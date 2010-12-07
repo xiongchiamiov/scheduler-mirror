@@ -1,0 +1,131 @@
+<html> 
+<head> 
+<title> 
+2.5.  Viewing a Schedule
+</title> 
+</head> 
+<body bgcolor = white> 
+<a name="Viewing a Schedule"> 
+<h3><u>
+2.5.  Viewing a Schedule
+</u></h3> 
+</a>
+<P>To view a schedule, select <font face="monospace">View</font> from the menu bar, then select the type of a schedule between a course schedule, a location schedule, or an instructor schedule. An example of the <font face="monospace">View</font> menu bar is shown in <a href="ui-admin.html#Admin UI overview">Figure 2</a> 
+</p> 
+<p>This section shows users a variety of ways to view a generated schedule:
+</p>
+<ul> 
+<li> 
+<a href="course-view.html"> 
+Course Schedule View
+</a> 
+<li> 
+<a href="location-view.html"> 
+Location Schedule View
+</a> 
+<li> 
+<a href="instructor-view.html"> 
+Instructor Schedule View
+</a> 
+</ul> 
+<br>
+<p>
+When the user selects to view a course schedule, the system displays a dialog shown in figure 66.
+</p>
+<hr>
+<p align=center>
+<a name="Setting page for viewing a course schedule">
+
+<img src="images/view/course-view-options-empty.jpg"/><br>Figure 66: Setting page for viewing a course schedule
+
+<hr>
+<p>
+The figure 66 shows the viewing options dialog that contains 4 data-entry options. Users can view a generated schedule in two different view modes; calendar mode or list mode. The user selects the view mode option in the <font face="Monospace">Viewing Mode</font> box. Users can view a schedule in a daily view or a weekly view by selecting the option in the <font face="Monospace">Viewing Level</font> box. The <font face="Monospace">Day</font> is a string value representing the day of a week. The value is Monday, Tuesday, Wednesday, Thursday, or Friday. An example of the day dropdown menu is shown in figure 67. When <font face="Monospace">Day</font> is selected, the user is required to pick a day from the dropdown menu. When <font face="Monospace">Week</font> is selected for the viewing level, the Scheduler Tool displays a schedule from Monday through Friday and the dropdown menu is grey out. The system displays a schedule starting at 7:00AM till 10:00PM by default. The user can change this setting through the <a href="advanced-filter.html"> Advanced Filters</a>
+
+<hr>
+<p align=center>
+<a name="Day Dropdown Menu">
+
+<img src="images/view/dropdown-day.jpg"/><br>Figure 67: Day Dropdown Menu
+</p>
+<hr>
+
+The check boxs in the <font face="Monospace">Filter</font> box specify which information fields appear in a schedule view. At least one of the check boxes must be checked. Some of these filter fields are automatically selected after selecting the view mode and the view level. The default selections are shown in table 1. The check boxes in the <font face="Monospace">Select Courses</font> box specifiy which courses appear in a schedule view. At least one of the check boxes must be checked. To select multiple checboxes, hold down <font face="Monospace">Shift</font> key and click.
+</p>
+<hr><br>
+<a name="Automatic Filter Selection"> 
+<table align=center border=1 cellpadding=4> 
+  <tr> 
+    <td valign=top><strong></strong> 
+    <td valign=top align=center><strong>Daily</strong> 
+    <td valign=top align=center><strong>Weekly</strong> 
+  <tr> 
+    <td valign=top><strong>Course View</strong>
+    <td valign=top>
+		<ul><li>Course Number <li>Section Number <li> StartTime <li>End Time</ul>
+    <td valign=top>
+		<ul><li>Course Number <li>Section Number <li> StartTime <li>End Time <li>Days</ul>
+  <tr> 
+	<td valign=top><strong>Location View</strong>
+    <td valign=top>
+		<ul><li>Course Number <li>Section Number <li> StartTime <li>End Time <li>Building<li>Room </ul>
+    <td valign=top>
+		<ul><li>Course Number <li>Section Number <li> StartTime <li>End Time <li>Building<li>Room <li>Days</ul>
+  <tr>
+	<td valign=top><strong>Instructor View</strong>
+    <td valign=top>
+		<ul><li>Course Number <li>Section Number <li> StartTime <li>End Time <li>Instructor Name</ul>
+    <td valign=top>
+		<ul><li>Course Number <li>Section Number <li> StartTime <li>End Time <li>Instructor Name <li>Days</ul>
+</table>
+</a>
+<p align=center>Table 1: Automatic Filter Selection</p>
+<hr>
+<p>
+When the user selects to view a location schedule from the <font face="monospace">View</font> menu, the system displays a dialog shown in figure 68.
+</p>
+<hr>
+<p align=center>
+<a name="Setting page for viewing a location schedule">
+
+<img src="images/view/location-view-options-empty.jpg"/><br>Figure 68: Setting page for viewing a location schedule
+</a>
+</p>
+<hr>
+<p>
+In figure 68, the <font face="monospace">Viewing Mode, Viewing Level,</font> and <font face="monospace"> Filter</font> boxes, have the same functionalities as the boxes in the course viewing option dialog. The check boxes in the <font face="Monospace">Select Locations</font> box specifiy which locations appear in a schedule view. When <font face="monospace">TBA</font> is selected for <font face="Monospace">Select Locations</font>, the Scheduler Tool displays all of the scheduled courses that do not have an assigned location. At least one of the check boxes must be checked. 
+</p>
+<p>
+When the user selects to view an instructor schedule from the <font face="monospace">View</font> menu, the system displays a dialog shown in figure 69.
+</p>
+<hr>
+<p align=center>
+<a name="Setting page for viewing an instructor schedule">
+<img src="images/view/instructor-view-options-empty.jpg"/><br>Figure 69: Setting page for viewing an instructor schedule
+</a>
+</p>
+<hr>
+<p>
+In figure 69, the <font face="monospace"> Viewing Mode, Viewing Level,</font> and <font face="monospace"> Filter</font> boxes, have the same functionalities as the boxes in the course viewing option dialog. The check boxes in the <font face="Monospace">Select Instructors</font> box specifiy which instructors appear in a schedule view. When <font face="monospace">Staff</font> is selected for <font face="Monospace">Select Instructors</font>, the Scheduler Tool displays all of the scheduled courses that do not have an assigned instructor. At least one of the check boxes must be checked.
+</p>
+
+
+
+
+ 
+ 
+<br> 
+<br> 
+<br> 
+<br> 
+<hr width=80% size=3> 
+<center> 
+<font size=-1> 
+<font color=black> Prev: </font><a href="view-schedule-attributes.html">view-schedule-attributes</a> 
+ | <font color=black> Next: </font><a href="course-view.html">course-view</a> 
+ | <font color=black> Up: </font><a href="functional.html">functional-requirements</a> 
+ | <font color=black> Top: </font><a href="index.html">index</a></font> 
+</center> 
+<hr width=80% size=3> 
+</body> 
+</html> 

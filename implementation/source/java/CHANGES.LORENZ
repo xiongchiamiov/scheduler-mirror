@@ -1,0 +1,8 @@
+- Changed InstructorTimePreferences class to use hashes instead of arraylists.
+- Fixed some typos in the Instructor class and InstructorDB class
+- Now when the database cannot be reached, the local databases will be filled
+  with empty data. Also the fields under the Database dropdown are disabled
+  when this occurs. If a user tries to access them, they will receive an error
+  message.
+- I made the ScheduleUI class static in order to implement the error messages
+  described in the last bullet.

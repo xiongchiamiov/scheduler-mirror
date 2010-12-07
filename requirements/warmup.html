@@ -1,0 +1,76 @@
+<html>
+<!--Title for your page-->
+<p><h3><u><p style="text-align:left;">
+Section 2.2: Basic Schedule Generation
+</u>
+</h3>
+</p>
+
+<!--Figure 7 Intro-->
+<p>
+This introductory scenario depicts an appropriately-privileged user generating a basic schedule for an particular term. A user's privileges are determined by another, alternate login system external to the Scheduler Tool. This view assumes a previously populated database of instructors, classes, rooms, and schedule preferences. For details on how these databases are populated, refer to <a href="data.html">Section 2.3</a>. This example also assumes that a user has already created a schedule project view the <font face="Monospace">File->New</font> command.<br>
+<br>
+To begin choosing how he/she wishes to generate a schedule, the user selects <font face="Monospace">Schedule-->Generate</font> from the <font face="Monospace">Schedule</font> menu, illustrated below in figure 7.
+<hr>
+<a name="Generate window - Blank">
+<p style="text-align:center;">
+<img src="images/warmup/generate-window.jpg#This is a test"><br>Figure 7: Generate window - Blank</img>
+</a>
+<hr>
+</p>
+
+<!--Figure 7 Explanation-->
+<p>
+The user is presented with a window populated by several, scrollable menus. Each corresponds to a variable of schedule generation (classes, professors, rooms, and constraints). A user may select certain entries within each menu that he/she wishes to incorporate into the schedule. To select a particular entry, a user need only to check the box besides each of their particular choices. For convenience, several <font face="Monospace">Select All</font> buttons have been placed under each of the given menus. Since it is altogether likely that most schedules will contain all entries within each menu, this allows the user to easily unselect key menu entries which represent rare exceptions. (A single professor going on sabbatical may be excluded by hitting <font face="Monospace">Select All</font> and then having his/her entry "unchecked" from the "Professor" list). If a user wishes to unselect an entire category, the <font face="Monospace">Clear</font> button under each list can be used to uncheck all entries in a corresponding menu. Additionally, an <font face="Monospace">Everything</font> button resides above all menus within the window, allowing the user to select every variable of every menu with a single button.<br>
+<br>
+Within the lists for instructors and rooms, the "Hours Avail." title is worth noting. If each list were to dislpay every available time slot for professors and teachers, each list would be unreasonably long. In light of this, each entry under "Hours Avail." is displayed in the form of a drop-down. Should the user wish to see available times of a particular entry, he/she can click the <font face="Monospace">[Click Here]</font> entry to list the detailed availability of a professor/room. In figure 7, the available times of professor Gene Fisher and room 247 (in building 14) are displayed in detail.<br>
+<br>
+Additionally, a <font face="Monospace">Maximum WTU's</font> field has been placed to allow an "on-the-fly" constraint for the maximum number of WTU's to be allowed per professor. (In future designs, this could be incorporated into the "Adding/Editing/Removing Constraints function). An empty field or a "0" represents a no-WTU limit.
+</p>
+<p>
+Also, the "Staff" instructor and "TBA" location (used when no other instructor/location is available) are not present in their respective fields. Both of these entries are selected by default during generation, and thus are not available for selection by the user. 
+</p>
+
+<!--Figure 8 Intro-->
+<p>
+Below, figure 8 details a possible combination of choices for schedule geneartion.
+</p>
+
+<p>
+<hr>
+<a name="Generate window - Filled">
+<p style="text-align:center;">
+<img src="images/warmup/generate-window-sample.jpg"><br>Figure 8: Generate window - Filled</img>
+</a>
+<hr>
+</p>
+
+<p>
+This scenario generates a scheduling with the following attributes: all classes, excluding CPE 102 and CSC 225; all instructors; all class rooms, excluding 14-247 and 14-249; all (3) constraints, to prevent 400/500 level classes from overlapping, limit the travel distance between classes (esp. lec/lab) to no more than 5 minutes, and use only rooms in the CSC/Engineering building(s); allow each instructor a maximum WTU count of 13. <br>
+<br>
+After selecting the <font face="Monospace">Generate</font> command, the Scheduling Tool sets to work creating a scheduling based on the requirements it was given in Figure 8. When it has generated a schedule, the Scheduler Tool presents the user with a default view of the schedule, illustrated in Figure 9.
+</p>
+
+<p>
+<hr>
+<a name="Generate - Sample">
+<p style="text-align:center;">
+<img src="images/warmup/generate-view.jpg"><br>Figure 9: Generate - Sample</img>
+</a>
+<hr>
+</p>
+
+<p>
+A generated schedule can be saved appropriately be selecting the <font face="Monospace">File->Save</font> or <font face="Monospace">File->Save As</font> commands.
+</p>
+
+<hr>
+<!--Links at bottom of page-->
+<p><p style="text-align:center;">
+prev: <a href = "ui-student.html">ui-student</a> |
+next: <a href = "data.html">database management</a> | 
+up: <a href = "functional.html">functional requirements</a> | 
+index: <a href = "index.html">index</a>
+</p>
+<hr>
+</html>

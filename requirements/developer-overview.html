@@ -1,0 +1,50 @@
+
+
+<!--Title for your page-->
+<p><h3>
+  <p style="text-align:left;">
+4. Developer Overview 
+  <p style="text-align:left;">
+  <!--Body of the page's text-->    
+</h3>
+
+<p>
+
+The following document is an executive summary of the Scheduler tool for the generation of class schedules. The scheduler creates a schedule of classes, rooms, courses, and professors based on information from a database. The software takes into account scheduling preferences set by professors in order to create a valid schedule. Professors can input time selection, course preferences, and WTUs. The administrator can input other information such as available rooms and courses offered. The administrator can add constraints and preferences that the schedule must meet. The scheduler creates a schedule based on preferences and constraints. 
+<br/>
+<br/>
+The specification for the Scheduler consists of a variety of modules that implement the
+features of the Scheduler. The database module specifies the top-level database object
+which contains these objects: preference database, 
+instructor database, location database, course database. All the objects in the
+top-level database are inputs to the scheduling algorithm specified in the Generate module. This
+module has the most important operation of the Scheduler: Generate. The algorithm uses its
+inputs to create an optimal Schedule object. A Schedule object consists of multiple ScheduleItem objects. 
+Each ScheduleItem is uniquely identified by its Course component (course and section). The assigned times and
+instructors for that course are also part of the ScheduleItem. The Scheduler also specifies modules
+for the user interface of the Scheduler, which differs based on the priviledges of the user. For example, 
+only an administrator has access to the Generate operation.  In addition to objects and operations
+for menu bar commands, the Scheduler also has a ViewSchedule module. This module contains View objects
+that specify the way a schedule is displayed. The Viewing operation takes display and filter
+options specified by the user and creates a View object. With the most important modules described above, the
+Scheduler is able to satisfy the core functionality of a scheduling tool.
+<br/>
+<br/>
+All of the objects in the scheduler tool can be modeled.The  preference database,
+instructor database, location database, course database will require database expierence and expertise to model.  
+<br/>
+<br/>
+Because the scheduler will be integrated with an already-made system, It may require expertise of the Log in system already in place.
+</p>
+
+<!--Links at bottom of page-->
+<hr>
+<p>
+<p style="text-align:center;">
+Prev: <a href = "non-functional.html">non-functional</a> |
+Next: <a href = "spec.html">spec</a> | 
+Up: <a href = "index.html">index</a> | 
+Top: <a href = "index.html">index</a>
+</p>
+<hr>
+

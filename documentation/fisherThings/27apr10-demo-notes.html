@@ -1,0 +1,146 @@
+<html>
+
+<p>
+All of the changes listed here are high priority, except those under the
+heading "<strong>General features, lower priority</strong>".  "High priority"
+means the changes should get done before we give the tool as a demo to Diane
+and Michael Haungs.
+<p>
+<ol type=1>
+<li>
+<strong>Changes to the menubar:</strong>
+<ol type=a>
+<li>
+Put menu bar intially at x=150, y=100.  Then place first content window at
+x=150, y=150.  Place all subsequent new windows  at x=x+25, y=y+25.
+<li>
+Swap the positions of the 'View' and 'Schedule' menus in the menubar.
+<li>
+Add a 'Databases' menu to the menu bar.  Its items are 'Courses',
+'Instructors', 'Locations', 'Preferences', 'Constraints'.  These are the same
+five items as on the top top of the current 'Scedule' menu.  They bring up the
+DB dialogs that you now have, except you should remove the 'Add Sections'
+button from the bottom of the 'Course DB' dialog.
+</ol>
+
+<p>
+<li>
+<strong>Changes to the 'Schedule' menu:</strong>
+<ol type=a>
+<li>
+Use the same names as the first five 'Databases' menu items (i.e., pluralize,
+and use "Course" instead of "Class").
+<li>
+Change the dialog for the first five items to be the check-box style list you
+now have in the larger 'Generate' dialog.  I.e., each dialog will be one of the
+three lists you currently have in the 'Generate' dialog.
+<li>
+Add a new item to the 'Schedule' menu called 'all-in-one' that shows the
+current 'Generate' dialog, i.e., the one with the three lists side-by-side.
+<li>
+Change the 'Generate' dialog to have just a summary of the overall schedule
+properties, and a 'Generate' (or 'Go') button at the bottom.  The overall
+properties are: Quarter, year, phase, and version number.
+</ol>
+<p>
+<li>
+<strong>Courses DB:</strong>
+<ol type=a>
+<li>
+Have both 'Prefix' and 'Number' for each course, where 'Prefix' defaults to
+"CPE".
+<li>
+Change 'Name' to 'Catalog Title.
+<li>
+Add a few more courses to the database to force the course list to have a
+scroll bar on its initial display.  (This will give the user a clue what things
+will look like with a full course DB.)
+<li>
+Put a "Courses:" label above the course list in the 'Course Database' dialog.
+<li>
+Put a white-background, bordered box around the course information that's to
+the right of the course list.  Make the list box and the information box the
+same height.
+<li>
+Make the width of the course list the same as the buttons below it.
+<li>
+Put about 1 'em' white space to in the left and top margins.
+<li>
+Sort the courses alphanumerically, with labs listed below their paired
+lectures.
+<li>
+Use the course prefix as entered in DB dialog, not just "CPE".  E.g., I entered
+"CSC" in the dialog, but it lists as "CPE" in the course list.
+</ol>
+<p>
+<li>
+<strong>Instructors DB:</strong><strong></strong>
+<ol type=a>
+<li>
+The instructor time prefs need to include days of the week.  (I thought they
+did at some point.)
+</ol>
+<p>
+<li>
+<strong>Generation:</strong>
+<ol type=a>
+<li>
+There should be a progress bar that shows up when the scheduling algorithm is
+going to take longer than a couple seconds.  Let's discuss.
+</ol>
+
+<p>
+<li>
+<strong>Viewing:</strong>
+<ol type=a>
+<li>
+I don't think the right panels are necessary in the schedule, a least not by
+default.  It looks like everything that you can do in those panels can be done
+from selecting items in the 'View' menu.  I think not having the commands in
+two places will eliminate some of my confusion about how the 'View' menu
+dialogs and schedule panel features are related.  Plus right now, there are
+some confusing inconsistencies between the 'View' menu dialogs and the Schedule
+dialog panels, e.g., "Day, Week" versus "Daily, Weekly"; the order of the
+'List' and 'Calendar' radio buttons.
+<li>
+We can add an 'all-in-one' option somewhere, that allows the user to select the
+current form of schedule view.
+</ol>
+
+<p>
+<li>
+<strong>General features, high priority</strong>
+<ol type=a>
+<li>
+Make all of the dialogs stretchable.
+<li>
+Make all of the dialogs update dynamically with DB changes.  It looks like the
+Generate dialog does dynamically update, but the Instructor preferences dialog
+does not.
+<li>
+Have confirm dialogs for all 'Remove' actions.  It's too easy to delete
+something by accident.
+<li>
+Generalized is too hard for the first release.  We need some policy for saving
+copies of DBs when the tool is entered, so in case someone makes a bad edit, he
+can revert to a save copy.  This can be in the form of a 'Revert' menu item, on
+the 'File' or 'Databases' menu.
+</ol>
+<p>
+<li>
+<strong>General features, lower priority</strong>
+<ol type=a>
+<li>
+Allow the panes in multi-pane windows to be individually resizeable.
+<li>
+In keeping with the free-floating menubar style, it would be nice to have an
+option for the schedule view to show up in its own window.
+<li>
+At one point during a session, it looked like the generator got stuck; the
+'Generate' button in the dialog went solid, and the schedule view never showed
+up.  I cannot reproduce this, so for now it's not an issue.
+</ol>
+</ol>
+
+</body>
+</html>

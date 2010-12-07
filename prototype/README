@@ -1,0 +1,93 @@
+Name: Eric Liebowitz
+Class: CPE 308
+Teammates:  Sasi R.
+            Aaron R.
+            "Lorenz" S.
+            Jason M.
+            Leland G.
+Project: Scheduler Tool
+
+Make Instructions:
+
+Simply typing "make" will compile all necessary java files and run them. For
+our demonstration, our team chose to illustrate our GUI via a free-floating,
+top-level menu bar. Thus, upon typing "make", this menu bar will be displayed,
+along with the "Administrator" splash screen. Also, simply typing "make"
+will clean out all "*.class" files after the program is closed. 
+
+Please note the following features are the only ones which "do" anything. 
+Everything else will, at best, display something to the terminal. 
+
+   UI Admin Splash
+   File->Exit
+   View->[Course/Instructor/Location/Conflict]
+   Schedule->Instructor
+   Schedule->Instructor->Add
+   Schedule->Preferences
+   Schedule->Quality
+   Prototype->[Calendar View/Manual Edit]
+
+Also, please be aware that clicking the "X" button to close a window may
+inadvertantly close the entire program, no matter what window it was. This is
+buggy behavior, but we were unable to remedy it before the deadline. If this
+happenes, simply type "make run" to restart the program. 
+
+If you wish to compile and run the java files in different steps, "make gui"
+and "make run" will suffice, respectively. "make clean" will delete all 
+"*.class" files. 
+
+NOTE: The "Prototype" menu will not be in an actual release. It has been 
+      placed to illustrate functionality which would normally open immediately
+      when Scheduler Tool is opened. However, to make viewing the prototype
+      easier, it has been wrapped up into the "Prototype" menu. 
+
+===============================================================================
+Eric Liebowitz         #1  The menu bar containing the "File", "Edit", "View",
+                           "Schedule", "Prototype", and "Help" menus opened 
+                           at startup
+                       #2  The splash screen opened at startup
+                       #3  Select File-->Exit
+
+                       (NOTE: Though I only have 3 GUI's, the top-level menu
+                       bar linked everyone elses GUI's together, which took
+                       a significant amount of effort and coordination. I also
+                       created and debugged the Makefile associate with
+                       compilation)
+
+Leland Garofalo            Select 'Schedule' in the Menubar
+                       #1  Select the 'Preferences' item in 'Schedule' Menu
+                       #2  Select 'Delete' in Preferences Database
+                           Select 'Schedule' in the Menubar
+                       #3  Select the 'Generate' item in 'Schedule' Menu
+                           Select the 'View' in the Menubar
+                           Select the 'Course' item in 'View' Menu
+                       #4  Select the 'OK' Option
+
+Jan Lorenz Soliman      
+                           Select 'Scheduler' in the Menubar
+                       #1  Select the 'Instructor' item in the 'Schedule' Menu
+                       #2  Select the 'Add Instructor' Button
+                       #3  Select the 'Course Preferences' Button
+                           Select 'File' in the Menubar
+                       #4  Select the 'Open' item
+                           
+Sasiluk Ruangrongsorakai
+                           Select 'Scheduler' in the Menubar
+                        #1 Select 'Course...' item in the 'View' Menu
+                        #2 Select 'Instructor...' item in the 'View' Menu
+                        #3 Select 'Location...' item in the 'View' Menu     
+                        #4 Select 'OK...' button in the 'Course Viewing Option' dialog
+                        #5 Select 'Advanced Filters' button in the 'Course Daily Schedule View' window
+                       
+Jason Mak
+						#1 Select 'Instructor...' item in the Scheduler Menu
+						#2 Select 'Quality...' item in the Scheduler menu
+                                                #3 Select 'Conflicts...' in the 'View' Menu    \
+
+
+Aaron Rivera
+                       #1 select the  OK button in "view->location"dialog. The large calander view.
+                       #2 Select select the  OK button in "view->location"dialog. click "view availability" in the small window
+                       #3 Select select the  OK button in "view->location"dialog. click "Edit" in the small window
+                       #4 not currently in prototype, but is made "CalanderDailyView.java"
+

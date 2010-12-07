@@ -1,0 +1,69 @@
+<html>
+<p align="center"><font size="6"><b><u>How to Run Tests</u></b></font></p>
+<p>
+In order to create the class files in the testing directory, navigate to the 
+directory <tt>testing/implementation/source/java</tt> and type <tt>make</tt>.
+Then, navigate to <tt>testing/implementation/executables/JVM</tt>. Once in that
+directory, any one of the following commands may be issued from the command line
+to run appropriate tests. 
+</p>
+<p>
+The results of each test are stored in the "<tt>testing/implementation/
+executables/JVM/testResults/</tt>" directory. In particular, the name of each 
+file's test result file corresponds to the name of the test file 
+used to run the test in the first place, sans the "<tt>.java</tt>" extension. 
+Thus, the results for the "<tt>AdmintTest.java</tt>" tests would be in a file 
+named "<tt>Admin</tt>"
+</p>
+<ul>
+<li>Type <tt>make admin</tt> to run the AdminTest.java 
+<li>Type <tt>make time</tt> to run the TimeTest.java 
+<li>Type <tt>make db</tt> to run the DatabaseTest.java
+<li>Type <tt>make coursedb</tt> to run the CourseDBTest.java
+<li>Type <tt>make instructordb</tt> to run the InstructorDBTest.java
+<li>Type <tt>make locationdb</tt> to run the LocationDBTest.java
+<li>Type <tt>make preferencesdb</tt> to run the PreferencesDBTest.java
+<li>Type <tt>make preferences</tt> to run the PreferencesTest.java
+<li>Type <tt>make findtime</tt> to run the FindTimeTest.java
+<li>Type <tt>make timePrefComparator</tt> to run the TimePreferenceComparatorTest.java
+<li>Type <tt>make edit</tt> to run the EditTest.java
+<li>Type <tt>make fair_qual</tt> to run the Fair_QualTest.java
+<li>Type <tt>make file</tt> to run the FileTest.java 
+<li>Type <tt>make filespecs</tt> to run the PrintSpecsTest.java 
+<li>Type <tt>make scheduleItemTest</tt> to run the ScheduleItemTest.java 
+<li>Type <tt>make findCourseTest</tt> to run the FindCourseTest.java
+<li>Type <tt>make treatmentTest</tt> to run TreatmentTest.java
+<li>Type <tt>make scheduleTest</tt> to run ScheduleTest.java
+<li>Type <tt>make dayAvailTest</tt> to run DayAvailTest.java
+<li>Type <tt>make advancedfilter</tt> to run the AdvancedFilterTest.java 
+<li>Type <tt>make student_feedback</tt> to run the StudentFeedbackTest.java
+<li>Type <tt>make locationfilter</tt> to run the LocationFilterObjTest.java 
+<li>Type <tt>make viewInstructorFilterTest</tt> to run the ViewInstructorFilterTest.java 
+<li>Type <tt>make instructorfilterobj</tt> to run the InstructorFilterObjTest.java 
+<li>Type <tt>make viewlocationfilter</tt> to run the ViewLocationFilterTest.java 
+<li>Type <tt>make treatmentTest</tt> to run TreatmentTest.java
+<li>Type <tt>make advancedFilterTest</tt> to run AdvancedFilterTest.java
+<li>Type <tt>make daysInWeekTest</tt> to run DaysInWeekTest.java
+<li>Type <tt>make findlocation</tt> to run FindLocationTest.java
+<li>Type <tt>make locationandtime</tt> to run LocationAndTimeTest.java
+<li>Type <tt>make listview</tt> to run the ListViewTest.java
+<li>Type <tt>make coursefilterobj</tt> to run the CourseFilterObjTest.java 
+<li>Type <tt>make viewmode</tt> to run the ViewModeTest.java
+<li>Type <tt>make viewlevel</tt> to run the ViewLevelTest.java 
+<li>Type <tt>make calendarViewTest</tt> to run the CalendarViewTest.java 
+</ul>
+
+<p align="center"><font size="6"><b><u>How to Run Coverage Tests</u></b></font></p>
+<p>
+We used the coverage tool "Cobertura". In order to run our coverage tests, first
+navigate to <tt>testing/implementation/source/java</tt> and type <tt>make</tt>.
+Then, navigate to <tt>testing/implementation/executables/JVM</tt>. From here, in
+order to run coverage tests on those classes/methods which were to be tested,
+take any one of tests detailed in the list above and prepend it with the prefix
+<tt>cv_</tt>. Thus, to run the <tt>AdmintTest.java</tt> file with the coverage
+tool, one would type <tt>make cv_admin</tt>
+
+Note: A set method in ViewMode.java and another set method in ViewLevel.java
+      do not receive code coverage because they would require a working
+      observer which is hard to set up for testing.
+</html>

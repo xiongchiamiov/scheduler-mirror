@@ -1,0 +1,76 @@
+<html> 
+<head> 
+<title> 
+2.8.7. Close Project
+</title> 
+</head> 
+<body bgcolor = white> 
+<a name="Close Project"> 
+<h3><u>
+2.8.7. Close Project
+</u></h3> 
+</a>
+
+<p>The <font face="monospace">Close</font> command is enabled in the <font face="monospace">File Menu</font> if a schedule is opened, disabled otherwise.
+</p>
+<p>When the user selects the <font face="monospace">Close</font> command, the system performs the following pre-close steps for the schedule to be closed, i.e., the current schedule: 
+</p>
+<ol>
+<li>checks if the schedule has unsaved changes 
+<li>checks if there are any pending edits in dialogs associated with the schedule 
+</ol>
+<p>Once these steps are completed satisfactorily, the system proceeds to perform the close operation. Details follow.</p>
+<p>
+For the first pre-close step, the system checks if the current calendar has any unsaved changes. If there are one or more unsaved changes, the system displays the dialog shown in Figure 112.
+</p>
+<hr>
+<p align=center>
+<a name="Offer to save schedule before closing">
+<img src="images/file/offer-save.jpg"/><br>Figure 112: Offer to save schedule before closing
+</a>
+<hr>
+<p>
+The <font face="monospace">name</font> string is the name of the current schedule project to be closed. If the user presses <font face="monospace">Yes</font>, the system proceeds as follows: 
+</p>
+<ol>
+<li>If the schedule to be closed has not yet been saved to a file, the system displays the file save-as dialog shown in <a href="saveAs.html#Save As Window">Figure 108</a>. If the user confirms a legal save-as operation in that dialog, the system proceeds to the next pre-close step. If the user presses <font face="monospace">Cancel</font> in the save-as dialog, the system returns to the offer-to save dialog, where the user may press <font face="monospace">No</font> or <font face="monospace">Cancel</font> (or <font face="monospace">Yes</font> if he/she wants to return again to the save-as dialog).  
+<li>If the schedule to be closed has previously been saved to a file, the system performs the file save operation described in <a href="file-save.html">Section 2.8.4</a>, and proceeds to the next pre-close step. 
+</ol>
+<p>If the user presses <font face="monospace">No</font> in the <font face="monospace">Offer to save schedule</font> dialog, the system proceeds to the next pre-close step without saving the schedule, thereby losing any unsaved changes. If the user presses <font face="monospace">Cancel</font> in the <font face="monospace">Offer to save schedule</font> dialog, the system cancels the close operation entirely, without saving, without performing further pre-close steps, and leaving the schedule open and unchanged. The system also removes both the offer-to-save and file-close dialogs from the screen.</p>
+<p>If the schedule to be closed has no unsaved changes, the system proceeds to the next pre-close step, without displaying the <font face="monospace">Offer to save schedule</font> dialog. Schedulers with no unsaved changes are those that have been saved prior to close, as well as other-user and group schedulers, since the latter two types of scheduler cannot be changed. </p>
+<p>For the second pre-close step, the system checks if there are any pending edits for the schedule to be closed. A pending edit is any unconfirmed or unapplied change the user has made in one or more of these dialogs. if there any such pending edits, the system displays the dialog shown in Figure 113.</p>
+<hr>
+<p align=center>
+<a name=" Warning when there are unconfirmed or unapplied dialog edits. ">
+<img src="images/file/pending-edit.jpg"/><br>Figure 113:  Warning when there are unconfirmed or unapplied dialog edits.
+</a>
+<hr>
+<p>If the user answers <font face="monospace">Yes</font> in the pending-edits dialog, the system discards any pending edits, cancels all pending dialogs, and removes the dialogs from the screen. When the system responds to the <font face="monospace">Yes</font> response or if the pending-edits dialog was not displayed, the system proceeds to the last pre-close step. </p>
+<p>If the user answers <font face="monospace">No</font> in the pending-edits dialog, the system cancels the close operation without performing the last pre-close step, leaves the schedule open, and leaves all pending edit dialogs open and unchanged. If the schedule had been saved as a result of the first pre-close step, it remains saved, i.e., the save operation is not undone. </p>
+<p>When the pre-close steps have been completed without a cancellation, the system completes the close operation by closing the schedule.When the close operation has been completed or canceled, the system removes all close-related dialogs from the screen. </p>
+<p>Closing a schedule does not automatically exit the Scheduler Tool. The Scheduler Tool runs with zero schedule file open. </p>
+ 
+<br> 
+<br> 
+<br> 
+<br> 
+<hr width=80% size=3> 
+<center> 
+<font size=-1> 
+<font color=black> Prev: </font><a href="print.html">print</a> 
+ | <font color=black> Next: </font><a href="file-exit.html">file-exit</a> 
+ | <font color=black> Up: </font><a href="file.html">file</a> 
+ | <font color=black> Top: </font><a href="index.html">index</a></font> 
+</center> 
+<hr width=80% size=3> 
+</body> 
+</html> 
+
+
+
+
+
+
+
+
+

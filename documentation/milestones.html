@@ -1,0 +1,103 @@
+<html>
+<p align="center"><font size=6><b><u>Milestones</u></b></font></p>
+<p>
+The following table details projected milestones which are to be completed 
+during the Spring quarter of 2010. These milestones represent goals for our 
+work, and may often yield a demo of our program to display new/improved
+functionality. 
+</p>
+<table width="90%" cellpadding="5" border="true" align="center">
+   <tr><td>Week</td><td>Details</td></tr>
+   <tr>
+      <td>3</td>
+      <td>
+         A simple "Things to Run" html file to detail the aspects of our program
+         which are functional and able to test. This version of program could be
+         classified as an "alpha" release, and is intended to demonstrate what 
+         our program will be able to do. The program should be runnable via the 
+         command line argument "java -jar scheduler.jar".<br>
+         <br>
+         In particular, any error message that would have simply printed to a 
+         console will be routed to a dialog to be displayed to the user.<br>
+         <br>
+         By the end of this week, a virtual machine will be installed via the 
+         Computer Science department. This will become the permanent resident
+         of our project repository. Furthermore, our SQL database will be run
+         from this server. The program's original specification documents will
+         also be placed here, and will available to the general public. (A url
+         to link to this will be provided at a later date). 
+      </td>
+   </tr>
+   <tr>
+      <td>4</td>
+      <td>
+         All things related to the virtual machine will be stable (the database,
+         repository, and SQL database).<br>
+         <br>
+         Project's package structure will be reorganized/structured to more 
+         adequately accomadate the team's needs.<br>
+         <br>
+         A new GUI for creating Schedule Preferences will be drafted and 
+         displayed. In particular, the functionality described in the 
+         specification documents will be largely trashed, in favor of a more
+         rigidly defined, concrete specification whose implementation will
+         be feasible by the end of the quarter.<br>
+         <br>
+         The "generate" package will be broken. In particular, the algorithm
+         which generates schedules will be redesigned to accomodate pre-existing
+         schedules. The algorithm will also be overhauled to weed out bugs in
+         generation. This process will be a long one: it will span multiple
+         milestones.<br>
+         <br>
+         Ideas for how best to implement manual editing/locking will be brought
+         up in the weekly, team-advisor meeting.<br>
+         <br>
+         The ability to specify a professor's time preferences will be 
+         implemented.
+      </td>
+   </tr>
+   <tr>
+      <td>5</td>
+      <td>
+         Barring continued work on the scheduling algorithm, the "schedule 
+         fairness" algorithm will be refined and finalized.<br>
+         <br>
+         Schedule preferences will have an agreed upon GUI and guaranteed
+         functionality. Development on the algorithm to compute a schedule's 
+         "quality" will begin.<br>
+         <br>
+         The ability to manually edit the time, location, and instructor for
+         a given course will be functional. Checks for whether manual edits
+         create conflicts will <b>not yet be implemented</b>. The ability to
+         "lock" schedule items will also be implemented, but perfect 
+         functionality will not yet be guaranteed.<br>
+         <br>
+         Excluding the incorporation of manual edits, the scheduling algorithm
+         will have taken shape. In particular, it should not generate conflicts
+         (double booking professors/rooms), and should take instructor's 
+         time and course preferences into consideration.<br>
+      </td>
+   </tr>
+   <tr>
+      <td>6</td>
+      <td>
+         A user will have the ability to open a new schedule (thus downloading
+         fresh information from our SQL database), or to open a pre-existing
+         schedule. Thus, a user will also be able to save a schedule to their
+         computer.<br>
+         <br>
+         Manual edits which cause conflicts will be highlighted in some way 
+         to notify the user. A differentiation will be made between conflicts
+         which represent a physical impossibility (i.e. double booking a room) 
+         andconflicts created by violating a schedule preference 
+         (i.e. overlapping certain courses)<br>
+      </td>
+   </tr>
+   <tr>
+      <td>X</td>
+      <td>
+         [More to come as the quarter develops]
+      </td>
+   </tr>
+</table>
+</html>

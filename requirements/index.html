@@ -1,0 +1,182 @@
+<!--Title-->
+<p><h2><p style="text-align:center;">
+Requirements Specification<br>
+for <i><font color="red">Scheduler</font></i><br>
+Version 2.4.0.0<br>
+09 October 2009<br>
+<br>
+Contents<br>
+<br>
+</h2>
+</p>
+
+<!--Section 1: Introduction-->
+<p>
+&nbsp;&nbsp;&nbsp;<font size=5><b><a href="intro.html">1. Introduction</a></b></font><br>
+<font size=4>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="problem.html">1.1. Problem Statement</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="personnel.html">1.2. System Personnel</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="setting.html">1.3. Operational Setting</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="impacts.html">1.4. Impacts</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="related.html">1.5. Related Systems</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="whentowork-review.html">1.5.1 WhenToWork</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="cyber-review.html">1.5.2. Cyber Matrix</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="asc-review.html">1.5.3. Asc Timetables</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="mimosa-review.html">1.5.4. Mimosa</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="lantiv-review.html">1.5.5. Lantiv Timetabler</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="fet-review.html">1.5.6. FET</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="feature-comparison.html">1.5.7. Feature Comparison Matrix</a><br>
+</font>
+</p>
+<p>
+&nbsp;&nbsp;&nbsp;<font size=5><b><a href="functional.html">2. Functional Requirements</a></b></font><br>
+<font size=4>
+<!--Section 2.1: UI Overviews-->
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="ui-overview.html">2.1. User Interview Overview</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="ui-admin.html">2.1.1. Administrative UI</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="ui-instructor.html">2.1.2. Instructor/Faculty UI</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="ui-student.html">2.1.3. Student UI</a><br>
+
+<!--Section 2.2: Basic Schedule Generation-->
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="warmup.html">2.2. Basic Schedule Generation</a><br>
+
+<!--Section 2.3: Database Management-->
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="data.html">2.3 Database Management</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="data-instructor.html">2.3.1. Instructor</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="instructor-add.html">2.3.1.1. Add</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="instructor-edit.html">2.3.1.2. Edit</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="instructor-remove.html">2.3.1.3. Remove</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="data-course.html">2.3.2. Course</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="course-add.html">2.3.2.1. Add</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="course-edit.html">2.3.2.2. Edit</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="course-remove.html">2.3.2.3. Remove</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="data-room.html">2.3.3. Room</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="room-add.html">2.3.3.1. Add</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="room-edit.html">2.3.3.2. Edit</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="room-remove.html">2.3.3.2. Remove</a><br>
+
+<!--Section 2.4: Advanced Schedule Generation and Adding-->
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="advanced-schedule.html">2.4. Advanced Schedule Generation and Editing</a><br>
+
+<!--Section 2.4.1: Constrains-->
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="constraints.html">2.4.1. Preferences</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="constraints-add.html">2.4.1.1. Add</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="constraints-edit.html">2.4.1.2. Edit</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="constraints-remove.html">2.4.1.3. Remove</a><br>
+
+<!--Section 2.4.2: Administrator Preferences-->
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="prefsetting.html">2.4.2. Administrator Preference Setting</a><br>
+
+<!--Section 2.4.3: Manual Editing-->
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="manual.html">2.4.3. Manual Editing</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="course-manual.html">2.4.3.1 Courses</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="locking.html">2.4.3.2 Locking</a><br>
+
+
+<!--Section 2.4.4: Conflict Resolution-->
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="conflict-resolution.html">2.4.4. Conflict Resolution</a><br>
+
+<!--Section 2.4.5: Viewing Schedule Attributes-->
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="schedule-attributes.html">2.4.5. Viewing Schedule Attributes</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="schedule-attributes-fairness.html">2.4.5.1. Schedule Fairness</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="schedule-attributes-quality.html">2.4.5.2. Schedule Quality</a><br>
+
+<!--Section 2.5: Viewing a shedule-->
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="view-schedule.html">2.5. Viewing a Schedule</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="course-view.html">2.5.1. Course Schedule View</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="daily-course-view.html#daily">2.5.1.1. Daily</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="weekly-course-view.html#weekly">2.5.1.2 Weekly</a><br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="location-view.html">2.5.2. Location Schedule View</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="daily-location-view.html#daily">2.5.2.1. Daily</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="weekly-location-view.html#weekly">2.5.2.2. Weekly</a><br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="instructor-view.html">2.5.3. Instructor Schedule View</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="daily-instructor-view.html#daily">2.5.3.1. Daily</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="weekly-instructor-view.html#weekly">2.5.3.2 Weekly</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="sorting-view.html">2.5.4. Sorting the List View</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="advanced-filter.html">2.5.5. Advanced Filters</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="view-availability.html">2.5.6. View Availability of Instructors and Locations</a><br>
+
+<!--Section 2.6: Student Access-->
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="feedback-student.html">2.6. Student Access</a><br>
+
+<!--Section 2.7: Server Administration-->
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="server-admin.html">2.7. Server Administration</a><br>
+
+<!--Section 2.8: Details of File commands-->
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="file.html">2.8. Details of File commands</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="file_new.html">2.8.1. New</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="file_open.html">2.8.2. Open</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="file-open-recent.html">2.8.3. Open Recent</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="file-save.html">2.8.4. Save</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="saveAs.html">2.8.5. Save As</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="print.html">2.8.6. Print Preview and Print</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="close.html">2.8.7. Close Project</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="">2.8.8. Exit</a><br>
+
+</p>
+
+<p>
+<!--Section 3: Non-Functional Requirement-->
+&nbsp;&nbsp;&nbsp;<font size=5><b><a href="non-functional.html">3. Non-Functional Requirement</a></b></font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="non-functional.html#Performance">3.1. Performance</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="non-functional.html#General Characteristics">3.2. General Characteristics</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="non-functional.html#Security and Privacy">3.2.1 Security and Privacy</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="non-functional.html#Simplicity versus Power">3.2.2 Simplicity versus Power</a><br>
+
+<br>
+</p>
+
+<p>
+<!--Section 4: Developer Overview-->
+&nbsp;&nbsp;&nbsp;<font size=5><b><a href="developer-overview.html">4. Developer Overview</a></b></font><br>
+</p>
+
+<p>
+<!--Section 5: Formal Specification-->
+&nbsp;&nbsp;&nbsp;<font size=5><b><a href="spec.html">5. Formal Specification</a></b></font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="../specification/database.sl">5.1 Database (database.sl)</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="../specification/instructorDB.sl">5.1.1 InstructorDB (instructorDB.sl)</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="../specification/courseDB.sl">5.1.2 CourseDB (courseDB.sl)</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="../specification/locationDB.sl">5.1.3 LocationDB (locationDB.sl)</a><br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="preference.sl">5.2 Preference (preference.sl)</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="../specification/conflict.sl">5.3 Conflicts (conflict.sl)</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="../specification/course-manual.sl">5.4 Course Editing (course-edit.sl)</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="view.sl">5.5 Viewing (view.sl)</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="../specification/generate.sl">5.6 Generate (generate.sl)</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="edit.sl">5.7 Edit Commands (edit.sl)</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="../specification/open.sl">5.8 Open Commands (edit.sl)</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="../specification/quality.sl">5.9 Quality (quality.sl)</a><br>
+</p>
+<p>
+<!--Appendix A-->
+&nbsp;&nbsp;&nbsp;<font size=5><b><a href="appendix-a.html">Appendix A</a></b></font><br>
+</p>
+<br>
+
+<!--Index of Images-->
+<p>
+<p style="text-align:center;"><a href="images.html">List of Figures</a>
+</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

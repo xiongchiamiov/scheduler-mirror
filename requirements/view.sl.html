@@ -1,0 +1,171 @@
+(****
+ *
+ * Module View defines the objects and operations related to the different
+ * schedule views available to user; course, location, and instructor schedule views. 
+ * There are operation to filter the information displaying on the schedule.
+ * Operation is available to view availability of instructors and locations at a particular time
+ *
+ *)
+
+module View;
+
+    import Database.Database, Database.Day, Database.Time, Database.Course,Database.Location, Databse.Instructor;
+    import ScheduleItem;
+
+    object View
+        component: ViewOption and ViewAvailability;
+        description: Contains all the necessary objects and attributes for a schedule view;
+    end View;
+
+    object ViewOption
+        component: ViewMode and ViewLevel and ViewInfoDialog and Filter and AdvancedFilter;
+        description: Scheduler uses the attributes from the ViewMode, ViewLevel, Filter, and AdvancedFilter to display a schedule. ViewInfoDialog is used to display information of each schedule item;
+        (*    
+        Scheduler uses these options from ViewMode, ViewLevel, Filter to display a schedule.
+        InfoDialogue is used to display information of an item on a schedule.
+        *)
+    end ViewOption;
+
+(***********************View Mode******************)
+    object ViewMode
+        description: There are two specialization of ViewMode: CalendarMode and ListMode;
+    end ViewMode;
+
+    object CalendarMode extends ViewMode
+        component: PopupView;
+        description: A schedule is displayed in a calendar format. PopupView is used to display more information when all the necessary details cannot fit in one cell on the view.;
+        (*
+        CalendarMode displays a schedule in a calendar format.
+        PopupView displays more information when everything can't fit in one cell on the calendar view.
+        *)
+    end CalendarMode;
+
+    object PopupView
+        component: ScheduleItem;
+        description: The PopupView displays the CourseNumber, Section, Building, Room, Instructor, and Day information of the ScheduleItem.
+        (*
+        If CourseFilter, SectionFilter, BuildingFilter, RoomFilter, InstructorFilter, or DayFilter is true or selected by the user,
+        Popup displays CourseItem, SectionItem, BuildingItem, RoomItem, InstructorItem, or DayItem on the popup screen
+        *);
+    end PopupView;
+
+    object ListMode extends ViewMode
+        description: A schedule is displayed in a list format.;
+    end ListMode;
+
+(***********************View Level******************)
+    object ViewLevel
+         description: There are two specialization of ViewLevel: Daily and Weekly;
+    end ViewLevel; 
+
+    object DailyView extends ViewLevel
+        component: Day;
+        description: Schedule displays a daily schedule of the Day;
+    end DailyView;
+
+    object WeeklyView extends ViewLevel
+        description: Schedule displays a weekly schedule;
+    end WeeklyView;
+(***********************ViewInfoDialog***********)
+    object ViewInfoDialog
+        component ScheduleItem;
+        description: ViewInfoDialog displays the details information for a schedule item;
+    end ViewInfoDialog;
+    
+(********************Advanced Filter*************)
+    object AdvancedFilter
+        component: StartTimeView and EndTimeView and Day*; 
+        description: Schedule displays a schedule starting from the time specified in the StartTimeView until the time specified in the EndTimeView. For viewing a weekly schedule, Scheduler displays a schedule for the selected Days;
+    end AdvancedFilter;
+
+    object StartTimeView = Time;
+    object EndTimeView = Time;
+
+(***********************Filter******************)
+    object Filter
+        component: ClassFilter and SectionFilter and StartTimeFilter and EndTimeFilter and BuildingFilter and RoomFilter and InstructorFilter and CreditsFilter and CourseWTUFilter and ClassTypeFilter and DayFilter and MaxEnrollmentFilter;
+        description: Scheduler displays information on a schedule if the filter value is true;
+    end Filter;
+
+    object ClassFilter = boolean;
+    object SectionFilter = boolean;
+    object StartTimeFilter = boolean;
+    object EndTimeFilter = boolean;
+    object BuildingFilter = boolean;
+    object RoomFilter = boolean;
+    object InstructorFilter = boolean;
+    object CourseWTUFilter = boolean;
+    object CreditsFilter = boolean;
+    object DayFilter = boolean;
+    object MaxEnrollmentFilter = boolean;
+    object ClassTypeFilter = boolean;
+
+(***************************************************)
+    object CourseScheduleView extends ViewOption
+        component: Course*; 
+        description:  Display a schedule for the given Course(s);
+    end CourseScheduleView;
+
+    object LocationScheduleView extends ViewOption
+        component Location*;
+        description: Display a schedule for the given Location(s);
+    end LocationScheduleView;
+
+    object InstructorScheduleView extends ViewOption
+        component Instructor*;
+        description: Display a schedule for the given Instructor(s);
+    end InstructorScheduleView;
+(******************View Availability**************************)
+    object ViewAvailability
+        component: InstructorAvailability and LocationAvailability and ScheduleItem;
+        description: Display the available instructor and location at the specific time of the ScheduleItem;
+            (* Available Instructor(s) and Location(s) are displayed *);
+    end ViewAvailability;
+
+    object InstructorAvailability 
+        component: Instructor*;
+        description: The available instructor at a specific time;
+    end InstructorAvailability
+
+    object LocationAvailability
+        component: Location*;
+        description: The available location at a specific time;
+    end LocationAvailability;
+
+(***********************Operation Schedule*************)
+    operation ViewingPopup
+        inputs: ScheduleItem*, Filter;
+        outputs: PopupView;
+        precondition:
+        postcondition:
+        description: Display the given ScheduleItem(s)' information on the small popup window;
+    end ViewingPopup;
+
+    operation ViewingInfoDialog
+        inputs: ScheduleItem, Filter;
+        outputs: InfoDialogue;
+        precondition:
+        postcondition:
+        description: Displaying the given ScheduleItem's full information on the dialog window;
+    end ViewingInfoDialogue;
+    
+    operation AdvancingFilter
+        inputs: v:View, af:AdvancedFilter;
+        outputs: v':View
+        precondition:
+        postcondition:
+        description: Change the AdvancedFilter of the View and regenerate a schedule view to correspond the view with the new Advanced Filter options;
+    end AdvancingFilter;
+     
+    operation ViewingAvailability
+        inputs: ScheduleItem;
+        outputs: Instructor* and Location*;
+        precondition:
+        postcondition:
+        description: Display available instructors and locations for a class specified in the ScheduleItem during the time specified in the ScheduleItem. 
+    end ViewingAvailability;
+    
+   
+    
+
+
