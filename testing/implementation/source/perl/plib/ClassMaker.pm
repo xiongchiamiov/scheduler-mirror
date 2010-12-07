@@ -64,17 +64,18 @@ sub runClass
    my $oldDir = getcwd();
    chdir ($DEST);
 
+   say "java $self->{mainClass} 1> $errFile 2>&1";
    system ("java $self->{mainClass} 1> $errFile 2>&1");
-
-   chdir ($oldDir);
-
    #
-   # Die if UNIX reports an error (a non-zero return
+   # Die if UNIX reports an error (a non-zero return)
    #
    if ($? >> 8)
    {
       die "Could not run '$self->{mainClass}'. See '$errFile' for details\n";
    }
+
+   chdir ($oldDir);
+
    1;
 }
 

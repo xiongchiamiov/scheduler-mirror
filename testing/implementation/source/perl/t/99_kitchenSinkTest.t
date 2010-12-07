@@ -51,8 +51,6 @@ my $rcgs = &genJavaClasses
    l_limit => 2,
 );
 
-say "HERE1";
-
 #################################
 # STEP 2: Compile all the generated files at once
 #################################
@@ -62,8 +60,6 @@ my $allClassBuilder = ClassMaker->new
    mainClass => "tooManyToCount",
 );
 $allClassBuilder->makeClassFiles("99_kitchenSink.compile_errors");
-
-say "HERE2";
 
 #################################
 # STEP 3: Run each gen'd class file
@@ -169,7 +165,8 @@ sub runClasses
    for (my $i = 0; $i < @{$rcgs}; $i ++)
    {
       my $rcg = $rcgs->[$i];
-      run_back { $rcg->runClass() };
+system ("cd /home/eliebowi/Senior_Project/testing/implementation/executables/JVM/; java Test_c1_i1_l1 1> /home/eliebowi/Senior_Project/testing/impementation/source/perl/t/test_c1_i1_l1.runClass 2>&1; cd /home/eliebowi/Senior_Project/testing/impementation/source/perl/t/");
+#      run_back { $rcg->runClass() };
       say "YO";
    }
    #
