@@ -472,7 +472,7 @@ public class SQLDB  {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
                         DriverManager.setLoginTimeout(5);
-			conn = DriverManager.getConnection("jdbc:mysql://cslvm215.csc.calpoly.edu/scheduler", "jseall", "");
+			conn = DriverManager.getConnection("jdbc:mysql://cslvm215.csc.calpoly.edu/scheduler", "root", "Abcd1234");
 			System.out.println("Database connection established.");
                         connected = true;
 		}

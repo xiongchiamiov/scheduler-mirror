@@ -172,7 +172,7 @@ public class AddCourse extends MyView implements Observer {
 
         Preference.setText("Preference");
 
-        PreferenceBox.setModel(new javax.swing.DefaultComboBoxModel(Scheduler.pdb.getDaysForClassesNames()));
+        PreferenceBox.setModel(new javax.swing.DefaultComboBoxModel(Scheduler.pdb.getDayPreferences()));
 
         HoursPerWeekLabel.setText("Hours Per Week");
         TypePrefixLabel.setText("Type Prefix");
