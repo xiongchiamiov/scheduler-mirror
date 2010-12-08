@@ -5,9 +5,14 @@ CLASS_DIR=$(HOME)/implementation/source/java
 TEST_DIR = t
 EXEC_DIR=../../executables/JVM
 PLIB=./plib
+HARNESS_OUTPUT="harness_output"
+
+blarg:
+	screen -S asdf
 
 test:
-	@perl -I $(PLIB) Harness.pm $(CLASS_DIR) $(TEST_CLASS_DIR) $(EXEC_DIR)
+	@perl -I $(PLIB) Harness.pm $(CLASS_DIR) $(TEST_CLASS_DIR) $(EXEC_DIR) | \
+		tee $(HARNESS_OUTPUT)
 
 clean:
 	@#

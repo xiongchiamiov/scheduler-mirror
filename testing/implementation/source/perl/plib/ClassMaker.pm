@@ -64,7 +64,6 @@ sub runClass
    my $oldDir = getcwd();
    chdir ($DEST);
 
-   say "java $self->{mainClass} 1> $errFile 2>&1";
    system ("java $self->{mainClass} 1> $errFile 2>&1");
    #
    # Die if UNIX reports an error (a non-zero return)

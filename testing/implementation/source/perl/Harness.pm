@@ -64,7 +64,7 @@ my $harness = Harness->new(
 {
    lib => [qw(./ ./plib)],          # Libraries tests will have in @INC
    color => 1,                      # Color output
-   #failures => 1,                   # Only print failed tests
+#   failures => 1,                   # Only print failed tests
    verbosity => 1,
    #
    # Pass 3 args to each test via @ARGV: 

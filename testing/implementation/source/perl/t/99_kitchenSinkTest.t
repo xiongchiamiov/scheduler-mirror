@@ -2,26 +2,29 @@
 use strict;
 use warnings;
 use 5.010;
+use Test::More; # How we'll run tests
+
+#################################
+# IMPORTS
+#################################
 #
-# Testing will be done in 4 steps:
+# Before we begin testing, get the number of CPUs we have to work with
 #
-#  1) All classes will be generated according to unique, random data
-#  2) All generated classes will be compiled w/ Javac
-#  3) All compiled classes will be run and dump their output
-#  4) All ouptut will verified.
-#
-# This is done so that I can fork children to accomplish each task in parallel, 
-# thereby speeding up testing to something less than 6 days.
-#
-use Test::More;
+my $cpu;
+BEGIN
+{
+   use Linux::Cpuinfo;
+   $cpu = Linux::Cpuinfo->new();
+}
+use Proc::Queue qw(run_back running_now waitpids), 
+                size => $cpu->num_cpus();
 
 use ConstraintChecker qw(check);
 use RandClassGenerator;
-
 use Cwd qw(getcwd abs_path);
 use Data::Dumper;
 use FindBin qw($Bin);
-use Proc::Queue qw(run_back running_now waitpids), size => 2;
+
 #################################
 # SET DIRECTORY TO THIS ONE
 #
@@ -39,45 +42,58 @@ $ClassMaker::DEST   = $dest;
 #################################
 # GLOBALS
 #################################
+
+# 
+# By the end of testing, will contain all RCG's which failed at some point
+# during testing. Their "getError" method will return a message explaining
+# why they failed
+#
 my @failures;
 
+###################################################################
+#                             TESTING                             #
+###################################################################
+# EXPLANATION:
+#
+# Testing will be done in 4 steps:
+#
+#  1) All classes will be generated according to unique, random data
+#  2) All generated classes will be compiled w/ Javac
+#  3) All compiled classes will be run and dump their output
+#  4) All ouptut will verified.
+#
+# This is done so that I can fork children to accomplish each task in parallel, 
+# thereby speeding up testing to something less than 6 days.
 #################################
+
+diag (); # Give us a clean line to start on
+
 # STEP 1: Gen files
-#################################
 my $rcgs = &genJavaClasses
 (
-   c_limit => 2, 
-   i_limit => 2, 
-   l_limit => 2,
+   c_limit => 100,
+   i_limit => 1000,
+   l_limit => 1000,
 );
 
-#################################
 # STEP 2: Compile all the generated files at once
-#################################
 my $allClassBuilder = ClassMaker->new
 (
    files => [map { @{$_->getCm()->getFiles()} } @{$rcgs}],
    mainClass => "tooManyToCount",
 );
+note("Building gen'd test files");
 $allClassBuilder->makeClassFiles("99_kitchenSink.compile_errors");
 
-#################################
 # STEP 3: Run each gen'd class file
-#################################
 &runClasses($rcgs);
-say "HERE3";
 
-#################################
 # STEP 4: Verify output
-#################################
 &verifyOutput($rcgs);
-say "HERE4";
 
-#################################
-# STEP 5: *gasp*
 #
 # If any RCG's failed, the use should be notified. 
-#################################
+#
 for my $rcg (@failures)
 {
    fail ($rcg->getName().": ".$rcg->getError());
@@ -87,10 +103,12 @@ done_testing();
 
 chdir ($oldDir);
 
+###################################################################
+#                           FUNCTIONS                             #
+###################################################################
+
 #
-# STEP 1:
-#
-# Generate all the java files. We'll fork off children to do the work in 
+# Generates all the java files. We'll fork off children to do the work in 
 # parallel. Since this is simply the generation step, the work will be nearly
 # instantaneous ('cause Perl's fast). But, in keeping with the other portion of
 # this test which uses children, I figured spawning processes couldn't hurt us.
@@ -109,11 +127,11 @@ sub genJavaClasses
    my (%args) = @_;
    my (@r);
 
-   for (my $cs = 1; $cs < $args{c_limit}; $cs += 1)
+   for (my $cs = 1; $cs < $args{c_limit}; $cs += 10)
    {
-      for (my $is = 1; $is < $args{i_limit}; $is += 1)
+      for (my $is = 1; $is < $args{i_limit}; $is += 100)
       {
-         for (my $ls = 1; $ls < $args{l_limit}; $ls += 1)
+         for (my $ls = 1; $ls < $args{l_limit}; $ls += 100)
          {
             my $name  = "test_c${cs}_i${is}_l${ls}";
             my $jFile = "$test_classDir/\u$name.java";
@@ -165,16 +183,13 @@ sub runClasses
    for (my $i = 0; $i < @{$rcgs}; $i ++)
    {
       my $rcg = $rcgs->[$i];
-system ("cd /home/eliebowi/Senior_Project/testing/implementation/executables/JVM/; java Test_c1_i1_l1 1> /home/eliebowi/Senior_Project/testing/impementation/source/perl/t/test_c1_i1_l1.runClass 2>&1; cd /home/eliebowi/Senior_Project/testing/impementation/source/perl/t/");
-#      run_back { $rcg->runClass() };
-      say "YO";
+      run_back { $rcg->runClass() };
+      note ("Running ".$rcg->getName());
    }
    #
    # Wait for any/all straggling children
    #
-   say "WAITING";
    waitpid(-1, 0) while (running_now());
-   say "DONE";
    &prune($rcgs);
 }#<==
 
