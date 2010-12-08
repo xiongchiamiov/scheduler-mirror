@@ -122,7 +122,7 @@ public class ScheduleMenu extends JMenu
          {
             public void actionPerformed (ActionEvent e)
             {
-               new PreferencesUI().show(150,150);
+               new scheduler.db.admin.admin_ui.PreferencesUI().show(150,150);
             }
          }
       );

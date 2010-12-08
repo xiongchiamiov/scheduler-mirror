@@ -355,7 +355,7 @@ public class PreferencesDB extends Observable {
      * </pre>
      */
     public void addDaysForClasses(DaysForClasses p) {
-        System.out.println("Doing SQL STUFF.");
+
         SQLDB sqldb = new SQLDB();
         String insert = "";
         insert = "( " + " '" + p.name + "', " + p.weight + ", ";
