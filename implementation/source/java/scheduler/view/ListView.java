@@ -13,10 +13,18 @@ import javax.swing.table.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-
+/****
+ * Class MyDefaultCellRender will override the default CellRender
+ * that is provided by JTable. As of now, the only extra functionality
+ * provided is the rendering of data in the middle of the cell. Future
+ * customizations to rendering can be implemented here. 
+ *
+ * @author Jason Mak
+ */
 class MyDefaultCellRenderer extends DefaultTableCellRenderer {
    public MyDefaultCellRenderer() {
       super();
+      //Tell renderer to center the data.
       setHorizontalAlignment((SwingConstants.CENTER));
    }
 }
@@ -31,7 +39,7 @@ class MyDefaultCellRenderer extends DefaultTableCellRenderer {
  */
 
 public class ListView {
-   public static int lastColAdded = -1;
+ 
    /**
     * Construct this class using its parent view object. Get settings
     * from the view object and instantiate the table model.
@@ -53,12 +61,15 @@ public class ListView {
       this.view = view;
       filterOptions = view.getViewSettings().getFilterOptions();
       makeNewTabelModel();
+
+      //create custom cell renderer
       final MyDefaultCellRenderer cellRenderer = new MyDefaultCellRenderer();
       table = new JTable(tableModel) {
          public TableCellRenderer getCellRenderer(int row, int column) {
             return cellRenderer;
          }
 
+	 //handles coloring of the most recently added column
          public Component prepareRenderer(TableCellRenderer renderer,
                                           int rowIndex, int vColIndex) {
             Component c = super.prepareRenderer(renderer, rowIndex, vColIndex);
@@ -66,7 +77,7 @@ public class ListView {
                c.setBackground(Color.CYAN);
             } else if (c.getBackground() == Color.CYAN) {
                // If not shaded, match the table's background
-               c.setBackground(getBackground());
+               c.setBackground(getbackground());
             }
             return c;
          }
@@ -82,6 +93,16 @@ public class ListView {
       listViewUI = new ListViewUI(this);
    }
 
+   /**
+    * Remakes the table's underlying tabelModel, clearing all data.
+    *
+    *                                                           <pre>
+    * pre:;
+    *
+    * post: tableModel.size() == 0 
+    *                                                              </pre>
+    *
+    */
    protected void makeNewTabelModel() {
       tableModel = new DefaultTableModel(FilterOptions.filterNames, 0) {
          public boolean isCellEditable(int rowIndex, int vColIndex) {
@@ -90,7 +111,8 @@ public class ListView {
 
          public Class getColumnClass(int columnIndex) {
             Object o = getValueAt(0, columnIndex);
-
+		
+            //this allows the tabelModel to determine the type of its columns
             if (o == null) {
                return Object.class;
             } else {
@@ -614,6 +636,9 @@ public class ListView {
    /** The parent view. */
    public View view;
 
+   /** The most recently added column to the view, if any. */
+   public static int lastColAdded = -1;
+ 
    /** The TableModel of viewable data. */
    protected DefaultTableModel tableModel;
 
