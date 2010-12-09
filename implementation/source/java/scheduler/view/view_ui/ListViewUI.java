@@ -15,7 +15,7 @@ import java.awt.event.*;
  * Class ListViewUI provides a view of a Schedule in list mode. Its
  * companion model class is ListView.
  *
- * @author Jason Mak
+ * @author Jason MAk
  */
 public class ListViewUI extends JScrollPane {
     /**
@@ -26,6 +26,8 @@ public class ListViewUI extends JScrollPane {
     public ListViewUI(ListView listView) {
         this.listView = listView;
         table = listView.getTable();
+
+        //handles a key press while a cell edit is taking place.
         table.addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
@@ -72,11 +74,13 @@ public class ListViewUI extends JScrollPane {
 
         table.addMouseListener(new MouseAdapter(){
             public void mouseClicked(MouseEvent e) {
-                if (table.isEditing()) {
+                //If a cell is being edited, ignore the mouse click
+		if (table.isEditing()) {
                     e.consume();
                     return;
                 }
-
+		
+                //If a cell is double clicked, pop up a ScheduleItemUI
                 if (e.getClickCount() == 2){
                     try {
                         ScheduleItemUI scheduleItemUI =
@@ -87,7 +91,8 @@ public class ListViewUI extends JScrollPane {
                     catch (Exception e1) {
                         e1.printStackTrace();
                     }
-                } else if (e.getClickCount() == 1) {
+                } else if (e.getClickCount() == 1) { 
+		    //A cell was single clicked so a manual edit on the cell is initated.
                     manualEditListener.setEditAt(table.getSelectedRow(), table.getSelectedColumn());
                     table.editCellAt(table.getSelectedRow(), table.getSelectedColumn());
                 }
@@ -99,11 +104,11 @@ public class ListViewUI extends JScrollPane {
         return this;
     }
 
-    public ManualEditListener manualEditListener;
+    /** The object that handles editing within a table cell. */
+    protected ManualEditListener manualEditListener;
 
     /** The list view table. */
     protected JTable table;
-
 
     /** The companion model object. */
     protected ListView listView;
