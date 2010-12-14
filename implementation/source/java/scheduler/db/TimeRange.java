@@ -4,9 +4,16 @@ import java.io.Serializable;
 
 public class TimeRange implements Serializable
 {
+   /** Start time*/
    private Time s;
+   /** End time */
    private Time e;
 
+   /**
+    * Constructor to create a range from a start and end time.
+    * @param s The start time
+    * @param e The end time
+    */
    public TimeRange (Time s, Time e)
    {
       if (s.compareTo(e) != -1)
@@ -17,6 +24,10 @@ public class TimeRange implements Serializable
       this.e = e;
    }
 
+   /**
+    * Returns the half hour length.
+    * @return The half hour length.
+    */
    public int getHalfHourLength ()
    {
       int halfHours = ((e.getHour() - s.getHour()) * 2);
@@ -32,6 +43,11 @@ public class TimeRange implements Serializable
       return halfHours;
    }
 
+   /**
+    * Returns whether there is overlap between this range and another range.
+    * @param tr The range
+    * @return true or false depending on whether they overlap.
+    */
    public boolean overlaps (TimeRange tr)
    {
       /*
@@ -68,9 +84,18 @@ public class TimeRange implements Serializable
       return false;
    }
 
+   /** Returns the start time
+    *  @return The start time 
+    */
    public Time getS () { return this.s; }
+   /** Returns the end time 
+    *  @return The start time 
+    */
    public Time getE () { return this.e; }
 
+   /** Overrides the default toString methor 
+    *  @return The range as a string
+    */
    public String toString ()
    {
       return "Start: " + this.s + "\nEnd  : " + this.e;

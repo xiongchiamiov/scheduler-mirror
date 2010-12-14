@@ -100,7 +100,8 @@ public class Course implements Serializable, Comparable<Course>
     * Added by: Eric Liebowitz
     */
    private Stack<DaysForClasses> dfc;
-
+   
+   /** The other DaysForClasses variable. */
    protected DaysForClasses other_dfc;
 
    /*<==*/
@@ -345,6 +346,11 @@ public class Course implements Serializable, Comparable<Course>
       return this.id + this.courseType.hashCode();
    }
 
+   /**
+    * Overrrides the default compareTo method()
+    * @param comp The course to compare to
+    * @return An integer representation of the comparison.
+    */
    public int compareTo(Course comp) 
    {
       if (comp == null || !(comp instanceof Course)) 
@@ -374,8 +380,9 @@ public class Course implements Serializable, Comparable<Course>
    }
 
 
-   /* GETTERS ==>*/
-
+   /** Returns the lab associated with this course.
+    * @return The lab associated with this course.
+    */
    public Course getLab ()
    {
       return this.labPairing;

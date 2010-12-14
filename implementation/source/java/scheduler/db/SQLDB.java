@@ -40,10 +40,20 @@ public class SQLDB  {
         /**Could the database connect? */
         private boolean connected = false;
 
+        /**
+         * Checks if the database is connected.
+         * @return connected Whether or not the db is connected.
+         */
         public boolean isConnected() {
             return connected;
         }
 
+
+
+	/**
+	 * Clears all of the courses in the course database.
+	 *
+	 **/
         public void clearCourses() {
             try {
                 String sql = "DELETE FROM courses";
@@ -58,7 +68,10 @@ public class SQLDB  {
 			System.out.println(se.getMessage());
             }
         }
-
+	/**
+	 * Clears all of the instructors in the instructor database.
+	 *
+	 **/
         public void clearInstructors() {
             try {
                 String sql = "DELETE FROM instructors";
@@ -72,6 +85,10 @@ public class SQLDB  {
             }
         }
 
+	/**
+	 * Clears all of the locations in the location database.
+	 *
+	 **/
         public void clearLocations() {
             try {
                 String sql = "DELETE FROM locations";
@@ -85,6 +102,10 @@ public class SQLDB  {
             }
         }
 
+	/**
+	 * Clears all of the preferences in the preferences database.
+	 *
+	 **/
         public void clearPreferences() {
             try {
                 String sql = "DELETE FROM preferences";

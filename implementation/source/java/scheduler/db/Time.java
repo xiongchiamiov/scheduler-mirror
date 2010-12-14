@@ -14,6 +14,7 @@ import scheduler.*;
 
 public class Time implements Comparable<Time>, Serializable
 {
+   /** Serial Version UID */
    public static final int serialVersionUID = 42;
 
     /**
