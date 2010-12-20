@@ -68,8 +68,6 @@ public class Scheduler implements Serializable
     */
    public Scheduler ()
    {
-      schedulerUI = new SchedulerUI();
-
       if(!System.getProperty("java.version").startsWith("1.6")
        && !System.getProperty("java.version").startsWith("1.7")) {
          JOptionPane.showMessageDialog(schedulerUI,
@@ -91,9 +89,12 @@ public class Scheduler implements Serializable
       cdb = schedDB.getCourseDB       ();
       idb = schedDB.getInstructorDB   ();
       ldb = schedDB.getLocationDB     ();
+   }
 
-      
-      Scheduler.debug (pdb.getDayPreferences().toString());
+   public void spawn (int x, int y)
+   {
+      schedulerUI = new SchedulerUI();
+
       try
       {
          /*
@@ -109,6 +110,8 @@ public class Scheduler implements Serializable
       schedView.initSettings();
 
       schedulerUI.compose();
+
+      schedulerUI.show(x, y);
    }
 
    /**
@@ -261,7 +264,6 @@ public class Scheduler implements Serializable
     */
    public static void main (String[] args)
    {
-      new Scheduler();
-      schedulerUI.show(150, 100);
+      new Scheduler().spawn(150, 100);
    }
 }

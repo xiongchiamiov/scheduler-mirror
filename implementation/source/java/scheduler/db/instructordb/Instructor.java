@@ -810,6 +810,9 @@ public class Instructor implements Comparable<Instructor>, Serializable
 
 	/**
 	 * This method sets the list of time preferences.
+    *
+    * TODO: The LinkedHashMap is a terrible way to do this. 
+    *
     * @param tps a list of time preferences.
 	 * @return the list of time preferences.
 	 */

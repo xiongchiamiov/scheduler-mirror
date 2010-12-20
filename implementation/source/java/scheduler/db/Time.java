@@ -327,7 +327,6 @@ public class Time implements Comparable<Time>, Serializable
     */
    public void addHalf ()
    {
-      //System.err.println ("ADD HALF: " + this);
       if (this.compareTo(new Time(23, 30)) > -1) 
       {
          throw new InvalidInputException ();

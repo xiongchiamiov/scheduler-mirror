@@ -5,6 +5,7 @@ import java.util.Vector;
 import java.util.Stack;
 
 import scheduler.db.preferencesdb.DaysForClasses;
+import scheduler.db.InvalidInputException;
 /**
  * This class will contain the information necessary to represent a course
  * available to the instructor, such as its name and required equipment.
@@ -150,7 +151,7 @@ public class Course implements Serializable, Comparable<Course>
 	 * @param numOfSections the numer of sections for this course.
 	 * @param labPairing the lab pairing, if required.
 	 * @param requiredEquipment the required equipment for htis course.
-    * @param prefix The prefix of the course
+   * @param prefix The prefix of the course
     * @param dfc The DaysForClasses preference for the course.
 	 */
    public Course (String courseName, int id, int wtu, int scu,
@@ -410,16 +411,7 @@ public class Course implements Serializable, Comparable<Course>
 		return prefix;
 	}
 
-	/**
-	 *  Sets the prefix
-	 *
-	 *  @param pre The string representing the course Name
-	 *
-	 **/
-	public void setPrefix(String pre) 
-   {
-		this.prefix = pre;
-	}
+
 
 	/**
 	 *  Returns the course type prefix as a string
@@ -432,16 +424,6 @@ public class Course implements Serializable, Comparable<Course>
 		return ctPrefix;
 	}
 
-	/**
-	 *  Sets the prefix
-	 *
-	 *  @param pre The string representing the course Name
-	 *
-	 **/
-	public void setCTPrefix(String ctpre) 
-   {
-		this.ctPrefix = ctpre;
-	}
 
 	/**
 	 *  Returns the id of the class
@@ -571,6 +553,7 @@ public class Course implements Serializable, Comparable<Course>
    }
 
    /**
+
     * Determines whether a given number of days are suitable for teaching this
     * course over. In particular, this means that the hours/week this course
     * is taught divide evenly among the given number of days, and in such as 
@@ -611,5 +594,106 @@ public class Course implements Serializable, Comparable<Course>
    {
 		this.numOfSections = num;
 	}
+
+	/**
+	 *  Sets the prefix
+	 *
+	 *  @param pre The string representing the course Name
+	 *
+	 **/
+	public void setCTPrefix(String ctpre) 
+   {
+		this.ctPrefix = ctpre;
+	}
+
+	/**
+	 *  Sets the prefix
+	 *
+	 *  @param pre The string representing the course Name
+	 *
+	 **/
+	public void setPrefix(String pre) 
+   {
+		this.prefix = pre;
+	}
+
+   /**
+    * Sets the hours per week for this course.
+    *
+    * @param hpw value to set hpw to. Must be > 0
+    *
+    * @throws InvalidInputException if hpw < 1
+    */
+   public void setHPW (int hpw)
+   {
+      if (hpw < 1) { throw new InvalidInputException(); }
+      
+      this.hoursPerWeek = hpw;
+   }
+
+   /**
+    * Sets the SCU for this course
+    *
+    * @param scu value to set scu to. Must be > 0
+    *
+    * @throws InvalidInputException if scu < 1
+    */
+   public void setSCU (int scu)
+   {
+      if (scu < 1) { throw new InvalidInputException(); }
+
+      this.scu = scu;
+   }
+
+   /**
+    * Sets the WTU for this course
+    *
+    * @param wtu value to set wtu to. Must be > 0
+    *
+    * @throws InvalidInputException if wtu < 1
+    */
+   public void setWTU (int wtu)
+   {
+      if (wtu < 1) { throw new InvalidInputException(); }
+
+      this.wtu = wtu;
+   }
+
+   /**
+    * Sets the type for this course. 
+    *
+    * @param type value to set the type to.
+    *
+    * @throws InvalidInputException if "type" is not Course.LEC or Course.LAB
+    */
+   public void setType (String type)
+   {
+      if (type != LEC || type != LAB)
+      {
+         throw new InvalidInputException ();
+      }
+      this.courseType = type;
+   }
+
+   /**
+    * Sets the numeric id for this course.
+    *
+    * @param id The number to set this course's id to
+    */
+   public void setID (int id)
+   {
+      this.id = id;
+   }
+
+   /**
+    * Sets the lab for this course
+    *
+    * @param lab The Course object to set as this one's lab
+    *
+    */
+   public void setLab (Course lab)
+   {
+      this.labPairing = lab;
+   }
    /*<==*/
 }
