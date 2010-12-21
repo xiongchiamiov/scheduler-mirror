@@ -20,7 +20,6 @@ use Proc::Queue qw(run_back running_now waitpids),
                 size => $cpu->num_cpus();
 
 use ConstraintChecker qw(check);
-use RandClassGenerator;
 use Cwd qw(getcwd abs_path);
 use Data::Dumper;
 use FindBin qw($Bin);
@@ -34,12 +33,6 @@ my ($oldDir) = getcwd();
 chdir ($Bin);
 
 #################################
-
-my ($cpath, $test_classDir, $dest) = @ARGV;
-$ClassMaker::CPATHS = [$cpath];
-$ClassMaker::DEST   = $dest;
-
-#################################
 # GLOBALS
 #################################
 
@@ -50,54 +43,30 @@ $ClassMaker::DEST   = $dest;
 #
 my @failures;
 
+#
+# Receive our cmd line args
+#
+my ($test_class_dir) = @ARGV;
+
 ###################################################################
 #                             TESTING                             #
 ###################################################################
-# EXPLANATION:
-#
-# Testing will be done in 4 steps:
-#
-#  1) All classes will be generated according to unique, random data
-#  2) All generated classes will be compiled w/ Javac
-#  3) All compiled classes will be run and dump their output
-#  4) All ouptut will verified.
-#
-# This is done so that I can fork children to accomplish each task in parallel, 
-# thereby speeding up testing to something less than 6 days.
-#################################
 
 diag (); # Give us a clean line to start on
 
-# STEP 1: Gen files
-my $rcgs = &genJavaClasses
-(
-   c_limit => 100,
-   i_limit => 1000,
-   l_limit => 1000,
-);
-
-# STEP 2: Compile all the generated files at once
-my $allClassBuilder = ClassMaker->new
-(
-   files => [map { @{$_->getCm()->getFiles()} } @{$rcgs}],
-   mainClass => "tooManyToCount",
-);
-note("Building gen'd test files");
-$allClassBuilder->makeClassFiles("99_kitchenSink.compile_errors");
-
-# STEP 3: Run each gen'd class file
-&runClasses($rcgs);
-
-# STEP 4: Verify output
-&verifyOutput($rcgs);
-
 #
-# If any RCG's failed, the use should be notified. 
+# Run the test class with different numerical arguments:
 #
-for my $rcg (@failures)
-{
-   fail ($rcg->getName().": ".$rcg->getError());
-}
+# - Courses go from 10 to 100 in increments of 10
+# - Instructors go from 100 to 1000 in increments of 1000
+# - Locations go from 100 to 1000 in increments of 1000
+#
+&verifyOutput(&runClass
+(
+   c_count => [1],#[grep { ($_ % 10) == 0 } 1..100],
+   i_count => [1],#[grep { ($_ % 100) == 0 } 1..1000],
+   l_count => [1],#[grep { ($_ % 100) == 0 } 1..1000],
+));
 
 done_testing();
 
@@ -122,33 +91,25 @@ chdir ($oldDir);
 # Returns a reference to a list of RCGs
 #
 # genJavaClasses ==>
-sub genJavaClasses
+sub runClass
 {
    my (%args) = @_;
    my (@r);
 
-   for (my $cs = 1; $cs < $args{c_limit}; $cs += 10)
+   for my $cs (@{$args{c_count}})
    {
-      for (my $is = 1; $is < $args{i_limit}; $is += 100)
+      for my $is (@{$args{i_count}})
       {
-         for (my $ls = 1; $ls < $args{l_limit}; $ls += 100)
+         for my $ls (@{$args{l_count}})
          {
-            my $name  = "test_c${cs}_i${is}_l${ls}";
-            my $jFile = "$test_classDir/\u$name.java";
+            my $file  = abs_path("test_c${cs}_i${is}_l${ls}");
 
-            my $rcg = RandClassGenerator->new(
+            run_back 
             {
-               name => "test_c${cs}_i${is}_l${ls}",
-               jfile => $jFile,
-               cs   => $cs,
-               is   => $is,
-               ls   => $ls,
-            });
-            #
-            # Fork children to do each build simlutaneously
-            #
-            run_back { $rcg->genClass(42) };
-            push (@r, $rcg);
+               system ("java -cp $test_class_dir Test_RandData ".
+                  "$file $cs $is $ls 1> $file.out 2> $file.err");
+            };
+            push (@r, $file);
          }
       }
    }
@@ -158,39 +119,7 @@ sub genJavaClasses
    #
    waitpid (-1, 0) while (running_now());
 
-   #
-   # Return all the RCG's we used which were successful. Those which wren't will
-   # be added to the "failures" array
-   #
-   &prune (\@r);
    return \@r;
-}#<==
-
-#
-# Run each gen'd class as a separate child. 
-#
-# $_[0] = Ref to hash w/ old PID's for values and still-need-to-be-used RCG's 
-#         for values. This function will delete all the old mappings in this
-#         hash and replace them with new PID-RCG pairs. (Thus, there will still
-#         be the same RCG values in the hash, but different, fresh PID's for 
-#         them as their keys
-#
-# runClasses ==> 
-sub runClasses
-{
-   my ($rcgs) = @_;
-
-   for (my $i = 0; $i < @{$rcgs}; $i ++)
-   {
-      my $rcg = $rcgs->[$i];
-      run_back { $rcg->runClass() };
-      note ("Running ".$rcg->getName());
-   }
-   #
-   # Wait for any/all straggling children
-   #
-   waitpid(-1, 0) while (running_now());
-   &prune($rcgs);
 }#<==
 
 #
@@ -205,32 +134,17 @@ sub runClasses
 #
 sub verifyOutput
 {
-   my ($rcgs) = @_;
+   my ($files) = @_;
 
-   for (my $i = 0; $i < scalar @{$rcgs}; $i ++)
+   for my $file (@{$files})
    {
-      my $rcg = $rcgs->[$i];
-      ok(check($rcg->getDumpFile()), $rcg->getName()." passed"); 
-   }
-}#<==
-
-#
-# Given a list of RCGs, removes any which have something returned from their 
-# "getError" method. Those removed are also added to the global "failures" array
-#
-# $_[0] = Array ref of RCGs
-#
-# prune ==>
-sub prune
-{
-   my ($rcgs) = @_;
-
-   for (my $i = 0; $i < $#{$rcgs}; $i ++)
-   {
-      if ($rcgs->[$i]->getError())
+      if (-e $file)
       {
-         push (@failures, $rcgs->[$i]);
-         delete $rcgs->[$i];
+         ok(check($file, "$file passed")); 
+      }
+      else
+      {
+         fail ("$file failed");
       }
    }
 }#<==

@@ -46,7 +46,7 @@ sub makeClassFiles
    make_path($DEST);
 
    my $cpaths = join(" ", map { "-classpath $_" } @{$CPATHS});
-
+   
    system ("javac -g -J-Xms1024m -J-Xmx1024m $cpaths -d $DEST @{$self->{files}} ".
       "1> $errFile 2>&1");
 

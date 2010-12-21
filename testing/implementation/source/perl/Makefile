@@ -5,33 +5,32 @@ CLASS_DIR=$(HOME)/implementation/source/java
 TEST_DIR = t
 EXEC_DIR=../../executables/JVM
 PLIB=./plib
-HARNESS_OUTPUT="harness_output"
+HARNESS_OUTPUT="harness.out"
 
-blarg:
-	screen -S asdf
+#
+# Finds all the java files in the scheduler packaged directory (ignoring svn 
+# directories)
+#
+BASE_FILES=`find $(CLASS_DIR) -path "*svn*" -prune -o -name "*java" -path "*scheduler/*" -print`
+#
+# Compiles all base files (including the test classes)
+#
+base:	
+	@javac -classpath $(CLASS_DIR) -d $(EXEC_DIR) $(BASE_FILES) 1> base.out 2>&1
+	@javac -classpath $(CLASS_DIR) -d $(EXEC_DIR) $(TEST_CLASS_DIR)/*.java 1> test.out 2>&1
 
-test:
+test:	base
 	@perl -I $(PLIB) Harness.pm $(CLASS_DIR) $(TEST_CLASS_DIR) $(EXEC_DIR) | \
 		tee $(HARNESS_OUTPUT)
 
 clean:
 	@#
-	@# Remove any/all compiler error output files
+	@# Remove any/all compiler and other output files
 	@#
-	@for f in $$(find ./ -name "*compile_errors*"); do \
-		rm $$f; \
-   done; 
-	@#
-	@# Remove any other temporary files generating during testing
-	@#
-	@for f in $(TEST_DIR)/*; do \
-		if [[ ! $$f =~ \.t$$ && ! -d $$f ]]; then \
-			rm $$f; \
-		fi; \
-	done;
+	@find ./ -name "*\.out" -o -name "*\.err"
 	@#
 	@# Remove the contents of the "executable" directory, where all built class
-	@# files are stored. Only the "sql" directory should be preserved, as its
+	@# files are stored. Only the sql directory should be preserved, as its
 	@# necessary from test-to-test. I may choose to copy it over every time, thus
 	@# make the removal of all these files a little easier. But for now, the "com"
 	@# directory will have to stay put.
@@ -41,9 +40,3 @@ clean:
       	rm -rf $$f; \
       fi; \
 	done;
-	@#
-	@# Remove all java TEST_ classes that were generated
-	@#
-	@for f in $(TEST_CLASS_DIR)/*; do \
-		rm -rf $$f; \
-	done; 
