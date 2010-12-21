@@ -102,10 +102,12 @@ sub runClass
       {
          for my $ls (@{$args{l_count}})
          {
-            my $file  = abs_path("test_c${cs}_i${is}_l${ls}");
+            my $name = "test_c${cs}_i${is}_l${ls}";
+            my $file  = abs_path("$name");
 
             run_back 
             {
+               diag ("Running '$name'");
                system ("java -cp $test_class_dir Test_RandData ".
                   "$file $cs $is $ls 1> $file.out 2> $file.err");
             };

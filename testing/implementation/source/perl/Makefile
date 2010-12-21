@@ -20,8 +20,11 @@ base:
 	@javac -classpath $(CLASS_DIR) -d $(EXEC_DIR) $(TEST_CLASS_DIR)/*.java 1> test.out 2>&1
 
 test:	base
-	@perl -I $(PLIB) Harness.pm $(CLASS_DIR) $(TEST_CLASS_DIR) $(EXEC_DIR) | \
+	@perl -I $(PLIB) Harness.pm $(CLASS_DIR) $(TEST_CLASS_DIR) $(EXEC_DIR) 2>&1 | \
 		tee $(HARNESS_OUTPUT)
+
+background_test:	
+	@screen -S scheduler_test -d -m make test
 
 clean:
 	@#
