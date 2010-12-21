@@ -27,7 +27,7 @@ clean:
 	@#
 	@# Remove any/all compiler and other output files
 	@#
-	@find ./ -name "*\.out" -o -name "*\.err"
+	@find ./ -name "*.out" -delete -o -name "*.err" -delete -o -name "test_*" -delete
 	@#
 	@# Remove the contents of the "executable" directory, where all built class
 	@# files are stored. Only the sql directory should be preserved, as its

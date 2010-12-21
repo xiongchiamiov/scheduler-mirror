@@ -59,7 +59,6 @@ sub check
    my $r = 1;
 
    die "Need filename\n" unless $fn;
-   
    my ($is, $s) = &gatherData($fn);
 
    $r &= &verifyGoodBookings($s);
@@ -134,7 +133,6 @@ sub verifyPreferenceRespect
             $r &= ok(&checkOverDays($tp_test, $ds, $s, $e), 
                "Acceptable preference for '".$i->getId()."' to teach on ".
                "@{$ds} from ".$s->getId()." to ".$e->getId());
-            
             #
             # Cheking course prefs won't require a closure, as I can make a 
             # quick call to the Instructor to verify that his preference for a 

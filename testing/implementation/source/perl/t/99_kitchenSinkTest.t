@@ -63,9 +63,9 @@ diag (); # Give us a clean line to start on
 #
 &verifyOutput(&runClass
 (
-   c_count => [1],#[grep { ($_ % 10) == 0 } 1..100],
-   i_count => [1],#[grep { ($_ % 100) == 0 } 1..1000],
-   l_count => [1],#[grep { ($_ % 100) == 0 } 1..1000],
+   c_count => [grep { ($_ % 10) == 0 } 1..100],
+   i_count => [grep { ($_ % 100) == 0 } 1..1000],
+   l_count => [grep { ($_ % 100) == 0 } 1..1000],
 ));
 
 done_testing();
@@ -90,7 +90,7 @@ chdir ($oldDir);
 #
 # Returns a reference to a list of RCGs
 #
-# genJavaClasses ==>
+# runClasses ==>
 sub runClass
 {
    my (%args) = @_;
@@ -140,7 +140,7 @@ sub verifyOutput
    {
       if (-e $file)
       {
-         ok(check($file, "$file passed")); 
+         ok(check($file), "$file passed");
       }
       else
       {
