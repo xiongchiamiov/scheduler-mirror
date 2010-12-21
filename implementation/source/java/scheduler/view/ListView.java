@@ -77,7 +77,7 @@ public class ListView {
                c.setBackground(Color.CYAN);
             } else if (c.getBackground() == Color.CYAN) {
                // If not shaded, match the table's background
-               c.setBackground(getbackground());
+               c.setBackground(getBackground());
             }
             return c;
          }

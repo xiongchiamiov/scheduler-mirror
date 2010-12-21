@@ -1,7 +1,6 @@
 package scheduler.generate;
 
 import scheduler.db.*;
-import scheduler.db.Time.InvalidInputException;
 import scheduler.db.instructordb.*;
 import scheduler.db.coursedb.*;
 import scheduler.db.locationdb.*;

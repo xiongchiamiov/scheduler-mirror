@@ -186,13 +186,6 @@ public class Time implements Comparable<Time>, Serializable
        }
     }
 
-    /**Invalid input exception thrown in the set methods.  */
-    public class InvalidInputException extends RuntimeException {
-         public InvalidInputException() {
-            super();
-         }
-    }
-
     /**
      * Tests if the time is equal
      * 

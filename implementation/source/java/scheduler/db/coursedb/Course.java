@@ -668,7 +668,7 @@ public class Course implements Serializable, Comparable<Course>
     */
    public void setType (String type)
    {
-      if (type != LEC || type != LAB)
+      if (type != LEC && type != LAB)
       {
          throw new InvalidInputException ();
       }
@@ -694,6 +694,40 @@ public class Course implements Serializable, Comparable<Course>
    public void setLab (Course lab)
    {
       this.labPairing = lab;
+   }
+
+   /**
+    * Sets the required equipment for this Course
+    *
+    * @param req The required equipment for this Course
+    */
+   public void setRequiredEquipment (RequiredEquipment req)
+   {
+      this.requiredEquipment = req;
+   }
+
+   /**
+    * Sets the DaysForClasses preference for this Course
+    *
+    * @param dfc the DaysForClasses preference for this Course
+    */
+   public void setDFC (DaysForClasses dfc)
+   {
+      if (this.dfc == null)
+      {
+         this.dfc = new Stack<DaysForClasses>();
+      }
+      this.dfc.push (dfc);
+   }
+
+   /**
+    * Sets the name for this course
+    *
+    * @param str The name to give this course
+    */
+   public void setName (String str)
+   {
+      this.courseName = str;
    }
    /*<==*/
 }
