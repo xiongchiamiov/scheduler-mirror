@@ -1,4 +1,4 @@
-package ClassMaker;
+package Legacy::ClassMaker;
 use strict;
 use warnings;
 use 5.010;
@@ -10,7 +10,7 @@ BEGIN
    @data = qw(mainClass files) 
 };
 use fields(@data);
-ClassMaker->mk_accessors(@data);
+Legacy::ClassMaker->mk_accessors(@data);
 
 sub accessor_name_for { "get\u$_[1]" }
 sub mutator_name_for  { "set\u$_[1]" }

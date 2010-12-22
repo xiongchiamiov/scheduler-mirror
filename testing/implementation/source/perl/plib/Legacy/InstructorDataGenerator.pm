@@ -1,4 +1,4 @@
-package InstructorDataGenerator;
+package Legacy::InstructorDataGenerator;
 use strict;
 use warnings;
 use 5.010;
@@ -13,7 +13,7 @@ our @EXPORT_OK = qw(gen);
 #################################
 # IMPORTS
 #################################
-use Course;
+use SchedulerMimics::Course;
 use Data::Dumper;
 use Scalar::Util qw(looks_like_number);
 

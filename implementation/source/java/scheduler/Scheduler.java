@@ -63,8 +63,7 @@ public class Scheduler implements Serializable
    /*<==*/
 
    /**
-    * Starts up the Scheduler at position 150x100. Tries to set the LAF to 
-    * something prettier. Initializes all databases. 
+    * Initializes all databases. 
     */
    public Scheduler ()
    {
@@ -95,6 +94,17 @@ public class Scheduler implements Serializable
    {
       schedulerUI = new SchedulerUI();
 
+      if(!System.getProperty("java.version").startsWith("1.6") && 
+         !System.getProperty("java.version").startsWith("1.7")) 
+       {
+         JOptionPane.showMessageDialog(schedulerUI,
+          "The Scheduler requires Java " +
+           "6 or higher to run. To download the latest version of Java, " +
+           "visit http://java.com/en/.",
+          "Java Runtime Environment out of date",
+          JOptionPane.ERROR_MESSAGE);
+         System.exit(1);
+      }
       try
       {
          /*
@@ -106,6 +116,7 @@ public class Scheduler implements Serializable
       {
          System.err.println ("Couldn't get the cool UI");
       }
+
       schedView = new View(this);
       schedView.initSettings();
 
@@ -118,11 +129,13 @@ public class Scheduler implements Serializable
     * Debug function
     *
     **/
-   public static void debug(String message) {
+   public static void debug(String message) 
+   {
       //Set to true if debugging
       boolean check = false;
 
-      if (check) {
+      if (check) 
+      {
          System.out.println (message);
       }
 
@@ -131,7 +144,8 @@ public class Scheduler implements Serializable
    /**
     * I don't know why this is here - Eric
     */
-   public MyView getView() {
+   public MyView getView() 
+   {
       return schedulerUI;
    }
 

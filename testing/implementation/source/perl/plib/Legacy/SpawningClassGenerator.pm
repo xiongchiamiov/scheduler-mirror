@@ -4,11 +4,11 @@
 # Will generate a class, using the 'ConvertToSpawn' package to    #
 # convert provided data files to a particular class.              #
 ###################################################################
-package SpawningClassGenerator;
+package Legacy::SpawningClassGenerator;
 use strict;
 use warnings;
 use 5.010;
-use base qw(ClassGenerator);
+use base qw(Legacy::ClassGenerator);
 
 sub convertFilesToClass
 {
@@ -30,11 +30,11 @@ sub convertFilesToClass
 # Will spawn the scheduler, populated with the data from the      #
 # files you give it                                               #
 ###################################################################
-package ConvertToSpawn;
+package Legacy::ConvertToSpawn;
 use strict;
 use warnings;
 use 5.010;
-use base qw(Converter);
+use base qw(Legacy::Converter);
 
 sub whatMainDoes
 {

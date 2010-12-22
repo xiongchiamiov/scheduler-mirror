@@ -1,4 +1,4 @@
-package Converter;
+package Legacy::Converter;
 use strict;
 use warnings;
 use 5.010;
@@ -8,9 +8,9 @@ use base qw(Exporter Class::Accessor);
 # IMPORTS
 #################################
 use Data::Dumper;
-use Course;
-use Instructor;
-use Location;
+use SchedulerMimics::Course;
+use SchedulerMimics::Instructor;
+use SchedulerMimics::Location;
 use File::Basename;
 use Getopt::Long;
 
@@ -31,7 +31,7 @@ BEGIN
    @otherData = qw(path cs is ls dfcs);
 }
 use fields (@data, @otherData);
-Converter->mk_accessors(@data, @otherData);
+Legacy::Converter->mk_accessors(@data, @otherData);
 
 sub accessor_name_for { "get\u$_[1]" }
 sub mutator_name_for  { "set\u$_[1]" }

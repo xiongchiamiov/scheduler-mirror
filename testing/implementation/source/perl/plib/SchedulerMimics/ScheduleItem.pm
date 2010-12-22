@@ -1,4 +1,4 @@
-package ScheduleItem;
+package SchedulerMimics::ScheduleItem;
 use strict;
 use warnings;
 use 5.010;
@@ -8,7 +8,7 @@ use base qw(Class::Accessor);
 # IMPORTS
 #################################
 use Data::Dumper;
-use Time;
+use SchedulerMimics::Time;
 
 #################################
 # FIELDS
@@ -17,7 +17,7 @@ my @data;
 BEGIN { @data = qw(id course instructor location s e days value) }
 use fields (@data);
 
-ScheduleItem->mk_accessors(@data);
+SchedulerMimics::ScheduleItem->mk_accessors(@data);
 sub accessor_name_for { "get\u$_[1]"; }
 sub mutator_name_for  { "set\u$_[1]"; }
 

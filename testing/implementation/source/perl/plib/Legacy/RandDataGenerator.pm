@@ -1,4 +1,4 @@
-Tpackage RandDataGenerator;
+package Legacy::RandDataGenerator;
 use strict;
 use warnings;
 use 5.010;
@@ -17,7 +17,7 @@ use fields (@data);
 use Data::Dumper;
 use Getopt::Long;
 use String::Random;
-use Time;
+use SchedulerMimics::Time;
 
 #################################
 # EXPORTS

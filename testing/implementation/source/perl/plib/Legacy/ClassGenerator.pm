@@ -1,4 +1,4 @@
-package ClassGenerator;
+package Legacy::ClassGenerator;
 use strict;
 use warnings;
 use 5.010;
@@ -18,14 +18,13 @@ use fields (@data, @other_data);
 
 sub accessor_name_for { "get\u$_[1]" }
 sub mutator_name_for  { "set\u$_[1]" }
-ClassGenerator->mk_accessors(@data, @other_data);
+Legacy::ClassGenerator->mk_accessors(@data, @other_data);
 
 ################################
 # IMPORTS
 #################################
-use ClassMaker;
-use Converter;
-use ConstraintChecker qw(check);
+use Legacy::ClassMaker;
+use Legacy::Converter;
 use Cwd qw(getcwd abs_path);
 use Data::Dumper;
 use Test::More;

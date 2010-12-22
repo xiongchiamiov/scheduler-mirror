@@ -1,4 +1,4 @@
-package Instructor;
+package SchedulerMimics::Instructor;
 use strict;
 use warnings;
 use 5.010;
@@ -8,7 +8,7 @@ use Data::Dumper;
 my @data;
 BEGIN { @data = qw (first last cPrefs tPrefs wtu id); }
 use fields (@data);
-Instructor->mk_accessors(@data);
+SchedulerMimics::Instructor->mk_accessors(@data);
 
 sub accessor_name_for { "get\u$_[1]" }
 sub mutator_name_for  { "set\u$_[1]" }

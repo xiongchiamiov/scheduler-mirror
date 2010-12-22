@@ -1,8 +1,8 @@
-package RandClassGenerator;
+package Legacy::RandClassGenerator;
 use strict;
 use warnings;
 use 5.010;
-use base qw(ClassGenerator);
+use base qw(Legacy::ClassGenerator);
 
 #################################
 # FIELDS
@@ -15,12 +15,12 @@ BEGIN
    @constructorData = (@data, "name", "jfile");
 }
 use fields (@data);
-RandClassGenerator->mk_accessors(@data);
+Legacy::RandClassGenerator->mk_accessors(@data);
 
 ################################
 # IMPORTS
 #################################
-use RandDataGenerator;
+use Legacy::RandDataGenerator;
 use Data::Dumper;
 
 ###################################################################

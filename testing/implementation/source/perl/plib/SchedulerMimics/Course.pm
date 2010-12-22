@@ -1,4 +1,4 @@
-package Course;
+package SchedulerMimics::Course;
 use strict;
 use warnings;
 use 5.010;
@@ -11,7 +11,7 @@ BEGIN
    @data = qw(id type sections dfc wtu scu lab hpw prefix) 
 }
 use fields @data;
-Course->mk_accessors(@data);
+SchedulerMimics::Course->mk_accessors(@data);
 
 sub accessor_name_for { "get\u$_[1]"; }
 sub mutator_name_for  { "set\u$_[1]"; }

@@ -1,4 +1,4 @@
-package Time;
+package SchedulerMimics::Time;
 use strict;
 use warnings;
 use 5.010;
@@ -16,7 +16,7 @@ my @data;
 BEGIN { @data = qw(h m) }
 use fields (@data);
 
-Time->mk_accessors(@data);
+SchedulerMimics::Time->mk_accessors(@data);
 sub accessor_name_for { "get\u$_[1]"; }
 sub mutator_name_for  { "set\u$_[1]"; }
 
