@@ -7,11 +7,11 @@ use Test::More; # How we'll run tests
 #################################
 # CONSTANTS
 #################################
-our $C_LIMIT = 10;
+our $C_LIMIT = 100;
 our $C_DIV   = 10;
-our $I_LIMIT = 100;
+our $I_LIMIT = 1000;
 our $I_DIV   = 100;
-our $L_LIMIT = 100;
+our $L_LIMIT = 1000;
 our $L_DIV   = 100;
 
 #################################
