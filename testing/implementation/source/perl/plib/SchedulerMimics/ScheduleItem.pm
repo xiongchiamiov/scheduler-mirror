@@ -42,8 +42,8 @@ sub new
    $self->{days} =~ s/([A-Z]..)/$1 /g;
    $self->{days} = [split(/ /, $self->{days})];
 
-   $self->{s} = Time->new($self->{s});
-   $self->{e} = Time->new($self->{e});
+   $self->{s} = SchedulerMimics::Time->new($self->{s});
+   $self->{e} = SchedulerMimics::Time->new($self->{e});
 
    $self;
 }

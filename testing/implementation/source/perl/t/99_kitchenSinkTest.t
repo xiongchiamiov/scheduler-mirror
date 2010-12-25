@@ -5,6 +5,16 @@ use 5.010;
 use Test::More; # How we'll run tests
 
 #################################
+# CONSTANTS
+#################################
+our $C_LIMIT = 10;
+our $C_DIV   = 10;
+our $I_LIMIT = 100;
+our $I_DIV   = 100;
+our $L_LIMIT = 100;
+our $L_DIV   = 100;
+
+#################################
 # IMPORTS
 #################################
 #
@@ -35,14 +45,6 @@ chdir ($Bin);
 #################################
 # GLOBALS
 #################################
-
-# 
-# By the end of testing, will contain all RCG's which failed at some point
-# during testing. Their "getError" method will return a message explaining
-# why they failed
-#
-my @failures;
-
 #
 # Receive our cmd line args
 #
@@ -63,9 +65,9 @@ diag (); # Give us a clean line to start on
 #
 &verifyOutput(&runClass
 (
-   c_count => [grep { ($_ % 10) == 0 } 1..100],
-   i_count => [grep { ($_ % 100) == 0 } 1..1000],
-   l_count => [grep { ($_ % 100) == 0 } 1..1000],
+   c_count => [grep { ($_ % $C_DIV) == 0 } 1..$C_LIMIT],
+   i_count => [grep { ($_ % $I_DIV) == 0 } 1..$I_LIMIT],
+   l_count => [grep { ($_ % $L_DIV) == 0 } 1..$L_LIMIT],
 ));
 
 done_testing();

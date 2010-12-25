@@ -5,12 +5,9 @@ use 5.010;
 use base qw(TAP::Harness);
 use lib "./plib";
 
-use ClassMaker;
-
 use Data::Dumper;
 use Cwd qw(abs_path);
 use File::Find qw(find);
-use Test::More tests => 1;
 
 #################################
 # RECEIVING ARGS FROM COMMAND LINE
@@ -30,8 +27,8 @@ my $harness = Harness->new(
 {
    lib => [qw(./ ./plib)],          # Libraries tests will have in @INC
    color => 1,                      # Color output
-#   failures => 1,                   # Only print failed tests
-   verbosity => 1,                  # Print everything
+   failures => 1,                   # Only print failed tests
+   #verbosity => 1,                  # Print everything
    #
    # Pass 1 arg(s) to each test via @ARGV: 
    #  - Absolute path to the top-level directory where java class files are
