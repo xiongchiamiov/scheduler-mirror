@@ -116,7 +116,7 @@ for (keys %uses)
    #
    # If '$line' is empty, a dangling ',' won't bother Perl
    #
-   print $fh "\$r &= use_ok(\"$module\", $line);\n";
+   print $fh "eval { \$r &= use_ok(\"$module\", $line);\n };";
 }
 
 print $fh "\nBAIL_OUT(\"Could not 'use' all required modules'\") if !\$r;";
