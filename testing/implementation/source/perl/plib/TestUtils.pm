@@ -19,7 +19,7 @@ TODO: HERE
 
 =head1 SYNOPSIS
 
- use TestUtils qw(createInstructors createScheduleItems)
+ use TestUtils qw(createInstructors createScheduleItems);
 
  open (my $fh, "someFile") or die $!;
  my ($data) = join("", <$fh>);

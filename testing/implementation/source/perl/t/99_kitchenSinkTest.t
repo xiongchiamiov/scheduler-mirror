@@ -2,17 +2,18 @@
 use strict;
 use warnings;
 use 5.010;
-use Test::More; # How we'll run tests
+use Test::More;       # How we'll run tests
+use Test::SharedFork; # Lets fork'd tests cooperate
 
 #################################
 # CONSTANTS
 #################################
-our $C_LIMIT = 100;
-our $C_DIV   = 10;
-our $I_LIMIT = 1000;
-our $I_DIV   = 100;
-our $L_LIMIT = 1000;
-our $L_DIV   = 100;
+our $C_LIMIT = 2;#100;
+our $C_DIV   = 1;#10;
+our $I_LIMIT = 2;#1000;
+our $I_DIV   = 1;#100;
+our $L_LIMIT = 2;#1000;
+our $L_DIV   = 1;#100;
 
 #################################
 # IMPORTS
@@ -57,11 +58,7 @@ my ($test_class_dir) = @ARGV;
 diag (); # Give us a clean line to start on
 
 #
-# Run the test class with different numerical arguments:
-#
-# - Courses go from 10 to 100 in increments of 10
-# - Instructors go from 100 to 1000 in increments of 1000
-# - Locations go from 100 to 1000 in increments of 1000
+# Run the test class with different numerical arguments
 #
 &verifyOutput(&runClass
 (
@@ -144,11 +141,16 @@ sub verifyOutput
    {
       if (-e $file)
       {
-         ok(check($file), "$file passed");
+         run_back
+         {
+            diag ("Checking file '$file'");
+            ok(check($file), "$file passed");
+         }
       }
       else
       {
          fail ("$file failed");
       }
    }
+   waitpid(-1, 0) while (running_now());
 }#<==

@@ -1,0 +1,21 @@
+###################################################################
+#                       READING DOCUMENTATION                     #
+###################################################################
+
+To read the documentation for a given module ("*.pm"), simply type
+'perldoc [path to module]'. Of course, you can always just open the file 
+with 'vim [path to module]' (why wouldn't you be using Vim?), but that's
+for those who really want to get nasty and start reading the inline comments.
+The POD documentation I've provided should be enough to get you started. 
+
+###################################################################
+#                          RUNNING TESTS                          #
+###################################################################
+
+To run the tests, simply type "make test". 
+
+If you're setup to run gobs and gobs of tests, type "make background_test". 
+This will branch off a terminal w/ 'screen' and run in the background. If done
+on a server, you can safely log off and allow the tests to continue running. To
+see a list of the screens running, type 'screen -ls'. To connect to the screen
+currently running the test, type 'screen -r scheduler_test'.

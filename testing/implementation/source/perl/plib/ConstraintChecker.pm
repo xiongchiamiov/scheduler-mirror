@@ -169,6 +169,7 @@ and then call your own testing functions elsewhere.
 
 =cut
 #<==
+# check ==>
 sub check
 {
    my ($fn) = @_;
@@ -181,7 +182,7 @@ sub check
    $r &= &verifyPreferenceRespect($s, $is);
 
    return $r;
-}
+}#<==
 
 # POD ==>
 =pod

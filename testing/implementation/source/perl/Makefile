@@ -8,10 +8,20 @@ PLIB=./plib
 HARNESS_OUTPUT="harness.out"
 
 #
+# Directories to search for modules. Those found will have their "use" 
+# statements compiled into the 00_libsTest.t file to make sure that a given
+# system provides the modules necessary for testing
+#
+TEST_ZERO_MODULE_DIRS = t \
+								plib \
+								plib/SchedulerMimics 
+
+#
 # Finds all the java files in the scheduler packaged directory (ignoring svn 
 # directories)
 #
 BASE_FILES=`find $(CLASS_DIR) -path "*svn*" -prune -o -name "*java" -path "*scheduler/*" -print`
+
 #
 # Compiles all base files (including the test classes)
 #
@@ -19,7 +29,10 @@ base:
 	@javac -classpath $(CLASS_DIR) -d $(EXEC_DIR) $(BASE_FILES) 1> base.out 2>&1
 	@javac -classpath $(CLASS_DIR) -d $(EXEC_DIR) $(TEST_CLASS_DIR)/*.java 1> test.out 2>&1
 
-test:	base
+libs_test:
+	perl buildLibsTest.pl $(TEST_ZERO_MODULE_DIRS)
+
+test:	base libs_test
 	@perl -I $(PLIB) Harness.pm $(CLASS_DIR) $(TEST_CLASS_DIR) $(EXEC_DIR) 2>&1 | \
 		tee $(HARNESS_OUTPUT)
 

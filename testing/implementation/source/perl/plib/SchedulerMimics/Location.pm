@@ -6,7 +6,7 @@ use base qw(Class::Accessor);
 
 my @data;
 BEGIN { @data = qw(type bldg room); }
-use fields(@data);
+use fields (@data);
 SchedulerMimics::Location->mk_accessors(@data);
 
 sub accessor_name_for { "get\u$_[1]" }
