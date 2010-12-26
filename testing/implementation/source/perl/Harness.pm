@@ -27,8 +27,8 @@ my $harness = Harness->new(
 {
    lib => [qw(./ ./plib)],          # Libraries tests will have in @INC
    color => 1,                      # Color output
-   #failures => 1,                   # Only print failed tests
-   verbosity => 1,                  # Print everything
+   failures => 1,                   # Only print failed tests
+   #verbosity => 1,                  # Print everything
    #
    # Pass 1 arg(s) to each test via @ARGV: 
    #  - Absolute path to the top-level directory where java class files are
@@ -39,4 +39,4 @@ my $harness = Harness->new(
 #
 # When ready for heavy testing, just do a "glob(t/*.t)"
 #
-$harness->runtests(glob("t/00*.t"));
+$harness->runtests(glob("t/*.t"));
