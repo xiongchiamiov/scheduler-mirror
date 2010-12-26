@@ -101,6 +101,7 @@ print $fh "use Test::More tests => ".scalar keys (%uses).";\n\n";
 #
 # Separate the module from any arguments which followed it
 #
+print $fh "my \$r = 1;\n";
 for (keys %uses)
 {
    my ($use, $module, $line) = split(/ /, $_, 3);
@@ -115,5 +116,7 @@ for (keys %uses)
    #
    # If '$line' is empty, a dangling ',' won't bother Perl
    #
-   print $fh "use_ok(\"$module\", $line);\n";
+   print $fh "\$r &= use_ok(\"$module\", $line);\n";
 }
+
+print $fh "\nBAIL_OUT(\"Could not 'use' all required modules'\") if !\$r;";
