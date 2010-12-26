@@ -8,12 +8,12 @@ use Test::SharedFork; # Lets fork'd tests cooperate
 #################################
 # CONSTANTS
 #################################
-our $C_LIMIT = 2;#100;
-our $C_DIV   = 1;#10;
-our $I_LIMIT = 2;#1000;
-our $I_DIV   = 1;#100;
-our $L_LIMIT = 2;#1000;
-our $L_DIV   = 1;#100;
+our $C_LIMIT = 100;
+our $C_DIV   = 10;
+our $I_LIMIT = 1000;
+our $I_DIV   = 100;
+our $L_LIMIT = 1000;
+our $L_DIV   = 100;
 
 #################################
 # IMPORTS
@@ -55,7 +55,7 @@ my ($test_class_dir) = @ARGV;
 #                             TESTING                             #
 ###################################################################
 
-diag (); # Give us a clean line to start on
+note (); # Give us a clean line to start on
 
 #
 # Run the test class with different numerical arguments
@@ -106,7 +106,7 @@ sub runClass
 
             run_back 
             {
-               diag ("Running '$name'");
+               note ("Running '$name'");
                system ("java -cp $test_class_dir Test_RandData ".
                   "$file $cs $is $ls 1> $file.out 2> $file.err");
             };
@@ -143,7 +143,7 @@ sub verifyOutput
       {
          run_back
          {
-            diag ("Checking file '$file'");
+            note ("Checking file '$file'");
             ok(check($file), "$file passed");
          }
       }
