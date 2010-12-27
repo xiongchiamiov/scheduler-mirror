@@ -9,11 +9,11 @@ use Test::SharedFork; # Lets fork'd tests cooperate
 # CONSTANTS
 #################################
 our $C_LIMIT = 100;
-our $C_DIV   = 10;
+our $C_DIV   = 100;
 our $I_LIMIT = 1000;
-our $I_DIV   = 100;
+our $I_DIV   = 1000;
 our $L_LIMIT = 1000;
-our $L_DIV   = 100;
+our $L_DIV   = 1000;
 
 #################################
 # IMPORTS
