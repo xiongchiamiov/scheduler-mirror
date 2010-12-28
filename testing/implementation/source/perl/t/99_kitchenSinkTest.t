@@ -3,17 +3,16 @@ use strict;
 use warnings;
 use 5.010;
 use Test::More;       # How we'll run tests
-use Test::SharedFork; # Lets fork'd tests cooperate
 
 #################################
 # CONSTANTS
 #################################
-our $C_LIMIT = 100;
-our $C_DIV   = 100;
-our $I_LIMIT = 1000;
-our $I_DIV   = 1000;
-our $L_LIMIT = 1000;
-our $L_DIV   = 1000;
+our $C_LIMIT = 3;
+our $C_DIV   = 1;
+our $I_LIMIT = 3;
+our $I_DIV   = 1;
+our $L_LIMIT = 3;
+our $L_DIV   = 1;
 
 #################################
 # IMPORTS
@@ -21,14 +20,15 @@ our $L_DIV   = 1000;
 #
 # Before we begin testing, get the number of CPUs we have to work with
 #
-my $cpu;
+my $CPUS;
 BEGIN
 {
    use Linux::Cpuinfo;
    $cpu = Linux::Cpuinfo->new();
+   $CPUS = $cpu->num_cpus();
 }
 use Proc::Queue qw(run_back running_now waitpids), 
-                size => $cpu->num_cpus();
+                size => $CPUS;
 
 use ConstraintChecker qw(check);
 use Cwd qw(getcwd abs_path);
@@ -55,7 +55,7 @@ my ($test_class_dir) = @ARGV;
 #                             TESTING                             #
 ###################################################################
 
-note (); # Give us a clean line to start on
+diag (); # Give us a clean line to start on
 
 #
 # Run the test class with different numerical arguments
@@ -106,7 +106,7 @@ sub runClass
 
             run_back 
             {
-               note ("Running '$name'");
+               diag ("Running '$name'");
                system ("java -cp $test_class_dir Test_RandData ".
                   "$file $cs $is $ls 1> $file.out 2> $file.err");
             };
@@ -135,22 +135,33 @@ sub runClass
 #
 sub verifyOutput
 {
+   use Thread::Pool;
+
    my ($files) = @_;
+
+   my $pool = Thread::Pool->new(
+   {
+      optimize => "cpu",
+      do => sub
+      {
+         diag ("Checking '$_[0]'");
+         ok(check($_[0]), "$_[0] passed");
+      },
+      workers => $CPUS,
+      minjobs => $CPUS, # Always have jobs for our workers
+   });
 
    for my $file (@{$files})
    {
       if (-e $file)
       {
-         run_back
-         {
-            note ("Checking file '$file'");
-            ok(check($file), "$file passed");
-         }
+         $pool->job($file);
       }
       else
       {
          fail ("$file failed");
       }
    }
-   waitpid(-1, 0) while (running_now());
+
+   $pool->shutdown(); # Isn't called in DESTROY, though docs say otherwise
 }#<==
