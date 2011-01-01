@@ -2,16 +2,17 @@
 use strict;
 use warnings;
 use 5.010;
+use threads;
 use Test::More;       # How we'll run tests
 
 #################################
 # CONSTANTS
 #################################
-our $C_LIMIT = 3;
+our $C_LIMIT = 2;
 our $C_DIV   = 1;
-our $I_LIMIT = 3;
+our $I_LIMIT = 2;
 our $I_DIV   = 1;
-our $L_LIMIT = 3;
+our $L_LIMIT = 2;
 our $L_DIV   = 1;
 
 #################################
@@ -24,16 +25,14 @@ my $CPUS;
 BEGIN
 {
    use Linux::Cpuinfo;
-   $cpu = Linux::Cpuinfo->new();
-   $CPUS = $cpu->num_cpus();
+   $CPUS = Linux::Cpuinfo->new()->num_cpus();
 }
-use Proc::Queue qw(run_back running_now waitpids), 
-                size => $CPUS;
 
 use ConstraintChecker qw(check);
 use Cwd qw(getcwd abs_path);
 use Data::Dumper;
 use FindBin qw($Bin);
+use Thread::Pool;       # Makes it easy to multi-thread execution
 
 #################################
 # SET DIRECTORY TO THIS ONE
@@ -69,31 +68,46 @@ diag (); # Give us a clean line to start on
 
 done_testing();
 
-chdir ($oldDir);
-
 ###################################################################
 #                           FUNCTIONS                             #
 ###################################################################
 
 #
-# Generates all the java files. We'll fork off children to do the work in 
+# Generates all the java files. We'll make threads to do the work in 
 # parallel. Since this is simply the generation step, the work will be nearly
-# instantaneous ('cause Perl's fast). But, in keeping with the other portion of
-# this test which uses children, I figured spawning processes couldn't hurt us.
 #
-# $_[0] = Hash of values to limit how many RCG's are created:
+# $_[0] = Hash of values to limit how courses, instructors, and locations are
+#         used
 #
-#   c_limit => # of courses
-#   i_limit => # of instructors
-#   l_limit => # of locations
-#
-# Returns a reference to a list of RCGs
+# Returns a reference to a list of test names (which are also the names of the
+# files to which schedule data is dumped in this directory).
 #
 # runClasses ==>
 sub runClass
 {
    my (%args) = @_;
    my (@r);
+
+   #
+   # Workers will operate based on how many courses, instructors, and locations
+   # you wish them to generate.
+   #
+   my $pool = Thread::Pool->new(
+   {
+      optimize => "cpu",
+      do => sub
+      {
+         my ($cs, $is, $ls, $name) = @_;
+         my $file  = abs_path("$name");
+
+         diag ("Running '$name'");
+         system ("java -cp $test_class_dir Test_RandData ".
+            "$file $cs $is $ls 1> $file.out 2> $file.err");
+      },
+      workers => $CPUS,
+      minjobs => $CPUS, # Always have jobs available for workers
+   });
+
 
    for my $cs (@{$args{c_count}})
    {
@@ -102,23 +116,11 @@ sub runClass
          for my $ls (@{$args{l_count}})
          {
             my $name = "test_c${cs}_i${is}_l${ls}";
-            my $file  = abs_path("$name");
-
-            run_back 
-            {
-               diag ("Running '$name'");
-               system ("java -cp $test_class_dir Test_RandData ".
-                  "$file $cs $is $ls 1> $file.out 2> $file.err");
-            };
-            push (@r, $file);
+            $pool->job($cs, $is, $ls, $name);
+            push (@r, $name);
          }
       }
    }
-
-   #
-   # Knock-off any/all straggling children
-   #
-   waitpid (-1, 0) while (running_now());
 
    return \@r;
 }#<==
@@ -135,8 +137,6 @@ sub runClass
 #
 sub verifyOutput
 {
-   use Thread::Pool;
-
    my ($files) = @_;
 
    my $pool = Thread::Pool->new(
@@ -153,6 +153,9 @@ sub verifyOutput
 
    for my $file (@{$files})
    {
+      #
+      # If the dumped file does not exist, something bad happened
+      #
       if (-e $file)
       {
          $pool->job($file);
@@ -162,6 +165,5 @@ sub verifyOutput
          fail ("$file failed");
       }
    }
-
-   $pool->shutdown(); # Isn't called in DESTROY, though docs say otherwise
 }#<==
+

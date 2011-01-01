@@ -32,7 +32,7 @@ base:
 libs_test:
 	perl buildLibsTest.pl $(TEST_ZERO_MODULE_DIRS)
 
-test:	base libs_test
+test:	base 
 	@perl -I $(PLIB) Harness.pm $(CLASS_DIR) $(TEST_CLASS_DIR) $(EXEC_DIR) 2>&1 | \
 		tee $(HARNESS_OUTPUT)
 
