@@ -18,31 +18,22 @@ import java.util.Vector;
 /**
  * Designed to run the Scheduler's generate method with a random set of data,
  * where "random" is determined by the algorithm with in the java.util.Random
- * class. 
- *
- * Takes 4 arguments, in order:
- * <ul>
- *    <li>Name of file to dump. Generated schedules will output data necessary
- *        to verify their integrity.</li>
- *    <li>Number of courses to generate.</li>
- *    <li>Number of instructors to generate.</li>
- *    <li>Number of locations to generate.</li>
- * </ul>
- *
- * Providing a "0" for any of the latter 3 options will throw an error, as 
- * there's really no point in testing these cases. (At least, the constraint
- * verification done in Perl thus far only considers generated schedules that 
- * work out well. It doesn't consider things TBA's or STAFF instructors).
+ * class. Generated schedules will then dump their contents to a file, which
+ * will be used later by Perl to verify the schedules' constraints. 
  *
  * @author Eric Liebowitz
  * @version 19dec10
  */
 public class Test_RandData
 {
-   /*
+   /**
     * Seed for predictable, random results
     */
+
    private static final int RAND_SEED = 42;
+   /**
+    * Global random [X] generator, seeded with RAND_SEED.
+    */
    private static final Random rand = new Random(RAND_SEED);
 
    /**
@@ -52,22 +43,22 @@ public class Test_RandData
    private static final int C_LIMIT = 899;
 
    /**
-    * The default office generated instructors are given.
+    * The default office that generated instructors are given.
     */
    private static final Location OFFICE = new Location (0, 00);
 
    /**
-    * Default occupancy maximum for generated locations
+    * Default occupancy maximum for generated locations.
     */
    private static final int MAX_OCCUPANCE = 35;
 
    /**
-    * Exclusive location bldg number maximum
+    * Location bldg number maximum (exclusive).
     */
    private static final int BLDG_LIMIT = 100;
 
    /**
-    * Exclusive location room number maximum
+    * Location room number maximum (exclusive).
     */
    private static final int ROOM_LIMIT = 1000;
 
@@ -87,6 +78,28 @@ public class Test_RandData
          new int[] { Week.MON, Week.TUE, Week.WED, Week.THU, Week.FRI }),
    };
 
+   /**
+    * Runs the Scheduler, populating it with data, generating a schedule, and 
+    * outputting the results to a file. Takes 4 arguments from the command line,
+    * in order:
+    *
+    * <ul>
+    *    <li>Name of file to dump. Generated schedules will output data necessary
+    *        to verify their integrity.</li>
+    *    <li>Number of courses to generate.</li>
+    *    <li>Number of instructors to generate.</li>
+    *    <li>Number of locations to generate.</li>
+    * </ul>
+    *
+    * Providing a "0" for any of the latter 3 options will throw an error, as 
+    * there's really no point in testing these cases. (At least, the constraint
+    * verification done in Perl thus far only considers generated schedules that 
+    * work out well. It doesn't consider things TBA's or STAFF instructors).
+    *
+    * @param args The command line arguments. 
+    *
+    * @see scheduler.Scheduler#dumpAsPerlText(PrintStream) 
+    */
    public static void main (String[] args)
    {
       /*
@@ -251,7 +264,7 @@ public class Test_RandData
     * @return A course w/ data generated which conforms to the rules specified 
     *         in the makeRandCourses method. 
     *
-    * @see makeRandCourses
+    * @see #makeRandCourses(int)
     */
    private static Course makeCourse (int id, String type, int sections) /*==>*/
    {
