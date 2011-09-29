@@ -1,4 +1,4 @@
-package scheduler.generate;
+package scheduler.db.coursedb;
 
 
 /**

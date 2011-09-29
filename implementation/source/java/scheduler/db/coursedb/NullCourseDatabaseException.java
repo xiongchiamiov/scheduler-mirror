@@ -1,4 +1,4 @@
-package scheduler.generate;
+package scheduler.db.coursedb;
 
 /**
  * Exception to be thrown when a null course database is passed to any
