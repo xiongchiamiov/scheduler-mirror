@@ -1,7 +1,6 @@
 package edu.calpoly.csc.scheduler.view.desktop.menu;
 
 import scheduler.db.admin.admin_ui.*;
-import scheduler.db.preferencesdb.preferences_ui.*;
 
 import javax.swing.*;
 
