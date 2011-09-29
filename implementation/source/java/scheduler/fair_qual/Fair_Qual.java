@@ -3,11 +3,17 @@ package scheduler.fair_qual;
 
 import java.util.*;
 import java.io.*;
-import java.io.Serializable;
+
+import edu.calpoly.csc.scheduler.Scheduler;
+import edu.calpoly.csc.scheduler.model.db.Time;
+import edu.calpoly.csc.scheduler.model.db.cdb.Course;
+import edu.calpoly.csc.scheduler.model.db.idb.CoursePreference;
+import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
+import edu.calpoly.csc.scheduler.model.schedule.Schedule;
+import edu.calpoly.csc.scheduler.model.schedule.ScheduleItem;
 
 import scheduler.generate.*;
 import scheduler.*;
-import scheduler.db.Time;
 import scheduler.db.instructordb.*;
 import scheduler.db.coursedb.*;
 import scheduler.db.locationdb.*;

@@ -14,10 +14,15 @@ package scheduler.db.admin.admin_ui;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.table.*;
+
+import edu.calpoly.csc.scheduler.Scheduler;
+import edu.calpoly.csc.scheduler.model.db.Time;
+import edu.calpoly.csc.scheduler.model.db.ldb.Location;
+import edu.calpoly.csc.scheduler.model.schedule.DayAvail;
+import edu.calpoly.csc.scheduler.view.desktop.MyView;
 import scheduler.*;
 import scheduler.db.*;
 import scheduler.db.locationdb.*;
-import scheduler.generate.DayAvail;
 /**
  *
  * @author jsoliman

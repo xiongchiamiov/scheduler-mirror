@@ -14,12 +14,18 @@ package scheduler.db.admin.admin_ui;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.table.*;
+
+import edu.calpoly.csc.scheduler.model.db.Time;
+import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
+import edu.calpoly.csc.scheduler.model.db.idb.TimePreference;
+import edu.calpoly.csc.scheduler.model.db.ldb.Location;
+import edu.calpoly.csc.scheduler.model.schedule.DayAvail;
+import edu.calpoly.csc.scheduler.model.schedule.Week;
+import edu.calpoly.csc.scheduler.view.desktop.MyView;
 import scheduler.*;
 import scheduler.db.*;
 import scheduler.db.instructordb.*;
 import scheduler.db.locationdb.*;
-import scheduler.generate.DayAvail;
-import scheduler.generate.Week;
 /**
  *
  * @author jsoliman
@@ -169,7 +175,7 @@ public class InstructorTimePrefs extends MyView {
             int min = Integer.parseInt(mid);
             for (int j = 1; j < 8; j++) {
                 if ((Integer) row.get(j) != 0) {
-                    Time tm = new scheduler.db.Time(hr,min);
+                    Time tm = new edu.calpoly.csc.scheduler.model.db.Time(hr,min);
                     TimePreference tp = new TimePreference( tm,(Integer)row.get(j)  );
                     LinkedHashMap dayPreference = (LinkedHashMap)timePreferences.get(j-1);
                     dayPreference.put(tm, tp);

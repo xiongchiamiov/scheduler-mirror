@@ -10,6 +10,13 @@ import java.util.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import edu.calpoly.csc.scheduler.Scheduler;
+import edu.calpoly.csc.scheduler.model.db.pdb.DaysForClasses;
+import edu.calpoly.csc.scheduler.model.db.pdb.PreferencesDB;
+import edu.calpoly.csc.scheduler.model.db.pdb.SchedulePreference;
+import edu.calpoly.csc.scheduler.model.schedule.Week;
+import edu.calpoly.csc.scheduler.view.desktop.MyView;
+
 import scheduler.*;
 import scheduler.generate.*;
 

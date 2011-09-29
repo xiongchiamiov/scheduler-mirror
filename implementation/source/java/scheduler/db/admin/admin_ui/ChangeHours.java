@@ -1,5 +1,8 @@
 package scheduler.db.admin.admin_ui;
 
+import edu.calpoly.csc.scheduler.Scheduler;
+import edu.calpoly.csc.scheduler.model.db.Time;
+import edu.calpoly.csc.scheduler.view.desktop.MyView;
 import scheduler.db.*;
 import scheduler.*;
 

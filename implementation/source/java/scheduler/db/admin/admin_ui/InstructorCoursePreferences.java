@@ -3,15 +3,16 @@ package scheduler.db.admin.admin_ui;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.table.*;
+
+import edu.calpoly.csc.scheduler.Scheduler;
+import edu.calpoly.csc.scheduler.model.db.cdb.Course;
+import edu.calpoly.csc.scheduler.model.db.cdb.CourseDB;
+import edu.calpoly.csc.scheduler.model.db.idb.CoursePreference;
+import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
+import edu.calpoly.csc.scheduler.model.db.idb.InstructorDB;
+import edu.calpoly.csc.scheduler.view.desktop.MyView;
 import scheduler.*;
 import scheduler.db.instructordb.*;
-import scheduler.db.coursedb.CourseDB;
-import scheduler.db.coursedb.Course;
-/*
- * SectionsPerCourse.java
- *
- * Created on Jan 25, 2010, 2:17:13 AM
- */
 
 /**
  * The class for the sections per course dialog.

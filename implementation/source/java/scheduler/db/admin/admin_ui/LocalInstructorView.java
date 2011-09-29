@@ -16,6 +16,12 @@ import scheduler.db.instructordb.*;
 import scheduler.*;
 import scheduler.menu.schedule.*;
 import javax.swing.*;
+
+import edu.calpoly.csc.scheduler.Scheduler;
+import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
+import edu.calpoly.csc.scheduler.model.db.idb.InstructorDB;
+import edu.calpoly.csc.scheduler.view.desktop.MyView;
+
 import java.util.*;
 
 /**

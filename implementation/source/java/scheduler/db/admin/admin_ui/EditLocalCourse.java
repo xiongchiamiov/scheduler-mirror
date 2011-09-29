@@ -2,9 +2,15 @@ package scheduler.db.admin.admin_ui;
 
 import java.util.*;
 import javax.swing.*;
+
+import edu.calpoly.csc.scheduler.Scheduler;
+import edu.calpoly.csc.scheduler.model.db.cdb.Course;
+import edu.calpoly.csc.scheduler.model.db.cdb.CourseDB;
+import edu.calpoly.csc.scheduler.model.db.cdb.RequiredEquipment;
+import edu.calpoly.csc.scheduler.model.db.pdb.DaysForClasses;
+import edu.calpoly.csc.scheduler.view.desktop.MyView;
 import scheduler.*;
 import scheduler.db.coursedb.*;
-import scheduler.db.preferencesdb.DaysForClasses;
 
 /**
  * The edit course dialog.

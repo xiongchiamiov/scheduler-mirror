@@ -2,14 +2,16 @@ package scheduler.db.preferencesdb.preferences_ui;
 
 import java.util.*;
 import javax.swing.*;
-import javax.swing.JOptionPane;
+
+import edu.calpoly.csc.scheduler.Scheduler;
+import edu.calpoly.csc.scheduler.model.db.pdb.Preferences;
+import edu.calpoly.csc.scheduler.model.db.pdb.PreferencesDB;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.lang.String;
 import scheduler.*;
 import scheduler.db.*;
-import scheduler.db.preferencesdb.PreferencesDB;
-import scheduler.db.preferencesdb.Preferences;
 
 /**
  * Preferences UI

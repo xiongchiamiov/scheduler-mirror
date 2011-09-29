@@ -4,6 +4,16 @@ package scheduler.db.admin.admin_ui;
 
 import javax.swing.*;
 import javax.swing.event.*;
+
+import edu.calpoly.csc.scheduler.Scheduler;
+import edu.calpoly.csc.scheduler.model.db.cdb.Course;
+import edu.calpoly.csc.scheduler.model.db.cdb.CourseDB;
+import edu.calpoly.csc.scheduler.model.db.pdb.DaysForClasses;
+import edu.calpoly.csc.scheduler.model.db.pdb.NoClassOverlap;
+import edu.calpoly.csc.scheduler.model.db.pdb.PreferencesDB;
+import edu.calpoly.csc.scheduler.model.db.pdb.PreferencesDB.PreferenceExistsException;
+import edu.calpoly.csc.scheduler.view.desktop.MyView;
+
 import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -13,7 +23,6 @@ import scheduler.generate.*;
 import scheduler.db.*;
 import scheduler.db.coursedb.*;
 import scheduler.db.preferencesdb.*;
-import scheduler.db.preferencesdb.PreferencesDB.PreferenceExistsException;
 
 public class OverlapTab extends MyView implements Observer {
 

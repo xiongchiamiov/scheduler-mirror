@@ -7,7 +7,13 @@ import scheduler.db.coursedb.*;
 import scheduler.menu.schedule.*;
 import javax.swing.*;
 import javax.swing.text.*;
-import scheduler.db.preferencesdb.DaysForClasses;
+
+import edu.calpoly.csc.scheduler.Scheduler;
+import edu.calpoly.csc.scheduler.model.db.cdb.Course;
+import edu.calpoly.csc.scheduler.model.db.cdb.CourseDB;
+import edu.calpoly.csc.scheduler.model.db.cdb.RequiredEquipment;
+import edu.calpoly.csc.scheduler.model.db.pdb.DaysForClasses;
+import edu.calpoly.csc.scheduler.view.desktop.MyView;
 
 /**
  * The class for the add course dialog.

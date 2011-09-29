@@ -10,6 +10,13 @@ import java.util.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import edu.calpoly.csc.scheduler.Scheduler;
+import edu.calpoly.csc.scheduler.model.db.pdb.DaysForClasses;
+import edu.calpoly.csc.scheduler.model.db.pdb.NoClassOverlap;
+import edu.calpoly.csc.scheduler.model.db.pdb.PreferencesDB;
+import edu.calpoly.csc.scheduler.model.db.pdb.PreferencesDB.PreferenceExistsException;
+import edu.calpoly.csc.scheduler.view.desktop.MyView;
+
 import scheduler.*;
 import scheduler.generate.*;
 
@@ -17,7 +24,6 @@ import scheduler.db.*;
 import scheduler.db.coursedb.*;
 import scheduler.db.admin.admin_ui.DayTab;
 import scheduler.db.preferencesdb.*;
-import scheduler.db.preferencesdb.PreferencesDB.PreferenceExistsException;
 /**
  *
  * @author alindt

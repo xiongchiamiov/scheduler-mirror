@@ -6,10 +6,12 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
+import edu.calpoly.csc.scheduler.model.db.Time;
+import edu.calpoly.csc.scheduler.model.schedule.Schedule;
 import scheduler.fair_qual.*;
 import scheduler.*;
 import scheduler.db.*;
-import scheduler.db.Time;
 import scheduler.db.instructordb.*;
 import scheduler.db.coursedb.*;
 import scheduler.db.locationdb.*;

@@ -4,10 +4,16 @@ import java.util.*;
 
 import javax.swing.*;
 import javax.swing.table.*;
+
+import edu.calpoly.csc.scheduler.Scheduler;
+import edu.calpoly.csc.scheduler.model.db.Time;
+import edu.calpoly.csc.scheduler.model.db.cdb.Course;
+import edu.calpoly.csc.scheduler.model.db.cdb.CourseDB;
+import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
+import edu.calpoly.csc.scheduler.model.db.idb.InstructorDB;
+import edu.calpoly.csc.scheduler.model.db.idb.TimePreference;
 import scheduler.*;
 import scheduler.db.instructordb.*;
-import scheduler.db.coursedb.CourseDB;
-import scheduler.db.coursedb.Course;
 import scheduler.db.*;
 /*
  * SectionsPerCourse.java

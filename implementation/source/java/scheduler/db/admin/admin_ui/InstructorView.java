@@ -4,11 +4,16 @@ import java.util.*;
 
 import javax.swing.*;
 
+import edu.calpoly.csc.scheduler.Scheduler;
+import edu.calpoly.csc.scheduler.model.db.cdb.Course;
+import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
+import edu.calpoly.csc.scheduler.model.db.idb.InstructorDB;
+import edu.calpoly.csc.scheduler.view.desktop.MyView;
+import edu.calpoly.csc.scheduler.view.desktop.menu.schedule.ScheduleMenu;
+
 import scheduler.*;
 import scheduler.db.*;
-import scheduler.db.coursedb.Course;
 import scheduler.db.instructordb.*;
-import scheduler.menu.schedule.ScheduleMenu;
 
 /**
  * The View of the course database class.
