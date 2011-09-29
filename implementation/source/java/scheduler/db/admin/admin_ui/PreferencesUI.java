@@ -23,7 +23,7 @@ import edu.calpoly.csc.scheduler.model.schedule.*;
 import scheduler.db.*;
 import edu.calpoly.csc.scheduler.model.db.cdb.*;
 import scheduler.db.admin.admin_ui.DayTab;
-import scheduler.db.preferencesdb.*;
+
 /**
  *
  * @author alindt

@@ -1,12 +1,10 @@
 package edu.calpoly.csc.scheduler;
 
-import scheduler.menu.*;
 
 import scheduler.db.*;
 import edu.calpoly.csc.scheduler.model.db.cdb.*;
 import edu.calpoly.csc.scheduler.model.db.idb.*;
 import edu.calpoly.csc.scheduler.model.db.ldb.*;
-import scheduler.db.preferencesdb.*;
 import scheduler.view.*;
 
 

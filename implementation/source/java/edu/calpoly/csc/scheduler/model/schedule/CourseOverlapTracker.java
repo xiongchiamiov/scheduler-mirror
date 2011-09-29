@@ -2,7 +2,6 @@ package edu.calpoly.csc.scheduler.model.schedule;
 
 import scheduler.db.*;
 import edu.calpoly.csc.scheduler.model.db.cdb.*;
-import scheduler.db.preferencesdb.*;
 
 import java.io.Serializable;
 import java.util.BitSet;

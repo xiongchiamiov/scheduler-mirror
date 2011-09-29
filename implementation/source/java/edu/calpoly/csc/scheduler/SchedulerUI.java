@@ -7,8 +7,6 @@ import edu.calpoly.csc.scheduler.view.desktop.menu.ScheduleMenuBar;
 
 import java.awt.*;
 
-import scheduler.menu.*;
-
 /**
  * Represents the GUI for the Scheduler. 
  *

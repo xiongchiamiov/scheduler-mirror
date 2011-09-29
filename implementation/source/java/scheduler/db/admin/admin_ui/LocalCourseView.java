@@ -21,7 +21,6 @@ import edu.calpoly.csc.scheduler.model.schedule.Week;
 import edu.calpoly.csc.scheduler.view.desktop.MyView;
 import scheduler.*;
 import scheduler.db.*;
-import scheduler.db.preferencesdb.*;
 import edu.calpoly.csc.scheduler.view.desktop.menu.schedule.*;
 
 /**

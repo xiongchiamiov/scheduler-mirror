@@ -4,8 +4,7 @@ import scheduler.db.*;
 import edu.calpoly.csc.scheduler.model.db.idb.*;
 import edu.calpoly.csc.scheduler.model.db.cdb.*;
 import edu.calpoly.csc.scheduler.model.db.ldb.*;
-import scheduler.db.preferencesdb.*;
-
+import edu.calpoly.csc.scheduler.model.db.pdb.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Collection;

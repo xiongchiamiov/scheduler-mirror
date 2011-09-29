@@ -19,7 +19,6 @@ import scheduler.*;
 import edu.calpoly.csc.scheduler.model.db.cdb.*;
 import edu.calpoly.csc.scheduler.model.db.idb.*;
 import edu.calpoly.csc.scheduler.model.db.ldb.*;
-import scheduler.db.preferencesdb.*;
 
 /**
  * Handles the opening of the Scheduler files.

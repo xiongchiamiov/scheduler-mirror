@@ -9,7 +9,6 @@ import edu.calpoly.csc.scheduler.model.db.cdb.Course;
 import edu.calpoly.csc.scheduler.model.db.pdb.NoClassOverlap;
 
 import edu.calpoly.csc.scheduler.model.db.cdb.*;
-import scheduler.db.preferencesdb.*;
 
 public class CourseWeekAvail extends GenWeekAvail<Course, CourseDayAvail> 
                              implements Serializable
