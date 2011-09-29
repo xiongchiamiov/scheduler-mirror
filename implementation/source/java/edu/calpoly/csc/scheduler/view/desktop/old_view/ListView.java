@@ -1,6 +1,6 @@
 package edu.calpoly.csc.scheduler.view.desktop.old_view;
 
-import scheduler.db.coursedb.*;
+import edu.calpoly.csc.scheduler.model.db.cdb.*;
 
 import javax.swing.*;
 import javax.swing.table.*;

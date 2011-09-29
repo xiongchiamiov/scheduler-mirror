@@ -5,7 +5,7 @@ import java.util.*;
 
 import edu.calpoly.csc.scheduler.Scheduler;
 
-import scheduler.db.locationdb.*;
+import edu.calpoly.csc.scheduler.model.db.ldb.*;
 
 /****
  *

@@ -10,7 +10,7 @@ import edu.calpoly.csc.scheduler.model.db.cdb.RequiredEquipment;
 import edu.calpoly.csc.scheduler.model.db.pdb.DaysForClasses;
 import edu.calpoly.csc.scheduler.view.desktop.MyView;
 import scheduler.*;
-import scheduler.db.coursedb.*;
+import edu.calpoly.csc.scheduler.model.db.cdb.*;
 
 /**
  * The edit course dialog.

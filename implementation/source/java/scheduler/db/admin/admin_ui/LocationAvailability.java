@@ -22,7 +22,7 @@ import edu.calpoly.csc.scheduler.model.schedule.DayAvail;
 import edu.calpoly.csc.scheduler.view.desktop.MyView;
 import scheduler.*;
 import scheduler.db.*;
-import scheduler.db.locationdb.*;
+import edu.calpoly.csc.scheduler.model.db.ldb.*;
 /**
  *
  * @author jsoliman

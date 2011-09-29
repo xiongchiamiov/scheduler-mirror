@@ -24,8 +24,8 @@ import edu.calpoly.csc.scheduler.model.schedule.Week;
 import edu.calpoly.csc.scheduler.view.desktop.MyView;
 import scheduler.*;
 import scheduler.db.*;
-import scheduler.db.instructordb.*;
-import scheduler.db.locationdb.*;
+import edu.calpoly.csc.scheduler.model.db.idb.*;
+import edu.calpoly.csc.scheduler.model.db.ldb.*;
 /**
  *
  * @author jsoliman

@@ -19,9 +19,9 @@ import java.awt.*;
 import java.awt.event.*;
 
 import scheduler.*;
-import scheduler.generate.*;
+import edu.calpoly.csc.scheduler.model.schedule.*;
 import scheduler.db.*;
-import scheduler.db.coursedb.*;
+import edu.calpoly.csc.scheduler.model.db.cdb.*;
 import scheduler.db.preferencesdb.*;
 
 public class OverlapTab extends MyView implements Observer {

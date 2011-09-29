@@ -9,7 +9,7 @@ import java.io.Serializable;
 
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
 
-import scheduler.db.coursedb.*;
+import edu.calpoly.csc.scheduler.model.db.cdb.*;
 
 /**
  * Represent the schedule preference which specifies which courses should not

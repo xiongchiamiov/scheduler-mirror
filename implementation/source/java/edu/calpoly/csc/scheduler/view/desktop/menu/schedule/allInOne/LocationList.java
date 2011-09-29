@@ -1,6 +1,6 @@
 package edu.calpoly.csc.scheduler.view.desktop.menu.schedule.allInOne;
 
-import scheduler.db.locationdb.*;
+import edu.calpoly.csc.scheduler.model.db.ldb.*;
 
 import java.util.Vector;
 import javax.swing.*;

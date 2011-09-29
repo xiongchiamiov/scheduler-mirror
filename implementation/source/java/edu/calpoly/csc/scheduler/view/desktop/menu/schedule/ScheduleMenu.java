@@ -3,8 +3,8 @@ package edu.calpoly.csc.scheduler.view.desktop.menu.schedule;
 import javax.swing.*;
 
 import edu.calpoly.csc.scheduler.Scheduler;
-import edu.calpoly.csc.scheduler.view.desktop.menu.schedule.allInOne.AllInOne;
-import edu.calpoly.csc.scheduler.view.desktop.menu.schedule.lockItems.LockItems;
+import edu.calpoly.csc.scheduler.view.desktop.menu.schedule.allInOne.*;
+import edu.calpoly.csc.scheduler.view.desktop.menu.schedule.lockItems.*;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -12,8 +12,6 @@ import java.util.Vector;
 
 import scheduler.*;
 import scheduler.db.admin.admin_ui.*;
-import scheduler.menu.schedule.allInOne.*;
-import scheduler.menu.schedule.lockItems.*;
 
 /**
  * Represents the GUI for the Scheudle drop-down in the topl-evel menu bar. This

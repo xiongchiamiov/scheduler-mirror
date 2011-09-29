@@ -11,7 +11,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 import scheduler.*;
-import scheduler.generate.*;
+import edu.calpoly.csc.scheduler.model.schedule.*;
 
 /**
  * Displays a table of all ScheduleItems in the current schedule (excluding any

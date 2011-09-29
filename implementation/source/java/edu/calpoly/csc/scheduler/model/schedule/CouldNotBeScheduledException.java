@@ -1,7 +1,7 @@
 package edu.calpoly.csc.scheduler.model.schedule;
 
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
-import scheduler.db.coursedb.*;
+import edu.calpoly.csc.scheduler.model.db.cdb.*;
 
 /**
  * Thrown when the Scheduler is unable to find a single day-time combination 

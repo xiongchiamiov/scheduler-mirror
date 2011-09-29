@@ -20,8 +20,8 @@ import edu.calpoly.csc.scheduler.model.db.ldb.LocationDB;
 import edu.calpoly.csc.scheduler.view.desktop.MyView;
 import scheduler.*;
 import scheduler.db.*;
-import scheduler.db.locationdb.*;
-import scheduler.menu.schedule.*;
+import edu.calpoly.csc.scheduler.model.db.ldb.*;
+import edu.calpoly.csc.scheduler.view.desktop.menu.schedule.*;
 
 /**
  *

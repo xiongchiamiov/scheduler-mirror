@@ -1,8 +1,7 @@
 package edu.calpoly.csc.scheduler.view.desktop.old_view;
 
 import scheduler.*;
-import scheduler.generate.*;
-import scheduler.view.view_ui.*;
+import edu.calpoly.csc.scheduler.model.schedule.*;
 import java.util.*;
 
 import edu.calpoly.csc.scheduler.Scheduler;

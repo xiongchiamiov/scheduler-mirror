@@ -12,7 +12,7 @@ import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
 import edu.calpoly.csc.scheduler.model.db.idb.InstructorDB;
 import edu.calpoly.csc.scheduler.view.desktop.MyView;
 import scheduler.*;
-import scheduler.db.instructordb.*;
+import edu.calpoly.csc.scheduler.model.db.idb.*;
 
 /**
  * The class for the sections per course dialog.

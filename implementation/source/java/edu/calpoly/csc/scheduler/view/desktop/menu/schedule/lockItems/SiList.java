@@ -1,7 +1,7 @@
 package edu.calpoly.csc.scheduler.view.desktop.menu.schedule.lockItems;
 
 import scheduler.*;
-import scheduler.generate.*;
+import edu.calpoly.csc.scheduler.model.schedule.*;
 
 import javax.swing.*;
 import javax.swing.event.*;

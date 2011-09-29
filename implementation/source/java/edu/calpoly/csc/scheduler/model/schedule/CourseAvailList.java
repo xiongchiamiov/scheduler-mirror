@@ -1,6 +1,6 @@
 package edu.calpoly.csc.scheduler.model.schedule;
 
-import scheduler.db.coursedb.*;
+import edu.calpoly.csc.scheduler.model.db.cdb.*;
 
 import java.util.Vector;
 import java.io.Serializable;

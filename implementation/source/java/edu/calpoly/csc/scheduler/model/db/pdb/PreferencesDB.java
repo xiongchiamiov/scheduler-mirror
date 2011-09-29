@@ -12,8 +12,8 @@ import edu.calpoly.csc.scheduler.model.db.SQLDB;
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
 import edu.calpoly.csc.scheduler.model.schedule.Week;
 import scheduler.db.*;
-import scheduler.db.coursedb.*;
-import scheduler.generate.*;
+import edu.calpoly.csc.scheduler.model.db.cdb.*;
+import edu.calpoly.csc.scheduler.model.schedule.*;
 
 /**
  *

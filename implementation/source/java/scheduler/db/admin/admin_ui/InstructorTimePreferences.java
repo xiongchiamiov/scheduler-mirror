@@ -13,7 +13,7 @@ import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
 import edu.calpoly.csc.scheduler.model.db.idb.InstructorDB;
 import edu.calpoly.csc.scheduler.model.db.idb.TimePreference;
 import scheduler.*;
-import scheduler.db.instructordb.*;
+import edu.calpoly.csc.scheduler.model.db.idb.*;
 import scheduler.db.*;
 /*
  * SectionsPerCourse.java

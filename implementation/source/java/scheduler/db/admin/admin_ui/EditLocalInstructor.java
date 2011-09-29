@@ -11,8 +11,8 @@
  */
 package scheduler.db.admin.admin_ui;
 
-import scheduler.db.instructordb.*;
-import scheduler.db.locationdb.*;
+import edu.calpoly.csc.scheduler.model.db.idb.*;
+import edu.calpoly.csc.scheduler.model.db.ldb.*;
 import scheduler.*;
 import javax.swing.*;
 

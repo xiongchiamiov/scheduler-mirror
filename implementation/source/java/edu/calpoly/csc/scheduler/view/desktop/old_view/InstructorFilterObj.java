@@ -1,7 +1,7 @@
 package edu.calpoly.csc.scheduler.view.desktop.old_view;
 
 import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
-import scheduler.db.instructordb.*;
+import edu.calpoly.csc.scheduler.model.db.idb.*;
 
 /****
  * InstructorFilterObj contains a string name represent the instructor's name

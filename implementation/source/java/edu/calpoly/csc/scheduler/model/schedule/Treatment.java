@@ -6,8 +6,8 @@ import java.util.Vector;
 import edu.calpoly.csc.scheduler.model.db.Time;
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
 import scheduler.db.*;
-import scheduler.db.instructordb.*;
-import scheduler.db.coursedb.*;
+import edu.calpoly.csc.scheduler.model.db.idb.*;
+import edu.calpoly.csc.scheduler.model.db.cdb.*;
 
 /**
  * Used as the object for a hash of how an instructor has been treated by the

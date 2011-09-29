@@ -3,7 +3,7 @@ package edu.calpoly.csc.scheduler.model.db.idb;
 import java.io.Serializable;
 
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
-import scheduler.db.coursedb.*;
+import edu.calpoly.csc.scheduler.model.db.cdb.*;
 
 /**
  * This class will house the preference an instructor has for a particular

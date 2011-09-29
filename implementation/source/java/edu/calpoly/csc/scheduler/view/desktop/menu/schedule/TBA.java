@@ -12,7 +12,7 @@ import java.util.Observer;
 import java.util.Vector;
 
 import scheduler.*;
-import scheduler.db.coursedb.*;
+import edu.calpoly.csc.scheduler.model.db.cdb.*;
 
 /**
  * Displays a list of all courses which are TBA. These courses will have 

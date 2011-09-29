@@ -137,7 +137,13 @@ private void addLocations ()/*==>*/
             public void actionPerformed(ActionEvent e) 
             {
                if (Scheduler.schedDB.isConnected()) {
-                  new scheduler.db.preferencesdb.preferences_ui.PreferencesUI().show(150, 150);
+                  /*
+                   * Removed as of 9-28-11
+                   * 
+                   * EL
+                   */
+                  //new scheduler.db.preferencesdb.preferences_ui.PreferencesUI().show(150, 150);
+                  System.err.println ("NO LONGER IMPLEMENTED");
                }
                else {
                   JOptionPane.showMessageDialog(Scheduler.schedulerUI,

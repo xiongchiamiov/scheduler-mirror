@@ -1,7 +1,7 @@
 package edu.calpoly.csc.scheduler.view.desktop.old_view;
 
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
-import scheduler.db.coursedb.*;
+import edu.calpoly.csc.scheduler.model.db.cdb.*;
 
 /****
  * Class CourseFilterObj contains a course object and a boolean value

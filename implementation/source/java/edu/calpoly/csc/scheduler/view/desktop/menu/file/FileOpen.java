@@ -16,9 +16,9 @@ import java.io.*;
 import java.util.Collection;
 
 import scheduler.*;
-import scheduler.db.coursedb.*;
-import scheduler.db.instructordb.*;
-import scheduler.db.locationdb.*;
+import edu.calpoly.csc.scheduler.model.db.cdb.*;
+import edu.calpoly.csc.scheduler.model.db.idb.*;
+import edu.calpoly.csc.scheduler.model.db.ldb.*;
 import scheduler.db.preferencesdb.*;
 
 /**

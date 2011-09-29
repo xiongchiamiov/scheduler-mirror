@@ -8,7 +8,7 @@ import edu.calpoly.csc.scheduler.model.db.cdb.RequiredEquipment;
 import edu.calpoly.csc.scheduler.model.schedule.Week;
 import edu.calpoly.csc.scheduler.model.schedule.WeekAvail;
 
-import scheduler.db.coursedb.*;
+import edu.calpoly.csc.scheduler.model.db.cdb.*;
 
 /**
  * This class contains the place and informaton about a location.

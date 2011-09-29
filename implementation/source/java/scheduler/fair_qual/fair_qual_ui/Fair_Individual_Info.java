@@ -12,10 +12,10 @@ import edu.calpoly.csc.scheduler.model.schedule.Schedule;
 import scheduler.fair_qual.*;
 import scheduler.*;
 import scheduler.db.*;
-import scheduler.db.instructordb.*;
-import scheduler.db.coursedb.*;
-import scheduler.db.locationdb.*;
-import scheduler.generate.*;
+import edu.calpoly.csc.scheduler.model.db.idb.*;
+import edu.calpoly.csc.scheduler.model.db.cdb.*;
+import edu.calpoly.csc.scheduler.model.db.ldb.*;
+import edu.calpoly.csc.scheduler.model.schedule.*;
 
 /***
  * Fair_Individual_Info is a popup window that

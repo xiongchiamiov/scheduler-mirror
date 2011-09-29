@@ -1,6 +1,6 @@
 package edu.calpoly.csc.scheduler.view.desktop.old_view;
 
-import scheduler.db.instructordb.*;
+import edu.calpoly.csc.scheduler.model.db.idb.*;
 
 import javax.swing.*;
 import javax.swing.event.CellEditorListener;

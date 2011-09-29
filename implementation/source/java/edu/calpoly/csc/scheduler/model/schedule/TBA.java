@@ -5,8 +5,8 @@ import java.io.Serializable;
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
 import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
 
-import scheduler.db.coursedb.*;
-import scheduler.db.instructordb.*;
+import edu.calpoly.csc.scheduler.model.db.cdb.*;
+import edu.calpoly.csc.scheduler.model.db.idb.*;
 
 public class TBA implements Serializable
 {

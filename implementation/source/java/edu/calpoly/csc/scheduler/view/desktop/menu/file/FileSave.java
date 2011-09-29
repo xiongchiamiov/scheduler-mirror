@@ -11,7 +11,7 @@ import java.awt.event.*;
 import java.io.*;
 
 import scheduler.*;
-import scheduler.db.instructordb.*;
+import edu.calpoly.csc.scheduler.model.db.idb.*;
 
 /**
  * Handles the saving of the Scheduler files.

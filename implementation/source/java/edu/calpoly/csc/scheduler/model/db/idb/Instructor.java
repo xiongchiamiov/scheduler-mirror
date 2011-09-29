@@ -19,10 +19,10 @@
 
 package edu.calpoly.csc.scheduler.model.db.idb;
 
-import scheduler.db.locationdb.*;
-import scheduler.db.coursedb.*;
+import edu.calpoly.csc.scheduler.model.db.ldb.*;
+import edu.calpoly.csc.scheduler.model.db.cdb.*;
 import scheduler.db.*;
-import scheduler.generate.*;
+import edu.calpoly.csc.scheduler.model.schedule.*;
 
 import java.util.Iterator;
 import java.util.ArrayList;

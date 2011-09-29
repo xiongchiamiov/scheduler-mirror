@@ -18,14 +18,14 @@ import java.awt.event.*;
 import java.util.*;
 
 import scheduler.*;
-import scheduler.generate.*;
+import edu.calpoly.csc.scheduler.model.schedule.*;
 import scheduler.db.*;
-import scheduler.db.instructordb.*;
-import scheduler.db.coursedb.*;
-import scheduler.db.locationdb.*;
+import edu.calpoly.csc.scheduler.model.db.idb.*;
+import edu.calpoly.csc.scheduler.model.db.cdb.*;
+import edu.calpoly.csc.scheduler.model.db.ldb.*;
 import scheduler.db.preferencesdb.*;
 import scheduler.fair_qual.*;
-import scheduler.menu.schedule.*;
+import edu.calpoly.csc.scheduler.view.desktop.menu.schedule.*;
 
 /**
  * Displays lists of each database to be used in schedule generation.

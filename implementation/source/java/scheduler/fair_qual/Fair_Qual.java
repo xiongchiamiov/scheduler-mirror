@@ -12,11 +12,11 @@ import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
 import edu.calpoly.csc.scheduler.model.schedule.Schedule;
 import edu.calpoly.csc.scheduler.model.schedule.ScheduleItem;
 
-import scheduler.generate.*;
+import edu.calpoly.csc.scheduler.model.schedule.*;
 import scheduler.*;
-import scheduler.db.instructordb.*;
-import scheduler.db.coursedb.*;
-import scheduler.db.locationdb.*;
+import edu.calpoly.csc.scheduler.model.db.idb.*;
+import edu.calpoly.csc.scheduler.model.db.cdb.*;
+import edu.calpoly.csc.scheduler.model.db.ldb.*;
 import scheduler.db.*;
 
 /***

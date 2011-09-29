@@ -12,7 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
 
-import scheduler.generate.*;
+import edu.calpoly.csc.scheduler.model.schedule.*;
 import scheduler.view.*;
 /**
  * Displaying a schedule in a calendar mode

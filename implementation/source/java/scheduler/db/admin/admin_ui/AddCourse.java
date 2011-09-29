@@ -5,8 +5,8 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Vector;
 import scheduler.*;
-import scheduler.db.coursedb.*;
-import scheduler.menu.schedule.*;
+import edu.calpoly.csc.scheduler.model.db.cdb.*;
+import edu.calpoly.csc.scheduler.view.desktop.menu.schedule.*;
 import javax.swing.*;
 import javax.swing.text.*;
 

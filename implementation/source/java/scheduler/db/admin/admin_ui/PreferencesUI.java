@@ -18,10 +18,10 @@ import edu.calpoly.csc.scheduler.model.db.pdb.PreferencesDB.PreferenceExistsExce
 import edu.calpoly.csc.scheduler.view.desktop.MyView;
 
 import scheduler.*;
-import scheduler.generate.*;
+import edu.calpoly.csc.scheduler.model.schedule.*;
 
 import scheduler.db.*;
-import scheduler.db.coursedb.*;
+import edu.calpoly.csc.scheduler.model.db.cdb.*;
 import scheduler.db.admin.admin_ui.DayTab;
 import scheduler.db.preferencesdb.*;
 /**

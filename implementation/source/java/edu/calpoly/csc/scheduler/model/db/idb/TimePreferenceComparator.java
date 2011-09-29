@@ -1,6 +1,6 @@
 package edu.calpoly.csc.scheduler.model.db.idb;
 
-import scheduler.db.coursedb.*;
+import edu.calpoly.csc.scheduler.model.db.cdb.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;

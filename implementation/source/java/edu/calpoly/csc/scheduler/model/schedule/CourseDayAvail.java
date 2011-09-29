@@ -8,7 +8,7 @@ import edu.calpoly.csc.scheduler.model.db.Time;
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
 import edu.calpoly.csc.scheduler.model.db.pdb.NoClassOverlap;
 
-import scheduler.db.coursedb.*;
+import edu.calpoly.csc.scheduler.model.db.cdb.*;
 import scheduler.db.preferencesdb.*;
 
 public class CourseDayAvail extends GenAvail<Course>

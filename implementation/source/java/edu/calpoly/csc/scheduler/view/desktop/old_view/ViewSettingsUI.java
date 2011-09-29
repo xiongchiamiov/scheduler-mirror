@@ -8,9 +8,9 @@ import edu.calpoly.csc.scheduler.model.db.ldb.Location;
 
 import java.util.*;
 import scheduler.view.*;
-import scheduler.db.instructordb.*;
-import scheduler.db.coursedb.*;
-import scheduler.db.locationdb.*;
+import edu.calpoly.csc.scheduler.model.db.idb.*;
+import edu.calpoly.csc.scheduler.model.db.cdb.*;
+import edu.calpoly.csc.scheduler.model.db.ldb.*;
 
 /****
  * Class ViewSettingsUI provides a view of ViewSettings as an input

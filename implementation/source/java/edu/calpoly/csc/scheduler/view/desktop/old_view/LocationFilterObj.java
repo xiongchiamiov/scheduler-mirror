@@ -1,7 +1,7 @@
 package edu.calpoly.csc.scheduler.view.desktop.old_view;
 
 import edu.calpoly.csc.scheduler.model.db.ldb.Location;
-import scheduler.db.locationdb.*;
+import edu.calpoly.csc.scheduler.model.db.ldb.*;
 /****
  * LocationFilterObj contains strings represent the location: building number
  * and room number

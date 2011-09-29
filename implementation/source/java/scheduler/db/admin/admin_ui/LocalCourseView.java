@@ -22,7 +22,7 @@ import edu.calpoly.csc.scheduler.view.desktop.MyView;
 import scheduler.*;
 import scheduler.db.*;
 import scheduler.db.preferencesdb.*;
-import scheduler.menu.schedule.*;
+import edu.calpoly.csc.scheduler.view.desktop.menu.schedule.*;
 
 /**
  * The View of the course database class.

@@ -13,7 +13,7 @@ import edu.calpoly.csc.scheduler.view.desktop.menu.schedule.ScheduleMenu;
 
 import scheduler.*;
 import scheduler.db.*;
-import scheduler.db.instructordb.*;
+import edu.calpoly.csc.scheduler.model.db.idb.*;
 
 /**
  * The View of the course database class.

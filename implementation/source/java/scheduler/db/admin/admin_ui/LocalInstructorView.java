@@ -12,9 +12,9 @@
 package scheduler.db.admin.admin_ui;
 
 import scheduler.db.admin.admin_ui.InstructorTimePrefs;
-import scheduler.db.instructordb.*;
+import edu.calpoly.csc.scheduler.model.db.idb.*;
 import scheduler.*;
-import scheduler.menu.schedule.*;
+import edu.calpoly.csc.scheduler.view.desktop.menu.schedule.*;
 import javax.swing.*;
 
 import edu.calpoly.csc.scheduler.Scheduler;
