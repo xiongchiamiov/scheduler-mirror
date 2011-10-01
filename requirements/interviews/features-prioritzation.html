@@ -1,0 +1,102 @@
+<html>
+<font size=+2>
+<head>
+<title>
+CSC 402: Feature Prioritization Matrix
+</title>
+</head>
+<body bgcolor=white>
+<p align=center>
+<strong>CSC 402: Feature Prioritization Matrix</strong>
+<br>
+<strong><em>DRAFT</em></strong>
+</p>
+</font>
+<p>
+The features included in a prioritization matrix are the discriminated union of
+features we deem to be particularly important, plus all of the tool features
+gathered in the interviews.  The structure of this matrix is very similar to
+the feature comparison matrix described in the 308 document here:
+<blockquote><pre>
+<a href="http://users.csc.calpoly.edu/~gfisher/classes/308/handouts/feature-matrix.html">
+http://users.csc.calpoly.edu/~gfisher/classes/308/handouts/feature-matrix.html
+</a>
+</pre></blockquote>
+</p><p>
+The rows in the prioritization matrix are elements of a taxonomic feature list,
+with precisely the same structure as in the comparison matrix.  Each column in
+the prioritization matrix corresponds to a requirements interview, with one or
+more interview attendees.
+</p><p>
+Each matrix cell has an integer "desirability value" from -2 to 2, defined as
+follows:
+</p><p>
+<table align=center border=1 cellpadding=4>
+  <tr>
+    <td valign=top><strong>Value</strong>
+    <td valign=top><strong>Meaning</strong>
+  <tr>
+    <td valign=top>-2
+    <td valign=top>Really don't want the feature
+  <tr>
+    <td valign=top>-1
+    <td valign=top>Would rather not have the feature
+  <tr>
+    <td valign=top>0
+    <td valign=top>Don't care about the feature
+  <tr>
+    <td valign=top>1
+    <td valign=top>Would like to have the feature
+  <tr>
+    <td valign=top>2
+    <td valign=top>Really want the feature
+</table>
+</p><p>
+Values in the rightmost matrix column are the sum of all the column values in a
+given row.  These values represent a weighted desirability value for each
+feature.
+</p><p>
+The desirability values are determined by reading the interview transcripts and
+listening to the audio.  The project team member who attended the interview
+will play a key role, being able to remember the tone of interviewee responses,
+in terms of how strongly certain opinions were expressed.
+</p><p>
+Determining desirability values is clearly a subjective exercise.  Those who
+attended the interview may recall language like "we must have this feature",
+"we would love this feature", or "this feature is very important to us".  These
+are indications of a desirability value of 2.  In contrast, there may be
+interview language like "we hate this feature in the tool we use", or "there
+simply must be a better way to do this".  These are indications of a
+desirability value of -2.
+</p><p>
+A desirability 0 value can easily be determined if a feature was not mentioned
+at all during the course of the interview, by either the interviewers or
+interviewees.  Values of -1 and 1 are determined subjectively, based on the
+lukewarmedness of the interviewees' language.
+</p><p>
+The prioritization of features is accomplished by sorting the rows by the
+weighted desirability total.
+
+<h3>
+Some Additional Discussion Points (These Ideas Need to be Refined)
+</h3>
+<ul>
+<p>
+<li>
+Look carefully at rows that have both -2 and 2 values.  Use some subjective
+judgment to determine in any given case whether a feature should be in or out
+with a 0 value that comes from a sum of -2 and 2.
+</p>
+<p>
+<li>
+Pick the features with the top n values, for n = the number of people we have
+to work on the scenarios.
+</p>
+<p>
+<li>
+As we see fit, we can increase the values of features that we think are
+critically important, even when those features have client values of "pure" 0,
+where "pure" means all or nearly all column values are 0.
+</ul>
+</body>
+</html>
