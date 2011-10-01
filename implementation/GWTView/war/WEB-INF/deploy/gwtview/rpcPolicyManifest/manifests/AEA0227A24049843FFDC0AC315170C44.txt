@@ -1,0 +1,2 @@
+serviceClass: edu.calpoly.csc.scheduler.view.web.client.GreetingService
+path: 767110E485ACE02F35E415D27AB6D5ED.gwt.rpc
