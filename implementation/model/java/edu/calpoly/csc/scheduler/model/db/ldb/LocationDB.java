@@ -13,7 +13,7 @@ import edu.calpoly.csc.scheduler.model.db.cdb.CourseDB;
 import edu.calpoly.csc.scheduler.model.db.cdb.CourseDB.CourseDoesNotExistException;
 import edu.calpoly.csc.scheduler.model.db.cdb.CourseDB.CourseExistsException;
 import edu.calpoly.csc.scheduler.model.schedule.DayAvail;
-import edu.calpoly.csc.scheduler.view.desktop.old_view.DaysInWeek.*;
+
 import scheduler.db.*;
 /**
  *

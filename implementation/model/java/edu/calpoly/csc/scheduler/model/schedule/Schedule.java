@@ -33,7 +33,7 @@ import edu.calpoly.csc.scheduler.model.db.idb.NullInstructorException;
 import edu.calpoly.csc.scheduler.model.db.ldb.Location;
 import edu.calpoly.csc.scheduler.model.db.pdb.DaysForClasses;
 import edu.calpoly.csc.scheduler.model.db.pdb.SchedulePreference;
-import edu.calpoly.csc.scheduler.view.desktop.menu.schedule.allInOne.Progress;
+
 
 /**
  * Contains the methods for generating a schedule. See method documentation for
@@ -166,7 +166,7 @@ public class Schedule extends Observable implements Serializable
                          Vector<Instructor> idb, 
                          Vector<Location> ldb,
                          Vector<SchedulePreference> pdb,
-                         Progress p)
+                         Object p)
    {
       int count = 0;
       int total = 0;
@@ -209,7 +209,6 @@ public class Schedule extends Observable implements Serializable
                 */
                ////System.err.println (i);
                c = gen (i, cdb, idb, ldb, pdb);
-               updateProgress(p, c);
             }
             /* Fatal */
             catch (EmptyCourseDatabaseException e) 
@@ -241,7 +240,6 @@ public class Schedule extends Observable implements Serializable
                c = e.si.getCourse();
                this.TBAs.add(new TBA(c, i));
                decrementSectionCount(c, cdb);
-               updateProgress(p, c);
             }
             catch (Exception e)
             {
@@ -267,18 +265,6 @@ public class Schedule extends Observable implements Serializable
       this.notifyObservers();
       ////System.err.println ("Looks like we're done");
    }/*<==*/
-   
-   private void updateProgress (Progress p, Course c)
-   {
-      if (p != null)
-      {
-         ////System.err.println ("UPDATE PROGRESS");
-         p.info.setText("Course: " + c.toString() + " | Section: " + 
-               c.getSection());
-
-         p.completeOneTask();
-      }
-   }
      
 
    /**

@@ -22,7 +22,6 @@ import edu.calpoly.csc.scheduler.model.db.pdb.DaysForClasses;
 import edu.calpoly.csc.scheduler.model.db.pdb.PreferencesDB;
 import edu.calpoly.csc.scheduler.model.schedule.Schedule;
 import edu.calpoly.csc.scheduler.view.desktop.MyView;
-import edu.calpoly.csc.scheduler.view.desktop.old_view.View;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -37,7 +36,7 @@ import java.util.Vector;
  * Top level class which will launch the GUI's main loop. Contains commonly used
  * used information, such as databases and the current schedule. 
  *
- * @author Eric Liebowit
+ * @author Eric Liebowitz
  * @version 08jun10
  */
 public class Scheduler implements Serializable
@@ -59,11 +58,6 @@ public class Scheduler implements Serializable
    /** Preference database */
    public static PreferencesDB pdb;
 
-   /** Scheduler viewing module */
-   public static View schedView;
-
-   public static SchedulerUI schedulerUI;
-
    public static Time startTime = new Time("7:00");
    public static Time endTime = new Time("22:00");
 
@@ -79,16 +73,7 @@ public class Scheduler implements Serializable
     */
    public Scheduler ()
    {
-      if(!System.getProperty("java.version").startsWith("1.6")
-       && !System.getProperty("java.version").startsWith("1.7")) {
-         JOptionPane.showMessageDialog(schedulerUI,
-          "The Scheduler requires Java " +
-           "6 or higher to run. To download the latest version of Java, " +
-           "visit http://java.com/en/.",
-          "Java Runtime Environment out of date",
-          JOptionPane.ERROR_MESSAGE);
-         System.exit(1);
-      }       
+      
 
       schedDB = new SQLDB ();
       schedDB.open();
@@ -104,19 +89,8 @@ public class Scheduler implements Serializable
 
    public void spawn (int x, int y)
    {
-      schedulerUI = new SchedulerUI();
-
-      if(!System.getProperty("java.version").startsWith("1.6") && 
-         !System.getProperty("java.version").startsWith("1.7")) 
-       {
-         JOptionPane.showMessageDialog(schedulerUI,
-          "The Scheduler requires Java " +
-           "6 or higher to run. To download the latest version of Java, " +
-           "visit http://java.com/en/.",
-          "Java Runtime Environment out of date",
-          JOptionPane.ERROR_MESSAGE);
-         System.exit(1);
-      }
+      
+      
       try
       {
          /*
@@ -128,13 +102,6 @@ public class Scheduler implements Serializable
       {
          System.err.println ("Couldn't get the cool UI");
       }
-
-      schedView = new View(this);
-      schedView.initSettings();
-
-      schedulerUI.compose();
-
-      schedulerUI.show(x, y);
    }
 
    /**
@@ -156,9 +123,9 @@ public class Scheduler implements Serializable
    /**
     * I don't know why this is here - Eric
     */
-   public MyView getView() 
+   public Object getView() 
    {
-      return schedulerUI;
+      return null;
    }
 
    /**
