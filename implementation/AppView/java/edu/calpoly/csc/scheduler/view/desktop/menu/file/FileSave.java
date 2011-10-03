@@ -3,7 +3,6 @@ package edu.calpoly.csc.scheduler.view.desktop.menu.file;
 import javax.swing.*;
 
 import edu.calpoly.csc.scheduler.Scheduler;
-import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -33,7 +32,7 @@ public class FileSave
     *    <li>The local CDB</li>
     *    <li>The local IDB</li>
     *    <li>The local LDB</li>
-    *    <li>TODO: The local PDB</li>
+    *    <li>The local PDB</li>
     * </ul>
     */
    public FileSave (JFileChooser fc)

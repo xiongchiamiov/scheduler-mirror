@@ -15,7 +15,6 @@ import java.awt.event.*;
 import java.io.*;
 import java.util.Collection;
 
-import scheduler.*;
 import edu.calpoly.csc.scheduler.model.db.cdb.*;
 import edu.calpoly.csc.scheduler.model.db.idb.*;
 import edu.calpoly.csc.scheduler.model.db.ldb.*;

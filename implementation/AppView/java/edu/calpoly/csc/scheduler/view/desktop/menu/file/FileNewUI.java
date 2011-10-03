@@ -5,7 +5,6 @@ import javax.swing.*;
 import edu.calpoly.csc.scheduler.view.desktop.MyView;
 
 import java.awt.*;
-import scheduler.*;
 
 /**
  * *
