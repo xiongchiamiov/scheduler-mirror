@@ -1,0 +1,104 @@
+Interview w/ Neil Fleishon
+
+- Clarified what program is going to do
+- He's the sole scheduler for his department
+- Been doing this since 1989
+- Just uses a tabular interface right now
+- Process
+   - Open up PeopleSoft
+   - Take previous year's schedule and change's upper-division courses
+      - Swap every-other quarter classes
+   - Lower division courses pretty much stay the same
+   - Uses "FileMaker"
+      - Mac-specific software
+      - Custom scripts help to make his job easier
+   - Directly inputs into PeopleSoft
+   - By first phase, he usually has classes and times
+   - Second phase
+      - Univsersity sends out request for scheduer to alter his first phase 
+        schedule
+        (Done b/c you don't know what instructors are going to be around until
+         around second phase)
+   - Would rather not put instructors into the Schedule
+      - Just make 'em all STAFF
+   - Figure out how many classes to you're going to need
+      - Hires instructors on an as-needed basis (esp. for the Fall)
+      - Sometimes hires quarter-to-quarter
+   - Assign instructors to classes, rather than classes to instructors
+   - Anybody should/could be able to teach a course
+      - Upper division stuff is different
+         - That's only 20% of their scheduling stuff
+- Most time-consuming thing is entering into PeopleSoft
+   - Would be nice if there was an easier interface to automate data entry
+      - Like Christy wanted for CSC
+   - Changing data in PeopleSoft is very time consuming
+   - Feels like double-entry
+   - PeopleSoft is bulky
+- Old system: SiS (Student Information Systems)
+   - No internet back then. Everything communicated through physical mediums
+   - Sold schedule books in the bookstore
+   - Signed up at tables in buildings of phoning in to get their schedules
+
+- Useful software features
+   - Interface where you can drop individual schedules
+   - Be able to "block out" chunks of time
+   - Rate time periods (like "am" higher/lower priority then "pm")
+      - 1 vs 1.5 hour lectures
+      - Lectures vs. labs
+      - Separated lab/lec or back-to-back
+      - Only looks for these things if there's wiggle room, as he's too busy 
+        already
+   - Preference scale
+   - Push a button! : D
+      - Looking for the one-button, optimal solution
+      - Helps to remove scheduler's from the "blame" of "unfair" schedules
+         - That'll put more responsibility on us, the programmer
+   - "Flip" two faculty schedules
+   - GUI w/ calendar in front
+      - Drag courses onto the calendar and they pop on the schedule
+   - No room-time conflicts 
+      - No double-booked rooms and no double-booked instructors
+   - Keep track of workload for instructors (WTU's)
+   - Integrating office hours
+   - Interface to easily read/view schedule information in various sorted forms
+   
+- Constraints
+   - "Chaining" or "associations"
+      - Certain labs go w/ certain lectures
+      - MWF or TR lectures
+         - A MWF lecture would have a T or R lab
+      - Try to put labs between successive lectures
+
+- Pros/Cons to software
+   - Would make his life easier
+   - If it's not easy to learn, we haven't done our job
+
+- Has website where people can see previously generated schedules
+      
+- Willing to learn small language to create custom constraints particular to his
+  department
+   - Might lose other schedulers, though, b/c not as many of them know how to 
+     program as much as he does
+      - Not as many "power users"
+- Include as many customizable features as possible
+      
+- Willing to meet later on in the quarter    
+      
+- Program exists to extract data from PeopleSoft and display data into a more
+  cohesive form
+   - Some computer tech guy
+   - Website
+   - Queries PeopleSoft constantly for last, current, and next schedule info
+      - Everything scheduler's have submitted
+   - Lists courses in a very readable 
+
+- Spring quarter needs to be done next week
+      
+      
+      
+      
+      
+      
+      
+      
+      
