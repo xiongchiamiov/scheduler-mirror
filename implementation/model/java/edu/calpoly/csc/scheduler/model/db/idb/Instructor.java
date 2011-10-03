@@ -21,7 +21,6 @@ package edu.calpoly.csc.scheduler.model.db.idb;
 
 import edu.calpoly.csc.scheduler.model.db.ldb.*;
 import edu.calpoly.csc.scheduler.model.db.cdb.*;
-import scheduler.db.*;
 import edu.calpoly.csc.scheduler.model.schedule.*;
 
 import java.util.Iterator;
@@ -32,7 +31,6 @@ import java.util.Vector;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-import edu.calpoly.csc.scheduler.Scheduler;
 import edu.calpoly.csc.scheduler.model.db.Time;
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
 import edu.calpoly.csc.scheduler.model.db.ldb.Location;
@@ -187,23 +185,27 @@ public class Instructor implements Comparable<Instructor>, Serializable
 
    public Instructor () { System.err.println ("I AM AN INSTRUCTOR"); }
 
+   /**
+    * TODO: REWRITE
+    * @return
+    */
    protected ArrayList<CoursePreference> initialCoursePreferences() 
    {
       ArrayList<CoursePreference> returnVal = new ArrayList<CoursePreference>();
-      if (Scheduler.getLocalCDB() != null) 
-      {
-         System.err.println ("Instructor says local CDB not null");
-         Vector<Course> cList = new Vector<Course>(Scheduler.getLocalCDB());
-         for (Course c: cList)
-         {
-            returnVal.add(new CoursePreference(c, 5));
-         }
-      }
-      else 
-      {
-         System.err.println("My method sucks!");
-         return null;
-      }
+//      if (Scheduler.getLocalCDB() != null) 
+//      {
+//         System.err.println ("Instructor says local CDB not null");
+//         Vector<Course> cList = new Vector<Course>(Scheduler.getLocalCDB());
+//         for (Course c: cList)
+//         {
+//            returnVal.add(new CoursePreference(c, 5));
+//         }
+//      }
+//      else 
+//      {
+//         System.err.println("My method sucks!");
+//         return null;
+//      }
       return returnVal;
    }
 
@@ -775,6 +777,8 @@ public class Instructor implements Comparable<Instructor>, Serializable
    /**
     * Update the preferences to get rid of courses that may not be there anymore.
     * 
+    * TODO: REWRITE
+    * 
     */
    public void updateLocalPreferences() {
       Iterator it = this.coursePreferences.iterator();
@@ -782,29 +786,29 @@ public class Instructor implements Comparable<Instructor>, Serializable
       int i = 0;
       while (it.hasNext()) {
          CoursePreference cp = (CoursePreference) it.next();
-         if (!Scheduler.cdb.getLocalData().contains(cp.getCourse())) {
-            //System.out.println("Removing " + cp);
-            removeIndexes.add(i);
-         }
+//         if (!Scheduler.cdb.getLocalData().contains(cp.getCourse())) {
+//            //System.out.println("Removing " + cp);
+//            removeIndexes.add(i);
+//         }
          i++;
       }
 
-      it = Scheduler.cdb.getLocalData().iterator();
-
-      boolean found = false;
-      while (it.hasNext()) {
-         Course co = (Course) it.next();
-         found = false;
-         for (CoursePreference c : coursePreferences) {
-            if (c.getCourse().equals(co)) {
-               found = true;
-               break;
-            }
-         }
-         if (!found) {
-            coursePreferences.add(new CoursePreference(co, 5));
-         }
-      }
+//      it = Scheduler.cdb.getLocalData().iterator();
+//
+//      boolean found = false;
+//      while (it.hasNext()) {
+//         Course co = (Course) it.next();
+//         found = false;
+//         for (CoursePreference c : coursePreferences) {
+//            if (c.getCourse().equals(co)) {
+//               found = true;
+//               break;
+//            }
+//         }
+//         if (!found) {
+//            coursePreferences.add(new CoursePreference(co, 5));
+//         }
+//      }
 
       it = removeIndexes.iterator();
       while (it.hasNext()) {

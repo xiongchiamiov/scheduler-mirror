@@ -33,13 +33,9 @@ import java.sql.*;
 import java.util.*;
 import java.io.PrintStream;
 
-import edu.calpoly.csc.scheduler.Scheduler;
 import edu.calpoly.csc.scheduler.model.db.SQLDB;
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
 import edu.calpoly.csc.scheduler.model.schedule.Week;
-
-import scheduler.*;
-import scheduler.db.*;
 
 /**
  *
@@ -211,7 +207,8 @@ public class InstructorDB extends Observable {
    {
 		if (i == null) throw new InvalidInstructorException();
 
-		SQLDB sqldb = Scheduler.schedDB;
+		//TODO: FIX
+		//SQLDB sqldb = Scheduler.schedDB;
 		String insert = "";
 		System.out.println(i);
 		insert = "( '" + i.getFirstName() + "', '" + i.getLastName() + "', '" +
@@ -219,8 +216,8 @@ public class InstructorDB extends Observable {
 		i.getOffice().getBuilding() + "', '" + i.getOffice().getRoom() + "', " + 
 		i.getDisability() + " )";
 		//sqldb.open();
-		sqldb.insertStmt("instructors", insert);
-		this.data = sqldb.getInstructorDB().getData();
+		//sqldb.insertStmt("instructors", insert);
+		//this.data = sqldb.getInstructorDB().getData();
 		updatePreferences();
 		//sqldb.close();
 		setChanged();
@@ -273,13 +270,14 @@ public class InstructorDB extends Observable {
 				return;
 			}
 			String id = (String) row.get(0);
-			if (Scheduler.cdb == null) 
-         {
-				return;
-			}
-			Course c = Scheduler.cdb.getLocalCourse( Integer.parseInt(id.substring(3,6)) , "Lecture");
-			CoursePreference cp = new CoursePreference(c, Integer.parseInt((String)row.get(1)) );
-			list.add(cp);
+			//TODO: FIX
+//			if (Scheduler.cdb == null) 
+//         {
+//				return;
+//			}
+//			Course c = Scheduler.cdb.getLocalCourse( Integer.parseInt(id.substring(3,6)) , "Lecture");
+//			CoursePreference cp = new CoursePreference(c, Integer.parseInt((String)row.get(1)) );
+//			list.add(cp);
 			//changeSections((String) row.get(0), Integer.parseInt((String)row.get(1)) );
 		}
 		PreferenceTuple tup = new PreferenceTuple(i.getId() , list);
@@ -767,27 +765,29 @@ public class InstructorDB extends Observable {
 	/**
 	 * Returns a table of instructors and courses in the database.
 	 * 
+	 * TODO: REWRITE
+	 * 
 	 * @return a table of instructors and courses in the database.
 	 */
 	public Vector<Vector> getTable() {
 		ArrayList<Vector> tabledata = new ArrayList<Vector>();
-		ArrayList<Course> data = (ArrayList) Scheduler.cdb.getLocalData();
-		if (Scheduler.cdb.getData() == null) {
-			Vector<String> row = new Vector<String>();
-			tabledata.add(row);
-			return new Vector(tabledata);
-		}
-		Iterator iterator = Scheduler.cdb.getData().iterator();
+//		ArrayList<Course> data = (ArrayList) Scheduler.cdb.getLocalData();
+//		if (Scheduler.cdb.getData() == null) {
+//			Vector<String> row = new Vector<String>();
+//			tabledata.add(row);
+//			return new Vector(tabledata);
+//		}
+//		Iterator iterator = Scheduler.cdb.getData().iterator();
 
-		while (iterator.hasNext()) {
-			Vector<String> row = new Vector<String>();
-			Course c = (Course)iterator.next();
-			if (c.getCourseType().contains("Lecture")) {
-				row.add("CPE" + c.getId());
-				row.add(5 + "");
-				tabledata.add(row);
-			}
-		}
+//		while (iterator.hasNext()) {
+//			Vector<String> row = new Vector<String>();
+//			Course c = (Course)iterator.next();
+//			if (c.getCourseType().contains("Lecture")) {
+//				row.add("CPE" + c.getId());
+//				row.add(5 + "");
+//				tabledata.add(row);
+//			}
+//		}
 		Vector<Vector> returnVal = new Vector(tabledata );
 		return returnVal;
 	}
@@ -946,9 +946,9 @@ public class InstructorDB extends Observable {
       }
 
       if (removeInd != -1) {
-         Scheduler.debug("Removing " + removeInd);
+         
          localData.remove(removeInd);
-         Scheduler.debug(localData.toString());
+         
       }
 
 		setChanged();
@@ -985,14 +985,15 @@ public class InstructorDB extends Observable {
 		if (!data.contains(i))
 			throw new InstructorDoesNotExistException();
 
-		SQLDB sqldb = Scheduler.schedDB;
+		//TODO: FIX
+//		SQLDB sqldb = Scheduler.schedDB;
 		//sqldb.open();
 		String remove = "userid = '" + i.getId() + "'";
 		String insert = "userid = '" + i.getId() + "'";	
-		sqldb.removeStmt("instructors", insert);
+//		sqldb.removeStmt("instructors", insert);
 
 		//sqldb.close();
-		this.data = sqldb.getInstructorDB().getData();
+//		this.data = sqldb.getInstructorDB().getData();
 		setChanged();
 		notifyObservers();
 	}

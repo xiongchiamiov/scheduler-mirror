@@ -4,9 +4,6 @@ import java.lang.*;
 import java.text.*;
 import java.io.Serializable;
 
-import edu.calpoly.csc.scheduler.Scheduler;
-import scheduler.*;
-
 /**
  * A time object consisting of a minute and an hour.
  * 
@@ -30,7 +27,6 @@ public class Time implements Comparable<Time>, Serializable
        }
        else 
        {
-          Scheduler.debug ("Hour is " + hour + "\n Minute is " + minute);
           throw new InvalidInputException();
        }
     }
@@ -225,10 +221,6 @@ public class Time implements Comparable<Time>, Serializable
     */
    public int compareTo (Time t)
    {
-      if (t == null) 
-      {
-         Scheduler.debug("Time is null.");
-      }
       if (this.hour > t.getHour())
       {
          return 1;

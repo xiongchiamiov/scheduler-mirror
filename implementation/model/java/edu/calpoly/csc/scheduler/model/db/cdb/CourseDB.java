@@ -5,11 +5,8 @@ import java.lang.*;
 import java.sql.*;
 import java.util.*;
 
-import edu.calpoly.csc.scheduler.Scheduler;
 import edu.calpoly.csc.scheduler.model.db.SQLDB;
 import edu.calpoly.csc.scheduler.model.db.pdb.DaysForClasses;
-import scheduler.*;
-import scheduler.db.*;
 
 /**
  * The class representing the course database.
@@ -420,7 +417,8 @@ public class CourseDB extends Observable {
                throw new CourseExistsException();
             }
          }
-         SQLDB sqldb = Scheduler.schedDB;
+         //TODO FIX
+         //SQLDB sqldb = Scheduler.schedDB;
          String labId = "NULL";
          if (c.getLabPairing() != null) {
             labId = c.getLabPairing().getId() + "";
@@ -433,18 +431,18 @@ public class CourseDB extends Observable {
 
          System.out.println(insert);
 
-         sqldb.insertStmt("courses", insert);
+         //sqldb.insertStmt("courses", insert);
 
          Iterator it = c.getDFC().iterator();
          while (it.hasNext()) {
              DaysForClasses dfc = (DaysForClasses)it.next();
              String dfcInsert = "( '" + c.getId() + "', " + "'" + dfc.toString() + "')";
-             sqldb.insertStmt("courses_to_preferences", dfcInsert);
+          //   sqldb.insertStmt("courses_to_preferences", dfcInsert);
          }
 
-         CourseDB temp = sqldb.getCourseDB();
+         //CourseDB temp = sqldb.getCourseDB();
          //addLocalCourse(c);
-         this.data = temp.getData();
+         //this.data = temp.getData();
          Collections.sort((List)data);
          setChanged();
          notifyObservers();
@@ -500,7 +498,7 @@ public class CourseDB extends Observable {
 
          this.localData.add(c);
          Collections.sort((List)localData);
-         Scheduler.idb.updateAllLocalPreferences();
+         //Scheduler.idb.updateAllLocalPreferences();
          setChanged();
          notifyObservers();
    }
@@ -927,15 +925,16 @@ public class CourseDB extends Observable {
       }
          //removeLocalCourse(c);
          System.out.println("In CourseDB.removeCourse");
-         SQLDB sqldb = Scheduler.schedDB;
+         // TODO FIX
+         //SQLDB sqldb = Scheduler.schedDB;
          String insert = "courseNum = " + c.getId() + " AND classType = '" + c.getCourseType() + "'";
          //sqldb.open();
-         sqldb.removeStmt("courses", insert );
+         //sqldb.removeStmt("courses", insert );
 
          String remove = "courseid = " + c.getId();
-         sqldb.removeStmt("courses_to_preferences", remove);
-         CourseDB temp = sqldb.getCourseDB();
-         this.data = temp.getData();
+         //sqldb.removeStmt("courses_to_preferences", remove);
+         //CourseDB temp = sqldb.getCourseDB();
+         //this.data = temp.getData();
          //sqldb.close();
          Collections.sort((List)data);
          setChanged();
@@ -1007,12 +1006,14 @@ public class CourseDB extends Observable {
       }
 
       if (removeInd != -1) {
-         Scheduler.debug("Removing " + removeInd);
+         
          localData.remove(removeInd);
-         Scheduler.debug(localData.toString());
+         
       }
       Collections.sort((List)data);
-      Scheduler.idb.updateAllLocalPreferences();
+      // TODO FIX
+      
+      //Scheduler.idb.updateAllLocalPreferences();
       setChanged();
       notifyObservers();
    }

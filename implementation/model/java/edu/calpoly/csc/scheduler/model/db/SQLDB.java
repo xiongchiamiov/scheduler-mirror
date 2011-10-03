@@ -11,7 +11,6 @@ import java.lang.*;
 import java.sql.*;
 import java.util.*;
 
-import edu.calpoly.csc.scheduler.Scheduler;
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
 import edu.calpoly.csc.scheduler.model.db.cdb.CourseDB;
 import edu.calpoly.csc.scheduler.model.db.cdb.RequiredEquipment;
@@ -259,6 +258,9 @@ public class SQLDB  {
 
 	/**
 	 * Returns the course database.
+	 * 
+	 * TODO: REWRITE
+	 * 
 	 * @return the course database.
 	 **/
 	public CourseDB getCourseDB() {
@@ -294,7 +296,8 @@ public class SQLDB  {
             Course lab = getLab(myArr, labId );
             String prefix = rs.getString("prefix");
             String dfcString = rs.getString("courses_to_preferences.prefid");
-            DaysForClasses dfc = Scheduler.pdb.getDaysForClassesByName(dfcString);
+            // FIX THIS
+            DaysForClasses dfc = null;// = Scheduler.pdb.getDaysForClassesByName(dfcString);
             //System.out.println(":" + dfc);
             RequiredEquipment re = new RequiredEquipment(smartroom, overhead, laptop);
             Course c = new Course(name, courseNum, wtus, scus, classType, 

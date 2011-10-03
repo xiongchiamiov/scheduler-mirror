@@ -1,12 +1,10 @@
 package edu.calpoly.csc.scheduler.model.db.ldb;
 
 import java.util.Collection;
-import scheduler.*;
 import java.lang.*;
 import java.sql.*;
 import java.util.*;
 
-import edu.calpoly.csc.scheduler.Scheduler;
 import edu.calpoly.csc.scheduler.model.db.SQLDB;
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
 import edu.calpoly.csc.scheduler.model.db.cdb.CourseDB;
@@ -14,7 +12,6 @@ import edu.calpoly.csc.scheduler.model.db.cdb.CourseDB.CourseDoesNotExistExcepti
 import edu.calpoly.csc.scheduler.model.db.cdb.CourseDB.CourseExistsException;
 import edu.calpoly.csc.scheduler.model.schedule.DayAvail;
 
-import scheduler.db.*;
 /**
  *
  * The class representing the location database. 
@@ -178,7 +175,7 @@ public class LocationDB extends Observable {
 
       while (it.hasNext()) {
          Location l = (Location) it.next();
-         Scheduler.debug("The size is " + l.getWeekSize());
+         
       }
  
 		return localData;
@@ -260,15 +257,16 @@ public class LocationDB extends Observable {
 				throw new LocationExistsException();
 			}
 		}
-		SQLDB sqldb = Scheduler.schedDB;		
+		// TODO FIX
+		//SQLDB sqldb = Scheduler.schedDB;		
 		String insert = "";
 		insert += "( " + " '" + l.getBuilding() + "', '" + l.getRoom() + "', ";
 		insert += l.getMaxOccupancy() + ", '" + l.getType()  +  "', " + l.isSmartRoom() + ", ";
 		insert += l.hasLaptopConnectivity() + ", " + l.isADACompliant() + "," + l.hasOverhead() + ")";
 
-		sqldb.insertStmt("locations", insert);
-		LocationDB temp = sqldb.getLocationDB();
-		this.data = temp.getData();
+		//sqldb.insertStmt("locations", insert);
+		//LocationDB temp = sqldb.getLocationDB();
+		//this.data = temp.getData();
       updateAvailability();
 		setChanged();
 		notifyObservers();
@@ -401,12 +399,13 @@ public class LocationDB extends Observable {
 			}
 		}
 		System.out.println("In LocationDB.removeLocation");
-		SQLDB sqldb = Scheduler.schedDB;
+		// TODO FIX
+		//SQLDB sqldb = Scheduler.schedDB;
 		String insert = "building = '" + l.getBuilding() + "' AND room = '" + l.getRoom() + "'";
 		//sqldb.open();
-		sqldb.removeStmt("locations", insert);
-		LocationDB temp = sqldb.getLocationDB();
-		this.data = temp.getData();
+		//sqldb.removeStmt("locations", insert);
+		//LocationDB temp = sqldb.getLocationDB();
+		//this.data = temp.getData();
 		//sqldb.close();
       //updateAvailability();
 		setChanged();
@@ -454,9 +453,9 @@ public class LocationDB extends Observable {
       }
 
       if (removeInd != -1) {
-         Scheduler.debug("Removing " + removeInd);
+         
          localData.remove(removeInd);
-         Scheduler.debug(localData.toString());
+         
       }
 
 
@@ -559,9 +558,7 @@ public class LocationDB extends Observable {
          while (iterator.hasNext()) {
             Location l = (Location) iterator.next();
             if (l.getBuilding().equals(building) && l.getRoom().equals(room )) {
-            Scheduler.debug(location);
-            Scheduler.debug(localData.toString());
-            Scheduler.debug("Comparing " + building + " with " + l.getBuilding());
+
             return l;
             }
       }
@@ -663,7 +660,7 @@ public class LocationDB extends Observable {
                edu.calpoly.csc.scheduler.model.db.Time end = getEndTime(j);
                try {
                   if (!day.isFree(start, end)) {
-                     Scheduler.debug(location.toString());
+                     
                      location.setBusy(i, start, end);
                   }
                }

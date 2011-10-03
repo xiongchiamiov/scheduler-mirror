@@ -5,7 +5,6 @@ import java.util.Vector;
 
 import edu.calpoly.csc.scheduler.model.db.Time;
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
-import scheduler.db.*;
 import edu.calpoly.csc.scheduler.model.db.idb.*;
 import edu.calpoly.csc.scheduler.model.db.cdb.*;
 

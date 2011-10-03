@@ -3,7 +3,6 @@ package edu.calpoly.csc.scheduler.model.schedule;
 import edu.calpoly.csc.scheduler.model.db.Time;
 import edu.calpoly.csc.scheduler.model.db.TimeRange;
 import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
-import scheduler.db.*;
 
 /**
  * Represents a collections of days and a start/end time for which an 

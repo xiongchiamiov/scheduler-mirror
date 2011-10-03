@@ -1,39 +1,17 @@
 package edu.calpoly.csc.scheduler.model.schedule;
 
-import scheduler.db.*;
+import edu.calpoly.csc.scheduler.model.db.*;
 import edu.calpoly.csc.scheduler.model.db.idb.*;
 import edu.calpoly.csc.scheduler.model.db.cdb.*;
 import edu.calpoly.csc.scheduler.model.db.ldb.*;
 import edu.calpoly.csc.scheduler.model.db.pdb.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.LinkedList;
-import java.util.LinkedHashMap;
-import java.util.Observable;
-import java.util.TreeMap;
-import java.util.Vector;
+import java.util.*;
 
-import java.io.PrintStream;
+import java.io.*;
 import java.io.Serializable;
 
 import javax.swing.JFrame;
 import javax.swing.JProgressBar;
-
-import edu.calpoly.csc.scheduler.model.db.InvalidInputException;
-import edu.calpoly.csc.scheduler.model.db.Time;
-import edu.calpoly.csc.scheduler.model.db.cdb.Course;
-import edu.calpoly.csc.scheduler.model.db.cdb.EmptyCourseDatabaseException;
-import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
-import edu.calpoly.csc.scheduler.model.db.idb.InstructorNotInDatabaseException;
-import edu.calpoly.csc.scheduler.model.db.idb.NullInstructorException;
-import edu.calpoly.csc.scheduler.model.db.ldb.Location;
-import edu.calpoly.csc.scheduler.model.db.pdb.DaysForClasses;
-import edu.calpoly.csc.scheduler.model.db.pdb.SchedulePreference;
-
 
 /**
  * Contains the methods for generating a schedule. See method documentation for

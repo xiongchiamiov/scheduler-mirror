@@ -1,6 +1,5 @@
 package edu.calpoly.csc.scheduler.model.schedule;
 
-import scheduler.*;
 import java.util.Vector;
 
 import edu.calpoly.csc.scheduler.model.db.Time;

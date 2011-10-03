@@ -7,11 +7,9 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import edu.calpoly.csc.scheduler.Scheduler;
 import edu.calpoly.csc.scheduler.model.db.SQLDB;
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
 import edu.calpoly.csc.scheduler.model.schedule.Week;
-import scheduler.db.*;
 import edu.calpoly.csc.scheduler.model.db.cdb.*;
 import edu.calpoly.csc.scheduler.model.schedule.*;
 
@@ -401,9 +399,9 @@ public class PreferencesDB extends Observable {
         }
 
         if (removeInd != -1) {
-            Scheduler.debug("Removing " + removeInd);
+            
             localDPrefs.remove(removeInd);
-            Scheduler.debug(localDPrefs.toString());
+            
         }
       
         Collections.sort(localDPrefs);
@@ -435,9 +433,9 @@ public class PreferencesDB extends Observable {
         }
 
         if (removeInd != -1) {
-            Scheduler.debug("Removing " + removeInd);
+            
             localCPrefs.remove(removeInd);
-            Scheduler.debug(localCPrefs.toString());
+            
         }
 
         Collections.sort(localCPrefs);
