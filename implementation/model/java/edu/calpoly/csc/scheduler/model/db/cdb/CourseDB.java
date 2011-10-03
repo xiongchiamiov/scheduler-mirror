@@ -849,9 +849,7 @@ public class CourseDB extends Observable {
    public void removeCourseTest(Course c) throws CourseDoesNotExistException {
       //try {
       if (data != null) {
-         if (c == null) {
-            c.getId();
-         }
+
          if (!data.contains(c)) {
             throw new CourseDoesNotExistException();
          }
@@ -917,7 +915,7 @@ public class CourseDB extends Observable {
       //try {
       if (data != null) {
          if (c == null) {
-            c.getId();
+            
          }
          if (!data.contains(c)) {
             throw new CourseDoesNotExistException();
@@ -989,7 +987,7 @@ public class CourseDB extends Observable {
       //try {
       if (localData != null) {
          if (c == null) {
-            c.getId();
+            
          }
          if (!localData.contains(c)) {
             throw new CourseDoesNotExistException();
