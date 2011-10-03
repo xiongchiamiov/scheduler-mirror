@@ -1,0 +1,60 @@
+*1* Who besides yourself does scheduling in your department?
+Just himself.
+
+*2* Can you give us an overview of how you do scheduling?
+Five disciplines.
+40+ faculty that have their own preferences.
+Certain classes require labs and certain types of rooms.
+No overlap of 400 and 500 level classes.
+Some concern about 300 level classes, not concerned about 200 level.
+Start at 7am and end at 10pm.
+
+** Is it done by staff? faculty? both?
+Just him.
+
+** If there are more than one, what are their roles?
+Secretarial staff fixes schedule/room issues at the end if needed.
+
+** What do you use to do scheduling? excel? paper?
+Just paper.
+
+** Are they satisfied with the current methods? What would you fix?
+There are 600-800 constraints set by the university and they change every quarter. These constraints need to be conformed to.
+
+** If you have any publicly accessible documents that provide information in this area, we would be happy to review those documents after the interview is over.
+http://www.universityscheduling.calpoly.edu/time_patterns.html - Special note was given towards the requirement: "Fifty percent (50%) of each department's lecture classes should be scheduled outside of prime time hours (9:00am-3:00pm)"
+
+
+*3* Do you have any particular ideas for the kinds of features you would like to see in a software tool that would help you with scheduling?
+He looked at several commercial solutions.
+Be able to put in preferences for individual faculty.
+Constraints from the university such as "Monday-Wednesday can only have ____"
+Don't conflict specific sets of classes.
+
+*4* Can you think of any particular positive or negative impacts that new scheduling software might have on your department?
+Overall it is a great idea. Not everyone will be happy with it but it's a good tool nonetheless.
+Be able to do post-changes and still check for conflicts.
+With said ability to check for conflicts, he can have staff do quick schedule fixes, freeing up his own time.
+
+** Concern of jobs taken over by computer?
+No.
+
+** Is the faculty open to interacting with the software for entering course and time preferences?
+Only a third would participate, even emailing to ask is "like pulling teeth."
+
+** Any bad experiences with other scheduling software? What in particular?
+Such software was good for elementary schools but not university despite being advertised as suitable for universities. Scheduling by hand is still preferred.
+
+*5* Is there anything else you would like to add?
+Individual faculty schedules were done manually in Excel and given to the respective faculty. An autogeneration of these schedules would be good.
+Be able to add a one-time scheduling for single occurrence events that need a classroom.
+Be able to output to tab delimited format.
+Some rooms are smart rooms, some have overheads, and some have space for design work. Be able to differentiate these rooms and schedule classes that require certain types of rooms to a suitable room.
+
+
+*6* Can you give us an estimate of how much time after this interview you might have to review the ideas we develop to meet your requirements?
+He is totally open to meeting every week if needed.
+
+Misc:
+He mentioned chi-squared multiple times in regard to scheduling and algorithms and is a more easy-to-relate-to engineering oriented guy.
+They have no control of lecture locations, but can override the university-given locations for reasons such as; a professor cannot walk too far, so make his lecture rooms close to his office.
