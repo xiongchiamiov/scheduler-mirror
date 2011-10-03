@@ -1,13 +1,11 @@
 package edu.calpoly.csc.scheduler.view.desktop.menu.schedule.lockItems;
 
-import scheduler.*;
 import edu.calpoly.csc.scheduler.model.schedule.*;
 
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
 
-import edu.calpoly.csc.scheduler.Scheduler;
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
 import edu.calpoly.csc.scheduler.model.schedule.ScheduleItem;
 import edu.calpoly.csc.scheduler.view.desktop.menu.schedule.allInOne.GenList;
@@ -178,7 +176,8 @@ public class SiList extends GenList<ScheduleItem>
     */
    public void refresh ()/*==>*/
    {
-      initSiList (Scheduler.getSchedule().getScheduleItems());
+      //TODO: FILL LIST
+//      initSiList (Scheduler.getSchedule().getScheduleItems());
       super.refresh();
    }/*<==*/
 

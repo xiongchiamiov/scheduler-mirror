@@ -4,13 +4,11 @@ import java.util.Observer;
 import java.util.Observable;
 import javax.swing.*;
 
-import edu.calpoly.csc.scheduler.Scheduler;
 import edu.calpoly.csc.scheduler.view.desktop.MyView;
 
 import java.awt.*;
 import java.awt.event.*;
 
-import scheduler.*;
 import edu.calpoly.csc.scheduler.model.schedule.*;
 
 /**
@@ -29,7 +27,7 @@ public class LockItems extends MyView implements Observer
    public LockItems ()
    {
       super ("Lock Schedule Items");
-      Scheduler.getSchedule().addObserver(this);
+      
       //siList = new SiList(Scheduler.getSchedule().getScheduleItems());
 
       contentBox = new Box (BoxLayout.Y_AXIS);

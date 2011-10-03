@@ -2,7 +2,6 @@ package edu.calpoly.csc.scheduler.view.desktop.menu.schedule;
 
 import javax.swing.*;
 
-import edu.calpoly.csc.scheduler.Scheduler;
 import edu.calpoly.csc.scheduler.model.schedule.ScheduleItem;
 import edu.calpoly.csc.scheduler.view.desktop.MyView;
 
@@ -11,7 +10,6 @@ import java.awt.event.*;
 import java.util.Observer;
 import java.util.Vector;
 
-import scheduler.*;
 import edu.calpoly.csc.scheduler.model.db.cdb.*;
 
 /**
@@ -46,7 +44,8 @@ public class TBA extends MyView
    {
       contentBox = new Box (BoxLayout.Y_AXIS);
 
-      JList tbaList = new JList (Scheduler.schedule.getTBAs());
+      // TODO: MAKE THIS DO SOMETHING
+      JList tbaList = new JList (new Vector<String>());
       tbaList.setLayoutOrientation(JList.VERTICAL);
       tbaScrollList = new JScrollPane (tbaList);
 

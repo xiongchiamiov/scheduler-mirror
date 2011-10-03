@@ -2,7 +2,6 @@ package edu.calpoly.csc.scheduler.view.desktop.menu.file;
 
 import javax.swing.*;
 
-import edu.calpoly.csc.scheduler.Scheduler;
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
 import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
 import edu.calpoly.csc.scheduler.model.db.ldb.Location;
@@ -75,6 +74,8 @@ public class FileOpen
     * Reads a "Schedule" object from a given object stream and changes the 
     * Scheduler's data to this reflex this new object.
     *
+    * TODO: FIX
+    *
     * @param ois Object file stream to read the Schedule object from
     */
    private void readSchedule (ObjectInputStream ois)
@@ -82,7 +83,8 @@ public class FileOpen
       Schedule s = null;
       try
       {
-         Scheduler.setSchedule((Schedule)ois.readObject());
+         //FIX HERE
+         //Scheduler.setSchedule((Schedule)ois.readObject());
       }
       catch (Exception e)
       {
@@ -95,13 +97,16 @@ public class FileOpen
     * Reads the local cdb from a given object stream and changes the 
     * Scheduler's data to reflect this.
     *
+    * TODO: FIX
+    *
     * @param ois Object file stream to read the local cdb data from
     */
    private void readLocalCDB (ObjectInputStream ois)
    {
       try
       {
-         Scheduler.setLocalCDB((Collection<Course>)ois.readObject());
+//         FIX HERE
+//         Scheduler.setLocalCDB((Collection<Course>)ois.readObject());
       }
       catch (Exception e)
       {
@@ -114,6 +119,8 @@ public class FileOpen
     * Reads the local idb from a given object stream and changes the Scheduler's
     * data to reflect this.
     *
+    * TODO: FIX
+    * 
     * @param ois Object file stream to read the local idb data from 
     */
    private void readLocalIDB (ObjectInputStream ois)
@@ -121,7 +128,8 @@ public class FileOpen
       try
       {
          Collection<Instructor> ci = (Collection<Instructor>) ois.readObject();
-         Scheduler.setLocalIDB(ci);
+//         FIX HERE
+//         Scheduler.setLocalIDB(ci);
       }
       catch (Exception e)
       {
@@ -134,13 +142,16 @@ public class FileOpen
     * Reads the local ldb from a given object stream and changes the Scheduler's
     * data to reflect this.
     *
+    * TODO: FIX
+    * 
     * @param ois Object file stream to read the local ldb data from 
     */
    private void readLocalLDB (ObjectInputStream ois)
    {
       try
       {
-         Scheduler.setLocalLDB((Collection<Location>)ois.readObject());
+//         FIX HERE
+//         Scheduler.setLocalLDB((Collection<Location>)ois.readObject());
       }
       catch (Exception e)
       {
@@ -156,13 +167,15 @@ public class FileOpen
     *
     *  - DaysForClasses preferences
     *
+    * TODO: FIX
     * @param ois Object file stream to read the local pdb data from 
     */
    private void readLocalPDB (ObjectInputStream ois)
    {
       try
       {
-         Scheduler.setLocalPDB_DFC((Collection<DaysForClasses>)ois.readObject());
+//         FIX HERE
+//         Scheduler.setLocalPDB_DFC((Collection<DaysForClasses>)ois.readObject());
       }
       catch (Exception e)
       {

@@ -5,25 +5,17 @@ import java.util.Collections;
 import javax.swing.*;
 import javax.swing.table.*;
 
-import edu.calpoly.csc.scheduler.Scheduler;
-import edu.calpoly.csc.scheduler.model.db.cdb.Course;
-import edu.calpoly.csc.scheduler.model.db.cdb.CourseDB;
-import edu.calpoly.csc.scheduler.model.db.idb.InstructorDB;
-import edu.calpoly.csc.scheduler.model.db.ldb.LocationDB;
-import edu.calpoly.csc.scheduler.model.db.pdb.PreferencesDB;
+import edu.calpoly.csc.scheduler.model.db.cdb.*;
+import edu.calpoly.csc.scheduler.model.db.idb.*;
+import edu.calpoly.csc.scheduler.model.db.ldb.*;
+import edu.calpoly.csc.scheduler.model.db.pdb.*;
 import edu.calpoly.csc.scheduler.view.desktop.MyView;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
-import scheduler.*;
 import edu.calpoly.csc.scheduler.model.schedule.*;
-import scheduler.db.*;
-import edu.calpoly.csc.scheduler.model.db.idb.*;
-import edu.calpoly.csc.scheduler.model.db.cdb.*;
-import edu.calpoly.csc.scheduler.model.db.ldb.*;
-import scheduler.fair_qual.*;
 import edu.calpoly.csc.scheduler.view.desktop.menu.schedule.*;
 
 /**
@@ -66,24 +58,32 @@ public class AllInOne extends MyView implements Observer
 
    /**
     * List of courses the user selects for generation
+    * 
+    * TODO: FIX
     */
    protected static CourseList cList = 
-      new CourseList (BoxLayout.Y_AXIS, Scheduler.cdb);
+      new CourseList (BoxLayout.Y_AXIS, null);
    /**
     * List of instructors the user selects for generation
+    * 
+    * TODO: FIX
     */
    protected static InstructorList iList = 
-      new InstructorList (BoxLayout.Y_AXIS, Scheduler.idb);
+      new InstructorList (BoxLayout.Y_AXIS, null);
    /**
     * List of locations the user selects for generation
+    * 
+    * TODO: FIX
     */
    protected static LocationList lList = 
-      new LocationList (BoxLayout.Y_AXIS, Scheduler.ldb);
+      new LocationList (BoxLayout.Y_AXIS, null);
    /**
     * List of preferences the user selects for generation
+    * 
+    * TODO: FIX
     */
    protected static PreferenceList pList = 
-      new PreferenceList (BoxLayout.Y_AXIS, Scheduler.pdb);
+      new PreferenceList (BoxLayout.Y_AXIS, null);
 
    /**
     * Determines whether the Instructor's should be sorted before generation
@@ -121,15 +121,17 @@ public class AllInOne extends MyView implements Observer
    private void init ()/*==>*/
    {
       outermostVertBox = new Box (BoxLayout.Y_AXIS);
-      cdb = Scheduler.cdb;
-      idb = Scheduler.idb;
-      ldb = Scheduler.ldb;
-      pdb = Scheduler.pdb;
       
-      cdb.addObserver(this);
-      idb.addObserver(this);
-      ldb.addObserver(this);
-      pdb.addObserver(this);
+      //TODO: FIX THIS
+//      cdb = Scheduler.cdb;
+//      idb = Scheduler.idb;
+//      ldb = Scheduler.ldb;
+//      pdb = Scheduler.pdb;
+//      
+//      cdb.addObserver(this);
+//      idb.addObserver(this);
+//      ldb.addObserver(this);
+//      pdb.addObserver(this);
 
       asIs = false;
    }/*<==*/

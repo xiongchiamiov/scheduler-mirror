@@ -2,22 +2,16 @@ package edu.calpoly.csc.scheduler.view.desktop.menu.schedule.allInOne;
 
 import java.util.Collection;
 import java.util.Vector;
-import javax.swing.*;
-
-import edu.calpoly.csc.scheduler.Scheduler;
-import edu.calpoly.csc.scheduler.model.db.cdb.Course;
-import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
-import edu.calpoly.csc.scheduler.model.db.ldb.Location;
-import edu.calpoly.csc.scheduler.model.db.pdb.SchedulePreference;
-import edu.calpoly.csc.scheduler.view.desktop.MyView;
 
 import java.awt.*;
 import java.beans.*;
+import javax.swing.*;
 
-import scheduler.*;
 import edu.calpoly.csc.scheduler.model.db.idb.*;
 import edu.calpoly.csc.scheduler.model.db.cdb.*;
 import edu.calpoly.csc.scheduler.model.db.ldb.*;
+import edu.calpoly.csc.scheduler.model.db.pdb.SchedulePreference;
+import edu.calpoly.csc.scheduler.view.desktop.MyView;
 
 /**
  * For displaying the progress of generation to the user with a nice progress
@@ -151,7 +145,7 @@ public class Progress extends SwingWorker<Void, Void>
     */
    public Void doInBackground ()
    {
-      Scheduler.schedule.generate (cdb, idb, ldb, pdb, this);
+      //TODO: CALL GENERATE OR SOMETHING
       return null;
    }
 

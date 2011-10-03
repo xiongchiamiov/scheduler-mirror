@@ -1,7 +1,5 @@
 package edu.calpoly.csc.scheduler.view.desktop.menu;
 
-import scheduler.fair_qual.fair_qual_ui.*;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -155,7 +153,6 @@ public class ViewMenu extends JMenu
             public void actionPerformed(ActionEvent e) 
             {
                System.err.println ("In View-->Fairness");
-               new FairUI().show(150, 150);
             }
          }
       );

@@ -1,6 +1,5 @@
 package edu.calpoly.csc.scheduler.view.desktop.menu;
 
-import scheduler.*;
 import edu.calpoly.csc.scheduler.view.desktop.menu.file.*;
 import edu.calpoly.csc.scheduler.view.desktop.menu.schedule.*;
 

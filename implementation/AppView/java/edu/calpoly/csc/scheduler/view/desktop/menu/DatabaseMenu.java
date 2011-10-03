@@ -1,10 +1,6 @@
 package edu.calpoly.csc.scheduler.view.desktop.menu;
 
-import scheduler.db.admin.admin_ui.*;
-
 import javax.swing.*;
-
-import edu.calpoly.csc.scheduler.Scheduler;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -54,15 +50,7 @@ public class DatabaseMenu extends JMenu
          {
             public void actionPerformed(ActionEvent e) 
             {
-               if (Scheduler.schedDB.isConnected()) {
-                  new CourseView().show(150, 150);
-               }
-               else {
-                  JOptionPane.showMessageDialog(Scheduler.schedulerUI,
-                   "You are not connected to the database.",
-                   "Error",
-                   JOptionPane.ERROR_MESSAGE);
-               }
+
             }
          }
       );
@@ -81,15 +69,8 @@ public class DatabaseMenu extends JMenu
          {
             public void actionPerformed(ActionEvent e) 
             {
-               if (Scheduler.schedDB.isConnected()) {
-                  new InstructorViewAlt().show(150, 150);
-               }
-               else {
-                  JOptionPane.showMessageDialog(Scheduler.schedulerUI,
-                   "You are not connected to the database.",
-                   "Error",
-                   JOptionPane.ERROR_MESSAGE);
-               }
+    
+         
             }
          }
       );
@@ -108,15 +89,7 @@ private void addLocations ()/*==>*/
          {
             public void actionPerformed(ActionEvent e) 
             {
-               if (Scheduler.schedDB.isConnected()) {
-                  new LocationView().show(150, 150);
-               }
-               else {
-                  JOptionPane.showMessageDialog(Scheduler.schedulerUI,
-                   "You are not connected to the database.",
-                   "Error",
-                   JOptionPane.ERROR_MESSAGE);
-               }
+
             }
          }
       );
@@ -135,21 +108,8 @@ private void addLocations ()/*==>*/
          {
             public void actionPerformed(ActionEvent e) 
             {
-               if (Scheduler.schedDB.isConnected()) {
-                  /*
-                   * Removed as of 9-28-11
-                   * 
-                   * EL
-                   */
-                  //new scheduler.db.preferencesdb.preferences_ui.PreferencesUI().show(150, 150);
-                  System.err.println ("NO LONGER IMPLEMENTED");
-               }
-               else {
-                  JOptionPane.showMessageDialog(Scheduler.schedulerUI,
-                   "You are not connected to the database.",
-                   "Error",
-                   JOptionPane.ERROR_MESSAGE);
-               }
+
+
             }
          }
       );
@@ -169,15 +129,7 @@ private void addLocations ()/*==>*/
          {
             public void actionPerformed(ActionEvent e)
             {
-               if (Scheduler.schedDB.isConnected()) {
-                  new PublishData().show(150, 150);
-               }
-               else {
-                  JOptionPane.showMessageDialog(Scheduler.schedulerUI,
-                   "You are not connected to the database.",
-                   "Error",
-                   JOptionPane.ERROR_MESSAGE);
-               }
+
             }
          }
       );

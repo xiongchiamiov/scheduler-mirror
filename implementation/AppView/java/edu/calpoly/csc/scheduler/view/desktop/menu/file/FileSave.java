@@ -1,15 +1,11 @@
 package edu.calpoly.csc.scheduler.view.desktop.menu.file;
 
 import javax.swing.*;
-
-import edu.calpoly.csc.scheduler.Scheduler;
-
 import java.awt.*;
 import java.awt.event.*;
 
 import java.io.*;
 
-import scheduler.*;
 import edu.calpoly.csc.scheduler.model.db.idb.*;
 
 /**
@@ -78,15 +74,18 @@ public class FileSave
    /**
     * Writes the Schedule object into a given object output stream
     *
+    * TODO: FIX
+    * 
     * @param oos Object output stream to write to
     */
    private void writeSchedule (ObjectOutputStream oos)
    {
       try
       {
-         oos.writeObject(Scheduler.getSchedule());
+//         FIX
+//         oos.writeObject(Scheduler.getSchedule());
       }
-      catch (IOException e)
+      catch (Exception e)
       {
          System.err.println ("Error writing Schedule to file");
          e.printStackTrace();
@@ -96,6 +95,8 @@ public class FileSave
    /**
     * Writes the local Course database into a given output stream.
     *
+    * TODO: FIX
+    *
     * @param oos Object output stream to write to
     */
    private void writeLocalCDB (ObjectOutputStream oos)
@@ -103,10 +104,10 @@ public class FileSave
       try 
       {
          System.err.println ("Writing localCDB");
-         System.err.println (Scheduler.getLocalCDB());
-         oos.writeObject(Scheduler.getLocalCDB());
+//         FIX HERE
+//         oos.writeObject(Scheduler.getLocalCDB());
       }
-      catch (IOException e)
+      catch (Exception e)
       {
          System.err.println ("Error writing local CDB to file");
          e.printStackTrace();
@@ -116,20 +117,18 @@ public class FileSave
    /**
     * Writes the local Instructor database into a given output stream
     * 
+    * TODO: FIX
+    * 
     * @param oos Object output stream to write to
     */
    private void writeLocalIDB (ObjectOutputStream oos)
    {
       try
       {
-         for (Instructor i: Scheduler.getLocalIDB())
-         {
-            System.err.println (i);
-            System.err.println ("CPrefs: " + i.getCoursePreferences());
-         }
-         oos.writeObject(Scheduler.getLocalIDB());
+         //FIX
+//         oos.writeObject(Scheduler.getLocalIDB());
       }
-      catch (IOException e)
+      catch (Exception e)
       {
          System.err.println ("Error writing local IDB to file");
          e.printStackTrace();
@@ -139,15 +138,18 @@ public class FileSave
    /**
     * Writes the local Location database into a given output stream
     * 
+    * TODO: FIX
+    * 
     * @param oos Object output stream to write to
     */
    private void writeLocalLDB (ObjectOutputStream oos)
    {
       try
       {
-         oos.writeObject(Scheduler.getLocalLDB());
+//         FIX HERE
+//         oos.writeObject(Scheduler.getLocalLDB());
       }
-      catch (IOException e)
+      catch (Exception e)
       {
          System.err.println ("Error writing local LDB to file");
          e.printStackTrace();
@@ -160,15 +162,18 @@ public class FileSave
     *
     *  - Local DaysForClasses data
     *
+    * TODO: FIX
+    * 
     * @param oos Object output stream to write to
     */
    private void writeLocalPDB (ObjectOutputStream oos)
    {
       try
       {
-         oos.writeObject(Scheduler.pdb.getLocalDaysForClasses());
+//         FIX HERE
+//         oos.writeObject(Scheduler.pdb.getLocalDaysForClasses());
       }
-      catch (IOException e)
+      catch (Exception e)
       {
          System.err.println ("Error writing local PDB to file");
          e.printStackTrace();

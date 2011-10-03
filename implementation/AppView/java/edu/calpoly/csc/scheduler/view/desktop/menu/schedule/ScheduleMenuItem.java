@@ -1,6 +1,5 @@
 package edu.calpoly.csc.scheduler.view.desktop.menu.schedule;
 
-import scheduler.*;
 import javax.swing.*;
 import javax.swing.table.*;
 

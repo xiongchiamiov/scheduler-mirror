@@ -2,16 +2,12 @@ package edu.calpoly.csc.scheduler.view.desktop.menu.schedule;
 
 import javax.swing.*;
 
-import edu.calpoly.csc.scheduler.Scheduler;
 import edu.calpoly.csc.scheduler.view.desktop.menu.schedule.allInOne.*;
 import edu.calpoly.csc.scheduler.view.desktop.menu.schedule.lockItems.*;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Vector;
-
-import scheduler.*;
-import scheduler.db.admin.admin_ui.*;
 
 /**
  * Represents the GUI for the Scheudle drop-down in the topl-evel menu bar. This
@@ -68,7 +64,7 @@ public class ScheduleMenu extends JMenu
          {
             public void actionPerformed (ActionEvent e)
             {
-               new LocalCourseView().show(150, 150);
+               
             }
          }
       );
@@ -87,7 +83,7 @@ public class ScheduleMenu extends JMenu
          {
             public void actionPerformed (ActionEvent e)
             {
-               new LocalInstructorView().show(150, 150);
+               
             }
          }
       );
@@ -106,7 +102,7 @@ public class ScheduleMenu extends JMenu
          {
             public void actionPerformed (ActionEvent e)
             {
-               new LocalLocationView().show(150, 150);
+               
             }
          }
       );
@@ -125,7 +121,7 @@ public class ScheduleMenu extends JMenu
          {
             public void actionPerformed (ActionEvent e)
             {
-               new scheduler.db.admin.admin_ui.PreferencesUI().show(150,150);
+               
             }
          }
       );
@@ -165,7 +161,7 @@ public class ScheduleMenu extends JMenu
          {
             public void actionPerformed (ActionEvent e)
             {
-               new ChangeHours().show(150, 150);
+               
             }
          }
       );
@@ -204,17 +200,7 @@ public class ScheduleMenu extends JMenu
          {
             public void actionPerformed (ActionEvent e)
             {
-               if (Scheduler.schedule.getTBAs().size() > 0)
-               {
-                  new TBA().show(150, 150);
-               }
-               else
-               {
-                  JOptionPane.showMessageDialog(null, 
-                                                "No courses are TBA right now",
-                                                "Note",
-                                                JOptionPane.INFORMATION_MESSAGE);
-               }
+          
             }
          }
       );
