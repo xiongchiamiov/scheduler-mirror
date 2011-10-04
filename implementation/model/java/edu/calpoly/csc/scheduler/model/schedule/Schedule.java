@@ -51,6 +51,7 @@ public class Schedule extends Observable implements Serializable
     * Used to keep track of when courses are booked
     */
    protected CourseOverlapTracker cot = new CourseOverlapTracker();
+   
    /** 
     * Records how many courses are in the schedule (not number of sections)
     */
@@ -63,12 +64,7 @@ public class Schedule extends Observable implements Serializable
     * Records how many locations are in the schedule
     */
    protected Vector<Location> lList = new Vector<Location>();
-   /**
-    * Holds a list of ScheduleItems which were "locked" and must be 
-    * incoporated, as-is, into the Schedule. 
-    */
-   private HashMap<Course, ScheduleItem> lockedItems = 
-      new HashMap<Course, ScheduleItem>();
+
 
    /**
     * Determines when the day begins for scheduling. Default is 7a.
@@ -143,8 +139,7 @@ public class Schedule extends Observable implements Serializable
    public void generate (Vector<Course> cdb,
                          Vector<Instructor> idb, 
                          Vector<Location> ldb,
-                         Vector<SchedulePreference> pdb,
-                         Object p)
+                         Vector<SchedulePreference> pdb)
    {
       int count = 0;
       int total = 0;
@@ -154,17 +149,11 @@ public class Schedule extends Observable implements Serializable
       }
 
       /*
-       * Get all the locked ScheduleItems and reset all records (including the 
-       * schedule).
+       * Reset all records (including the schedule).
        */
-      //compileLockedItems();
       reset();
       initBookings(idb, ldb, pdb);
-      /*
-       * With the new Schedule and all its data empty, pre-book all the locked
-       * ScheduleItems
-       */
-      initSchedule();
+
       Course c = null;
       while (!cdb.isEmpty())
       {
@@ -243,24 +232,6 @@ public class Schedule extends Observable implements Serializable
       this.notifyObservers();
       ////System.err.println ("Looks like we're done");
    }/*<==*/
-     
-
-   /**
-    * Does nothing right now. Needs work. 
-    */
-   private void compileLockedItems ()/*==>*/
-   {
-      this.lockedItems.clear();
-      for (ScheduleItem si: this.s)
-      {
-         if (si.locked)
-         {
-            ////System.err.println ("Key: " + si.c + " section " + si.c.getSection());
-            ////System.err.println ("Putting: " + si);
-            this.lockedItems.put(si.c, si);
-         }
-      }
-   }/*<==*/
 
    /**
     * Resets (clears) all data particular to the schedule. Note that 
@@ -322,25 +293,6 @@ public class Schedule extends Observable implements Serializable
       this.treatment.put(Instructor.STAFF, new Treatment());
 
       this.cot = new CourseOverlapTracker (pdb);
-   }/*<==*/
-
-   /**
-    * Fills the schedule with whatever ScheduleItems are currently values in the
-    * "lockedItems" LinkedHashMap
-    */
-   private void initSchedule ()/*==>*/
-   {
-      for (ScheduleItem si: this.lockedItems.values())
-      {
-         try
-         {
-            add(si);
-         }
-         catch (Exception e)
-         {
-            e.printStackTrace();
-         }
-      }
    }/*<==*/
 
    /**
@@ -1432,7 +1384,7 @@ public class Schedule extends Observable implements Serializable
     */
    public LinkedList<Course> getCourseList ()
    {
-      return new LinkedList(this.cList);
+      return new LinkedList<Course>(this.cList);
    }
 
    /**
@@ -1442,7 +1394,7 @@ public class Schedule extends Observable implements Serializable
     */
    public LinkedList<Instructor> getInstructorList ()
    {
-      return new LinkedList(this.iList);
+      return new LinkedList<Instructor>(this.iList);
    }
 
    /**
@@ -1452,7 +1404,7 @@ public class Schedule extends Observable implements Serializable
     */
    public LinkedList<Location> getLocationList ()
    {
-      return new LinkedList(this.lList);
+      return new LinkedList<Location>(this.lList);
    }
 
    public Vector<TBA> getTBAs ()

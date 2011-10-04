@@ -38,7 +38,6 @@ public class Course implements Serializable, Comparable<Course>
 
 	/**
 	 * Id of course
-	 *
 	 */
 	int id;
 
@@ -80,11 +79,10 @@ public class Course implements Serializable, Comparable<Course>
    /**
     * Course Prefix (CPE vs CSC)
     */
-   String prefix;
+   String department;
 
    /**
     * Course Type Prefix
-    * 
     */
    String ctPrefix;
 
@@ -130,13 +128,41 @@ public class Course implements Serializable, Comparable<Course>
     * @param hoursPerWeek The hours per week of consecutive class.
     * @param ctPrefix The course type prefix.
 	 */
-   public Course (String courseName, int id, int wtu, int scu,
-         String courseType, int maxEnrollment, int numOfSections,
-         Course labPairing, RequiredEquipment requiredEquipment, String prefix, 
-         DaysForClasses dfc, int hoursPerWeek, String ctPrefix)
+   public Course (String name, 
+                  int id, 
+                  int wtu, 
+                  int scu,
+                  String type, 
+                  int maxEnrollment, 
+                  int numOfSections,
+                  Course labPairing, 
+                  RequiredEquipment req, 
+                  String prefix, 
+                  DaysForClasses dfc, 
+                  int hpw, 
+                  String ctPrefix)
    {
-      init (courseName, id, wtu, scu, courseType, maxEnrollment, numOfSections,
-            labPairing, requiredEquipment, prefix, dfc, hoursPerWeek, ctPrefix);
+      this.courseName = name;
+      this.id = id;
+      this.wtu = wtu;
+      this.scu = scu;
+      this.courseType = type;
+      this.maxEnrollment = maxEnrollment;
+      this.numOfSections = numOfSections;
+      this.labPairing = labPairing;
+      this.requiredEquipment = req;
+
+      this.dfc= new Stack<DaysForClasses>();
+      if (dfc == null) 
+      {
+         dfc = DaysForClasses.MTWRF;
+      }
+      this.dfc.push(dfc);
+
+      this.hoursPerWeek = hpw;
+
+      this.department = prefix;
+      this.ctPrefix = ctPrefix;
 	}
 
 
@@ -160,51 +186,8 @@ public class Course implements Serializable, Comparable<Course>
          Course labPairing, RequiredEquipment requiredEquipment, String prefix, 
          DaysForClasses dfc)
    {
-      init (courseName, id, wtu, scu, courseType, maxEnrollment, numOfSections,
+      this (courseName, id, wtu, scu, courseType, maxEnrollment, numOfSections,
             labPairing, requiredEquipment, prefix, dfc, 0, LEC);
-   }
-
-   /**
-    * Unites the initialization of Course fields into a single method, for less
-    * code duplication (though extremely long parameters lists still abound).
-    *
-    */
-   private void init (String name, 
-                      int id, 
-                      int wtu, 
-                      int scu,
-                      String type, 
-                      int maxEnrollment, 
-                      int numOfSections,
-                      Course labPairing, 
-                      RequiredEquipment req, 
-                      String prefix, 
-                      DaysForClasses dfc, 
-                      int hpw, 
-                      String ctPrefix)
-   {
-		this.courseName = name;
-		this.id = id;
-		this.wtu = wtu;
-		this.scu = scu;
-		this.courseType = type;
-		this.maxEnrollment = maxEnrollment;
-		this.numOfSections = numOfSections;
-		this.labPairing = labPairing;
-		this.requiredEquipment = req;
-
-      this.dfc= new Stack<DaysForClasses>();
-      if (dfc == null) 
-      {
-         dfc = DaysForClasses.MTWRF;
-      }
-      this.dfc.push(dfc);
-
-      this.hoursPerWeek = hpw;
-
-      this.prefix = prefix;
-      this.ctPrefix = ctPrefix;
-
    }
 
    /**
@@ -213,7 +196,7 @@ public class Course implements Serializable, Comparable<Course>
     * right now (15nov10), this makes a <b>shallow copy</b> of the object, 
     * though all non-object fields will, of course, be copied. 
     *
-    * Note: This particular constructor if pivotal to passing a copy of all
+    * Note: This particular constructor is pivotal to passing a copy of all
     *       to the schedule generator. In this way, the algorithm can do 
     *       whatever it likes to the Courses w/o fear of altering the 
     *       originals. 
@@ -230,7 +213,7 @@ public class Course implements Serializable, Comparable<Course>
       this.maxEnrollment      = c.getMaxEnrollment();
       this.numOfSections      = c.getNumberOfSections();
       this.requiredEquipment  = c.getRequiredEquipment().clone();
-      this.prefix             = c.getPrefix();
+      this.department             = c.getDepartment();
       this.dfc                = c.getDFC();
 
       /*
@@ -249,10 +232,9 @@ public class Course implements Serializable, Comparable<Course>
    }
 
    /**
-    * Throws an UnsupportedOperationException object when called. Children 
-    * classes must extend this method. It is only provided so that a call to
-    * [some Course object].hasLab() can work, when the [some Course object] is
-    * some other child class (such as a Lecture).
+    * Returns whether this class has a lecture or not
+    * 
+    * @return this.labPairing != null
     */
    public boolean hasLab ()
    {
@@ -262,7 +244,7 @@ public class Course implements Serializable, Comparable<Course>
    /**
     * Returns whether the given course is a lab.
     *
-    * @return True if the course is a lab. False otherwise. 
+    * @return this.courseType.equals(LAB)
     */
    public boolean isLab ()
    {
@@ -272,7 +254,7 @@ public class Course implements Serializable, Comparable<Course>
    /**
     * Tells whether this course is a lecture.
     *
-    * @return true if this course is a lecture. False othwerise. 
+    * @return this.courseType.equals(LEC) 
     */
    public boolean isLecture ()
    {
@@ -280,7 +262,7 @@ public class Course implements Serializable, Comparable<Course>
    }
 
    /**
-    * Adds a DaysForClasses preference to the front of the Fector of 
+    * Adds a DaysForClasses preference to the front of the Vector of 
     * DaysForClasses associated w/ this Course. 
     *
     * Written by: Eric Liebowitz
@@ -314,7 +296,7 @@ public class Course implements Serializable, Comparable<Course>
 	 */
 	public String toString()
 	{
-		return this.prefix + this.id;
+		return this.department + this.id;
 	}
 
 	/**
@@ -407,12 +389,10 @@ public class Course implements Serializable, Comparable<Course>
 	 *  @return The string representing the course Name
 	 *
 	 **/
-	public String getPrefix() 
+	public String getDepartment () 
    {
-		return prefix;
+		return department;
 	}
-
-
 
 	/**
 	 *  Returns the course type prefix as a string
@@ -613,9 +593,9 @@ public class Course implements Serializable, Comparable<Course>
 	 *  @param pre The string representing the course Name
 	 *
 	 **/
-	public void setPrefix(String pre) 
+	public void setDepartment (String pre) 
    {
-		this.prefix = pre;
+		this.department = pre;
 	}
 
    /**

@@ -426,7 +426,7 @@ public class CourseDB extends Observable {
          String insert = "";
          insert = "( " + " '" + c.courseName + "', " + c.id + ", " + c.wtu + ", " + c.scu + ", '";
          insert = insert + c.courseType + "', " + c.maxEnrollment +  ", " + labId +  ", " + c.requiredEquipment.isSmartroom() + ", ";
-         insert = insert + c.requiredEquipment.hasOverhead() + ", " + c.requiredEquipment.hasLaptopConnectivity() + ", '" +  c.getPrefix() + "', " +  c.getHoursPerWeek()  + ", '" + c.getCTPrefix() + "')";
+         insert = insert + c.requiredEquipment.hasOverhead() + ", " + c.requiredEquipment.hasLaptopConnectivity() + ", '" +  c.getDepartment() + "', " +  c.getHoursPerWeek()  + ", '" + c.getCTPrefix() + "')";
          //insert = insert + c.requiredEquipment.hasOverhead() + ", " + c.requiredEquipment.hasLaptopConnectivity() + ", '" +  c.getPrefix() + "')";
 
          System.out.println(insert);
