@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
+import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
+import edu.calpoly.csc.scheduler.model.db.ldb.Location;
 import edu.calpoly.csc.scheduler.view.web.client.GreetingService;
 
 /**
@@ -22,13 +24,14 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 //		new Scheduler();
 //		assert(Scheduler.getLocalIDB() != null);
 //		if (Scheduler.getLocalIDB().size() == 0)
-//			Scheduler.getLocalIDB().add(new Instructor("Evan", "IsAwesome", "1337", 69, new Location(14, 235)));
+//			Scheduler.getLocalIDB().add();
 //		Instructor instructor = Scheduler.getLocalIDB().iterator().next();
 //		assert(instructor != null);
+		
+		Instructor instructor = new Instructor("Evan", "IsAwesome", "1337", 69, new Location(14, 235));
 
 		ArrayList<String> results = new ArrayList<String>();
-//		results.add(instructor.getLastName() + ", " + instructor.getFirstName());
-		results.add("Derp, Herp");
+		results.add(instructor.getLastName() + ", " + instructor.getFirstName());
 		return results;
 	}
 }
