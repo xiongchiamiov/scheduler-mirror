@@ -13,6 +13,11 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
+import edu.calpoly.csc.scheduler.view.web.client.table.EditableTable;
+import edu.calpoly.csc.scheduler.view.web.client.table.EditableTableEntry;
+import edu.calpoly.csc.scheduler.view.web.client.table.EditableTableFactory;
+import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
+
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
@@ -29,6 +34,29 @@ public class GWTView implements EntryPoint {
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
+		
+		/* editable table (professors) */
+		EditableTable professorTable = EditableTableFactory.createProfessors();
+		RootPanel.get().add(professorTable.getWidget());
+		
+		// dummy data
+		InstructorGWT i1 = new InstructorGWT("Gene", "Fisher", "123", "14", "210");
+		
+		professorTable.add(new EditableTableEntry(i1));
+		
+		
+		InstructorGWT i2 = new InstructorGWT("Aaron", "Keen", "409", "14", "230");
+		
+		professorTable.add(new EditableTableEntry(i2));
+		
+		
+		InstructorGWT i3 = new InstructorGWT("Clark", "Turner", "2", "14", "222");
+		
+		professorTable.add(new EditableTableEntry(i3));
+		
+		
+		
+		/* button to get professors list */
 		VerticalPanel panel = new VerticalPanel();
 		names = new VerticalPanel();
 		
