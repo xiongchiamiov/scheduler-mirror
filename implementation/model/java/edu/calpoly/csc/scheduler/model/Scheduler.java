@@ -2,6 +2,11 @@ package edu.calpoly.csc.scheduler.model;
 
 import java.io.Serializable;
 
+import edu.calpoly.csc.scheduler.model.db.cdb.*;
+import edu.calpoly.csc.scheduler.model.db.idb.*;
+import edu.calpoly.csc.scheduler.model.db.ldb.*;
+import edu.calpoly.csc.scheduler.model.db.pdb.*;
+
 /**
  * The top-level model. Views will be passed this object when they are 
  * instantiated. Any view interaction w/ underlying data will be done via
@@ -18,19 +23,19 @@ public class Scheduler implements Serializable
    /**
     * Our course database
     */
-   public Object cdb;
+   public CourseDB cdb;
    /**
     * Our instrucor database
     */
-   public Object idb;
+   public InstructorDB idb;
    /**
     * Our location database
     */
-   public Object ldb;
+   public LocationDB ldb;
    /**
     * Our preference database
     */
-   public Object pdb;
+   public PreferencesDB pdb;
    
    public Scheduler (String url)
    {
@@ -42,7 +47,7 @@ public class Scheduler implements Serializable
     * 
     * @return the course db of this model
     */
-   public Object getCourseDB ()
+   public CourseDB getCourseDB ()
    {
       return cdb;
    }
@@ -52,7 +57,7 @@ public class Scheduler implements Serializable
     *
     * @param cdb the course db to set our cdb to
     */
-   public void setCourseDB (Object cdb)
+   public void setCourseDB (CourseDB cdb)
    {
       this.cdb = cdb;
    }
@@ -62,7 +67,7 @@ public class Scheduler implements Serializable
     * 
     * @return the instructor db of this model
     */
-   public Object getInstructorDB ()
+   public InstructorDB getInstructorDB ()
    {
       return idb;
    }
@@ -72,7 +77,7 @@ public class Scheduler implements Serializable
     *
     * @param idb instructor db to set our idb to
     */
-   public void setInstructorDB (Object idb)
+   public void setInstructorDB (InstructorDB idb)
    {
       this.idb = idb;
    }
@@ -82,7 +87,7 @@ public class Scheduler implements Serializable
     * 
     * @return the location db of this model
     */
-   public Object getLocationDB ()
+   public LocationDB getLocationDB ()
    {
       return ldb;
    }
@@ -92,7 +97,7 @@ public class Scheduler implements Serializable
     *
     * @param ldb location db to set our ldb to
     */
-   public void setLocationDB (Object ldb)
+   public void setLocationDB (LocationDB ldb)
    {
       this.ldb = ldb;
    }
@@ -102,7 +107,7 @@ public class Scheduler implements Serializable
     * 
     * @return the preference db of this model
     */
-   public Object getPreferenceDB ()
+   public PreferencesDB getPreferenceDB ()
    {
       return pdb;
    }
@@ -112,7 +117,7 @@ public class Scheduler implements Serializable
     *
     * @param pdb preference db to set our pdb to
     */
-   public void setPdb (Object pdb)
+   public void setPreferenceDB (PreferencesDB pdb)
    {
       this.pdb = pdb;
    }
