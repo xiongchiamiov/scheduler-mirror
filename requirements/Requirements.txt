@@ -1,0 +1,32 @@
+=== BASIC OPERATION (Required) ===
+
+- Users must be able to edit constraints seperately at both the department and university level. Constraints must persist from quarter to quarter.
+- Restrictions (professor preferences, etc) must remain persistant from quarter to quarter.
+- Some classes will require one particular room, or one from a specific list. It must be intuitive for the class creation wizard to support this room specification.
+- The administrator may change the level of desire expressors may express towards their schedules; some departments support full input, some allow only binary input (can, cannot), and some do not allow preferences.
+- It must be easy to prevent overlap of particular classes and class ranges (302 and 308, 4xx and 5xx, etc)
+- Generated schedule must be intuitive to modify. The user must be notified immediately of any conflicts caused by hand edits.
+- Scheduler must reliabely produce a non-conflicting schedule every time
+- Conflicts must be presented as soon as the system is aware of them. Error messages must be descriptive and easy to fix. The system should suggest solutions where possible.
+- Class, instructor, and room settings must be easy to modify
+- Final schedule must be exportable to text, csv, table form, etc. It must be easy to print in any desired view.
+- Final schedule MUST have a device in place for easy entry into Peoplesoft.
+- All classes must fall within University specified time patterns (MWF, etc)
+- Schedules must persist from quarter to quarter (minimal change)
+
+=== ADDITIONAL FUNCTIONALITY ===
+
+- Instructors and classes should have a flexible and powerful constraint system. Allow a wide range of operations, including days, times, patterns, percentages, etc. Consider using an existing constraint language here.
+- The program should store a history of generated schedules, both attempts for this quarter and the official accepted schedule for past quarters.
+- Have the ability to generate multiple different output schedules at once.
+- Because all settings are persistant, the user should be able to generate a schedule using a one-click button, without any configuration or setttings before hand.
+- Released program should come with pre-populated databases, to the extent possible. This should include professors, rooms, and classes for each client department.
+- Schedulers should have the bility to see other departments' schedules and form dependencies on those classes, in order to avoid conflicts.
+- Multiple clients have requested a drag and drop interface to forming a calendar. Consider dragging classes into the calendar view to build a schedule, then assigning professors to the decided schedule.
+- The program should always include course title with numbers to prevent confusion
+- The program should provide the ability to merge schedules from multiple departments
+- GRC has requested that the applcication be able to sync with Lantiv, their existing scheduling software
+- Generated schedule must have easily and highly configurable filters to create specific views
+- The professor priority system should allow the administrator to harass faculty for input, using e-mail. If faculty does not respond in time, apply previous priorities, or default if none exist.
+- When a faculty member is setting their preferences, do not allow them to be too 'greedy'
+- The program must have a way to track the assets associated with a particular room, such as whiteboards, smart room, etc.
