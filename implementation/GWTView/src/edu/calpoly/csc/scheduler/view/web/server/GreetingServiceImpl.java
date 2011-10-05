@@ -7,6 +7,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
 import edu.calpoly.csc.scheduler.model.db.ldb.Location;
 import edu.calpoly.csc.scheduler.view.web.client.GreetingService;
+import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 
 /**
  * The server side implementation of the RPC service.
@@ -16,7 +17,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		GreetingService {
 
 
-	public ArrayList<String> getProfessorNames() throws IllegalArgumentException {
+	public ArrayList<InstructorGWT> getProfessorNames() throws IllegalArgumentException {
 		
 		/** TODO */
 		// replace sample data with data from the db
@@ -30,8 +31,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		
 		Instructor instructor = new Instructor("Evan", "IsXAwesome", "1337", 69, new Location(14, 235));
 
-		ArrayList<String> results = new ArrayList<String>();
-		results.add(instructor.getLastName() + ", " + instructor.getFirstName());
+		ArrayList<InstructorGWT> results = new ArrayList<InstructorGWT>();
+		results.add(Conversion.toGWT(instructor));
 		return results;
 	}
 }
