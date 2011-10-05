@@ -20,6 +20,8 @@ import edu.calpoly.csc.scheduler.model.schedule.*;
  */
 public class SchedTableModel extends DefaultTableModel
 {
+   public static final long serialVersionUID = 42;
+   
    private static final String[] COL_DATA = 
    {
       "Dept.",

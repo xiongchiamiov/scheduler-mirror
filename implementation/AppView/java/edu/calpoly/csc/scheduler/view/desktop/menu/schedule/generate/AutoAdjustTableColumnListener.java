@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.view.desktop.menu.schedule.allInOne;
+package edu.calpoly.csc.scheduler.view.desktop.menu.schedule.generate;
 
 import javax.swing.*;
 import java.awt.event.*;

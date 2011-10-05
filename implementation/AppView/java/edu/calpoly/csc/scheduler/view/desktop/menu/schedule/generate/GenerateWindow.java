@@ -1,9 +1,8 @@
-package edu.calpoly.csc.scheduler.view.desktop.menu.schedule.allInOne;
+package edu.calpoly.csc.scheduler.view.desktop.menu.schedule.generate;
 
 import java.util.Observer;
 import java.util.Collections;
 import javax.swing.*;
-import javax.swing.table.*;
 
 import edu.calpoly.csc.scheduler.model.db.cdb.*;
 import edu.calpoly.csc.scheduler.model.db.idb.*;
@@ -15,9 +14,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
-import edu.calpoly.csc.scheduler.model.schedule.*;
-import edu.calpoly.csc.scheduler.view.desktop.menu.schedule.*;
-
 /**
  * Displays lists of each database to be used in schedule generation.
  * The user may select from these lists any/all variables which they wish
@@ -26,7 +22,7 @@ import edu.calpoly.csc.scheduler.view.desktop.menu.schedule.*;
  * @author Eric Liebowitz
  * @version 08jun10
  */
-public class AllInOne extends MyView implements Observer
+public class GenerateWindow extends MyView implements Observer
 {
    /* Instance variables ==>*/
    /**
@@ -105,7 +101,7 @@ public class AllInOne extends MyView implements Observer
     *    Cancel button
     * </pre>
     */
-   public AllInOne ()/*==>*/
+   public GenerateWindow ()/*==>*/
    {
       super ("Generate a Schedule...");
 

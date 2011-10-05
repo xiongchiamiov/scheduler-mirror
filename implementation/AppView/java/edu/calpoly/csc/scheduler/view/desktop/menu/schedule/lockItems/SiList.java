@@ -8,7 +8,7 @@ import javax.swing.table.*;
 
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
 import edu.calpoly.csc.scheduler.model.schedule.ScheduleItem;
-import edu.calpoly.csc.scheduler.view.desktop.menu.schedule.allInOne.GenList;
+import edu.calpoly.csc.scheduler.view.desktop.menu.schedule.generate.GenList;
 
 import java.awt.*;
 import java.util.Vector;

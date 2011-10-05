@@ -2,7 +2,7 @@ package edu.calpoly.csc.scheduler.view.desktop.menu.schedule;
 
 import javax.swing.*;
 
-import edu.calpoly.csc.scheduler.view.desktop.menu.schedule.allInOne.*;
+import edu.calpoly.csc.scheduler.view.desktop.menu.schedule.generate.*;
 import edu.calpoly.csc.scheduler.view.desktop.menu.schedule.lockItems.*;
 
 import java.awt.*;
@@ -220,7 +220,7 @@ public class ScheduleMenu extends JMenu
        * (See AllInOne's constructor so see where observers are added for 
        * a better description).
        */
-      final AllInOne aio = new AllInOne();
+      final GenerateWindow aio = new GenerateWindow();
       this.add(new JMenuItem("All-in-One")).addActionListener
       (
          new ActionListener ()
