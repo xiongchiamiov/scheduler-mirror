@@ -28,7 +28,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 //		Instructor instructor = Scheduler.getLocalIDB().iterator().next();
 //		assert(instructor != null);
 		
-		Instructor instructor = new Instructor("Evan", "IsAwesome", "1337", 69, new Location(14, 235));
+		Instructor instructor = new Instructor("Evan", "IsXAwesome", "1337", 69, new Location(14, 235));
 
 		ArrayList<String> results = new ArrayList<String>();
 		results.add(instructor.getLastName() + ", " + instructor.getFirstName());
