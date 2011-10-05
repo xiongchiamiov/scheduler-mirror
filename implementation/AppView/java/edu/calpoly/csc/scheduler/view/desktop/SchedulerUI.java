@@ -4,6 +4,8 @@ import javax.swing.*;
 
 import edu.calpoly.csc.scheduler.view.desktop.sched_display.SchedTableModel;
 import edu.calpoly.csc.scheduler.view.desktop.menu.ScheduleMenuBar;
+
+import edu.calpoly.csc.scheduler.model.Scheduler;
 import edu.calpoly.csc.scheduler.model.schedule.Schedule;
 
 /**
@@ -15,11 +17,14 @@ public class SchedulerUI extends JFrame
 {
 	private static final long serialVersionUID = 42;
 	
+	Scheduler model;
 	Box content = Box.createVerticalBox();
    
-   public SchedulerUI ()
+   public SchedulerUI (Scheduler s)
    {
-      this.setJMenuBar(new ScheduleMenuBar());
+      this.model = s;
+      
+      this.setJMenuBar(new ScheduleMenuBar(this.model));
       
       this.add(new JScrollPane(new JTable(new SchedTableModel(new Schedule()))));
       
@@ -28,6 +33,6 @@ public class SchedulerUI extends JFrame
    
    public static void main (String[] args)
    {
-      new SchedulerUI().setVisible(true);
+      new SchedulerUI(new Scheduler("404 NOT FOUND")).setVisible(true);
    }
 }

@@ -4,15 +4,15 @@ import java.util.Observer;
 import java.util.Collections;
 import javax.swing.*;
 
+import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
+
 import edu.calpoly.csc.scheduler.model.db.cdb.*;
 import edu.calpoly.csc.scheduler.model.db.idb.*;
 import edu.calpoly.csc.scheduler.model.db.ldb.*;
 import edu.calpoly.csc.scheduler.model.db.pdb.*;
 import edu.calpoly.csc.scheduler.view.desktop.MyView;
-
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
 
 /**
  * Displays lists of each database to be used in schedule generation.
@@ -101,35 +101,21 @@ public class GenerateWindow extends MyView implements Observer
     *    Cancel button
     * </pre>
     */
-   public GenerateWindow ()/*==>*/
+   public GenerateWindow (CourseDB cdb, InstructorDB idb, LocationDB ldb)/*==>*/
    {
       super ("Generate a Schedule...");
 
+      (this.cdb = cdb).addObserver(this);
+      (this.idb = idb).addObserver(this);
+      (this.ldb = ldb).addObserver(this);
+      
       init ();
       createGUI();
    }/*<==*/
-
-   /**
-    * Instantiates the "outermostVertBox" and all 4 databases (cdb, idb, ldb, 
-    * pdb). Adds this object as an observer of all of these databases. Inits
-    * 'asIs' to false.
-    */
+   
    private void init ()/*==>*/
    {
-      outermostVertBox = new Box (BoxLayout.Y_AXIS);
-      
-      //TODO: FIX THIS
-//      cdb = Scheduler.cdb;
-//      idb = Scheduler.idb;
-//      ldb = Scheduler.ldb;
-//      pdb = Scheduler.pdb;
-//      
-//      cdb.addObserver(this);
-//      idb.addObserver(this);
-//      ldb.addObserver(this);
-//      pdb.addObserver(this);
 
-      asIs = false;
    }/*<==*/
 
    /**
