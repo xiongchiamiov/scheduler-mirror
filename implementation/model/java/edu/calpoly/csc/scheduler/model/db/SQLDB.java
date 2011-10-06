@@ -704,4 +704,88 @@ public class SQLDB  {
 		}
 	}
 
+        /* Methods for retrieving the various database entries from the central
+	 * database server.
+	 * @author Michael McMahon*/
+	
+	/* Retrieves all entries from the instructors database table
+	 * 
+	 * @return The result of a query for all instructors
+	 */ 
+	public ResultSet getSQLInstructors()
+	{
+	 if(!connected)
+	 {
+	  open();	 
+	 }
+	 
+	 String queryForInstructors = "SELECT * FROM instructors";
+         Statement stmt;
+         ResultSet instructorsResult = null;
+     
+	 try 
+	 {
+		stmt = conn.createStatement();
+		instructorsResult = stmt.executeQuery(queryForInstructors);
+	 } 
+	 catch (SQLException e) 
+	 {
+		System.err.println(e.toString());
+	 }
+	 return instructorsResult;
+	}
+    
+	/* Retrieves all entries from the courses database table
+	 * 
+	 * @return The result of a query for all courses
+	 */ 
+	public ResultSet getSQLCourses()
+	{
+	 if(!connected)
+	 {
+	  open();	 
+	 }
+		 
+	 String queryForCourses = "SELECT * FROM courses";
+	 Statement stmt;
+	 ResultSet coursesResult = null;
+	     
+	 try 
+	 {
+	  stmt = conn.createStatement();
+	  coursesResult = stmt.executeQuery(queryForCourses);
+	 } 
+	 catch (SQLException e) 
+	 {
+	  System.err.println(e.toString());
+	 }
+	 return coursesResult;
+	}
+    
+	/* Retrieves all entries from the locations database table
+	 * 
+	 * @return The result of a query for all locations
+	 */ 
+	public ResultSet getSQLLocations()
+	{
+	 if(!connected)
+	 {
+	  open();	 
+	 }
+		 
+         String queryForLocations = "SELECT * FROM locations";
+	 Statement stmt;
+	 ResultSet locationsResult = null;
+	     
+	 try 
+	 {
+	  stmt = conn.createStatement();
+	  locationsResult = stmt.executeQuery(queryForLocations);
+	 } 
+	 catch (SQLException e) 
+	 {
+	  System.err.println(e.toString());
+	 }
+	 return locationsResult;	
+	}
 }
