@@ -12,4 +12,7 @@ import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 public interface GreetingServiceAsync {
 	void getProfessorNames(AsyncCallback<ArrayList<InstructorGWT>> callback)
 			throws IllegalArgumentException;
+	
+	void saveProfessors(ArrayList<InstructorGWT> instructors, ArrayList<InstructorGWT> deleted, AsyncCallback<Void> callback)
+			throws IllegalArgumentException;
 }

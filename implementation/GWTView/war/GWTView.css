@@ -31,3 +31,8 @@ h1 {
 .editTableModified {
 	background-color: yellow;
 }
+
+.editTableButton {
+	width: 6em;
+	max-width: 6em;
+}

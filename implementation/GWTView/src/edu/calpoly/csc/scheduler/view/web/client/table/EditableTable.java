@@ -14,6 +14,8 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
+import edu.calpoly.csc.scheduler.view.web.client.GWTView;
+
 public class EditableTable{
 
 	private FlexTable table;
@@ -22,6 +24,7 @@ public class EditableTable{
 	private FlexCellFormatter cellFormatter;
 	private boolean editMode;
 	private ArrayList<EditableTableEntry> entries, deleted;
+	private Button editButton;
 	
 	/**
 	 * Creates an editable table with a column for each passed in attribute
@@ -69,10 +72,20 @@ public class EditableTable{
 		
 		
 	    // table, add button to panel
-	    grid = new Grid(2, 2);
+	    grid = new Grid(2, 4);
+	    
 	    grid.setWidget(0, 0, table);
+	    
 	    grid.getCellFormatter().setVerticalAlignment(0, 1, HasVerticalAlignment.ALIGN_TOP);
-	    grid.setWidget(0, 1, editButton());
+	    editButton = editButton();
+	    grid.setWidget(0, 1, editButton);
+	    
+	    grid.getCellFormatter().setVerticalAlignment(0, 2, HasVerticalAlignment.ALIGN_TOP);
+	    grid.setWidget(0, 2, cancelButton());
+	    
+	    grid.getCellFormatter().setVerticalAlignment(0, 3, HasVerticalAlignment.ALIGN_TOP);
+	    grid.setWidget(0, 3, saveButton());
+	    
 	    grid.setWidget(1, 1, addButton());
 	}
 	
@@ -122,6 +135,22 @@ public class EditableTable{
 	
 	
 	/**
+	 * Clear the table
+	 */
+	public void clear(){
+		
+		editMode = false;
+		editButton.setText(EditableTableConstants.EDIT);
+		entries.clear();
+		deleted.clear();
+		
+		while(table.getRowCount() > 1){
+			table.removeRow(1);
+		}
+	}
+	
+	
+	/**
 	 * Button to remove a row from the table
 	 * @return the button to remove the row
 	 */
@@ -142,7 +171,10 @@ public class EditableTable{
 						table.removeRow(r);
 						EditableTableEntry entry = entries.remove(r-1);
 						entry.delete();
-						deleted.add(entry);
+						
+						if(!entry.getKey().equals(EditableTableConstants.DEFAULT_KEY)){
+							deleted.add(entry);
+						}
 					}
 				}
 			}
@@ -158,7 +190,7 @@ public class EditableTable{
 	 */
 	private Button addButton(){
 		
-		return new Button(EditableTableConstants.ADD,
+		Button button = new Button(EditableTableConstants.ADD,
 				new ClickHandler(){
 			public void onClick(ClickEvent event){
 				
@@ -172,6 +204,10 @@ public class EditableTable{
 				entries.add(new EditableTableEntry(cols));
 		   }
 		});
+		
+		button.addStyleName("editTableButton");
+		
+		return button;
 	}
 	
 	
@@ -238,6 +274,49 @@ public class EditableTable{
 				}
 		   }
 		});
+		
+		button.addStyleName("editTableButton");
+		
+		return button;
+	}
+	
+	
+	/**
+	 * Button to save changes
+	 * @return the button to save changes
+	 */
+	private Button saveButton(){
+		
+		Button button = new Button(EditableTableConstants.SAVE,
+				new ClickHandler(){
+			public void onClick(ClickEvent event){
+				
+				GWTView.saveProfessors(EditableTableEntry.getInstructors(entries), 
+						EditableTableEntry.getInstructors(deleted));
+		   }
+		});
+		
+		button.addStyleName("editTableButton");
+		
+		return button;
+	}
+	
+	
+	/**
+	 * Button to cancel changes
+	 * @return the button to cancel changes
+	 */
+	private Button cancelButton(){
+		
+		Button button = new Button(EditableTableConstants.CANCEL,
+				new ClickHandler(){
+			public void onClick(ClickEvent event){
+				
+				GWTView.populateProfessors();
+		   }
+		});
+		
+		button.addStyleName("editTableButton");
 		
 		return button;
 	}

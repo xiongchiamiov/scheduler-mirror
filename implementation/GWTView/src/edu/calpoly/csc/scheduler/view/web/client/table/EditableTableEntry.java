@@ -17,7 +17,8 @@ public class EditableTableEntry {
 	
 	private boolean deleted;
 	
-	private InstructorGWT instructor;
+	private String key;
+	
 	
 	/**********************
 	 * Instructor methods *
@@ -33,22 +34,42 @@ public class EditableTableEntry {
 		
 		values.add(instructor.getLastName());
 		values.add(instructor.getFirstName());
-		values.add(instructor.getUserID());
 		values.add(instructor.getOfficeBldg());
 		values.add(instructor.getOfficeRoom());
 		
 		// initialize object and set instructor
 		initialize(values);
-		this.instructor = instructor;
 	}
 	
 	/**
 	 * Returns the instructor represented by the table entry
-	 * @return the represented instructor, null if the type is not instructor
+	 * @return the represented instructor, null if there is an error
 	 */
 	public InstructorGWT getInstructor(){
-		/** TODO update the instructor */
-		return instructor;
+		
+		if(newValues.size() < 4){
+			return null;
+		}
+		
+		return new InstructorGWT(newValues.get(0), newValues.get(1), key,
+				newValues.get(2), newValues.get(3));
+	}
+	
+	
+	/**
+	 * Converts a list of editable table entries into a list of instructors
+	 * @param entries entries to convert
+	 * @return list of instructors
+	 */
+	public static ArrayList<InstructorGWT> getInstructors(ArrayList<EditableTableEntry> entries){
+		
+		ArrayList<InstructorGWT> results = new ArrayList<InstructorGWT>();
+		
+		for(EditableTableEntry e : entries){
+			results.add(e.getInstructor());
+		}
+		
+		return results;
 	}
 	
 	
@@ -115,10 +136,12 @@ public class EditableTableEntry {
 			prevValues.add(str);
 			newValues.add(str);
 		}
-		
-		instructor = null;
 	}
 	
+	/**
+	 * Constructot for a new entry. Key will be set to default key
+	 * @param columns number of columns in the table
+	 */
 	public EditableTableEntry(int columns){
 		
 		ArrayList<String> values = new ArrayList<String>();
@@ -127,6 +150,16 @@ public class EditableTableEntry {
 			values.add("");
 		}
 		
+		key = EditableTableConstants.DEFAULT_KEY;
+		
 		initialize(values);
+	}
+	
+	/**
+	 * Returns the entry's key
+	 * @return the key
+	 */
+	public String getKey(){
+		return key;
 	}
 }

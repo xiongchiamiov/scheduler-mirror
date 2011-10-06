@@ -16,8 +16,6 @@ public class EditableTableFactory {
 		
 		attr.add(EditableTableConstants.FIRST_NAME);
 		
-		attr.add(EditableTableConstants.ID);
-		
 		attr.add(EditableTableConstants.OFFICE_BLDG);
 		
 		attr.add(EditableTableConstants.OFFICE_ROOM);

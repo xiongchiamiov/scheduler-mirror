@@ -2,7 +2,13 @@ package edu.calpoly.csc.scheduler.view.web.client.table;
 
 public class EditableTableConstants {
 
+	/** Default key */
+	public static final String DEFAULT_KEY = "0";
+	
+	/** Table constants */
 	public static final String ADD = "Add Row";
+	
+	public static final String CANCEL = "Cancel";
 	
 	public static final String EDIT = "Edit";
 	
@@ -10,10 +16,11 @@ public class EditableTableConstants {
 	
 	public static final String REMOVE = "X";
 	
+	public static final String SAVE = "Save";
+	
+	
 	/** Professor table */
 	public static final String FIRST_NAME = "First";
-	
-	public static final String ID = "ID";
 	
 	public static final String LAST_NAME = "Last";
 	
