@@ -105,12 +105,12 @@ public class GenerateWindow extends MyView implements Observer
    {
       super ("Generate a Schedule...");
 
-      (this.cdb = cdb).addObserver(this);
-      (this.idb = idb).addObserver(this);
-      (this.ldb = ldb).addObserver(this);
+//      (this.cdb = cdb).addObserver(this);
+//      (this.idb = idb).addObserver(this);
+//      (this.ldb = ldb).addObserver(this);
       
       init ();
-      createGUI();
+//      createGUI();
    }/*<==*/
    
    private void init ()/*==>*/
