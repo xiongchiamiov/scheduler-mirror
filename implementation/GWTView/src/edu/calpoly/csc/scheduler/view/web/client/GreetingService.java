@@ -17,4 +17,5 @@ public interface GreetingService extends RemoteService {
 	ArrayList<InstructorGWT> getProfessorNames() throws IllegalArgumentException;
 	
 	void saveProfessors(ArrayList<InstructorGWT> instructors, ArrayList<InstructorGWT> deleted) throws IllegalArgumentException;
+	ArrayList<gwtScheduleItem> getGWTScheduleItems() throws IllegalArgumentException;
 }

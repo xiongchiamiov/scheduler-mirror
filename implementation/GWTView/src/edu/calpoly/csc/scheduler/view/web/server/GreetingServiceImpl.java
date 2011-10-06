@@ -59,4 +59,15 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		
 		/** TODO */
 	}
+ /*
+  *@gwt.typeArgs <shared.gwtScheduleItem>
+  */
+ public ArrayList<gwtScheduleItem> getGWTScheduleItems()
+ {
+  ArrayList<gwtScheduleItem> items = new ArrayList<gwtScheduleItem>();
+  gwtScheduleItem i1 = new gwtScheduleItem("CPE", 101, 1, "MWF", new int[] { 1,
+    3, 5 }, 13, 15);
+  items.add(i1);
+  return items;
+ }
 }
