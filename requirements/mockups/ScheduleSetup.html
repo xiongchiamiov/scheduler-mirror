@@ -1,0 +1,27 @@
+<html>
+<head>
+<title>Schedule Setup</title>
+</head>
+<body>
+
+<h1>Schedule Setup</h1>
+<p>Before generating a schedule, the user is presented with a Schedule Setup interface.  The Schedule Setup interface allows the user to specify which classes to include in the schedule generation.  
+</p>
+
+<h3>Master Course List</h3>
+<p>On the left side of the interface is the Master Course List.  This is the list that contains all the courses in the course database.  If no previous schedule has been created, all the courses will appear in this list.  If a schedule was generated previously, only the courses that were not taught in the previous schedule will be listed in the Master Course List.  The user can then drap-and-drop courses from the Master Course List to either the week calendar or the offered course list.  Doing so will remove the course from the Master Course List and add it to the offered course list.  
+</p>
+
+<h3>Calendar</h3>
+<p>The middle portion of the Schedule Setup interface consists of a calendar.  The calendar lists the seven days of the week as the column headers with the time of the day as the row headers.  A scroll bar on the right side of the calendar area allows the user to scroll up and down to view any hour of the day.  This setup is similar to the Google Calendar approach to displaying a weekly calendar.  The user can drag-and-drop a course from either the Master Course List or the Offered Course List onto a specific time slot on the calendar to specify a given time constraint for a class.  Every time a user moves a class around on the calendar, the schedule gerneration algorithm will run and modify the coloring of the class to mark whether or not there is a possible schedule to create with the given time constraints.  A green class means there is a possible schedule that can be generated, a red class means there is no possible schedule that can be generated with the given constraints.
+</p>
+
+<h3>Offered Course List</h3>
+<p>The right side of the Schedule setup interface will contain the Offered Course List.  This list will include all the courses that will be included in schedule generation.  If a schedule has been previously created, this list will be populated with the offered classes of the previous schedule.  If no previous schedules have been made, this list will be empty initially.  The user can add classes to the list by drag-and-dropping the desired courses from the Master Course List to the Offered Course List or to the schedule.
+
+<h3>Schedule Generation</h3>
+<p>When the user has specified at least one course to include in schedule creation, the Generate Schedule button will be enabled and will allow the user to generate a schedule that includes the classes in the Offered Course List and on the calendar.
+</p>
+
+</body>
+</html>
