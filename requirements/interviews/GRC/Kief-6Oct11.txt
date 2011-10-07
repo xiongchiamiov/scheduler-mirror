@@ -1,0 +1,18 @@
+- Professor Kief is the chair of the scheduling committee. All members are teachers, no dedicated administrators
+- Step one in the process is to determine the number of FTEF, or faculty saleries allocated to the department
+ + Tenured faculty average 36 WTU per year per FTEF
+ + Lecturers average 45 WTU per year per FTEF
+- This is currently done with a Filemaker Database
+- 11 FTEF is more than 11 faculty becuase some are part time
+- CS numbers are used to determine how many WTU each hour of work counts for, based on the type of class
+- Schedules are highly persistant from year to year (~95% remains unchanged)
+- GRC also uses Lantiv for timetabling
+ + Program requires all inputs; class time is the only variable
+  o IE: class, room, professor, units, etc are all manual. No algorithm.
+ + Views are per day, per professor, and per room
+ + When drag-dropping classes onto schedule, the program automatically grays out invalid times. Very useful feature to duplicate.
+- Biggest challenge for department is minimizing conflict
+ + Perhaps multiple schedules should be proposed to choose between?
+ + A way of determining how bad a conflict is (unacceptable, bad, okay, etc)
+- Teachers prefer Monday or Friday off; creates 'bell curve' schedule density
+- Professor Kief is excited to see this come together and is more than willing to make time to work with us

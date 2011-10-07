@@ -1,3 +1,10 @@
+PLEASE NOTE THE FOLLOWING:
+This is a SUPER BASIC DRAFT of requirements; more interview notes than anything else.
+Feel free to make changes or modifications, but please denote them with an asterisk (*) as the first character of each line.
+For example,
+* - This is a sample edit.
+* Note that each line starts with an asterisk.
+
 === BASIC OPERATION (Required) ===
 
 - Users must be able to edit constraints seperately at both the department and university level. Constraints must persist from quarter to quarter.
