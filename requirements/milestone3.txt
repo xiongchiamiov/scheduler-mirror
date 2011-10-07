@@ -1,0 +1,13 @@
+So far, requirements team has:
+- Created a base round of mockups, based on old 308 requirements
+- Reviewed interviews to date in order to create a basic sketch of requirements
+- Modified GUI mockups to reflect new input from requirements
+- Set up initial walkthrough pages
+
+Requirements plans to:
+- Work with look and feal team to create cohesive gui mockups
+- Begin overviewing interviews to create a more complete set of requirements, especially as pertains to each mockup
+- Generate prioritization of program features
+- Create a full, production level requirements list
+- Create full, production level use cases
+- Adapt requirements and use cases to respond to new interviews and client feedback
