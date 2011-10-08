@@ -1,52 +1,79 @@
 package edu.calpoly.csc.scheduler.view.web.shared;
 
-import java.io.Serializable;
-
 import com.google.gwt.user.client.rpc.IsSerializable;
 
-public class gwtScheduleItem implements IsSerializable
+public class gwtScheduleItem implements IsSerializable, Comparable
 {
+ private String professor;
  private String courseDept;
  private int courseNum;
  private int section;
  private String days;
  private int dayNums[];
- private int startTime;
- private int endTime;
+ private int startTimeHour;
+ private int endTimeHour;
+ //private int startTimeMin;
+ //private int endTimeMin;
  
  public gwtScheduleItem()
  {
   
  }
- public gwtScheduleItem(String dept, int cNum, int sec, String ds, int dNums[], int st, int et)
+ 
+ public gwtScheduleItem(String prof, String dept, int cNum, int sec, String ds, int dNums[], int sth, int eth)
  {
+  professor = prof;
   courseDept = dept;
   courseNum = cNum;
   section = sec;
   days = ds;
   dayNums = dNums;
-  startTime = st;
-  endTime = et;
+  startTimeHour = sth;
+  //startTimeMin = stm;
+  endTimeHour = eth;
+  //endTimeMin = etm;
  }
  
  public String toString()
  {
-  return courseDept + courseNum + "-" + section + "<br>" + startTime + " - " + 
-   endTime + "<br>" + days; 
+  return courseDept + courseNum + "-" + section + "<br>" + professor + "<br>" +
+   startTimeHour + " - " + endTimeHour + "<br>" + days; 
  }
  
  public int getStartTime()
  {
-  return startTime;
+  return startTimeHour;
  }
  
  public int getEndTime()
  {
-  return endTime;
+  return endTimeHour;
  }
  
  public int[] getDayNums()
  {
   return dayNums;
+ }
+ 
+ public String getProfessor()
+ {
+  return professor;
+ }
+
+ public String getCourse()
+ {
+  return courseDept + courseNum;
+ }
+ public int compareTo(Object compared)
+ {
+  if(this.startTimeHour > ((gwtScheduleItem)compared).getStartTime())
+  {
+   return 1;
+  }
+  else if(this.startTimeHour < ((gwtScheduleItem)compared).getStartTime())
+  {
+   return -1;
+  }
+  return 0;
  }
 }

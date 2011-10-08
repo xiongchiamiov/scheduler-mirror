@@ -60,15 +60,25 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		
 		/** TODO */
 	}
- /*
-  *@gwt.typeArgs <shared.gwtScheduleItem>
-  */
- public ArrayList<gwtScheduleItem> getGWTScheduleItems()
- {
-  ArrayList<gwtScheduleItem> items = new ArrayList<gwtScheduleItem>();
-  gwtScheduleItem i1 = new gwtScheduleItem("CPE", 101, 1, "MWF", new int[] { 1,
-    3, 5 }, 13, 15);
-  items.add(i1);
-  return items;
- }
+
+	 /*
+	  *@gwt.typeArgs <shared.gwtScheduleItem>
+	  */
+	 public ArrayList<gwtScheduleItem> getGWTScheduleItems()
+	 {
+	  ArrayList<gwtScheduleItem> items = new ArrayList<gwtScheduleItem>();
+	  gwtScheduleItem i1 = new gwtScheduleItem("Gene Fisher", "CPE", 101, 1, "MWF",
+	   new int[] {1, 3, 5}, 8, 10);
+	  gwtScheduleItem i2 = new gwtScheduleItem("Gene Fisher", "CPE", 402, 1, "MWF",
+	   new int[] {1, 3, 5}, 14, 16);
+	  gwtScheduleItem i3 = new gwtScheduleItem("Clark Turner", "CPE", 300, 1, "TR",
+	   new int[] {2, 4}, 12, 14);
+	  gwtScheduleItem i4 = new gwtScheduleItem("Nancy Parham", "CPE", 141, 1, "MWF",
+	   new int[] {1, 3, 5}, 13, 14);
+	  items.add(i1);
+	  items.add(i2);
+	  items.add(i4);
+	  items.add(i3);
+	  return items;
+	 }
 }
