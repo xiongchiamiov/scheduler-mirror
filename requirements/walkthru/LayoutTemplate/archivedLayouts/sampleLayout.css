@@ -1,0 +1,84 @@
+h1 {
+  font-size: 2em;
+  font-weight: bold;
+  color: #777777;
+  margin: 40px 0px 70px;
+  text-align: center;
+}
+
+
+/** Editable table */
+.editableTableCell {
+  border: 1px solid #BBBBBB;
+  padding: 2px;
+  width: 13em;
+  max-width: 13em;
+  height: 1.5em;
+  max-height: 1.5em;
+}
+
+.editableTableCellRemove {
+  border: 1px solid #BBBBBB;
+  padding: 2px;
+  height: 1.5em;
+  max-height: 1.5em;
+}
+
+.editTableHeading {
+	font-weight: bold;
+}
+
+.editTableModified {
+	background-color: yellow;
+}
+
+.editTableButton {
+	width: 6em;
+	max-width: 6em;
+}
+
+#titleHeader {
+	background-color: #d7d7d7;
+	width: 1000px;
+	height: 100px;
+}
+#spacerIMG{
+background-color: lightgrey;
+width: 80px;
+height: 80px;
+padding: 10px;
+	line-height: 10px;
+	font-size: 10px;
+float: left;
+}
+#leftMenu {
+	background-color: #cbcafa;
+	width: 100px;
+	height: 500px;
+	text-align: center;
+	font-size: 12px;
+	float: left;
+}
+#contentArea{
+	background-color: #f6f7f9;
+	width: 900px;
+	float: left;
+	height: 500px;
+ 	text-indent: 100px;
+	left: 100px;
+	border-left-style: none;
+	border-left-width: 100px;
+}
+
+#gridArea{
+	width: 1000px;
+}
+#headerTitle{
+	//background-color: orange;
+	width: 500px;
+	hesight: 90px;
+	float: left;
+	margin-left:100px;
+	margin-top: 30px;
+	font-size: 40px;
+}
