@@ -1,0 +1,33 @@
+Interview Transcription (Jill Victorino)
+Department head, 10%
+Jill 90%
+
+We received a copy of formal documentation, paper copies of the master schedule they use.
+Lots of regulations by the state (scheduling time patterns, standard time units)
+Department controls lab rooms with important equipment, fields, specialized stuff
+food science/nutrition is mostly controlled by university
+
+Profs email Jill to “set” their details and contraints (times, classes)
+Some classes are often scheduled together (classes that are prereqs with each other, lower division along with upper division courses)
+Try to keep a similar schedule between years
+
+List of suggested features:
+class conflicts (certain classes, most are taken at the same time)
+schedule prereqs at the same time
+seperate schedules per professor
+print (historical) schedules
+RPT (evaluation)
+different views of t he same data!
+FLAG ERRORS so that they can be fixed rapidly
+validation and correction
+use of previous years schedule
+unifying planning system between all departments
+
+collision criteria:
+--year to year similarity
+--once per year class
+--class priorioty (some classes more important to have at certain times than others)
+
+all contact goes through one person, not to many people.
+
+jill is willing to test the software!
