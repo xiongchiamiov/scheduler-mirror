@@ -1,0 +1,473 @@
+<html>
+<head>
+<title>
+Evaluation of Phase 1 Deliverable Pre-Release
+</title>
+</head>
+<body bgcolor=white>
+<p align=center>
+<font size=+2>
+<strong>Evaluation of Phase 1 Deliverable Pre-Release
+<br>
+Monday 10 October 2011</strong>
+</font>
+</p>
+
+<h2>
+General Observations
+</h2>
+<ol type=1>
+<p> <li>
+I like the slide-like style of the walk-through, but it needs an underlying
+"interesting and engaging story line", as discussed in the
+<a href="http://users.csc.calpoly.edu/~gfisher/classes/308/lectures/3.html#story-line">
+CSC 308 notes.
+</a>
+Here's a concrete suggestion:
+<blockquote>
+Select a Term <strong><em>-- new</em></strong>
+<br>
+Generate a Schedule <strong><em>-- new</em></strong>
+<br>
+
+<br>
+View Schedule <strong><em>-- existing, reworded</em></strong>
+<br>
+View Class Schedule <strong><em>-- existing, reworded</em></strong>
+<br>
+View Teacher Schedule <strong><em>-- existing, reworded</em></strong>
+<br>
+View Department Schedule <strong><em>-- existing, reworded</em></strong>
+<br>
+View Department Schedule, Hovering <strong><em>-- existing,
+reworded</em></strong>
+<br>
+
+<br>
+Manage Instructors <strong><em>-- existing, reworded</em></strong>
+<br>
+Add Instructor <strong><em>-- existing</em></strong>
+<br>
+Add Instructor, Filled In <strong><em>-- existing, reworded</em></strong>
+<br>
+Edit Instructor <strong><em>-- existing</em></strong>
+<br>
+Remove Instructor <strong><em>-- existing</em></strong>
+<br>
+Instructor Course Preferences <strong><em>-- existing</em></strong>
+<br>
+Instructor Time Preferences <strong><em>-- existing</em></strong>
+<br>
+Instructor Distance Preference <strong><em>-- existing</em></strong>
+<br>
+
+<br>
+Manage Courses <strong><em>-- new</em></strong>
+<br>
+Add Course <strong><em>-- new</em></strong>
+<br>
+Add Course, Filled In <strong><em>-- new</em></strong>
+<br>
+Edit Course <strong><em>-- new</em></strong>
+<br>
+Remove Course <strong><em>-- new</em></strong>
+<br>
+
+<br>
+Manage Rooms <strong><em>-- existing, reworded</em></strong>
+<br>
+Add a Room <strong><em>-- existing, reworded, repositioned</em></strong>
+<br>
+Add Room, Filled In <strong><em>-- new</em></strong>
+<br>
+Edit Room <strong><em>-- new</em></strong>
+<br>
+Remove Room <strong><em>-- new</em></strong>
+<br>
+Classroom Availability <strong><em>-- existing, reworded</em></strong>
+<br>
+Classrooms Preferences <strong><em>-- existing, reworded</em></strong>
+<br>
+
+<br>
+Filter Views <strong><em>-- existing, reworded</em></strong>
+<br>
+Filter View <strong><em>-- existing</em></strong>
+<br>
+Filter View, Selected Days <strong><em>-- existing, reworded</em></strong>
+<br>
+Filter View, Selected Instructors <strong><em>-- new</em></strong>
+</blockquote>
+<ol type=a>
+<p> <li>
+I put generation first since it seems to be a popular feature.
+<p> <li>
+I put viewing after generation since, for me, it follows better in a story
+line.
+<p> <li>
+I added course management and put it before room management, since I believe
+overall courses are a more important feature.
+</ol>
+<p>
+<p> <li>
+Aesthetically, I believe we have CSS prettifying in the plans, correct?
+<p>
+<p> <li>
+There is a question as to whether we should use the standard Poly web style, as
+defined at
+<a href="http://warc.calpoly.edu/">
+Web Authoring Resource Center,
+</a>
+or have one of our own.
+<ol type=a>
+<p> <li>
+I prefer the latter, i.e., our own CSS style.
+<p> <li>
+If we do so, we may need some form of graceful transition from the currently
+WARC-styled scheduler web page.
+<p> <li>
+Another option is to skip the WARC style altogether, including at the top-
+levels of the Scheduler Project web page.
+</ol>
+<p>
+<p> <li>
+The introductory paragraphs at
+<a href="http://scheduler.csc.calpoly.edu/release/alpha/scheduler/requirements/walkthru/index.html">
+<tt>requirements/walkthru/index.html</tt>
+</a>
+need some wordsmithing.  I'll do some in the next couple days and present on
+Wednesday in class.
+<ol type=a>
+<p> <li>
+A particular need is to explain that we've not yet had time to take into
+account all of the specific features that were discussed during the initial in-
+person interviews, but will do so in the next requirements release.
+<p> <li>
+This ties into the deeper requirements analysis discussed in
+<a href="http://users.csc.calpoly.edu/~gfisher/classes/402/lectures/week4.pdf">
+402 lecture notes week 4.
+</a>
+<p> <li>
+For this week's release, we'll do our best informally to address specific
+client concerns, and inform the clients that we'll do more next time.
+</ol>
+<p>
+<p> <li>
+We need to use a consistent prose style throughout.
+<ol type=a>
+<p> <li>
+I definitely prefer
+<a href="http://users.csc.calpoly.edu/~gfisher/classes/308/handouts/spec-doc-outline.html#prose-conventions">
+the prose convention for CSC 308,
+</a>
+that specifies present tense, third person, active voice.
+<p> <li>
+If we don't do this exactly, we still must have a <em>consistent</em> prose
+style.
+<li>
+Not to pick on any one specifically, I think the following is a good example of
+why passive voice can be confusing, since it is unclear precisely what the user
+does to perform a search:
+<blockquote>
+<em>"When a teacher is searched for in the search box, the table is filled with
+the classes that teacher is scheduled to teach for the quarter."</em>
+</ol>
+<p>
+<p> <li>
+Are we OK with using CSC department as the data example, or should use a
+generic set of instructor names?
+<ol type=a>
+<p> <li>
+I'm inclined to go generic.
+<p> <li>
+If we use CSC, we need a compelling rationalization of this to the explanation
+readers.
+</ol>
+<p> <li>
+We need to use consistent terminology throughout:
+<ol type=a>
+<p> <li>
+<strong>Instructor</strong>, not Teacher (simply for consistency)
+<p> <li>
+<strong>Course</strong>, not Class (simply for consistency, either will do)
+<p> <li>
+<strong>Room</strong>, not Classroom (to avoid potential confusion with lecture
+versus lab room)
+</ol>
+<p>
+<p> <li>
+I very much liked the consistency among the management UIs that is present in a
+number of the scheduler tools form prevous 308 work, e.g.,
+<a href="http://users.csc.calpoly.edu/~gfisher/classes-archive/308-f07/afternoon/requirements/">
+http://users.csc.calpoly.edu/~gfisher/classes-
+archive/308-f07/afternoon/requirements/
+</a>
+or
+<a href="http://users.csc.calpoly.edu/~gfisher/classes-archive/308-f09/afternoon/requirements/room-add.html">
+http://users.csc.calpoly.edu/~gfisher/classes-
+archive/308-f09/afternoon/requirements/room-add.html
+</a>
+<p> <li>
+<em>Clerical</em> -- I think the slide blurb would be better to the right of
+the figure.
+</ol>
+
+<h2>
+Walk-Thru Files
+</h2>
+
+<h3>
+FilterOn.html
+</h3>
+<ol type=1>
+<p> <li>
+Images are broken.
+<p> <li>
+Needs to tie in with viewing section of the slides.
+</ol>
+
+<h3>
+FilterSomeOffScroll.html
+</h3>
+<ol type=1>
+<p> <li>
+Needs a blurb and consisten look with other slides.
+<p> <li>
+Details link is wrong.
+</ol>
+
+<h3>
+ScheduleView*.html
+</h3>
+<ol type=1>
+<p> <li>
+This is not yet in the consistent slide-at-a-time walk-through format.
+<p> <li>
+The first slide appears to have all of the content that is then displayed in
+the individual slides.
+</ol>
+
+<h3>
+ScheduleViewClassFilled.html
+</h3>
+<ol type=1>
+<p> <li>
+What happens if there is more than one section at the same time?
+</ol>
+
+<h3>
+ScheduleViewEmpty.html
+</h3>
+<ol type=1>
+<p> <li>
+Needs blurb and consistent look.
+<p> <li>
+Should be the first single slide in the View section.
+</ol>
+
+<h3>
+ScheduleViewFilled.html
+</h3>
+<ol type=1>
+<p> <li>
+Not linked in the slides.  Is this correct?
+</ol>
+
+<h3>
+ScheduleViewFilledDept.html
+</h3>
+<ol type=1>
+<p> <li>
+<em>Definitely</em> needs a blurb, since it's unclear what colors mean.
+<p> <li>
+'Read More' link is wrong.
+</ol>
+
+<h3>
+ScheduleViewFilledDeptHover.html
+</h3>
+<ol type=1>
+<p> <li>
+I like the hover idea.
+<p> <li>
+As noted for previous slide, the colors should have some meaning, or at least
+an explanation of why they're different.
+</ol>
+
+<h3>
+database-room-add.html
+</h3>
+<ol type=1>
+The description of the "Add button in the bottom center" does not seem to apply
+here.
+<p> <li>
+The look and layout comments from the room-main slide apply here.
+</ol>
+
+<h3>
+database-room-advanced.html
+</h3>
+<ol type=1>
+<p> <li>
+The look and layout comments from the room-main slide apply here.
+</ol>
+
+<h3>
+database-room-main-filled.html
+</h3>
+<ol type=1>
+<p> <li>
+Look is not consistent (clerical).
+<p> <li>
+Definitely needs a blurb to describe the screens.
+<p> <li>
+My impression is that is UI is too complicated for a first entry point, and not
+consistent with the instructor management UIs.  I suggest having the 'Room
+Availability' dialog come up separatey, rather than by default in the intial
+display.
+</ol>
+
+<h3>
+database-room-main.html
+</h3>
+<ol type=1>
+</ol>
+
+<h3>
+index.html
+</h3>
+<ol type=1>
+<p> <li>
+<em>Clerical</em> -- needs a CSS.
+<p> <li>
+I suggest subdividing it into labeled subsections: Generate, View, Instructors,
+Courses, Rooms, Filter.
+</ol>
+
+<h3>
+instructor-*.html
+</h3>
+<ol type=1>
+<p> <li>
+These have the basic necessary features.
+<p> <li>
+The add and remove slides should be consistent, either both showing or not
+showing the instrctor list
+<p> <li>
+Per comments elsehwhere, they need to be made consistent with the other
+management UIs.
+</ol>
+
+<h3>
+instructor-pref-*.html
+</h3>
+<ol type=1>
+<p> <li>
+Even the slide blurb should describe the user action that leads to the UI being
+displayed.
+<p> <li>
+In course prefs, I'm not sure about the drag interface, as opposed to a simpler
+two-column list with courses and keyword or numeric pref value (or radio
+buttons).
+<p> <li>
+I like the times pref tab.
+<p> <li>
+I like the distance pref tab.
+</ol>
+
+<h3>
+template.html
+</h3>
+<ol type=1>
+<p> <li>
+<em>Clerical:</em> Needs to be removed for the walk-through index.
+<p> <li>
+Visio is a good tool, but it would be nice to have the look and feel be a
+little less Windows-like.  Is there a Visio setting to do this?
+</ol>
+
+<h3>
+FilterOn.html
+</h3>
+<p>
+<ul>
+<li>
+The images are broken here.
+
+</ul>
+
+<h2>
+Detailed Requirments Scenario Files
+</h2>
+<h3>
+database-instructor.html
+</h3>
+<ol type=1>
+</ol>
+
+<h3>
+database-room.html
+</h3>
+<ol type=1>
+<p> <li>
+The prose style needs to be made consistent.
+<p> <li>
+I suggest the
+<a href=".(Ah" http://users.csc.calpoly.edu/~gfisher/classes/308/spec-doc-outline#prose-conventions>
+308 convention
+</ol>
+
+<h3>
+index.html
+</h3>
+<ol type=1>
+</ol>
+
+<h3>
+instructor-add.html
+</h3>
+<ol type=1>
+</ol>
+
+<h3>
+instructor-edit.html
+</h3>
+<ol type=1>
+</ol>
+
+<h3>
+instructor-pref-courses.html
+</h3>
+<ol type=1>
+</ol>
+
+<h3>
+instructor-pref-distance.html
+</h3>
+<ol type=1>
+</ol>
+
+<h3>
+instructor-pref-times.html
+</h3>
+<ol type=1>
+</ol>
+
+<h3>
+instructor-pref.html
+</h3>
+<ol type=1>
+</ol>
+
+<h3>
+instructor-remove.html
+</h3>
+<ol type=1>
+</ol>
+
+
+
+
+
+</body>
+</html>
