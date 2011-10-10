@@ -205,7 +205,7 @@ public class Course implements Serializable, Comparable<Course>
     */
    public Course (Course c)
    {
-      this.courseName         = c.getCourseName();
+      this.courseName         = c.getName();
       this.id                 = c.getId();
       this.wtu                = c.getWTUs();
       this.scu                = c.getSCUs();
@@ -296,7 +296,7 @@ public class Course implements Serializable, Comparable<Course>
 	 */
 	public String toString()
 	{
-		return this.department + this.id;
+		return this.department + " " + this.id;
 	}
 
 	/**
@@ -378,7 +378,7 @@ public class Course implements Serializable, Comparable<Course>
 	 *  @return The string representing the course Name
 	 *
 	 **/
-	public String getCourseName() 
+	public String getName() 
    {
 		return courseName;
 	}
@@ -588,14 +588,18 @@ public class Course implements Serializable, Comparable<Course>
 	}
 
 	/**
-	 *  Sets the prefix
+	 *  Sets the department prefix
 	 *
-	 *  @param pre The string representing the course Name
+	 *  @param pre The string representing the course dept prefix
+	 *  
+	 *  @return this object
 	 *
 	 **/
-	public void setDepartment (String pre) 
+	public Course setDept (String pre) 
    {
 		this.department = pre;
+		
+		return this;
 	}
 
    /**
@@ -660,10 +664,14 @@ public class Course implements Serializable, Comparable<Course>
     * Sets the numeric id for this course.
     *
     * @param id The number to set this course's id to
+    * 
+    * @return this Course object
     */
-   public void setID (int id)
+   public Course setID (int id)
    {
       this.id = id;
+      
+      return this;
    }
 
    /**
@@ -705,10 +713,14 @@ public class Course implements Serializable, Comparable<Course>
     * Sets the name for this course
     *
     * @param str The name to give this course
+    * 
+    * @return this object
     */
-   public void setName (String str)
+   public Course setName (String str)
    {
       this.courseName = str;
+      
+      return this;
    }
    /*<==*/
 }

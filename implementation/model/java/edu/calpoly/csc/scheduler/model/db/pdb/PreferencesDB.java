@@ -306,7 +306,7 @@ public class PreferencesDB extends Observable {
 
         while (it.hasNext()) {
            Course c = (Course) it.next();
-           insert2.add("( " + " '" + c.getCourseName() +  "', '" + p.name + "')");
+           insert2.add("( " + " '" + c.getName() +  "', '" + p.name + "')");
         }
 
 
