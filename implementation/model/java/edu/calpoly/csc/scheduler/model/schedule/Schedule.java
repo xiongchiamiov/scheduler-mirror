@@ -130,29 +130,17 @@ public class Schedule extends Observable implements Serializable
     * @param cdb The list of courses to schedule
     * @param idb The list of instructors with which to teach the courses
     * @param ldb The list of location in which to teach the courses
-    * @param pdb The list of schedule preferences to be incorporated in the 
-    *            schedule
-    * @param p SwingWorker used to display scheduling progress to the user. If
-    *          null, no progress bar will be created
     */
    /* generate ==>*/
    public void generate (Vector<Course> cdb,
                          Vector<Instructor> idb, 
-                         Vector<Location> ldb,
-                         Vector<SchedulePreference> pdb)
+                         Vector<Location> ldb)
    {
-      int count = 0;
-      int total = 0;
-      for (Course c: cdb)
-      {
-         total += c.getSection();
-      }
-
       /*
        * Reset all records (including the schedule).
        */
       reset();
-      initBookings(idb, ldb, pdb);
+      initBookings(idb, ldb);
 
       Course c = null;
       while (!cdb.isEmpty())
@@ -171,16 +159,11 @@ public class Schedule extends Observable implements Serializable
          {
             try 
             {
-               /*
-                * Gen and update progress
-                */
-               ////System.err.println (i);
-               c = gen (i, cdb, idb, ldb, pdb);
+               c = gen (i, cdb, idb, ldb);
             }
             /* Fatal */
             catch (EmptyCourseDatabaseException e) 
             {
-               ////System.err.println ("Empty CDB"); 
                break;
             }
             /* 
@@ -191,17 +174,14 @@ public class Schedule extends Observable implements Serializable
              */
             catch (InstructorCanTeachNothingException e) 
             {
-               ////System.err.println ("CANNOT TEACH");
                toRemove.add(i);
             }
             catch (InstructorWTUMaxedException e) 
             {
-               ////System.err.println ("Have no more WTU's");
                toRemove.add(i);
             }
             catch (CouldNotBeScheduledException e)
             {
-               ////System.err.println ("TBA up top for " + e.c + ". Dec'ing sec. count");
                e.printStackTrace();
 
                c = e.si.getCourse();
@@ -212,25 +192,15 @@ public class Schedule extends Observable implements Serializable
             {
                e.printStackTrace();
             }
-            finally
-            {
-
-            }
          }
-         //Remove instructors who should no longer be considered
          for (Instructor i: toRemove)
          {
-            ////System.err.println ("REMOVING");
             idb.remove(i);
          }
-         ////System.err.println ("Instructors left: " + idb);
 
       }
-      ////System.err.println ("NOTIFYING");
       this.setChanged();
-      ////System.err.println ("SET");
       this.notifyObservers();
-      ////System.err.println ("Looks like we're done");
    }/*<==*/
 
    /**
@@ -267,13 +237,10 @@ public class Schedule extends Observable implements Serializable
     *
     * @param idb List of instructors for generating
     * @param ldb List of locations for generating
-    * @param pdb List of SchedulePreferences to apply to the schedule 
-    *            (currently, should only be NCO's)
     */
    /* initBookings ==>*/
    private void initBookings (Vector<Instructor> idb,
-                              Vector<Location> ldb,
-                              Vector<SchedulePreference> pdb)
+                              Vector<Location> ldb)
    {
       for (Location l: ldb)
       {
@@ -291,8 +258,6 @@ public class Schedule extends Observable implements Serializable
        */
       this.iBookings.put(Instructor.STAFF, new WeekAvail());
       this.treatment.put(Instructor.STAFF, new Treatment());
-
-      this.cot = new CourseOverlapTracker (pdb);
    }/*<==*/
 
    /**
@@ -338,8 +303,7 @@ public class Schedule extends Observable implements Serializable
    private Course gen (Instructor i,
                        Vector<Course> cdb, 
                        Vector<Instructor> idb, 
-                       Vector<Location> ldb,
-                       Vector<SchedulePreference> pdb)
+                       Vector<Location> ldb)
       throws EmptyCourseDatabaseException,
              InstructorCanTeachNothingException,
              InstructorWTUMaxedException,
@@ -357,60 +321,40 @@ public class Schedule extends Observable implements Serializable
       base = buildSI_course (cdb, base);
 
       /*
-       * If this course is already booked due to a locked ScheduleItem, return
-       * immediately. The Scheduler will keep on cranking, thinking the course
-       * was scheduled. Technically, it has been, but was done so in the 
-       * previous generation for the old schedule.
+       * This list will contain SI's with the same course, but with different
+       * start times, end times, and days-to-be-taught. 
        */
-      if (!alreadyLocked(base.getCourse()))
+      Vector<ScheduleItem> sis = findTime(base, base.getCourse());
+      /*
+       * This'll return a list similar to the one above, but with more
+       * SI's. In particular, each SI will have the same course, times, and
+       * days-to-be-taught (along w/ any corresponding lab). However, the
+       * location of each SI (and any lab) will be different.
+       * 
+       * I reassign to "sis" b/c there's no need to keep the old one lyin' 
+       * around.
+       */
+      sis = findLocations (ldb, sis);
+      
+      /*
+       * If not even one SI could be created, the course could not be 
+       * scheduled, so we should throw an exception saying so. 
+       */
+      if (sis.size() == 0)
       {
-         ////System.err.println ("Not locked!");
+         throw new CouldNotBeScheduledException(base);
+      }
 
-         /*
-          * This list will contain SI's with the same course, but with different
-          * start times, end times, and days-to-be-taught. 
-          */
-         Vector<ScheduleItem> sis = findTime(base, base.getCourse());
-         /*
-          * This'll return a list similar to the one above, but with more
-          * SI's. In particular, each SI will have the same course, times, and
-          * days-to-be-taught (along w/ any corresponding lab). However, the
-          * location of each SI (and any lab) will be different.
-          * 
-          * I reassign to "sis" b/c there's no need to keep the old one lyin' 
-          * around.
-          */
-         sis = findLocations (ldb, sis);
-         
-         /*
-          * If not even one SI could be created, the course could not be 
-          * scheduled, so we should throw an exception saying so. 
-          */
-         if (sis.size() == 0)
-         {
-            throw new CouldNotBeScheduledException(base);
-         }
-
-         /*
-          * Add it
-          */
-         try
-         {
-            addBest(sis);
-         }
-         catch (Exception e)
-         {
-            e.printStackTrace();
-         }
-   
-         /* Debugging */
-         for (Course temp: this.treatment.get(base.getInstructor()).courses)
-         {
-            ////System.err.println (temp + " " + temp.getSection() + " " + 
-                  //temp.getCourseType());
-         }
-         ////System.err.println ("");
-         ////System.err.println("\n======================================\n");
+      /*
+       * Add it
+       */
+      try
+      {
+         addBest(sis);
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
       }
 
       /*
@@ -420,27 +364,6 @@ public class Schedule extends Observable implements Serializable
       decrementSectionCount(base.getCourse(), cdb);
 
       return base.getCourse();
-   }/*<==*/
-
-   /**
-    * Is not used yet. 
-    *
-    * @param c Course whose "locked-ness" is to be checked for
-    *
-    * @return false. This method needs to be worked on.
-    */
-   private boolean alreadyLocked (Course c)/*==>*/
-   {
-      boolean r = false;
-      /*
-       * HACK (sort of): Course's section numbers are not considered for
-       * equality, but they are necessary for deciding whether a course has
-       * already been scheduled b/c it was locked. So, a simple call to 
-       * "lockedItems.containsKey" won't work, b/c it will return true 
-       * irrespective of a course's section count. Thus, sadly, I've to 
-       * iterate through all the lockedItems keys and look for a match.
-       */
-      return r;
    }/*<==*/
 
    /**
@@ -475,11 +398,6 @@ public class Schedule extends Observable implements Serializable
       {
          cdb.remove(realCourse);
       }
-      for (Course temp: cdb)
-      {
-         ////System.err.println ("CDB: " + temp + " - " + temp.getSection());
-      }
-      ////System.err.println ("Course: " + c + " - " + c.getSection());
    }/*<==*/
    /*<==*/ 
 
@@ -530,11 +448,10 @@ public class Schedule extends Observable implements Serializable
       /*
        * Exhaustively find the best course.
        */
-      ////System.err.println ("HERE, w/ cdb = " + cdb);
       for (Course temp: cdb)
       {
          int pref = i.getPreference(temp);
-         ////System.err.println ("Has pref " + pref + " for " + temp);
+
          /*
           * Don't consider courses w/ a "0" preference
           */
@@ -558,14 +475,7 @@ public class Schedule extends Observable implements Serializable
                bestPref = pref;
             }
          }
-         /*
-          * Can't get any better than this.
-          */
-         if (bestPref == 10) { break; }
-         ////System.err.println ("CanPref: " + canPref);
-         ////System.err.println ("CanWTU: "  + canWTU);
       }
-      ////System.err.println ("Looped through all courses");
       /*
        * If no course existed which professor was able to teach.
        */
@@ -575,9 +485,6 @@ public class Schedule extends Observable implements Serializable
        * teach.
        */
       if (!canWTU)  { throw new InstructorWTUMaxedException (); }
-      
-      ////System.err.println ("Finished");
-      ////System.err.println (); /* For aesthetics */
 
       si.setCourse(new Course(bestC));
       /*
@@ -721,7 +628,7 @@ public class Schedule extends Observable implements Serializable
           * A return < 1 means that time didn't divide well into the number of
           * days provided.
           */
-         int halfHours = c.getLengthOverDays(dayNum);
+         int halfHours = c.getLengthPerDay(dayNum);
          ////System.err.println ("LENGTH: " + halfHours);
          if (halfHours > 0)
          {
@@ -774,7 +681,7 @@ public class Schedule extends Observable implements Serializable
       )
    {
       Vector<DaysAndTime> dats = new Vector<DaysAndTime>();
-      ////System.err.println ("Num of days: " + nDays);
+
       /*
        * Create DaysAndTime objects for when this course could be taught across
        * the Weeks computed above. 
@@ -790,7 +697,7 @@ public class Schedule extends Observable implements Serializable
           */
          try
          {
-            for (Time t = new Time(0, 0); /* Exception will break */; t.addHalf())
+            for (Time t = new Time(0, 0); t.addHalf();)
             {
                /*
                 * Need to make a new Time w/ "t's" fields, so that we don't 
@@ -812,10 +719,7 @@ public class Schedule extends Observable implements Serializable
                }
             }
          }
-         catch (InvalidInputException e)
-         {
-            ////System.err.println ("Finished makeDAT for " + w);
-         }
+         catch (Exception e) { e.printStackTrace(); }
       }
       return dats;
    }/*<==*/
@@ -942,13 +846,12 @@ public class Schedule extends Observable implements Serializable
             if (((int)i.getAvgPrefForTimeRange(days, s, e)) > 0)
             {
                /*
-                * Ensure this course does not overlap with other courses it's not 
-                * supposed to.
+                * TODO: ENABLE ONCE PREFERENCES ARE WORKING AGAIN
                 */
-               if (doesNotOverlap(c, s, e, days))
-               {
-                  r = new DaysAndTime (days, s, e);
-               }
+//               if (doesNotOverlap(c, s, e, days))
+//               {
+//                  r = new DaysAndTime (days, s, e);
+//               }
             }
             else
             {
@@ -1469,7 +1372,7 @@ public class Schedule extends Observable implements Serializable
    public void replaceWithThisFromFile (Schedule s)
    {
       this.reset();
-      this.initBookings(s.iList, s.lList, new Vector<SchedulePreference>());
+      this.initBookings(s.iList, s.lList);
       this.cot = s.cot;
       this.TBAs = s.TBAs;
       this.treatment = s.treatment;

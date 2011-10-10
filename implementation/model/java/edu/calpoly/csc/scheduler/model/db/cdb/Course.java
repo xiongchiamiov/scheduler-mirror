@@ -211,7 +211,7 @@ public class Course implements Serializable, Comparable<Course>
       this.scu                = c.getSCUs();
       this.courseType         = c.getCourseType();
       this.maxEnrollment      = c.getMaxEnrollment();
-      this.numOfSections      = c.getNumberOfSections();
+      this.numOfSections      = c.getNumOfSections();
       this.requiredEquipment  = c.getRequiredEquipment().clone();
       this.department             = c.getDepartment();
       this.dfc                = c.getDFC();
@@ -493,7 +493,7 @@ public class Course implements Serializable, Comparable<Course>
 	 * Returns the number of sections.
 	 * @return the number of sections.
 	 */
-	public int getNumberOfSections() 
+	public int getNumOfSections() 
    {
 		return numOfSections;
 	}
@@ -523,10 +523,10 @@ public class Course implements Serializable, Comparable<Course>
    }
 
    /** TODO */
-   public int getLengthOverDays (int numOfDays)
+   public int getLengthPerDay (int numOfDays)
    {
       int r = -1;
-      if (hoursDivideIntoDays(numOfDays))
+      if (canBeTaughtForDays(numOfDays))
       {
          r = ((this.hoursPerWeek * 2) / numOfDays);
       }
@@ -545,7 +545,7 @@ public class Course implements Serializable, Comparable<Course>
     * @return ((((this.hoursPerWeek * 2) % numOfDays) == 0) &&
     *            (this.hoursPerWeek * 2) / numOfDays) >  1));
     */
-   public boolean hoursDivideIntoDays (int numOfDays)
+   public boolean canBeTaughtForDays (int numOfDays)
    {
       int halfHours = (this.hoursPerWeek * 2);
       return (((halfHours % numOfDays) == 0) && ((halfHours / numOfDays) > 1));
