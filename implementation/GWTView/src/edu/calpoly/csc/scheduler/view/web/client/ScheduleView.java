@@ -23,9 +23,6 @@ import com.google.gwt.user.client.ui.TextBox;
 
 import edu.calpoly.csc.scheduler.view.web.shared.gwtScheduleItem;
 
-/**
- * Entry point classes define <code>onModuleLoad()</code>.
- */
 public class ScheduleView
 {
  /**

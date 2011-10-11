@@ -7,6 +7,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import edu.calpoly.csc.scheduler.view.web.client.GreetingService;
 import edu.calpoly.csc.scheduler.view.web.client.table.EditableTableEntry;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.gwtScheduleItem;
 
 /**
@@ -17,7 +18,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		GreetingService {
 
 
-	public ArrayList<InstructorGWT> getProfessorNames() throws IllegalArgumentException {
+	public ArrayList<InstructorGWT> getInstructorNames() throws IllegalArgumentException {
 		
 		/** TODO */
 		// replace sample data with data from the db
@@ -55,7 +56,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	}
 	
 	
-	public void saveProfessors(ArrayList<InstructorGWT> instructors,
+	public void saveInstructors(ArrayList<InstructorGWT> instructors,
 			ArrayList<InstructorGWT> deleted) throws IllegalArgumentException {
 		
 		/** TODO */
@@ -67,18 +68,25 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	 public ArrayList<gwtScheduleItem> getGWTScheduleItems()
 	 {
 	  ArrayList<gwtScheduleItem> items = new ArrayList<gwtScheduleItem>();
-	  gwtScheduleItem i1 = new gwtScheduleItem("Gene Fisher", "CPE", 101, 1, "MWF",
-	   new int[] {1, 3, 5}, 8, 10);
-	  gwtScheduleItem i2 = new gwtScheduleItem("Gene Fisher", "CPE", 402, 1, "MWF",
-	   new int[] {1, 3, 5}, 14, 16);
-	  gwtScheduleItem i3 = new gwtScheduleItem("Clark Turner", "CPE", 300, 1, "TR",
-	   new int[] {2, 4}, 12, 14);
-	  gwtScheduleItem i4 = new gwtScheduleItem("Nancy Parham", "CPE", 141, 1, "MWF",
-	   new int[] {1, 3, 5}, 13, 14);
-	  items.add(i1);
-	  items.add(i2);
-	  items.add(i4);
-	  items.add(i3);
+	  items.add(new gwtScheduleItem("Gene Fisher", "CPE", 101, 1, "MWF", new int[] {1, 3, 5}, 8, 10));
+	  items.add(new gwtScheduleItem("Gene Fisher", "CPE", 402, 1, "MWF", new int[] {1, 3, 5}, 14, 16));
+	  items.add(new gwtScheduleItem("Clark Turner", "CPE", 300, 1, "TR", new int[] {2, 4}, 12, 14));
+	  items.add(new gwtScheduleItem("Nancy Parham", "CPE", 141, 1, "MWF", new int[] {1, 3, 5}, 13, 14));
 	  return items;
 	 }
+
+
+	@Override
+	public ArrayList<LocationGWT> getLocationNames() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public void saveLocations(ArrayList<LocationGWT> locations,
+			ArrayList<LocationGWT> deleted) {
+		// TODO Auto-generated method stub
+		
+	}
 }

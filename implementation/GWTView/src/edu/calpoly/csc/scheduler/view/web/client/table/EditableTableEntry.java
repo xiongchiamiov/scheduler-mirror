@@ -3,6 +3,7 @@ package edu.calpoly.csc.scheduler.view.web.client.table;
 import java.util.ArrayList;
 
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
 
 /**
  * Class represents an entry (row) for an editable table
@@ -41,6 +42,17 @@ public class EditableTableEntry {
 		initialize(values);
 	}
 	
+	public EditableTableEntry(LocationGWT location) {
+		ArrayList<String> values = new ArrayList<String>();
+
+		values.add(location.getBuilding());
+		values.add(location.getRoom());
+		values.add(String.valueOf(location.getMaxOccupancy()));
+		values.add(location.getType());
+		
+		initialize(values);
+	}
+	
 	/**
 	 * Returns the instructor represented by the table entry
 	 * @return the represented instructor, null if there is an error
@@ -53,6 +65,14 @@ public class EditableTableEntry {
 		
 		return new InstructorGWT(newValues.get(0), newValues.get(1), key,
 				newValues.get(2), newValues.get(3));
+	}
+	
+	public LocationGWT getLocation() {
+		if (newValues.size() < 4) {
+			return null;
+		}
+		
+		return new LocationGWT(newValues.get(0), newValues.get(1), newValues.get(2), Integer.valueOf(newValues.get(3)));
 	}
 	
 	

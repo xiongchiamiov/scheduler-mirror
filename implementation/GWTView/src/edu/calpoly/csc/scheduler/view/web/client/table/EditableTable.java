@@ -291,7 +291,7 @@ public class EditableTable{
 				new ClickHandler(){
 			public void onClick(ClickEvent event){
 				
-				GWTView.saveProfessors(EditableTableEntry.getInstructors(entries), 
+				GWTView.saveInstructors(EditableTableEntry.getInstructors(entries), 
 						EditableTableEntry.getInstructors(deleted));
 		   }
 		});
@@ -312,7 +312,7 @@ public class EditableTable{
 				new ClickHandler(){
 			public void onClick(ClickEvent event){
 				
-				GWTView.populateProfessors();
+				GWTView.populateInstructors();
 		   }
 		});
 		
