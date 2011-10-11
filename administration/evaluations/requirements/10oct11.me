@@ -1,0 +1,469 @@
+.sz 11
+.ds ~ /users/gfisher/nroff
+. so \*~/stdhdr.me
+.(TI "Evaluation of Phase 1 Deliverable Pre-Release"
+.(S +2
+\fBEvaluation of Phase 1 Deliverable Pre-Release
+.hbr
+Monday 10 October 2011\fP
+.)S
+.)TI
+
+.uh "General Observations" 1
+.(L 1
+.le
+I like the slide-like style of the walk-through, but it needs an underlying
+"interesting and engaging story line", as discussed in the
+.(Ah "http://users.csc.calpoly.edu/~gfisher/classes/308/lectures/3.html#story-line"
+CSC 308 notes.
+.)Ah
+Here's a concrete suggestion:
+.(n
+Start the Scheduler Tool \f[BI]-- new\fP
+Select a Term \f[BI]-- new\fP
+Generate a Schedule \f[BI]-- new\fP
+
+View Schedule \f[BI]-- existing, reworded\fP
+View Class Schedule \f[BI]-- existing, reworded\fP
+View Instructor Schedule \f[BI]-- existing, reworded\fP
+View Department Schedule \f[BI]-- existing, reworded\fP
+View Department Schedule, Hovering \f[BI]-- existing, reworded\fP
+
+Manage Instructors \f[BI]-- existing, reworded\fP
+Add Instructor \f[BI]-- existing\fP
+Add Instructor, Filled In \f[BI]-- existing, reworded\fP
+Edit Instructor \f[BI]-- existing\fP
+Remove Instructor \f[BI]-- existing\fP
+Instructor Course Preferences \f[BI]-- existing\fP
+Instructor Time Preferences \f[BI]-- existing\fP
+Instructor Distance Preference \f[BI]-- existing\fP
+
+Manage Courses \f[BI]-- new\fP
+Add Course \f[BI]-- new\fP
+Add Course, Filled In \f[BI]-- new\fP
+Edit Course \f[BI]-- new\fP
+Remove Course \f[BI]-- new\fP
+
+Manage Rooms \f[BI]-- existing, reworded\fP
+Add a Room \f[BI]-- existing, reworded, repositioned\fP
+Add Room, Filled In \f[BI]-- new\fP
+Edit Room \f[BI]-- new\fP
+Remove Room \f[BI]-- new\fP
+Classroom Availability \f[BI]-- existing, reworded\fP
+Classrooms Preferences \f[BI]-- existing, reworded\fP
+
+Filter Views \f[BI]-- existing, reworded\fP
+Filter View \f[BI]-- existing\fP
+Filter View, Selected Days \f[BI]-- existing, reworded\fP
+Filter View, Selected Instructors \f[BI]-- new\fP
+.)n
+.(L a .4v
+.le
+I put a "Start the Scheduler Tool" slide at the very top, since it should be
+the slide show entry point.
+.(L i
+.le
+I understand that Matt S. and Tyler Y. have a
+version of the top-level UI that isn't yet hooked into the slide show.
+.le
+I look forward to seeing this.
+.)L i
+.le
+After the initials screen, I put a couple generation slides at the beginning,
+since auto-generation seems to be a popular feature with many of the clients
+we've interviewed so far.
+.le
+I put basic viewing after generation since, for me, it follows better in a
+story line.  The more advanced filtered viewing I left at the end, since it's a
+level of detail that is better to put later in the story.
+.le
+I added course management and put it before room management, since I believe
+overall courses are a more important feature.
+.(L i .4v
+.le
+Based on input from Kaylene,
+course management slides were supposed to be done Erik W.
+.le
+HEY ERIK -- WE NEED YOUR STUFF!  If it's an SVN issue, send me your files by
+mail and I'll commit them.
+.)L i
+.le
+\f[BI]IN-CLASS DECISION:\fP The consensus is that the preceding proposed story
+line is fundamentally sound, and Mike S. has updated and committed
+walkthru/index.html accordingly.
+.)L a
+.hc p
+.le
+Aesthetically, I believe we have CSS prettifying in the plans, correct?
+.hc p
+.le
+There is a question as to whether we should use the standard Poly web style, as
+defined at
+.(Ah "http://warc.calpoly.edu/"
+Web Authoring Resource Center,
+.)Ah
+or have one of our own.
+.(L a .2v
+.le
+I prefer the latter, i.e., our own CSS style.
+.le
+If we do so, we may need some form of graceful transition from the currently
+WARC-styled scheduler web page.
+.le
+Another option is to skip the WARC style altogether, including at the
+top-levels of the Scheduler Project web page.
+.)L a
+.hc p
+.le
+The introductory paragraphs at
+.(Ah "http://scheduler.csc.calpoly.edu/release/alpha/scheduler/requirements/walkthru/index.html"
+\fCrequirements/walkthru/index.html\fP
+.)Ah
+need some wordsmithing.  I'll do some in the next couple days and present on
+Wednesday in class.
+.(L a .2v
+.le
+A particular need is to explain that we've not yet had time to take into
+account all of the specific features that were discussed during the initial
+in-person interviews, but will do so in the next requirements release.
+.le
+This ties into the deeper requirements analysis discussed in
+.(Ah "http://users.csc.calpoly.edu/~gfisher/classes/402/lectures/week4.pdf"
+402 lecture notes week 4.
+.)Ah
+.le
+For this week's release, we'll do our best informally to address specific
+client concerns, and inform the clients that we'll do more next time.
+.)L a
+.hc p
+.le
+We need to use a consistent prose style throughout.
+.(L a .2v
+.le
+I definitely prefer
+.(Ah "http://users.csc.calpoly.edu/~gfisher/classes/308/handouts/spec-doc-outline.html#prose-conventions"
+the prose convention for CSC 308,
+.)Ah
+that specifies present tense, third person, active voice.
+.le
+If we don't do this exactly, we still must have a \fIconsistent\fP prose
+style.
+.ee
+Not to pick on any one specifically, I think the following is a good example of
+why passive voice can be confusing, since it is unclear precisely what the user
+does to perform a search:
+.(i
+\fI"When a teacher is searched for in the search box, the table is filled with
+the classes that teacher is scheduled to teach for the quarter."\fP
+.)L a
+.hc p
+.le
+Are we OK with using CSC department as the data example, or should use a
+generic set of instructor names?
+.(L a
+.le
+I'm inclined to go generic.
+.le
+If we use CSC, we need a compelling rationalization of this to the explanation
+readers.
+.le
+\f[BI]IN-CLASS DECISION:\fP We will use the CHEM department as the consistent
+example throughout all of the requirements scenarios and slides.  Mike S. is
+sending a message to the Chem department client he interviewed to confirm that
+his is OK with their department.  We expect that it will be.
+.)L a
+.le
+We need to use consistent terminology throughout:
+.(L a .2v
+.le
+\fBInstructor\fP, not Teacher (simply for consistency)
+.le
+\fBCourse\fP, not Class (simply for consistency, either will do)
+.le
+\fBLocation\fP, not Classroom (to avoid potential confusion with lecture room
+versus lab room versus some other kind of location altogether)
+.)L a
+.hc p
+.le
+I very much liked the consistency among the management UIs that is present in a
+number of the scheduler tools form previous 308 work, e.g.,
+.(Ah "http://users.csc.calpoly.edu/~gfisher/classes-archive/308-f07/afternoon/requirements/"
+http://users.csc.calpoly.edu/~gfisher/classes-archive/308-f07/afternoon/requirements/
+.)Ah
+or
+.(Ah "http://users.csc.calpoly.edu/~gfisher/classes-archive/308-f09/afternoon/requirements/room-add.html"
+http://users.csc.calpoly.edu/~gfisher/classes-archive/308-f09/afternoon/requirements/room-add.html
+.)Ah
+\f[BI]IN-CLASS DISCUSSION:\fP Michael H. mentioned that he and other
+requirements team members have discussed a form of uniform editing for
+instructors, courses, and locations.  What they've come up with is a
+direct-edit tabular view, with object-specific column headings.  I look
+forward to seeing this.
+.hc p
+.le
+\fIClerical\fP -- I think the slide blurb would be better to the right of the
+figure.
+.)L 1
+
+.uh "Walk-Thru Files" 1
+.pp
+The following file-specific comments are in addition to the general discussion
+above.
+
+.uh "FilterOn.html" 2
+.(L 1
+.le
+Images are broken.
+.le
+Needs to tie in with viewing section of the slides.
+.)L 1
+
+.uh "FilterSomeOffScroll.html" 2
+.(L 1
+.le
+Needs a blurb and consistent look with other slides.
+.le
+\&'Read More'  link is wrong.
+.)L 1
+
+.uh "ScheduleView*.html" 2
+.(L 1
+.le
+This is not yet in the consistent slide-at-a-time walk-through format.
+.le
+The first slide appears to have all of the content that is then displayed in
+the individual slides.
+.)L 1
+
+.uh "ScheduleViewClassFilled.html" 2
+.(L 1
+.le
+What happens if there is more than one section at the same time?  This is a
+fine detail, but there's nothing immediately in the display that helps me
+understand how it might be handled.
+.le
+.)L 1
+
+.uh "ScheduleViewEmpty.html" 2
+.(L 1
+.le
+Needs blurb and consistent look.
+.le
+Should be the first single slide in the View section.
+.)L 1
+
+.uh "ScheduleViewFilled.html" 2
+.(L 1
+.le
+Not linked in the slides.  Is this correct?
+.)L 1
+
+.uh "ScheduleViewFilledDept.html" 2
+.(L 1
+.le
+\fIDefinitely\fP needs a blurb, since it's unclear what colors mean.
+.le
+\&'Read More' link is wrong.
+.)L 1
+
+.uh "ScheduleViewFilledDeptHover.html" 2
+.(L 1
+.le
+I like the hover idea.
+.le
+As noted for the previous slide, the colors should have some meaning, or at
+least an explanation of why they're different.
+.)L 1
+
+.uh "database-room-add.html" 2
+.(L 1
+The description of the "Add button in the bottom center" does not seem to apply
+here.
+.le
+The look and layout comments from the room-main slide apply here.
+.)L 1
+
+.uh "database-room-advanced.html" 2
+.(L 1
+.le
+The look and layout comments from the room-main slide apply here.
+.)L 1
+
+.uh "database-room-main-filled.html" 2
+.(L 1
+.le
+Look is not consistent (clerical).
+.le
+Definitely needs a blurb to describe the screens.
+.le
+My impression is that this UI is too complicated for a first entry point, and
+not consistent with the instructor management UIs.  I suggest having the 'Room
+Availability' dialog come up separately, rather than by default in the initial
+display.
+.)L 1
+
+.uh "database-room-main.html" 2
+.(L 1
+.)L 1
+
+.uh "index.html" 2
+.(L 1
+.le
+\fIClerical\fP -- needs a CSS.
+.le
+I suggest subdividing it into labeled subsections: Generate, View, Instructors,
+Courses, Rooms, Filter.
+.)L 1
+
+.uh "instructor-*.html" 2
+.(L 1
+.le
+These have the basic necessary features.
+.le
+The add and remove slides should be consistent, either both showing or not
+showing the instructor list
+.le
+Per comments elsewhere, they need to be made consistent with the other
+management UIs.
+.)L 1
+
+.uh "instructor-pref-*.html" 2
+.(L 1
+.le
+Even the slide blurb should describe the user action that leads to the UI being
+displayed.
+.le
+In course prefs, I'm not sure about the drag interface, as opposed to a simpler
+two-column list with courses and keyword or numeric pref value (or radio
+buttons).
+.le
+I like the times pref tab.
+.le
+I like the distance pref tab.
+.)L 1
+
+.uh "template.html" 2
+.(L 1
+.le
+\fIClerical:\fP Needs to be removed for the walk-through index.
+.le
+Visio is a good tool, but it would be nice to have the look and feel be a
+little less Windows-like.  Is there a Visio setting to do this?
+.)L 1
+
+.uh "FilterOn.html" 2
+.pp
+.(E .2v
+.ee
+The images are broken here.
+.)E
+
+.uh "Detailed Requirments Scenario Files" 1
+.pp
+\f[BI]IN-CLASS DECISION:\fP We decided that we will \fINOT\fP include the
+detailed requirements scenarios in the Phase 1 release this Friday.  This
+includes removing the 'Read More' link on all of the slides.  Therefore,
+addressing all of the comments below is deferred until \fIAFTER\fP the Phase 1
+release.
+.pp
+The following file-specific comments are in addition to the general discussion
+above.  To summarize, the most important to-do items are these:
+.(E .4v
+.ee
+Use a consistent prose style, with the
+.(Ah "http://users.csc.calpoly.edu/~gfisher/classes/308/handouts/spec-doc-outline.html#prose-conventions"
+308 conventions
+.)Ah
+as the default.
+.ee
+Use a common UI look for all slides.
+.ee
+As discussed in
+.(Ah "http://users.csc.calpoly.edu/~gfisher/classes/402/lectures/week3.pdf"
+402 Notes Week 3,
+.)Ah
+have a consistent relationship between the blurb on the slides and the
+beginning sentence or two in the scenarios.
+.)E
+.sp
+\f[BI]Again, since we will not release the detailed scenarios for Phase 1, work
+on them is deferred until after Friday 14 October.\fP  This deferral applies to
+all of the evaluation comments that follow below.
+
+.uh "database-instructor.html" 2
+.(L 1
+.le
+Clerical: The prose style needs to be fixed.
+.(L a .4v
+.le
+Use present tense, no "will".  E.g., "In this view, the user sees a list of
+instructors."
+.le
+Use third person.  E.g., "To add an instructor, the user clicks the 'Add'
+button."
+.)L a
+.le
+Basic content looks satisfactory.  To refine further, we need to
+.(L a .4v
+.le
+Make sure we have all instructor attributes mentioned  in any client
+interviews, in particular the supporting documentation supplied by some
+clients.
+.le
+Make the instructor information in the scenarios consistent with the existing
+data model in the Java model code.
+.)L a
+.)L 1
+
+.uh "database-room.html" 2
+.(L 1
+.le
+As noted above, I think the 'Room Availability' frame should be accessible with
+a user click, not part of the initial display.
+.le
+The prose style needs to be made consistent.  Again, I suggest the
+.(Ah "http://users.csc.calpoly.edu/~gfisher/classes/308/handouts/spec-doc-outline.html#prose-conventions"
+308 conventions
+.)Ah
+.)L 1
+
+.if 0 \{\
+.uh "index.html" 2
+.(L 1
+.le
+.)L 1
+
+.uh "instructor-add.html" 2
+.(L 1
+.)L 1
+
+.uh "instructor-edit.html" 2
+.(L 1
+.)L 1
+
+.uh "instructor-pref-courses.html" 2
+.(L 1
+.)L 1
+
+.uh "instructor-pref-distance.html" 2
+.(L 1
+.)L 1
+
+.uh "instructor-pref-times.html" 2
+.(L 1
+.)L 1
+
+.uh "instructor-pref.html" 2
+.(L 1
+.)L 1
+
+.uh "instructor-remove.html" 2
+.(L 1
+.)L 1
+.\}
+
+.\" LocalWords:  Pre Poly WARC wordsmithing CSC BI Aesthetically prettifying UI
+.\" LocalWords:  FilterOn html FilterSomeOffScroll ScheduleView pref Visio SVN
+.\" LocalWords:  ScheduleViewClassFilled ScheduleViewEmpty ScheduleViewFilled
+.\" LocalWords:  ScheduleViewFilledDept ScheduleViewFilledDeptHover Requirments
+.\" LocalWords:  Kaylene walkthru UIs prefs CHEM Chem
