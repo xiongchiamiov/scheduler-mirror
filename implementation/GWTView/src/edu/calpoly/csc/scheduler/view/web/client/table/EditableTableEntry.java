@@ -2,6 +2,7 @@ package edu.calpoly.csc.scheduler.view.web.client.table;
 
 import java.util.ArrayList;
 
+import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
 
@@ -40,17 +41,9 @@ public class EditableTableEntry {
 		
 		// initialize object and set instructor
 		initialize(values);
-	}
-	
-	public EditableTableEntry(LocationGWT location) {
-		ArrayList<String> values = new ArrayList<String>();
-
-		values.add(location.getBuilding());
-		values.add(location.getRoom());
-		values.add(String.valueOf(location.getMaxOccupancy()));
-		values.add(location.getType());
 		
-		initialize(values);
+		// set the key
+		key = instructor.getUserID();
 	}
 	
 	/**
@@ -67,14 +60,6 @@ public class EditableTableEntry {
 				newValues.get(2), newValues.get(3));
 	}
 	
-	public LocationGWT getLocation() {
-		if (newValues.size() < 4) {
-			return null;
-		}
-		
-		return new LocationGWT(newValues.get(0), newValues.get(1), newValues.get(2), Integer.valueOf(newValues.get(3)));
-	}
-	
 	
 	/**
 	 * Converts a list of editable table entries into a list of instructors
@@ -87,6 +72,147 @@ public class EditableTableEntry {
 		
 		for(EditableTableEntry e : entries){
 			results.add(e.getInstructor());
+		}
+		
+		return results;
+	}
+	
+	
+	/******************
+	 * Course methods *
+	 ******************/
+	/**
+	 * Creates an entry for an editable table from a course
+	 * @param course the course to create an entry from
+	 */
+	public EditableTableEntry(CourseGWT course){
+
+		// get the original values
+		ArrayList<String> values = new ArrayList<String>();
+		
+		values.add(course.getCourseName());
+		values.add(course.getDepartment());
+		values.add(course.getCourseType());
+		values.add("" + course.getId());
+		values.add("" + course.getWtu());
+		values.add("" + course.getScu());
+		values.add("" + course.getMaxEnrollment());
+		values.add("" + course.getNumOfSections());
+		
+		// initialize object and set instructor
+		initialize(values);
+		
+		// set the key
+		/** TODO set the key to database key for a course */
+		key = "1";
+	}
+	
+	/**
+	 * Returns the course represented by the table entry
+	 * @return the represented course, null if there is an error
+	 */
+	public CourseGWT getCourse(){
+		
+		if(newValues.size() < 8){
+			return null;
+		}
+		
+		int id, wtu, scu, maxEnrollment, numOfSections;
+		
+		try{
+			id = Integer.parseInt(newValues.get(3));
+			wtu = Integer.parseInt(newValues.get(4));
+			scu = Integer.parseInt(newValues.get(5));
+			maxEnrollment = Integer.parseInt(newValues.get(6));
+			numOfSections = Integer.parseInt(newValues.get(7));
+			
+		}catch(Exception e){
+			return null;
+		}
+		
+		return new CourseGWT(newValues.get(0), newValues.get(1),
+				newValues.get(2), id, wtu, scu, maxEnrollment, numOfSections);
+	}
+	
+	
+	/**
+	 * Converts a list of editable table entries into a list of courses
+	 * @param entries entries to convert
+	 * @return list of courses
+	 */
+	public static ArrayList<CourseGWT> getCourses(ArrayList<EditableTableEntry> entries){
+		
+		ArrayList<CourseGWT> results = new ArrayList<CourseGWT>();
+		
+		for(EditableTableEntry e : entries){
+			results.add(e.getCourse());
+		}
+		
+		return results;
+	}
+	
+	
+	
+	/********************
+	 * Location methods *
+	 ********************/
+	/**
+	 * Creates an entry for an editable table from a location
+	 * @param location the location to create an entry from
+	 */
+	public EditableTableEntry(LocationGWT location){
+
+		// get the original values
+		ArrayList<String> values = new ArrayList<String>();
+		
+		values.add(location.getBuilding());
+		values.add(location.getRoom());
+		values.add(location.getType());
+		values.add("" + location.getMaxOccupancy());
+		
+		// initialize object and set instructor
+		initialize(values);
+		
+		// set the key
+		/** TODO set the key to database key for a course */
+		key = "1";
+	}
+	
+	/**
+	 * Returns the location represented by the table entry
+	 * @return the represented course, null if there is an error
+	 */
+	public LocationGWT getLocation(){
+		
+		if(newValues.size() < 4){
+			return null;
+		}
+		
+		int maxOccupancy;
+		
+		try{
+			maxOccupancy = Integer.parseInt(newValues.get(3));
+			
+		}catch(Exception e){
+			return null;
+		}
+		
+		return new LocationGWT(newValues.get(0), newValues.get(1),
+				newValues.get(2), maxOccupancy);
+	}
+	
+	
+	/**
+	 * Converts a list of editable table entries into a list of locations
+	 * @param entries entries to convert
+	 * @return list of locations
+	 */
+	public static ArrayList<LocationGWT> getLocations(ArrayList<EditableTableEntry> entries){
+		
+		ArrayList<LocationGWT> results = new ArrayList<LocationGWT>();
+		
+		for(EditableTableEntry e : entries){
+			results.add(e.getLocation());
 		}
 		
 		return results;
@@ -159,7 +285,7 @@ public class EditableTableEntry {
 	}
 	
 	/**
-	 * Constructot for a new entry. Key will be set to default key
+	 * Constructor for a new entry. Key will be set to default key
 	 * @param columns number of columns in the table
 	 */
 	public EditableTableEntry(int columns){

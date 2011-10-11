@@ -9,7 +9,6 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlexTable.FlexCellFormatter;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -24,7 +23,7 @@ public class EditableTable{
 	private FlexCellFormatter cellFormatter;
 	private boolean editMode;
 	private ArrayList<EditableTableEntry> entries, deleted;
-	private Button editButton;
+	private Button editButton, saveButton, cancelButton, addRowButton;
 	
 	/**
 	 * Creates an editable table with a column for each passed in attribute
@@ -71,22 +70,34 @@ public class EditableTable{
 		}
 		
 		
-	    // table, add button to panel
-	    grid = new Grid(2, 4);
+		// edit, save, cancel panel
+		Grid editGrid = new Grid(1, 3);
+		
+		editButton = editButton();
+		saveButton = saveButton();
+		cancelButton = cancelButton();
+		addRowButton = addButton();
+		
+		editGrid.setWidget(0,  0, editButton);
+		editGrid.setWidget(0,  1, saveButton);
+		editGrid.setWidget(0,  2, cancelButton);
+		
+		
+	    // add elements to the grid
+	    grid = new Grid(3, 1);
 	    
-	    grid.setWidget(0, 0, table);
+	    grid.setWidget(0, 0, editGrid);
 	    
-	    grid.getCellFormatter().setVerticalAlignment(0, 1, HasVerticalAlignment.ALIGN_TOP);
-	    editButton = editButton();
-	    grid.setWidget(0, 1, editButton);
+	    grid.setWidget(1, 0, table);
 	    
-	    grid.getCellFormatter().setVerticalAlignment(0, 2, HasVerticalAlignment.ALIGN_TOP);
-	    grid.setWidget(0, 2, cancelButton());
+	    grid.getCellFormatter().setHorizontalAlignment(2, 0, HasHorizontalAlignment.ALIGN_RIGHT);
+	    grid.setWidget(2, 0, addRowButton);
 	    
-	    grid.getCellFormatter().setVerticalAlignment(0, 3, HasVerticalAlignment.ALIGN_TOP);
-	    grid.setWidget(0, 3, saveButton());
 	    
-	    grid.setWidget(1, 1, addButton());
+	    // disable buttons while not editing
+	    saveButton.setVisible(false);
+		cancelButton.setVisible(false);
+		addRowButton.setVisible(false);
 	}
 	
 	
@@ -147,6 +158,11 @@ public class EditableTable{
 		while(table.getRowCount() > 1){
 			table.removeRow(1);
 		}
+		
+		// disable buttons while not editing
+	    saveButton.setVisible(false);
+		cancelButton.setVisible(false);
+		addRowButton.setVisible(false);
 	}
 	
 	
@@ -228,6 +244,11 @@ public class EditableTable{
 				if(editMode){
 					button.setText(EditableTableConstants.EDIT_DONE);
 					
+					saveButton.setVisible(true);
+					cancelButton.setVisible(true);
+					addRowButton.setVisible(true);
+					
+					
 					for(int r = 1; r < table.getRowCount(); r++){
 						ArrayList<String> vals = entries.get(r-1).getValues();
 						for(int c = 0; c < cols; c++){
@@ -244,6 +265,10 @@ public class EditableTable{
 				// done
 				else{
 					button.setText(EditableTableConstants.EDIT);
+					
+					saveButton.setVisible(false);
+					cancelButton.setVisible(false);
+					addRowButton.setVisible(false);
 					
 					for(int r = 1; r < table.getRowCount(); r++){
 						EditableTableEntry entry = entries.get(r-1);
@@ -291,7 +316,7 @@ public class EditableTable{
 				new ClickHandler(){
 			public void onClick(ClickEvent event){
 				
-				GWTView.saveInstructors(EditableTableEntry.getInstructors(entries), 
+				GWTView.saveProfessors(EditableTableEntry.getInstructors(entries), 
 						EditableTableEntry.getInstructors(deleted));
 		   }
 		});
@@ -312,7 +337,7 @@ public class EditableTable{
 				new ClickHandler(){
 			public void onClick(ClickEvent event){
 				
-				GWTView.populateInstructors();
+				GWTView.populateProfessors();
 		   }
 		});
 		

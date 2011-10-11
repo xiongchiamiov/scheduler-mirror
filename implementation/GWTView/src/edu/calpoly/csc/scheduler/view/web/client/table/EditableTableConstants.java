@@ -28,4 +28,31 @@ public class EditableTableConstants {
 	
 	public static final String OFFICE_ROOM = "Office Room";
 	
+	
+	/** Course table */
+	public static final String COURSE_NAME = "Course Name";
+	
+	public static final String DEPARTMENT = "Department";
+	
+	public static final String COURSE_TYPE = "Course Type";
+	
+	public static final String ID = "ID";
+	
+	public static final String WTU = "Work Time Units";
+	
+	public static final String SCU = "Student Time Units";
+	
+	public static final String MAX_ENROLLMENT = "Max Enrollment";
+	
+	public static final String NUM_SECTIONS = "# of Sections";
+	
+	
+	/** Location table */
+	public static final String BUILDING = "Building";
+	
+	public static final String ROOM = "Room";
+	
+	public static final String TYPE = "Type";
+	
+	public static final String MAX_OCCUPANCY = "Max Occupancy";
 }
