@@ -35,7 +35,7 @@ import java.io.PrintStream;
 
 import edu.calpoly.csc.scheduler.model.db.SQLDB;
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
-import edu.calpoly.csc.scheduler.model.schedule.Week;
+import edu.calpoly.csc.scheduler.model.schedule.*;
 
 /**
  *
@@ -354,7 +354,7 @@ public class InstructorDB extends Observable {
    private void changeLocalInstructorTPrefs 
    (
       Instructor i, 
-      HashMap<Integer, LinkedHashMap<edu.calpoly.csc.scheduler.model.db.Time, TimePreference>> tPrefs
+      HashMap<Day, LinkedHashMap<edu.calpoly.csc.scheduler.model.db.Time, TimePreference>> tPrefs
    )
    {
       /*
@@ -1108,7 +1108,7 @@ public class InstructorDB extends Observable {
           * The random whitespace prints are for better formatting. Might as 
           * well make it nice to read, right?
           */
-         for (Integer d: i.getTimePreferences().keySet())
+         for (Day d: i.getTimePreferences().keySet())
          {
             ps.print ("   ");
             ps.println (d + " => \n   {");

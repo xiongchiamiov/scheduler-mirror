@@ -18,12 +18,12 @@ import edu.calpoly.csc.scheduler.model.db.ldb.*;
 public class NewSchedule extends Observable implements Serializable
 {
    private NewCourseDB cdb;
-   private InstructorDB idb;
+   private NewInstructorDB idb;
    private LocationDB ldb;
    
    Vector<ScheduleItem> siList = new Vector<ScheduleItem>();
    
-   public NewSchedule (NewCourseDB cdb, InstructorDB idb, LocationDB ldb)
+   public NewSchedule (NewCourseDB cdb, NewInstructorDB idb, LocationDB ldb)
    {
       this.cdb = cdb;
       this.idb = idb;
@@ -67,7 +67,7 @@ public class NewSchedule extends Observable implements Serializable
    
    private Instructor findInstructor (Course c)
    {
-      return null;
+      return this.idb.getInstructor(c);
    }
    
    private Vector<Time> findTimes (Instructor i)

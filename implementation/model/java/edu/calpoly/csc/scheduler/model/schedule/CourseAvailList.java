@@ -82,7 +82,7 @@ public class CourseAvailList extends Vector<CourseWeekAvail>
     * @throws NotADayException if any of the "days" are not a valid day as 
     *         defined in generate.Week.java
     */
-   public boolean book (Course c, Time s, Time e, Vector<Integer> days)
+   public boolean book (Course c, Time s, Time e, Vector<Day> days)
    {
       boolean r;
 

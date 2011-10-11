@@ -3,7 +3,7 @@ package edu.calpoly.csc.scheduler.model.db.pdb;
 import java.util.Vector;
 import java.io.Serializable;
 
-import edu.calpoly.csc.scheduler.model.schedule.Week;
+import edu.calpoly.csc.scheduler.model.schedule.*;
 
 
 /**
@@ -37,11 +37,11 @@ public class DaysForClasses extends SchedulePreference
     * preference. 
     */
    public static final DaysForClasses MTWRF = 
-      new DaysForClasses ("MTWRF", 5, new int[] {Week.MON,
-                                                 Week.TUE, 
-                                                 Week.WED, 
-                                                 Week.THU, 
-                                                 Week.FRI});
+      new DaysForClasses ("MTWRF", 5, new Day[] {Day.MON,
+                                                 Day.TUE, 
+                                                 Day.WED, 
+                                                 Day.THU, 
+                                                 Day.FRI});
 
    public Week days;
 
@@ -67,7 +67,7 @@ public class DaysForClasses extends SchedulePreference
     * @param days An array of integers representing days of the week. (Sun = 0, 
     *             6 = Sat). This array will be used to create the "Week" object.
     */
-   public DaysForClasses (String name, int weight, int[] days)
+   public DaysForClasses (String name, int weight, Day[] days)
    {
       super (name, weight);
       this.days = new Week(days);
@@ -80,7 +80,7 @@ public class DaysForClasses extends SchedulePreference
     *
     * @return true if the list was altered. False otherwise. 
     */
-   public boolean addDay (int day)
+   public boolean addDay (Day day)
    {
       return this.days.add(day);
    }
@@ -92,12 +92,12 @@ public class DaysForClasses extends SchedulePreference
     * 
     * @return true if the list was altered. False otherwise. 
     */
-   public boolean delDay (int day)
+   public boolean delDay (Day day)
    {
       /*
        * Have to make new Int to get the right method out of Week
        */
-      return this.days.remove(new Integer(day));
+      return this.days.del(day);
    }
 
    /**

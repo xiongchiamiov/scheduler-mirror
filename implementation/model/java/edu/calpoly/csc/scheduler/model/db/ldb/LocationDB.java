@@ -10,7 +10,7 @@ import edu.calpoly.csc.scheduler.model.db.cdb.Course;
 import edu.calpoly.csc.scheduler.model.db.cdb.CourseDB;
 import edu.calpoly.csc.scheduler.model.db.cdb.CourseDB.CourseDoesNotExistException;
 import edu.calpoly.csc.scheduler.model.db.cdb.CourseDB.CourseExistsException;
-import edu.calpoly.csc.scheduler.model.schedule.DayAvail;
+import edu.calpoly.csc.scheduler.model.schedule.*;
 
 /**
  *
@@ -652,8 +652,8 @@ public class LocationDB extends Observable {
 
          ArrayList<DayAvail> avail = getAvailability(location);
 
-         for (int i = 0; i < NUMDAYSINWEEK; i++ ) {
-            DayAvail day = avail.get(i);
+         for (Day d: Week.fiveDayWeek.getDays()) {
+            DayAvail day = avail.get(d.getNum());
 
             for (int j = 0; j < ROWS; j++) {
                edu.calpoly.csc.scheduler.model.db.Time start = getStartTime(j);
@@ -661,7 +661,7 @@ public class LocationDB extends Observable {
                try {
                   if (!day.isFree(start, end)) {
                      
-                     location.setBusy(i, start, end);
+                     location.setBusy(d, start, end);
                   }
                }
                catch (Exception e) {

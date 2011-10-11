@@ -67,6 +67,10 @@ public class Course implements Serializable
     * Maximum number of students that can be enrolled in this course
     */
    private int enrollment = 0;
+   /**
+    * This course's lab. Can be null, which means it has no lab
+    */
+   private Course lab = null;
    
    /**
     * Default constructor. Does nothing.
@@ -78,12 +82,9 @@ public class Course implements Serializable
     * you want to instantiate the numerous other fields of this class, call its
     * setters.
     * 
-    * @param name
-    *           Name you want to give the class
-    * @param dept
-    *           Course department prefix
-    * @param catalogNum
-    *           Catalog number of the class
+    * @param name Name you want to give the class
+    * @param dept Course department prefix
+    * @param catalogNum Catalog number of the class
     */
    public Course (String name, String dept, int catalogNum)
    {
@@ -336,6 +337,16 @@ public class Course implements Serializable
    public Course getLab ()
    {
       return null;
+   }
+   
+   /**
+    * Sets this course's lab
+    * 
+    * @param lab The lab this course is to now have
+    */
+   public void setLab (Course lab)
+   {
+      this.lab = lab;
    }
    
    /**

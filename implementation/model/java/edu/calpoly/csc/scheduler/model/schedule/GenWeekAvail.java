@@ -33,19 +33,14 @@ public class GenWeekAvail<T, U extends GenAvail<T>> extends Vector<U>
     * @throws NotADayException if "d" is not a valid day as defined in 
     *         generate.Week.java
     */
-   public boolean book (T t, Time s, Time e, int d) /*==>*/
+   public boolean book (T t, Time s, Time e, Day d) /*==>*/
       throws EndBeforeStartException,
              NotADayException
    {
-      if (!Week.isValidDay(d))
-      {
-         throw new NotADayException();
-      }
-
       boolean r;
       try 
       {
-         r = this.get(d).book(t, s, e);
+         r = this.get(d.getNum()).book(t, s, e);
       }
       catch (ArrayIndexOutOfBoundsException x)
       {
@@ -67,21 +62,16 @@ public class GenWeekAvail<T, U extends GenAvail<T>> extends Vector<U>
     * @throws NotADayException if "d" is not a valid day as defined in 
     *         generate.Week.java
     */
-   public boolean book (T t, Time s, Time e, Vector<Integer> d) /*==>*/
+   public boolean book (T t, Time s, Time e, Week days) /*==>*/
       throws EndBeforeStartException,
              NotADayException
    {
-      if (!Week.hasValidDays(d))
-      {
-         throw new NotADayException();
-      }
-
       boolean r = true;
-      for (Integer i: d)
+      for (Day d: days.getDays())
       {
          try 
          {
-            r &= this.get(i).book(t, s, e);
+            r &= this.get(d.getNum()).book(t, s, e);
          }
          catch (ArrayIndexOutOfBoundsException x)
          {
@@ -104,19 +94,14 @@ public class GenWeekAvail<T, U extends GenAvail<T>> extends Vector<U>
     * @throws NotADayException if "d" is not a valid day as defined in 
     *         generate.Week.java
     */
-   public boolean isFree (T t, Time s, Time e, int day) /*==>*/
+   public boolean isFree (T t, Time s, Time e, Day day) /*==>*/
       throws EndBeforeStartException,
              NotADayException
    {
-      if (!Week.isValidDay(day))
-      {
-         throw new NotADayException();
-      }
-
       boolean free;
       try
       {
-         free = this.get(day).isFree(t, s, e);
+         free = this.get(day.getNum()).isFree(t, s, e);
       }
       catch (ArrayIndexOutOfBoundsException x)
       {
@@ -138,22 +123,17 @@ public class GenWeekAvail<T, U extends GenAvail<T>> extends Vector<U>
     * @throws NotADayException if "d" is not a valid day as defined in 
     *         generate.Week.java
     */
-   public boolean isFree (T t, Time s, Time e, Vector<Integer> d) /*==>*/
+   public boolean isFree (T t, Time s, Time e, Week days) /*==>*/
       throws EndBeforeStartException,
              NotADayException
 
    {
-      if (!Week.hasValidDays(d))
-      {
-         throw new NotADayException();
-      }
-
       boolean free = true;
-      for (Integer i: d)
+      for (Day d: days.getDays())
       {
          try
          {
-            free &= this.get(i).isFree(t, s, e);
+            free &= this.get(d.getNum()).isFree(t, s, e);
          }
          catch (ArrayIndexOutOfBoundsException x)
          {

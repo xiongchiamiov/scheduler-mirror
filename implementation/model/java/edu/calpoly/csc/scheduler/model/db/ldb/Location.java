@@ -5,8 +5,7 @@ import java.io.Serializable;
 import edu.calpoly.csc.scheduler.model.db.Time;
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
 import edu.calpoly.csc.scheduler.model.db.cdb.RequiredEquipment;
-import edu.calpoly.csc.scheduler.model.schedule.Week;
-import edu.calpoly.csc.scheduler.model.schedule.WeekAvail;
+import edu.calpoly.csc.scheduler.model.schedule.*;
 
 import edu.calpoly.csc.scheduler.model.db.cdb.*;
 
@@ -266,7 +265,7 @@ public class Location implements Serializable
     * 
     * Written by: Eric Liebowitz
 	 */
-	public boolean isAvailable (int dayOfWeek, Time s, Time e) 
+	public boolean isAvailable (Day dayOfWeek, Time s, Time e) 
    {
       return this.availability.isFree(s, e, dayOfWeek);
 	}
@@ -298,7 +297,7 @@ public class Location implements Serializable
     *
     * Written by: Eric Liebowitz 
     */
-   public void setBusy(int dayOfWeek, Time s, Time e) 
+   public void setBusy(Day dayOfWeek, Time s, Time e) 
    {
       this.availability.book(s, e, dayOfWeek);
    }

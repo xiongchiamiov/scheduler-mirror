@@ -181,7 +181,7 @@ public class Instructor implements Comparable<Instructor>, Serializable
 	/**
 	 * List of time preferences an instructor has for a course.
 	 */
-   private HashMap<Integer, LinkedHashMap<Time, TimePreference>> tPrefs;
+   private HashMap<Day, LinkedHashMap<Time, TimePreference>> tPrefs;
 
    public Instructor () { System.err.println ("I AM AN INSTRUCTOR"); }
 
@@ -307,10 +307,10 @@ public class Instructor implements Comparable<Instructor>, Serializable
     */
    private void initTPrefs ()
    {
-      this.tPrefs = new HashMap <Integer, LinkedHashMap<Time, TimePreference>>();
-      for (int day = Week.SUN; day <= Week.SAT; day ++)
+      this.tPrefs = new HashMap <Day, LinkedHashMap<Time, TimePreference>>();
+      for (Day d: Week.fiveDayWeek.getDays())
       {
-         fillDayWithTPrefs (day);
+         fillDayWithTPrefs (d);
       }
    }
 	
@@ -323,13 +323,8 @@ public class Instructor implements Comparable<Instructor>, Serializable
     * @throws NotADayException if "d" is not one of the days defined in 
     *         generate.Week.java
     */
-   private void fillDayWithTPrefs (int d)
+   private void fillDayWithTPrefs (Day d)
    {
-      if (!Week.isValidDay(d))
-      {
-         throw new NotADayException ();
-      }
-
       /*
        * Make a list of the preferences for a given day
        */
@@ -368,16 +363,12 @@ public class Instructor implements Comparable<Instructor>, Serializable
     * @throws NotADayException if "d" is not one of the days defined in 
     *         generate.Week.java
 	 */
-	public void addTimePreference (int d, TimePreference tp) 
+	public void addTimePreference (Day d, TimePreference tp) 
       throws NullPreferenceException 
    {
 		if (tp == null)
       {
          throw new NullPreferenceException();
-      }
-      if (!Week.isValidDay(d))
-      {
-         throw new NotADayException ();
       }
 
       if (!this.tPrefs.containsKey(d))
@@ -647,13 +638,8 @@ public class Instructor implements Comparable<Instructor>, Serializable
     *
     * Written by: Eric Liebowitz
 	 */
-	public int getPreference(int d, Time time) 
+	public int getPreference(Day d, Time time) 
    {
-      if (!Week.isValidDay(d))
-      {
-         throw new NotADayException ();
-      }
-
       if (!this.tPrefs.containsKey(d))
       {
          fillDayWithTPrefs (d);
@@ -684,11 +670,6 @@ public class Instructor implements Comparable<Instructor>, Serializable
     */
    public Vector<TimePreference> getTPrefsByDay (int d)
    {
-      if (!Week.isValidDay(d))
-      {
-         throw new NotADayException ();
-      }
-
       Vector<TimePreference> r = 
          new Vector<TimePreference>(this.tPrefs.get(d).values());
       Collections.sort(r, new TimePreferenceComparator());
@@ -730,8 +711,7 @@ public class Instructor implements Comparable<Instructor>, Serializable
       /*
        * Go over every day in the week
        */
-      Vector<Integer> days = w.getWeek();
-      for (int d: days)
+      for (Day d: w.getDays())
       {
          Time tempS = new Time (s);
          double dayTotal = 0;
@@ -769,7 +749,7 @@ public class Instructor implements Comparable<Instructor>, Serializable
 	 * This method returns the list of time preferences.
 	 * @return the list of time preferences.
 	 */
-   public HashMap<Integer, LinkedHashMap<Time, TimePreference>> getTimePreferences() 
+   public HashMap<Day, LinkedHashMap<Time, TimePreference>> getTimePreferences() 
    {
       return tPrefs;
 	}
@@ -828,7 +808,7 @@ public class Instructor implements Comparable<Instructor>, Serializable
     * @param tps a list of time preferences.
 	 * @return the list of time preferences.
 	 */
-	public void setTimePreferences(HashMap<Integer, LinkedHashMap<Time, TimePreference>> tps) 
+	public void setTimePreferences(HashMap<Day, LinkedHashMap<Time, TimePreference>> tps) 
    {
       this.tPrefs = tps;
 	}
@@ -852,7 +832,7 @@ public class Instructor implements Comparable<Instructor>, Serializable
 	 * @param endtime the end time of the query.
 	 * @return whether the location is available during this time.
 	 */
-	public boolean isAvailable (int dayOfWeek, Time starttime, Time endtime) 
+	public boolean isAvailable (Day dayOfWeek, Time starttime, Time endtime) 
       throws edu.calpoly.csc.scheduler.model.db.EndBeforeStartException,
              NotADayException
    {
@@ -867,7 +847,7 @@ public class Instructor implements Comparable<Instructor>, Serializable
 	 * @param starttime the start time to set busy.
 	 * @param endtime the end time of the busy interval.
 	 */
-	public void setBusy(int dayOfWeek, Time starttime, Time endtime)
+	public void setBusy(Day dayOfWeek, Time starttime, Time endtime)
    {
       this.availability.book(starttime, endtime, dayOfWeek);
 	}

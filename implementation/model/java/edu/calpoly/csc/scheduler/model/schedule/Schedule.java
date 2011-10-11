@@ -746,7 +746,6 @@ public class Schedule extends Observable implements Serializable
        */
       for (DaysForClasses dfc: dPrefs)
       {
-         ////System.err.println ("Have Course DFC: " + dfc);
          try
          {
             /*
@@ -756,8 +755,7 @@ public class Schedule extends Observable implements Serializable
          }
          catch (NotEnoughDaysException e)
          {
-            ////System.err.println ("Need " + numOfDays + " days; " + 
-               //"given insufficient '" + dfc.days + "'");
+
          }
       }
       return allWeeks;
@@ -781,7 +779,7 @@ public class Schedule extends Observable implements Serializable
                                  Week alreadyAssigned)
       throws NotEnoughDaysException
    {
-      if (depth > availableDays.size())
+      if (depth > availableDays.getDays().size())
       {
          throw new NotEnoughDaysException();
       }
@@ -791,7 +789,7 @@ public class Schedule extends Observable implements Serializable
       }
       else
       {
-         for (Integer d: availableDays.getWeek())
+         for (Day d: availableDays.getDays())
          {
             if (!alreadyAssigned.contains(d))
             {

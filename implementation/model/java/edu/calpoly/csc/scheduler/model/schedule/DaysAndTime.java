@@ -18,9 +18,9 @@ public class DaysAndTime
     */
    public static DaysAndTime TBA ()
    {
-      DaysAndTime dat = new DaysAndTime (new int[]{Week.SUN}, 
-                                         new Time (0, 0), 
-                                         new Time (1, 0));
+      Week w = new Week(new Day[] { Day.SUN });
+      DaysAndTime dat = new DaysAndTime (w, new Time (0, 0), new Time (1, 0));
+      
       return dat;
    }
 
@@ -40,19 +40,6 @@ public class DaysAndTime
     * The end time
     */
    protected Time e;
-
-
-   /**
-    * @param days Array of ints which the week will be made up of
-    *             (0 = sun, 6 = sat)
-    * @param s The start time
-    * @param e The end time
-    */
-   public DaysAndTime (int[] days, Time s, Time e)
-   {
-      this.week = new Week(days);
-      init (s, e);
-   }
 
    /**
     * @param days Week of days to represent

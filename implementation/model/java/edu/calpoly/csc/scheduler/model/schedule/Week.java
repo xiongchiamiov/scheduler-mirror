@@ -11,34 +11,19 @@ import java.io.Serializable;
  * @author Eric Liebowitz
  * @version 13apr10
  */
-public class Week extends Vector<Integer> implements Serializable
+public class Week implements Serializable
 {
    /**
     * For serializing
     */
    public static final int serialVersionUID = 42;
 
-   /* Represent days of the week */
-
-   /** Sunday */
-   public static final int SUN = 0;
-   /** Monday */
-   public static final int MON = 1;
-   /** Tuesday */
-   public static final int TUE = 2;
-   /** Wednesday */
-   public static final int WED = 3;
-   /** Thursday */
-   public static final int THU = 4;
-   /** Friday */
-   public static final int FRI = 5;
-   /** Saturday */
-   public static final int SAT = 6;
-
    /** A 5-day week (Mon-Fri) */
    public static final Week fiveDayWeek = 
-      new Week (new int[]{MON, TUE, WED, THU, FRI});
+      new Week (new Day[]{Day.MON, Day.TUE, Day.WED, Day.THU, Day.FRI});
 
+   private Vector<Day> days = new Vector<Day>();
+   
    /**
     * Creates a Week w/ no days in it
     */
@@ -47,95 +32,31 @@ public class Week extends Vector<Integer> implements Serializable
       super ();
    }
 
-   /**
-    * Creates a week with the specified days in it. Duplicates are not allowed 
-    * and will be ignored. Ints which do not represent valid days will raise a
-    * NotADayException. Asking for a Week w/ more then 7 days will raise an
-    * EightDayWeekException.
-    *
-    * @param days Array of ints representing what days should be in this week.
-    */
-   public Week (int[] days)
+   public Week (Day[] days)
    {
-      super();
-      for (Integer i: days)
-      {
-         this.add(i);
-      }
+
    }
 
-   /**
-    * Creates a week with the specified days in it. Duplicates are not allowed 
-    * and will be ignored. Ints which do not represent valid days will raise a
-    * NotADayException. Asking for a Week w/ more then 7 days will raise an
-    * EightDayWeekException.
-    *
-    * @param days Collection of ints representing what days should be in this 
-    *             week.
-    */
-   public Week (Collection<Integer> days)
+   public boolean add (Day d)
    {
-      super();
-      for (Integer i: days)
+      boolean r = false;
+      if (!this.contains(d))
       {
-         this.add(i);
+         r = this.days.add(d);
       }
+      return r;
    }
-
+   
    /**
-    * Adds a day to this week.
-    *
-    * @param d Day to add
-    *
-    * @return True if the day was added. False otherwise. 
-    *
-    * @throws NotADayException if "d" is not one of the day constants defined 
-    *         in this class.
-    * @throws EightDayWeekException if this week is already full (7 days)
-    */
-   public boolean add (int d) throws NotADayException, EightDayWeekException
-   {
-      /*
-       * Don't make weird days 
-       */
-      if (!isValidDay(d))
-      {
-         throw new NotADayException ();
-      }
-      /*
-       * Our week is only 7 days...we can't add beyond that
-       */
-      if (this.size() == 7)
-      {
-         throw new EightDayWeekException ();
-      }
-      /*
-       * Don't add duplicate days
-       */
-      if (this.contains(d))
-      {
-         return false;
-      }
-      return super.add(d);
-   }
-
-   /**
-    * Removes a day from this Week, if it exists. 
-    *
-    * @param d Day to remove
+    * Removes the given day from this week.
     * 
-    * @return True if the day existed and was thus removed. Flase otherwise. 
-    *
-    * @throws NotADayException if "d" is not one of the day constants defined
-    *         in this class.
+    * @param d Day to remove
+    * @return true if the day was removed. False if it was not (most likely b/c
+    *         it didn't exist in this week).
     */
-   public boolean del (int d) throws NotADayException
+   public boolean del (Day d)
    {
-      if (!isValidDay(d))
-      {
-         throw new NotADayException ();
-      }
-      return this.getWeek().removeElement(d);
+      return days.remove(d);
    }
 
    /**
@@ -147,13 +68,12 @@ public class Week extends Vector<Integer> implements Serializable
    public boolean chop ()
    {
       boolean r = false;
-      Vector<Integer> w = this.getWeek();
-      if (w.size() > 0)
+      if (this.days.size() > 0)
       {
          /*
           * "size" isn't 0-indexed, so I have to adjust
           */
-         w.remove(w.size() - 1);
+         this.days.remove(this.days.size() - 1);
          r = true;
       }
       return r;
@@ -165,34 +85,9 @@ public class Week extends Vector<Integer> implements Serializable
    public String toString ()
    {
       String r = new String();
-      for (Integer i: this)
+      for (Day d: this.days)
       {
-         switch (i)
-         {
-            case (SUN):
-               r += "Sun ";
-               break;
-            case (MON):
-               r += "Mon ";
-               break;
-            case (TUE):
-               r += "Tue ";
-               break;
-            case (WED):
-               r += "Wed ";
-               break;
-            case (THU):
-               r += "Thu ";
-               break;
-            case (FRI):
-               r += "Fri ";
-               break;
-            case (SAT):
-               r += "Sat ";
-               break;
-            default:
-               System.err.println ("Invalid day in week?");
-         }
+         r += d.toString() + " ";
       }
       return r;
    }
@@ -203,65 +98,23 @@ public class Week extends Vector<Integer> implements Serializable
     *
     * @return a list (Vector) of Integers represeting that days in this Week
     */
-   public Vector<Integer> getWeek ()
+   public Vector<Day> getDays ()
    {
-      return this;
+      return this.days;
    }
 
    /**
-    * Determines whether a given day is in this Week.
-    *
-    * @param d Day in question
-    *
-    * @return whether "d" is in this Week
+    * Determines whether this week contains the specified day
+    * 
+    * @param d Day to check for
+    * 
+    * @return true if this week contains the given day. False otherwise. 
     */
-   public boolean containsDay (int d) throws NotADayException
+   public boolean contains (Day d)
    {
-      boolean contains = false;
-
-      if (!isValidDay(d))
-      {
-         throw new NotADayException();
-      }
-      
-      for (int ourDay: this)
-      {
-         contains |= (ourDay == d);
-      }
-      return contains;
+      return this.days.contains(d);
    }
-
-   /**
-    * Determines whether a given day is valid. That is, if it is numerically 
-    * greater-than-or-equal-to SUN and numerically less-than-or-equal-to SAT.
-    *
-    * @param d The day in question
-    *
-    * @return (d >= SUN && d <= SAT)
-    */
-   public static boolean isValidDay (int d)
-   {
-      return (d >= SUN && d <= SAT);
-   }
-
-   /**
-    * Determines whetehr a given list of days contains all-valid days, where
-    * "valid" is determined by the "isValidDay" method.
-    *
-    * @param days The list of days to check
-    *
-    * @return True if all the days are a valid day. False otherwise. 
-    */
-   public static boolean hasValidDays (Collection<Integer> days)
-   {
-      boolean r = true;
-      for (int d: days)
-      {
-         r &= isValidDay (d);
-      }
-      return r;
-   }
-
+   
    /** 
     * Determines whether this Week shares any days with a given one.
     *
@@ -274,9 +127,9 @@ public class Week extends Vector<Integer> implements Serializable
    {
       boolean r = false;
       
-      for (int d: w.getWeek())
+      for (Day d: w.getDays())
       {
-         r |= this.containsDay(d);
+         r |= this.days.contains(d);
       }
 
       return r;
@@ -291,7 +144,7 @@ public class Week extends Vector<Integer> implements Serializable
     */
    public boolean equals (Week w)
    {
-      return this.getWeek().equals(w.getWeek());
+      return this.getDays().equals(w.getDays());
    }
 
    /**

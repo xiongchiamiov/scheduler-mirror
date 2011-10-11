@@ -361,11 +361,11 @@ public class PreferencesDB extends Observable {
         SQLDB sqldb = new SQLDB();
         String insert = "";
         insert = "( " + " '" + p.name + "', " + p.weight + ", ";
-        insert = insert + p.days.contains(Week.SUN) + ", " + p.days.contains(Week.MON); 
-        insert = insert + ", " + p.days.contains(Week.TUE) + ", ";
-        insert = insert + p.days.contains(Week.WED) + ", " + p.days.contains(Week.THU);
-        insert = insert + ", " + p.days.contains(Week.FRI) + ", ";
-        insert = insert + p.days.contains(Week.SAT) + ")";
+        insert = insert + p.days.contains(Day.SUN) + ", " + p.days.contains(Day.MON); 
+        insert = insert + ", " + p.days.contains(Day.TUE) + ", ";
+        insert = insert + p.days.contains(Day.WED) + ", " + p.days.contains(Day.THU);
+        insert = insert + ", " + p.days.contains(Day.FRI) + ", ";
+        insert = insert + p.days.contains(Day.SAT) + ")";
         sqldb.open();
         sqldb.insertPrefStmt("preferences_days", insert, DAYS_PREFERENCES_FIELD );
         PreferencesDB temp = sqldb.getPreferencesDB();

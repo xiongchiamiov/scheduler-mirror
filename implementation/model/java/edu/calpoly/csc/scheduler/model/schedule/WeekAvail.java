@@ -48,7 +48,7 @@ public class WeekAvail extends GenWeekAvail<Void, DayAvail>
     * @throws NotADayException if "d" is not a valid day as defined in 
     *         generate.Week.java
     */
-   public boolean book (Time s, Time e, int d) /*==>*/
+   public boolean book (Time s, Time e, Day d) /*==>*/
       throws EndBeforeStartException,
              NotADayException
    {
@@ -67,11 +67,11 @@ public class WeekAvail extends GenWeekAvail<Void, DayAvail>
     * @throws NotADayException if "d" is not a valid day as defined in 
     *         generate.Week.java
     */
-   public boolean book (Time s, Time e, Vector<Integer> d) /*==>*/
+   public boolean book (Time s, Time e, Week w) /*==>*/
       throws EndBeforeStartException,
              NotADayException
    {
-      return this.book(null, s, e, d);
+      return this.book(null, s, e, w);
    }/*<==*/
    
    /**
@@ -86,7 +86,7 @@ public class WeekAvail extends GenWeekAvail<Void, DayAvail>
     * @throws NotADayException if "d" is not a valid day as defined in 
     *         generate.Week.java
     */
-   public boolean isFree (Time s, Time e, int day) /*==>*/
+   public boolean isFree (Time s, Time e, Day day) /*==>*/
       throws EndBeforeStartException,
              NotADayException
    {
@@ -105,11 +105,11 @@ public class WeekAvail extends GenWeekAvail<Void, DayAvail>
     * @throws NotADayException if "d" is not a valid day as defined in 
     *         generate.Week.java
     */
-   public boolean isFree (Time s, Time e, Vector<Integer> d) /*==>*/
+   public boolean isFree (Time s, Time e, Week days) /*==>*/
       throws EndBeforeStartException,
              NotADayException
 
    {
-      return this.isFree(null, s, e, d);
+      return this.isFree(null, s, e, days);
    }/*<==*/
 }

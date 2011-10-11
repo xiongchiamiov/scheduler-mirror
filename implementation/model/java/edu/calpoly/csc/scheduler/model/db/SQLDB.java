@@ -11,19 +11,6 @@ import java.lang.*;
 import java.sql.*;
 import java.util.*;
 
-import edu.calpoly.csc.scheduler.model.db.cdb.Course;
-import edu.calpoly.csc.scheduler.model.db.cdb.CourseDB;
-import edu.calpoly.csc.scheduler.model.db.cdb.RequiredEquipment;
-import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
-import edu.calpoly.csc.scheduler.model.db.idb.InstructorDB;
-import edu.calpoly.csc.scheduler.model.db.ldb.Location;
-import edu.calpoly.csc.scheduler.model.db.ldb.LocationDB;
-import edu.calpoly.csc.scheduler.model.db.pdb.DaysForClasses;
-import edu.calpoly.csc.scheduler.model.db.pdb.NoClassOverlap;
-import edu.calpoly.csc.scheduler.model.db.pdb.Preferences;
-import edu.calpoly.csc.scheduler.model.db.pdb.PreferencesDB;
-import edu.calpoly.csc.scheduler.model.schedule.Week;
-
 /**
  * This class provides for direct access to a MySQL database. Though it  a user
  * can connect to a database, get different tables related to the scheduler,
@@ -467,8 +454,10 @@ public class SQLDB  {
             days[5] = rs.getBoolean("fri");
             days[6] = rs.getBoolean("sat");
            
-
-            DaysForClasses dfc = new DaysForClasses(name, weight, makeWeek(days) );
+            /*
+             * Default MTWRF pref
+             */
+            DaysForClasses dfc = new DaysForClasses(name, weight, Week.fiveDayWeek);
 				dayPrefs.add(dfc);
 			}
 		} catch(SQLException se) {
@@ -486,26 +475,6 @@ public class SQLDB  {
 		}
 		return preferencesDB;
 	}
-
-
-   /**
-    * Creates an empty week object.
-    * @param days A list of seven booleans representing days
-    *             to add to the return value.
-    *
-    * @return A Week object with the corresponding days.
-    *
-    **/
-   public Week makeWeek(boolean days[]) {
-            ArrayList<Integer> weekModel = new ArrayList<Integer>();
-            for (int i = 0; i < 7; i++) {
-               if (days[i]) {
-                  weekModel.add(Week.SUN + i);
-               }
-            }
-            Week wk = new Week(weekModel);
-            return wk;
-   }
 
 	/**
 	 *  This constructor will create the SQLDB object.
