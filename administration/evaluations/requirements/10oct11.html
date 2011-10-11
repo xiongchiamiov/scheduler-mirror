@@ -25,6 +25,8 @@ CSC 308 notes.
 </a>
 Here's a concrete suggestion:
 <blockquote>
+Start the Scheduler Tool <strong><em>-- new</em></strong>
+<br>
 Select a Term <strong><em>-- new</em></strong>
 <br>
 Generate a Schedule <strong><em>-- new</em></strong>
@@ -35,7 +37,7 @@ View Schedule <strong><em>-- existing, reworded</em></strong>
 <br>
 View Class Schedule <strong><em>-- existing, reworded</em></strong>
 <br>
-View Teacher Schedule <strong><em>-- existing, reworded</em></strong>
+View Instructor Schedule <strong><em>-- existing, reworded</em></strong>
 <br>
 View Department Schedule <strong><em>-- existing, reworded</em></strong>
 <br>
@@ -100,13 +102,38 @@ Filter View, Selected Instructors <strong><em>-- new</em></strong>
 </blockquote>
 <ol type=a>
 <p> <li>
-I put generation first since it seems to be a popular feature.
+I put a "Start the Scheduler Tool" slide at the very top, since it should be
+the slide show entry point.
+<ol type=i>
 <p> <li>
-I put viewing after generation since, for me, it follows better in a story
-line.
+I understand that Matt S. and Tyler Y. have a version of the top-level UI that
+isn't yet hooked into the slide show.
+<p> <li>
+I look forward to seeing this.
+</ol>
+<p> <li>
+After the initials screen, I put a couple generation slides at the beginning,
+since auto-generation seems to be a popular feature with many of the clients
+we've interviewed so far.
+<p> <li>
+I put basic viewing after generation since, for me, it follows better in a
+story line.  The more advanced filtered viewing I left at the end, since it's a
+level of detail that is better to put later in the story.
 <p> <li>
 I added course management and put it before room management, since I believe
 overall courses are a more important feature.
+<ol type=i>
+<p> <li>
+Based on input from Kaylene, course management slides were supposed to be done
+Erik W.
+<p> <li>
+HEY ERIK -- WE NEED YOUR STUFF!  If it's an SVN issue, send me your files by
+mail and I'll commit them.
+</ol>
+<p> <li>
+<strong><em>IN-CLASS DECISION:</em></strong> The consensus is that the
+preceding proposed story line is fundamentally sound, and Mike S. has updated
+and committed walkthru/index.html accordingly.
 </ol>
 <p>
 <p> <li>
@@ -120,6 +147,8 @@ Web Authoring Resource Center,
 </a>
 or have one of our own.
 <ol type=a>
+<p> <li>
+<br><br>
 <p> <li>
 I prefer the latter, i.e., our own CSS style.
 <p> <li>
@@ -182,6 +211,11 @@ I'm inclined to go generic.
 <p> <li>
 If we use CSC, we need a compelling rationalization of this to the explanation
 readers.
+<p> <li>
+<strong><em>IN-CLASS DECISION:</em></strong> We will use the CHEM department as
+the consistent example throughout all of the requirements scenarios and slides.
+Mike S. is sending a message to the Chem department client he interviewed to
+confirm that his is OK with their department.  We expect that it will be.
 </ol>
 <p> <li>
 We need to use consistent terminology throughout:
@@ -191,13 +225,13 @@ We need to use consistent terminology throughout:
 <p> <li>
 <strong>Course</strong>, not Class (simply for consistency, either will do)
 <p> <li>
-<strong>Room</strong>, not Classroom (to avoid potential confusion with lecture
-versus lab room)
+<strong>Location</strong>, not Classroom (to avoid potential confusion with
+lecture room versus lab room versus some other kind of location altogether)
 </ol>
 <p>
 <p> <li>
 I very much liked the consistency among the management UIs that is present in a
-number of the scheduler tools form prevous 308 work, e.g.,
+number of the scheduler tools form previous 308 work, e.g.,
 <a href="http://users.csc.calpoly.edu/~gfisher/classes-archive/308-f07/afternoon/requirements/">
 http://users.csc.calpoly.edu/~gfisher/classes-
 archive/308-f07/afternoon/requirements/
@@ -207,6 +241,12 @@ or
 http://users.csc.calpoly.edu/~gfisher/classes-
 archive/308-f09/afternoon/requirements/room-add.html
 </a>
+<strong><em>IN-CLASS DISCUSSION:</em></strong> Michael H. mentioned that he and
+other requirements team members have discussed a form of uniform editing for
+instructors, courses, and locations.  What they've come up with is a direct-
+edit tabular view, with object-specific column headings.  I look forward to
+seeing this.
+<p>
 <p> <li>
 <em>Clerical</em> -- I think the slide blurb would be better to the right of
 the figure.
@@ -215,6 +255,9 @@ the figure.
 <h2>
 Walk-Thru Files
 </h2>
+<p>
+The following file-specific comments are in addition to the general discussion
+above.
 
 <h3>
 FilterOn.html
@@ -231,9 +274,9 @@ FilterSomeOffScroll.html
 </h3>
 <ol type=1>
 <p> <li>
-Needs a blurb and consisten look with other slides.
+Needs a blurb and consistent look with other slides.
 <p> <li>
-Details link is wrong.
+'Read More'  link is wrong.
 </ol>
 
 <h3>
@@ -252,7 +295,10 @@ ScheduleViewClassFilled.html
 </h3>
 <ol type=1>
 <p> <li>
-What happens if there is more than one section at the same time?
+What happens if there is more than one section at the same time?  This is a
+fine detail, but there's nothing immediately in the display that helps me
+understand how it might be handled.
+<p> <li>
 </ol>
 
 <h3>
@@ -290,8 +336,8 @@ ScheduleViewFilledDeptHover.html
 <p> <li>
 I like the hover idea.
 <p> <li>
-As noted for previous slide, the colors should have some meaning, or at least
-an explanation of why they're different.
+As noted for the previous slide, the colors should have some meaning, or at
+least an explanation of why they're different.
 </ol>
 
 <h3>
@@ -321,9 +367,9 @@ Look is not consistent (clerical).
 <p> <li>
 Definitely needs a blurb to describe the screens.
 <p> <li>
-My impression is that is UI is too complicated for a first entry point, and not
-consistent with the instructor management UIs.  I suggest having the 'Room
-Availability' dialog come up separatey, rather than by default in the intial
+My impression is that this UI is too complicated for a first entry point, and
+not consistent with the instructor management UIs.  I suggest having the 'Room
+Availability' dialog come up separately, rather than by default in the initial
 display.
 </ol>
 
@@ -352,9 +398,9 @@ instructor-*.html
 These have the basic necessary features.
 <p> <li>
 The add and remove slides should be consistent, either both showing or not
-showing the instrctor list
+showing the instructor list
 <p> <li>
-Per comments elsehwhere, they need to be made consistent with the other
+Per comments elsewhere, they need to be made consistent with the other
 management UIs.
 </ol>
 
@@ -393,16 +439,65 @@ FilterOn.html
 <ul>
 <li>
 The images are broken here.
-
 </ul>
 
 <h2>
 Detailed Requirments Scenario Files
 </h2>
+<p>
+<strong><em>IN-CLASS DECISION:</em></strong> We decided that we will
+<em>NOT</em> include the detailed requirements scenarios in the Phase 1 release
+this Friday.  This includes removing the 'Read More' link on all of the slides.
+Therefore, addressing all of the comments below is deferred until
+<em>AFTER</em> the Phase 1 release.
+<p>
+The following file-specific comments are in addition to the general discussion
+above.  To summarize, the most important to-do items are these:
+<ul>
+<li>
+Use a consistent prose style, with the
+<a href="http://users.csc.calpoly.edu/~gfisher/classes/308/handouts/spec-doc-outline.html#prose-conventions">
+308 conventions
+</a>
+as the default.
+<li>
+Use a common UI look for all slides.
+<li>
+As discussed in
+<a href="http://users.csc.calpoly.edu/~gfisher/classes/402/lectures/week3.pdf">
+402 Notes Week 3,
+</ul>
+have a consistent relationship between the blurb on the slides and the
+beginning sentence or two in the scenarios.
+</ul>
+<strong><em>Again, since we will not release the detailed scenarios for Phase
+1, work on them is deferred until after Friday 14 October.</em></strong>
+
 <h3>
 database-instructor.html
 </h3>
 <ol type=1>
+<p> <li>
+Clerical: The prose style needs to be fixed.
+<ol type=a>
+<p> <li>
+Use present tense, no "will".  E.g., "In this view, the user sees a list of
+instructors."
+<p> <li>
+Use third person.  E.g., "To add an instructor, the user clicks the 'Add'
+button."
+</ol>
+<p> <li>
+Basic content looks satisfactory.  To refine further, we need to
+<ol type=a>
+<p> <li>
+Make sure we have all instructor attributes mentioned  in any client
+interviews, in particular the supporting documentation supplied by some
+clients.
+<p> <li>
+Make the instructor information in the scenarios consistent with the existing
+data model in the Java model code.
+</ol>
 </ol>
 
 <h3>
@@ -410,17 +505,20 @@ database-room.html
 </h3>
 <ol type=1>
 <p> <li>
-The prose style needs to be made consistent.
+As noted above, I think the 'Room Availability' frame should be accessible with
+a user click, not part of the initial display.
 <p> <li>
-I suggest the
+The prose style needs to be made consistent.  Again, I suggest the
 <a href=".(Ah" http://users.csc.calpoly.edu/~gfisher/classes/308/spec-doc-outline#prose-conventions>
 308 convention
+</a>
 </ol>
 
 <h3>
 index.html
 </h3>
 <ol type=1>
+<p> <li>
 </ol>
 
 <h3>
@@ -464,10 +562,6 @@ instructor-remove.html
 </h3>
 <ol type=1>
 </ol>
-
-
-
-
 
 </body>
 </html>
