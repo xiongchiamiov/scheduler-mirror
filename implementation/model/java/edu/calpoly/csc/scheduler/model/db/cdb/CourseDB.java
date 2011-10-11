@@ -139,7 +139,7 @@ public class CourseDB extends Observable {
          c = this.getLocalCourse( Integer.parseInt(number), "Lecture" );
       }
       localData.remove(c);
-      c.setSection(sections);
+      c.setNumOfSections(sections);
       localData.add(c);
       
    }
@@ -229,11 +229,12 @@ public class CourseDB extends Observable {
       else {
          return null;
       }
+      /*
+       * TODO: THIS IS BROKEN! DOES NOT CONSIDER COURSE TYPE
+       */
       while (iterator.hasNext()) {
          Course c = (Course) iterator.next();
-         //System.out.println ("Looking at course " + c);
-         //System.out.println ("Comparing " + c.getId() + " to " + number );
-         if (c.getId() == number && c.getCourseType().equals(courseType )) {
+         if (c.getCatalogNum() == number) {
             return c;
          }
       }
@@ -280,9 +281,10 @@ public class CourseDB extends Observable {
       }
       while (iterator.hasNext()) {
          Course c = (Course) iterator.next();
-         //System.out.println ("Looking at course " + c);
-         //System.out.println ("Comparing " + c.getId() + " to " + number );
-         if (c.getId() == number && c.getCourseType().equals(courseType )) {
+         /*
+          * TODO: BROKEN. DOES NOT CONSIDER COURSE TYPE
+          */
+         if (c.getCatalogNum() == number) {
             return c;
          }
       }
@@ -366,13 +368,15 @@ public class CourseDB extends Observable {
          sqldb.open("mysql://cedders.homelinux.net/jseallfilled");
 
          String labId = "NULL";
-         if (c.getLabPairing() != null) {
-            labId = c.getLabPairing().getId() + "";
-         }
+
+         /*
+          * TODO: LAB DETECTION IS MISSING
+          */
          String insert = "";
-         insert = "( " + " '" + c.courseName + "', " + c.id + ", " + c.wtu + ", " + c.scu + ", '";
-         insert = insert + c.courseType + "', " + c.maxEnrollment +  ", " + labId +  ", " + c.requiredEquipment.isSmartroom() + ", ";
-         insert = insert + c.requiredEquipment.hasOverhead() + ", " + c.requiredEquipment.hasLaptopConnectivity() + ")";
+         insert = "( " + " '" + c.getName() + "', " + c.getCatalogNum() + ", " + 
+            c.getWtu() + ", " + c.getScu() + ", '";
+         insert = insert + c.getType() + "', " + c.getEnrollment();
+         
 
          sqldb.insertStmt("courses", insert);
          CourseDB temp = sqldb.getCourseDB();
@@ -420,25 +424,18 @@ public class CourseDB extends Observable {
          //TODO FIX
          //SQLDB sqldb = Scheduler.schedDB;
          String labId = "NULL";
-         if (c.getLabPairing() != null) {
-            labId = c.getLabPairing().getId() + "";
-         }
+
+         /*
+          * TODO: LAB AND REQUIRED EQUIPMENT IS MISSING
+          */
          String insert = "";
-         insert = "( " + " '" + c.courseName + "', " + c.id + ", " + c.wtu + ", " + c.scu + ", '";
-         insert = insert + c.courseType + "', " + c.maxEnrollment +  ", " + labId +  ", " + c.requiredEquipment.isSmartroom() + ", ";
-         insert = insert + c.requiredEquipment.hasOverhead() + ", " + c.requiredEquipment.hasLaptopConnectivity() + ", '" +  c.getDepartment() + "', " +  c.getHoursPerWeek()  + ", '" + c.getCTPrefix() + "')";
-         //insert = insert + c.requiredEquipment.hasOverhead() + ", " + c.requiredEquipment.hasLaptopConnectivity() + ", '" +  c.getPrefix() + "')";
+         insert = "( " + " '" + c.getName() + "', " + c.getCatalogNum() + ", " + c.getWtu() + ", " + c.getScu() + ", '";
+         insert = insert + c.getType() + "', " + c.getEnrollment() +  ", ";
+         insert = c.getDept() + "', " +  c.getLength();
 
          System.out.println(insert);
 
          //sqldb.insertStmt("courses", insert);
-
-         Iterator it = c.getDFC().iterator();
-         while (it.hasNext()) {
-             DaysForClasses dfc = (DaysForClasses)it.next();
-             String dfcInsert = "( '" + c.getId() + "', " + "'" + dfc.toString() + "')";
-          //   sqldb.insertStmt("courses_to_preferences", dfcInsert);
-         }
 
          //CourseDB temp = sqldb.getCourseDB();
          //addLocalCourse(c);
@@ -531,13 +528,11 @@ public class CourseDB extends Observable {
     */
    public Vector<Course> getLabs() {
       Vector<Course> courses  = new Vector<Course>();
-      Course empty = new Course("", 0, 0, 0, "", 0, 0, null, 
-                                new RequiredEquipment(false, false, false), 
-                                "", null);
+      Course empty = new Course();
       courses.add(empty);
       for (Course c: data  ) {
          if (c != null) {
-            if (c.getCourseType().equals("Lab" ) ) {
+            if (c.getType() == Course.CourseType.LAB) {
                courses.add(c);
             }
          }
@@ -569,7 +564,7 @@ public class CourseDB extends Observable {
       if (data != null) {
          for (Course c: data  ) {
             if (c != null) {
-               if (c.getCourseType().equals("Lab" ) ) {
+               if (c.getType() == Course.CourseType.LAB) {
                   courses.add(c.toString());
                }
             }
@@ -607,7 +602,7 @@ public class CourseDB extends Observable {
          {
             if (c != null) 
             {
-               if (c.getCourseType().equals("Lab")) 
+               if (c.getType() == Course.CourseType.LAB) 
                {
                   System.err.println (c + " is a lab");
                   courses.add(c.toString());
@@ -857,7 +852,7 @@ public class CourseDB extends Observable {
          System.out.println("In CourseDB.removeCourse");
          SQLDB sqldb = new SQLDB();
          sqldb.open("mysql://cedders.homelinux.net/jseallfilled");
-         String insert = "courseNum = " + c.getId() + " AND classType = '" + c.getCourseType() + "'";
+         String insert = "courseNum = " + c.getCatalogNum() + " AND classType = '" + c.getType() + "'";
          //sqldb.open();
          sqldb.removeStmt("courses", insert );
          CourseDB temp = sqldb.getCourseDB();
@@ -925,11 +920,11 @@ public class CourseDB extends Observable {
          System.out.println("In CourseDB.removeCourse");
          // TODO FIX
          //SQLDB sqldb = Scheduler.schedDB;
-         String insert = "courseNum = " + c.getId() + " AND classType = '" + c.getCourseType() + "'";
+         String insert = "courseNum = " + c.getCatalogNum() + " AND classType = '" + c.getType() + "'";
          //sqldb.open();
          //sqldb.removeStmt("courses", insert );
 
-         String remove = "courseid = " + c.getId();
+         String remove = "courseid = " + c.getCatalogNum();
          //sqldb.removeStmt("courses_to_preferences", remove);
          //CourseDB temp = sqldb.getCourseDB();
          //this.data = temp.getData();

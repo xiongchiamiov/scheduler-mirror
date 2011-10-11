@@ -389,12 +389,12 @@ public class Schedule extends Observable implements Serializable
       ////System.err.println ("INDEX: " + cdb.indexOf(c));
       Course realLab = realCourse.getLab();    //Can be null
 
-      realCourse.setSection(realCourse.getSection() - 1);
+      realCourse.setNumOfSections(realCourse.getNumOfSections() - 1);
       if (realLab != null)
       {
-         realLab.setSection(realLab.getSection() - 1);
+         realLab.setNumOfSections(realLab.getNumOfSections() - 1);
       }
-      if (realCourse.getSection() < 1)
+      if (realCourse.getNumOfSections() < 1)
       {
          cdb.remove(realCourse);
       }
@@ -468,7 +468,7 @@ public class Schedule extends Observable implements Serializable
             /*
              * If STAFF, or he/she has the WTU's to teach it.
              */
-            if ((i.getMaxWTU() < 0) || (temp.getWTUs() + iWTU <= i.getMaxWTU()))
+            if ((i.getMaxWTU() < 0) || (temp.getWtu() + iWTU <= i.getMaxWTU()))
             {
                canWTU = true;
                bestC = temp;
@@ -540,7 +540,6 @@ public class Schedule extends Observable implements Serializable
        */
       for (ScheduleItem lec_si: buildSI_setDats(base, lec))
       {
-         //System.err.println ("Trying SI: " + lec_si);
          /*
           * We'll have to stop and consider the lab as well, if there is one
           */
@@ -623,13 +622,11 @@ public class Schedule extends Observable implements Serializable
        */
       for (int dayNum = 5; dayNum > 0; dayNum --)
       {
-         ////System.err.println ("DAY NUM: " + dayNum);
          /*
           * A return < 1 means that time didn't divide well into the number of
           * days provided.
           */
-         int halfHours = c.getLengthPerDay(dayNum);
-         ////System.err.println ("LENGTH: " + halfHours);
+         int halfHours = c.splitLengthOverDays(dayNum);
          if (halfHours > 0)
          {
             for (DaysAndTime dat: createDatsForDays(base.i, 
@@ -730,8 +727,7 @@ public class Schedule extends Observable implements Serializable
     * DFC(s) to define the form of the week, though not necessarily the number
     * of days.
     *
-    * TODO: Fix. This'll only get one combination of a given week, not all 
-    *       possible ones.
+    * @.todo This does nothing right now
     *
     * @param c Course with the course preferences to use
     * @param numOfDays Number of days each Week should have
@@ -742,7 +738,7 @@ public class Schedule extends Observable implements Serializable
    private Vector<Week> getAllDayCombos (Course c, int numOfDays)
    {
       Vector<Week> allWeeks = new Vector<Week>();
-      Vector<DaysForClasses> dPrefs = c.getDFC();
+      Vector<DaysForClasses> dPrefs = new Vector<DaysForClasses>();
 
       /*
        * Go through all desired day combinations specified by Schedule
@@ -1260,7 +1256,7 @@ public class Schedule extends Observable implements Serializable
        */
       Treatment t = this.treatment.get(si.i);
       t.courses.add(si.c);
-      t.wtu += si.c.getWTUs();
+      t.wtu += si.c.getWtu();
    }/*<==*/
    /*<==*/ 
 

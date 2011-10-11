@@ -29,6 +29,6 @@ public class CouldNotBeScheduledException extends Exception
    public CouldNotBeScheduledException (Course c)
    {
       super ();
-      this.c = new Course (c);
+      this.c = c;
    }
 }

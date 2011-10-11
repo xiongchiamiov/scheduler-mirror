@@ -373,49 +373,15 @@ public class Location implements Serializable
     * Determines whether this location provides the required equipment for a
     * given course, and is of a compatible type.
     *
-    * NOTE: THE COMPARISON OF LOCATION TYPE W/ COURSE TYPE HAS BEEN DISABLED.
-    *       Since Lectures and Labs can be taught in both types of rooms and a
-    *       deadline is fast approaching, the quickest fix was to remove this
-    *       constraint. I've no doubt a sol'n would be easy enough to find, but
-    *       I've not the time right now. TODO: Next quarter.
-    *
-    *    18nov10
-    *
     * @param c The course to provide for
     *
-    * @return True if this location all the course's required equipment. False 
-    *         otherwise.
+    * @.todo Either remove or fill w/ useful data
     *
-    * Written by: Eric Liebowitz
+    * @return True 
     */
    public boolean providesFor (Course c)
    {
       boolean r = true;
-      RequiredEquipment cReqs = c.getRequiredEquipment();
-
-      /*
-       * Only check for a provision if the course requires it.
-       */
-      if (cReqs.isSmartroom())
-      {
-         //System.out.println (c + " has smart room");
-         r &= this.providedEquipment.isSmartRoom;
-         //System.out.println ("Does location: " + r);
-      }
-      if (cReqs.hasOverhead())
-      {
-         //System.out.println (c + " has overhead");
-         r &= this.providedEquipment.hasOverhead;
-         //System.out.println ("Does location: " + r);
-      }
-      if (cReqs.hasLaptopConnectivity())
-      {
-         //System.out.println (c + " has laptop");
-         r &= this.providedEquipment.hasLaptopConnectivity;
-         //System.out.println ("Does location: " + r);
-      }
-
-      //r &= this.type.equals(c.getCourseType()); //DISABLED!
 
       return r;
    }

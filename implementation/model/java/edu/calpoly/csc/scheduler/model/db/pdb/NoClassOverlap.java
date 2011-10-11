@@ -77,7 +77,7 @@ public class NoClassOverlap extends SchedulePreference
     */
    public boolean addCourse (Course c)
    {
-      bitSet.set(c.getBit(), true);
+      bitSet.set(c.hashCode(), true);
       return this.cs.add(c);
    }
 
@@ -92,7 +92,7 @@ public class NoClassOverlap extends SchedulePreference
     */
    public boolean delCourse (Course c)
    {
-      bitSet.set(c.getBit(), false);
+      bitSet.set(c.hashCode(), false);
       return this.cs.remove(c);
    }
 

@@ -67,6 +67,6 @@ public class CourseDayAvail extends GenAvail<Course>
 
    public int getBit (Course c)
    {
-      return c.getBit();
+      return c.hashCode();
    }
 }

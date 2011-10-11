@@ -83,15 +83,16 @@ public class CourseOverlapTracker implements Serializable
          /*
           * If it has a lab, incorporate that as well
           */
-         if (c.hasLab())
-         {
-            Course lab = c.getLabPairing();
-            if (!this.cBookings.containsKey(lab))
-            {
-               this.cBookings.put(lab, new CourseAvailList());
-            }
-            this.cBookings.get(lab).addWeekAvail(cwa);
-         }
+         //TODO: FIX
+//         if (c.hasLab())
+//         {
+//            Course lab = c.getLabPairing();
+//            if (!this.cBookings.containsKey(lab))
+//            {
+//               this.cBookings.put(lab, new CourseAvailList());
+//            }
+//            this.cBookings.get(lab).addWeekAvail(cwa);
+//         }
       }
    }
 

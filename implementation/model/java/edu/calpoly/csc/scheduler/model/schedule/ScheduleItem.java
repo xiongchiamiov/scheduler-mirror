@@ -253,7 +253,7 @@ public class ScheduleItem implements Serializable, Cloneable,
    public void setCourse (Course c)
    {
       this.c = c;
-      this.section = c.getSection();
+      this.section = c.getNumOfSections();
    }
 
    /**
@@ -407,7 +407,7 @@ public class ScheduleItem implements Serializable, Cloneable,
    public String toString ()
    {
       String r = (this.c + " - Section: " + this.section + " - " + 
-              this.c.getCourseType() + "\n" + 
+              this.c.getType() + "\n" + 
               "Instructor:\t" + this.i + "\n" + 
               "In:\t\t" + this.l + "\n" + 
               "On:\t\t" + this.days + "\n" + 
@@ -459,7 +459,7 @@ public class ScheduleItem implements Serializable, Cloneable,
       ps.println
       (
          "id => \"" + this.c + "_" + this.section + "_"   + 
-            this.c.getCourseType() + "\",\n" +
+            this.c.getType() + "\",\n" +
          "course => \"" + this.c + "\",\n"                +
          "instructor => \""   + this.i.getId() + "\",\n"  +
          "location => \""     + this.l + "\",\n"          +

@@ -249,7 +249,8 @@ public class SQLDB  {
       Iterator iterator =  arrList.iterator();
       while (iterator.hasNext()) {
          Course course = (Course) iterator.next();
-         if (course.getId() == lab && course.getCourseType().contains("Lab")) {
+         if (course.getCatalogNum() == lab && 
+             course.getType() == Course.CourseType.LAB) {
             return course;
          }
       }
@@ -300,10 +301,21 @@ public class SQLDB  {
             DaysForClasses dfc = null;// = Scheduler.pdb.getDaysForClassesByName(dfcString);
             //System.out.println(":" + dfc);
             RequiredEquipment re = new RequiredEquipment(smartroom, overhead, laptop);
-            Course c = new Course(name, courseNum, wtus, scus, classType, 
-                                   maxEnrollment, 1, lab, 
-                                   re, 
-                                   prefix, dfc, hoursPerWeek, ctPrefix);
+            
+            /*
+             * Tyler: Note that the 'lab' is currently not set in this. Also, 
+             * we need to change the course type dialog to a drop down 
+             * displaying the two types in the enum in Course.CourseType.
+             */
+            Course c = new Course(name, prefix, courseNum);
+            c.setWtu(wtus);
+            c.setScu(scus);
+            c.setLength(hoursPerWeek * 2);
+            c.setEnrollment(maxEnrollment);
+            c.setNumOfSections(1);
+            //TODO: WE SHOULDN"T DO THIS AWKWARD TEST
+            c.setType((classType.equals("LEC")) ? Course.CourseType.LEC
+                                                : Course.CourseType.LAB);
             myArr.add(c);
 
             /*if (classType.contains("Lecture")) {

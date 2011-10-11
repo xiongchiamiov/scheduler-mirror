@@ -58,23 +58,24 @@ public class NewSchedule extends Observable implements Serializable
       {
          for (int s = 0; s < c.getNumOfSections(); s ++)
          {
-            Instructor i = chooseInstructor(c);
-            Location l = chooseLocation(i);
+            Instructor i = findInstructor(c);
+            Vector<Time> times = findTimes(i);
+            Vector<Location> locations = findLocations(times);
          }
       }
    }
    
-   /**
-    * Chooses an 
-    * @param c
-    * @return
-    */
-   private Instructor chooseInstructor (Course c)
+   private Instructor findInstructor (Course c)
    {
       return null;
    }
    
-   private Location chooseLocation (Instructor i)
+   private Vector<Time> findTimes (Instructor i)
+   {
+      return null;
+   }
+   
+   private Vector<Location> findLocations (Vector<Time> times)
    {
       return null;
    }
