@@ -8,7 +8,7 @@ public class EditableTableFactory {
 	 * Create an editable table for professors
 	 * @return the newly created table
 	 */
-	public static EditableTable createProfessors(){
+	public static EditableTable createProfessors(EditableTable.CancelHandler cancelHandler, EditableTable.SaveHandler saveHandler){
 		
 		ArrayList<String> attr = new ArrayList<String>();
 		
@@ -20,7 +20,7 @@ public class EditableTableFactory {
 		
 		attr.add(EditableTableConstants.OFFICE_ROOM);
 		
-		return new EditableTable(attr);
+		return new EditableTable(cancelHandler, saveHandler, attr);
 	}
 	
 	
@@ -28,7 +28,7 @@ public class EditableTableFactory {
 	 * Create an editable table for courses
 	 * @return the newly created table
 	 */
-	public static EditableTable createCourses(){
+	public static EditableTable createCourses(EditableTable.CancelHandler cancelHandler, EditableTable.SaveHandler saveHandler){
 		
 		ArrayList<String> attr = new ArrayList<String>();
 		
@@ -48,7 +48,7 @@ public class EditableTableFactory {
 		
 		attr.add(EditableTableConstants.NUM_SECTIONS);
 		
-		return new EditableTable(attr);
+		return new EditableTable(cancelHandler, saveHandler, attr);
 	}
 	
 	
@@ -56,7 +56,7 @@ public class EditableTableFactory {
 	 * Create an editable table for locations
 	 * @return the newly created table
 	 */
-	public static EditableTable createLocations(){
+	public static EditableTable createLocations(EditableTable.CancelHandler cancelHandler, EditableTable.SaveHandler saveHandler){
 		
 		ArrayList<String> attr = new ArrayList<String>();
 		
@@ -68,6 +68,6 @@ public class EditableTableFactory {
 		
 		attr.add(EditableTableConstants.MAX_OCCUPANCY);
 		
-		return new EditableTable(attr);
+		return new EditableTable(cancelHandler, saveHandler, attr);
 	}
 }

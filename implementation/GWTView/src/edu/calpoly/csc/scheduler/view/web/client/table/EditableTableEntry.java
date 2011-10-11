@@ -90,9 +90,9 @@ public class EditableTableEntry {
 		// get the original values
 		ArrayList<String> values = new ArrayList<String>();
 		
-		values.add(course.getCourseName());
-		values.add(course.getDepartment());
-		values.add(course.getCourseType());
+		values.add(course.getName());
+		values.add(course.getDept());
+		values.add(course.getType());
 		values.add("" + course.getId());
 		values.add("" + course.getWtu());
 		values.add("" + course.getScu());

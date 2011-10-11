@@ -1,22 +1,18 @@
 package edu.calpoly.csc.scheduler.view.web.client;
 
-import java.util.ArrayList;
-
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-import edu.calpoly.csc.scheduler.view.web.client.table.EditableTable;
-import edu.calpoly.csc.scheduler.view.web.client.table.EditableTableEntry;
-import edu.calpoly.csc.scheduler.view.web.client.table.EditableTableFactory;
-import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
+import edu.calpoly.csc.scheduler.view.web.client.pages.CoursesPage;
+import edu.calpoly.csc.scheduler.view.web.client.pages.InstructorsPage;
+import edu.calpoly.csc.scheduler.view.web.client.pages.View;
+import edu.calpoly.csc.scheduler.view.web.client.pages.RoomsPage;
+import edu.calpoly.csc.scheduler.view.web.client.pages.SchedulePage;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -28,106 +24,74 @@ public class GWTView implements EntryPoint {
 	private static final GreetingServiceAsync greetingService = GWT
 			.create(GreetingService.class);
 
-	private static EditableTable instructorTable;
-	private static EditableTable locationTable;
-	
 	VerticalPanel bodyPanel;
+	
+	Button instructorsViewButton, roomsViewButton, coursesViewButton, scheduleViewButton;
+
+	InstructorsPage instructorsPage;
+	RoomsPage roomsPage;
+	CoursesPage coursesPage;
+	SchedulePage viewSchedulePage;
+	View currentPage;
 	
 	/**
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
-		
-		/* editable table (professors) */
-		instructorTable = EditableTableFactory.createProfessors();
-		
+		instructorsViewButton = new Button("Instructors", new ClickHandler() {
+			public void onClick(ClickEvent events) {
+				if (instructorsPage == null)
+					instructorsPage = new InstructorsPage(greetingService);
+				showPage(instructorsPage);
+			}
+		});
+
+		roomsViewButton = new Button("Rooms", new ClickHandler() {
+			public void onClick(ClickEvent events) {
+				if (roomsPage == null)
+					roomsPage = new RoomsPage(greetingService);
+				showPage(roomsPage);
+			}
+		});
+
+		coursesViewButton = new Button("Courses", new ClickHandler() {
+			public void onClick(ClickEvent events) {
+				if (coursesPage == null)
+					coursesPage = new CoursesPage(greetingService);
+				showPage(coursesPage);
+			}
+		});
+
+		scheduleViewButton = new Button("Schedule", new ClickHandler() {
+			public void onClick(ClickEvent events) {
+				if (viewSchedulePage == null)
+					viewSchedulePage = new SchedulePage(greetingService);
+				showPage(viewSchedulePage);
+			}
+		});
+
+		RootPanel.get().add(instructorsViewButton);
+		RootPanel.get().add(roomsViewButton);
+		RootPanel.get().add(coursesViewButton);
+		RootPanel.get().add(scheduleViewButton);
+
 		bodyPanel = new VerticalPanel();
 		RootPanel.get().add(bodyPanel);
 		
-		bodyPanel.add(instructorTable.getWidget());
-		populateInstructors();
-		
-		RootPanel.get().add(new Button("Rooms", new ClickHandler() {
-			public void onClick(ClickEvent events) {
-				bodyPanel.clear();
-				bodyPanel.add(locationTable.getWidget());
-				populateLocations();
-			}
-		}));
-
-	}
-
-
-	public static void populateLocations() {
-		
-		locationTable.clear();
-		
-		greetingService.getLocationNames(new AsyncCallback<ArrayList<LocationGWT>>(){
-			public void onFailure(Throwable caught){
-				
-				Window.alert("Failed to get professors: " + caught.toString());
-			}
-			
-			public void onSuccess(ArrayList<LocationGWT> result){
-				
-				if(result != null){
-					for(LocationGWT s : result){
-						locationTable.add(new EditableTableEntry(s));
-					}
-				}
-			}
-		});
-	}
-
-	public static void saveLocations(ArrayList<LocationGWT> locations, ArrayList<LocationGWT> deleted){
-		
-		greetingService.saveLocations(locations, deleted, new AsyncCallback<Void>(){
-			public void onFailure(Throwable caught) {
-				Window.alert("Failed to save location: " + caught.toString());
-			}
-			
-			public void onSuccess(Void result) {
-				populateLocations();
-			}
-		});
+		instructorsViewButton.click();
 	}
 	
-	
-	public static void saveInstructors(ArrayList<InstructorGWT> instructors, ArrayList<InstructorGWT> deleted){
+	public void showPage(View newPage) {
+		if (currentPage != null) {
+			bodyPanel.clear();
+			currentPage.beforeHide();
+			currentPage = null;
+		}
 		
-		greetingService.saveInstructors(instructors, deleted,
-				new AsyncCallback<Void>(){
-			public void onFailure(Throwable caught){
-				
-				Window.alert("Failed to save instructors: " + caught.toString());
-			}
-			
-			public void onSuccess(Void result){
-				
-				populateInstructors();
-			}
-		});
+		assert(newPage != null);
+		
+		currentPage = newPage;
+		bodyPanel.add(currentPage);
+		currentPage.afterShow();
 	}
-
-	public static void populateInstructors() {
-		
-		instructorTable.clear();
-		
-		greetingService.getInstructorNames(new AsyncCallback<ArrayList<InstructorGWT>>(){
-			public void onFailure(Throwable caught){
-				
-				Window.alert("Failed to get professors: " + caught.toString());
-			}
-			
-			public void onSuccess(ArrayList<InstructorGWT> result){
-				
-				if(result != null){
-					for(InstructorGWT s : result){
-						instructorTable.add(new EditableTableEntry(s));
-					}
-				}
-			}
-		});
-	}
-	
 }

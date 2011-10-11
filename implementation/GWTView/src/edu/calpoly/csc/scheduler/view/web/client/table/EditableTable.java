@@ -14,9 +14,20 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.client.GWTView;
+import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 
 public class EditableTable{
+	
+	public interface CancelHandler {
+		void canceled();
+	}
+	
+	public interface SaveHandler {
+		void saved(ArrayList<InstructorGWT> existingGWTs, ArrayList<InstructorGWT> deletedGWTs);
+	}
 
+	private final CancelHandler cancelHandler;
+	private final SaveHandler saveHandler;
 	private FlexTable table;
 	private Grid grid;
 	private int cols;
@@ -29,7 +40,9 @@ public class EditableTable{
 	 * Creates an editable table with a column for each passed in attribute
 	 * @param attributes column headings for the table
 	 */
-	public EditableTable(ArrayList<String> attributes){
+	public EditableTable(CancelHandler cancelHandler, SaveHandler saveHandler, ArrayList<String> attributes){
+		this.cancelHandler = cancelHandler;
+		this.saveHandler = saveHandler;
 		
 		// initialize variables
 		cols = 0;
@@ -312,14 +325,13 @@ public class EditableTable{
 	 */
 	private Button saveButton(){
 		
-		Button button = new Button(EditableTableConstants.SAVE,
-				new ClickHandler(){
+		Button button = new Button(EditableTableConstants.SAVE, new ClickHandler(){
 			public void onClick(ClickEvent event){
+				ArrayList<InstructorGWT> existingGWTs = EditableTableEntry.getInstructors(entries);
+				ArrayList<InstructorGWT> deletedGWTs = EditableTableEntry.getInstructors(deleted);
 				
-				/** TODO make save handler generic */
-				GWTView.saveProfessors(EditableTableEntry.getInstructors(entries), 
-						EditableTableEntry.getInstructors(deleted));
-		   }
+				saveHandler.saved(existingGWTs, deletedGWTs);
+			}
 		});
 		
 		button.addStyleName("editTableButton");
@@ -334,12 +346,9 @@ public class EditableTable{
 	 */
 	private Button cancelButton(){
 		
-		Button button = new Button(EditableTableConstants.CANCEL,
-				new ClickHandler(){
+		Button button = new Button(EditableTableConstants.CANCEL, new ClickHandler(){
 			public void onClick(ClickEvent event){
-				
-				/** TODO make cancel handler generic */
-				GWTView.populateProfessors();
+				cancelHandler.canceled();
 		   }
 		});
 		
