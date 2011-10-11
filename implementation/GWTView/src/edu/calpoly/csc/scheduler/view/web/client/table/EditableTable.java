@@ -316,6 +316,7 @@ public class EditableTable{
 				new ClickHandler(){
 			public void onClick(ClickEvent event){
 				
+				/** TODO make save handler generic */
 				GWTView.saveProfessors(EditableTableEntry.getInstructors(entries), 
 						EditableTableEntry.getInstructors(deleted));
 		   }
@@ -337,6 +338,7 @@ public class EditableTable{
 				new ClickHandler(){
 			public void onClick(ClickEvent event){
 				
+				/** TODO make cancel handler generic */
 				GWTView.populateProfessors();
 		   }
 		});
