@@ -30,18 +30,13 @@ DROP TABLE IF EXISTS `courses`;
 CREATE TABLE `courses` (
   `id` int(255) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
-  `coursenum` int(4) NOT NULL,
-  `wtus` int(3) NOT NULL,
-  `scus` int(3) NOT NULL,
-  `classType` varchar(12) NOT NULL,
-  `maxEnrollment` int(11) NOT NULL,
-  `labPairing` int(11) DEFAULT NULL,
-  `smartroom` tinyint(1) NOT NULL,
-  `laptop` tinyint(1) NOT NULL,
-  `overhead` tinyint(1) NOT NULL,
-  `hoursPerweek` int(11) NOT NULL,
-  `ctPrefix` varchar(12) NOT NULL,
-  `prefix` varchar(12) NOT NULL,
+  `catalognum` int(4) NOT NULL,
+  `dept` varchar(255) NOT NULL,
+  `wtu` int(3) NOT NULL,
+  `scu` int(3) NOT NULL,
+  `numofsections` int(11) NOT NULL,
+  `coursetype` varchar(12) NOT NULL,
+  `labid` int(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -90,7 +85,7 @@ CREATE TABLE `instructors` (
   `userid` varchar(255) NOT NULL,
   `wtu` int(3) NOT NULL,
   `building` varchar(10) NOT NULL,
-  `room` int(10) NOT NULL,
+  `room` varchar(10) NOT NULL,
   `disabilities` tinyint(1) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
