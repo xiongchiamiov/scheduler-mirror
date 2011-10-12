@@ -20,6 +20,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.shared.gwtScheduleItem;
 
@@ -337,16 +338,14 @@ public class ScheduleView
   }
  }
  
- public void showScheduleView(GreetingServiceAsync service)
+ public Widget getWidget(GreetingServiceAsync service)
  {
-  final ArrayList<gwtScheduleItem> scheduleItems;
-
   greetingService = service;
-  RootPanel.get().clear();
+  //RootPanel.get().clear();
   layoutDaysAndTimes();
-  
   layoutScheduleItems();
   
-  RootPanel.get().add(mainPanel);
+  //RootPanel.get().add(mainPanel);
+  return mainPanel;
  }
 }
