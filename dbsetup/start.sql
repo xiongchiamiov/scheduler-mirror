@@ -36,6 +36,8 @@ CREATE TABLE `courses` (
   `scu` int(3) NOT NULL,
   `numofsections` int(11) NOT NULL,
   `coursetype` varchar(12) NOT NULL,
+  `length` int(255) NOT NULL,
+  `enrollment` int(255) NOT NULL,
   `labid` int(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
@@ -86,7 +88,8 @@ CREATE TABLE `instructors` (
   `wtu` int(3) NOT NULL,
   `building` varchar(10) NOT NULL,
   `room` varchar(10) NOT NULL,
-  `disabilities` tinyint(1) NOT NULL
+  `disabilities` tinyint(1) NOT NULL,
+  `weekavail` varbinary(255) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -113,8 +116,9 @@ CREATE TABLE `locations` (
   `type` varchar(255) NOT NULL,
   `smartroom` tinyint(1) NOT NULL,
   `laptopconnectivity` tinyint(1) NOT NULL,
+  `overhead` tinyint(1) NOT NULL,
   `adacompliant` tinyint(1) NOT NULL,
-  `overhead` tinyint(1) NOT NULL
+  `weekavail` varbinary(255) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
