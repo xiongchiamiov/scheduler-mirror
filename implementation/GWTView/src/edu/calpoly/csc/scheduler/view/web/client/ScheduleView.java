@@ -25,13 +25,6 @@ import edu.calpoly.csc.scheduler.view.web.shared.gwtScheduleItem;
 
 public class ScheduleView
 {
- /**
-  * The message displayed to the user when the server cannot be reached or
-  * returns an error.
-  */
- private static final String SERVER_ERROR = "An error occurred while "
-   + "attempting to contact the server. Please check your network "
-   + "connection and try again.";
  private GreetingServiceAsync greetingService;
  private ArrayList<gwtScheduleItem> scheduleItems = new ArrayList<gwtScheduleItem>();
  private ArrayList<String> professorList = new ArrayList<String>();
@@ -40,8 +33,9 @@ public class ScheduleView
  private FlexTable scheduleGrid = new FlexTable();
  private VerticalPanel filtersPanel = new VerticalPanel();
  private ArrayList<ArrayList<Integer>> columnsOfDays;
- private static final int numberOfTimeSlots = 31;
+ private static final int numberOfTimeSlots = 30;
  private static final int numberOfDays = 5;
+ private ArrayList<Integer> dayColumnSpans;
  
  private void resetColumnsOfDays()
  {
@@ -52,12 +46,26 @@ public class ScheduleView
   for(timeRow = 0; timeRow < numberOfTimeSlots; timeRow++)
   {
    cods = new ArrayList<Integer>();
-   for(dayCol = 1; dayCol <= numberOfDays; dayCol++)
+   for(dayCol = 1; dayCol <= numberOfDays+1; dayCol++)
    {
     cods.add(new Integer(dayCol));
    }
    columnsOfDays.add(cods);
   }
+ }
+ 
+ private void resetDayColumnSpans()
+ {
+  int day;
+  FlexCellFormatter formatter = scheduleGrid.getFlexCellFormatter();
+  
+  dayColumnSpans = new ArrayList<Integer>();
+  for(day = 1; day <= 5; day++)
+  {
+   formatter.setColSpan(0, day, 1);
+   dayColumnSpans.add(new Integer(1));
+  }
+  dayColumnSpans.add(new Integer(1));
  }
  
  private void resetRowSpans()
@@ -68,11 +76,11 @@ public class ScheduleView
   {
    for(col = 1; col <= numberOfDays; col++)
    {
-    System.out.println("working row " + row + " col " + col);
     formatter.setRowSpan(row, col, 1);
    }
   }
  }
+ 
  // Places the days Mon-Fri as the first row in the schedule
  private void setDaysOfWeek()
  {
@@ -95,7 +103,7 @@ public class ScheduleView
     "9:30am", "10:00am", "10:30am", "11:00am", "11:30am", "12:00pm", "12:30pm",
     "1:00pm", "1:30pm", "2:00pm", "2:30pm", "3:00pm", "3:30pm", "4:00pm",
     "4:30pm", "5:00pm", "5:30pm", "6:00pm", "6:30pm", "7:00pm", "7:30pm",
-    "8:00pm", "8:30pm", "9:00pm", "9:30pm", "10:00pm" };
+    "8:00pm", "8:30pm", "9:00pm", "9:30pm"};
   int i;
   
   for (i = 0; i < times.length; i++)
@@ -116,40 +124,107 @@ public class ScheduleView
   return (2*time)-13;
  }
  
+ private int overlaps(gwtScheduleItem toBePlaced, int day)
+ {
+  int occupiedDays[];
+  int h, i, placedStartTime, placedEndTime, occupiedStartTime, occupiedEndTime;  
+  int overlapCount = 0;
+  int maxOverlap = 0;
+  gwtScheduleItem occupiedItem;
+  
+  for(h = toBePlaced.getStartTime(); h < toBePlaced.getEndTime(); h++)
+  {
+   for(gwtScheduleItem item : scheduleItems)
+   {
+    occupiedDays = item.getDayNums();
+    for(i = 0; i < occupiedDays.length; i++)
+    {
+     if(occupiedDays[i] == day && item.isPlaced() && h >= item.getStartTime() 
+         && h < item.getEndTime())
+     {
+      overlapCount++;
+     }
+    }
+   }
+   maxOverlap = Math.max(maxOverlap, overlapCount);
+   overlapCount = 0;
+  }
+  return maxOverlap;
+ }  
+ 
+ 
+ 
+ private void layoutDay(int day, ArrayList<gwtScheduleItem> itemsInDay)
+ {
+  int maxOverlap = 0;
+  for(gwtScheduleItem item : itemsInDay)
+  {
+   maxOverlap = Math.max(maxOverlap, overlaps(item, day));
+  }
+ }
+ 
+ private void expandDay(int day)
+ {
+  int i, j;
+  Integer dayColumn;
+  Integer dayColSpan;
+  FlexCellFormatter formatter = scheduleGrid.getFlexCellFormatter();
+  
+  dayColSpan = dayColumnSpans.get(day-1).intValue()+1;
+  dayColumnSpans.set(day-1, dayColSpan);
+  formatter.setColSpan(0, day, dayColSpan);
+  
+  for(i = 1; i <= numberOfTimeSlots; i++)
+  {
+   scheduleGrid.insertCell(i, columnsOfDays.get(i-1).get(day-1).intValue());
+   for(j = day; j <= numberOfDays; j++)
+   {
+    dayColumn = columnsOfDays.get(i-1).get(j).intValue() + 1;
+    columnsOfDays.get(i-1).set(j, dayColumn);
+   }
+  }
+ }
+ 
  private void placeScheduleItem(gwtScheduleItem placedSchdItem)
  {
-  int rowRangeStart;
-  int rowRangeEnd;
   int schdItemDays[];
-  int i,j,k, day;
+  int i,j,k, day, rowRangeStart, rowRangeEnd, overlapCount;
   ArrayList<Integer> cods;
   Integer dayColumn;
-
+  
   rowRangeStart = getRowFromTime(placedSchdItem.getStartTime());
   rowRangeEnd = getRowFromTime(placedSchdItem.getEndTime());
   schdItemDays = placedSchdItem.getDayNums();
 
   for (i = 0; i < schdItemDays.length; i++)
   {
+   overlapCount = overlaps(placedSchdItem, schdItemDays[i]);
+   if(overlapCount >= dayColumnSpans.get(schdItemDays[i]-1))
+   {
+	 expandDay(schdItemDays[i]);
+   }
    day = columnsOfDays.get(rowRangeStart-1).get(schdItemDays[i]-1).intValue();
    scheduleGrid.setWidget(rowRangeStart, day, new HTML(placedSchdItem.toString()));
    scheduleGrid.getFlexCellFormatter().setRowSpan(rowRangeStart, day, 
     rowRangeEnd - rowRangeStart);
-   for(j = rowRangeStart; j < rowRangeEnd-1 && j < columnsOfDays.size(); j++)
+   
+   cods = columnsOfDays.get(rowRangeStart-1);
+   dayColumn = cods.get(schdItemDays[i]-1) + 1;
+   cods.set(schdItemDays[i]-1, dayColumn);
+   columnsOfDays.set(rowRangeStart-1, cods);
+   for(j = rowRangeStart; j < rowRangeEnd-1; j++)
    {
     cods = columnsOfDays.get(j);
-    for(k = schdItemDays[i]; k < numberOfDays; k++)
+    for(k = schdItemDays[i]; k <= numberOfDays; k++)
     {
      dayColumn = cods.get(k);
-     dayColumn = new Integer(dayColumn.intValue()-1);
-     cods.remove(k);
-     cods.add(k, dayColumn);
+     cods.set(k, new Integer(dayColumn.intValue()-1));
     }
-    columnsOfDays.remove(j);
-    columnsOfDays.add(j, cods);
+    columnsOfDays.set(j, cods);
     scheduleGrid.removeCell(j+1, (scheduleGrid.getCellCount(j+1) - 1));
    }
   }
+  placedSchdItem.setPlaced(true);
  }
  
  private void setProfessorList(ArrayList<gwtScheduleItem> schdItems)
@@ -168,7 +243,7 @@ public class ScheduleView
   public void onChange(ChangeEvent event)
   {
    ArrayList<String> professorFilters = new ArrayList<String>();
-   int i = 0;
+   int i;
    for(i = 0; i < professorListBox.getItemCount(); i++)
    {
     if(professorListBox.isItemSelected(i))
@@ -210,6 +285,8 @@ public class ScheduleView
      {
       Collections.sort(result);
       resetRowSpans();
+      resetColumnsOfDays();
+      resetDayColumnSpans();
       for(gwtScheduleItem item : result)
       {
        scheduleItems.add(item);
@@ -223,11 +300,34 @@ public class ScheduleView
    });
  }
  
+ private void resetIsPlaced()
+ {
+  for(gwtScheduleItem item : scheduleItems)
+  {
+   item.setPlaced(false);
+  }
+ }
+ 
+ private void trimExtraCells()
+ {
+  int i, cellsInRow;
+  for(i = 1; i <= numberOfTimeSlots; i++)
+  {
+   for(cellsInRow = scheduleGrid.getCellCount(i); cellsInRow > 6; cellsInRow--)
+   {
+    scheduleGrid.removeCell(i, cellsInRow-1);
+   }
+  }
+ }
+ 
  private void filterScheduleItems(ArrayList<String> profNames)
  {
   scheduleGrid.clear();
   resetColumnsOfDays();
   resetRowSpans();
+  resetDayColumnSpans();
+  resetIsPlaced();
+  trimExtraCells();
   for(gwtScheduleItem item : scheduleItems)
   {
    if(profNames.contains(item.getProfessor()) || profNames.size() == 0)
@@ -242,7 +342,6 @@ public class ScheduleView
   final ArrayList<gwtScheduleItem> scheduleItems;
 
   greetingService = service;
-  resetColumnsOfDays();
   RootPanel.get().clear();
   layoutDaysAndTimes();
   

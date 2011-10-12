@@ -14,6 +14,7 @@ public class gwtScheduleItem implements IsSerializable, Comparable
  private int endTimeHour;
  //private int startTimeMin;
  //private int endTimeMin;
+ private boolean placed = false;
  
  public gwtScheduleItem()
  {
@@ -75,5 +76,13 @@ public class gwtScheduleItem implements IsSerializable, Comparable
    return -1;
   }
   return 0;
+ }
+ public boolean isPlaced()
+ {
+  return placed;
+ }
+ public void setPlaced(boolean p)
+ {
+  placed = p;
  }
 }

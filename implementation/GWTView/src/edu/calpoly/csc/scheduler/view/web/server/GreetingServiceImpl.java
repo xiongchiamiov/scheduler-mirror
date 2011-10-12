@@ -62,19 +62,35 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		/** TODO */
 	}
 
-	 /*
-	  *@gwt.typeArgs <shared.gwtScheduleItem>
-	  */
-	 public ArrayList<gwtScheduleItem> getGWTScheduleItems()
-	 {
-	  ArrayList<gwtScheduleItem> items = new ArrayList<gwtScheduleItem>();
-	  items.add(new gwtScheduleItem("Gene Fisher", "CPE", 101, 1, "MWF", new int[] {1, 3, 5}, 8, 10));
-	  items.add(new gwtScheduleItem("Gene Fisher", "CPE", 402, 1, "MWF", new int[] {1, 3, 5}, 14, 16));
-	  items.add(new gwtScheduleItem("Clark Turner", "CPE", 300, 1, "TR", new int[] {2, 4}, 12, 14));
-	  items.add(new gwtScheduleItem("Nancy Parham", "CPE", 141, 1, "MWF", new int[] {1, 3, 5}, 13, 14));
-	  return items;
-	 }
-
+    /*
+	 *@gwt.typeArgs <shared.gwtScheduleItem>
+	 */
+	public ArrayList<gwtScheduleItem> getGWTScheduleItems()
+	{
+	 ArrayList<gwtScheduleItem> items = new ArrayList<gwtScheduleItem>();
+	 gwtScheduleItem i1 = new gwtScheduleItem("Gene Fisher", "CPE", 101, 1, "MWF",
+	  new int[] {1, 3, 5}, 8, 10);
+	 gwtScheduleItem i2 = new gwtScheduleItem("Gene Fisher", "CPE", 402, 1, "MWF",
+	  new int[] {1, 3, 5}, 13, 17);
+	 gwtScheduleItem i3 = new gwtScheduleItem("Clark Turner", "CPE", 300, 1, "TR",
+	  new int[] {2, 4}, 15, 17);
+	 gwtScheduleItem i4 = new gwtScheduleItem("Nancy Parham", "CPE", 141, 1, 
+	  "MWF", new int[] {1, 3, 5}, 13, 14);
+	 gwtScheduleItem i5 = new gwtScheduleItem("John Dalbey", "CPE", 308, 1, "MWF",
+	  new int[] {1, 3, 5}, 13, 14);
+	 gwtScheduleItem i6 = new gwtScheduleItem("John Clements", "CPE", 431, 1, 
+	  "MWF", new int[] {1,3,5}, 16, 22);
+	 gwtScheduleItem i7 = new gwtScheduleItem("Mei-Ling Liu", "CPE", 365, 1, 
+	  "MWF", new int[] {1,3,5}, 13, 17);
+	 items.add(i1);
+	 items.add(i2);
+	 items.add(i4);
+	 items.add(i3);
+	 items.add(i5);
+	 items.add(i6);
+	 items.add(i7);
+	 return items;
+	}
 
 	@Override
 	public ArrayList<LocationGWT> getLocationNames() {
