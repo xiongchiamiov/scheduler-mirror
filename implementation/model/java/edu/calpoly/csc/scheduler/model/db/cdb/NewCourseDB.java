@@ -7,9 +7,8 @@ import java.util.ArrayList;
 
 import edu.calpoly.csc.scheduler.model.db.Database;
 import edu.calpoly.csc.scheduler.model.db.SQLDB;
-import edu.calpoly.csc.scheduler.model.db.ldb.Location;
 
-public class NewCourseDB implements Database
+public class NewCourseDB implements Database<Course>
 {
    private ArrayList<Course> data;
    private SQLDB             sqldb;
@@ -74,11 +73,9 @@ public class NewCourseDB implements Database
    }
 
    @Override
-   public void addData(Object data)
+   public void addData(Course data)
    {
-      Course course = (Course) data;
       // Create insert strings
-      // TODO: update this with the new course fields
       String insertString = "insert into courses ("
             + "name, catalognum, dept, wtu, scu, numofsections, coursetype, "
             + "length, enrollment, labid)"
@@ -88,7 +85,17 @@ public class NewCourseDB implements Database
       // Set values
       try
       {
-         stmt.setString(1, course.getName());
+         stmt.setString(1, data.getName());
+         stmt.setInt(2, data.getCatalogNum());
+         stmt.setString(3, data.getDept());
+         stmt.setInt(4, data.getWtu());
+         stmt.setInt(5, data.getScu());
+         stmt.setInt(6, data.getNumOfSections());
+         stmt.setString(7, data.getType().toString());
+         stmt.setInt(8, data.getLength());
+         stmt.setInt(9, data.getEnrollment());
+         // TODO: get lab id or change this completely to match new DB
+         // stmt.setInt(10, data.getLab());
       }
       catch (SQLException e)
       {
@@ -99,14 +106,14 @@ public class NewCourseDB implements Database
    }
 
    @Override
-   public void editData(Object newData)
+   public void editData(Course newData)
    {
       // TODO Auto-generated method stub
 
    }
 
    @Override
-   public void removeData(Object data)
+   public void removeData(Course data)
    {
       // TODO Auto-generated method stub
 

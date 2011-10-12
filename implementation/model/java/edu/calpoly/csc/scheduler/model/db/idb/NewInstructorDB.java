@@ -1,5 +1,11 @@
 package edu.calpoly.csc.scheduler.model.db.idb;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,6 +14,7 @@ import java.util.ArrayList;
 import edu.calpoly.csc.scheduler.model.db.*;
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
 import edu.calpoly.csc.scheduler.model.db.ldb.Location;
+import edu.calpoly.csc.scheduler.model.schedule.WeekAvail;
 
 public class NewInstructorDB implements Database<Instructor>
 {
@@ -52,6 +59,23 @@ public class NewInstructorDB implements Database<Instructor>
             Location office = new Location(building, room);
             Instructor toAdd = new Instructor(fname, lname, userid, wtu,
                   office, disabilities);
+            
+            // Deserialize week availiability
+            byte[] buf = rs.getBytes("weekavail");
+            if (buf != null)
+            {
+               try
+               {
+                  ObjectInputStream objectIn;
+                  objectIn = new ObjectInputStream(
+                        new ByteArrayInputStream(buf));
+                  toAdd.setAvailability((WeekAvail) objectIn.readObject());
+               }
+               catch (Exception e)
+               {
+                  e.printStackTrace();
+               }
+            }
             data.add(toAdd);
          }
       }
@@ -64,23 +88,35 @@ public class NewInstructorDB implements Database<Instructor>
    @Override
    public void addData(Instructor data)
    {
-      Instructor instructor = (Instructor) data;
       // Create insert strings
       String insertString = "insert into instructors ("
-            + "firstname, lastname, userid, wtu, building, room, disabilities)"
-            + "values (?, ?, ?, ?, ?, ?, ?)";
+            + "firstname, lastname, userid, wtu, building, room, "
+            + "disabilities, weekavail)" + "values (?, ?, ?, ?, ?, ?, ?, ?)";
       // Create prepared statement
       PreparedStatement stmt = sqldb.getPrepStmt(insertString);
       // Set values
       try
       {
-         stmt.setString(1, instructor.getFirstName());
-         stmt.setString(2, instructor.getLastName());
-         stmt.setString(3, instructor.getId());
-         stmt.setInt(4, instructor.getMaxWTU());
-         stmt.setString(5, instructor.getOffice().getBuilding());
-         stmt.setString(6, instructor.getOffice().getRoom());
-         stmt.setBoolean(7, instructor.getDisability());
+         stmt.setString(1, data.getFirstName());
+         stmt.setString(2, data.getLastName());
+         stmt.setString(3, data.getId());
+         stmt.setInt(4, data.getMaxWTU());
+         stmt.setString(5, data.getOffice().getBuilding());
+         stmt.setString(6, data.getOffice().getRoom());
+         stmt.setBoolean(7, data.getDisability());
+         // Get WeekAvail through Serializable
+         try
+         {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutput out = new ObjectOutputStream(baos);
+            out.writeObject(data.getAvailability());
+            out.close();
+            stmt.setBytes(8, baos.toByteArray());
+         }
+         catch (IOException e)
+         {
+            e.printStackTrace();
+         }
       }
       catch (SQLException e)
       {

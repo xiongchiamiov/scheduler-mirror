@@ -10,7 +10,7 @@ import edu.calpoly.csc.scheduler.model.db.Time;
 public abstract class GenAvail<T> extends Vector<BitSet> 
                                    implements Serializable
 {
-   public static final int serialVersionUID = 42;
+   public static final long serialVersionUID = 42;
 
    /**
     * Constructs a single day of availability, with 48 BitSets to represent the

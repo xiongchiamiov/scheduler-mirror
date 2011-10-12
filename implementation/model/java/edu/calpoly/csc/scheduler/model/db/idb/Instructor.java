@@ -869,6 +869,22 @@ public class Instructor implements Comparable<Instructor>, Serializable
 	}
 
 	/**
+    * @return the availability
+    */
+   public WeekAvail getAvailability()
+   {
+      return availability;
+   }
+
+   /**
+    * @param availability the availability to set
+    */
+   public void setAvailability(WeekAvail availability)
+   {
+      this.availability = availability;
+   }
+
+   /**
 	 * Returns a lastname-comma-firstname representation of this instructor's
 	 * name.
 	 * 

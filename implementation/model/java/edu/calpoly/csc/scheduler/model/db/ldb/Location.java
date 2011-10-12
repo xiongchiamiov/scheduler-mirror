@@ -4,10 +4,9 @@ import java.io.Serializable;
 
 import edu.calpoly.csc.scheduler.model.db.Time;
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
-import edu.calpoly.csc.scheduler.model.db.cdb.RequiredEquipment;
-import edu.calpoly.csc.scheduler.model.schedule.*;
-
-import edu.calpoly.csc.scheduler.model.db.cdb.*;
+import edu.calpoly.csc.scheduler.model.schedule.Day;
+import edu.calpoly.csc.scheduler.model.schedule.Week;
+import edu.calpoly.csc.scheduler.model.schedule.WeekAvail;
 
 /**
  * This class contains the place and informaton about a location.
@@ -17,6 +16,8 @@ import edu.calpoly.csc.scheduler.model.db.cdb.*;
 
 public class Location implements Serializable
 {
+   private static final long serialVersionUID = 42;
+
    /** Represents a location who's identity is not yet known */
    public static Location TBA = new Location (-1, -1);
 
@@ -28,7 +29,9 @@ public class Location implements Serializable
 	 *
 	 */
 	public class InvalidDayOfWeekException extends RuntimeException {
-		public InvalidDayOfWeekException() {
+      private static final long serialVersionUID = 42;
+
+      public InvalidDayOfWeekException() {
 			super();
 		}
 	}
@@ -40,7 +43,9 @@ public class Location implements Serializable
 	 *
 	 */
 	public class InvalidTimeInputException extends RuntimeException {
-		public InvalidTimeInputException() {
+      private static final long serialVersionUID = 42;
+
+      public InvalidTimeInputException() {
 			super();
 		}
 	}
@@ -50,7 +55,8 @@ public class Location implements Serializable
 	 */
 	private class ProvidedEquipment implements Serializable
    {
-		public boolean hasOverhead;
+      private static final long serialVersionUID = 42;
+      public boolean hasOverhead;
 		public boolean isSmartRoom;
 		public boolean hasLaptopConnectivity;
 	}
@@ -254,6 +260,22 @@ public class Location implements Serializable
 	}
 
 	/**
+    * @return the availability
+    */
+   public WeekAvail getAvailability()
+   {
+      return availability;
+   }
+
+   /**
+    * @param availability the availability to set
+    */
+   public void setAvailability(WeekAvail availability)
+   {
+      this.availability = availability;
+   }
+
+   /**
 	 * This method will tell whether this location is availble during the given
 	 * time slot.
 	 * 

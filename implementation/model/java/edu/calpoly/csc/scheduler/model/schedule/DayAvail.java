@@ -1,9 +1,8 @@
 package edu.calpoly.csc.scheduler.model.schedule;
 
 
-import java.util.BitSet;
-import java.util.Vector;
 import java.io.Serializable;
+import java.util.BitSet;
 
 import edu.calpoly.csc.scheduler.model.db.Time;
 
@@ -15,7 +14,7 @@ import edu.calpoly.csc.scheduler.model.db.Time;
  */
 public class DayAvail extends GenAvail<Void> implements Serializable
 {
-   public static final int serialVersionUID = 42;
+   public static final long serialVersionUID = 42;
 
    public DayAvail ()/*==>*/
    {

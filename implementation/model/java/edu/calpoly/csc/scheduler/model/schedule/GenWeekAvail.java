@@ -1,7 +1,6 @@
 package edu.calpoly.csc.scheduler.model.schedule;
 
 import java.io.Serializable;
-import java.util.BitSet;
 import java.util.Vector;
 
 import edu.calpoly.csc.scheduler.model.db.Time;
@@ -10,6 +9,8 @@ import edu.calpoly.csc.scheduler.model.db.Time;
 public class GenWeekAvail<T, U extends GenAvail<T>> extends Vector<U> 
                                                     implements Serializable
 {
+   private static final long serialVersionUID = 42;
+
    /**
     * Basic constructor that calls "super()". This will <b>not</b> initialize 
     * the 7 elements of the Week. As far as I can tell, this is b/c Java can't

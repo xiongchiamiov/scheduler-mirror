@@ -1,7 +1,5 @@
 package edu.calpoly.csc.scheduler.model.schedule;
 
-import java.util.Vector;
-
 import edu.calpoly.csc.scheduler.model.db.Time;
 
 /**
@@ -20,7 +18,7 @@ import edu.calpoly.csc.scheduler.model.db.Time;
  */
 public class WeekAvail extends GenWeekAvail<Void, DayAvail>
 {
-   public static final int serialVersionUID = 42;
+   public static final long serialVersionUID = 42;
 
    /**
     * Creates a 7-entry array of availability for the day (one entry for every
