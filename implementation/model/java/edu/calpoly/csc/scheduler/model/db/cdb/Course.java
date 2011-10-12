@@ -303,6 +303,24 @@ public class Course implements Serializable
    {
       this.type = type;
    }
+   
+   /**
+    * Sets the type to the given parameter.
+    * 
+    * @param type
+    *           the string type to set
+    */
+   public void setType (String type)
+   {
+      if(type.equalsIgnoreCase("LEC"))
+      {
+         this.type = CourseType.LEC;
+      }
+      else if(type.equalsIgnoreCase("LAB"))
+      {
+         this.type = CourseType.LEC;
+      }
+   }
 
    /**
     * Returns how many half hours this course is taught in a week

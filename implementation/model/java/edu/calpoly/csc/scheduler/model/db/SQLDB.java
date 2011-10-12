@@ -769,4 +769,36 @@ public class SQLDB  {
 	 }
 	 return locationsResult;	
 	}
+	
+	public PreparedStatement getPrepStmt(String sql)
+	{
+	   if(!connected)
+	    {
+	     open();    
+	    }
+	   try
+      {
+         return conn.prepareStatement(sql);
+      }
+      catch (SQLException e)
+      {
+         System.out.println("SQLException: " + e.getMessage());
+         e.printStackTrace();
+      }
+	   return null;
+	}
+	
+	public void executePrepStmt(PreparedStatement stmt)
+	{
+	   try
+      {
+         stmt.execute();
+         stmt.close();
+      }
+      catch (SQLException e)
+      {
+         System.out.println("SQLException: " + e.getMessage());  
+         e.printStackTrace();
+      }
+	}
 }
