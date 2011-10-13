@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingService;
-import edu.calpoly.csc.scheduler.view.web.client.table.EditableTableEntry;
+import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.gwtScheduleItem;
@@ -94,14 +94,67 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 
 	@Override
 	public ArrayList<LocationGWT> getLocationNames() {
-		// TODO Auto-generated method stub
-		return null;
+		/** TODO */
+		// replace sample data with data from the db
+		
+		ArrayList<LocationGWT> results = new ArrayList<LocationGWT>();
+		
+		// dummy data
+		LocationGWT l1 = new LocationGWT("14", "256", "Lab", 32);
+		
+		results.add(l1);
+		
+		
+		LocationGWT l2 = new LocationGWT("22", "212", "Lec", 38);
+		
+		results.add(l2);
+		
+		
+		LocationGWT l3 = new LocationGWT("53", "213", "Lec", 84);
+		
+		results.add(l3);
+
+		return results;
 	}
 
 
 	@Override
 	public void saveLocations(ArrayList<LocationGWT> locations,
 			ArrayList<LocationGWT> deleted) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public ArrayList<CourseGWT> getCourses() {
+
+		/** TODO */
+		// replace sample data with data from the db
+		
+		ArrayList<CourseGWT> results = new ArrayList<CourseGWT>();
+		
+		// dummy data
+		CourseGWT c1 = new CourseGWT("101", "CPE", "Lec", 8972, 4, 4, 30, 8);
+		
+		results.add(c1);
+		
+		
+		CourseGWT c2 = new CourseGWT("300", "CSC", "Lec", 3795, 4, 4, 24, 1);
+		
+		results.add(c2);
+		
+		
+		CourseGWT c3 = new CourseGWT("402", "CSC", "Lec", 1255, 4, 4, 20, 1);
+		
+		results.add(c3);
+
+		return results;
+	}
+
+
+	@Override
+	public void saveCourses(ArrayList<CourseGWT> courses,
+			ArrayList<CourseGWT> deleted) {
 		// TODO Auto-generated method stub
 		
 	}

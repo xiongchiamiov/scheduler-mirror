@@ -4,18 +4,29 @@ import java.io.Serializable;
 
 
 public class CourseGWT implements Serializable{
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -6029182331166478666L;
+	private static final long serialVersionUID = 5390601887732802996L;
 	
 	String name, dept, type;
 	int id, wtu, scu, maxEnrollment, numOfSections;
 	
-	public CourseGWT(String name, String dept, String type, int id,
-			int wtu, int scu, int maxEnrollment, int numOfSections) {
-		// TODO Auto-generated constructor stub
+	public CourseGWT(){}
+	
+	
+
+	public CourseGWT(String name, String dept, String type, int id, int wtu,
+			int scu, int maxEnrollment, int numOfSections) {
+		super();
+		this.name = name;
+		this.dept = dept;
+		this.type = type;
+		this.id = id;
+		this.wtu = wtu;
+		this.scu = scu;
+		this.maxEnrollment = maxEnrollment;
+		this.numOfSections = numOfSections;
 	}
+
+
 
 	public String getName() {
 		return name;

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
+import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.gwtScheduleItem;
@@ -25,4 +26,9 @@ public interface GreetingService extends RemoteService {
 
 	void saveLocations(ArrayList<LocationGWT> locations,
 			ArrayList<LocationGWT> deleted);
+	
+	ArrayList<CourseGWT> getCourses();
+
+	void saveCourses(ArrayList<CourseGWT> locations,
+			ArrayList<CourseGWT> deleted);
 }
