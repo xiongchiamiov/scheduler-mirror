@@ -7,7 +7,7 @@
 	 * In order to maintain cross-browser compatibility, the following syntax is
 	 * used to create IE6 specific style rules:
 	 *    .gwt-Widget {
-	 *      property: rule applies to all browsers
+	 *      property: rule applies to all browsers 
 	 *      -property: rule applies only to IE6 (overrides previous rule)
 	 *    }
 	 *    * html .gwt-Widget {
@@ -1381,76 +1381,168 @@
 	padding:10px 8px;
 	}
 #hor-minimalist-b td{
+	border-bottom:1px solid #ccc;
 	color:#004000;
 	padding:6px 8px;
 		text-align:center;
 	}
 	
 #hor-minimalist-b tbody tr:hover td{color:black;}
-
-#hor-minimalist-c{
-	font-family:"Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
-	font-size:12px;
-	background:#fff;
-	width:480px;
-	border-collapse:collapse;
-	text-align:right;
-	margin:20px;
-	}
-#hor-minimalist-c th{
-	font-size:14px;
-	font-weight:normal;
-	color:#004000;
-	border-bottom:2px solid #004000;
-	padding:10px 8px;
-	}
-#hor-minimalist-c td{
-	color:#004000;
-	border-right:2px solid #ccc;
-	border-left:2px solid #ccc;
-	border-top:2px solid #ccc;
-	border-bottom:2px solid #ccc;
-	padding:6px 8px;
-		text-align:center;
-	}
-	
-#hor-minimalist-c tbody tr:hover td{color:black;}
 	
 	</style>
 </head><body>
 
-<h2>Instructor Distance Preference</h2>
+<h2>Instructor Overview</h2>
 <table id="hor-minimalist-b">
 <tr>
+<td>
+<p>Click on course to view and edit preferences</p>
+   <table>
+      <tr>
+         <td>Course</td>
+         <td>Preferences</td>
+      </tr>
+      <tr>
+         <td colspan="2">
+         <select size="5" style="width: 300px;">
+            <option>CPE 357 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2</option>
+            <option>CPE 300 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3</option>
+            <option>CPE 315 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1</option>
+            <option>CPE 402 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4</option>
+            <option>CPE 508 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4</option>
+            <option>CPE 570 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4</option>
+            <option>CPE 590 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4</option>
+         </select>         
+         </td>
+      </tr>
+   </table>
+</td>
+<td>
+<p>Name: Gene Fisher</p>
+<p>WTU: 12</p>
+</td>
+</tr>
+<tr>
 <td colspan="2">
+<h3>Weekly Calender Preview</h3>
 
    <table id="hor-minimalist-b">
+      <thead>
+      <tr>
+         <th></th>
+         <th>Monday</th>
+         <th>Tuesday</th>
+         <th>Wednesday</th>
+         <th>Thursday</th>
+         <th>Friday</th>
+      </tr>
+      </thead>
 	   <tbody>
-		   <tr style="min-height: 100px; min-width: 500px;">
-     		  <td style="min-width: 30px; min-height: 100px;" colspan="2">Which building do you prefer to be nearest to?</td>
-     		  <td style="min-width: 30px; min-height: 100px;"><input type="text" name="building" value="50"></td>
+		   <tr style="border-style:solid; border-width:1px; min-height: 100px; min-width: 500px;">
+     		   <td style="min-width: 100px; min-height: 100px;">7:00 AM</td>
+		      <td style="min-width: 100px; min-height: 100px;">1</td>
+		      <td style="min-width: 100px; min-height: 100px;">1</td>
+		      <td style="min-width: 100px; min-height: 100px;">1</td>
+		      <td style="min-width: 100px; min-height: 100px;">1</td>
+		      <td style="min-width: 100px; min-height: 100px;">1</td>
 		   </tr>
-		   <tr style="min-height: 100px; min-width: 500px;">
-     		  <td style="min-width: 30px; min-height: 100px;" colspan="2">How far are you willing to walk to rooms?</td><td style="min-width: 30px; min-height: 100px;"><input type="text" name="distance" value="1000"></td>
-     		  <td style="min-width: 30px; min-height: 100px;">
-				<select>
-				<option>feet</option>
-				<option>yard</option>
-				<option>meter</option>
-				<option>kilometer</option>
-				<option>mile</option>
-				</select>
-			  </td>
+		   <tr style="border-style:solid; border-width:1px; min-height: 100px; min-width: 500px;">
+     		   <td style="min-width: 100px; min-height: 100px;">8:00 AM</td>
+		      <td style="min-width: 100px; min-height: 100px;">1</td>
+		      <td style="min-width: 100px; min-height: 100px;">1</td>
+		      <td style="min-width: 100px; min-height: 100px;">1</td>
+		      <td style="min-width: 100px; min-height: 100px;">1</td>
+		      <td style="min-width: 100px; min-height: 100px;">1</td>
+		   </tr>
+		   <tr style="border-style:solid; border-width:1px; min-height: 100px; min-width: 500px;">
+     		   <td style="min-width: 100px; min-height: 100px;">9:00 AM</td>
+		      <td style="min-width: 100px; min-height: 100px;">1</td>
+		      <td style="min-width: 100px; min-height: 100px;">3</td>
+		      <td style="min-width: 100px; min-height: 100px;">3</td>
+		      <td style="min-width: 100px; min-height: 100px;">2</td>
+		      <td style="min-width: 100px; min-height: 100px;">4</td>
+		   </tr>
+		   <tr style="border-style:solid; border-width:1px; min-height: 100px; min-width: 500px;">
+     		   <td style="min-width: 100px; min-height: 100px;">10:00 AM</td>
+		      <td style="min-width: 100px; min-height: 100px;">5</td>
+		      <td style="min-width: 100px; min-height: 100px;">5</td>
+		      <td style="min-width: 100px; min-height: 100px;">5</td>
+		      <td style="min-width: 100px; min-height: 100px;">5</td>
+		      <td style="min-width: 100px; min-height: 100px;">5</td>
+		   </tr>
+		   <tr style="border-style:solid; border-width:1px; min-height: 100px; min-width: 500px;">
+     		   <td style="min-width: 100px; min-height: 100px;">11:00 AM</td>
+		      <td style="min-width: 100px; min-height: 100px;">1</td>
+		      <td style="min-width: 100px; min-height: 100px;">1</td>
+		      <td style="min-width: 100px; min-height: 100px;">1</td>
+		      <td style="min-width: 100px; min-height: 100px;">1</td>
+		      <td style="min-width: 100px; min-height: 100px;">1</td>
+		   </tr>
+		   <tr style="border-style:solid; border-width:1px; min-height: 100px; min-width: 500px;">
+     		   <td style="min-width: 100px; min-height: 100px;">12:00 PM</td>
+		      <td style="min-width: 100px; min-height: 100px;">2</td>
+		      <td style="min-width: 100px; min-height: 100px;">2</td>
+		      <td style="min-width: 100px; min-height: 100px;">4</td>
+		      <td style="min-width: 100px; min-height: 100px;">3</td>
+		      <td style="min-width: 100px; min-height: 100px;">1</td>
+		   </tr>
+		   <tr style="border-style:solid; border-width:1px; min-height: 100px; min-width: 500px;">
+     		   <td style="min-width: 100px; min-height: 100px;">1:00 PM</td>
+		      <td style="min-width: 100px; min-height: 100px;">1</td>
+		      <td style="min-width: 100px; min-height: 100px;">3</td>
+		      <td style="min-width: 100px; min-height: 100px;">4</td>
+		      <td style="min-width: 100px; min-height: 100px;">5</td>
+		      <td style="min-width: 100px; min-height: 100px;">1</td>
+		   </tr>
+		   <tr style="border-style:solid; border-width:1px; min-height: 100px; min-width: 500px;">
+     		   <td style="min-width: 100px; min-height: 100px;">2:00 PM</td>
+		      <td style="min-width: 100px; min-height: 100px;">3</td>
+		      <td style="min-width: 100px; min-height: 100px;">3</td>
+		      <td style="min-width: 100px; min-height: 100px;">3</td>
+		      <td style="min-width: 100px; min-height: 100px;">3</td>
+		      <td style="min-width: 100px; min-height: 100px;">3</td>
+		   </tr>
+		   <tr style="border-style:solid; border-width:1px; min-height: 100px; min-width: 500px;">
+     		   <td style="min-width: 100px; min-height: 100px;">3:00 PM</td>
+		      <td style="min-width: 100px; min-height: 100px;">3</td>
+		      <td style="min-width: 100px; min-height: 100px;">3</td>
+		      <td style="min-width: 100px; min-height: 100px;">3</td>
+		      <td style="min-width: 100px; min-height: 100px;">3</td>
+		      <td style="min-width: 100px; min-height: 100px;">3</td>
+		   </tr>
+		   <tr style="border-style:solid; border-width:1px; min-height: 100px; min-width: 500px;">
+     		   <td style="min-width: 100px; min-height: 100px;">4:00 PM</td>
+		      <td style="min-width: 100px; min-height: 100px;">1</td>
+		      <td style="min-width: 100px; min-height: 100px;">1</td>
+		      <td style="min-width: 100px; min-height: 100px;">1</td>
+		      <td style="min-width: 100px; min-height: 100px;">1</td>
+		      <td style="min-width: 100px; min-height: 100px;">1</td>
+		   </tr>
+		   <tr style="border-style:solid; border-width:1px; min-height: 100px; min-width: 500px;">
+     		   <td style="min-width: 100px; min-height: 100px;">5:00 PM</td>
+		      <td style="min-width: 100px; min-height: 100px;">1</td>
+		      <td style="min-width: 100px; min-height: 100px;">1</td>
+		      <td style="min-width: 100px; min-height: 100px;">1</td>
+		      <td style="min-width: 100px; min-height: 100px;">1</td>
+		      <td style="min-width: 100px; min-height: 100px;">1</td>
+		   </tr>
+		   <tr style="border-style:solid; border-width:1px; min-height: 100px; min-width: 500px;">
+     		   <td style="min-width: 100px; min-height: 100px;">6:00 PM</td>
+		      <td style="min-width: 100px; min-height: 100px;">5</td>
+		      <td style="min-width: 100px; min-height: 100px;">5</td>
+		      <td style="min-width: 100px; min-height: 100px;">5</td>
+		      <td style="min-width: 100px; min-height: 100px;">5</td>
+		      <td style="min-width: 100px; min-height: 100px;">5</td>
+		   </tr>
+		   <tr style="border-style:solid; border-width:1px; min-height: 100px; min-width: 500px;">
+     		   <td style="min-width: 100px; min-height: 100px;">7:00 PM</td>
+		      <td style="min-width: 100px; min-height: 100px;">2</td>
+		      <td style="min-width: 100px; min-height: 100px;">2</td>
+		      <td style="min-width: 100px; min-height: 100px;">3</td>
+		      <td style="min-width: 100px; min-height: 100px;">4</td>
+		      <td style="min-width: 100px; min-height: 100px;">5</td>
 		   </tr>
 	   </tbody>
-   </table>
-   <table id="hor-minimalist-b">
-		<tbody>
-		   <tr>
-		      <td style="min-width: 100px; min-height: 100px;"><button type="push" name="save">Save</button></td>
-		      <td style="min-width: 100px; min-height: 100px;"><button type="push" name="cancel">Cancel</button></td>
-		   </tr>
-		</tbody>
    </table>
 </td>
    </tr>
