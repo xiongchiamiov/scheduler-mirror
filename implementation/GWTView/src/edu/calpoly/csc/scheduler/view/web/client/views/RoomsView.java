@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.view.web.client.pages;
+package edu.calpoly.csc.scheduler.view.web.client.views;
 
 import java.util.ArrayList;
 
@@ -9,42 +9,41 @@ import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.client.table.EditableTable;
 import edu.calpoly.csc.scheduler.view.web.client.table.EditableTableEntry;
 import edu.calpoly.csc.scheduler.view.web.client.table.EditableTableFactory;
-import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
 
-public class CoursesPage extends View {
+public class RoomsView extends View {
 	private GreetingServiceAsync greetingService;
-	private EditableTable courseTable;
+	private EditableTable locationTable;
 
-	public CoursesPage(GreetingServiceAsync greetingService) {
+	public RoomsView(GreetingServiceAsync greetingService) {
 		this.greetingService = greetingService;
-		
-		courseTable = EditableTableFactory.createCourses(new EditableTable.CancelHandler() {
+		locationTable = EditableTableFactory.createLocations(new EditableTable.CancelHandler() {
 			public void canceled() {
-				populateCourses();
+				populateLocations();
 			}
 		}, new EditableTable.SaveHandler() {
 			public void saved(ArrayList<InstructorGWT> existingGWTs, ArrayList<InstructorGWT> deletedGWTs) {
 				/* TODO */
-				populateCourses();
+				populateLocations();
 			}
 		});
 		
-		this.add(courseTable.getWidget());
+		this.add(locationTable.getWidget());
 	}
 	
-	public void populateCourses() {
-		courseTable.clear();
+	public void populateLocations() {
+		locationTable.clear();
 		
-		greetingService.getCourses(new AsyncCallback<ArrayList<CourseGWT>>() {
+		greetingService.getLocationNames(new AsyncCallback<ArrayList<LocationGWT>>() {
 			public void onFailure(Throwable caught) {
 				Window.alert("Failed to get courses: " + caught.toString());
 			}
 			
-			public void onSuccess(ArrayList<CourseGWT> result){
+			public void onSuccess(ArrayList<LocationGWT> result){
 				if (result != null) {
-					for (CourseGWT s : result) {
-						courseTable.add(new EditableTableEntry(s));
+					for (LocationGWT s : result) {
+						locationTable.add(new EditableTableEntry(s));
 					}
 				}
 			}
@@ -53,12 +52,13 @@ public class CoursesPage extends View {
 	
 	@Override
 	public void beforeHide() {
-		
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override
 	public void afterShow() {
-		populateCourses();
+		populateLocations();
 	}
 
 }

@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.view.web.client.pages;
+package edu.calpoly.csc.scheduler.view.web.client.views;
 
 import com.google.gwt.user.client.ui.FlowPanel;
 

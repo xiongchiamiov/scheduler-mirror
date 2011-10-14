@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.view.web.client.pages;
+package edu.calpoly.csc.scheduler.view.web.client.views;
 
 import java.util.ArrayList;
 
@@ -11,11 +11,11 @@ import edu.calpoly.csc.scheduler.view.web.client.table.EditableTableEntry;
 import edu.calpoly.csc.scheduler.view.web.client.table.EditableTableFactory;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 
-public class InstructorsPage extends View {
+public class InstructorsView extends View {
 	private GreetingServiceAsync greetingService;
 	private EditableTable instructorTable;
 
-	public InstructorsPage(GreetingServiceAsync greetingService) {
+	public InstructorsView(GreetingServiceAsync greetingService) {
 		this.greetingService = greetingService;
 		instructorTable = EditableTableFactory.createProfessors(new EditableTable.CancelHandler() {
 			public void canceled() {

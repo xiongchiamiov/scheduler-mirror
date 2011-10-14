@@ -26,7 +26,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.shared.gwtScheduleItem;
 
-public class ScheduleView
+public class ScheduleViewWidget
 {
  private GreetingServiceAsync greetingService;
  private ArrayList<gwtScheduleItem> scheduleItems = new ArrayList<gwtScheduleItem>();

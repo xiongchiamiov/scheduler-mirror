@@ -1,14 +1,14 @@
-package edu.calpoly.csc.scheduler.view.web.client.pages;
+package edu.calpoly.csc.scheduler.view.web.client.views;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
-import edu.calpoly.csc.scheduler.view.web.client.ScheduleView;
+import edu.calpoly.csc.scheduler.view.web.client.ScheduleViewWidget;
 
-public class SchedulePage extends View {
+public class ScheduleView extends View {
 	private GreetingServiceAsync greetingService;
 
-	public SchedulePage(GreetingServiceAsync greetingService) {
+	public ScheduleView(GreetingServiceAsync greetingService) {
 		this.greetingService = greetingService;
-		ScheduleView schdView = new ScheduleView();
+		ScheduleViewWidget schdView = new ScheduleViewWidget();
 		this.add(schdView.getWidget(greetingService));
 	}
 	

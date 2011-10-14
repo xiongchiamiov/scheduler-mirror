@@ -2,17 +2,24 @@ package edu.calpoly.csc.scheduler.view.web.client;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.RootLayoutPanel;
+import com.google.gwt.user.client.ui.StackPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-import edu.calpoly.csc.scheduler.view.web.client.pages.CoursesPage;
-import edu.calpoly.csc.scheduler.view.web.client.pages.InstructorsPage;
-import edu.calpoly.csc.scheduler.view.web.client.pages.View;
-import edu.calpoly.csc.scheduler.view.web.client.pages.RoomsPage;
-import edu.calpoly.csc.scheduler.view.web.client.pages.SchedulePage;
+import edu.calpoly.csc.scheduler.view.web.client.views.CoursesView;
+import edu.calpoly.csc.scheduler.view.web.client.views.InstructorsView;
+import edu.calpoly.csc.scheduler.view.web.client.views.RoomsView;
+import edu.calpoly.csc.scheduler.view.web.client.views.ScheduleView;
+import edu.calpoly.csc.scheduler.view.web.client.views.View;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -28,70 +35,125 @@ public class GWTView implements EntryPoint {
 	
 	Button instructorsViewButton, roomsViewButton, coursesViewButton, scheduleViewButton;
 
-	InstructorsPage instructorsPage;
-	RoomsPage roomsPage;
-	CoursesPage coursesPage;
-	SchedulePage viewSchedulePage;
-	View currentPage;
+	InstructorsView instructorsView;
+	RoomsView roomsView;
+	CoursesView coursesView;
+	ScheduleView scheduleView;
+	
+	View currentView;
 	
 	/**
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
+
+		////////////Title Bar Menu
+		HorizontalPanel titlePanel = new HorizontalPanel();
+		
+		titlePanel.addStyleName("titlePanelStyle") ;
+		Image logoPlaceHolder = new Image();
+	    // Point the image at a real URL.
+		logoPlaceHolder.setUrl("imgs/LogoPlaceHolder.png");
+		logoPlaceHolder.setStyleName("logoPlaceHolderStyle") ;
+
+		HTML northPanel = new HTML() ;
+	 	Image titleImg = new Image() ;
+	 	titleImg.setUrl("imgs/titleImg.png") ;
+	 	titleImg.setStyleName("titleImgStyle") ;
+		
+		northPanel.getElement().setId("northPanelID") ;
+	 	northPanel.setHTML("<div id='titleText'><img src='imgs/titleImg.png'></div>") ;
+	    //p.addNorth(new HTML("<div id='northDiv' style='background-color:#004000; width:100%; height:100%';>north</div>"), 2);
+	 	
+	 	
+		titlePanel.add(logoPlaceHolder) ;
+		titlePanel.add(northPanel) ;
+		
+		titlePanel.setCellWidth(titlePanel.getWidget(0), "100px");
+		
+		titlePanel.getWidget(0).setStyleName("logoContainerDiv") ;
+		
+		////////////
+		//LEFT MENU LAYOUT
+		StackPanel leftMenuSP = new StackPanel();
+		leftMenuSP.add(new HTML("Start<BR>Generate<br>Review"),"Generate Schedule",true);
+		leftMenuSP.add(new HTML("Export Schedule"), "Export Schedule",true);
+		leftMenuSP.add(createLeftPanel(), "Configuration",true);
+		leftMenuSP.setStyleName("myStackPanel") ;
+
+		 DockLayoutPanel p = new DockLayoutPanel(Unit.EM);
+		 	
+		 	p.addNorth(titlePanel, 7);
+			  
+		 	p.addSouth(new HTML("south"), 2);
+		    //p.addEast(new HTML("east"), 2);
+		    p.addWest(leftMenuSP, 15);
+		    p.getWidgetContainerElement(leftMenuSP).setId("leftPanelID") ;
+
+			bodyPanel = new VerticalPanel();
+		    p.add(bodyPanel) ;
+		   
+		    // Attach the LayoutPanel to the RootLayoutPanel. The latter will listen for
+		    // resize events on the window to ensure that its children are informed of
+		    // possible size changes.
+		    RootLayoutPanel rp = RootLayoutPanel.get();
+		    rp.add(p);
+		
+		instructorsViewButton.click();
+	}
+	
+	private Panel createLeftPanel() {
 		instructorsViewButton = new Button("Instructors", new ClickHandler() {
 			public void onClick(ClickEvent events) {
-				if (instructorsPage == null)
-					instructorsPage = new InstructorsPage(greetingService);
-				showPage(instructorsPage);
+				if (instructorsView == null)
+					instructorsView = new InstructorsView(greetingService);
+				showView(instructorsView);
 			}
 		});
 
 		roomsViewButton = new Button("Rooms", new ClickHandler() {
 			public void onClick(ClickEvent events) {
-				if (roomsPage == null)
-					roomsPage = new RoomsPage(greetingService);
-				showPage(roomsPage);
+				if (roomsView == null)
+					roomsView = new RoomsView(greetingService);
+				showView(roomsView);
 			}
 		});
 
 		coursesViewButton = new Button("Courses", new ClickHandler() {
 			public void onClick(ClickEvent events) {
-				if (coursesPage == null)
-					coursesPage = new CoursesPage(greetingService);
-				showPage(coursesPage);
+				if (coursesView == null)
+					coursesView = new CoursesView(greetingService);
+				showView(coursesView);
 			}
 		});
 
 		scheduleViewButton = new Button("Schedule", new ClickHandler() {
 			public void onClick(ClickEvent events) {
-				if (viewSchedulePage == null)
-					viewSchedulePage = new SchedulePage(greetingService);
-				showPage(viewSchedulePage);
+				if (scheduleView == null)
+					scheduleView = new ScheduleView(greetingService);
+				showView(scheduleView);
 			}
 		});
 
-		RootPanel.get().add(instructorsViewButton);
-		RootPanel.get().add(roomsViewButton);
-		RootPanel.get().add(coursesViewButton);
-		RootPanel.get().add(scheduleViewButton);
-
-		bodyPanel = new VerticalPanel();
-		RootPanel.get().add(bodyPanel);
-		
-		instructorsViewButton.click();
+		Panel leftPanel = new VerticalPanel();
+		leftPanel.add(instructorsViewButton);
+		leftPanel.add(roomsViewButton);
+		leftPanel.add(coursesViewButton);
+		leftPanel.add(scheduleViewButton);
+		return leftPanel;
 	}
 	
-	public void showPage(View newPage) {
-		if (currentPage != null) {
+	public void showView(View newPage) {
+		if (currentView != null) {
 			bodyPanel.clear();
-			currentPage.beforeHide();
-			currentPage = null;
+			currentView.beforeHide();
+			currentView = null;
 		}
 		
 		assert(newPage != null);
 		
-		currentPage = newPage;
-		bodyPanel.add(currentPage);
-		currentPage.afterShow();
+		currentView = newPage;
+		bodyPanel.add(currentView);
+		currentView.afterShow();
 	}
 }
