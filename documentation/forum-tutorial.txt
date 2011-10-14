@@ -1,0 +1,28 @@
+
+Terms:
+------
+- A forum, in this context, is a collection of online conversations.
+- A topic is one of the conversations within a particular forum.
+
+
+Browsing:
+---------
+Go to scheduler.csc.calpoly.edu/forum
+On the first page you will see a list of our forums. There is a Sandbox forum and a Feedback forum. The Sandbox forum allows users to test out the site or practice using the web forum. The Feedback forum is for users to discuss the scheduling tool. Your can post problems you encounter, questions you have, ideas for features you'd like us to add, or anything else that might help us create a better scheduling too;. All feedback is greatly appreciated.
+
+
+User Accounts:
+--------------
+You can post to our forums with or without creating a user account. Posting without an account is quicker, but creating an account does have some advantages. Having an account can help people recognize who you are and prevent others from impersonating you on our forums. It will also help you see which topics or posts you have not read yet and keep track of your own topics and posts.
+
+
+Practice Posting:
+-----------------
+Go to scheduler.csc.calpoly.edu/forum and Click on the 'Sandbox' link. This will take you to our Sandbox forum. Here you will see a list of topics that are being discussed in this forum. The topics here are mostly just people testing everything out or practicing posting. Click on any topic to see what people have already said in that conversation. Practice posting a reply by clicking the 'Post Reply' link on the right hand side. You will need to enter a name, an email address, and a message. If you'd like to review what people have said recently in this conversation, you can see the recent posts listed at the bottom of this page. Once you're done entering everything, click the 'Submit' button below the message box to add your reply to the conversation. This will take you back to viewing the conversation, and you should now see your reply at the bottom.
+
+Now let's practice creating a new conversation. Go back to the Sandbox forum. If you are still viewing the conversation from the [previous step, you can get back to the Sandbox forum by clicking the 'Sandbox' link at the top of the conversation. Next, start a new conversation by clicking 'Post a new topic' on the right hand side. The page that comes up will look very similar to when you posted a reply to someone else's conversation, but now you will be prompted to input a subject as well. The subject is like the title of your conversation; whatever you put in as the subject will appear on the list of conversations in the Sandbox forum. Once you are down filling everything out, click the submit button at the bottom to create your topic.
+
+
+Creating an Account:
+--------------------
+To create a user account, simply click the 'Register' button on the main menu bar at the top of any forum page. Fill in your information on the page that comes up, then click the 'Register' button at the bottom. Next time you come to the forum, you will have to login to your account by clicking the 'Login' button on the menu bar. Once you are logged in, topics that have posts that you haven't read yet will have a different colored icon next to them. You can also view all of your own posts or topics by clicking on 'Profile' on the main menu bar, then scrolling to the bottom of the page. There you will see links to 'Show all topics' and 'Show all posts', which will take you to a listing of all your posts and topics respectively.
