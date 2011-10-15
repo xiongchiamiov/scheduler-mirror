@@ -1,0 +1,32 @@
+* {
+   padding: 0px;
+   margin: 0px;
+   border: none;
+}
+
+#blurb {
+   position: absolute;
+   top: 0;
+   right: 20px;
+   left: 20px;
+   color: #000000;
+   text-align: center;
+}
+
+#blurb h2, #links {
+   margin: 0 0 9px 0;
+}
+
+#blurb a {
+   margin: 0 8px 0 8px;
+}
+
+#screenshot {
+   position: absolute;
+   top: 140px;
+   right: 5px;
+   bottom: 5px;
+   left: 5px;
+   border: 2px solid #AAAAAA;
+   overflow: auto;
+}
