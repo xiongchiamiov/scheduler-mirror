@@ -34,4 +34,18 @@
    border: 2px solid #AAAAAA;
    overflow: auto;
    text-align: center;
+    display: table-cell;
+}
+
+#screenshot * {  
+   vertical-align: middle;
+}
+
+#screenshot {
+    display: block;
+}
+#screenshot span {
+    display: inline-block;
+    height: 100%;
+    width: 1px;
 }
