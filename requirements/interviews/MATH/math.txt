@@ -1,0 +1,20 @@
+- Additional faculty involvement with scheduling:
+ + Mark determines sections for the department to offer
+ + Cynthia manages scheduling
+ + Carly performes schedule entry
+- Course offerings are based on two year history of section offering versus student enrollment. Schedules have relatively low persistance, especially compared to other departments
+- Actual math majors are a minority; majority of department is support courses
+- Unique time / day patterns are used to ensure maximum student attendance (No late Friday classes)
+- Instructors convey preferences, including desire for chalk, smart room, etc
+- Office of the Registrar, upon receipt of schedule, confirms some classes and rooms, "TBD's" others (suggestions are often provided)
+- Initial schedule creation is department's largest time sink, due to the sheer volume of offerings
+- Department owns very few rooms, but Registrar will often 'allocate' a block from the math & science building
+- Strong preference for MTWH / MTHF for one hour, due to nature of subject (short sessions, mimimal space between)
+- High demand for filterable views (by class, prof, etc)
+- Peoplesoft rolls over details from previous quarter. Sometimes bad, as many courses must be manually removed and altered
+- Schedules for all three quarters are due simultaneously
+- Strong preference for Excel-style print outs
+- Magnet system unlikely to change, just represented in software
+- Cynthia is willing to participate in all follow-up activities
+
+Overall, the math department fits very well into the existing model. The preference towards MTWH / MTHF class patterns deserves special consideration. Department is very large and process is very time consuming. Should prove to be an excellent gauge of success and scalability of algorithm.
