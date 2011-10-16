@@ -1371,31 +1371,59 @@
    border-style: solid;
    border-width: 1px;
 }
-
-#black-text {
-   color: #000000   
-}
 	
 	</style>
 <body>
-		<table align="center" id="hor-minimalist-b">
+		<table id="hor-minimalist-b">
 		<tbody>
                 <tr>
-                <td><br /><br /><br /><img src="error_icon.png" /></td>
-                <td>
-                  <br /><br /><br />
-                  <p id="black-text">An error occured while generating schedule <b>Fall 2012</b></p>
-                  <p id="black-text"><b>Error: </b>Too many classes in time block <b>Tue 1-2pm</b> for <b>Instructor Armstrong</b></p>
-                </td>
+                <td>&nbsp;</td>
+                <td align="center"><h2 style="color: #000000">Schedule Setup</h2></td>
+                <td>&nbsp;</td>
                 </tr>
+		<tr>
+                <td>
+                  <select size="20" multiple style="width: 150px">
+                    <option selected id="course-option">IME101 (3)</option>
+                    <option id="course-option">IME142 (2)</option>
+                    <option id="course-option">IME143</option>
+                    <option id="course-option">IME144 (2)</option>
+                    <option id="course-option">IME156 (2)</option>
+                    <option id="course-option">IME157</option>
+                    <option id="course-option">IME223 (3)</option>
+                    <option id="course-option">IME239</option>
+                    <option id="course-option">IME241</option>
+                    <option id="course-option">IME301</option>
+                    <option id="course-option">IME303</option>
+                    <option id="course-option">IME312</option>
+                    <option id="course-option">IME314 (3)</option>
+                    <option id="course-option">IME319</option>
+                    <option id="course-option">IME320</option>
+                    <option id="course-option">IME322</option>
+                    <option id="course-option">IME326 (2)</option>
+                    <option id="course-option">IME335</option>
+                    <option id="course-option">IME341</option>
+                    <option id="course-option">IME342</option>
+                    <option id="course-option">IME352</option>
+                    <option id="course-option">IME356 (2)</option>
+                    <option id="course-option">IME400</option>
+                    <option id="course-option">IME401</option>
+                  </select>
+                </td>
+                <td><img src="Calendar.png" /></td>
+                <td>
+                  <select size="20" multiple style="width: 150px">
+                    <option id="course-option">IME101 (3)</option>
+                    <option id="course-option">IME130</option>
+                    <option id="course-option">IME140 (2)</option>
+                    <option id="course-option">IME141</option>
+                  </select>
+                </td>
+		</tr>
                 <tr>
                 <td>&nbsp;</td>
-                <td>
-                  <p id="black-text">Suggested Fixes:</p>
-                  <p id="black-text"><a>Add</a> more Instructors<br />
-                                     <a>Modify</a> courses<br />
-                  </p>
-                </td>
+                <td><div align="center"><input class="gwt-button" type="button" value="Generate Schedule" /></div></td>
+                <td>&nbsp;</td>
                 </tr>
 		</tbody>
 		</table>
