@@ -3,6 +3,7 @@ package edu.calpoly.csc.scheduler.model.schedule;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Observable;
+import java.util.List;
 import java.util.Vector;
 
 import edu.calpoly.csc.scheduler.model.db.*;
@@ -19,13 +20,13 @@ public class NewSchedule extends Observable implements Serializable
 {
    private NewCourseDB cdb;
    private NewInstructorDB idb;
-   private LocationDB ldb;
+   private NewLocationDB ldb;
 
    private TimeRange bounds = new TimeRange(new Time(7, 0), new Time(22, 0));
 
    Vector<ScheduleItem> siList = new Vector<ScheduleItem>();
 
-   public NewSchedule (NewCourseDB cdb, NewInstructorDB idb, LocationDB ldb)
+   public NewSchedule (NewCourseDB cdb, NewInstructorDB idb, NewLocationDB ldb)
    {
       this.cdb = cdb;
       this.idb = idb;
@@ -33,45 +34,30 @@ public class NewSchedule extends Observable implements Serializable
    }
 
    /**
-    * Creates a ScheduleItem for the given course. Will find an appropriate
-    * instructor and location for the course.
-    * 
-    * @.todo write this
-    * @.todo Consider passing a list of days
-    * 
-    * @param c Course to add to the schedule
-    * @param t Start time the course is to be taught on
-    * @param days Days of the week to schedule the course
-    * 
-    * @return A schedule item for this course to be taught starting on time 't'
-    *         on days 'days', w/ an automatically-picked instructor teaching it
-    *         in a auto-picked location.
-    */
-   public ScheduleItem makeItem (Course c, Time t, Week days)
-   {
-      return null;
-   }
-
-   /**
     * Does schedule generation.
     */
    public void generate ()
    {
+      boolean done = false;
       Collection<Course> courses = this.cdb.getData();
-
-      for (Course lec : courses)
+      
+      while (!done)
       {
-         Course lab = lec.getLab();
-         for (int section = 0; section < lec.getNumOfSections(); section++)
+         for (Instructor i: this.idb.getData())
          {
-            Vector<ScheduleItem> items = new Vector<ScheduleItem>();
+//            if (i.canTeach())
+            Course lec = this.findCourse(i);
+            Course lab = lec.getLab();
             
-            for (Instructor i: findInstructors(lec))
+            Vector<TimeRange> lec_times = findTimes(i, lec);
+            Vector<Location>  lec_rooms = findLocations(lec, lec_times);
+            
+            Vector<TimeRange> lab_times;
+            Vector<Location>  lab_rooms;
+            if (lab != null)
             {
-               Vector<TimeRange> lec_times = findTimes(i, lec);
-               Vector<Location> lec_places = findLocations(lec, lec_times);
-
-               Vector<ScheduleItem> lec_items = new Vector<ScheduleItem>();
+               lab_times = findTimes (i, lab);
+               lab_rooms = findLocations (lab, lab_times); 
             }
          }
       }
@@ -119,20 +105,9 @@ public class NewSchedule extends Observable implements Serializable
       return items;
    }
 
-   /**
-    * Gets a list of instructors who want to teach a given Course. The list is
-    * sorted in descending order of desire to teach this course. 
-    * 
-    * @param c Course to find an instructor for
-    * 
-    * @return a list of instructors who want to teach 'c', sorted in descending
-    *         order of desire to teach 'c'
-    * 
-    * @see NewInstructorDB#getInstructors(Course)
-    */
-   private Vector<Instructor> findInstructors (Course c)
+   private Course findCourse (Instructor i)
    {
-      return this.idb.getInstructors(c);
+      return null;
    }
 
    /**
@@ -166,6 +141,6 @@ public class NewSchedule extends Observable implements Serializable
     */
    private Vector<Location> findLocations (Course c, Vector<TimeRange> times)
    {
-      return null;
+      return new Vector<Location>(this.ldb.findRooms(c, times));
    }
 }

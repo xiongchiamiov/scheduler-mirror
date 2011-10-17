@@ -178,7 +178,6 @@ public class Instructor implements Comparable<Instructor>, Serializable
 
    public Instructor ()
    {
-      System.err.println("I AM AN INSTRUCTOR");
    }
 
    /**

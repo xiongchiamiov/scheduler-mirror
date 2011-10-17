@@ -1,11 +1,6 @@
 package edu.calpoly.csc.scheduler.model.db.ldb;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,9 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-import edu.calpoly.csc.scheduler.model.db.Database;
-import edu.calpoly.csc.scheduler.model.db.SQLDB;
-import edu.calpoly.csc.scheduler.model.db.TimeRange;
+import edu.calpoly.csc.scheduler.model.db.*;
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
 import edu.calpoly.csc.scheduler.model.schedule.WeekAvail;
 
@@ -154,7 +147,7 @@ public class NewLocationDB implements Database<Location>
          if (room.providesFor(course))
          {
             // Check if time is available
-            //if(room.isAvailable(null, TimeRange something, TimeRange something))
+//            if(room.isAvailable(course.getDays(), tr.getS(), tr.getE())
             {
                rooms.add(room);
             }
