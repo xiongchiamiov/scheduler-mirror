@@ -1,0 +1,23 @@
+Initial comments on walkthru.
+
+    * When clicking on forum (which is great), it should open up a new window.  The sandbox should be removed and perhaps topics added for each section, plus a general observations topic.
+
+    * Forum might want instructions at the top for people to register before posting.
+    * Scheduler Home looks very good!  It needs a link back to the Forum
+
+    * Notes at top of each screen is very good, but should be at the top of all screens.  It is on teh bottom of the schedule generation screen
+
+    * The course lists on either side of the calendar should be labeled and instructions to drag from one list to the other.  However, the idea that each quarter the user needs to drag all the classes over seems wrong.  Could they start with a master list like "Fall quarter classes"
+
+    * Graphics are missing from "View Blank Schedule" forward.
+
+    * View Schedule Department, Hovering next button goes to 404 error
+
+    * In Instructor management area, do you think you might want to go to a new screen to add/edit an instructor.  They might want more info on each instructor like telephone number or general notes.  Also, what about an import from Excel feature?
+    * I assume Remove instructor is just a dialog box.  It shows as a new screen
+
+    * Is it assumed that the scheduler is going to enter the course preferences for each instructor?  If not, this should show the instructors view at at the top of Course preferences, it should show the instructor's name.  Also, instead of having all courses say "acceptable" the example should show all choices of Preferred, Acceptable, Not Preferred, Not Qualified.
+
+    Screen images are missing from Manage courses through the end.
+
+I think it is starting to shape up nicely, but is definitely not ready for the public.
