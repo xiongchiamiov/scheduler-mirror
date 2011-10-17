@@ -1,19 +1,10 @@
 package edu.calpoly.csc.scheduler.model.db.idb;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Vector;
+import java.util.*;
 
 import edu.calpoly.csc.scheduler.model.db.Database;
 import edu.calpoly.csc.scheduler.model.db.SQLDB;
@@ -24,20 +15,20 @@ import edu.calpoly.csc.scheduler.model.schedule.WeekAvail;
 public class NewInstructorDB implements Database<Instructor>
 {
    private ArrayList<Instructor> data;
-   private SQLDB                 sqldb;
+   private SQLDB sqldb;
 
-   public NewInstructorDB()
+   public NewInstructorDB ()
    {
       initDB();
    }
 
    @Override
-   public ArrayList<Instructor> getData()
+   public ArrayList<Instructor> getData ()
    {
       return data;
    }
 
-   private void initDB()
+   private void initDB ()
    {
       data = new ArrayList<Instructor>();
       sqldb = new SQLDB();
@@ -45,7 +36,7 @@ public class NewInstructorDB implements Database<Instructor>
    }
 
    @Override
-   public void pullData()
+   public void pullData ()
    {
       ResultSet rs = sqldb.getSQLInstructors();
       try
@@ -64,9 +55,8 @@ public class NewInstructorDB implements Database<Instructor>
             // Put items into Instructor object and add to data
             Location office = new Location(building, room);
             Instructor toAdd = new Instructor(fname, lname, userid, maxwtu,
-                  office, disabilities);
-            toAdd.setMaxWTU(maxwtu);
-            toAdd.setAvailableWTU(currentwtu);
+               office, disabilities);
+
             // Deserialize week availiability
             byte[] buf = rs.getBytes("weekavail");
             if (buf != null)
@@ -75,7 +65,7 @@ public class NewInstructorDB implements Database<Instructor>
                {
                   ObjectInputStream objectIn;
                   objectIn = new ObjectInputStream(
-                        new ByteArrayInputStream(buf));
+                     new ByteArrayInputStream(buf));
                   toAdd.setAvailability((WeekAvail) objectIn.readObject());
                }
                catch (Exception e)
@@ -93,12 +83,12 @@ public class NewInstructorDB implements Database<Instructor>
    }
 
    @Override
-   public void addData(Instructor data)
+   public void addData (Instructor data)
    {
       // Create insert strings
       String insertString = "insert into instructors ("
-            + "firstname, lastname, userid, maxwtu,, currentwtu building, room, "
-            + "disabilities, weekavail)" + "values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+         + "firstname, lastname, userid, wtu, building, room, "
+         + "disabilities, weekavail)" + "values (?, ?, ?, ?, ?, ?, ?, ?)";
       // Create prepared statement
       PreparedStatement stmt = sqldb.getPrepStmt(insertString);
       // Set values
@@ -137,39 +127,34 @@ public class NewInstructorDB implements Database<Instructor>
    }
 
    @Override
-   public void editData(Instructor newData)
+   public void editData (Instructor newData)
    {
       // TODO Auto-generated method stub
 
    }
 
    @Override
-   public void removeData(Instructor data)
+   public void removeData (Instructor data)
    {
       // TODO Auto-generated method stub
 
    }
 
    /**
-    * Stubbed. Returns an instructor who wants to teach this course. In
-    * particular, there should be no other instructor other than the one
-    * returned who wants to teach the given Course <b>more</b> than this one.<br>
+    * Stubbed. Returns a list of instructors who want to teach this course.<br>
     * <br>
-    * Also, the returned instructor must be able to teach the course. I.e. he
-    * must have enough WTU's available to take on the course.<br>
-    * <br>
-    * If no instructor can be found to teach the given course, null is returned.
+    * Instructors must be able to teach the course. I.e. they must have enough 
+    * WTU's available to take on the course and they must not have a course
+    * pref of 0 for the course.<br>
     * 
     * @.todo Write this
     * 
-    * @param c
-    *           Course which the returned instructor wants to teach
+    * @param c Course which the returned instructor wants to teach
     * 
-    * @return an Instructor who wants to teach the given Course at least as much
-    *         as every other instructor and who is able to add the course to his
-    *         workload. If no instructor can be found, null is returned.
+    * @return a list of instructor who want to/can teach course 'c'. The list
+    *         should be in descending order of desire.
     */
-   public Instructor getInstructor(Course c)
+   public Vector<Instructor> getInstructors (Course c)
    {
       return null;
    }
