@@ -2,6 +2,8 @@ package edu.calpoly.csc.scheduler.model.db.cdb;
 
 import java.io.Serializable;
 
+import edu.calpoly.csc.scheduler.model.schedule.Week;
+
 /**
  * Represents a course to be scheduled in the Scheduler.
  * 
@@ -64,6 +66,10 @@ public class Course implements Serializable
     */
    private int length = 0;
    /**
+    * The days in the week this course is to be taught
+    */
+   private Week days;
+   /**
     * Maximum number of students that can be enrolled in this course
     */
    private int enrollment = 0;
@@ -71,6 +77,11 @@ public class Course implements Serializable
     * This course's lab. Can be null, which means it has no lab
     */
    private Course lab = null;
+   /**
+    * How many half hours before/after this course that a lab can be taught. 
+    * Default is 0, which'll put a lab right after the lecture.
+    */
+   private int labPad = 0;
    
    /**
     * Default constructor. Does nothing.
@@ -346,6 +357,26 @@ public class Course implements Serializable
    }
 
    /**
+    * Returns the days
+    * 
+    * @return the days
+    */
+   public Week getDays ()
+   {
+      return days;
+   }
+
+   /**
+    * Sets the days to the given parameter.
+    *
+    * @param days the days to set
+    */
+   public void setDays (Week days)
+   {
+      this.days = days;
+   }
+
+   /**
     * Stubbed. Returns the lab paired w/ this course. Can be null.
     * 
     * @.todo Write this. It just returned 'null'.
@@ -367,6 +398,29 @@ public class Course implements Serializable
       this.lab = lab;
    }
    
+   /**
+    * Returns the number of half hours before/after this course that a lab is
+    * allowed to be taught. 
+    * 
+    * @return the labPad
+    */
+   public int getLabPad ()
+   {
+      return labPad;
+   }
+
+   /**
+    * Sets the labPad to the given parameter. A negative value means you're 
+    * specifying a pad for the lab being taught <b>before</b> the lecture. A 
+    * positive value is for <b>after</b>.
+    *
+    * @param labPad the labPad to set
+    */
+   public void setLabPad (int labPad)
+   {
+      this.labPad = labPad;
+   }
+
    /**
     * Stubbed. Returns whether this course has a lab or not. 
     * 

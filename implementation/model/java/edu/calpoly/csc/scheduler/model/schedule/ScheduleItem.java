@@ -126,9 +126,22 @@ public class ScheduleItem implements Serializable, Cloneable,
       this.locked = false;
       this.lab = null;
    }
+   
+   public ScheduleItem (ScheduleItem si)
+   {
+      this.i = si.getInstructor();
+      this.c = si.getCourse();
+      this.l = si.getLocation();
+      this.section = si.getSection();
+      this.days = si.getDays();
+      this.start = si.getStart();
+      this.end = si.getEnd();
+      this.tr = new TimeRange(this.start, this.end);
+   }
 
    /**
-    * Sets the start and end time and days of this SI to the fields present in 
+    * Sets the start and end time and days of this S
+      boolean r = false;I to the fields present in 
     * a given DaysAndTime object.
     *
     * @param dat DaysAndTime object where the start, end, and days fields will
@@ -188,6 +201,26 @@ public class ScheduleItem implements Serializable, Cloneable,
    public ScheduleItem getLab ()
    {
       return this.lab;
+   }
+
+   /**
+    * Returns the section
+    * 
+    * @return the section
+    */
+   public int getSection ()
+   {
+      return section;
+   }
+
+   /**
+    * Sets the section to the given parameter.
+    *
+    * @param section the section to set
+    */
+   public void setSection (int section)
+   {
+      this.section = section;
    }
 
    /** 

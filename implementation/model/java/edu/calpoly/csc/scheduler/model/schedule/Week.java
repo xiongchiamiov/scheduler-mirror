@@ -1,5 +1,6 @@
 package edu.calpoly.csc.scheduler.model.schedule;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Vector;
 import java.io.Serializable;
@@ -34,7 +35,7 @@ public class Week implements Serializable
 
    public Week (Day[] days)
    {
-
+      this.days = new Vector<Day>(Arrays.asList(days));
    }
 
    public boolean add (Day d)

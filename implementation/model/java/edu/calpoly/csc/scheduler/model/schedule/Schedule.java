@@ -556,7 +556,6 @@ public class Schedule extends Observable implements Serializable
              */
             for (ScheduleItem lab_si: buildSI_setDats(base_lab, lab))
             {
-               //System.err.println ("Trying LAB SI: " + lab_si);
                /*
                 * The lecture and lab cannot overlap each other
                 */
@@ -634,7 +633,6 @@ public class Schedule extends Observable implements Serializable
                                                     dayNum, 
                                                     halfHours))
             {
-               ////System.err.println ("Have DAT: " + dat);
                /*
                 * Clone our "base" SI and set its days and time. Note that
                 * "null" DAT's should not be considered.
@@ -643,7 +641,6 @@ public class Schedule extends Observable implements Serializable
                {
                   ScheduleItem si = base.clone();
                   si.setDaysAndTime(dat);
-                  //System.err.println ("SET DAT: " + si);
                   sis.add(si);
                }
             }
@@ -669,7 +666,6 @@ public class Schedule extends Observable implements Serializable
     */
    /* createDatsForDays ==>*/
    private Vector<DaysAndTime> createDatsForDays 
-      /* Line too long to fit all the params */
       (
          Instructor i,
          Course c,
@@ -686,7 +682,6 @@ public class Schedule extends Observable implements Serializable
       Vector<Week> allWeeks = getAllDayCombos(c, nDays); /* TODO: FIX. It lies */
       for (Week w: allWeeks)
       {
-         ////System.err.println ("Have week: " + w);
          /*
           * Make DATs for all possible times. Some will be made which the 
           * instructor will not want to teach. These will be pruned out later

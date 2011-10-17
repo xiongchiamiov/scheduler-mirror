@@ -25,6 +25,23 @@ public class TimeRange implements Serializable
    }
 
    /**
+    * Creates a time range given a start time and a length, in half hours
+    * 
+    * @param t Start time of the range
+    * @param length Number of half hours after the start time that the end time
+    *        should be at
+    */
+   public TimeRange (Time t, int length)
+   {
+      Time temp = new Time(t);
+      
+      this.s = new Time(t);
+      
+      temp.addHalves(length);
+      this.e = temp;
+   }
+   
+   /**
     * Returns the half hour length.
     * @return The half hour length.
     */
@@ -84,10 +101,26 @@ public class TimeRange implements Serializable
       return false;
    }
 
+   /**
+    * Returns true if this TimeRange contains the given TimeRange. 
+    * 
+    * @param tr TimeRange which we want to see if this one contains
+    * 
+    * @return True if this TimeRange contains the given one. In particular, 
+    *         our start time is before its start time, and our end time if 
+    *         after its end time. <b>This is not the same as overlapping!</b>
+    */
+   public boolean contains (TimeRange tr)
+   {  
+      return (this.getS().compareTo(tr.getS()) > 0 &&
+              this.getE().compareTo(tr.getE()) < 0);
+   }
+   
    /** Returns the start time
     *  @return The start time 
     */
    public Time getS () { return this.s; }
+   
    /** Returns the end time 
     *  @return The start time 
     */
