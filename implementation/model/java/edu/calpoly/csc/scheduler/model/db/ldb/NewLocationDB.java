@@ -10,9 +10,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
 
 import edu.calpoly.csc.scheduler.model.db.Database;
 import edu.calpoly.csc.scheduler.model.db.SQLDB;
+import edu.calpoly.csc.scheduler.model.db.TimeRange;
+import edu.calpoly.csc.scheduler.model.db.cdb.Course;
 import edu.calpoly.csc.scheduler.model.schedule.WeekAvail;
 
 public class NewLocationDB implements Database<Location>
@@ -138,5 +142,25 @@ public class NewLocationDB implements Database<Location>
    {
       // TODO Auto-generated method stub
 
+   }
+
+   public List<Location> findRooms(Course course, Vector<TimeRange> times)
+   {
+      List<Location> rooms = new Vector<Location>();
+
+      for (Location room : data)
+      {
+         // Check if course has needed utilities
+         if (room.providesFor(course))
+         {
+            // Check if time is available
+            //if(room.isAvailable(null, TimeRange something, TimeRange something))
+            {
+               rooms.add(room);
+            }
+         }
+      }
+
+      return rooms;
    }
 }

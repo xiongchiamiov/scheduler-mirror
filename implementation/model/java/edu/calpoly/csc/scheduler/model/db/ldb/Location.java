@@ -402,8 +402,7 @@ public class Location implements Serializable
     */
    public boolean providesFor (Course c)
    {
-      boolean r = true;
-
-      return r;
+      //TODO: Actually check if course needs overhead,etc.
+      return true;
    }
 }

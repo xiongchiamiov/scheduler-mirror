@@ -143,9 +143,16 @@ public class Instructor implements Comparable<Instructor>, Serializable
 	private String userID;
 
 	/**
-	 * Work-Time units.
+	 * Maximum Work-Time units.
 	 */
-	private int wtu;
+	private int maxWTU;
+	
+	/**
+	 * Current Work-Time units available.
+	 * Example: maxWTU = 16, available = 12, means 4 WTUs used so far 
+	 *          and 12 left to use
+	 */
+	private int availableWTU;
 
 	/**
 	 * Building and office number of instructor.
@@ -230,7 +237,7 @@ public class Instructor implements Comparable<Instructor>, Serializable
 		this.firstName = i.firstName;
 		this.lastName = i.lastName;
 		this.userID = i.userID;
-		this.wtu = i.wtu; 
+		this.maxWTU = i.maxWTU; 
 		this.office = i.office;
 		//Preserve preferences!
 		this.coursePreferences = i.coursePreferences;
@@ -288,7 +295,7 @@ public class Instructor implements Comparable<Instructor>, Serializable
       this.firstName = first;
       this.lastName = last;
       this.userID = id;
-      this.wtu = wtu;
+      this.maxWTU = wtu;
       this.office = office;
       this.disability = disabilities;
       this.availability = new WeekAvail();
@@ -581,10 +588,35 @@ public class Instructor implements Comparable<Instructor>, Serializable
 	 */
 	public int getMaxWTU() 
    {
-		return this.wtu;
+		return this.maxWTU;
 	}
 
 	/**
+	 * @param maxWTU the maxWTU to set
+	 */
+	public void setMaxWTU(int maxWTU)
+	{
+	   this.maxWTU = maxWTU;
+	}
+	
+	/**
+    * @return the currentWTU
+    */
+   public int getAvailableWTU()
+   {
+      return availableWTU;
+   }
+
+   /**
+    * @param currentWTU the currentWTU to set
+    */
+   public void setAvailableWTU(int availableWTU)
+   {
+      this.availableWTU = availableWTU;
+   }
+
+
+   /**
 	 * Returns a string representing the instructor's name in the form
 	 * first name - space - last name.
 	 * 
@@ -893,4 +925,7 @@ public class Instructor implements Comparable<Instructor>, Serializable
 	public String toString() {
 		return new String(this.getLastName() + ", " + this.getFirstName());
 	}
+	
+	//TODO: Write method to add/subtract current WTUs? They aren't kept track of
+	//      right now
 }
