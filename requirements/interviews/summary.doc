@@ -1,0 +1,146 @@
+﻿=== General Operation ===
+When a schedule is created, it is in “working” mode. Once it is complete, it may become “proposed”. Any quarter can have any number of “working” or “proposed” schedules. Only one schedule can be considered “committed” as the official schedule for that quarter. A committed schedule is still easily edited, or swapped out with another proposed schedule. Individual instructors are able to view the committed schedule, and possible the proposed (?). A link is present that sends an immediate feedback e-mail to the registered schedule administrator.
+When editing a schedule via drag-n-drop, the calendar view greys out when dragging a selected class. Only areas that do not create a conflict are available to drop. Areas that create a ‘light’ conflict (non-essential or resolvable) are grey, but placeable. Areas that create a ‘hard’ conflict (instructor, time, room) are dark grey and not placeable.
+
+
+=== AERO ===
+Coordination between lectures and labs
+Use a ticket system for instructors to provide feedback and requests
+Download / view the schedules of other departments - Be able to add other department classes into our schedule
+
+
+=== BUS ===
+Schedules persist from corresponding quarter last year
+Classes and instructors are pre-assigned by the corresponding department heads (7 of them)
+Faculty have ample input regarding where and when they teach
+Should be connected to PeopleSoft
+Must avoid room and time conflicts
+Editing a generated schedule is currently the most time consuming action for the department. We must have a quick, easy, and intuitive method for editing a schedule
+Departments should be able to submit their individual schedule requests into the tool (-1)
+Changes must be reflected immediately in the tool
+View schedules by instructor in order to examine course load
+View instructor load as a yearly snapshot
+Reflect changes made in PeopleSoft by the University immediately
+Allow instructors to view the proposed schedule without touching
+
+
+=== CENG ===
+
+=== CHEM ===
+Be able to see all other departments’ schedule
+Don’t schedule classes that are listed in the same quarter, on the flowchart, at the same time
+Be able to edit the schedule via drag-and-drop
+Persist all changes throughout all scheduling views (i.e. changing a class in Course View will also change this for all view)
+Notify users as soon as their is a conflict in the schedule with a descriptive error
+The ability to load the up previous schedules from specific terms
+Display enrollment information and dynamically update
+Give the teachers the ability to leave feedback on the proposed schedule
+Instructor preferences easily available
+Ability to take multiple schedules and merge them together. (i.e. If PChem and OChem make schedules, he can merge them together)
+
+=== CM ===
+Be able to pre-populate scheduling constraints from the term of the previous year (previous schedule kept in excel file)
+Ensure Senior level classes aren’t in conflict and must be scheduled (have highest priority)
+All labs must be in CM department spaces
+Course preferences must be taken into consideration since most professors have specific specializations
+Have data on how many students are enrolled in a specific course
+Have this database linked in with PeopleSoft so data entry is automatic
+Make sure the Dean and the Scheduling department both have access to this data to avoid confusion
+Wants the Schedule generation algorithm to take into account previous schedules when generating
+Be able to easily distribute a draft of the schedule to professors and faculty for review
+Generate schedules with final exam dates considered and included 
+Follow all University time constraints as well as department time constraints
+Ultimate control should come down to the scheduler so that teacher preferences do not limit the courses being offered to students. 
+
+
+=== EE ===
+High persistence from last year’s quarters
+Focus on being able to plan out a student's schedule for all four years
+Lecture / lab coordination
+Conflicts based not only on time, but also problems with flowchart and course dependencies
+Faculty preferences are very important
+Attempting to keep repeating lab sections in the same room (or adjacent) is very difficult
+Lecture rooms are assigned by the university
+Do not schedule back to back classes (like lecture / lab) far away
+Concerned with maintaining instructor feedback on schedules as well as blame
+
+
+=== GRC ===
+
+=== IME ===
+
+=== MU ===
+Give suggestions on times.
+Display conflicts when they occur
+Teacher Preferences as to what classes they want to teach
+See ALL the information about a class
+Templates???
+Doesn’t want teacher preferences
+Must have specific rooms. No randomly generated rooms
+
+
+=== PHYS ===
+Look at previous schedule and start from there
+Ability to not have to have a professor to schedule a class
+Easy to enter into peoplesoft
+Easy to automate data entry. AKA database?
+Able to block out time for some reasons
+Rank time positions, 1.1.5 hour lectures, separate lab or together
+One button for optimal solution to avoid blaming the scheduler
+Drag and drop items onto a weekly schedule
+Keep track of WTUs
+No conflicts
+Ability to write scripts to run things
+Readable course listing
+TBA locations and times for classes
+
+
+=== MATH ===
+filterable views (by class, prof, etc)
+Schedules for all three quarters are due simultaneously
+Strong preference for Excel-style print outs
+Instructors convey preferences, including desire for chalk, smart room, etc
+
+
+=== FSN ===
+class conflicts (certain classes, most are taken at the same time)
+schedule prereqs at the same time
+seperate schedules per professor
+print (historical) schedules
+RPT (evaluation)
+different views of t he same data!
+FLAG ERRORS so that they can be fixed rapidly
+validation and correction
+use of previous years schedule
+unifying planning system between all departments
+
+
+=== POLS ===
+Ability to integrate with PeopleSoft
+Ability to color code the classes, when displayed in calender view, by certain criteria such as upper division, lower division, masters, miscellaneous  
+Ability to easily change class rooms, size, and other features
+Be able to view/check the number of classes after a specific time
+There are certain time constraints for classes depending on department
+Sometimes there are professors who want to teach a class jointly (2 professors to 1 class)
+Would like to be able to view the schedules in a view similar to the “Weekly View” present in CPReg/PASS
+
+
+=== JOUR ===
+Only two dedicated rooms, the rest are university rooms that will not have time conflicts
+Wants printable schedules that can fit on one paper; a version for individual instructors and a version for all instructors
+Wants to know if an entered time is not a valid time pattern like MWF 9-10
+Reduce amount of data entry necessary
+Instructors can look, but not modify
+Binary preferences, CAN or CANNOT only. No other preferences whatsoever
+
+
+=== ENGL ===
+Have different levels of preference options depending on an instructor’s years worked/contract
+Be able to sort the schedule view by Classes, Instructor, or Days
+Have a comments section for each course or otherwise provide a way to keep track of the different attributes of a course
+Wants a list view instead of calendar view, still sortable
+Print schedule in course order or instructor order
+Pull data from previous quarter(s)
+Automated sending of schedule to PeopleSoft
+
+
