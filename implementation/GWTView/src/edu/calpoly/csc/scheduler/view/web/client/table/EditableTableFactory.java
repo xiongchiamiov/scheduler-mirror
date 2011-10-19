@@ -12,13 +12,13 @@ public class EditableTableFactory {
 		
 		ArrayList<String> attr = new ArrayList<String>();
 		
-		attr.add(EditableTableConstants.LAST_NAME);
+		attr.add(EditableTableConstants.INSTR_ID);
 		
-		attr.add(EditableTableConstants.FIRST_NAME);
+		attr.add(EditableTableConstants.INSTR_NAME);
 		
-		attr.add(EditableTableConstants.OFFICE_BLDG);
+		attr.add(EditableTableConstants.INSTR_WTU);
 		
-		attr.add(EditableTableConstants.OFFICE_ROOM);
+		attr.add(EditableTableConstants.INSTR_OFFICE);
 		
 		return new EditableTable(cancelHandler, saveHandler, attr);
 	}
@@ -34,19 +34,21 @@ public class EditableTableFactory {
 		
 		attr.add(EditableTableConstants.COURSE_NAME);
 		
-		attr.add(EditableTableConstants.DEPARTMENT);
+		attr.add(EditableTableConstants.COURSE_CATALOG_NUM);
+		
+		attr.add(EditableTableConstants.COURSE_DEPARTMENT);
+		
+		attr.add(EditableTableConstants.COURSE_WTU);
+		
+		attr.add(EditableTableConstants.COURSE_SCU);
+		
+		attr.add(EditableTableConstants.COURSE_NUM_SECTIONS);
 		
 		attr.add(EditableTableConstants.COURSE_TYPE);
 		
-		attr.add(EditableTableConstants.ID);
+		attr.add(EditableTableConstants.COURSE_MAX_ENROLLMENT);
 		
-		attr.add(EditableTableConstants.WTU);
-		
-		attr.add(EditableTableConstants.SCU);
-		
-		attr.add(EditableTableConstants.MAX_ENROLLMENT);
-		
-		attr.add(EditableTableConstants.NUM_SECTIONS);
+		attr.add(EditableTableConstants.COURSE_LAB);
 		
 		return new EditableTable(cancelHandler, saveHandler, attr);
 	}
@@ -60,13 +62,19 @@ public class EditableTableFactory {
 		
 		ArrayList<String> attr = new ArrayList<String>();
 		
-		attr.add(EditableTableConstants.BUILDING);
+		attr.add(EditableTableConstants.LOC_BUILDING);
 		
-		attr.add(EditableTableConstants.ROOM);
+		attr.add(EditableTableConstants.LOC_NAME);
 		
-		attr.add(EditableTableConstants.TYPE);
+		attr.add(EditableTableConstants.LOC_ROOM);
 		
-		attr.add(EditableTableConstants.MAX_OCCUPANCY);
+		attr.add(EditableTableConstants.LOC_TYPE);
+		
+		attr.add(EditableTableConstants.LOC_MAX_OCCUPANCY);
+		
+		attr.add(EditableTableConstants.LOC_EQIPMENT_LIST);
+		
+		attr.add(EditableTableConstants.LOC_ADDITIONAL_DETAILS);
 		
 		return new EditableTable(cancelHandler, saveHandler, attr);
 	}

@@ -38,17 +38,17 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		
 		
 		// dummy data
-		InstructorGWT i1 = new InstructorGWT("Gene", "Fisher", "123", "14", "210");
+		InstructorGWT i1 = new InstructorGWT("Gene", "Fisher", 12, "14-210");
 		
 		results.add(i1);
 		
 		
-		InstructorGWT i2 = new InstructorGWT("Aaron", "Keen", "409", "14", "230");
+		InstructorGWT i2 = new InstructorGWT("Aaron", "Keen", 8, "14-230");
 		
 		results.add(i2);
 		
 		
-		InstructorGWT i3 = new InstructorGWT("Clark", "Turner", "2", "14", "222");
+		InstructorGWT i3 = new InstructorGWT("Clark", "Turner", 16, "14-222");
 		
 		results.add(i3);
 
@@ -100,17 +100,17 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		ArrayList<LocationGWT> results = new ArrayList<LocationGWT>();
 		
 		// dummy data
-		LocationGWT l1 = new LocationGWT("14", "256", "Lab", 32);
+		LocationGWT l1 = new LocationGWT("14", "Frank E. Pilling", "256", "Lab", 32, "Computers", "Really comfortable chairs");
 		
 		results.add(l1);
 		
 		
-		LocationGWT l2 = new LocationGWT("22", "212", "Lec", 38);
+		LocationGWT l2 = new LocationGWT("22", "English", "212", "Lec", 38, "Desks", "Uncomfortable, wooden desk chairs");
 		
 		results.add(l2);
 		
 		
-		LocationGWT l3 = new LocationGWT("53", "213", "Lec", 84);
+		LocationGWT l3 = new LocationGWT("53", "Science North", "213", "Lec", 84, "", "Stadium seats");
 		
 		results.add(l3);
 
@@ -134,17 +134,17 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		ArrayList<CourseGWT> results = new ArrayList<CourseGWT>();
 		
 		// dummy data
-		CourseGWT c1 = new CourseGWT("101", "CPE", "Lec", 8972, 4, 4, 30, 8);
+		CourseGWT c1 = new CourseGWT("The beginning...", 101, "CPE", 4, 4, 6, "Lec", 30, "CPE101");
 		
 		results.add(c1);
 		
 		
-		CourseGWT c2 = new CourseGWT("300", "CSC", "Lec", 3795, 4, 4, 24, 1);
+		CourseGWT c2 = new CourseGWT("Writing", 300, "CSC", 4, 4, 1, "Lec", 24, "");
 		
 		results.add(c2);
 		
 		
-		CourseGWT c3 = new CourseGWT("402", "CSC", "Lec", 1255, 4, 4, 20, 1);
+		CourseGWT c3 = new CourseGWT("Scheduling", 402, "CSC", 4, 4, 1, "Lec", 20, "");
 		
 		results.add(c3);
 

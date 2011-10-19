@@ -4,36 +4,46 @@ import java.io.Serializable;
 
 
 public class CourseGWT implements Serializable{
-	private static final long serialVersionUID = 5390601887732802996L;
+	private static final long serialVersionUID = -3337091550673507081L;
 	
-	String name, dept, type;
-	int id, wtu, scu, maxEnrollment, numOfSections;
+	private String courseName;
+	private int catalogNum;
+	private String dept;
+	private int wtu, scu, numSections;
+	private String type;
+	private int maxEnroll;
+	private String lab;
 	
 	public CourseGWT(){}
-	
-	
 
-	public CourseGWT(String name, String dept, String type, int id, int wtu,
-			int scu, int maxEnrollment, int numOfSections) {
+	public CourseGWT(String courseName, int catalogNum, String dept, int wtu,
+			int scu, int numSections, String type, int maxEnroll, String lab) {
 		super();
-		this.name = name;
+		this.courseName = courseName;
+		this.catalogNum = catalogNum;
 		this.dept = dept;
-		this.type = type;
-		this.id = id;
 		this.wtu = wtu;
 		this.scu = scu;
-		this.maxEnrollment = maxEnrollment;
-		this.numOfSections = numOfSections;
+		this.numSections = numSections;
+		this.type = type;
+		this.maxEnroll = maxEnroll;
+		this.lab = lab;
 	}
 
-
-
-	public String getName() {
-		return name;
+	public String getCourseName() {
+		return courseName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setCourseName(String courseName) {
+		this.courseName = courseName;
+	}
+
+	public int getCatalogNum() {
+		return catalogNum;
+	}
+
+	public void setCatalogNum(int catalogNum) {
+		this.catalogNum = catalogNum;
 	}
 
 	public String getDept() {
@@ -42,22 +52,6 @@ public class CourseGWT implements Serializable{
 
 	public void setDept(String dept) {
 		this.dept = dept;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	public int getWtu() {
@@ -76,19 +70,35 @@ public class CourseGWT implements Serializable{
 		this.scu = scu;
 	}
 
-	public int getMaxEnrollment() {
-		return maxEnrollment;
+	public int getNumSections() {
+		return numSections;
 	}
 
-	public void setMaxEnrollment(int maxEnrollment) {
-		this.maxEnrollment = maxEnrollment;
+	public void setNumSections(int numSections) {
+		this.numSections = numSections;
 	}
 
-	public int getNumOfSections() {
-		return numOfSections;
+	public String getType() {
+		return type;
 	}
 
-	public void setNumOfSections(int numOfSections) {
-		this.numOfSections = numOfSections;
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public int getMaxEnroll() {
+		return maxEnroll;
+	}
+
+	public void setMaxEnroll(int maxEnroll) {
+		this.maxEnroll = maxEnroll;
+	}
+
+	public String getLab() {
+		return lab;
+	}
+
+	public void setLab(String lab) {
+		this.lab = lab;
 	}
 }

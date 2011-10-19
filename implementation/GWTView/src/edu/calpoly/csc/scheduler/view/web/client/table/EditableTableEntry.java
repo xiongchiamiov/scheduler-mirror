@@ -34,10 +34,10 @@ public class EditableTableEntry {
 		// get the original values
 		ArrayList<String> values = new ArrayList<String>();
 		
-		values.add(instructor.getLastName());
-		values.add(instructor.getFirstName());
-		values.add(instructor.getOfficeBldg());
-		values.add(instructor.getOfficeRoom());
+		values.add(instructor.getName());
+		values.add(instructor.getUserID());
+		values.add("" + instructor.getWtu());
+		values.add(instructor.getOffice());
 		
 		// initialize object and set instructor
 		initialize(values);
@@ -56,8 +56,13 @@ public class EditableTableEntry {
 			return null;
 		}
 		
-		return new InstructorGWT(newValues.get(0), newValues.get(1), key,
-				newValues.get(2), newValues.get(3));
+		int wtu;
+		try{
+			wtu = Integer.parseInt(newValues.get(2));
+		}catch(Exception e){wtu = 0;}
+		
+		return new InstructorGWT(newValues.get(0), newValues.get(1),
+				wtu, newValues.get(3));
 	}
 	
 	
@@ -90,14 +95,15 @@ public class EditableTableEntry {
 		// get the original values
 		ArrayList<String> values = new ArrayList<String>();
 		
-		values.add(course.getName());
+		values.add(course.getCourseName());
+		values.add("" + course.getCatalogNum());
 		values.add(course.getDept());
-		values.add(course.getType());
-		values.add("" + course.getId());
 		values.add("" + course.getWtu());
 		values.add("" + course.getScu());
-		values.add("" + course.getMaxEnrollment());
-		values.add("" + course.getNumOfSections());
+		values.add("" + course.getNumSections());
+		values.add(course.getType());
+		values.add("" + course.getMaxEnroll());
+		values.add(course.getLab());
 		
 		// initialize object and set instructor
 		initialize(values);
@@ -113,25 +119,28 @@ public class EditableTableEntry {
 	 */
 	public CourseGWT getCourse(){
 		
-		if(newValues.size() < 8){
+		if(newValues.size() < 9){
 			return null;
 		}
 		
-		int id, wtu, scu, maxEnrollment, numOfSections;
+		int catalogName, wtu, scu, numSections, maxEnroll;
 		
 		try{
-			id = Integer.parseInt(newValues.get(3));
-			wtu = Integer.parseInt(newValues.get(4));
-			scu = Integer.parseInt(newValues.get(5));
-			maxEnrollment = Integer.parseInt(newValues.get(6));
-			numOfSections = Integer.parseInt(newValues.get(7));
+			catalogName = Integer.parseInt(newValues.get(1));
+			wtu = Integer.parseInt(newValues.get(3));
+			scu = Integer.parseInt(newValues.get(4));
+			numSections = Integer.parseInt(newValues.get(5));
+			maxEnroll = Integer.parseInt(newValues.get(7));
 			
 		}catch(Exception e){
-			return null;
+			catalogName = 0;
+			wtu = 0;
+			scu = 0;
+			numSections = 0;
+			maxEnroll = 0;
 		}
 		
-		return new CourseGWT(newValues.get(0), newValues.get(1),
-				newValues.get(2), id, wtu, scu, maxEnrollment, numOfSections);
+		return new CourseGWT(newValues.get(0), catalogName, newValues.get(2), wtu, scu, numSections, newValues.get(6), maxEnroll, newValues.get(8));
 	}
 	
 	
@@ -166,9 +175,12 @@ public class EditableTableEntry {
 		ArrayList<String> values = new ArrayList<String>();
 		
 		values.add(location.getBuilding());
+		values.add(location.getName());
 		values.add(location.getRoom());
 		values.add(location.getType());
 		values.add("" + location.getMaxOccupancy());
+		values.add(location.getEquipmentList());
+		values.add(location.getAdditionalDetails());
 		
 		// initialize object and set instructor
 		initialize(values);
@@ -184,21 +196,21 @@ public class EditableTableEntry {
 	 */
 	public LocationGWT getLocation(){
 		
-		if(newValues.size() < 4){
+		if(newValues.size() < 7){
 			return null;
 		}
 		
 		int maxOccupancy;
 		
 		try{
-			maxOccupancy = Integer.parseInt(newValues.get(3));
+			maxOccupancy = Integer.parseInt(newValues.get(4));
 			
 		}catch(Exception e){
-			return null;
+			maxOccupancy = 0;
 		}
 		
 		return new LocationGWT(newValues.get(0), newValues.get(1),
-				newValues.get(2), maxOccupancy);
+				newValues.get(2), newValues.get(3), maxOccupancy, newValues.get(5), newValues.get(6));
 	}
 	
 	

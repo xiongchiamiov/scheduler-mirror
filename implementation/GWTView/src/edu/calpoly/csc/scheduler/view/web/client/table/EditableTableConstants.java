@@ -20,39 +20,47 @@ public class EditableTableConstants {
 	
 	
 	/** Professor table */
-	public static final String FIRST_NAME = "First";
+	public static final String INSTR_NAME = "Instructor Name";
 	
-	public static final String LAST_NAME = "Last";
+	public static final String INSTR_ID = "ID";
 	
-	public static final String OFFICE_BLDG = "Office Bldg";
+	public static final String INSTR_WTU = "WTU";
 	
-	public static final String OFFICE_ROOM = "Office Room";
+	public static final String INSTR_OFFICE = "Office";
 	
 	
 	/** Course table */
 	public static final String COURSE_NAME = "Course Name";
 	
-	public static final String DEPARTMENT = "Department";
+	public static final String COURSE_CATALOG_NUM = "Catalog Number";
+	
+	public static final String COURSE_DEPARTMENT = "Department";
+	
+	public static final String COURSE_WTU = "WTU";
+	
+	public static final String COURSE_SCU = "SCU";
+	
+	public static final String COURSE_NUM_SECTIONS = "# of Sections";
 	
 	public static final String COURSE_TYPE = "Course Type";
 	
-	public static final String ID = "ID";
+	public static final String COURSE_MAX_ENROLLMENT = "Max Enrollment";
 	
-	public static final String WTU = "Work Time Units";
-	
-	public static final String SCU = "Student Time Units";
-	
-	public static final String MAX_ENROLLMENT = "Max Enrollment";
-	
-	public static final String NUM_SECTIONS = "# of Sections";
+	public static final String COURSE_LAB = "Lab";
 	
 	
 	/** Location table */
-	public static final String BUILDING = "Building";
+	public static final String LOC_BUILDING = "Building";
 	
-	public static final String ROOM = "Room";
+	public static final String LOC_NAME = "Name";
 	
-	public static final String TYPE = "Type";
+	public static final String LOC_ROOM = "Room";
 	
-	public static final String MAX_OCCUPANCY = "Max Occupancy";
+	public static final String LOC_TYPE = "Type";
+	
+	public static final String LOC_MAX_OCCUPANCY = "Max Occupancy";
+	
+	public static final String LOC_EQIPMENT_LIST = "Equipment List";
+	
+	public static final String LOC_ADDITIONAL_DETAILS = "Additional Details";
 }

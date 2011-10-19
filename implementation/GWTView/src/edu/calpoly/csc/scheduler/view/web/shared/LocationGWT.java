@@ -4,13 +4,15 @@ import java.io.Serializable;
 
 
 public class LocationGWT implements Serializable{
-	private static final long serialVersionUID = -4158472135773670339L;
+	private static final long serialVersionUID = 1015108352203434920L;
 
 	/**
 	 * Building number of location.
 	 */
 	private String building;
 
+	private String name;
+	
 	/**
 	 * Room number of location.
 	 */
@@ -25,6 +27,10 @@ public class LocationGWT implements Serializable{
 	 * Maximum occupancy of this location.
 	 */
 	private int maxOccupancy;
+	
+	private String equipmentList;
+	
+	private String additionalDetails;
 
 	/**
 	 * Provided equuipment in this location.
@@ -42,13 +48,17 @@ public class LocationGWT implements Serializable{
 //   private WeekAvail availability;
 
 	public LocationGWT(){}
-	
-	public LocationGWT(String building, String room, String type, int maxOccupancy) {
+
+	public LocationGWT(String building, String name, String room, String type,
+			int maxOccupancy, String equipmentList, String additionalDetails) {
 		super();
 		this.building = building;
+		this.name = name;
 		this.room = room;
 		this.type = type;
 		this.maxOccupancy = maxOccupancy;
+		this.equipmentList = equipmentList;
+		this.additionalDetails = additionalDetails;
 	}
 
 	public String getBuilding() {
@@ -59,12 +69,28 @@ public class LocationGWT implements Serializable{
 		this.building = building;
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	public String getRoom() {
 		return room;
 	}
 
 	public void setRoom(String room) {
 		this.room = room;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	public int getMaxOccupancy() {
@@ -75,11 +101,23 @@ public class LocationGWT implements Serializable{
 		this.maxOccupancy = maxOccupancy;
 	}
 
-	public String getType() {
-		return type;
+	public String getEquipmentList() {
+		return equipmentList;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setEquipmentList(String equipmentList) {
+		this.equipmentList = equipmentList;
+	}
+
+	public String getAdditionalDetails() {
+		return additionalDetails;
+	}
+
+	public void setAdditionalDetails(String additionalDetails) {
+		this.additionalDetails = additionalDetails;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 }

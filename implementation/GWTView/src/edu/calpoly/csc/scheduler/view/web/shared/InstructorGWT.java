@@ -4,36 +4,28 @@ import java.io.Serializable;
 
 
 public class InstructorGWT implements Serializable{
-	private static final long serialVersionUID = -4158472135773670339L;
+	private static final long serialVersionUID = -539236134373434229L;
 	
-	private String firstName, lastName, userID, officeBldg, officeRoom;
+	private String name, userID, office;
+	private int wtu;
 
 	public InstructorGWT(){}
 	
-	public InstructorGWT(String firstName, String lastName, String userID,
-			String officeBldg, String officeRoom) {
+	public InstructorGWT(String name, String userID,
+			int wtu, String office) {
 		super();
-		this.firstName = firstName;
-		this.lastName = lastName;
+		this.name = name;
 		this.userID = userID;
-		this.officeBldg = officeBldg;
-		this.officeRoom = officeRoom;
+		this.wtu = wtu;
+		this.office = office;
+	}
+	
+	public String getName() {
+		return name;
 	}
 
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getUserID() {
@@ -44,19 +36,19 @@ public class InstructorGWT implements Serializable{
 		this.userID = userID;
 	}
 
-	public String getOfficeBldg() {
-		return officeBldg;
+	public int getWtu() {
+		return wtu;
 	}
 
-	public void setOfficeBldg(String officeBldg) {
-		this.officeBldg = officeBldg;
+	public void setWtu(int wtu) {
+		this.wtu = wtu;
 	}
 
-	public String getOfficeRoom() {
-		return officeRoom;
+	public String getOffice() {
+		return office;
 	}
 
-	public void setOfficeRoom(String officeRoom) {
-		this.officeRoom = officeRoom;
+	public void setOffice(String office) {
+		this.office = office;
 	}
 }
