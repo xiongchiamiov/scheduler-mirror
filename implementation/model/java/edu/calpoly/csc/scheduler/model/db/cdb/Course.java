@@ -31,6 +31,11 @@ public class Course implements Serializable
    }
 
    /**
+    * ID of this course in the sql database.
+    */
+   private int id = -1;
+   
+   /**
     * Name of this course (Like "Fundamentals of Computer Science I")
     */
    private String name = "";
@@ -127,9 +132,10 @@ public class Course implements Serializable
     */
    public boolean equals (Course c)
    {
-      return (this.getName().equals(c.getName())         && 
+      return (this.getId() == c.getId() || (
+              this.getName().equals(c.getName()) && 
               this.getCatalogNum() == c.getCatalogNum()  && 
-              this.getType() == c.getType());
+              this.getType() == c.getType()));
    }
 
    /**
@@ -146,6 +152,22 @@ public class Course implements Serializable
    {
       return this.getName().hashCode() + this.getCatalogNum()
          + this.getType().hashCode();
+   }
+
+   /**
+    * @return the id
+    */
+   public int getId()
+   {
+      return id;
+   }
+
+   /**
+    * @param id the id to set
+    */
+   public void setId(int id)
+   {
+      this.id = id;
    }
 
    /**

@@ -15,20 +15,20 @@ import edu.calpoly.csc.scheduler.model.schedule.WeekAvail;
 public class NewInstructorDB implements Database<Instructor>
 {
    private ArrayList<Instructor> data;
-   private SQLDB sqldb;
+   private SQLDB                 sqldb;
 
-   public NewInstructorDB ()
+   public NewInstructorDB()
    {
       initDB();
    }
 
    @Override
-   public ArrayList<Instructor> getData ()
+   public ArrayList<Instructor> getData()
    {
       return data;
    }
 
-   private void initDB ()
+   private void initDB()
    {
       data = new ArrayList<Instructor>();
       sqldb = new SQLDB();
@@ -36,7 +36,7 @@ public class NewInstructorDB implements Database<Instructor>
    }
 
    @Override
-   public void pullData ()
+   public void pullData()
    {
       ResultSet rs = sqldb.getSQLInstructors();
       try
@@ -48,25 +48,30 @@ public class NewInstructorDB implements Database<Instructor>
             String lname = rs.getString("lastname");
             String userid = rs.getString("userid");
             int maxwtu = rs.getInt("maxwtu");
-            int currentwtu = rs.getInt("availablewtu");
+            int curwtu = rs.getInt("curwtu");
             String building = rs.getString("building");
             String room = rs.getString("room");
             boolean disabilities = rs.getBoolean("disabilities");
             // Put items into Instructor object and add to data
             Location office = new Location(building, room);
             Instructor toAdd = new Instructor(fname, lname, userid, maxwtu,
-               office, disabilities);
+                  office, disabilities);
 
-            // Deserialize week availiability
-            byte[] buf = rs.getBytes("weekavail");
-            if (buf != null)
+            // Deserialize week availability and course preferences
+            byte[] weekAvailBuf = rs.getBytes("weekavail");
+            byte[] coursePrefsBuf = rs.getBytes("coursepreferences");
+            if (weekAvailBuf != null && coursePrefsBuf != null)
             {
                try
                {
                   ObjectInputStream objectIn;
-                  objectIn = new ObjectInputStream(
-                     new ByteArrayInputStream(buf));
+                  objectIn = new ObjectInputStream(new ByteArrayInputStream(
+                        weekAvailBuf));
                   toAdd.setAvailability((WeekAvail) objectIn.readObject());
+                  objectIn = new ObjectInputStream(new ByteArrayInputStream(
+                        coursePrefsBuf));
+                  toAdd.setCoursePreferences((ArrayList<CoursePreference>) objectIn
+                        .readObject());
                }
                catch (Exception e)
                {
@@ -83,12 +88,13 @@ public class NewInstructorDB implements Database<Instructor>
    }
 
    @Override
-   public void addData (Instructor data)
+   public void addData(Instructor data)
    {
       // Create insert strings
       String insertString = "insert into instructors ("
-         + "firstname, lastname, userid, wtu, building, room, "
-         + "disabilities, weekavail)" + "values (?, ?, ?, ?, ?, ?, ?, ?)";
+            + "firstname, lastname, userid, maxwtu, curwtu, building, room, "
+            + "disabilities, weekavail, coursepreferences)"
+            + "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
       // Create prepared statement
       PreparedStatement stmt = sqldb.getPrepStmt(insertString);
       // Set values
@@ -98,7 +104,7 @@ public class NewInstructorDB implements Database<Instructor>
          stmt.setString(2, data.getLastName());
          stmt.setString(3, data.getId());
          stmt.setInt(4, data.getMaxWTU());
-         stmt.setInt(5, data.getAvailableWTU());
+         stmt.setInt(5, data.getCurWtu());
          stmt.setString(6, data.getOffice().getBuilding());
          stmt.setString(7, data.getOffice().getRoom());
          stmt.setBoolean(8, data.getDisability());
@@ -111,6 +117,10 @@ public class NewInstructorDB implements Database<Instructor>
             out.close();
             stmt.setBytes(9, baos.toByteArray());
             // TODO: get coursepreferences
+            baos = new ByteArrayOutputStream();
+            out = new ObjectOutputStream(baos);
+            out.writeObject(data.getCoursePreferences());
+            stmt.setBytes(10, baos.toByteArray());
          }
          catch (IOException e)
          {
@@ -127,14 +137,14 @@ public class NewInstructorDB implements Database<Instructor>
    }
 
    @Override
-   public void editData (Instructor newData)
+   public void editData(Instructor newData)
    {
       // TODO Auto-generated method stub
 
    }
 
    @Override
-   public void removeData (Instructor data)
+   public void removeData(Instructor data)
    {
       // TODO Auto-generated method stub
 
@@ -143,18 +153,19 @@ public class NewInstructorDB implements Database<Instructor>
    /**
     * Stubbed. Returns a list of instructors who want to teach this course.<br>
     * <br>
-    * Instructors must be able to teach the course. I.e. they must have enough 
-    * WTU's available to take on the course and they must not have a course
-    * pref of 0 for the course.<br>
+    * Instructors must be able to teach the course. I.e. they must have enough
+    * WTU's available to take on the course and they must not have a course pref
+    * of 0 for the course.<br>
     * 
     * @.todo Write this
     * 
-    * @param c Course which the returned instructor wants to teach
+    * @param c
+    *           Course which the returned instructor wants to teach
     * 
     * @return a list of instructor who want to/can teach course 'c'. The list
     *         should be in descending order of desire.
     */
-   public Vector<Instructor> getInstructors (Course c)
+   public Vector<Instructor> getInstructors(Course c)
    {
       return null;
    }

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import edu.calpoly.csc.scheduler.model.db.Database;
 import edu.calpoly.csc.scheduler.model.db.SQLDB;
+import edu.calpoly.csc.scheduler.model.db.cdb.Course.CourseType;
 
 public class NewCourseDB implements Database<Course>
 {
@@ -40,6 +41,7 @@ public class NewCourseDB implements Database<Course>
          while (rs.next())
          {
             // Retrieve by column name
+            int id = rs.getInt("id");
             String name = rs.getString("name");
             int catalogNum = rs.getInt("catalognum");
             String dept = rs.getString("dept");
@@ -52,6 +54,7 @@ public class NewCourseDB implements Database<Course>
             int labId = rs.getInt("labPairing");
             // Put items into Course object and add to data
             Course toAdd = new Course();
+            toAdd.setId(id);
             toAdd.setName(name);
             toAdd.setCatalogNum(catalogNum);
             toAdd.setDept(dept);
@@ -61,14 +64,38 @@ public class NewCourseDB implements Database<Course>
             toAdd.setType(courseType);
             toAdd.setLength(length);
             toAdd.setEnrollment(enrollment);
-            // TODO: Pair with labs somehow?
-
+            Course lab = null;
+            // TODO: Check what value null ints are stored as and change this
+            if (labId > -1)
+            {
+               lab = new Course();
+               lab.setId(labId);
+               lab.setType(CourseType.LAB);
+            }
+            toAdd.setLab(lab);
             data.add(toAdd);
          }
       }
       catch (SQLException e)
       {
          e.printStackTrace();
+      }
+      linkLabs();
+   }
+
+   /**
+    * Links all of the courses that have labs with their labs
+    */
+   private void linkLabs()
+   {
+      for (Course course : data)
+      {
+         // Course has a lab
+         if (course.getLab() != null)
+         {
+            //Find lab data and put it into the object
+            course.setLab(data.get(data.indexOf(course.getLab())));
+         }
       }
    }
 
@@ -82,9 +109,26 @@ public class NewCourseDB implements Database<Course>
             + "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
       // Create prepared statement
       PreparedStatement stmt = sqldb.getPrepStmt(insertString);
-      // Set values
+      int labid = -1;
+      // TODO: Clean this next part up. It's gross.
+      // Check if it has a lab
       try
       {
+         if (data.getLab() != null)
+         {
+            // Insert lab into DB and get id
+            stmt.setString(1, data.getName());
+            stmt.setInt(2, data.getCatalogNum());
+            stmt.setString(3, data.getDept());
+            stmt.setInt(4, data.getWtu());
+            stmt.setInt(5, data.getScu());
+            stmt.setInt(6, data.getNumOfSections());
+            stmt.setString(7, data.getType().toString());
+            stmt.setInt(8, data.getLength());
+            stmt.setInt(9, data.getEnrollment());
+            labid = sqldb.executePrepStmt(stmt);
+         }
+         // Set values
          stmt.setString(1, data.getName());
          stmt.setInt(2, data.getCatalogNum());
          stmt.setString(3, data.getDept());
@@ -94,8 +138,10 @@ public class NewCourseDB implements Database<Course>
          stmt.setString(7, data.getType().toString());
          stmt.setInt(8, data.getLength());
          stmt.setInt(9, data.getEnrollment());
-         // TODO: get lab id or change this completely to match new DB
-         // stmt.setInt(10, data.getLab());
+         if (labid != -1)
+         {
+            stmt.setInt(10, labid);
+         }
       }
       catch (SQLException e)
       {

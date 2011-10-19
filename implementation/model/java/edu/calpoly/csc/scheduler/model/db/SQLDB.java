@@ -788,11 +788,12 @@ public class SQLDB  {
 	   return null;
 	}
 	
-	public void executePrepStmt(PreparedStatement stmt)
+	public int executePrepStmt(PreparedStatement stmt)
 	{
+	   int result = -1;
 	   try
       {
-         stmt.execute();
+         result = stmt.executeUpdate();
          stmt.close();
       }
       catch (SQLException e)
@@ -800,5 +801,6 @@ public class SQLDB  {
          System.out.println("SQLException: " + e.getMessage());  
          e.printStackTrace();
       }
+	   return result;
 	}
 }

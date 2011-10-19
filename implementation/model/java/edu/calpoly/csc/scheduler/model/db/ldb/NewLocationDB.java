@@ -146,14 +146,16 @@ public class NewLocationDB implements Database<Location>
          // Check if course has needed utilities
          if (room.providesFor(course))
          {
-            // Check if time is available
-//            if(room.isAvailable(course.getDays(), tr.getS(), tr.getE())
+            // Check if each time slot is available
+            for (TimeRange slot : times)
             {
-               rooms.add(room);
+               if (room.isAvailable(course.getDays(), slot.getS(), slot.getE()))
+               {
+                  rooms.add(room);
+               }
             }
          }
       }
-
       return rooms;
    }
 }
