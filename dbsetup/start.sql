@@ -86,11 +86,12 @@ CREATE TABLE `instructors` (
   `lastname` varchar(255) NOT NULL,
   `userid` varchar(255) NOT NULL,
   `maxwtu` int(3) NOT NULL,
-  `availablewtu` int(3) NOT NULL,
+  `curwtu` int(3) NOT NULL,
   `building` varchar(10) NOT NULL,
   `room` varchar(10) NOT NULL,
   `disabilities` tinyint(1) NOT NULL,
   `weekavail` varbinary(255) NOT NULL
+  `coursepreferences` varbinary(255) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
