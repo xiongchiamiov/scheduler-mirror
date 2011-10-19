@@ -1,0 +1,75 @@
+.sz 11
+.ds ~ /users/gfisher/nroff
+. so \*~/stdhdr.me
+.(TI "Walkthru Slide Creation"
+.(S +2
+\fBWalkthru Slide Creation\fP
+.)S
+.)TI
+.spt
+The following are the steps necessary to generate a slide in the requirements
+walk-thru.  There are three files involved in the slide creation process.  For
+explanation purposes here, the slides will have the same root filename
+"\fCX\fP".  The files are the following:
+.pep
+.(E .2v
+.ee
+\fCrequirements/mockups/UID/X.html\fP -- the hand-built HTML file that is the
+screen image to be shown in a slide
+.ee
+\fCrequirements/images/X.png\fP -- the image captured from the mockup
+\fCX.html\fP file
+.ee
+\fCrequirements/walkthru/X.html\fP -- the slide as it appears in the
+walkthru; this \fCX.html\fP has the navigation links, explanatory blurb, and
+links to the slide screen image in \fCimages/X.png\fP
+.)E
+.pep
+As of 17oct11, there is no consistent naming convention for these three files.
+The naming convention followed here is to use the same root file name for all
+of them.
+.pep
+Here are the specific steps to create these files:
+.(L 1 .3v
+.le
+Create or edit the HTML file in \fCrequirements/mockups/UID/X.html\fP, where
+UID is your user id.  By convention, mockup HTML files are stored in
+subdirectories named with user id.  Again, "X" is the root name of the slide
+file we're creating or editing.  \fCX.html\fP in the mockup directory is the
+raw HTML image content for a slide.
+.le
+Goto the \fCrequirements/mockups/HTML\\ Template\fP directory.
+.le
+Copy the entire Tempus\\ Layout_files subdirectory and the \fCTempus\\
+Layout.html\fP file to a working dir, and go to that working directory.
+.le
+A quick way to "install" \fCX.html\fP into the Tempus Layout is to rename
+\fCX.html\fP to \fCsamplePage.html\fP.  The \fCsamplePage\fP file is the name
+that is src included in \fCTempus\\ Layout.html\fP.  Alternatively, the included
+file name in \fCTempus\\ Layout.html\fP can be changed to \fCX.html\fP.
+.le
+Open \fCTempus\\ Layout.html\fP in a Chrome browser, ignoring the Web Toolkit
+error message.  As of 17oct11, using Chrome is necessary since Firefox has
+problems with sizing, and Safari has problems with fonts in the template.
+.le
+Capture the screen image displayed in the browser as a png and store in
+\fCX.png\fP.  Copy or move \fCX.png\fP from your working directory into
+\fCrequirements/images\fP.
+.le
+To create the actual slide, copy \fCrequirements/walkthru/template.html\fP into
+\fCrequirements/walkthru/X.html\fP.
+.le
+Edit the content of the slide file as follows:
+.(L a .2v
+.le
+Make the Next and Prev links point to the proper slides.
+.le
+Link to the captured image in \fCimages/X.png\fP.
+.le
+Write the blurb.
+.le
+Fix the title.
+.)L a
+.)L 1
+.\" LocalWords:  html Tempus dir samplePage src WT oct Firefox img src'd png
+.\" LocalWords:  Prev Walkthru walkthru

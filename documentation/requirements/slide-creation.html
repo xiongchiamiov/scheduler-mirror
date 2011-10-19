@@ -1,0 +1,81 @@
+<html>
+<head>
+<title>
+Walkthru Slide Creation
+</title>
+</head>
+<body bgcolor=white>
+<p align=center>
+<font size=+2>
+<strong>Walkthru Slide Creation</strong>
+</font>
+</p>
+<br>
+<br>
+The following are the steps necessary to generate a slide in the requirements
+walk-thru.  There are three files involved in the slide creation process.  For
+explanation purposes here, the slides will have the same root filename
+"<tt>X</tt>".  The files are the following:
+</p><p>
+<ul>
+<li>
+<tt>requirements/mockups/UID/X.html</tt> -- the hand-built HTML file that is
+the screen image to be shown in a slide
+<li>
+<tt>requirements/images/X.png</tt> -- the image captured from the mockup
+<tt>X.html</tt> file
+<li>
+<tt>requirements/walkthru/X.html</tt> -- the slide as it appears in the
+walkthru; this <tt>X.html</tt> has the navigation links, explanatory blurb, and
+links to the slide screen image in <tt>images/X.png</tt>
+</ul>
+</p><p>
+As of 17oct11, there is no consistent naming convention for these three files.
+The naming convention followed here is to use the same root file name for all
+of them.
+</p><p>
+Here are the specific steps to create these files:
+<ol type=1>
+<p> <li>
+Create or edit the HTML file in <tt>requirements/mockups/UID/X.html</tt>, where
+UID is your user id.  By convention, mockup HTML files are stored in
+subdirectories named with user id.  Again, "X" is the root name of the slide
+file we're creating or editing.  <tt>X.html</tt> in the mockup directory is the
+raw HTML image content for a slide.
+<p> <li>
+Goto the <tt>requirements/mockups/HTML\ Template</tt> directory.
+<p> <li>
+Copy the entire Tempus\ Layout_files subdirectory and the <tt>Tempus\
+Layout.html</tt> file to a working dir, and go to that working directory.
+<p> <li>
+A quick way to "install" <tt>X.html</tt> into the Tempus Layout is to rename
+<tt>X.html</tt> to <tt>samplePage.html</tt>.  The <tt>samplePage</tt> file is
+the name that is src included in <tt>Tempus\ Layout.html</tt>.  Alternatively,
+the included file name in <tt>Tempus\ Layout.html</tt> can be changed to
+<tt>X.html</tt>.
+<p> <li>
+Open <tt>Tempus\ Layout.html</tt> in a Chrome browser, ignoring the Web Toolkit
+error message.  As of 17oct11, using Chrome is necessary since Firefox has
+problems with sizing, and Safari has problems with fonts in the template.
+<p> <li>
+Capture the screen image displayed in the browser as a png and store in
+<tt>X.png</tt>.  Copy or move <tt>X.png</tt> from your working directory into
+<tt>requirements/images</tt>.
+<p> <li>
+To create the actual slide, copy <tt>requirements/walkthru/template.html</tt>
+into <tt>requirements/walkthru/X.html</tt>.
+<p> <li>
+Edit the content of the slide file as follows:
+<ol type=a>
+<p> <li>
+Make the Next and Prev links point to the proper slides.
+<p> <li>
+Link to the captured image in <tt>images/X.png</tt>.
+<p> <li>
+Write the blurb.
+<p> <li>
+Fix the title.
+</ol>
+</ol>
+</body>
+</html>
