@@ -60,44 +60,24 @@ public class GWTView implements EntryPoint {
 	 	Image titleImg = new Image() ;
 	 	//titleImg.setUrl("imgs/titleImg.png") ;
 	 	titleImg.setStyleName("titleImgStyle") ;
-		
 		northPanel.getElement().setId("northPanelID") ;
-	 	//northPanel.setHTML("<div id='titleText'><img src='imgs/titleImg.png'></div>") ;
-	    //p.addNorth(new HTML("<div id='northDiv' style='background-color:#004000; width:100%; height:100%';>north</div>"), 2);
-	 	
-	 	
-		//titlePanel.add(logoPlaceHolder) ;
 		titlePanel.add(northPanel) ;
 		
-		//titlePanel.setCellWidth(titlePanel.getWidget(0), "100px");
-		
 		titlePanel.getWidget(0).setStyleName("logoContainerDiv") ;
-		
-		////////////
-		//LEFT MENU LAYOUT
-		StackPanel leftMenuSP = new StackPanel();
-		leftMenuSP.add(new HTML(""),"Home",true);
-		leftMenuSP.add(new HTML("Build<BR>View<br>Edit"),"Schedule",true);
-		leftMenuSP.add(createLeftPanel(), "Manage",true);
-		leftMenuSP.setStyleName("myStackPanel") ;
-
-		 DockLayoutPanel p = new DockLayoutPanel(Unit.EM);
+		DockLayoutPanel p = new DockLayoutPanel(Unit.EM);
 		 	
-		 	p.addNorth(titlePanel, 7);
-			  
-		 	p.addSouth(new HTML("south"), 2);
-		    //p.addEast(new HTML("east"), 2);
-		    p.addWest(leftMenuSP, 15);
-		    p.getWidgetContainerElement(leftMenuSP).setId("leftPanelID") ;
+	 	p.addNorth(titlePanel, 7);
+	 	p.addSouth(new HTML("south"), 2);
+	 	p.addWest(createLeftPanel(), 15);
 
-			bodyPanel = new VerticalPanel();
-		    p.add(bodyPanel) ;
+		bodyPanel = new VerticalPanel();
+	    p.add(bodyPanel) ;
 		   
-		    // Attach the LayoutPanel to the RootLayoutPanel. The latter will listen for
-		    // resize events on the window to ensure that its children are informed of
-		    // possible size changes.
-		    RootLayoutPanel rp = RootLayoutPanel.get();
-		    rp.add(p);
+	    // Attach the LayoutPanel to the RootLayoutPanel. The latter will listen for
+	    // resize events on the window to ensure that its children are informed of
+	    // possible size changes.
+	    RootLayoutPanel rp = RootLayoutPanel.get();
+	    rp.add(p);
 		
 		instructorsViewButton.click();
 	}
@@ -127,7 +107,7 @@ public class GWTView implements EntryPoint {
 			}
 		});
 
-		scheduleViewButton = new Button("Schedule", new ClickHandler() {
+		scheduleViewButton = new Button("View", new ClickHandler() {
 			public void onClick(ClickEvent events) {
 				if (scheduleView == null)
 					scheduleView = new ScheduleView(greetingService);
@@ -135,12 +115,22 @@ public class GWTView implements EntryPoint {
 			}
 		});
 
-		Panel leftPanel = new VerticalPanel();
-		leftPanel.add(instructorsViewButton);
-		leftPanel.add(roomsViewButton);
-		leftPanel.add(coursesViewButton);
-		leftPanel.add(scheduleViewButton);
-		return leftPanel;
+		Panel SchedulePanel = new VerticalPanel();
+		SchedulePanel.add(new HTML("Build<BR>"));
+		SchedulePanel.add(scheduleViewButton);
+		SchedulePanel.add(new HTML("<BR>Edit"));
+		
+		Panel ManagePanel = new VerticalPanel();
+		ManagePanel.add(instructorsViewButton);
+		ManagePanel.add(roomsViewButton);
+		ManagePanel.add(coursesViewButton);
+		
+		StackPanel leftMenuSP = new StackPanel();
+		leftMenuSP.add(new HTML(""),"Home",true);		
+		leftMenuSP.add(SchedulePanel, "Schedule",true);
+		leftMenuSP.add(ManagePanel, "Manage",true);
+		leftMenuSP.setStyleName("myStackPanel") ;
+		return leftMenuSP ;
 	}
 	
 	public void showView(View newPage) {
