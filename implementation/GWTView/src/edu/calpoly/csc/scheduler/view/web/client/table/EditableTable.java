@@ -96,14 +96,23 @@ public class EditableTable{
 	}
 	
 	
+	/**
+	 * Add table entry to the table
+	 * @param entry
+	 */
 	public void add(EditableTableEntry entry){
 		
-		add(entry.getValues());
+		add(entry.getValues(), false);
 		entries.add(entry);
 	}
 	
 	
-	private void add(ArrayList<String> values){
+	/**
+	 * Add a row of values to the table object
+	 * @param values
+	 * @param editMode true to set the new row to be in edit mode, false if not edit mode
+	 */
+	private void add(ArrayList<String> values, boolean editMode){
 		
 		int row = table.getRowCount();
 		
@@ -113,7 +122,17 @@ public class EditableTable{
 		
 		for(i = 0; i < cols && i < values.size(); i++){
 			
-			table.setWidget(row, i, new Label(values.get(i)));
+			Widget w;
+			if(editMode){
+				TextBox tbox = new TextBox();
+				tbox.setText(values.get(i));
+				w = tbox;
+			}
+			else{
+				w = new Label(values.get(i));
+			}
+			
+			table.setWidget(row, i, w);
 			cellFormatter.addStyleName(row, i, "editableTableCell");
 		}
 		
@@ -122,7 +141,7 @@ public class EditableTable{
 		        row, i, HasHorizontalAlignment.ALIGN_CENTER);
 		Button removeButton = removeButton();
 		
-		removeButton.setVisible(false);
+		removeButton.setVisible(editMode);
 		table.setWidget(row, i, removeButton);
 		cellFormatter.addStyleName(row, i, "editableTableCellRemove");
 	}
@@ -175,7 +194,6 @@ public class EditableTable{
 					// remove from table and delete corresponding entry
 					if(table.getWidget(r, cols) == button){
 						table.removeRow(r);
-						entries.remove(r-1);
 					}
 				}
 			}
@@ -201,7 +219,7 @@ public class EditableTable{
 					list.add("");
 				}
 				
-				add(list);
+				add(list, true);
 				entries.add(new EditableTableEntry(cols));
 		   }
 		});
@@ -324,7 +342,7 @@ public class EditableTable{
 				
 				// add back the previous values
 				for(EditableTableEntry e : entries){
-					add(e.getValues());
+					add(e.getValues(), false);
 				}
 		   }
 		});
