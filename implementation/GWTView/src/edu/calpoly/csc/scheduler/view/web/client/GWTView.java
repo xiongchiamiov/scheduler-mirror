@@ -58,27 +58,27 @@ public class GWTView implements EntryPoint {
 
 		HTML northPanel = new HTML() ;
 	 	Image titleImg = new Image() ;
-	 	titleImg.setUrl("imgs/titleImg.png") ;
+	 	//titleImg.setUrl("imgs/titleImg.png") ;
 	 	titleImg.setStyleName("titleImgStyle") ;
 		
 		northPanel.getElement().setId("northPanelID") ;
-	 	northPanel.setHTML("<div id='titleText'><img src='imgs/titleImg.png'></div>") ;
+	 	//northPanel.setHTML("<div id='titleText'><img src='imgs/titleImg.png'></div>") ;
 	    //p.addNorth(new HTML("<div id='northDiv' style='background-color:#004000; width:100%; height:100%';>north</div>"), 2);
 	 	
 	 	
-		titlePanel.add(logoPlaceHolder) ;
+		//titlePanel.add(logoPlaceHolder) ;
 		titlePanel.add(northPanel) ;
 		
-		titlePanel.setCellWidth(titlePanel.getWidget(0), "100px");
+		//titlePanel.setCellWidth(titlePanel.getWidget(0), "100px");
 		
 		titlePanel.getWidget(0).setStyleName("logoContainerDiv") ;
 		
 		////////////
 		//LEFT MENU LAYOUT
 		StackPanel leftMenuSP = new StackPanel();
-		leftMenuSP.add(new HTML("Start<BR>Generate<br>Review"),"Generate Schedule",true);
-		leftMenuSP.add(new HTML("Export Schedule"), "Export Schedule",true);
-		leftMenuSP.add(createLeftPanel(), "Configuration",true);
+		leftMenuSP.add(new HTML(""),"Home",true);
+		leftMenuSP.add(new HTML("Build<BR>View<br>Edit"),"Schedule",true);
+		leftMenuSP.add(createLeftPanel(), "Manage",true);
 		leftMenuSP.setStyleName("myStackPanel") ;
 
 		 DockLayoutPanel p = new DockLayoutPanel(Unit.EM);
@@ -111,7 +111,7 @@ public class GWTView implements EntryPoint {
 			}
 		});
 
-		roomsViewButton = new Button("Rooms", new ClickHandler() {
+		roomsViewButton = new Button("Locations", new ClickHandler() {
 			public void onClick(ClickEvent events) {
 				if (roomsView == null)
 					roomsView = new RoomsView(greetingService);
