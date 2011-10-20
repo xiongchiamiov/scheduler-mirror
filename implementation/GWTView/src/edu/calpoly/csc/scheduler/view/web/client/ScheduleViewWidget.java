@@ -1,44 +1,42 @@
 package edu.calpoly.csc.scheduler.view.web.client;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.Vector;
-
-import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlexTable.FlexCellFormatter;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.InlineLabel;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.shared.gwtScheduleItem;
 
-public class ScheduleViewWidget
+public class ScheduleViewWidget implements CloseHandler<PopupPanel>
 {
  private GreetingServiceAsync greetingService;
  private ArrayList<gwtScheduleItem> scheduleItems = new ArrayList<gwtScheduleItem>();
  private ArrayList<String> professorList = new ArrayList<String>();
  private ListBox professorListBox = new ListBox(true);
- private HorizontalPanel mainPanel = new HorizontalPanel();
+ private VerticalPanel mainPanel = new VerticalPanel();
  private FlexTable scheduleGrid = new FlexTable();
- private VerticalPanel interfacePanel = new VerticalPanel();
+ private HorizontalPanel interfacePanel = new HorizontalPanel();
  private ArrayList<ArrayList<Integer>> columnsOfDays;
  private static final int numberOfTimeSlots = 30;
  private static final int numberOfDays = 5;
  private ArrayList<Integer> dayColumnSpans;
+ private FiltersViewWidget filtersDialog = new FiltersViewWidget();
  
  private void resetColumnsOfDays()
  {
@@ -92,12 +90,12 @@ public class ScheduleViewWidget
 
   for (i = 0; i < days.length; i++)
   {
-   scheduleGrid.setText(0, i + 1, days[i]);
+   scheduleGrid.setWidget(0, i + 1, new HTML("<b>"+days[i]+"</b>"));
   }
  }
 
  /*
-  * Places the times 7am-10pm at half hour increments as the rows in thefirst
+  * Places the times 7am-10pm at half hour increments as the rows in the first
   * column in the schedule.
   */
  private void setTimes()
@@ -111,7 +109,7 @@ public class ScheduleViewWidget
   
   for (i = 0; i < times.length; i++)
   {
-   scheduleGrid.setText(i + 1, 0, times[i]);
+   scheduleGrid.setWidget(i + 1, 0, new HTML("<b>"+times[i]+"</b>"));
   }
  }
 
@@ -124,9 +122,14 @@ public class ScheduleViewWidget
   mainPanel.add(scheduleGrid);
  }
 
- private int getRowFromTime(int time)
+ private int getRowFromTime(int hour, boolean overHalfHour)
  {
-  return (2*time)-13;
+  int halfHourRow = 0;
+  if(overHalfHour)
+  {
+   halfHourRow = 1;
+  }
+  return (2*hour)-13+halfHourRow;
  }
  
  private int overlaps(gwtScheduleItem toBePlaced, int day)
@@ -135,18 +138,32 @@ public class ScheduleViewWidget
   int h, i;  
   int overlapCount = 0;
   int maxOverlap = 0;
+  int startRow = 
+   getRowFromTime(toBePlaced.getStartTimeHour(), 
+    toBePlaced.startsAfterHalf());
+  int endRow =
+   getRowFromTime(toBePlaced.getEndTimeHour(), 
+    toBePlaced.endsAfterHalf()) - 1;
+  int occupiedEndRow, occupiedStartRow;
   
-  for(h = toBePlaced.getStartTime(); h < toBePlaced.getEndTime(); h++)
+  for(h = startRow; h <= endRow; h++)
   {
    for(gwtScheduleItem item : scheduleItems)
    {
-    occupiedDays = item.getDayNums();
-    for(i = 0; i < occupiedDays.length; i++)
-    {
-     if(occupiedDays[i] == day && item.isPlaced() && h >= item.getStartTime() 
-         && h < item.getEndTime())
+	if(item.isPlaced())
+	{
+     occupiedDays = item.getDayNums();
+     occupiedStartRow = getRowFromTime(item.getStartTimeHour(), 
+      item.startsAfterHalf());
+     occupiedEndRow = getRowFromTime(item.getEndTimeHour(),
+      item.endsAfterHalf()) - 1;
+     for(i = 0; i < occupiedDays.length; i++)
      {
-      overlapCount++;
+      if(occupiedDays[i] == day && h >= occupiedStartRow 
+          && h <= occupiedEndRow)
+      {
+       overlapCount++;
+      }
      }
     }
    }
@@ -162,11 +179,14 @@ public class ScheduleViewWidget
   Integer dayColumn;
   Integer dayColSpan;
   FlexCellFormatter formatter = scheduleGrid.getFlexCellFormatter();
+  HTML dayText;
   
   dayColSpan = dayColumnSpans.get(day-1).intValue()+1;
   dayColumnSpans.set(day-1, dayColSpan);
+  dayText = (HTML)scheduleGrid.getWidget(0, day);
   formatter.setColSpan(0, day, dayColSpan);
-  
+  scheduleGrid.setWidget(0, day, dayText);
+
   for(i = 1; i <= numberOfTimeSlots; i++)
   {
    scheduleGrid.insertCell(i, columnsOfDays.get(i-1).get(day-1).intValue());
@@ -178,87 +198,55 @@ public class ScheduleViewWidget
   }
  }
  
- private void placeScheduleItem(gwtScheduleItem placedSchdItem)
+ private void placeScheduleItem(gwtScheduleItem placedSchdItem,
+                                 ArrayList<Integer> filteredDays)
  {
   int schdItemDays[];
-  int i,j,k, day, rowRangeStart, rowRangeEnd, overlapCount;
+  int i,j,k, day, dayNum, rowRangeStart, rowRangeEnd, overlapCount;
   ArrayList<Integer> cods;
   Integer dayColumn;
-  
-  rowRangeStart = getRowFromTime(placedSchdItem.getStartTime());
-  rowRangeEnd = getRowFromTime(placedSchdItem.getEndTime());
+  rowRangeStart = getRowFromTime(placedSchdItem.getStartTimeHour(),
+		                          placedSchdItem.startsAfterHalf());
+  rowRangeEnd = getRowFromTime(placedSchdItem.getEndTimeHour(),
+		                        placedSchdItem.endsAfterHalf());
   schdItemDays = placedSchdItem.getDayNums();
-
+  
   for (i = 0; i < schdItemDays.length; i++)
   {
-   overlapCount = overlaps(placedSchdItem, schdItemDays[i]);
-   if(overlapCount >= dayColumnSpans.get(schdItemDays[i]-1))
-   {
-	 expandDay(schdItemDays[i]);
-   }
-   day = columnsOfDays.get(rowRangeStart-1).get(schdItemDays[i]-1).intValue();
-   scheduleGrid.setWidget(rowRangeStart, day, new HTML(placedSchdItem.toString()));
-   scheduleGrid.getFlexCellFormatter().setRowSpan(rowRangeStart, day, 
-    rowRangeEnd - rowRangeStart);
-   
-   cods = columnsOfDays.get(rowRangeStart-1);
-   dayColumn = cods.get(schdItemDays[i]-1) + 1;
-   cods.set(schdItemDays[i]-1, dayColumn);
-   columnsOfDays.set(rowRangeStart-1, cods);
-   for(j = rowRangeStart; j < rowRangeEnd-1; j++)
-   {
-    cods = columnsOfDays.get(j);
-    for(k = schdItemDays[i]; k <= numberOfDays; k++)
+   if(!filteredDays.contains(schdItemDays[i]))
+   {   
+    dayNum = schdItemDays[i];
+    overlapCount = overlaps(placedSchdItem, dayNum);
+    placedSchdItem.setOverlapCount(overlapCount);
+    if(overlapCount >= dayColumnSpans.get(dayNum-1))
     {
-     dayColumn = cods.get(k);
-     cods.set(k, new Integer(dayColumn.intValue()-1));
+ 	 expandDay(dayNum);
     }
-    columnsOfDays.set(j, cods);
-    scheduleGrid.removeCell(j+1, (scheduleGrid.getCellCount(j+1) - 1));
+    day = columnsOfDays.get(rowRangeStart-1).get(dayNum-1).intValue();
+    scheduleGrid.setWidget(rowRangeStart, day, new HTML(placedSchdItem.toString()));
+    placedSchdItem.setRow(rowRangeStart);
+    placedSchdItem.setCol(day);
+    scheduleGrid.getFlexCellFormatter().setRowSpan(rowRangeStart, day, 
+     rowRangeEnd - rowRangeStart);
+   
+    cods = columnsOfDays.get(rowRangeStart-1);
+    dayColumn = cods.get(dayNum-1) + 1;
+    cods.set(dayNum-1, dayColumn);
+    columnsOfDays.set(rowRangeStart-1, cods);
+    for(j = rowRangeStart; j < rowRangeEnd-1; j++)
+    {
+     cods = columnsOfDays.get(j);
+     for(k = dayNum; k <= numberOfDays; k++)
+     {
+      dayColumn = cods.get(k);
+      cods.set(k, new Integer(dayColumn.intValue()-1));
+     }
+     columnsOfDays.set(j, cods);
+     scheduleGrid.removeCell(j+1, (scheduleGrid.getCellCount(j+1) - 1));
+    }
    }
   }
   placedSchdItem.setPlaced(true);
- }
- 
- private void updateProfessorList(ArrayList<gwtScheduleItem> schdItems)
- {
-  for(gwtScheduleItem item : schdItems)
-  {
-   if(!professorList.contains(item.getProfessor()))
-   {
-    professorList.add(item.getProfessor());
-   }
-  }
-  for(String prof : professorList)
-  {
-   professorListBox.addItem(prof);
-  }
- }
- 
- private class professorSelected implements ChangeHandler
- {
-  public void onChange(ChangeEvent event)
-  {
-   ArrayList<String> professorFilters = new ArrayList<String>();
-   int i;
-   for(i = 0; i < professorListBox.getItemCount(); i++)
-   {
-    if(professorListBox.isItemSelected(i))
-    {
-     professorFilters.add(professorListBox.getItemText(i));
-    }
-   }
-   filterScheduleItems(professorFilters);
-  }
- }
- 
- private void layoutProfList()
- {
-  professorListBox.setVisibleItemCount(5);
-  professorListBox.addChangeHandler(new professorSelected());
-  interfacePanel.add(new HTML("Select a professor to view their schedule.<br>" +
-  		"Ctrl+Click to add or remove professors"));
-  interfacePanel.add(professorListBox);
  }
  
  private void getScheduleItems()
@@ -277,12 +265,13 @@ public class ScheduleViewWidget
      {
       Collections.sort(result);
       resetSchedule();
+      scheduleItems = new ArrayList<gwtScheduleItem>();
       for(gwtScheduleItem item : result)
       {
        scheduleItems.add(item);
-       placeScheduleItem(item);
       }
-      updateProfessorList(result);
+      filtersDialog.addItems(scheduleItems);
+      filterScheduleItems();
      }
     }
    });
@@ -316,16 +305,24 @@ public class ScheduleViewWidget
   resetDayColumnSpans();
   resetIsPlaced();
   trimExtraCells();
+  setTimes();
+  setDaysOfWeek();
  }
  
- private void filterScheduleItems(ArrayList<String> profNames)
+ private void filterScheduleItems()
  {
   resetSchedule();
+  ArrayList<String> filtInstructors = filtersDialog.getInstructors();
+  ArrayList<String> filtCourses = filtersDialog.getCourses();
+  ArrayList<String> filtRooms = filtersDialog.getRooms();
+  ArrayList<Integer> filtDays = filtersDialog.getDays();
   for(gwtScheduleItem item : scheduleItems)
   {
-   if(profNames.contains(item.getProfessor()) || profNames.size() == 0)
+   if(filtInstructors.contains(item.getProfessor()) && 
+	   filtCourses.contains(item.getCourse()) && 
+	    filtRooms.contains(item.getRoom()))
    {
-    placeScheduleItem(item);
+    placeScheduleItem(item, filtDays);
    }
   }
  }
@@ -340,18 +337,31 @@ public class ScheduleViewWidget
  
  private void layoutInterface()
  {
+  interfacePanel.add(new Button("Filters", 
+   new ClickHandler()
+   {
+	public void onClick(ClickEvent event) 
+	{
+	 filtersDialog.center();	
+	}  
+   }));
+  filtersDialog.addCloseHandler(this);
   interfacePanel.add(new Button("Generate Schedule", 
    new GenerateScheduleClickHandler()));
-  layoutProfList();
   mainPanel.add(interfacePanel);
  }
  
  public Widget getWidget(GreetingServiceAsync service)
  {
   greetingService = service;
-  layoutDaysAndTimes();
   layoutInterface();
+  layoutDaysAndTimes();
   
   return mainPanel;
+ }
+
+ public void onClose(CloseEvent<PopupPanel> event) 
+ {
+  filterScheduleItems();
  }
 }

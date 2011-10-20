@@ -69,19 +69,22 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	{
 	 ArrayList<gwtScheduleItem> items = new ArrayList<gwtScheduleItem>();
 	 gwtScheduleItem i1 = new gwtScheduleItem("Gene Fisher", "CPE", 101, 1, "MWF",
-	  new int[] {1, 3, 5}, 8, 10);
-	 gwtScheduleItem i2 = new gwtScheduleItem("Gene Fisher", "CPE", 402, 1, "MWF",
-	  new int[] {1, 3, 5}, 13, 17);
+	  new int[] {1, 3, 5}, 8, 10, 10, 0, "14-250");
+ 	 gwtScheduleItem i2 = new gwtScheduleItem("Gene Fisher", "CPE", 402, 1, "MWF",
+	  new int[] {1, 3, 5}, 13, 30, 17, 30, "14-256");
 	 gwtScheduleItem i3 = new gwtScheduleItem("Clark Turner", "CPE", 300, 1, "TR",
-	  new int[] {2, 4}, 15, 17);
+	  new int[] {2, 4}, 15, 10, 17, 0, "14-256");
 	 gwtScheduleItem i4 = new gwtScheduleItem("Nancy Parham", "CPE", 141, 1, 
-	  "MWF", new int[] {1, 3, 5}, 13, 14);
+	  "MWF", new int[] {1, 3, 5}, 13, 10, 14, 0, "100-1234");
 	 gwtScheduleItem i5 = new gwtScheduleItem("John Dalbey", "CPE", 308, 1, "MWF",
-	  new int[] {1, 3, 5}, 13, 14);
+	  new int[] {1, 3, 5}, 13, 59, 14, 01, "01-001");
 	 gwtScheduleItem i6 = new gwtScheduleItem("John Clements", "CPE", 431, 1, 
-	  "MWF", new int[] {1,3,5}, 16, 22);
+	  "MWF", new int[] {1,3,5}, 16, 10, 22, 0, "12-34");
 	 gwtScheduleItem i7 = new gwtScheduleItem("Mei-Ling Liu", "CPE", 365, 1, 
-	  "MWF", new int[] {1,3,5}, 13, 17);
+	  "MWF", new int[] {1,3,5}, 13, 1, 17, 31, "50-100");
+	 gwtScheduleItem i8 = new gwtScheduleItem("Kurt Mammen", "CPE", 101, 2, "TR",
+	  new int[] {2,4}, 17, 0, 19, 0, "03-14");
+			 
 	 items.add(i1);
 	 items.add(i2);
 	 items.add(i4);
@@ -89,6 +92,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	 items.add(i5);
 	 items.add(i6);
 	 items.add(i7);
+	 //items.add(i8);
 	 return items;
 	}
 
