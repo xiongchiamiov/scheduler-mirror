@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.StackPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -31,15 +32,10 @@ public class GWTView implements EntryPoint {
 	private static final GreetingServiceAsync greetingService = GWT
 			.create(GreetingService.class);
 
-	VerticalPanel bodyPanel;
+	ScrollPanel bodyPanel;
 	
 	Button instructorsViewButton, roomsViewButton, coursesViewButton, scheduleViewButton;
 
-	InstructorsView instructorsView;
-	RoomsView roomsView;
-	CoursesView coursesView;
-	ScheduleView scheduleView;
-	
 	View currentView;
 	
 	/**
@@ -70,8 +66,8 @@ public class GWTView implements EntryPoint {
 	 	p.addSouth(new HTML("south"), 2);
 	 	p.addWest(createLeftPanel(), 15);
 
-		bodyPanel = new VerticalPanel();
-	    p.add(bodyPanel) ;
+			bodyPanel = new ScrollPanel();
+		    p.add(bodyPanel) ;
 		   
 	    // Attach the LayoutPanel to the RootLayoutPanel. The latter will listen for
 	    // resize events on the window to ensure that its children are informed of
@@ -85,33 +81,25 @@ public class GWTView implements EntryPoint {
 	private Panel createLeftPanel() {
 		instructorsViewButton = new Button("Instructors", new ClickHandler() {
 			public void onClick(ClickEvent events) {
-				if (instructorsView == null)
-					instructorsView = new InstructorsView(greetingService);
-				showView(instructorsView);
+				showView(new InstructorsView(greetingService));
 			}
 		});
 
 		roomsViewButton = new Button("Locations", new ClickHandler() {
 			public void onClick(ClickEvent events) {
-				if (roomsView == null)
-					roomsView = new RoomsView(greetingService);
-				showView(roomsView);
+				showView(new RoomsView(greetingService));
 			}
 		});
 
 		coursesViewButton = new Button("Courses", new ClickHandler() {
 			public void onClick(ClickEvent events) {
-				if (coursesView == null)
-					coursesView = new CoursesView(greetingService);
-				showView(coursesView);
+				showView(new CoursesView(greetingService));
 			}
 		});
 
 		scheduleViewButton = new Button("View", new ClickHandler() {
 			public void onClick(ClickEvent events) {
-				if (scheduleView == null)
-					scheduleView = new ScheduleView(greetingService);
-				showView(scheduleView);
+				showView(new ScheduleView(greetingService));
 			}
 		});
 

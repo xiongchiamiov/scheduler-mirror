@@ -129,6 +129,7 @@ h1 {
 	color:  #004000 ;
 	padding-left:5px;
 }
-	
-	
+
+.bodyPanel {
+	overflow: auto;
 }
