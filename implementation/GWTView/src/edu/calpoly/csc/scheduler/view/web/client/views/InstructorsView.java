@@ -17,15 +17,7 @@ public class InstructorsView extends View {
 
 	public InstructorsView(GreetingServiceAsync greetingService) {
 		this.greetingService = greetingService;
-		instructorTable = EditableTableFactory.createProfessors(new EditableTable.CancelHandler() {
-			public void canceled() {
-				populateInstructors();
-			}
-		}, new EditableTable.SaveHandler() {
-			public void saved(ArrayList<InstructorGWT> existingGWTs, ArrayList<InstructorGWT> deletedGWTs) {
-				saveInstructors(existingGWTs, deletedGWTs);
-			}
-		});
+		instructorTable = EditableTableFactory.createProfessors();
 		
 		this.add(instructorTable.getWidget());
 	}
@@ -47,19 +39,7 @@ public class InstructorsView extends View {
 			}
 		});
 	}
-
-	public void saveInstructors(ArrayList<InstructorGWT> instructors, ArrayList<InstructorGWT> deleted){
-		
-		greetingService.saveInstructors(instructors, deleted, new AsyncCallback<Void>() {
-			public void onFailure(Throwable caught) {
-				Window.alert("Failed to save instructors: " + caught.toString());
-			}
-			
-			public void onSuccess(Void result){
-				populateInstructors();
-			}
-		});
-	}
+	
 
 	@Override
 	public void afterShow() {

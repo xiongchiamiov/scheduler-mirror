@@ -19,16 +19,14 @@ import edu.calpoly.csc.scheduler.view.web.shared.gwtScheduleItem;
 public interface GreetingService extends RemoteService {
 	ArrayList<InstructorGWT> getInstructorNames() throws IllegalArgumentException;
 	
-	void saveInstructors(ArrayList<InstructorGWT> instructors, ArrayList<InstructorGWT> deleted) throws IllegalArgumentException;
+	void saveInstructors(ArrayList<InstructorGWT> instructors) throws IllegalArgumentException;
 	ArrayList<gwtScheduleItem> getGWTScheduleItems() throws IllegalArgumentException;
 
 	ArrayList<LocationGWT> getLocationNames();
 
-	void saveLocations(ArrayList<LocationGWT> locations,
-			ArrayList<LocationGWT> deleted);
+	void saveLocations(ArrayList<LocationGWT> locations);
 	
 	ArrayList<CourseGWT> getCourses();
 
-	void saveCourses(ArrayList<CourseGWT> locations,
-			ArrayList<CourseGWT> deleted);
+	void saveCourses(ArrayList<CourseGWT> locations);
 }

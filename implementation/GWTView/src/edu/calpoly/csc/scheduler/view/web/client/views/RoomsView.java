@@ -9,7 +9,6 @@ import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.client.table.EditableTable;
 import edu.calpoly.csc.scheduler.view.web.client.table.EditableTableEntry;
 import edu.calpoly.csc.scheduler.view.web.client.table.EditableTableFactory;
-import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
 
 public class RoomsView extends View {
@@ -18,16 +17,7 @@ public class RoomsView extends View {
 
 	public RoomsView(GreetingServiceAsync greetingService) {
 		this.greetingService = greetingService;
-		locationTable = EditableTableFactory.createLocations(new EditableTable.CancelHandler() {
-			public void canceled() {
-				populateLocations();
-			}
-		}, new EditableTable.SaveHandler() {
-			public void saved(ArrayList<InstructorGWT> existingGWTs, ArrayList<InstructorGWT> deletedGWTs) {
-				/* TODO */
-				populateLocations();
-			}
-		});
+		locationTable = EditableTableFactory.createLocations();
 		
 		this.add(locationTable.getWidget());
 	}

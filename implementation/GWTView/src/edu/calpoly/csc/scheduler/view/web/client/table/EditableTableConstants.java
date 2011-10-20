@@ -12,8 +12,6 @@ public class EditableTableConstants {
 	
 	public static final String EDIT = "Edit";
 	
-	public static final String EDIT_DONE = "Done Editing";
-	
 	public static final String REMOVE = "X";
 	
 	public static final String SAVE = "Save";

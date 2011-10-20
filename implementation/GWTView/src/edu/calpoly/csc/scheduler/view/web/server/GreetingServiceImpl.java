@@ -56,8 +56,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	}
 	
 	
-	public void saveInstructors(ArrayList<InstructorGWT> instructors,
-			ArrayList<InstructorGWT> deleted) throws IllegalArgumentException {
+	public void saveInstructors(ArrayList<InstructorGWT> instructors) throws IllegalArgumentException {
 		
 		/** TODO */
 	}
@@ -123,8 +122,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 
 
 	@Override
-	public void saveLocations(ArrayList<LocationGWT> locations,
-			ArrayList<LocationGWT> deleted) {
+	public void saveLocations(ArrayList<LocationGWT> locations) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -157,8 +155,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 
 
 	@Override
-	public void saveCourses(ArrayList<CourseGWT> courses,
-			ArrayList<CourseGWT> deleted) {
+	public void saveCourses(ArrayList<CourseGWT> courses) {
 		// TODO Auto-generated method stub
 		
 	}

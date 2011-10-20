@@ -12,14 +12,8 @@ import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
  *
  */
 public class EditableTableEntry {
-
-	private ArrayList<String> prevValues;
 	
-	private ArrayList<String> newValues;
-	
-	private boolean deleted;
-	
-	private String key;
+	private ArrayList<String> currValues;
 	
 	
 	/**********************
@@ -41,9 +35,6 @@ public class EditableTableEntry {
 		
 		// initialize object and set instructor
 		initialize(values);
-		
-		// set the key
-		key = instructor.getUserID();
 	}
 	
 	/**
@@ -52,17 +43,17 @@ public class EditableTableEntry {
 	 */
 	public InstructorGWT getInstructor(){
 		
-		if(newValues.size() < 4){
+		if(currValues.size() < 4){
 			return null;
 		}
 		
 		int wtu;
 		try{
-			wtu = Integer.parseInt(newValues.get(2));
+			wtu = Integer.parseInt(currValues.get(2));
 		}catch(Exception e){wtu = 0;}
 		
-		return new InstructorGWT(newValues.get(0), newValues.get(1),
-				wtu, newValues.get(3));
+		return new InstructorGWT(currValues.get(0), currValues.get(1),
+				wtu, currValues.get(3));
 	}
 	
 	
@@ -107,10 +98,6 @@ public class EditableTableEntry {
 		
 		// initialize object and set instructor
 		initialize(values);
-		
-		// set the key
-		/** TODO set the key to database key for a course */
-		key = "1";
 	}
 	
 	/**
@@ -119,18 +106,18 @@ public class EditableTableEntry {
 	 */
 	public CourseGWT getCourse(){
 		
-		if(newValues.size() < 9){
+		if(currValues.size() < 9){
 			return null;
 		}
 		
 		int catalogName, wtu, scu, numSections, maxEnroll;
 		
 		try{
-			catalogName = Integer.parseInt(newValues.get(1));
-			wtu = Integer.parseInt(newValues.get(3));
-			scu = Integer.parseInt(newValues.get(4));
-			numSections = Integer.parseInt(newValues.get(5));
-			maxEnroll = Integer.parseInt(newValues.get(7));
+			catalogName = Integer.parseInt(currValues.get(1));
+			wtu = Integer.parseInt(currValues.get(3));
+			scu = Integer.parseInt(currValues.get(4));
+			numSections = Integer.parseInt(currValues.get(5));
+			maxEnroll = Integer.parseInt(currValues.get(7));
 			
 		}catch(Exception e){
 			catalogName = 0;
@@ -140,7 +127,7 @@ public class EditableTableEntry {
 			maxEnroll = 0;
 		}
 		
-		return new CourseGWT(newValues.get(0), catalogName, newValues.get(2), wtu, scu, numSections, newValues.get(6), maxEnroll, newValues.get(8));
+		return new CourseGWT(currValues.get(0), catalogName, currValues.get(2), wtu, scu, numSections, currValues.get(6), maxEnroll, currValues.get(8));
 	}
 	
 	
@@ -184,10 +171,6 @@ public class EditableTableEntry {
 		
 		// initialize object and set instructor
 		initialize(values);
-		
-		// set the key
-		/** TODO set the key to database key for a course */
-		key = "1";
 	}
 	
 	/**
@@ -196,21 +179,21 @@ public class EditableTableEntry {
 	 */
 	public LocationGWT getLocation(){
 		
-		if(newValues.size() < 7){
+		if(currValues.size() < 7){
 			return null;
 		}
 		
 		int maxOccupancy;
 		
 		try{
-			maxOccupancy = Integer.parseInt(newValues.get(4));
+			maxOccupancy = Integer.parseInt(currValues.get(4));
 			
 		}catch(Exception e){
 			maxOccupancy = 0;
 		}
 		
-		return new LocationGWT(newValues.get(0), newValues.get(1),
-				newValues.get(2), newValues.get(3), maxOccupancy, newValues.get(5), newValues.get(6));
+		return new LocationGWT(currValues.get(0), currValues.get(1),
+				currValues.get(2), currValues.get(3), maxOccupancy, currValues.get(5), currValues.get(6));
 	}
 	
 	
@@ -234,49 +217,20 @@ public class EditableTableEntry {
 	/*********************
 	 * Universal methods *
 	 *********************/
+	public EditableTableEntry(ArrayList<String> values){
+		initialize(values);
+	}
+	
 	/**
 	 * Returns a list of the current values
 	 */
 	public ArrayList<String> getValues(){
-		return newValues;
+		return currValues;
 	}
 	
 	public void setValue(int index, String value){
-		newValues.remove(index);
-		newValues.add(index, value);
-	}
-	
-	/**
-	 * Deletes the entry from the table
-	 */
-	public void delete(){
-		deleted = true;
-	}
-	
-	
-	/**
-	 * Get whether the entry has been deleted from the table
-	 * @return true if the entry has been deleted, false if it has not been deleted
-	 */
-	public boolean isDeleted() {
-		return deleted;
-	}
-
-	/**
-	 * Returns whether the entry at the given index has been modified
-	 * @param index the index to compare
-	 * @return true if there are changes or index is out of bounds, false if no changes have been made
-	 */
-	public boolean isChanged(int index){
-		
-		// check array sizes
-		if(newValues.size() <= index ||
-			prevValues.size() <= index){
-			return true;
-		}
-		
-		// compare items
-		return !newValues.get(index).equals(prevValues.get(index));
+		currValues.remove(index);
+		currValues.add(index, value);
 	}
 
 	
@@ -285,14 +239,11 @@ public class EditableTableEntry {
 	 * @param values original values for the object
 	 */
 	private void initialize(ArrayList<String> values){
-		deleted = false;
 		
-		prevValues = new ArrayList<String>();
-		newValues = new ArrayList<String>();
+		currValues = new ArrayList<String>();
 		
 		for(String str : values){
-			prevValues.add(str);
-			newValues.add(str);
+			currValues.add(str);
 		}
 	}
 	
@@ -308,16 +259,6 @@ public class EditableTableEntry {
 			values.add("");
 		}
 		
-		key = EditableTableConstants.DEFAULT_KEY;
-		
 		initialize(values);
-	}
-	
-	/**
-	 * Returns the entry's key
-	 * @return the key
-	 */
-	public String getKey(){
-		return key;
 	}
 }

@@ -13,42 +13,24 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.calpoly.csc.scheduler.view.web.client.GWTView;
-import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
-
 public class EditableTable{
-	
-	public interface CancelHandler {
-		void canceled();
-	}
-	
-	public interface SaveHandler {
-		void saved(ArrayList<InstructorGWT> existingGWTs, ArrayList<InstructorGWT> deletedGWTs);
-	}
 
-	private final CancelHandler cancelHandler;
-	private final SaveHandler saveHandler;
 	private FlexTable table;
 	private Grid grid;
 	private int cols;
 	private FlexCellFormatter cellFormatter;
-	private boolean editMode;
-	private ArrayList<EditableTableEntry> entries, deleted;
+	private ArrayList<EditableTableEntry> entries;
 	private Button editButton, saveButton, cancelButton, addRowButton;
 	
 	/**
 	 * Creates an editable table with a column for each passed in attribute
 	 * @param attributes column headings for the table
 	 */
-	public EditableTable(CancelHandler cancelHandler, SaveHandler saveHandler, ArrayList<String> attributes){
-		this.cancelHandler = cancelHandler;
-		this.saveHandler = saveHandler;
+	public EditableTable(ArrayList<String> attributes){
 		
 		// initialize variables
 		cols = 0;
-		editMode = false;
 		entries = new ArrayList<EditableTableEntry>();
-		deleted = new ArrayList<EditableTableEntry>();
 		
 		/* table */
 		table = new FlexTable();
@@ -130,21 +112,18 @@ public class EditableTable{
 		int i;
 		
 		for(i = 0; i < cols && i < values.size(); i++){
-			if(editMode){
-				TextBox tbox = new TextBox();
-				tbox.setText(values.get(i));
-				table.setWidget(row, i, tbox);
-			}
-			else{
-				table.setWidget(row, i, new Label(values.get(i)));
-			}
+			
+			table.setWidget(row, i, new Label(values.get(i)));
 			cellFormatter.addStyleName(row, i, "editableTableCell");
 		}
 		
 		
 		cellFormatter.setHorizontalAlignment(
 		        row, i, HasHorizontalAlignment.ALIGN_CENTER);
-		table.setWidget(row, i, removeButton());
+		Button removeButton = removeButton();
+		
+		removeButton.setVisible(false);
+		table.setWidget(row, i, removeButton);
 		cellFormatter.addStyleName(row, i, "editableTableCellRemove");
 	}
 	
@@ -163,11 +142,6 @@ public class EditableTable{
 	 */
 	public void clear(){
 		
-		editMode = false;
-		editButton.setText(EditableTableConstants.EDIT);
-		entries.clear();
-		deleted.clear();
-		
 		while(table.getRowCount() > 1){
 			table.removeRow(1);
 		}
@@ -176,6 +150,9 @@ public class EditableTable{
 	    saveButton.setVisible(false);
 		cancelButton.setVisible(false);
 		addRowButton.setVisible(false);
+		
+		// restore edit button
+		editButton.setVisible(true);
 	}
 	
 	
@@ -198,12 +175,7 @@ public class EditableTable{
 					// remove from table and delete corresponding entry
 					if(table.getWidget(r, cols) == button){
 						table.removeRow(r);
-						EditableTableEntry entry = entries.remove(r-1);
-						entry.delete();
-						
-						if(!entry.getKey().equals(EditableTableConstants.DEFAULT_KEY)){
-							deleted.add(entry);
-						}
+						entries.remove(r-1);
 					}
 				}
 			}
@@ -241,7 +213,7 @@ public class EditableTable{
 	
 	
 	/**
-	 * Button to toggle edit mode
+	 * Button to turn on edit mode
 	 * @return the edit mode button
 	 */
 	private Button editButton(){
@@ -249,66 +221,28 @@ public class EditableTable{
 		final Button button = new Button(EditableTableConstants.EDIT);
 		button.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent event){
+
+				// toggle which buttons are visible
+				saveButton.setVisible(true);
+				cancelButton.setVisible(true);
+				addRowButton.setVisible(true);
+				button.setVisible(false);
 				
-				// change mode
-				editMode = !editMode;
-				
-				// edit
-				if(editMode){
-					button.setText(EditableTableConstants.EDIT_DONE);
-					
-					saveButton.setVisible(true);
-					cancelButton.setVisible(true);
-					addRowButton.setVisible(true);
-					
-					
-					for(int r = 1; r < table.getRowCount(); r++){
-						ArrayList<String> vals = entries.get(r-1).getValues();
-						for(int c = 0; c < cols; c++){
-							String str = vals.get(c);
-								
-							TextBox tbox = new TextBox();
-							tbox.setText(str);
+				// convert all labels to text boxes
+				for(int r = 1; r < table.getRowCount(); r++){
+					ArrayList<String> vals = entries.get(r-1).getValues();
+					for(int c = 0; c < cols; c++){
+						String str = vals.get(c);
 							
-							table.setWidget(r, c, tbox);
-						}
+						TextBox tbox = new TextBox();
+						tbox.setText(str);
+						
+						table.setWidget(r, c, tbox);
 					}
-				}
-				
-				// done
-				else{
-					button.setText(EditableTableConstants.EDIT);
 					
-					saveButton.setVisible(false);
-					cancelButton.setVisible(false);
-					addRowButton.setVisible(false);
-					
-					for(int r = 1; r < table.getRowCount(); r++){
-						EditableTableEntry entry = entries.get(r-1);
-						for(int c = 0; c < cols; c++){
-							
-							String str = "";
-							
-							try{
-								TextBox tbox = (TextBox)table.getWidget(r, c);
-								str = tbox.getText();
-							}catch(Exception e){}
-							
-							entry.setValue(c, str);
-							
-							Label lbl = new Label(str);
-							
-							table.setWidget(r, c, lbl);
-							
-							// set cell color
-							if(entry.isChanged(c)){
-								cellFormatter.addStyleName(r, c, "editTableModified");
-							}
-							else{
-								cellFormatter.removeStyleName(r, c, "editTableModified");
-							}
-						}
-					}
+					// show remove button
+					Button rButton = (Button)table.getWidget(r, cols);
+					rButton.setVisible(true);
 				}
 		   }
 		});
@@ -325,12 +259,39 @@ public class EditableTable{
 	 */
 	private Button saveButton(){
 		
-		Button button = new Button(EditableTableConstants.SAVE, new ClickHandler(){
+		Button button = new Button(
+				EditableTableConstants.SAVE);
+		
+		button.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent event){
-				ArrayList<InstructorGWT> existingGWTs = EditableTableEntry.getInstructors(entries);
-				ArrayList<InstructorGWT> deletedGWTs = EditableTableEntry.getInstructors(deleted);
+			
+				// toggle which buttons are visible
+				saveButton.setVisible(false);
+				cancelButton.setVisible(false);
+				addRowButton.setVisible(false);
+				editButton.setVisible(true);
 				
-				saveHandler.saved(existingGWTs, deletedGWTs);
+				entries.clear();
+				
+				// convert all labels to text boxes
+				for(int r = 1; r < table.getRowCount(); r++){
+					EditableTableEntry entry;
+					ArrayList<String> vals = new ArrayList<String>();
+					for(int c = 0; c < cols; c++){
+						
+						TextBox tBox = (TextBox)table.getWidget(r, c);
+						String str = tBox.getText();
+						vals.add(str);
+						table.setWidget(r, c, new Label(str));
+					}
+					
+					entry = new EditableTableEntry(vals);
+					entries.add(entry);
+					
+					// show remove button
+					Button rButton = (Button)table.getWidget(r, cols);
+					rButton.setVisible(false);
+				}
 			}
 		});
 		
@@ -341,19 +302,61 @@ public class EditableTable{
 	
 	
 	/**
+	 * Defines the click handler for the table's save button
+	 * @param clickHandler
+	 */
+	public void addSaveHandler(ClickHandler clickHandler){
+		saveButton.addClickHandler(clickHandler);
+	}
+	
+	
+	/**
 	 * Button to cancel changes
 	 * @return the button to cancel changes
 	 */
 	private Button cancelButton(){
 		
-		Button button = new Button(EditableTableConstants.CANCEL, new ClickHandler(){
+		Button button = new Button(EditableTableConstants.CANCEL, 
+				new ClickHandler(){
 			public void onClick(ClickEvent event){
-				cancelHandler.canceled();
+				// clear table
+				clear();
+				
+				// add back the previous values
+				for(EditableTableEntry e : entries){
+					add(e.getValues());
+				}
 		   }
 		});
 		
 		button.addStyleName("editTableButton");
 		
 		return button;
+	}
+	
+	
+	/**
+	 * Get the current table entries
+	 * @return
+	 */
+	public ArrayList<EditableTableEntry> getEntries(){
+		return entries;
+	}
+	
+	
+	public void saveEntries(){
+		
+		// save all values to entries
+		for(int r = 1; r < table.getRowCount(); r++){
+			ArrayList<String> vals = entries.get(r-1).getValues();
+			for(int c = 0; c < cols; c++){
+				String str = vals.get(c);
+					
+				TextBox tbox = new TextBox();
+				tbox.setText(str);
+				
+				table.setWidget(r, c, tbox);
+			}
+		}
 	}
 }
