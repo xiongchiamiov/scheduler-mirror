@@ -198,25 +198,26 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		System.out.println("Size of locations list: " + locations.size());
 		for(int i = 0; i < locations.size(); i++)
 		{
-		    results.add(new LocationGWT(locations.get(i).getBuilding(), null,
-		                locations.get(i).getRoom(), locations.get(i).getType(),
-		                locations.get(i).getMaxOccupancy(), null, null));
+		    results.add(new LocationGWT(locations.get(i).getBuilding(), locations.get(i).getRoom(),
+		                locations.get(i).getMaxOccupancy(), locations.get(i).getType(),
+		                locations.get(i).isSmartRoom(), locations.get(i).hasLaptopConnectivity(),
+		                locations.get(i).isADACompliant(), locations.get(i).hasOverhead()));
 		}
 		
 		// dummy data
 		LocationGWT l1 = new LocationGWT("14", "Frank E. Pilling", "256", "Lab", 32, "Computers", "Really comfortable chairs");
 		
-		results.add(l1);
+		//results.add(l1);
 		
 		
 		LocationGWT l2 = new LocationGWT("22", "English", "212", "Lec", 38, "Desks", "Uncomfortable, wooden desk chairs");
 		
-		results.add(l2);
+		//results.add(l2);
 		
 		
 		LocationGWT l3 = new LocationGWT("53", "Science North", "213", "Lec", 84, "", "Stadium seats");
 		
-		results.add(l3);
+		//results.add(l3);
 
 		return results;
 	}

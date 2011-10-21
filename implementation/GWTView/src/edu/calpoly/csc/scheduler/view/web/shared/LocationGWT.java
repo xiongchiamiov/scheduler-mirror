@@ -31,6 +31,14 @@ public class LocationGWT implements Serializable{
 	private String equipmentList;
 	
 	private String additionalDetails;
+	
+	private boolean smartroom;
+	
+	private boolean laptopconnectivity;
+	
+	private boolean addacompliant;
+	
+	private boolean overhead;
 
 	/**
 	 * Provided equuipment in this location.
@@ -59,6 +67,19 @@ public class LocationGWT implements Serializable{
 		this.maxOccupancy = maxOccupancy;
 		this.equipmentList = equipmentList;
 		this.additionalDetails = additionalDetails;
+	}
+	
+	public LocationGWT(String building, String room, int maxOccupancy, String type,
+			boolean smartroom, boolean laptopconnectivity, boolean addacompliant,
+			boolean overhead) {
+		this.building = building;
+		this.room = room;
+		this.maxOccupancy = maxOccupancy;
+		this.type = type;
+		this.smartroom = smartroom;
+		this.laptopconnectivity = laptopconnectivity;
+		this.addacompliant = addacompliant;
+		this.overhead = overhead;
 	}
 
 	public String getBuilding() {
