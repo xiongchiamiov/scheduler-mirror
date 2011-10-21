@@ -56,7 +56,7 @@ public class LocationDB implements DatabaseAPI<Location>
                   adacompliant, smartroom, laptopconnectivity, overhead);
 
             // Deserialize week availiability
-            byte[] buf = rs.getBytes("weekavail");
+            /*byte[] buf = rs.getBytes("weekavail");
             if (buf != null)
             {
                try
@@ -70,7 +70,7 @@ public class LocationDB implements DatabaseAPI<Location>
                {
                   e.printStackTrace();
                }
-            }
+            }*/
             data.add(toAdd);
          }
       }

@@ -195,7 +195,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		LocationDB ldb = sqldb.getLocationDB();
 		
 		ArrayList<Location> locations = ldb.getData();
-		System.out.println("Size of instructor list: " + locations.size());
+		System.out.println("Size of locations list: " + locations.size());
 		for(int i = 0; i < locations.size(); i++)
 		{
 		    results.add(new LocationGWT(locations.get(i).getBuilding(), null,
@@ -241,13 +241,13 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		CourseDB cdb = db.getCourseDB();
 		
 		ArrayList<Course> courses = cdb.getData();
-		System.out.println("Size of instructor list: " + courses.size());
+		System.out.println("Size of course list: " + courses.size());
 		for(int i = 0; i < courses.size(); i++)
 		{
 		    results.add(new CourseGWT(courses.get(i).getName(), courses.get(i).getCatalogNum(),
 		                courses.get(i).getDept(), courses.get(i).getWtu(), courses.get(i).getScu(),
 		                courses.get(i).getNumOfSections(), courses.get(i).getType().toString(), 
-		                courses.get(i).getEnrollment(), courses.get(i).getLab().getName()));
+		                courses.get(i).getEnrollment(), null));
 		}
 		
 		// dummy data
