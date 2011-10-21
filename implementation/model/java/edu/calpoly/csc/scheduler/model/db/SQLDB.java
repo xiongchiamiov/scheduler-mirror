@@ -398,7 +398,7 @@ public class SQLDB
       catch (SQLException se)
       {
          System.out.println("Error clearing the database.");
-         System.out.println(se.getMessage());
+         se.printStackTrace();
       }
    }
 
@@ -418,7 +418,7 @@ public class SQLDB
       catch (SQLException se)
       {
          System.out.println("Error clearing the database.");
-         System.out.println(se.getMessage());
+         se.printStackTrace();
       }
    }
 
@@ -438,7 +438,7 @@ public class SQLDB
       catch (SQLException se)
       {
          System.out.println("Error clearing the database.");
-         System.out.println(se.getMessage());
+         se.printStackTrace();
       }
    }
 
@@ -462,7 +462,7 @@ public class SQLDB
       catch (SQLException se)
       {
          System.out.println("Error clearing the database.");
-         System.out.println(se.getMessage());
+         se.printStackTrace();
       }
    }
 
@@ -567,7 +567,7 @@ public class SQLDB
       catch (Exception e)
       {
          System.out.println("Error connecting to the database.");
-         System.out.println(e.getMessage());
+         e.printStackTrace();
       }
       
       assert(conn != null);
@@ -592,7 +592,7 @@ public class SQLDB
       catch (Exception e)
       {
          System.out.println("Error connecting to the database.");
-         System.out.println(e.getMessage());
+         e.printStackTrace();
       }
    }
 
@@ -614,7 +614,7 @@ public class SQLDB
          }
          catch (Exception e)
          {
-            System.out.print(e.getMessage());
+            e.printStackTrace();
          }
       }
    }
@@ -647,7 +647,7 @@ public class SQLDB
       }
       catch (SQLException e)
       {
-         System.out.println("SQLException: " + e.getMessage());
+         e.printStackTrace();
       }
    }
 
@@ -694,7 +694,7 @@ public class SQLDB
       }
       catch (SQLException e)
       {
-         System.out.println("SQLException: " + e.getMessage());
+    	  e.printStackTrace();
       }
    }
 
@@ -742,7 +742,7 @@ public class SQLDB
       }
       catch (SQLException e)
       {
-         System.out.println("SQLException: " + e.getMessage());
+    	  e.printStackTrace();
       }
    }
 
@@ -769,7 +769,7 @@ public class SQLDB
 
       catch (SQLException e)
       {
-         System.out.println("SQLException: " + e.getMessage());
+    	  e.printStackTrace();
       }
    }
 
@@ -795,7 +795,7 @@ public class SQLDB
 
       catch (SQLException e)
       {
-         System.out.println("SQLException: " + e.getMessage());
+    	  e.printStackTrace();
       }
    }
 
@@ -826,7 +826,7 @@ public class SQLDB
       }
       catch (SQLException e)
       {
-         System.err.println(e.toString());
+    	  e.printStackTrace();
       }
       finally {
     	  close();
@@ -855,7 +855,7 @@ public class SQLDB
       }
       catch (SQLException e)
       {
-         System.err.println(e.toString());
+    	  e.printStackTrace();
       }
       finally {
     	  close();
@@ -884,7 +884,7 @@ public class SQLDB
       }
       catch (SQLException e)
       {
-         System.err.println(e.toString());
+    	  e.printStackTrace();
       }
       finally {
     	  close();
