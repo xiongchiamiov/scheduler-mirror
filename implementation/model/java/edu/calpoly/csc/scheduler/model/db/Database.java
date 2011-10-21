@@ -1,25 +1,60 @@
 package edu.calpoly.csc.scheduler.model.db;
 
-import java.util.ArrayList;
-import java.sql.Connection;
+import edu.calpoly.csc.scheduler.model.db.cdb.CourseDB;
+import edu.calpoly.csc.scheduler.model.db.idb.InstructorDB;
+import edu.calpoly.csc.scheduler.model.db.ldb.LocationDB;
 
-import edu.calpoly.csc.scheduler.model.db.cdb.Course;
-import edu.calpoly.csc.scheduler.model.db.ldb.Location;
+/**
+ * This class holds all of the individual database objects. The view will
+ * interact with this class to get the individual databases.
+ * 
+ * @author Tyler Holland
+ **/
 
-public interface Database<T>
+public class Database
 {
-   // Puts all of the data in the database into an ArrayList and returns it
-   public ArrayList<T> getData();
+   /** The instructor database. */
+   private InstructorDB instructorDB;
 
-   // Pulls data from SQLDB, getting the same data that is on the server
-   public void pullData();
+   /** The course database. */
+   private CourseDB     courseDB;
 
-   // Adds an item to the database
-   public void addData(T data);
+   /** The location database. */
+   private LocationDB   locationDB;
 
-   // Edits an item in the database
-   public void editData(T newData);
+   // TODO: Add preferences DB?
 
-   // Removes and item from the database
-   public void removeData(T data);
+   /**
+    * This constructor will create the SQLDB object.
+    **/
+   public Database()
+   {
+      instructorDB = new InstructorDB();
+      courseDB = new CourseDB();
+      locationDB = new LocationDB();
+   }
+
+   /**
+    * @return the instructorDB
+    */
+   public InstructorDB getInstructorDB()
+   {
+      return instructorDB;
+   }
+
+   /**
+    * @return the courseDB
+    */
+   public CourseDB getCourseDB()
+   {
+      return courseDB;
+   }
+
+   /**
+    * @return the locationDB
+    */
+   public LocationDB getLocationDB()
+   {
+      return locationDB;
+   }
 }
