@@ -150,6 +150,12 @@ public class InstructorDB implements DatabaseAPI<Instructor>
 
    }
 
+   public void clearData ()
+   {
+      PreparedStatement stmt = sqldb.getPrepStmt("clear * from instructors");
+      sqldb.executePrepStmt(stmt);
+   }
+   
    /**
     * Returns a vector of instructors for teaching this course. Instructors
     * returned have the needed WTUs left to teach this course. Sorted by
