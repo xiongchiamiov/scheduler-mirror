@@ -34,14 +34,8 @@ import edu.calpoly.csc.scheduler.model.schedule.Week;
 public class SQLDB
 {
 
-   /** The preferences database */
-   private PreferencesDB preferencesDB;
-
    /** The connection */
    private Connection    conn      = null;
-
-   /** Could the database connect? */
-   private boolean       connected = false;
 
    /**
     * This constructor will create the SQLDB object.
@@ -294,87 +288,87 @@ public class SQLDB
     * 
     * </pre>
     */
-   public PreferencesDB getPreferencesDB()
-   {
-      if (!this.connected)
-      {
-         PreferencesDB pdb = new PreferencesDB();
-         pdb.setDays(new Vector<DaysForClasses>());
-         pdb.setLocalDays(new Vector<DaysForClasses>());
-         return pdb;
-      }
-
-      System.out.println("Getting preference data.");
-      Vector<Preferences> myArr = null;
-      Vector<DaysForClasses> dayPrefs = null;
-      Vector<NoClassOverlap> overlaps = null;
-      try
-      {
-         myArr = new Vector<Preferences>();
-         String sql = "SELECT name, data, type, importance, violatable FROM preferences";
-         Statement stmt = conn.createStatement();
-         ResultSet rs = stmt.executeQuery(sql);
-
-         while (rs.next())
-         {
-            // Retrieve by column name
-            String name = rs.getString("name");
-            String data = rs.getString("data");
-            int type = rs.getInt("type");
-            int importance = rs.getInt("importance");
-            int violatable = rs.getInt("violatable");
-            Preferences p = new Preferences(name, data, type, importance,
-                  violatable);
-            myArr.add(p);
-         }
-
-         dayPrefs = new Vector<DaysForClasses>();
-         String sqlDays = "SELECT name, weight, sun, mon, tues, wed, thur, fri, sat FROM preferences_days";
-         stmt = conn.createStatement();
-         rs = stmt.executeQuery(sqlDays);
-
-         while (rs.next())
-         {
-            // Retrieve by column name
-            String name = rs.getString("name");
-            int weight = rs.getInt("weight");
-            boolean days[] = new boolean[7];
-            days[0] = rs.getBoolean("sun");
-            days[1] = rs.getBoolean("mon");
-            days[2] = rs.getBoolean("tues");
-            days[3] = rs.getBoolean("wed");
-            days[4] = rs.getBoolean("thur");
-            days[5] = rs.getBoolean("fri");
-            days[6] = rs.getBoolean("sat");
-
-            /*
-             * Default MTWRF pref
-             */
-            DaysForClasses dfc = new DaysForClasses(name, weight,
-                  Week.fiveDayWeek);
-            dayPrefs.add(dfc);
-         }
-      }
-      catch (SQLException se)
-      {
-         System.out.println("Error creating database");
-         System.out.println(se.getMessage());
-      }
-      finally
-      {
-         // System.out.println("WOOOOOOO!");
-         preferencesDB = new PreferencesDB();
-         if (!myArr.isEmpty())
-         {
-            preferencesDB.setData(myArr);
-         }
-         preferencesDB.setDays(dayPrefs);
-         preferencesDB.setLocalDays(dayPrefs);
-         // System.out.println("Day prefs is " +
-         // preferencesDB.getDayPreferences());
-      }
-      return preferencesDB;
-   }
+//   public PreferencesDB getPreferencesDB()
+//   {
+//      if (!this.connected)
+//      {
+//         PreferencesDB pdb = new PreferencesDB();
+//         pdb.setDays(new Vector<DaysForClasses>());
+//         pdb.setLocalDays(new Vector<DaysForClasses>());
+//         return pdb;
+//      }
+//
+//      System.out.println("Getting preference data.");
+//      Vector<Preferences> myArr = null;
+//      Vector<DaysForClasses> dayPrefs = null;
+//      Vector<NoClassOverlap> overlaps = null;
+//      try
+//      {
+//         myArr = new Vector<Preferences>();
+//         String sql = "SELECT name, data, type, importance, violatable FROM preferences";
+//         Statement stmt = conn.createStatement();
+//         ResultSet rs = stmt.executeQuery(sql);
+//
+//         while (rs.next())
+//         {
+//            // Retrieve by column name
+//            String name = rs.getString("name");
+//            String data = rs.getString("data");
+//            int type = rs.getInt("type");
+//            int importance = rs.getInt("importance");
+//            int violatable = rs.getInt("violatable");
+//            Preferences p = new Preferences(name, data, type, importance,
+//                  violatable);
+//            myArr.add(p);
+//         }
+//
+//         dayPrefs = new Vector<DaysForClasses>();
+//         String sqlDays = "SELECT name, weight, sun, mon, tues, wed, thur, fri, sat FROM preferences_days";
+//         stmt = conn.createStatement();
+//         rs = stmt.executeQuery(sqlDays);
+//
+//         while (rs.next())
+//         {
+//            // Retrieve by column name
+//            String name = rs.getString("name");
+//            int weight = rs.getInt("weight");
+//            boolean days[] = new boolean[7];
+//            days[0] = rs.getBoolean("sun");
+//            days[1] = rs.getBoolean("mon");
+//            days[2] = rs.getBoolean("tues");
+//            days[3] = rs.getBoolean("wed");
+//            days[4] = rs.getBoolean("thur");
+//            days[5] = rs.getBoolean("fri");
+//            days[6] = rs.getBoolean("sat");
+//
+//            /*
+//             * Default MTWRF pref
+//             */
+//            DaysForClasses dfc = new DaysForClasses(name, weight,
+//                  Week.fiveDayWeek);
+//            dayPrefs.add(dfc);
+//         }
+//      }
+//      catch (SQLException se)
+//      {
+//         System.out.println("Error creating database");
+//         System.out.println(se.getMessage());
+//      }
+//      finally
+//      {
+//         // System.out.println("WOOOOOOO!");
+//         preferencesDB = new PreferencesDB();
+//         if (!myArr.isEmpty())
+//         {
+//            preferencesDB.setData(myArr);
+//         }
+//         preferencesDB.setDays(dayPrefs);
+//         preferencesDB.setLocalDays(dayPrefs);
+//         // System.out.println("Day prefs is " +
+//         // preferencesDB.getDayPreferences());
+//      }
+//      return preferencesDB;
+//   }
 
    /**
     * Checks if the database is connected.
@@ -383,7 +377,7 @@ public class SQLDB
     */
    public boolean isConnected()
    {
-      return connected;
+      return true;
    }
 
    /**
@@ -517,44 +511,44 @@ public class SQLDB
     * 
     * </pre>
     */
-   public PreferencesDB getPreferencesDBOld()
-   {
-      Vector<Preferences> myArr = null;
-      try
-      {
-         myArr = new Vector<Preferences>();
-         String sql = "SELECT name, data, type, importance, violatable FROM preferences";
-         Statement stmt = conn.createStatement();
-         ResultSet rs = stmt.executeQuery(sql);
-
-         while (rs.next())
-         {
-            // Retrieve by column name
-            String name = rs.getString("name");
-            String data = rs.getString("data");
-            int type = rs.getInt("type");
-            int importance = rs.getInt("importance");
-            int violatable = rs.getInt("violatable");
-            Preferences p = new Preferences(name, data, type, importance,
-                  violatable);
-            myArr.add(p);
-         }
-      }
-      catch (SQLException se)
-      {
-         System.out.println("Error creating database");
-         System.out.println(se.getMessage());
-      }
-      finally
-      {
-         preferencesDB = new PreferencesDB();
-         if (!myArr.isEmpty())
-         {
-            preferencesDB.setData(myArr);
-         }
-      }
-      return preferencesDB;
-   }
+//   public PreferencesDB getPreferencesDBOld()
+//   {
+//      Vector<Preferences> myArr = null;
+//      try
+//      {
+//         myArr = new Vector<Preferences>();
+//         String sql = "SELECT name, data, type, importance, violatable FROM preferences";
+//         Statement stmt = conn.createStatement();
+//         ResultSet rs = stmt.executeQuery(sql);
+//
+//         while (rs.next())
+//         {
+//            // Retrieve by column name
+//            String name = rs.getString("name");
+//            String data = rs.getString("data");
+//            int type = rs.getInt("type");
+//            int importance = rs.getInt("importance");
+//            int violatable = rs.getInt("violatable");
+//            Preferences p = new Preferences(name, data, type, importance,
+//                  violatable);
+//            myArr.add(p);
+//         }
+//      }
+//      catch (SQLException se)
+//      {
+//         System.out.println("Error creating database");
+//         System.out.println(se.getMessage());
+//      }
+//      finally
+//      {
+//         preferencesDB = new PreferencesDB();
+//         if (!myArr.isEmpty())
+//         {
+//            preferencesDB.setData(myArr);
+//         }
+//      }
+//      return preferencesDB;
+//   }
 
    /**
     * The open() method opens a connection to the database.
@@ -569,13 +563,14 @@ public class SQLDB
                "jdbc:mysql://cslvm215.csc.calpoly.edu/scheduler", "root",
                "Abcd1234");
          System.out.println("Database connection established.");
-         connected = true;
       }
       catch (Exception e)
       {
          System.out.println("Error connecting to the database.");
          System.out.println(e.getMessage());
       }
+      
+      assert(conn != null);
    }
 
    /**
@@ -606,7 +601,7 @@ public class SQLDB
     **/
    public void close()
    {
-      if (!this.connected)
+      if (isConnected())
       {
          return;
       }
@@ -818,10 +813,7 @@ public class SQLDB
     */
    public ResultSet getSQLInstructors()
    {
-      if (!connected)
-      {
-         open();
-      }
+     open();
 
       String queryForInstructors = "SELECT * FROM instructors";
       Statement stmt;
@@ -836,6 +828,10 @@ public class SQLDB
       {
          System.err.println(e.toString());
       }
+      finally {
+    	  close();
+      }
+      
       return instructorsResult;
    }
 
@@ -846,10 +842,7 @@ public class SQLDB
     */
    public ResultSet getSQLCourses()
    {
-      if (!connected)
-      {
-         open();
-      }
+     open();
 
       String queryForCourses = "SELECT * FROM courses";
       Statement stmt;
@@ -864,6 +857,10 @@ public class SQLDB
       {
          System.err.println(e.toString());
       }
+      finally {
+    	  close();
+      }
+      
       return coursesResult;
    }
 
@@ -874,10 +871,7 @@ public class SQLDB
     */
    public ResultSet getSQLLocations()
    {
-      if (!connected)
-      {
          open();
-      }
 
       String queryForLocations = "SELECT * FROM locations";
       Statement stmt;
@@ -892,15 +886,16 @@ public class SQLDB
       {
          System.err.println(e.toString());
       }
+      finally {
+    	  close();
+      }
       return locationsResult;
    }
 
    public PreparedStatement getPrepStmt(String sql)
    {
-      if (!connected)
-      {
          open();
-      }
+         
       try
       {
          return conn.prepareStatement(sql);
@@ -910,6 +905,10 @@ public class SQLDB
          System.out.println("SQLException: " + e.getMessage());
          e.printStackTrace();
       }
+      finally {
+    	  close();
+      }
+      
       return null;
    }
 

@@ -28,6 +28,8 @@ public class PreferencesDB extends Observable {
     /** Constant for the days preferences field */
     public static final String DAYS_PREFERENCES_FIELD = "(name, weight, sun, mon, tues, wed, thur, fri, sat)";
 
+    private SQLDB sqldb;
+    
     /** Collection of preferences.  */
     protected Vector<Preferences> data;
     /** Collection of days preferences. */
@@ -43,7 +45,9 @@ public class PreferencesDB extends Observable {
     protected Vector<NoClassOverlap> localCPrefs;
 
     /** Default Constructor */
-    public PreferencesDB() {
+    public PreferencesDB(SQLDB sqldb) {
+    	this.sqldb = sqldb;
+    	
       dPrefs = new Vector<DaysForClasses>();
       cPrefs = new Vector<NoClassOverlap>();
       localDPrefs = new Vector<DaysForClasses>();
@@ -213,14 +217,10 @@ public class PreferencesDB extends Observable {
      * </pre>
      */
     public void addPreference(Preferences p) {
-        SQLDB sqldb = new SQLDB();
+
         String insert = "";
         insert = "( " + " '" + p.name + "', '" + p.data + "', " + p.type + ", " + p.violatable + ", " + p.importance + ")";
-        sqldb.open();
         sqldb.insertPrefStmt("preferences", insert);
-        PreferencesDB temp = sqldb.getPreferencesDB();
-        this.data = temp.getDataOld();
-        sqldb.close();
         setChanged();
         notifyObservers();
     }
@@ -319,11 +319,11 @@ public class PreferencesDB extends Observable {
            sqldb.insertPrefStmt("courses_to_preferences",holder, COURSES_TO_PREFERENCES);
         }
 
-        PreferencesDB temp = sqldb.getPreferencesDB();
-        this.data = temp.getDataOld();
-        sqldb.close();
-        setChanged();
-        notifyObservers();
+//        PreferencesDB temp = sqldb.getPreferencesDB();
+//        this.data = temp.getDataOld();
+//        sqldb.close();
+//        setChanged();
+//        notifyObservers();
     }
 
     /**
@@ -368,11 +368,11 @@ public class PreferencesDB extends Observable {
         insert = insert + p.days.contains(Day.SAT) + ")";
         sqldb.open();
         sqldb.insertPrefStmt("preferences_days", insert, DAYS_PREFERENCES_FIELD );
-        PreferencesDB temp = sqldb.getPreferencesDB();
-        this.data = temp.getDataOld();
-        sqldb.close();
-        setChanged();
-        notifyObservers();
+//        PreferencesDB temp = sqldb.getPreferencesDB();
+//        this.data = temp.getDataOld();
+//        sqldb.close();
+//        setChanged();
+//        notifyObservers();
     }
 
     /**
@@ -680,20 +680,20 @@ public class PreferencesDB extends Observable {
             table = "preferences_courses";
         }
 
-        System.out.println("In PreferencesDB.removePreference");
-        SQLDB sqldb = new SQLDB();
-        String insert = "name = '" + p.name + "'";
-        sqldb.open();
-        sqldb.removePrefStmt(table, insert);
-        if (table.contains("preferences_courses")) {
-            String s = "prefid = '" + p.name + "'";
-            sqldb.removePrefStmt( "courses_to_preferences",  s);
-        }
-        PreferencesDB temp = sqldb.getPreferencesDB();
-        this.data = temp.getDataOld();
-        sqldb.close();
-        setChanged();
-        notifyObservers();
+//        System.out.println("In PreferencesDB.removePreference");
+//        SQLDB sqldb = new SQLDB();
+//        String insert = "name = '" + p.name + "'";
+//        sqldb.open();
+//        sqldb.removePrefStmt(table, insert);
+//        if (table.contains("preferences_courses")) {
+//            String s = "prefid = '" + p.name + "'";
+//            sqldb.removePrefStmt( "courses_to_preferences",  s);
+//        }
+//        PreferencesDB temp = sqldb.getPreferencesDB();
+//        this.data = temp.getDataOld();
+//        sqldb.close();
+//        setChanged();
+//        notifyObservers();
     }
 
     
@@ -732,11 +732,11 @@ public class PreferencesDB extends Observable {
         String insert = "name = '" + p.getName() + "'";
         sqldb.open();
         sqldb.removePrefStmt("preferences", insert);
-        PreferencesDB temp = sqldb.getPreferencesDB();
-        this.data = temp.getDataOld();
-        sqldb.close();
-        setChanged();
-        notifyObservers();
+//        PreferencesDB temp = sqldb.getPreferencesDB();
+//        this.data = temp.getDataOld();
+//        sqldb.close();
+//        setChanged();
+//        notifyObservers();
     }
 
     /**
