@@ -66,19 +66,19 @@ public class Week implements Serializable
     *
     * @return True if an element was removed. False otherwise. 
     */
-   public boolean chop ()
-   {
-      boolean r = false;
-      if (this.days.size() > 0)
-      {
-         /*
-          * "size" isn't 0-indexed, so I have to adjust
-          */
-         this.days.remove(this.days.size() - 1);
-         r = true;
-      }
-      return r;
-   }
+//   public boolean chop ()
+//   {
+//      boolean r = false;
+//      if (this.days.size() > 0)
+//      {
+//         /*
+//          * "size" isn't 0-indexed, so I have to adjust
+//          */
+//         this.days.remove(this.days.size() - 1);
+//         r = true;
+//      }
+//      return r;
+//   }
 
    /**
     * Returns a String representing this object
@@ -104,6 +104,16 @@ public class Week implements Serializable
       return this.days;
    }
 
+   /**
+    * Returns the number of days in this week
+    * 
+    * @return the number of days in this week
+    */
+   public int size ()
+   {
+      return this.days.size();
+   }
+   
    /**
     * Determines whether this week contains the specified day
     * 

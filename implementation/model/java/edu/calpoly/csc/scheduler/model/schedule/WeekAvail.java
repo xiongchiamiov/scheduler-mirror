@@ -1,6 +1,6 @@
 package edu.calpoly.csc.scheduler.model.schedule;
 
-import edu.calpoly.csc.scheduler.model.db.Time;
+import edu.calpoly.csc.scheduler.model.db.*;
 
 /**
  * Represents a Week's availability. For constant-definitions of the days in 
@@ -72,6 +72,11 @@ public class WeekAvail extends GenWeekAvail<Void, DayAvail>
       return this.book(null, s, e, w);
    }/*<==*/
    
+   public boolean book (Week w, TimeRange tr)
+   {
+      return this.book(tr.getS(), tr.getE(), w);
+   }
+   
    /**
     * Determines whether a given span of time is free for a given day.
     *
@@ -99,9 +104,6 @@ public class WeekAvail extends GenWeekAvail<Void, DayAvail>
     * @param d The list of days
     *
     * @return True if the time specified is free on all days. False otherwise.
-    *
-    * @throws NotADayException if "d" is not a valid day as defined in 
-    *         generate.Week.java
     */
    public boolean isFree (Time s, Time e, Week days) /*==>*/
       throws EndBeforeStartException,
@@ -109,5 +111,19 @@ public class WeekAvail extends GenWeekAvail<Void, DayAvail>
 
    {
       return this.isFree(null, s, e, days);
-   }/*<==*/
+   }
+  
+   /**
+    * Determines whether a given span of time is free for a given list of dyas.
+    *
+    * @param tr TimeRange to check over 'days'
+    * @param d The list of days
+    *
+    * @return True if the time specified is free on all days. False otherwise.
+    */
+   public boolean isFree (TimeRange tr, Week days)
+   {
+      return this.isFree(tr.getS(), tr.getE(), days);
+   }
+   /*<==*/
 }

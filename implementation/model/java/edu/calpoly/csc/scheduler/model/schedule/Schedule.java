@@ -615,37 +615,30 @@ public class Schedule extends Observable implements Serializable
       Vector<ScheduleItem> sis = new Vector<ScheduleItem>();
 
       /*
-       * A course can be taught, at maximum, 5 days. Starting from there and 
-       * working down, create DAT's for a number a days, distributing the 
-       * course's hours evenly across each day
+       * A return < 1 means that time didn't divide well into the number of
+       * days provided.
        */
-      for (int dayNum = 5; dayNum > 0; dayNum --)
+      int halfHours = c.getDayLength();
+      if (halfHours > 0)
       {
-         /*
-          * A return < 1 means that time didn't divide well into the number of
-          * days provided.
-          */
-         int halfHours = c.splitLengthOverDays(dayNum);
-         if (halfHours > 0)
+         for (DaysAndTime dat: createDatsForDays(base.i, 
+                                                 c,
+                                                 c.getDays().size(), 
+                                                 halfHours))
          {
-            for (DaysAndTime dat: createDatsForDays(base.i, 
-                                                    c,
-                                                    dayNum, 
-                                                    halfHours))
+            /*
+             * Clone our "base" SI and set its days and time. Note that
+             * "null" DAT's should not be considered.
+             */
+            if (dat != null)
             {
-               /*
-                * Clone our "base" SI and set its days and time. Note that
-                * "null" DAT's should not be considered.
-                */
-               if (dat != null)
-               {
-                  ScheduleItem si = base.clone();
-                  si.setDaysAndTime(dat);
-                  sis.add(si);
-               }
+               ScheduleItem si = base.clone();
+               si.setDaysAndTime(dat);
+               sis.add(si);
             }
          }
       }
+
 
       return sis;
    }/*<==*/
@@ -679,14 +672,9 @@ public class Schedule extends Observable implements Serializable
        * Create DaysAndTime objects for when this course could be taught across
        * the Weeks computed above. 
        */
-      Vector<Week> allWeeks = getAllDayCombos(c, nDays); /* TODO: FIX. It lies */
+      Vector<Week> allWeeks = getAllDayCombos(c, nDays);
       for (Week w: allWeeks)
       {
-         /*
-          * Make DATs for all possible times. Some will be made which the 
-          * instructor will not want to teach. These will be pruned out later
-          * using the "getValue" method in the ScheduleItem class
-          */
          try
          {
             for (Time t = new Time(0, 0); t.addHalf();)
@@ -733,26 +721,8 @@ public class Schedule extends Observable implements Serializable
    private Vector<Week> getAllDayCombos (Course c, int numOfDays)
    {
       Vector<Week> allWeeks = new Vector<Week>();
-      Vector<DaysForClasses> dPrefs = new Vector<DaysForClasses>();
+      allWeeks.add(c.getDays());
 
-      /*
-       * Go through all desired day combinations specified by Schedule
-       * Preferences.
-       */
-      for (DaysForClasses dfc: dPrefs)
-      {
-         try
-         {
-            /*
-             * Choose a number of days from the given Week (if able). 
-             */
-            allWeeks.add(chooseWhichDays (numOfDays, dfc.days, new Week()));
-         }
-         catch (NotEnoughDaysException e)
-         {
-
-         }
-      }
       return allWeeks;
    }/*<==*/
 
@@ -821,7 +791,7 @@ public class Schedule extends Observable implements Serializable
        * Since we know how long the course will go, computing the end-time 
        * relative to the start time is easy...just add up all the half-hours.
        */
-      Time e = new Time (s.getHour(), s.getMinute());
+      Time e = new Time (s);
       e.addHalves(halfHours);
       /*
        * If the professor is free for the specified time and across the 
@@ -839,14 +809,8 @@ public class Schedule extends Observable implements Serializable
                 */
 //               if (doesNotOverlap(c, s, e, days))
 //               {
-//                  r = new DaysAndTime (days, s, e);
+                  r = new DaysAndTime (days, s, e);
 //               }
-            }
-            else
-            {
-               //System.err.println ("BAD DAT: " + new DaysAndTime(days, s, e) +
-                  //" for " + i);
-               //System.err.println ("PREF: " + i.getAvgPrefForTimeRange(days, s, e));
             }
          }
       }
@@ -1012,7 +976,7 @@ public class Schedule extends Observable implements Serializable
          if (haveGoodLocForSI(l, base))
          {
             ScheduleItem si = base.clone();
-            si.l = l;
+            si.location = l;
             
             r.add(si);
             break;
@@ -1080,20 +1044,17 @@ public class Schedule extends Observable implements Serializable
        * If Location was undetermined, don't add it to the schedule...add it to
        * a special list
        */
-      if (si.l == Location.TBA)
+      if (si.location == Location.TBA)
       {
-         ////System.err.println ("Shouldn't have a TBA when adding!");
          this.TBAs.add(new TBA(si.c, si.i));
          return false;
       }
       else
       {
-         ////System.err.println ("Not a TBA");
          if (!verifyNoBadBookings (si))
          {
             return false;
          }
-         ////System.err.println ("Booked well");
          /*
           * Update book-keeping records (i, c, and l lists, along with 
           * Instructor treatment)
@@ -1103,11 +1064,9 @@ public class Schedule extends Observable implements Serializable
          /*
           * Book the course, instructor, location for this time
           */
-         this.cot.book(si.c, si.start, si.end, si.days);
-         book(this.lBookings.get(si.l), si.days, si.start, si.end);
+//         this.cot.book(si.c, si.start, si.end, si.days);
+         book(this.lBookings.get(si.location), si.days, si.start, si.end);
          book(this.iBookings.get(si.i), si.days, si.start, si.end);
-
-         ////System.err.println ("ADDED\n" + si);
 
          return this.s.add(si);
       }
@@ -1129,7 +1088,7 @@ public class Schedule extends Observable implements Serializable
       /*
        * Check for double-booked location and instructor.
        */
-      if (!check(this.lBookings.get(si.l), si.days, si.start, si.end))
+      if (!check(this.lBookings.get(si.location), si.days, si.start, si.end))
       {
          ////System.err.println ("Double booked location " + si.l + " from " + 
                //si.start + " to " + si.end + " on " + si.days +
@@ -1239,9 +1198,9 @@ public class Schedule extends Observable implements Serializable
       /*
        * Add location to the location list, if it isn't already there
        */
-      if (!this.lList.contains(si.l))
+      if (!this.lList.contains(si.location))
       {
-         this.lList.add(si.l);
+         this.lList.add(si.location);
       }
       
       /*
