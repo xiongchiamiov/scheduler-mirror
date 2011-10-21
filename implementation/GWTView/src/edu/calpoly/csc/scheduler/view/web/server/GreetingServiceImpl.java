@@ -44,8 +44,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		System.out.println("Size of instructor list: " + instructors.size());
 		for(int i = 0; i < instructors.size(); i++)
 		{
-		    results.add(new InstructorGWT(instructors.get(i).getFirstName(), instructors.get(i).getLastName(),
-		                ((Integer)instructors.get(i).getMaxWTU()), instructors.get(i).getOffice().getBuilding() + "-" + instructors.get(i).getOffice().getRoom()));
+		    results.add(new InstructorGWT(instructors.get(i).getFirstName(), instructors.get(i).getLastName(), instructors.get(i).getId(),
+		                ((Integer)instructors.get(i).getMaxWTU()), instructors.get(i).getBuilding(),
+		                instructors.get(i).getRoomNumber(), instructors.get(i).getDisability()));
 		}
 		// replace sample data with data from the db
 		
@@ -64,19 +65,13 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		
 		// dummy data
 		InstructorGWT i1 = new InstructorGWT("Gene", "Fisher", 12, "14-210");
-		
-		results.add(i1);
-		
+				
 		
 		InstructorGWT i2 = new InstructorGWT("Aaron", "Keen", 8, "14-230");
-		
-		results.add(i2);
-		
+			
 		
 		InstructorGWT i3 = new InstructorGWT("Clark", "Turner", 16, "14-222");
 		
-		results.add(i3);
-
 		return results;
 	}
 	
@@ -267,27 +262,22 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		System.out.println("Size of course list: " + courses.size());
 		for(int i = 0; i < courses.size(); i++)
 		{
-		    results.add(new CourseGWT(courses.get(i).getName(), courses.get(i).getCatalogNum(),
-		                courses.get(i).getDept(), courses.get(i).getWtu(), courses.get(i).getScu(),
-		                courses.get(i).getNumOfSections(), courses.get(i).getType().toString(), 
-		                courses.get(i).getEnrollment(), null));
+		    results.add(new CourseGWT(courses.get(i).getId(), courses.get(i).getName(), courses.get(i).getCatalogNum(),
+		                courses.get(i).getWtu(), courses.get(i).getScu(), courses.get(i).getCourseType(), 
+		                courses.get(i).getEnrollment(), courses.get(i).getLabID(), courses.get(i).getSmartroom(),
+		                courses.get(i).getLaptop(), courses.get(i).getOverhead(), courses.get(i).getLength(),
+		                courses.get(i).getCTPrefix(), courses.get(i).getPrefix()));
 		}
 		
 		// dummy data
 		CourseGWT c1 = new CourseGWT("The beginning...", 101, "CPE", 4, 4, 6, "Lec", 30, "CPE101");
-		
-		results.add(c1);
-		
+				
 		
 		CourseGWT c2 = new CourseGWT("Writing", 300, "CSC", 4, 4, 1, "Lec", 24, "");
-		
-		results.add(c2);
-		
+				
 		
 		CourseGWT c3 = new CourseGWT("Scheduling", 402, "CSC", 4, 4, 1, "Lec", 20, "");
 		
-		results.add(c3);
-
 		return results;
 	}
 

@@ -54,8 +54,8 @@ public class InstructorDB implements DatabaseAPI<Instructor>
             boolean disabilities = rs.getBoolean("disabilities");
             // Put items into Instructor object and add to data
             Location office = new Location(building, room);
-            Instructor toAdd = new Instructor(fname, lname, userid, maxwtu,
-                  office, disabilities);
+            Instructor toAdd = new Instructor(fname, lname, userid, maxwtu, building,
+                  room, disabilities);
 
             // Deserialize week availability and course preferences
             /*byte[] weekAvailBuf = rs.getBytes("weekavail");

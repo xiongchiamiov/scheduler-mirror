@@ -13,8 +13,35 @@ public class CourseGWT implements Serializable{
 	private String type;
 	private int maxEnroll;
 	private String lab;
+	private int id;
+	private int labId;
+	private boolean smartroom;
+	private boolean laptop;
+	private boolean overhead;
+	private int length;
+	private String ctPrefix;
+	private String prefix;
 	
 	public CourseGWT(){}
+	
+	public CourseGWT(int id, String name, int catalogNum, int wtus, int scus, String courseType,
+			   int enrollment, int labId, boolean smartroom, boolean laptop, boolean overhead, 
+			   int hoursPerWeek, String ctPrefix, String prefix) {
+		   this.id = id;
+		   this.courseName = name;
+		   this.catalogNum = catalogNum;
+		   this.wtu = wtus;
+		   this.scu = scus;
+		   this.type = courseType;
+		   this.maxEnroll = enrollment;
+		   this.labId = labId;
+		   this.smartroom = smartroom;
+		   this.laptop = laptop;
+		   this.overhead = overhead;
+		   this.length = hoursPerWeek;
+		   this.ctPrefix = ctPrefix;
+		   this.prefix = prefix;
+	   }
 
 	public CourseGWT(String courseName, int catalogNum, String dept, int wtu,
 			int scu, int numSections, String type, int maxEnroll, String lab) {
@@ -29,6 +56,45 @@ public class CourseGWT implements Serializable{
 		this.maxEnroll = maxEnroll;
 		this.lab = lab;
 	}
+	
+	public int getID()
+	{
+		return id;
+	}
+	public int getLabID()
+	   {
+		   return labId;
+	   }
+	   
+	   public boolean getSmartroom()
+	   {
+		   return smartroom;
+	   }
+	   
+	   public boolean getLaptop()
+	   {
+		   return laptop;
+	   }
+	   
+	   public boolean getOverhead()
+	   {
+		   return overhead;
+	   }
+	   
+	   public String getCTPrefix()
+	   {
+		   return ctPrefix;
+	   }
+	   
+	   public String getPrefix()
+	   {
+		   return prefix;
+	   }
+	
+	   public int getLength()
+	   {
+		   return length;
+	   }
 
 	public String getCourseName() {
 		return courseName;

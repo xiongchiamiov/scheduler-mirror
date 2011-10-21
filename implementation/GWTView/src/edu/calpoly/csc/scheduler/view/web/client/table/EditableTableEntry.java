@@ -28,10 +28,13 @@ public class EditableTableEntry {
 		// get the original values
 		ArrayList<String> values = new ArrayList<String>();
 		
-		values.add(instructor.getName());
+		values.add(instructor.getFirstName());
+		values.add(instructor.getLastName());
 		values.add(instructor.getUserID());
 		values.add("" + instructor.getWtu());
-		values.add(instructor.getOffice());
+		values.add(instructor.getBuilding());
+		values.add(instructor.getRoomNumber());
+		values.add(""+instructor.getDisabilities());
 		
 		// initialize object and set instructor
 		initialize(values);
@@ -86,15 +89,22 @@ public class EditableTableEntry {
 		// get the original values
 		ArrayList<String> values = new ArrayList<String>();
 		
+		values.add("" + course.getID());
 		values.add(course.getCourseName());
 		values.add("" + course.getCatalogNum());
-		values.add(course.getDept());
 		values.add("" + course.getWtu());
 		values.add("" + course.getScu());
-		values.add("" + course.getNumSections());
 		values.add(course.getType());
 		values.add("" + course.getMaxEnroll());
-		values.add(course.getLab());
+		values.add("" + course.getLabID());
+		values.add(""+course.getSmartroom());
+		values.add(""+course.getLaptop());
+		values.add(""+course.getOverhead());
+		values.add(""+course.getLength());
+		values.add(course.getCTPrefix());
+		values.add(course.getPrefix());
+
+
 		
 		// initialize object and set instructor
 		initialize(values);
@@ -162,13 +172,14 @@ public class EditableTableEntry {
 		ArrayList<String> values = new ArrayList<String>();
 		
 		values.add(location.getBuilding());
-		values.add(location.getName());
 		values.add(location.getRoom());
-		values.add(location.getType());
 		values.add("" + location.getMaxOccupancy());
-		values.add(location.getEquipmentList());
-		values.add(location.getAdditionalDetails());
-		
+		values.add(location.getType());
+		values.add("" + location.isSmartRoom());
+		values.add("" + location.hasLaptopConnectivity());
+		values.add("" + location.isADACompliant());
+		values.add("" + location.hasOverhead());
+
 		// initialize object and set instructor
 		initialize(values);
 	}

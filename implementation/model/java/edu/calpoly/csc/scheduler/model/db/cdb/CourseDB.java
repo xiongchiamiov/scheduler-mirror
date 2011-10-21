@@ -54,28 +54,25 @@ public class CourseDB implements DatabaseAPI<Course>
             //int length = rs.getInt("length");
             int enrollment = rs.getInt("maxEnrollment");
             int labId = rs.getInt("labPairing");
+            boolean smartroom = rs.getBoolean("smartroom");
+            boolean laptop = rs.getBoolean("laptop");
+            boolean overhead = rs.getBoolean("overhead");
+            int hoursPerWeek = rs.getInt("hoursperweek");
+            String ctPrefix = rs.getString("ctPrefix");
+            String prefix = rs.getString("prefix");
+
             // Put items into Course object and add to data
-            Course toAdd = new Course();
-            toAdd.setId(id);
-            toAdd.setName(name);
-            toAdd.setCatalogNum(catalogNum);
-            toAdd.setDept("CPE");
-            toAdd.setWtu(wtus);
-            toAdd.setScu(scus);
-            toAdd.setDays(new Week(new Day[]{Day.MON, Day.WED, Day.FRI}));
-            toAdd.setNumOfSections(1);
-            toAdd.setType(courseType);
-            toAdd.setLength(6);
-            toAdd.setEnrollment(enrollment);
-            Course lab = null;
+            Course toAdd = new Course(id, name, catalogNum, wtus, scus, courseType, enrollment,
+            					labId, smartroom, laptop, overhead, hoursPerWeek, ctPrefix, prefix);
+
             // TODO: Check what value null ints are stored as and change this
-            if (labId > -1)
+            /*if (labId > -1)
             {
                lab = new Course();
                lab.setId(labId);
                lab.setType(CourseType.LAB);
             }
-            toAdd.setLab(lab);
+            toAdd.setLab(lab);*/
             data.add(toAdd);
          }
       }

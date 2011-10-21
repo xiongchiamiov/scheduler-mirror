@@ -89,6 +89,20 @@ public class Course implements Serializable
     */
    private int labPad = 0;
    
+   private String coursetype = "";
+   
+   private boolean smartroom = true;
+   
+   private boolean laptop = true;
+   
+   private boolean overhead = true;
+   
+   private String ctPrefix = "";
+   
+   private String prefix = "";
+   
+   private int labId = -1;
+   
    /**
     * Default constructor. Does nothing.
     */
@@ -108,6 +122,25 @@ public class Course implements Serializable
       this.name = name;
       this.catalogNum = catalogNum;
    }
+   
+   public Course(int id, String name, int catalogNum, int wtus, int scus, String courseType,
+		   int enrollment, int labId, boolean smartroom, boolean laptop, boolean overhead, 
+		   int hoursPerWeek, String ctPrefix, String prefix) {
+	   this.id = id;
+	   this.name = name;
+	   this.catalogNum = catalogNum;
+	   this.wtu = wtus;
+	   this.scu = scus;
+	   this.coursetype = courseType;
+	   this.enrollment = enrollment;
+	   this.labId = labId;
+	   this.smartroom = smartroom;
+	   this.laptop = laptop;
+	   this.overhead = overhead;
+	   this.length = hoursPerWeek;
+	   this.ctPrefix = ctPrefix;
+	   this.prefix = prefix;
+   }
 
    /**
     * Creates a new Course object whose fields are identical to the given 
@@ -120,6 +153,41 @@ public class Course implements Serializable
    public Course (Course c)
    {
       
+   }
+   
+   public String getCourseType()
+   {
+	   return coursetype;
+   }
+   
+   public int getLabID()
+   {
+	   return labId;
+   }
+   
+   public boolean getSmartroom()
+   {
+	   return smartroom;
+   }
+   
+   public boolean getLaptop()
+   {
+	   return laptop;
+   }
+   
+   public boolean getOverhead()
+   {
+	   return overhead;
+   }
+   
+   public String getCTPrefix()
+   {
+	   return ctPrefix;
+   }
+   
+   public String getPrefix()
+   {
+	   return prefix;
    }
    
    /**

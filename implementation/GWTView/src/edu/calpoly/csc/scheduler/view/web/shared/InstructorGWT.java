@@ -7,6 +7,8 @@ public class InstructorGWT implements Serializable{
 	private static final long serialVersionUID = -539236134373434229L;
 	
 	private String name, userID, office;
+	private String firstName, lastName, roomNumber, building;
+	private boolean disabilities;
 	private int wtu;
 
 	public InstructorGWT(){}
@@ -18,6 +20,38 @@ public class InstructorGWT implements Serializable{
 		this.userID = userID;
 		this.wtu = wtu;
 		this.office = office;
+	}
+	
+	public InstructorGWT(String firstName, String lastName, String userID,
+			int wtu, String building, String roomNumber, boolean disabilities) {
+		super();
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.userID = userID;
+		this.wtu = wtu;
+		this.building = building;
+		this.roomNumber = roomNumber;
+		this.disabilities = disabilities;
+	}
+	
+	public String getFirstName(){
+		return firstName;
+	}
+	
+	public String getLastName(){
+		return lastName;
+	}
+	
+	public String getBuilding(){
+		return building;
+	}
+	
+	public String getRoomNumber(){
+		return roomNumber;
+	}
+	
+	public boolean getDisabilities(){
+		return disabilities;
 	}
 	
 	public String getName() {

@@ -19,23 +19,50 @@ public class EditableTableConstants {
 	
 	/** Professor table */
 	public static final String INSTR_NAME = "Instructor Name";
-	
+
+	public static final String INSTR_FIRSTNAME = "First Name";
+
+	public static final String INSTR_LASTNAME = "Last Name";
+
 	public static final String INSTR_ID = "ID";
 	
 	public static final String INSTR_WTU = "WTU";
 	
 	public static final String INSTR_OFFICE = "Office";
 	
+	public static final String INSTR_BUILDING = "Building";
+
+	public static final String INSTR_ROOMNUMBER = "Room Number";
+
+	public static final String INSTR_DISABILITIES = "Disabilities";
+
+	
 	
 	/** Course table */
 	public static final String COURSE_NAME = "Course Name";
-	
+
+	public static final String COURSE_ID = "ID";
+
 	public static final String COURSE_CATALOG_NUM = "Catalog Number";
 	
 	public static final String COURSE_DEPARTMENT = "Department";
 	
 	public static final String COURSE_WTU = "WTU";
+
+	public static final String COURSE_LABID = "Lab ID";
+
+	public static final String COURSE_SMARTROOM = "Smartroom";
+
+	public static final String COURSE_LAPTOP = "Laptop";
+
+	public static final String COURSE_OVERHEAD = "Overhead";
+
+	public static final String COURSE_LENGTH = "Hours Per Week";
 	
+	public static final String COURSE_CTPREFIX = "ctPrefix";
+	
+	public static final String COURSE_PREFIX = "Prefix";
+
 	public static final String COURSE_SCU = "SCU";
 	
 	public static final String COURSE_NUM_SECTIONS = "# of Sections";
@@ -49,6 +76,14 @@ public class EditableTableConstants {
 	
 	/** Location table */
 	public static final String LOC_BUILDING = "Building";
+	
+	public static final String LOC_SMARTROOM = "Smartroom";
+	
+	public static final String LOC_LAPTOPCONNECTIVITY = "Laptop Connectivity";
+	
+	public static final String LOC_ADACOMPLIANT = "ADA Compliant";
+	
+	public static final String LOC_OVERHEAD = "Overhead";
 	
 	public static final String LOC_NAME = "Name";
 	

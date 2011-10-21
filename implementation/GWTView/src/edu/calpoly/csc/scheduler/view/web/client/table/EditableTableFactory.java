@@ -27,15 +27,21 @@ public class EditableTableFactory {
 		
 		ArrayList<String> attr = new ArrayList<String>();
 		
-		// attributes
+		// attributes		
+		attr.add(EditableTableConstants.INSTR_FIRSTNAME);
+
+		attr.add(EditableTableConstants.INSTR_LASTNAME);
+
 		attr.add(EditableTableConstants.INSTR_ID);
-		
-		attr.add(EditableTableConstants.INSTR_NAME);
-		
+
 		attr.add(EditableTableConstants.INSTR_WTU);
 		
-		attr.add(EditableTableConstants.INSTR_OFFICE);
-		
+		attr.add(EditableTableConstants.INSTR_BUILDING);
+
+		attr.add(EditableTableConstants.INSTR_ROOMNUMBER);
+
+		attr.add(EditableTableConstants.INSTR_DISABILITIES);
+
 		// save handler
 		final EditableTable table = new EditableTable(attr);
 		table.addSaveHandler(new ClickHandler(){
@@ -72,24 +78,34 @@ public class EditableTableFactory {
 		ArrayList<String> attr = new ArrayList<String>();
 		
 		// attributes
+		attr.add(EditableTableConstants.COURSE_ID);
+
 		attr.add(EditableTableConstants.COURSE_NAME);
 		
 		attr.add(EditableTableConstants.COURSE_CATALOG_NUM);
-		
-		attr.add(EditableTableConstants.COURSE_DEPARTMENT);
-		
+				
 		attr.add(EditableTableConstants.COURSE_WTU);
 		
 		attr.add(EditableTableConstants.COURSE_SCU);
-		
-		attr.add(EditableTableConstants.COURSE_NUM_SECTIONS);
-		
+				
 		attr.add(EditableTableConstants.COURSE_TYPE);
 		
 		attr.add(EditableTableConstants.COURSE_MAX_ENROLLMENT);
 		
-		attr.add(EditableTableConstants.COURSE_LAB);
-		
+		attr.add(EditableTableConstants.COURSE_LABID);
+
+		attr.add(EditableTableConstants.COURSE_SMARTROOM);
+
+		attr.add(EditableTableConstants.COURSE_LAPTOP);
+
+		attr.add(EditableTableConstants.COURSE_OVERHEAD);
+
+		attr.add(EditableTableConstants.COURSE_LENGTH);
+
+		attr.add(EditableTableConstants.COURSE_CTPREFIX);
+
+		attr.add(EditableTableConstants.COURSE_PREFIX);
+
 		// save handler
 		final EditableTable table = new EditableTable(attr);
 		table.addSaveHandler(new ClickHandler(){
@@ -127,19 +143,21 @@ public class EditableTableFactory {
 		
 		// attributes
 		attr.add(EditableTableConstants.LOC_BUILDING);
-		
-		attr.add(EditableTableConstants.LOC_NAME);
-		
+				
 		attr.add(EditableTableConstants.LOC_ROOM);
-		
-		attr.add(EditableTableConstants.LOC_TYPE);
 		
 		attr.add(EditableTableConstants.LOC_MAX_OCCUPANCY);
 		
-		attr.add(EditableTableConstants.LOC_EQIPMENT_LIST);
+		attr.add(EditableTableConstants.LOC_TYPE);
 		
-		attr.add(EditableTableConstants.LOC_ADDITIONAL_DETAILS);
+		attr.add(EditableTableConstants.LOC_SMARTROOM);
 		
+		attr.add(EditableTableConstants.LOC_LAPTOPCONNECTIVITY);
+
+		attr.add(EditableTableConstants.LOC_ADACOMPLIANT);
+
+		attr.add(EditableTableConstants.LOC_OVERHEAD);
+
 		// save handler
 		final EditableTable table = new EditableTable(attr);
 		table.addSaveHandler(new ClickHandler(){

@@ -125,6 +125,8 @@ public class Instructor implements Comparable<Instructor>, Serializable
     * Last name of instructor.
     */
    private String lastName;
+   
+   private String roomNumber;
 
    /**
     * User ID of instructor.
@@ -165,6 +167,8 @@ public class Instructor implements Comparable<Instructor>, Serializable
     * Records this instructor's current availability.
     */
    private WeekAvail availability;
+   
+   private String building;
 
    /**
     * List of preferences each instructor has for a course.
@@ -273,10 +277,16 @@ public class Instructor implements Comparable<Instructor>, Serializable
     *           whether or not the professor has any disabilities
     */
    public Instructor (String first, String last, String id, int wtu,
-      Location office, boolean disabilities)
-   {
-      init(first, last, id, wtu, office, disabilities);
-   }
+		   Location office, boolean disabilities)
+		   {
+		      init(first, last, id, wtu, office, disabilities);
+		   }
+   
+   public Instructor (String first, String last, String id, int wtu,
+		   String building, String room, boolean disabilities)
+		   {
+		      init(first, last, id, wtu, building, room, disabilities);
+		   }
 
    /**
     * Does the initialization all Instructor constructors need. Since they all
@@ -297,18 +307,33 @@ public class Instructor implements Comparable<Instructor>, Serializable
     *           whether or not the professor has any disabilities
     */
    private void init (String first, String last, String id, int wtu,
-      Location office, boolean disabilities)
-   {
-      this.firstName = first;
-      this.lastName = last;
-      this.userID = id;
-      this.maxWtu = wtu;
-      this.office = office;
-      this.disability = disabilities;
-      this.availability = new WeekAvail();
-      this.coursePreferences = initialCoursePreferences();
-      initTPrefs();
-   }
+		      Location office, boolean disabilities)
+		   {
+		      this.firstName = first;
+		      this.lastName = last;
+		      this.userID = id;
+		      this.maxWtu = wtu;
+		      this.office = office;
+		      this.disability = disabilities;
+		      this.availability = new WeekAvail();
+		      this.coursePreferences = initialCoursePreferences();
+		      initTPrefs();
+		   }
+   
+   private void init (String first, String last, String id, int wtu,
+		      String building, String room, boolean disabilities)
+		   {
+		      this.firstName = first;
+		      this.lastName = last;
+		      this.userID = id;
+		      this.maxWtu = wtu;
+		      this.building = building;
+		      this.roomNumber = room;
+		      this.disability = disabilities;
+		      this.availability = new WeekAvail();
+		      this.coursePreferences = initialCoursePreferences();
+		      initTPrefs();
+		   }
 
    /**
     * Gives instructor's prefs of 5 for all times between 7a.m. and 10 p.m..
@@ -546,6 +571,10 @@ public class Instructor implements Comparable<Instructor>, Serializable
       return disability;
    }
 
+   public String getBuilding(){
+	   return building;
+   }
+   
    /**
     * Returns the fairness value of this instructor.
     * 
@@ -604,6 +633,10 @@ public class Instructor implements Comparable<Instructor>, Serializable
       return this.maxWtu;
    }
 
+   public String getRoomNumber(){
+	   return roomNumber;
+   }
+   
    /**
     * Sets the maxWtu to the given parameter.
     *
