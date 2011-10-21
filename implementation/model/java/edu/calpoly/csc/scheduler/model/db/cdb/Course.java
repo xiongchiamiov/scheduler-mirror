@@ -2,6 +2,7 @@ package edu.calpoly.csc.scheduler.model.db.cdb;
 
 import java.io.Serializable;
 
+import edu.calpoly.csc.scheduler.model.schedule.Day;
 import edu.calpoly.csc.scheduler.model.schedule.Week;
 
 /**
@@ -378,6 +379,11 @@ public class Course implements Serializable
       this.length = length;
    }
 
+   public int getDayLength ()
+   {
+	  return 2;
+   }
+   
    /**
     * Returns the days
     * 
@@ -385,7 +391,7 @@ public class Course implements Serializable
     */
    public Week getDays ()
    {
-      return days;
+      return new Week(new Day[]{Day.MON,Day.WED,Day.FRI});
    }
 
    /**
