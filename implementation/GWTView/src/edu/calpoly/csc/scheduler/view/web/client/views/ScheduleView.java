@@ -10,7 +10,7 @@ public class ScheduleView extends ScrollPanel {
 	private GreetingServiceAsync service;
 
 	public ScheduleView(Panel container, GreetingServiceAsync greetingService, String quarterID) {
-		this.service = service;
+		this.service = greetingService;
 	}
 	
 	@Override
