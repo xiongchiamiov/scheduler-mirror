@@ -93,7 +93,7 @@ public class Course implements Serializable
     * Default constructor. Does nothing.
     */
    public Course () { }
-
+   
    /**
     * Creates a course w/ the given name, dept prefix, and catalog number. If
     * you want to instantiate the numerous other fields of this class, call its
@@ -381,7 +381,7 @@ public class Course implements Serializable
 
    public int getDayLength ()
    {
-	  return 2;
+      return this.length / this.days.size();
    }
    
    /**
@@ -391,7 +391,7 @@ public class Course implements Serializable
     */
    public Week getDays ()
    {
-      return new Week(new Day[]{Day.MON,Day.WED,Day.FRI});
+      return days;
    }
 
    /**
