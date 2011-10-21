@@ -9,6 +9,8 @@ import edu.calpoly.csc.scheduler.model.db.DatabaseAPI;
 import edu.calpoly.csc.scheduler.model.db.SQLDB;
 import edu.calpoly.csc.scheduler.model.db.cdb.Course.CourseType;
 
+import edu.calpoly.csc.scheduler.model.schedule.*;
+
 public class CourseDB implements DatabaseAPI<Course>
 {
    private ArrayList<Course> data;
@@ -57,12 +59,13 @@ public class CourseDB implements DatabaseAPI<Course>
             toAdd.setId(id);
             toAdd.setName(name);
             toAdd.setCatalogNum(catalogNum);
-            //toAdd.setDept(dept);
+            toAdd.setDept("CPE");
             toAdd.setWtu(wtus);
             toAdd.setScu(scus);
-            //toAdd.setNumOfSections(numOfSections);
+            toAdd.setDays(new Week(new Day[]{Day.MON, Day.WED, Day.FRI}));
+            toAdd.setNumOfSections(1);
             toAdd.setType(courseType);
-            //toAdd.setLength(length);
+            toAdd.setLength(6);
             toAdd.setEnrollment(enrollment);
             Course lab = null;
             // TODO: Check what value null ints are stored as and change this
