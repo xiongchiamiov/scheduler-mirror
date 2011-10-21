@@ -137,6 +137,23 @@ public class LocationDB implements DatabaseAPI<Location>
 
    }
 
+   public Location getLocation (String id)
+   {
+      String[] stuff = id.split("-");
+      
+      Location l = new Location(stuff[0], stuff[1]);
+      if (!this.data.contains(l))
+      {
+         data.add(l);
+      }
+      else
+      {
+         l = this.data.get(this.data.indexOf(l));
+      }
+      
+      return l;
+   }
+   
    public List<Location> findRooms(Course course, Vector<TimeRange> times)
    {
       List<Location> rooms = new Vector<Location>();
