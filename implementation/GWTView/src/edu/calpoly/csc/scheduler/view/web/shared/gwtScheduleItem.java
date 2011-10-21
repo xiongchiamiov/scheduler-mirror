@@ -1,15 +1,17 @@
 package edu.calpoly.csc.scheduler.view.web.shared;
 
-import com.google.gwt.user.client.rpc.IsSerializable;
+import java.io.Serializable;
+import java.util.ArrayList;
 
-public class gwtScheduleItem implements IsSerializable, Comparable
+public class gwtScheduleItem implements Serializable, Comparable
 {
+ private static final long serialVersionUID = 5345021880975658731L;
  private String professor;
  private String courseDept;
  private int courseNum;
  private int section;
  private String days;
- private int dayNums[];
+ ArrayList<Integer> dayNums;
  private int startTimeHour;
  private int endTimeHour;
  private int startTimeMin;
@@ -19,26 +21,42 @@ public class gwtScheduleItem implements IsSerializable, Comparable
  private int colPlaced = -1;
  private int overlapCount = -1;
  private String room;
- public gwtScheduleItem()
- {
-  
- }
  
- public gwtScheduleItem(String prof, String dept, int cNum, int sec, String ds,
-		                 int dNums[], int sth, int stm, int eth, int etm, 
-		                  String rm)
+ public gwtScheduleItem(){}
+ 
+ public gwtScheduleItem(String prof, String dept, int cNum, int sec, 
+		                 ArrayList<Integer> dNums, int sth, int stm, int eth, 
+		                  int etm, String rm)
  {
+  super();
   professor = prof;
   courseDept = dept;
   courseNum = cNum;
   section = sec;
-  days = ds;
   dayNums = dNums;
+  days = getDayString(dayNums);
   startTimeHour = sth;
   startTimeMin = stm;
   endTimeHour = eth;
   endTimeMin = etm;
   room = rm;
+ }
+ 
+ private String getDayString(ArrayList<Integer> dayNums)
+ {
+  String dayString = new String();
+  for(int day : dayNums)
+  {
+   switch (day) 
+   {
+	case 1 : dayString += "M"; break;
+	case 2 : dayString += "T"; break;
+	case 3 : dayString += "W"; break;
+	case 4 : dayString += "R"; break;
+	case 5 : dayString += "F"; break;
+   }
+  }
+  return dayString;
  }
  
  public String toString()
@@ -107,7 +125,7 @@ public class gwtScheduleItem implements IsSerializable, Comparable
   return endTimeMin;
  }
 
- public int[] getDayNums()
+ public ArrayList<Integer> getDayNums()
  {
   return dayNums;
  }

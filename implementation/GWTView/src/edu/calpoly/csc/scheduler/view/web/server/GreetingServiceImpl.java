@@ -1,9 +1,18 @@
 package edu.calpoly.csc.scheduler.view.web.server;
 
 import java.util.ArrayList;
+import java.util.Vector;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
+import edu.calpoly.csc.scheduler.model.db.Time;
+import edu.calpoly.csc.scheduler.model.db.cdb.Course;
+import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
+import edu.calpoly.csc.scheduler.model.db.ldb.Location;
+import edu.calpoly.csc.scheduler.model.schedule.Day;
+import edu.calpoly.csc.scheduler.model.schedule.Schedule;
+import edu.calpoly.csc.scheduler.model.schedule.ScheduleItem;
+import edu.calpoly.csc.scheduler.model.schedule.Week;
 import edu.calpoly.csc.scheduler.view.web.client.GreetingService;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
@@ -61,40 +70,103 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		/** TODO */
 	}
 
-    /*
-	 *@gwt.typeArgs <shared.gwtScheduleItem>
-	 */
 	public ArrayList<gwtScheduleItem> getGWTScheduleItems()
 	{
-	 ArrayList<gwtScheduleItem> items = new ArrayList<gwtScheduleItem>();
-	 gwtScheduleItem i1 = new gwtScheduleItem("Gene Fisher", "CPE", 101, 1, "MWF",
-	  new int[] {1, 3, 5}, 8, 10, 10, 0, "14-250");
- 	 gwtScheduleItem i2 = new gwtScheduleItem("Gene Fisher", "CPE", 402, 1, "MWF",
-	  new int[] {1, 3, 5}, 13, 30, 17, 30, "14-256");
-	 gwtScheduleItem i3 = new gwtScheduleItem("Clark Turner", "CPE", 300, 1, "TR",
-	  new int[] {2, 4}, 15, 10, 17, 0, "14-256");
-	 gwtScheduleItem i4 = new gwtScheduleItem("Nancy Parham", "CPE", 141, 1, 
-	  "MWF", new int[] {1, 3, 5}, 13, 10, 14, 0, "100-1234");
-	 gwtScheduleItem i5 = new gwtScheduleItem("John Dalbey", "CPE", 308, 1, "MWF",
-	  new int[] {1, 3, 5}, 13, 59, 14, 01, "01-001");
-	 gwtScheduleItem i6 = new gwtScheduleItem("John Clements", "CPE", 431, 1, 
-	  "MWF", new int[] {1,3,5}, 16, 10, 22, 0, "12-34");
-	 gwtScheduleItem i7 = new gwtScheduleItem("Mei-Ling Liu", "CPE", 365, 1, 
-	  "MWF", new int[] {1,3,5}, 13, 1, 17, 31, "50-100");
-	 gwtScheduleItem i8 = new gwtScheduleItem("Kurt Mammen", "CPE", 101, 2, "TR",
-	  new int[] {2,4}, 17, 0, 19, 0, "03-14");
-			 
-	 items.add(i1);
-	 items.add(i2);
-	 items.add(i4);
-	 items.add(i3);
-	 items.add(i5);
-	 items.add(i6);
-	 items.add(i7);
-	 //items.add(i8);
-	 return items;
+	 Vector<ScheduleItem> modelItems = new Vector<ScheduleItem>();
+	 ArrayList<gwtScheduleItem> gwtItems = new ArrayList<gwtScheduleItem>();
+	 
+	 Week mwf = new Week(new Day[]{Day.MON, Day.WED, Day.FRI});
+	 Week tr = new Week(new Day[]{Day.TUE, Day.THU});
+	 Time ts1 = new Time(8, 10);
+	 Time te1 = new Time(10, 0);
+	 Time ts2 = new Time(9, 10);
+	 Time te2 = new Time(10, 0);
+	 Time ts3 = new Time(10, 10);
+	 Time te3 = new Time(12, 0);
+	 Time ts4 = new Time(14, 10);
+	 Time te4 = new Time(16, 0);
+	 Time ts5 = new Time(14, 10);
+	 Time te5 = new Time(17, 0);
+	 Time ts6 = new Time(15, 10);
+	 Time te6 = new Time(19, 0);
+	 
+	 Course c1 = new Course("", "CPE", 101);
+	 c1.setDept("CPE");
+	 Course c2 = new Course("", "CPE", 102);
+     c2.setDept("CPE");
+     Course c3 = new Course("", "CPE", 103);
+     c3.setDept("CPE");
+     Course c4 = new Course("", "CPE", 104);
+     c4.setDept("CPE");
+     Course c5 = new Course("", "CPE", 105);
+     c5.setDept("CPE");
+     Course c6 = new Course("", "CPE", 106);
+     c6.setDept("CPE");
+     
+	 Location office = new Location(1, 2);
+     Instructor i1 = new Instructor("Gene", "Fisher", "1", 12, office);
+     Instructor i2 = new Instructor("Clark", "Turner", "2", 12, office);
+     Instructor i3 = new Instructor("John", "Dalbey", "3", 12, office);
+     Instructor i4 = new Instructor("John", "Clements", "4", 12, office);
+     Instructor i5 = new Instructor("Franz", "Kurfess", "5", 12, office);
+     Instructor i6 = new Instructor("Mei-Ling", "Liu", "6", 12, office);
+     
+     Location l1 = new Location(14, 256);
+     Location l2 = new Location(14, 255);
+     Location l3 = new Location(1, 3);
+     Location l4 = new Location(15, 10);
+     Location l5 = new Location(50, 100);
+     Location l6 = new Location(3, 14);
+     
+     modelItems.add(new ScheduleItem(i1, c1, l1, 1, mwf, ts1, te1));
+     modelItems.add(new ScheduleItem(i2, c2, l2, 1, mwf, ts2, te2));
+     modelItems.add(new ScheduleItem(i3, c3, l3, 1, tr, ts3, te3));
+     modelItems.add(new ScheduleItem(i4, c4, l4, 1, mwf, ts4, te4));
+     modelItems.add(new ScheduleItem(i5, c5, l5, 1, mwf, ts5, te5));
+     modelItems.add(new ScheduleItem(i6, c6, l6, 1, mwf, ts6, te6));
+     
+     for(ScheduleItem item : modelItems)
+     {         
+      gwtItems.add(convertScheduleItem(item));
+     }
+	 
+	 return gwtItems;
 	}
-
+	
+	public gwtScheduleItem convertScheduleItem(ScheduleItem schdItem)
+	{
+	 String instructor;
+	 String courseDept;
+	 int courseNum;
+	 int section;
+	 ArrayList<Integer> dayNums = new ArrayList<Integer>();
+	 int startTimeHour;
+	 int endTimeHour;
+	 int startTimeMin;
+	 int endTimeMin;
+	 String location;
+	 Vector<Day> schdDays;
+	 
+	 instructor = schdItem.getInstructor().getName();
+	 courseDept = schdItem.getCourse().getDept();
+	 courseNum = schdItem.getCourse().getCatalogNum();
+	 section = schdItem.getSection();
+	 schdDays = schdItem.getDays().getDays();
+	 for(Day d : schdDays)
+	 {
+	  dayNums.add(d.getNum()); 
+	 }
+	 startTimeHour = schdItem.getStart().getHour();
+	 endTimeHour = schdItem.getEnd().getHour();
+	 startTimeMin = schdItem.getStart().getMinute();
+     endTimeMin = schdItem.getEnd().getMinute();
+     location = schdItem.getLocation().toString();
+     
+     return new gwtScheduleItem(instructor, courseDept, courseNum, section,
+    		                    dayNums, startTimeHour, startTimeMin, 
+    		                    endTimeHour, endTimeMin, location);
+	}
+	
 	@Override
 	public ArrayList<LocationGWT> getLocationNames() {
 		/** TODO */

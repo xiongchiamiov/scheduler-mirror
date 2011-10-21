@@ -134,7 +134,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
  
  private int overlaps(gwtScheduleItem toBePlaced, int day)
  {
-  int occupiedDays[];
+  ArrayList<Integer> occupiedDays;
   int h, i;  
   int overlapCount = 0;
   int maxOverlap = 0;
@@ -157,9 +157,9 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
       item.startsAfterHalf());
      occupiedEndRow = getRowFromTime(item.getEndTimeHour(),
       item.endsAfterHalf()) - 1;
-     for(i = 0; i < occupiedDays.length; i++)
+     for(int occDay : occupiedDays)
      {
-      if(occupiedDays[i] == day && h >= occupiedStartRow 
+      if(occDay == day && h >= occupiedStartRow 
           && h <= occupiedEndRow)
       {
        overlapCount++;
@@ -201,45 +201,39 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
  private void placeScheduleItem(gwtScheduleItem placedSchdItem,
                                  ArrayList<Integer> filteredDays)
  {
-  int schdItemDays[];
-  int i,j,k, day, dayNum, rowRangeStart, rowRangeEnd, overlapCount;
+  ArrayList<Integer> schdItemDays;
+  int j, k, dayCol, rowRangeStart, rowRangeEnd, overlapCount;
   ArrayList<Integer> cods;
-  Integer dayColumn;
   rowRangeStart = getRowFromTime(placedSchdItem.getStartTimeHour(),
 		                          placedSchdItem.startsAfterHalf());
   rowRangeEnd = getRowFromTime(placedSchdItem.getEndTimeHour(),
 		                        placedSchdItem.endsAfterHalf());
   schdItemDays = placedSchdItem.getDayNums();
   
-  for (i = 0; i < schdItemDays.length; i++)
+  for (int dayNum : schdItemDays)
   {
-   if(!filteredDays.contains(schdItemDays[i]))
+   if(!filteredDays.contains(dayNum))
    {   
-    dayNum = schdItemDays[i];
     overlapCount = overlaps(placedSchdItem, dayNum);
     placedSchdItem.setOverlapCount(overlapCount);
     if(overlapCount >= dayColumnSpans.get(dayNum-1))
     {
  	 expandDay(dayNum);
     }
-    day = columnsOfDays.get(rowRangeStart-1).get(dayNum-1).intValue();
-    scheduleGrid.setWidget(rowRangeStart, day, new HTML(placedSchdItem.toString()));
-    placedSchdItem.setRow(rowRangeStart);
-    placedSchdItem.setCol(day);
-    scheduleGrid.getFlexCellFormatter().setRowSpan(rowRangeStart, day, 
+    dayCol = columnsOfDays.get(rowRangeStart-1).get(dayNum-1).intValue();
+    scheduleGrid.setWidget(rowRangeStart, dayCol, new HTML(placedSchdItem.toString()));
+    scheduleGrid.getFlexCellFormatter().setRowSpan(rowRangeStart, dayCol, 
      rowRangeEnd - rowRangeStart);
    
     cods = columnsOfDays.get(rowRangeStart-1);
-    dayColumn = cods.get(dayNum-1) + 1;
-    cods.set(dayNum-1, dayColumn);
+    cods.set(dayNum-1, cods.get(dayNum-1) + 1);
     columnsOfDays.set(rowRangeStart-1, cods);
     for(j = rowRangeStart; j < rowRangeEnd-1; j++)
     {
      cods = columnsOfDays.get(j);
      for(k = dayNum; k <= numberOfDays; k++)
      {
-      dayColumn = cods.get(k);
-      cods.set(k, new Integer(dayColumn.intValue()-1));
+      cods.set(k, cods.get(k)-1);
      }
      columnsOfDays.set(j, cods);
      scheduleGrid.removeCell(j+1, (scheduleGrid.getCellCount(j+1) - 1));
