@@ -22,24 +22,68 @@ public class Treatment implements Serializable
    /** 
     * Which time slots this instructor has been assigned to teach
     */
-   protected Vector<Time> times;
+   protected Vector<Time> times = new Vector<Time>();
    /**
     * Which courses this instructor has been assigned to teach
     */
-   protected Vector<Course> courses;
+   protected Vector<Course> courses = new Vector<Course>();
    /**
     * How many wtu's an instructor has accrued
     */
-   protected int wtu;
-
+   protected int wtu = 0;
+   
    /**
-    * Constructs a Fairness object with no time assignments, no course
-    * assignments, and a WTU count of 0.
+    * Returns the times
+    * 
+    * @return the times
     */
-   protected Treatment ()
+   public Vector<Time> getTimes ()
    {
-      times = new Vector<Time>();
-      courses = new Vector<Course>();
-      wtu = 0;
+      return times;
+   }
+   /**
+    * Sets the times to the given parameter.
+    *
+    * @param times the times to set
+    */
+   public void setTimes (Vector<Time> times)
+   {
+      this.times = times;
+   }
+   /**
+    * Returns the courses
+    * 
+    * @return the courses
+    */
+   public Vector<Course> getCourses ()
+   {
+      return courses;
+   }
+   /**
+    * Sets the courses to the given parameter.
+    *
+    * @param courses the courses to set
+    */
+   public void setCourses (Vector<Course> courses)
+   {
+      this.courses = courses;
+   }
+   /**
+    * Returns the wtu
+    * 
+    * @return the wtu
+    */
+   public int getWtu ()
+   {
+      return wtu;
+   }
+   /**
+    * Sets the wtu to the given parameter.
+    *
+    * @param wtu the wtu to set
+    */
+   public void setWtu (int wtu)
+   {
+      this.wtu = wtu;
    }
 }

@@ -2,6 +2,7 @@ package edu.calpoly.csc.scheduler.model;
 
 import java.io.Serializable;
 
+import edu.calpoly.csc.scheduler.model.db.*;
 import edu.calpoly.csc.scheduler.model.db.cdb.*;
 import edu.calpoly.csc.scheduler.model.db.idb.*;
 import edu.calpoly.csc.scheduler.model.db.ldb.*;
@@ -120,5 +121,11 @@ public class Scheduler implements Serializable
    public void setPdb (Object pdb)
    {
       this.pdb = pdb;
+   }
+   
+   public static void main (String[] args)
+   {
+      Database db = new Database();
+      
    }
 }

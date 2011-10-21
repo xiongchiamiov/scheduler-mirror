@@ -135,9 +135,8 @@ public class Instructor implements Comparable<Instructor>, Serializable
     * Work-Time units.
     */
    private int maxWtu;
-   
    /**
-    * Current amount of wtus used
+    * Current amount of wtus
     */
    private int curWtu;
    
@@ -594,10 +593,7 @@ public class Instructor implements Comparable<Instructor>, Serializable
    {
       return new String(this.lastName);
    }
-   // System.out.println(tPrefs == null);
-   // System.out.println(this.tPrefs.get(d) == null);
-   // System.out.println("Finding for time " + time + " " +
-   // this.tPrefs.get(d));
+
    /**
     * Returns the instructor's work-time units.
     * 
@@ -606,6 +602,16 @@ public class Instructor implements Comparable<Instructor>, Serializable
    public int getMaxWTU ()
    {
       return this.maxWtu;
+   }
+
+   /**
+    * Sets the maxWtu to the given parameter.
+    *
+    * @param maxWtu the maxWtu to set
+    */
+   public void setMaxWtu (int maxWtu)
+   {
+      this.maxWtu = maxWtu;
    }
 
    /**
@@ -618,6 +624,16 @@ public class Instructor implements Comparable<Instructor>, Serializable
       return this.curWtu;
    }
    
+   /**
+    * Sets the curWtu to the given parameter.
+    *
+    * @param curWtu the curWtu to set
+    */
+   public void setCurWtu (int curWtu)
+   {
+      this.curWtu = curWtu;
+   }
+
    /**
     * Returns this instructor's current wtu count
     * 
@@ -930,6 +946,36 @@ public class Instructor implements Comparable<Instructor>, Serializable
       return new String(this.getLastName() + ", " + this.getFirstName());
    }
    
+      /**
+    * Checks to see if an instructor can teach the given course.
+    * Checks available WTUs and if their teaching preference is not 0.
+    * 
+    * @param course Course instructor might teach
+    * 
+    * @return A list of time ranges that instructor can and wants to teach this
+    *         course
+    */
+   public boolean canTeach(Course course)
+   {
+      //Check if instructor has enough WTUs
+      if((this.curWtu + course.getWtu()) <= this.maxWtu)
+      {
+         //Check if preferences allow it
+         //TODO: rewrite this when CoursePreference is changed to a hash
+         for(CoursePreference coursePref : this.coursePreferences)
+         {
+            if(coursePref.getCourse().equals(course))
+            {
+               if(coursePref.getDesire() > 0)
+               {
+                  return true;
+               }
+            }
+         }
+      }
+      return false;
+   }
+   
    /**
     * Gets the list of time ranges that this instructor is available and wants
     * to teach this course. The Course's 'getDays' method is used to determine
@@ -959,35 +1005,5 @@ public class Instructor implements Comparable<Instructor>, Serializable
       }
       
       return r;
-   }
-   
-   /**
-    * Checks to see if an instructor can teach the given course.
-    * Checks available WTUs and if their teaching preference is not 0.
-    * 
-    * @param course Course instructor might teach
-    * 
-    * @return A list of time ranges that instructor can and wants to teach this
-    *         course
-    */
-   public boolean canTeach(Course course)
-   {
-      //Check if instructor has enough WTUs
-      if((this.curWtu + course.getWtu()) <= this.maxWtu)
-      {
-         //Check if preferences allow it
-         //TODO: rewrite this when CoursePreference is changed to a hash
-         for(CoursePreference coursePref : this.coursePreferences)
-         {
-            if(coursePref.getCourse().equals(course))
-            {
-               if(coursePref.getDesire() > 0)
-               {
-                  return true;
-               }
-            }
-         }
-      }
-      return false;
    }
 }

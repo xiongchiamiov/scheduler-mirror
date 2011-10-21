@@ -116,6 +116,11 @@ public class TimeRange implements Serializable
               this.getE().compareTo(tr.getE()) < 0);
    }
    
+   public boolean addHalf ()
+   {
+      return this.getS().addHalf() && this.getE().addHalf();
+   }
+   
    /** Returns the start time
     *  @return The start time 
     */
