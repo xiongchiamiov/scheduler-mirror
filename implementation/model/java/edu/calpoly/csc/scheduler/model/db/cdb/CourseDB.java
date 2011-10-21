@@ -14,8 +14,9 @@ public class CourseDB implements DatabaseAPI<Course>
    private ArrayList<Course> data;
    private SQLDB             sqldb;
 
-   public CourseDB()
+   public CourseDB(SQLDB sqldb)
    {
+	   this.sqldb = sqldb;
       initDB();
    }
 
@@ -28,7 +29,6 @@ public class CourseDB implements DatabaseAPI<Course>
    private void initDB()
    {
       data = new ArrayList<Course>();
-      sqldb = new SQLDB();
       pullData();
    }
 
@@ -43,26 +43,26 @@ public class CourseDB implements DatabaseAPI<Course>
             // Retrieve by column name
             int id = rs.getInt("id");
             String name = rs.getString("name");
-            int catalogNum = rs.getInt("catalognum");
-            String dept = rs.getString("dept");
+            int catalogNum = rs.getInt("coursenum");
+            //String dept = rs.getString("dept");
             int wtus = rs.getInt("wtus");
             int scus = rs.getInt("scus");
-            int numOfSections = rs.getInt("numofsections");
-            String courseType = rs.getString("courseType");
-            int length = rs.getInt("length");
-            int enrollment = rs.getInt("enrollment");
+            //int numOfSections = rs.getInt("numofsections");
+            String courseType = rs.getString("classType");
+            //int length = rs.getInt("length");
+            int enrollment = rs.getInt("maxEnrollment");
             int labId = rs.getInt("labPairing");
             // Put items into Course object and add to data
             Course toAdd = new Course();
             toAdd.setId(id);
             toAdd.setName(name);
             toAdd.setCatalogNum(catalogNum);
-            toAdd.setDept(dept);
+            //toAdd.setDept(dept);
             toAdd.setWtu(wtus);
             toAdd.setScu(scus);
-            toAdd.setNumOfSections(numOfSections);
+            //toAdd.setNumOfSections(numOfSections);
             toAdd.setType(courseType);
-            toAdd.setLength(length);
+            //toAdd.setLength(length);
             toAdd.setEnrollment(enrollment);
             Course lab = null;
             // TODO: Check what value null ints are stored as and change this

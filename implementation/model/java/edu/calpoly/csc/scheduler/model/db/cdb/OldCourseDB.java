@@ -379,7 +379,8 @@ public class OldCourseDB extends Observable {
          
 
          sqldb.insertStmt("courses", insert);
-         CourseDB temp = sqldb.getCourseDB();
+         assert(false);
+         CourseDB temp = new CourseDB(null);//sqldb.getCourseDB();
          this.data = temp.getData();
          setChanged();
          notifyObservers();
@@ -855,7 +856,8 @@ public class OldCourseDB extends Observable {
          String insert = "courseNum = " + c.getCatalogNum() + " AND classType = '" + c.getType() + "'";
          //sqldb.open();
          sqldb.removeStmt("courses", insert );
-         CourseDB temp = sqldb.getCourseDB();
+         assert(false);
+         CourseDB temp = new CourseDB(null);//sqldb.getCourseDB();
          this.data = temp.getData();
          //sqldb.close();
          setChanged();

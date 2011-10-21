@@ -17,8 +17,9 @@ public class InstructorDB implements DatabaseAPI<Instructor>
    private ArrayList<Instructor> data;
    private SQLDB                 sqldb;
 
-   public InstructorDB()
+   public InstructorDB(SQLDB sqldb)
    {
+	   this.sqldb = sqldb;
       initDB();
    }
 
@@ -31,7 +32,6 @@ public class InstructorDB implements DatabaseAPI<Instructor>
    private void initDB()
    {
       data = new ArrayList<Instructor>();
-      sqldb = new SQLDB();
       pullData();
    }
 
@@ -47,8 +47,8 @@ public class InstructorDB implements DatabaseAPI<Instructor>
             String fname = rs.getString("firstname");
             String lname = rs.getString("lastname");
             String userid = rs.getString("userid");
-            int maxwtu = rs.getInt("maxwtu");
-            int curwtu = rs.getInt("curwtu");
+            int maxwtu = rs.getInt("wtu");
+            //int curwtu = rs.getInt("curwtu");
             String building = rs.getString("building");
             String room = rs.getString("room");
             boolean disabilities = rs.getBoolean("disabilities");
@@ -58,7 +58,7 @@ public class InstructorDB implements DatabaseAPI<Instructor>
                   office, disabilities);
 
             // Deserialize week availability and course preferences
-            byte[] weekAvailBuf = rs.getBytes("weekavail");
+            /*byte[] weekAvailBuf = rs.getBytes("weekavail");
             byte[] coursePrefsBuf = rs.getBytes("coursepreferences");
             if (weekAvailBuf != null && coursePrefsBuf != null)
             {
@@ -77,7 +77,7 @@ public class InstructorDB implements DatabaseAPI<Instructor>
                {
                   e.printStackTrace();
                }
-            }
+            }*/
             data.add(toAdd);
          }
       }

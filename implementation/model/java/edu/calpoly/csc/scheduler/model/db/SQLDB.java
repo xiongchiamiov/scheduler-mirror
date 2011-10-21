@@ -34,15 +34,6 @@ import edu.calpoly.csc.scheduler.model.schedule.Week;
 public class SQLDB
 {
 
-   /** The instructor database. */
-   private InstructorDB  instructorDB;
-
-   /** The course database. */
-   private CourseDB      courseDB;
-
-   /** The location database. */
-   private LocationDB    locationDB;
-
    /** The preferences database */
    private PreferencesDB preferencesDB;
 
@@ -58,9 +49,6 @@ public class SQLDB
     **/
    public SQLDB()
    {
-      instructorDB = new InstructorDB();
-      courseDB = new CourseDB();
-      locationDB = new LocationDB();
    }
 
    /**
@@ -69,9 +57,9 @@ public class SQLDB
     * @return the location database.
     * 
     **/
-   public LocationDB getLocationDB()
-   {
-      return locationDB;
+//   public LocationDB getLocationDB()
+//   {
+//      return locationDB;
       //Old code
 //      if (!this.connected)
 //      {
@@ -122,17 +110,17 @@ public class SQLDB
 //         locationDB.setLocalData(myArr);
 //      }
 //      return locationDB;
-   }
-
-   /**
-    * Returns the instructor database.
-    * 
-    * @return the instructor database.
-    * 
-    **/
-   public InstructorDB getInstructorDB()
-   {
-      return instructorDB;
+//   }
+//
+//   /**
+//    * Returns the instructor database.
+//    * 
+//    * @return the instructor database.
+//    * 
+//    **/
+//   public InstructorDB getInstructorDB()
+//   {
+//      return instructorDB;
       //Old Code
 //      if (!this.connected)
 //      {
@@ -185,18 +173,18 @@ public class SQLDB
 //         }
 //      }
 //      return instructorDB;
-   }
-
-   /**
-    * Returns the course database.
-    * 
-    * TODO: REWRITE
-    * 
-    * @return the course database.
-    **/
-   public CourseDB getCourseDB()
-   {
-      return courseDB;
+//   }
+//
+//   /**
+//    * Returns the course database.
+//    * 
+//    * TODO: REWRITE
+//    * 
+//    * @return the course database.
+//    **/
+//   public CourseDB getCourseDB()
+//   {
+//      return courseDB;
       //Old Code
 //      if (!this.connected)
 //      {
@@ -283,7 +271,7 @@ public class SQLDB
 //         // }
 //      }
 //      return courseDB;
-   }
+//   }
 
    /**
     * Returns the preferences database.

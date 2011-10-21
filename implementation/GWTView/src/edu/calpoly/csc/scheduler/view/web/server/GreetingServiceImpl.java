@@ -5,10 +5,14 @@ import java.util.Vector;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
+import edu.calpoly.csc.scheduler.model.db.Database;
 import edu.calpoly.csc.scheduler.model.db.Time;
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
+import edu.calpoly.csc.scheduler.model.db.cdb.CourseDB;
 import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
+import edu.calpoly.csc.scheduler.model.db.idb.InstructorDB;
 import edu.calpoly.csc.scheduler.model.db.ldb.Location;
+import edu.calpoly.csc.scheduler.model.db.ldb.LocationDB;
 import edu.calpoly.csc.scheduler.model.schedule.Day;
 import edu.calpoly.csc.scheduler.model.schedule.Schedule;
 import edu.calpoly.csc.scheduler.model.schedule.ScheduleItem;
@@ -30,6 +34,19 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	public ArrayList<InstructorGWT> getInstructorNames() throws IllegalArgumentException {
 		
 		/** TODO */
+		ArrayList<InstructorGWT> results = new ArrayList<InstructorGWT>();
+		
+		Database db = new Database();
+
+		InstructorDB idb = db.getInstructorDB();
+		
+		ArrayList<Instructor> instructors = idb.getData();
+		System.out.println("Size of instructor list: " + instructors.size());
+		for(int i = 0; i < instructors.size(); i++)
+		{
+		    results.add(new InstructorGWT(instructors.get(i).getFirstName(), instructors.get(i).getLastName(),
+		                ((Integer)instructors.get(i).getMaxWTU()), instructors.get(i).getOffice().getBuilding() + "-" + instructors.get(i).getOffice().getRoom()));
+		}
 		// replace sample data with data from the db
 		
 //		new Scheduler();
@@ -41,7 +58,6 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		
 //		Instructor instructor = new Instructor("Evan", "IsXAwesome", "1337", 69, new Location(14, 235));
 
-		ArrayList<InstructorGWT> results = new ArrayList<InstructorGWT>();
 //		results.add(Conversion.toGWT(instructor));
 		
 		
@@ -174,6 +190,19 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		
 		ArrayList<LocationGWT> results = new ArrayList<LocationGWT>();
 		
+		Database sqldb = new Database();
+
+		LocationDB ldb = sqldb.getLocationDB();
+		
+		ArrayList<Location> locations = ldb.getData();
+		System.out.println("Size of instructor list: " + locations.size());
+		for(int i = 0; i < locations.size(); i++)
+		{
+		    results.add(new LocationGWT(locations.get(i).getBuilding(), null,
+		                locations.get(i).getRoom(), locations.get(i).getType(),
+		                locations.get(i).getMaxOccupancy(), null, null));
+		}
+		
 		// dummy data
 		LocationGWT l1 = new LocationGWT("14", "Frank E. Pilling", "256", "Lab", 32, "Computers", "Really comfortable chairs");
 		
@@ -206,6 +235,20 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		// replace sample data with data from the db
 		
 		ArrayList<CourseGWT> results = new ArrayList<CourseGWT>();
+		
+		Database db = new Database();
+
+		CourseDB cdb = db.getCourseDB();
+		
+		ArrayList<Course> courses = cdb.getData();
+		System.out.println("Size of instructor list: " + courses.size());
+		for(int i = 0; i < courses.size(); i++)
+		{
+		    results.add(new CourseGWT(courses.get(i).getName(), courses.get(i).getCatalogNum(),
+		                courses.get(i).getDept(), courses.get(i).getWtu(), courses.get(i).getScu(),
+		                courses.get(i).getNumOfSections(), courses.get(i).getType().toString(), 
+		                courses.get(i).getEnrollment(), courses.get(i).getLab().getName()));
+		}
 		
 		// dummy data
 		CourseGWT c1 = new CourseGWT("The beginning...", 101, "CPE", 4, 4, 6, "Lec", 30, "CPE101");

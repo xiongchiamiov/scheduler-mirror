@@ -17,8 +17,9 @@ public class LocationDB implements DatabaseAPI<Location>
    private ArrayList<Location> data;
    private SQLDB               sqldb;
 
-   public LocationDB()
+   public LocationDB(SQLDB sqldb)
    {
+	   this.sqldb = sqldb;
       initDB();
    }
 
@@ -31,7 +32,6 @@ public class LocationDB implements DatabaseAPI<Location>
    private void initDB()
    {
       data = new ArrayList<Location>();
-      sqldb = new SQLDB();
       pullData();
    }
 

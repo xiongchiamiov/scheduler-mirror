@@ -13,6 +13,9 @@ import edu.calpoly.csc.scheduler.model.db.ldb.LocationDB;
 
 public class Database
 {
+	/** The actual sqldb behind all the other databases. I store this for shits and giggles. */
+	private SQLDB sqlDB;
+	
    /** The instructor database. */
    private InstructorDB instructorDB;
 
@@ -29,9 +32,10 @@ public class Database
     **/
    public Database()
    {
-      instructorDB = new InstructorDB();
-      courseDB = new CourseDB();
-      locationDB = new LocationDB();
+	   SQLDB sqldb = new SQLDB();
+      instructorDB = new InstructorDB(sqldb);
+      courseDB = new CourseDB(sqldb);
+      locationDB = new LocationDB(sqldb);
    }
 
    /**
