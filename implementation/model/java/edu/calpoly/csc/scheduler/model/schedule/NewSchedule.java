@@ -40,13 +40,19 @@ public class NewSchedule extends Observable implements Serializable
    
    private TimeRange bounds = new TimeRange(new Time(7, 0), new Time(22, 0));
 
-   Vector<ScheduleItem> siList = new Vector<ScheduleItem>();
+   Vector<ScheduleItem> items = new Vector<ScheduleItem>();
 
-   public NewSchedule ()
-   {
-      
-   }
-
+   public NewSchedule () { }
+   
+   /**
+    * Adds the given ScheduleItem to this schedule. Before an add is done, the
+    * ScheduleItem is verified to make sure it doesn't double-book an 
+    * instructor/location and that the instructor can actually teach the course.
+    * 
+    * @param si ScheduleItem to add
+    * 
+    * @return true if the item was added. False otherwise.
+    */
    public boolean add (ScheduleItem si)
    {
       boolean r = false;
@@ -103,7 +109,7 @@ public class NewSchedule extends Observable implements Serializable
       
       bookSection(si.getCourse());
       
-      this.siList.add(si);
+      this.items.add(si);
    }
    
    /**
@@ -119,6 +125,8 @@ public class NewSchedule extends Observable implements Serializable
       
       int i = this.courseCount.get(c);
       i ++;
+      this.courseCount.put(c, i);
+      
       if (i == c.getNumOfSections())
       {
          cSourceList.remove(c);
@@ -182,6 +190,7 @@ public class NewSchedule extends Observable implements Serializable
             try
             {
                Vector<ScheduleItem> sis = genListForInstructor(i);
+               add(sis.get(0));
                //TODO: Write pruning method
             }
             catch (InstructorCanTeachNothingException e)
@@ -189,7 +198,6 @@ public class NewSchedule extends Observable implements Serializable
                toRemove.add(i);
             }
             //TODO: Sort ScheduleItems
-            //TODO: Write "add" method
          }
       }
    }
@@ -249,22 +257,9 @@ public class NewSchedule extends Observable implements Serializable
       lec_si_list = findTimes(lec_base);
       lec_si_list = findLocations(lec_si_list);
       
-      /*
-       * Get ScheduleItems for the lab, if there is one
-       */
-      ScheduleItem lab_base = null;
-      Course lab            = lec_base.getCourse().getLab();
-      if (lab != null)
-      {
-         lab_base = new ScheduleItem();
-         lab_base.setInstructor(lec_base.getInstructor());
-         lab_base.setCourse(lab);
-         
-         lab_si_list = findTimes(lab_base);
-         lab_si_list = findLocations (lab_si_list);
-      }
+      //TODO: Do labs
       
-      return joinLecsWithLabs(lec_si_list, lab_si_list);
+      return lec_si_list;
    }
    
    /**
@@ -307,8 +302,7 @@ public class NewSchedule extends Observable implements Serializable
          if (pref > bestPref)
          {
             canPref = true;
-            //TODO: GET UPDATE FROM TYLER
-            // if (i.canTeach(temp))
+             if (i.canTeach(temp))
             {
                canWTU = true;
                bestC = temp;
@@ -432,7 +426,6 @@ public class NewSchedule extends Observable implements Serializable
             if (!lec_si.getTimeRange().overlaps(lab_si.getTimeRange()))
             {
                lec_clone.setLab(lab_si);
-               /* TODO: Check lab pad. Currently impossible */
             }
          }
          items.add(lec_clone);
@@ -440,4 +433,13 @@ public class NewSchedule extends Observable implements Serializable
       return items;
    }
 
+   /**
+    * Returns the items
+    * 
+    * @return the items
+    */
+   public Vector<ScheduleItem> getItems ()
+   {
+      return items;
+   }
 }
