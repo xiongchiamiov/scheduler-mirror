@@ -101,7 +101,24 @@ public class NewSchedule extends Observable implements Serializable
       wtu += si.getWtuTotal();
       i.setCurWtu(wtu);
       
+      bookSection(si.getCourse());
+      
       this.siList.add(si);
+   }
+   
+   private void bookSection (Course c)
+   {
+      if (!this.courseCount.containsKey(c))
+      {
+         this.courseCount.put(c, 0);
+      }
+      
+      int i = this.courseCount.get(c);
+      i ++;
+      if (i == c.getNumOfSections())
+      {
+         cSourceList.remove(c);
+      }
    }
    
    /**
@@ -152,9 +169,8 @@ public class NewSchedule extends Observable implements Serializable
                          List<Location> l_list)
    {
       initGenData(c_list, i_list, l_list);
-      boolean done = false;
 
-      while (!done)
+      while (shouldKeepGenerating())
       {
          Vector<Instructor> toRemove = new Vector<Instructor>();
          for (Instructor i : this.iSourceList)
@@ -172,6 +188,11 @@ public class NewSchedule extends Observable implements Serializable
             //TODO: Write "add" method
          }
       }
+   }
+   
+   private boolean shouldKeepGenerating ()
+   {
+      return this.cSourceList.size() > 0;
    }
    
    /**
