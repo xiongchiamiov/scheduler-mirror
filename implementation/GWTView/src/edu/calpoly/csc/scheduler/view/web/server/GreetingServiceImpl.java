@@ -77,8 +77,17 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	
 	
 	public void saveInstructors(ArrayList<InstructorGWT> instructors) throws IllegalArgumentException {
-		
 		/** TODO */
+		Database sqldb = new Database();
+
+		InstructorDB idb = sqldb.getInstructorDB();
+//		LocationDB ldb = sqldb.getLocationDB();
+		
+		idb.clearData();
+		
+		for (InstructorGWT instructor : instructors)
+//			idb.addData(new Instructor(instructor.getName(), instructor.getName(), instructor.getUserID(), instructor.getWtu(), ldb.getLocation(instructor.getOffice())));
+			idb.addData(new Instructor(instructor.getFirstName(), instructor.getLastName(), instructor.getUserID(), instructor.getWtu(), instructor.getBuilding(), instructor.getRoomNumber(), instructor.getDisabilities()));
 	}
 
 	public ArrayList<gwtScheduleItem> getGWTScheduleItems()
@@ -243,7 +252,17 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public void saveLocations(ArrayList<LocationGWT> locations) {
 		// TODO Auto-generated method stub
+
+		/** TODO */
+		Database sqldb = new Database();
+
+		LocationDB ldb = sqldb.getLocationDB();
 		
+		ldb.clearData();
+		
+		for (LocationGWT location : locations)
+//			ldb.addData(new Location(location.getBuilding(), location.getRoom(), location.getMaxOccupancy(), location.getType(), false, false, false, false));
+			ldb.addData(new Location(location.getBuilding(), location.getRoom(), location.getMaxOccupancy(), location.getType(), location.isADACompliant(), location.isSmartRoom(), location.hasLaptopConnectivity(), location.hasOverhead()));
 	}
 	
 	@Override
@@ -285,6 +304,16 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public void saveCourses(ArrayList<CourseGWT> courses) {
 		// TODO Auto-generated method stub
+
+		/** TODO */
+		Database sqldb = new Database();
+
+		CourseDB cdb = sqldb.getCourseDB();
 		
+		cdb.clearData();
+		
+		for (CourseGWT course : courses)
+//			cdb.addData(new Course(course.getCourseName(), course.getDept(), course.getCatalogNum()));
+			cdb.addData(new Course(course.getID(), course.getCourseName(), course.getCatalogNum(), course.getWtu(), course.getScu(), course.getType(), course.getMaxEnroll(), course.getLabID(), course.getSmartroom(), course.getLaptop(), course.getOverhead(), 8, course.getCTPrefix(), course.getPrefix()));
 	}
 }

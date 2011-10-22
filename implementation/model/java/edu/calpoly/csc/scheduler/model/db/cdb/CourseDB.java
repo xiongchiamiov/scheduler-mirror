@@ -149,6 +149,12 @@ public class CourseDB implements DatabaseAPI<Course>
       // Execute
       sqldb.executePrepStmt(stmt);
    }
+   
+   public void clearData ()
+   {
+      PreparedStatement stmt = sqldb.getPrepStmt("delete from courses;");
+      sqldb.executePrepStmt(stmt);
+   }
 
    @Override
    public void editData(Course data)

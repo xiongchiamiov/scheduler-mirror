@@ -918,6 +918,7 @@ public class SQLDB
       try
       {
          result = stmt.executeUpdate();
+         conn.commit();
          stmt.close();
       }
       catch (SQLException e)

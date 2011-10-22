@@ -195,7 +195,7 @@ public class InstructorDB implements DatabaseAPI<Instructor>
 
    public void clearData()
    {
-      PreparedStatement stmt = sqldb.getPrepStmt("clear * from instructors");
+      PreparedStatement stmt = sqldb.getPrepStmt("delete from courses;");
       sqldb.executePrepStmt(stmt);
    }
 
