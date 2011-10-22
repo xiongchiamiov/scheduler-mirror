@@ -13,10 +13,11 @@ import java.util.ArrayList;
 
 import edu.calpoly.csc.scheduler.model.db.DatabaseAPI;
 import edu.calpoly.csc.scheduler.model.db.SQLDB;
+import edu.calpoly.csc.scheduler.model.schedule.NewSchedule;
 import edu.calpoly.csc.scheduler.model.schedule.Schedule;
 
-public class ScheduleDB implements DatabaseAPI<Schedule> {
-	private ArrayList<Schedule> data;
+public class ScheduleDB implements DatabaseAPI<NewSchedule> {
+	private ArrayList<NewSchedule> data;
 	private SQLDB sqldb;
 
 	public ScheduleDB(SQLDB sqldb) {
@@ -25,12 +26,12 @@ public class ScheduleDB implements DatabaseAPI<Schedule> {
 	}
 
 	private void initDB() {
-		data = new ArrayList<Schedule>();
+		data = new ArrayList<NewSchedule>();
 		pullData();
 	}
 
 	@Override
-	public ArrayList<Schedule> getData() {
+	public ArrayList<NewSchedule> getData() {
 		return data;
 	}
 
@@ -39,7 +40,7 @@ public class ScheduleDB implements DatabaseAPI<Schedule> {
 		ResultSet rs = sqldb.getSQLSchedules();
 		try {
 			while (rs.next()) {
-				Schedule toAdd = new Schedule();
+			   NewSchedule toAdd = new NewSchedule();
 				// Deserialize ALL THE SCHEDULE!
 				byte[] scheduleBuf = rs.getBytes("schedule");
 				if (scheduleBuf != null) {
@@ -47,7 +48,7 @@ public class ScheduleDB implements DatabaseAPI<Schedule> {
 						ObjectInputStream objectIn;
 						objectIn = new ObjectInputStream(
 								new ByteArrayInputStream(scheduleBuf));
-						toAdd = (Schedule) objectIn.readObject();
+						toAdd = (NewSchedule) objectIn.readObject();
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -61,10 +62,10 @@ public class ScheduleDB implements DatabaseAPI<Schedule> {
 		}
 	}
 
-	public void saveSchedule(Schedule data, String name, String quarterID) {
+	public void saveSchedule(NewSchedule data, String name, String quarterID) {
 		// Make sure data in schedule and given name are correct
 		data.setName(name);
-		data.setQuarterID(quarterID);
+		data.setQuarterId(quarterID);
 		// Create insert string
 		String insertString = "insert into schedules ("
 				+ "name, quarterid, schedule" + "values (?, ?, ?)";
@@ -73,7 +74,7 @@ public class ScheduleDB implements DatabaseAPI<Schedule> {
 		// Set values
 		try {
 			stmt.setString(1, data.getName());
-			stmt.setString(2, data.getQuarterID());
+			stmt.setString(2, data.getQuarterId());
 			// Get Schedule through Serializable
 			try {
 				ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -94,7 +95,7 @@ public class ScheduleDB implements DatabaseAPI<Schedule> {
 	
 
 	@Override
-	public void addData(Schedule data) {
+	public void addData(NewSchedule data) {
 		// Create insert string
 		String insertString = "insert into schedules (name, quarterid, schedule"
 				+ "values (?, ?, ?)";
@@ -103,7 +104,7 @@ public class ScheduleDB implements DatabaseAPI<Schedule> {
 		// Set values
 		try {
 			stmt.setString(1, data.getName());
-			stmt.setString(2, data.getQuarterID());
+			stmt.setString(2, data.getQuarterId());
 			// Get Schedule through Serializable
 			try {
 				ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -122,7 +123,7 @@ public class ScheduleDB implements DatabaseAPI<Schedule> {
 	}
 
 	@Override
-	public void editData(Schedule data) {
+	public void editData(NewSchedule data) {
 		// Create insert string
 		String updateString = "update schedules set name = ?, quarterid = ?, schedule = ? where scheduleid = ?";
 		// Create prepared statement
@@ -130,7 +131,7 @@ public class ScheduleDB implements DatabaseAPI<Schedule> {
 		// Set values
 		try {
 			stmt.setString(1, data.getName());
-			stmt.setString(2, data.getQuarterID());
+			stmt.setString(2, data.getQuarterId());
 			// Get Schedule through Serializable
 			try {
 				ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -151,7 +152,7 @@ public class ScheduleDB implements DatabaseAPI<Schedule> {
 	}
 
 	@Override
-	public void removeData(Schedule data) {
+	public void removeData(NewSchedule data) {
 		// Create delete string
 		String deleteString = "delete from schedules where scheduleid = ?";
 		// Create prepared statement
