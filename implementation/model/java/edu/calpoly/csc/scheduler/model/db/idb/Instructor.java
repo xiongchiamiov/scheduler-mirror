@@ -32,89 +32,6 @@ import java.io.Serializable;
 public class Instructor implements Comparable<Instructor>, Serializable
 {
    public static final int serialVersionUID = 42;
-
-   /**
-    * This exception class is thrown when the day of week is not in the Sunday
-    * to Saturday format.
-    * 
-    * @author Cedric Wienold
-    * 
-    */
-   public class InvalidDayOfWeekException extends RuntimeException
-   {
-      /**
-       * Calls the exception constructor.
-       */
-      public InvalidDayOfWeekException ()
-      {
-         super();
-      }
-   }
-
-   /**
-    * This exception is raised when invalid time inputs are entered.
-    * 
-    * @author Cedric Wienold
-    * 
-    */
-   public class InvalidTimeInputException extends RuntimeException
-   {
-      public InvalidTimeInputException ()
-      {
-         super();
-      }
-   }
-
-   /**
-    * Exception class for null preferences.
-    * 
-    * @author Cedric Wienold
-    * 
-    */
-   public static class NullPreferenceException extends RuntimeException
-   {
-      /**
-       * This constructor is used for throwing this exception.
-       */
-      public NullPreferenceException ()
-      {
-         super();
-      }
-   }
-
-   /**
-    * Exception class for null user ids.
-    * 
-    * @author Cedric Wienold
-    * 
-    */
-   public static class NullUserIDException extends RuntimeException
-   {
-      /**
-       * This constructor is used for throwing this exception.
-       */
-      public NullUserIDException ()
-      {
-         super();
-      }
-   }
-
-   /**
-    * Exception class for generally bad instructors.
-    * 
-    * @author Cedric Wienold
-    * 
-    */
-   public static class InvalidInstructorException extends RuntimeException
-   {
-      /**
-       * This constructor throws this exception.
-       */
-      public InvalidInstructorException ()
-      {
-         super();
-      }
-   }
    
    /**
     * First name of instructor.
@@ -125,8 +42,6 @@ public class Instructor implements Comparable<Instructor>, Serializable
     * Last name of instructor.
     */
    private String lastName;
-   
-   private String roomNumber;
 
    /**
     * User ID of instructor.
@@ -167,8 +82,6 @@ public class Instructor implements Comparable<Instructor>, Serializable
     * Records this instructor's current availability.
     */
    private WeekAvail availability;
-   
-   private String building;
 
    /**
     * List of preferences each instructor has for a course.
@@ -327,8 +240,7 @@ public class Instructor implements Comparable<Instructor>, Serializable
 		      this.lastName = last;
 		      this.userID = id;
 		      this.maxWtu = wtu;
-		      this.building = building;
-		      this.roomNumber = room;
+		      this.office = new Location(building, room);
 		      this.disability = disabilities;
 		      this.availability = new WeekAvail();
 		      this.coursePreferences = initialCoursePreferences();
@@ -508,15 +420,8 @@ public class Instructor implements Comparable<Instructor>, Serializable
       {
          return false;
       }
-
-      try
-      {
-         if (!((Instructor) other).getId().equals(this.userID))
-         {
-            return false;
-         }
-      }
-      catch (NullUserIDException e)
+      
+      if (!((Instructor) other).getId().equals(this.userID))
       {
          return false;
       }
@@ -571,8 +476,9 @@ public class Instructor implements Comparable<Instructor>, Serializable
       return disability;
    }
 
-   public String getBuilding(){
-	   return building;
+   public String getBuilding()
+   {
+	   return office.getBuilding();
    }
    
    /**
@@ -633,8 +539,9 @@ public class Instructor implements Comparable<Instructor>, Serializable
       return this.maxWtu;
    }
 
-   public String getRoomNumber(){
-	   return roomNumber;
+   public String getRoomNumber()
+   {
+	   return this.office.getRoom();
    }
    
    /**

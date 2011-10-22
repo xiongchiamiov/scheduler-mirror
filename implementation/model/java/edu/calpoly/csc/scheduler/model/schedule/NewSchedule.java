@@ -79,10 +79,13 @@ public class NewSchedule extends Observable implements Serializable
    /**
     * Applies all the day/time/wtu commitments of a ScheduleItem to the internal
     * structures the Schedule uses to keep track of things. iBookings, 
-    * lBookings, and the instructor's WTU count are updated.
+    * lBookings, and the instructor's WTU count are updated. It is assumed 
+    * you've already verified the ScheduleItem.
     *  
     * @param si The ScheduleItem w/ the days, times, etc. which'll be booked
     *           in the schedule
+    *
+    * @see #verify(ScheduleItem)
     */
    private void book (ScheduleItem si)
    {
