@@ -552,22 +552,6 @@ public class Instructor extends DbData
     * time on given days. If there is a preference of 0 found in this length of
     * Time for any day in the Week, 0 is returned immediately.
     * 
-    * @param dat Object containing the week, start, and end time to lookup the
-    *        average preference for.
-    * 
-    * @return the average desire for the given time range. If there was a 0
-    *         found anywhere in this time range, 0 is returned.
-    */
-   public double getAvgPrefForTimeRange (DaysAndTime dat)
-   {
-      return getAvgPrefForTimeRange(dat.getWeek(), dat.getS(), dat.getE());
-   }
-
-   /**
-    * Returns the average desire an Instructor has for teaching a give length of
-    * time on given days. If there is a preference of 0 found in this length of
-    * Time for any day in the Week, 0 is returned immediately.
-    * 
     * @param w The day(s) to check
     * @param s The start time
     * @param e The end time
@@ -612,6 +596,23 @@ public class Instructor extends DbData
       return total;
    }
 
+   /**
+    * Returns the average desire an Instructor has for teaching a give length of
+    * time on given days. If there is a preference of 0 found in this length of
+    * Time for any day in the Week, 0 is returned immediately.
+    * 
+    * @param w The day(s) to check
+    * @param tr Time range to check
+    * 
+    * @return the average desire for the given time span
+    * 
+    * @see #getAvgPrefForTimeRange (Week,Time,Time)
+    */
+   public double getAvgPrefForTimeRange (Week w, TimeRange tr)
+   {
+      return this.getAvgPrefForTimeRange(w, tr.getS(), tr.getE());
+   }
+   
    /**
     * This method returns the list of time preferences.
     * 
