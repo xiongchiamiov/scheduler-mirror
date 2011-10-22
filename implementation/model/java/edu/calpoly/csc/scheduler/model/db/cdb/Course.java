@@ -85,6 +85,11 @@ public class Course implements Serializable
    private int labPad = 0;
    
    /**
+    * The quarter this course applies to
+    */
+   private String quarterId = "";
+   
+   /**
     * Default constructor. Does nothing.
     */
    public Course () { }
@@ -210,6 +215,26 @@ public class Course implements Serializable
    public void setCatalogNum (int catalogNum)
    {
       this.catalogNum = catalogNum;
+   }
+
+   /**
+    * Returns the quarterId
+    * 
+    * @return the quarterId
+    */
+   public String getQuarterId ()
+   {
+      return quarterId;
+   }
+
+   /**
+    * Sets the quarterId to the given parameter.
+    *
+    * @param quarterId the quarterId to set
+    */
+   public void setQuarterId (String quarterId)
+   {
+      this.quarterId = quarterId;
    }
 
    /**
