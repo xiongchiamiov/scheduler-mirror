@@ -19,7 +19,7 @@ public class InstructorDB implements DatabaseAPI<Instructor>
 
    public InstructorDB(SQLDB sqldb)
    {
-	   this.sqldb = sqldb;
+      this.sqldb = sqldb;
       initDB();
    }
 
@@ -48,36 +48,28 @@ public class InstructorDB implements DatabaseAPI<Instructor>
             String lname = rs.getString("lastname");
             String userid = rs.getString("userid");
             int maxwtu = rs.getInt("wtu");
-            //int curwtu = rs.getInt("curwtu");
+            // int curwtu = rs.getInt("curwtu");
             String building = rs.getString("building");
             String room = rs.getString("room");
             boolean disabilities = rs.getBoolean("disabilities");
             // Put items into Instructor object and add to data
             Location office = new Location(building, room);
-            Instructor toAdd = new Instructor(fname, lname, userid, maxwtu, building,
-                  room, disabilities);
+            Instructor toAdd = new Instructor(fname, lname, userid, maxwtu,
+                  building, room, disabilities);
 
             // Deserialize week availability and course preferences
-            /*byte[] weekAvailBuf = rs.getBytes("weekavail");
-            byte[] coursePrefsBuf = rs.getBytes("coursepreferences");
-            if (weekAvailBuf != null && coursePrefsBuf != null)
-            {
-               try
-               {
-                  ObjectInputStream objectIn;
-                  objectIn = new ObjectInputStream(new ByteArrayInputStream(
-                        weekAvailBuf));
-                  toAdd.setAvailability((WeekAvail) objectIn.readObject());
-                  objectIn = new ObjectInputStream(new ByteArrayInputStream(
-                        coursePrefsBuf));
-                  toAdd.setCoursePreferences((ArrayList<CoursePreference>) objectIn
-                        .readObject());
-               }
-               catch (Exception e)
-               {
-                  e.printStackTrace();
-               }
-            }*/
+            /*
+             * byte[] weekAvailBuf = rs.getBytes("weekavail"); byte[]
+             * coursePrefsBuf = rs.getBytes("coursepreferences"); if
+             * (weekAvailBuf != null && coursePrefsBuf != null) { try {
+             * ObjectInputStream objectIn; objectIn = new ObjectInputStream(new
+             * ByteArrayInputStream( weekAvailBuf));
+             * toAdd.setAvailability((WeekAvail) objectIn.readObject());
+             * objectIn = new ObjectInputStream(new ByteArrayInputStream(
+             * coursePrefsBuf));
+             * toAdd.setCoursePreferences((ArrayList<CoursePreference>) objectIn
+             * .readObject()); } catch (Exception e) { e.printStackTrace(); } }
+             */
             data.add(toAdd);
          }
       }
@@ -90,7 +82,7 @@ public class InstructorDB implements DatabaseAPI<Instructor>
    @Override
    public void addData(Instructor data)
    {
-      // Create insert strings
+      // Create insert string
       String insertString = "insert into instructors ("
             + "firstname, lastname, userid, maxwtu, curwtu, building, room, "
             + "disabilities, weekavail, coursepreferences)"
@@ -116,7 +108,6 @@ public class InstructorDB implements DatabaseAPI<Instructor>
             out.writeObject(data.getAvailability());
             out.close();
             stmt.setBytes(9, baos.toByteArray());
-            // TODO: get coursepreferences
             baos = new ByteArrayOutputStream();
             out = new ObjectOutputStream(baos);
             out.writeObject(data.getCoursePreferences());
@@ -133,29 +124,81 @@ public class InstructorDB implements DatabaseAPI<Instructor>
       }
       // Execute
       sqldb.executePrepStmt(stmt);
-
    }
 
    @Override
-   public void editData(Instructor newData)
+   public void editData(Instructor data)
    {
-      // TODO Auto-generated method stub
+      // Create update string
+      String insertString = "update instructors set firstname = ?, lastname = ?,"
+            + "userid = ?, maxwtu = ?, curwtu = ?, building = ?, room = ?, "
+            + "disabilities = ?, weekavail = ?, coursepreferences = ? where userid = ?";
+      // Create prepared statement
+      PreparedStatement stmt = sqldb.getPrepStmt(insertString);
+      // Set values
+      try
+      {
+         stmt.setString(1, data.getFirstName());
+         stmt.setString(2, data.getLastName());
+         stmt.setString(3, data.getId());
+         stmt.setInt(4, data.getMaxWTU());
+         stmt.setInt(5, data.getCurWtu());
+         stmt.setString(6, data.getOffice().getBuilding());
+         stmt.setString(7, data.getOffice().getRoom());
+         stmt.setBoolean(8, data.getDisability());
+         // Get WeekAvail and CoursePrefs through Serializable
+         try
+         {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutput out = new ObjectOutputStream(baos);
+            out.writeObject(data.getAvailability());
+            out.close();
+            stmt.setBytes(9, baos.toByteArray());
+            baos = new ByteArrayOutputStream();
+            out = new ObjectOutputStream(baos);
+            out.writeObject(data.getCoursePreferences());
+            stmt.setBytes(10, baos.toByteArray());
+         }
+         catch (IOException e)
+         {
+            e.printStackTrace();
+         }
+         stmt.setString(11, data.getId());
+      }
+      catch (SQLException e)
+      {
+         e.printStackTrace();
+      }
+      // Execute
+      sqldb.executePrepStmt(stmt);
 
    }
 
    @Override
    public void removeData(Instructor data)
    {
-      // TODO Auto-generated method stub
-
+      // Create delete string
+      String deleteString = "delete from instructors where id = ?";
+      // Create prepared statement
+      PreparedStatement stmt = sqldb.getPrepStmt(deleteString);
+      try
+      {
+         stmt.setString(1, data.getId());
+      }
+      catch (SQLException e)
+      {
+         e.printStackTrace();
+      }
+      // Execute
+      sqldb.executePrepStmt(stmt);
    }
 
-   public void clearData ()
+   public void clearData()
    {
       PreparedStatement stmt = sqldb.getPrepStmt("clear * from instructors");
       sqldb.executePrepStmt(stmt);
    }
-   
+
    /**
     * Returns a vector of instructors for teaching this course. Instructors
     * returned have the needed WTUs left to teach this course. Sorted by

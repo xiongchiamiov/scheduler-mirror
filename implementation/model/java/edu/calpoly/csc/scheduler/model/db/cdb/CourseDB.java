@@ -18,7 +18,7 @@ public class CourseDB implements DatabaseAPI<Course>
 
    public CourseDB(SQLDB sqldb)
    {
-	   this.sqldb = sqldb;
+      this.sqldb = sqldb;
       initDB();
    }
 
@@ -46,12 +46,12 @@ public class CourseDB implements DatabaseAPI<Course>
             int id = rs.getInt("id");
             String name = rs.getString("name");
             int catalogNum = rs.getInt("coursenum");
-            //String dept = rs.getString("dept");
+            // String dept = rs.getString("dept");
             int wtus = rs.getInt("wtus");
             int scus = rs.getInt("scus");
-            //int numOfSections = rs.getInt("numofsections");
+            // int numOfSections = rs.getInt("numofsections");
             String courseType = rs.getString("classType");
-            //int length = rs.getInt("length");
+            // int length = rs.getInt("length");
             int enrollment = rs.getInt("maxEnrollment");
             int labId = rs.getInt("labPairing");
             boolean smartroom = rs.getBoolean("smartroom");
@@ -62,17 +62,15 @@ public class CourseDB implements DatabaseAPI<Course>
             String prefix = rs.getString("prefix");
 
             // Put items into Course object and add to data
-            Course toAdd = new Course(id, name, catalogNum, wtus, scus, courseType, enrollment,
-            					labId, smartroom, laptop, overhead, hoursPerWeek, ctPrefix, prefix);
+            Course toAdd = new Course(id, name, catalogNum, wtus, scus,
+                  courseType, enrollment, labId, smartroom, laptop, overhead,
+                  hoursPerWeek, ctPrefix, prefix);
 
             // TODO: Check what value null ints are stored as and change this
-            /*if (labId > -1)
-            {
-               lab = new Course();
-               lab.setId(labId);
-               lab.setType(CourseType.LAB);
-            }
-            toAdd.setLab(lab);*/
+            /*
+             * if (labId > -1) { lab = new Course(); lab.setId(labId);
+             * lab.setType(CourseType.LAB); } toAdd.setLab(lab);
+             */
             data.add(toAdd);
          }
       }
@@ -93,7 +91,7 @@ public class CourseDB implements DatabaseAPI<Course>
          // Course has a lab
          if (course.getLab() != null)
          {
-            //Find lab data and put it into the object
+            // Find lab data and put it into the object
             course.setLab(data.get(data.indexOf(course.getLab())));
          }
       }
@@ -102,30 +100,30 @@ public class CourseDB implements DatabaseAPI<Course>
    @Override
    public void addData(Course data)
    {
-      // Create insert strings
+      // Create insert string
       String insertString = "insert into courses ("
             + "name, catalognum, dept, wtu, scu, numofsections, coursetype, "
             + "length, enrollment, labid)"
             + "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
       // Create prepared statement
       PreparedStatement stmt = sqldb.getPrepStmt(insertString);
-      int labid = -1;
       // TODO: Clean this next part up. It's gross.
       // Check if it has a lab
+      int labid = -1;
       try
       {
          if (data.getLab() != null)
          {
             // Insert lab into DB and get id
-            stmt.setString(1, data.getName());
-            stmt.setInt(2, data.getCatalogNum());
-            stmt.setString(3, data.getDept());
-            stmt.setInt(4, data.getWtu());
-            stmt.setInt(5, data.getScu());
-            stmt.setInt(6, data.getNumOfSections());
-            stmt.setString(7, data.getType().toString());
-            stmt.setInt(8, data.getLength());
-            stmt.setInt(9, data.getEnrollment());
+            stmt.setString(1, data.getLab().getName());
+            stmt.setInt(2, data.getLab().getCatalogNum());
+            stmt.setString(3, data.getLab().getDept());
+            stmt.setInt(4, data.getLab().getWtu());
+            stmt.setInt(5, data.getLab().getScu());
+            stmt.setInt(6, data.getLab().getNumOfSections());
+            stmt.setString(7, data.getLab().getType().toString());
+            stmt.setInt(8, data.getLab().getLength());
+            stmt.setInt(9, data.getLab().getEnrollment());
             labid = sqldb.executePrepStmt(stmt);
          }
          // Set values
@@ -147,21 +145,60 @@ public class CourseDB implements DatabaseAPI<Course>
       {
          e.printStackTrace();
       }
+
       // Execute
       sqldb.executePrepStmt(stmt);
    }
 
    @Override
-   public void editData(Course newData)
+   public void editData(Course data)
    {
-      // TODO Auto-generated method stub
-
+      // Create update string
+      String updateString = "update courses set name = ?, catalognum = ?, "
+            + "dept = ?, wtu = ?, scu = ?, numofsections = ?, "
+            + "coursetype = ?, length = ?, enrollment = ?, "
+            + "labid = ? where id = ?";
+      // Create prepared statement
+      PreparedStatement stmt = sqldb.getPrepStmt(updateString);
+      // Set values
+      try
+      {
+         stmt.setString(1, data.getName());
+         stmt.setInt(2, data.getCatalogNum());
+         stmt.setString(3, data.getDept());
+         stmt.setInt(4, data.getWtu());
+         stmt.setInt(5, data.getScu());
+         stmt.setInt(6, data.getNumOfSections());
+         stmt.setString(7, data.getType().toString());
+         stmt.setInt(8, data.getLength());
+         stmt.setInt(9, data.getEnrollment());
+         stmt.setInt(10, data.getLab().getId());
+         stmt.setInt(11, data.getId());
+      }
+      catch (SQLException e)
+      {
+         e.printStackTrace();
+      }
+      // Execute
+      sqldb.executePrepStmt(stmt);
    }
 
    @Override
    public void removeData(Course data)
    {
-      // TODO Auto-generated method stub
-
+      // Create delete string
+      String deleteString = "delete from courses where id = ?";
+      // Create prepared statement
+      PreparedStatement stmt = sqldb.getPrepStmt(deleteString);
+      try
+      {
+         stmt.setInt(1, data.getId());
+      }
+      catch (SQLException e)
+      {
+         e.printStackTrace();
+      }
+      // Execute
+      sqldb.executePrepStmt(stmt);
    }
 }

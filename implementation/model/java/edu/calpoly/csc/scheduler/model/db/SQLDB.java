@@ -894,7 +894,7 @@ public class SQLDB
 
    public PreparedStatement getPrepStmt(String sql)
    {
-         open();
+      open();
          
       try
       {

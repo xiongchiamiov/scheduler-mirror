@@ -19,7 +19,7 @@ public class LocationDB implements DatabaseAPI<Location>
 
    public LocationDB(SQLDB sqldb)
    {
-	   this.sqldb = sqldb;
+      this.sqldb = sqldb;
       initDB();
    }
 
@@ -56,21 +56,13 @@ public class LocationDB implements DatabaseAPI<Location>
                   adacompliant, smartroom, laptopconnectivity, overhead);
 
             // Deserialize week availiability
-            /*byte[] buf = rs.getBytes("weekavail");
-            if (buf != null)
-            {
-               try
-               {
-                  ObjectInputStream objectIn;
-                  objectIn = new ObjectInputStream(
-                        new ByteArrayInputStream(buf));
-                  toAdd.setAvailability((WeekAvail) objectIn.readObject());
-               }
-               catch (Exception e)
-               {
-                  e.printStackTrace();
-               }
-            }*/
+            /*
+             * byte[] buf = rs.getBytes("weekavail"); if (buf != null) { try {
+             * ObjectInputStream objectIn; objectIn = new ObjectInputStream( new
+             * ByteArrayInputStream(buf)); toAdd.setAvailability((WeekAvail)
+             * objectIn.readObject()); } catch (Exception e) {
+             * e.printStackTrace(); } }
+             */
             data.add(toAdd);
          }
       }
@@ -83,7 +75,7 @@ public class LocationDB implements DatabaseAPI<Location>
    @Override
    public void addData(Location data)
    {
-      // Create insert strings
+      // Create insert string
       String insertString = "insert into locations ("
             + "building, room, maxoccupancy, type, smartroom, "
             + "laptopconnectivity, adacompliant, overhead, weekavail)"
@@ -124,23 +116,75 @@ public class LocationDB implements DatabaseAPI<Location>
    }
 
    @Override
-   public void editData(Location newData)
+   public void editData(Location data)
    {
-      // TODO Auto-generated method stub
+      // Create update string
+      String updateString = "update locations set building = ?, room = ?,"
+            + "maxoccupancy = ?, type = ?, smartroom = ?, laptopconnectivity = ?, "
+            + "adacompliant = ?, overhead = ?, weekavail = ? "
+            + "where building = ? and room = ?";
+      // Create prepared statement
+      PreparedStatement stmt = sqldb.getPrepStmt(updateString);
+      // Set values
+      try
+      {
+         stmt.setString(1, data.getBuilding());
+         stmt.setString(2, data.getRoom());
+         stmt.setInt(3, data.getMaxOccupancy());
+         stmt.setString(4, data.getType());
+         stmt.setBoolean(5, data.isSmartRoom());
+         stmt.setBoolean(6, data.hasLaptopConnectivity());
+         stmt.setBoolean(7, data.isADACompliant());
+         stmt.setBoolean(8, data.hasOverhead());
+         // Get WeekAvail through Serializable
+         try
+         {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutput out = new ObjectOutputStream(baos);
+            out.writeObject(data.getAvailability());
+            out.close();
+            stmt.setBytes(9, baos.toByteArray());
+         }
+         catch (IOException e)
+         {
+            e.printStackTrace();
+         }
+         stmt.setString(10, data.getBuilding());
+         stmt.setString(11, data.getRoom());
+      }
+      catch (SQLException e)
+      {
+         e.printStackTrace();
+      }
+      // Execute
+      sqldb.executePrepStmt(stmt);
 
    }
 
    @Override
    public void removeData(Location data)
    {
-      // TODO Auto-generated method stub
-
+      // Create delete string
+      String deleteString = "delete from locations where building = ? and room = ?";
+      // Create prepared statement
+      PreparedStatement stmt = sqldb.getPrepStmt(deleteString);
+      try
+      {
+         stmt.setString(1, data.getBuilding());
+         stmt.setString(2, data.getRoom());
+      }
+      catch (SQLException e)
+      {
+         e.printStackTrace();
+      }
+      // Execute
+      sqldb.executePrepStmt(stmt);
    }
 
-   public Location getLocation (String id)
+   public Location getLocation(String id)
    {
       String[] stuff = id.split("-");
-      
+
       Location l = new Location(stuff[0], stuff[1]);
       if (!this.data.contains(l))
       {
@@ -150,10 +194,10 @@ public class LocationDB implements DatabaseAPI<Location>
       {
          l = this.data.get(this.data.indexOf(l));
       }
-      
+
       return l;
    }
-   
+
    public List<Location> findRooms(Course course, Vector<TimeRange> times)
    {
       List<Location> rooms = new Vector<Location>();
