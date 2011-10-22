@@ -75,6 +75,16 @@ public class Schedule extends Observable implements Serializable
     * Determines when the day ends for scheduling. Default is 10p.
     */
    private Time dayEnd = new Time (22, 0);
+   
+   /**
+    * ID for the schedule in the database
+    */
+   private int id = -1;
+   
+   /**
+    * Name for the schedule
+    */
+   private String name = "";
 
    /*<==*/
 
@@ -1309,7 +1319,23 @@ public class Schedule extends Observable implements Serializable
    }
    /*<==*/
 
-   /**
+   public int getId() {
+	return id;
+}
+
+public void setId(int id) {
+	this.id = id;
+}
+
+public String getName() {
+	return name;
+}
+
+public void setName(String name) {
+	this.name = name;
+}
+
+/**
     * Replaces this schedule with a given one, while preserving this one's 
     * reference. All data (lists, TBAs, booking information, treatment, and the
     * actual schedule) is passed over via shallow copies. 
