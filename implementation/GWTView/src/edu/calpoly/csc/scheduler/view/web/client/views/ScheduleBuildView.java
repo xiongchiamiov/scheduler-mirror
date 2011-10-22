@@ -83,7 +83,7 @@ public class ScheduleBuildView extends ScrollPanel {
 			@Override
 			public void onFailure(Throwable caught) {
 				// TODO something bad happened
-				Window.alert("Could not get available courses");
+				Window.alert("Could not get available courses from database.");
 			}
 
 			@Override
