@@ -26,8 +26,6 @@ public class NewSchedule extends Observable implements Serializable
    private List<Course> genCourseList           = new Vector<Course>();
    private List<Instructor> genInstructorList   = new Vector<Instructor>();
    private List<Location> genLocationList       = new Vector<Location>();
-   
-   private TreatmentTracker treatment = new TreatmentTracker();
 
    private HashMap<Instructor, WeekAvail> iBookings = 
       new HashMap<Instructor, WeekAvail>();
@@ -42,6 +40,10 @@ public class NewSchedule extends Observable implements Serializable
 
    Vector<ScheduleItem> items = new Vector<ScheduleItem>();
 
+   private Integer id = -1;
+   private String quarterId = "";
+   private String name = "";
+   
    public NewSchedule () { }
    
    /**
@@ -152,12 +154,13 @@ public class NewSchedule extends Observable implements Serializable
       Week days = si.getDays();
       TimeRange tr = si.getTimeRange();
       Instructor i = si.getInstructor();
+      Location l = si.getLocation();
       
-      if (this.iBookings.get(si.getInstructor()).isFree(tr, days))
+      if (i.isAvailable(days, tr))
       {
          r = false;
       }
-      if (this.lBookings.get(si.getLocation()).isFree(tr, days))
+      if (l.isAvailable(days, tr))
       {
          r = false;
       }
@@ -243,8 +246,6 @@ public class NewSchedule extends Observable implements Serializable
       Vector<ScheduleItem> sis = new Vector<ScheduleItem>();
       Vector<ScheduleItem> lec_si_list = new Vector<ScheduleItem>();
       Vector<ScheduleItem> lab_si_list = new Vector<ScheduleItem>();
-      
-      treatment.addInstructor(i);
 
       /*
        *  Get ScheduleItems for the lecture
@@ -284,7 +285,6 @@ public class NewSchedule extends Observable implements Serializable
    {
       Instructor i = si.getInstructor();
       Course bestC = null;
-      int iWTU = this.treatment.getWtu(i);
       int bestPref = 0;
       boolean canWTU = false;
       boolean canPref = false;
@@ -441,5 +441,65 @@ public class NewSchedule extends Observable implements Serializable
    public Vector<ScheduleItem> getItems ()
    {
       return items;
+   }
+
+   /**
+    * Returns the id
+    * 
+    * @return the id
+    */
+   public Integer getId ()
+   {
+      return id;
+   }
+
+   /**
+    * Sets the id to the given parameter.
+    *
+    * @param id the id to set
+    */
+   public void setId (Integer id)
+   {
+      this.id = id;
+   }
+
+   /**
+    * Returns the quarterId
+    * 
+    * @return the quarterId
+    */
+   public String getQuarterId ()
+   {
+      return quarterId;
+   }
+
+   /**
+    * Sets the quarterId to the given parameter.
+    *
+    * @param quarterId the quarterId to set
+    */
+   public void setQuarterId (String quarterId)
+   {
+      this.quarterId = quarterId;
+   }
+
+   /**
+    * Returns the name
+    * 
+    * @return the name
+    */
+   public String getName ()
+   {
+      return name;
+   }
+
+   /**
+    * Sets the name to the given parameter.
+    *
+    * @param name the name to set
+    */
+   public void setName (String name)
+   {
+      this.name = name;
    }
 }

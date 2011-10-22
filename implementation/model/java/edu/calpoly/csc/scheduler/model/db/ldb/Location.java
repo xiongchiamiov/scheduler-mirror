@@ -2,11 +2,9 @@ package edu.calpoly.csc.scheduler.model.db.ldb;
 
 import java.io.Serializable;
 
-import edu.calpoly.csc.scheduler.model.db.Time;
+import edu.calpoly.csc.scheduler.model.db.*;
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
-import edu.calpoly.csc.scheduler.model.schedule.Day;
-import edu.calpoly.csc.scheduler.model.schedule.Week;
-import edu.calpoly.csc.scheduler.model.schedule.WeekAvail;
+import edu.calpoly.csc.scheduler.model.schedule.*;
 
 /**
  * This class contains the place and informaton about a location.
@@ -285,6 +283,20 @@ public class Location implements Serializable
       return this.availability.isFree(s, e, week);
    }
 
+   /**
+    * Determines whether a location is available during the given span of time,
+    * over the given week of days.
+    * 
+    * @param week The week of days that must be free
+    * @param tr TimeRange to check
+    * 
+    * @return True if the TimeRange is free on all days of "week"
+    */
+   public boolean isAvailable (Week week, TimeRange tr)
+   {
+      return this.availability.isFree(tr, week);
+   }
+   
    /**
     * This method will take in a day, start time, and end time and set that time
     * interval as busy for this location.

@@ -1,15 +1,3 @@
-/*
- * NOTE TO AUTHOR (LORENZ): In the "getCoursePreferences()" method, you returned
- * a new ArrayList of CoursePreferences if the instructor's were null: I changed
- * that to return null. The method was frustrating b/c, if an instructor's
- * CPrefs were null, I couldn't know, since the "getCoursePreferences" method
- * said they weren't. But, when I would call the "getPreference(Course)" method,
- * it will give me a null-pointer-exception, since the CPrefs -were- null. To
- * avoid confusion, the method now returns null if the prefs are null. As of now
- * (8-18-10), doing so hasn't hindered the scheduler at all. Let me know if
- * these changes have impacted something I overlooked. Contact me at
- * eliebowi@calpoly.edu or call/text at 818.530.3799 - Eric
- */
 package edu.calpoly.csc.scheduler.model.db.idb;
 
 import edu.calpoly.csc.scheduler.model.db.*;
@@ -22,11 +10,9 @@ import java.io.Serializable;
 
 /**
  * This class holds the information necessary to represent an instructor.
- * Through this class the name, office number, work-time units, and other
- * necessary information may be accessed and stored.
  * 
- * @author Cedric Wienold Modified by Jan Lorenz Soliman (March 2010 to June
- *         2010)
+ * @author Eric Liebowitz
+ * @version October 22, 2011
  */
 
 public class Instructor implements Comparable<Instructor>, Serializable
@@ -52,6 +38,7 @@ public class Instructor implements Comparable<Instructor>, Serializable
     * Work-Time units.
     */
    private int maxWtu;
+
    /**
     * Current amount of wtus
     */
@@ -93,6 +80,8 @@ public class Instructor implements Comparable<Instructor>, Serializable
     */
    private HashMap<Day, LinkedHashMap<Time, TimePreference>> tPrefs;
 
+   private Vector<ScheduleItem> itemsTaught = new Vector<ScheduleItem>();
+   
    public Instructor ()
    {
    }
@@ -268,12 +257,8 @@ public class Instructor implements Comparable<Instructor>, Serializable
     *         generate.Week.java
     */
    public void addTimePreference (Day d, TimePreference tp)
-      throws NullPreferenceException
    {
-      if (tp == null)
-      {
-         throw new NullPreferenceException();
-      }
+      assert (tp != null);
 
       if (!this.tPrefs.containsKey(d))
       {
@@ -288,12 +273,9 @@ public class Instructor implements Comparable<Instructor>, Serializable
     * @param preference
     */
    public void addCoursePreference (CoursePreference preference)
-      throws NullPreferenceException
    {
-      if (preference == null)
-      {
-         throw new NullPreferenceException();
-      }
+      assert (preference != null);
+      
       coursePreferences.add(preference);
    }
 
@@ -303,31 +285,10 @@ public class Instructor implements Comparable<Instructor>, Serializable
     * @param preference
     */
    public void removeCoursePreference (CoursePreference preference)
-      throws NullPreferenceException
    {
-      if (preference == null)
-      {
-         throw new NullPreferenceException();
-      }
-      Iterator iterator = coursePreferences.iterator();
+      assert (preference != null);
 
-      int index = 0;
-      int remove = -1;
-      while (iterator.hasNext())
-      {
-         CoursePreference check = (CoursePreference) iterator.next();
-         if (coursePreferences.contains(preference))
-         {
-            remove = index;
-            break;
-         }
-         index++;
-      }
-
-      if (remove >= 0)
-      {
-         coursePreferences.remove(remove);
-      }
+      coursePreferences.remove(preference);
    }
 
    /**
@@ -602,28 +563,6 @@ public class Instructor implements Comparable<Instructor>, Serializable
    }
 
    /**
-    * Looks up a professor's TimePreferences for a given day.
-    * 
-    * @param d Day which all TimePreferences should be for.
-    * 
-    * @return List of TimePreferences, sorted in descending order of
-    *         desirability
-    * 
-    * @throws NotADayException if "d" is not a valid day. See "Week" under the
-    *         "generate" package, and look for the "isValidDay" method docs for
-    *         more information.
-    * 
-    *         Written by: Eric Liebowitz
-    */
-   public Vector<TimePreference> getTPrefsByDay (int d)
-   {
-      Vector<TimePreference> r = new Vector<TimePreference>(this.tPrefs.get(d)
-         .values());
-      Collections.sort(r, new TimePreferenceComparator());
-      return r;
-   }
-
-   /**
     * Returns the average desire an Instructor has for teaching a give length of
     * time on given days. If there is a preference of 0 found in this length of
     * Time for any day in the Week, 0 is returned immediately.
@@ -713,36 +652,15 @@ public class Instructor implements Comparable<Instructor>, Serializable
       while (it.hasNext())
       {
          CoursePreference cp = (CoursePreference) it.next();
-         // if (!Scheduler.cdb.getLocalData().contains(cp.getCourse())) {
-         // //System.out.println("Removing " + cp);
-         // removeIndexes.add(i);
-         // }
+
          i++;
       }
-
-      // it = Scheduler.cdb.getLocalData().iterator();
-      //
-      // boolean found = false;
-      // while (it.hasNext()) {
-      // Course co = (Course) it.next();
-      // found = false;
-      // for (CoursePreference c : coursePreferences) {
-      // if (c.getCourse().equals(co)) {
-      // found = true;
-      // break;
-      // }
-      // }
-      // if (!found) {
-      // coursePreferences.add(new CoursePreference(co, 5));
-      // }
-      // }
 
       it = removeIndexes.iterator();
       while (it.hasNext())
       {
          int removeIndex = (Integer) it.next();
-         // System.out.println("Removing Index " + removeIndex);
-         // System.out.println("Size is " + coursePreferences.size());
+
          coursePreferences.remove(removeIndex);
       }
 
@@ -787,6 +705,21 @@ public class Instructor implements Comparable<Instructor>, Serializable
       return this.availability.isFree(tr.getS(), tr.getE(), days);
    }
 
+   /**
+    * Sets the instructor as busy for a given set of days over a given 
+    * TimeRange.
+    * 
+    * @param days Days to book for
+    * @param tr TimeRange to book across the days
+    * 
+    * @return True if the instructor was booked. False if he was already booked
+    *         for any part of the time specified.
+    */
+   public boolean setBusy (Week days, TimeRange tr)
+   {
+      return this.availability.book(days, tr);
+   }
+   
    /**
     * This method will take in a day, start time, and end time and set that time
     * interval as busy for this instructor.
@@ -841,7 +774,6 @@ public class Instructor implements Comparable<Instructor>, Serializable
       // Check if instructor has enough WTUs
       if ((this.curWtu + course.getWtu()) <= this.maxWtu)
       {
-         // Check if preferences allow it
          /*
           * TODO: rewrite this when CoursePreference is changed to a hash. Note
           * that you'll not need to change this...just change the method
@@ -883,6 +815,23 @@ public class Instructor implements Comparable<Instructor>, Serializable
          }
       }
 
+      return r;
+   }
+   
+   public boolean addItem (ScheduleItem si)
+   {
+      boolean r = false;
+      
+      if (!this.itemsTaught.contains(si))
+      {
+         Course c = si.getCourse();
+         if (canTeach(c))
+         {
+            this.curWtu += c.getWtu();
+            r = true;
+         }
+      }
+      
       return r;
    }
 }
