@@ -1,5 +1,11 @@
 package edu.calpoly.csc.scheduler.model.db.cdb;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -35,85 +41,101 @@ public class CourseDB implements DatabaseAPI<Course> {
 		ResultSet rs = sqldb.getSQLCourses();
 		try {
 			while (rs.next()) {
-				// Retrieve by column name
-				int id = rs.getInt("id");
-				String name = rs.getString("name");
-				int catalogNum = rs.getInt("coursenum");
-				String dept = rs.getString("dept");
-				int wtus = rs.getInt("wtus");
-				int scus = rs.getInt("scus");
-				int numOfSections = rs.getInt("numofsections");
-				String courseType = rs.getString("classType");
-				int length = rs.getInt("length");
-				int enrollment = rs.getInt("maxEnrollment");
-				int labId = rs.getInt("labPairing");
-				boolean smartroom = rs.getBoolean("smartroom");
-				boolean laptop = rs.getBoolean("laptop");
-				boolean overhead = rs.getBoolean("overhead");
-				int hoursPerWeek = rs.getInt("hoursperweek");
-				String ctPrefix = rs.getString("ctPrefix");
-				String prefix = rs.getString("prefix");
-
-				// Put items into Course object and add to data
-				Course toAdd = new Course();
-
-				// TODO: Check what value null ints are stored as and change
-				// this
-
-//				if (labId > -1) {
-//					lab = new Course();
-//					lab.setId(labId);
-//					lab.setType(CourseType.LAB);
-//				}
-//				toAdd.setLab(lab);
-
-				data.add(toAdd);
+				data.add(makeCourse(rs));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		linkLabs();
 	}
 
-	/**
-	 * Links all of the courses that have labs with their labs
-	 */
-	private void linkLabs() {
-		for (Course course : data) {
-			// Course has a lab
-			if (course.getLab() != null) {
-				// Find lab data and put it into the object
-				course.setLab(data.get(data.indexOf(course.getLab())));
+	public Course getCourseByID(int id) {
+		return makeCourse(sqldb.getSQLCourseByID(id));
+	}
+
+	private Course makeCourse(ResultSet rs) {
+		// Retrieve by column name
+		Course toAdd = new Course();
+		try {
+			String name = rs.getString("name");
+			toAdd.setName(name);
+
+			int catalogNum = rs.getInt("catalognum");
+			toAdd.setCatalogNum(catalogNum);
+
+			String dept = rs.getString("dept");
+			toAdd.setDept(dept);
+
+			int wtu = rs.getInt("wtu");
+			toAdd.setWtu(wtu);
+
+			int scu = rs.getInt("scu");
+			toAdd.setScu(scu);
+
+			int numOfSections = rs.getInt("numofsections");
+			toAdd.setNumOfSections(numOfSections);
+
+			String courseType = rs.getString("type");
+			toAdd.setType(courseType);
+
+			int length = rs.getInt("length");
+			toAdd.setLength(length);
+
+			// Deserialize Days
+			byte[] daysBuf = rs.getBytes("days");
+			if (daysBuf != null) {
+				try {
+					ObjectInputStream objectIn;
+					objectIn = new ObjectInputStream(new ByteArrayInputStream(
+							daysBuf));
+					toAdd.setDays((Week) objectIn.readObject());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
+
+			int enrollment = rs.getInt("maxEnrollment");
+			toAdd.setEnrollment(enrollment);
+
+			// Deserialize Lab
+			byte[] labBuf = rs.getBytes("lab");
+			if (labBuf != null) {
+				try {
+					ObjectInputStream objectIn;
+					objectIn = new ObjectInputStream(new ByteArrayInputStream(
+							labBuf));
+					toAdd.setLab((Course) objectIn.readObject());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+
+			int labPad = rs.getInt("labpad");
+			toAdd.setLabPad(labPad);
+			
+			String quarterid = rs.getString("quarterid");
+			toAdd.setQuarterId(quarterid);
+			
+			int scheduleid = rs.getInt("scheduleid");
+//			toAdd.setScheduleId(scheduleid);
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		return toAdd;
 	}
 
 	@Override
 	public void addData(Course data) {
 		// Create insert string
 		String insertString = "insert into courses ("
-				+ "name, catalognum, dept, wtu, scu, numofsections, coursetype, "
-				+ "length, enrollment, labid)"
-				+ "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				+ "name, catalognum, dept, wtu, scu, "
+				+ "numofsections, type, length, days, "
+				+ "enrollment, lab, labpad, quarterid, scheduleid)"
+				+ "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		// Create prepared statement
 		PreparedStatement stmt = sqldb.getPrepStmt(insertString);
-		// TODO: Clean this next part up. It's gross.
-		// Check if it has a lab
-		int labid = -1;
 		try {
-			if (data.getLab() != null) {
-				// Insert lab into DB and get id
-				stmt.setString(1, data.getLab().getName());
-				stmt.setInt(2, data.getLab().getCatalogNum());
-				stmt.setString(3, data.getLab().getDept());
-				stmt.setInt(4, data.getLab().getWtu());
-				stmt.setInt(5, data.getLab().getScu());
-				stmt.setInt(6, data.getLab().getNumOfSections());
-				stmt.setString(7, data.getLab().getType().toString());
-				stmt.setInt(8, data.getLab().getLength());
-				stmt.setInt(9, data.getLab().getEnrollment());
-				labid = sqldb.executePrepStmt(stmt);
-			}
 			// Set values
 			stmt.setString(1, data.getName());
 			stmt.setInt(2, data.getCatalogNum());
@@ -123,14 +145,33 @@ public class CourseDB implements DatabaseAPI<Course> {
 			stmt.setInt(6, data.getNumOfSections());
 			stmt.setString(7, data.getType().toString());
 			stmt.setInt(8, data.getLength());
-			stmt.setInt(9, data.getEnrollment());
-			if (labid != -1) {
-				stmt.setInt(10, labid);
+			// Serialize days
+			try {
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				ObjectOutput out = new ObjectOutputStream(baos);
+				out.writeObject(data.getDays());
+				out.close();
+				stmt.setBytes(9, baos.toByteArray());
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
+			stmt.setInt(10, data.getEnrollment());
+			// Serialize Lab
+			try {
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				ObjectOutput out = new ObjectOutputStream(baos);
+				out.writeObject(data.getLab());
+				out.close();
+				stmt.setBytes(11, baos.toByteArray());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			stmt.setInt(12, data.getLabPad());
+			stmt.setString(13, data.getQuarterId());
+//			stmt.setInt(14, data.getScheduleId());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
 		// Execute
 		sqldb.executePrepStmt(stmt);
 	}
@@ -145,12 +186,13 @@ public class CourseDB implements DatabaseAPI<Course> {
 		// Create update string
 		String updateString = "update courses set name = ?, catalognum = ?, "
 				+ "dept = ?, wtu = ?, scu = ?, numofsections = ?, "
-				+ "coursetype = ?, length = ?, enrollment = ?, "
-				+ "labid = ? where id = ?";
+				+ "type = ?, length = ?, days = ?, enrollment = ?, "
+				+ "lab = ?, labid = ?, quarterid = ?, scheduleid = ? where catalognum = ? "
+				+ "and dept = ? and type = ? and quarterid = ?";
 		// Create prepared statement
 		PreparedStatement stmt = sqldb.getPrepStmt(updateString);
-		// Set values
 		try {
+			// Set values
 			stmt.setString(1, data.getName());
 			stmt.setInt(2, data.getCatalogNum());
 			stmt.setString(3, data.getDept());
@@ -159,9 +201,36 @@ public class CourseDB implements DatabaseAPI<Course> {
 			stmt.setInt(6, data.getNumOfSections());
 			stmt.setString(7, data.getType().toString());
 			stmt.setInt(8, data.getLength());
-			stmt.setInt(9, data.getEnrollment());
-			stmt.setInt(10, data.getLab().getId());
-			stmt.setInt(11, data.getId());
+			// Serialize days
+			try {
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				ObjectOutput out = new ObjectOutputStream(baos);
+				out.writeObject(data.getDays());
+				out.close();
+				stmt.setBytes(9, baos.toByteArray());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			stmt.setInt(10, data.getEnrollment());
+			// Serialize Lab
+			try {
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				ObjectOutput out = new ObjectOutputStream(baos);
+				out.writeObject(data.getLab());
+				out.close();
+				stmt.setBytes(11, baos.toByteArray());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			stmt.setInt(12, data.getLabPad());
+			stmt.setString(13, data.getQuarterId());
+//			stmt.setInt(14, data.getScheduleId());
+
+			// Where clause
+			stmt.setInt(15, data.getCatalogNum());
+			stmt.setString(16, data.getDept());
+			stmt.setString(17, data.getType().toString());
+			stmt.setString(18, data.getQuarterId());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -172,11 +241,15 @@ public class CourseDB implements DatabaseAPI<Course> {
 	@Override
 	public void removeData(Course data) {
 		// Create delete string
-		String deleteString = "delete from courses where id = ?";
+		String deleteString = "delete from courses where catalognum = ? "
+				+ "and dept = ? and type = ? and quarterid = ?";
 		// Create prepared statement
 		PreparedStatement stmt = sqldb.getPrepStmt(deleteString);
 		try {
-			stmt.setInt(1, data.getId());
+			stmt.setInt(1, data.getCatalogNum());
+			stmt.setString(2, data.getDept());
+			stmt.setString(3, data.getType().toString());
+			stmt.setString(4, data.getQuarterId());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
