@@ -328,6 +328,11 @@ public class Location implements Serializable
       return this.availability.book(s, e, week);
    }
 
+   public boolean setBusy (Week week, TimeRange tr)
+   {
+      return this.availability.book(week, tr);
+   }
+   
    /**
     * Returns whether this location is a lab room.
     * 
