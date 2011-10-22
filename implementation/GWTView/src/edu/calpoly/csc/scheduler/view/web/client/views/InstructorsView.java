@@ -2,10 +2,15 @@ package edu.calpoly.csc.scheduler.view.web.client.views;
 
 import java.util.ArrayList;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.client.table.EditableTable;
@@ -34,9 +39,45 @@ public class InstructorsView extends ScrollPanel {
 		setWidth("100%");
 		setHeight("100%");
 		
+		VerticalPanel vp = new VerticalPanel();
+		this.add(vp);
+		
 		instructorTable = EditableTableFactory.createProfessors();
-		this.add(instructorTable.getWidget());	
+		vp.add(instructorTable.getWidget());
 		populateInstructors();
+		
+		vp.add(createInstructorViewLinkList());
+	}
+	
+	public Widget createInstructorViewLinkList() {
+		final VerticalPanel vp = new VerticalPanel();
+		
+		service.getInstructorNames(new AsyncCallback<ArrayList<InstructorGWT>>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert(caught.getMessage());
+			}
+			
+			@Override
+			public void onSuccess(ArrayList<InstructorGWT> result) {
+				// TODO Auto-generated method stub
+				for (InstructorGWT instructorBlerk : result) {
+					final InstructorGWT instructor = instructorBlerk;
+					HTML link = new HTML(instructor.getLastName() + ", " + instructor.getFirstName());
+					link.addStyleName("inAppLink");
+					link.addClickHandler(new ClickHandler() {
+						@Override
+						public void onClick(ClickEvent event) {
+							container.clear();
+							container.add(new InstructorPreferencesView(container, service, quarterID, instructor.getUserID()));
+						}
+					});
+					vp.add(link);
+				}
+			}
+		});
+		
+		return vp;
 	}
 
 	public void populateInstructors() {
