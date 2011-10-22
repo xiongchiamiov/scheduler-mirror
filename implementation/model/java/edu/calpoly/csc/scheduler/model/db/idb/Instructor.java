@@ -708,7 +708,7 @@ public class Instructor implements Comparable<Instructor>, Serializable
     */
    public int getPreference (Course course)
    {
-      int desire = 5;
+      int desire = -1;
       for (CoursePreference c : coursePreferences)
       {
          if (c.getCourse().equals(course))
@@ -994,16 +994,14 @@ public class Instructor implements Comparable<Instructor>, Serializable
       if((this.curWtu + course.getWtu()) <= this.maxWtu)
       {
          //Check if preferences allow it
-         //TODO: rewrite this when CoursePreference is changed to a hash
-         for(CoursePreference coursePref : this.coursePreferences)
+         /*
+          * TODO: rewrite this when CoursePreference is changed to a hash.
+          *       Note that you'll not need to change this...just change the
+          *       method "getPreference"
+          */
+         if (getPreference(course) > 0)
          {
-            if(coursePref.getCourse().equals(course))
-            {
-               if(coursePref.getDesire() > 0)
-               {
-                  return true;
-               }
-            }
+            return true;
          }
       }
       return false;

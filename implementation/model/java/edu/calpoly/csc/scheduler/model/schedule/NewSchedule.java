@@ -71,6 +71,7 @@ public class NewSchedule extends Observable implements Serializable
          }
       
          book (si);
+         r = true;
       }
       return r;
    }
@@ -101,42 +102,16 @@ public class NewSchedule extends Observable implements Serializable
    }
    
    /**
-    * Adds a section of the given course to our list of scheduled courses. If 
-    * the number of sections scheduled would exceed the course's section count, 
-    * nothing is done. 
-    * 
-    * @param c Course to add a section of
-    * 
-    * @return true if the section count is increased. False if doing so would 
-    *         exceed the course's section count.
-    */
-   private boolean addSection (Course c)
-   {
-      boolean r = false;
-      
-      if (!courseCount.containsKey(c))
-      {
-         courseCount.put(c, 0);
-      }
-      
-      int i = courseCount.get(c);
-      if (i <= c.getNumOfSections())
-      {
-         i ++;
-         r = true;
-      }
-      
-      return r;
-   }
-   
-   /**
     * Ensures that the given ScheduleItem can be scheduled. This means it 
     * doesn't double book instructors/locations, and the instructor can teach
     * the lecture/lab w/o exceeding his max wtu limit. 
     * 
     * @param si ScheduleItem to verify
     * 
-    * @return true if 'si' can be taught by its instructor at its location.
+    * @return true if 'si' can be taught by its instructor at its location, and
+    *         the instructor can teach the course. 
+    *         
+    * @see Instructor#canTeach(Course)
     */
    private boolean verify (ScheduleItem si)
    {
@@ -144,6 +119,7 @@ public class NewSchedule extends Observable implements Serializable
       
       Week days = si.getDays();
       TimeRange tr = si.getTimeRange();
+      Instructor i = si.getInstructor();
       
       if (this.iBookings.get(si.getInstructor()).isFree(tr, days))
       {
@@ -153,11 +129,11 @@ public class NewSchedule extends Observable implements Serializable
       {
          r = false;
       }
-      //TODO: Get update from Tyler
-//      if (i.canTeach(si.getCourse()))
+      if (!i.canTeach(si.getCourse()))
       {
-         
+         r = false;
       }
+      
       return r;
    }
    
@@ -195,6 +171,13 @@ public class NewSchedule extends Observable implements Serializable
       }
    }
    
+   /**
+    * Clears the record-keeping data associated w/ generation. 
+    * 
+    * @param c_list List of Courses that'll be put into the schedule
+    * @param i_list List of Instructors that'll be put into the schedule
+    * @param l_list List of Locations that'll be put into the schedule
+    */
    private void initGenData (List<Course> c_list, List<Instructor> i_list, 
       List<Location> l_list)
    {
