@@ -1,6 +1,10 @@
 package edu.calpoly.csc.scheduler.view.web.client.views;
 
-import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.DockPanel;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 
@@ -20,8 +24,24 @@ public class ScheduleBuildView extends ScrollPanel {
 		setWidth("100%");
 		setHeight("100%");
 
-		this.add(new HTML("My content goes here lololol"));
 		
+		DockPanel dp = new DockPanel();
+		
+		
+		ListBox listBoxAvailableCourses = new ListBox();		
+		dp.add(listBoxAvailableCourses);
+		
+		ListBox listBoxIncludedCourses = new ListBox();		
+		dp.add(listBoxIncludedCourses);
+		
+		Button buttonGenerate = new Button();
+		buttonGenerate.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				
+			}
+		});
+		
+		this.add(dp);
 //		service.generateSchedule(new Callback() {
 //			
 //		});
