@@ -30,11 +30,6 @@ public class Course implements Serializable
          return (this == LEC) ? "LEC" : "LAB";
       }
    }
-
-   /**
-    * ID of this course in the sql database.
-    */
-   private int id = -1;
    
    /**
     * Name of this course (Like "Fundamentals of Computer Science I")
@@ -157,18 +152,22 @@ public class Course implements Serializable
 
    /**
     * @return the id
+    * 
+    * @deprecated Use getCatalogNum instead
     */
    public int getId()
    {
-      return id;
+      return getCatalogNum();
    }
 
    /**
     * @param id the id to set
+    * 
+    * @deprecated Use setCatalogNum instead
     */
    public void setId(int id)
    {
-      this.id = id;
+      setCatalogNum(id);
    }
 
    /**
@@ -381,6 +380,7 @@ public class Course implements Serializable
 
    public int getDayLength ()
    {
+      System.out.println (this.days);
       return this.length / this.days.size();
    }
    

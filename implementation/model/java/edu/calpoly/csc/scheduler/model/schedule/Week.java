@@ -61,26 +61,6 @@ public class Week implements Serializable
    }
 
    /**
-    * Blindly removes the last element of this Week. If none exist, nothing is
-    * done.
-    *
-    * @return True if an element was removed. False otherwise. 
-    */
-//   public boolean chop ()
-//   {
-//      boolean r = false;
-//      if (this.days.size() > 0)
-//      {
-//         /*
-//          * "size" isn't 0-indexed, so I have to adjust
-//          */
-//         this.days.remove(this.days.size() - 1);
-//         r = true;
-//      }
-//      return r;
-//   }
-
-   /**
     * Returns a String representing this object
     */
    public String toString ()

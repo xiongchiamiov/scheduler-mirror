@@ -27,12 +27,6 @@ public class NewSchedule extends Observable implements Serializable
    private List<Instructor> genInstructorList   = new Vector<Instructor>();
    private List<Location> genLocationList       = new Vector<Location>();
 
-   private HashMap<Instructor, WeekAvail> iBookings = 
-      new HashMap<Instructor, WeekAvail>();
-   
-   private HashMap<Location, WeekAvail> lBookings = 
-      new HashMap<Location, WeekAvail>();
-
    private HashMap<Course, Integer> courseCount = 
       new HashMap<Course, Integer>();
    
@@ -102,8 +96,8 @@ public class NewSchedule extends Observable implements Serializable
       Week days      = si.getDays();
       TimeRange tr   = si.getTimeRange();
       
-      this.iBookings.get(i).book(days, tr);
-      this.lBookings.get(l).book(days, tr);
+      i.setBusy(days, tr);
+      l.setBusy(days, tr);
       
       int wtu = i.getCurWtu();
       wtu += si.getWtuTotal();
@@ -120,6 +114,7 @@ public class NewSchedule extends Observable implements Serializable
     */
    private void bookSection (Course c)
    {
+      System.out.println ("BOOKING SECTION FOR " + c);
       if (!this.courseCount.containsKey(c))
       {
          this.courseCount.put(c, 0);
@@ -131,6 +126,7 @@ public class NewSchedule extends Observable implements Serializable
       
       if (i == c.getNumOfSections())
       {
+         System.out.println ("REMOVING IT");
          cSourceList.remove(c);
       }
    }
@@ -185,23 +181,32 @@ public class NewSchedule extends Observable implements Serializable
    {
       initGenData(c_list, i_list, l_list);
 
+      System.out.println ("GENERATING");
       while (shouldKeepGenerating())
       {
          Vector<Instructor> toRemove = new Vector<Instructor>();
          for (Instructor i : this.iSourceList)
          {
+            System.out.println ("HAVE INSTRUCTOR " + i);
             try
             {
                Vector<ScheduleItem> sis = genListForInstructor(i);
+               System.out.println ("GOT A LIST");
                add(sis.get(0));
                //TODO: Write pruning method
             }
             catch (InstructorCanTeachNothingException e)
             {
+               System.err.println (e);
                toRemove.add(i);
             }
             //TODO: Sort ScheduleItems
          }
+         /*
+          * Now that we're not using the list of instructors, we can remove 
+          * those which were deemed unable to teach anymore
+          */
+         this.iSourceList.removeAll(toRemove);
       }
    }
    
@@ -243,6 +248,7 @@ public class NewSchedule extends Observable implements Serializable
    private Vector<ScheduleItem> genListForInstructor (Instructor i)
       throws InstructorCanTeachNothingException
    {
+      System.out.println ("MAKING LIST");
       Vector<ScheduleItem> sis = new Vector<ScheduleItem>();
       Vector<ScheduleItem> lec_si_list = new Vector<ScheduleItem>();
       Vector<ScheduleItem> lab_si_list = new Vector<ScheduleItem>();
@@ -255,8 +261,11 @@ public class NewSchedule extends Observable implements Serializable
       lec_base.setInstructor(i);
       
       lec_base    = findCourse(lec_base);
+      System.out.println ("FOUND COURSE");
       lec_si_list = findTimes(lec_base);
+      System.out.println ("GOT TIMES");
       lec_si_list = findLocations(lec_si_list);
+      System.out.println ("GOT LOCATIONS");
       
       //TODO: Do labs
       
@@ -294,8 +303,9 @@ public class NewSchedule extends Observable implements Serializable
        */
       for (Course temp : this.cSourceList)
       {
+         System.out.println ("TRY COURSE " + temp);
          int pref = i.getPreference(temp);
-
+         System.out.println ("PREF IS: " + pref);
          /*
           * If prof wants this course more than previous "best".
           */
@@ -346,7 +356,7 @@ public class NewSchedule extends Observable implements Serializable
       {
          Week days = c.getDays();
 
-         if (this.iBookings.get(i).isFree(tr, days))
+         if (i.isAvailable(days, tr))
          {
             if (i.getAvgPrefForTimeRange(days, tr.getS(), tr.getE()) > 0)
             {
@@ -377,10 +387,10 @@ public class NewSchedule extends Observable implements Serializable
       for (ScheduleItem si : sis)
       {
          Week days = si.getDays();
-
+         TimeRange tr = si.getTimeRange();
          for (Location l : this.lSourceList)
          {
-            if (this.lBookings.get(l).isFree(si.getTimeRange(), days))
+            if (l.isAvailable(days, tr))
             {
                ScheduleItem base = si.clone();
                base.setLocation(l);
@@ -392,47 +402,41 @@ public class NewSchedule extends Observable implements Serializable
       return si_list;
    }
 
-   /**
-    * Takes a list of lectures and a potentially-not-zero list of labs and makes
-    * new items with each lecture paired with each lab, ensuring that the
-    * lectures/labs are compatible (i.e. they don't overlap). Those which do not
-    * pair well together will not be added to the list of returned items.
-    * 
-    * @.todo Check the lab pad
-    * 
-    * @param lecs List of lecture ScheduleItems
-    * @param labs List of lab ScheduleItems
-    * 
-    * @return List of All the lectures paired w/ all their labs. Each pair is
-    *         guaranteed to not overlap or conflict in any other way.
-    */
-   private Vector<ScheduleItem> joinLecsWithLabs (Vector<ScheduleItem> lecs,
-      Vector<ScheduleItem> labs)
+   public ScheduleItem makeItem (Course c, Week days, Time start)
+      throws CouldNotBeScheduledException
    {
-      Vector<ScheduleItem> items = new Vector<ScheduleItem>();
-      for (ScheduleItem lec_si : lecs)
-      {
-         /**
-          * We need to clone the lecture's b/c we're possibly setting their lab
-          * in each iteration.
-          */
-         ScheduleItem lec_clone = lec_si.clone();
-
-         for (ScheduleItem lab_si : labs)
-         {
-            /*
-             * Only pair lec and lab si's if they don't overlap
-             */
-            if (!lec_si.getTimeRange().overlaps(lab_si.getTimeRange()))
-            {
-               lec_clone.setLab(lab_si);
-            }
-         }
-         items.add(lec_clone);
-      }
-      return items;
+      ScheduleItem si = new ScheduleItem();
+      
+      return si;
    }
-
+   
+   /**
+    * Finds an instructor for a given course that wants to teach the course and
+    * can teach the course.
+    * 
+    * @param c Course to find an instructor for
+    * @return An instructor who wants to teach 'c' at least as much as every
+    *         other currently available instructor.
+    *
+    */
+   private Instructor findInstructor (Course c)
+   {
+      int curPref = 0;
+      Instructor r = null;
+      for (Instructor i: this.iSourceList)
+      {
+         int temp = i.getPreference(c);
+         if (temp > curPref && i.canTeach(c))
+         {
+            r = i;
+            curPref = temp;
+         }
+            
+      }
+      
+      return r;
+   }
+   
    /**
     * Returns the items
     * 

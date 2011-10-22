@@ -19,6 +19,8 @@ public class Instructor implements Comparable<Instructor>, Serializable
 {
    public static final int serialVersionUID = 42;
 
+   public static final int DEFAULT_PREF = 5;
+
    /**
     * First name of instructor.
     */
@@ -71,9 +73,10 @@ public class Instructor implements Comparable<Instructor>, Serializable
    private WeekAvail availability;
 
    /**
-    * List of preferences each instructor has for a course.
+    * Keeps track of an instructor course preferences.
     */
-   private ArrayList<CoursePreference> coursePreferences;
+   private HashMap<Course, Integer> coursePreferences = 
+      new HashMap<Course, Integer>();
 
    /**
     * List of time preferences an instructor has for a course.
@@ -81,36 +84,13 @@ public class Instructor implements Comparable<Instructor>, Serializable
    private HashMap<Day, LinkedHashMap<Time, TimePreference>> tPrefs;
 
    private Vector<ScheduleItem> itemsTaught = new Vector<ScheduleItem>();
-   
+
    public Instructor ()
    {
    }
 
    /**
-    * TODO: REWRITE
-    * 
-    * @return
-    */
-   protected ArrayList<CoursePreference> initialCoursePreferences ()
-   {
-      ArrayList<CoursePreference> returnVal = new ArrayList<CoursePreference>();
-
-      return returnVal;
-   }
-
-   /**
-    * Represents the STAFF instructor. Placed here to provide a stable place to
-    * find this instructor. Hopefully, all other classes will eventually use
-    * this whenever they need STAFF.
-    * 
-    * By: Eric Liebowitz
-    */
-   public static final Instructor STAFF = new Instructor("Staff", "ffatS",
-      "STAFF", -1, null);
-
-   /**
-    * Returns a new, fresh copy of a given instructor. Written by: Eric
-    * Liebowitz
+    * Returns a new, fresh copy of a given instructor. 
     * 
     * @param i The instructor to copy
     */
@@ -122,7 +102,8 @@ public class Instructor implements Comparable<Instructor>, Serializable
       this.maxWtu = i.maxWtu;
       this.office = i.office;
       // Preserve preferences!
-      this.coursePreferences = i.coursePreferences;
+      this.coursePreferences = new HashMap<Course, Integer>(
+         i.getCoursePreferences());
       this.tPrefs = i.getTimePreferences();
    }
 
@@ -187,7 +168,6 @@ public class Instructor implements Comparable<Instructor>, Serializable
       this.office = office;
       this.disability = disabilities;
       this.availability = new WeekAvail();
-      this.coursePreferences = initialCoursePreferences();
       initTPrefs();
    }
 
@@ -272,11 +252,11 @@ public class Instructor implements Comparable<Instructor>, Serializable
     * 
     * @param preference
     */
-   public void addCoursePreference (CoursePreference preference)
+   public void addCoursePreference (CoursePreference cp)
    {
-      assert (preference != null);
-      
-      coursePreferences.add(preference);
+      assert (cp != null);
+
+      coursePreferences.put(cp.getCourse(), cp.getDesire());
    }
 
    /**
@@ -345,24 +325,9 @@ public class Instructor implements Comparable<Instructor>, Serializable
     * 
     * @return the list of course preferences.
     */
-   public ArrayList<CoursePreference> getCoursePreferences ()
+   public HashMap<Course, Integer> getCoursePreferences ()
    {
-      if (coursePreferences == null)
-      {
-         /*
-          * NOTE: This used to returns a new, all-5's ArrayList of
-          * CoursePreference objects whenever the instructor CPrefs were null.
-          * This wasn't good, as I didn't know when the CPrefs weren't around,
-          * b/c this method gave me good prefs regardless of whether they were
-          * actually null or not. - Eric
-          */
-         System.err.println("CPrefs are null!");
-         return null;
-      }
-      else
-      {
-         return new ArrayList<CoursePreference>(coursePreferences);
-      }
+      return this.coursePreferences;
    }
 
    /**
@@ -370,9 +335,9 @@ public class Instructor implements Comparable<Instructor>, Serializable
     * 
     * @param the list of course preferences.
     */
-   public void setCoursePreferences (ArrayList<CoursePreference> cPreferences)
+   public void setCoursePreferences (HashMap<Course, Integer> cps)
    {
-      this.coursePreferences = cPreferences;
+      this.coursePreferences = cps;
    }
 
    /**
@@ -523,14 +488,14 @@ public class Instructor implements Comparable<Instructor>, Serializable
     */
    public int getPreference (Course course)
    {
-      int desire = -1;
-      for (CoursePreference c : coursePreferences)
+      int desire = DEFAULT_PREF;
+
+      Integer temp = coursePreferences.get(course);
+      if (temp != null)
       {
-         if (c.getCourse().equals(course))
-         {
-            desire = c.getDesire();
-         }
+         desire = temp;
       }
+
       return desire;
    }
 
@@ -638,35 +603,6 @@ public class Instructor implements Comparable<Instructor>, Serializable
    }
 
    /**
-    * Update the preferences to get rid of courses that may not be there
-    * anymore.
-    * 
-    * TODO: REWRITE
-    * 
-    */
-   public void updateLocalPreferences ()
-   {
-      Iterator it = this.coursePreferences.iterator();
-      Vector<Integer> removeIndexes = new Vector<Integer>();
-      int i = 0;
-      while (it.hasNext())
-      {
-         CoursePreference cp = (CoursePreference) it.next();
-
-         i++;
-      }
-
-      it = removeIndexes.iterator();
-      while (it.hasNext())
-      {
-         int removeIndex = (Integer) it.next();
-
-         coursePreferences.remove(removeIndex);
-      }
-
-   }
-
-   /**
     * This method sets the list of time preferences.
     * 
     * TODO: The LinkedHashMap is a terrible way to do this.
@@ -706,7 +642,7 @@ public class Instructor implements Comparable<Instructor>, Serializable
    }
 
    /**
-    * Sets the instructor as busy for a given set of days over a given 
+    * Sets the instructor as busy for a given set of days over a given
     * TimeRange.
     * 
     * @param days Days to book for
@@ -719,7 +655,7 @@ public class Instructor implements Comparable<Instructor>, Serializable
    {
       return this.availability.book(days, tr);
    }
-   
+
    /**
     * This method will take in a day, start time, and end time and set that time
     * interval as busy for this instructor.
@@ -817,11 +753,11 @@ public class Instructor implements Comparable<Instructor>, Serializable
 
       return r;
    }
-   
+
    public boolean addItem (ScheduleItem si)
    {
       boolean r = false;
-      
+
       if (!this.itemsTaught.contains(si))
       {
          Course c = si.getCourse();
@@ -831,7 +767,7 @@ public class Instructor implements Comparable<Instructor>, Serializable
             r = true;
          }
       }
-      
+
       return r;
    }
 }

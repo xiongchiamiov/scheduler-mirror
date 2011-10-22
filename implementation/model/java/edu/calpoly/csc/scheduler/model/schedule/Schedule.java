@@ -163,7 +163,7 @@ public class Schedule extends Observable implements Serializable
           */
          if (idb.isEmpty())
          {
-            idb.add(Instructor.STAFF);
+//            idb.add(Instructor.STAFF);
          }
          for (Instructor i: idb)
          {
@@ -266,8 +266,8 @@ public class Schedule extends Observable implements Serializable
        * the STAFF isn't needed yet (when opening a schedule from a file that
        * has a  STAFF in it, for instance)
        */
-      this.iBookings.put(Instructor.STAFF, new WeekAvail());
-      this.treatment.put(Instructor.STAFF, new Treatment());
+//      this.iBookings.put(Instructor.STAFF, new WeekAvail());
+//      this.treatment.put(Instructor.STAFF, new Treatment());
    }/*<==*/
 
    /**
