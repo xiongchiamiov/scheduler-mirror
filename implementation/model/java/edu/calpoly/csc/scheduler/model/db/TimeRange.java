@@ -136,6 +136,11 @@ public class TimeRange implements Serializable
     */
    public String toString ()
    {
-      return "Start: " + this.s + "\nEnd  : " + this.e;
+      return this.s + " to " + this.e;
+   }
+   
+   public boolean equals (TimeRange tr)
+   {
+      return this.s.equals(tr.getS()) && this.e.equals(tr.getE());
    }
 }

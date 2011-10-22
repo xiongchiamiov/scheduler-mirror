@@ -12,7 +12,7 @@ import edu.calpoly.csc.scheduler.model.schedule.*;
  * @author Cedric Wienold
  */
 
-public class Location implements Serializable
+public class Location extends DbData implements Serializable
 {
    private static final long serialVersionUID = 42;
 
@@ -39,11 +39,11 @@ public class Location implements Serializable
     * Room number of location.
     */
    private String room;
-
+   
    /**
     * Maximum occupancy of this location.
     */
-   private int maxOccupancy;
+   private Integer maxOccupancy;
 
    /**
     * Type of this location.
@@ -58,13 +58,22 @@ public class Location implements Serializable
    /**
     * Whether this location is compliant to those with disabilities.
     */
-   private boolean adaCompliant;
+   private Boolean adaCompliant;
 
    /**
     * Represents a location's availabilty throughout the week.
     */
    private WeekAvail availability = new WeekAvail();
 
+   /**
+    * Quarter this location is a part of
+    */
+   private Integer quarterId;
+   /**
+    * Schedule this location is a part of
+    */
+   private Integer scheduleId;
+   
    /**
     * This constructor creates a location at a particular room and building.
     * 
@@ -201,6 +210,46 @@ public class Location implements Serializable
    public String getType ()
    {
       return this.type;
+   }
+
+   /**
+    * Returns the quarterId
+    * 
+    * @return the quarterId
+    */
+   public Integer getQuarterId ()
+   {
+      return quarterId;
+   }
+
+   /**
+    * Sets the quarterId to the given parameter.
+    *
+    * @param quarterId the quarterId to set
+    */
+   public void setQuarterId (Integer quarterId)
+   {
+      this.quarterId = quarterId;
+   }
+
+   /**
+    * Returns the scheduleId
+    * 
+    * @return the scheduleId
+    */
+   public Integer getScheduleId ()
+   {
+      return scheduleId;
+   }
+
+   /**
+    * Sets the scheduleId to the given parameter.
+    *
+    * @param scheduleId the scheduleId to set
+    */
+   public void setScheduleId (Integer scheduleId)
+   {
+      this.scheduleId = scheduleId;
    }
 
    /**
@@ -387,12 +436,53 @@ public class Location implements Serializable
     * 
     * @param c The course to provide for
     * 
-    * @.todo Either remove or fill w/ useful data
-    * 
-    * @return True
+    * @return true if this location has enough seats to support the given 
+    *         course.
     */
    public boolean providesFor (Course c)
    {
-      return true;
+      boolean r = false;
+      if (c.getEnrollment() <= this.getMaxOccupancy())
+      {
+         r = true;
+      }
+      return false;
+   }
+
+   /**
+    * Verifies that the vital fields of this Object  (i.e. those essential 
+    * for generation of identification in a DB) are not null. "Vital" fields
+    * are as follows:
+    * 
+    * <ul>
+    *    <li>adaCompliant</li>
+    *    <li>building</li>
+    *    <li>maxOccupancy</li>
+    *    <li>providedEquipment</li>
+    *    <li>quarterId</li>
+    *    <li>room</li>
+    *    <li>scheduleId</li>
+    *    <li>type</li>
+    * </ul>
+    * 
+    * @throws NullDataException if any field vital to generation or storage is
+    *         null
+    *
+    * @see edu.calpoly.csc.scheduler.model.db.DbData#verify()
+    */
+   public void verify () throws NullDataException
+   {
+      if (adaCompliant        == null ||
+          building            == null ||
+          maxOccupancy        == null ||
+          providedEquipment   == null ||
+          quarterId           == null ||
+          room                == null ||
+          scheduleId          == null ||
+          type                == null)
+      {
+         throw new NullDataException ();
+      }
+         
    }
 }

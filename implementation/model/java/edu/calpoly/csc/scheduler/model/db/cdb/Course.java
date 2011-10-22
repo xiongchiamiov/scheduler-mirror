@@ -2,6 +2,7 @@ package edu.calpoly.csc.scheduler.model.db.cdb;
 
 import java.io.Serializable;
 
+import edu.calpoly.csc.scheduler.model.db.*;
 import edu.calpoly.csc.scheduler.model.schedule.Day;
 import edu.calpoly.csc.scheduler.model.schedule.Week;
 
@@ -11,7 +12,7 @@ import edu.calpoly.csc.scheduler.model.schedule.Week;
  * @author Eric Liebowitz
  * @version Oct 10, 2011
  */
-public class Course implements Serializable
+public class Course extends DbData implements Serializable
 {
    /**
     * Represents the type of a course. The values currently defined are for
@@ -38,7 +39,7 @@ public class Course implements Serializable
    /**
     * Course's number in the catalog (like "101")
     */
-   private int catalogNum = 0;
+   private Integer catalogNum = 0;
    /**
     * Course's department prefix (like "CPE")
     */
@@ -47,16 +48,16 @@ public class Course implements Serializable
     * Number of work time units this course is worth. This value is important
     * for figuring out how much an instructor is allowed to teach
     */
-   private int wtu = 0;
+   private Integer wtu = 0;
    /**
     * Number of student credit units. This value is the number of units students
     * get for taking this course.
     */
-   private int scu = 0;
+   private Integer scu = 0;
    /**
     * Number of sections of this course that'll be offered
     */
-   private int numOfSections = 0;
+   private Integer numOfSections = 0;
    /**
     * The type of this course (i.e. lecture or lab). Default is lecture.
     */
@@ -65,7 +66,7 @@ public class Course implements Serializable
     * How long a course is taught in a week. Measured in number of half hours it
     * is taught in a given week.
     */
-   private int length = 0;
+   private Integer length = 0;
    /**
     * The days in the week this course is to be taught
     */
@@ -73,7 +74,7 @@ public class Course implements Serializable
    /**
     * Maximum number of students that can be enrolled in this course
     */
-   private int enrollment = 0;
+   private Integer enrollment = 0;
    /**
     * This course's lab. Can be null, which means it has no lab
     */
@@ -82,12 +83,16 @@ public class Course implements Serializable
     * How many half hours before/after this course that a lab can be taught. 
     * Default is 0, which'll put a lab right after the lecture.
     */
-   private int labPad = 0;
+   private Integer labPad = 0;
    
    /**
     * The quarter this course applies to
     */
    private String quarterId = "";
+   /**
+    * The scheduler this course applies to
+    */
+   private Integer scheduleId;
    
    /**
     * Default constructor. Does nothing.
@@ -148,7 +153,6 @@ public class Course implements Serializable
     * 
     * @see java.lang.Object#hashCode()
     */
-   @Override
    public int hashCode ()
    {
       return this.getName().hashCode() + this.getCatalogNum()
@@ -235,6 +239,26 @@ public class Course implements Serializable
    public void setQuarterId (String quarterId)
    {
       this.quarterId = quarterId;
+   }
+
+   /**
+    * Returns the scheduleId
+    * 
+    * @return the scheduleId
+    */
+   public Integer getScheduleId ()
+   {
+      return scheduleId;
+   }
+
+   /**
+    * Sets the scheduleId to the given parameter.
+    *
+    * @param scheduleId the scheduleId to set
+    */
+   public void setScheduleId (Integer scheduleId)
+   {
+      this.scheduleId = scheduleId;
    }
 
    /**
@@ -405,7 +429,6 @@ public class Course implements Serializable
 
    public int getDayLength ()
    {
-      System.out.println (this.days);
       return this.length / this.days.size();
    }
    
@@ -517,5 +540,49 @@ public class Course implements Serializable
    public int splitLengthOverDays (int days)
    {
       return this.getLength() / days;
+   }
+   
+   /**
+    * Verifies that the vital fields of this Object  (i.e. those essential 
+    * for generation of identification in a DB) are not null. "Vital" fields
+    * are as follows:
+    * 
+    * <ul>
+    *    <li>catalogNum</li>
+    *    <li>days</li>
+    *    <li>dept</li>
+    *    <li>enrollment</li>
+    *    <li>labPad</li>
+    *    <li>length</li>
+    *    <li>name</li>
+    *    <li>numOfSections</li>
+    *    <li>quarterId</li>
+    *    <li>scu</li>
+    *    <li>type></li>
+    *    <li>wtu</li>
+    * </ul>
+    * 
+    * @throws NullDataException if any field vital to generation or storage is
+    *         null
+    *
+    * @see edu.calpoly.csc.scheduler.model.db.DbData#verify()
+    */
+   public void verify () throws NullDataException
+   {
+      if (catalogNum    == null ||
+          days          == null ||
+          dept          == null ||
+          enrollment    == null ||
+          labPad        == null ||
+          length        == null ||
+          name          == null ||
+          numOfSections == null ||
+          quarterId     == null ||
+          scu           == null ||
+          type          == null ||
+          wtu           == null)
+      {
+         throw new NullDataException ();
+      }
    }
 }

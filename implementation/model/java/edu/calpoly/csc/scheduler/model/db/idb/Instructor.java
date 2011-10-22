@@ -15,12 +15,22 @@ import java.io.Serializable;
  * @version October 22, 2011
  */
 
-public class Instructor implements Comparable<Instructor>, Serializable
+public class Instructor extends DbData 
+                        implements Comparable<Instructor>, Serializable
 {
    public static final int serialVersionUID = 42;
 
    public static final int DEFAULT_PREF = 5;
 
+   /**
+    * Quarter this Instructor is a part of
+    */
+   private String quarterId;
+   /**
+    * Schedule this Instructor is a part of
+    */
+   private Integer scheduleId;
+   
    /**
     * First name of instructor.
     */
@@ -39,12 +49,12 @@ public class Instructor implements Comparable<Instructor>, Serializable
    /**
     * Work-Time units.
     */
-   private int maxWtu;
+   private Integer maxWtu;
 
    /**
     * Current amount of wtus
     */
-   private int curWtu;
+   private Integer curWtu;
 
    /**
     * Building and office number of instructor.
@@ -54,13 +64,13 @@ public class Instructor implements Comparable<Instructor>, Serializable
    /**
     * The fairness with which the instructor has been treated
     */
-   private int fairness;
+   private Integer fairness;
 
    /**
     * Whether or not the instructor has a disability.
     * 
     **/
-   private boolean disability;
+   private Boolean disability;
 
    /**
     * The generosity of the instructors scheduler.
@@ -85,10 +95,32 @@ public class Instructor implements Comparable<Instructor>, Serializable
 
    private Vector<ScheduleItem> itemsTaught = new Vector<ScheduleItem>();
 
-   public Instructor ()
-   {
-   }
+   public Instructor () { }
 
+   /**
+    * Constructs the instructor with the given first and last names, and user
+    * id.
+    * 
+    * @param first the first name of the instructor
+    * @param last the last name of the instructor
+    * @param id the user id of the instructor
+    * @param wtu the work-time units of the instructor
+    * @param office the office building and room numbers of the instructor
+    * @param disabilities whether or not the professor has any disabilities
+    */
+   public Instructor (String first, String last, String id, int wtu,
+      Location office, boolean disabilities)
+   {
+      this.firstName = first;
+      this.lastName = last;
+      this.userID = id;
+      this.maxWtu = wtu;
+      this.office = office;
+      this.disability = disabilities;
+      this.availability = new WeekAvail();
+      initTPrefs();
+   }
+   
    /**
     * Returns a new, fresh copy of a given instructor. 
     * 
@@ -107,68 +139,16 @@ public class Instructor implements Comparable<Instructor>, Serializable
       this.tPrefs = i.getTimePreferences();
    }
 
-   /**
-    * Constructs the instructor with the given first and last names, and user
-    * id. This will set "disabilities" to false
-    * 
-    * @param first the first name of the instructor
-    * @param last the last name of the instructor
-    * @param id the user id of the instructor
-    * @param wtu the work-time units of the instructor
-    * @param office the office building and room numbers of the instructor
-    */
-   public Instructor (String first, String last, String id, int wtu,
-      Location office)
+   public Instructor (String f, String l, String id, int wtu, Location office)
    {
-      init(first, last, id, wtu, office, false);
-   }
-
-   /**
-    * Constructs the instructor with the given first and last names, and user
-    * id.
-    * 
-    * @param first the first name of the instructor
-    * @param last the last name of the instructor
-    * @param id the user id of the instructor
-    * @param wtu the work-time units of the instructor
-    * @param office the office building and room numbers of the instructor
-    * @param disabilities whether or not the professor has any disabilities
-    */
-   public Instructor (String first, String last, String id, int wtu,
-      Location office, boolean disabilities)
-   {
-      init(first, last, id, wtu, office, disabilities);
+      this (f, l, id, wtu, office, false);
    }
 
    public Instructor (String first, String last, String id, int wtu,
       String building, String room, boolean disabilities)
    {
-      init(first, last, id, wtu, new Location(building, room), disabilities);
-   }
-
-   /**
-    * Does the initialization all Instructor constructors need. Since they all
-    * do the same thing (with minor tweaks), unifying the actions into one
-    * method seemed wise.
-    * 
-    * @param first the first name of the instructor
-    * @param last the last name of the instructor
-    * @param id the user id of the instructor
-    * @param wtu the work-time units of the instructor
-    * @param office the office building and room numbers of the instructor
-    * @param disabilities whether or not the professor has any disabilities
-    */
-   private void init (String first, String last, String id, int wtu,
-      Location office, boolean disabilities)
-   {
-      this.firstName = first;
-      this.lastName = last;
-      this.userID = id;
-      this.maxWtu = wtu;
-      this.office = office;
-      this.disability = disabilities;
-      this.availability = new WeekAvail();
-      initTPrefs();
+      
+      this (first, last, id, wtu, new Location(building, room), disabilities);
    }
 
    /**
@@ -456,6 +436,46 @@ public class Instructor implements Comparable<Instructor>, Serializable
    public int getAvailableWTU ()
    {
       return this.getCurWtu();
+   }
+
+   /**
+    * Returns the quarterId
+    * 
+    * @return the quarterId
+    */
+   public String getQuarterId ()
+   {
+      return quarterId;
+   }
+
+   /**
+    * Sets the quarterId to the given parameter.
+    *
+    * @param quarterId the quarterId to set
+    */
+   public void setQuarterId (String quarterId)
+   {
+      this.quarterId = quarterId;
+   }
+
+   /**
+    * Returns the scheduleId
+    * 
+    * @return the scheduleId
+    */
+   public Integer getScheduleId ()
+   {
+      return scheduleId;
+   }
+
+   /**
+    * Sets the scheduleId to the given parameter.
+    *
+    * @param scheduleId the scheduleId to set
+    */
+   public void setScheduleId (Integer scheduleId)
+   {
+      this.scheduleId = scheduleId;
    }
 
    /**
@@ -770,4 +790,41 @@ public class Instructor implements Comparable<Instructor>, Serializable
 
       return r;
    }
+
+   /**
+    * Verifies that the vital fields of this Object  (i.e. those essential 
+    * for generation of identification in a DB) are not null. "Vital" fields
+    * are as follows:
+    * 
+    * <ul>
+    *    <li>coursePreferences</li>
+    *    <li>curWtu</li>
+    *    <li>maxWtu</li>
+    *    <li>office</li>
+    *    <li>quarterId</li>
+    *    <li>scheduleId</li>
+    *    <li>tPrefs</li>
+    *    <li>userID</li>
+    * </ul>
+    * 
+    * @throws NullDataException if any field vital to generation or storage is
+    *         null
+    *
+    * @see edu.calpoly.csc.scheduler.model.db.DbData#verify()
+    */
+   public void verify () throws NullDataException 
+   {
+      if (coursePreferences   == null ||
+          curWtu              == null ||
+          maxWtu              == null ||
+          office              == null ||
+          quarterId           == null ||
+          scheduleId          == null ||
+          tPrefs              == null ||
+          userID              == null)
+      {
+         throw new NullDataException();
+      }
+   }
 }
+

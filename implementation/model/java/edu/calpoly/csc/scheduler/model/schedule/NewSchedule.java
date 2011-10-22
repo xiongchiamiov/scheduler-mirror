@@ -19,25 +19,72 @@ import edu.calpoly.csc.scheduler.model.db.ldb.*;
  */
 public class NewSchedule extends Observable implements Serializable
 {
+   /**
+    * Used for debugging. Toggle it to get debugging output
+    */
+   public static final boolean DEBUG = !true;
+   /**
+    * Prints a message if DEBUG is true
+    * 
+    * @param s String to print
+    */
+   public static void debug (String s)
+   {
+      if (DEBUG)
+      {
+         System.err.println (s);
+      }
+   }
+   
+   /**
+    * List of courses that are to be added to the schedule. This list will be
+    * shortened as courses are fully scheduled during generation.
+    */
    private List<Course> cSourceList       = new Vector<Course>();
+   /**
+    * List of instructors that are to be added to the schedule. This list will 
+    * be shortend as instructors become unavailable to teach anymore courses.
+    */
    private List<Instructor> iSourceList   = new Vector<Instructor>();
+   /**
+    * List of location that are to be made available for schedule generation.
+    */
    private List<Location> lSourceList     = new Vector<Location>();
 
-   private List<Course> genCourseList           = new Vector<Course>();
-   private List<Instructor> genInstructorList   = new Vector<Instructor>();
-   private List<Location> genLocationList       = new Vector<Location>();
-
+   /**
+    * Keeps track of how many sections of a given course have been scheduled. 
+    */
    private HashMap<Course, Integer> courseCount = 
       new HashMap<Course, Integer>();
    
+   /**
+    * The global start/end times for a given day on the schedule. Default 
+    * bounds are 7a-10p.
+    */
    private TimeRange bounds = new TimeRange(new Time(7, 0), new Time(22, 0));
 
+   /**
+    * List of ScheduleItems which generation will create. This is the "schedule"
+    * that the user will see.
+    */
    Vector<ScheduleItem> items = new Vector<ScheduleItem>();
 
+   /**
+    * This schedule's id
+    */
    private Integer id = -1;
+   /**
+    * The quarter id to link this schedule w/ a particular quarter
+    */
    private String quarterId = "";
+   /**
+    * Human-readable string to identify this schedule
+    */
    private String name = "";
    
+   /**
+    * Default constructor. Does nothing but give you back a new object. 
+    */
    public NewSchedule () { }
    
    /**
@@ -51,61 +98,50 @@ public class NewSchedule extends Observable implements Serializable
     */
    public boolean add (ScheduleItem si)
    {
-      boolean r = false;
-      
-      Course c       = si.getCourse();
-      Instructor i   = si.getInstructor();
-      Location l     = si.getLocation();
-      
-      if (!verify(si))
-      {
-         
-      }
-      else
-      {
-         if (!genInstructorList.contains(i))
-         {
-            genInstructorList.add(i);
-         }
-         if (!genLocationList.contains(l))
-         {
-            genLocationList.contains(l);
-         }
-      
-         book (si);
-         r = true;
-      }
-      return r;
+      return book(si);
    }
    
    /**
-    * Applies all the day/time/wtu commitments of a ScheduleItem to the internal
-    * structures the Schedule uses to keep track of things. iBookings, 
-    * lBookings, and the instructor's WTU count are updated. It is assumed 
-    * you've already verified the ScheduleItem.
+    * Applies all the day/time/wtu commitments of a ScheduleItem to instructors
+    * and locations to take up their availability. Instructor's WTU count is 
+    * updated. Course section count is also updated.<br>
+    * <br>
+    * The ScheduleItem is also verified before it is booked. If verification 
+    * fails, the ScheduleItem is not added.  
     *  
     * @param si The ScheduleItem w/ the days, times, etc. which'll be booked
     *           in the schedule
     *
+    * @return true if the ScheduleItem was added. False otherwise. 
+    *
     * @see #verify(ScheduleItem)
     */
-   private void book (ScheduleItem si)
+   private boolean book (ScheduleItem si)
    {
-      Instructor i   = si.getInstructor();
-      Location l     = si.getLocation();
-      Week days      = si.getDays();
-      TimeRange tr   = si.getTimeRange();
+      boolean r = false;
       
-      i.setBusy(days, tr);
-      l.setBusy(days, tr);
+      if (verify(si))
+      {
+         Instructor i   = si.getInstructor();
+         Location l     = si.getLocation();
+         Week days      = si.getDays();
+         TimeRange tr   = si.getTimeRange();
+         
+         i.setBusy(days, tr);
+         l.setBusy(days, tr);
+         
+         int wtu = i.getCurWtu();
+         wtu += si.getWtuTotal();
+         i.setCurWtu(wtu);
+         
+         bookSection(si.getCourse());
+         
+         this.items.add(si);
+         
+         r = true;
+      }
       
-      int wtu = i.getCurWtu();
-      wtu += si.getWtuTotal();
-      i.setCurWtu(wtu);
-      
-      bookSection(si.getCourse());
-      
-      this.items.add(si);
+      return r;
    }
    
    /**
@@ -114,7 +150,7 @@ public class NewSchedule extends Observable implements Serializable
     */
    private void bookSection (Course c)
    {
-      System.out.println ("BOOKING SECTION FOR " + c);
+      debug ("BOOKING SECTION FOR " + c);
       if (!this.courseCount.containsKey(c))
       {
          this.courseCount.put(c, 0);
@@ -126,7 +162,7 @@ public class NewSchedule extends Observable implements Serializable
       
       if (i == c.getNumOfSections())
       {
-         System.out.println ("REMOVING IT");
+         debug ("REMOVING IT");
          cSourceList.remove(c);
       }
    }
@@ -152,11 +188,11 @@ public class NewSchedule extends Observable implements Serializable
       Instructor i = si.getInstructor();
       Location l = si.getLocation();
       
-      if (i.isAvailable(days, tr))
+      if (!i.isAvailable(days, tr))
       {
          r = false;
       }
-      if (l.isAvailable(days, tr))
+      if (!l.isAvailable(days, tr))
       {
          r = false;
       }
@@ -175,23 +211,23 @@ public class NewSchedule extends Observable implements Serializable
     * @param i_list List of instructors you want to teach stuff
     * @param l_list List of locations you want stuff to be taught in
     */
-   public void generate (List<Course> c_list, 
-                         List<Instructor> i_list, 
-                         List<Location> l_list)
+   public Vector<ScheduleItem> generate (List<Course> c_list, 
+                                         List<Instructor> i_list, 
+                                         List<Location> l_list)
    {
       initGenData(c_list, i_list, l_list);
 
-      System.out.println ("GENERATING");
+      debug ("GENERATING");
       while (shouldKeepGenerating())
       {
          Vector<Instructor> toRemove = new Vector<Instructor>();
          for (Instructor i : this.iSourceList)
          {
-            System.out.println ("HAVE INSTRUCTOR " + i);
+            debug ("HAVE INSTRUCTOR " + i);
             try
             {
                Vector<ScheduleItem> sis = genListForInstructor(i);
-               System.out.println ("GOT A LIST");
+               debug ("GOT " + sis.size() + " ITEMS");
                add(sis.get(0));
                //TODO: Write pruning method
             }
@@ -208,6 +244,8 @@ public class NewSchedule extends Observable implements Serializable
           */
          this.iSourceList.removeAll(toRemove);
       }
+      
+      return this.getItems();
    }
    
    private boolean shouldKeepGenerating ()
@@ -248,7 +286,6 @@ public class NewSchedule extends Observable implements Serializable
    private Vector<ScheduleItem> genListForInstructor (Instructor i)
       throws InstructorCanTeachNothingException
    {
-      System.out.println ("MAKING LIST");
       Vector<ScheduleItem> sis = new Vector<ScheduleItem>();
       Vector<ScheduleItem> lec_si_list = new Vector<ScheduleItem>();
       Vector<ScheduleItem> lab_si_list = new Vector<ScheduleItem>();
@@ -261,11 +298,11 @@ public class NewSchedule extends Observable implements Serializable
       lec_base.setInstructor(i);
       
       lec_base    = findCourse(lec_base);
-      System.out.println ("FOUND COURSE");
+      debug ("FOUND COURSE");
       lec_si_list = findTimes(lec_base);
-      System.out.println ("GOT TIMES");
+      debug ("GOT " + lec_si_list.size() + " TIMES");
       lec_si_list = findLocations(lec_si_list);
-      System.out.println ("GOT LOCATIONS");
+      debug ("GOT " + lec_si_list.size() + " LOCATIONS");
       
       //TODO: Do labs
       
@@ -303,9 +340,9 @@ public class NewSchedule extends Observable implements Serializable
        */
       for (Course temp : this.cSourceList)
       {
-         System.out.println ("TRY COURSE " + temp);
+         debug ("TRY COURSE " + temp);
          int pref = i.getPreference(temp);
-         System.out.println ("PREF IS: " + pref);
+         debug ("PREF IS: " + pref);
          /*
           * If prof wants this course more than previous "best".
           */
@@ -326,6 +363,7 @@ public class NewSchedule extends Observable implements Serializable
          throw new InstructorCanTeachNothingException();
       }
 
+      debug ("BEST: " + bestC);
       si.setCourse(bestC);
       return si;
    }
@@ -347,22 +385,28 @@ public class NewSchedule extends Observable implements Serializable
     */
    private Vector<ScheduleItem> findTimes (ScheduleItem si)
    {
+      debug ("FINDING TIMES");
       Vector<ScheduleItem> sis = new Vector<ScheduleItem>();
       Course c = si.getCourse();
       Instructor i = si.getInstructor();
 
       TimeRange tr = new TimeRange(this.bounds.getS(), c.getDayLength());
-      for (; tr.getE().equals(this.bounds.getE()); tr.addHalf())
+      for (; !tr.getE().equals(this.bounds.getE()); tr.addHalf())
       {
          Week days = c.getDays();
 
+         debug ("CONSIDERING TR: " + tr);
          if (i.isAvailable(days, tr))
          {
+            debug ("AVAILABLE");
             if (i.getAvgPrefForTimeRange(days, tr.getS(), tr.getE()) > 0)
             {
+               debug ("WANTS");
                ScheduleItem toAdd = si.clone();
-               si.setDays(days);
-               si.setTimeRange(tr);
+               toAdd.setDays(days);
+               toAdd.setTimeRange(tr);
+               
+               sis.add(toAdd);
             }
          }
       }
