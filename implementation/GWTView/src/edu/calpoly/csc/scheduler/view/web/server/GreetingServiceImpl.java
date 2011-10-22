@@ -109,7 +109,70 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	    
 		return gwtItems;
 	}
-
+	
+/*	public ArrayList<gwtScheduleItem> getGWTScheduleItems()
+	{
+	 Vector<ScheduleItem> modelItems = new Vector<ScheduleItem>();
+	 ArrayList<gwtScheduleItem> gwtItems = new ArrayList<gwtScheduleItem>();
+	 
+	 Week mwf = new Week(new Day[]{Day.MON, Day.WED, Day.FRI});
+	 Week tr = new Week(new Day[]{Day.TUE, Day.THU});
+	 Time ts1 = new Time(8, 10);
+	 Time te1 = new Time(10, 0);
+	 Time ts2 = new Time(9, 10);
+	 Time te2 = new Time(10, 0);
+	 Time ts3 = new Time(10, 10);
+	 Time te3 = new Time(12, 0);
+	 Time ts4 = new Time(14, 10);
+	 Time te4 = new Time(16, 0);
+	 Time ts5 = new Time(14, 10);
+	 Time te5 = new Time(17, 0);
+	 Time ts6 = new Time(15, 10);
+	 Time te6 = new Time(19, 0);
+	 
+	 Course c1 = new Course("", "CPE", 101);
+	 c1.setDept("CPE");
+	 Course c2 = new Course("", "CPE", 102);
+     c2.setDept("CPE");
+     Course c3 = new Course("", "CPE", 103);
+     c3.setDept("CPE");
+     Course c4 = new Course("", "CPE", 104);
+     c4.setDept("CPE");
+     Course c5 = new Course("", "CPE", 105);
+     c5.setDept("CPE");
+     Course c6 = new Course("", "CPE", 106);
+     c6.setDept("CPE");
+     
+	 Location office = new Location(1, 2);
+     Instructor i1 = new Instructor("Gene", "Fisher", "1", 12, office);
+     Instructor i2 = new Instructor("Clark", "Turner", "2", 12, office);
+     Instructor i3 = new Instructor("John", "Dalbey", "3", 12, office);
+     Instructor i4 = new Instructor("John", "Clements", "4", 12, office);
+     Instructor i5 = new Instructor("Franz", "Kurfess", "5", 12, office);
+     Instructor i6 = new Instructor("Mei-Ling", "Liu", "6", 12, office);
+     
+     Location l1 = new Location(14, 256);
+     Location l2 = new Location(14, 255);
+     Location l3 = new Location(1, 3);
+     Location l4 = new Location(15, 10);
+     Location l5 = new Location(50, 100);
+     Location l6 = new Location(3, 14);
+     
+     modelItems.add(new ScheduleItem(i1, c1, l1, 1, mwf, ts1, te1));
+     modelItems.add(new ScheduleItem(i2, c2, l2, 1, mwf, ts2, te2));
+     modelItems.add(new ScheduleItem(i3, c3, l3, 1, tr, ts3, te3));
+     modelItems.add(new ScheduleItem(i4, c4, l4, 1, mwf, ts4, te4));
+     modelItems.add(new ScheduleItem(i5, c5, l5, 1, mwf, ts5, te5));
+     modelItems.add(new ScheduleItem(i6, c6, l6, 1, mwf, ts6, te6));
+     
+     for(ScheduleItem item : modelItems)
+     {         
+      gwtItems.add(convertScheduleItem(item));
+     }
+	 
+	 return gwtItems;
+	}*/
+	
 	public ArrayList<gwtScheduleItem> getGWTScheduleItems()
 	{
 		
@@ -121,37 +184,37 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		Course c1 = new Course("one oh one", "CPE", 101);
 		 c1.setDept("CPE");
 		 c1.setId(1);
-		 c1.setLength(4);
+		 c1.setLength(6);
 		 c1.setNumOfSections(1);
 		 c1.setDays(mwf);
 		 Course c2 = new Course("one oh two", "CPE", 102);
 	     c2.setDept("CPE");
 		 c2.setId(2);
-		 c2.setLength(4);
+		 c2.setLength(6);
 		 c2.setNumOfSections(1);
 		 c2.setDays(mwf);
 	     Course c3 = new Course("one oh three", "CPE", 103);
 	     c3.setDept("CPE");
 		 c3.setId(3);
-		 c3.setLength(4);
+		 c3.setLength(6);
 		 c3.setNumOfSections(1);
 		 c3.setDays(mwf);
          Course c4 = new Course("one oh four", "CPE", 104);
 	     c4.setDept("CPE");
 		 c4.setId(4);
-		 c4.setLength(4);
+		 c4.setLength(6);
 		 c4.setNumOfSections(1);
 		 c4.setDays(mwf);
          Course c5 = new Course("one oh five", "CPE", 105);
 	     c5.setDept("CPE");
 		 c5.setId(5);
-		 c5.setLength(4);
+		 c5.setLength(6);
 		 c5.setNumOfSections(1);
 		 c5.setDays(mwf);
 	     Course c6 = new Course("one oh six", "CPE", 106);
 	     c6.setDept("CPE");
 		 c6.setId(6);
-		 c6.setLength(4);
+		 c6.setLength(6);
 		 c6.setNumOfSections(1);
 		 c6.setDays(mwf);
         courses.add(c1);
@@ -176,6 +239,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	 
 	 return gwtItems;
 	}
+	
+	
 	public gwtScheduleItem convertScheduleItem(ScheduleItem schdItem)
 	{
 	 String instructor;
