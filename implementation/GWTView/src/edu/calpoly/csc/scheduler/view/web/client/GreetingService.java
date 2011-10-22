@@ -29,4 +29,6 @@ public interface GreetingService extends RemoteService {
 	ArrayList<CourseGWT> getCourses();
 
 	void saveCourses(ArrayList<CourseGWT> locations);
+	
+	ArrayList<gwtScheduleItem> generateSchedule();
 }

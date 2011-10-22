@@ -21,5 +21,9 @@ public class ScheduleBuildView extends ScrollPanel {
 		setHeight("100%");
 
 		this.add(new HTML("My content goes here lololol"));
+		
+//		service.generateSchedule(new Callback() {
+//			
+//		});
 	}
 }

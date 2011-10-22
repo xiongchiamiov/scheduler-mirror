@@ -90,6 +90,25 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 			idb.addData(new Instructor(instructor.getFirstName(), instructor.getLastName(), instructor.getUserID(), instructor.getWtu(), instructor.getBuilding(), instructor.getRoomNumber(), instructor.getDisabilities()));
 	}
 
+	public ArrayList<gwtScheduleItem> generateSchedule() {
+		Database db = new Database();
+		ArrayList<Instructor> instructors = db.getInstructorDB().getData();
+		ArrayList<Course> courses = db.getCourseDB().getData();
+		ArrayList<Location> locations = db.getLocationDB().getData();
+		
+		Schedule schedule = new Schedule();
+		schedule.generate(new Vector<Course>(courses), new Vector<Instructor>(instructors), new Vector<Location>(locations));
+		
+		ArrayList<gwtScheduleItem> gwtItems = new ArrayList<gwtScheduleItem>();
+		
+	    for(ScheduleItem item : schedule.getScheduleItems())
+	    {         
+	    	gwtItems.add(convertScheduleItem(item));
+	    }
+	    
+		return gwtItems;
+	}
+	
 	public ArrayList<gwtScheduleItem> getGWTScheduleItems()
 	{
 	/*	
@@ -281,11 +300,18 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		System.out.println("Size of course list: " + courses.size());
 		for(int i = 0; i < courses.size(); i++)
 		{
-		    results.add(new CourseGWT(courses.get(i).getId(), courses.get(i).getName(), courses.get(i).getCatalogNum(),
-		                courses.get(i).getWtu(), courses.get(i).getScu(), courses.get(i).getCourseType(), 
-		                courses.get(i).getEnrollment(), courses.get(i).getLabID(), courses.get(i).getSmartroom(),
-		                courses.get(i).getLaptop(), courses.get(i).getOverhead(), courses.get(i).getLength(),
-		                courses.get(i).getCTPrefix(), courses.get(i).getPrefix()));
+			Course course = courses.get(i);
+			CourseGWT newCourse = new CourseGWT();
+			newCourse.setCatalogNum(course.getCatalogNum());
+			newCourse.setCourseName(course.getName());
+			newCourse.setDept(course.getDept());
+			newCourse.setLab("herp");
+			newCourse.setMaxEnroll(course.getEnrollment());
+			newCourse.setNumSections(course.getNumOfSections());
+			newCourse.setScu(course.getScu());
+			newCourse.setType(course.getType().toString());
+			newCourse.setWtu(course.getWtu());
+		    results.add(newCourse);
 		}
 		
 		// dummy data
@@ -312,8 +338,19 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		
 		cdb.clearData();
 		
-		for (CourseGWT course : courses)
+		for (CourseGWT course : courses) {
 //			cdb.addData(new Course(course.getCourseName(), course.getDept(), course.getCatalogNum()));
-			cdb.addData(new Course(course.getID(), course.getCourseName(), course.getCatalogNum(), course.getWtu(), course.getScu(), course.getType(), course.getMaxEnroll(), course.getLabID(), course.getSmartroom(), course.getLaptop(), course.getOverhead(), 8, course.getCTPrefix(), course.getPrefix()));
+//			cdb.addData(new Course((), course.getLabID(), course.getSmartroom(), course.getLaptop(), course.getOverhead(), 8, course.getCTPrefix(), course.getPrefix()));
+			Course newCourse = new Course();
+			newCourse.setId(course.getID());
+			newCourse.setName(course.getCourseName());
+			newCourse.setCatalogNum(course.getCatalogNum());
+			newCourse.setWtu(course.getWtu());
+			newCourse.setScu(course.getScu());
+			newCourse.setType(course.getType());
+			newCourse.setEnrollment(course.getMaxEnroll());
+			
+			assert(false); // implement the rest of them
+		}
 	}
 }

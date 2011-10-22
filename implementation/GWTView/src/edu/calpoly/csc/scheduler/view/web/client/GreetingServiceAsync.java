@@ -28,6 +28,9 @@ public interface GreetingServiceAsync {
 	void saveCourses(ArrayList<CourseGWT> courses, AsyncCallback<Void> callback)
 			throws IllegalArgumentException;
 	
+	void generateSchedule(AsyncCallback<ArrayList<gwtScheduleItem>> scheduleItems)
+    		throws IllegalArgumentException;
+	
     void getGWTScheduleItems(AsyncCallback<ArrayList<gwtScheduleItem>> scheduleItems)
     		throws IllegalArgumentException;
 }

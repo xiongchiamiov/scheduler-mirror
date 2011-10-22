@@ -44,11 +44,4 @@
 		<nature>org.eclipse.wst.common.project.facet.core.nature</nature>
 		<nature>org.eclipse.wst.jsdt.core.jsNature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>modeljava</name>
-			<type>2</type>
-			<location>D:/workspacejava/repo/implementation/model/java</location>
-		</link>
-	</linkedResources>
 </projectDescription>
