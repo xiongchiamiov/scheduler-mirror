@@ -37,7 +37,7 @@ public class ScheduleItem implements Serializable, Cloneable,
     * (course, time, days) which the instructor it represents cannot do (has a
     * preference of 0 for)
     */
-   public static final int IMPOSSIBLE = 0;
+   public static final int IMPOSSIBLE = -1;
 
    /**
     * The instructor for this scheduled item
@@ -375,27 +375,12 @@ public class ScheduleItem implements Serializable, Cloneable,
       /*
        * If any one part of the value was 0, its impossible for the instructor
        * should teach this SI, so our value should reflect that with the 
-       * impossible 0 value.
+       * IMPOSSIBLE.
        */
       if ((hasLab    && ((int)lab    == 0))  ||
           (hasCourse && ((int)course == 0))  ||
           (hasTime   && ((int)time    == 0)))
       {
-         System.err.println ("Returning IMPOSSIBLE");
-         System.err.println ("Has lab: " + hasLab + " - Val: " + lab);
-         System.err.println ("Has Course: " + hasCourse + " - Val: " + course);
-         System.err.println ("Has time: " + hasTime + " - Val: " + time);
-         System.err.println ("Lab truth: " + (hasLab && ((int)lab    == 0)));
-         System.err.println ("Crs truth: " + (hasCourse && ((int)course == 0)));
-         System.err.println ("Time truth: " + (hasTime  && ((int)lab    == 0)));
-         if (hasTime)
-         {
-            System.err.println (days);
-            System.err.println (tr);
-            System.err.println ("Val: " + i.getAvgPrefForTimeRange(this.days, 
-                                                                   this.tr.getS(),
-                                                                   this.tr.getE()));
-         }
          return IMPOSSIBLE;
       }
 
@@ -507,8 +492,6 @@ public class ScheduleItem implements Serializable, Cloneable,
    {
       this.location = location;
    }
-
-   
 
    /**
     * Sets the section to the given parameter.

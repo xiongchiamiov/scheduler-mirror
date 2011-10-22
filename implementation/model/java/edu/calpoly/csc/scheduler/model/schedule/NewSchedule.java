@@ -399,7 +399,7 @@ public class NewSchedule extends Observable implements Serializable
          if (i.isAvailable(days, tr))
          {
             debug ("AVAILABLE");
-            if (i.getAvgPrefForTimeRange(days, tr.getS(), tr.getE()) > 0)
+            if (i.getAvgPrefForTimeRange(days, tr) > 0)
             {
                debug ("WANTS");
                ScheduleItem toAdd = si.clone();
@@ -436,9 +436,16 @@ public class NewSchedule extends Observable implements Serializable
          {
             if (l.isAvailable(days, tr))
             {
-               ScheduleItem base = si.clone();
-               base.setLocation(l);
-               si_list.add(base);
+               if (l.providesFor(si.getCourse()))
+               {
+                  /*
+                   * I clone so we don't keep changing the same object...that'd
+                   * be pretty bad.
+                   */
+                  ScheduleItem base = si.clone();
+                  base.setLocation(l);
+                  si_list.add(base);
+               }
             }
          }
       }
@@ -446,39 +453,56 @@ public class NewSchedule extends Observable implements Serializable
       return si_list;
    }
 
-   public ScheduleItem makeItem (Course c, Week days, Time start)
+   /**
+    * Creates a ScheduleItem to teach a given course on a given set of days 
+    * in a given time range. 
+    * 
+    * @param c Course to teach
+    * @param days Days to teach
+    * @param s Time of day the course should start
+    * 
+    * @return A ScheduleItem w/ an instructor and location aptly suited for 
+    *         teaching with the given parameters. 
+    *         
+    * @throws CouldNotBeScheduledException If no instructor or location can be
+    *         found which is compatible w/ the given parameters. 
+    */
+   public ScheduleItem makeItem (Course c, Week days, Time s)
       throws CouldNotBeScheduledException
    {
-      ScheduleItem si = new ScheduleItem();
+      TimeRange tr = new TimeRange(s, c.splitLengthOverDays(days.size()));
       
-      return si;
-   }
-   
-   /**
-    * Finds an instructor for a given course that wants to teach the course and
-    * can teach the course.
-    * 
-    * @param c Course to find an instructor for
-    * @return An instructor who wants to teach 'c' at least as much as every
-    *         other currently available instructor.
-    *
-    */
-   private Instructor findInstructor (Course c)
-   {
-      int curPref = 0;
-      Instructor r = null;
+      /*
+       * SiMap'll sort out everything and let the best choice float to the top
+       */
+      SiMap sis = new SiMap();
+      ScheduleItem si = new ScheduleItem();
+      si.setCourse(c);
+      si.setDays(days);
+      si.setTimeRange(tr);
+      
       for (Instructor i: this.iSourceList)
       {
-         int temp = i.getPreference(c);
-         if (temp > curPref && i.canTeach(c))
-         {
-            r = i;
-            curPref = temp;
-         }
-            
+         /*
+          * The map won't add if the instructor has a 0 pref for anything in
+          * the ScheduleItem.  
+          */
+         ScheduleItem clone = si.clone();
+         clone.setInstructor(i);
+         
+         sis.put(clone);
       }
       
-      return r;
+      /*
+       * If not even one not-impossible ScheduleItem was created, we'll have to
+       * balk
+       */
+      if (sis.size() == 0)
+      {
+         throw new CouldNotBeScheduledException();
+      }
+      
+      return sis.lastKey();
    }
    
    /**

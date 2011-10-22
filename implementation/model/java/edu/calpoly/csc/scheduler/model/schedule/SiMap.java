@@ -22,6 +22,25 @@ import java.util.Vector;
 public class SiMap extends TreeMap<ScheduleItem, Void>
 {
    /**
+    * Used for debugging. Toggle it to get debugging output
+    */
+   public static final boolean DEBUG = !true;
+   /**
+    * Prints a message if DEBUG is true
+    * 
+    * @param s String to print
+    */
+   public static void debug (String s)
+   {
+      if (DEBUG)
+      {
+         System.err.println (s);
+      }
+   }
+   
+   public SiMap () { }
+   
+   /**
     * Creates a new sorted mapping and adds each ScheduleItem in the list 
     * provided as keys in the map. 
     *
@@ -32,11 +51,7 @@ public class SiMap extends TreeMap<ScheduleItem, Void>
       super();
       for (ScheduleItem si: sis)
       {
-         if (!this.put(si))
-         {
-            System.err.println ("Couldn't add \n" + si + "\nb/c it has a pref " +
-               "of 0");
-         }
+         this.put(si);
       }
    }
 
@@ -52,8 +67,6 @@ public class SiMap extends TreeMap<ScheduleItem, Void>
     */
    public boolean put (ScheduleItem si)
    {
-      //System.err.println ("Putting into map:");
-      //System.err.println (si);
       if (si.getValue() == ScheduleItem.IMPOSSIBLE)
       {
          return false;
