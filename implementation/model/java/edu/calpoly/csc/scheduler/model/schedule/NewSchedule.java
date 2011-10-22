@@ -106,6 +106,10 @@ public class NewSchedule extends Observable implements Serializable
       this.siList.add(si);
    }
    
+   /**
+    * Books another section of the given course. 
+    * @param c
+    */
    private void bookSection (Course c)
    {
       if (!this.courseCount.containsKey(c))

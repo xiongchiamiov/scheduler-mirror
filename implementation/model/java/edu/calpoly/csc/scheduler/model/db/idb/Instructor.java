@@ -32,7 +32,7 @@ import java.io.Serializable;
 public class Instructor implements Comparable<Instructor>, Serializable
 {
    public static final int serialVersionUID = 42;
-   
+
    /**
     * First name of instructor.
     */
@@ -56,7 +56,7 @@ public class Instructor implements Comparable<Instructor>, Serializable
     * Current amount of wtus
     */
    private int curWtu;
-   
+
    /**
     * Building and office number of instructor.
     */
@@ -105,20 +105,7 @@ public class Instructor implements Comparable<Instructor>, Serializable
    protected ArrayList<CoursePreference> initialCoursePreferences ()
    {
       ArrayList<CoursePreference> returnVal = new ArrayList<CoursePreference>();
-      // if (Scheduler.getLocalCDB() != null)
-      // {
-      // System.err.println ("Instructor says local CDB not null");
-      // Vector<Course> cList = new Vector<Course>(Scheduler.getLocalCDB());
-      // for (Course c: cList)
-      // {
-      // returnVal.add(new CoursePreference(c, 5));
-      // }
-      // }
-      // else
-      // {
-      // System.err.println("My method sucks!");
-      // return null;
-      // }
+
       return returnVal;
    }
 
@@ -136,8 +123,7 @@ public class Instructor implements Comparable<Instructor>, Serializable
     * Returns a new, fresh copy of a given instructor. Written by: Eric
     * Liebowitz
     * 
-    * @param i
-    *           The instructor to copy
+    * @param i The instructor to copy
     */
    public Instructor (Instructor i)
    {
@@ -155,16 +141,11 @@ public class Instructor implements Comparable<Instructor>, Serializable
     * Constructs the instructor with the given first and last names, and user
     * id. This will set "disabilities" to false
     * 
-    * @param first
-    *           the first name of the instructor
-    * @param last
-    *           the last name of the instructor
-    * @param id
-    *           the user id of the instructor
-    * @param wtu
-    *           the work-time units of the instructor
-    * @param office
-    *           the office building and room numbers of the instructor
+    * @param first the first name of the instructor
+    * @param last the last name of the instructor
+    * @param id the user id of the instructor
+    * @param wtu the work-time units of the instructor
+    * @param office the office building and room numbers of the instructor
     */
    public Instructor (String first, String last, String id, int wtu,
       Location office)
@@ -176,76 +157,50 @@ public class Instructor implements Comparable<Instructor>, Serializable
     * Constructs the instructor with the given first and last names, and user
     * id.
     * 
-    * @param first
-    *           the first name of the instructor
-    * @param last
-    *           the last name of the instructor
-    * @param id
-    *           the user id of the instructor
-    * @param wtu
-    *           the work-time units of the instructor
-    * @param office
-    *           the office building and room numbers of the instructor
-    * @param disabilities
-    *           whether or not the professor has any disabilities
+    * @param first the first name of the instructor
+    * @param last the last name of the instructor
+    * @param id the user id of the instructor
+    * @param wtu the work-time units of the instructor
+    * @param office the office building and room numbers of the instructor
+    * @param disabilities whether or not the professor has any disabilities
     */
    public Instructor (String first, String last, String id, int wtu,
-		   Location office, boolean disabilities)
-		   {
-		      init(first, last, id, wtu, office, disabilities);
-		   }
-   
+      Location office, boolean disabilities)
+   {
+      init(first, last, id, wtu, office, disabilities);
+   }
+
    public Instructor (String first, String last, String id, int wtu,
-		   String building, String room, boolean disabilities)
-		   {
-		      init(first, last, id, wtu, building, room, disabilities);
-		   }
+      String building, String room, boolean disabilities)
+   {
+      init(first, last, id, wtu, new Location(building, room), disabilities);
+   }
 
    /**
     * Does the initialization all Instructor constructors need. Since they all
     * do the same thing (with minor tweaks), unifying the actions into one
     * method seemed wise.
     * 
-    * @param first
-    *           the first name of the instructor
-    * @param last
-    *           the last name of the instructor
-    * @param id
-    *           the user id of the instructor
-    * @param wtu
-    *           the work-time units of the instructor
-    * @param office
-    *           the office building and room numbers of the instructor
-    * @param disabilities
-    *           whether or not the professor has any disabilities
+    * @param first the first name of the instructor
+    * @param last the last name of the instructor
+    * @param id the user id of the instructor
+    * @param wtu the work-time units of the instructor
+    * @param office the office building and room numbers of the instructor
+    * @param disabilities whether or not the professor has any disabilities
     */
    private void init (String first, String last, String id, int wtu,
-		      Location office, boolean disabilities)
-		   {
-		      this.firstName = first;
-		      this.lastName = last;
-		      this.userID = id;
-		      this.maxWtu = wtu;
-		      this.office = office;
-		      this.disability = disabilities;
-		      this.availability = new WeekAvail();
-		      this.coursePreferences = initialCoursePreferences();
-		      initTPrefs();
-		   }
-   
-   private void init (String first, String last, String id, int wtu,
-		      String building, String room, boolean disabilities)
-		   {
-		      this.firstName = first;
-		      this.lastName = last;
-		      this.userID = id;
-		      this.maxWtu = wtu;
-		      this.office = new Location(building, room);
-		      this.disability = disabilities;
-		      this.availability = new WeekAvail();
-		      this.coursePreferences = initialCoursePreferences();
-		      initTPrefs();
-		   }
+      Location office, boolean disabilities)
+   {
+      this.firstName = first;
+      this.lastName = last;
+      this.userID = id;
+      this.maxWtu = wtu;
+      this.office = office;
+      this.disability = disabilities;
+      this.availability = new WeekAvail();
+      this.coursePreferences = initialCoursePreferences();
+      initTPrefs();
+   }
 
    /**
     * Gives instructor's prefs of 5 for all times between 7a.m. and 10 p.m..
@@ -269,11 +224,10 @@ public class Instructor implements Comparable<Instructor>, Serializable
     * Initiliazes a given days' LinkedHashMap of TimePreferences. Times from
     * 7a-10p get a desire of 5; all others get 0.
     * 
-    * @param d
-    *           The day to fill with default TPrefs
+    * @param d The day to fill with default TPrefs
     * 
-    * @throws NotADayException
-    *            if "d" is not one of the days defined in generate.Week.java
+    * @throws NotADayException if "d" is not one of the days defined in
+    *         generate.Week.java
     */
    private void fillDayWithTPrefs (Day d)
    {
@@ -307,13 +261,11 @@ public class Instructor implements Comparable<Instructor>, Serializable
    /**
     * This method will add a TimePreference to a given day.
     * 
-    * @param d
-    *           The day to apply the preference to
-    * @param tp
-    *           The time preference
+    * @param d The day to apply the preference to
+    * @param tp The time preference
     * 
-    * @throws NotADayException
-    *            if "d" is not one of the days defined in generate.Week.java
+    * @throws NotADayException if "d" is not one of the days defined in
+    *         generate.Week.java
     */
    public void addTimePreference (Day d, TimePreference tp)
       throws NullPreferenceException
@@ -381,8 +333,7 @@ public class Instructor implements Comparable<Instructor>, Serializable
    /**
     * Added so I can make an ordered list of Instructors
     * 
-    * @param o
-    *           Thing to compare
+    * @param o Thing to compare
     * @return 1 if o was greater. 0 if equal. -1 if lesser.
     * 
     *         Written by: Eric Liebowitz
@@ -407,8 +358,7 @@ public class Instructor implements Comparable<Instructor>, Serializable
     * This method will return true if the argument is not null, is an Instructor
     * class and has the same userID as this object.
     * 
-    * @param other
-    *           the object to compare with
+    * @param other the object to compare with
     * @return whether the two objects are equal
     */
    public boolean equals (Object other)
@@ -420,7 +370,7 @@ public class Instructor implements Comparable<Instructor>, Serializable
       {
          return false;
       }
-      
+
       if (!((Instructor) other).getId().equals(this.userID))
       {
          return false;
@@ -457,13 +407,11 @@ public class Instructor implements Comparable<Instructor>, Serializable
    /**
     * This method sets the course preferences for the instructor.
     * 
-    * @param the
-    *           list of course preferences.
+    * @param the list of course preferences.
     */
    public void setCoursePreferences (ArrayList<CoursePreference> cPreferences)
    {
       this.coursePreferences = cPreferences;
-      // return new ArrayList<CoursePreference>(coursePreferences);
    }
 
    /**
@@ -476,11 +424,11 @@ public class Instructor implements Comparable<Instructor>, Serializable
       return disability;
    }
 
-   public String getBuilding()
+   public String getBuilding ()
    {
-	   return office.getBuilding();
+      return office.getBuilding();
    }
-   
+
    /**
     * Returns the fairness value of this instructor.
     * 
@@ -513,7 +461,7 @@ public class Instructor implements Comparable<Instructor>, Serializable
    /**
     * Returns the id of the instructors.
     **/
-   public String getId () 
+   public String getId ()
    {
       return userID;
    }
@@ -539,14 +487,14 @@ public class Instructor implements Comparable<Instructor>, Serializable
       return this.maxWtu;
    }
 
-   public String getRoomNumber()
+   public String getRoomNumber ()
    {
-	   return this.office.getRoom();
+      return this.office.getRoom();
    }
-   
+
    /**
     * Sets the maxWtu to the given parameter.
-    *
+    * 
     * @param maxWtu the maxWtu to set
     */
    public void setMaxWtu (int maxWtu)
@@ -563,10 +511,10 @@ public class Instructor implements Comparable<Instructor>, Serializable
    {
       return this.curWtu;
    }
-   
+
    /**
     * Sets the curWtu to the given parameter.
-    *
+    * 
     * @param curWtu the curWtu to set
     */
    public void setCurWtu (int curWtu)
@@ -579,11 +527,11 @@ public class Instructor implements Comparable<Instructor>, Serializable
     * 
     * @return this instructor's current wtu count
     */
-   public int getAvailableWTU()
+   public int getAvailableWTU ()
    {
       return this.getCurWtu();
    }
-   
+
    /**
     * Returns a string representing the instructor's name in the form first name
     * - space - last name.
@@ -609,8 +557,7 @@ public class Instructor implements Comparable<Instructor>, Serializable
    /**
     * This method will get a course preference from the list of preferences.
     * 
-    * @param course
-    *           the course for which to get the preference.
+    * @param course the course for which to get the preference.
     * @return the course preference for the given course.
     */
    public int getPreference (Course course)
@@ -631,17 +578,15 @@ public class Instructor implements Comparable<Instructor>, Serializable
     * for a given day and time. If the day in question does not yet have any
     * TPrefs, it will be populated with default values.
     * 
-    * @param d
-    *           the day the preference is from
-    * @param t
-    *           the time of the preference to get.
+    * @param d the day the preference is from
+    * @param t the time of the preference to get.
     * 
     * @return the preference (int) related to the given time on the given day
     * 
-    * @throws NotADayException
-    *            if "d" is not one of the days defined in generate.Week.java
+    * @throws NotADayException if "d" is not one of the days defined in
+    *         generate.Week.java
     * 
-    *            Written by: Eric Liebowitz
+    *         Written by: Eric Liebowitz
     */
    public int getPreference (Day d, Time time)
    {
@@ -659,18 +604,16 @@ public class Instructor implements Comparable<Instructor>, Serializable
    /**
     * Looks up a professor's TimePreferences for a given day.
     * 
-    * @param d
-    *           Day which all TimePreferences should be for.
+    * @param d Day which all TimePreferences should be for.
     * 
     * @return List of TimePreferences, sorted in descending order of
     *         desirability
     * 
-    * @throws NotADayException
-    *            if "d" is not a valid day. See "Week" under the "generate"
-    *            package, and look for the "isValidDay" method docs for more
-    *            information.
+    * @throws NotADayException if "d" is not a valid day. See "Week" under the
+    *         "generate" package, and look for the "isValidDay" method docs for
+    *         more information.
     * 
-    *            Written by: Eric Liebowitz
+    *         Written by: Eric Liebowitz
     */
    public Vector<TimePreference> getTPrefsByDay (int d)
    {
@@ -685,9 +628,8 @@ public class Instructor implements Comparable<Instructor>, Serializable
     * time on given days. If there is a preference of 0 found in this length of
     * Time for any day in the Week, 0 is returned immediately.
     * 
-    * @param dat
-    *           Object containing the week, start, and end time to lookup the
-    *           average preference for.
+    * @param dat Object containing the week, start, and end time to lookup the
+    *        average preference for.
     * 
     * @return the average desire for the given time range. If there was a 0
     *         found anywhere in this time range, 0 is returned.
@@ -829,15 +771,15 @@ public class Instructor implements Comparable<Instructor>, Serializable
    {
       return userID.hashCode();
    }
-   
+
    /**
     * Returns true if this instructor is available for the given Week of days
     * and the given time range
     * 
     * @param w Week containing the days to check
-    * @param tr Time range to check 
+    * @param tr Time range to check
     * 
-    * @return True if the instructor is available for the given time range 
+    * @return True if the instructor is available for the given time range
     *         across the given Week
     */
    public boolean isAvailable (Week days, TimeRange tr)
@@ -867,8 +809,7 @@ public class Instructor implements Comparable<Instructor>, Serializable
    }
 
    /**
-    * @param availability
-    *           the availability to set
+    * @param availability the availability to set
     */
    public void setAvailability (WeekAvail availability)
    {
@@ -885,26 +826,26 @@ public class Instructor implements Comparable<Instructor>, Serializable
    {
       return new String(this.getLastName() + ", " + this.getFirstName());
    }
-   
-      /**
-    * Checks to see if an instructor can teach the given course.
-    * Checks available WTUs and if their teaching preference is not 0.
+
+   /**
+    * Checks to see if an instructor can teach the given course. Checks
+    * available WTUs and if their teaching preference is not 0.
     * 
     * @param course Course instructor might teach
     * 
     * @return A list of time ranges that instructor can and wants to teach this
     *         course
     */
-   public boolean canTeach(Course course)
+   public boolean canTeach (Course course)
    {
-      //Check if instructor has enough WTUs
-      if((this.curWtu + course.getWtu()) <= this.maxWtu)
+      // Check if instructor has enough WTUs
+      if ((this.curWtu + course.getWtu()) <= this.maxWtu)
       {
-         //Check if preferences allow it
+         // Check if preferences allow it
          /*
-          * TODO: rewrite this when CoursePreference is changed to a hash.
-          *       Note that you'll not need to change this...just change the
-          *       method "getPreference"
+          * TODO: rewrite this when CoursePreference is changed to a hash. Note
+          * that you'll not need to change this...just change the method
+          * "getPreference"
           */
          if (getPreference(course) > 0)
          {
@@ -913,7 +854,7 @@ public class Instructor implements Comparable<Instructor>, Serializable
       }
       return false;
    }
-   
+
    /**
     * Gets the list of time ranges that this instructor is available and wants
     * to teach this course. The Course's 'getDays' method is used to determine
@@ -930,18 +871,18 @@ public class Instructor implements Comparable<Instructor>, Serializable
    {
       Vector<TimeRange> r = new Vector<TimeRange>();
       int length = c.getLength();
-      
-      for (Time t: Time.ALL_TIMES_IN_DAY)
+
+      for (Time t : Time.ALL_TIMES_IN_DAY)
       {
          TimeRange tr = new TimeRange(t, length);
-         double pref = 
-            this.getAvgPrefForTimeRange(c.getDays(), tr.getS(), tr.getE());
+         double pref = this.getAvgPrefForTimeRange(c.getDays(), tr.getS(),
+            tr.getE());
          if (pref > 0 && this.isAvailable(c.getDays(), tr))
          {
             r.add(tr);
          }
       }
-      
+
       return r;
    }
 }
