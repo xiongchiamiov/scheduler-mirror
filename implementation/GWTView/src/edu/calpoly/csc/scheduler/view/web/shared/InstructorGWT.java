@@ -4,8 +4,11 @@ import java.io.Serializable;
 
 
 public class InstructorGWT implements Serializable{
-	private static final long serialVersionUID = -539236134373434229L;
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4982539363690274674L;
 	private String name, userID, office;
 	private String firstName, lastName, roomNumber, building;
 	private boolean disabilities;
@@ -84,5 +87,25 @@ public class InstructorGWT implements Serializable{
 
 	public void setOffice(String office) {
 		this.office = office;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public void setRoomNumber(String roomNumber) {
+		this.roomNumber = roomNumber;
+	}
+
+	public void setBuilding(String building) {
+		this.building = building;
+	}
+
+	public void setDisabilities(boolean disabilities) {
+		this.disabilities = disabilities;
 	}
 }

@@ -32,7 +32,7 @@ public class EditableTableConstants {
 	
 	public static final String INSTR_BUILDING = "Building";
 
-	public static final String INSTR_ROOMNUMBER = "Room Number";
+	public static final String INSTR_ROOMNUMBER = "Room #";
 
 	public static final String INSTR_DISABILITIES = "Disabilities";
 

@@ -4,50 +4,77 @@ import java.util.ArrayList;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.user.cellview.client.DataGrid;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlexTable.FlexCellFormatter;
+import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.HorizontalSplitPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class EditableTable{
 
 	private FlexTable table;
-	private Grid grid;
+	private VerticalPanel grid;
 	private int cols;
 	private FlexCellFormatter cellFormatter;
 	private ArrayList<EditableTableEntry> entries;
 	private Button editButton, saveButton, cancelButton, addRowButton;
+	private HorizontalPanel headerPanel;
+	private ArrayList<Short> columnTypes;
 	
 	/**
 	 * Creates an editable table with a column for each passed in attribute
 	 * @param attributes column headings for the table
 	 */
-	public EditableTable(ArrayList<String> attributes){
-		
+	public EditableTable(ArrayList<AttributeInfo> attributes){
+		try{
 		// initialize variables
 		cols = 0;
 		entries = new ArrayList<EditableTableEntry>();
 		
-		/* table */
+		// tables
 		table = new FlexTable();
+		FocusPanel focusPanel = new FocusPanel();
+		headerPanel = 
+				new HorizontalPanel();
+		focusPanel.add(headerPanel);
 		
+		focusPanel.addMouseOverHandler(new MouseOverHandler(){
+			public void onMouseOver(MouseOverEvent event){
+				resizeColumns();
+			}
+		});
+		
+
+		columnTypes = new ArrayList<Short>();
 		cellFormatter = table.getFlexCellFormatter();
 		
 		// null check the parameter
 		if(attributes != null){
 		
 			cols = attributes.size();
-			
 			int i;
 			
 			// make each attribute name a column heading
 			for(i = 0; i < cols; i++){
 				
-				String str = attributes.get(i);
+				AttributeInfo attr = attributes.get(i);
+				String str = attr.getAttr();
+				short type = attr.getType();
+				columnTypes.add(type);
+				headerPanel.add(createColumn(i, str));
+				
 				
 				// null check attribute name
 				if(str != null){
@@ -57,7 +84,19 @@ public class EditableTable{
 					cellFormatter.setHorizontalAlignment(
 					        0, i, HasHorizontalAlignment.ALIGN_CENTER);
 					table.setWidget(0, i, label);
-					cellFormatter.addStyleName(0, i, "editableTableCell");
+					
+					String style = "";
+					if(type == AttributeInfo.STR){
+						style = "editTableCellStr";
+					}
+					else if(type == AttributeInfo.INT){
+						style = "editTableCellInt";
+					}
+					else if(type == AttributeInfo.BOOL){
+						style = "editTableCellBool";
+					}
+					
+					cellFormatter.addStyleName(0, i, style);
 				}
 			}	
 			
@@ -77,22 +116,60 @@ public class EditableTable{
 		editGrid.setWidget(0,  1, saveButton);
 		editGrid.setWidget(0,  2, cancelButton);
 		
+		headerPanel.addStyleName("editTableHeaderPanel");
 		
 	    // add elements to the grid
-	    grid = new Grid(3, 1);
+	    grid = new VerticalPanel();
 	    
-	    grid.setWidget(0, 0, editGrid);
+	    grid.add(editGrid);
 	    
-	    grid.setWidget(1, 0, table);
+	    //grid.add(focusPanel);
 	    
-	    grid.getCellFormatter().setHorizontalAlignment(2, 0, HasHorizontalAlignment.ALIGN_RIGHT);
-	    grid.setWidget(2, 0, addRowButton);
+	    grid.add(table);
 	    
 	    
+	    grid.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
+	    grid.add(addRowButton);
+	    
+
 	    // disable buttons while not editing
 	    saveButton.setVisible(false);
 		cancelButton.setVisible(false);
 		addRowButton.setVisible(false);
+		}catch(Exception e){
+			Window.alert(e.getLocalizedMessage());
+		}
+	}
+	
+	
+	private HorizontalSplitPanel createColumn(int index, String name){
+		
+		HorizontalSplitPanel splitPanel = new HorizontalSplitPanel();
+		splitPanel.setLeftWidget(new Label(name));
+		splitPanel.setSplitPosition("100%");
+		
+	    // Return the content
+	    return splitPanel;
+	}
+	
+	
+	private void resizeColumns(){
+		
+		int totalWidth = 0;
+		
+		for(int i = 0; i < headerPanel.getWidgetCount(); i++){
+			
+			HorizontalSplitPanel split = 
+					(HorizontalSplitPanel)headerPanel.getWidget(i);
+			
+			int width = split.getLeftWidget().getOffsetWidth() + 5;
+			
+			totalWidth += width;
+			
+			//table.getColumnFormatter().setWidth(i, width);
+		}
+		
+		headerPanel.setWidth("" + totalWidth + "px");
 	}
 	
 	
@@ -133,7 +210,21 @@ public class EditableTable{
 			}
 			
 			table.setWidget(row, i, w);
-			cellFormatter.addStyleName(row, i, "editableTableCell");
+			
+			// set style
+			short type = columnTypes.get(i);
+			String style = "";
+			if(type == AttributeInfo.STR){
+				style = "editTableCellStr";
+			}
+			else if(type == AttributeInfo.INT){
+				style = "editTableCellInt";
+			}
+			else if(type == AttributeInfo.BOOL){
+				style = "editTableCellBool";
+			}
+			
+			cellFormatter.addStyleName(row, i, style);
 		}
 		
 		

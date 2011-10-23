@@ -25,22 +25,22 @@ public class EditableTableFactory {
 	 */
 	public static EditableTable createProfessors(){
 		
-		ArrayList<String> attr = new ArrayList<String>();
+		ArrayList<AttributeInfo> attr = new ArrayList<AttributeInfo>();
 		
 		// attributes		
-		attr.add(EditableTableConstants.INSTR_FIRSTNAME);
+		attr.add(new AttributeInfo(EditableTableConstants.INSTR_FIRSTNAME, AttributeInfo.STR));
 
-		attr.add(EditableTableConstants.INSTR_LASTNAME);
+		attr.add(new AttributeInfo(EditableTableConstants.INSTR_LASTNAME, AttributeInfo.STR));
 
-		attr.add(EditableTableConstants.INSTR_ID);
+		attr.add(new AttributeInfo(EditableTableConstants.INSTR_ID, AttributeInfo.STR));
 
-		attr.add(EditableTableConstants.INSTR_WTU);
+		attr.add(new AttributeInfo(EditableTableConstants.INSTR_WTU, AttributeInfo.INT));
 		
-		attr.add(EditableTableConstants.INSTR_BUILDING);
+		attr.add(new AttributeInfo(EditableTableConstants.INSTR_BUILDING, AttributeInfo.INT));
 
-		attr.add(EditableTableConstants.INSTR_ROOMNUMBER);
+		attr.add(new AttributeInfo(EditableTableConstants.INSTR_ROOMNUMBER, AttributeInfo.INT));
 
-		attr.add(EditableTableConstants.INSTR_DISABILITIES);
+		attr.add(new AttributeInfo(EditableTableConstants.INSTR_DISABILITIES, AttributeInfo.BOOL));
 
 		// save handler
 		final EditableTable table = new EditableTable(attr);
@@ -75,36 +75,36 @@ public class EditableTableFactory {
 	 */
 	public static EditableTable createCourses(){
 		
-		ArrayList<String> attr = new ArrayList<String>();
+		ArrayList<AttributeInfo> attr = new ArrayList<AttributeInfo>();
 		
 		// attributes
-		attr.add(EditableTableConstants.COURSE_ID);
+		attr.add(new AttributeInfo(EditableTableConstants.COURSE_ID, AttributeInfo.INT));
 
-		attr.add(EditableTableConstants.COURSE_NAME);
+		attr.add(new AttributeInfo(EditableTableConstants.COURSE_NAME, AttributeInfo.INT));
 		
-		attr.add(EditableTableConstants.COURSE_CATALOG_NUM);
+		attr.add(new AttributeInfo(EditableTableConstants.COURSE_CATALOG_NUM, AttributeInfo.INT));
 				
-		attr.add(EditableTableConstants.COURSE_WTU);
+		attr.add(new AttributeInfo(EditableTableConstants.COURSE_WTU, AttributeInfo.INT));
 		
-		attr.add(EditableTableConstants.COURSE_SCU);
+		attr.add(new AttributeInfo(EditableTableConstants.COURSE_SCU, AttributeInfo.INT));
 				
-		attr.add(EditableTableConstants.COURSE_TYPE);
+		attr.add(new AttributeInfo(EditableTableConstants.COURSE_TYPE, AttributeInfo.INT));
 		
-		attr.add(EditableTableConstants.COURSE_MAX_ENROLLMENT);
+		attr.add(new AttributeInfo(EditableTableConstants.COURSE_MAX_ENROLLMENT, AttributeInfo.INT));
 		
-		attr.add(EditableTableConstants.COURSE_LABID);
+		attr.add(new AttributeInfo(EditableTableConstants.COURSE_LABID, AttributeInfo.INT));
 
-		attr.add(EditableTableConstants.COURSE_SMARTROOM);
+		attr.add(new AttributeInfo(EditableTableConstants.COURSE_SMARTROOM, AttributeInfo.INT));
 
-		attr.add(EditableTableConstants.COURSE_LAPTOP);
+		attr.add(new AttributeInfo(EditableTableConstants.COURSE_LAPTOP, AttributeInfo.INT));
 
-		attr.add(EditableTableConstants.COURSE_OVERHEAD);
+		attr.add(new AttributeInfo(EditableTableConstants.COURSE_OVERHEAD, AttributeInfo.INT));
 
-		attr.add(EditableTableConstants.COURSE_LENGTH);
+		attr.add(new AttributeInfo(EditableTableConstants.COURSE_LENGTH, AttributeInfo.INT));
 
-		attr.add(EditableTableConstants.COURSE_CTPREFIX);
+		attr.add(new AttributeInfo(EditableTableConstants.COURSE_CTPREFIX, AttributeInfo.INT));
 
-		attr.add(EditableTableConstants.COURSE_PREFIX);
+		attr.add(new AttributeInfo(EditableTableConstants.COURSE_PREFIX, AttributeInfo.INT));
 
 		// save handler
 		final EditableTable table = new EditableTable(attr);
@@ -139,24 +139,24 @@ public class EditableTableFactory {
 	 */
 	public static EditableTable createLocations(){
 		
-		ArrayList<String> attr = new ArrayList<String>();
+		ArrayList<AttributeInfo> attr = new ArrayList<AttributeInfo>();
 		
 		// attributes
-		attr.add(EditableTableConstants.LOC_BUILDING);
+		attr.add(new AttributeInfo(EditableTableConstants.LOC_BUILDING, AttributeInfo.INT));
 				
-		attr.add(EditableTableConstants.LOC_ROOM);
+		attr.add(new AttributeInfo(EditableTableConstants.LOC_ROOM, AttributeInfo.INT));
 		
-		attr.add(EditableTableConstants.LOC_MAX_OCCUPANCY);
+		attr.add(new AttributeInfo(EditableTableConstants.LOC_MAX_OCCUPANCY, AttributeInfo.INT));
 		
-		attr.add(EditableTableConstants.LOC_TYPE);
+		attr.add(new AttributeInfo(EditableTableConstants.LOC_TYPE, AttributeInfo.INT));
 		
-		attr.add(EditableTableConstants.LOC_SMARTROOM);
+		attr.add(new AttributeInfo(EditableTableConstants.LOC_SMARTROOM, AttributeInfo.INT));
 		
-		attr.add(EditableTableConstants.LOC_LAPTOPCONNECTIVITY);
+		attr.add(new AttributeInfo(EditableTableConstants.LOC_LAPTOPCONNECTIVITY, AttributeInfo.INT));
 
-		attr.add(EditableTableConstants.LOC_ADACOMPLIANT);
+		attr.add(new AttributeInfo(EditableTableConstants.LOC_ADACOMPLIANT, AttributeInfo.INT));
 
-		attr.add(EditableTableConstants.LOC_OVERHEAD);
+		attr.add(new AttributeInfo(EditableTableConstants.LOC_OVERHEAD, AttributeInfo.INT));
 
 		// save handler
 		final EditableTable table = new EditableTable(attr);
