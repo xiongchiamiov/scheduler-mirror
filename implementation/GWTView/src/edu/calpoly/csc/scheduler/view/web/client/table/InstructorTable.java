@@ -10,6 +10,8 @@ import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
@@ -18,6 +20,8 @@ import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.view.client.ListDataProvider;
 
@@ -31,9 +35,11 @@ public class InstructorTable {
 			.create(GreetingService.class);
 	
 	private VerticalPanel mainPanel;
+	private HorizontalPanel showColPanel;
 	private CellTable<InstructorGWT> table;
 	private ListDataProvider<InstructorGWT> dataProvider;
 	private ListHandler<InstructorGWT> sortHandler;
+	private Button saveButton, addButton;
 	
 	/**
 	 * Create an instructor table
@@ -49,15 +55,49 @@ public class InstructorTable {
 	            new ListHandler<InstructorGWT>(dataProvider.getList());
 	    table.addColumnSortHandler(sortHandler);
 	    
+	    // hide/show columns
+	    showColPanel = new HorizontalPanel(); 
+	    
 	    // create columns
+	    removeColumn();
 	    createColumns();
+	    
+	    // create save button
+	    saveButton();
+	    
+	    // add button
+	    addButton();
 
 	    // add everything to panel
 	    dataProvider.addDataDisplay(table);
 	    
+	    HorizontalPanel buttonPanel = new HorizontalPanel();
+	    buttonPanel.add(saveButton);
+	    buttonPanel.add(addButton);
+	    buttonPanel.setSpacing(14);
+	    
 	    mainPanel = new VerticalPanel();
-	    mainPanel.add(saveButton());
+	    mainPanel.add(buttonPanel);
+	    mainPanel.add(showColPanel);
 	    mainPanel.add(table);
+	    mainPanel.setSpacing(14);
+	}
+	
+	
+	/**
+	 * Add new row button
+	 */
+	private void addButton(){
+		
+		addButton = new Button("+ New");
+		addButton.addStyleName("tableButton");
+		
+		addButton.addClickHandler(new ClickHandler(){
+			public void onClick(ClickEvent event){
+				
+				add(new InstructorGWT());
+			}
+		});
 	}
 	
 	
@@ -65,9 +105,16 @@ public class InstructorTable {
 	 * Save button for the table
 	 * @return
 	 */
-	private Button saveButton(){
-		return new Button("Save", new ClickHandler(){
+	private void saveButton(){
+		
+		saveButton = new Button("Save");
+		saveButton.setEnabled(false);
+		saveButton.addStyleName("tableButton");
+		
+		saveButton.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent event){
+				
+				saveButton.setEnabled(false);
 				
 				ArrayList<InstructorGWT> list = new ArrayList<InstructorGWT>();
 				for(InstructorGWT i : dataProvider.getList()){
@@ -77,14 +124,10 @@ public class InstructorTable {
 				service.saveInstructors(list, new AsyncCallback<Void>(){
 					public void onFailure(Throwable caught){ 
 						
-						String str = caught.getMessage();
-						StackTraceElement[] trace = caught.getStackTrace();
-						for(StackTraceElement ste : trace){
-							str += "\n" + ste.toString();
-						}
+						saveButton.setEnabled(true);
 						
-						
-						Window.alert("Error saving instructors:\n" + str);
+						Window.alert("Error saving instructors:\n" + 
+								caught.getLocalizedMessage());
 					}
 					public void onSuccess(Void result){
 						Window.alert("Successfully saved");
@@ -92,6 +135,24 @@ public class InstructorTable {
 				});
 			}
 		});
+	}
+	
+	
+	/**
+	 * Add an object to the table
+	 * @param instructor
+	 */
+	public void add(InstructorGWT instructor){
+		
+		ArrayList<InstructorGWT> newList = new ArrayList<InstructorGWT>();
+		newList.add(instructor);
+		
+		List<InstructorGWT> list = dataProvider.getList();
+		int oldSize = list.size();
+		list.add(instructor);
+		
+		table.setRowCount(list.size(), true);
+		table.setRowData(oldSize, newList);
 	}
 	
 	
@@ -149,9 +210,11 @@ public class InstructorTable {
 		firstName.setFieldUpdater(new FieldUpdater<InstructorGWT, String>() {
 		      public void update(int index, InstructorGWT object, String value) {
 		        object.setFirstName(value);
+		        saveButton.setEnabled(true);
 		      }
 		    });
 		table.addColumn(firstName, EditableTableConstants.INSTR_FIRSTNAME);
+		showColPanel.add(showHideBox(firstName, EditableTableConstants.INSTR_FIRSTNAME));
 		
 		// last name
 		TextColumn<InstructorGWT> lastName = 
@@ -168,6 +231,7 @@ public class InstructorTable {
 	        }
 	    });
 		table.addColumn(lastName, EditableTableConstants.INSTR_LASTNAME);
+		showColPanel.add(showHideBox(lastName, EditableTableConstants.INSTR_LASTNAME));
 		
 		// id
 		TextColumn<InstructorGWT> id = 
@@ -184,7 +248,8 @@ public class InstructorTable {
 	        }
 	    });
 		table.addColumn(id, EditableTableConstants.INSTR_ID);
-	
+		showColPanel.add(showHideBox(id, EditableTableConstants.INSTR_ID));
+		
 		// wtu
 		TextColumn<InstructorGWT> wtu = 
 				new TextColumn<InstructorGWT>() {
@@ -200,7 +265,8 @@ public class InstructorTable {
 	        }
 	    });
 		table.addColumn(wtu, EditableTableConstants.INSTR_WTU);
-	    
+		showColPanel.add(showHideBox(wtu, EditableTableConstants.INSTR_WTU));
+		
 		// building
 		TextColumn<InstructorGWT> building = 
 				new TextColumn<InstructorGWT>() {
@@ -216,7 +282,8 @@ public class InstructorTable {
 	        }
 	    });
 		table.addColumn(building, EditableTableConstants.INSTR_BUILDING);
-	    
+		showColPanel.add(showHideBox(building, EditableTableConstants.INSTR_BUILDING));
+		
 		// room number
 		TextColumn<InstructorGWT> roomNum = 
 				new TextColumn<InstructorGWT>() {
@@ -232,7 +299,8 @@ public class InstructorTable {
 	        }
 	    });
 		table.addColumn(roomNum, EditableTableConstants.INSTR_ROOMNUMBER);
-	    
+		showColPanel.add(showHideBox(roomNum, EditableTableConstants.INSTR_ROOMNUMBER));
+		
 		// disability
 		Column<InstructorGWT, Boolean> disable = 
 				new Column<InstructorGWT, Boolean>(new CheckboxCell(true, false)) {
@@ -255,8 +323,74 @@ public class InstructorTable {
 		disable.setFieldUpdater(new FieldUpdater<InstructorGWT, Boolean>() {
 		      public void update(int index, InstructorGWT object, Boolean value) {
 		        object.setDisabilities(value);
+		        saveButton.setEnabled(true);
 		      }
 		});
 		table.addColumn(disable, EditableTableConstants.INSTR_DISABILITIES);
+		showColPanel.add(showHideBox(disable, EditableTableConstants.INSTR_DISABILITIES));
+	}
+	
+	
+	/**
+	 * Column for removing items
+	 */
+	private void removeColumn(){
+		
+		// remove
+		Column<InstructorGWT, Boolean> remove = 
+				new Column<InstructorGWT, Boolean>(new CheckboxCell(true, false)) {
+		      @Override
+		      public Boolean getValue(InstructorGWT instr) {
+		        return false;
+		      }
+		};
+		
+		remove.setFieldUpdater(new FieldUpdater<InstructorGWT, Boolean>() {
+		      public void update(int index, InstructorGWT object, Boolean value) {
+		        
+		    	  if(value){
+		    		  
+		    		  boolean confirm = Window.confirm("Remove " + object.getFirstName() + " " + object.getLastName() + "?");
+		    		  if(confirm){
+		    			  dataProvider.getList().remove(object);
+		    		  }
+		    		  
+		    		  table.redraw();
+		    		  
+		    		  saveButton.setEnabled(true);
+		    	  }
+		      }
+		});
+		table.addColumn(remove, "REMOVE");
+	}
+	
+	
+	/**
+	 * Create check box for showing, hiding column
+	 * @param col
+	 * @param name
+	 * @return
+	 */
+	private CheckBox showHideBox(Column<InstructorGWT, ?> col, String name){
+		
+		final Column<InstructorGWT, ?> fcol = col;
+		final String fname = name;
+		CheckBox cb = new CheckBox(name);
+		cb.addValueChangeHandler(new ValueChangeHandler<Boolean>(){
+			public void onValueChange(ValueChangeEvent<Boolean> event) {
+				
+				if(event.getValue()){
+					table.addColumn(fcol, fname);
+				}
+				else{
+					table.removeColumn(fcol);
+				}
+				table.redraw();
+			}
+		});
+		cb.setValue(true);
+		cb.addStyleName("tableColumnCheckBox");
+		
+		return cb;
 	}
 }

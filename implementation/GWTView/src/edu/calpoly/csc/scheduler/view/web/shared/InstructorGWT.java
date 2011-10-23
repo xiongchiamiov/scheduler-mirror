@@ -4,18 +4,24 @@ import java.io.Serializable;
 
 
 public class InstructorGWT implements Serializable{
-	
-	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -4982539363690274674L;
+	
 	private String name, userID, office;
 	private String firstName, lastName, roomNumber, building;
 	private boolean disabilities;
 	private int wtu;
 
-	public InstructorGWT(){}
+	public InstructorGWT(){
+		name = "";
+		userID = "";
+		office = "";
+		firstName = "";
+		lastName = "";
+		roomNumber = "";
+		building = "";
+		disabilities = false;
+		wtu = 0;
+	}
 	
 	public InstructorGWT(String name, String userID,
 			int wtu, String office) {
