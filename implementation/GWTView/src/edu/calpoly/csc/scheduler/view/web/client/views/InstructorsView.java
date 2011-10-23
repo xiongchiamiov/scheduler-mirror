@@ -13,16 +13,14 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
-import edu.calpoly.csc.scheduler.view.web.client.table.EditableTable;
-import edu.calpoly.csc.scheduler.view.web.client.table.EditableTableEntry;
-import edu.calpoly.csc.scheduler.view.web.client.table.EditableTableFactory;
+import edu.calpoly.csc.scheduler.view.web.client.table.InstructorTable;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 
 public class InstructorsView extends ScrollPanel {
 	private Panel container;
 	private GreetingServiceAsync service;
-	private EditableTable instructorTable;
 	private String quarterID;
+	private InstructorTable iTable;
 
 	public InstructorsView(Panel container, GreetingServiceAsync service, String quarterID) {
 		assert(service != null);
@@ -42,8 +40,8 @@ public class InstructorsView extends ScrollPanel {
 		VerticalPanel vp = new VerticalPanel();
 		this.add(vp);
 		
-		instructorTable = EditableTableFactory.createProfessors();
-		vp.add(instructorTable.getWidget());
+		iTable = new InstructorTable();
+		vp.add(iTable.getWidget());
 		populateInstructors();
 		
 		vp.add(createInstructorViewLinkList());
@@ -81,7 +79,7 @@ public class InstructorsView extends ScrollPanel {
 	}
 
 	public void populateInstructors() {
-		instructorTable.clear();
+		iTable.clear();
 		
 		service.getInstructorNames(new AsyncCallback<ArrayList<InstructorGWT>>() {
 			public void onFailure(Throwable caught) {
@@ -90,9 +88,7 @@ public class InstructorsView extends ScrollPanel {
 			
 			public void onSuccess(ArrayList<InstructorGWT> result){
 				if (result != null) {
-					for (InstructorGWT s : result) {
-						instructorTable.add(new EditableTableEntry(s));
-					}
+					iTable.set(result);
 				}
 			}
 		});
