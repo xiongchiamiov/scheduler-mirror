@@ -1,7 +1,6 @@
 package edu.calpoly.csc.scheduler.view.web.server;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Vector;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -77,7 +76,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	}
 	
 	
-	public void saveInstructors(List<InstructorGWT> instructors) throws IllegalArgumentException {
+	public void saveInstructors(ArrayList<InstructorGWT> instructors) throws IllegalArgumentException {
+		
 		/** TODO */
 		Database sqldb = new Database();
 
@@ -86,9 +86,12 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		
 		idb.clearData();
 		
-		for (InstructorGWT instructor : instructors)
+		
+		
+		for (InstructorGWT instructor : instructors){
 //			idb.addData(new Instructor(instructor.getName(), instructor.getName(), instructor.getUserID(), instructor.getWtu(), ldb.getLocation(instructor.getOffice())));
 			idb.addData(new Instructor(instructor.getFirstName(), instructor.getLastName(), instructor.getUserID(), instructor.getWtu(), instructor.getBuilding(), instructor.getRoomNumber(), instructor.getDisabilities()));
+		}
 	}
 
 	public ArrayList<gwtScheduleItem> generateSchedule() {
@@ -310,7 +313,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 
 
 	@Override
-	public void saveLocations(List<LocationGWT> locations) {
+	public void saveLocations(ArrayList<LocationGWT> locations) {
 		// TODO Auto-generated method stub
 
 		/** TODO */
@@ -369,7 +372,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 
 
 	@Override
-	public void saveCourses(List<CourseGWT> courses) {
+	public void saveCourses(ArrayList<CourseGWT> courses) {
 		// TODO Auto-generated method stub
 
 		/** TODO */

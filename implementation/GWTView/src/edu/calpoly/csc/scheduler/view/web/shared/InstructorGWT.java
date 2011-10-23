@@ -5,6 +5,7 @@ import java.io.Serializable;
 
 public class InstructorGWT implements Serializable{
 	
+	
 	/**
 	 * 
 	 */

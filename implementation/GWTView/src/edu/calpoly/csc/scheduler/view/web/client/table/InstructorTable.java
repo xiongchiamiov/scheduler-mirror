@@ -69,9 +69,22 @@ public class InstructorTable {
 		return new Button("Save", new ClickHandler(){
 			public void onClick(ClickEvent event){
 				
-				service.saveInstructors(dataProvider.getList(), new AsyncCallback<Void>(){
+				ArrayList<InstructorGWT> list = new ArrayList<InstructorGWT>();
+				for(InstructorGWT i : dataProvider.getList()){
+					list.add(i);
+				}
+				
+				service.saveInstructors(list, new AsyncCallback<Void>(){
 					public void onFailure(Throwable caught){ 
-						Window.alert("Error saving instructors:\n" + caught.getMessage());
+						
+						String str = caught.getMessage();
+						StackTraceElement[] trace = caught.getStackTrace();
+						for(StackTraceElement ste : trace){
+							str += "\n" + ste.toString();
+						}
+						
+						
+						Window.alert("Error saving instructors:\n" + str);
 					}
 					public void onSuccess(Void result){
 						Window.alert("Successfully saved");
