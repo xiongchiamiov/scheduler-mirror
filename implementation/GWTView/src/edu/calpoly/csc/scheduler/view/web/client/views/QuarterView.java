@@ -63,7 +63,7 @@ public class QuarterView extends DockLayoutPanel {
 			@Override
 			public void onClick(ClickEvent event) {
 				container.clear();
-				container.add(new SelectQuarterView(container, service));
+				container.add(new HomeView(container, service));
 			}
 		}));
 		
