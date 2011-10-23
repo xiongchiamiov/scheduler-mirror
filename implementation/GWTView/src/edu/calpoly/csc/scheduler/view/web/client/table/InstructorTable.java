@@ -69,7 +69,7 @@ public class InstructorTable {
 		return new Button("Save", new ClickHandler(){
 			public void onClick(ClickEvent event){
 				
-				service.saveInstructors((ArrayList<InstructorGWT>)dataProvider.getList(), new AsyncCallback<Void>(){
+				service.saveInstructors(dataProvider.getList(), new AsyncCallback<Void>(){
 					public void onFailure(Throwable caught){ 
 						Window.alert("Error saving instructors:\n" + caught.getMessage());
 					}

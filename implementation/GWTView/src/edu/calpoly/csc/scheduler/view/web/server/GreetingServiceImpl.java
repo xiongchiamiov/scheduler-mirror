@@ -1,12 +1,12 @@
 package edu.calpoly.csc.scheduler.view.web.server;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import edu.calpoly.csc.scheduler.model.db.Database;
-import edu.calpoly.csc.scheduler.model.db.Time;
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
 import edu.calpoly.csc.scheduler.model.db.cdb.CourseDB;
 import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
@@ -77,7 +77,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	}
 	
 	
-	public void saveInstructors(ArrayList<InstructorGWT> instructors) throws IllegalArgumentException {
+	public void saveInstructors(List<InstructorGWT> instructors) throws IllegalArgumentException {
 		/** TODO */
 		Database sqldb = new Database();
 
@@ -310,7 +310,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 
 
 	@Override
-	public void saveLocations(ArrayList<LocationGWT> locations) {
+	public void saveLocations(List<LocationGWT> locations) {
 		// TODO Auto-generated method stub
 
 		/** TODO */
@@ -369,7 +369,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 
 
 	@Override
-	public void saveCourses(ArrayList<CourseGWT> courses) {
+	public void saveCourses(List<CourseGWT> courses) {
 		// TODO Auto-generated method stub
 
 		/** TODO */
