@@ -17,70 +17,79 @@ public class Location extends DbData implements Serializable
    private static final long serialVersionUID = 42;
 
    /** Represents a location who's identity is not yet known */
-   public static Location TBA = new Location(-1, -1);
+   public static Location    TBA              = new Location(-1, -1);
 
    /**
     * This class contains the equipment provided at a location.
     */
-   private class ProvidedEquipment implements Serializable
+   public class ProvidedEquipment implements Serializable
    {
       private static final long serialVersionUID = 42;
-      public boolean hasOverhead;
-      public boolean isSmartRoom;
-      public boolean hasLaptopConnectivity;
+      public boolean            hasOverhead;
+      public boolean            isSmartRoom;
+      public boolean            hasLaptopConnectivity;
    }
 
    /**
     * Building number of location.
     */
-   private String building;
+   private String            building;
 
    /**
     * Room number of location.
     */
-   private String room;
-   
+   private String            room;
+
    /**
     * Maximum occupancy of this location.
     */
-   private Integer maxOccupancy;
+   private Integer           maxOccupancy;
 
    /**
     * Type of this location.
     */
-   private String type;
+   private String            type;
 
    /**
-    * Provided equuipment in this location.
+    * Provided equipment in this location.
     */
    private ProvidedEquipment providedEquipment;
 
    /**
     * Whether this location is compliant to those with disabilities.
     */
-   private Boolean adaCompliant;
+   private Boolean           adaCompliant;
 
    /**
     * Represents a location's availabilty throughout the week.
     */
-   private WeekAvail availability = new WeekAvail();
+   private WeekAvail         availability = new WeekAvail();
 
    /**
     * Quarter this location is a part of
     */
-   private Integer quarterId;
+   private String            quarterId;
    /**
     * Schedule this location is a part of
     */
-   private Integer scheduleId;
-   
+   private Integer           scheduleId;
+
+   /**
+    * Default constructor
+    */
+   public Location()
+   {
+   }
+
    /**
     * This constructor creates a location at a particular room and building.
     * 
-    * @param bldg the building number.
-    * @param room the room number.
+    * @param bldg
+    *           the building number.
+    * @param room
+    *           the room number.
     */
-   public Location (int bldg, int room)
+   public Location(int bldg, int room)
    {
       this.building = Integer.toString(bldg);
       this.room = Integer.toString(room);
@@ -94,9 +103,10 @@ public class Location extends DbData implements Serializable
     * 
     * Written by: Eric Liebowitz
     * 
-    * @param l Location to copy
+    * @param l
+    *           Location to copy
     */
-   public Location (Location l)
+   public Location(Location l)
    {
       this.building = l.building;
       this.room = l.room;
@@ -117,7 +127,7 @@ public class Location extends DbData implements Serializable
     * @param building
     * @param room
     */
-   public Location (String building, String room)
+   public Location(String building, String room)
    {
       this.building = building;
       this.room = room;
@@ -132,9 +142,9 @@ public class Location extends DbData implements Serializable
     * 
     * @deprecated Stop using this
     */
-   public Location (String building, String room, int maxOccupancy,
-      String type, boolean disabilities, boolean smartroom, boolean laptop,
-      boolean overhead)
+   public Location(String building, String room, int maxOccupancy, String type,
+         boolean disabilities, boolean smartroom, boolean laptop,
+         boolean overhead)
    {
       this.building = building;
       this.room = room;
@@ -153,15 +163,14 @@ public class Location extends DbData implements Serializable
     * Returns true if the argument is not null, is an instance of the Location
     * class, and its building and room numbers are the same as this object's.
     * 
-    * @param other the object to compare with
+    * @param other
+    *           the object to compare with
     * @return whether the two objects are equal
     */
-   public boolean equals (Object other)
+   public boolean equals(Object other)
    {
-      if (other == null)
-         return false;
-      if (!(other instanceof Location))
-         return false;
+      if (other == null) return false;
+      if (!(other instanceof Location)) return false;
 
       Location obj = (Location) other;
 
@@ -172,7 +181,7 @@ public class Location extends DbData implements Serializable
     * Returns this Location's hash code (a combination of its bldg and room hash
     * codes)
     */
-   public int hashCode ()
+   public int hashCode()
    {
       return this.building.hashCode() + this.room.hashCode();
    }
@@ -182,7 +191,7 @@ public class Location extends DbData implements Serializable
     * 
     * @return the building number of this location.
     */
-   public String getBuilding ()
+   public String getBuilding()
    {
       return this.building;
    }
@@ -192,7 +201,7 @@ public class Location extends DbData implements Serializable
     * 
     * @return the maximum occupancy of this location.
     */
-   public int getMaxOccupancy ()
+   public int getMaxOccupancy()
    {
       return this.maxOccupancy;
    }
@@ -202,12 +211,12 @@ public class Location extends DbData implements Serializable
     * 
     * @return the room number of this location.
     */
-   public String getRoom ()
+   public String getRoom()
    {
       return this.room;
    }
 
-   public String getType ()
+   public String getType()
    {
       return this.type;
    }
@@ -217,17 +226,18 @@ public class Location extends DbData implements Serializable
     * 
     * @return the quarterId
     */
-   public Integer getQuarterId ()
+   public String getQuarterId()
    {
       return quarterId;
    }
 
    /**
     * Sets the quarterId to the given parameter.
-    *
-    * @param quarterId the quarterId to set
+    * 
+    * @param quarterId
+    *           the quarterId to set
     */
-   public void setQuarterId (Integer quarterId)
+   public void setQuarterId(String quarterId)
    {
       this.quarterId = quarterId;
    }
@@ -237,17 +247,88 @@ public class Location extends DbData implements Serializable
     * 
     * @return the scheduleId
     */
-   public Integer getScheduleId ()
+   public Integer getScheduleId()
    {
       return scheduleId;
    }
 
    /**
-    * Sets the scheduleId to the given parameter.
-    *
-    * @param scheduleId the scheduleId to set
+    * @return the providedEquipment
     */
-   public void setScheduleId (Integer scheduleId)
+   public ProvidedEquipment getProvidedEquipment()
+   {
+      return providedEquipment;
+   }
+
+   /**
+    * @return the adaCompliant
+    */
+   public Boolean getAdaCompliant()
+   {
+      return adaCompliant;
+   }
+
+   /**
+    * @param building
+    *           the building to set
+    */
+   public void setBuilding(String building)
+   {
+      this.building = building;
+   }
+
+   /**
+    * @param room
+    *           the room to set
+    */
+   public void setRoom(String room)
+   {
+      this.room = room;
+   }
+
+   /**
+    * @param maxOccupancy
+    *           the maxOccupancy to set
+    */
+   public void setMaxOccupancy(Integer maxOccupancy)
+   {
+      this.maxOccupancy = maxOccupancy;
+   }
+
+   /**
+    * @param type
+    *           the type to set
+    */
+   public void setType(String type)
+   {
+      this.type = type;
+   }
+
+   /**
+    * @param providedEquipment
+    *           the providedEquipment to set
+    */
+   public void setProvidedEquipment(ProvidedEquipment providedEquipment)
+   {
+      this.providedEquipment = providedEquipment;
+   }
+
+   /**
+    * @param adaCompliant
+    *           the adaCompliant to set
+    */
+   public void setAdaCompliant(Boolean adaCompliant)
+   {
+      this.adaCompliant = adaCompliant;
+   }
+
+   /**
+    * Sets the scheduleId to the given parameter.
+    * 
+    * @param scheduleId
+    *           the scheduleId to set
+    */
+   public void setScheduleId(Integer scheduleId)
    {
       this.scheduleId = scheduleId;
    }
@@ -257,7 +338,7 @@ public class Location extends DbData implements Serializable
     * 
     * @return whether this room has laptop connectivity.
     */
-   public boolean hasLaptopConnectivity ()
+   public boolean hasLaptopConnectivity()
    {
       return providedEquipment.hasLaptopConnectivity;
    }
@@ -267,7 +348,7 @@ public class Location extends DbData implements Serializable
     * 
     * @return whether this room has an overhead.
     */
-   public boolean hasOverhead ()
+   public boolean hasOverhead()
    {
       return this.providedEquipment.hasOverhead;
    }
@@ -277,7 +358,7 @@ public class Location extends DbData implements Serializable
     * 
     * @return whether this rom is disabled-accessible.
     */
-   public boolean isADACompliant ()
+   public boolean isADACompliant()
    {
       return this.adaCompliant;
    }
@@ -285,15 +366,16 @@ public class Location extends DbData implements Serializable
    /**
     * @return the availability
     */
-   public WeekAvail getAvailability ()
+   public WeekAvail getAvailability()
    {
       return availability;
    }
 
    /**
-    * @param availability the availability to set
+    * @param availability
+    *           the availability to set
     */
-   public void setAvailability (WeekAvail availability)
+   public void setAvailability(WeekAvail availability)
    {
       this.availability = availability;
    }
@@ -302,15 +384,18 @@ public class Location extends DbData implements Serializable
     * This method will tell whether this location is availble during the given
     * time slot.
     * 
-    * @param dayOfWeek The day (0 = Sun; 6 = Sat)
-    * @param s The start time
-    * @param e The end time
+    * @param dayOfWeek
+    *           The day (0 = Sun; 6 = Sat)
+    * @param s
+    *           The start time
+    * @param e
+    *           The end time
     * 
     * @return True if the given span of time is available. False otherwise.
     * 
     *         Written by: Eric Liebowitz
     */
-   public boolean isAvailable (Day dayOfWeek, Time s, Time e)
+   public boolean isAvailable(Day dayOfWeek, Time s, Time e)
    {
       return this.availability.isFree(s, e, dayOfWeek);
    }
@@ -319,15 +404,18 @@ public class Location extends DbData implements Serializable
     * Determines whether a location is available during the given span of time,
     * over the given week of days.
     * 
-    * @param week The week of days that must be free
-    * @param s The start time
-    * @param e The end time
+    * @param week
+    *           The week of days that must be free
+    * @param s
+    *           The start time
+    * @param e
+    *           The end time
     * 
     * @return True if the time between "s" and "e" is free on all days of "week"
     * 
     *         Written by: Eric Liebowitz
     */
-   public boolean isAvailable (Week week, Time s, Time e)
+   public boolean isAvailable(Week week, Time s, Time e)
    {
       return this.availability.isFree(s, e, week);
    }
@@ -336,27 +424,32 @@ public class Location extends DbData implements Serializable
     * Determines whether a location is available during the given span of time,
     * over the given week of days.
     * 
-    * @param week The week of days that must be free
-    * @param tr TimeRange to check
+    * @param week
+    *           The week of days that must be free
+    * @param tr
+    *           TimeRange to check
     * 
     * @return True if the TimeRange is free on all days of "week"
     */
-   public boolean isAvailable (Week week, TimeRange tr)
+   public boolean isAvailable(Week week, TimeRange tr)
    {
       return this.availability.isFree(tr, week);
    }
-   
+
    /**
     * This method will take in a day, start time, and end time and set that time
     * interval as busy for this location.
     * 
-    * @param dayOfWeek The day (0 = Sun; 6 = Sat)
-    * @param s The start time
-    * @param e The end time
+    * @param dayOfWeek
+    *           The day (0 = Sun; 6 = Sat)
+    * @param s
+    *           The start time
+    * @param e
+    *           The end time
     * 
-    *        Written by: Eric Liebowitz
+    *           Written by: Eric Liebowitz
     */
-   public void setBusy (Day dayOfWeek, Time s, Time e)
+   public void setBusy(Day dayOfWeek, Time s, Time e)
    {
       this.availability.book(s, e, dayOfWeek);
    }
@@ -364,30 +457,33 @@ public class Location extends DbData implements Serializable
    /**
     * Books this location for a given time over a given span of days (Week).
     * 
-    * @param week The span of days to book
-    * @param s The start time
-    * @param e The end time
+    * @param week
+    *           The span of days to book
+    * @param s
+    *           The start time
+    * @param e
+    *           The end time
     * 
     * @return if the time was booked, and thus free beforehand.
     * 
     *         Written by: Eric Liebowitz
     */
-   public boolean setBusy (Week week, Time s, Time e)
+   public boolean setBusy(Week week, Time s, Time e)
    {
       return this.availability.book(s, e, week);
    }
 
-   public boolean setBusy (Week week, TimeRange tr)
+   public boolean setBusy(Week week, TimeRange tr)
    {
       return this.availability.book(week, tr);
    }
-   
+
    /**
     * Returns whether this location is a lab room.
     * 
     * @return whether this location is a lab room.
     */
-   public boolean isLab ()
+   public boolean isLab()
    {
       return (this.type.equalsIgnoreCase("Lab"));
    }
@@ -397,7 +493,7 @@ public class Location extends DbData implements Serializable
     * 
     * @return whether this location is a lecture room.
     */
-   public boolean isLecture ()
+   public boolean isLecture()
    {
       return (this.type.equalsIgnoreCase("Lecture"));
    }
@@ -407,7 +503,7 @@ public class Location extends DbData implements Serializable
     * 
     * @return whether this is a smart room.
     */
-   public boolean isSmartRoom ()
+   public boolean isSmartRoom()
    {
       return providedEquipment.isSmartRoom;
    }
@@ -415,7 +511,7 @@ public class Location extends DbData implements Serializable
    /**
     * Returns whether the currect class is a valid LocationDB.
     */
-   public boolean isValidLocationDB ()
+   public boolean isValidLocationDB()
    {
       return false;
    }
@@ -425,7 +521,7 @@ public class Location extends DbData implements Serializable
     * 
     * @return the string representation of this building
     */
-   public String toString ()
+   public String toString()
    {
       return new String(this.building + " - " + this.room);
    }
@@ -434,12 +530,13 @@ public class Location extends DbData implements Serializable
     * Determines whether this location provides the required equipment for a
     * given course, and is of a compatible type.
     * 
-    * @param c The course to provide for
+    * @param c
+    *           The course to provide for
     * 
-    * @return true if this location has enough seats to support the given 
+    * @return true if this location has enough seats to support the given
     *         course.
     */
-   public boolean providesFor (Course c)
+   public boolean providesFor(Course c)
    {
       boolean r = false;
       if (c.getEnrollment() <= this.getMaxOccupancy())
@@ -449,40 +546,54 @@ public class Location extends DbData implements Serializable
       return false;
    }
 
+   public Location getCannedData()
+   {
+      Location l = new Location();
+      l.setBuilding("14");
+      l.setRoom("256");
+      l.setMaxOccupancy(123);
+      l.setType("LEC");
+      ProvidedEquipment e = new ProvidedEquipment();
+      e.hasLaptopConnectivity = true;
+      e.hasOverhead = false;
+      e.isSmartRoom = true;
+      l.setProvidedEquipment(e);
+      l.setAdaCompliant(true);
+      l.setAvailability(new WeekAvail());
+      l.setQuarterId("w2011");
+      l.setScheduleId(1);
+      return l;
+   }
+
    /**
-    * Verifies that the vital fields of this Object  (i.e. those essential 
-    * for generation of identification in a DB) are not null. "Vital" fields
-    * are as follows:
+    * Verifies that the vital fields of this Object (i.e. those essential for
+    * generation of identification in a DB) are not null. "Vital" fields are as
+    * follows:
     * 
     * <ul>
-    *    <li>adaCompliant</li>
-    *    <li>building</li>
-    *    <li>maxOccupancy</li>
-    *    <li>providedEquipment</li>
-    *    <li>quarterId</li>
-    *    <li>room</li>
-    *    <li>scheduleId</li>
-    *    <li>type</li>
+    * <li>adaCompliant</li>
+    * <li>building</li>
+    * <li>maxOccupancy</li>
+    * <li>providedEquipment</li>
+    * <li>quarterId</li>
+    * <li>room</li>
+    * <li>scheduleId</li>
+    * <li>type</li>
     * </ul>
     * 
-    * @throws NullDataException if any field vital to generation or storage is
-    *         null
-    *
+    * @throws NullDataException
+    *            if any field vital to generation or storage is null
+    * 
     * @see edu.calpoly.csc.scheduler.model.db.DbData#verify()
     */
-   public void verify () throws NullDataException
+   public void verify() throws NullDataException
    {
-      if (adaCompliant        == null ||
-          building            == null ||
-          maxOccupancy        == null ||
-          providedEquipment   == null ||
-          quarterId           == null ||
-          room                == null ||
-          scheduleId          == null ||
-          type                == null)
+      if (adaCompliant == null || building == null || maxOccupancy == null
+            || providedEquipment == null || quarterId == null || room == null
+            || scheduleId == null || type == null)
       {
-         throw new NullDataException ();
+         throw new NullDataException();
       }
-         
+
    }
 }

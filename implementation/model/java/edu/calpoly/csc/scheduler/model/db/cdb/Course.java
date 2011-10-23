@@ -585,4 +585,24 @@ public class Course extends DbData implements Serializable
          throw new NullDataException ();
       }
    }
+   
+   public Course getCannedData()
+   {
+      Course c = new Course();
+      c.setName("Test");
+      c.setCatalogNum(255);
+      c.setDept("CSC");
+      c.setWtu(4);
+      c.setScu(4);
+      c.setNumOfSections(2);
+      c.setType("LEC");
+      c.setLength(3);
+      c.setDays(new Week());
+      c.setEnrollment(50);
+      c.setLab(new Course());
+      c.setLabPad(1);
+      c.setQuarterId("w2011");
+      c.setScheduleId(1);
+      return c;
+   }
 }

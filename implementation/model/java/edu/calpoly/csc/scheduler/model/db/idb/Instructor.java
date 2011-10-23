@@ -399,6 +399,22 @@ public class Instructor extends DbData
    }
 
    /**
+    * @param firstName the firstName to set
+    */
+   public void setFirstName(String firstName)
+   {
+      this.firstName = firstName;
+   }
+
+   /**
+    * @param lastName the lastName to set
+    */
+   public void setLastName(String lastName)
+   {
+      this.lastName = lastName;
+   }
+
+   /**
     * Sets the maxWtu to the given parameter.
     * 
     * @param maxWtu the maxWtu to set
@@ -406,6 +422,110 @@ public class Instructor extends DbData
    public void setMaxWtu (int maxWtu)
    {
       this.maxWtu = maxWtu;
+   }
+
+   /**
+    * @return the userID
+    */
+   public String getUserID()
+   {
+      return userID;
+   }
+
+   /**
+    * @return the maxWtu
+    */
+   public Integer getMaxWtu()
+   {
+      return maxWtu;
+   }
+
+   /**
+    * @return the tPrefs
+    */
+   public HashMap<Day, LinkedHashMap<Time, TimePreference>> gettPrefs()
+   {
+      return tPrefs;
+   }
+
+   /**
+    * @return the itemsTaught
+    */
+   public Vector<ScheduleItem> getItemsTaught()
+   {
+      return itemsTaught;
+   }
+
+   /**
+    * @param userID the userID to set
+    */
+   public void setUserID(String userID)
+   {
+      this.userID = userID;
+   }
+
+   /**
+    * @param maxWtu the maxWtu to set
+    */
+   public void setMaxWtu(Integer maxWtu)
+   {
+      this.maxWtu = maxWtu;
+   }
+
+   /**
+    * @param curWtu the curWtu to set
+    */
+   public void setCurWtu(Integer curWtu)
+   {
+      this.curWtu = curWtu;
+   }
+
+   /**
+    * @param office the office to set
+    */
+   public void setOffice(Location office)
+   {
+      this.office = office;
+   }
+
+   /**
+    * @param fairness the fairness to set
+    */
+   public void setFairness(Integer fairness)
+   {
+      this.fairness = fairness;
+   }
+
+   /**
+    * @param disability the disability to set
+    */
+   public void setDisability(Boolean disability)
+   {
+      this.disability = disability;
+   }
+
+   /**
+    * @param generosity the generosity to set
+    */
+   public void setGenerosity(int generosity)
+   {
+      this.generosity = generosity;
+   }
+
+   /**
+    * @param tPrefs the tPrefs to set
+    */
+   public void settPrefs(HashMap<Day, LinkedHashMap<Time, TimePreference>> tPrefs)
+   {
+      this.tPrefs = tPrefs;
+   }
+
+   /**
+    * @param itemsTaught the itemsTaught to set
+    */
+   public void setItemsTaught(Vector<ScheduleItem> itemsTaught)
+   {
+      this.itemsTaught = itemsTaught;
    }
 
    /**
@@ -826,6 +946,27 @@ public class Instructor extends DbData
       {
          throw new NullDataException();
       }
+   }
+   
+   public Instructor getCannedData()
+   {
+      Instructor i = new Instructor();
+      i.setFirstName("Lim");
+      i.setLastName("Yo-Hwan");
+      i.setUserID("SlayerS_BoxeR");
+      i.setMaxWtu(60);
+      i.setCurWtu(0);
+      i.setOffice(new Location());
+      i.setFairness(1);
+      i.setDisability(false);
+      i.setGenerosity(1);
+      i.setAvailability(new WeekAvail());
+      i.setCoursePreferences(coursePreferences);
+      i.settPrefs(new HashMap<Day, LinkedHashMap<Time, TimePreference>>());
+      i.setItemsTaught(itemsTaught);
+      i.setQuarterId("w2011");
+      i.setScheduleId(1);
+      return i;
    }
 }
 

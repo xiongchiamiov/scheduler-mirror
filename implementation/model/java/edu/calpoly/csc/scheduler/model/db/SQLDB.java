@@ -894,7 +894,6 @@ public class SQLDB {
 		int result = -1;
 		try {
 			result = stmt.executeUpdate();
-			conn.commit();
 			stmt.close();
 		} catch (SQLException e) {
 			System.out.println("SQLException: " + e.getMessage());

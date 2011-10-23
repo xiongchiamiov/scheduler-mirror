@@ -1,6 +1,11 @@
 package edu.calpoly.csc.scheduler.model.db.ldb;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,8 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-import edu.calpoly.csc.scheduler.model.db.*;
+import edu.calpoly.csc.scheduler.model.db.DatabaseAPI;
+import edu.calpoly.csc.scheduler.model.db.NullDataException;
+import edu.calpoly.csc.scheduler.model.db.SQLDB;
+import edu.calpoly.csc.scheduler.model.db.TimeRange;
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
+import edu.calpoly.csc.scheduler.model.db.ldb.Location.ProvidedEquipment;
 import edu.calpoly.csc.scheduler.model.schedule.WeekAvail;
 
 public class LocationDB implements DatabaseAPI<Location>
@@ -32,6 +41,8 @@ public class LocationDB implements DatabaseAPI<Location>
    private void initDB()
    {
       data = new ArrayList<Location>();
+      //TODO: REMOVE
+//      addData(new Location().getCannedData());
       pullData();
    }
 
@@ -43,27 +54,7 @@ public class LocationDB implements DatabaseAPI<Location>
       {
          while (rs.next())
          {
-            String bldg = rs.getString("building");
-            String room = rs.getString("room");
-            int occupancy = rs.getInt("maxoccupancy");
-            String type = rs.getString("type");
-            boolean adacompliant = rs.getBoolean("adacompliant");
-            boolean smartroom = rs.getBoolean("smartroom");
-            boolean laptopconnectivity = rs.getBoolean("laptopconnectivity");
-            boolean overhead = rs.getBoolean("overhead");
-            // Put items into Location object and add to data
-            Location toAdd = new Location(bldg, room, occupancy, type,
-                  adacompliant, smartroom, laptopconnectivity, overhead);
-
-            // Deserialize week availiability
-            /*
-             * byte[] buf = rs.getBytes("weekavail"); if (buf != null) { try {
-             * ObjectInputStream objectIn; objectIn = new ObjectInputStream( new
-             * ByteArrayInputStream(buf)); toAdd.setAvailability((WeekAvail)
-             * objectIn.readObject()); } catch (Exception e) {
-             * e.printStackTrace(); } }
-             */
-            data.add(toAdd);
+            data.add(makeLocation(rs));
          }
       }
       catch (SQLException e)
@@ -72,14 +63,82 @@ public class LocationDB implements DatabaseAPI<Location>
       }
    }
 
+   private Location makeLocation(ResultSet rs)
+   {
+      Location toAdd = new Location();
+      try
+      {
+         String bldg = rs.getString("building");
+         toAdd.setBuilding(bldg);
+
+         String room = rs.getString("room");
+         toAdd.setRoom(room);
+
+         int occupancy = rs.getInt("maxoccupancy");
+         toAdd.setMaxOccupancy(occupancy);
+
+         String type = rs.getString("type");
+         toAdd.setType(type);
+
+         // Deserialize ProvidedEquipment
+         byte[] equipBuf = rs.getBytes("providedequipment");
+         if (equipBuf != null)
+         {
+            try
+            {
+               ObjectInputStream objectIn;
+               objectIn = new ObjectInputStream(new ByteArrayInputStream(
+                     equipBuf));
+               toAdd.setProvidedEquipment((Location.ProvidedEquipment) objectIn
+                     .readObject());
+            }
+            catch (Exception e)
+            {
+               e.printStackTrace();
+            }
+         }
+
+         boolean adacompliant = rs.getBoolean("adacompliant");
+         toAdd.setAdaCompliant(adacompliant);
+
+         // Deserialize Availability
+         byte[] availBuf = rs.getBytes("availability");
+         if (availBuf != null)
+         {
+            try
+            {
+               ObjectInputStream objectIn;
+               objectIn = new ObjectInputStream(new ByteArrayInputStream(
+                     availBuf));
+               toAdd.setAvailability((WeekAvail) objectIn.readObject());
+            }
+            catch (Exception e)
+            {
+               e.printStackTrace();
+            }
+         }
+
+         String quarterid = rs.getString("quarterid");
+         toAdd.setQuarterId(quarterid);
+
+         int scheduleid = rs.getInt("scheduleid");
+         toAdd.setScheduleId(scheduleid);
+      }
+      catch (SQLException e)
+      {
+         e.printStackTrace();
+      }
+      return toAdd;
+   }
+
    @Override
    public void addData(Location data)
    {
       // Create insert string
       String insertString = "insert into locations ("
-            + "building, room, maxoccupancy, type, smartroom, "
-            + "laptopconnectivity, adacompliant, overhead, weekavail)"
-            + "values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            + "building, room, maxoccupancy, type, providedequipment,"
+            + " adacompliant, availability, quarterid, scheduleid)"
+            + "values (?,?,?,?,?,?,?,?,?)";
       // Create prepared statement
       PreparedStatement stmt = sqldb.getPrepStmt(insertString);
       // Set values
@@ -89,23 +148,35 @@ public class LocationDB implements DatabaseAPI<Location>
          stmt.setString(2, data.getRoom());
          stmt.setInt(3, data.getMaxOccupancy());
          stmt.setString(4, data.getType());
-         stmt.setBoolean(5, data.isSmartRoom());
-         stmt.setBoolean(6, data.hasLaptopConnectivity());
-         stmt.setBoolean(7, data.isADACompliant());
-         stmt.setBoolean(8, data.hasOverhead());
-         // Get WeekAvail through Serializable
+         // Serialize ProvidedEquipment
+         try
+         {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutput out = new ObjectOutputStream(baos);
+            out.writeObject(data.getProvidedEquipment());
+            out.close();
+            stmt.setBytes(5, baos.toByteArray());
+         }
+         catch (IOException e)
+         {
+            e.printStackTrace();
+         }
+         stmt.setBoolean(6, data.getAdaCompliant());
+         // Serialize Availability
          try
          {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ObjectOutput out = new ObjectOutputStream(baos);
             out.writeObject(data.getAvailability());
             out.close();
-            stmt.setBytes(9, baos.toByteArray());
+            stmt.setBytes(7, baos.toByteArray());
          }
          catch (IOException e)
          {
             e.printStackTrace();
          }
+         stmt.setString(8, data.getQuarterId());
+         stmt.setInt(9, data.getScheduleId());
       }
       catch (SQLException e)
       {
@@ -118,10 +189,11 @@ public class LocationDB implements DatabaseAPI<Location>
    @Override
    public void editData(Location data)
    {
+//      data.verify();
       // Create update string
       String updateString = "update locations set building = ?, room = ?,"
-            + "maxoccupancy = ?, type = ?, smartroom = ?, laptopconnectivity = ?, "
-            + "adacompliant = ?, overhead = ?, weekavail = ? "
+            + "maxoccupancy = ?, type = ?, providedequipment = ?, "
+            + "adacompliant = ?, availability = ?, quarterid = ?, scheduleid = ? "
             + "where building = ? and room = ?";
       // Create prepared statement
       PreparedStatement stmt = sqldb.getPrepStmt(updateString);
@@ -132,25 +204,40 @@ public class LocationDB implements DatabaseAPI<Location>
          stmt.setString(2, data.getRoom());
          stmt.setInt(3, data.getMaxOccupancy());
          stmt.setString(4, data.getType());
-         stmt.setBoolean(5, data.isSmartRoom());
-         stmt.setBoolean(6, data.hasLaptopConnectivity());
-         stmt.setBoolean(7, data.isADACompliant());
-         stmt.setBoolean(8, data.hasOverhead());
-         // Get WeekAvail through Serializable
+         // Serialize ProvidedEquipment
+         try
+         {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutput out = new ObjectOutputStream(baos);
+            out.writeObject(data.getProvidedEquipment());
+            out.close();
+            stmt.setBytes(5, baos.toByteArray());
+         }
+         catch (IOException e)
+         {
+            e.printStackTrace();
+         }
+         stmt.setBoolean(6, data.getAdaCompliant());
+         // Serialize Availability
          try
          {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ObjectOutput out = new ObjectOutputStream(baos);
             out.writeObject(data.getAvailability());
             out.close();
-            stmt.setBytes(9, baos.toByteArray());
+            stmt.setBytes(7, baos.toByteArray());
          }
          catch (IOException e)
          {
             e.printStackTrace();
          }
+         stmt.setString(8, data.getQuarterId());
+         stmt.setInt(9, data.getScheduleId());
+
+         // Where clause
          stmt.setString(10, data.getBuilding());
          stmt.setString(11, data.getRoom());
+
       }
       catch (SQLException e)
       {
@@ -160,16 +247,17 @@ public class LocationDB implements DatabaseAPI<Location>
       sqldb.executePrepStmt(stmt);
 
    }
-   
-   public void clearData ()
+
+   public void clearData()
    {
-      PreparedStatement stmt = sqldb.getPrepStmt("delete from courses;");
+      PreparedStatement stmt = sqldb.getPrepStmt("delete from locations;");
       sqldb.executePrepStmt(stmt);
    }
 
    @Override
    public void removeData(Location data)
    {
+//      data.verify();
       // Create delete string
       String deleteString = "delete from locations where building = ? and room = ?";
       // Create prepared statement
