@@ -12,11 +12,7 @@ import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
 import edu.calpoly.csc.scheduler.model.db.idb.InstructorDB;
 import edu.calpoly.csc.scheduler.model.db.ldb.Location;
 import edu.calpoly.csc.scheduler.model.db.ldb.LocationDB;
-import edu.calpoly.csc.scheduler.model.schedule.Day;
-import edu.calpoly.csc.scheduler.model.schedule.Schedule;
-import edu.calpoly.csc.scheduler.model.schedule.OldSchedule;
-import edu.calpoly.csc.scheduler.model.schedule.ScheduleItem;
-import edu.calpoly.csc.scheduler.model.schedule.Week;
+import edu.calpoly.csc.scheduler.model.schedule.*;
 import edu.calpoly.csc.scheduler.view.web.client.GreetingService;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
@@ -100,12 +96,12 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		ArrayList<Course> courses = db.getCourseDB().getData();
 		ArrayList<Location> locations = db.getLocationDB().getData();
 		
-		OldSchedule schedule = new OldSchedule();
+		Schedule schedule = new Schedule();
 		schedule.generate(new Vector<Course>(courses), new Vector<Instructor>(instructors), new Vector<Location>(locations));
 		
 		ArrayList<gwtScheduleItem> gwtItems = new ArrayList<gwtScheduleItem>();
 		
-	    for(ScheduleItem item : schedule.getScheduleItems())
+	    for(ScheduleItem item : schedule.getItems())
 	    {         
 	    	gwtItems.add(convertScheduleItem(item));
 	    }
