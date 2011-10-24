@@ -1381,7 +1381,7 @@
 	padding:10px 8px;
 	}
 #hor-minimalist-b td{
-	border-bottom:1px solid #ccc;
+	//border-bottom:1px solid #ccc;
 	color: #000000;
 	padding:6px 8px;
 		text-align:center;
@@ -1401,18 +1401,18 @@
 #hor-minimalist-c th{
 	font-size:14px;
 	font-weight:normal;
-	color:#000000;
-	border-bottom:2px solid #000000;
+	color: #000000;
+	border-bottom:2px solid  #000000;
 	padding:10px 8px;
+	text-align:center;
 	}
 #hor-minimalist-c td{
 	color:#000000;
-	border-right:1px solid #ccc;
-	border-left:1px solid #ccc;
+	//border-right:1px solid #ccc;
+	//border-left:1px solid #ccc;
 	border-top:1px solid #ccc;
-	border-bottom:1px solid #ccc;
 	padding:6px 8px;
-		text-align:center;
+	text-align:center;
 	}
 	
 #hor-minimalist-c tbody tr:hover td{color:black;}
@@ -1422,11 +1422,13 @@
 
 <h1>Instructor Course Preferences</h1>
    <center>
-<table id="hor-minimalist-b">
-<tr>
-<td colspan="2">
-
    <table id="hor-minimalist-c">
+      <thead>
+      <tr>
+	<th>Course</th>
+	<th>Preference</th>
+      </tr>
+      </thead>
 	   <tbody>
 		   <tr style="min-height: 100px; min-width: 500px;">
      		   <td style="min-width: 200px; min-height: 100px;">CHEM 101</td>
@@ -1437,7 +1439,7 @@
 					<option>Not Preferred</option>
 					<option>Not Qualified</option>
 				</select>
-			  </td>
+			</td>
 		   </tr>
 		   <tr style="min-height: 100px; min-width: 500px;">
      		   <td style="min-width: 200px; min-height: 100px;">CHEM 106</td>
@@ -1566,14 +1568,10 @@
    <table id="hor-minimalist-b">
 		<tbody>
 		   <tr>
-		      <td style="min-width: 100px; min-height: 100px;"><button type="push" name="save">Save</button></td>
-		      <td style="min-width: 100px; min-height: 100px;"><button type="push" name="cancel">Cancel</button></td>
+		      <td style="min-width: 100px; min-height: 100px;"><button type="push" class="gwt-Button" name="save">Save</button></td>
+		      <td style="min-width: 100px; min-height: 100px;"><button type="push" class="gwt-Button" name="cancel">Cancel</button></td>
 		   </tr>
 		</tbody>
-   </table>
-   </center>
-</td>
-   </tr>
    </table>
    </center>
 		
