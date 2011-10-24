@@ -13,8 +13,8 @@ import edu.calpoly.csc.scheduler.model.db.idb.InstructorDB;
 import edu.calpoly.csc.scheduler.model.db.ldb.Location;
 import edu.calpoly.csc.scheduler.model.db.ldb.LocationDB;
 import edu.calpoly.csc.scheduler.model.schedule.Day;
-import edu.calpoly.csc.scheduler.model.schedule.NewSchedule;
 import edu.calpoly.csc.scheduler.model.schedule.Schedule;
+import edu.calpoly.csc.scheduler.model.schedule.OldSchedule;
 import edu.calpoly.csc.scheduler.model.schedule.ScheduleItem;
 import edu.calpoly.csc.scheduler.model.schedule.Week;
 import edu.calpoly.csc.scheduler.view.web.client.GreetingService;
@@ -100,7 +100,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		ArrayList<Course> courses = db.getCourseDB().getData();
 		ArrayList<Location> locations = db.getLocationDB().getData();
 		
-		Schedule schedule = new Schedule();
+		OldSchedule schedule = new OldSchedule();
 		schedule.generate(new Vector<Course>(courses), new Vector<Instructor>(instructors), new Vector<Location>(locations));
 		
 		ArrayList<gwtScheduleItem> gwtItems = new ArrayList<gwtScheduleItem>();
@@ -221,7 +221,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		courses.add(c5);
 		courses.add(c6);
         ArrayList<Location> locations = db.getLocationDB().getData();
-		NewSchedule schedule = new NewSchedule();
+		Schedule schedule = new Schedule();
 		schedule.generate(new Vector<Course>(courses), new Vector<Instructor>(instructors), new Vector<Location>(locations));
 		
 		

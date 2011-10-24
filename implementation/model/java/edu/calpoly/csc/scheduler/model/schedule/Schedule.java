@@ -1,484 +1,432 @@
 package edu.calpoly.csc.scheduler.model.schedule;
 
-import edu.calpoly.csc.scheduler.model.db.*;
-import edu.calpoly.csc.scheduler.model.db.idb.*;
-import edu.calpoly.csc.scheduler.model.db.cdb.*;
-import edu.calpoly.csc.scheduler.model.db.ldb.*;
-import edu.calpoly.csc.scheduler.model.db.pdb.*;
-import java.util.*;
-
-import java.io.*;
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Observable;
+import java.util.List;
+import java.util.Vector;
 
-import javax.swing.JFrame;
-import javax.swing.JProgressBar;
+import edu.calpoly.csc.scheduler.model.db.*;
+import edu.calpoly.csc.scheduler.model.db.cdb.*;
+import edu.calpoly.csc.scheduler.model.db.idb.*;
+import edu.calpoly.csc.scheduler.model.db.ldb.*;
 
 /**
- * Contains the methods for generating a schedule. See method documentation for
- * the details behind this process. 
- *
+ * 
  * @author Eric Liebowitz
+ * @version Oct 10, 2011
  */
 public class Schedule extends Observable implements Serializable
 {
-   public static final int serialVersionUID = 42;
-
-   /* Instance Variables ==>*/
    /**
-    * What courses, times, and WTU's an instructor had been assigned
+    * Used for debugging. Toggle it to get debugging output
     */
-   public Hashtable<Instructor, Treatment> treatment = 
-      new Hashtable<Instructor, Treatment>();
-   /** 
-    * The generated schedule 
-    */
-   public Vector<ScheduleItem> s;
+   public static final boolean DEBUG = !true;
    /**
-    * List of courses that had TBA locations.
+    * Prints a message if DEBUG is true
+    * 
+    * @param s String to print
     */
-   public Vector<TBA> TBAs = new Vector<TBA>();
-   /**
-    * Used to keep track of when rooms are booked
-    */
-   private Hashtable<Location, WeekAvail> lBookings = 
-      new Hashtable<Location, WeekAvail>();
-   /**
-    * Used to keep track of when instructors are booked
-    */
-   private Hashtable<Instructor, WeekAvail> iBookings = 
-      new Hashtable<Instructor, WeekAvail>();
-   /**
-    * Used to keep track of when courses are booked
-    */
-   protected CourseOverlapTracker cot = new CourseOverlapTracker();
-   
-   /** 
-    * Records how many courses are in the schedule (not number of sections)
-    */
-   protected Vector<Course> cList = new Vector<Course> ();
-   /**
-    * Records how many instructors are in the schedule
-    */
-   protected Vector<Instructor> iList = new Vector<Instructor>();
-   /**
-    * Records how many locations are in the schedule
-    */
-   protected Vector<Location> lList = new Vector<Location>();
-
-
-   /**
-    * Determines when the day begins for scheduling. Default is 7a.
-    */
-   private Time dayStart = new Time (7, 0);
-
-   /**
-    * Determines when the day ends for scheduling. Default is 10p.
-    */
-   private Time dayEnd = new Time (22, 0);
+   public static void debug (String s)
+   {
+      if (DEBUG)
+      {
+         System.err.println (s);
+      }
+   }
    
    /**
-    * ID for the schedule in the database
+    * List of courses that are to be added to the schedule. This list will be
+    * shortened as courses are fully scheduled during generation.
     */
-   private int id = -1;
+   private List<Course> cSourceList       = new Vector<Course>();
+   /**
+    * List of instructors that are to be added to the schedule. This list will 
+    * be shortend as instructors become unavailable to teach anymore courses.
+    */
+   private List<Instructor> iSourceList   = new Vector<Instructor>();
+   /**
+    * List of location that are to be made available for schedule generation.
+    */
+   private List<Location> lSourceList     = new Vector<Location>();
+
+   /**
+    * Keeps track of how many sections of a given course have been scheduled. 
+    */
+   private HashMap<Course, Integer> courseCount = 
+      new HashMap<Course, Integer>();
    
    /**
-    * Name for the schedule
+    * The global start/end times for a given day on the schedule. Default 
+    * bounds are 7a-10p.
+    */
+   private TimeRange bounds = new TimeRange(new Time(7, 0), new Time(22, 0));
+
+   /**
+    * List of ScheduleItems which generation will create. This is the "schedule"
+    * that the user will see.
+    */
+   Vector<ScheduleItem> items = new Vector<ScheduleItem>();
+
+   /**
+    * This schedule's id
+    */
+   private Integer id = -1;
+   /**
+    * The quarter id to link this schedule w/ a particular quarter
+    */
+   private String quarterId = "";
+   /**
+    * Human-readable string to identify this schedule
     */
    private String name = "";
-
-   /*<==*/
-
-   /* Schedule construtors ==>*/
-   /** 
-    * Creates an empty schedule. 
-    */
-   public Schedule ()
-   {
-      super ();
-      s = new Vector<ScheduleItem>();
-   }
-
+   
    /**
-    * Creates a schedule from a given vector of ScheduleItem's.
-    *
-    * @param s Vector of ScheduleItem's to create a schedule from.
+    * Default constructor. Does nothing but give you back a new object. 
     */
-   public Schedule (Collection<ScheduleItem> s)
-   {
-      super ();
-      /*
-       * I don't use super(<Collection>) b/c I need to do specific checks
-       * before the add can occur. It made the most sense to put these
-       * within the add method.
-       */
-      for (ScheduleItem si: s)
-      {
-         this.add(si);
-      }
-   }/*<==*/
-
-   /* Main "generate" methods ==>*/
+   public Schedule () { }
+   
    /**
-    * <pre>
-    * Generates a schedule. In particular, the process adheres to the process 
-    * outlined in the pseudo code below:
-    *
-    *    while (there are courses)
-    *       get Insructor "i"
-    *       choose Course "c" which "i" most wants to teach
-    *       choose a time "t" when "i" most wants to teach
-    *       choose a location "l" which can accomodate "c" and "t"
-    *
-    * This method calls the "gen" method to do most the heavy lifting for
-    * generation. However, most, if not all of the exception handling is done
-    * here.
-    *
-    * However, before generation begins, any/all "locked" ScheduleItems from the
-    * previous schedule are immediately added to the new Schedule. 
-    * </pre>
-    *
-    * @param cdb The list of courses to schedule
-    * @param idb The list of instructors with which to teach the courses
-    * @param ldb The list of location in which to teach the courses
+    * Creates a ScheduleItem to teach a given course on a given set of days 
+    * in a given time range. 
+    * 
+    * @param c Course to teach
+    * @param days Days to teach
+    * @param s Time of day the course should start
+    * 
+    * @return A ScheduleItem w/ an instructor and location aptly suited for 
+    *         teaching with the given parameters. 
+    *         
+    * @throws CouldNotBeScheduledException If no instructor or location can be
+    *         found which is compatible w/ the given parameters. 
     */
-   /* generate ==>*/
-   public void generate (Vector<Course> cdb,
-                         Vector<Instructor> idb, 
-                         Vector<Location> ldb)
+   public ScheduleItem makeItem (Course c, Week days, Time s)
+      throws CouldNotBeScheduledException
    {
+      TimeRange tr = new TimeRange(s, c.splitLengthOverDays(days.size()));
+      
       /*
-       * Reset all records (including the schedule).
+       * SiMap'll sort out everything and let the best choice float to the top
        */
-      reset();
-      initBookings(idb, ldb);
-
-      Course c = null;
-      while (!cdb.isEmpty())
+      SiMap sis = new SiMap();
+      
+      ScheduleItem si = new ScheduleItem();
+      si.setCourse(c);
+      si.setDays(days);
+      si.setTimeRange(tr);
+      
+      for (Instructor i: this.iSourceList)
       {
-         Vector<Instructor> toRemove = new Vector<Instructor>();
          /*
-          * If there are no more instructors, add the almighty "STAFF" to teach
-          * the rest of the courses. It is here that an "iBookings" entry will
-          * be created for STAFF.
+          * The map won't add if the instructor has a 0 pref for anything in
+          * the ScheduleItem.  
           */
-         if (idb.isEmpty())
-         {
-//            idb.add(Instructor.STAFF);
-         }
-         for (Instructor i: idb)
-         {
-            try 
-            {
-               c = gen (i, cdb, idb, ldb);
-            }
-            /* Fatal */
-            catch (EmptyCourseDatabaseException e) 
-            {
-               break;
-            }
-            /* 
-             * These two exceptions represent when an Instructor can't teach 
-             * anything else and should be removed. But, that can't be done
-             * right in the middle of a "foreach". So, the removals are appended
-             * to a queue. After the loop, the instructors are actually removed.
-             */
-            catch (InstructorCanTeachNothingException e) 
-            {
-               toRemove.add(i);
-            }
-            catch (InstructorWTUMaxedException e) 
-            {
-               toRemove.add(i);
-            }
-            catch (CouldNotBeScheduledException e)
-            {
-               e.printStackTrace();
-
-               c = e.si.getCourse();
-               this.TBAs.add(new TBA(c, i));
-               decrementSectionCount(c, cdb);
-            }
-            catch (Exception e)
-            {
-               e.printStackTrace();
-            }
-         }
-         for (Instructor i: toRemove)
-         {
-            idb.remove(i);
-         }
-
+         ScheduleItem clone = si.clone();
+         clone.setInstructor(i);
+         
+         sis.put(clone);
       }
-      this.setChanged();
-      this.notifyObservers();
-   }/*<==*/
-
-   /**
-    * Resets (clears) all data particular to the schedule. Note that 
-    * "lockedItems" is not reset here. Since this piece of data needs the old
-    * Schedule's locked items prior to generation, it will have been created
-    * before this method is called (as the old schedule is wiped here). So, I
-    * shouldn't go wiping it out just after I made it. 
-    */
-   /* reset ==>*/
-   private void reset ()
-   {
-      this.s.clear();
-      this.TBAs.clear();
-      this.treatment.clear();
-      this.cot.clear();
-      this.iBookings.clear();
-      this.lBookings.clear();
-      this.cList.clear();
-      this.iList.clear();
-      this.lList.clear();
-      
-   }/*<==*/
-
-   /**
-    * Initializes the l and i bookings HashMaps to contain fresh WeekAvail
-    * objects for each item in the cdb, ldb, and idb (respectively). 
-    * 
-    * It'll also create Treatment objects for each  Instructor while it's at 
-    * it.
-    * 
-    * Also inits the "cOverlaps" variable, which keeps track of what classes 
-    * can/can't overlap one another.
-    *
-    * @param idb List of instructors for generating
-    * @param ldb List of locations for generating
-    */
-   /* initBookings ==>*/
-   private void initBookings (Vector<Instructor> idb,
-                              Vector<Location> ldb)
-   {
-      for (Location l: ldb)
-      {
-         this.lBookings.put(l, new WeekAvail());
-      }
-      for (Instructor i: idb)
-      {
-         this.iBookings.put(i, new WeekAvail());
-         this.treatment.put(i, new Treatment());
-      }
-      /*
-       * Adding info for STAFF here so it's available at all times, even if 
-       * the STAFF isn't needed yet (when opening a schedule from a file that
-       * has a  STAFF in it, for instance)
-       */
-//      this.iBookings.put(Instructor.STAFF, new WeekAvail());
-//      this.treatment.put(Instructor.STAFF, new Treatment());
-   }/*<==*/
-
-   /**
-    * <pre>
-    * Does the heavy lifting for schedule generation. 
-    * 
-    * Given an instructor, it selects a course for him/her to teach. 
-    * 
-    * It subsequently gathers a list of all possible days/time combinations, 
-    * in descending order of desirability. 
-    * 
-    * With this information, it will compile a list of all locations which can
-    * be taught on any of those day/time combinations, in descending order of
-    * desirability.
-    * 
-    * All this information will culminate in the course being scheduled. The 
-    * course's section count will be decremented by one and, if it has a lab
-    * which was also scheduled, the lab's will be decremented as well.
-    *
-    * </pre>
-    *
-    * @param i The given Instructor
-    * @param cdb List of courses still available to teach
-    * @param idb List of all Instructor still able to teach
-    * @param ldb List of all Locations
-    * @param pdb List of all SchedulePreferences to apply to this schedule
-    *
-    * @return The Course scheduled
-    *
-    * @throws EmptyCourseDatabaseException if the "cdb" is empty
-    * @throws InstructorCanTeachNothingException if no course exists for which 
-    *         the Instructor's preference is not a 0
-    * @throws InstructorWTUMaxedException if no course exists which will not
-    *         push an Instructor's WTU's past his/her limit
-    * @throws InstructorNotInDatabaseException if, for some reason, the 
-    *         Instructor given isn't in the idb
-    * @throws NullInstructorException if, for some reason, the given Instructor
-    *         is null
-    * @throws CouldNotBeScheduledException when no DaysAndTime object can be 
-    *         created for a given course, meaning it is to be TBA
-    */
-   /* gen ==>*/
-   private Course gen (Instructor i,
-                       Vector<Course> cdb, 
-                       Vector<Instructor> idb, 
-                       Vector<Location> ldb)
-      throws EmptyCourseDatabaseException,
-             InstructorCanTeachNothingException,
-             InstructorWTUMaxedException,
-             InstructorNotInDatabaseException,
-             NullInstructorException,
-             CouldNotBeScheduledException
-   {
-      ScheduleItem base = new ScheduleItem();
-      base.setInstructor(i);
-
-      /*
-       * Build a piece of a ScheduleItem: its course (and possible lab-SI 
-       * component)
-       */
-      base = buildSI_course (cdb, base);
-
-      /*
-       * This list will contain SI's with the same course, but with different
-       * start times, end times, and days-to-be-taught. 
-       */
-      Vector<ScheduleItem> sis = findTime(base, base.getCourse());
-      /*
-       * This'll return a list similar to the one above, but with more
-       * SI's. In particular, each SI will have the same course, times, and
-       * days-to-be-taught (along w/ any corresponding lab). However, the
-       * location of each SI (and any lab) will be different.
-       * 
-       * I reassign to "sis" b/c there's no need to keep the old one lyin' 
-       * around.
-       */
-      sis = findLocations (ldb, sis);
       
       /*
-       * If not even one SI could be created, the course could not be 
-       * scheduled, so we should throw an exception saying so. 
+       * If not even one not-impossible ScheduleItem was created, we'll have to
+       * balk
        */
       if (sis.size() == 0)
       {
-         throw new CouldNotBeScheduledException(base);
+         throw new CouldNotBeScheduledException();
       }
-
-      /*
-       * Add it
-       */
-      try
-      {
-         addBest(sis);
-      }
-      catch (Exception e)
-      {
-         e.printStackTrace();
-      }
-
-      /*
-       * Decrement course section counts, regardless of whether it was in a 
-       * locked SI or not. See the documentation for this method...it's helpful
-       */
-      decrementSectionCount(base.getCourse(), cdb);
-
-      return base.getCourse();
-   }/*<==*/
-
+      
+      return sis.getBest();
+   }
+   
    /**
-    * Decrements a given Course's section count along w/ its lab's section
-    * count, if it has one. If the lecture's section count falls to 0, it is 
-    * removed from the "cdb". 
-    *
-    * Note the the provided Course "c" will not have its section count
-    * decremented directly. Rather, "c" is used to look itself up in "cdb", and
-    * the resulting object is decrememnted. This is done b/c, due to the 
-    * possibility of a locked Course, the provided Course might already be part
-    * of a locked SI. Since we don't want to alter the SI in any way, we've got
-    * to be sure we only alter the section count of the Course in the CDB, which
-    * does not yet have a home. 
-    *
-    * @param c Course to decrement section count
-    * @param cdb List of courses for generation
+    * Adds the given ScheduleItem to this schedule. Before an add is done, the
+    * ScheduleItem is verified to make sure it doesn't double-book an 
+    * instructor/location and that the instructor can actually teach the course.
+    * 
+    * @param si ScheduleItem to add
+    * 
+    * @return true if the item was added. False otherwise.
     */
-   /* decrementSectionCount ==>*/
-   private void decrementSectionCount (Course c, Vector<Course> cdb)
+   public boolean add (ScheduleItem si)
    {
-      Course realCourse = cdb.get(cdb.indexOf(c));
-      ////System.err.println ("INDEX: " + cdb.indexOf(c));
-      Course realLab = realCourse.getLab();    //Can be null
-
-      realCourse.setNumOfSections(realCourse.getNumOfSections() - 1);
-      if (realLab != null)
-      {
-         realLab.setNumOfSections(realLab.getNumOfSections() - 1);
-      }
-      if (realCourse.getNumOfSections() < 1)
-      {
-         cdb.remove(realCourse);
-      }
-   }/*<==*/
-   /*<==*/ 
-
-   /* For selecting a course ==>*/
+      return book(si);
+   }
+   
    /**
-    * Finds the most suitable course for a given instructor to teach. In
-    * particular, the selected course will be whatever course for which the
-    * given instructor had the highest preference to teach. If he/she has the
-    * same highest preference for two courses, the first course encountered
-    * will be the one selected. 
+    * Applies all the day/time/wtu commitments of a ScheduleItem to instructors
+    * and locations to take up their availability. Instructor's WTU count is 
+    * updated. Course section count is also updated.<br>
+    * <br>
+    * The ScheduleItem is also verified before it is booked. If verification 
+    * fails, the ScheduleItem is not added.  
+    *  
+    * @param si The ScheduleItem w/ the days, times, etc. which'll be booked
+    *           in the schedule
     *
-    * @param cdb Database of courses
-    * @param si ScheduleItem containing the instructor to give the course to
+    * @return true if the ScheduleItem was added. False otherwise. 
     *
-    * @return A ScheduleItem with its course field set to the most desirable 
-    *         course available to give this Instructor. If the course has a lab,
-    *         the returned SI will have its "lab" field filled appropriately.
-    *
-    * @throws InstructorWTUMaxedException if no course exists which will not
-    *         push an Instructor's WTU's past his/her limit
-    * @throws InstructorCanTeachNothingException if no course exists for which 
-    *         the Instructor's preference is not a 0
+    * @see #verify(ScheduleItem)
     */
-   /* buildSI_course ==>*/
-   private ScheduleItem buildSI_course (Vector<Course> cdb,
-                                        ScheduleItem si)
-      throws
-         EmptyCourseDatabaseException,
-         NullInstructorException,
-         InstructorNotInDatabaseException,
-         InstructorWTUMaxedException,
-         InstructorCanTeachNothingException//
+   private boolean book (ScheduleItem si)
+   {
+      boolean r = false;
+      
+      if (verify(si))
+      {
+         Instructor i   = si.getInstructor();
+         Location l     = si.getLocation();
+         Week days      = si.getDays();
+         TimeRange tr   = si.getTimeRange();
+         
+         i.setBusy(days, tr);
+         l.setBusy(days, tr);
+         
+         int wtu = i.getCurWtu();
+         wtu += si.getWtuTotal();
+         i.setCurWtu(wtu);
+         
+         bookSection(si.getCourse());
+         
+         this.items.add(si);
+         
+         r = true;
+      }
+      
+      return r;
+   }
+   
+   /**
+    * Books another section of the given course. 
+    * @param c
+    */
+   private void bookSection (Course c)
+   {
+      debug ("BOOKING SECTION FOR " + c);
+      if (!this.courseCount.containsKey(c))
+      {
+         this.courseCount.put(c, 0);
+      }
+      
+      int i = this.courseCount.get(c);
+      i ++;
+      this.courseCount.put(c, i);
+      
+      if (i == c.getNumOfSections())
+      {
+         debug ("REMOVING IT");
+         cSourceList.remove(c);
+      }
+   }
+   
+   /**
+    * Ensures that the given ScheduleItem can be scheduled. This means it 
+    * doesn't double book instructors/locations, and the instructor can teach
+    * the lecture/lab w/o exceeding his max wtu limit. 
+    * 
+    * @param si ScheduleItem to verify
+    * 
+    * @return true if 'si' can be taught by its instructor at its location, and
+    *         the instructor can teach the course. 
+    *         
+    * @see Instructor#canTeach(Course)
+    */
+   private boolean verify (ScheduleItem si)
+   {
+      boolean r = true;
+      
+      Week days = si.getDays();
+      TimeRange tr = si.getTimeRange();
+      Instructor i = si.getInstructor();
+      Location l = si.getLocation();
+      
+      if (!i.isAvailable(days, tr))
+      {
+         r = false;
+      }
+      if (!l.isAvailable(days, tr))
+      {
+         r = false;
+      }
+      if (!i.canTeach(si.getCourse()))
+      {
+         r = false;
+      }
+      
+      return r;
+   }
+   
+   /**
+    * Does schedule generation
+    * 
+    * @param c_list List of courses you want scheduled
+    * @param i_list List of instructors you want to teach stuff
+    * @param l_list List of locations you want stuff to be taught in
+    */
+   public Vector<ScheduleItem> generate (List<Course> c_list, 
+                                         List<Instructor> i_list, 
+                                         List<Location> l_list)
+   {
+      initGenData(c_list, i_list, l_list);
+
+      debug ("GENERATING");
+      debug ("COURSES: " + this.cSourceList);
+      debug ("INSTRUCTORS: " + this.iSourceList);
+      debug ("LOCATIONS: " + this.lSourceList);
+      
+      while (shouldKeepGenerating())
+      {
+         Vector<Instructor> toRemove = new Vector<Instructor>();         
+         
+         addStaff();
+         
+         for (Instructor i : this.iSourceList)
+         {
+            debug ("HAVE INSTRUCTOR " + i);
+            try
+            {
+               SiMap sis = genListForInstructor(i);
+               debug ("GOT " + sis.size() + " ITEMS");
+               add(sis.getBest());
+            }
+            catch (InstructorCanTeachNothingException e)
+            {
+               System.err.println (e);
+               toRemove.add(i);
+            }
+         }
+         /*
+          * Now that we're not using the list of instructors, we can remove 
+          * those which were deemed unable to teach anymore
+          */
+         this.iSourceList.removeAll(toRemove);
+      }
+      
+      return this.getItems();
+   }
+   
+   private boolean shouldKeepGenerating ()
+   {
+      return this.cSourceList.size() > 0;
+   }
+   
+   /**
+    * Adds the special 'STAFF' instructor to our list of instructors if the
+    * list is empty.
+    */
+   private void addStaff ()
+   {
+      if (this.iSourceList.isEmpty())
+      {
+         this.iSourceList.add(Staff.getStaff());
+      }
+   }
+   
+   /**
+    * Clears the record-keeping data associated w/ generation. Sets the list of
+    * courses, instructors, and locations to the provides arguments.<br>
+    * <br>
+    * The special location 'Tba' is added to the end of the location list
+    * 
+    * @param c_list List of Courses that'll be put into the schedule
+    * @param i_list List of Instructors that'll be put into the schedule
+    * @param l_list List of Locations that'll be put into the schedule
+    * 
+    * @see Tba
+    */
+   private void initGenData (List<Course> c_list, List<Instructor> i_list, 
+      List<Location> l_list)
+   {
+      cSourceList = new Vector<Course>(c_list);
+      iSourceList = new Vector<Instructor>(i_list);
+      lSourceList = new Vector<Location>(l_list);
+      
+      lSourceList.add(Tba.getTba());
+   }
+   
+   /**
+    * Generates a list of ScheduleItems for a given instructor. All items 
+    * returned will contain the same course (one which the instructor wishes
+    * to/can teach), contain times for which the instructor wants to/is able to
+    * teach, and be taught in a location available for the time range specified.
+    *  
+    * @param i Instructor build ScheduleItems for
+    * 
+    * @return A list of ScheduleItems for what this instructor was scheduled to
+    *         teach.
+    *         
+    * @throws InstructorCanTeachNothingException if no course exists which the 
+    *         Instructor wants to teach and/or no course exists which does not
+    *         exceed the Instructor's WTU limit. 
+    */
+   private SiMap genListForInstructor (Instructor i)
+      throws InstructorCanTeachNothingException
+   {
+      Vector<ScheduleItem> sis = new Vector<ScheduleItem>();
+      Vector<ScheduleItem> lec_si_list = new Vector<ScheduleItem>();
+      Vector<ScheduleItem> lab_si_list = new Vector<ScheduleItem>();
+
+      /*
+       *  Get ScheduleItems for the lecture
+       */
+      ScheduleItem lec_base = new ScheduleItem();
+      
+      lec_base.setInstructor(i);
+      
+      lec_base    = findCourse(lec_base);
+      debug ("FOUND COURSE");
+      lec_si_list = findTimes(lec_base);
+      debug ("GOT " + lec_si_list.size() + " TIMES");
+      SiMap si_map = findLocations(lec_si_list);
+      debug ("GOT " + lec_si_list.size() + " LOCATIONS");
+      
+      //TODO: Do labs
+      
+      return si_map;
+   }
+   
+   /**
+    * Finds a course which a given instructor wants to teach and can teach. This
+    * means that the course returned will not exceed his WTU limit. Furthermore,
+    * the instructor's preference for the class is at least as high as his
+    * preference for every other class.
+    * 
+    * @param si ScheduleItem with the instructor we're to find a course for
+    * 
+    * @return A ScheduleItem w/ its course value set
+    * 
+    * @throws InstructorCanTeachNothingException If no course exists which this
+    *         instructor can teach (has a preference > 0)
+    * @throws InstructorWTUMaxedException if no course exists which will not
+    *         push this instructor's WTUs over his limit
+    * 
+    * @see genCourseList
+    */
+   private ScheduleItem findCourse (ScheduleItem si)
+      throws InstructorCanTeachNothingException
    {
       Instructor i = si.getInstructor();
-
-      /* The best course found */
       Course bestC = null;
-
-      /* Instructor's current WTU count */
-      int iWTU = this.treatment.get(i).wtu, bestPref = 0;
-
-      /* 
-       * Whether an instructor has the WTU's or preference for at least one 
-       * course.
-       */
-      boolean canWTU = false, canPref = false;
+      int bestPref = 0;
+      boolean canWTU = false;
+      boolean canPref = false;
 
       /*
        * Exhaustively find the best course.
        */
-      for (Course temp: cdb)
+      for (Course temp : this.cSourceList)
       {
+         debug ("TRY COURSE " + temp);
          int pref = i.getPreference(temp);
-
-         /*
-          * Don't consider courses w/ a "0" preference
-          */
-         if (pref == 0) 
-         {
-            continue;
-         }
+         debug ("PREF IS: " + pref);
          /*
           * If prof wants this course more than previous "best".
           */
          if (pref > bestPref)
          {
             canPref = true;
-            /*
-             * If STAFF, or he/she has the WTU's to teach it.
-             */
-            if ((i.getMaxWTU() < 0) || (temp.getWtu() + iWTU <= i.getMaxWTU()))
+             if (i.canTeach(temp))
             {
                canWTU = true;
                bestC = temp;
@@ -486,897 +434,170 @@ public class Schedule extends Observable implements Serializable
             }
          }
       }
-      /*
-       * If no course existed which professor was able to teach.
-       */
-      if (!canPref) { throw new InstructorCanTeachNothingException (); }
-      /*
-       * If instructor had no WTU's to spare for any course he could still 
-       * teach.
-       */
-      if (!canWTU)  { throw new InstructorWTUMaxedException (); }
 
-      si.setCourse(new Course(bestC));
-      /*
-       * Make the lab SI if needed 
-       */
-      if (bestC.hasLab())
+      if (!canPref || !canPref)
       {
-         ScheduleItem lab = new ScheduleItem();
-         lab.setCourse(new Course(bestC.getLab()));
-         lab.setInstructor(i);
-         si.setLab(lab);
-         
+         throw new InstructorCanTeachNothingException();
       }
 
+      debug ("BEST: " + bestC);
+      si.setCourse(bestC);
       return si;
-   }/*<==*/
+   }
 
-   /*<==*/
-
-   /* For finding times ==>*/
    /**
-    * Compiles a list of all day/time combinations a given instructor can teach
-    * a given course. These combinations are stored in individual ScheduleItem
-    * objects. Each object returned will contain valid start time, end time, 
-    * and days-to-be-taught values. (Also, if they've a lab component, their
-    * SI's lab field will contain a similarly structured SI object).
-    *
-    * Takes into consideration both DaysForClasses preferences and 
-    * NoClassOverlap preferences. 
-    *
-    * @param i The Instructor
-    * @param lec The lec
-    * @param lab The lec's lab (can be null if there isn't one)
-    *
-    * @return A list of ScheduleItems, each with a different start time, end
-    *         time, or days-to-be-taught (or a combination of all three), but 
-    *         with the same course "lec". If "lec" had a lab ("lab"), each 
-    *         returned SI will have its "lab" field filled with an SI with its
-    *         own start time, end time, and days-to-be-taught.
+    * Gets all the possible time ranges that an instructor can teach a given
+    * course. The days that are considered for teaching are the days defined by
+    * the course to be taught. Each ScheduleItem returned is a clone of the
+    * single ScheduleItem passed in, so that all the fields in the returned list
+    * will be the same <b>except</b> for their times.
+    * 
+    * @param si ScheduleItem w/ the course and instructor we're to use in
+    *        computing times to consider. This ScheduleItem is cloned for every
+    *        time range returned.
+    * 
+    * @return A list of ScheduleItems w/ their days and time ranges set to times
+    *         which the instructor wants to/can teach and on the days the Course
+    *         is to be taught on.
     */
-   /* findTime ==>*/
-   /* TODO: Adjust to take a single SI, with courses already set */
-   private Vector<ScheduleItem> findTime (ScheduleItem base,
-                                          Course lec)
-      throws CouldNotBeScheduledException
+   private Vector<ScheduleItem> findTimes (ScheduleItem si)
    {
+      debug ("FINDING TIMES");
       Vector<ScheduleItem> sis = new Vector<ScheduleItem>();
+      Course c = si.getCourse();
+      Instructor i = si.getInstructor();
 
-      /*
-       * Until we've made at least one SI for the lecture, we must consider 
-       * this generation "not alright". If it stays that way, we'll throw a
-       * CouldNotBeScheduledException to notify the caller
-       */
-      for (ScheduleItem lec_si: buildSI_setDats(base, lec))
+      TimeRange tr = new TimeRange(this.bounds.getS(), c.getDayLength());
+      for (; !tr.getE().equals(this.bounds.getE()); tr.addHalf())
       {
-         /*
-          * We'll have to stop and consider the lab as well, if there is one
-          */
-         if (base.hasLab())
-         {
-            ScheduleItem base_lab = base.getLab();
-            Course lab = base_lab.getCourse();
-            /*
-             * Though finding a lecture made generation "alright", we're now 
-             * comitted to finding a time for its lab as well. If we can't
-             * find at least one DAT for the lab, we'll have to throw a 
-             * CouldNotBeScheduledException for the lab portion, as a lecture
-             * can't be taught w/o its lab
-             */
-            for (ScheduleItem lab_si: buildSI_setDats(base_lab, lab))
-            {
-               /*
-                * The lecture and lab cannot overlap each other
-                */
-               if (!lec_si.overlaps(lab_si))
-               {
-                  /*
-                   * More cloning! The "lec_si" is the base upon which this lab
-                   * will be added, but the reference to said base must be 
-                   * different, else we won't get unique lec/lab combinations
-                   */
-                  ScheduleItem toAdd = lec_si.clone();
-                  toAdd.setLab(lab_si);
+         Week days = c.getDays();
 
-                  /*
-                   * I'm aware I call "sis.add" in two different contexts. 
-                   * I must call it -here- b/c I now know that both the lecture
-                   * and lab have good times. I call it in the "else" block
-                   * below b/c if there's no lab, we can just add the lecture
-                   * right away.
-                   */
-                  sis.add(toAdd);
-               }
-            }
-         }
-         /*
-          * Otherwise, if there was no lab, we can add the lecture to our
-          * return right away
-          */
-         else
+         debug ("CONSIDERING TR: " + tr);
+         if (i.isAvailable(days, tr))
          {
-            sis.add(lec_si);
+            debug ("AVAILABLE");
+            if (i.getAvgPrefForTimeRange(days, tr) > 0)
+            {
+               debug ("WANTS");
+               ScheduleItem toAdd = si.clone();
+               toAdd.setDays(days);
+               toAdd.setTimeRange(tr);
+               
+               sis.add(toAdd);
+            }
          }
       }
 
       return sis;
-   }/*<==*/
-   
-   /**
-    * Builds the days and time portion of a ScheduleItem, using a provided base
-    * to supply each created object w/ any other fields which need not be 
-    * considered, but which should be copied over. Thus, each ScheduleItem 
-    * returned from this method will have the same course "c" applied to it, but
-    * different DATs.
-    *
-    * @param base The "base". This base will be used to create a list of clones,
-    *             each of which will be given a different DAT.
-    * @param c The course to create DATS for
-    *
-    * @return A list of ScheduleItems, each of which has same fields as that
-    *         of the "base", except for "days", "start", and "end", which will
-    *         have been set according to the unique DATs generated in this 
-    *         method.
-    */
-   /* buildSI_setDats ==>*/
-   public Vector<ScheduleItem> buildSI_setDats (ScheduleItem base, Course c)
-   {
-      Vector<ScheduleItem> sis = new Vector<ScheduleItem>();
-
-      /*
-       * A return < 1 means that time didn't divide well into the number of
-       * days provided.
-       */
-      int halfHours = c.getDayLength();
-      if (halfHours > 0)
-      {
-         for (DaysAndTime dat: createDatsForDays(base.i, 
-                                                 c,
-                                                 c.getDays().size(), 
-                                                 halfHours))
-         {
-            /*
-             * Clone our "base" SI and set its days and time. Note that
-             * "null" DAT's should not be considered.
-             */
-            if (dat != null)
-            {
-               ScheduleItem si = base.clone();
-               si.setDaysAndTime(dat);
-               sis.add(si);
-            }
-         }
-      }
-
-
-      return sis;
-   }/*<==*/
+   }
 
    /**
-    * Creates a list of lists of possible DaysAndTime objects. w
-    *
-    * A course's "DaysForClasses" preferences are taken into consideration here.
-    *
-    * @param i The instructor who to be scheduled for
-    * @param c The course to schedule
-    * @param nDays How many days to schedule for
-    * @param nHalfHours the number of half hours to be taught on each day
+    * Finds all locations which are compatible with the given Course and are
+    * available for any of the given list of TimeRanges.
     * 
-    * @return A vector of DATs, each of which is a viable DAT for the given 
-    *         Course/Instructor. It is guaranteed that none of these DAT's will
-    *         represent a time which the instructor is incapable of teaching.
-    */
-   /* createDatsForDays ==>*/
-   private Vector<DaysAndTime> createDatsForDays 
-      (
-         Instructor i,
-         Course c,
-         int nDays,
-         int nHalfHours
-      )
-   {
-      Vector<DaysAndTime> dats = new Vector<DaysAndTime>();
-
-      /*
-       * Create DaysAndTime objects for when this course could be taught across
-       * the Weeks computed above. 
-       */
-      Vector<Week> allWeeks = getAllDayCombos(c, nDays);
-      for (Week w: allWeeks)
-      {
-         try
-         {
-            for (Time t = new Time(0, 0); t.addHalf();)
-            {
-               /*
-                * Need to make a new Time w/ "t's" fields, so that we don't 
-                * suffer from the subtle nuances of passing the same object
-                * reference around
-                */
-               DaysAndTime toAdd = makeDAT (c, new Time(t), nHalfHours, w, i);
-               /*
-                * Only pass "toAdd" on if it's valid and if it 
-                * represents a Time the Instructor is remotely willing to teach
-                * (doesn't have 0 specified for the days/time range). There's 
-                * no points in carrying this information and spawning multitudes
-                * of other SI's if there times are just going to be rejected
-                * later.
-                */
-               if (toAdd != null)
-               {
-                  dats.add(toAdd);
-               }
-            }
-         }
-         catch (Exception e) { e.printStackTrace(); }
-      }
-      return dats;
-   }/*<==*/
-
-   /**
-    * Given a number of days, returns a list of all weeks containing as many
-    * permutations of that numbers of days as are possible. Uses the course's 
-    * DFC(s) to define the form of the week, though not necessarily the number
-    * of days.
-    *
-    * @.todo This does nothing right now
-    *
-    * @param c Course with the course preferences to use
-    * @param numOfDays Number of days each Week should have
+    * @param c Course to find a location for
+    * @param times List of TimeRanges which this course can be taught for.
     * 
-    * @return a Vector of Week objects, each with "numOfDays" days. 
+    * @return A list of locaitons which can be taught on the days for course 'c'
+    *         during at least the TimeRanges passed in.
     */
-   /* getAllDayCombos ==>*/
-   private Vector<Week> getAllDayCombos (Course c, int numOfDays)
+   private SiMap findLocations (Vector<ScheduleItem> sis)
    {
-      Vector<Week> allWeeks = new Vector<Week>();
-      allWeeks.add(c.getDays());
+      SiMap si_map = new SiMap();
 
-      return allWeeks;
-   }/*<==*/
-
-   /**
-    * Chooses a number of days from a given Week of available days.
-    * 
-    * @param depth Number of days to choose
-    * @param availableDays Days available to choose
-    * @param alreadyAssigned Days already in the Week to return
-    *
-    * @return A Week consisting of the days chosen from "availableDays". There 
-    *         will be exactly "depth" days in this Week.
-    *
-    * @throws NotEnoughDaysException if/when depth > availableDays.size()
-    */
-   /* chooseWhichDays ==>*/
-   private Week chooseWhichDays (int depth,
-                                 Week availableDays,
-                                 Week alreadyAssigned)
-      throws NotEnoughDaysException
-   {
-      if (depth > availableDays.getDays().size())
+      for (ScheduleItem si : sis)
       {
-         throw new NotEnoughDaysException();
-      }
-      if (depth == 0)
-      {
-         return alreadyAssigned;
-      }
-      else
-      {
-         for (Day d: availableDays.getDays())
+         Week days = si.getDays();
+         TimeRange tr = si.getTimeRange();
+         for (Location l : this.lSourceList)
          {
-            if (!alreadyAssigned.contains(d))
+            if (l.isAvailable(days, tr))
             {
-               alreadyAssigned.add(d);
-               break;
-            }
-         }
-      }
-      return chooseWhichDays (depth - 1, availableDays, alreadyAssigned);
-   }/*<==*/
-
-   /**
-    * Creates a DaysAndTime object for a given time range across a given Week
-    * for a given instructor. If the instructor is not available for this
-    * time, null is returned. 
-    *
-    * @param c The course to be scheduling
-    * @param s The start time
-    * @param halfHours The number of half hours to go from "s"
-    * @param days The Week these times will be applied to
-    * @param i The instructor who needs to be available for this time span
-    *
-    * @return A DaysAndTime representing a time starting at "s", ending
-    *         (halfHours * 30) minutes afterwards across "days". If "i" is not
-    *         available for this time frame or cannot teach for the given time
-    *         frame, null is returned. 
-    */
-   /* makeDAT ==>*/
-   private DaysAndTime makeDAT (Course c, Time s, int halfHours, Week days, 
-                                  Instructor i)
-   {
-      DaysAndTime r = null;
-      /*
-       * Since we know how long the course will go, computing the end-time 
-       * relative to the start time is easy...just add up all the half-hours.
-       */
-      Time e = new Time (s);
-      e.addHalves(halfHours);
-      /*
-       * If the professor is free for the specified time and across the 
-       * specified days, it's a valid DAT. Otherwise, return null and deal
-       * w/ it from the caller's persepctive.
-       */
-      try
-      {
-         if (this.iBookings.get(i).isFree(s, e, days))
-         {
-            if (((int)i.getAvgPrefForTimeRange(days, s, e)) > 0)
-            {
-               /*
-                * TODO: ENABLE ONCE PREFERENCES ARE WORKING AGAIN
-                */
-//               if (doesNotOverlap(c, s, e, days))
-//               {
-                  r = new DaysAndTime (days, s, e);
-//               }
-            }
-         }
-      }
-      /*
-       * If there's a bad time/day, return null anyhow 
-       */
-      catch (NotADayException exc)
-      {
-         exc.printStackTrace();
-      }
-      catch (EndBeforeStartException exc)
-      {
-         exc.printStackTrace();
-      }
-
-      return r;
-   }/*<==*/
-   
-   /**
-    * Determines whether a given course's teaching time is to overlap that
-    * of another, already-scheduled course with which it is forbidden to 
-    * overlap. If a given course isn't forbidden to overlap anything else, 
-    * true is returned w/o question. 
-    *
-    * @param c The course in question
-    * @param s The time the course is to start
-    * @param e The time the course is to end
-    * @param days The days over which the course is to be scheduled
-    *
-    * @return true if the Course doesn't overlap anything it should. False 
-    *         otherwise. 
-    */
-   private boolean doesNotOverlap (Course c, Time s, Time e, Week days)/*==>*/
-   {
-      return this.cot.isFree(c, s, e, days);
-   }/*<==*/
-   /*<==*/
-
-   /* For finding locations ==>*/
-   /**
-    * Finds every possible, compatible location for every ScheduleItem in "sis".
-    * For every SI in the list, it'll clone it as many times as it finds 
-    * different locations which provide for its needs and are available for its
-    * days/times. 
-    *
-    * This method was written to find locations for SI's which shared all the
-    * same fields. While you could pass in <i>any</i> list of SI's, I use it
-    * by passing in a list of SI's which all have the same instructor and 
-    * course, but different days and times. The list which comes out of
-    * this method will have even <b>more</b> SI's. Those with the same 
-    * instructor, days, and times will have different locations.
-    *
-    * @param ldb List of locations to try
-    * @param sis List of all the ScheduleItems to find locations for. 
-    * 
-    * @return A list of ScheduleItems, each with a start, end, days
-    *         taught, and <b>location</b>. While many will have identical fields
-    *         for the first 3, their location will be what distinguishes them.
-    */
-   /* findLocation ==>*/
-   private Vector<ScheduleItem> findLocations (Vector<Location> ldb,
-                                               Vector<ScheduleItem> sis)
-      throws CouldNotBeScheduledException
-   {
-      Vector<ScheduleItem> r = new Vector<ScheduleItem>();
-
-      //for (ScheduleItem si: sis)
-      //{
-         //System.err.println ("BEFORE RUN: " + si);
-      //}
-
-      /*
-       * For every SI (each of which is for the same instructor, course, time,
-       * days, etc.), create more SI's, each of which has a different location
-       * to be taught in
-       */
-      for (ScheduleItem si: sis)
-      {
-         //System.err.println ("BEFORE BUILD: " + si);
-         ////System.err.println ("Finding locations for " + si.getCourse());
-         /*
-          * Build a list of ScheduleItems for the lecture
-          */
-         for (ScheduleItem lec_si: buildSIList_locs(si, ldb))
-         {
-            //System.err.println ("BUILT LEC: " + lec_si);
-            ////System.err.println ("SI w/ location: " + lec_si.getLocation());
-            /*
-             * If there's a lab, go make new SI's for it as well, and clone 
-             * the lec_si for each new lab SI built
-             */
-            if (lec_si.hasLab())
-            {
-               ScheduleItem base_lab = lec_si.getLab();
-               /*
-                * The lec_si can't be cleared for adding until we know at least
-                * one location can be found for its corresponding lab
-                */
-               //System.err.println ("BASE LAB: " + base_lab);
-               for (ScheduleItem lab_si: buildSIList_locs(base_lab, ldb))
+               if (l.providesFor(si.getCourse()))
                {
                   /*
-                   * More cloning! The "lec_si" is the base upon which all found
-                   * labs must be attached, but the reference to said base must
-                   * be different, else we won't get unique lec/lab combinations.
+                   * I clone so we don't keep changing the same object...that'd
+                   * be pretty bad.
                    */
-                  ScheduleItem toAdd = lec_si.clone();
-                  toAdd.setLab(lab_si);
-
-                  r.add(toAdd);
+                  ScheduleItem base = si.clone();
+                  base.setLocation(l);
+                  
+                  si_map.put(base);
                }
             }
-            /*
-             * If there was no lab, we can add the lec_si right away
-             */
-            else
-            {
-               r.add(lec_si);
-            }
          }
-      }
-
-      return r;
-   }/*<==*/
-
-   /**
-    *
-    * Finds all possible locations which are compatible with a given, 
-    * partially-built ScheduleItem. Partially built = the SI has at least its 
-    * "start", "end", and "days" fields initialized to something valid. 
-    * Compatible = the location is free for the SI's days/times, and it is 
-    * compatible with the SI's equipment needs (which are really its course's
-    * equipment needs).
-    *
-    * @param base The ScheduleItem to use to get information about what time the
-    *             selected locations should be available. Thus, when this method
-    *             is called, this object must have at least its "start", "end", 
-    *             and "days" fields initialized. 
-    * @param ldb List of locations to try
-    *
-    * @return A list of ScheduleItems, each with a different location to be 
-    *         taught in. NOTE: Currently, this list will only contain a single
-    *         worthy location. There is no current need to gather all available
-    *         locations, and doing so slows down generation exponentially as 
-    *         more locations are incorporated. So once if find a good spot, 
-    *         it'll break out and return. 
-    */
-   /* buildSIList_locs ==>*/
-   private Vector<ScheduleItem> buildSIList_locs (ScheduleItem base,
-                                                  Vector<Location> ldb)
-   {
-      Vector<ScheduleItem> r = new Vector<ScheduleItem>();
-
-      /*
-       * Consider every location for "base"
-       */
-      for (Location l: ldb)
-      {
-         /*
-          * If it's good, we can add it the list of SI's w/ good locations that 
-          * we return
-          */
-         if (haveGoodLocForSI(l, base))
-         {
-            ScheduleItem si = base.clone();
-            si.location = l;
-            
-            r.add(si);
-            break;
-         }
-      }
-      return r;
-   }/*<==*/
-
-   private boolean haveGoodLocForSI (Location l, ScheduleItem si)
-   {
-      return (l.providesFor(si.c) && lBookings.get(l).isFree(si.start,
-                                                             si.end,
-                                                             si.days));
-   }
-  /*<==*/ 
-
-   /* For adding to the schedule ==>*/
-   /**
-    * Adds the "best" ScheduleItem of a given list to the Schedule, along with
-    * its corresponding lab when applicable. "Best" is determined by the "value"
-    * field associated w/ SI's. The one with the highest value will be chosen.
-    *
-    * @param sis The list of SI's to choose from
-    *
-    * @see edu.calpoly.csc.scheduler.model.schedule.Schedule#chooseBest
-    */
-   private void addBest (Vector<ScheduleItem> sis)
-   {
-      ScheduleItem toAdd = chooseBest(sis);
-      this.add(toAdd);
-      if (toAdd.hasLab())
-      {
-         this.add(toAdd.getLab());
-      }
-   }
-   
-   /** 
-    * Sorts a list of ScheduleItems according to their "value" and returns the 
-    * highest value. 
-    * 
-    * @param sis The list of SI's to choose from
-    * 
-    * @return The SI w/ the highest value
-    *
-    * @see edu.calpoly.csc.scheduler.model.schedule.SiMap
-    */
-   private ScheduleItem chooseBest (Vector<ScheduleItem> sis)
-   {
-      return new SiMap(sis).lastKey();
-   }
-
-   /**
-    * Extends "add", so as to update schedule-related information as items are
-    * scheduled. Also enforced "no double booking" rules.
-    *
-    * @param si ScheduleItem to add
-    *
-    * @return true if the ScheduleItem was successfully added. False if it 
-    *         violated any rules (double booking, etc.)
-    */
-   /* add ==>*/
-   public boolean add (ScheduleItem si)
-   {
-      /*
-       * If Location was undetermined, don't add it to the schedule...add it to
-       * a special list
-       */
-      if (si.location == Location.TBA)
-      {
-         this.TBAs.add(new TBA(si.c, si.i));
-         return false;
-      }
-      else
-      {
-         if (!verifyNoBadBookings (si))
-         {
-            return false;
-         }
-         /*
-          * Update book-keeping records (i, c, and l lists, along with 
-          * Instructor treatment)
-          */
-         updateRecords (si);
-   
-         /*
-          * Book the course, instructor, location for this time
-          */
-//         this.cot.book(si.c, si.start, si.end, si.days);
-         book(this.lBookings.get(si.location), si.days, si.start, si.end);
-         book(this.iBookings.get(si.i), si.days, si.start, si.end);
-
-         return this.s.add(si);
-      }
-   }/*<==*/
-   
-   /**
-    * Checks to ensure that no instructors, locations, or courses were booked
-    * innappropriately (double-booked, overlapped, etc.).
-    *
-    * @param si The ScheduleItem to verify
-    * 
-    * @return true if no rules are violated. False otherwise. 
-    */
-   /* verifyNoBadBookings ==>*/
-   private boolean verifyNoBadBookings (ScheduleItem si)
-   {
-      boolean passed = true;
-
-      /*
-       * Check for double-booked location and instructor.
-       */
-      if (!check(this.lBookings.get(si.location), si.days, si.start, si.end))
-      {
-         ////System.err.println ("Double booked location " + si.l + " from " + 
-               //si.start + " to " + si.end + " on " + si.days +
-               //"with instructor " + si.i + " and course " + si.c);
-         passed = false;
-      }
-      if (!check(this.iBookings.get(si.i), si.days, si.start, si.end))
-      {
-         ////System.err.println ("Double booked instructor " + si.i + " from " + 
-               //si.start + " to " + si.end + " on " + si.days + " with course " +
-               //si.c);
-         passed = false;
-      }
-
-      return passed;
-   }/*<==*/
-
-   /**
-    * Checks whether a given hash of availability has a given span of free time.
-    *
-    * @param a Hash of availability
-    * @param days Days to consider for span of availability
-    * @param start Beginning of the given span of time
-    * @param end End of the given span of time
-    * @return true if the time span from "start" to "end" is free for all "days"
-    */
-   /* check ==>*/
-   private static boolean check (WeekAvail a,
-                                 Week days,
-                                 Time start,
-                                 Time end)
-   {
-      boolean passed = true;
-      try
-      {
-         passed = a.isFree(start, end, days);
-      }
-      catch (NotADayException e)
-      {
-         passed = false;
-      }
-      catch (EndBeforeStartException e) 
-      { 
-         passed = false; 
-      }
-      catch (Exception e)
-      {
-         e.printStackTrace();
-      }
-      return passed;
-   }/*<==*/
-
-   /**
-    * Books a span of time over a set of days in a hash (indexed by numerical
-    * days) of availabilities.
-    *
-    * @param a Hash of availabilities
-    * @param days Set of days
-    * @param start Beginning of span of time
-    * @param end End of span of time
-    */
-   /* book ==>*/
-   private static void book (WeekAvail a, //
-                             Week days,
-                             Time start,
-                             Time end)
-   {
-      try
-      {
-         a.book(start, end, days);
-      }
-      catch (NotADayException e)
-      {
-         ////System.err.println ("Error adding on " + days + " from " + start + 
-            //" to " + end);
-      }
-      catch (EndBeforeStartException e)
-      {
-         ////System.err.println ("Error adding on " + days + " from " + start + 
-            //" to " + end);
-      }
-   }/*<==*/
-   
-   /**
-    * Updates the c, i, and l lists for a given schedule item, along with the
-    * instructor's "treatment".
-    *
-    * @param si The ScheduleItem containing all the information needed
-    */
-   /* updateRecords ==>*/
-   private void updateRecords (ScheduleItem si)
-   {
-      /*
-       * Add course to the course list, if it isn't already there
-       */
-      if (!this.cList.contains(si.c))
-      {
-         this.cList.add(si.c);
-      }
-      /*
-       * Add instructor the instructor list, if he/she isn't already there
-       */
-      if (!this.iList.contains(si.i))
-      {
-         this.iList.add(si.i);
-      }
-      /*
-       * Add location to the location list, if it isn't already there
-       */
-      if (!this.lList.contains(si.location))
-      {
-         this.lList.add(si.location);
       }
       
-      /*
-       * Update "treatment" according to what's in the ScheduleItem
-       */
-      Treatment t = this.treatment.get(si.i);
-      t.courses.add(si.c);
-      t.wtu += si.c.getWtu();
-   }/*<==*/
-   /*<==*/ 
-
-   /* toString ==>*/
+      return si_map;
+   }
+   
    /**
-    * Returns a String of the schedule. In reality, this just invokes the 
-    * "toString" for every ScheduleItem contained in the schedule
+    * Returns the items
+    * 
+    * @return the items
     */
-   public String toString ()
+   public Vector<ScheduleItem> getItems ()
    {
-      String r = "";
-      for (ScheduleItem si: this.s)
-      {
-         r += si;
-      }
-      return r;
-   }/*<==*/
-
-   /* Simple Getters & Setters ==>*/
-   /**
-    * Returns the list of courses.
-    *
-    * @return the list of courses
-    */
-   public LinkedList<Course> getCourseList ()
-   {
-      return new LinkedList<Course>(this.cList);
+      return items;
    }
 
    /**
-    * Returns the list of instructors.
-    *
-    * @return the list of instructors
+    * Returns the id
+    * 
+    * @return the id
     */
-   public LinkedList<Instructor> getInstructorList ()
+   public Integer getId ()
    {
-      return new LinkedList<Instructor>(this.iList);
+      return id;
    }
 
    /**
-    * Returns the list of locations.
+    * Sets the id to the given parameter.
     *
-    * @return the list of locations
+    * @param id the id to set
     */
-   public LinkedList<Location> getLocationList ()
+   public void setId (Integer id)
    {
-      return new LinkedList<Location>(this.lList);
-   }
-
-   public Vector<TBA> getTBAs ()
-   {
-      return this.TBAs;
-   }
-
-   public Vector<ScheduleItem> getScheduleItems ()
-   {
-      return this.s;
+      this.id = id;
    }
 
    /**
-    * Returns when the day starts for scheduling
-    *
-    * @return when the day starts for scheduling
+    * Returns the quarterId
+    * 
+    * @return the quarterId
     */
-   public Time getDayStart ()
+   public String getQuarterId ()
    {
-      return this.dayStart;
+      return quarterId;
    }
 
    /**
-    * Sets when the day starts for scheduling
+    * Sets the quarterId to the given parameter.
     *
-    * @param s When the day will start for scheduling
+    * @param quarterId the quarterId to set
     */
-   public void setDayStart (Time s)
+   public void setQuarterId (String quarterId)
    {
-      this.dayStart = s;
+      this.quarterId = quarterId;
    }
 
    /**
-    * Returns when the day ends for scheduling
-    *
-    * @return when the day ends for scheduling
+    * Returns the name
+    * 
+    * @return the name
     */
-   public Time getDayEnd ()
+   public String getName ()
    {
-      return this.dayEnd;
+      return name;
    }
 
    /**
-    * Sets when the day ends for scheduling
+    * Sets the name to the given parameter.
     *
-    * @param e when the day ends for scheduling
+    * @param name the name to set
     */
-   public void setDayEnd (Time e)
+   public void setName (String name)
    {
-      this.dayEnd = e;
-   }
-   /*<==*/
-
-   public int getId() {
-	return id;
-}
-
-public void setId(int id) {
-	this.id = id;
-}
-
-public String getName() {
-	return name;
-}
-
-public void setName(String name) {
-	this.name = name;
-}
-
-/**
-    * Replaces this schedule with a given one, while preserving this one's 
-    * reference. All data (lists, TBAs, booking information, treatment, and the
-    * actual schedule) is passed over via shallow copies. 
-    *
-    * @param s The schedule to replace this one with
-    */
-   /* replaceWithThisFromFile ==>*/
-   public void replaceWithThisFromFile (Schedule s)
-   {
-      this.reset();
-      this.initBookings(s.iList, s.lList);
-      this.cot = s.cot;
-      this.TBAs = s.TBAs;
-      this.treatment = s.treatment;
-      /*
-       * The "add" method takes care of booking info, list info, and 
-       * reconstructs the schedule
-       */
-      for (ScheduleItem si: s.s)
-      {
-         this.add(si);
-      }
-      ////System.err.println ("Done recreating Schedule");
-      this.setChanged();
-      this.notifyObservers();
-   }/*<==*/
-
-   public void dumpAsPerlText (PrintStream ps)
-   {
-      ps.println("--SCHEDULE BEGIN--");
-      
-      for (ScheduleItem si: this.s)
-      {
-         si.dumpAsPerlText(ps);
-         ps.println("===");
-      }
-      ps.println("--SCHEDULE END--");
+      this.name = name;
    }
 }
-
-/* Keep this here
-         
-         -Eric */
-/* For Jason */

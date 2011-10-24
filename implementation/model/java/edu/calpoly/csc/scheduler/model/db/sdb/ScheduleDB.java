@@ -13,11 +13,11 @@ import java.util.ArrayList;
 
 import edu.calpoly.csc.scheduler.model.db.DatabaseAPI;
 import edu.calpoly.csc.scheduler.model.db.SQLDB;
-import edu.calpoly.csc.scheduler.model.schedule.NewSchedule;
 import edu.calpoly.csc.scheduler.model.schedule.Schedule;
+import edu.calpoly.csc.scheduler.model.schedule.OldSchedule;
 
-public class ScheduleDB implements DatabaseAPI<NewSchedule> {
-	private ArrayList<NewSchedule> data;
+public class ScheduleDB implements DatabaseAPI<Schedule> {
+	private ArrayList<Schedule> data;
 	private SQLDB sqldb;
 
 	public ScheduleDB(SQLDB sqldb) {
@@ -26,12 +26,12 @@ public class ScheduleDB implements DatabaseAPI<NewSchedule> {
 	}
 
 	private void initDB() {
-		data = new ArrayList<NewSchedule>();
+		data = new ArrayList<Schedule>();
 		pullData();
 	}
 
 	@Override
-	public ArrayList<NewSchedule> getData() {
+	public ArrayList<Schedule> getData() {
 		return data;
 	}
 
@@ -40,7 +40,7 @@ public class ScheduleDB implements DatabaseAPI<NewSchedule> {
 		ResultSet rs = sqldb.getSQLSchedules();
 		try {
 			while (rs.next()) {
-			   NewSchedule toAdd = new NewSchedule();
+			   Schedule toAdd = new Schedule();
 				// Deserialize ALL THE SCHEDULE!
 				byte[] scheduleBuf = rs.getBytes("schedule");
 				if (scheduleBuf != null) {
@@ -48,7 +48,7 @@ public class ScheduleDB implements DatabaseAPI<NewSchedule> {
 						ObjectInputStream objectIn;
 						objectIn = new ObjectInputStream(
 								new ByteArrayInputStream(scheduleBuf));
-						toAdd = (NewSchedule) objectIn.readObject();
+						toAdd = (Schedule) objectIn.readObject();
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -62,7 +62,7 @@ public class ScheduleDB implements DatabaseAPI<NewSchedule> {
 		}
 	}
 
-	public void saveSchedule(NewSchedule data, String name, String quarterID) {
+	public void saveSchedule(Schedule data, String name, String quarterID) {
 		// Make sure data in schedule and given name are correct
 		data.setName(name);
 		data.setQuarterId(quarterID);
@@ -95,7 +95,7 @@ public class ScheduleDB implements DatabaseAPI<NewSchedule> {
 	
 
 	@Override
-	public void addData(NewSchedule data) {
+	public void addData(Schedule data) {
 		// Create insert string
 		String insertString = "insert into schedules (name, quarterid, schedule"
 				+ "values (?, ?, ?)";
@@ -123,7 +123,7 @@ public class ScheduleDB implements DatabaseAPI<NewSchedule> {
 	}
 
 	@Override
-	public void editData(NewSchedule data) {
+	public void editData(Schedule data) {
 		// Create insert string
 		String updateString = "update schedules set name = ?, quarterid = ?, schedule = ? where scheduleid = ?";
 		// Create prepared statement
@@ -152,7 +152,7 @@ public class ScheduleDB implements DatabaseAPI<NewSchedule> {
 	}
 
 	@Override
-	public void removeData(NewSchedule data) {
+	public void removeData(Schedule data) {
 		// Create delete string
 		String deleteString = "delete from schedules where scheduleid = ?";
 		// Create prepared statement

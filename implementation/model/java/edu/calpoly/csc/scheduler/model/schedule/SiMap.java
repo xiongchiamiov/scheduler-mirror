@@ -74,4 +74,15 @@ public class SiMap extends TreeMap<ScheduleItem, Void>
       super.put(si, null);
       return true;
    }
+   
+   /**
+    * Returns the "best" ScheduleItem in this map, where the "best" ScheduleItem
+    * is the one whose value is at least as high as all the others in this map.
+    * 
+    * @return this.lastKey();
+    */
+   public ScheduleItem getBest ()
+   {
+      return this.lastKey();
+   }
 }
