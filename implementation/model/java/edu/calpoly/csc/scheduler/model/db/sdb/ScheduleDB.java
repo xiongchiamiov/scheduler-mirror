@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import edu.calpoly.csc.scheduler.model.db.DatabaseAPI;
 import edu.calpoly.csc.scheduler.model.db.SQLDB;
 import edu.calpoly.csc.scheduler.model.schedule.Schedule;
-import edu.calpoly.csc.scheduler.model.schedule.OldSchedule;
 
 public class ScheduleDB implements DatabaseAPI<Schedule> {
 	private ArrayList<Schedule> data;

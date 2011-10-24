@@ -35,19 +35,9 @@ public class GenWeekAvail<T, U extends GenAvail<T>> extends Vector<U>
     *         generate.Week.java
     */
    public boolean book (T t, Time s, Time e, Day d) /*==>*/
-      throws EndBeforeStartException,
-             NotADayException
+      throws EndBeforeStartException
    {
-      boolean r;
-      try 
-      {
-         r = this.get(d.getNum()).book(t, s, e);
-      }
-      catch (ArrayIndexOutOfBoundsException x)
-      {
-         throw new NotADayException ();
-      }
-      return r;
+      return this.get(d.getNum()).book(t, s, e);
    }/*<==*/
 
    /**
@@ -64,20 +54,12 @@ public class GenWeekAvail<T, U extends GenAvail<T>> extends Vector<U>
     *         generate.Week.java
     */
    public boolean book (T t, Time s, Time e, Week days) /*==>*/
-      throws EndBeforeStartException,
-             NotADayException
+      throws EndBeforeStartException
    {
       boolean r = true;
       for (Day d: days.getDays())
       {
-         try 
-         {
-            r &= this.get(d.getNum()).book(t, s, e);
-         }
-         catch (ArrayIndexOutOfBoundsException x)
-         {
-            throw new NotADayException ();
-         }
+         r &= this.get(d.getNum()).book(t, s, e);
       }
       return r;
    }/*<==*/
@@ -96,19 +78,9 @@ public class GenWeekAvail<T, U extends GenAvail<T>> extends Vector<U>
     *         generate.Week.java
     */
    public boolean isFree (T t, Time s, Time e, Day day) /*==>*/
-      throws EndBeforeStartException,
-             NotADayException
+      throws EndBeforeStartException
    {
-      boolean free;
-      try
-      {
-         free = this.get(day.getNum()).isFree(t, s, e);
-      }
-      catch (ArrayIndexOutOfBoundsException x)
-      {
-         throw new NotADayException ();
-      }
-      return free;
+      return this.get(day.getNum()).isFree(t, s, e);
    }/*<==*/
 
    /**
@@ -125,21 +97,12 @@ public class GenWeekAvail<T, U extends GenAvail<T>> extends Vector<U>
     *         generate.Week.java
     */
    public boolean isFree (T t, Time s, Time e, Week days) /*==>*/
-      throws EndBeforeStartException,
-             NotADayException
-
+      throws EndBeforeStartException
    {
       boolean free = true;
       for (Day d: days.getDays())
       {
-         try
-         {
-            free &= this.get(d.getNum()).isFree(t, s, e);
-         }
-         catch (ArrayIndexOutOfBoundsException x)
-         {
-            throw new NotADayException ();
-         }
+         free &= this.get(d.getNum()).isFree(t, s, e);
       }
       return free;
    }/*<==*/
