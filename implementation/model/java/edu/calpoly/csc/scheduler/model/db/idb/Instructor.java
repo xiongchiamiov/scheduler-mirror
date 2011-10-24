@@ -805,9 +805,9 @@ public class Instructor extends DbData
     * @param starttime the start time to set busy.
     * @param endtime the end time of the busy interval.
     */
-   public void setBusy (Day dayOfWeek, Time starttime, Time endtime)
+   public boolean setBusy (Day dayOfWeek, Time starttime, Time endtime)
    {
-      this.availability.book(starttime, endtime, dayOfWeek);
+      return this.availability.book(starttime, endtime, dayOfWeek);
    }
 
    /**
@@ -875,6 +875,8 @@ public class Instructor extends DbData
     *         course
     * 
     * @see Course#getDays()
+    * 
+    * @deprecated Shouldn't be needed
     */
    public Vector<TimeRange> getTeachingTimes (Course c)
    {
@@ -895,6 +897,15 @@ public class Instructor extends DbData
       return r;
    }
 
+   /**
+    * Adds the given ScheduleItem as an item to be taught by this instructor. 
+    * This item is not verified.
+    * 
+    * @param si ScheduleItem to add to this instructor's list o' stuff
+    * 
+    * @return True if this item currently isn't held within this instructor. 
+    *         False otherwise
+    */
    public boolean addItem (ScheduleItem si)
    {
       boolean r = false;

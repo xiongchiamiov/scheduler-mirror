@@ -449,9 +449,9 @@ public class Location extends DbData implements Serializable
     * 
     *           Written by: Eric Liebowitz
     */
-   public void setBusy(Day dayOfWeek, Time s, Time e)
+   public boolean setBusy(Day dayOfWeek, Time s, Time e)
    {
-      this.availability.book(s, e, dayOfWeek);
+      return this.availability.book(s, e, dayOfWeek);
    }
 
    /**
@@ -506,14 +506,6 @@ public class Location extends DbData implements Serializable
    public boolean isSmartRoom()
    {
       return providedEquipment.isSmartRoom;
-   }
-
-   /**
-    * Returns whether the currect class is a valid LocationDB.
-    */
-   public boolean isValidLocationDB()
-   {
-      return false;
    }
 
    /**

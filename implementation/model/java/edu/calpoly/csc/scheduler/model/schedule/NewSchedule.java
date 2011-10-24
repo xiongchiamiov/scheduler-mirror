@@ -218,9 +218,16 @@ public class NewSchedule extends Observable implements Serializable
       initGenData(c_list, i_list, l_list);
 
       debug ("GENERATING");
+      debug ("COURSES: " + this.cSourceList);
+      debug ("INSTRUCTORS: " + this.iSourceList);
+      debug ("LOCATIONS: " + this.lSourceList);
+      
       while (shouldKeepGenerating())
       {
-         Vector<Instructor> toRemove = new Vector<Instructor>();
+         Vector<Instructor> toRemove = new Vector<Instructor>();         
+         
+         addStaff();
+         
          for (Instructor i : this.iSourceList)
          {
             debug ("HAVE INSTRUCTOR " + i);
@@ -254,11 +261,28 @@ public class NewSchedule extends Observable implements Serializable
    }
    
    /**
-    * Clears the record-keeping data associated w/ generation. 
+    * Adds the special 'STAFF' instructor to our list of instructors if the
+    * list is empty.
+    */
+   private void addStaff ()
+   {
+      if (this.iSourceList.isEmpty())
+      {
+         this.iSourceList.add(Staff.getStaff());
+      }
+   }
+   
+   /**
+    * Clears the record-keeping data associated w/ generation. Sets the list of
+    * courses, instructors, and locations to the provides arguments.<br>
+    * <br>
+    * The special location 'Tba' is added to the end of the location list
     * 
     * @param c_list List of Courses that'll be put into the schedule
     * @param i_list List of Instructors that'll be put into the schedule
     * @param l_list List of Locations that'll be put into the schedule
+    * 
+    * @see Tba
     */
    private void initGenData (List<Course> c_list, List<Instructor> i_list, 
       List<Location> l_list)
@@ -266,6 +290,8 @@ public class NewSchedule extends Observable implements Serializable
       cSourceList = new Vector<Course>(c_list);
       iSourceList = new Vector<Instructor>(i_list);
       lSourceList = new Vector<Location>(l_list);
+      
+      lSourceList.add(Tba.getTba());
    }
    
    /**
