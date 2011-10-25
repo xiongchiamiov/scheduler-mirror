@@ -85,8 +85,13 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		
 		
 		for (InstructorGWT instructor : instructors){
+			Instructor ins = new Instructor();
+			
+			ins.setFirstName(instructor.getFirstName());
+			
+			idb.addData(ins);
 //			idb.addData(new Instructor(instructor.getName(), instructor.getName(), instructor.getUserID(), instructor.getWtu(), ldb.getLocation(instructor.getOffice())));
-			idb.addData(new Instructor(instructor.getFirstName(), instructor.getLastName(), instructor.getUserID(), instructor.getWtu(), instructor.getBuilding(), instructor.getRoomNumber(), instructor.getDisabilities()));
+			//idb.addData(new Instructor(instructor.getFirstName(), instructor.getLastName(), instructor.getUserID(), instructor.getWtu(), instructor.getBuilding(), instructor.getRoomNumber(), instructor.getDisabilities()));
 		}
 	}
 
@@ -320,8 +325,15 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		ldb.clearData();
 		
 		for (LocationGWT location : locations)
+		{
+			Location loc = new Location();
+			
+			loc.setRoom(location.getRoom());
+			
+			ldb.addData(loc);
+		}
 //			ldb.addData(new Location(location.getBuilding(), location.getRoom(), location.getMaxOccupancy(), location.getType(), false, false, false, false));
-			ldb.addData(new Location(location.getBuilding(), location.getRoom(), location.getMaxOccupancy(), location.getType(), location.isADACompliant(), location.isSmartRoom(), location.hasLaptopConnectivity(), location.hasOverhead()));
+			//ldb.addData(new Location(location.getBuilding(), location.getRoom(), location.getMaxOccupancy(), location.getType(), location.isADACompliant(), location.isSmartRoom(), location.hasLaptopConnectivity(), location.hasOverhead()));
 	}
 	
 	@Override
@@ -345,12 +357,17 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 			newCourse.setCatalogNum(course.getCatalogNum());
 			newCourse.setCourseName(course.getName());
 			newCourse.setDept(course.getDept());
-			newCourse.setLab("herp");
+			newCourse.setLab(null);
+			newCourse.setDays(null);
+			newCourse.setLength(course.getLength());
+			newCourse.setLabPad(course.getLabPad());
 			newCourse.setMaxEnroll(course.getEnrollment());
 			newCourse.setNumSections(course.getNumOfSections());
 			newCourse.setScu(course.getScu());
 			newCourse.setType(course.getType().toString());
 			newCourse.setWtu(course.getWtu());
+			newCourse.setQuarterID(course.getQuarterId());
+			newCourse.setScheduleID(course.getScheduleId());
 		    results.add(newCourse);
 		}
 		
@@ -382,15 +399,25 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 //			cdb.addData(new Course(course.getCourseName(), course.getDept(), course.getCatalogNum()));
 //			cdb.addData(new Course((), course.getLabID(), course.getSmartroom(), course.getLaptop(), course.getOverhead(), 8, course.getCTPrefix(), course.getPrefix()));
 			Course newCourse = new Course();
-			newCourse.setId(course.getID());
 			newCourse.setName(course.getCourseName());
 			newCourse.setCatalogNum(course.getCatalogNum());
 			newCourse.setWtu(course.getWtu());
 			newCourse.setScu(course.getScu());
 			newCourse.setType(course.getType());
 			newCourse.setEnrollment(course.getMaxEnroll());
+			newCourse.setLab(null);
+			newCourse.setLabPad(course.getLabPad());
+			newCourse.setQuarterId(course.getQuarterID());
+			newCourse.setScheduleId(course.getScheduleID());
+			newCourse.setDept(course.getDept());
+			newCourse.setLength(course.getLength());
+			newCourse.setNumOfSections(course.getNumSections());
+			newCourse.setDays(null);
 			
-			assert(false); // implement the rest of them
+			
+			cdb.addData(newCourse);
+			
+			//assert(false); // implement the rest of them
 		}
 	}
 }

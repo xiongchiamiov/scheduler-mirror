@@ -6,13 +6,12 @@ import java.io.Serializable;
 public class InstructorGWT implements Serializable{
 	private static final long serialVersionUID = -4982539363690274674L;
 	
-	private String name, userID, office;
+	private String userID, office;
 	private String firstName, lastName, roomNumber, building;
 	private boolean disabilities;
-	private int wtu;
+	private int maxwtu, curwtu;
 
 	public InstructorGWT(){
-		name = "";
 		userID = "";
 		office = "";
 		firstName = "";
@@ -20,15 +19,15 @@ public class InstructorGWT implements Serializable{
 		roomNumber = "";
 		building = "";
 		disabilities = false;
-		wtu = 0;
+		maxwtu = 0;
 	}
 	
 	public InstructorGWT(String name, String userID,
 			int wtu, String office) {
 		super();
-		this.name = name;
+		this.firstName = name;
 		this.userID = userID;
-		this.wtu = wtu;
+		this.maxwtu = wtu;
 		this.office = office;
 	}
 	
@@ -38,7 +37,7 @@ public class InstructorGWT implements Serializable{
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.userID = userID;
-		this.wtu = wtu;
+		this.maxwtu = wtu;
 		this.building = building;
 		this.roomNumber = roomNumber;
 		this.disabilities = disabilities;
@@ -65,11 +64,11 @@ public class InstructorGWT implements Serializable{
 	}
 	
 	public String getName() {
-		return name;
+		return firstName;
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		this.firstName = name;
 	}
 
 	public String getUserID() {
@@ -81,11 +80,11 @@ public class InstructorGWT implements Serializable{
 	}
 
 	public int getWtu() {
-		return wtu;
+		return maxwtu;
 	}
 
 	public void setWtu(int wtu) {
-		this.wtu = wtu;
+		this.maxwtu = wtu;
 	}
 
 	public String getOffice() {

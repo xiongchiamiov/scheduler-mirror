@@ -15,12 +15,11 @@ public class CourseGWT implements Serializable{
 	private String lab;
 	private int id;
 	private int labId;
-	private boolean smartroom;
-	private boolean laptop;
-	private boolean overhead;
+	private int labPad;
 	private int length;
-	private String ctPrefix;
-	private String prefix;
+	private String days;
+	private String quarterID;
+	private int scheduleID;
 	
 	public CourseGWT(){
 		courseName = "";
@@ -53,12 +52,7 @@ public class CourseGWT implements Serializable{
 		   this.type = courseType;
 		   this.maxEnroll = enrollment;
 		   this.labId = labId;
-		   this.smartroom = smartroom;
-		   this.laptop = laptop;
-		   this.overhead = overhead;
 		   this.length = hoursPerWeek;
-		   this.ctPrefix = ctPrefix;
-		   this.prefix = prefix;
 	   }
 
 	public CourseGWT(String courseName, int catalogNum, String dept, int wtu,
@@ -75,6 +69,51 @@ public class CourseGWT implements Serializable{
 		this.lab = lab;
 	}
 	
+	public void setQuarterID(String quarter)
+	{
+		this.quarterID = quarter;
+	}
+	
+	public String getQuarterID()
+	{
+		return quarterID;
+	}
+	
+	public void setScheduleID(int schedule)
+	{
+		this.scheduleID = schedule;
+	}
+	
+	public int getScheduleID()
+	{
+		return scheduleID;
+	}
+	
+	public void setLabPad(int labpad)
+	{
+		this.labPad = labpad;
+	}
+	
+	public int getLabPad()
+	{
+		return labPad;
+	}
+	
+	public void setDays(String days)
+	{
+		this.days = days;
+	}
+	
+	public String getDays()
+	{
+		return days;
+	}
+	
+	public void setID(int id)
+	{
+		this.id = id;
+	}
+	
 	public int getID()
 	{
 		return id;
@@ -84,35 +123,16 @@ public class CourseGWT implements Serializable{
 		   return labId;
 	   }
 	   
-	   public boolean getSmartroom()
-	   {
-		   return smartroom;
-	   }
-	   
-	   public boolean getLaptop()
-	   {
-		   return laptop;
-	   }
-	   
-	   public boolean getOverhead()
-	   {
-		   return overhead;
-	   }
-	   
-	   public String getCTPrefix()
-	   {
-		   return ctPrefix;
-	   }
-	   
-	   public String getPrefix()
-	   {
-		   return prefix;
-	   }
 	
 	   public int getLength()
 	   {
 		   return length;
 	   }
+	   
+	public void setLength(int length)
+	{
+		this.length = length;
+	}
 
 	public String getCourseName() {
 		return courseName;
