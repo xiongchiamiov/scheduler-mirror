@@ -1,10 +1,11 @@
 package edu.calpoly.csc.scheduler.view.web.client;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
+import java.util.Iterator;
+
+import com.allen_sauer.gwt.dnd.client.PickupDragController;
+import com.allen_sauer.gwt.dnd.client.drop.DropController;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
@@ -17,8 +18,9 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.shared.gwtScheduleItem;
@@ -42,6 +44,49 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
  //For each day, this variable holds the number of columns spanned by that day
  private ArrayList<Integer> dayColumnSpans;
  private FiltersViewWidget filtersDialog = new FiltersViewWidget();
+ PickupDragController dragController = 
+  new PickupDragController(RootPanel.get(), false);
+ 
+ /**
+  * Places a ScheduleCell in each cell for dragging and dropping schedule items.
+  */
+ private void placePanels()
+ {
+  int row, col;
+  ScheduleCell schdCell;
+  
+  for(row = 1; row <= numberOfTimeSlots; row++)
+  {
+   for(col = 1; col <= numberOfDays; col++)
+   {
+	schdCell = new ScheduleCell();
+	schdCell.setWidget(new HTML("&nbsp"));
+	scheduleGrid.setWidget(row, col, schdCell);
+	schdCell.setRow(row);
+	schdCell.setCol(col);
+   }
+  }
+ }
+ 
+ /**
+  * Registers all cells in schedule table as drop targets.
+  */
+ private void registerDrops()
+ {
+  Iterator<Widget> allCells = scheduleGrid.iterator();
+  Widget cell;
+  DropController dropController;
+  
+  while(allCells.hasNext())
+  {
+   cell = allCells.next();
+   if(cell.getClass().equals(ScheduleCell.class))
+   {
+    dropController = new ScheduleCellDropController((ScheduleCell)cell);
+    dragController.registerDropController(dropController);
+   }
+  }
+ }
  
  /**
   * Resets days Mon, Tue, Wed, Thu, Fri to align with columns 1, 2, 3, 4, and 5
@@ -138,6 +183,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
   setDaysOfWeek();
   setTimes();
   resetRowSpans();
+  placePanels();
   mainPanel.add(scheduleGrid);
  }
 
@@ -168,7 +214,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
  private int overlaps(gwtScheduleItem toBePlaced, int day)
  {
   ArrayList<Integer> occupiedDays;
-  int h, i;  
+  int h;
   int overlapCount = 0;
   int maxOverlap = 0;
   int startRow = 
@@ -218,30 +264,34 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
   */
  private void expandDay(int day)
  {
-  int i, j;
-  Integer dayColumn;
-  Integer dayColSpan;
+  int i, j, col;
   FlexCellFormatter formatter = scheduleGrid.getFlexCellFormatter();
   HTML dayText;
+  ScheduleCell cellPanel;
   
   //Increase the column span count for this day
-  dayColSpan = dayColumnSpans.get(day-1).intValue()+1;
-  dayColumnSpans.set(day-1, dayColSpan);
+  dayColumnSpans.set(day-1, dayColumnSpans.get(day-1) + 1);
   //Retain the day text that was in this column
   dayText = (HTML)scheduleGrid.getWidget(0, day);
   //Increment the column span
-  formatter.setColSpan(0, day, dayColSpan);
+  formatter.setColSpan(0, day, dayColumnSpans.get(day - 1));
   scheduleGrid.setWidget(0, day, dayText);
 
   //Add a new column of cells underneath this day heading
   for(i = 1; i <= numberOfTimeSlots; i++)
   {
-   scheduleGrid.insertCell(i, columnsOfDays.get(i-1).get(day-1).intValue());
+   col = columnsOfDays.get(i-1).get(day-1);
+   scheduleGrid.insertCell(i, col);
+   cellPanel = new ScheduleCell();
+   cellPanel.setRow(i);
+   cellPanel.setCol(col);
+   cellPanel.setWidget(new HTML("&nbsp"));
+   scheduleGrid.setWidget(i, col, cellPanel);
+   
    //The new column will bump columns of following days forward by one
    for(j = day; j <= numberOfDays; j++)
    {
-    dayColumn = columnsOfDays.get(i-1).get(j).intValue() + 1;
-    columnsOfDays.get(i-1).set(j, dayColumn);
+    columnsOfDays.get(i-1).set(j, columnsOfDays.get(i-1).get(j) + 1);
    }
   }
  }
@@ -257,6 +307,8 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
   ArrayList<Integer> schdItemDays;
   int j, k, dayCol, rowRangeStart, rowRangeEnd, overlapCount;
   ArrayList<Integer> cods;
+  HTML schdItem;
+  
   rowRangeStart = getRowFromTime(placedSchdItem.getStartTimeHour(),
 		                          placedSchdItem.startsAfterHalf());
   rowRangeEnd = getRowFromTime(placedSchdItem.getEndTimeHour(),
@@ -280,9 +332,11 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
     }
     //Get the column which this day aligns with
     dayCol = columnsOfDays.get(rowRangeStart-1).get(dayNum-1).intValue();
+    schdItem = new HTML(placedSchdItem.toString());
+    dragController.makeDraggable(schdItem);
     //Place the schedule item at it's start time
-    scheduleGrid.setWidget(rowRangeStart, dayCol, new HTML(placedSchdItem.toString()));
-    //Set the schedule item to span rows which it's time occupies
+    ((SimplePanel)scheduleGrid.getWidget(rowRangeStart, dayCol)).setWidget(schdItem);
+    //Set the schedule item to span rows which its time occupies
     scheduleGrid.getFlexCellFormatter().setRowSpan(rowRangeStart, dayCol, 
      rowRangeEnd - rowRangeStart);
    
@@ -387,6 +441,8 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
   trimExtraCells();
   setTimes();
   setDaysOfWeek();
+  placePanels();
+  dragController.unregisterDropControllers();
  }
  
  /**
@@ -408,6 +464,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
     placeScheduleItem(item, filtDays);
    }
   }
+  registerDrops();
  }
  
  /**

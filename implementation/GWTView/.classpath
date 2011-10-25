@@ -7,5 +7,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="lib" path="/home/jasonkilroy/College/5th_Year/Fall/CPE_402/implementation/model/java/mysql-connector-java-5.0.8-bin.jar"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/Sched_Model"/>
+	<classpathentry kind="lib" path="gwt-dnd-3.1.2.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
