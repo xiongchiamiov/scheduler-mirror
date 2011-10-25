@@ -3,6 +3,7 @@ package edu.calpoly.csc.scheduler.model.db;
 import edu.calpoly.csc.scheduler.model.db.cdb.CourseDB;
 import edu.calpoly.csc.scheduler.model.db.idb.InstructorDB;
 import edu.calpoly.csc.scheduler.model.db.ldb.LocationDB;
+import edu.calpoly.csc.scheduler.model.db.sdb.ScheduleDB;
 
 /**
  * This class holds all of the individual database objects. The view will
@@ -13,7 +14,7 @@ import edu.calpoly.csc.scheduler.model.db.ldb.LocationDB;
 
 public class Database
 {
-	/** The actual sqldb behind all the other databases. I store this for shits and giggles. */
+	/** The SQLDB object to pass to other database objects */
 	private SQLDB sqlDB;
 	
    /** The instructor database. */
@@ -25,7 +26,8 @@ public class Database
    /** The location database. */
    private LocationDB   locationDB;
 
-   // TODO: Add preferences DB?
+   /** The schedule database. */
+   private ScheduleDB   scheduleDB;
 
    /**
     * This constructor will create the SQLDB object.
@@ -36,6 +38,7 @@ public class Database
       instructorDB = new InstructorDB(sqldb);
       courseDB = new CourseDB(sqldb);
       locationDB = new LocationDB(sqldb);
+      scheduleDB = new ScheduleDB(sqldb);
    }
 
    /**
@@ -60,5 +63,13 @@ public class Database
    public LocationDB getLocationDB()
    {
       return locationDB;
+   }
+   
+   /**
+    * @return the scheduleDB
+    */
+   public ScheduleDB getScheduleDB()
+   {
+      return scheduleDB;
    }
 }
