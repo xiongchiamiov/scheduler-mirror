@@ -13,14 +13,15 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
-import edu.calpoly.csc.scheduler.view.web.client.table.InstructorTable;
+import edu.calpoly.csc.scheduler.view.web.client.table.Table;
+import edu.calpoly.csc.scheduler.view.web.client.table.TableFactory;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 
 public class InstructorsView extends ScrollPanel {
 	private Panel container;
 	private GreetingServiceAsync service;
 	private String quarterID;
-	private InstructorTable iTable;
+	private Table<InstructorGWT> iTable;
 
 	public InstructorsView(Panel container, GreetingServiceAsync service, String quarterID) {
 		assert(service != null);
@@ -40,7 +41,7 @@ public class InstructorsView extends ScrollPanel {
 		VerticalPanel vp = new VerticalPanel();
 		this.add(vp);
 		
-		iTable = new InstructorTable();
+		iTable = TableFactory.instructor();
 		vp.add(iTable.getWidget());
 		populateInstructors();
 		

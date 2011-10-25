@@ -213,8 +213,8 @@ public class InstructorTable {
 		        saveButton.setEnabled(true);
 		      }
 		    });
-		table.addColumn(firstName, EditableTableConstants.INSTR_FIRSTNAME);
-		showColPanel.add(showHideBox(firstName, EditableTableConstants.INSTR_FIRSTNAME));
+		table.addColumn(firstName, TableConstants.INSTR_FIRSTNAME);
+		showColPanel.add(showHideBox(firstName, TableConstants.INSTR_FIRSTNAME));
 		
 		// last name
 		TextColumn<InstructorGWT> lastName = 
@@ -230,8 +230,8 @@ public class InstructorTable {
 	          return o1.getLastName().compareTo(o2.getLastName());
 	        }
 	    });
-		table.addColumn(lastName, EditableTableConstants.INSTR_LASTNAME);
-		showColPanel.add(showHideBox(lastName, EditableTableConstants.INSTR_LASTNAME));
+		table.addColumn(lastName, TableConstants.INSTR_LASTNAME);
+		showColPanel.add(showHideBox(lastName, TableConstants.INSTR_LASTNAME));
 		
 		// id
 		TextColumn<InstructorGWT> id = 
@@ -247,8 +247,8 @@ public class InstructorTable {
 	          return o1.getUserID().compareTo(o2.getUserID());
 	        }
 	    });
-		table.addColumn(id, EditableTableConstants.INSTR_ID);
-		showColPanel.add(showHideBox(id, EditableTableConstants.INSTR_ID));
+		table.addColumn(id, TableConstants.INSTR_ID);
+		showColPanel.add(showHideBox(id, TableConstants.INSTR_ID));
 		
 		// wtu
 		TextColumn<InstructorGWT> wtu = 
@@ -264,8 +264,8 @@ public class InstructorTable {
 	          return o1.getWtu() - o2.getWtu();
 	        }
 	    });
-		table.addColumn(wtu, EditableTableConstants.INSTR_WTU);
-		showColPanel.add(showHideBox(wtu, EditableTableConstants.INSTR_WTU));
+		table.addColumn(wtu, TableConstants.INSTR_WTU);
+		showColPanel.add(showHideBox(wtu, TableConstants.INSTR_WTU));
 		
 		// building
 		TextColumn<InstructorGWT> building = 
@@ -281,8 +281,8 @@ public class InstructorTable {
 	          return o1.getBuilding().compareTo(o2.getBuilding());
 	        }
 	    });
-		table.addColumn(building, EditableTableConstants.INSTR_BUILDING);
-		showColPanel.add(showHideBox(building, EditableTableConstants.INSTR_BUILDING));
+		table.addColumn(building, TableConstants.INSTR_BUILDING);
+		showColPanel.add(showHideBox(building, TableConstants.INSTR_BUILDING));
 		
 		// room number
 		TextColumn<InstructorGWT> roomNum = 
@@ -298,8 +298,8 @@ public class InstructorTable {
 	          return o1.getRoomNumber().compareTo(o2.getRoomNumber());
 	        }
 	    });
-		table.addColumn(roomNum, EditableTableConstants.INSTR_ROOMNUMBER);
-		showColPanel.add(showHideBox(roomNum, EditableTableConstants.INSTR_ROOMNUMBER));
+		table.addColumn(roomNum, TableConstants.INSTR_ROOMNUMBER);
+		showColPanel.add(showHideBox(roomNum, TableConstants.INSTR_ROOMNUMBER));
 		
 		// disability
 		Column<InstructorGWT, Boolean> disable = 
@@ -326,8 +326,8 @@ public class InstructorTable {
 		        saveButton.setEnabled(true);
 		      }
 		});
-		table.addColumn(disable, EditableTableConstants.INSTR_DISABILITIES);
-		showColPanel.add(showHideBox(disable, EditableTableConstants.INSTR_DISABILITIES));
+		table.addColumn(disable, TableConstants.INSTR_DISABILITIES);
+		showColPanel.add(showHideBox(disable, TableConstants.INSTR_DISABILITIES));
 	}
 	
 	

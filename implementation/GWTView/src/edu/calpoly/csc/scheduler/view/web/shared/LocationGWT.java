@@ -55,7 +55,19 @@ public class LocationGWT implements Serializable{
 	 */
 //   private WeekAvail availability;
 
-	public LocationGWT(){}
+	public LocationGWT(){
+		building = "";
+		name = "";
+		room = "";
+		type = "";
+		maxOccupancy = 0;
+		equipmentList = "";
+		additionalDetails = "";
+		smartroom = false;
+		laptopconnectivity = false;
+		adacompliant = false;
+		overhead = false;
+	}
 
 	public LocationGWT(String building, String name, String room, String type,
 			int maxOccupancy, String equipmentList, String additionalDetails) {

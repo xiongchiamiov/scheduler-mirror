@@ -6,18 +6,18 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
-import edu.calpoly.csc.scheduler.view.web.client.table.EditableTable;
-import edu.calpoly.csc.scheduler.view.web.client.table.EditableTableEntry;
-import edu.calpoly.csc.scheduler.view.web.client.table.EditableTableFactory;
+import edu.calpoly.csc.scheduler.view.web.client.table.Table;
+import edu.calpoly.csc.scheduler.view.web.client.table.TableFactory;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
 
 public class RoomsView extends ScrollPanel {
 	private Panel container;
 	private GreetingServiceAsync service;
-	private EditableTable locationTable;
 	private String quarterID;
+	private Table<LocationGWT> lTable;
 
 	public RoomsView(Panel container, GreetingServiceAsync service, String quarterID) {
 		this.container = container;
@@ -32,13 +32,16 @@ public class RoomsView extends ScrollPanel {
 		setWidth("100%");
 		setHeight("100%");
 		
-		locationTable = EditableTableFactory.createLocations();
-		this.add(locationTable.getWidget());
+		VerticalPanel vp = new VerticalPanel();
+		this.add(vp);
+		
+		lTable = TableFactory.location();
+		vp.add(lTable.getWidget());
 		populateLocations();
 	}
 	
 	public void populateLocations() {
-		locationTable.clear();
+		lTable.clear();
 		
 		service.getLocationNames(new AsyncCallback<ArrayList<LocationGWT>>() {
 			public void onFailure(Throwable caught) {
@@ -47,9 +50,7 @@ public class RoomsView extends ScrollPanel {
 			
 			public void onSuccess(ArrayList<LocationGWT> result){
 				if (result != null) {
-					for (LocationGWT s : result) {
-						locationTable.add(new EditableTableEntry(s));
-					}
+					lTable.set(result);
 				}
 			}
 		});

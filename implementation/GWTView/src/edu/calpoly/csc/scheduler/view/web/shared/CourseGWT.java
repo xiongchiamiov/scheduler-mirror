@@ -22,7 +22,25 @@ public class CourseGWT implements Serializable{
 	private String ctPrefix;
 	private String prefix;
 	
-	public CourseGWT(){}
+	public CourseGWT(){
+		courseName = "";
+		catalogNum = 0;
+		dept = "";
+		wtu = 0;
+		scu = 0;
+		numSections = 0;
+		type = "";
+		maxEnroll = 0;
+		lab = "";
+		id = 0;
+		labId = 0;
+		smartroom = false;
+		laptop = false;
+		overhead = false;
+		length = 0;
+		ctPrefix = "";
+		prefix = "";
+	}
 	
 	public CourseGWT(int id, String name, int catalogNum, int wtus, int scus, String courseType,
 			   int enrollment, int labId, boolean smartroom, boolean laptop, boolean overhead, 
@@ -167,4 +185,53 @@ public class CourseGWT implements Serializable{
 	public void setLab(String lab) {
 		this.lab = lab;
 	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public int getLabId() {
+		return labId;
+	}
+
+	public void setLabId(int labId) {
+		this.labId = labId;
+	}
+
+	public String getCtPrefix() {
+		return ctPrefix;
+	}
+
+	public void setCtPrefix(String ctPrefix) {
+		this.ctPrefix = ctPrefix;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	public void setSmartroom(boolean smartroom) {
+		this.smartroom = smartroom;
+	}
+
+	public void setLaptop(boolean laptop) {
+		this.laptop = laptop;
+	}
+
+	public void setOverhead(boolean overhead) {
+		this.overhead = overhead;
+	}
+
+	public void setLength(int length) {
+		this.length = length;
+	}
+
+	public void setPrefix(String prefix) {
+		this.prefix = prefix;
+	}
+	
 }
