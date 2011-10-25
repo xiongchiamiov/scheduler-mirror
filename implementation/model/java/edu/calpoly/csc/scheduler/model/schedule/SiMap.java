@@ -1,6 +1,7 @@
 package edu.calpoly.csc.scheduler.model.schedule;
 
 import java.util.TreeMap;
+import java.util.List;
 import java.util.Vector;
 
 /**
@@ -64,6 +65,8 @@ public class SiMap extends TreeMap<ScheduleItem, Void>
     *
     * @return true if "si" was added. False if its value is 
     *         ScheduleItem.IMPOSSIBLE.
+    * 
+    * @see ScheduleItem#getValue()
     */
    public boolean put (ScheduleItem si)
    {
@@ -73,6 +76,23 @@ public class SiMap extends TreeMap<ScheduleItem, Void>
       }
       super.put(si, null);
       return true;
+   }
+   
+   /**
+    * Puts all elements in the given list into this map. 
+    * 
+    * @param list List of ScheduleItems to add to this map
+    * 
+    * @return true if all items were added. False if at least one was not
+    */
+   public boolean putAll (List<ScheduleItem> list)
+   {
+      boolean r = true;
+      for (ScheduleItem si: list)
+      {
+         r &= this.put(si);
+      }
+      return r;
    }
    
    /**

@@ -1,11 +1,7 @@
 package edu.calpoly.csc.scheduler.model.schedule;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Observable;
-import java.util.List;
-import java.util.Vector;
+import java.util.*;
 
 import edu.calpoly.csc.scheduler.model.db.*;
 import edu.calpoly.csc.scheduler.model.db.cdb.*;
@@ -67,7 +63,7 @@ public class Schedule extends Observable implements Serializable
     * List of ScheduleItems which generation will create. This is the "schedule"
     * that the user will see.
     */
-   Vector<ScheduleItem> items = new Vector<ScheduleItem>();
+   private Vector<ScheduleItem> items = new Vector<ScheduleItem>();
 
    /**
     * This schedule's id
@@ -99,7 +95,9 @@ public class Schedule extends Observable implements Serializable
     *         teaching with the given parameters. 
     *         
     * @throws CouldNotBeScheduledException If no instructor or location can be
-    *         found which is compatible w/ the given parameters. 
+    *         found which is compatible w/ the given parameters.
+    *
+    * @.todo Incorporate labs into this
     */
    public ScheduleItem makeItem (Course c, Week days, Time s)
       throws CouldNotBeScheduledException
@@ -109,7 +107,7 @@ public class Schedule extends Observable implements Serializable
       /*
        * SiMap'll sort out everything and let the best choice float to the top
        */
-      SiMap sis = new SiMap();
+      SiMap si_map = new SiMap();
       
       ScheduleItem si = new ScheduleItem();
       si.setCourse(c);
@@ -124,20 +122,29 @@ public class Schedule extends Observable implements Serializable
           */
          ScheduleItem clone = si.clone();
          clone.setInstructor(i);
-         
-         sis.put(clone);
+         List<ScheduleItem> list = Arrays.asList(new ScheduleItem[]{ clone });
+
+         /*
+          * If there's a lab, fill our list with lectures all paired with labs
+          */
+         Lab lab = c.getLab();
+         if (lab != null)
+         {
+            list = addLab(lab, list);
+         }
+         si_map.putAll(list);
       }
       
       /*
        * If not even one not-impossible ScheduleItem was created, we'll have to
        * balk
        */
-      if (sis.size() == 0)
+      if (si_map.size() == 0)
       {
          throw new CouldNotBeScheduledException();
       }
       
-      return sis.getBest();
+      return si_map.getBest();
    }
    
    /**
@@ -286,14 +293,19 @@ public class Schedule extends Observable implements Serializable
             debug ("HAVE INSTRUCTOR " + i);
             try
             {
-               SiMap sis = genListForInstructor(i);
-               debug ("GOT " + sis.size() + " ITEMS");
-               add(sis.getBest());
+               ScheduleItem si = genSIForInstructor(i);
+               debug ("GOT " + si);
+               add(si);
             }
             catch (InstructorCanTeachNothingException e)
             {
                System.err.println (e);
                toRemove.add(i);
+            }
+            catch (CouldNotBeScheduledException e)
+            {
+               System.out.println ("GAH");
+               System.out.println (e);
             }
          }
          /*
@@ -346,26 +358,31 @@ public class Schedule extends Observable implements Serializable
    }
    
    /**
-    * Generates a list of ScheduleItems for a given instructor. All items 
-    * returned will contain the same course (one which the instructor wishes
-    * to/can teach), contain times for which the instructor wants to/is able to
-    * teach, and be taught in a location available for the time range specified.
+    * Generates a ScheduleItem for a given instructor. Guarantees that no other
+    * ScheduleItem could be created which this instructor would want 
+    * <b>more</b> than this one.
     *  
     * @param i Instructor build ScheduleItems for
     * 
-    * @return A list of ScheduleItems for what this instructor was scheduled to
-    *         teach.
+    * @return A ScheduleItem which this instructor wants to teach at least as 
+    *         much as every other ScheduleItem that might be produced
     *         
     * @throws InstructorCanTeachNothingException if no course exists which the 
     *         Instructor wants to teach and/or no course exists which does not
     *         exceed the Instructor's WTU limit. 
+    *         
+    * @throws CouldNotBeScheduledException if no time/location could be found
+    *         for the Instructor to teach the course (and possible its lab)
+    *
+    * @see SiMap#put(ScheduleItem)
+    * @see ScheduleItem#getValue()
     */
-   private SiMap genListForInstructor (Instructor i)
-      throws InstructorCanTeachNothingException
+   private ScheduleItem genSIForInstructor (Instructor i)
+      throws InstructorCanTeachNothingException,
+             CouldNotBeScheduledException
    {
       Vector<ScheduleItem> sis = new Vector<ScheduleItem>();
-      Vector<ScheduleItem> lec_si_list = new Vector<ScheduleItem>();
-      Vector<ScheduleItem> lab_si_list = new Vector<ScheduleItem>();
+      Vector<ScheduleItem> si_list = new Vector<ScheduleItem>();
 
       /*
        *  Get ScheduleItems for the lecture
@@ -376,14 +393,34 @@ public class Schedule extends Observable implements Serializable
       
       lec_base    = findCourse(lec_base);
       debug ("FOUND COURSE");
-      lec_si_list = findTimes(lec_base);
-      debug ("GOT " + lec_si_list.size() + " TIMES");
-      SiMap si_map = findLocations(lec_si_list);
-      debug ("GOT " + lec_si_list.size() + " LOCATIONS");
+      si_list = findTimes(lec_base, this.bounds);
+      debug ("GOT " + si_list.size() + " TIMES");
+      si_list = findLocations(si_list);
+      debug ("GOT " + si_list.size() + " LOCATIONS");
       
-      //TODO: Do labs
+      /*
+       * Handle lab component, if necessary
+       * 
+       * TODO: Add support for using an instructor other than the lectures
+       */
+      Lab lab = lec_base.getCourse().getLab();
+      if (lab != null)
+      {
+         debug ("HAS LAB " + lab);
+         
+         si_list = addLab(lab, si_list);
+         debug ("MADE " + si_list.size() + " POSSIBLE LAB PAIRINGS");
+      }
       
-      return si_map;
+      /*
+       * The map will prune out items which are impossible
+       */
+      SiMap sortedItems = new SiMap(si_list);
+      if (sortedItems.size() == 0)
+      {
+         throw new CouldNotBeScheduledException();
+      }
+      return new SiMap(si_list).getBest();
    }
    
    /**
@@ -460,15 +497,15 @@ public class Schedule extends Observable implements Serializable
     *         which the instructor wants to/can teach and on the days the Course
     *         is to be taught on.
     */
-   private Vector<ScheduleItem> findTimes (ScheduleItem si)
+   private Vector<ScheduleItem> findTimes (ScheduleItem si, TimeRange range)
    {
       debug ("FINDING TIMES");
       Vector<ScheduleItem> sis = new Vector<ScheduleItem>();
       Course c = si.getCourse();
       Instructor i = si.getInstructor();
 
-      TimeRange tr = new TimeRange(this.bounds.getS(), c.getDayLength());
-      for (; !tr.getE().equals(this.bounds.getE()); tr.addHalf())
+      TimeRange tr = new TimeRange(range.getS(), c.getDayLength());
+      for (; !tr.getE().equals(range.getE()); tr.addHalf())
       {
          Week days = c.getDays();
 
@@ -501,9 +538,9 @@ public class Schedule extends Observable implements Serializable
     * @return A list of locaitons which can be taught on the days for course 'c'
     *         during at least the TimeRanges passed in.
     */
-   private SiMap findLocations (Vector<ScheduleItem> sis)
+   private Vector<ScheduleItem> findLocations (Vector<ScheduleItem> sis)
    {
-      SiMap si_map = new SiMap();
+      Vector<ScheduleItem> si_list = new Vector<ScheduleItem>();
 
       for (ScheduleItem si : sis)
       {
@@ -522,13 +559,84 @@ public class Schedule extends Observable implements Serializable
                   ScheduleItem base = si.clone();
                   base.setLocation(l);
                   
-                  si_map.put(base);
+                  si_list.add(base);
                }
             }
          }
       }
       
-      return si_map;
+      return si_list;
+   }
+   
+   /**
+    * Adds a given ScheduleItem lab to every lecture ScheduleItem in a list. 
+    * Each new lab ScheduleItem for the same lecture will have potentially 
+    * different times and/or locations
+    * 
+    * @param lab_base Contains base information to be used in all lad 
+    *        ScheduleItems created
+    * @param lec_si_list List of lecture ScheduleItems to pair with every 
+    *        possible lab ScheduleItem we can make for them
+    *        
+    * @return List of all pairs of lecture/lab ScheduleItems which could be
+    *         scheduled for times the instructor is currently available. 
+    */
+   private Vector<ScheduleItem> addLab (Lab lab,
+      List<ScheduleItem> lec_si_list)
+   {
+      ScheduleItem lab_base = new ScheduleItem();
+      lab_base.setCourse(lab);
+      
+      Vector<ScheduleItem> si_list = new Vector<ScheduleItem>();
+      
+      /*
+       * We try to pair labs with every lecture ScheduleItem.
+       */
+      for (ScheduleItem lec_si: lec_si_list)
+      {
+         Vector<ScheduleItem> lab_si_list = new Vector<ScheduleItem>();
+         //TODO: Support unteathered instructor choice
+         lab_base.setInstructor(lec_si.getInstructor());
+         TimeRange tr;
+         if (lab.isTethered())
+         {
+            /*
+             *  Find times directly after the lecture only
+             */
+            tr = new TimeRange(lec_si.getEnd(), lab.getLength());
+         }
+         /*
+          * Otherwise, lab can go anywhere within schedule bounds
+          */
+         else
+         {
+            tr = this.bounds;
+         }
+         lab_si_list = findTimes(lab_base, tr);
+         lab_si_list = findLocations (lab_si_list);
+         
+         /*
+          * For every lab ScheduleItem created, pair it with the lecture 
+          * ScheduleItem. 
+          * 
+          * We are not concerned with overlap problems here. The SiMap, paired 
+          * with the 'getValue' method of a ScheduleItem will help us with that
+          * later
+          */
+         for (ScheduleItem lab_si: lab_si_list)
+         {
+            /*
+             * TODO: Add support to consider lab enrollment vs. lecture 
+             *       enrollment
+             */
+            ScheduleItem clone = lec_si.clone();
+            lec_si.setLab(lab_si);
+            
+            si_list.add(clone);
+         }
+      }
+      
+      return si_list;
    }
    
    /**

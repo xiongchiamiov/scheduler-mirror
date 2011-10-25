@@ -1,6 +1,7 @@
 package edu.calpoly.csc.scheduler.model.db;
 
 import java.io.Serializable;
+import java.util.Vector;
 
 public class TimeRange implements Serializable
 {
@@ -69,7 +70,7 @@ public class TimeRange implements Serializable
    {
       /*
        * If our start is between the other's start and end, they must overlap.
-       * (The start must be >= the other's start and the other's end)
+       * (The start must be >= the other's start and < the other's end)
        */
       if ((this.s.compareTo(tr.getS()) > -1) && 
           (this.s.compareTo(tr.getE()) < 0))

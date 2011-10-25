@@ -78,7 +78,7 @@ public class Course extends DbData implements Serializable
    /**
     * This course's lab. Can be null, which means it has no lab
     */
-   private Course lab = null;
+   private Lab lab = null;
    /**
     * How many half hours before/after this course that a lab can be taught. 
     * Default is 0, which'll put a lab right after the lecture.
@@ -111,6 +111,7 @@ public class Course extends DbData implements Serializable
    public Course (String name, String dept, int catalogNum)
    {
       this.name = name;
+      this.dept = dept;
       this.catalogNum = catalogNum;
    }
 
@@ -138,10 +139,9 @@ public class Course extends DbData implements Serializable
     */
    public boolean equals (Course c)
    {
-      return (this.getId() == c.getId() || (
-              this.getName().equals(c.getName()) && 
+      return (this.getName().equals(c.getName())         && 
               this.getCatalogNum() == c.getCatalogNum()  && 
-              this.getType() == c.getType()));
+              this.getType() == c.getType());
    }
 
    /**
@@ -157,26 +157,6 @@ public class Course extends DbData implements Serializable
    {
       return this.getName().hashCode() + this.getCatalogNum()
          + this.getType().hashCode();
-   }
-
-   /**
-    * @return the id
-    * 
-    * @deprecated Use getCatalogNum instead
-    */
-   public int getId()
-   {
-      return getCatalogNum();
-   }
-
-   /**
-    * @param id the id to set
-    * 
-    * @deprecated Use setCatalogNum instead
-    */
-   public void setId(int id)
-   {
-      setCatalogNum(id);
    }
 
    /**
@@ -459,9 +439,9 @@ public class Course extends DbData implements Serializable
     * 
     * @return The Course representing the lab. If there is none, null.
     */
-   public Course getLab ()
+   public Lab getLab ()
    {
-      return null;
+      return this.lab;
    }
    
    /**
@@ -469,9 +449,22 @@ public class Course extends DbData implements Serializable
     * 
     * @param lab The lab this course is to now have
     */
-   public void setLab (Course lab)
+   public void setLab (Lab lab)
    {
       this.lab = lab;
+   }
+ 
+   /**
+    * Stubbed. Returns whether this course has a lab or not. 
+    * 
+    * @.todo Write this. It always returns false right now.
+    * 
+    * @return getLab() != null
+    * @return
+    */
+   public boolean hasLab ()
+   {
+      return getLab() != null;
    }
    
    /**
@@ -496,28 +489,15 @@ public class Course extends DbData implements Serializable
    {
       this.labPad = labPad;
    }
-
-   /**
-    * Stubbed. Returns whether this course has a lab or not. 
-    * 
-    * @.todo Write this. It always returns false right now.
-    * 
-    * @return getLab() != null
-    * @return
-    */
-   public boolean hasLab ()
-   {
-      return getLab() != null;
-   }
    
    /**
     * Returns whether this course can be taught evenly for at least 1 hour a 
-    * day for a given number of days/week.
+    * day for a given number of days.
     * 
     * @param days
     *           Number of days per week the course would be taught
     * 
-    * @return (this.length / days) > 1;
+    * @return (this.length % days) == 0 && (this.length / days) > 1;
     */
    public boolean canBeTaughtForDays (int days)
    {
@@ -599,7 +579,7 @@ public class Course extends DbData implements Serializable
       c.setLength(3);
       c.setDays(new Week());
       c.setEnrollment(50);
-      c.setLab(new Course());
+      c.setLab(new Lab());
       c.setLabPad(1);
       c.setQuarterId("w2011");
       c.setScheduleId(1);

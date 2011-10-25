@@ -328,19 +328,14 @@ public class ScheduleItem implements Serializable, Cloneable,
    }
 
    /**
-    * Returns how "valuable" this ScheduleItem is, where "value" is determined
-    * by how closely the fields of this object adhere to the most desirable
-    * preferences of the instructor it represents. This method will take the
-    * following fields into account, so long as each of them is valid (i.e. not
-    * null. If they <i>are</i> null, they just won't be considered):
-    * <ul>
-    *    <li>Start and end time</li>
-    *    <li>Days to be taught</li>
-    *    <li>Course to teach</li>
-    * </ul>
-    *
+    * Returns how "valuable" this ScheduleItem is. "value" is determined by how 
+    * closely the fields of this object adhere to the preferences of the 
+    * instructor it represents.<br> 
+    * <br>
     * The fields applied to the "lab" field are also considered, but only if
-    * the lab is actually defined.
+    * the lab is actually defined. If the lab of this ScheduleItem overlaps 
+    * with this ScheduleItem, IMPOSSIBLE will eventually be returned, as you 
+    * can't teach both a lecture and a lab at the same time.
     *
     * @return the sum of all the instructors preferences for this object's 
     *         fields. Thus, a higher number means a higher value.
@@ -353,6 +348,13 @@ public class ScheduleItem implements Serializable, Cloneable,
       if (hasLab = this.hasLab())
       {
          lab = this.lab.getValue();
+         /*
+          * A lecture and lab which overlap cannot be taught
+          */
+         if (this.overlaps(this.lab))
+         {
+            lab = 0;
+         }
       }
       /*
        * You can call "getValue" on an SI regarldess of whether all its fields

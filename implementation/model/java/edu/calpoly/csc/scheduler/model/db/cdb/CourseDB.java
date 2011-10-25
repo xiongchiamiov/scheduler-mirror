@@ -124,7 +124,8 @@ public class CourseDB implements DatabaseAPI<Course>
                ObjectInputStream objectIn;
                objectIn = new ObjectInputStream(
                      new ByteArrayInputStream(labBuf));
-               toAdd.setLab((Course) objectIn.readObject());
+               //I CHANGED THIS - Eric
+               toAdd.setLab((Lab) objectIn.readObject());
             }
             catch (Exception e)
             {
