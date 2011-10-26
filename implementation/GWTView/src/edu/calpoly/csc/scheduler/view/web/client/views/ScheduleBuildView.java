@@ -18,7 +18,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.gwtScheduleItem;
+import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 
 public class ScheduleBuildView extends ScrollPanel {
 	private GreetingServiceAsync service;
@@ -55,7 +55,7 @@ public class ScheduleBuildView extends ScrollPanel {
 			public void onClick(ClickEvent event) {
 				
 				
-				service.generateSchedule(new AsyncCallback<ArrayList<gwtScheduleItem>>() {
+				service.generateSchedule(new AsyncCallback<ArrayList<ScheduleItemGWT>>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -64,7 +64,7 @@ public class ScheduleBuildView extends ScrollPanel {
 					}
 
 					@Override
-					public void onSuccess(ArrayList<gwtScheduleItem> result) {
+					public void onSuccess(ArrayList<ScheduleItemGWT> result) {
 						// TODO Auto-generated method stub
 						
 					}

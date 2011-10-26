@@ -7,7 +7,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.gwtScheduleItem;
+import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 
 /**
  * The async counterpart of <code>GreetingService</code>.
@@ -28,9 +28,16 @@ public interface GreetingServiceAsync {
 	void saveCourses(ArrayList<CourseGWT> courses, AsyncCallback<Void> callback)
 			throws IllegalArgumentException;
 	
-	void generateSchedule(AsyncCallback<ArrayList<gwtScheduleItem>> scheduleItems)
+	void generateSchedule(AsyncCallback<ArrayList<ScheduleItemGWT>> scheduleItems)
     		throws IllegalArgumentException;
 	
-    void getGWTScheduleItems(AsyncCallback<ArrayList<gwtScheduleItem>> scheduleItems)
+    void getGWTScheduleItems(AsyncCallback<ArrayList<ScheduleItemGWT>> scheduleItems)
     		throws IllegalArgumentException;
+    
+    void getTestGWTScheduleItems(AsyncCallback<ArrayList<ScheduleItemGWT>> scheduleItems)
+    		throws IllegalArgumentException;
+    
+	void rescheduleCourse(ScheduleItemGWT scheduleItem,
+			ArrayList<Integer> days, int startHour, boolean atHalfHour, AsyncCallback<ScheduleItemGWT> callback)
+	         throws IllegalArgumentException;
 }

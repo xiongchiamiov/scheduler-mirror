@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.view.web.client;
+package edu.calpoly.csc.scheduler.view.web.client.schedule;
 
 import com.allen_sauer.gwt.dnd.client.DragContext;
 import com.allen_sauer.gwt.dnd.client.drop.SimpleDropController;
@@ -6,17 +6,22 @@ import com.allen_sauer.gwt.dnd.client.drop.SimpleDropController;
 public class ScheduleCellDropController extends SimpleDropController 
 {
  ScheduleCell targetCell;
+ ScheduleViewWidget schedule;
  
- ScheduleCellDropController(ScheduleCell target)
+ ScheduleCellDropController(ScheduleCell target, ScheduleViewWidget schedule)
  {
   super(target);  
   targetCell = target;
+  this.schedule = schedule;
  }
  
  public void onDrop(DragContext context)
  {
-  targetCell.setWidget(context.draggable);
+  ScheduleItemHTML droppedItem;
+  
   super.onDrop(context);
+  droppedItem = (ScheduleItemHTML)context.draggable;
+  schedule.moveItem(droppedItem.getScheduleItem(), targetCell.getRow());
  }
  
  public void onEnter(DragContext context)

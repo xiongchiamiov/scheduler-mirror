@@ -4,7 +4,7 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
-import edu.calpoly.csc.scheduler.view.web.client.ScheduleViewWidget;
+import edu.calpoly.csc.scheduler.view.web.client.schedule.ScheduleViewWidget;
 
 public class ScheduleView extends ScrollPanel {
 	private GreetingServiceAsync service;

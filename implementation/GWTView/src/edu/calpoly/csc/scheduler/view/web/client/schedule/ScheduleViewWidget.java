@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.view.web.client;
+package edu.calpoly.csc.scheduler.view.web.client.schedule;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,7 +23,8 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.calpoly.csc.scheduler.view.web.shared.gwtScheduleItem;
+import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
+import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 
 /**
  * This class generates a widget that displays a schedule.
@@ -33,7 +34,7 @@ import edu.calpoly.csc.scheduler.view.web.shared.gwtScheduleItem;
 public class ScheduleViewWidget implements CloseHandler<PopupPanel>
 {
  private GreetingServiceAsync greetingService;
- private ArrayList<gwtScheduleItem> scheduleItems = new ArrayList<gwtScheduleItem>();
+ private ArrayList<ScheduleItemGWT> scheduleItems = new ArrayList<ScheduleItemGWT>();
  private VerticalPanel mainPanel = new VerticalPanel();
  private FlexTable scheduleGrid = new FlexTable();
  private HorizontalPanel interfacePanel = new HorizontalPanel();
@@ -63,7 +64,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
 	schdCell.setWidget(new HTML("&nbsp"));
 	scheduleGrid.setWidget(row, col, schdCell);
 	schdCell.setRow(row);
-	schdCell.setCol(col);
+	//schdCell.setCol(col);
    }
   }
  }
@@ -82,7 +83,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
    cell = allCells.next();
    if(cell.getClass().equals(ScheduleCell.class))
    {
-    dropController = new ScheduleCellDropController((ScheduleCell)cell);
+    dropController = new ScheduleCellDropController((ScheduleCell)cell, this);
     dragController.registerDropController(dropController);
    }
   }
@@ -211,7 +212,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
   * @param day The day to search on.
   * @return The most times this item overlaps with other items.
   */
- private int overlaps(gwtScheduleItem toBePlaced, int day)
+ private int overlaps(ScheduleItemGWT toBePlaced, int day)
  {
   ArrayList<Integer> occupiedDays;
   int h;
@@ -229,7 +230,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
   for(h = startRow; h <= endRow; h++)
   {
    //Examine each item already placed on schedule
-   for(gwtScheduleItem item : scheduleItems)
+   for(ScheduleItemGWT item : scheduleItems)
    {
 	if(item.isPlaced())
 	{
@@ -284,7 +285,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
    scheduleGrid.insertCell(i, col);
    cellPanel = new ScheduleCell();
    cellPanel.setRow(i);
-   cellPanel.setCol(col);
+   //cellPanel.setCol(col);
    cellPanel.setWidget(new HTML("&nbsp"));
    scheduleGrid.setWidget(i, col, cellPanel);
    
@@ -301,13 +302,13 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
   * @param placedSchdItem The item to be placed
   * @param filteredDays The days on which the item should not show up
   */
- private void placeScheduleItem(gwtScheduleItem placedSchdItem,
+ private void placeScheduleItem(ScheduleItemGWT placedSchdItem,
                                  ArrayList<Integer> filteredDays)
  {
   ArrayList<Integer> schdItemDays;
   int j, k, dayCol, rowRangeStart, rowRangeEnd, overlapCount;
   ArrayList<Integer> cods;
-  HTML schdItem;
+  ScheduleItemHTML schdItem;
   
   rowRangeStart = getRowFromTime(placedSchdItem.getStartTimeHour(),
 		                          placedSchdItem.startsAfterHalf());
@@ -332,7 +333,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
     }
     //Get the column which this day aligns with
     dayCol = columnsOfDays.get(rowRangeStart-1).get(dayNum-1).intValue();
-    schdItem = new HTML(placedSchdItem.toString());
+    schdItem = new ScheduleItemHTML(placedSchdItem);
     dragController.makeDraggable(schdItem);
     //Place the schedule item at it's start time
     ((SimplePanel)scheduleGrid.getWidget(rowRangeStart, dayCol)).setWidget(schdItem);
@@ -344,7 +345,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
     cods = columnsOfDays.get(rowRangeStart-1);
     cods.set(dayNum-1, cods.get(dayNum-1) + 1);
     columnsOfDays.set(rowRangeStart-1, cods);
-    /*Every row which was spanned upon will bump forward by one like this:
+    /*Every row which was spanned upon will bump one column forward, like this:
      * |0,0|0,1|0,2|0,3| Cell 0,0 spans 3 rows |0,0|0,1|0,2|0,3|
      * |1,0|1,1|1,2|1,3| --------------------> |0,0|1,0|1,1|1,2|1,3|
      * |2,0|2,1|2,2|2,3|                       |0,0|2,0|2,1|2,2|2,3|
@@ -373,14 +374,14 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
  private void getScheduleItems()
  {
   greetingService.getGWTScheduleItems(
-   new AsyncCallback<ArrayList<gwtScheduleItem>>()
+   new AsyncCallback<ArrayList<ScheduleItemGWT>>()
    {
     public void onFailure(Throwable caught)
     {
      Window.alert("Failed to get schedule: " + caught.toString());
     }
 
-    public void onSuccess(ArrayList<gwtScheduleItem> result)
+    public void onSuccess(ArrayList<ScheduleItemGWT> result)
     {
      if (result != null)
      {
@@ -388,8 +389,8 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
       Collections.sort(result);
       //Reset column and row spans, remove any items already placed
       resetSchedule();
-      scheduleItems = new ArrayList<gwtScheduleItem>();
-      for(gwtScheduleItem item : result)
+      scheduleItems = new ArrayList<ScheduleItemGWT>();
+      for(ScheduleItemGWT item : result)
       {
        scheduleItems.add(item);
       }
@@ -407,7 +408,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
   */
  private void resetIsPlaced()
  {
-  for(gwtScheduleItem item : scheduleItems)
+  for(ScheduleItemGWT item : scheduleItems)
   {
    item.setPlaced(false);
   }
@@ -455,7 +456,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
   ArrayList<String> filtCourses = filtersDialog.getCourses();
   ArrayList<String> filtRooms = filtersDialog.getRooms();
   ArrayList<Integer> filtDays = filtersDialog.getDays();
-  for(gwtScheduleItem item : scheduleItems)
+  for(ScheduleItemGWT item : scheduleItems)
   {
    if(filtInstructors.contains(item.getProfessor()) && 
 	   filtCourses.contains(item.getCourse()) && 
@@ -518,6 +519,61 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
   */
  public void onClose(CloseEvent<PopupPanel> event) 
  {
+  filterScheduleItems();
+ }
+
+ private int getHourFromRow(int row)
+ {
+  return (row/2)+6+(row%2);
+ }
+ 
+ private boolean rowIsAtHalfHour(int row)
+ {
+  return row%2 == 0;
+ }
+ 
+ public void moveItem(final ScheduleItemGWT scheduleItem, int row) 
+ {
+  ArrayList<Integer> days = scheduleItem.getDayNums();
+  final int startHour = getHourFromRow(row);
+  final boolean atHalfHour = rowIsAtHalfHour(row);
+  greetingService.rescheduleCourse(scheduleItem, days, startHour, 
+   atHalfHour, 
+   new AsyncCallback<ScheduleItemGWT>()
+   {
+    @Override
+	public void onFailure(Throwable caught) 
+    {
+	 Window.alert("Failed to retrieve rescheduled item");			
+    }
+	@Override
+	public void onSuccess(ScheduleItemGWT rescheduled) 
+	{
+	 if(rescheduled == null)
+	 {
+	  Window.alert("Course could not be rescheduled at time " + startHour + (atHalfHour? ":30" : ":00"));
+	 }
+	 else
+	 {
+	  scheduleItems.remove(scheduleItem);
+	  scheduleItems.add(rescheduled);
+	  Collections.sort(scheduleItems);
+	 }
+	 filterScheduleItems();			
+	}
+   });
+ }
+ 
+ public void simpleMove(ScheduleItemGWT moved, int row)
+ {
+  int hour, min;
+  hour = getHourFromRow(row);
+  min = rowIsAtHalfHour(row)? 30 : 0;
+  moved.setStartTimeHour(hour);
+  moved.setStartTimeMin(min);
+  moved.setEndTimeHour(hour+2);
+  moved.setEndTimeMin(min);
+  Collections.sort(scheduleItems);
   filterScheduleItems();
  }
 }

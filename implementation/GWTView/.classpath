@@ -5,8 +5,8 @@
 	<classpathentry kind="src" output="test-classes" path="test"/>
 	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry exported="true" kind="lib" path="/home/jasonkilroy/College/5th_Year/Fall/CPE_402/implementation/model/java/mysql-connector-java-5.0.8-bin.jar"/>
-	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/Sched_Model"/>
+	<classpathentry kind="lib" path="C:/Documents and Settings/mike/workspace/1/SchedulerModel/java/mysql-connector-java-5.0.8-bin.jar"/>
 	<classpathentry kind="lib" path="gwt-dnd-3.1.2.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/SchedulerModel"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

@@ -3,9 +3,11 @@ package edu.calpoly.csc.scheduler.view.web.shared;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class gwtScheduleItem implements Serializable, Comparable
+import com.google.gwt.user.client.ui.HTML;
+
+public class ScheduleItemGWT implements Serializable, Comparable
 {
- private static final long serialVersionUID = 5345021880975658731L;
+ //private static final long serialVersionUID = 5345021880975658731L;
  private String professor;
  private String courseDept;
  private int courseNum;
@@ -21,14 +23,16 @@ public class gwtScheduleItem implements Serializable, Comparable
  private int colPlaced = -1;
  private int overlapCount = -1;
  private String room;
+ private int courseID = 1;
  
- public gwtScheduleItem(){}
+ public ScheduleItemGWT()
+ {
+ }
  
- public gwtScheduleItem(String prof, String dept, int cNum, int sec, 
+ public ScheduleItemGWT(String prof, String dept, int cNum, int sec, 
 		                 ArrayList<Integer> dNums, int sth, int stm, int eth, 
 		                  int etm, String rm)
  {
-  super();
   professor = prof;
   courseDept = dept;
   courseNum = cNum;
@@ -59,7 +63,7 @@ public class gwtScheduleItem implements Serializable, Comparable
   return dayString;
  }
  
- public String toString()
+ public String getSchdItemText()
  {
   String startHour, endHour, startMin, endMin;
   String startAmPm, endAmPm;
@@ -146,19 +150,19 @@ public class gwtScheduleItem implements Serializable, Comparable
  }
  public int compareTo(Object compared)
  {
-  if(this.startTimeHour > ((gwtScheduleItem)compared).getStartTimeHour())
+  if(this.startTimeHour > ((ScheduleItemGWT)compared).getStartTimeHour())
   {
    return 1;
   }
-  else if(this.startTimeHour < ((gwtScheduleItem)compared).getStartTimeHour())
+  else if(this.startTimeHour < ((ScheduleItemGWT)compared).getStartTimeHour())
   {
    return -1;
   }
-  else if(this.startTimeMin > ((gwtScheduleItem)compared).getStartTimeMin())
+  else if(this.startTimeMin > ((ScheduleItemGWT)compared).getStartTimeMin())
   {
    return 1;
   }
-  else if(this.startTimeMin < ((gwtScheduleItem)compared).getStartTimeMin())
+  else if(this.startTimeMin < ((ScheduleItemGWT)compared).getStartTimeMin())
   {
    return -1;
   }
@@ -186,33 +190,28 @@ public class gwtScheduleItem implements Serializable, Comparable
   return endTimeMin >=30;
  }
  
- public void setRow(int row)
+ public int getCourseID()
  {
-  rowPlaced = row;
+  return courseID;
  }
  
- public int getRow()
+ public void setStartTimeHour(int hour)
  {
-  return rowPlaced;
+  startTimeHour = hour;
  }
  
- public void setCol(int col)
+ public void setStartTimeMin(int min)
  {
-  colPlaced = col;
+  startTimeMin = min;
  }
  
- public int getCol()
+ public void setEndTimeHour(int hour)
  {
-  return colPlaced;
+  endTimeHour = hour;
  }
  
- public void setOverlapCount(int overlaps)
+ public void setEndTimeMin(int min)
  {
-  overlapCount = overlaps;
- }
- 
- public int getOverlapCount()
- {
-  return overlapCount;
+  endTimeMin = min;
  }
 }

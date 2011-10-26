@@ -6,6 +6,7 @@ import java.util.Vector;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import edu.calpoly.csc.scheduler.model.db.Database;
+import edu.calpoly.csc.scheduler.model.db.Time;
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
 import edu.calpoly.csc.scheduler.model.db.cdb.CourseDB;
 import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
@@ -17,7 +18,7 @@ import edu.calpoly.csc.scheduler.view.web.client.GreetingService;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.gwtScheduleItem;
+import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 
 /**
  * The server side implementation of the RPC service.
@@ -26,7 +27,8 @@ import edu.calpoly.csc.scheduler.view.web.shared.gwtScheduleItem;
 public class GreetingServiceImpl extends RemoteServiceServlet implements
 		GreetingService {
 
-
+    private Schedule schedule;
+	
 	public ArrayList<InstructorGWT> getInstructorNames() throws IllegalArgumentException {
 		
 		/** TODO */
@@ -95,7 +97,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		}
 	}
 
-	public ArrayList<gwtScheduleItem> generateSchedule() {
+	public ArrayList<ScheduleItemGWT> generateSchedule() {
 		Database db = new Database();
 		ArrayList<Instructor> instructors = db.getInstructorDB().getData();
 		ArrayList<Course> courses = db.getCourseDB().getData();
@@ -104,7 +106,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		Schedule schedule = new Schedule();
 		schedule.generate(new Vector<Course>(courses), new Vector<Instructor>(instructors), new Vector<Location>(locations));
 		
-		ArrayList<gwtScheduleItem> gwtItems = new ArrayList<gwtScheduleItem>();
+		ArrayList<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
 		
 	    for(ScheduleItem item : schedule.getItems())
 	    {         
@@ -114,10 +116,11 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		return gwtItems;
 	}
 	
-/*	public ArrayList<gwtScheduleItem> getGWTScheduleItems()
+	public ArrayList<ScheduleItemGWT> getTestGWTScheduleItems()
 	{
 	 Vector<ScheduleItem> modelItems = new Vector<ScheduleItem>();
-	 ArrayList<gwtScheduleItem> gwtItems = new ArrayList<gwtScheduleItem>();
+	 ArrayList<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
+	 schedule = new Schedule();
 	 
 	 Week mwf = new Week(new Day[]{Day.MON, Day.WED, Day.FRI});
 	 Week tr = new Week(new Day[]{Day.TUE, Day.THU});
@@ -175,11 +178,10 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
      }
 	 
 	 return gwtItems;
-	}*/
+	}
 	
-	public ArrayList<gwtScheduleItem> getGWTScheduleItems()
+	public ArrayList<ScheduleItemGWT> getGWTScheduleItems()
 	{
-		
 		Database db = new Database();
 		ArrayList<Instructor> instructors = db.getInstructorDB().getData();
 		ArrayList<Course> courses = new ArrayList<Course>();//db.getCourseDB().getData();
@@ -222,13 +224,13 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		courses.add(c5);
 		courses.add(c6);
         ArrayList<Location> locations = db.getLocationDB().getData();
-		Schedule schedule = new Schedule();
+        schedule = new Schedule();
 		schedule.generate(new Vector<Course>(courses), new Vector<Instructor>(instructors), new Vector<Location>(locations));
 		
 		
 		
 		
-	 ArrayList<gwtScheduleItem> gwtItems = new ArrayList<gwtScheduleItem>();
+	 ArrayList<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
 	
      for(ScheduleItem item : schedule.getItems())
      {         
@@ -239,7 +241,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	}
 	
 	
-	public gwtScheduleItem convertScheduleItem(ScheduleItem schdItem)
+	public ScheduleItemGWT convertScheduleItem(ScheduleItem schdItem)
 	{
 	 String instructor;
 	 String courseDept;
@@ -268,9 +270,48 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
      endTimeMin = schdItem.getEnd().getMinute();
      location = schdItem.getLocation().toString();
      
-     return new gwtScheduleItem(instructor, courseDept, courseNum, section,
+     return new ScheduleItemGWT(instructor, courseDept, courseNum, section,
     		                    dayNums, startTimeHour, startTimeMin, 
     		                    endTimeHour, endTimeMin, location);
+	}
+	
+	public ScheduleItemGWT rescheduleCourse(ScheduleItemGWT scheduleItem,
+			ArrayList<Integer> days, int startHour, boolean atHalfHour)
+	{
+	 ScheduleItem rescheduled;
+	 Course course;
+	 ArrayList<Day> daysScheduled = new ArrayList<Day>();
+	 Week daysInWeek;
+	 Time startTime;
+	 String dayNames[] = {"SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"};
+	 Database db = new Database();
+	 
+	 for(Integer dayNum : days)
+	 {
+	  switch(dayNum)
+	  {
+	   case 1 : daysScheduled.add(Day.MON); break;
+	   case 2 : daysScheduled.add(Day.TUE); break;
+	   case 3 : daysScheduled.add(Day.WED); break;
+	   case 4 : daysScheduled.add(Day.THU); break;
+	   case 5 : daysScheduled.add(Day.FRI); break;
+	  }
+	 }
+	 
+	 course = db.getCourseDB().getCourseByID(scheduleItem.getCourseID()); 
+	 daysInWeek = new Week((Day[])daysScheduled.toArray());
+	 startTime = new Time(startHour, (atHalfHour? 30 : 0));
+	 
+	 try
+	 {
+	  rescheduled = schedule.makeItem(course, daysInWeek, startTime);
+	 }
+	 catch(CouldNotBeScheduledException e)
+	 {
+	  return null;
+	 }
+	 
+	 return convertScheduleItem(rescheduled);
 	}
 	
 	@Override

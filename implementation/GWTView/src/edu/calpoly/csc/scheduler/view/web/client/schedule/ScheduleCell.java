@@ -1,16 +1,16 @@
-package edu.calpoly.csc.scheduler.view.web.client;
+package edu.calpoly.csc.scheduler.view.web.client.schedule;
 
 import com.google.gwt.user.client.ui.SimplePanel;
 
-import edu.calpoly.csc.scheduler.view.web.shared.gwtScheduleItem;
+import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 
 public class ScheduleCell extends SimplePanel 
 {
- gwtScheduleItem scheduleItem = null;
+ ScheduleItemGWT scheduleItem = null;
  int row = -1;
  int col = -1;
  
- public void setScheduleItem(gwtScheduleItem item)
+ public void setScheduleItem(ScheduleItemGWT item)
  {
   scheduleItem = item;
  }

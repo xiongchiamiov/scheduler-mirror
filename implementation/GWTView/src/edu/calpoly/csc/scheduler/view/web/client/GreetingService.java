@@ -10,7 +10,7 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.gwtScheduleItem;
+import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 
 /**
  * The client side stub for the RPC service.
@@ -20,7 +20,10 @@ public interface GreetingService extends RemoteService {
 	ArrayList<InstructorGWT> getInstructorNames() throws IllegalArgumentException;
 	
 	void saveInstructors(ArrayList<InstructorGWT> instructors) throws IllegalArgumentException;
-	ArrayList<gwtScheduleItem> getGWTScheduleItems() throws IllegalArgumentException;
+	
+	ArrayList<ScheduleItemGWT> getGWTScheduleItems() throws IllegalArgumentException;
+	
+	ArrayList<ScheduleItemGWT> getTestGWTScheduleItems() throws IllegalArgumentException;
 
 	ArrayList<LocationGWT> getLocationNames();
 
@@ -30,5 +33,8 @@ public interface GreetingService extends RemoteService {
 
 	void saveCourses(ArrayList<CourseGWT> locations);
 	
-	ArrayList<gwtScheduleItem> generateSchedule();
+	ArrayList<ScheduleItemGWT> generateSchedule();
+	
+	ScheduleItemGWT rescheduleCourse(ScheduleItemGWT scheduleItem,
+			ArrayList<Integer> days, int startHour, boolean atHalfHour);
 }

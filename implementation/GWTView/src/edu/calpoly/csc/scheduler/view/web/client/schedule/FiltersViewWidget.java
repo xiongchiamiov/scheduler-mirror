@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.view.web.client;
+package edu.calpoly.csc.scheduler.view.web.client.schedule;
 
 import java.util.ArrayList;
 
@@ -14,7 +14,7 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.calpoly.csc.scheduler.view.web.shared.gwtScheduleItem;
+import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 
 public class FiltersViewWidget extends DialogBox
 {
@@ -95,13 +95,13 @@ public class FiltersViewWidget extends DialogBox
   filtersPanel.add(roomsPanel);
  }
  
- public void addItems(ArrayList<gwtScheduleItem> items)
+ public void addItems(ArrayList<ScheduleItemGWT> items)
  {
   String itemInstr;
   String itemCourse;
   String itemRoom;
   
-  for(gwtScheduleItem item : items)
+  for(ScheduleItemGWT item : items)
   {
    itemInstr = item.getProfessor();
    itemCourse = item.getCourse();
