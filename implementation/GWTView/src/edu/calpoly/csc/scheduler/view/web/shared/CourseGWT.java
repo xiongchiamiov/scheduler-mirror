@@ -10,14 +10,13 @@ public class CourseGWT implements Serializable{
 	private int catalogNum;
 	private String dept;
 	private int wtu, scu, numSections;
-	private String type;
+	private String type; //will be an object
 	private int maxEnroll;
-	private String lab;
-	private int id;
+	private String lab; //will be an object
 	private int labId;
 	private int labPad;
 	private int length;
-	private String days;
+	private String days; //will be an object
 	private String quarterID;
 	private int scheduleID;
 	
@@ -31,7 +30,6 @@ public class CourseGWT implements Serializable{
 		type = "";
 		maxEnroll = 0;
 		lab = "";
-		id = 0;
 		labId = 0;
 		length = 0;
 	}
@@ -39,7 +37,6 @@ public class CourseGWT implements Serializable{
 	public CourseGWT(int id, String name, int catalogNum, int wtus, int scus, String courseType,
 			   int enrollment, int labId, boolean smartroom, boolean laptop, boolean overhead, 
 			   int hoursPerWeek, String ctPrefix, String prefix) {
-		   this.id = id;
 		   this.courseName = name;
 		   this.catalogNum = catalogNum;
 		   this.wtu = wtus;
@@ -103,27 +100,17 @@ public class CourseGWT implements Serializable{
 	{
 		return days;
 	}
-	
-	public void setID(int id)
-	{
-		this.id = id;
-	}
-	
-	public int getID()
-	{
-		return id;
-	}
+
 	public int getLabID()
-	   {
-		   return labId;
-	   }
-	   
-	
-	   public int getLength()
-	   {
-		   return length;
-	   }
-	   
+	{
+	   return labId;
+	}
+   
+
+	public int getLength()
+	{
+	   return length;
+	}
 
 	public String getCourseName() {
 		return courseName;
@@ -195,14 +182,6 @@ public class CourseGWT implements Serializable{
 
 	public void setLab(String lab) {
 		this.lab = lab;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	public int getLabId() {

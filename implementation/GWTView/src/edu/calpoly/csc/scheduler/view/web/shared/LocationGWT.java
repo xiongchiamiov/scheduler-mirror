@@ -10,8 +10,6 @@ public class LocationGWT implements Serializable{
 	 * Building number of location.
 	 */
 	private String building;
-
-	private String name;
 	
 	/**
 	 * Room number of location.
@@ -21,25 +19,22 @@ public class LocationGWT implements Serializable{
 	/**
 	 * Type of this location.
 	 */
-	private String type;
+	private String type; 
 
 	/**
 	 * Maximum occupancy of this location.
 	 */
 	private int maxOccupancy;
 	
-	private String equipmentList;
-	
-	private String additionalDetails;
-	
-	private boolean smartroom;
-	
-	private boolean laptopconnectivity;
+	private String equipmentList; //will be an object
 	
 	private boolean adacompliant;
 	
-	private boolean overhead;
-
+	private String availability; //will be an object
+	
+	private String quarterID;
+	
+	private int scheduleID;
 	/**
 	 * Provided equuipment in this location.
 	 */
@@ -57,28 +52,21 @@ public class LocationGWT implements Serializable{
 
 	public LocationGWT(){
 		building = "";
-		name = "";
 		room = "";
 		type = "";
 		maxOccupancy = 0;
 		equipmentList = "";
-		additionalDetails = "";
-		smartroom = false;
-		laptopconnectivity = false;
 		adacompliant = false;
-		overhead = false;
 	}
 
 	public LocationGWT(String building, String name, String room, String type,
 			int maxOccupancy, String equipmentList, String additionalDetails) {
 		super();
 		this.building = building;
-		this.name = name;
 		this.room = room;
 		this.type = type;
 		this.maxOccupancy = maxOccupancy;
 		this.equipmentList = equipmentList;
-		this.additionalDetails = additionalDetails;
 	}
 	
 	public LocationGWT(String building, String room, int maxOccupancy, String type,
@@ -88,26 +76,46 @@ public class LocationGWT implements Serializable{
 		this.room = room;
 		this.maxOccupancy = maxOccupancy;
 		this.type = type;
-		this.smartroom = smartroom;
-		this.laptopconnectivity = laptopconnectivity;
 		this.adacompliant = adacompliant;
-		this.overhead = overhead;
 	}
 	
-	public boolean isSmartRoom() {
-		return smartroom;
+	public String getAvailability()
+	{
+		return availability;
 	}
 	
-	public boolean hasLaptopConnectivity() {
-		return laptopconnectivity;
+	public void setAvailability(String availability)
+	{
+		this.availability = availability;
+	}
+	
+	public String getQuarterID()
+	{
+		return quarterID;
+	}
+	
+	public void setQuarterID(String quarter)
+	{
+		this.quarterID = quarter;
+	}
+	
+	public int getScheduleID()
+	{
+		return scheduleID;
+	}
+	
+	public void setScheduleID(int id)
+	{
+		this.scheduleID = id;
 	}
 	
 	public boolean isADACompliant() {
 		return adacompliant;
 	}
 	
-	public boolean hasOverhead() {
-		return overhead;
+	public void setADACompliant(boolean compliant)
+	{
+		this.adacompliant = compliant;
 	}
 
 	public String getBuilding() {
@@ -116,14 +124,6 @@ public class LocationGWT implements Serializable{
 
 	public void setBuilding(String building) {
 		this.building = building;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public String getRoom() {
@@ -156,14 +156,6 @@ public class LocationGWT implements Serializable{
 
 	public void setEquipmentList(String equipmentList) {
 		this.equipmentList = equipmentList;
-	}
-
-	public String getAdditionalDetails() {
-		return additionalDetails;
-	}
-
-	public void setAdditionalDetails(String additionalDetails) {
-		this.additionalDetails = additionalDetails;
 	}
 
 	public static long getSerialversionuid() {
