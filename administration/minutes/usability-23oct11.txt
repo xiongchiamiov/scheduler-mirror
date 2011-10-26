@@ -1,0 +1,10 @@
+Date: 10/23/11
+People present: Eric, Erik, Evan, Michael, Salo
+
+We discussed one major issue we have; timelines for displaying information. There is displaying and editing information per quarter, and then editing and displaying information per year.
+
+General consensus: schedule should be edited and created per quarter, while faculty access and information should be displayed and edited per academic year.
+
+Our big decision conflict happens when we try to create new quarters or new years; which data set should we use? Should we base the present year on the previous year? Or should we access a larger database that keeps track of all the professors?
+
+A side task for Salo was brought up involving a common area that shows what someone is looking at. If someone is looking at a full faculty year, it will tell them which academic year. If someone is looking at a quarter, it will tell them the quarter and which academic year. This is an easily visible place that someone can look, and it updates depending on what a person is looking at.
