@@ -27,20 +27,20 @@ public class CTableBuilder implements TableBuilder<CourseGWT>{
 		ArrayList<ColumnObject<CourseGWT>> list = 
 				new ArrayList<ColumnObject<CourseGWT>>();
 		
-		// id		    
-		Column<CourseGWT, String> id = 
+		// catalog number		    
+		Column<CourseGWT, String> catalogNum = 
 				new Column<CourseGWT, String>(new EditTextCell()) {
 		      @Override
 		      public String getValue(CourseGWT course) {
-		        return "" + course.getID();
+		        return "" + course.getCatalogNum();
 		      }
 		};
-		sortHandler.setComparator(id, new Comparator<CourseGWT>() {
+		sortHandler.setComparator(catalogNum, new Comparator<CourseGWT>() {
 	        public int compare(CourseGWT o1, CourseGWT o2) {
-	          return o1.getID() - o2.getID();
+	          return o1.getCatalogNum() - o2.getCatalogNum();
 	        }
 	    });
-		id.setFieldUpdater(new FieldUpdater<CourseGWT, String>() {
+		catalogNum.setFieldUpdater(new FieldUpdater<CourseGWT, String>() {
 		      public void update(int index, CourseGWT object, String value) {
 		    	  value = value.trim();
 		    	  Integer i = null;
@@ -49,14 +49,14 @@ public class CTableBuilder implements TableBuilder<CourseGWT>{
 		    	  }catch(Exception e){}
 		    	  
 		    	  if(i == null){
-		    		  Window.alert(TableConstants.COURSE_ID + " must be a number. \'" + value + "\' is invalid.");
+		    		  Window.alert(TableConstants.COURSE_CATALOG_NUM + " must be a number. \'" + value + "\' is invalid.");
 		    	  }
 		    	  else{
-		    		  object.setId(i);
+		    		  object.setCatalogNum(i);
 		    	  }
 		      }
 		});
-		list.add(new ColumnObject<CourseGWT>(id, TableConstants.COURSE_ID));
+		list.add(new ColumnObject<CourseGWT>(catalogNum, TableConstants.COURSE_CATALOG_NUM));
 		
 		return list;
 	}

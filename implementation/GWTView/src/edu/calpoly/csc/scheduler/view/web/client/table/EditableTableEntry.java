@@ -31,7 +31,7 @@ public class EditableTableEntry {
 		values.add(instructor.getFirstName());
 		values.add(instructor.getLastName());
 		values.add(instructor.getUserID());
-		values.add("" + instructor.getWtu());
+		values.add("null");
 		values.add(instructor.getBuilding());
 		values.add(instructor.getRoomNumber());
 		values.add(""+instructor.getDisabilities());
@@ -89,7 +89,7 @@ public class EditableTableEntry {
 		// get the original values
 		ArrayList<String> values = new ArrayList<String>();
 		
-		values.add("" + course.getID());
+		values.add("null");
 		values.add(course.getCourseName());
 		values.add("" + course.getCatalogNum());
 		values.add("" + course.getDept());
@@ -139,7 +139,7 @@ public class EditableTableEntry {
 		}
 		
 		CourseGWT newCourse = new CourseGWT();
-		newCourse.setID(Integer.parseInt(currValues.get(0)));
+		//newCourse.setID(Integer.parseInt(currValues.get(0)));
 		newCourse.setCourseName((currValues.get(1)));
 		newCourse.setCatalogNum(Integer.parseInt(currValues.get(2)));
 		newCourse.setDept((currValues.get(3)));
@@ -193,10 +193,10 @@ public class EditableTableEntry {
 		values.add(location.getRoom());
 		values.add("" + location.getMaxOccupancy());
 		values.add(location.getType());
-		values.add("" + location.isSmartRoom());
-		values.add("" + location.hasLaptopConnectivity());
-		values.add("" + location.isADACompliant());
-		values.add("" + location.hasOverhead());
+		values.add("null");// + location.isSmartRoom());
+		values.add("null");// + location.hasLaptopConnectivity());
+		values.add("null");// + location.isADACompliant());
+		values.add("null");// + location.hasOverhead());
 
 		// initialize object and set instructor
 		initialize(values);

@@ -255,17 +255,17 @@ public class InstructorTable {
 				new TextColumn<InstructorGWT>() {
 		      @Override
 		      public String getValue(InstructorGWT instr) {
-		        return "" + instr.getWtu();
+		        return "" + instr.getMaxWtu();
 		      }
 		};
 		wtu.setSortable(true);
 		sortHandler.setComparator(wtu, new Comparator<InstructorGWT>() {
 	        public int compare(InstructorGWT o1, InstructorGWT o2) {
-	          return o1.getWtu() - o2.getWtu();
+	          return o1.getMaxWtu() - o2.getMaxWtu();
 	        }
 	    });
-		table.addColumn(wtu, TableConstants.INSTR_WTU);
-		showColPanel.add(showHideBox(wtu, TableConstants.INSTR_WTU));
+		table.addColumn(wtu, TableConstants.INSTR_MAX_WTU);
+		showColPanel.add(showHideBox(wtu, TableConstants.INSTR_MAX_WTU));
 		
 		// building
 		TextColumn<InstructorGWT> building = 

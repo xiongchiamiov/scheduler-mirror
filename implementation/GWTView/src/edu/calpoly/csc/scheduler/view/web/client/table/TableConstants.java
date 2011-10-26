@@ -17,7 +17,7 @@ public class TableConstants {
 	public static final String SAVE = "Save";
 	
 	
-	/** Professor table */
+	/** Instructor table */
 	public static final String INSTR_NAME = "Instructor Name";
 
 	public static final String INSTR_FIRSTNAME = "First Name";
@@ -26,7 +26,7 @@ public class TableConstants {
 
 	public static final String INSTR_ID = "ID";
 	
-	public static final String INSTR_WTU = "WTU";
+	public static final String INSTR_MAX_WTU = "Max WTU";
 	
 	public static final String INSTR_OFFICE = "Office";
 	

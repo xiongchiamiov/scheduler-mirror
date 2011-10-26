@@ -88,20 +88,20 @@ public class ITableBuilder implements TableBuilder<InstructorGWT>{
 		});
 		list.add(new ColumnObject<InstructorGWT>(id, TableConstants.INSTR_ID));
 		
-		// wtu
-		Column<InstructorGWT, String> wtu = 
+		// max wtu
+		Column<InstructorGWT, String> maxwtu = 
 				new Column<InstructorGWT, String>(new EditTextCell()) {
 		      @Override
 		      public String getValue(InstructorGWT instr) {
-		        return "" + instr.getWtu();
+		        return "" + instr.getMaxWtu();
 		      }
 		};
-		sortHandler.setComparator(wtu, new Comparator<InstructorGWT>() {
+		sortHandler.setComparator(maxwtu, new Comparator<InstructorGWT>() {
 	        public int compare(InstructorGWT o1, InstructorGWT o2) {
-	          return o1.getWtu() - o2.getWtu();
+	          return o1.getMaxWtu() - o2.getMaxWtu();
 	        }
 	    });
-		wtu.setFieldUpdater(new FieldUpdater<InstructorGWT, String>() {
+		maxwtu.setFieldUpdater(new FieldUpdater<InstructorGWT, String>() {
 		      public void update(int index, InstructorGWT object, String value) {
 		        
 		    	  value = value.trim();
@@ -111,14 +111,14 @@ public class ITableBuilder implements TableBuilder<InstructorGWT>{
 		    	  }catch(Exception e){}
 		    	  
 		    	  if(i == null){
-		    		  Window.alert(TableConstants.INSTR_WTU + " must be a number. \'" + value + "\' is invalid.");
+		    		  Window.alert(TableConstants.INSTR_MAX_WTU + " must be a number. \'" + value + "\' is invalid.");
 		    	  }
 		    	  else{
-		    		  object.setWtu(i);
+		    		  object.setMaxWtu(i);
 		    	  }
 		      }
 		});
-		list.add(new ColumnObject<InstructorGWT>(wtu, TableConstants.INSTR_WTU));
+		list.add(new ColumnObject<InstructorGWT>(maxwtu, TableConstants.INSTR_MAX_WTU));
 		
 		// building
 		Column<InstructorGWT, String> building = 
