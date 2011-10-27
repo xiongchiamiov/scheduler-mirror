@@ -25,9 +25,9 @@ public class Location extends DbData implements Serializable
    public class ProvidedEquipment implements Serializable
    {
       private static final long serialVersionUID = 42;
-      public boolean            hasOverhead;
-      public boolean            isSmartRoom;
-      public boolean            hasLaptopConnectivity;
+      public boolean            hasOverhead = false;
+      public boolean            isSmartRoom = false;
+      public boolean            hasLaptopConnectivity = false;
    }
 
    /**
@@ -53,7 +53,7 @@ public class Location extends DbData implements Serializable
    /**
     * Provided equipment in this location.
     */
-   private ProvidedEquipment providedEquipment;
+   private ProvidedEquipment providedEquipment = new ProvidedEquipment();
 
    /**
     * Whether this location is compliant to those with disabilities.
