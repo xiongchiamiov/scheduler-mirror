@@ -25,10 +25,20 @@ public class LocationDB implements DatabaseAPI<Location>
 {
    private ArrayList<Location> data;
    private SQLDB               sqldb;
+   private int                 scheduleID;
+   private String              quarterID;
 
    public LocationDB(SQLDB sqldb)
    {
       this.sqldb = sqldb;
+      initDB();
+   }
+
+   public LocationDB(SQLDB sqldb, int scheduleID, String quarterID)
+   {
+      this.sqldb = sqldb;
+      this.scheduleID = scheduleID;
+      this.quarterID = quarterID;
       initDB();
    }
 
@@ -41,8 +51,8 @@ public class LocationDB implements DatabaseAPI<Location>
    private void initDB()
    {
       data = new ArrayList<Location>();
-      //TODO: REMOVE
-//      addData(new Location().getCannedData());
+      // TODO: REMOVE
+      // addData(new Location().getCannedData());
       pullData();
    }
 
@@ -128,12 +138,14 @@ public class LocationDB implements DatabaseAPI<Location>
       {
          e.printStackTrace();
       }
+      toAdd.verify();
       return toAdd;
    }
 
    @Override
    public void addData(Location data)
    {
+      data.verify();
       // Create insert string
       String insertString = "insert into locations ("
             + "building, room, maxoccupancy, type, providedequipment,"
@@ -189,7 +201,7 @@ public class LocationDB implements DatabaseAPI<Location>
    @Override
    public void editData(Location data)
    {
-//      data.verify();
+       data.verify();
       // Create update string
       String updateString = "update locations set building = ?, room = ?,"
             + "maxoccupancy = ?, type = ?, providedequipment = ?, "
@@ -257,7 +269,7 @@ public class LocationDB implements DatabaseAPI<Location>
    @Override
    public void removeData(Location data)
    {
-//      data.verify();
+       data.verify();
       // Create delete string
       String deleteString = "delete from locations where building = ? and room = ?";
       // Create prepared statement

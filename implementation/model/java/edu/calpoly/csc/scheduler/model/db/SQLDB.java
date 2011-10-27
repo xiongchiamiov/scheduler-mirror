@@ -764,6 +764,7 @@ public class SQLDB {
 	 * 
 	 * @return The result of a query for all instructors
 	 */
+	@Deprecated
 	public ResultSet getSQLInstructors() {
 		open();
 
@@ -785,9 +786,11 @@ public class SQLDB {
 
 	/*
 	 * Retrieves all entries from the courses database table
+
 	 * 
 	 * @return The result of a query for all courses
 	 */
+	@Deprecated
 	public ResultSet getSQLCourses() {
 		open();
 
@@ -807,33 +810,13 @@ public class SQLDB {
 		return coursesResult;
 	}
 
-	/*
-	 * Retrieves all entries from the courses database table
-	 * 
-	 * @return The result of a query for all courses
-	 */
-	public ResultSet getSQLCourseByID(int id) {
-		open();
-
-		String selectString = "select * from courses where id = ?";
-		PreparedStatement stmt = getPrepStmt(selectString);
-		ResultSet rs = null;
-		try {
-			stmt.setInt(1, id);
-			rs = stmt.executeQuery();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			close();
-		}
-		return rs;
-	}
 
 	/*
 	 * Retrieves all entries from the locations database table
 	 * 
 	 * @return The result of a query for all locations
 	 */
+	@Deprecated
 	public ResultSet getSQLLocations() {
 		open();
 
@@ -857,6 +840,7 @@ public class SQLDB {
 	 * 
 	 * @return The result of a query for all schedules
 	 */
+	@Deprecated
 	public ResultSet getSQLSchedules() {
 		open();
 
@@ -874,7 +858,187 @@ public class SQLDB {
 		}
 		return schedulesResult;
 	}
+	
+	/*
+	 * Retrieves entries from the instructors database table for 
+	 * given schedule id and quarter id
+	 * 
+	 * @return The result of a query for instructors in this quarter and schedule
+	 */
+	public ResultSet getSQLInstructors(String quarterid, int scheduleid) {
+	   open();
+	   
+	   String queryForInstructors = "SELECT * FROM instructors where quarterid = ? and scheduleid = ?";
+	   PreparedStatement stmt;
+	   ResultSet instructorsResult = null;
+	   
+	   try {
+	      stmt = conn.prepareStatement(queryForInstructors);
+	      stmt.setString(1, quarterid);
+	      stmt.setInt(2, scheduleid);
+	      instructorsResult = stmt.executeQuery(queryForInstructors);
+	   } catch (SQLException e) {
+	      e.printStackTrace();
+	   } finally {
+	      close();
+	   }
+	   
+	   return instructorsResult;
+	}
+	
+   /*
+    * Retrieves entries from the courses database table for 
+    * given schedule id and quarter id
+    * 
+    * @return The result of a query for courses in this quarter and schedule
+    */
+	public ResultSet getSQLCourses(String quarterid, int scheduleid) {
+	   open();
+	   
+	   String queryForCourses = "SELECT * FROM courses where quarterid = ? and scheduleid = ?";
+	   PreparedStatement stmt;
+	   ResultSet coursesResult = null;
+	   
+	   try {
+	      stmt = conn.prepareStatement(queryForCourses);
+	      stmt.setString(1, quarterid);
+         stmt.setInt(2, scheduleid);
+	      coursesResult = stmt.executeQuery(queryForCourses);
+	   } catch (SQLException e) {
+	      e.printStackTrace();
+	   } finally {
+	      close();
+	   }
+	   
+	   return coursesResult;
+	}
+	
+	
+   /*
+    * Retrieves entries from the locations database table for 
+    * given schedule id and quarter id
+    * 
+    * @return The result of a query for locations in this quarter and schedule
+    */
+	public ResultSet getSQLLocations(String quarterid, int scheduleid) {
+	   open();
+	   
+	   String queryForLocations = "SELECT * FROM locations where quarterid = ? and scheduleid = ?";
+	   PreparedStatement stmt;
+	   ResultSet locationsResult = null;
+	   
+	   try {
+	      stmt = conn.prepareStatement(queryForLocations);
+	      stmt.setString(1, quarterid);
+         stmt.setInt(2, scheduleid);
+	      locationsResult = stmt.executeQuery(queryForLocations);
+	   } catch (SQLException e) {
+	      e.printStackTrace();
+	   } finally {
+	      close();
+	   }
+	   return locationsResult;
+	}
+	
+   /*
+    * Retrieves entries from the schedules database table for 
+    * given schedule id and quarter id
+    * 
+    * @return The result of a query for schedules in this quarter and schedule
+    */
+	public ResultSet getSQLSchedules(String quarterid, int scheduleid) {
+	   open();
+	   
+	   String queryForSchedules = "SELECT * FROM schedules where quarterid = ? and scheduleid = ?";
+	   PreparedStatement stmt;
+	   ResultSet schedulesResult = null;
+	   
+	   try {
+	      stmt = conn.prepareStatement(queryForSchedules);
+         stmt.setString(1, quarterid);
+         stmt.setInt(2, scheduleid);
+	      schedulesResult = stmt.executeQuery(queryForSchedules);
+	   } catch (SQLException e) {
+	      e.printStackTrace();
+	   } finally {
+	      close();
+	   }
+	   return schedulesResult;
+	}
+	
+	
 
+	/**
+	 * Retrieves the course with matching ID from the database
+	 * 
+	 * @return The result of a query for courses with given id
+	 */
+	public ResultSet getSQLCourseByID(int id) {
+	   open();
+	   
+	   String selectString = "select * from courses where id = ?";
+	   PreparedStatement stmt = getPrepStmt(selectString);
+	   ResultSet rs = null;
+	   try {
+	      stmt.setInt(1, id);
+	      rs = stmt.executeQuery();
+	   } catch (SQLException e) {
+	      e.printStackTrace();
+	   } finally {
+	      close();
+	   }
+	   return rs;
+	}
+	
+	/**
+	 * Retrieves the course with matching department and catalog number from the database
+	 * 
+	 * @return The result of a query for courses with given dept and catalogNum
+	 */
+	@Deprecated
+	public ResultSet getSQLCourse(String dept, int catalogNum) {
+	   open();
+	   
+	   String selectString = "select * from courses where dept = ? and catalognum = ?";
+	   PreparedStatement stmt = getPrepStmt(selectString);
+	   ResultSet rs = null;
+	   try {
+	      stmt.setString(1, dept);
+	      stmt.setInt(2, catalogNum);
+	      rs = stmt.executeQuery();
+	   } catch (SQLException e) {
+	      e.printStackTrace();
+	   } finally {
+	      close();
+	   }
+	   return rs;
+	}
+	
+	/**
+	 * Retrieves the course with matching department and catalog number from the database
+	 * 
+	 * @return The result of a query for courses with given dept and catalogNum
+	 */
+	public ResultSet getSQLCourse(String dept, int catalogNum, int scheduleid, String quarterid) {
+	   open();
+	   
+	   String selectString = "select * from courses where dept = ? and catalognum = ? and scheduleid = ? and quarterid = ?";
+	   PreparedStatement stmt = getPrepStmt(selectString);
+	   ResultSet rs = null;
+	   try {
+	      stmt.setString(1, dept);
+	      stmt.setInt(2, catalogNum);
+	      stmt.setInt(3, scheduleid);
+	      stmt.setString(4, quarterid);
+	      rs = stmt.executeQuery();
+	   } catch (SQLException e) {
+	      e.printStackTrace();
+	   } finally {
+	      close();
+	   }
+	   return rs;
+	}
+	
 	public PreparedStatement getPrepStmt(String sql) {
 		open();
 

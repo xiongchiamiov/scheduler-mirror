@@ -20,10 +20,20 @@ public class InstructorDB implements DatabaseAPI<Instructor>
 {
    private ArrayList<Instructor> data;
    private SQLDB                 sqldb;
+   private int                   scheduleID;
+   private String                quarterID;
 
    public InstructorDB(SQLDB sqldb)
    {
       this.sqldb = sqldb;
+      initDB();
+   }
+
+   public InstructorDB(SQLDB sqldb, int scheduleID, String quarterID)
+   {
+      this.sqldb = sqldb;
+      this.scheduleID = scheduleID;
+      this.quarterID = quarterID;
       initDB();
    }
 
@@ -36,8 +46,8 @@ public class InstructorDB implements DatabaseAPI<Instructor>
    private void initDB()
    {
       data = new ArrayList<Instructor>();
-      //TODO: REMOVE THIS
-//      addData(new Instructor().getCannedData());
+      // TODO: REMOVE THIS
+      // addData(new Instructor().getCannedData());
       pullData();
    }
 
@@ -186,12 +196,14 @@ public class InstructorDB implements DatabaseAPI<Instructor>
       {
          e.printStackTrace();
       }
+      toAdd.verify();
       return toAdd;
    }
 
    @Override
    public void addData(Instructor data)
    {
+      data.verify();
       // Create insert string
       String insertString = "insert into instructors ("
             + "firstname, lastname, userid, maxwtu, curwtu, office, "
@@ -276,6 +288,7 @@ public class InstructorDB implements DatabaseAPI<Instructor>
    @Override
    public void editData(Instructor data)
    {
+      data.verify();
       // Create update string
       String updateString = "update instructors set firstname = ?, lastname = ?,"
             + "userid = ?, maxwtu = ?, curwtu = ?, office = ?, "
@@ -363,6 +376,7 @@ public class InstructorDB implements DatabaseAPI<Instructor>
    @Override
    public void removeData(Instructor data)
    {
+      data.verify();
       // Create delete string
       String deleteString = "delete from instructors where userid = ?";
       // Create prepared statement

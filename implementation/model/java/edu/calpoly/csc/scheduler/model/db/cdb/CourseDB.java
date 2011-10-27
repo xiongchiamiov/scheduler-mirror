@@ -22,10 +22,20 @@ public class CourseDB implements DatabaseAPI<Course>
 {
    private ArrayList<Course> data;
    private SQLDB             sqldb;
+   private int               scheduleID;
+   private String            quarterID;
 
    public CourseDB(SQLDB sqldb)
    {
       this.sqldb = sqldb;
+      initDB();
+   }
+
+   public CourseDB(SQLDB sqldb, int scheduleID, String quarterID)
+   {
+      this.sqldb = sqldb;
+      this.scheduleID = scheduleID;
+      this.quarterID = quarterID;
       initDB();
    }
 
@@ -38,8 +48,8 @@ public class CourseDB implements DatabaseAPI<Course>
    private void initDB()
    {
       data = new ArrayList<Course>();
-      //TODO: REMOVE THIS
-//      addData(new Course().getCannedData());
+      // TODO: REMOVE THIS
+      // addData(new Course().getCannedData());
       pullData();
    }
 
@@ -63,6 +73,12 @@ public class CourseDB implements DatabaseAPI<Course>
    public Course getCourseByID(int id)
    {
       return makeCourse(sqldb.getSQLCourseByID(id));
+   }
+
+   public Course getCourse(String dept, int catalogNum)
+   {
+      //TODO: Change to pass in schedule and quarter id
+      return makeCourse(sqldb.getSQLCourse(dept, catalogNum));
    }
 
    private Course makeCourse(ResultSet rs)
@@ -124,7 +140,7 @@ public class CourseDB implements DatabaseAPI<Course>
                ObjectInputStream objectIn;
                objectIn = new ObjectInputStream(
                      new ByteArrayInputStream(labBuf));
-               //I CHANGED THIS - Eric
+               // I CHANGED THIS - Eric
                toAdd.setLab((Lab) objectIn.readObject());
             }
             catch (Exception e)
@@ -148,12 +164,14 @@ public class CourseDB implements DatabaseAPI<Course>
          // TODO Auto-generated catch block
          e.printStackTrace();
       }
+      toAdd.verify();
       return toAdd;
    }
 
    @Override
    public void addData(Course data)
    {
+      data.verify();
       // Create insert string
       String insertString = "insert into courses ("
             + "name, catalognum, dept, wtu, scu, "
@@ -221,6 +239,7 @@ public class CourseDB implements DatabaseAPI<Course>
    @Override
    public void editData(Course data)
    {
+      data.verify();
       // Create update string
       String updateString = "update courses set name = ?, catalognum = ?, "
             + "dept = ?, wtu = ?, scu = ?, numofsections = ?, "
@@ -288,6 +307,7 @@ public class CourseDB implements DatabaseAPI<Course>
    @Override
    public void removeData(Course data)
    {
+      data.verify();
       // Create delete string
       String deleteString = "delete from courses where catalognum = ? "
             + "and dept = ? and type = ? and quarterid = ?";

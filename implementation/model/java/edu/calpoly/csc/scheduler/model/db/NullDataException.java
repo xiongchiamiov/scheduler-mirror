@@ -7,7 +7,7 @@ import java.util.Vector;
  * @author Eric Liebowitz
  * @version Oct 22, 2011
  */
-public class NullDataException extends Exception
+public class NullDataException extends RuntimeException
 {
 
 }

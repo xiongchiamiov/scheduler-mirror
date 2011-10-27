@@ -14,9 +14,9 @@ import edu.calpoly.csc.scheduler.model.db.sdb.ScheduleDB;
 
 public class Database
 {
-	/** The SQLDB object to pass to other database objects */
-	private SQLDB sqlDB;
-	
+   /** The SQLDB object to pass to other database objects */
+   private SQLDB        sqldb;
+
    /** The instructor database. */
    private InstructorDB instructorDB;
 
@@ -29,16 +29,45 @@ public class Database
    /** The schedule database. */
    private ScheduleDB   scheduleDB;
 
+   /** The current schedule id */
+   private int          scheduleID;
+
+   /** The current quarter id */
+   private String       quarterID;
+
    /**
     * This constructor will create the SQLDB object.
     **/
    public Database()
    {
-	   SQLDB sqldb = new SQLDB();
-      instructorDB = new InstructorDB(sqldb);
-      courseDB = new CourseDB(sqldb);
-      locationDB = new LocationDB(sqldb);
-      scheduleDB = new ScheduleDB(sqldb);
+      sqldb = new SQLDB();
+//      instructorDB = new InstructorDB(sqldb);
+//      courseDB = new CourseDB(sqldb);
+//      locationDB = new LocationDB(sqldb);
+//      scheduleDB = new ScheduleDB(sqldb);
+      scheduleID = -1;
+      quarterID = "";
+   }
+
+   /**
+    * This constructor will create the SQLDB object with the given quarter id
+    * and schedule id.
+    **/
+   public Database(int scheduleID, String quarterID)
+   {
+      SQLDB sqldb = new SQLDB();
+//      instructorDB = new InstructorDB(sqldb);
+//      courseDB = new CourseDB(sqldb);
+//      locationDB = new LocationDB(sqldb);
+//      scheduleDB = new ScheduleDB(sqldb);
+      this.scheduleID = scheduleID;
+      this.quarterID = quarterID;
+   }
+   
+   public void setSchedule(int scheduleID, String quarterID)
+   {
+      this.scheduleID = scheduleID;
+      this.quarterID = quarterID;
    }
 
    /**
@@ -46,7 +75,16 @@ public class Database
     */
    public InstructorDB getInstructorDB()
    {
-      return instructorDB;
+      return new InstructorDB(sqldb);
+//      return new InstructorDB(sqldb, scheduleID, quarterID);
+   }
+   
+   /**
+    * @return the instructorDB
+    */
+   public InstructorDB getInstructorDB(int scheduleID, String quarterID)
+   {
+      return new InstructorDB(sqldb, scheduleID, quarterID);
    }
 
    /**
@@ -54,7 +92,16 @@ public class Database
     */
    public CourseDB getCourseDB()
    {
-      return courseDB;
+      return new CourseDB(sqldb);
+//      return new CourseDB(sqldb, scheduleID, quarterID);
+   }
+   
+   /**
+    * @return the courseDB
+    */
+   public CourseDB getCourseDB(int scheduleID, String quarterID)
+   {
+      return new CourseDB(sqldb, scheduleID, quarterID);
    }
 
    /**
@@ -62,14 +109,66 @@ public class Database
     */
    public LocationDB getLocationDB()
    {
-      return locationDB;
+      return new LocationDB(sqldb);
+//      return new LocationDB(sqldb, scheduleID, quarterID);
    }
    
+   /**
+    * @return the locationDB
+    */
+   public LocationDB getLocationDB(int scheduleID, String quarterID)
+   {
+      return new LocationDB(sqldb, scheduleID, quarterID);
+   }
+
    /**
     * @return the scheduleDB
     */
    public ScheduleDB getScheduleDB()
    {
-      return scheduleDB;
+      return new ScheduleDB(sqldb);
+//      return new ScheduleDB(sqldb, scheduleID, quarterID);
+   }
+   
+   /**
+    * @return the scheduleDB
+    */
+   public ScheduleDB getScheduleDB(int scheduleID, String quarterID)
+   {
+      return new ScheduleDB(sqldb, scheduleID, quarterID);
+   }
+
+   /**
+    * @return the scheduleID
+    */
+   public int getScheduleID()
+   {
+      return scheduleID;
+   }
+
+   /**
+    * @param scheduleID
+    *           the scheduleID to set
+    */
+   public void setScheduleID(int scheduleID)
+   {
+      this.scheduleID = scheduleID;
+   }
+
+   /**
+    * @return the quarterID
+    */
+   public String getQuarterID()
+   {
+      return quarterID;
+   }
+
+   /**
+    * @param quarterID
+    *           the quarterID to set
+    */
+   public void setQuarterID(String quarterID)
+   {
+      this.quarterID = quarterID;
    }
 }
