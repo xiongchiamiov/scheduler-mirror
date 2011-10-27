@@ -26,3 +26,11 @@ To rebuild and deploy:
 Right click on the project, Google -> GWT Compile.
 Once its done, right click on the project, Run As -> Run on Server
 On the dialog that comes up, hit Finish.
+
+
+If you ever get an error in the application that says "java.lang.ClassNotFoundException: com.mysql.jdbc.Driver" or "Error connecting to the database.":
+Right click on the project, Run As -> Run Configurations
+In Apache Tomcat -> Tomcat v7.0 Server at localhost, click on classpath tab.
+Click on user entries
+Click on add external JARs
+navigate to repo/implementation/model/java, and select mysql-connector-java-5.0.8-bin.jar, hit open
