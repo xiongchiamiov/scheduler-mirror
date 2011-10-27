@@ -3,6 +3,7 @@ package edu.calpoly.csc.scheduler.view.web.client.table;
 import java.util.ArrayList;
 import java.util.Comparator;
 
+import com.google.gwt.cell.client.CheckboxCell;
 import com.google.gwt.cell.client.EditTextCell;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.core.client.GWT;
@@ -46,7 +47,109 @@ public class LTableBuilder implements TableBuilder<LocationGWT>{
 		      }
 		});
 		list.add(new ColumnObject<LocationGWT>(building, TableConstants.LOC_BUILDING));
+		
+		
+		// room		   
+		Column<LocationGWT, String> room = 
+				new Column<LocationGWT, String>(new EditTextCell()) {
+		      @Override
+		      public String getValue(LocationGWT location) {
+		        return location.getRoom();
+		      }
+		};
+		sortHandler.setComparator(room, new Comparator<LocationGWT>() {
+	        public int compare(LocationGWT o1, LocationGWT o2) {
+	          return o1.getRoom().compareTo(o2.getRoom());
+	        }
+	    });
+		room.setFieldUpdater(new FieldUpdater<LocationGWT, String>() {
+		      public void update(int index, LocationGWT object, String value) {
+		        object.setRoom(value);
+		      }
+		});
+		list.add(new ColumnObject<LocationGWT>(room, TableConstants.LOC_ROOM));
 
+		
+		// type		    
+		Column<LocationGWT, String> type = 
+				new Column<LocationGWT, String>(new EditTextCell()) {
+		      @Override
+		      public String getValue(LocationGWT location) {
+		        return location.getType();
+		      }
+		};
+		sortHandler.setComparator(type, new Comparator<LocationGWT>() {
+	        public int compare(LocationGWT o1, LocationGWT o2) {
+	          return o1.getType().compareTo(o2.getType());
+	        }
+	    });
+		type.setFieldUpdater(new FieldUpdater<LocationGWT, String>() {
+		      public void update(int index, LocationGWT object, String value) {
+		        object.setType(value);
+		      }
+		});
+		list.add(new ColumnObject<LocationGWT>(type, TableConstants.LOC_TYPE));
+		
+		
+		// max occupancy		    
+		Column<LocationGWT, String> maxOcc = 
+				new Column<LocationGWT, String>(new EditTextCell()) {
+		      @Override
+		      public String getValue(LocationGWT course) {
+		        return "" + course.getMaxOccupancy();
+		      }
+		};
+		sortHandler.setComparator(maxOcc, new Comparator<LocationGWT>() {
+	        public int compare(LocationGWT o1, LocationGWT o2) {
+	          return o1.getMaxOccupancy() - o2.getMaxOccupancy();
+	        }
+	    });
+		maxOcc.setFieldUpdater(new FieldUpdater<LocationGWT, String>() {
+		      public void update(int index, LocationGWT object, String value) {
+		    	  value = value.trim();
+		    	  Integer i = null;
+		    	  try{
+		    		  i = Integer.parseInt(value);
+		    	  }catch(Exception e){}
+		    	  
+		    	  if(i == null){
+		    		  Window.alert(TableConstants.LOC_MAX_OCCUPANCY + " must be a number. \'" + value + "\' is invalid.");
+		    	  }
+		    	  else{
+		    		  object.setMaxOccupancy(i);
+		    	  }
+		      }
+		});
+		list.add(new ColumnObject<LocationGWT>(maxOcc, TableConstants.LOC_MAX_OCCUPANCY));
+		
+		
+		// ada compliant
+		Column<LocationGWT, Boolean> adaCompliant = 
+				new Column<LocationGWT, Boolean>(new CheckboxCell(true, false)) {
+		      @Override
+		      public Boolean getValue(LocationGWT loc) {
+		        return loc.isADACompliant();
+		      }
+		};
+		sortHandler.setComparator(adaCompliant, new Comparator<LocationGWT>() {
+	        public int compare(LocationGWT o1, LocationGWT o2) {
+	          
+	        	boolean b1 = o1.isADACompliant();
+	        	boolean b2 = o2.isADACompliant();
+	        	if(b1 == b2){ return 0;}
+	        	if(b2){ return -1;}
+	        	return 1;
+	        }
+	    });
+		adaCompliant.setFieldUpdater(new FieldUpdater<LocationGWT, Boolean>() {
+		      public void update(int index, LocationGWT object, Boolean value) {
+		        object.setADACompliant(value);
+		      }
+		});
+		list.add(new ColumnObject<LocationGWT>(adaCompliant, TableConstants.LOC_ADACOMPLIANT));
+		
+		
+		
 		return list;
 	}
 

@@ -63,7 +63,7 @@ public class TableConstants {
 	
 	public static final String COURSE_PREFIX = "Prefix";
 
-	public static final String COURSE_SCU = "SCU";
+	public static final String COURSE_STU = "STU";
 	
 	public static final String COURSE_NUM_SECTIONS = "# of Sections";
 	
