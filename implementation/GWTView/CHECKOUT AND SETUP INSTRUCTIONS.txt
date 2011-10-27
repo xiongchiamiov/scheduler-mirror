@@ -1,3 +1,5 @@
+first, make sure you have the GWT plugin for eclipse.
+
 checkout the project
 copy the file ".project template" and name it to ".project"
 copy the file ".classpath template" and name it to ".classpath"
