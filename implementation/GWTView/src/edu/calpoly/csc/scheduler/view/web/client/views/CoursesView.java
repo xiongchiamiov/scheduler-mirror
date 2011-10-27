@@ -30,7 +30,7 @@ public class CoursesView extends ScrollPanel {
 		VerticalPanel vp = new VerticalPanel();
 		this.add(vp);
 		
-		cTable = TableFactory.course();
+		cTable = TableFactory.course(quarterID, service);
 		vp.add(cTable.getWidget());
 		populateCourses();
 	}

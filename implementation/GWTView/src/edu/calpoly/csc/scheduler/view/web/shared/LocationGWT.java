@@ -2,9 +2,15 @@ package edu.calpoly.csc.scheduler.view.web.shared;
 
 import java.io.Serializable;
 
+import com.google.gwt.user.client.Window;
+
 
 public class LocationGWT implements Serializable{
 	private static final long serialVersionUID = 1015108352203434920L;
+	
+	public class NullGWTDataException extends RuntimeException {
+		
+	}
 
 	/**
 	 * Building number of location.
@@ -49,6 +55,33 @@ public class LocationGWT implements Serializable{
     * Represents a location's availabilty throughout the week.
 	 */
 //   private WeekAvail availability;
+	
+	public void verify() {
+		if (building == null){
+			Window.alert("derp");
+			throw new NullGWTDataException();
+		}
+		if (room == null){
+			Window.alert("derp2");
+			throw new NullGWTDataException();
+		}
+		if (type == null){
+			Window.alert("derp3");
+			throw new NullGWTDataException();
+		}
+		if (equipmentList == null){
+			Window.alert("derp4");
+			throw new NullGWTDataException();
+		}
+		if (availability == null) {
+			Window.alert("derp5");
+			throw new NullGWTDataException();
+		}
+		if (quarterID == null) {
+			Window.alert("derp6");
+			throw new NullGWTDataException();
+		}
+	}
 
 	public LocationGWT(){
 		building = "";

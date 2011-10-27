@@ -145,6 +145,7 @@ public class LocationDB implements DatabaseAPI<Location>
    @Override
    public void addData(Location data)
    {
+	   System.out.println("derp");
       data.verify();
       // Create insert string
       String insertString = "insert into locations ("
@@ -154,6 +155,7 @@ public class LocationDB implements DatabaseAPI<Location>
       // Create prepared statement
       PreparedStatement stmt = sqldb.getPrepStmt(insertString);
       // Set values
+	   System.out.println("lerp");
       try
       {
          stmt.setString(1, data.getBuilding());
@@ -189,13 +191,16 @@ public class LocationDB implements DatabaseAPI<Location>
          }
          stmt.setString(8, data.getQuarterId());
          stmt.setInt(9, data.getScheduleId());
+  	   	System.out.println("sherp");
       }
       catch (SQLException e)
       {
          e.printStackTrace();
       }
       // Execute
+	   System.out.println("defrp");
       sqldb.executePrepStmt(stmt);
+	   System.out.println("dkerp");
    }
 
    @Override

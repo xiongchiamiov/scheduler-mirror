@@ -1,5 +1,7 @@
 package edu.calpoly.csc.scheduler.view.web.client.table;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Comparator;
 
@@ -17,9 +19,13 @@ import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
 
 public class LTableBuilder implements TableBuilder<LocationGWT>{
-
-	private static final GreetingServiceAsync service = GWT
-			.create(GreetingService.class);
+	private String quarterID;
+	private GreetingServiceAsync service;
+	
+	public LTableBuilder(String quarterID, GreetingServiceAsync service) {
+		this.quarterID = quarterID;
+		this.service = service;
+	}
 	
 	@Override
 	public ArrayList<ColumnObject<LocationGWT>> getColumns(
@@ -160,21 +166,35 @@ public class LTableBuilder implements TableBuilder<LocationGWT>{
 
 	@Override
 	public LocationGWT newObject() {
-		return new LocationGWT();
+		LocationGWT loc = new LocationGWT();
+		loc.setAvailability("derp?");
+		loc.setQuarterID(quarterID);
+		return loc;
 	}
 
 	@Override
 	public void save(ArrayList<LocationGWT> list) {
-		
-		service.saveLocations(list, new AsyncCallback<Void>(){
-			public void onFailure(Throwable caught){ 
-				
-				Window.alert("Error saving:\n" + 
-						caught.getLocalizedMessage());
-			}
-			public void onSuccess(Void result){
-				Window.alert("Successfully saved");
-			}
-		});
+		try {
+			Window.alert("savoijhg");
+			
+			for (LocationGWT loc : list)
+				loc.verify();
+			
+			Window.alert("now calling saveLocations!");
+			
+			service.saveLocations(list, new AsyncCallback<Void>(){
+				public void onFailure(Throwable caught){ 
+					
+					Window.alert("Error saving:\n" + 
+							caught.getLocalizedMessage());
+				}
+				public void onSuccess(Void result){
+					Window.alert("Successfully saved");
+				}
+			});
+		}
+		catch (RuntimeException e) {
+			Window.alert("exception: " + e.getClass().getName() + " " + e.getMessage());
+		}
 	}
 }

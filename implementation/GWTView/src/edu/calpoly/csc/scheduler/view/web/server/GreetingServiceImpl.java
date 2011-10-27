@@ -367,9 +367,20 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		
 		for (LocationGWT location : locations)
 		{
-			Location loc = new Location();
+			location.verify();
 			
+			Location loc = new Location();
 			loc.setRoom(location.getRoom());
+			loc.setAdaCompliant(location.isADACompliant());
+			loc.setAvailability(new WeekAvail());
+			loc.setBuilding(location.getBuilding());
+			loc.setMaxOccupancy(location.getMaxOccupancy());
+			loc.setProvidedEquipment(loc.new ProvidedEquipment());
+			loc.setQuarterId(location.getQuarterID());
+			loc.setRoom(location.getRoom());
+			loc.setScheduleId(location.getScheduleID());
+			loc.setType(location.getType());
+			loc.verify();
 			
 			ldb.addData(loc);
 		}

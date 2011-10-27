@@ -41,7 +41,7 @@ public class InstructorsView extends ScrollPanel {
 		VerticalPanel vp = new VerticalPanel();
 		this.add(vp);
 		
-		iTable = TableFactory.instructor();
+		iTable = TableFactory.instructor(quarterID, service);
 		vp.add(iTable.getWidget());
 		populateInstructors();
 		

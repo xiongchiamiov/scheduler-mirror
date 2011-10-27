@@ -170,6 +170,7 @@ public class EditableTableFactory {
 				ArrayList<EditableTableEntry> entries = table.getEntries();
 				for(EditableTableEntry e : entries){
 					LocationGWT l = e.getLocation();
+					l.verify();
 					if(l != null){
 						locations.add(l);
 					}

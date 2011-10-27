@@ -35,7 +35,7 @@ public class RoomsView extends ScrollPanel {
 		VerticalPanel vp = new VerticalPanel();
 		this.add(vp);
 		
-		lTable = TableFactory.location();
+		lTable = TableFactory.location(quarterID, service);
 		vp.add(lTable.getWidget());
 		populateLocations();
 	}

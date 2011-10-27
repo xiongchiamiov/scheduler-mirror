@@ -17,8 +17,13 @@ import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 
 public class CTableBuilder implements TableBuilder<CourseGWT>{
 
-	private static final GreetingServiceAsync service = GWT
-			.create(GreetingService.class);
+	private String quarterID;
+	private GreetingServiceAsync service;
+	
+	public CTableBuilder(String quarterID, GreetingServiceAsync service) {
+		this.quarterID = quarterID;
+		this.service = service;
+	}
 	
 	@Override
 	public ArrayList<ColumnObject<CourseGWT>> getColumns(
