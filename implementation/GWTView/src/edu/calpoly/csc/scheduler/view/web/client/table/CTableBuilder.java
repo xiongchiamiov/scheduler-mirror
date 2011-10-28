@@ -287,11 +287,20 @@ public class CTableBuilder implements TableBuilder<CourseGWT>{
 
 	@Override
 	public CourseGWT newObject() {
-		return new CourseGWT();
+		CourseGWT course = new CourseGWT();
+		course.setLabId(1201);
+		course.setLabPad(1202);
+		course.setLength(1203);
+		course.setDays("daysderp");
+		course.setQuarterID(this.quarterID);
+		course.setScheduleID(7);
+		return course;
 	}
 
 	@Override
 	public void save(ArrayList<CourseGWT> list) {
+		for (CourseGWT course : list)
+			course.verify();
 		
 		service.saveCourses(list, new AsyncCallback<Void>(){
 			public void onFailure(Throwable caught){ 

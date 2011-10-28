@@ -13,7 +13,12 @@ import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
 import edu.calpoly.csc.scheduler.model.db.idb.InstructorDB;
 import edu.calpoly.csc.scheduler.model.db.ldb.Location;
 import edu.calpoly.csc.scheduler.model.db.ldb.LocationDB;
-import edu.calpoly.csc.scheduler.model.schedule.*;
+import edu.calpoly.csc.scheduler.model.schedule.CouldNotBeScheduledException;
+import edu.calpoly.csc.scheduler.model.schedule.Day;
+import edu.calpoly.csc.scheduler.model.schedule.Schedule;
+import edu.calpoly.csc.scheduler.model.schedule.ScheduleItem;
+import edu.calpoly.csc.scheduler.model.schedule.Week;
+import edu.calpoly.csc.scheduler.model.schedule.WeekAvail;
 import edu.calpoly.csc.scheduler.view.web.client.GreetingService;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
@@ -448,6 +453,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		cdb.clearData();
 		
 		for (CourseGWT course : courses) {
+			course.verify();
+			
 //			cdb.addData(new Course(course.getCourseName(), course.getDept(), course.getCatalogNum()));
 //			cdb.addData(new Course((), course.getLabID(), course.getSmartroom(), course.getLaptop(), course.getOverhead(), 8, course.getCTPrefix(), course.getPrefix()));
 			Course newCourse = new Course();
@@ -464,7 +471,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 			newCourse.setDept(course.getDept());
 			newCourse.setLength(course.getLength());
 			newCourse.setNumOfSections(course.getNumSections());
-			newCourse.setDays(null);
+			newCourse.setDays(Week.fiveDayWeek);
 			
 			
 			cdb.addData(newCourse);

@@ -1,5 +1,7 @@
 package edu.calpoly.csc.scheduler.model.schedule;
 
+import java.io.Serializable;
+
 /**
  * Represents a day of the week. To help unify the standards of what a Day is,
  * you can't actually use the constructor for this class. Instead, 7 statically
@@ -9,7 +11,7 @@ package edu.calpoly.csc.scheduler.model.schedule;
  * @author Eric Liebowitz
  * @version Oct 11, 2011
  */
-public class Day
+public class Day implements Serializable
 {
    /** Sunday */
    public static final Day SUN = new Day(0, "SUN");
