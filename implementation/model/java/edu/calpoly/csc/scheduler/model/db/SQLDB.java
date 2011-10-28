@@ -528,7 +528,7 @@ public class SQLDB {
 	   try {
 	      stmt = conn.prepareStatement(queryForSchedules);
          stmt.setInt(1, scheduleid);
-	      schedulesResult = stmt.executeQuery(queryForSchedules);
+	      schedulesResult = stmt.executeQuery();
 	   } catch (SQLException e) {
 	      e.printStackTrace();
 	   } 
