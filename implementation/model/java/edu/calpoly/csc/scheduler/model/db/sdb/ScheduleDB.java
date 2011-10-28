@@ -82,17 +82,57 @@ public class ScheduleDB implements DatabaseAPI<Schedule>
          e.printStackTrace();
       }
    }
+   
+   public int createNewSchedule(String dept)
+   {
+	      // Create insert string
+	      String insertString = "insert into schedules ("
+	            + "name, quarterid, schedule, dept" + "values (?, ?, ?, ?)";
+	      // Create prepared statement
+	      PreparedStatement stmt = sqldb.getPrepStmt(insertString);
+	      // Set values
+	      try
+	      {
+	         stmt.setString(1, "New Schedule");
+	         stmt.setString(2, "blank");
+	         // Get Schedule through Serializable
+	         Schedule data = new Schedule();
+	         try
+	         {
+	            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	            ObjectOutput out = new ObjectOutputStream(baos);
+	            out.writeObject(data);
+	            out.close();
+	            stmt.setBytes(3, baos.toByteArray());
+	         }
+	         catch (IOException e)
+	         {
+	            e.printStackTrace();
+	         }
+	         stmt.setString(4, dept);
+	      }
+	      catch (SQLException e)
+	      {
+	         e.printStackTrace();
+	      }
+	      // Execute
+	      return sqldb.executePrepStmt(stmt);
+   }
+   
+   public void saveSchedule(Schedule data)
+   {
+	   saveSchedule(data, data.getName(), data.getQuarterId());
+   }
 
    public void saveSchedule(Schedule data, String name, String quarterID)
    {
       // Make sure data in schedule and given name are correct
       data.setName(name);
       data.setQuarterId(quarterID);
-      // Create insert string
-      String insertString = "insert into schedules ("
-            + "name, quarterid, schedule, dept" + "values (?, ?, ?, ?)";
+      // Create update string
+      String updateString = "update schedules set name = ?, quarterid = ?, schedule = ?, dept = ? where scheduleid = ?";
       // Create prepared statement
-      PreparedStatement stmt = sqldb.getPrepStmt(insertString);
+      PreparedStatement stmt = sqldb.getPrepStmt(updateString);
       // Set values
       try
       {
@@ -111,6 +151,7 @@ public class ScheduleDB implements DatabaseAPI<Schedule>
          {
             e.printStackTrace();
          }
+         stmt.setString(4, "CSC");
 //         stmt.setString(4, data.getDept());
       }
       catch (SQLException e)
@@ -148,6 +189,7 @@ public class ScheduleDB implements DatabaseAPI<Schedule>
          {
             e.printStackTrace();
          }
+       stmt.setString(4, "CSC");
 //       stmt.setString(4, data.getDept());
       }
       catch (SQLException e)
@@ -184,6 +226,7 @@ public class ScheduleDB implements DatabaseAPI<Schedule>
             e.printStackTrace();
          }
          // Where clause
+         stmt.setString(4, "CSC");
 //       stmt.setString(4, data.getDept());
          stmt.setInt(5, data.getId());
       }
