@@ -1,0 +1,207 @@
+<html>
+<head>
+<title>
+Copy Editor Comments on Phase 1 Release
+</title>
+</head>
+<body bgcolor=white>
+<p align=center>
+<font size=+2>
+<strong>Copy Editor Comments on Phase 1 Release</strong>
+</font>
+</p>
+<p>
+Theser are comments on the changes made to produce the
+<a href="http://scheduler.csc.calpoly.edu/branches/scheduler-rel1/requirements/walkthru">
+phase 1 release requirements walkthru
+</a>
+from the
+<a href="http://scheduler.csc.calpoly.edu/branches/scheduler-r648/requirements/walkthru">
+pre-release version of the walkthru.
+</a>
+
+<strong>Global Remarks:</strong>
+<ul>
+<li>
+        Added standard WARC banner.  For Phase 2 release, this should either be
+        (a) removed entirely, in favor of a more clearly defined program UI, or
+        (b) replaced with the PolySched brand.
+<li>
+        Made blurb area a line taller, to accommodate expanded explanations on
+        some key slides.
+<li>
+        Explained more of screen contents on certain key slides.
+<li>
+        Made language consistent with scenario use-case conventions, in
+        particular referring explicitly to user actions that are performed.
+<li>
+        See Milestones 5-7 writeups for refinements
+</ul>
+<br>
+<br>
+<strong>Slide-by-Slide Comments:</strong>
+<table align=center border=1 cellpadding=4>
+  <tr>
+    <td valign=top>index
+    <td valign=top>
+        Tuned up language.  Got rid of the rather folksy "Hello!".  "Previous"
+        and "Back" buttons were potentially confusable with browser's 'Back'
+        and 'Forward' buttons.  Added conventional single quoting of explicit
+        UI element.  Considered beautifying with CSS, but decided that the
+        simple style reinforces the notion that this is a preliminary 1st rough
+        draft.  The walk-through index for the Phase 2 release should
+        definitely have better look.
+  <tr>
+    <td valign=top>
+  <tr>
+    <td valign=top>login
+    <td valign=top>
+        Added explanation of the side bar.  This is quite important, and
+        represents the general notion that requirements authors may omit
+        descriptions of display aspects that are "obvious" to them, but may not
+        be obvious to first-time readers.  In Phase 2, if we continue with this
+        style, the appropriate buttons in the UI should be high-lighted, as if
+        pressed by the user, which will also provide context for the changing
+        slide content.
+  <tr>
+    <td valign=top>
+  <tr>
+    <td valign=top>home
+    <td valign=top>
+        Added 'Generate schedule for' area, so that the user can select the
+        term and year for the new schedule.  This was an important missing
+        piece.  During in-class review, Scanlon noted that 'Generate' should be
+        changed to 'Create', so that the word 'Generate' is reserved
+        specifically for the generation operation.
+  <tr>
+    <td valign=top>
+  <tr>
+    <td valign=top>setup
+    <td valign=top>
+        Tuned up blur to clarify user action performed to bring up this
+        display.  Added 'Generate Schedule' button at the bottom of the
+        screen.  The latter addition was an important missing component.
+  <tr>
+    <td valign=top>
+  <tr>
+    <td valign=top>conflict (old)
+    <td valign=top>
+        Removed conflict screen that was present in the pre-release version of
+        the slides.  The error dialog provided no surrounding context, and was
+        therefore potentially difficult for the reader to understand
+  <tr>
+    <td valign=top>generated scheduler views (new)
+    <td valign=top>
+        Added three new generated schedule views, in place of the blank view
+        that was in the pre-release version.  These views helped in two ways
+        (1) provided a form of view that was likely more familiar to the
+        readers; (2) made the multi-colored view secondary, so it did not
+        appear as the primary (default) form of schedule viewing
+  <tr>
+    <td valign=top>hovering
+    <td valign=top>
+        Clarified language in blurb slightly.
+  <tr>
+    <td valign=top>instructor view schedule
+    <td valign=top>
+        Added clarification of "intelligent search".  Operational details of
+        search and filter need further significant refinement.
+  <tr>
+    <td valign=top>view course schedule
+    <td valign=top>
+        Clarified blurb to be explicit about user action performed.
+  <tr>
+    <td valign=top>filters
+    <td valign=top>
+        Clarified blurb to be explicit about user action performed.
+        Added 'Apply' button at the bottom.  The latter addition was an
+        important missing component.  During in-class discussion, Schirle noted
+        that a combination of search and filtering, as in the iTunes interface,
+        may be a useful approach here.  This detail definitely needs to be
+        determined.
+  <tr>
+    <td valign=top>filter days
+    <td valign=top>
+        Clarified blurb to be explicit about user action performed;
+        added 'Apply' button
+  <tr>
+    <td valign=top>filter instructor
+    <td valign=top>
+        Clarified blurb to be explicit about user action performed;
+        added 'Apply' button.  Also added explicit mention of user pressing
+        the 'Apply' button.  In the next release, the result of filtering on a
+        scheduled needs to be shown as an explicit screen.
+  <tr>
+    <td valign=top>manage instructors
+    <td valign=top>
+        Left justified image to be consistent with other slides.  Added
+        clarifying blurb sentence about entering section that focuses on
+        the 'Manage' functions in the left-side toolbar.  In general, the
+        details of the toolbar, and how it is used to supply context in the
+        walk-through, need to be refined.
+  <tr>
+    <td valign=top>edit instructor
+    <td valign=top>
+        Clarified blurb to be explicit about user action performed; left
+        justified image.
+  <tr>
+    <td valign=top>remove instructor (old)
+    <td valign=top>
+        Removed this slide since (a) it did not fit well in the slide flow, and
+        (b) it was a bare dialog with no UI context.
+  <tr>
+    <td valign=top>instructor course prefs
+    <td valign=top>
+        Added very important language to the blurb that clarifies the
+        distinction between instructor edits of prefs versus department
+        scheduler edits.  This idea needs to be made completely clear to
+        everyone.
+  <tr>
+    <td valign=top>instructor time prefs
+    <td valign=top>
+        Reiterated clarification from immediately preceding slide.  I would
+        have changed the grey-scale shading to signal colors, if I'd had the
+        time.
+  <tr>
+    <td valign=top>instructor distance prefs
+    <td valign=top>
+        Clarified blurb to be explicit about user action performed; left
+        justified image.
+  <tr>
+    <td valign=top>manage courses
+    <td valign=top>
+        Clarified blurb to be explicit about user action performed.  Changed
+        text in body of slide from 'Configure Courses' to 'Manage Courses', for
+        consistency.
+  <tr>
+    <td valign=top>add course
+    <td valign=top>
+        Clarified blurb to be explicit about user action performed.
+  <tr>
+    <td valign=top>edit course
+    <td valign=top>
+        Clarified blurb to be explicit about user action performed.
+  <tr>
+    <td valign=top>manage locations
+    <td valign=top>
+        Fixed "This is the home screen" language to action/result style.
+  <tr>
+    <td valign=top>add locations
+    <td valign=top>
+        Clarified blurb to be explicit about user action performed.
+  <tr>
+    <td valign=top>edit locations
+    <td valign=top>
+        Clarified blurb to be explicit about user action performed, and removed
+        superfluous "the user can ..." language.
+  <tr>
+    <td valign=top>location availability (old)
+    <td valign=top>
+        Removed this slide.  The UI looked good, but the notion of room
+        availability is ambiguous.  It can mean (1) a room is available because
+        not class is being taught in it, or (2) a room is available because the
+        department has (exclusive) control over it.  This detail must be worked
+        out for the next release.
+</table>
+</body>
+</html>
