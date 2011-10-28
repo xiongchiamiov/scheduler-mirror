@@ -122,21 +122,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	}
 
 	public void newSchedule() {
-		if (model == null)
-			throw new RuntimeException("model is null!");
-		Database db = model.getDb();
-		
-		Schedule schedule = new Schedule();
-		schedule.setId(1337);
-		schedule.generate(new Vector<Course>(), new Vector<Instructor>(), new Vector<Location>());
-
-		this.selectSchedule(1337);
-		
-		if (db == null)
-			throw new RuntimeException("db is null");
-		if (db.getScheduleDB() == null)
-			throw new RuntimeException("getscheduledb is null");
-		db.getScheduleDB().addData(schedule);
+		selectSchedule(1337);
 	}
 	
 	public ArrayList<ScheduleItemGWT> generateSchedule() {

@@ -631,7 +631,15 @@ public class SQLDB {
       try {
          stmt.setString(1, userid);
          rs = stmt.executeQuery();
-         dept = rs.getString("dept");
+         System.out.println("about to call rs.next");
+         if (rs.next()) {
+        	 System.out.println("called rs.next");
+        	 dept = rs.getString("dept");
+         }
+         else {
+        	 System.out.println("rs empty");
+        	 assert(false);
+         }
       } catch (SQLException e) {
          e.printStackTrace();
       }
