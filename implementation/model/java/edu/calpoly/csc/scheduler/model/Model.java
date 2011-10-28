@@ -22,7 +22,7 @@ public class Model implements Serializable
    
    private Database db;
    
-   public Model (String username, Integer sid)
+   public Model ()
    {
       db = new Database();
    }
