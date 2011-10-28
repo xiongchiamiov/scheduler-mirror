@@ -36,3 +36,10 @@ In Apache Tomcat -> Tomcat v7.0 Server at localhost, click on classpath tab.
 Click on user entries
 Click on add external JARs
 navigate to repo/implementation/model/java, and select mysql-connector-java-5.0.8-bin.jar, hit open
+
+If you get an error like "javax.servlet.http.HttpServletResponse not found" do the following
+1. Right click your GWTView project
+2. Go to build path and select Configure Build Path...
+3. Go to the Libraries tab
+4. Click on Add Library...
+5. Select Google Web Toolkit and follow the instructions
