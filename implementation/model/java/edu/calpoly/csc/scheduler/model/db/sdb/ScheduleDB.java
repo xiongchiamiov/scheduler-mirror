@@ -156,8 +156,7 @@ public class ScheduleDB implements DatabaseAPI<Schedule>
          {
             e.printStackTrace();
          }
-         stmt.setString(4, "CSC");
-//         stmt.setString(4, data.getDept());
+         stmt.setString(4, data.getDept());
       }
       catch (SQLException e)
       {
@@ -194,8 +193,7 @@ public class ScheduleDB implements DatabaseAPI<Schedule>
          {
             e.printStackTrace();
          }
-       stmt.setString(4, "CSC");
-//       stmt.setString(4, data.getDept());
+       stmt.setString(4, data.getDept());
       }
       catch (SQLException e)
       {
@@ -231,8 +229,7 @@ public class ScheduleDB implements DatabaseAPI<Schedule>
             e.printStackTrace();
          }
          // Where clause
-         stmt.setString(4, "CSC");
-//       stmt.setString(4, data.getDept());
+       stmt.setString(4, data.getDept());
          stmt.setInt(5, data.getId());
       }
       catch (SQLException e)
