@@ -946,17 +946,22 @@ public class Instructor extends DbData
     */
    public void verify () throws NullDataException 
    {
-      if (coursePreferences   == null ||
-          curWtu              == null ||
-          maxWtu              == null ||
-          office              == null ||
-          quarterId           == null ||
-          scheduleId          == null ||
-          tPrefs              == null ||
-          userID              == null)
-      {
-         throw new NullDataException();
-      }
+      if (coursePreferences   == null)
+    	  throw new NullDataException();
+      if (curWtu              == null)
+    	  throw new NullDataException();
+	  if (maxWtu              == null)
+		  throw new NullDataException();
+	  if (office              == null)
+		  throw new NullDataException();
+	  if (quarterId           == null)
+		  throw new NullDataException();
+      if (scheduleId          == null)
+    	  throw new NullDataException();
+      if (tPrefs              == null)
+    	  throw new NullDataException();
+      if (userID              == null)
+    	  throw new NullDataException();
    }
    
    public Instructor getCannedData()

@@ -1,6 +1,8 @@
 package edu.calpoly.csc.scheduler.view.web.server;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Vector;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -11,6 +13,7 @@ import edu.calpoly.csc.scheduler.model.db.cdb.Course;
 import edu.calpoly.csc.scheduler.model.db.cdb.CourseDB;
 import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
 import edu.calpoly.csc.scheduler.model.db.idb.InstructorDB;
+import edu.calpoly.csc.scheduler.model.db.idb.TimePreference;
 import edu.calpoly.csc.scheduler.model.db.ldb.Location;
 import edu.calpoly.csc.scheduler.model.db.ldb.LocationDB;
 import edu.calpoly.csc.scheduler.model.schedule.CouldNotBeScheduledException;
@@ -93,9 +96,22 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		
 		for (InstructorGWT instructor : instructors){
 			Instructor ins = new Instructor();
-			
+
+			ins.setQuarterId(instructor.getQuarterID());
+			ins.setScheduleId(0);
 			ins.setFirstName(instructor.getFirstName());
-			
+			ins.setLastName(instructor.getLastName());
+			ins.setUserID(instructor.getUserID());
+			ins.setMaxWtu(instructor.getMaxWtu());
+			ins.setCurWtu(instructor.getCurWtu());
+			ins.setOffice(new Location(instructor.getBuilding(), instructor.getRoomNumber()));
+			ins.setFairness(instructor.getFairness());
+			ins.setDisability(instructor.getDisabilities());
+			ins.setGenerosity(instructor.getGenerosity());
+			ins.setAvailability(new WeekAvail());
+			ins.setCoursePreferences(new HashMap<Course,Integer>());
+			ins.setTimePreferences(new HashMap<Day, LinkedHashMap<Time, TimePreference>>());
+			ins.setItemsTaught(new Vector<ScheduleItem>());
 			idb.addData(ins);
 //			idb.addData(new Instructor(instructor.getName(), instructor.getName(), instructor.getUserID(), instructor.getWtu(), ldb.getLocation(instructor.getOffice())));
 			//idb.addData(new Instructor(instructor.getFirstName(), instructor.getLastName(), instructor.getUserID(), instructor.getWtu(), instructor.getBuilding(), instructor.getRoomNumber(), instructor.getDisabilities()));

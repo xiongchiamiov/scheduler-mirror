@@ -201,12 +201,20 @@ public class ITableBuilder implements TableBuilder<InstructorGWT>{
 
 	@Override
 	public InstructorGWT newObject() {
-		return new InstructorGWT();
+		InstructorGWT instructor = new InstructorGWT();
+		instructor.setAvailability("avail?");
+		instructor.setCoursePreferences("courseprefshere");
+		instructor.setTPreferences("tprefshere");
+		instructor.setItemsTaught("itemstaught");
+		instructor.setQuarterID(quarterID);
+		return instructor;
 	}
 
 	@Override
 	public void save(ArrayList<InstructorGWT> list) {
-	
+		for (InstructorGWT instructor : list)
+			instructor.verify();
+		
 		service.saveInstructors(list, new AsyncCallback<Void>(){
 			public void onFailure(Throwable caught){ 
 				

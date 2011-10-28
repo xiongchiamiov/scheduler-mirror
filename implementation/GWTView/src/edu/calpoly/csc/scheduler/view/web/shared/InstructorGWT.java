@@ -2,6 +2,8 @@ package edu.calpoly.csc.scheduler.view.web.shared;
 
 import java.io.Serializable;
 
+import com.google.gwt.user.client.Window;
+
 
 public class InstructorGWT implements Serializable{
 	private static final long serialVersionUID = -4982539363690274674L;
@@ -16,6 +18,31 @@ public class InstructorGWT implements Serializable{
 	private String quarterID;
 	
 	private int scheduleID;
+	
+	public void verify() {
+		if (userID == null)
+			Window.alert("zerp1");
+		if (firstName == null)
+			Window.alert("zerp2");
+		if (lastName == null)
+			Window.alert("zerp3");
+		if (roomNumber == null)
+			Window.alert("zerp4");
+		if (building == null)
+			Window.alert("zerp5");
+		if (office == null)
+			Window.alert("zerp6");
+		if (availability == null)
+			Window.alert("zerp7");
+		if (coursePrefs == null)
+			Window.alert("zerp8");
+		if (tPrefs == null)
+			Window.alert("zerp9");
+		if (itemsTaught == null)
+			Window.alert("zerp10");
+		if (quarterID == null)
+			Window.alert("zerp11");
+	}
 
 	public InstructorGWT(){
 		userID = "";
