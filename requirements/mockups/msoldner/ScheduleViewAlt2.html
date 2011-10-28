@@ -1394,17 +1394,44 @@
 
 		<div> <strong>Search:</strong> <input type="text" class="gwt-TextBox"> 
 		&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-		<button type="button" class="gwt-Button">Filters</button> </div>
+		<input type="radio" name="view" value="week" /> Weekly
+		<input type="radio" name="view" value="list" /> List
+		<input type="radio" name="view" value="table" /> Class Table
+		</div>
 		
 		<table id="hor-minimalist-b" summary="Schdule View" style="border-spacing: 0px;">
 		<thead>
 		<tr>
-		<th scope="col">Time</th>
-		<th scope="col">Monday</th>
-		<th scope="col">Tuesday</th>
-		<th scope="col">Wednesday</th>
-		<th scope="col">Thursday</th>
-		<th scope="col">Friday</th>
+		<th scope="col">Time
+		&nbsp &nbsp &nbsp
+		<SELECT MULTIPLE SIZE=1 style="height:25px;width:0px;">
+			<OPTION VALUE="o1">
+		</SELECT></th>
+		<th scope="col">Monday
+		&nbsp &nbsp &nbsp
+		<SELECT MULTIPLE SIZE=1 style="height:25px;width:0px;">
+			<OPTION VALUE="o1">
+		</SELECT></th>
+		<th scope="col">Tuesday
+		&nbsp &nbsp &nbsp
+		<SELECT MULTIPLE SIZE=1 style="height:25px;width:0px;">
+			<OPTION VALUE="o1">
+		</SELECT></th>
+		<th scope="col">Wednesday
+		&nbsp &nbsp &nbsp
+		<SELECT MULTIPLE SIZE=1 style="height:25px;width:0px;">
+			<OPTION VALUE="o1">
+		</SELECT></th>
+		<th scope="col">Thursday
+		&nbsp &nbsp &nbsp
+		<SELECT MULTIPLE SIZE=1 style="height:25px;width:0px;">
+			<OPTION VALUE="o1">
+		</SELECT></th>
+		<th scope="col">Friday
+		&nbsp &nbsp &nbsp
+		<SELECT MULTIPLE SIZE=1 style="height:25px;width:0px;">
+			<OPTION VALUE="o1">
+		</SELECT></th>
 		</tr>
 		</thead>
 		<tbody>
@@ -1427,10 +1454,13 @@
 		<tr>
 		<td>8:00-8:30am</td>
 		<td><SELECT MULTIPLE SIZE=5 style="height:25px;width:150px;">
-			<OPTION VALUE="o1">CHEM 101 - Sec 01
+			<OPTION VALUE="o1">CHEM 110 - Sec 01
 			<OPTION VALUE="o2">Blah
 		</SELECT></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td><SELECT MULTIPLE SIZE=5 style="height:25px;width:150px;">
+			<OPTION VALUE="o1">CHEM 110 - Sec 01
+			<OPTION VALUE="o2">Blah
+		</SELECT></td>
 		<td><SELECT MULTIPLE SIZE=5 style="height:25px;width:150px;">
 			<OPTION VALUE="o1">CHEM 101 - Sec 01
 			<OPTION VALUE="o2">Blah
@@ -1444,10 +1474,13 @@
 		<tr>
 		<td>8:30-9:00am</td>
 		<td><SELECT MULTIPLE SIZE=5 style="height:25px;width:150px;">
-			<OPTION VALUE="o1">CHEM 101 - Sec 01
+			<OPTION VALUE="o1">CHEM 110 - Sec 01
 			<OPTION VALUE="o2">Blah
 		</SELECT></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td><SELECT MULTIPLE SIZE=5 style="height:25px;width:150px;">
+			<OPTION VALUE="o1">CHEM 110 - Sec 01
+			<OPTION VALUE="o2">Blah
+		</SELECT></td>
 		<td><SELECT MULTIPLE SIZE=5 style="height:25px;width:150px;">
 			<OPTION VALUE="o1">CHEM 101 - Sec 01
 			<OPTION VALUE="o2">Blah
@@ -1460,11 +1493,11 @@
 		</tr><tr>
 		<td>9:00-9:30am</td>
 		<td><SELECT MULTIPLE SIZE=5 style="height:25px;width:150px;">
-			<OPTION VALUE="o1">CHEM 106 - Sec 01
+			<OPTION VALUE="o1">CHEM 110 - Sec 01
 			<OPTION VALUE="o2">Blah
 		</SELECT></td>
 		<td><SELECT MULTIPLE SIZE=5 style="height:25px;width:150px;">
-			<OPTION VALUE="o1">CHEM 106 - Sec 01
+			<OPTION VALUE="o1">CHEM 110 - Sec 01
 			<OPTION VALUE="o2">Blah
 		</SELECT></td>
 		<td><SELECT MULTIPLE SIZE=5 style="height:25px;width:150px;">
@@ -1483,11 +1516,11 @@
 		<tr>
 		<td>9:30-10:00am</td>
 		<td><SELECT MULTIPLE SIZE=5 style="height:25px;width:150px;">
-			<OPTION VALUE="o1">CHEM 101 - Sec 01
+			<OPTION VALUE="o1">CHEM 110 - Sec 01
 			<OPTION VALUE="o2">Blah
 		</SELECT></td>
 		<td><SELECT MULTIPLE SIZE=5 style="height:25px;width:150px;">
-			<OPTION VALUE="o1">CHEM 124 - Sec 03
+			<OPTION VALUE="o1">CHEM 110 - Sec 01
 			<OPTION VALUE="o2">Blah
 		</SELECT></td>
 		<td><SELECT MULTIPLE SIZE=5 style="height:25px;width:150px;">
@@ -1504,9 +1537,12 @@
 		</SELECT></td>
 		</tr><tr>
 		<td>10:00-10:30am</td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
 		<td><SELECT MULTIPLE SIZE=5 style="height:25px;width:150px;">
-			<OPTION VALUE="o1">CHEM 124 - Sec 04
+			<OPTION VALUE="o1">CHEM 110 - Sec 01
+			<OPTION VALUE="o2">Blah
+		</SELECT></td>
+		<td><SELECT MULTIPLE SIZE=5 style="height:25px;width:150px;">
+			<OPTION VALUE="o1">CHEM 110 - Sec 01
 			<OPTION VALUE="o2">Blah
 		</SELECT></td>
 		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
@@ -1518,9 +1554,12 @@
 		</tr>
 		<tr>
 		<td>10:30-11:00am</td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
 		<td><SELECT MULTIPLE SIZE=5 style="height:25px;width:150px;">
-			<OPTION VALUE="o1">CHEM 124 - Sec 04
+			<OPTION VALUE="o1">CHEM 110 - Sec 01
+			<OPTION VALUE="o2">Blah
+		</SELECT></td>
+		<td><SELECT MULTIPLE SIZE=5 style="height:25px;width:150px;">
+			<OPTION VALUE="o1">CHEM 110 - Sec 01
 			<OPTION VALUE="o2">Blah
 		</SELECT></td>
 		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
@@ -1639,7 +1678,7 @@
 			<OPTION VALUE="o2">Blah
 		</SELECT></td>
 		<td><SELECT MULTIPLE SIZE=5 style="height:25px;width:150px;">
-			<OPTION VALUE="o1">CHEM 439 - Sec 02
+			<OPTION VALUE="o1">CHEM 110 - Sec 01
 			<OPTION VALUE="o2">Blah
 		</SELECT></td>
 		<td><SELECT MULTIPLE SIZE=5 style="height:25px;width:150px;">
@@ -1647,7 +1686,7 @@
 			<OPTION VALUE="o2">Blah
 		</SELECT></td>
 		<td><SELECT MULTIPLE SIZE=5 style="height:25px;width:150px;">
-			<OPTION VALUE="o1">CHEM 439 - Sec 02
+			<OPTION VALUE="o1">CHEM 110 - Sec 01
 			<OPTION VALUE="o2">Blah
 		</SELECT></td>
 		<td><SELECT MULTIPLE SIZE=5 style="height:25px;width:150px;">
@@ -1662,7 +1701,7 @@
 			<OPTION VALUE="o2">Blah
 		</SELECT></td>
 		<td><SELECT MULTIPLE SIZE=5 style="height:25px;width:150px;">
-			<OPTION VALUE="o1">CHEM 439 - Sec 02
+			<OPTION VALUE="o1">CHEM 110 - Sec 01
 			<OPTION VALUE="o2">Blah
 		</SELECT></td>
 		<td><SELECT MULTIPLE SIZE=5 style="height:25px;width:150px;">
@@ -1670,7 +1709,7 @@
 			<OPTION VALUE="o2">Blah
 		</SELECT></td>
 		<td><SELECT MULTIPLE SIZE=5 style="height:25px;width:150px;">
-			<OPTION VALUE="o1">CHEM 439 - Sec 02
+			<OPTION VALUE="o1">CHEM 110 - Sec 01
 			<OPTION VALUE="o2">Blah
 		</SELECT></td>
 		<td><SELECT MULTIPLE SIZE=5 style="height:25px;width:150px;">
@@ -1685,7 +1724,7 @@
 			<OPTION VALUE="o2">Blah
 		</SELECT></td>
 		<td><SELECT MULTIPLE SIZE=5 style="height:25px;width:150px;">
-			<OPTION VALUE="o1">CHEM 439 - Sec 02
+			<OPTION VALUE="o1">CHEM 110 - Sec 01
 			<OPTION VALUE="o2">Blah
 		</SELECT></td>
 		<td><SELECT MULTIPLE SIZE=5 style="height:25px;width:150px;">
@@ -1693,7 +1732,7 @@
 			<OPTION VALUE="o2">Blah
 		</SELECT></td>
 		<td><SELECT MULTIPLE SIZE=5 style="height:25px;width:150px;">
-			<OPTION VALUE="o1">CHEM 439 - Sec 02
+			<OPTION VALUE="o1">CHEM 110 - Sec 01
 			<OPTION VALUE="o2">Blah
 		</SELECT></td>
 		<td><SELECT MULTIPLE SIZE=5 style="height:25px;width:150px;">
@@ -1707,7 +1746,7 @@
 			<OPTION VALUE="o2">Blah
 		</SELECT></td>
 		<td><SELECT MULTIPLE SIZE=5 style="height:25px;width:150px;">
-			<OPTION VALUE="o1">CHEM 439 - Sec 02
+			<OPTION VALUE="o1">CHEM 110 - Sec 04
 			<OPTION VALUE="o2">Blah
 		</SELECT></td>
 		<td><SELECT MULTIPLE SIZE=5 style="height:25px;width:150px;">
@@ -1725,19 +1764,104 @@
 		</tr><tr>
 		<td>3:30-4:00pm</td>
 		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td><SELECT MULTIPLE SIZE=5 style="height:25px;width:150px;">
+			<OPTION VALUE="o1">CHEM 110 - Sec 04
+			<OPTION VALUE="o2">Blah
+		</SELECT></td>
 		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
 		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
 		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
 		</tr><tr>
 		<td>4:00-4:30pm</td>
 		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td><SELECT MULTIPLE SIZE=5 style="height:25px;width:150px;">
+			<OPTION VALUE="o1">CHEM 110 - Sec 04
+			<OPTION VALUE="o2">Blah
+		</SELECT></td>
 		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
 		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
 		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
 		</tr><tr>
 		<td>4:30-5:00pm</td>
+		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td><SELECT MULTIPLE SIZE=5 style="height:25px;width:150px;">
+			<OPTION VALUE="o1">CHEM 110 - Sec 04
+			<OPTION VALUE="o2">Blah
+		</SELECT></td>
+		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		</tr>
+		<td>5:00-5:30pm</td>
+		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td><SELECT MULTIPLE SIZE=5 style="height:25px;width:150px;">
+			<OPTION VALUE="o1">CHEM 110 - Sec 04
+			<OPTION VALUE="o2">Blah
+		</SELECT></td>
+		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		</tr>
+		<td>5:30-6:00pm</td>
+		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td><SELECT MULTIPLE SIZE=5 style="height:25px;width:150px;">
+			<OPTION VALUE="o1">CHEM 110 - Sec 04
+			<OPTION VALUE="o2">Blah
+		</SELECT></td>
+		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		</tr>
+		<td>6:00-6:30pm</td>
+		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		</tr>
+		<td>6:30-7:00pm</td>
+		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		</tr>
+		<td>7:00-7:30pm</td>
+		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		</tr>
+		<td>7:30-8:00pm</td>
+		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		</tr>
+		<td>8:00-8:30pm</td>
+		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		</tr>
+		<td>8:30-9:00pm</td>
+		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		</tr>
+		<td>9:00-9:30pm</td>
+		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		</tr>
+		<td>9:30-10:00pm</td>
 		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
 		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
 		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
