@@ -50,6 +50,7 @@ public class ScheduleDB implements DatabaseAPI<Schedule>
    @Override
    public void pullData()
    {
+      System.err.println ("SID: " + scheduleID);
       ResultSet rs = sqldb.getSQLSchedules(scheduleID);
       try
       {
@@ -73,7 +74,7 @@ public class ScheduleDB implements DatabaseAPI<Schedule>
                }
             }
             // Get ID since database maintains it
-            toAdd.setId(rs.getInt("id"));
+            toAdd.setId(rs.getInt("scheduleid"));
             data.add(toAdd);
          }
       }
