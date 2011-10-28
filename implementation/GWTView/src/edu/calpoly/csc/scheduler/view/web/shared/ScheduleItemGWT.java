@@ -214,4 +214,14 @@ public class ScheduleItemGWT implements Serializable, Comparable
  {
   endTimeMin = min;
  }
+ 
+ public String getDept()
+ {
+  return courseDept;
+ }
+ 
+ public int getCatalogNum()
+ {
+  return courseNum;
+ }
 }

@@ -2,7 +2,6 @@ package edu.calpoly.csc.scheduler.view.web.server;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Vector;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -13,15 +12,9 @@ import edu.calpoly.csc.scheduler.model.db.cdb.Course;
 import edu.calpoly.csc.scheduler.model.db.cdb.CourseDB;
 import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
 import edu.calpoly.csc.scheduler.model.db.idb.InstructorDB;
-import edu.calpoly.csc.scheduler.model.db.idb.TimePreference;
 import edu.calpoly.csc.scheduler.model.db.ldb.Location;
 import edu.calpoly.csc.scheduler.model.db.ldb.LocationDB;
-import edu.calpoly.csc.scheduler.model.schedule.CouldNotBeScheduledException;
-import edu.calpoly.csc.scheduler.model.schedule.Day;
-import edu.calpoly.csc.scheduler.model.schedule.Schedule;
-import edu.calpoly.csc.scheduler.model.schedule.ScheduleItem;
-import edu.calpoly.csc.scheduler.model.schedule.Week;
-import edu.calpoly.csc.scheduler.model.schedule.WeekAvail;
+import edu.calpoly.csc.scheduler.model.schedule.*;
 import edu.calpoly.csc.scheduler.view.web.client.GreetingService;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
@@ -36,6 +29,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		GreetingService {
 
     private Schedule schedule;
+    private HashMap<String, Course> cannedCourses;
 	
 	public ArrayList<InstructorGWT> getInstructorNames() throws IllegalArgumentException {
 		
@@ -96,22 +90,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		
 		for (InstructorGWT instructor : instructors){
 			Instructor ins = new Instructor();
-
-			ins.setQuarterId(instructor.getQuarterID());
-			ins.setScheduleId(0);
+			
 			ins.setFirstName(instructor.getFirstName());
-			ins.setLastName(instructor.getLastName());
-			ins.setUserID(instructor.getUserID());
-			ins.setMaxWtu(instructor.getMaxWtu());
-			ins.setCurWtu(instructor.getCurWtu());
-			ins.setOffice(new Location(instructor.getBuilding(), instructor.getRoomNumber()));
-			ins.setFairness(instructor.getFairness());
-			ins.setDisability(instructor.getDisabilities());
-			ins.setGenerosity(instructor.getGenerosity());
-			ins.setAvailability(new WeekAvail());
-			ins.setCoursePreferences(new HashMap<Course,Integer>());
-			ins.setTimePreferences(new HashMap<Day, LinkedHashMap<Time, TimePreference>>());
-			ins.setItemsTaught(new Vector<ScheduleItem>());
+			
 			idb.addData(ins);
 //			idb.addData(new Instructor(instructor.getName(), instructor.getName(), instructor.getUserID(), instructor.getWtu(), ldb.getLocation(instructor.getOffice())));
 			//idb.addData(new Instructor(instructor.getFirstName(), instructor.getLastName(), instructor.getUserID(), instructor.getWtu(), instructor.getBuilding(), instructor.getRoomNumber(), instructor.getDisabilities()));
@@ -201,12 +182,10 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	 return gwtItems;
 	}
 	
-	public ArrayList<ScheduleItemGWT> getGWTScheduleItems()
+	public void setCannedCourses()
 	{
-		Database db = new Database();
-		ArrayList<Instructor> instructors = db.getInstructorDB().getData();
-		ArrayList<Course> courses = new ArrayList<Course>();//db.getCourseDB().getData();
-		 Week mwf = new Week(new Day[]{Day.MON, Day.WED, Day.FRI});
+		cannedCourses = new HashMap<String, Course>();
+		Week mwf = new Week(new Day[]{Day.MON, Day.WED, Day.FRI});
 		 Week tr = new Week(new Day[]{Day.TUE, Day.THU});
 		Course c1 = new Course("one oh one", "CPE", 101);
 		 c1.setDept("CPE");
@@ -238,19 +217,23 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		 c6.setLength(6);
 		 c6.setNumOfSections(1);
 		 c6.setDays(mwf);
-        courses.add(c1);
-		courses.add(c2);
-		courses.add(c3);
-		courses.add(c4);
-		courses.add(c5);
-		courses.add(c6);
-        ArrayList<Location> locations = db.getLocationDB().getData();
-        schedule = new Schedule();
-		schedule.generate(new Vector<Course>(courses), new Vector<Instructor>(instructors), new Vector<Location>(locations));
-		
-		
-		
-		
+        cannedCourses.put(c1.getDept()+c1.getCatalogNum(), c1);
+		cannedCourses.put(c2.getDept()+c2.getCatalogNum(), c2);
+		cannedCourses.put(c3.getDept()+c3.getCatalogNum(), c3);
+		cannedCourses.put(c4.getDept()+c4.getCatalogNum(), c4);
+		cannedCourses.put(c5.getDept()+c5.getCatalogNum(), c5);
+		cannedCourses.put(c6.getDept()+c6.getCatalogNum(), c6);			
+	}
+	
+	public ArrayList<ScheduleItemGWT> getGWTScheduleItems()
+	{
+	 Database db = new Database();
+	 ArrayList<Instructor> instructors = db.getInstructorDB().getData();
+	 setCannedCourses();
+	 ArrayList<Course> courses = new ArrayList<Course>(cannedCourses.values());//db.getCourseDB().getData();
+     ArrayList<Location> locations = db.getLocationDB().getData();
+     schedule = new Schedule();
+	 schedule.generate(new Vector<Course>(courses), new Vector<Instructor>(instructors), new Vector<Location>(locations));		
 	 ArrayList<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
 	
      for(ScheduleItem item : schedule.getItems())
@@ -276,7 +259,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	 String location;
 	 Vector<Day> schdDays;
 	 
-	 instructor = schdItem.getInstructor().getName();
+	 instructor = (schdItem.getInstructor() == null ? "" : schdItem.getInstructor().getName());
 	 courseDept = schdItem.getCourse().getDept();
 	 courseNum = schdItem.getCourse().getCatalogNum();
 	 section = schdItem.getSection();
@@ -289,7 +272,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	 endTimeHour = schdItem.getEnd().getHour();
 	 startTimeMin = schdItem.getStart().getMinute();
      endTimeMin = schdItem.getEnd().getMinute();
-     location = schdItem.getLocation().toString();
+     location = (schdItem.getLocation() == null ? "" : schdItem.getLocation().toString());
      
      return new ScheduleItemGWT(instructor, courseDept, courseNum, section,
     		                    dayNums, startTimeHour, startTimeMin, 
@@ -301,26 +284,27 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	{
 	 ScheduleItem rescheduled;
 	 Course course;
-	 ArrayList<Day> daysScheduled = new ArrayList<Day>();
+	 int numberOfDays = days.size();
+	 Day[] daysScheduled = new Day[numberOfDays];
 	 Week daysInWeek;
 	 Time startTime;
-	 String dayNames[] = {"SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"};
 	 Database db = new Database();
+	 int i;
 	 
-	 for(Integer dayNum : days)
+	 for(i = 0; i < numberOfDays; i++)
 	 {
-	  switch(dayNum)
+	  switch(days.get(i))
 	  {
-	   case 1 : daysScheduled.add(Day.MON); break;
-	   case 2 : daysScheduled.add(Day.TUE); break;
-	   case 3 : daysScheduled.add(Day.WED); break;
-	   case 4 : daysScheduled.add(Day.THU); break;
-	   case 5 : daysScheduled.add(Day.FRI); break;
+	   case 1 : daysScheduled[i] = (Day.MON); break;
+	   case 2 : daysScheduled[i] = (Day.TUE); break;
+	   case 3 : daysScheduled[i] = (Day.WED); break;
+	   case 4 : daysScheduled[i] = (Day.THU); break;
+	   case 5 : daysScheduled[i] = (Day.FRI); break;
 	  }
 	 }
 	 
-	 course = db.getCourseDB().getCourseByID(scheduleItem.getCourseID()); 
-	 daysInWeek = new Week((Day[])daysScheduled.toArray());
+	 course = cannedCourses.get(scheduleItem.getDept()+scheduleItem.getCatalogNum());//db.getCourseDB.getCourse(scheduleItem.getDept(), scheduleItem.getCatalogNum()); 
+	 daysInWeek = new Week(daysScheduled);
 	 startTime = new Time(startHour, (atHalfHour? 30 : 0));
 	 
 	 try
@@ -331,7 +315,6 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	 {
 	  return null;
 	 }
-	 
 	 return convertScheduleItem(rescheduled);
 	}
 	
@@ -388,20 +371,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		
 		for (LocationGWT location : locations)
 		{
-			location.verify();
-			
 			Location loc = new Location();
+			
 			loc.setRoom(location.getRoom());
-			loc.setAdaCompliant(location.isADACompliant());
-			loc.setAvailability(new WeekAvail());
-			loc.setBuilding(location.getBuilding());
-			loc.setMaxOccupancy(location.getMaxOccupancy());
-			loc.setProvidedEquipment(loc.new ProvidedEquipment());
-			loc.setQuarterId(location.getQuarterID());
-			loc.setRoom(location.getRoom());
-			loc.setScheduleId(location.getScheduleID());
-			loc.setType(location.getType());
-			loc.verify();
 			
 			ldb.addData(loc);
 		}
@@ -469,8 +441,6 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		cdb.clearData();
 		
 		for (CourseGWT course : courses) {
-			course.verify();
-			
 //			cdb.addData(new Course(course.getCourseName(), course.getDept(), course.getCatalogNum()));
 //			cdb.addData(new Course((), course.getLabID(), course.getSmartroom(), course.getLaptop(), course.getOverhead(), 8, course.getCTPrefix(), course.getPrefix()));
 			Course newCourse = new Course();
@@ -487,7 +457,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 			newCourse.setDept(course.getDept());
 			newCourse.setLength(course.getLength());
 			newCourse.setNumOfSections(course.getNumSections());
-			newCourse.setDays(Week.fiveDayWeek);
+			newCourse.setDays(null);
 			
 			
 			cdb.addData(newCourse);

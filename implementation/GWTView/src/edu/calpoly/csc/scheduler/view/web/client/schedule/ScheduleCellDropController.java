@@ -18,10 +18,9 @@ public class ScheduleCellDropController extends SimpleDropController
  public void onDrop(DragContext context)
  {
   ScheduleItemHTML droppedItem;
-  
   super.onDrop(context);
   droppedItem = (ScheduleItemHTML)context.draggable;
-  schedule.moveItem(droppedItem.getScheduleItem(), targetCell.getRow());
+  targetCell.promptForDays(droppedItem.getScheduleItem(), targetCell.getRow());
  }
  
  public void onEnter(DragContext context)

@@ -60,7 +60,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
   {
    for(col = 1; col <= numberOfDays; col++)
    {
-	schdCell = new ScheduleCell();
+	schdCell = new ScheduleCell(this);
 	schdCell.setWidget(new HTML("&nbsp"));
 	scheduleGrid.setWidget(row, col, schdCell);
 	schdCell.setRow(row);
@@ -283,7 +283,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
   {
    col = columnsOfDays.get(i-1).get(day-1);
    scheduleGrid.insertCell(i, col);
-   cellPanel = new ScheduleCell();
+   cellPanel = new ScheduleCell(this);
    cellPanel.setRow(i);
    //cellPanel.setCol(col);
    cellPanel.setWidget(new HTML("&nbsp"));
@@ -483,6 +483,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
   */
  private void layoutInterface()
  {
+  //SearchBoxinterfacePanel.add(new TextBox)
   interfacePanel.add(new Button("Filters", 
    new ClickHandler()
    {
@@ -519,7 +520,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
   */
  public void onClose(CloseEvent<PopupPanel> event) 
  {
-  filterScheduleItems();
+   filterScheduleItems();
  }
 
  private int getHourFromRow(int row)
@@ -532,9 +533,9 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
   return row%2 == 0;
  }
  
- public void moveItem(final ScheduleItemGWT scheduleItem, int row) 
+ public void moveItem(final ScheduleItemGWT scheduleItem, 
+  ArrayList<Integer> days, int row) 
  {
-  ArrayList<Integer> days = scheduleItem.getDayNums();
   final int startHour = getHourFromRow(row);
   final boolean atHalfHour = rowIsAtHalfHour(row);
   greetingService.rescheduleCourse(scheduleItem, days, startHour, 
@@ -559,6 +560,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
 	  scheduleItems.add(rescheduled);
 	  Collections.sort(scheduleItems);
 	 }
+     filtersDialog.addItems(scheduleItems);
 	 filterScheduleItems();			
 	}
    });
