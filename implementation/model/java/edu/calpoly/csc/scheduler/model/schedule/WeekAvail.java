@@ -57,7 +57,7 @@ public class WeekAvail extends GenWeekAvail<Void, DayAvail>
     *
     * @param s The start time
     * @param e The end time
-    * @param d The days to book (0 = Sun; 6 = Sat)
+    * @param w The days to book
     *
     * @return True if the time was booked. False otherwise. 
     *
@@ -98,7 +98,7 @@ public class WeekAvail extends GenWeekAvail<Void, DayAvail>
     *
     * @param s The start time
     * @param e The end time
-    * @param d The list of days
+    * @param days The list of days
     *
     * @return True if the time specified is free on all days. False otherwise.
     */
@@ -113,7 +113,7 @@ public class WeekAvail extends GenWeekAvail<Void, DayAvail>
     * Determines whether a given span of time is free for a given list of dyas.
     *
     * @param tr TimeRange to check over 'days'
-    * @param d The list of days
+    * @param days The list of days
     *
     * @return True if the time specified is free on all days. False otherwise.
     */

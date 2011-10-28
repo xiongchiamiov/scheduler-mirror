@@ -46,7 +46,7 @@ public class GenWeekAvail<T, U extends GenAvail<T>> extends Vector<U>
     * @param t The thing for which to book
     * @param s The start time
     * @param e The end time
-    * @param d The days to book (0 = Sun; 6 = Sat)
+    * @param days The days to book (0 = Sun; 6 = Sat)
     *
     * @return True if the time was booked. False otherwise. 
     *
@@ -89,7 +89,7 @@ public class GenWeekAvail<T, U extends GenAvail<T>> extends Vector<U>
     * @param t The thing for which to book
     * @param s The start time
     * @param e The end time
-    * @param d The list of days
+    * @param days The list of days
     *
     * @return True if the time specified is free on all days. False otherwise.
     *
