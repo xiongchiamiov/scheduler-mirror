@@ -19,9 +19,11 @@ import com.google.gwt.user.client.ui.FlexTable.FlexCellFormatter;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.KeyboardListenerAdapter;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -54,6 +56,9 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
  PickupDragController dragController = 
   new PickupDragController(RootPanel.get(), false);
  TextBox searchBox;
+ private ListBox listBoxAvailable;
+ private ListBox listBoxIncluded;
+ private HorizontalPanel boxesAndSchedulePanel;
  
  /**
   * Places a ScheduleCell in each cell for dragging and dropping schedule items.
@@ -192,7 +197,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
   setTimes();
   resetRowSpans();
   placePanels();
-  mainPanel.add(scheduleGrid);
+  boxesAndSchedulePanel.add(scheduleGrid);
  }
 
  /**
@@ -526,6 +531,37 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
   filterScheduleItems(searchBox.getText());
  }
 
+ private void addCoursesToBoxes()
+ {
+  listBoxAvailable.addItem("CPE 101");
+  listBoxAvailable.addItem("CPE 402");
+  listBoxAvailable.addItem("CPE 102");
+  listBoxAvailable.addItem("CPE 103");
+  listBoxAvailable.addItem("CPE 365");
+  listBoxAvailable.addItem("CPE 491");
+  listBoxAvailable.addItem("CPE 300");
+
+  listBoxIncluded.addItem("CPE 508");
+  listBoxIncluded.addItem("CPE 509");
+  listBoxIncluded.addItem("CPE 570");
+ }
+ 
+ private void layoutBoxesAndSchedule()
+ {
+  boxesAndSchedulePanel = new HorizontalPanel();
+  listBoxAvailable = new ListBox(true);
+  listBoxIncluded = new ListBox(true);
+  
+  listBoxAvailable.setVisibleItemCount(10);
+  listBoxIncluded.setVisibleItemCount(10);
+  addCoursesToBoxes();
+  boxesAndSchedulePanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+  boxesAndSchedulePanel.add(listBoxAvailable);
+  boxesAndSchedulePanel.add(listBoxIncluded);
+  layoutDaysAndTimes(); 
+  mainPanel.add(boxesAndSchedulePanel);
+ }
+ 
 /**
   * Returns this widget in its entirety.
   * @param service The server-side service which this widget will contact
@@ -535,7 +571,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
  {
   greetingService = service;
   layoutInterface();
-  layoutDaysAndTimes();
+  layoutBoxesAndSchedule();
   
   return mainPanel;
  }
