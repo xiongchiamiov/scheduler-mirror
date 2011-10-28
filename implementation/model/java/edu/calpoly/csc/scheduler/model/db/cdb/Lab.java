@@ -9,6 +9,7 @@ public class Lab extends Course
 {
    private boolean tethered;
    private Course component;
+   private boolean useLectureInstructor;
 
    public Lab () { }
    
@@ -31,7 +32,7 @@ public class Lab extends Course
    /**
     * Sets whether we're tethered to our lecture or not
     *
-    * @param whether we're tethered to our lecture or not
+    * @param tethered whether we're tethered to our lecture or not
     */
    public void setTethered (boolean tethered)
    {
@@ -56,5 +57,28 @@ public class Lab extends Course
    public void setComponent (Course component)
    {
       this.component = component;
+   }
+
+   /**
+    * Sets the 'useLectureInstructor' field
+    * 
+    * @param b whether you want this lab to use the same instructor as its 
+    *        lecture
+    */
+   public void setUseLectureInstructor (boolean b)
+   {
+      this.useLectureInstructor = b;
+   }
+   
+   /**
+    * Returns whether this lab should be taught by the same instructor as its
+    * lecture.
+    * 
+    * @return whether this lab should be taught by the same instructor as its
+    * lecture.
+    */
+   public boolean shouldUseLectureInstructor ()
+   {
+      return this.useLectureInstructor;
    }
 }

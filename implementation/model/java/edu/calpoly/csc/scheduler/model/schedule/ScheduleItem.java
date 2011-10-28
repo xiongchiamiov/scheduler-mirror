@@ -2,6 +2,7 @@ package edu.calpoly.csc.scheduler.model.schedule;
 
 import java.io.PrintStream;
 import java.io.Serializable;
+import java.util.*;
 
 import edu.calpoly.csc.scheduler.model.db.*;
 import edu.calpoly.csc.scheduler.model.db.idb.*;
@@ -42,33 +43,24 @@ public class ScheduleItem implements Serializable, Cloneable,
    /**
     * The instructor for this scheduled item
     */
-   public Instructor i;
+   private Instructor i;
    /**
     * The course for this scheduled item
     */
-   public Course c;
+   private Course c;
    /**
     * The location for this scheduled item
     */
-   public Location location;
+   private Location location;
    /**
     * Course section 
     */
-   public int section;
+   private int section;
    /**
     * The days in the week this item is scheduled
     */
-   public Week days;
-   /**
-    * The time at which this scheduled item starts. Do not access this field directly. 
-    * Use getters/setters, as this is no longer used for SI computations. 
-    */
-   public Time start;
-   /**
-    * The time at which this scheduled item ends. Do not access this field directly. 
-    * Use getters/setters, as this is no longer used for SI computations. 
-    */
-   public Time end;
+   private Week days = new Week();
+
    /**
     * Time range representing when this ScheduleItem starts/ends. This is what 
     * is used in place of "start" and "end". However, when I added this new 
@@ -81,51 +73,20 @@ public class ScheduleItem implements Serializable, Cloneable,
    /**
     * Whether this SI is locked into the schedule or not
     */
-   public boolean locked; 
+   private boolean locked; 
    /**
     * The lab that goes with the class this SI represents, if any
     */
-   public ScheduleItem lab;
+   private List<ScheduleItem> labs = new Vector<ScheduleItem>();
    /**
     * How "valuable" this course/time combination is to the Instructor.
     */
-   public int value;
+   private int value;
    
    /**
     * Builds an empty Schedule Item. None of its fields will be initialized.
     */
    public ScheduleItem () { }
-
-   /**
-    * Creates a scheduled course, complete with instructor, location
-    * section, days taught, and start/end time.
-    *
-    * @param i Instructor teaching the course
-    * @param c Course being taught
-    * @param l Location course will be taught
-    * @param days Days of the week this course will be taught
-    * @param s Time the course starts
-    * @param e Time the course ends
-    */
-   public ScheduleItem (Instructor i,
-                        Course c,
-                        Location l, 
-                        int section, 
-                        Week days,
-                        Time s,
-                        Time e)
-   {
-      this.i = i;
-      this.c = c;
-      this.location = l;
-      this.section = section;
-      this.days = days;
-      this.start = s;
-      this.end = e;
-      this.tr = new TimeRange(s, e);
-      this.locked = false;
-      this.lab = null;
-   }
    
    public ScheduleItem (ScheduleItem si)
    {
@@ -134,11 +95,34 @@ public class ScheduleItem implements Serializable, Cloneable,
       this.location = si.getLocation();
       this.section = si.getSection();
       this.days = si.getDays();
-      this.start = si.getStart();
-      this.end = si.getEnd();
-      this.tr = new TimeRange(this.start, this.end);
+      
+      this.tr = new TimeRange(si.getStart(), si.getEnd());
    }
 
+   /**
+    * A jacked up constructor.
+    * 
+    * @param i
+    * @param c
+    * @param l
+    * @param section
+    * @param days
+    * @param s
+    * @param e
+    * 
+    * @deprecated Stop using this
+    */
+   public ScheduleItem (Instructor i, Course c, Location l, int section, 
+      Week days, Time s, Time e)
+   {
+      this.i = i;
+      this.c = c;
+      this.location = l;
+      this.section = section;
+      this.days = days;
+      this.tr = new TimeRange(s, e);
+   }
+   
    public ScheduleItem clone()
    {
       ScheduleItem si = null;
@@ -196,8 +180,8 @@ public class ScheduleItem implements Serializable, Cloneable,
          "instructor => \""   + this.i.getId() + "\",\n"  +
          "location => \""     + this.location + "\",\n"          +
          "days => \""         + this.days + "\",\n"       +
-         "s => \""            + this.start + "\",\n"      +
-         "e => \""            + this.end   + "\",\n"      + 
+         "s => \""            + this.tr.getS() + "\",\n"      +
+         "e => \""            + this.tr.getE() + "\",\n"      + 
          "value => "          + this.getValue() + ","
       );
    }
@@ -218,9 +202,8 @@ public class ScheduleItem implements Serializable, Cloneable,
               this.location.equals(s.location)          &&
               this.section == s.section   &&
               this.days.equals(s.days)    &&
-              this.start.equals(s.start)  &&
-              this.end.equals(s.end)      &&
-              this.lab.equals(s.lab));
+              this.tr.equals(s.getTimeRange()) &&
+              this.labs.equals(s.labs));
    }
 
    /** 
@@ -273,10 +256,11 @@ public class ScheduleItem implements Serializable, Cloneable,
     * haven't set it yet, or if this SI isn't even supposed to have one
     *
     * @return the SI-lab component for this SI. Can be null.
+    * 
     */
-   public ScheduleItem getLab ()
+   public List<ScheduleItem> getLabs ()
    {
-      return this.lab;
+      return this.labs;
    }
 
    /**
@@ -347,11 +331,15 @@ public class ScheduleItem implements Serializable, Cloneable,
 
       if (hasLab = this.hasLab())
       {
-         lab = this.lab.getValue();
+         for (ScheduleItem lab_si: this.labs)
+         {
+            lab += lab_si.getValue();
+         }
+         
          /*
           * A lecture and lab which overlap cannot be taught
           */
-         if (this.overlaps(this.lab))
+         if (this.overlaps(this.labs))
          {
             lab = 0;
          }
@@ -412,12 +400,39 @@ public class ScheduleItem implements Serializable, Cloneable,
       return 0;
    }
 
-   public boolean hasLab () { return this.lab != null; }
+   /**
+    * Determines whether there're any lab components to this ScheduleItem.
+    * 
+    * @return this.labs != null && this.labs.size() > 0
+    */
+   public boolean hasLab () 
+   {
+      return this.labs != null && this.labs.size() > 0;
+   }
 
+   /**
+    * Tells you if this ScheduleItem overlaps with any of a list of 
+    * ScheduleItems.
+    * 
+    * @param sis List of ScheduleItems to check for overlappingness
+    * 
+    * @return true if this ScheduleItem overlaps with any of the ScheduleItems
+    *         in the provided list
+    */
+   public boolean overlaps (List<ScheduleItem> sis)
+   {
+      boolean r = true;
+      for (ScheduleItem si: sis)
+      {
+         r &= this.overlaps(si);
+      }
+      return r;
+   }
+   
    /**
     * Used to determine whether this SI overlaps with another one. 
     *
-    * @param the SI we'll check for overlapping-ness.
+    * @param si the SI we'll check for overlapping-ness.
     *
     * @return (this.tr.overlaps(si.getTimeRange()) && this.days.overlaps(si.getDays()))
     */
@@ -449,22 +464,6 @@ public class ScheduleItem implements Serializable, Cloneable,
       this.days = days;
    }
 
-   /**
-    * Sets the start and end time and days of this S
-      boolean r = false;I to the fields present in 
-    * a given DaysAndTime object.
-    *
-    * @param dat DaysAndTime object where the start, end, and days fields will
-    *            be found.
-    */
-   public void setDaysAndTime (DaysAndTime dat)
-   {
-      this.start = dat.getS();
-      this.end   = dat.getE();
-      this.tr = new TimeRange(this.start, this.end);
-      this.days  = dat.getWeek ();
-   }
-
    /** 
     * Sets the instructor for this SI.
     *
@@ -480,9 +479,9 @@ public class ScheduleItem implements Serializable, Cloneable,
     *
     * @param lab The SI you wish to apply to this SI's lab field.
     */
-   public void setLab (ScheduleItem lab)
+   public void addLab (ScheduleItem lab)
    {
-      this.lab = lab;
+      this.labs.add(lab);
    }
 
    /**
@@ -507,9 +506,7 @@ public class ScheduleItem implements Serializable, Cloneable,
 
    public void setTimeRange (TimeRange tr)
    {
-      this.start = new Time(tr.getS());
-      this.end = new Time(tr.getE());
-      this.tr = new TimeRange(this.start, this.end);
+      this.tr = new TimeRange(tr.getS(), tr.getE());
    }
 
    /**
@@ -522,13 +519,13 @@ public class ScheduleItem implements Serializable, Cloneable,
               "Instructor:\t" + this.i + "\n" + 
               "In:\t\t" + this.location + "\n" + 
               "On:\t\t" + this.days + "\n" + 
-              "Starts:\t\t" + this.start + "\n" + 
-              "Ends:\t\t" + this.end + "\n" + 
+              "Starts:\t\t" + this.tr.getS() + "\n" + 
+              "Ends:\t\t" + this.tr.getE() + "\n" + 
               "Locked:\t\t" + this.locked + "\n" +
               "Value :\t\t" + this.getValue() + "\n");
       if (this.hasLab())
       {
-         r += this.getLab().toString();
+         r += this.getLabs().toString();
       }
       return r;
    }
