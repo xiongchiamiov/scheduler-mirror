@@ -460,7 +460,7 @@ public class SQLDB {
 	   try {
 	      stmt = conn.prepareStatement(queryForInstructors);
 	      stmt.setInt(1, scheduleid);
-	      instructorsResult = stmt.executeQuery(queryForInstructors);
+	      instructorsResult = stmt.executeQuery();
 	   } catch (SQLException e) {
 	      e.printStackTrace();
 	   } 
@@ -482,7 +482,7 @@ public class SQLDB {
 	   try {
 	      stmt = conn.prepareStatement(queryForCourses);
          stmt.setInt(1, scheduleid);
-	      coursesResult = stmt.executeQuery(queryForCourses);
+	      coursesResult = stmt.executeQuery();
 	   } catch (SQLException e) {
 	      e.printStackTrace();
 	   }
@@ -506,7 +506,7 @@ public class SQLDB {
 	   try {
 	      stmt = conn.prepareStatement(queryForLocations);
          stmt.setInt(1, scheduleid);
-	      locationsResult = stmt.executeQuery(queryForLocations);
+	      locationsResult = stmt.executeQuery();
 	   } catch (SQLException e) {
 	      e.printStackTrace();
 	   }
