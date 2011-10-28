@@ -43,6 +43,12 @@ public class Model implements Serializable
       return db.getSchedules(dept);
    }
    
+   public Database initDbs (Integer sid)
+   {
+      db.openDB(sid);
+      return this.db;
+   }
+   
    /**
     * Returns the db
     * 
