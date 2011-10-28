@@ -8,6 +8,9 @@ import com.allen_sauer.gwt.dnd.client.PickupDragController;
 import com.allen_sauer.gwt.dnd.client.drop.DropController;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.Window;
@@ -17,9 +20,12 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.KeyboardListener;
+import com.google.gwt.user.client.ui.KeyboardListenerAdapter;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -47,6 +53,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
  private FiltersViewWidget filtersDialog = new FiltersViewWidget();
  PickupDragController dragController = 
   new PickupDragController(RootPanel.get(), false);
+ TextBox searchBox;
  
  /**
   * Places a ScheduleCell in each cell for dragging and dropping schedule items.
@@ -397,7 +404,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
       //Add the attributes of the retrieved items to the filters list
       filtersDialog.addItems(scheduleItems);
       //Place schedule items with any previously set filters
-      filterScheduleItems();
+      filterScheduleItems(searchBox.getText());
      }
     }
    });
@@ -449,7 +456,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
  /**
   * Place schedule items which are not filtered.
   */
- private void filterScheduleItems()
+ private void filterScheduleItems(String search)
  {
   resetSchedule();
   ArrayList<String> filtInstructors = filtersDialog.getInstructors();
@@ -460,7 +467,8 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
   {
    if(filtInstructors.contains(item.getProfessor()) && 
 	   filtCourses.contains(item.getCourse()) && 
-	    filtRooms.contains(item.getRoom()))
+	   filtRooms.contains(item.getRoom()) && 
+	   item.getSchdItemText().contains(search))
    {
     placeScheduleItem(item, filtDays);
    }
@@ -483,7 +491,19 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
   */
  private void layoutInterface()
  {
-  //SearchBoxinterfacePanel.add(new TextBox)
+  searchBox = new TextBox();
+  searchBox.addKeyPressHandler(
+   new KeyPressHandler()
+   {
+	public void onKeyPress(KeyPressEvent event) 
+	{
+	 if(event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER)
+	 {
+	  search();
+	 }
+	}
+   });
+  interfacePanel.add(searchBox);
   interfacePanel.add(new Button("Filters", 
    new ClickHandler()
    {
@@ -501,7 +521,12 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
   mainPanel.add(interfacePanel);
  }
  
- /**
+ private void search() 
+ {
+  filterScheduleItems(searchBox.getText());
+ }
+
+/**
   * Returns this widget in its entirety.
   * @param service The server-side service which this widget will contact
   * @return This widget
@@ -520,7 +545,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
   */
  public void onClose(CloseEvent<PopupPanel> event) 
  {
-   filterScheduleItems();
+   filterScheduleItems(searchBox.getText());
  }
 
  private int getHourFromRow(int row)
@@ -561,21 +586,8 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
 	  Collections.sort(scheduleItems);
 	 }
      filtersDialog.addItems(scheduleItems);
-	 filterScheduleItems();			
+	 filterScheduleItems(searchBox.getText());			
 	}
    });
- }
- 
- public void simpleMove(ScheduleItemGWT moved, int row)
- {
-  int hour, min;
-  hour = getHourFromRow(row);
-  min = rowIsAtHalfHour(row)? 30 : 0;
-  moved.setStartTimeHour(hour);
-  moved.setStartTimeMin(min);
-  moved.setEndTimeHour(hour+2);
-  moved.setEndTimeMin(min);
-  Collections.sort(scheduleItems);
-  filterScheduleItems();
  }
 }
