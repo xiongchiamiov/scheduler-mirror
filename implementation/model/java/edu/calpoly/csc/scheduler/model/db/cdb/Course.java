@@ -460,7 +460,6 @@ public class Course extends DbData implements Serializable
     * @.todo Write this. It always returns false right now.
     * 
     * @return getLab() != null
-    * @return
     */
    public boolean hasLab ()
    {
@@ -549,30 +548,21 @@ public class Course extends DbData implements Serializable
     */
    public void verify () throws NullDataException
    {
-      if (catalogNum == null)
-    	  throw new NullDataException ();
-      if (days == null)
-		  throw new NullDataException ();
-	  if (dept == null)
-		  throw new NullDataException ();
-	  if (enrollment == null)
-		  throw new NullDataException ();
-	  if (labPad == null)
-		  throw new NullDataException ();
-	  if (length == null)
-		  throw new NullDataException ();
-	  if (name == null)
-		  throw new NullDataException ();
-	  if (numOfSections == null)
-		  throw new NullDataException ();
-	  if (quarterId == null)
-		  throw new NullDataException ();
-	  if (scu == null)
-		  throw new NullDataException ();
-      if (type == null)
-		  throw new NullDataException ();
-      if (wtu == null)
-          throw new NullDataException ();
+      if (catalogNum    == null ||
+          days          == null ||
+          dept          == null ||
+          enrollment    == null ||
+          labPad        == null ||
+          length        == null ||
+          name          == null ||
+          numOfSections == null ||
+          quarterId     == null ||
+          scu           == null ||
+          type          == null ||
+          wtu           == null)
+      {
+         throw new NullDataException ();
+      }
    }
    
    public Course getCannedData()
