@@ -12,30 +12,26 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import edu.calpoly.csc.scheduler.model.db.DatabaseAPI;
-import edu.calpoly.csc.scheduler.model.db.NullDataException;
 import edu.calpoly.csc.scheduler.model.db.SQLDB;
-import edu.calpoly.csc.scheduler.model.db.cdb.Course.CourseType;
-
-import edu.calpoly.csc.scheduler.model.schedule.*;
+import edu.calpoly.csc.scheduler.model.schedule.Week;
 
 public class CourseDB implements DatabaseAPI<Course>
 {
    private ArrayList<Course> data;
    private SQLDB             sqldb;
    private int               scheduleID;
-   private String            quarterID;
 
+   @Deprecated
    public CourseDB(SQLDB sqldb)
    {
       this.sqldb = sqldb;
       initDB();
    }
 
-   public CourseDB(SQLDB sqldb, int scheduleID, String quarterID)
+   public CourseDB(SQLDB sqldb, int scheduleID)
    {
       this.sqldb = sqldb;
       this.scheduleID = scheduleID;
-      this.quarterID = quarterID;
       initDB();
    }
 
@@ -56,7 +52,7 @@ public class CourseDB implements DatabaseAPI<Course>
    @Override
    public void pullData()
    {
-      ResultSet rs = sqldb.getSQLCourses();
+      ResultSet rs = sqldb.getSQLCourses(scheduleID);
       try
       {
          while (rs.next())
@@ -77,8 +73,7 @@ public class CourseDB implements DatabaseAPI<Course>
 
    public Course getCourse(String dept, int catalogNum)
    {
-      //TODO: Change to pass in schedule and quarter id
-      return makeCourse(sqldb.getSQLCourse(dept, catalogNum));
+      return makeCourse(sqldb.getSQLCourse(dept, catalogNum, scheduleID));
    }
 
    private Course makeCourse(ResultSet rs)

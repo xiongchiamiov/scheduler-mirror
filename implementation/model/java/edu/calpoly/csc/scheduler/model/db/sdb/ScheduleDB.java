@@ -21,7 +21,6 @@ public class ScheduleDB implements DatabaseAPI<Schedule>
    private ArrayList<Schedule> data;
    private SQLDB               sqldb;
    private int                 scheduleID;
-   private String              quarterID;
 
    public ScheduleDB(SQLDB sqldb)
    {
@@ -29,11 +28,10 @@ public class ScheduleDB implements DatabaseAPI<Schedule>
       initDB();
    }
 
-   public ScheduleDB(SQLDB sqldb, int scheduleID, String quarterID)
+   public ScheduleDB(SQLDB sqldb,int scheduleID)
    {
       this.sqldb = sqldb;
       this.scheduleID = scheduleID;
-      this.quarterID = quarterID;
       initDB();
    }
 
@@ -52,7 +50,7 @@ public class ScheduleDB implements DatabaseAPI<Schedule>
    @Override
    public void pullData()
    {
-      ResultSet rs = sqldb.getSQLSchedules();
+      ResultSet rs = sqldb.getSQLSchedules(scheduleID);
       try
       {
          while (rs.next())
@@ -92,7 +90,7 @@ public class ScheduleDB implements DatabaseAPI<Schedule>
       data.setQuarterId(quarterID);
       // Create insert string
       String insertString = "insert into schedules ("
-            + "name, quarterid, schedule" + "values (?, ?, ?)";
+            + "name, quarterid, schedule, dept" + "values (?, ?, ?, ?)";
       // Create prepared statement
       PreparedStatement stmt = sqldb.getPrepStmt(insertString);
       // Set values
@@ -113,6 +111,7 @@ public class ScheduleDB implements DatabaseAPI<Schedule>
          {
             e.printStackTrace();
          }
+//         stmt.setString(4, data.getDept());
       }
       catch (SQLException e)
       {
@@ -127,8 +126,8 @@ public class ScheduleDB implements DatabaseAPI<Schedule>
    {
       
       // Create insert string
-      String insertString = "insert into schedules (name, quarterid, schedule"
-            + "values (?, ?, ?)";
+      String insertString = "insert into schedules (name, quarterid, schedule, dept"
+            + "values (?, ?, ?, ?)";
       // Create prepared statement
       PreparedStatement stmt = sqldb.getPrepStmt(insertString);
       // Set values
@@ -149,6 +148,7 @@ public class ScheduleDB implements DatabaseAPI<Schedule>
          {
             e.printStackTrace();
          }
+//       stmt.setString(4, data.getDept());
       }
       catch (SQLException e)
       {
@@ -162,7 +162,7 @@ public class ScheduleDB implements DatabaseAPI<Schedule>
    public void editData(Schedule data)
    {
       // Create insert string
-      String updateString = "update schedules set name = ?, quarterid = ?, schedule = ? where scheduleid = ?";
+      String updateString = "update schedules set name = ?, quarterid = ?, schedule = ?, dept = ? where scheduleid = ?";
       // Create prepared statement
       PreparedStatement stmt = sqldb.getPrepStmt(updateString);
       // Set values
@@ -184,7 +184,8 @@ public class ScheduleDB implements DatabaseAPI<Schedule>
             e.printStackTrace();
          }
          // Where clause
-         stmt.setInt(4, data.getId());
+//       stmt.setString(4, data.getDept());
+         stmt.setInt(5, data.getId());
       }
       catch (SQLException e)
       {

@@ -1,5 +1,9 @@
 package edu.calpoly.csc.scheduler.model.db;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+
 import edu.calpoly.csc.scheduler.model.db.cdb.CourseDB;
 import edu.calpoly.csc.scheduler.model.db.idb.InstructorDB;
 import edu.calpoly.csc.scheduler.model.db.ldb.LocationDB;
@@ -32,42 +36,53 @@ public class Database
    /** The current schedule id */
    private int          scheduleID;
 
-   /** The current quarter id */
-   private String       quarterID;
-
    /**
-    * This constructor will create the SQLDB object.
+    * STEP 1 This constructor will create the SQLDB object.
     **/
    public Database()
    {
       sqldb = new SQLDB();
-//      instructorDB = new InstructorDB(sqldb);
-//      courseDB = new CourseDB(sqldb);
-//      locationDB = new LocationDB(sqldb);
-//      scheduleDB = new ScheduleDB(sqldb);
-      scheduleID = -1;
-      quarterID = "";
+      sqldb.open();
    }
 
    /**
-    * This constructor will create the SQLDB object with the given quarter id
-    * and schedule id.
-    **/
-   public Database(int scheduleID, String quarterID)
+    * STEP 2 Returns the department the user is in
+    */
+   public String getDept(String userid)
    {
-      SQLDB sqldb = new SQLDB();
-//      instructorDB = new InstructorDB(sqldb);
-//      courseDB = new CourseDB(sqldb);
-//      locationDB = new LocationDB(sqldb);
-//      scheduleDB = new ScheduleDB(sqldb);
-      this.scheduleID = scheduleID;
-      this.quarterID = quarterID;
+      return sqldb.getDeptByUserID(userid);
    }
-   
-   public void setSchedule(int scheduleID, String quarterID)
+
+   /**
+    * STEP 3 Returns the list of schedules for this department
+    */
+   public HashMap<String, Integer> getSchedules(String dept)
    {
-      this.scheduleID = scheduleID;
-      this.quarterID = quarterID;
+      HashMap<String, Integer> schedules = new HashMap<String, Integer>();
+      ResultSet rs = sqldb.getSchedulesByDept(dept);
+      try
+      {
+         while (rs.next())
+         {
+            schedules.put(rs.getString("name"), rs.getInt("scheduleid"));
+         }
+      }
+      catch (SQLException e)
+      {
+         e.printStackTrace();
+      }
+      return schedules;
+   }
+
+   /**
+    * STEP 4 Initialize databases with given schedule id
+    */
+   public void openDB(int scheduleid)
+   {
+      instructorDB = new InstructorDB(sqldb, scheduleid);
+      courseDB = new CourseDB(sqldb, scheduleid);
+      locationDB = new LocationDB(sqldb, scheduleid);
+      scheduleDB = new ScheduleDB(sqldb, scheduleid);
    }
 
    /**
@@ -75,16 +90,7 @@ public class Database
     */
    public InstructorDB getInstructorDB()
    {
-      return new InstructorDB(sqldb);
-//      return new InstructorDB(sqldb, scheduleID, quarterID);
-   }
-   
-   /**
-    * @return the instructorDB
-    */
-   public InstructorDB getInstructorDB(int scheduleID, String quarterID)
-   {
-      return new InstructorDB(sqldb, scheduleID, quarterID);
+      return instructorDB;
    }
 
    /**
@@ -92,16 +98,7 @@ public class Database
     */
    public CourseDB getCourseDB()
    {
-      return new CourseDB(sqldb);
-//      return new CourseDB(sqldb, scheduleID, quarterID);
-   }
-   
-   /**
-    * @return the courseDB
-    */
-   public CourseDB getCourseDB(int scheduleID, String quarterID)
-   {
-      return new CourseDB(sqldb, scheduleID, quarterID);
+      return courseDB;
    }
 
    /**
@@ -109,16 +106,7 @@ public class Database
     */
    public LocationDB getLocationDB()
    {
-      return new LocationDB(sqldb);
-//      return new LocationDB(sqldb, scheduleID, quarterID);
-   }
-   
-   /**
-    * @return the locationDB
-    */
-   public LocationDB getLocationDB(int scheduleID, String quarterID)
-   {
-      return new LocationDB(sqldb, scheduleID, quarterID);
+      return locationDB;
    }
 
    /**
@@ -126,16 +114,7 @@ public class Database
     */
    public ScheduleDB getScheduleDB()
    {
-      return new ScheduleDB(sqldb);
-//      return new ScheduleDB(sqldb, scheduleID, quarterID);
-   }
-   
-   /**
-    * @return the scheduleDB
-    */
-   public ScheduleDB getScheduleDB(int scheduleID, String quarterID)
-   {
-      return new ScheduleDB(sqldb, scheduleID, quarterID);
+      return scheduleDB;
    }
 
    /**
@@ -153,22 +132,5 @@ public class Database
    public void setScheduleID(int scheduleID)
    {
       this.scheduleID = scheduleID;
-   }
-
-   /**
-    * @return the quarterID
-    */
-   public String getQuarterID()
-   {
-      return quarterID;
-   }
-
-   /**
-    * @param quarterID
-    *           the quarterID to set
-    */
-   public void setQuarterID(String quarterID)
-   {
-      this.quarterID = quarterID;
    }
 }

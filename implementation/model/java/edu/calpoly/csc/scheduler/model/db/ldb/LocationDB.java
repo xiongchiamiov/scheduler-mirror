@@ -14,11 +14,9 @@ import java.util.List;
 import java.util.Vector;
 
 import edu.calpoly.csc.scheduler.model.db.DatabaseAPI;
-import edu.calpoly.csc.scheduler.model.db.NullDataException;
 import edu.calpoly.csc.scheduler.model.db.SQLDB;
 import edu.calpoly.csc.scheduler.model.db.TimeRange;
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
-import edu.calpoly.csc.scheduler.model.db.ldb.Location.ProvidedEquipment;
 import edu.calpoly.csc.scheduler.model.schedule.WeekAvail;
 
 public class LocationDB implements DatabaseAPI<Location>
@@ -26,19 +24,18 @@ public class LocationDB implements DatabaseAPI<Location>
    private ArrayList<Location> data;
    private SQLDB               sqldb;
    private int                 scheduleID;
-   private String              quarterID;
 
+   @Deprecated
    public LocationDB(SQLDB sqldb)
    {
       this.sqldb = sqldb;
       initDB();
    }
 
-   public LocationDB(SQLDB sqldb, int scheduleID, String quarterID)
+   public LocationDB(SQLDB sqldb, int scheduleID)
    {
       this.sqldb = sqldb;
       this.scheduleID = scheduleID;
-      this.quarterID = quarterID;
       initDB();
    }
 
@@ -59,7 +56,7 @@ public class LocationDB implements DatabaseAPI<Location>
    @Override
    public void pullData()
    {
-      ResultSet rs = sqldb.getSQLLocations();
+      ResultSet rs = sqldb.getSQLLocations(scheduleID);
       try
       {
          while (rs.next())
@@ -145,7 +142,6 @@ public class LocationDB implements DatabaseAPI<Location>
    @Override
    public void addData(Location data)
    {
-	   System.out.println("derp");
       data.verify();
       // Create insert string
       String insertString = "insert into locations ("
@@ -155,7 +151,6 @@ public class LocationDB implements DatabaseAPI<Location>
       // Create prepared statement
       PreparedStatement stmt = sqldb.getPrepStmt(insertString);
       // Set values
-	   System.out.println("lerp");
       try
       {
          stmt.setString(1, data.getBuilding());
@@ -191,16 +186,13 @@ public class LocationDB implements DatabaseAPI<Location>
          }
          stmt.setString(8, data.getQuarterId());
          stmt.setInt(9, data.getScheduleId());
-  	   	System.out.println("sherp");
       }
       catch (SQLException e)
       {
          e.printStackTrace();
       }
       // Execute
-	   System.out.println("defrp");
       sqldb.executePrepStmt(stmt);
-	   System.out.println("dkerp");
    }
 
    @Override

@@ -1,10 +1,20 @@
 package edu.calpoly.csc.scheduler.model.db.idb;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Vector;
 
 import edu.calpoly.csc.scheduler.model.db.DatabaseAPI;
 import edu.calpoly.csc.scheduler.model.db.SQLDB;
@@ -13,7 +23,6 @@ import edu.calpoly.csc.scheduler.model.db.cdb.Course;
 import edu.calpoly.csc.scheduler.model.db.ldb.Location;
 import edu.calpoly.csc.scheduler.model.schedule.Day;
 import edu.calpoly.csc.scheduler.model.schedule.ScheduleItem;
-import edu.calpoly.csc.scheduler.model.schedule.Week;
 import edu.calpoly.csc.scheduler.model.schedule.WeekAvail;
 
 public class InstructorDB implements DatabaseAPI<Instructor>
@@ -21,19 +30,18 @@ public class InstructorDB implements DatabaseAPI<Instructor>
    private ArrayList<Instructor> data;
    private SQLDB                 sqldb;
    private int                   scheduleID;
-   private String                quarterID;
 
+   @Deprecated
    public InstructorDB(SQLDB sqldb)
    {
       this.sqldb = sqldb;
       initDB();
    }
 
-   public InstructorDB(SQLDB sqldb, int scheduleID, String quarterID)
+   public InstructorDB(SQLDB sqldb, int scheduleID)
    {
       this.sqldb = sqldb;
       this.scheduleID = scheduleID;
-      this.quarterID = quarterID;
       initDB();
    }
 
@@ -54,7 +62,7 @@ public class InstructorDB implements DatabaseAPI<Instructor>
    @Override
    public void pullData()
    {
-      ResultSet rs = sqldb.getSQLInstructors();
+      ResultSet rs = sqldb.getSQLInstructors(scheduleID);
       try
       {
          while (rs.next())

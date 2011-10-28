@@ -7,21 +7,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Vector;
 
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
-import edu.calpoly.csc.scheduler.model.db.cdb.CourseDB;
-import edu.calpoly.csc.scheduler.model.db.cdb.RequiredEquipment;
-import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
-import edu.calpoly.csc.scheduler.model.db.idb.InstructorDB;
-import edu.calpoly.csc.scheduler.model.db.ldb.Location;
-import edu.calpoly.csc.scheduler.model.db.ldb.LocationDB;
-import edu.calpoly.csc.scheduler.model.db.pdb.DaysForClasses;
-import edu.calpoly.csc.scheduler.model.db.pdb.NoClassOverlap;
-import edu.calpoly.csc.scheduler.model.db.pdb.Preferences;
-import edu.calpoly.csc.scheduler.model.db.pdb.PreferencesDB;
-import edu.calpoly.csc.scheduler.model.schedule.Week;
 
 /**
  * This class provides for direct access to a MySQL database. Though it a user
@@ -42,337 +31,6 @@ public class SQLDB {
 	 **/
 	public SQLDB() {
 	}
-
-	/**
-	 * Returns the location database.
-	 * 
-	 * @return the location database.
-	 * 
-	 **/
-	// public LocationDB getLocationDB()
-	// {
-	// return locationDB;
-	// Old code
-	// if (!this.connected)
-	// {
-	// LocationDB ldb = new LocationDB();
-	// ldb.setData(new ArrayList<Location>());
-	// ldb.setLocalData(new Vector<Location>());
-	// return ldb;
-	// }
-	//
-	// ArrayList<Location> myArr = new ArrayList<Location>();
-	// try
-	// {
-	// String sql =
-	// "SELECT building, room, maxoccupancy, type, smartroom, laptopconnectivity, adacompliant, overhead";
-	// sql += " FROM locations";
-	//
-	// Statement stmt = conn.createStatement();
-	// ResultSet rs = stmt.executeQuery(sql);
-	//
-	// while (rs.next())
-	// {
-	// String bldg = rs.getString("building");
-	// String room = rs.getString("room");
-	// int occupancy = rs.getInt("maxoccupancy");
-	// String type = rs.getString("type");
-	// boolean smartroom = rs.getBoolean("smartroom");
-	// boolean laptopconnectivity = rs.getBoolean("laptopconnectivity");
-	// boolean adacompliant = rs.getBoolean("adacompliant");
-	// boolean overhead = rs.getBoolean("overhead");
-	// Location l = new Location(bldg, room, occupancy, type,
-	// adacompliant, overhead, smartroom, laptopconnectivity);
-	// myArr.add(l);
-	// }
-	//
-	// }
-	// catch (SQLException se)
-	// {
-	// System.out.println("Error creating database");
-	// System.out.println(se.getMessage());
-	// }
-	// finally
-	// {
-	// locationDB = new LocationDB();
-	// if (!myArr.isEmpty())
-	// {
-	// locationDB.setData(myArr);
-	// }
-	// locationDB.setData(myArr);
-	// locationDB.setLocalData(myArr);
-	// }
-	// return locationDB;
-	// }
-	//
-	// /**
-	// * Returns the instructor database.
-	// *
-	// * @return the instructor database.
-	// *
-	// **/
-	// public InstructorDB getInstructorDB()
-	// {
-	// return instructorDB;
-	// Old Code
-	// if (!this.connected)
-	// {
-	// InstructorDB idb = new InstructorDB();
-	// idb.setData(new Vector<Instructor>());
-	// idb.setLocalData(new Vector<Instructor>());
-	// return idb;
-	// }
-	//
-	// Vector<Instructor> myArr = null;
-	// try
-	// {
-	// myArr = new Vector<Instructor>();
-	//
-	// String sql =
-	// "SELECT `firstname`, `lastname`, `userid`, `wtu`, `building`, `room`, `disabilities`";
-	// sql += " FROM instructors";
-	//
-	// Statement stmt = conn.createStatement();
-	// ResultSet rs = stmt.executeQuery(sql);
-	//
-	// while (rs.next())
-	// {
-	// // Retrieve by column name
-	// String fname = rs.getString("firstname");
-	// String lname = rs.getString("lastname");
-	// String userid = rs.getString("userid");
-	// int wtu = rs.getInt("wtu");
-	// String building = rs.getString("building");
-	// String room = rs.getString("room");
-	// boolean disabilities = rs.getBoolean("disabilities");
-	// // System.out.println (disabilities + "");
-	// Instructor i = new Instructor(fname, lname, userid, wtu,
-	// new Location(building, room), disabilities);
-	// myArr.add(i);
-	// }
-	//
-	// }
-	// catch (SQLException se)
-	// {
-	// System.out.println("Error creating database");
-	// System.out.println(se.getMessage());
-	// }
-	// finally
-	// {
-	// instructorDB = new InstructorDB(new Vector<Instructor>());
-	// if (!myArr.isEmpty())
-	// {
-	// instructorDB = new InstructorDB(myArr);
-	// // instructorDB.setData(myArr);
-	// }
-	// }
-	// return instructorDB;
-	// }
-	//
-	// /**
-	// * Returns the course database.
-	// *
-	// * TODO: REWRITE
-	// *
-	// * @return the course database.
-	// **/
-	// public CourseDB getCourseDB()
-	// {
-	// return courseDB;
-	// Old Code
-	// if (!this.connected)
-	// {
-	// CourseDB cdb = new CourseDB();
-	// cdb.setData(new ArrayList<Course>());
-	// cdb.setLocalData(new Vector<Course>());
-	// return cdb;
-	// }
-	//
-	// ArrayList<Course> myArr = null;
-	// try
-	// {
-	// myArr = new ArrayList<Course>();
-	// String sql =
-	// "SELECT name, courseNum, wtus, scus, classType, maxEnrollment,";
-	// sql = sql
-	// +
-	// "labPairing, smartroom, overhead, laptop, prefix, hoursPerWeek, ctPrefix, courses_to_preferences.prefid FROM courses LEFT JOIN courses_to_preferences ON courses_to_preferences.courseid = courses.id ORDER BY classType";
-	// Statement stmt = conn.createStatement();
-	// ResultSet rs = stmt.executeQuery(sql);
-	//
-	// while (rs.next())
-	// {
-	// // Retrieve by column name
-	// String name = rs.getString("name");
-	// int courseNum = rs.getInt("courseNum");
-	// int wtus = rs.getInt("wtus");
-	// int scus = rs.getInt("scus");
-	// String classType = rs.getString("classType");
-	// int maxEnrollment = rs.getInt("maxEnrollment");
-	// int labId = rs.getInt("labPairing");
-	// int hoursPerWeek = rs.getInt("hoursPerWeek");
-	// String ctPrefix = rs.getString("ctPrefix");
-	// boolean overhead = rs.getBoolean("overhead");
-	// boolean smartroom = rs.getBoolean("smartroom");
-	// boolean laptop = rs.getBoolean("laptop");
-	// Course lab = getLab(myArr, labId);
-	// String prefix = rs.getString("prefix");
-	// String dfcString = rs.getString("courses_to_preferences.prefid");
-	// // FIX THIS
-	// DaysForClasses dfc = null;// =
-	// // Scheduler.pdb.getDaysForClassesByName(dfcString);
-	// // System.out.println(":" + dfc);
-	// RequiredEquipment re = new RequiredEquipment(smartroom, overhead,
-	// laptop);
-	//
-	// /*
-	// * Tyler: Note that the 'lab' is currently not set in this. Also, we
-	// * need to change the course type dialog to a drop down displaying
-	// * the two types in the enum in Course.CourseType.
-	// */
-	// Course c = new Course(name, prefix, courseNum);
-	// c.setWtu(wtus);
-	// c.setScu(scus);
-	// c.setLength(hoursPerWeek * 2);
-	// c.setEnrollment(maxEnrollment);
-	// c.setNumOfSections(1);
-	// // TODO: WE SHOULDN"T DO THIS AWKWARD TEST
-	// c.setType((classType.equals("LEC")) ? Course.CourseType.LEC
-	// : Course.CourseType.LAB);
-	// myArr.add(c);
-	//
-	// /*
-	// * if (classType.contains("Lecture")) { Lecture c = new
-	// * Lecture(name, courseNum, wtus, scus, classType, maxEnrollment, 1,
-	// * lab, overhead, smartroom, laptop, prefix, dfc, hoursPerWeek,
-	// * ctPrefix); myArr.add(c); } else { Lab c = new Lab(name,
-	// * courseNum, wtus, scus, maxEnrollment, 1, smartroom, overhead,
-	// * laptop, prefix, dfc, hoursPerWeek, ctPrefix); myArr.add(c); }
-	// */
-	//
-	// }
-	//
-	// }
-	// catch (SQLException se)
-	// {
-	// System.out.println("Error creating database");
-	// System.out.println(se.getMessage());
-	// }
-	// finally
-	// {
-	// courseDB = new CourseDB();
-	// // if (!myArr.isEmpty()) {
-	// courseDB.setData(myArr);
-	// courseDB.setLocalData(myArr);
-	// // }
-	// }
-	// return courseDB;
-	// }
-
-	/**
-	 * Returns the preferences database.
-	 * 
-	 * @return the preferences database.
-	 * 
-	 *         <pre>
-	 * // ** Pre and Post conditions ** //
-	 * 
-	 * <b><u>Pre:</u></b>
-	 * 
-	 * // SQL conn must not be Null
-	 * conn != nil
-	 * 
-	 * <b><u>Post:</u></b>
-	 * 
-	 * // PreferencesDB can not be Null
-	 * pdb != nil
-	 * 
-	 * 
-	 * </pre>
-	 */
-	// public PreferencesDB getPreferencesDB()
-	// {
-	// if (!this.connected)
-	// {
-	// PreferencesDB pdb = new PreferencesDB();
-	// pdb.setDays(new Vector<DaysForClasses>());
-	// pdb.setLocalDays(new Vector<DaysForClasses>());
-	// return pdb;
-	// }
-	//
-	// System.out.println("Getting preference data.");
-	// Vector<Preferences> myArr = null;
-	// Vector<DaysForClasses> dayPrefs = null;
-	// Vector<NoClassOverlap> overlaps = null;
-	// try
-	// {
-	// myArr = new Vector<Preferences>();
-	// String sql =
-	// "SELECT name, data, type, importance, violatable FROM preferences";
-	// Statement stmt = conn.createStatement();
-	// ResultSet rs = stmt.executeQuery(sql);
-	//
-	// while (rs.next())
-	// {
-	// // Retrieve by column name
-	// String name = rs.getString("name");
-	// String data = rs.getString("data");
-	// int type = rs.getInt("type");
-	// int importance = rs.getInt("importance");
-	// int violatable = rs.getInt("violatable");
-	// Preferences p = new Preferences(name, data, type, importance,
-	// violatable);
-	// myArr.add(p);
-	// }
-	//
-	// dayPrefs = new Vector<DaysForClasses>();
-	// String sqlDays =
-	// "SELECT name, weight, sun, mon, tues, wed, thur, fri, sat FROM preferences_days";
-	// stmt = conn.createStatement();
-	// rs = stmt.executeQuery(sqlDays);
-	//
-	// while (rs.next())
-	// {
-	// // Retrieve by column name
-	// String name = rs.getString("name");
-	// int weight = rs.getInt("weight");
-	// boolean days[] = new boolean[7];
-	// days[0] = rs.getBoolean("sun");
-	// days[1] = rs.getBoolean("mon");
-	// days[2] = rs.getBoolean("tues");
-	// days[3] = rs.getBoolean("wed");
-	// days[4] = rs.getBoolean("thur");
-	// days[5] = rs.getBoolean("fri");
-	// days[6] = rs.getBoolean("sat");
-	//
-	// /*
-	// * Default MTWRF pref
-	// */
-	// DaysForClasses dfc = new DaysForClasses(name, weight,
-	// Week.fiveDayWeek);
-	// dayPrefs.add(dfc);
-	// }
-	// }
-	// catch (SQLException se)
-	// {
-	// System.out.println("Error creating database");
-	// System.out.println(se.getMessage());
-	// }
-	// finally
-	// {
-	// // System.out.println("WOOOOOOO!");
-	// preferencesDB = new PreferencesDB();
-	// if (!myArr.isEmpty())
-	// {
-	// preferencesDB.setData(myArr);
-	// }
-	// preferencesDB.setDays(dayPrefs);
-	// preferencesDB.setLocalDays(dayPrefs);
-	// // System.out.println("Day prefs is " +
-	// // preferencesDB.getDayPreferences());
-	// }
-	// return preferencesDB;
-	// }
 
 	/**
 	 * Checks if the database is connected.
@@ -473,67 +131,6 @@ public class SQLDB {
 		}
 		return null;
 	}
-
-	/**
-	 * Returns the preferences database.
-	 * 
-	 * @return the preferences database.
-	 * 
-	 *         <pre>
-	 * // ** Pre and Post conditions ** //
-	 * 
-	 * <b><u>Pre:</u></b>
-	 * 
-	 * // SQL conn must not be Null
-	 * conn != nil
-	 * 
-	 * <b><u>Post:</u></b>
-	 * 
-	 * // PreferencesDB can not be Null
-	 * pdb != nil
-	 * 
-	 * 
-	 * </pre>
-	 */
-	// public PreferencesDB getPreferencesDBOld()
-	// {
-	// Vector<Preferences> myArr = null;
-	// try
-	// {
-	// myArr = new Vector<Preferences>();
-	// String sql =
-	// "SELECT name, data, type, importance, violatable FROM preferences";
-	// Statement stmt = conn.createStatement();
-	// ResultSet rs = stmt.executeQuery(sql);
-	//
-	// while (rs.next())
-	// {
-	// // Retrieve by column name
-	// String name = rs.getString("name");
-	// String data = rs.getString("data");
-	// int type = rs.getInt("type");
-	// int importance = rs.getInt("importance");
-	// int violatable = rs.getInt("violatable");
-	// Preferences p = new Preferences(name, data, type, importance,
-	// violatable);
-	// myArr.add(p);
-	// }
-	// }
-	// catch (SQLException se)
-	// {
-	// System.out.println("Error creating database");
-	// System.out.println(se.getMessage());
-	// }
-	// finally
-	// {
-	// preferencesDB = new PreferencesDB();
-	// if (!myArr.isEmpty())
-	// {
-	// preferencesDB.setData(myArr);
-	// }
-	// }
-	// return preferencesDB;
-	// }
 
 	/**
 	 * The open() method opens a connection to the database.
@@ -766,7 +363,6 @@ public class SQLDB {
 	 */
 	@Deprecated
 	public ResultSet getSQLInstructors() {
-		open();
 
 		String queryForInstructors = "SELECT * FROM instructors";
 		Statement stmt;
@@ -777,8 +373,6 @@ public class SQLDB {
 			instructorsResult = stmt.executeQuery(queryForInstructors);
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
-			close();
 		}
 
 		return instructorsResult;
@@ -792,7 +386,7 @@ public class SQLDB {
 	 */
 	@Deprecated
 	public ResultSet getSQLCourses() {
-		open();
+
 
 		String queryForCourses = "SELECT * FROM courses";
 		Statement stmt;
@@ -803,8 +397,6 @@ public class SQLDB {
 			coursesResult = stmt.executeQuery(queryForCourses);
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
-			close();
 		}
 
 		return coursesResult;
@@ -818,7 +410,7 @@ public class SQLDB {
 	 */
 	@Deprecated
 	public ResultSet getSQLLocations() {
-		open();
+
 
 		String queryForLocations = "SELECT * FROM locations";
 		Statement stmt;
@@ -829,8 +421,6 @@ public class SQLDB {
 			locationsResult = stmt.executeQuery(queryForLocations);
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
-			close();
 		}
 		return locationsResult;
 	}
@@ -840,9 +430,7 @@ public class SQLDB {
 	 * 
 	 * @return The result of a query for all schedules
 	 */
-	@Deprecated
 	public ResultSet getSQLSchedules() {
-		open();
 
 		String queryForSchedules = "SELECT * FROM schedules";
 		Statement stmt;
@@ -853,61 +441,50 @@ public class SQLDB {
 			schedulesResult = stmt.executeQuery(queryForSchedules);
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
-			close();
-		}
+		} 
 		return schedulesResult;
 	}
 	
 	/*
 	 * Retrieves entries from the instructors database table for 
-	 * given schedule id and quarter id
+	 * given schedule id
 	 * 
-	 * @return The result of a query for instructors in this quarter and schedule
+	 * @return The result of a query for instructors in this schedule
 	 */
-	public ResultSet getSQLInstructors(String quarterid, int scheduleid) {
-	   open();
+	public ResultSet getSQLInstructors(int scheduleid) {
 	   
-	   String queryForInstructors = "SELECT * FROM instructors where quarterid = ? and scheduleid = ?";
+	   String queryForInstructors = "SELECT * FROM instructors where scheduleid = ?";
 	   PreparedStatement stmt;
 	   ResultSet instructorsResult = null;
 	   
 	   try {
 	      stmt = conn.prepareStatement(queryForInstructors);
-	      stmt.setString(1, quarterid);
-	      stmt.setInt(2, scheduleid);
+	      stmt.setInt(1, scheduleid);
 	      instructorsResult = stmt.executeQuery(queryForInstructors);
 	   } catch (SQLException e) {
 	      e.printStackTrace();
-	   } finally {
-	      close();
-	   }
-	   
+	   } 
 	   return instructorsResult;
 	}
 	
    /*
     * Retrieves entries from the courses database table for 
-    * given schedule id and quarter id
+    * given schedule id
     * 
-    * @return The result of a query for courses in this quarter and schedule
+    * @return The result of a query for courses in this schedule
     */
-	public ResultSet getSQLCourses(String quarterid, int scheduleid) {
-	   open();
+	public ResultSet getSQLCourses(int scheduleid) {
 	   
-	   String queryForCourses = "SELECT * FROM courses where quarterid = ? and scheduleid = ?";
+	   String queryForCourses = "SELECT * FROM courses where scheduleid = ?";
 	   PreparedStatement stmt;
 	   ResultSet coursesResult = null;
 	   
 	   try {
 	      stmt = conn.prepareStatement(queryForCourses);
-	      stmt.setString(1, quarterid);
-         stmt.setInt(2, scheduleid);
+         stmt.setInt(1, scheduleid);
 	      coursesResult = stmt.executeQuery(queryForCourses);
 	   } catch (SQLException e) {
 	      e.printStackTrace();
-	   } finally {
-	      close();
 	   }
 	   
 	   return coursesResult;
@@ -916,53 +493,45 @@ public class SQLDB {
 	
    /*
     * Retrieves entries from the locations database table for 
-    * given schedule id and quarter id
+    * given schedule id
     * 
-    * @return The result of a query for locations in this quarter and schedule
+    * @return The result of a query for locations in this schedule
     */
-	public ResultSet getSQLLocations(String quarterid, int scheduleid) {
-	   open();
+	public ResultSet getSQLLocations(int scheduleid) {
 	   
-	   String queryForLocations = "SELECT * FROM locations where quarterid = ? and scheduleid = ?";
+	   String queryForLocations = "SELECT * FROM locations where scheduleid = ?";
 	   PreparedStatement stmt;
 	   ResultSet locationsResult = null;
 	   
 	   try {
 	      stmt = conn.prepareStatement(queryForLocations);
-	      stmt.setString(1, quarterid);
-         stmt.setInt(2, scheduleid);
+         stmt.setInt(1, scheduleid);
 	      locationsResult = stmt.executeQuery(queryForLocations);
 	   } catch (SQLException e) {
 	      e.printStackTrace();
-	   } finally {
-	      close();
 	   }
 	   return locationsResult;
 	}
 	
    /*
     * Retrieves entries from the schedules database table for 
-    * given schedule id and quarter id
+    * given schedule id
     * 
-    * @return The result of a query for schedules in this quarter and schedule
+    * @return The result of a query for schedules in this schedule
     */
-	public ResultSet getSQLSchedules(String quarterid, int scheduleid) {
-	   open();
+	public ResultSet getSQLSchedules(int scheduleid) {
 	   
-	   String queryForSchedules = "SELECT * FROM schedules where quarterid = ? and scheduleid = ?";
+	   String queryForSchedules = "SELECT * FROM schedules where scheduleid = ?";
 	   PreparedStatement stmt;
 	   ResultSet schedulesResult = null;
 	   
 	   try {
 	      stmt = conn.prepareStatement(queryForSchedules);
-         stmt.setString(1, quarterid);
-         stmt.setInt(2, scheduleid);
+         stmt.setInt(1, scheduleid);
 	      schedulesResult = stmt.executeQuery(queryForSchedules);
 	   } catch (SQLException e) {
 	      e.printStackTrace();
-	   } finally {
-	      close();
-	   }
+	   } 
 	   return schedulesResult;
 	}
 	
@@ -974,7 +543,7 @@ public class SQLDB {
 	 * @return The result of a query for courses with given id
 	 */
 	public ResultSet getSQLCourseByID(int id) {
-	   open();
+
 	   
 	   String selectString = "select * from courses where id = ?";
 	   PreparedStatement stmt = getPrepStmt(selectString);
@@ -984,9 +553,7 @@ public class SQLDB {
 	      rs = stmt.executeQuery();
 	   } catch (SQLException e) {
 	      e.printStackTrace();
-	   } finally {
-	      close();
-	   }
+	   } 
 	   return rs;
 	}
 	
@@ -997,7 +564,6 @@ public class SQLDB {
 	 */
 	@Deprecated
 	public ResultSet getSQLCourse(String dept, int catalogNum) {
-	   open();
 	   
 	   String selectString = "select * from courses where dept = ? and catalognum = ?";
 	   PreparedStatement stmt = getPrepStmt(selectString);
@@ -1008,8 +574,6 @@ public class SQLDB {
 	      rs = stmt.executeQuery();
 	   } catch (SQLException e) {
 	      e.printStackTrace();
-	   } finally {
-	      close();
 	   }
 	   return rs;
 	}
@@ -1019,38 +583,30 @@ public class SQLDB {
 	 * 
 	 * @return The result of a query for courses with given dept and catalogNum
 	 */
-	public ResultSet getSQLCourse(String dept, int catalogNum, int scheduleid, String quarterid) {
-	   open();
+	public ResultSet getSQLCourse(String dept, int catalogNum,int scheduleid) {
 	   
-	   String selectString = "select * from courses where dept = ? and catalognum = ? and scheduleid = ? and quarterid = ?";
+	   String selectString = "select * from courses where dept = ? and catalognum = ? and scheduleid = ?";
 	   PreparedStatement stmt = getPrepStmt(selectString);
 	   ResultSet rs = null;
 	   try {
 	      stmt.setString(1, dept);
 	      stmt.setInt(2, catalogNum);
 	      stmt.setInt(3, scheduleid);
-	      stmt.setString(4, quarterid);
 	      rs = stmt.executeQuery();
 	   } catch (SQLException e) {
 	      e.printStackTrace();
-	   } finally {
-	      close();
 	   }
 	   return rs;
 	}
 	
 	public PreparedStatement getPrepStmt(String sql) {
-		open();
 
 		try {
 			return conn.prepareStatement(sql);
 		} catch (SQLException e) {
 			System.out.println("SQLException: " + e.getMessage());
 			e.printStackTrace();
-		} finally {
-			close();
 		}
-
 		return null;
 	}
 
@@ -1064,5 +620,35 @@ public class SQLDB {
 			e.printStackTrace();
 		}
 		return result;
+	}
+	
+	public String getDeptByUserID(String userid)
+	{
+	   String selectString = "select dept from users where userid = ?";
+      PreparedStatement stmt = getPrepStmt(selectString);
+      ResultSet rs = null;
+      String dept = "";
+      try {
+         stmt.setString(1, userid);
+         rs = stmt.executeQuery();
+         dept = rs.getString("dept");
+      } catch (SQLException e) {
+         e.printStackTrace();
+      }
+      return dept;
+	}
+	
+	public ResultSet getSchedulesByDept(String dept)
+	{
+	   String selectString = "select name, scheduleid from schedules where dept = ?";
+      PreparedStatement stmt = getPrepStmt(selectString);
+      ResultSet rs = null;
+      try {
+         stmt.setString(1, dept);
+         rs = stmt.executeQuery();
+      } catch (SQLException e) {
+         e.printStackTrace();
+      }
+      return rs;
 	}
 }
