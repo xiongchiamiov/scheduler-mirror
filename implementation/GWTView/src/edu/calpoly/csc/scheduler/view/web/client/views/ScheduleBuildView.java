@@ -28,7 +28,7 @@ public class ScheduleBuildView extends ScrollPanel {
 	private Button buttonGenerate = new Button();
 	private FlexTable flexTableCalendar = new FlexTable();
 	
-	public ScheduleBuildView(Panel container, GreetingServiceAsync greetingService, String quarterID) {
+	public ScheduleBuildView(Panel container, GreetingServiceAsync greetingService) {
 		this.service = greetingService;
 	}
 	

@@ -20,15 +20,13 @@ import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 public class InstructorsView extends ScrollPanel {
 	private Panel container;
 	private GreetingServiceAsync service;
-	private String quarterID;
 	private Table<InstructorGWT> iTable;
 
-	public InstructorsView(Panel container, GreetingServiceAsync service, String quarterID) {
+	public InstructorsView(Panel container, GreetingServiceAsync service) {
 		assert(service != null);
 		
 		this.container = container;
 		this.service = service;
-		this.quarterID = quarterID;
 	}
 	
 	@Override
@@ -40,15 +38,17 @@ public class InstructorsView extends ScrollPanel {
 		
 		VerticalPanel vp = new VerticalPanel();
 		this.add(vp);
+
+		vp.add(new HTML("<h2>Fall Quarter 2010 Final Schedule Instructors</h2>"));
 		
-		iTable = TableFactory.instructor(quarterID, service);
+		iTable = TableFactory.instructor(service);
 		vp.add(iTable.getWidget());
 		populateInstructors();
 		
-		vp.add(createInstructorViewLinkList());
+		vp.add(createInstructorPreferencesLinkList());
 	}
 	
-	public Widget createInstructorViewLinkList() {
+	public Widget createInstructorPreferencesLinkList() {
 		final VerticalPanel vp = new VerticalPanel();
 		
 		service.getInstructorNames(new AsyncCallback<ArrayList<InstructorGWT>>() {
@@ -68,7 +68,7 @@ public class InstructorsView extends ScrollPanel {
 						@Override
 						public void onClick(ClickEvent event) {
 							container.clear();
-							container.add(new InstructorPreferencesView(container, service, quarterID, instructor.getUserID()));
+							container.add(new InstructorPreferencesView(container, service, instructor.getUserID()));
 						}
 					});
 					vp.add(link);

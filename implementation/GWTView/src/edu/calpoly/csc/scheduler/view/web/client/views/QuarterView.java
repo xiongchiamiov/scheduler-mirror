@@ -15,15 +15,13 @@ import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 public class QuarterView extends DockLayoutPanel {
 	Panel container;
 	GreetingServiceAsync service;
-	String quarterID;
 	Panel contentPanel;
 	
-	QuarterView(Panel container, GreetingServiceAsync service, String quarterID) {
+	QuarterView(Panel container, GreetingServiceAsync service) {
 		super(Unit.EM);
 		
 		this.container = container;
 		this.service = service;
-		this.quarterID = quarterID;
 	}
 	
 	@Override
@@ -38,6 +36,7 @@ public class QuarterView extends DockLayoutPanel {
 		getWidgetContainerElement(leftPanel).addClassName("quarterViewMenu");
 		
 		add(contentPanel = new SimplePanel());
+		contentPanel.add(new ScheduleView(contentPanel, service));
 	}
 	
 	static HTML createLink(String label, String styleName, ClickHandler handler) {
@@ -63,7 +62,7 @@ public class QuarterView extends DockLayoutPanel {
 			@Override
 			public void onClick(ClickEvent event) {
 				container.clear();
-				container.add(new HomeView(container, service));
+				container.add(new HomeView(container, service, "gfisher"));
 			}
 		}));
 		
@@ -71,12 +70,12 @@ public class QuarterView extends DockLayoutPanel {
 		leftMenuVP.add(createLink("Build", "inAppLink indented", new ClickHandler() {
 			public void onClick(ClickEvent events) {
 				contentPanel.clear();
-				contentPanel.add(new ScheduleBuildView(contentPanel, service, quarterID));
+				contentPanel.add(new ScheduleBuildView(contentPanel, service));
 			}
 		}));leftMenuVP.add(createLink("View", "inAppLink indented", new ClickHandler() {
 			public void onClick(ClickEvent events) {
 				contentPanel.clear();
-				contentPanel.add(new ScheduleView(contentPanel, service, quarterID));
+				contentPanel.add(new ScheduleView(contentPanel, service));
 			}
 		}));
 		leftMenuVP.add(createLabel("Edit", "indented"));
@@ -85,19 +84,19 @@ public class QuarterView extends DockLayoutPanel {
 		leftMenuVP.add(createLink("Instructors", "inAppLink indented", new ClickHandler() {
 			public void onClick(ClickEvent events) {
 				contentPanel.clear();
-				contentPanel.add(new InstructorsView(contentPanel, service, quarterID));
+				contentPanel.add(new InstructorsView(contentPanel, service));
 			}
 		}));
 		leftMenuVP.add(createLink("Locations", "inAppLink indented", new ClickHandler() {
 			public void onClick(ClickEvent events) {
 				contentPanel.clear();
-				contentPanel.add(new RoomsView(contentPanel, service, quarterID));
+				contentPanel.add(new RoomsView(contentPanel, service));
 			}
 		}));
 		leftMenuVP.add(createLink("Courses", "inAppLink indented", new ClickHandler() {
 			public void onClick(ClickEvent events) {
 				contentPanel.clear();
-				contentPanel.add(new CoursesView(contentPanel, service, quarterID));
+				contentPanel.add(new CoursesView(contentPanel, service));
 			}
 		}));
 //		leftMenuSP.add(ManagePanel, "Manage",true);

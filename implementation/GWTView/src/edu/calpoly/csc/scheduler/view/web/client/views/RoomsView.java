@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -16,13 +17,11 @@ import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
 public class RoomsView extends ScrollPanel {
 	private Panel container;
 	private GreetingServiceAsync service;
-	private String quarterID;
 	private Table<LocationGWT> lTable;
 
-	public RoomsView(Panel container, GreetingServiceAsync service, String quarterID) {
+	public RoomsView(Panel container, GreetingServiceAsync service) {
 		this.container = container;
 		this.service = service;
-		this.quarterID = quarterID;
 	}
 	
 	@Override
@@ -34,8 +33,10 @@ public class RoomsView extends ScrollPanel {
 		
 		VerticalPanel vp = new VerticalPanel();
 		this.add(vp);
+
+		vp.add(new HTML("<h2>Fall Quarter 2010 Final Schedule Locations</h2>"));
 		
-		lTable = TableFactory.location(quarterID, service);
+		lTable = TableFactory.location(service);
 		vp.add(lTable.getWidget());
 		populateLocations();
 	}

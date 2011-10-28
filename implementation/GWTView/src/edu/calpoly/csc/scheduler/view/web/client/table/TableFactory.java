@@ -7,15 +7,15 @@ import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
 
 public class TableFactory {
 
-	public static Table<InstructorGWT> instructor(String quarterID, GreetingServiceAsync service){
-		return new Table<InstructorGWT>(new ITableBuilder(quarterID, service));
+	public static Table<InstructorGWT> instructor(GreetingServiceAsync service){
+		return new Table<InstructorGWT>(new ITableBuilder(service));
 	}
 	
-	public static Table<CourseGWT> course(String quarterID, GreetingServiceAsync service){
-		return new Table<CourseGWT>(new CTableBuilder(quarterID, service));
+	public static Table<CourseGWT> course(GreetingServiceAsync service){
+		return new Table<CourseGWT>(new CTableBuilder(service));
 	}
 	
-	public static Table<LocationGWT> location(String quarterID, GreetingServiceAsync service){
-		return new Table<LocationGWT>(new LTableBuilder(quarterID, service));
+	public static Table<LocationGWT> location(GreetingServiceAsync service){
+		return new Table<LocationGWT>(new LTableBuilder(service));
 	}
 }

@@ -2,10 +2,12 @@ package edu.calpoly.csc.scheduler.view.web.server;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
+import edu.calpoly.csc.scheduler.model.Model;
 import edu.calpoly.csc.scheduler.model.db.Database;
 import edu.calpoly.csc.scheduler.model.db.Time;
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
@@ -14,7 +16,11 @@ import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
 import edu.calpoly.csc.scheduler.model.db.idb.InstructorDB;
 import edu.calpoly.csc.scheduler.model.db.ldb.Location;
 import edu.calpoly.csc.scheduler.model.db.ldb.LocationDB;
-import edu.calpoly.csc.scheduler.model.schedule.*;
+import edu.calpoly.csc.scheduler.model.schedule.CouldNotBeScheduledException;
+import edu.calpoly.csc.scheduler.model.schedule.Day;
+import edu.calpoly.csc.scheduler.model.schedule.Schedule;
+import edu.calpoly.csc.scheduler.model.schedule.ScheduleItem;
+import edu.calpoly.csc.scheduler.model.schedule.Week;
 import edu.calpoly.csc.scheduler.view.web.client.GreetingService;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
@@ -28,15 +34,30 @@ import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 public class GreetingServiceImpl extends RemoteServiceServlet implements
 		GreetingService {
 
+	private Model model;
+	
     private Schedule schedule;
     private HashMap<String, Course> cannedCourses;
 	
+    public Map<Integer, String> getScheduleNames(String username) {
+    	if (model == null) {
+    		model = new Model();
+    	}
+    	
+    	return model.getSchedules(username);
+    }
+    
+    public void selectSchedule(Integer scheduleID) {
+		model.initDbs(scheduleID);
+    }
+    
 	public ArrayList<InstructorGWT> getInstructorNames() throws IllegalArgumentException {
+		assert(model != null);
 		
 		/** TODO */
 		ArrayList<InstructorGWT> results = new ArrayList<InstructorGWT>();
 		
-		Database db = new Database();
+		Database db = model.getDb();
 
 		InstructorDB idb = db.getInstructorDB();
 		
@@ -77,9 +98,10 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	
 	
 	public void saveInstructors(ArrayList<InstructorGWT> instructors) throws IllegalArgumentException {
+		assert(model != null);
 		
 		/** TODO */
-		Database sqldb = new Database();
+		Database sqldb = model.getDb();
 
 		InstructorDB idb = sqldb.getInstructorDB();
 //		LocationDB ldb = sqldb.getLocationDB();
@@ -99,8 +121,27 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		}
 	}
 
+	public void newSchedule() {
+		if (model == null)
+			throw new RuntimeException("model is null!");
+		Database db = model.getDb();
+		
+		Schedule schedule = new Schedule();
+		schedule.setId(1337);
+		schedule.generate(new Vector<Course>(), new Vector<Instructor>(), new Vector<Location>());
+
+		this.selectSchedule(1337);
+		
+		if (db == null)
+			throw new RuntimeException("db is null");
+		if (db.getScheduleDB() == null)
+			throw new RuntimeException("getscheduledb is null");
+		db.getScheduleDB().addData(schedule);
+	}
+	
 	public ArrayList<ScheduleItemGWT> generateSchedule() {
-		Database db = new Database();
+		assert(model != null);
+		Database db = model.getDb();
 		ArrayList<Instructor> instructors = db.getInstructorDB().getData();
 		ArrayList<Course> courses = db.getCourseDB().getData();
 		ArrayList<Location> locations = db.getLocationDB().getData();
@@ -120,6 +161,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	
 	public ArrayList<ScheduleItemGWT> getTestGWTScheduleItems()
 	{
+		assert(model != null);
+		
 	 Vector<ScheduleItem> modelItems = new Vector<ScheduleItem>();
 	 ArrayList<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
 	 schedule = new Schedule();
@@ -184,6 +227,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	
 	public void setCannedCourses()
 	{
+		assert(model != null);
 		cannedCourses = new HashMap<String, Course>();
 		Week mwf = new Week(new Day[]{Day.MON, Day.WED, Day.FRI});
 		 Week tr = new Week(new Day[]{Day.TUE, Day.THU});
@@ -227,7 +271,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	
 	public ArrayList<ScheduleItemGWT> getGWTScheduleItems()
 	{
-	 Database db = new Database();
+		assert(model != null);
+	 Database db = model.getDb();
 	 ArrayList<Instructor> instructors = db.getInstructorDB().getData();
 	 setCannedCourses();
 	 ArrayList<Course> courses = new ArrayList<Course>(cannedCourses.values());//db.getCourseDB().getData();
@@ -247,6 +292,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	
 	public ScheduleItemGWT convertScheduleItem(ScheduleItem schdItem)
 	{
+		assert(model != null);
 	 String instructor;
 	 String courseDept;
 	 int courseNum;
@@ -282,13 +328,14 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	public ScheduleItemGWT rescheduleCourse(ScheduleItemGWT scheduleItem,
 			ArrayList<Integer> days, int startHour, boolean atHalfHour)
 	{
+		assert(model != null);
 	 ScheduleItem rescheduled;
 	 Course course;
 	 int numberOfDays = days.size();
 	 Day[] daysScheduled = new Day[numberOfDays];
 	 Week daysInWeek;
 	 Time startTime;
-	 Database db = new Database();
+	 Database db = model.getDb();
 	 int i;
 	 
 	 for(i = 0; i < numberOfDays; i++)
@@ -320,12 +367,13 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	
 	@Override
 	public ArrayList<LocationGWT> getLocationNames() {
+		assert(model != null);
 		/** TODO */
 		// replace sample data with data from the db
 		
 		ArrayList<LocationGWT> results = new ArrayList<LocationGWT>();
 		
-		Database sqldb = new Database();
+		Database sqldb = model.getDb();
 
 		LocationDB ldb = sqldb.getLocationDB();
 		
@@ -360,10 +408,11 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 
 	@Override
 	public void saveLocations(ArrayList<LocationGWT> locations) {
+		assert(model != null);
 		// TODO Auto-generated method stub
 
 		/** TODO */
-		Database sqldb = new Database();
+		Database sqldb = model.getDb();
 
 		LocationDB ldb = sqldb.getLocationDB();
 		
@@ -384,12 +433,13 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public ArrayList<CourseGWT> getCourses() {
 
+		assert(model != null);
 		/** TODO */
 		// replace sample data with data from the db
 		
 		ArrayList<CourseGWT> results = new ArrayList<CourseGWT>();
 		
-		Database db = new Database();
+		Database db = model.getDb();
 
 		CourseDB cdb = db.getCourseDB();
 		
@@ -433,8 +483,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	public void saveCourses(ArrayList<CourseGWT> courses) {
 		// TODO Auto-generated method stub
 
+		assert(model != null);
 		/** TODO */
-		Database sqldb = new Database();
+		Database sqldb = model.getDb();
 
 		CourseDB cdb = sqldb.getCourseDB();
 		

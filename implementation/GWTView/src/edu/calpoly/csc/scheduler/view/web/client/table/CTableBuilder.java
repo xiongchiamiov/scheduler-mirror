@@ -17,11 +17,9 @@ import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 
 public class CTableBuilder implements TableBuilder<CourseGWT>{
 
-	private String quarterID;
 	private GreetingServiceAsync service;
 	
-	public CTableBuilder(String quarterID, GreetingServiceAsync service) {
-		this.quarterID = quarterID;
+	public CTableBuilder(GreetingServiceAsync service) {
 		this.service = service;
 	}
 	
@@ -292,7 +290,7 @@ public class CTableBuilder implements TableBuilder<CourseGWT>{
 		course.setLabPad(1202);
 		course.setLength(1203);
 		course.setDays("daysderp");
-		course.setQuarterID(this.quarterID);
+		course.setQuarterID("qid?");
 		course.setScheduleID(7);
 		return course;
 	}

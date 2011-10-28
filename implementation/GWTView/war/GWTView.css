@@ -18,11 +18,17 @@ body {
 }
 
 .topPanel {
-	background-color: #004000;
+	background: url('imgs/calpolybanner.gif') no-repeat #003300;
+	text-align: right;
+	font-size: 3em;
+	padding-right: 1em;
+	color: #207020;
+	font-weight: bold;
+	font-family: Verdana;
 }
 
 .quarterViewMenu {
-	background-color: #F0FFF0;
+	background-color: #C0E080;
 }
 
 .selectQuarterView {
@@ -39,12 +45,12 @@ body {
 
 .inAppLink {
 	text-decoration: underline;
-	color: #0000FF;
+	color: #008000;
 	cursor: pointer;
 }
 
 .inAppLink:hover {
-	color: #4040FF;
+	color: #00C000;
 }
 
 h1 {
@@ -181,4 +187,12 @@ h1 {
 
 .bodyPanel {
 	overflow: auto;
+}
+
+.selectedCell {
+	background-color: #FFFF40;
+}
+
+.anchorCell div {
+	border: 2px solid black;
 }

@@ -18,11 +18,9 @@ import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 
 public class ITableBuilder implements TableBuilder<InstructorGWT>{
 
-	private String quarterID;
 	private GreetingServiceAsync service;
 	
-	public ITableBuilder(String quarterID, GreetingServiceAsync service) {
-		this.quarterID = quarterID;
+	public ITableBuilder(GreetingServiceAsync service) {
 		this.service = service;
 	}
 	
@@ -206,7 +204,7 @@ public class ITableBuilder implements TableBuilder<InstructorGWT>{
 		instructor.setCoursePreferences("courseprefshere");
 		instructor.setTPreferences("tprefshere");
 		instructor.setItemsTaught("itemstaught");
-		instructor.setQuarterID(quarterID);
+		instructor.setQuarterID("qid?");
 		return instructor;
 	}
 

@@ -19,11 +19,9 @@ import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
 
 public class LTableBuilder implements TableBuilder<LocationGWT>{
-	private String quarterID;
 	private GreetingServiceAsync service;
 	
-	public LTableBuilder(String quarterID, GreetingServiceAsync service) {
-		this.quarterID = quarterID;
+	public LTableBuilder(GreetingServiceAsync service) {
 		this.service = service;
 	}
 	
@@ -168,7 +166,7 @@ public class LTableBuilder implements TableBuilder<LocationGWT>{
 	public LocationGWT newObject() {
 		LocationGWT loc = new LocationGWT();
 		loc.setAvailability("derp?");
-		loc.setQuarterID(quarterID);
+		loc.setQuarterID("qid?");
 		return loc;
 	}
 

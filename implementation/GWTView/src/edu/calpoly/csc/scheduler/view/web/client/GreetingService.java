@@ -3,6 +3,7 @@ package edu.calpoly.csc.scheduler.view.web.client;
 
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
@@ -21,6 +22,10 @@ public interface GreetingService extends RemoteService {
 	
 	void saveInstructors(ArrayList<InstructorGWT> instructors) throws IllegalArgumentException;
 	
+	void selectSchedule(Integer scheduleID);
+	
+	Map<Integer, String> getScheduleNames(String username);
+	
 	ArrayList<ScheduleItemGWT> getGWTScheduleItems() throws IllegalArgumentException;
 	
 	ArrayList<ScheduleItemGWT> getTestGWTScheduleItems() throws IllegalArgumentException;
@@ -30,6 +35,8 @@ public interface GreetingService extends RemoteService {
 	void saveLocations(ArrayList<LocationGWT> locations);
 	
 	ArrayList<CourseGWT> getCourses();
+
+	void newSchedule();
 
 	void saveCourses(ArrayList<CourseGWT> locations);
 	

@@ -2,6 +2,7 @@ package edu.calpoly.csc.scheduler.view.web.client.views;
 
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.SimplePanel;
 
@@ -26,6 +27,7 @@ public class MainView extends DockLayoutPanel {
 		
 		SimplePanel topPanel = new SimplePanel();
 		topPanel.addStyleName("topPanel");
+		topPanel.add(new HTML("Schedulizerifier"));
 		addNorth(topPanel, 5);
 		
 		add(contents = new SimplePanel());
