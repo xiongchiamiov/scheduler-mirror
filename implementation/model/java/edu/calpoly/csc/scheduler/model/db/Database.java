@@ -56,15 +56,15 @@ public class Database
    /**
     * STEP 3 Returns the list of schedules for this department
     */
-   public HashMap<String, Integer> getSchedules(String dept)
+   public HashMap<Integer, String> getSchedules(String dept)
    {
-      HashMap<String, Integer> schedules = new HashMap<String, Integer>();
+      HashMap<Integer, String> schedules = new HashMap<Integer, String>();
       ResultSet rs = sqldb.getSchedulesByDept(dept);
       try
       {
          while (rs.next())
          {
-            schedules.put(rs.getString("name"), rs.getInt("scheduleid"));
+            schedules.put(rs.getInt("scheduleid"), rs.getString("name"));
          }
       }
       catch (SQLException e)
