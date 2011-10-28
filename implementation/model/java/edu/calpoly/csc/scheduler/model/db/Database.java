@@ -35,6 +35,9 @@ public class Database
 
    /** The current schedule id */
    private int          scheduleID;
+   
+   /** The current department */
+   private String dept;
 
    /**
     * STEP 1 This constructor will create the SQLDB object.
@@ -58,6 +61,7 @@ public class Database
     */
    public HashMap<Integer, String> getSchedules(String dept)
    {
+	   this.dept = dept;
       HashMap<Integer, String> schedules = new HashMap<Integer, String>();
       ResultSet rs = sqldb.getSchedulesByDept(dept);
       try
@@ -79,10 +83,20 @@ public class Database
     */
    public void openDB(int scheduleid)
    {
-      instructorDB = new InstructorDB(sqldb, scheduleid);
-      courseDB = new CourseDB(sqldb, scheduleid);
-      locationDB = new LocationDB(sqldb, scheduleid);
-      scheduleDB = new ScheduleDB(sqldb, scheduleid);
+	   int realid = scheduleid;
+	  if(!sqldb.doesScheduleIDExist(scheduleid))
+	  {
+		  scheduleDB = new ScheduleDB(sqldb);
+		  realid = scheduleDB.createNewSchedule(dept);
+	  }
+	  else
+	  {
+		  scheduleDB = new ScheduleDB(sqldb, realid);
+	  }
+	  instructorDB = new InstructorDB(sqldb, realid);
+	  courseDB = new CourseDB(sqldb, realid);
+	  locationDB = new LocationDB(sqldb, realid);
+	  
    }
 
    /**

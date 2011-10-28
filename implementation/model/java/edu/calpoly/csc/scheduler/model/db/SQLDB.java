@@ -651,4 +651,29 @@ public class SQLDB {
       }
       return rs;
 	}
+	
+	public boolean doesScheduleIDExist(int scheduleid)
+	{
+		String selectString = "select scheduleid from schedules where scheduleid = ?";
+	      PreparedStatement stmt = getPrepStmt(selectString);
+	      ResultSet rs;
+	      try {
+	         stmt.setInt(1, scheduleid);
+	         rs = stmt.executeQuery();
+	         if(rs.next())
+	         {
+	        	 if(rs.getInt("scheduleid") == scheduleid)
+	        	 {
+	        		 return true;
+	        	 }
+	        	 else
+	        	 {
+	        		 return false;
+	        	 }
+	         }
+	      } catch (SQLException e) {
+	         return false;
+	      }
+	      return true;
+	}
 }

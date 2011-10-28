@@ -97,6 +97,9 @@ public class ScheduleDB implements DatabaseAPI<Schedule>
 	         stmt.setString(2, "blank");
 	         // Get Schedule through Serializable
 	         Schedule data = new Schedule();
+	         data.setDept(dept);
+	         data.setName("New Schedule");
+	         data.setQuarterId("blank");
 	         try
 	         {
 	            ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -116,7 +119,9 @@ public class ScheduleDB implements DatabaseAPI<Schedule>
 	         e.printStackTrace();
 	      }
 	      // Execute
-	      return sqldb.executePrepStmt(stmt);
+	      int newid = sqldb.executePrepStmt(stmt);
+	      this.scheduleID = newid;
+	      return newid;
    }
    
    public void saveSchedule(Schedule data)
