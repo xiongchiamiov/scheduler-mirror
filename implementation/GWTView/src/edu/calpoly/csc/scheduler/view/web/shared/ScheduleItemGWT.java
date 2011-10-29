@@ -224,4 +224,9 @@ public class ScheduleItemGWT implements Serializable, Comparable
  {
   return courseNum;
  }
+ 
+ public int getSection()
+ {
+  return section;
+ }
 }

@@ -39,6 +39,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	
     private Schedule schedule;
     private HashMap<String, Course> cannedCourses;
+    private HashMap<String, ScheduleItem> scheduleItems;
 	
     public Map<Integer, String> getScheduleNames(String username) {
     	if (model == null) {
@@ -211,7 +212,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	 
 	 return gwtItems;
 	}
-	
+		
 	public void setCannedCourses()
 	{
 		assert(model != null);
@@ -253,7 +254,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		cannedCourses.put(c3.getDept()+c3.getCatalogNum(), c3);
 		cannedCourses.put(c4.getDept()+c4.getCatalogNum(), c4);
 		cannedCourses.put(c5.getDept()+c5.getCatalogNum(), c5);
-		cannedCourses.put(c6.getDept()+c6.getCatalogNum(), c6);			
+		cannedCourses.put(c6.getDept()+c6.getCatalogNum(), c6);	
 	}
 	
 	public ArrayList<ScheduleItemGWT> getGWTScheduleItems(ArrayList<CourseGWT> courses)
@@ -261,20 +262,27 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	 assert(model != null);
 	 Database db = model.getDb();
 	 CourseDB cdb = db.getCourseDB();
+     setCannedCourses();
 	 ArrayList<Instructor> instructors = db.getInstructorDB().getData();
      ArrayList<Location> locations = db.getLocationDB().getData();
-     ArrayList<Course> modelCourses = new ArrayList<Course>();
+     ArrayList<Course> modelCourses = new ArrayList<Course>(cannedCourses.values());//new ArrayList<Course>();
+     scheduleItems = new HashMap<String, ScheduleItem>();
+     
      for(CourseGWT course : courses)
      {
-      modelCourses.add(cdb.getCourse(course.getDept(), course.getCatalogNum()));	 
+      modelCourses.add(cannedCourses.get(course.getDept() + course.getCatalogNum()));	 
      }
-     schedule = new Schedule(new Vector<Instructor>(instructors), new Vector<Location>(locations));
+     System.out.println("Empty");
+     schedule = new Schedule(new Vector<Instructor>(), new Vector<Location>());
 	 schedule.generate(modelCourses);		
 	 ArrayList<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
 	
      for(ScheduleItem item : schedule.getItems())
      {         
       gwtItems.add(convertScheduleItem(item));
+      scheduleItems.put(item.getCourse().getDept() + 
+       item.getCourse().getCatalogNum() + 
+       item.getSection(), item);
      }
 	 
 	 return gwtItems;
@@ -328,6 +336,10 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	 Time startTime;
 	 Database db = model.getDb();
 	 int i;
+	 ScheduleItem moved; 
+	 String schdItemKey = scheduleItem.getDept() + 
+			  scheduleItem.getCatalogNum() + 
+			  scheduleItem.getSection();
 	 
 	 for(i = 0; i < numberOfDays; i++)
 	 {
@@ -341,18 +353,31 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	  }
 	 }
 	 
-	 course = db.getCourseDB().getCourse(scheduleItem.getDept(), scheduleItem.getCatalogNum()); 
+	 course = cannedCourses.get(scheduleItem.getDept() + scheduleItem.getCatalogNum()); 
 	 daysInWeek = new Week(daysScheduled);
 	 startTime = new Time(startHour, (atHalfHour? 30 : 0));
 	 
+	 moved = scheduleItems.get(schdItemKey);
+	 schedule.remove(moved);
 	 try
 	 {
 	  rescheduled = schedule.makeItem(course, daysInWeek, startTime);
+	  schedule.add(rescheduled);
 	 }
 	 catch(CouldNotBeScheduledException e)
 	 {
+	  try
+	  {
+	   schedule.add(moved);
+	  }
+	  catch(CouldNotBeScheduledException cnbse)
+	  {
+	   System.out.println("Could not put old item back in");
+	  }
 	  return null;
 	 }
+	 scheduleItems.remove(schdItemKey);
+	 scheduleItems.put(schdItemKey, rescheduled);
 	 return convertScheduleItem(rescheduled);
 	}
 	
