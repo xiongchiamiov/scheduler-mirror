@@ -25,8 +25,8 @@ public class ScheduleView extends ScrollPanel {
 		VerticalPanel panel = new VerticalPanel();
 
 		panel.add(new HTML("<h2>Fall Quarter 2010 Final Schedule</h2>"));
-		
 		ScheduleViewWidget schdView = new ScheduleViewWidget();
 		panel.add(schdView.getWidget(service));
+		this.add(panel);
 	}
 }
