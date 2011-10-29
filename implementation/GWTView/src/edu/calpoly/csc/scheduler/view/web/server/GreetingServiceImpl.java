@@ -255,16 +255,14 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		cannedCourses.put(c6.getDept()+c6.getCatalogNum(), c6);			
 	}
 	
-	public ArrayList<ScheduleItemGWT> getGWTScheduleItems()
+	public ArrayList<ScheduleItemGWT> getGWTScheduleItems(ArrayList<CourseGWT> courses)
 	{
-		assert(model != null);
+	 assert(model != null);
 	 Database db = model.getDb();
 	 ArrayList<Instructor> instructors = db.getInstructorDB().getData();
-	 setCannedCourses();
-	 ArrayList<Course> courses = new ArrayList<Course>(cannedCourses.values());//db.getCourseDB().getData();
      ArrayList<Location> locations = db.getLocationDB().getData();
-     schedule = new Schedule();
-	 schedule.generate(new Vector<Course>(courses), new Vector<Instructor>(instructors), new Vector<Location>(locations));		
+     schedule = new Schedule(new Vector<Instructor>(instructors), new Vector<Location>(locations));
+	 schedule.generate(new Vector<Course>(courses));		
 	 ArrayList<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
 	
      for(ScheduleItem item : schedule.getItems())
@@ -278,7 +276,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	
 	public ScheduleItemGWT convertScheduleItem(ScheduleItem schdItem)
 	{
-		assert(model != null);
+	 assert(model != null);
 	 String instructor;
 	 String courseDept;
 	 int courseNum;
@@ -314,7 +312,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	public ScheduleItemGWT rescheduleCourse(ScheduleItemGWT scheduleItem,
 			ArrayList<Integer> days, int startHour, boolean atHalfHour)
 	{
-		assert(model != null);
+	 assert(model != null);
 	 ScheduleItem rescheduled;
 	 Course course;
 	 int numberOfDays = days.size();
@@ -336,7 +334,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	  }
 	 }
 	 
-	 course = cannedCourses.get(scheduleItem.getDept()+scheduleItem.getCatalogNum());//db.getCourseDB.getCourse(scheduleItem.getDept(), scheduleItem.getCatalogNum()); 
+	 course = db.getCourseDB().getCourse(scheduleItem.getDept(), scheduleItem.getCatalogNum()); 
 	 daysInWeek = new Week(daysScheduled);
 	 startTime = new Time(startHour, (atHalfHour? 30 : 0));
 	 

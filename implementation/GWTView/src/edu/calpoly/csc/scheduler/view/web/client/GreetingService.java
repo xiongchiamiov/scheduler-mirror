@@ -26,7 +26,7 @@ public interface GreetingService extends RemoteService {
 	
 	Map<Integer, String> getScheduleNames(String username);
 	
-	ArrayList<ScheduleItemGWT> getGWTScheduleItems() throws IllegalArgumentException;
+	ArrayList<ScheduleItemGWT> getGWTScheduleItems(ArrayList<CourseGWT> courses) throws IllegalArgumentException;
 	
 	ArrayList<ScheduleItemGWT> getTestGWTScheduleItems() throws IllegalArgumentException;
 

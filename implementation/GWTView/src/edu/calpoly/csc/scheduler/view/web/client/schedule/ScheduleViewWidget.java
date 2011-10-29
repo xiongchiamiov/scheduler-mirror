@@ -32,6 +32,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
+import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 
 /**
@@ -59,6 +60,8 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
  private ListBox listBoxAvailable;
  private ListBox listBoxIncluded;
  private HorizontalPanel boxesAndSchedulePanel;
+ private ArrayList<CourseGWT> availableCourses;
+ private ArrayList<CourseGWT> includedCourses;
  
  /**
   * Places a ScheduleCell in each cell for dragging and dropping schedule items.
@@ -385,7 +388,12 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
   */
  private void getScheduleItems()
  {
-  greetingService.getGWTScheduleItems(
+  for(CourseGWT course : availableCourses)
+  {
+   includedCourses.add(course);  
+  }
+  
+  greetingService.getGWTScheduleItems(includedCourses,
    new AsyncCallback<ArrayList<ScheduleItemGWT>>()
    {
     public void onFailure(Throwable caught)
@@ -533,17 +541,32 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
 
  private void addCoursesToBoxes()
  {
-  listBoxAvailable.addItem("CPE 101");
-  listBoxAvailable.addItem("CPE 402");
-  listBoxAvailable.addItem("CPE 102");
-  listBoxAvailable.addItem("CPE 103");
-  listBoxAvailable.addItem("CPE 365");
-  listBoxAvailable.addItem("CPE 491");
-  listBoxAvailable.addItem("CPE 300");
+  availableCourses = new ArrayList<CourseGWT>();
+  includedCourses = new ArrayList<CourseGWT>();
+  
+  greetingService.getCourses(
+   new AsyncCallback<ArrayList<CourseGWT>>()
+   {
+	@Override
+	public void onFailure(Throwable caught) 
+	{
+     Window.alert("Failed to retrieve courses");		
+	}
 
-  listBoxIncluded.addItem("CPE 508");
-  listBoxIncluded.addItem("CPE 509");
-  listBoxIncluded.addItem("CPE 570");
+	@Override
+	public void onSuccess(ArrayList<CourseGWT> result) 
+	{
+     if(result != null)
+     {
+      for(CourseGWT course : result)
+      {
+       availableCourses.add(course);
+       listBoxAvailable.addItem(course.getDept() + course.getCatalogNum());
+      }
+     }
+	}	
+   }  
+   );
  }
  
  private void layoutBoxesAndSchedule()
@@ -572,7 +595,6 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
   greetingService = service;
   layoutInterface();
   layoutBoxesAndSchedule();
-  
   return mainPanel;
  }
 

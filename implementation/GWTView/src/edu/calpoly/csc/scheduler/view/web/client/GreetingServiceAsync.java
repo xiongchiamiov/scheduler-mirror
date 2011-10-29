@@ -40,7 +40,8 @@ public interface GreetingServiceAsync {
 	void generateSchedule(AsyncCallback<ArrayList<ScheduleItemGWT>> scheduleItems)
     		throws IllegalArgumentException;
 	
-    void getGWTScheduleItems(AsyncCallback<ArrayList<ScheduleItemGWT>> scheduleItems)
+    void getGWTScheduleItems(ArrayList<CourseGWT> courses, 
+    		AsyncCallback<ArrayList<ScheduleItemGWT>> scheduleItems)
     		throws IllegalArgumentException;
     
     void getTestGWTScheduleItems(AsyncCallback<ArrayList<ScheduleItemGWT>> scheduleItems)
