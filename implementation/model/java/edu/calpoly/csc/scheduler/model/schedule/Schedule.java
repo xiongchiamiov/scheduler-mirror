@@ -51,11 +51,6 @@ public class Schedule implements Serializable
     */
    private List<Location> lSourceList = new Vector<Location>();
 
-   /**
-    * Keeps track of how many sections of a given course have been scheduled.
-    */
-   private HashMap<Course, Integer> courseCount = new HashMap<Course, Integer>();
-
    private HashMap<Course, SectionTracker> sections = new HashMap<Course, SectionTracker>();
 
    /**
@@ -385,7 +380,8 @@ public class Schedule implements Serializable
       {
          r = false;
       }
-      if (this.courseCount.get(c) == c.getNumOfSections())
+      SectionTracker st = this.sections.get(c);
+      if (!st.canBookAnotherSection())
       {
          r = false;
       }
@@ -486,7 +482,35 @@ public class Schedule implements Serializable
       {
          for (Course c: this.cSourceList)
          {
+            ScheduleItem lec_si = genLectureItem(c);
+            try { add(lec_si); }
+            catch (CouldNotBeScheduledException e)
+            {
+               System.err.println ("GENERATION MADE A BAD LEC");
+               System.err.println (lec_si);
+            }
             
+            Lab lab = c.getLab();
+            if (lab != null)
+            {
+               int curEnrollment = 0;
+               int goal = c.getEnrollment();
+               while (curEnrollment < goal)
+               {
+               
+                  ScheduleItem lab_si = genLabItem (lab, lec_si);
+                  try 
+                  { 
+                     add(lab_si);
+                     curEnrollment += lab.getEnrollment();
+                  }
+                  catch (CouldNotBeScheduledException e)
+                  {
+                     System.err.println ("GENERATION MADE A BAD LAB");
+                     System.err.println (lab_si);
+                  }
+               }
+            }
          }
       }
 
@@ -529,19 +553,49 @@ public class Schedule implements Serializable
       cSourceList = new Vector<Course>(c_list);
    }
 
+   /**
+    * Creates a lecture ScheduleItem for the given course. Finds an instructor
+    * for the course, and subsequently finds times and locations which that 
+    * instructor wants to teach for.<br>
+    * <br>
+    * In the case that no instructor or location can be found, Staff and Tba 
+    * will be used to make sure generation can continue.
+    * 
+    * @param lec Course to schedule
+    * 
+    * @return A ScheduleItem which is safe to add to the schedule
+    * 
+    * @see Tba#getTba()
+    * @see Staff#getStaff()
+    */
    private ScheduleItem genLectureItem (Course lec)
    {
       Vector<ScheduleItem> si_list = new Vector<ScheduleItem>();
-      ScheduleItem r = new ScheduleItem();
+      ScheduleItem lec_si = new ScheduleItem();
       
-      r.setInstructor(findInstructor(lec));
+      lec_si.setInstructor(findInstructor(lec));
       
-      
-      
-      return r;
+      return genBestTime(lec_si, this.bounds);
    }
 
-   private ScheduleItem genLab (Lab lab, ScheduleItem lec_si)
+   /**
+    * Creates a ScheduleItem for the given lab. The 'lec_si' is provided in
+    * case the lab is tied to the lecture in any particular way. If it is, we 
+    * can easily access its data at this point.<br>
+    * <br>
+    * In the case that no instructor or location can be found, Staff and Tba 
+    * will be used to make sure generation can continue.
+    * 
+    * @param lab Lab to schedule
+    * @param lec_si Lecture ScheduleItem which holds information which lab 
+    *        scheduling might need
+    *        
+    * @return A ScheduleItem for 'lab' which is safe to add to the schedule
+    * 
+    * @see Tba#getTba()
+    * @see Staff#getStaff()
+    */
+   private ScheduleItem genLabItem (Lab lab, ScheduleItem lec_si)
    {
       ScheduleItem lab_si = new ScheduleItem();
       
@@ -553,9 +607,7 @@ public class Schedule implements Serializable
          tr = new TimeRange(lec_si.getStart(), lab.getDayLength());
       }
       
-      lab_si = genBestTime(lab_si, tr);
-      
-      return lab_si;
+      return genBestTime(lab_si, tr);
    }
 
    /**
