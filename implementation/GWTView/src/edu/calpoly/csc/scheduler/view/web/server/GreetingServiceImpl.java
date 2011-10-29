@@ -2,6 +2,7 @@ package edu.calpoly.csc.scheduler.view.web.server;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
@@ -133,7 +134,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		ArrayList<Location> locations = db.getLocationDB().getData();
 		
 		Schedule schedule = new Schedule();
-		schedule.generate(new Vector<Course>(courses), new Vector<Instructor>(instructors), new Vector<Location>(locations));
+		schedule.generate(new Vector<Course>(courses));
 		
 		ArrayList<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
 		
@@ -259,10 +260,16 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	{
 	 assert(model != null);
 	 Database db = model.getDb();
+	 CourseDB cdb = db.getCourseDB();
 	 ArrayList<Instructor> instructors = db.getInstructorDB().getData();
      ArrayList<Location> locations = db.getLocationDB().getData();
+     ArrayList<Course> modelCourses = new ArrayList<Course>();
+     for(CourseGWT course : courses)
+     {
+      modelCourses.add(cdb.getCourse(course.getDept(), course.getCatalogNum()));	 
+     }
      schedule = new Schedule(new Vector<Instructor>(instructors), new Vector<Location>(locations));
-	 schedule.generate(new Vector<Course>(courses));		
+	 schedule.generate(modelCourses);		
 	 ArrayList<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
 	
      for(ScheduleItem item : schedule.getItems())
