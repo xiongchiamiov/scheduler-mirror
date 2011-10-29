@@ -88,7 +88,7 @@ public class ScheduleDB implements DatabaseAPI<Schedule>
    {
 	      // Create insert string
 	      String insertString = "insert into schedules ("
-	            + "name, quarterid, schedule, dept" + "values (?, ?, ?, ?)";
+	            + "name, quarterid, schedule, dept) values (?, ?, ?, ?)";
 	      // Create prepared statement
 	      PreparedStatement stmt = sqldb.getPrepStmt(insertString);
 	      // Set values
