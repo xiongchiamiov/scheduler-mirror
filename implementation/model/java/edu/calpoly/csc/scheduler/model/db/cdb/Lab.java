@@ -81,4 +81,5 @@ public class Lab extends Course
    {
       return this.useLectureInstructor;
    }
+
 }
