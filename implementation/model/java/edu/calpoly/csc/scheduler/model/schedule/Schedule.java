@@ -376,11 +376,11 @@ public class Schedule implements Serializable
       {
          r = false;
       }
-      if (!i.canTeach(si.getCourse()))
+      if (!i.canTeach(c))
       {
          r = false;
       }
-      SectionTracker st = this.sections.get(c);
+      SectionTracker st = this.getSectionTracker(c);
       if (!st.canBookAnotherSection())
       {
          r = false;
@@ -493,6 +493,10 @@ public class Schedule implements Serializable
             Lab lab = c.getLab();
             if (lab != null)
             {
+               /*
+                * We need to schedule labs until we have enough enrollment to
+                * supply the lecture
+                */
                int curEnrollment = 0;
                int goal = c.getEnrollment();
                while (curEnrollment < goal)
