@@ -792,9 +792,9 @@ public class Instructor extends DbData
     * @return True if the instructor was booked. False if he was already booked
     *         for any part of the time specified.
     */
-   public boolean setBusy (Week days, TimeRange tr)
+   public boolean book (boolean b, Week days, TimeRange tr)
    {
-      return this.availability.book(days, tr);
+      return this.availability.book(b, days, tr);
    }
 
    /**
@@ -805,9 +805,9 @@ public class Instructor extends DbData
     * @param starttime the start time to set busy.
     * @param endtime the end time of the busy interval.
     */
-   public boolean setBusy (Day dayOfWeek, Time starttime, Time endtime)
+   public boolean book (boolean b, Day dayOfWeek, Time starttime, Time endtime)
    {
-      return this.availability.book(starttime, endtime, dayOfWeek);
+      return this.availability.book(b, starttime, endtime, dayOfWeek);
    }
 
    /**

@@ -57,6 +57,9 @@ public class Schedule implements Serializable
    private HashMap<Course, Integer> courseCount = 
       new HashMap<Course, Integer>();
 
+   private HashMap<Course, SectionTracker> sections = 
+      new HashMap<Course, SectionTracker>();
+   
    /**
     * The global start/end times for a given day on the schedule. Default bounds
     * are 7a-10p.
@@ -94,6 +97,19 @@ public class Schedule implements Serializable
    }
 
    /**
+    * Creates a schedule w/ the given lists of Instructors and Locations
+    * taken into consideration when it generates.
+    * 
+    * @param i_list List of instructors to use
+    * @param l_list List of locations   to use
+    */
+   public Schedule (List<Instructor> i_list, List<Location> l_list)
+   {
+      this.iSourceList = new Vector<Instructor>(i_list);
+      this.setlSourceList(l_list);
+   }
+   
+   /**
     * Creates a ScheduleItem to teach a given course on a given set of days in a
     * given time range.
     * 
@@ -111,7 +127,7 @@ public class Schedule implements Serializable
       throws CouldNotBeScheduledException
    {
       Vector<ScheduleItem> sis = new Vector<ScheduleItem>();
-
+      
       TimeRange tr = new TimeRange(s, c.splitLengthOverDays(days.size()));
 
       ScheduleItem si = new ScheduleItem();
@@ -134,11 +150,12 @@ public class Schedule implements Serializable
              * If there's a lab, fill our list with lectures all paired with
              * labs
              */
-            Lab lab = c.getLab();
-            if (lab != null)
-            {
-               list = addLab(lab, list);
-            }
+            //TODO: FIX     
+//            Lab lab = c.getLab();
+//            if (lab != null)
+//            {
+//               list = addLab(lab, list);
+//            }
             sis.addAll(list);
          }
       }
@@ -162,6 +179,41 @@ public class Schedule implements Serializable
       return si_map.getBest();
    }
 
+   /**
+    * Removes a given ScheduleItem from the schedule. Updates instructor and
+    * location availability to show this new free time. The course's number
+    * of sections taught are decremented. If this makes the course again 
+    * eligible to be taught, it will be added back to our cSourceList.
+    *  
+    * @param si ScheduleItem to remove
+    * @return
+    */
+   public ScheduleItem remove (ScheduleItem si)
+   {
+      if (this.items.contains(si))
+      {
+         Course c = si.getCourse();
+         Instructor i = si.getInstructor();
+         Location l = si.getLocation();
+         Week days = si.getDays();
+         TimeRange tr = si.getTimeRange();
+         
+         this.items.remove(si);
+         i.book(false, days, tr);
+         l.book(false, days, tr);
+         
+         int wtu = i.getCurWtu();
+         wtu -= si.getWtuTotal();
+         i.setCurWtu(wtu);
+         
+         SectionTracker st = getSectionTracker(c);
+         st.removeSection(si.getSection());
+         
+         updateCourseSrcList (st);
+      }
+      return si;
+   }
+   
    /**
     * Adds the given ScheduleItem to this schedule. Before an add is done, the
     * ScheduleItem is verified to make sure it doesn't double-book an
@@ -212,17 +264,18 @@ public class Schedule implements Serializable
       Week days = si.getDays();
       TimeRange tr = si.getTimeRange();
 
-      i.setBusy(days, tr);
-      l.setBusy(days, tr);
+      i.book(true, days, tr);
+      l.book(true, days, tr);
 
       int wtu = i.getCurWtu();
       wtu += si.getWtuTotal();
       i.setCurWtu(wtu);
-
-      bookSection(si.getCourse());
-
+      
       this.items.add(si);
 
+      SectionTracker st = getSectionTracker(si.getCourse());
+      st.addSection();
+      updateCourseSrcList (st);
    }
 
    /**
@@ -240,33 +293,49 @@ public class Schedule implements Serializable
          book(si);
       }
    }
-
+   
    /**
-    * Books another section of the given course. If the number of sections being
-    * taught == the number of sections 'c' has, 'c' will be removed from further
-    * generation consideration.
+    * Gets the SectionTracker associated with course 'c'. If no tracker yet
+    * exists for the Course, one is created and added.
     * 
-    * @param c Course to add another section of
+    * @param c Course to get the tracker for
+    * 
+    * @return this.sections.get(c);
     */
-   private void bookSection (Course c)
+   private SectionTracker getSectionTracker (Course c)
    {
-      debug("BOOKING SECTION FOR " + c);
-      if (!this.courseCount.containsKey(c))
-      {
-         this.courseCount.put(c, 0);
+      if (!this.sections.containsKey(c))
+      { 
+         this.sections.put(c, new SectionTracker(c));
       }
-
-      int i = this.courseCount.get(c);
-      i++;
-      this.courseCount.put(c, i);
-
-      if (i == c.getNumOfSections())
+      
+      return this.sections.get(c);
+   }
+   
+   /**
+    * Removes the course associated w/ 'st' if no more sections of it can be
+    * taught
+    * 
+    * @param st SectionTracker for the course we're updating
+    * 
+    * @see SectionTracker#canBookAnotherSection
+    */
+   private void updateCourseSrcList (SectionTracker st)
+   {
+      Course c = st.getCourse();
+      if (st.canBookAnotherSection())
       {
-         debug("REMOVING IT");
-         cSourceList.remove(c);
+         if (!this.cSourceList.contains(c))
+         {
+            this.cSourceList.add(c);
+         }
+      }
+      else
+      {
+         this.cSourceList.remove(c);
       }
    }
-
+   
    /**
     * Ensures that the given ScheduleItem can be scheduled. This means it
     * doesn't double book instructors/locations, and the instructor can teach
@@ -327,6 +396,7 @@ public class Schedule implements Serializable
       return r;
    }
 
+   
    /**
     * Just calls 'verify(ScheduleItem)' and returns whether we good all 'true'
     * values or not
@@ -347,6 +417,7 @@ public class Schedule implements Serializable
       return r;
    }
 
+   
    /**
     * Does schedule generation
     * 
@@ -354,10 +425,9 @@ public class Schedule implements Serializable
     * @param i_list List of instructors you want to teach stuff
     * @param l_list List of locations you want stuff to be taught in
     */
-   public Vector<ScheduleItem> generate (List<Course> c_list,
-      List<Instructor> i_list, List<Location> l_list)
+   public Vector<ScheduleItem> generate (List<Course> c_list)
    {
-      initGenData(c_list, i_list, l_list);
+      initGenData(c_list);
 
       debug("GENERATING");
       debug("COURSES: " + this.cSourceList);
@@ -400,6 +470,7 @@ public class Schedule implements Serializable
       return this.getItems();
    }
 
+   
    /**
     * Tells us whether we should go through another round of generation,
     * assigning one course to each instructor still able to teach.
@@ -411,6 +482,7 @@ public class Schedule implements Serializable
       return this.cSourceList.size() > 0;
    }
 
+   
    /**
     * Adds the special 'STAFF' instructor to our list of instructors if the list
     * is empty.
@@ -423,31 +495,21 @@ public class Schedule implements Serializable
       }
    }
 
+   
    /**
     * Clears the record-keeping data associated w/ generation. Sets the list of
-    * courses, instructors, and locations to the provides arguments.<br>
-    * <br>
-    * The special location 'Tba' is added to the end of the location list
+    * courses, instructors, and locations to the provides arguments.
     * 
     * @param c_list List of Courses that'll be put into the schedule
-    * @param i_list List of Instructors that'll be put into the schedule
-    * @param l_list List of Locations that'll be put into the schedule
     * 
     * @see Tba
     */
-   private void initGenData (List<Course> c_list, List<Instructor> i_list,
-      List<Location> l_list)
+   private void initGenData (List<Course> c_list)
    {
       cSourceList = new Vector<Course>(c_list);
-      iSourceList = new Vector<Instructor>(i_list);
-      lSourceList = new Vector<Location>(l_list);
-
-      /*
-       * Adding this to the end makes it the last possible choice
-       */
-      lSourceList.add(Tba.getTba());
    }
 
+   
    /**
     * Generates a ScheduleItem for a given instructor. Guarantees that no other
     * ScheduleItem could be created which this instructor would want <b>more</b>
@@ -511,6 +573,7 @@ public class Schedule implements Serializable
       return new SiMap(si_list).getBest();
    }
 
+   
    /**
     * Finds a course which a given instructor wants to teach and can teach. This
     * means that the course returned will not exceed his WTU limit. Furthermore,
@@ -568,6 +631,7 @@ public class Schedule implements Serializable
       return si;
    }
 
+   
    /**
     * Gets all the possible time ranges that an instructor can teach a given
     * course. The days that are considered for teaching are the days defined by
@@ -614,6 +678,7 @@ public class Schedule implements Serializable
       return sis;
    }
 
+   
    /**
     * Finds all locations which are compatible with the given Course and are
     * available for any of the given list of TimeRanges.
@@ -935,5 +1000,67 @@ public class Schedule implements Serializable
    public void setDept (String dept)
    {
       this.dept = dept;
+   }
+
+   /**
+    * Returns the cSourceList
+    * 
+    * @return the cSourceList
+    */
+   public List<Course> getcSourceList ()
+   {
+      return cSourceList;
+   }
+
+   /**
+    * Sets the cSourceList to the given parameter.
+    *
+    * @param cSourceList the cSourceList to set
+    */
+   public void setcSourceList (List<Course> cSourceList)
+   {
+      this.cSourceList = cSourceList;
+   }
+
+   /**
+    * Returns the iSourceList
+    * 
+    * @return the iSourceList
+    */
+   public List<Instructor> getiSourceList ()
+   {
+      return iSourceList;
+   }
+
+   /**
+    * Sets the iSourceList to the given parameter.
+    *
+    * @param iSourceList the iSourceList to set
+    */
+   public void setiSourceList (List<Instructor> iSourceList)
+   {
+      this.iSourceList = new Vector<Instructor>(iSourceList);
+   }
+
+   /**
+    * Returns the lSourceList
+    * 
+    * @return the lSourceList
+    */
+   public List<Location> getlSourceList ()
+   {
+      return lSourceList;
+   }
+
+   /**
+    * Sets the lSourceList to the given parameter. The special "TBA" location is
+    * added to the end of the source list after setting.
+    *
+    * @param lSourceList the lSourceList to set
+    */
+   public void setlSourceList (List<Location> lSourceList)
+   {
+      this.lSourceList = new Vector<Location>(lSourceList);
+      this.lSourceList.add(Tba.TBA);
    }
 }

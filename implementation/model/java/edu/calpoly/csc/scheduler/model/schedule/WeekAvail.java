@@ -46,10 +46,10 @@ public class WeekAvail extends GenWeekAvail<Void, DayAvail>
     * @throws NotADayException if "d" is not a valid day as defined in 
     *         generate.Week.java
     */
-   public boolean book (Time s, Time e, Day d) /*==>*/
+   public boolean book (boolean b, Time s, Time e, Day d) /*==>*/
       throws EndBeforeStartException
    {
-      return this.book(null, s, e, d);
+      return this.book(b, null, s, e, d);
    }/*<==*/
 
    /**
@@ -64,15 +64,15 @@ public class WeekAvail extends GenWeekAvail<Void, DayAvail>
     * @throws NotADayException if "d" is not a valid day as defined in 
     *         generate.Week.java
     */
-   public boolean book (Time s, Time e, Week w) /*==>*/
+   public boolean book (boolean b, Time s, Time e, Week w) /*==>*/
       throws EndBeforeStartException
    {
-      return this.book(null, s, e, w);
+      return this.book(b, null, s, e, w);
    }/*<==*/
    
-   public boolean book (Week w, TimeRange tr)
+   public boolean book (boolean b, Week w, TimeRange tr)
    {
-      return this.book(tr.getS(), tr.getE(), w);
+      return this.book(b, tr.getS(), tr.getE(), w);
    }
    
    /**

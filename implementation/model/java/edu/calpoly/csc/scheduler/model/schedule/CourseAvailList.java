@@ -52,7 +52,7 @@ public class CourseAvailList extends Vector<CourseWeekAvail>
     * @throws NotADayException if "d" is not a valid day as defined in 
     *         generate.Week.java
     */
-   public boolean book (Course c, Time s, Time e, Day d)
+   public boolean book (boolean b, Course c, Time s, Time e, Day d)
    {
       boolean r;
 
@@ -60,7 +60,7 @@ public class CourseAvailList extends Vector<CourseWeekAvail>
       {
          for (CourseWeekAvail cwa: this)
          {
-            r &= cwa.book(c, s, e, d);
+            r &= cwa.book(b, c, s, e, d);
    
          }
       }
@@ -82,7 +82,7 @@ public class CourseAvailList extends Vector<CourseWeekAvail>
     * @throws NotADayException if any of the "days" are not a valid day as 
     *         defined in generate.Week.java
     */
-   public boolean book (Course c, Time s, Time e, Week days)
+   public boolean book (boolean b, Course c, Time s, Time e, Week days)
    {
       boolean r;
 
@@ -90,7 +90,7 @@ public class CourseAvailList extends Vector<CourseWeekAvail>
       {
          for (CourseWeekAvail cwa: this)
          {
-            r &= cwa.book(c, s, e, days);
+            r &= cwa.book(b, c, s, e, days);
          }
       }
       return r;

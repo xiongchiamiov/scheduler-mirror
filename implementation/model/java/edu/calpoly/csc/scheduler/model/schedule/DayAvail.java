@@ -27,9 +27,9 @@ public class DayAvail extends GenAvail<Void> implements Serializable
     * which is used in other places. See documenation of "GenAvail" for details
     * as to what this method does. 
     */
-   public boolean book (Time s, Time e)/*==>*/
+   public boolean book (boolean b, Time s, Time e)/*==>*/
    {
-      return this.book(null, s, e);
+      return this.book(b, null, s, e);
    }/*<==*/
 
    /**

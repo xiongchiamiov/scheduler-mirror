@@ -449,9 +449,9 @@ public class Location extends DbData implements Serializable
     * 
     *           Written by: Eric Liebowitz
     */
-   public boolean setBusy(Day dayOfWeek, Time s, Time e)
+   public boolean book(boolean b, Day dayOfWeek, Time s, Time e)
    {
-      return this.availability.book(s, e, dayOfWeek);
+      return this.availability.book(b, s, e, dayOfWeek);
    }
 
    /**
@@ -468,14 +468,14 @@ public class Location extends DbData implements Serializable
     * 
     *         Written by: Eric Liebowitz
     */
-   public boolean setBusy(Week week, Time s, Time e)
+   public boolean book(boolean b, Week week, Time s, Time e)
    {
-      return this.availability.book(s, e, week);
+      return this.availability.book(b, s, e, week);
    }
 
-   public boolean setBusy(Week week, TimeRange tr)
+   public boolean book(boolean b, Week week, TimeRange tr)
    {
-      return this.availability.book(week, tr);
+      return this.availability.book(b, week, tr);
    }
 
    /**

@@ -111,11 +111,11 @@ public class CourseOverlapTracker implements Serializable
     * @throws NotADayException if any of the "days" are not a valid day as 
     *         defined in generate.Week.java
     */
-   public boolean book (Course c, Time s, Time e, Week days)
+   public boolean book (boolean b, Course c, Time s, Time e, Week days)
    {
       if (this.cBookings.containsKey(c))
       {
-         return this.cBookings.get(c).book(c, s, e, days);
+         return this.cBookings.get(c).book(b, c, s, e, days);
       }
       return true;
    }

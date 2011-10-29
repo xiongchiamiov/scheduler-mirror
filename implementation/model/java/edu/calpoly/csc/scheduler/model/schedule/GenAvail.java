@@ -36,9 +36,15 @@ public abstract class GenAvail<T> extends Vector<BitSet>
     *
     * @return true if the booking was made. False otherwise. 
     */
-   public boolean book (T t, Time s, Time e)//==>
+   public boolean book (boolean b, T t, Time s, Time e)//==>
    {
-      if (!isFree(t, s, e)) { return false; }
+      /*
+       * If they want to try and book, see if they can
+       */
+      if (b)
+      {
+         if (!isFree(t, s, e)) { return false; }
+      }
       
       /*
        * Times will have been rounded in "isFree"
@@ -49,7 +55,7 @@ public abstract class GenAvail<T> extends Vector<BitSet>
 
       for (int i = 0; i < slots; i ++)
       {
-         this.get(baseSlot + i).set(bit, true);
+         this.get(baseSlot + i).set(bit, b);
       }
       return true;
    }//<==

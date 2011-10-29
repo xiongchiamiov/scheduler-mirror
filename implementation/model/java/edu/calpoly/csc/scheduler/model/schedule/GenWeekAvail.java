@@ -34,10 +34,10 @@ public class GenWeekAvail<T, U extends GenAvail<T>> extends Vector<U>
     * @throws NotADayException if "d" is not a valid day as defined in 
     *         generate.Week.java
     */
-   public boolean book (T t, Time s, Time e, Day d) /*==>*/
+   public boolean book (boolean b, T t, Time s, Time e, Day d) /*==>*/
       throws EndBeforeStartException
    {
-      return this.get(d.getNum()).book(t, s, e);
+      return this.get(d.getNum()).book(b, t, s, e);
    }/*<==*/
 
    /**
@@ -53,13 +53,13 @@ public class GenWeekAvail<T, U extends GenAvail<T>> extends Vector<U>
     * @throws NotADayException if "d" is not a valid day as defined in 
     *         generate.Week.java
     */
-   public boolean book (T t, Time s, Time e, Week days) /*==>*/
+   public boolean book (boolean b, T t, Time s, Time e, Week days) /*==>*/
       throws EndBeforeStartException
    {
       boolean r = true;
       for (Day d: days.getDays())
       {
-         r &= this.get(d.getNum()).book(t, s, e);
+         r &= this.get(d.getNum()).book(b, t, s, e);
       }
       return r;
    }/*<==*/

@@ -44,13 +44,13 @@ public class Staff extends Instructor
    }
    
    @Override
-   public boolean setBusy (Week w, TimeRange tr)
+   public boolean book (boolean b, Week w, TimeRange tr)
    {
       return true;
    }
 
    @Override
-   public boolean setBusy (Day dayOfWeek, Time starttime, Time endtime)
+   public boolean book (boolean b, Day dayOfWeek, Time starttime, Time endtime)
    {
       return true;
    }

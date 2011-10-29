@@ -46,19 +46,19 @@ public class Tba extends Location
    }
    
    @Override
-   public boolean setBusy(Day dayOfWeek, Time s, Time e)
+   public boolean book (boolean b, Day dayOfWeek, Time s, Time e)
    {
       return true;
    }
 
    @Override
-   public boolean setBusy(Week week, Time s, Time e)
+   public boolean book (boolean b, Week week, Time s, Time e)
    {
       return true;
    }
 
    @Override
-   public boolean setBusy(Week week, TimeRange tr)
+   public boolean book (boolean b, Week week, TimeRange tr)
    {
       return true;
    }
