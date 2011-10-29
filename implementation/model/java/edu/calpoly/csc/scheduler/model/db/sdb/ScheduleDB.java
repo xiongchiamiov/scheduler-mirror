@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Random;
 
 import edu.calpoly.csc.scheduler.model.db.DatabaseAPI;
 import edu.calpoly.csc.scheduler.model.db.SQLDB;
@@ -94,12 +95,14 @@ public class ScheduleDB implements DatabaseAPI<Schedule>
 	      // Set values
 	      try
 	      {
-	         stmt.setString(1, "New Schedule");
+	    	  Random rn = new Random();
+	    	  int append = rn.nextInt(999);
+	         stmt.setString(1, "New Schedule" + append);
 	         stmt.setString(2, "blank");
 	         // Get Schedule through Serializable
 	         Schedule data = new Schedule();
 	         data.setDept(dept);
-	         data.setName("New Schedule");
+	         data.setName("New Schedule" + append);
 	         data.setQuarterId("blank");
 	         try
 	         {

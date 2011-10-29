@@ -662,6 +662,7 @@ public class SQLDB {
 	
 	public boolean doesScheduleIDExist(int scheduleid)
 	{
+		System.out.println("Does " + scheduleid + " exist?");
 		String selectString = "select scheduleid from schedules where scheduleid = ?";
 	      PreparedStatement stmt = getPrepStmt(selectString);
 	      ResultSet rs;
@@ -672,16 +673,23 @@ public class SQLDB {
 	         {
 	        	 if(rs.getInt("scheduleid") == scheduleid)
 	        	 {
+	        		 System.out.println("yes");
 	        		 return true;
 	        	 }
 	        	 else
 	        	 {
+	        		 System.out.println("no");
 	        		 return false;
 	        	 }
 	         }
+	         else
+	         {
+	        	 System.out.println("No, nothing in resultset");
+	        	 return false;
+	         }
 	      } catch (SQLException e) {
+	    	  System.out.println("no, sqlexception");
 	         return false;
 	      }
-	      return true;
 	}
 }
