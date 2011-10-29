@@ -21,7 +21,7 @@ public class Schedule implements Serializable
    /**
     * Used for debugging. Toggle it to get debugging output
     */
-   public static final boolean DEBUG = !true;
+   public static final boolean DEBUG = true;
 
    /**
     * Prints a message if DEBUG is true
@@ -54,12 +54,10 @@ public class Schedule implements Serializable
    /**
     * Keeps track of how many sections of a given course have been scheduled.
     */
-   private HashMap<Course, Integer> courseCount = 
-      new HashMap<Course, Integer>();
+   private HashMap<Course, Integer> courseCount = new HashMap<Course, Integer>();
 
-   private HashMap<Course, SectionTracker> sections = 
-      new HashMap<Course, SectionTracker>();
-   
+   private HashMap<Course, SectionTracker> sections = new HashMap<Course, SectionTracker>();
+
    /**
     * The global start/end times for a given day on the schedule. Default bounds
     * are 7a-10p.
@@ -88,7 +86,7 @@ public class Schedule implements Serializable
     * The department this schedule is for
     */
    private String dept = "";
-   
+
    /**
     * Default constructor. Does nothing but give you back a new object.
     */
@@ -97,18 +95,18 @@ public class Schedule implements Serializable
    }
 
    /**
-    * Creates a schedule w/ the given lists of Instructors and Locations
-    * taken into consideration when it generates.
+    * Creates a schedule w/ the given lists of Instructors and Locations taken
+    * into consideration when it generates.
     * 
     * @param i_list List of instructors to use
-    * @param l_list List of locations   to use
+    * @param l_list List of locations to use
     */
    public Schedule (List<Instructor> i_list, List<Location> l_list)
    {
       this.iSourceList = new Vector<Instructor>(i_list);
       this.setlSourceList(l_list);
    }
-   
+
    /**
     * Creates a ScheduleItem to teach a given course on a given set of days in a
     * given time range.
@@ -127,7 +125,7 @@ public class Schedule implements Serializable
       throws CouldNotBeScheduledException
    {
       Vector<ScheduleItem> sis = new Vector<ScheduleItem>();
-      
+
       TimeRange tr = new TimeRange(s, c.splitLengthOverDays(days.size()));
 
       ScheduleItem si = new ScheduleItem();
@@ -150,12 +148,12 @@ public class Schedule implements Serializable
              * If there's a lab, fill our list with lectures all paired with
              * labs
              */
-            //TODO: FIX     
-//            Lab lab = c.getLab();
-//            if (lab != null)
-//            {
-//               list = addLab(lab, list);
-//            }
+            // TODO: FIX
+            // Lab lab = c.getLab();
+            // if (lab != null)
+            // {
+            // list = addLab(lab, list);
+            // }
             sis.addAll(list);
          }
       }
@@ -181,10 +179,10 @@ public class Schedule implements Serializable
 
    /**
     * Removes a given ScheduleItem from the schedule. Updates instructor and
-    * location availability to show this new free time. The course's number
-    * of sections taught are decremented. If this makes the course again 
-    * eligible to be taught, it will be added back to our cSourceList.
-    *  
+    * location availability to show this new free time. The course's number of
+    * sections taught are decremented. If this makes the course again eligible
+    * to be taught, it will be added back to our cSourceList.
+    * 
     * @param si ScheduleItem to remove
     * @return
     */
@@ -197,23 +195,23 @@ public class Schedule implements Serializable
          Location l = si.getLocation();
          Week days = si.getDays();
          TimeRange tr = si.getTimeRange();
-         
+
          this.items.remove(si);
          i.book(false, days, tr);
          l.book(false, days, tr);
-         
+
          int wtu = i.getCurWtu();
          wtu -= si.getWtuTotal();
          i.setCurWtu(wtu);
-         
+
          SectionTracker st = getSectionTracker(c);
          st.removeSection(si.getSection());
-         
-         updateCourseSrcList (st);
+
+         updateCourseSrcList(st);
       }
       return si;
    }
-   
+
    /**
     * Adds the given ScheduleItem to this schedule. Before an add is done, the
     * ScheduleItem is verified to make sure it doesn't double-book an
@@ -223,7 +221,7 @@ public class Schedule implements Serializable
     * 
     * @return true if the item was added. False otherwise.
     */
-   public boolean add (ScheduleItem si)
+   public boolean add (ScheduleItem si) throws CouldNotBeScheduledException
    {
       boolean r = false;
       /*
@@ -237,6 +235,10 @@ public class Schedule implements Serializable
          {
             book(si.getLabs());
          }
+      }
+      else
+      {
+         throw new CouldNotBeScheduledException();
       }
 
       return r;
@@ -270,12 +272,12 @@ public class Schedule implements Serializable
       int wtu = i.getCurWtu();
       wtu += si.getWtuTotal();
       i.setCurWtu(wtu);
-      
+
       this.items.add(si);
 
       SectionTracker st = getSectionTracker(si.getCourse());
       st.addSection();
-      updateCourseSrcList (st);
+      updateCourseSrcList(st);
    }
 
    /**
@@ -293,7 +295,7 @@ public class Schedule implements Serializable
          book(si);
       }
    }
-   
+
    /**
     * Gets the SectionTracker associated with course 'c'. If no tracker yet
     * exists for the Course, one is created and added.
@@ -305,13 +307,13 @@ public class Schedule implements Serializable
    private SectionTracker getSectionTracker (Course c)
    {
       if (!this.sections.containsKey(c))
-      { 
+      {
          this.sections.put(c, new SectionTracker(c));
       }
-      
+
       return this.sections.get(c);
    }
-   
+
    /**
     * Removes the course associated w/ 'st' if no more sections of it can be
     * taught
@@ -335,7 +337,7 @@ public class Schedule implements Serializable
          this.cSourceList.remove(c);
       }
    }
-   
+
    /**
     * Ensures that the given ScheduleItem can be scheduled. This means it
     * doesn't double book instructors/locations, and the instructor can teach
@@ -396,7 +398,6 @@ public class Schedule implements Serializable
       return r;
    }
 
-   
    /**
     * Just calls 'verify(ScheduleItem)' and returns whether we good all 'true'
     * values or not
@@ -417,7 +418,6 @@ public class Schedule implements Serializable
       return r;
    }
 
-   
    /**
     * Does schedule generation
     * 
@@ -437,7 +437,6 @@ public class Schedule implements Serializable
       while (shouldKeepGenerating())
       {
          Vector<Instructor> toRemove = new Vector<Instructor>();
-
          addStaff();
 
          for (Instructor i : this.iSourceList)
@@ -445,9 +444,13 @@ public class Schedule implements Serializable
             debug("HAVE INSTRUCTOR " + i);
             try
             {
-               ScheduleItem si = genSIForInstructor(i);
-               debug("GOT " + si);
-               add(si);
+               ScheduleItem lec_si = new ScheduleItem();
+               lec_si.setInstructor(i);
+               lec_si = findCourse(lec_si);
+
+               lec_si = genBestTime(lec_si, this.bounds);
+               debug("LEC GOT " + lec_si);
+               add(lec_si);
             }
             catch (InstructorCanTeachNothingException e)
             {
@@ -470,6 +473,25 @@ public class Schedule implements Serializable
       return this.getItems();
    }
 
+   public Vector<ScheduleItem> generate_beta (List<Course> c_list)
+   {
+      initGenData(c_list);
+
+      debug("GENERATING");
+      debug("COURSES: " + this.cSourceList);
+      debug("INSTRUCTORS: " + this.iSourceList);
+      debug("LOCATIONS: " + this.lSourceList);
+
+      while (shouldKeepGenerating())
+      {
+         for (Course c: this.cSourceList)
+         {
+            
+         }
+      }
+
+      return this.getItems();   
+   }
    
    /**
     * Tells us whether we should go through another round of generation,
@@ -482,7 +504,6 @@ public class Schedule implements Serializable
       return this.cSourceList.size() > 0;
    }
 
-   
    /**
     * Adds the special 'STAFF' instructor to our list of instructors if the list
     * is empty.
@@ -495,7 +516,6 @@ public class Schedule implements Serializable
       }
    }
 
-   
    /**
     * Clears the record-keeping data associated w/ generation. Sets the list of
     * courses, instructors, and locations to the provides arguments.
@@ -509,7 +529,35 @@ public class Schedule implements Serializable
       cSourceList = new Vector<Course>(c_list);
    }
 
-   
+   private ScheduleItem genLectureItem (Course lec)
+   {
+      Vector<ScheduleItem> si_list = new Vector<ScheduleItem>();
+      ScheduleItem r = new ScheduleItem();
+      
+      r.setInstructor(findInstructor(lec));
+      
+      
+      
+      return r;
+   }
+
+   private ScheduleItem genLab (Lab lab, ScheduleItem lec_si)
+   {
+      ScheduleItem lab_si = new ScheduleItem();
+      
+      lab_si.setInstructor(getLabInstructor(lab, lec_si));
+      
+      TimeRange tr = this.bounds;
+      if (lab.isTethered())
+      {
+         tr = new TimeRange(lec_si.getStart(), lab.getDayLength());
+      }
+      
+      lab_si = genBestTime(lab_si, tr);
+      
+      return lab_si;
+   }
+
    /**
     * Generates a ScheduleItem for a given instructor. Guarantees that no other
     * ScheduleItem could be created which this instructor would want <b>more</b>
@@ -530,50 +578,25 @@ public class Schedule implements Serializable
     * @see SiMap#put(ScheduleItem)
     * @see ScheduleItem#getValue()
     */
-   private ScheduleItem genSIForInstructor (Instructor i)
-      throws InstructorCanTeachNothingException, CouldNotBeScheduledException
+   private ScheduleItem genBestTime (ScheduleItem base, TimeRange tr)
    {
-      Vector<ScheduleItem> sis = new Vector<ScheduleItem>();
       Vector<ScheduleItem> si_list = new Vector<ScheduleItem>();
 
-      /*
-       * Get ScheduleItems for the lecture
-       */
-      ScheduleItem lec_base = new ScheduleItem();
-
-      lec_base.setInstructor(i);
-
-      lec_base = findCourse(lec_base);
-      debug("FOUND COURSE");
-      si_list = findTimes(lec_base, this.bounds);
+      si_list = findTimes(base, tr);
       debug("GOT " + si_list.size() + " TIMES");
+
       si_list = findLocations(si_list);
       debug("GOT " + si_list.size() + " LOCATIONS");
 
       /*
-       * Handle lab component, if necessary 
-       */
-      Lab lab = lec_base.getCourse().getLab();
-      if (lab != null)
-      {
-         debug("HAS LAB " + lab);
-
-//         si_list = addLab(lab, si_list);
-//         debug("MADE " + si_list.size() + " POSSIBLE LAB PAIRINGS");
-      }
-
-      /*
-       * The map will prune out items which are impossible
+       * The map will prune out items which are impossible. Note that there will
+       * always be at least one location available: TBA
        */
       SiMap sortedItems = new SiMap(si_list);
-      if (sortedItems.size() == 0)
-      {
-         throw new CouldNotBeScheduledException();
-      }
+
       return new SiMap(si_list).getBest();
    }
 
-   
    /**
     * Finds a course which a given instructor wants to teach and can teach. This
     * means that the course returned will not exceed his WTU limit. Furthermore,
@@ -631,7 +654,6 @@ public class Schedule implements Serializable
       return si;
    }
 
-   
    /**
     * Gets all the possible time ranges that an instructor can teach a given
     * course. The days that are considered for teaching are the days defined by
@@ -678,7 +700,6 @@ public class Schedule implements Serializable
       return sis;
    }
 
-   
    /**
     * Finds all locations which are compatible with the given Course and are
     * available for any of the given list of TimeRanges.
@@ -742,6 +763,7 @@ public class Schedule implements Serializable
       ScheduleItem lab_base = new ScheduleItem();
       lab_base.setCourse(lab);
 
+      SiMap si_map = new SiMap();
       Vector<ScheduleItem> si_list = new Vector<ScheduleItem>();
 
       /*
@@ -749,64 +771,77 @@ public class Schedule implements Serializable
        */
       for (ScheduleItem lec_si : lec_si_list)
       {
-         debug ("FINDING LAB FOR " + lec_si);
-         
+         debug("FINDING LAB FOR " + lec_si);
+
          Course lec = lec_si.getCourse();
          Vector<ScheduleItem> lab_si_list = new Vector<ScheduleItem>();
-         
+
          lab_base.setInstructor(getLabInstructor(lab, lec_si));
-         debug ("GOT LAB INSTRUCTOR " + lab_base.getInstructor());
-         
-         TimeRange tr = getLabTimeRange (lab, lec_si);
-         debug ("GOT LAB TIMERANGE " + tr);
+         debug("GOT LAB INSTRUCTOR " + lab_base.getInstructor());
+
+         TimeRange tr = getLabTimeRange(lab, lec_si);
+         debug("GOT LAB TIMERANGE " + tr);
 
          lab_si_list = findTimes(lab_base, tr);
          lab_si_list = findLocations(lab_si_list);
 
-         si_list.addAll(pairLecWithLabs(lec_si, lab_si_list));
+         for (ScheduleItem si : pairLecWithLabs(lec_si, lab_si_list))
+         {
+            si_map.put(si);
+         }
       }
 
       return si_list;
    }
-   
+
    /**
     * Returns an instructor to teach a given lab. If the lab is told to use the
     * same instructor as its lecture, that instructor is used. Otherwise, a new
     * instructor will be found who wants to teach the lab.
     * 
     * @param lab Lab we're finding an instructor for
-    * @param lec_si Schedule information for the lecture component. Used to 
+    * @param lec_si Schedule information for the lecture component. Used to
     *        extract the instructor whose teaching the lecture in the case where
     *        the lab is teathered to the lecture.
-    *        
-    * @return An instructor to teach the lab. If the lab is teathered, this
-    *         will be the same instructor returned by 'lec_si.getInstructor'. 
     * 
-    * @.todo Write the instructor-finding method
+    * @return An instructor to teach the lab. If the lab is teathered, this will
+    *         be the same instructor returned by 'lec_si.getInstructor'. If no
+    *         instructor is able to teach, STAFF is returned
+    *
+    * @see Staff#getStaff()
     */
    private Instructor getLabInstructor (Lab lab, ScheduleItem lec_si)
    {
-      /*
-       * Assume same instructor. If we're wrong, then we'll do the work of 
-       * finding the new guy
-       */
-      Instructor i = lec_si.getInstructor();
+      Instructor r;
+      
       if (!lab.shouldUseLectureInstructor())
       {
-         i = findInstructor(lab);
+         r = findInstructor(lab);
       }
-      return i;
+      else
+      {
+         Instructor i = lec_si.getInstructor();
+         if (i.canTeach(lab))
+         {
+            r = i;
+         }
+         else
+         {
+            r = Staff.getStaff();
+         }
+      }
+      return r;
    }
-   
+
    /**
     * Determines the time range a lab can be taught for. In particular, if the
-    * lab is teathered to its lecture, it must be taught directly after the 
-    * lecture. Otherwise, it can float around and be taught anywhere. 
+    * lab is teathered to its lecture, it must be taught directly after the
+    * lecture. Otherwise, it can float around and be taught anywhere.
     * 
     * @param lab Lab to check for teathering
-    * @param lec_si Schedule info for the lecture. Used for figuring out when
-    *        a teathered lab to start
-    *        
+    * @param lec_si Schedule info for the lecture. Used for figuring out when a
+    *        teathered lab to start
+    * 
     * @return the TimeRange within which the given lab can be taught
     */
    private TimeRange getLabTimeRange (Lab lab, ScheduleItem lec_si)
@@ -828,40 +863,39 @@ public class Schedule implements Serializable
       }
       return tr;
    }
-   
+
    /**
     * Pairs a list of lab ScheduleItems with a single lecture ScheduleItem. The
-    * returned list will contain ScheduleItems identical to the 'lec_si' 
-    * parameter, save for the fact that their lab field will be different. 
+    * returned list will contain ScheduleItems identical to the 'lec_si'
+    * parameter, save for the fact that their lab field will be different.
     * Additionally, each lab is guaranteed to not overlap its lecture.
     * 
     * @param lec_si Lecture to pair labs with
     * @param lab_si_list List of labs to use for pairing
     * 
-    * @return A list of ScheduleItems, each identical to 'lec_si' except for
-    *         its lab component. Each ScheduleItem in this list will have a lab
+    * @return A list of ScheduleItems, each identical to 'lec_si' except for its
+    *         lab component. Each ScheduleItem in this list will have a lab
     *         which does not conflict/overlap with its lecture
     */
-   private List<ScheduleItem> pairLecWithLabs (ScheduleItem lec_si, 
-                                               List<ScheduleItem> lab_si_list)
+   private List<ScheduleItem> pairLecWithLabs (ScheduleItem lec_si,
+      List<ScheduleItem> lab_si_list)
    {
       Vector<ScheduleItem> si_list = new Vector<ScheduleItem>();
-      
+
       /*
        * For every lab ScheduleItem created, pair it with the lecture
-       * ScheduleItem. 
+       * ScheduleItem.
        */
       for (ScheduleItem lab_si : lab_si_list)
       {
-         debug ("CONSDIDER LAB ADDITION " + lab_si);
+         debug("CONSDIDER LAB ADDITION " + lab_si);
          int enrollmentGoal = lec_si.getCourse().getEnrollment();
          int curEnrollment = 0;
          while (curEnrollment < enrollmentGoal)
          {
             /*
-             * Only setup pair and add to possibilities if lab and lecture
-             * don't overlap (which is a bad thing) 
-             * 
+             * Only setup pair and add to possibilities if lab and lecture don't
+             * overlap (which is a bad thing)
              */
             if (!lec_si.overlaps(lab_si))
             {
@@ -873,45 +907,55 @@ public class Schedule implements Serializable
                 * TODO: Discuss w/ requirements and view guys
                 */
                curEnrollment += lab_si.getCourse().getEnrollment();
-               
-               debug ("SUCCESS! ENROLLMENT AT " + curEnrollment + "/" + 
-                  enrollmentGoal);  
+
+               debug("SUCCESS! ENROLLMENT AT " + curEnrollment + "/"
+                  + enrollmentGoal);
             }
          }
       }
-      
+
       return si_list;
    }
-   
+
    /**
-    * Finds an instructor who wants to teach a given course. 
+    * Finds an instructor who wants to teach a given course.
     * 
     * @param c Course to find an instructor for
     * 
-    * @return An instructor who can and wants to teach the course. If no 
-    *         instructor can be found, null is returned
+    * @return An instructor who can and wants to teach the course. If no
+    *         instructor can be found, Staff.getStaff is returned
+    *
+    * @see Staff#getStaff()
     */
    private Instructor findInstructor (Course c)
    {
       Instructor r = null;
       int curMaxPref = 0;
-      
-      for (Instructor i: this.iSourceList)
+
+      for (Instructor i : this.iSourceList)
       {
          if (i.canTeach(c))
          {
             int pref = i.getPreference(c);
             if (pref > curMaxPref)
             {
-               r = i; 
+               r = i;
                curMaxPref = pref;
             }
          }
       }
-      
+
+      if (r == null)
+      {
+         r = Staff.getStaff();
+      }
       return r;
    }
-   
+
+   /***********************
+    * GETTERS & SETTERS *
+    ***********************/
+
    /**
     * Returns the items
     * 
@@ -994,7 +1038,7 @@ public class Schedule implements Serializable
 
    /**
     * Sets the dept to the given parameter.
-    *
+    * 
     * @param dept the dept to set
     */
    public void setDept (String dept)
@@ -1014,7 +1058,7 @@ public class Schedule implements Serializable
 
    /**
     * Sets the cSourceList to the given parameter.
-    *
+    * 
     * @param cSourceList the cSourceList to set
     */
    public void setcSourceList (List<Course> cSourceList)
@@ -1034,7 +1078,7 @@ public class Schedule implements Serializable
 
    /**
     * Sets the iSourceList to the given parameter.
-    *
+    * 
     * @param iSourceList the iSourceList to set
     */
    public void setiSourceList (List<Instructor> iSourceList)
@@ -1055,7 +1099,7 @@ public class Schedule implements Serializable
    /**
     * Sets the lSourceList to the given parameter. The special "TBA" location is
     * added to the end of the source list after setting.
-    *
+    * 
     * @param lSourceList the lSourceList to set
     */
    public void setlSourceList (List<Location> lSourceList)
