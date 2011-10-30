@@ -2,7 +2,7 @@ package edu.calpoly.csc.scheduler.view.web.server;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Vector;
 
@@ -15,6 +15,7 @@ import edu.calpoly.csc.scheduler.model.db.cdb.Course;
 import edu.calpoly.csc.scheduler.model.db.cdb.CourseDB;
 import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
 import edu.calpoly.csc.scheduler.model.db.idb.InstructorDB;
+import edu.calpoly.csc.scheduler.model.db.idb.TimePreference;
 import edu.calpoly.csc.scheduler.model.db.ldb.Location;
 import edu.calpoly.csc.scheduler.model.db.ldb.LocationDB;
 import edu.calpoly.csc.scheduler.model.schedule.CouldNotBeScheduledException;
@@ -22,6 +23,7 @@ import edu.calpoly.csc.scheduler.model.schedule.Day;
 import edu.calpoly.csc.scheduler.model.schedule.Schedule;
 import edu.calpoly.csc.scheduler.model.schedule.ScheduleItem;
 import edu.calpoly.csc.scheduler.model.schedule.Week;
+import edu.calpoly.csc.scheduler.model.schedule.WeekAvail;
 import edu.calpoly.csc.scheduler.view.web.client.GreetingService;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
@@ -113,9 +115,24 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		
 		
 		for (InstructorGWT instructor : instructors){
-			Instructor ins = new Instructor();
+			instructor.verify();
 			
+			Instructor ins = new Instructor();
+			ins.setQuarterId(instructor.getQuarterID());
+			ins.setScheduleId(0);
 			ins.setFirstName(instructor.getFirstName());
+			ins.setLastName(instructor.getLastName());
+			ins.setUserID(instructor.getUserID());
+			ins.setMaxWtu(instructor.getMaxWtu());
+			ins.setCurWtu(instructor.getCurWtu());
+			ins.setOffice(new Location(instructor.getBuilding(), instructor.getRoomNumber()));
+			ins.setFairness(instructor.getFairness());
+			ins.setDisability(instructor.getDisabilities());
+			ins.setGenerosity(instructor.getGenerosity());
+			ins.setAvailability(new WeekAvail());
+			ins.setCoursePreferences(new HashMap<Course,Integer>());
+			ins.setTimePreferences(new HashMap<Day, LinkedHashMap<Time, TimePreference>>());
+			ins.setItemsTaught(new Vector<ScheduleItem>());
 			
 			idb.addData(ins);
 //			idb.addData(new Instructor(instructor.getName(), instructor.getName(), instructor.getUserID(), instructor.getWtu(), ldb.getLocation(instructor.getOffice())));
@@ -436,9 +453,20 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		
 		for (LocationGWT location : locations)
 		{
-			Location loc = new Location();
+			location.verify();
 			
+			Location loc = new Location();
 			loc.setRoom(location.getRoom());
+			loc.setAdaCompliant(location.isADACompliant());
+			loc.setAvailability(new WeekAvail());
+			loc.setBuilding(location.getBuilding());
+			loc.setMaxOccupancy(location.getMaxOccupancy());
+			loc.setProvidedEquipment(loc.new ProvidedEquipment());
+			loc.setQuarterId(location.getQuarterID());
+			loc.setRoom(location.getRoom());
+			loc.setScheduleId(location.getScheduleID());
+			loc.setType(location.getType());
+			loc.verify();
 			
 			ldb.addData(loc);
 		}

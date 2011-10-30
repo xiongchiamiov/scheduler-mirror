@@ -202,6 +202,7 @@ public class ITableBuilder implements TableBuilder<InstructorGWT>{
 		InstructorGWT instructor = new InstructorGWT();
 		instructor.setAvailability("avail?");
 		instructor.setCoursePreferences("courseprefshere");
+		instructor.setCurWtu(0);
 		instructor.setTPreferences("tprefshere");
 		instructor.setItemsTaught("itemstaught");
 		instructor.setQuarterID("qid?");
