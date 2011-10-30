@@ -1,8 +1,16 @@
 package edu.calpoly.csc.scheduler.view.web.shared;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Vector;
 
 import com.google.gwt.user.client.Window;
+
+import edu.calpoly.csc.scheduler.model.db.Time;
+import edu.calpoly.csc.scheduler.model.db.idb.TimePreference;
+import edu.calpoly.csc.scheduler.model.schedule.Day;
+import edu.calpoly.csc.scheduler.model.schedule.WeekAvail;
 
 
 public class InstructorGWT implements Serializable{
@@ -13,9 +21,13 @@ public class InstructorGWT implements Serializable{
 	private boolean disabilities;
 	private int maxwtu, curwtu, fairness, generosity;
 	
-	private String office, availability, coursePrefs, tPrefs, itemsTaught; //will be objects
-	
-	private String quarterID;
+//	private WeekAvailGWT availability; //will be objects
+
+	Vector<ScheduleItemGWT> itemsTaught;
+
+//	HashMap<Day, LinkedHashMap<Time, TimePreference>> tPrefs;
+
+	HashMap<CourseGWT, Integer> coursePrefs;
 	
 	private int scheduleID;
 	
@@ -30,82 +42,26 @@ public class InstructorGWT implements Serializable{
 			Window.alert("zerp4");
 		if (building == null)
 			Window.alert("zerp5");
-		if (office == null)
-			Window.alert("zerp6");
-		if (availability == null)
-			Window.alert("zerp7");
 		if (coursePrefs == null)
 			Window.alert("zerp8");
-		if (tPrefs == null)
-			Window.alert("zerp9");
 		if (itemsTaught == null)
 			Window.alert("zerp10");
-		if (quarterID == null)
-			Window.alert("zerp11");
 	}
 
-	public InstructorGWT(){
-		userID = "";
-		office = "";
-		firstName = "";
-		lastName = "";
-		roomNumber = "";
-		building = "";
-		disabilities = false;
-		maxwtu = 0;
-	}
-	
-	public InstructorGWT(String name, String userID,
-			int wtu, String office) {
-		super();
-		this.firstName = name;
-		this.userID = userID;
-		this.maxwtu = wtu;
-		this.office = office;
-	}
-	
-	public InstructorGWT(String firstName, String lastName, String userID,
-			int wtu, String building, String roomNumber, boolean disabilities) {
-		super();
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.userID = userID;
-		this.maxwtu = wtu;
-		this.building = building;
-		this.roomNumber = roomNumber;
-		this.disabilities = disabilities;
-	}
-	
-	public String getItemsTaugh(){
+	public Vector<ScheduleItemGWT> getItemsTaugh(){
 		return itemsTaught;
 	}
 	
-	public void setItemsTaught(String items){
+	public void setItemsTaught(Vector<ScheduleItemGWT> items){
 		this.itemsTaught = items;
 	}
 	
-	public String getAvailability(){
-		return availability;
-	}
-	
-	public void setAvailability(String avail){
-		this.availability = avail;
-	}
-	
-	public String getCoursePreferences(){
+	public HashMap<CourseGWT, Integer> getCoursePreferences(){
 		return coursePrefs;
 	}
 	
-	public void setCoursePreferences(String coursePrefs){
+	public void setCoursePreferences(HashMap<CourseGWT, Integer> coursePrefs){
 		this.coursePrefs = coursePrefs;
-	}
-	
-	public String getTPreferences(){
-		return tPrefs;
-	}
-	
-	public void setTPreferences(String tprefs){
-		this.tPrefs = tprefs;
 	}
 	
 	public int getCurWtu(){
@@ -114,14 +70,6 @@ public class InstructorGWT implements Serializable{
 	
 	public void setCurWtu(int curWtu){
 		this.curwtu = curWtu;
-	}
-	
-	public String getQuarterID(){
-		return quarterID;
-	}
-	
-	public void setQuarterID(String quarterID){
-		this.quarterID = quarterID;
 	}
 	
 	public int getScheduleID(){
@@ -190,14 +138,6 @@ public class InstructorGWT implements Serializable{
 
 	public void setMaxWtu(int wtu) {
 		this.maxwtu = wtu;
-	}
-
-	public String getOffice() {
-		return office;
-	}
-
-	public void setOffice(String office) {
-		this.office = office;
 	}
 
 	public void setFirstName(String firstName) {

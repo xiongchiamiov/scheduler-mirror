@@ -2,19 +2,21 @@ package edu.calpoly.csc.scheduler.view.web.client.table;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Vector;
 
 import com.google.gwt.cell.client.CheckboxCell;
 import com.google.gwt.cell.client.EditTextCell;
 import com.google.gwt.cell.client.FieldUpdater;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import edu.calpoly.csc.scheduler.view.web.client.GreetingService;
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
+import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 
 public class ITableBuilder implements TableBuilder<InstructorGWT>{
 
@@ -200,12 +202,14 @@ public class ITableBuilder implements TableBuilder<InstructorGWT>{
 	@Override
 	public InstructorGWT newObject() {
 		InstructorGWT instructor = new InstructorGWT();
-		instructor.setAvailability("avail?");
-		instructor.setCoursePreferences("courseprefshere");
-		instructor.setCurWtu(0);
-		instructor.setTPreferences("tprefshere");
-		instructor.setItemsTaught("itemstaught");
-		instructor.setQuarterID("qid?");
+		instructor.setUserID("");
+		instructor.setFirstName("");
+		instructor.setLastName("");
+		instructor.setRoomNumber("");
+		instructor.setBuilding("");
+		instructor.setCoursePreferences(new HashMap<CourseGWT, Integer>());
+		instructor.setItemsTaught(new Vector<ScheduleItemGWT>());
+		instructor.verify();
 		return instructor;
 	}
 

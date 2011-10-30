@@ -89,6 +89,9 @@ public class InstructorsView extends ScrollPanel {
 			
 			public void onSuccess(ArrayList<InstructorGWT> result){
 				if (result != null) {
+					for (InstructorGWT ins : result)
+						ins.verify();
+					
 					iTable.set(result);
 				}
 			}

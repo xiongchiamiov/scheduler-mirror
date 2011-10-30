@@ -44,10 +44,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
     private HashMap<String, ScheduleItem> scheduleItems;
 	
     public Map<Integer, String> getScheduleNames(String username) {
-    	if (model == null) {
+    	if (model == null)
     		model = new Model();
-    	}
-    	
     	return model.getSchedules(username);
     }
     
@@ -56,24 +54,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
     }
     
 	public ArrayList<InstructorGWT> getInstructorNames() throws IllegalArgumentException {
-		assert(model != null);
-		
-		/** TODO */
 		ArrayList<InstructorGWT> results = new ArrayList<InstructorGWT>();
-		
-		ArrayList<Instructor> instructors = model.getDb().getInstructorDB().getData();
-		
-		System.out.println("Size of instructor list: " + instructors.size());
-		for(int i = 0; i < instructors.size(); i++)
-		    results.add(new InstructorGWT(
-    				instructors.get(i).getFirstName(),
-    				instructors.get(i).getLastName(),
-    				instructors.get(i).getId(),
-	                instructors.get(i).getMaxWTU(),
-	                instructors.get(i).getBuilding(),
-	                instructors.get(i).getRoomNumber(),
-	                instructors.get(i).getDisability()));
-		
+		for (Instructor instructor : model.getDb().getInstructorDB().getData())
+			results.add(Conversion.toGWT(instructor));
 		return results;
 	}
 	
@@ -84,30 +67,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		InstructorDB idb = model.getDb().getInstructorDB();
 		
 		idb.clearData();
-		
-		for (InstructorGWT instructor : instructors){
-			instructor.verify();
-			
-			Instructor ins = new Instructor();
-			ins.setQuarterId(instructor.getQuarterID());
-			ins.setScheduleId(0);
-			ins.setFirstName(instructor.getFirstName());
-			ins.setLastName(instructor.getLastName());
-			ins.setUserID(instructor.getUserID());
-			ins.setMaxWtu(instructor.getMaxWtu());
-			ins.setCurWtu(instructor.getCurWtu());
-			ins.setOffice(new Location(instructor.getBuilding(), instructor.getRoomNumber()));
-			ins.setFairness(instructor.getFairness());
-			ins.setDisability(instructor.getDisabilities());
-			ins.setGenerosity(instructor.getGenerosity());
-			ins.setAvailability(new WeekAvail());
-			ins.setCoursePreferences(new HashMap<Course,Integer>());
-			ins.setTimePreferences(new HashMap<Day, LinkedHashMap<Time, TimePreference>>());
-			ins.setItemsTaught(new Vector<ScheduleItem>());
-			ins.verify();
-			
-			idb.addData(ins);
-		}
+		for (InstructorGWT instructor : instructors)
+			idb.addData(Conversion.fromGWT(instructor));
 		
 		assert(model.getDb().getInstructorDB().getData().size() == instructors.size());
 	}
@@ -129,9 +90,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		ArrayList<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
 		
 	    for(ScheduleItem item : schedule.getItems())
-	    {         
-	    	gwtItems.add(convertScheduleItem(item));
-	    }
+	    	gwtItems.add(Conversion.toGWT(item));
 	    
 		return gwtItems;
 	}
@@ -196,7 +155,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
      
      for(ScheduleItem item : modelItems)
      {         
-      gwtItems.add(convertScheduleItem(item));
+      gwtItems.add(Conversion.toGWT(item));
      }
 	 
 	 return gwtItems;
@@ -254,26 +213,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		
 		ArrayList<Course> courses = new ArrayList<Course>(cannedCourses.values());
 		System.out.println("Size of course list: " + courses.size());
-		for(int i = 0; i < courses.size(); i++)
-		{
-			Course course = courses.get(i);
-			CourseGWT newCourse = new CourseGWT();
-			newCourse.setCatalogNum(course.getCatalogNum());
-			newCourse.setCourseName(course.getName());
-			newCourse.setDept(course.getDept());
-			newCourse.setLab(null);
-			newCourse.setDays(null);
-			newCourse.setLength(course.getLength());
-			newCourse.setLabPad(course.getLabPad());
-			newCourse.setMaxEnroll(course.getEnrollment());
-			newCourse.setNumSections(course.getNumOfSections());
-			newCourse.setScu(course.getScu());
-			newCourse.setType(course.getType().toString());
-			newCourse.setWtu(course.getWtu());
-			newCourse.setQuarterID(course.getQuarterId());
-			//newCourse.setScheduleID(course.getScheduleId());
-		    results.add(newCourse);
-		}
+		for (Course course : courses)
+		    results.add(Conversion.toGWT(course));
 		return results;
 	}
 	
@@ -295,51 +236,16 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	 schedule.generate(modelCourses);		
 	 ArrayList<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
 	
-     for(ScheduleItem item : schedule.getItems())
-     {         
-      gwtItems.add(convertScheduleItem(item));
-      scheduleItems.put(item.getCourse().getDept() + 
-       item.getCourse().getCatalogNum() + 
-       item.getSection(), item);
-     } 
+	 for(ScheduleItem item : schedule.getItems())
+	 {         
+	  gwtItems.add(Conversion.toGWT(item));
+	  scheduleItems.put(item.getCourse().getDept() + 
+	   item.getCourse().getCatalogNum() + 
+	   item.getSection(), item);
+	 } 
 	 return gwtItems;
 	}
 	
-	
-	public ScheduleItemGWT convertScheduleItem(ScheduleItem schdItem)
-	{
-	 assert(model != null);
-	 String instructor;
-	 String courseDept;
-	 int courseNum;
-	 int section;
-	 ArrayList<Integer> dayNums = new ArrayList<Integer>();
-	 int startTimeHour;
-	 int endTimeHour;
-	 int startTimeMin;
-	 int endTimeMin;
-	 String location;
-	 Vector<Day> schdDays;
-	 
-	 instructor = (schdItem.getInstructor() == null ? "" : schdItem.getInstructor().getName());
-	 courseDept = schdItem.getCourse().getDept();
-	 courseNum = schdItem.getCourse().getCatalogNum();
-	 section = schdItem.getSection();
-	 schdDays = schdItem.getDays().getDays();
-	 for(Day d : schdDays)
-	 {
-	  dayNums.add(d.getNum()); 
-	 }
-	 startTimeHour = schdItem.getStart().getHour();
-	 endTimeHour = schdItem.getEnd().getHour();
-	 startTimeMin = schdItem.getStart().getMinute();
-     endTimeMin = schdItem.getEnd().getMinute();
-     location = (schdItem.getLocation() == null ? "" : schdItem.getLocation().toString());
-     
-     return new ScheduleItemGWT(instructor, courseDept, courseNum, section,
-    		                    dayNums, startTimeHour, startTimeMin, 
-    		                    endTimeHour, endTimeMin, location);
-	}
 	
 	public ScheduleItemGWT rescheduleCourse(ScheduleItemGWT scheduleItem,
 			ArrayList<Integer> days, int startHour, boolean atHalfHour)
@@ -395,169 +301,40 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	 }
 	 scheduleItems.remove(schdItemKey);
 	 scheduleItems.put(schdItemKey, rescheduled);
-	 return convertScheduleItem(rescheduled);
+	 return Conversion.toGWT(rescheduled);
 	}
 	
 	@Override
 	public ArrayList<LocationGWT> getLocationNames() {
-		assert(model != null);
-		/** TODO */
-		// replace sample data with data from the db
-		
 		ArrayList<LocationGWT> results = new ArrayList<LocationGWT>();
-		
-		Database sqldb = model.getDb();
-
-		LocationDB ldb = sqldb.getLocationDB();
-		
-		ArrayList<Location> locations = ldb.getData();
-		System.out.println("Size of locations list: " + locations.size());
-		for(int i = 0; i < locations.size(); i++)
-		{
-		    results.add(new LocationGWT(locations.get(i).getBuilding(), locations.get(i).getRoom(),
-		                locations.get(i).getMaxOccupancy(), locations.get(i).getType(),
-		                locations.get(i).isSmartRoom(), locations.get(i).hasLaptopConnectivity(),
-		                locations.get(i).isADACompliant(), locations.get(i).hasOverhead()));
-		}
-		
-		// dummy data
-		LocationGWT l1 = new LocationGWT("14", "Frank E. Pilling", "256", "Lab", 32, "Computers", "Really comfortable chairs");
-		
-		//results.add(l1);
-		
-		
-		LocationGWT l2 = new LocationGWT("22", "English", "212", "Lec", 38, "Desks", "Uncomfortable, wooden desk chairs");
-		
-		//results.add(l2);
-		
-		
-		LocationGWT l3 = new LocationGWT("53", "Science North", "213", "Lec", 84, "", "Stadium seats");
-		
-		//results.add(l3);
-
+		for (Location location : model.getDb().getLocationDB().getData())
+			results.add(Conversion.toGWT(location));
 		return results;
 	}
 
 
 	@Override
 	public void saveLocations(ArrayList<LocationGWT> locations) {
-		assert(model != null);
-		// TODO Auto-generated method stub
-
-		/** TODO */
-		Database sqldb = model.getDb();
-
-		LocationDB ldb = sqldb.getLocationDB();
-		
+		LocationDB ldb = model.getDb().getLocationDB();
 		ldb.clearData();
-		
 		for (LocationGWT location : locations)
-		{
-			location.verify();
-			
-			Location loc = new Location();
-			loc.setRoom(location.getRoom());
-			loc.setAdaCompliant(location.isADACompliant());
-			loc.setAvailability(new WeekAvail());
-			loc.setBuilding(location.getBuilding());
-			loc.setMaxOccupancy(location.getMaxOccupancy());
-			loc.setProvidedEquipment(loc.new ProvidedEquipment());
-			loc.setQuarterId(location.getQuarterID());
-			loc.setRoom(location.getRoom());
-			loc.setScheduleId(location.getScheduleID());
-			loc.setType(location.getType());
-			loc.verify();
-			
-			ldb.addData(loc);
-		}
-//			ldb.addData(new Location(location.getBuilding(), location.getRoom(), location.getMaxOccupancy(), location.getType(), false, false, false, false));
-			//ldb.addData(new Location(location.getBuilding(), location.getRoom(), location.getMaxOccupancy(), location.getType(), location.isADACompliant(), location.isSmartRoom(), location.hasLaptopConnectivity(), location.hasOverhead()));
+			ldb.addData(Conversion.fromGWT(location));
 	}
 	
 	@Override
-	public ArrayList<CourseGWT> getCourses() {
-
-		assert(model != null);
-		/** TODO */
-		// replace sample data with data from the db
-		
+	public ArrayList<CourseGWT> getCourses() {		
 		ArrayList<CourseGWT> results = new ArrayList<CourseGWT>();
-		
-		Database db = model.getDb();
-
-		CourseDB cdb = db.getCourseDB();
-		
-		ArrayList<Course> courses = cdb.getData();
-		System.out.println("Size of course list: " + courses.size());
-		for(int i = 0; i < courses.size(); i++)
-		{
-			Course course = courses.get(i);
-			CourseGWT newCourse = new CourseGWT();
-			newCourse.setCatalogNum(course.getCatalogNum());
-			newCourse.setCourseName(course.getName());
-			newCourse.setDept(course.getDept());
-			newCourse.setLab(null);
-			newCourse.setDays(null);
-			newCourse.setLength(course.getLength());
-			newCourse.setLabPad(course.getLabPad());
-			newCourse.setMaxEnroll(course.getEnrollment());
-			newCourse.setNumSections(course.getNumOfSections());
-			newCourse.setScu(course.getScu());
-			newCourse.setType(course.getType().toString());
-			newCourse.setWtu(course.getWtu());
-			newCourse.setQuarterID(course.getQuarterId());
-			newCourse.setScheduleID(course.getScheduleId());
-		    results.add(newCourse);
-		}
-		
-		// dummy data
-		CourseGWT c1 = new CourseGWT("The beginning...", 101, "CPE", 4, 4, 6, "Lec", 30, "CPE101");
-				
-		
-		CourseGWT c2 = new CourseGWT("Writing", 300, "CSC", 4, 4, 1, "Lec", 24, "");
-				
-		
-		CourseGWT c3 = new CourseGWT("Scheduling", 402, "CSC", 4, 4, 1, "Lec", 20, "");
-		
+		for (Course course : model.getDb().getCourseDB().getData())
+			results.add(Conversion.toGWT(course));
 		return results;
 	}
 
 
 	@Override
 	public void saveCourses(ArrayList<CourseGWT> courses) {
-		// TODO Auto-generated method stub
-
-		assert(model != null);
-		/** TODO */
-		Database sqldb = model.getDb();
-
-		CourseDB cdb = sqldb.getCourseDB();
-		
+		CourseDB cdb = model.getDb().getCourseDB();
 		cdb.clearData();
-		
-		for (CourseGWT course : courses) {
-//			cdb.addData(new Course(course.getCourseName(), course.getDept(), course.getCatalogNum()));
-//			cdb.addData(new Course((), course.getLabID(), course.getSmartroom(), course.getLaptop(), course.getOverhead(), 8, course.getCTPrefix(), course.getPrefix()));
-			Course newCourse = new Course();
-			newCourse.setName(course.getCourseName());
-			newCourse.setCatalogNum(course.getCatalogNum());
-			newCourse.setWtu(course.getWtu());
-			newCourse.setScu(course.getScu());
-			newCourse.setType(course.getType());
-			newCourse.setEnrollment(course.getMaxEnroll());
-			newCourse.setLab(null);
-			newCourse.setLabPad(course.getLabPad());
-			newCourse.setQuarterId(course.getQuarterID());
-			newCourse.setScheduleId(course.getScheduleID());
-			newCourse.setDept(course.getDept());
-			newCourse.setLength(course.getLength());
-			newCourse.setNumOfSections(course.getNumSections());
-			newCourse.setDays(null);
-			
-			
-			cdb.addData(newCourse);
-			
-			//assert(false); // implement the rest of them
-		}
+		for (CourseGWT course : courses)
+			cdb.addData(Conversion.fromGWT(course));
 	}
 }
