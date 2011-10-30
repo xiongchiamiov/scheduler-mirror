@@ -61,41 +61,18 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		/** TODO */
 		ArrayList<InstructorGWT> results = new ArrayList<InstructorGWT>();
 		
-		Database db = model.getDb();
-
-		InstructorDB idb = db.getInstructorDB();
+		ArrayList<Instructor> instructors = model.getDb().getInstructorDB().getData();
 		
-		ArrayList<Instructor> instructors = idb.getData();
 		System.out.println("Size of instructor list: " + instructors.size());
 		for(int i = 0; i < instructors.size(); i++)
-		{
-		    results.add(new InstructorGWT(instructors.get(i).getFirstName(), instructors.get(i).getLastName(), instructors.get(i).getId(),
-		                ((Integer)instructors.get(i).getMaxWTU()), instructors.get(i).getBuilding(),
-		                instructors.get(i).getRoomNumber(), instructors.get(i).getDisability()));
-		}
-		// replace sample data with data from the db
-		
-//		new Scheduler();
-//		assert(Scheduler.getLocalIDB() != null);
-//		if (Scheduler.getLocalIDB().size() == 0)
-//			Scheduler.getLocalIDB().add();
-//		Instructor instructor = Scheduler.getLocalIDB().iterator().next();
-//		assert(instructor != null);
-		
-//		Instructor instructor = new Instructor("Evan", "IsXAwesome", "1337", 69, new Location(14, 235));
-
-//		results.add(Conversion.toGWT(instructor));
-		
-		
-		
-		// dummy data
-		InstructorGWT i1 = new InstructorGWT("Gene", "Fisher", 12, "14-210");
-				
-		
-		InstructorGWT i2 = new InstructorGWT("Aaron", "Keen", 8, "14-230");
-			
-		
-		InstructorGWT i3 = new InstructorGWT("Clark", "Turner", 16, "14-222");
+		    results.add(new InstructorGWT(
+    				instructors.get(i).getFirstName(),
+    				instructors.get(i).getLastName(),
+    				instructors.get(i).getId(),
+	                instructors.get(i).getMaxWTU(),
+	                instructors.get(i).getBuilding(),
+	                instructors.get(i).getRoomNumber(),
+	                instructors.get(i).getDisability()));
 		
 		return results;
 	}
@@ -104,15 +81,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	public void saveInstructors(ArrayList<InstructorGWT> instructors) throws IllegalArgumentException {
 		assert(model != null);
 		
-		/** TODO */
-		Database sqldb = model.getDb();
-
-		InstructorDB idb = sqldb.getInstructorDB();
-//		LocationDB ldb = sqldb.getLocationDB();
+		InstructorDB idb = model.getDb().getInstructorDB();
 		
 		idb.clearData();
-		
-		
 		
 		for (InstructorGWT instructor : instructors){
 			instructor.verify();
@@ -133,11 +104,12 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 			ins.setCoursePreferences(new HashMap<Course,Integer>());
 			ins.setTimePreferences(new HashMap<Day, LinkedHashMap<Time, TimePreference>>());
 			ins.setItemsTaught(new Vector<ScheduleItem>());
+			ins.verify();
 			
 			idb.addData(ins);
-//			idb.addData(new Instructor(instructor.getName(), instructor.getName(), instructor.getUserID(), instructor.getWtu(), ldb.getLocation(instructor.getOffice())));
-			//idb.addData(new Instructor(instructor.getFirstName(), instructor.getLastName(), instructor.getUserID(), instructor.getWtu(), instructor.getBuilding(), instructor.getRoomNumber(), instructor.getDisabilities()));
 		}
+		
+		assert(model.getDb().getInstructorDB().getData().size() == instructors.size());
 	}
 
 	public void newSchedule() {
