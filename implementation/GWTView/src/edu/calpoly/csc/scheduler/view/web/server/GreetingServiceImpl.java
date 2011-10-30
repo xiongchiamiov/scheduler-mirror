@@ -274,22 +274,51 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		cannedCourses.put(c6.getDept()+c6.getCatalogNum(), c6);	
 	}
 	
+	public ArrayList<CourseGWT> getCannedCourses()
+	{
+	 setCannedCourses();
+	 
+	 ArrayList<CourseGWT> results = new ArrayList<CourseGWT>();
+		
+		ArrayList<Course> courses = new ArrayList<Course>(cannedCourses.values());
+		System.out.println("Size of course list: " + courses.size());
+		for(int i = 0; i < courses.size(); i++)
+		{
+			Course course = courses.get(i);
+			CourseGWT newCourse = new CourseGWT();
+			newCourse.setCatalogNum(course.getCatalogNum());
+			newCourse.setCourseName(course.getName());
+			newCourse.setDept(course.getDept());
+			newCourse.setLab(null);
+			newCourse.setDays(null);
+			newCourse.setLength(course.getLength());
+			newCourse.setLabPad(course.getLabPad());
+			newCourse.setMaxEnroll(course.getEnrollment());
+			newCourse.setNumSections(course.getNumOfSections());
+			newCourse.setScu(course.getScu());
+			newCourse.setType(course.getType().toString());
+			newCourse.setWtu(course.getWtu());
+			newCourse.setQuarterID(course.getQuarterId());
+			//newCourse.setScheduleID(course.getScheduleId());
+		    results.add(newCourse);
+		}
+		return results;
+	}
+	
 	public ArrayList<ScheduleItemGWT> getGWTScheduleItems(ArrayList<CourseGWT> courses)
 	{
 	 assert(model != null);
 	 Database db = model.getDb();
 	 CourseDB cdb = db.getCourseDB();
-     setCannedCourses();
 	 ArrayList<Instructor> instructors = db.getInstructorDB().getData();
      ArrayList<Location> locations = db.getLocationDB().getData();
-     ArrayList<Course> modelCourses = new ArrayList<Course>(cannedCourses.values());//new ArrayList<Course>();
+     ArrayList<Course> modelCourses = new ArrayList<Course>();//new ArrayList<Course>();
      scheduleItems = new HashMap<String, ScheduleItem>();
      
      for(CourseGWT course : courses)
      {
       modelCourses.add(cannedCourses.get(course.getDept() + course.getCatalogNum()));	 
      }
-     System.out.println("Empty");
      schedule = new Schedule(new Vector<Instructor>(), new Vector<Location>());
 	 schedule.generate(modelCourses);		
 	 ArrayList<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
@@ -300,8 +329,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
       scheduleItems.put(item.getCourse().getDept() + 
        item.getCourse().getCatalogNum() + 
        item.getSection(), item);
-     }
-	 
+     } 
 	 return gwtItems;
 	}
 	

@@ -388,11 +388,6 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
   */
  private void getScheduleItems()
  {
-  for(CourseGWT course : availableCourses)
-  {
-   includedCourses.add(course);  
-  }
-  
   greetingService.getGWTScheduleItems(includedCourses,
    new AsyncCallback<ArrayList<ScheduleItemGWT>>()
    {
@@ -544,7 +539,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
   availableCourses = new ArrayList<CourseGWT>();
   includedCourses = new ArrayList<CourseGWT>();
   
-  greetingService.getCourses(
+  greetingService.getCannedCourses(
    new AsyncCallback<ArrayList<CourseGWT>>()
    {
 	@Override
@@ -558,11 +553,14 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
 	{
      if(result != null)
      {
+      System.out.println(result.size());
       for(CourseGWT course : result)
       {
        availableCourses.add(course);
        listBoxAvailable.addItem(course.getDept() + course.getCatalogNum());
       }
+      includedCourses.add(availableCourses.get(0));
+      listBoxIncluded.addItem(includedCourses.get(0).getDept() + includedCourses.get(0).getCatalogNum());
      }
 	}	
    }  
