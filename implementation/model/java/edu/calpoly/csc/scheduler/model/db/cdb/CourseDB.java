@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 import edu.calpoly.csc.scheduler.model.db.DatabaseAPI;
 import edu.calpoly.csc.scheduler.model.db.SQLDB;
+import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
 import edu.calpoly.csc.scheduler.model.schedule.Week;
 
 public class CourseDB implements DatabaseAPI<Course>
@@ -38,6 +39,7 @@ public class CourseDB implements DatabaseAPI<Course>
    @Override
    public ArrayList<Course> getData()
    {
+      pullData();
       return data;
    }
 
@@ -52,6 +54,7 @@ public class CourseDB implements DatabaseAPI<Course>
    @Override
    public void pullData()
    {
+      data = new ArrayList<Course>();
       ResultSet rs = sqldb.getSQLCourses(scheduleID);
       try
       {
@@ -215,7 +218,7 @@ public class CourseDB implements DatabaseAPI<Course>
          }
          stmt.setInt(12, data.getLabPad());
          stmt.setString(13, data.getQuarterId());
-         stmt.setInt(14, data.getScheduleId());
+         stmt.setInt(14, scheduleID);
       }
       catch (SQLException e)
       {
@@ -283,7 +286,7 @@ public class CourseDB implements DatabaseAPI<Course>
          }
          stmt.setInt(12, data.getLabPad());
          stmt.setString(13, data.getQuarterId());
-         stmt.setInt(14, data.getScheduleId());
+         stmt.setInt(14, scheduleID);
 
          // Where clause
          stmt.setInt(15, data.getCatalogNum());

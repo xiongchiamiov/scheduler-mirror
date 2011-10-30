@@ -17,6 +17,7 @@ import edu.calpoly.csc.scheduler.model.db.DatabaseAPI;
 import edu.calpoly.csc.scheduler.model.db.SQLDB;
 import edu.calpoly.csc.scheduler.model.db.TimeRange;
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
+import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
 import edu.calpoly.csc.scheduler.model.schedule.WeekAvail;
 
 public class LocationDB implements DatabaseAPI<Location>
@@ -42,6 +43,7 @@ public class LocationDB implements DatabaseAPI<Location>
    @Override
    public ArrayList<Location> getData()
    {
+      pullData();
       return data;
    }
 
@@ -56,6 +58,7 @@ public class LocationDB implements DatabaseAPI<Location>
    @Override
    public void pullData()
    {
+      data = new ArrayList<Location>();
       ResultSet rs = sqldb.getSQLLocations(scheduleID);
       try
       {
@@ -185,7 +188,7 @@ public class LocationDB implements DatabaseAPI<Location>
             e.printStackTrace();
          }
          stmt.setString(8, data.getQuarterId());
-         stmt.setInt(9, data.getScheduleId());
+         stmt.setInt(9, scheduleID);
       }
       catch (SQLException e)
       {
@@ -241,7 +244,7 @@ public class LocationDB implements DatabaseAPI<Location>
             e.printStackTrace();
          }
          stmt.setString(8, data.getQuarterId());
-         stmt.setInt(9, data.getScheduleId());
+         stmt.setInt(9, scheduleID);
 
          // Where clause
          stmt.setString(10, data.getBuilding());

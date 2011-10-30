@@ -48,6 +48,7 @@ public class InstructorDB implements DatabaseAPI<Instructor>
    @Override
    public ArrayList<Instructor> getData()
    {
+      pullData();
       return data;
    }
 
@@ -62,6 +63,7 @@ public class InstructorDB implements DatabaseAPI<Instructor>
    @Override
    public void pullData()
    {
+      data = new ArrayList<Instructor>();
       ResultSet rs = sqldb.getSQLInstructors(scheduleID);
       try
       {
@@ -282,7 +284,7 @@ public class InstructorDB implements DatabaseAPI<Instructor>
          }
 
          stmt.setString(14, data.getQuarterId());
-         stmt.setInt(15, data.getScheduleId());
+         stmt.setInt(15, scheduleID);
 
       }
       catch (SQLException e)
@@ -367,7 +369,7 @@ public class InstructorDB implements DatabaseAPI<Instructor>
          }
 
          stmt.setString(14, data.getQuarterId());
-         stmt.setInt(15, data.getScheduleId());
+         stmt.setInt(15, scheduleID);
 
          // Where clause
          stmt.setString(16, data.getUserID());
