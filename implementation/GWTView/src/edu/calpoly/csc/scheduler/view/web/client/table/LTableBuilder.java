@@ -1,23 +1,18 @@
 package edu.calpoly.csc.scheduler.view.web.client.table;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Comparator;
 
 import com.google.gwt.cell.client.CheckboxCell;
 import com.google.gwt.cell.client.EditTextCell;
 import com.google.gwt.cell.client.FieldUpdater;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import edu.calpoly.csc.scheduler.view.web.client.GreetingService;
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT.NullGWTDataException;
 
 public class LTableBuilder implements TableBuilder<LocationGWT>{
 	private GreetingServiceAsync service;
@@ -51,6 +46,7 @@ public class LTableBuilder implements TableBuilder<LocationGWT>{
 		        object.setBuilding(value);
 		      }
 		});
+		building.setCellStyleNames("tableColumnWidthInt");
 		list.add(new ColumnObject<LocationGWT>(building, TableConstants.LOC_BUILDING));
 		
 		
@@ -72,6 +68,7 @@ public class LTableBuilder implements TableBuilder<LocationGWT>{
 		        object.setRoom(value);
 		      }
 		});
+		room.setCellStyleNames("tableColumnWidthInt");
 		list.add(new ColumnObject<LocationGWT>(room, TableConstants.LOC_ROOM));
 
 		
@@ -93,6 +90,7 @@ public class LTableBuilder implements TableBuilder<LocationGWT>{
 		        object.setType(value);
 		      }
 		});
+		type.setCellStyleNames("tableColumnWidthString");
 		list.add(new ColumnObject<LocationGWT>(type, TableConstants.LOC_TYPE));
 		
 		
@@ -125,6 +123,7 @@ public class LTableBuilder implements TableBuilder<LocationGWT>{
 		    	  }
 		      }
 		});
+		maxOcc.setCellStyleNames("tableColumnWidthInt");
 		list.add(new ColumnObject<LocationGWT>(maxOcc, TableConstants.LOC_MAX_OCCUPANCY));
 		
 		
@@ -166,26 +165,20 @@ public class LTableBuilder implements TableBuilder<LocationGWT>{
 	@Override
 	public LocationGWT newObject() {
 		LocationGWT loc = new LocationGWT();
-		loc.setAvailability("");
-		loc.setQuarterID("");
-		loc.setBuilding("");
-		loc.setRoom("");
-		loc.setType("");
-		loc.setEquipmentList("");
-		loc.setAvailability("");
-		loc.verify();
+		loc.setAvailability("derp?");
+		loc.setQuarterID("qid?");
 		return loc;
 	}
 
 	@Override
 	public void save(ArrayList<LocationGWT> list) {
 		try {
-//			Window.alert("savoijhg");
+			Window.alert("savoijhg");
 			
 			for (LocationGWT loc : list)
 				loc.verify();
 			
-//			Window.alert("now calling saveLocations!");
+			Window.alert("now calling saveLocations!");
 			
 			service.saveLocations(list, new AsyncCallback<Void>(){
 				public void onFailure(Throwable caught){ 

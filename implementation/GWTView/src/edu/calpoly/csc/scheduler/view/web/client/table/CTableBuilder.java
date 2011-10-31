@@ -50,6 +50,7 @@ public class CTableBuilder implements TableBuilder<CourseGWT>{
 		        object.setCourseName(value);
 		      }
 		});
+		courseName.setCellStyleNames("tableColumnWidthString");
 		list.add(new ColumnObject<CourseGWT>(courseName, TableConstants.COURSE_NAME));
 		
 		
@@ -82,6 +83,7 @@ public class CTableBuilder implements TableBuilder<CourseGWT>{
 		    	  }
 		      }
 		});
+		catalogNum.setCellStyleNames("tableColumnWidthInt");
 		list.add(new ColumnObject<CourseGWT>(catalogNum, TableConstants.COURSE_CATALOG_NUM));
 		
 		
@@ -103,6 +105,7 @@ public class CTableBuilder implements TableBuilder<CourseGWT>{
 		        object.setDept(value);
 		      }
 		});
+		dept.setCellStyleNames("tableColumnWidthInt");
 		list.add(new ColumnObject<CourseGWT>(dept, TableConstants.COURSE_DEPARTMENT));
 		
 		
@@ -135,23 +138,24 @@ public class CTableBuilder implements TableBuilder<CourseGWT>{
 		    	  }
 		      }
 		});
+		wtu.setCellStyleNames("tableColumnWidthInt");
 		list.add(new ColumnObject<CourseGWT>(wtu, TableConstants.COURSE_WTU));
 		
 		
-		// scu		    
-		Column<CourseGWT, String> scu = 
+		// stu		    
+		Column<CourseGWT, String> stu = 
 				new Column<CourseGWT, String>(new EditTextCell()) {
 		      @Override
 		      public String getValue(CourseGWT course) {
 		        return "" + course.getScu();
 		      }
 		};
-		sortHandler.setComparator(scu, new Comparator<CourseGWT>() {
+		sortHandler.setComparator(stu, new Comparator<CourseGWT>() {
 	        public int compare(CourseGWT o1, CourseGWT o2) {
 	          return o1.getScu() - o2.getScu();
 	        }
 	    });
-		scu.setFieldUpdater(new FieldUpdater<CourseGWT, String>() {
+		stu.setFieldUpdater(new FieldUpdater<CourseGWT, String>() {
 		      public void update(int index, CourseGWT object, String value) {
 		    	  value = value.trim();
 		    	  Integer i = null;
@@ -160,14 +164,15 @@ public class CTableBuilder implements TableBuilder<CourseGWT>{
 		    	  }catch(Exception e){}
 		    	  
 		    	  if(i == null){
-		    		  Window.alert(TableConstants.COURSE_SCU + " must be a number. \'" + value + "\' is invalid.");
+		    		  Window.alert(TableConstants.COURSE_STU + " must be a number. \'" + value + "\' is invalid.");
 		    	  }
 		    	  else{
 		    		  object.setScu(i);
 		    	  }
 		      }
 		});
-		list.add(new ColumnObject<CourseGWT>(scu, TableConstants.COURSE_SCU));
+		stu.setCellStyleNames("tableColumnWidthInt");
+		list.add(new ColumnObject<CourseGWT>(stu, TableConstants.COURSE_STU));
 		
 		
 		// # sections		    
@@ -199,6 +204,7 @@ public class CTableBuilder implements TableBuilder<CourseGWT>{
 		    	  }
 		      }
 		});
+		numSections.setCellStyleNames("tableColumnWidthInt");
 		list.add(new ColumnObject<CourseGWT>(numSections, TableConstants.COURSE_NUM_SECTIONS));
 		
 		
@@ -220,6 +226,7 @@ public class CTableBuilder implements TableBuilder<CourseGWT>{
 		        object.setType(value);
 		      }
 		});
+		type.setCellStyleNames("tableColumnWidthString");
 		list.add(new ColumnObject<CourseGWT>(type, TableConstants.COURSE_TYPE));
 		
 		
@@ -252,6 +259,7 @@ public class CTableBuilder implements TableBuilder<CourseGWT>{
 		    	  }
 		      }
 		});
+		maxEnroll.setCellStyleNames("tableColumnWidthInt");
 		list.add(new ColumnObject<CourseGWT>(maxEnroll, TableConstants.COURSE_MAX_ENROLLMENT));
 		
 		
@@ -273,6 +281,7 @@ public class CTableBuilder implements TableBuilder<CourseGWT>{
 		        //object.setLab(value);
 		      }
 		});
+		lab.setCellStyleNames("tableColumnWidthString");
 		list.add(new ColumnObject<CourseGWT>(lab, TableConstants.COURSE_LAB));
 		
 		
@@ -290,15 +299,11 @@ public class CTableBuilder implements TableBuilder<CourseGWT>{
 		course.setCatalogNum(0);
 		course.setLabId(0);
 		course.setLabPad(0);
-		course.setLength(6);
+		course.setLength(0);
 		course.setDept("");
 		
 		WeekGWT week = new WeekGWT();
-		Vector<DayGWT> vec = new Vector<DayGWT>();
-		vec.add(DayGWT.MON);
-		vec.add(DayGWT.WED);
-		vec.add(DayGWT.FRI);
-		week.setDays(vec);
+		week.setDays(new Vector<DayGWT>());
 		course.setDays(week);
 		
 		course.setQuarterID("");

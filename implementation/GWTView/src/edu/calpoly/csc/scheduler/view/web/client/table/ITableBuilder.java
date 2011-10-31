@@ -55,7 +55,9 @@ public class ITableBuilder implements TableBuilder<InstructorGWT>{
 		        object.setFirstName(value);
 		      }
 		});
+		firstName.setCellStyleNames("tableColumnWidthString");
 		list.add(new ColumnObject<InstructorGWT>(firstName, TableConstants.INSTR_FIRSTNAME));
+		
 		
 		// last name
 		Column<InstructorGWT, String> lastName = 
@@ -75,6 +77,7 @@ public class ITableBuilder implements TableBuilder<InstructorGWT>{
 		        object.setLastName(value);
 		      }
 		});
+		lastName.setCellStyleNames("tableColumnWidthString");
 		list.add(new ColumnObject<InstructorGWT>(lastName, TableConstants.INSTR_LASTNAME));
 		
 		// id
@@ -95,6 +98,7 @@ public class ITableBuilder implements TableBuilder<InstructorGWT>{
 		        object.setUserID(value);
 		      }
 		});
+		id.setCellStyleNames("tableColumnWidthString");
 		list.add(new ColumnObject<InstructorGWT>(id, TableConstants.INSTR_ID));
 		
 		// max wtu
@@ -127,6 +131,7 @@ public class ITableBuilder implements TableBuilder<InstructorGWT>{
 		    	  }
 		      }
 		});
+		maxwtu.setCellStyleNames("tableColumnWidthInt");
 		list.add(new ColumnObject<InstructorGWT>(maxwtu, TableConstants.INSTR_MAX_WTU));
 		
 		// building
@@ -147,6 +152,7 @@ public class ITableBuilder implements TableBuilder<InstructorGWT>{
 		        object.setBuilding(value);
 		      }
 		});
+		building.setCellStyleNames("tableColumnWidthInt");
 		list.add(new ColumnObject<InstructorGWT>(building, TableConstants.INSTR_BUILDING));
 		
 		// room number
@@ -167,6 +173,7 @@ public class ITableBuilder implements TableBuilder<InstructorGWT>{
 		        object.setRoomNumber(value);
 		      }
 		});
+		roomNum.setCellStyleNames("tableColumnWidthInt");
 		list.add(new ColumnObject<InstructorGWT>(roomNum, TableConstants.INSTR_ROOMNUMBER));
 		
 		// disability
