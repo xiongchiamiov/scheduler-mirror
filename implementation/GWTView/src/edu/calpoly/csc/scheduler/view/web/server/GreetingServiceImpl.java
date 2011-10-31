@@ -66,8 +66,10 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		assert(model.getDb().getInstructorDB().getData().size() == instructors.size());
 	}
 
-	public void newSchedule() {
-		selectSchedule(1337);
+	public void newSchedule(String schedName) {		
+		selectSchedule(Integer.valueOf(-1));
+		int newID = model.getDb().getScheduleDB().createNewSchedule(schedName);
+		selectSchedule(newID);
 	}
 	
 	public ArrayList<ScheduleItemGWT> generateSchedule() {
