@@ -87,14 +87,14 @@ public class Database
 	  if(!(sqldb.doesScheduleIDExist(scheduleid)))
 	  {
 		  System.out.println("Creating new schedule");
-		  scheduleDB = new ScheduleDB(sqldb);
+		  scheduleDB = new ScheduleDB(sqldb, dept);
 		  realid = scheduleDB.createNewSchedule(dept);
 		  System.out.println("New schedule id: " + realid);
 	  }
 	  else
 	  {
 		  System.out.println("Using existing schedule");
-		  scheduleDB = new ScheduleDB(sqldb, realid);
+		  scheduleDB = new ScheduleDB(sqldb, realid, dept);
 	  }
 	  instructorDB = new InstructorDB(sqldb, realid);
 	  courseDB = new CourseDB(sqldb, realid);
