@@ -86,12 +86,15 @@ public class LocationGWT implements Serializable{
 				equipmentList = "";
 			}
 			if (availability == null) {
-				Window.alert("derp5");
-				throw new NullGWTDataException();
+//				availability = new 
+//				Window.alert("derp5");
+//				throw new NullGWTDataException();
+				availability = "";
 			}
 			if (quarterID == null) {
-				Window.alert("derp6");
-				throw new NullGWTDataException();
+//				Window.alert("derp6");
+//				throw new NullGWTDataException();
+				quarterID = "";
 			}
 		}
 		catch (Exception e) {
