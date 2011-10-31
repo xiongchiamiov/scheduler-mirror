@@ -106,12 +106,20 @@ public class Schedule implements Serializable
    {
       Course clone = new Course(c);
       clone.setDays(days);
-      
+
+      /*
+       * We'll lie to 'generate'. We've been asked to place this Course in a 
+       * very specific time window. This makes the Schedule think the only 
+       * times available for consideration *are* this window.
+       */
       TimeRange oldBounds = this.bounds;
-      this.bounds = new TimeRange(s, c.splitLengthOverDays(days.size()));
+      this.bounds = new TimeRange(s, clone.splitLengthOverDays(days.size()));
       
       generate(new Vector<Course>(Arrays.asList(new Course[]{clone})));
       
+      /*
+       * Once we're done w/ the lie, we'll set things right
+       */
       this.bounds = oldBounds;
    }
    
@@ -373,7 +381,7 @@ public class Schedule implements Serializable
                + " / " + st.getMaxSections());
             
             ScheduleItem lec_si = genLectureItem(c);
-            debug ("MADE LEC_SI " + lec_si);
+            debug ("MADE LEC_SI\n" + lec_si);
             try
             {
                add(lec_si);
@@ -401,6 +409,10 @@ public class Schedule implements Serializable
                   ScheduleItem lab_si = genLabItem(lab, lec_si);
                   try
                   {
+                     /*
+                      * If the add fails, we won't consider its enrollment, 
+                      * which is good. So, don't screw w/ the order here
+                      */
                      add(lab_si);
                      curEnrollment += lab.getEnrollment();
                   }
