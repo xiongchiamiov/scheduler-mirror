@@ -45,8 +45,10 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
     
 	public ArrayList<InstructorGWT> getInstructorNames() throws IllegalArgumentException {
 		ArrayList<InstructorGWT> results = new ArrayList<InstructorGWT>();
-		for (Instructor instructor : model.getDb().getInstructorDB().getData())
+		for (Instructor instructor : model.getDb().getInstructorDB().getData()) {
+			System.out.println("Model returning instructor " + instructor.getFirstName() + " has prefs? " + hasPreferences(instructor));
 			results.add(Conversion.toGWT(instructor));
+		}
 		System.out.println("Model returning " + results.size() + " instructors");
 		return results;
 	}
@@ -322,10 +324,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 			cdb.addData(Conversion.fromGWT(course));
 	}
 
-	@Override
-	public void saveInstructor(InstructorGWT instructorGWT) {
-		Instructor instructor = Conversion.fromGWT(instructorGWT);
-		System.out.println("calling editdata");
+	private boolean hasPreferences(Instructor instructor) {
 		int totalDesire = 0;
 		for (Day day : instructor.getTimePreferences().keySet()) {
 			LinkedHashMap<Time, TimePreference> dayPrefs = instructor.getTimePreferences().get(day);
@@ -334,8 +333,13 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 				totalDesire += timePrefs.getDesire();
 			}
 		}
-		assert(totalDesire > 0);
-		
+		return totalDesire > 0;
+	}
+	
+	@Override
+	public void saveInstructor(InstructorGWT instructorGWT) {
+		Instructor instructor = Conversion.fromGWT(instructorGWT);
+		System.out.println("calling editdata. has prefs? " + hasPreferences(instructor));
 		model.getDb().getInstructorDB().editData(instructor);
 	}
 }

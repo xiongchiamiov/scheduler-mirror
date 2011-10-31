@@ -290,7 +290,7 @@ public class CTableBuilder implements TableBuilder<CourseGWT>{
 		course.setCatalogNum(0);
 		course.setLabId(0);
 		course.setLabPad(0);
-		course.setLength(0);
+		course.setLength(6);
 		course.setDept("");
 		
 		WeekGWT week = new WeekGWT();
