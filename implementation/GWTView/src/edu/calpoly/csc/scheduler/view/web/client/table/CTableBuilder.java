@@ -138,20 +138,20 @@ public class CTableBuilder implements TableBuilder<CourseGWT>{
 		list.add(new ColumnObject<CourseGWT>(wtu, TableConstants.COURSE_WTU));
 		
 		
-		// stu		    
-		Column<CourseGWT, String> stu = 
+		// scu		    
+		Column<CourseGWT, String> scu = 
 				new Column<CourseGWT, String>(new EditTextCell()) {
 		      @Override
 		      public String getValue(CourseGWT course) {
 		        return "" + course.getScu();
 		      }
 		};
-		sortHandler.setComparator(stu, new Comparator<CourseGWT>() {
+		sortHandler.setComparator(scu, new Comparator<CourseGWT>() {
 	        public int compare(CourseGWT o1, CourseGWT o2) {
 	          return o1.getScu() - o2.getScu();
 	        }
 	    });
-		stu.setFieldUpdater(new FieldUpdater<CourseGWT, String>() {
+		scu.setFieldUpdater(new FieldUpdater<CourseGWT, String>() {
 		      public void update(int index, CourseGWT object, String value) {
 		    	  value = value.trim();
 		    	  Integer i = null;
@@ -160,14 +160,14 @@ public class CTableBuilder implements TableBuilder<CourseGWT>{
 		    	  }catch(Exception e){}
 		    	  
 		    	  if(i == null){
-		    		  Window.alert(TableConstants.COURSE_STU + " must be a number. \'" + value + "\' is invalid.");
+		    		  Window.alert(TableConstants.COURSE_SCU + " must be a number. \'" + value + "\' is invalid.");
 		    	  }
 		    	  else{
 		    		  object.setScu(i);
 		    	  }
 		      }
 		});
-		list.add(new ColumnObject<CourseGWT>(stu, TableConstants.COURSE_STU));
+		list.add(new ColumnObject<CourseGWT>(scu, TableConstants.COURSE_SCU));
 		
 		
 		// # sections		    
@@ -294,7 +294,11 @@ public class CTableBuilder implements TableBuilder<CourseGWT>{
 		course.setDept("");
 		
 		WeekGWT week = new WeekGWT();
-		week.setDays(new Vector<DayGWT>());
+		Vector<DayGWT> vec = new Vector<DayGWT>();
+		vec.add(DayGWT.MON);
+		vec.add(DayGWT.WED);
+		vec.add(DayGWT.FRI);
+		week.setDays(vec);
 		course.setDays(week);
 		
 		course.setQuarterID("");

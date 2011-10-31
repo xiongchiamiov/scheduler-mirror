@@ -21,6 +21,7 @@ public class InstructorsView extends ScrollPanel {
 	private Panel container;
 	private GreetingServiceAsync service;
 	private Table<InstructorGWT> iTable;
+	private VerticalPanel vp;
 
 	public InstructorsView(Panel container, GreetingServiceAsync service) {
 		assert(service != null);
@@ -36,7 +37,7 @@ public class InstructorsView extends ScrollPanel {
 		setWidth("100%");
 		setHeight("100%");
 		
-		VerticalPanel vp = new VerticalPanel();
+		vp = new VerticalPanel();
 		this.add(vp);
 
 		vp.add(new HTML("<h2>Fall Quarter 2010 Final Schedule Instructors</h2>"));
@@ -44,41 +45,8 @@ public class InstructorsView extends ScrollPanel {
 		iTable = TableFactory.instructor(service);
 		vp.add(iTable.getWidget());
 		populateInstructors();
-		
-		vp.add(createInstructorPreferencesLinkList());
 	}
 	
-	public Widget createInstructorPreferencesLinkList() {
-		final VerticalPanel vp = new VerticalPanel();
-		
-		service.getInstructorNames(new AsyncCallback<ArrayList<InstructorGWT>>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				Window.alert(caught.getMessage());
-			}
-			
-			@Override
-			public void onSuccess(ArrayList<InstructorGWT> result) {
-				// TODO Auto-generated method stub
-				for (InstructorGWT instructorBlerk : result) {
-					final InstructorGWT instructor = instructorBlerk;
-					HTML link = new HTML(instructor.getLastName() + ", " + instructor.getFirstName());
-					link.addStyleName("inAppLink");
-					link.addClickHandler(new ClickHandler() {
-						@Override
-						public void onClick(ClickEvent event) {
-							container.clear();
-							container.add(new InstructorPreferencesView(container, service, instructor));
-						}
-					});
-					vp.add(link);
-				}
-			}
-		});
-		
-		return vp;
-	}
-
 	public void populateInstructors() {
 		iTable.clear();
 		
@@ -93,6 +61,21 @@ public class InstructorsView extends ScrollPanel {
 						ins.verify();
 					
 					iTable.set(result);
+
+					// TODO Auto-generated method stub
+					for (InstructorGWT instructorBlerk : result) {
+						final InstructorGWT instructor = instructorBlerk;
+						HTML link = new HTML(instructor.getLastName() + ", " + instructor.getFirstName());
+						link.addStyleName("inAppLink");
+						link.addClickHandler(new ClickHandler() {
+							@Override
+							public void onClick(ClickEvent event) {
+								container.clear();
+								container.add(new InstructorPreferencesView(container, service, instructor));
+							}
+						});
+						vp.add(link);
+					}
 				}
 			}
 		});

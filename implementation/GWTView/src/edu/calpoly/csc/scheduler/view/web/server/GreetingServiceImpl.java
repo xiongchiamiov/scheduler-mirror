@@ -314,6 +314,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 
 	@Override
 	public void saveCourses(ArrayList<CourseGWT> courses) {
+		for (CourseGWT course : courses)
+			course.verify();
 		CourseDB cdb = model.getDb().getCourseDB();
 		cdb.clearData();
 		for (CourseGWT course : courses)
@@ -323,6 +325,17 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public void saveInstructor(InstructorGWT instructorGWT) {
 		Instructor instructor = Conversion.fromGWT(instructorGWT);
+		System.out.println("calling editdata");
+		int totalDesire = 0;
+		for (Day day : instructor.getTimePreferences().keySet()) {
+			LinkedHashMap<Time, TimePreference> dayPrefs = instructor.getTimePreferences().get(day);
+			for (Time time : dayPrefs.keySet()) {
+				TimePreference timePrefs = dayPrefs.get(time);
+				totalDesire += timePrefs.getDesire();
+			}
+		}
+		assert(totalDesire > 0);
+		
 		model.getDb().getInstructorDB().editData(instructor);
 	}
 }

@@ -289,7 +289,7 @@ public class InstructorDB implements DatabaseAPI<Instructor>
       String updateString = "update instructors set firstname = ?, lastname = ?,"
             + "userid = ?, maxwtu = ?, curwtu = ?, office = ?, "
             + "fairness = ?, disability = ?, generosity = ?, availability = ?, "
-            + "coursepreferences = ?, tprefs = ?, itesmtaught = ?, quarterid = ?, "
+            + "coursepreferences = ?, tprefs = ?, itemstaught = ?, quarterid = ?, "
             + "scheduleid = ? where userid = ?";
       // Create prepared statement
       PreparedStatement stmt = sqldb.getPrepStmt(updateString);

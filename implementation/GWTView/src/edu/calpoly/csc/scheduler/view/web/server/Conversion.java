@@ -163,6 +163,32 @@ public abstract class Conversion {
 		return result;
 	}
 
+	private static Week fromGWT(WeekGWT days) {
+		Week week = new Week();
+		for (DayGWT day : days.getDays())
+			week.add(fromGWT(day));
+		return week;
+	}
+	
+	private static Day fromGWT(DayGWT day) {
+		if (day.getNum() == DayGWT.SUN.getNum())
+			return Day.SUN;
+		if (day.getNum() == DayGWT.MON.getNum())
+			return Day.MON;
+		if (day.getNum() == DayGWT.TUE.getNum())
+			return Day.TUE;
+		if (day.getNum() == DayGWT.WED.getNum())
+			return Day.WED;
+		if (day.getNum() == DayGWT.THU.getNum())
+			return Day.THU;
+		if (day.getNum() == DayGWT.FRI.getNum())
+			return Day.FRI;
+		if (day.getNum() == DayGWT.SAT.getNum())
+			return Day.SAT;
+		assert(false);
+		return null;
+	}
+
 	public static LocationGWT toGWT(Location location) {
 	    return new LocationGWT(location.getBuilding(), location.getRoom(),
                 location.getMaxOccupancy(), location.getType(),
@@ -204,7 +230,7 @@ public abstract class Conversion {
 		newCourse.setDept(course.getDept());
 		newCourse.setLength(course.getLength());
 		newCourse.setNumOfSections(course.getNumSections());
-		newCourse.setDays(null);
+		newCourse.setDays(fromGWT(course.getDays()));
 		return newCourse;
 	}
 }
