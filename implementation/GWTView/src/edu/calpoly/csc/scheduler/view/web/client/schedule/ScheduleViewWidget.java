@@ -23,6 +23,7 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.KeyboardListenerAdapter;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -62,6 +63,8 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 
 	private VerticalPanel verticalPanelAvailable;
 	private VerticalPanel verticalPanelIncluded;
+	private Label labelAvailableList;
+	private Label labelIncludedList;
 	private ListBox listBoxAvailable;
 	private ListBox listBoxIncluded;
 	private HorizontalPanel boxesAndSchedulePanel;
@@ -549,13 +552,14 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 		boxesAndSchedulePanel = new HorizontalPanel();
 
 		verticalPanelAvailable = new VerticalPanel();
-		verticalPanelAvailable.setTitle("Available Classes");
-
+		labelAvailableList = new Label("Available");
+		labelIncludedList = new Label("Included");
 		verticalPanelIncluded = new VerticalPanel();
-		verticalPanelIncluded.setTitle("Included Classes");
 
 		listBoxAvailable = new ListBox(true);
 		listBoxIncluded = new ListBox(true);
+		verticalPanelAvailable.add(labelAvailableList);
+		verticalPanelIncluded.add(labelIncludedList);
 		verticalPanelAvailable.add(listBoxAvailable);
 		verticalPanelIncluded.add(listBoxIncluded);
 
