@@ -290,7 +290,7 @@ public class InstructorDB implements DatabaseAPI<Instructor>
             + "userid = ?, maxwtu = ?, curwtu = ?, office = ?, "
             + "fairness = ?, disability = ?, generosity = ?, availability = ?, "
             + "coursepreferences = ?, tprefs = ?, itesmtaught = ?, quarterid = ?, "
-            + "scheduleid = ?, where userid = ?";
+            + "scheduleid = ? where userid = ?";
       // Create prepared statement
       PreparedStatement stmt = sqldb.getPrepStmt(updateString);
       // Set values

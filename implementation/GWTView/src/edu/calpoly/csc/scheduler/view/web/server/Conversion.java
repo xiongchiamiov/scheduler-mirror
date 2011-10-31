@@ -14,6 +14,7 @@ import edu.calpoly.csc.scheduler.model.db.idb.TimePreference;
 import edu.calpoly.csc.scheduler.model.db.ldb.Location;
 import edu.calpoly.csc.scheduler.model.schedule.Day;
 import edu.calpoly.csc.scheduler.model.schedule.ScheduleItem;
+import edu.calpoly.csc.scheduler.model.schedule.Week;
 import edu.calpoly.csc.scheduler.model.schedule.WeekAvail;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.DayGWT;
@@ -22,6 +23,7 @@ import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.TimeGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.TimePreferenceGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.WeekGWT;
 
 public abstract class Conversion {
 	public static InstructorGWT toGWT(Instructor instructor) {
@@ -139,8 +141,7 @@ public abstract class Conversion {
 		newCourse.setCatalogNum(course.getCatalogNum());
 		newCourse.setCourseName(course.getName());
 		newCourse.setDept(course.getDept());
-		newCourse.setLab(null);
-		newCourse.setDays(null);
+		newCourse.setDays(Conversion.toGWT(course.getDays()));
 		newCourse.setLength(course.getLength());
 		newCourse.setLabPad(course.getLabPad());
 		newCourse.setMaxEnroll(course.getEnrollment());
@@ -151,6 +152,15 @@ public abstract class Conversion {
 		newCourse.setQuarterID(course.getQuarterId());
 		//newCourse.setScheduleID(course.getScheduleId());
 	    return newCourse;
+	}
+
+	private static WeekGWT toGWT(Week source) {
+		WeekGWT result = new WeekGWT();
+		Vector<DayGWT> days = new Vector<DayGWT>();
+		for (Day sourceDay : source.getDays())
+			days.add(toGWT(sourceDay));
+		result.setDays(days);
+		return result;
 	}
 
 	public static LocationGWT toGWT(Location location) {

@@ -47,6 +47,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		ArrayList<InstructorGWT> results = new ArrayList<InstructorGWT>();
 		for (Instructor instructor : model.getDb().getInstructorDB().getData())
 			results.add(Conversion.toGWT(instructor));
+		System.out.println("Model returning " + results.size() + " instructors");
 		return results;
 	}
 	
@@ -331,7 +332,6 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public void saveInstructor(InstructorGWT instructorGWT) {
 		Instructor instructor = Conversion.fromGWT(instructorGWT);
-		System.out.println("implement saving instructor!");
-//		model.saveInstructor(instructor);
+		model.getDb().getInstructorDB().editData(instructor);
 	}
 }

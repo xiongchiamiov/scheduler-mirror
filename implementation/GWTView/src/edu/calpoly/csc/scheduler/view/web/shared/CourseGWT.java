@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import com.google.gwt.user.client.Window;
 
+import edu.calpoly.csc.scheduler.model.db.cdb.Lab;
+
 
 public class CourseGWT implements Serializable{
 	private static final long serialVersionUID = -3337091550673507081L;
@@ -14,11 +16,10 @@ public class CourseGWT implements Serializable{
 	private int wtu, scu, numSections;
 	private String type; //will be an object
 	private int maxEnroll;
-	private String lab; //will be an object
 	private int labId;
 	private int labPad;
 	private int length;
-	private String days; //will be an object
+	private WeekGWT days;
 	private String quarterID;
 	private int scheduleID;
 	
@@ -29,55 +30,12 @@ public class CourseGWT implements Serializable{
 			Window.alert("flerp2");
 		if (type == null)
 			Window.alert("flerp3");
-		if (lab == null)
-			Window.alert("flerp4");
 		if (days == null)
 			Window.alert("flerp5");
 		if (quarterID == null)
 			Window.alert("flerp6");
 	}
-	
-	public CourseGWT(){
-		courseName = "";
-		catalogNum = 0;
-		dept = "";
-		wtu = 0;
-		scu = 0;
-		numSections = 0;
-		type = "";
-		maxEnroll = 0;
-		lab = "";
-		labId = 0;
-		length = 0;
-	}
-	
-	public CourseGWT(int id, String name, int catalogNum, int wtus, int scus, String courseType,
-			   int enrollment, int labId, boolean smartroom, boolean laptop, boolean overhead, 
-			   int hoursPerWeek, String ctPrefix, String prefix) {
-		   this.courseName = name;
-		   this.catalogNum = catalogNum;
-		   this.wtu = wtus;
-		   this.scu = scus;
-		   this.type = courseType;
-		   this.maxEnroll = enrollment;
-		   this.labId = labId;
-		   this.length = hoursPerWeek;
-	   }
 
-	public CourseGWT(String courseName, int catalogNum, String dept, int wtu,
-			int scu, int numSections, String type, int maxEnroll, String lab) {
-		super();
-		this.courseName = courseName;
-		this.catalogNum = catalogNum;
-		this.dept = dept;
-		this.wtu = wtu;
-		this.scu = scu;
-		this.numSections = numSections;
-		this.type = type;
-		this.maxEnroll = maxEnroll;
-		this.lab = lab;
-	}
-	
 	public void setQuarterID(String quarter)
 	{
 		this.quarterID = quarter;
@@ -108,12 +66,12 @@ public class CourseGWT implements Serializable{
 		return labPad;
 	}
 	
-	public void setDays(String days)
+	public void setDays(WeekGWT days)
 	{
 		this.days = days;
 	}
 	
-	public String getDays()
+	public WeekGWT getDays()
 	{
 		return days;
 	}
@@ -191,14 +149,6 @@ public class CourseGWT implements Serializable{
 
 	public void setMaxEnroll(int maxEnroll) {
 		this.maxEnroll = maxEnroll;
-	}
-
-	public String getLab() {
-		return lab;
-	}
-
-	public void setLab(String lab) {
-		this.lab = lab;
 	}
 
 	public int getLabId() {

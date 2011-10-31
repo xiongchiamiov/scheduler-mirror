@@ -2,18 +2,19 @@ package edu.calpoly.csc.scheduler.view.web.client.table;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Vector;
 
 import com.google.gwt.cell.client.EditTextCell;
 import com.google.gwt.cell.client.FieldUpdater;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import edu.calpoly.csc.scheduler.view.web.client.GreetingService;
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.DayGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.WeekGWT;
 
 public class CTableBuilder implements TableBuilder<CourseGWT>{
 
@@ -259,17 +260,17 @@ public class CTableBuilder implements TableBuilder<CourseGWT>{
 				new Column<CourseGWT, String>(new EditTextCell()) {
 		      @Override
 		      public String getValue(CourseGWT course) {
-		        return course.getLab();
+		        return "";//course.getLab();
 		      }
 		};
 		sortHandler.setComparator(lab, new Comparator<CourseGWT>() {
 	        public int compare(CourseGWT o1, CourseGWT o2) {
-	          return o1.getLab().compareTo(o2.getLab());
+	          return 0;//o1.getLab().compareTo(o2.getLab());
 	        }
 	    });
 		lab.setFieldUpdater(new FieldUpdater<CourseGWT, String>() {
 		      public void update(int index, CourseGWT object, String value) {
-		        object.setLab(value);
+		        //object.setLab(value);
 		      }
 		});
 		list.add(new ColumnObject<CourseGWT>(lab, TableConstants.COURSE_LAB));
@@ -286,12 +287,24 @@ public class CTableBuilder implements TableBuilder<CourseGWT>{
 	@Override
 	public CourseGWT newObject() {
 		CourseGWT course = new CourseGWT();
-		course.setLabId(1201);
-		course.setLabPad(1202);
-		course.setLength(1203);
-		course.setDays("daysderp");
-		course.setQuarterID("qid?");
-		course.setScheduleID(7);
+		course.setCatalogNum(0);
+		course.setLabId(0);
+		course.setLabPad(0);
+		course.setLength(0);
+		course.setDept("");
+		
+		WeekGWT week = new WeekGWT();
+		week.setDays(new Vector<DayGWT>());
+		course.setDays(week);
+		
+		course.setQuarterID("");
+		course.setScheduleID(0);
+		course.setMaxEnroll(0);
+		course.setCourseName("");
+		course.setNumSections(0);
+		course.setScu(0);
+		course.setWtu(0);
+		course.setType("");
 		return course;
 	}
 
