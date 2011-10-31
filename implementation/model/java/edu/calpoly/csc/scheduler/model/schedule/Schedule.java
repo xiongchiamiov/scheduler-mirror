@@ -101,8 +101,18 @@ public class Schedule implements Serializable
       this.iSourceList = new Vector<Instructor>(i_list);
       this.setlSourceList(l_list);
    }
-
-   public void genItem (Course c, Week days, Time s)
+   
+   /**
+    * Generates and adds a ScheduleItem to teach a given course on a given set 
+    * of days in a given time range.
+    * 
+    * @param c Course to teach
+    * @param days Days to teach
+    * @param s Time of day the course should start
+    * 
+    * @see #generate(List<Course>)
+    */
+   public ScheduleItem genItem (Course c, Week days, Time s)
    {
       Course clone = new Course(c);
       clone.setDays(days);
@@ -121,6 +131,8 @@ public class Schedule implements Serializable
        * Once we're done w/ the lie, we'll set things right
        */
       this.bounds = oldBounds;
+      
+      return this.getItems().lastElement();
    }
    
    /**
