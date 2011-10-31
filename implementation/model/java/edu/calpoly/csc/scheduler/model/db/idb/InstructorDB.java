@@ -1,29 +1,15 @@
 package edu.calpoly.csc.scheduler.model.db.idb;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Vector;
+import java.util.*;
 
-import edu.calpoly.csc.scheduler.model.db.DatabaseAPI;
-import edu.calpoly.csc.scheduler.model.db.SQLDB;
-import edu.calpoly.csc.scheduler.model.db.Time;
+import edu.calpoly.csc.scheduler.model.db.*;
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
 import edu.calpoly.csc.scheduler.model.db.ldb.Location;
-import edu.calpoly.csc.scheduler.model.schedule.Day;
-import edu.calpoly.csc.scheduler.model.schedule.ScheduleItem;
-import edu.calpoly.csc.scheduler.model.schedule.WeekAvail;
+import edu.calpoly.csc.scheduler.model.schedule.*;
 
 public class InstructorDB implements DatabaseAPI<Instructor>
 {
@@ -407,48 +393,5 @@ public class InstructorDB implements DatabaseAPI<Instructor>
    {
       PreparedStatement stmt = sqldb.getPrepStmt("delete from instructors;");
       sqldb.executePrepStmt(stmt);
-   }
-
-   /**
-    * Returns a vector of instructors for teaching this course. Instructors
-    * returned have the needed WTUs left to teach this course. Sorted by
-    * instructors that want to teach it the most coming first.
-    * 
-    * @param course
-    *           Course which the returned instructors can teach
-    * 
-    * @return Instructors that can teach this class without going over their WTU
-    *         limit, in order of most wanting to teach the class first
-    */
-   public Vector<Instructor> getInstructorsForCourse(final Course course)
-   {
-      Vector<Instructor> instructors = new Vector<Instructor>();
-      int courseWTU = course.getWtu();
-
-      for (Instructor i : data)
-      {
-         // Check if instructor has enough WTUs
-         if (i.getAvailableWTU() >= courseWTU)
-         {
-            // Check for 0 course preference
-            if (i.getPreference(course) != 0)
-            {
-               instructors.add(i);
-            }
-         }
-      }
-
-      // Sort by teaching priority in descending order. Teachers that want to
-      // teach most come first.
-
-      Collections.<Instructor> sort(instructors, new Comparator<Instructor>()
-      {
-         @Override
-         public int compare(Instructor o1, Instructor o2)
-         {
-            return o1.getPreference(course) - o2.getPreference(course);
-         }
-      });
-      return instructors;
    }
 }
