@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
@@ -11,7 +12,9 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -80,11 +83,18 @@ public class HomeView extends ScrollPanel {
 				vp.add(new Button("New Schedule", new ClickHandler() {
 					@Override
 					public void onClick(ClickEvent event) {
-						service.newSchedule(new AsyncCallback<Void>() {
+						//String schedName = displayNewSchedPopup();
+						
+						//Temporary for getting a unique schedule name
+						//CHANGE THIS
+						String schedName = "Schedule " + Random.nextInt();
+						
+						System.out.println(schedName);
+						
+						service.newSchedule(schedName, new AsyncCallback<Void>() {
 							@Override
 							public void onFailure(Throwable caught) {
-								// TODO Auto-generated method stub
-								
+								//TODO Auto-generated method stub				
 							}
 							
 							@Override
@@ -97,7 +107,7 @@ public class HomeView extends ScrollPanel {
 					}
 				}));
 				
-				vp.add(createDBInfoPanel());
+				//vp.add(createDBInfoPanel());
 				
 			}
 			
@@ -167,5 +177,13 @@ public class HomeView extends ScrollPanel {
 		}));
 		
 		return vp;
+	}
+	
+	public String displayNewSchedPopup() {
+		PopupPanel popup = new PopupPanel();
+		
+		popup.add(new TextBox());
+		
+		return new String();
 	}
 }
