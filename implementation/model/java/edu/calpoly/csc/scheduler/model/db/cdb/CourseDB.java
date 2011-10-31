@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 import edu.calpoly.csc.scheduler.model.db.DatabaseAPI;
 import edu.calpoly.csc.scheduler.model.db.SQLDB;
-import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
+import edu.calpoly.csc.scheduler.model.schedule.Day;
 import edu.calpoly.csc.scheduler.model.schedule.Week;
 
 public class CourseDB implements DatabaseAPI<Course>
@@ -110,21 +110,24 @@ public class CourseDB implements DatabaseAPI<Course>
          toAdd.setLength(length);
 
          // Deserialize Days
-         byte[] daysBuf = rs.getBytes("days");
-         if (daysBuf != null)
-         {
-            try
-            {
-               ObjectInputStream objectIn;
-               objectIn = new ObjectInputStream(new ByteArrayInputStream(
-                     daysBuf));
-               toAdd.setDays((Week) objectIn.readObject());
-            }
-            catch (Exception e)
-            {
-               e.printStackTrace();
-            }
-         }
+//         byte[] daysBuf = rs.getBytes("days");
+//         if (daysBuf != null)
+//         {
+//            try
+//            {
+//               ObjectInputStream objectIn;
+//               objectIn = new ObjectInputStream(new ByteArrayInputStream(
+//                     daysBuf));
+//               toAdd.setDays((Week) objectIn.readObject());
+//            }
+//            catch (Exception e)
+//            {
+//               e.printStackTrace();
+//            }
+//         }
+         //TODO: Remove this later
+         Week temp = new Week(new Day[]{Day.MON, Day.WED, Day.FRI});
+         toAdd.setDays(temp);
 
          int enrollment = rs.getInt("enrollment");
          toAdd.setEnrollment(enrollment);
