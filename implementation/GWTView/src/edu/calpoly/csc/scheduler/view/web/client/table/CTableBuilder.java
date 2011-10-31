@@ -164,7 +164,7 @@ public class CTableBuilder implements TableBuilder<CourseGWT>{
 		    	  }catch(Exception e){}
 		    	  
 		    	  if(i == null){
-		    		  Window.alert(TableConstants.COURSE_STU + " must be a number. \'" + value + "\' is invalid.");
+		    		  Window.alert(TableConstants.COURSE_SCU + " must be a number. \'" + value + "\' is invalid.");
 		    	  }
 		    	  else{
 		    		  object.setScu(i);
@@ -172,7 +172,7 @@ public class CTableBuilder implements TableBuilder<CourseGWT>{
 		      }
 		});
 		stu.setCellStyleNames("tableColumnWidthInt");
-		list.add(new ColumnObject<CourseGWT>(stu, TableConstants.COURSE_STU));
+		list.add(new ColumnObject<CourseGWT>(stu, TableConstants.COURSE_SCU));
 		
 		
 		// # sections		    
