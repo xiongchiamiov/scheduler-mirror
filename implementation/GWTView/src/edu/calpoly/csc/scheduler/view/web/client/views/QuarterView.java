@@ -67,18 +67,19 @@ public class QuarterView extends DockLayoutPanel {
 		}));
 		
 		leftMenuVP.add(new HTML("<b>Schedule</b>"));
-		leftMenuVP.add(createLink("Build", "inAppLink indented", new ClickHandler() {
+		/*leftMenuVP.add(createLink("Build", "inAppLink indented", new ClickHandler() {
 			public void onClick(ClickEvent events) {
 				contentPanel.clear();
 				contentPanel.add(new ScheduleBuildView(contentPanel, service));
 			}
-		}));leftMenuVP.add(createLink("View", "inAppLink indented", new ClickHandler() {
+		}));*/
+		leftMenuVP.add(createLink("Build / View", "inAppLink indented", new ClickHandler() {
 			public void onClick(ClickEvent events) {
 				contentPanel.clear();
 				contentPanel.add(new ScheduleView(contentPanel, service));
 			}
 		}));
-		leftMenuVP.add(createLabel("Edit", "indented"));
+		//leftMenuVP.add(createLabel("Edit", "indented"));
 		
 		leftMenuVP.add(new HTML("<b>Manage</b>"));
 		leftMenuVP.add(createLink("Instructors", "inAppLink indented", new ClickHandler() {
