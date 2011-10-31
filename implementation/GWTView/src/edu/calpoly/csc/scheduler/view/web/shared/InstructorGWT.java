@@ -1,16 +1,11 @@
 package edu.calpoly.csc.scheduler.view.web.shared;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.Vector;
 
 import com.google.gwt.user.client.Window;
-
-import edu.calpoly.csc.scheduler.model.db.Time;
-import edu.calpoly.csc.scheduler.model.db.idb.TimePreference;
-import edu.calpoly.csc.scheduler.model.schedule.Day;
-import edu.calpoly.csc.scheduler.model.schedule.WeekAvail;
 
 
 public class InstructorGWT implements Serializable{
@@ -20,17 +15,62 @@ public class InstructorGWT implements Serializable{
 	private String firstName, lastName, roomNumber, building;
 	private boolean disabilities;
 	private int maxwtu, curwtu, fairness, generosity;
-	
-//	private WeekAvailGWT availability; //will be objects
 
 	Vector<ScheduleItemGWT> itemsTaught;
 
-//	HashMap<Day, LinkedHashMap<Time, TimePreference>> tPrefs;
+	Map<DayGWT, Map<TimeGWT, TimePreferenceGWT>> tPrefs;
 
-	HashMap<CourseGWT, Integer> coursePrefs;
+	Map<CourseGWT, Integer> coursePrefs;
 	
 	private int scheduleID;
 	
+	public InstructorGWT clone() {
+		InstructorGWT instructor = new InstructorGWT();
+		instructor.setUserID(userID);
+		instructor.setFirstName(firstName);
+		instructor.setLastName(lastName);
+		instructor.setRoomNumber(roomNumber);
+		instructor.setBuilding(building);
+		instructor.setDisabilities(disabilities);
+		instructor.setMaxWtu(maxwtu);
+		instructor.setCurWtu(curwtu);
+		instructor.setFairness(fairness);
+		instructor.setGenerosity(generosity);
+		instructor.setItemsTaught((Vector<ScheduleItemGWT>)itemsTaught.clone());
+		
+		Map<DayGWT, Map<TimeGWT, TimePreferenceGWT>> newTPrefs = new TreeMap<DayGWT, Map<TimeGWT,TimePreferenceGWT>>(); 
+		for (DayGWT day : tPrefs.keySet()) {
+			Map<TimeGWT, TimePreferenceGWT> dayPrefs = tPrefs.get(day);
+			
+			DayGWT newDay = day.clone();
+			Map<TimeGWT, TimePreferenceGWT> newDayPrefs = new TreeMap<TimeGWT, TimePreferenceGWT>();
+			
+			for (TimeGWT time : dayPrefs.keySet()) {
+				TimePreferenceGWT pref = dayPrefs.get(time);
+
+				TimeGWT newTime = time.clone();
+				TimePreferenceGWT newPref = pref.clone();
+				newDayPrefs.put(newTime, newPref);
+			}
+			
+			newTPrefs.put(newDay, newDayPrefs);
+		}
+		instructor.settPrefs(newTPrefs);
+		
+		return instructor;
+	}
+	
+//	private WeekAvailGWT availability; //will be objects
+
+	public Map<DayGWT, Map<TimeGWT, TimePreferenceGWT>> gettPrefs() {
+		return tPrefs;
+	}
+
+	public void settPrefs(
+			Map<DayGWT, Map<TimeGWT, TimePreferenceGWT>> tPrefs) {
+		this.tPrefs = tPrefs;
+	}
+
 	public void verify() {
 		if (userID == null)
 			Window.alert("zerp1");
@@ -56,11 +96,11 @@ public class InstructorGWT implements Serializable{
 		this.itemsTaught = items;
 	}
 	
-	public HashMap<CourseGWT, Integer> getCoursePreferences(){
+	public Map<CourseGWT, Integer> getCoursePreferences(){
 		return coursePrefs;
 	}
 	
-	public void setCoursePreferences(HashMap<CourseGWT, Integer> coursePrefs){
+	public void setCoursePreferences(Map<CourseGWT, Integer> coursePrefs){
 		this.coursePrefs = coursePrefs;
 	}
 	

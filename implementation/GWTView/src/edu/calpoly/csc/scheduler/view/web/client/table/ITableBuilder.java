@@ -3,6 +3,7 @@ package edu.calpoly.csc.scheduler.view.web.client.table;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 
 import com.google.gwt.cell.client.CheckboxCell;
@@ -15,8 +16,11 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.DayGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.TimeGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.TimePreferenceGWT;
 
 public class ITableBuilder implements TableBuilder<InstructorGWT>{
 
@@ -208,6 +212,7 @@ public class ITableBuilder implements TableBuilder<InstructorGWT>{
 		instructor.setRoomNumber("");
 		instructor.setBuilding("");
 		instructor.setCoursePreferences(new HashMap<CourseGWT, Integer>());
+		instructor.settPrefs(new HashMap<DayGWT, Map<TimeGWT,TimePreferenceGWT>>());
 		instructor.setItemsTaught(new Vector<ScheduleItemGWT>());
 		instructor.verify();
 		return instructor;

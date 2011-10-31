@@ -196,3 +196,11 @@ h1 {
 .anchorCell div {
 	border: 2px solid black;
 }
+
+.changed {
+	background-color: #FFFF00;
+}
+
+.timePreferencesTable .desireCell:hover {
+	background-color: #E0E0E0;
+}

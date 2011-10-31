@@ -68,7 +68,7 @@ public class InstructorsView extends ScrollPanel {
 						@Override
 						public void onClick(ClickEvent event) {
 							container.clear();
-							container.add(new InstructorPreferencesView(container, service, instructor.getUserID()));
+							container.add(new InstructorPreferencesView(container, service, instructor));
 						}
 					});
 					vp.add(link);

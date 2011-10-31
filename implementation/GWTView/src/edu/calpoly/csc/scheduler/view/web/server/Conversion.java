@@ -3,6 +3,8 @@ package edu.calpoly.csc.scheduler.view.web.server;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.Vector;
 
 import edu.calpoly.csc.scheduler.model.db.Time;
@@ -14,9 +16,12 @@ import edu.calpoly.csc.scheduler.model.schedule.Day;
 import edu.calpoly.csc.scheduler.model.schedule.ScheduleItem;
 import edu.calpoly.csc.scheduler.model.schedule.WeekAvail;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.DayGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.TimeGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.TimePreferenceGWT;
 
 public abstract class Conversion {
 	public static InstructorGWT toGWT(Instructor instructor) {
@@ -38,6 +43,22 @@ public abstract class Conversion {
 			coursePreferences.put(Conversion.toGWT(course), sourceCoursePreferences.get(course));
 		result.setCoursePreferences(coursePreferences);
 		
+		HashMap<Day, LinkedHashMap<Time, TimePreference>> sourceTimePreferences = instructor.getTimePreferences();
+		Map<DayGWT, Map<TimeGWT, TimePreferenceGWT>> timePreferences = new TreeMap<DayGWT, Map<TimeGWT,TimePreferenceGWT>>();
+		for (Day sourceDay : sourceTimePreferences.keySet()) {
+			LinkedHashMap<Time, TimePreference> sourceTimePreferencesForDay = sourceTimePreferences.get(sourceDay);
+			DayGWT day = Conversion.toGWT(sourceDay);
+			Map<TimeGWT, TimePreferenceGWT> timePreferencesForDay = new TreeMap<TimeGWT, TimePreferenceGWT>();
+			for (Time sourceTime : sourceTimePreferencesForDay.keySet()) {
+				TimePreference sourceTimePreferencesForTime = sourceTimePreferencesForDay.get(sourceTime);
+				TimeGWT time = Conversion.toGWT(sourceTime);
+				TimePreferenceGWT timePreferencesForTime = Conversion.toGWT(sourceTimePreferencesForTime);
+				timePreferencesForDay.put(time, timePreferencesForTime);
+			}
+			timePreferences.put(day, timePreferencesForDay);
+		}
+		result.settPrefs(timePreferences);
+		
 		Vector<ScheduleItem> sourceItemsTaught = instructor.getItemsTaught();
 		Vector<ScheduleItemGWT> itemsTaught = new Vector<ScheduleItemGWT>();
 		for (ScheduleItem item : sourceItemsTaught)
@@ -48,6 +69,26 @@ public abstract class Conversion {
 		return result;
 	}
 	
+	private static TimePreferenceGWT toGWT(TimePreference source) {
+		TimePreferenceGWT timePref = new TimePreferenceGWT();
+		timePref.setDesire(source.getDesire());
+		timePref.setTime(Conversion.toGWT(source.getTime()));
+		return timePref;
+	}
+
+	private static TimeGWT toGWT(Time source) {
+		TimeGWT time = new TimeGWT();
+		time.setHour(source.getHour());
+		time.setMinute(source.getMinute());
+		return time;
+	}
+
+	private static DayGWT toGWT(Day sourceDay) {
+		DayGWT day = new DayGWT();
+		day.setNum(sourceDay.getNum());
+		return day;
+	}
+
 	public static Instructor fromGWT(InstructorGWT instructor) {
 		instructor.verify();
 		Instructor ins = new Instructor();

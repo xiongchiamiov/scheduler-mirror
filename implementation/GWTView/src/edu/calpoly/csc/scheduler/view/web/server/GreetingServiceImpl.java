@@ -337,4 +337,11 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		for (CourseGWT course : courses)
 			cdb.addData(Conversion.fromGWT(course));
 	}
+
+	@Override
+	public void saveInstructor(InstructorGWT instructorGWT) {
+		Instructor instructor = Conversion.fromGWT(instructorGWT);
+		System.out.println("implement saving instructor!");
+//		model.saveInstructor(instructor);
+	}
 }

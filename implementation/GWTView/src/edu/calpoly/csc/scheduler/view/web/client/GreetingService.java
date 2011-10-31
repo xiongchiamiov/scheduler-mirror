@@ -46,4 +46,6 @@ public interface GreetingService extends RemoteService {
 	
 	ScheduleItemGWT rescheduleCourse(ScheduleItemGWT scheduleItem,
 			ArrayList<Integer> days, int startHour, boolean atHalfHour);
+
+	void saveInstructor(InstructorGWT instructor);
 }
