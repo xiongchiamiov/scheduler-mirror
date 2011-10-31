@@ -16,9 +16,6 @@ public class Location extends DbData implements Serializable
 {
    private static final long serialVersionUID = 42;
 
-   /** Represents a location who's identity is not yet known */
-   public static Location    TBA              = new Location(-1, -1);
-
    /**
     * This class contains the equipment provided at a location.
     */
@@ -515,7 +512,7 @@ public class Location extends DbData implements Serializable
     */
    public String toString()
    {
-      return new String(this.building + " - " + this.room);
+      return new String("BLDG: " + this.building + " Room: " + this.room);
    }
 
    /**

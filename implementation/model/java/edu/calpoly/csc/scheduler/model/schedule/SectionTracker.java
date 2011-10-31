@@ -3,6 +3,7 @@ package edu.calpoly.csc.scheduler.model.schedule;
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
 
 import java.util.Vector;
+import java.util.BitSet;
 
 /**
  *
@@ -18,28 +19,37 @@ public class SectionTracker
    /**
     * List of section numbers that've been added
     */
-   private Vector<Integer> sections = new Vector<Integer>();
+   private BitSet sections;
    /**
     * The course this class tracks sections for
     */
    private Course c;
+   /**
+    * Max number of sections
+    */
+   private int maxSections;
    
    public SectionTracker (Course c)
    {
       this.c = c;
+      this.maxSections = c.getNumOfSections();
+      sections = new BitSet(this.maxSections);
    }
    
    /**
     * Adds the next available section to our list of sections taught
     */
-   public void addSection ()
+   public boolean addSection ()
    {
-      this.curSection = getNextSection();
+      boolean r;
       
-      if (canBookAnotherSection())
+      if (r = canBookAnotherSection())
       {
-         sections.add(curSection);
+         this.curSection = getNextSection();
+         sections.set(this.curSection, true);
       }
+      
+      return r;
    }
    
    /**
@@ -49,17 +59,9 @@ public class SectionTracker
     * 
     * @return true if the section exists and is thusly removed
     */
-   public boolean removeSection (int s)
+   public void removeSection (int s)
    {
-      boolean r = false;
-      
-      if (this.sections.contains(s))
-      {
-         r = true;
-         sections.remove((Integer)s);
-      }
-      
-      return r;
+      this.sections.set(s, false);
    }
    
    /**
@@ -71,19 +73,7 @@ public class SectionTracker
     */
    private int getNextSection ()
    {
-      int r = 0;
-      int cur = 0;
-      
-      for (int i: this.sections)
-      {
-         if (i != (cur + 1))
-         {
-            r = cur;
-         }
-         cur = i;
-      }
-      
-      return r;
+      return this.sections.nextClearBit(0);
    }
 
    /**
@@ -93,7 +83,7 @@ public class SectionTracker
     */
    public boolean canBookAnotherSection ()
    {
-      return this.sections.size() == this.c.getNumOfSections();
+      return this.sections.cardinality() != this.maxSections;
    }
    
    /**
@@ -106,6 +96,16 @@ public class SectionTracker
       return curSection;
    }
    
+   /**
+    * Returns the maxSections
+    * 
+    * @return the maxSections
+    */
+   public int getMaxSections ()
+   {
+      return maxSections;
+   }
+
    /**
     * Returns the Course this tracker tracks
     * 

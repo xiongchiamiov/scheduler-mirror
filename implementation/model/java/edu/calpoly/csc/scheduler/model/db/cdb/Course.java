@@ -79,11 +79,6 @@ public class Course extends DbData implements Serializable
     * This course's lab. Can be null, which means it has no lab
     */
    private Lab lab = null;
-   /**
-    * How many half hours before/after this course that a lab can be taught. 
-    * Default is 0, which'll put a lab right after the lecture.
-    */
-   private Integer labPad = 0;
    
    /**
     * The quarter this course applies to
@@ -125,7 +120,19 @@ public class Course extends DbData implements Serializable
     */
    public Course (Course c)
    {
-      
+      this.name = c.getName();
+      this.catalogNum = c.getCatalogNum();
+      this.dept = c.getDept();
+      this.wtu = c.getWtu();
+      this.scu = c.getScu();
+      this.numOfSections = c.getNumOfSections();
+      this.type = c.getType();
+      this.length = c.getLength();
+      this.days = c.getDays();
+      this.enrollment = new Integer(c.getEnrollment());
+      this.lab = c.getLab();
+      this.quarterId = c.getQuarterId();
+      this.scheduleId = c.getScheduleId();
    }
    
    /**
@@ -465,30 +472,7 @@ public class Course extends DbData implements Serializable
    {
       return getLab() != null;
    }
-   
-   /**
-    * Returns the number of half hours before/after this course that a lab is
-    * allowed to be taught. 
-    * 
-    * @return the labPad
-    */
-   public int getLabPad ()
-   {
-      return labPad;
-   }
-
-   /**
-    * Sets the labPad to the given parameter. A negative value means you're 
-    * specifying a pad for the lab being taught <b>before</b> the lecture. A 
-    * positive value is for <b>after</b>.
-    *
-    * @param labPad the labPad to set
-    */
-   public void setLabPad (int labPad)
-   {
-      this.labPad = labPad;
-   }
-   
+      
    /**
     * Returns whether this course can be taught evenly for at least 1 hour a 
     * day for a given number of days.
@@ -519,6 +503,11 @@ public class Course extends DbData implements Serializable
    public int splitLengthOverDays (int days)
    {
       return this.getLength() / days;
+   }
+
+   public String toString ()
+   {
+      return dept + " " + catalogNum;
    }
    
    /**
@@ -552,7 +541,6 @@ public class Course extends DbData implements Serializable
           days          == null ||
           dept          == null ||
           enrollment    == null ||
-          labPad        == null ||
           length        == null ||
           name          == null ||
           numOfSections == null ||
@@ -578,10 +566,25 @@ public class Course extends DbData implements Serializable
       c.setLength(3);
       c.setDays(new Week());
       c.setEnrollment(50);
-      c.setLab(new Lab());
-      c.setLabPad(1);
+      c.setLab(new Lab());;
       c.setQuarterId("w2011");
       c.setScheduleId(1);
       return c;
+   }
+
+   /**
+    * @deprecated This is no longer used/needed
+    */
+   public int getLabPad ()
+   {
+      return 0;
+   }
+   
+   /**
+    * @deprecated This is no longer used/needed
+    */
+   public void setLabPad (int p)
+   {
+      
    }
 }

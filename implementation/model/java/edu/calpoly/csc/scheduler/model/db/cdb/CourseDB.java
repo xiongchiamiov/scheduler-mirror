@@ -147,9 +147,8 @@ public class CourseDB implements DatabaseAPI<Course>
             }
          }
 
-         int labPad = rs.getInt("labpad");
-         toAdd.setLabPad(labPad);
-
+         //TODO: Tyler, no more lab pad
+         
          String quarterid = rs.getString("quarterid");
          toAdd.setQuarterId(quarterid);
 
@@ -216,7 +215,8 @@ public class CourseDB implements DatabaseAPI<Course>
          {
             e.printStackTrace();
          }
-         stmt.setInt(12, data.getLabPad());
+         //TODO: Tyler, remove lab pad from stuff
+         stmt.setInt(12, 1);
          stmt.setString(13, data.getQuarterId());
          stmt.setInt(14, scheduleID);
       }
@@ -284,7 +284,8 @@ public class CourseDB implements DatabaseAPI<Course>
          {
             e.printStackTrace();
          }
-         stmt.setInt(12, data.getLabPad());
+         //TODO: Tyler, remove lab pad from stuff
+         stmt.setInt(12, 1);
          stmt.setString(13, data.getQuarterId());
          stmt.setInt(14, scheduleID);
 

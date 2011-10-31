@@ -21,10 +21,15 @@ public class TimeRange implements Serializable
       {
          throw new EndBeforeStartException();
       }
-      this.s = s;
-      this.e = e;
+      this.s = new Time(s);
+      this.e = new Time(e);
    }
 
+   public TimeRange (TimeRange tr)
+   {
+      this (tr.getS(), tr.getE());
+   }
+   
    /**
     * Creates a time range given a start time and a length, in half hours
     * 

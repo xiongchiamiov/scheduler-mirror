@@ -19,7 +19,7 @@ public class Tba extends Location
    
    private Tba ()
    {
-      super (-1, -1);
+      super (0, 0);
    }
    
    public static Tba getTba ()
@@ -63,5 +63,9 @@ public class Tba extends Location
       return true;
    }
 
+   public int getMaxOccupancy ()
+   {
+      return 99;
+   }
    
 }

@@ -95,7 +95,6 @@ public class ScheduleItem implements Serializable, Cloneable,
       this.location = si.getLocation();
       this.section = si.getSection();
       this.days = si.getDays();
-      
       this.tr = new TimeRange(si.getStart(), si.getEnd());
    }
 
