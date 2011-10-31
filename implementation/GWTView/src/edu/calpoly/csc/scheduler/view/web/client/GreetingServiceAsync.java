@@ -51,7 +51,7 @@ public interface GreetingServiceAsync {
     		throws IllegalArgumentException;
     
 	void rescheduleCourse(ScheduleItemGWT scheduleItem,
-			ArrayList<Integer> days, int startHour, boolean atHalfHour, AsyncCallback<ScheduleItemGWT> callback)
+			ArrayList<Integer> days, int startHour, boolean atHalfHour, AsyncCallback<ArrayList<ScheduleItemGWT>> callback)
 	         throws IllegalArgumentException;
 	void saveInstructor(InstructorGWT instructor, AsyncCallback<Void> asyncCallback);
 }

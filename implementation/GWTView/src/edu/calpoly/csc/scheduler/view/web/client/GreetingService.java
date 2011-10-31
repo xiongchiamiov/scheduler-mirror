@@ -44,7 +44,7 @@ public interface GreetingService extends RemoteService {
 	
 	ArrayList<ScheduleItemGWT> generateSchedule();
 	
-	ScheduleItemGWT rescheduleCourse(ScheduleItemGWT scheduleItem,
+	ArrayList<ScheduleItemGWT> rescheduleCourse(ScheduleItemGWT scheduleItem,
 			ArrayList<Integer> days, int startHour, boolean atHalfHour);
 
 	void saveInstructor(InstructorGWT instructor);

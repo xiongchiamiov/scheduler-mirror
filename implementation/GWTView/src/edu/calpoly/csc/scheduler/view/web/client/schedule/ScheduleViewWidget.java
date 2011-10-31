@@ -621,7 +621,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
   final boolean atHalfHour = rowIsAtHalfHour(row);
   greetingService.rescheduleCourse(scheduleItem, days, startHour, 
    atHalfHour, 
-   new AsyncCallback<ScheduleItemGWT>()
+   new AsyncCallback<ArrayList<ScheduleItemGWT>>()
    {
     @Override
 	public void onFailure(Throwable caught) 
@@ -629,7 +629,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
 	 Window.alert("Failed to retrieve rescheduled item");			
     }
 	@Override
-	public void onSuccess(ScheduleItemGWT rescheduled) 
+	public void onSuccess(ArrayList<ScheduleItemGWT> rescheduled) 
 	{
 	 if(rescheduled == null)
 	 {
@@ -637,8 +637,11 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
 	 }
 	 else
 	 {
-	  scheduleItems.remove(scheduleItem);
-	  scheduleItems.add(rescheduled);
+	  scheduleItems = new ArrayList<ScheduleItemGWT>(); 
+	  for(ScheduleItemGWT schdItem : rescheduled)
+	  {
+	   scheduleItems.add(schdItem);
+	  }
 	  Collections.sort(scheduleItems);
 	 }
      filtersDialog.addItems(scheduleItems);

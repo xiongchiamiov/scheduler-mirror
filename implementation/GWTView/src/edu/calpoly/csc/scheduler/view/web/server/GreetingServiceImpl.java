@@ -238,10 +238,11 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	}
 	
 	
-	public ScheduleItemGWT rescheduleCourse(ScheduleItemGWT scheduleItem,
+	public ArrayList<ScheduleItemGWT> rescheduleCourse(ScheduleItemGWT scheduleItem,
 			ArrayList<Integer> days, int startHour, boolean atHalfHour)
 	{
 	 assert(model != null);
+	 ArrayList<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
 	 ScheduleItem rescheduled;
 	 Course course;
 	 int numberOfDays = days.size();
@@ -273,26 +274,16 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	 
 	 moved = scheduleItems.get(schdItemKey);
 	 schedule.remove(moved);
-	 try
-	 {
-	  rescheduled = schedule.makeItem(course, daysInWeek, startTime);
-	  schedule.add(rescheduled);
-	 }
-	 catch(CouldNotBeScheduledException e)
-	 {
-	  try
-	  {
-	   schedule.add(moved);
-	  }
-	  catch(CouldNotBeScheduledException cnbse)
-	  {
-	   System.out.println("Could not put old item back in");
-	  }
-	  return null;
-	 }
-	 scheduleItems.remove(schdItemKey);
-	 scheduleItems.put(schdItemKey, rescheduled);
-	 return Conversion.toGWT(rescheduled);
+	 rescheduled = schedule.genItem(course, daysInWeek, startTime);
+	 scheduleItems = new HashMap<String, ScheduleItem>();
+	 for(ScheduleItem item : schedule.getItems())
+	 {         
+	  gwtItems.add(Conversion.toGWT(item));
+	  scheduleItems.put(item.getCourse().getDept() + 
+	   item.getCourse().getCatalogNum() + 
+	   item.getSection(), item);
+	 } 
+	 return gwtItems;
 	}
 	
 	@Override
