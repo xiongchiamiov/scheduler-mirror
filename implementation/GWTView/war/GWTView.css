@@ -63,6 +63,12 @@ h1 {
 
 
 /** Editable table */
+.tableColumnCheckBox{
+	margin: 1.5em;	
+}
+
+
+
 .editableTableCell {
   border: 1px solid #BBBBBB;
   padding: 2px;
@@ -91,7 +97,6 @@ h1 {
 	width: 6em;
 	max-width: 6em;
 }
-
 
 
 
