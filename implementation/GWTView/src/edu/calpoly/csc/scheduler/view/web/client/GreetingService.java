@@ -38,7 +38,7 @@ public interface GreetingService extends RemoteService {
 
 	ArrayList<CourseGWT> getCannedCourses();
 
-	void newSchedule();
+	void newSchedule(String schedName);
 
 	void saveCourses(ArrayList<CourseGWT> locations);
 	

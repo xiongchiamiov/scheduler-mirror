@@ -22,7 +22,7 @@ public interface GreetingServiceAsync {
 	void selectSchedule(Integer scheduleID, AsyncCallback<Void> callback) throws IllegalArgumentException;
 		
 
-	void newSchedule(AsyncCallback<Void> callback) throws IllegalArgumentException;
+	void newSchedule(String schedName, AsyncCallback<Void> callback) throws IllegalArgumentException;
 	
 	void getScheduleNames(String username, AsyncCallback<Map<Integer, String>> callback)
 			throws IllegalArgumentException;
