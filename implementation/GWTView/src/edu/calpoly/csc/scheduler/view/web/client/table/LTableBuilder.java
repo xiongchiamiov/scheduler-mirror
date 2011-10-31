@@ -17,6 +17,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.calpoly.csc.scheduler.view.web.client.GreetingService;
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT.NullGWTDataException;
 
 public class LTableBuilder implements TableBuilder<LocationGWT>{
 	private GreetingServiceAsync service;
@@ -165,20 +166,26 @@ public class LTableBuilder implements TableBuilder<LocationGWT>{
 	@Override
 	public LocationGWT newObject() {
 		LocationGWT loc = new LocationGWT();
-		loc.setAvailability("derp?");
-		loc.setQuarterID("qid?");
+		loc.setAvailability("");
+		loc.setQuarterID("");
+		loc.setBuilding("");
+		loc.setRoom("");
+		loc.setType("");
+		loc.setEquipmentList("");
+		loc.setAvailability("");
+		loc.verify();
 		return loc;
 	}
 
 	@Override
 	public void save(ArrayList<LocationGWT> list) {
 		try {
-			Window.alert("savoijhg");
+//			Window.alert("savoijhg");
 			
 			for (LocationGWT loc : list)
 				loc.verify();
 			
-			Window.alert("now calling saveLocations!");
+//			Window.alert("now calling saveLocations!");
 			
 			service.saveLocations(list, new AsyncCallback<Void>(){
 				public void onFailure(Throwable caught){ 

@@ -3,6 +3,8 @@ package edu.calpoly.csc.scheduler.view.web.shared;
 import java.io.Serializable;
 
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.RootPanel;
 
 
 public class LocationGWT implements Serializable{
@@ -55,31 +57,45 @@ public class LocationGWT implements Serializable{
     * Represents a location's availabilty throughout the week.
 	 */
 //   private WeekAvail availability;
-	
+
+	static void printException(Throwable e) {
+		String st = e.getClass().getName() + ": " + e.getMessage();
+		for (StackTraceElement ste : e.getStackTrace())
+			st += "<br />" + ste.toString();
+		RootPanel.get().clear();
+		RootPanel.get().add(new HTML(st));
+	}
+
 	public void verify() {
-		if (building == null){
-			Window.alert("derp");
-			throw new NullGWTDataException();
+		try {
+			if (building == null){
+				Window.alert("derp");
+				throw new NullGWTDataException();
+			}
+			if (room == null){
+				Window.alert("derp2");
+				throw new NullGWTDataException();
+			}
+			if (type == null){
+				Window.alert("derp3");
+				throw new NullGWTDataException();
+			}
+			if (equipmentList == null){
+//				Window.alert("derp4");
+//				throw new NullGWTDataException();
+				equipmentList = "";
+			}
+			if (availability == null) {
+				Window.alert("derp5");
+				throw new NullGWTDataException();
+			}
+			if (quarterID == null) {
+				Window.alert("derp6");
+				throw new NullGWTDataException();
+			}
 		}
-		if (room == null){
-			Window.alert("derp2");
-			throw new NullGWTDataException();
-		}
-		if (type == null){
-			Window.alert("derp3");
-			throw new NullGWTDataException();
-		}
-		if (equipmentList == null){
-			Window.alert("derp4");
-			throw new NullGWTDataException();
-		}
-		if (availability == null) {
-			Window.alert("derp5");
-			throw new NullGWTDataException();
-		}
-		if (quarterID == null) {
-			Window.alert("derp6");
-			throw new NullGWTDataException();
+		catch (Exception e) {
+			printException(e);
 		}
 	}
 
