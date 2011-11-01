@@ -8,6 +8,7 @@ import edu.calpoly.csc.scheduler.model.db.cdb.CourseDB;
 import edu.calpoly.csc.scheduler.model.db.idb.InstructorDB;
 import edu.calpoly.csc.scheduler.model.db.ldb.LocationDB;
 import edu.calpoly.csc.scheduler.model.db.sdb.ScheduleDB;
+import edu.calpoly.csc.scheduler.model.schedule.Schedule;
 
 /**
  * This class holds all of the individual database objects. The view will
@@ -35,9 +36,9 @@ public class Database
 
    /** The current schedule id */
    private int          scheduleID;
-   
+
    /** The current department */
-   private String dept;
+   private String       dept;
 
    /**
     * STEP 1 This constructor will create the SQLDB object.
@@ -61,7 +62,7 @@ public class Database
     */
    public HashMap<Integer, String> getSchedules(String dept)
    {
-	   this.dept = dept;
+      this.dept = dept;
       HashMap<Integer, String> schedules = new HashMap<Integer, String>();
       ResultSet rs = sqldb.getSchedulesByDept(dept);
       try
@@ -81,25 +82,50 @@ public class Database
    /**
     * STEP 4 Initialize databases with given schedule id
     */
+   public void openDB(int scheduleid, String scheduleName)
+   {
+      int realid = scheduleid;
+      Schedule temp = new Schedule();
+      temp.setId(scheduleid);
+      temp.setName(scheduleName);
+      if (!(sqldb.doesScheduleExist(temp)))
+      {
+         System.out.println("Creating new schedule");
+         scheduleDB = new ScheduleDB(sqldb, dept);
+         realid = scheduleDB.createNewSchedule(scheduleName);
+         System.out.println("New schedule id: " + realid);
+      }
+      else
+      {
+         System.out.println("Using existing schedule");
+         scheduleDB = new ScheduleDB(sqldb, realid, dept);
+      }
+      instructorDB = new InstructorDB(sqldb, realid);
+      courseDB = new CourseDB(sqldb, realid);
+      locationDB = new LocationDB(sqldb, realid);
+      this.scheduleID = realid;
+   }
+   @Deprecated
    public void openDB(int scheduleid)
    {
-	   int realid = scheduleid;
-	  if(!(sqldb.doesScheduleIDExist(scheduleid)))
-	  {
-		  System.out.println("Creating new schedule");
-		  scheduleDB = new ScheduleDB(sqldb, dept);
-		  realid = scheduleDB.createNewSchedule(dept);
-		  System.out.println("New schedule id: " + realid);
-	  }
-	  else
-	  {
-		  System.out.println("Using existing schedule");
-		  scheduleDB = new ScheduleDB(sqldb, realid, dept);
-	  }
-	  instructorDB = new InstructorDB(sqldb, realid);
-	  courseDB = new CourseDB(sqldb, realid);
-	  locationDB = new LocationDB(sqldb, realid);
-	  
+      int realid = scheduleid;
+      if (!(sqldb.doesScheduleIDExist(scheduleid)))
+      {
+         System.out.println("Creating new schedule");
+         scheduleDB = new ScheduleDB(sqldb, dept);
+         //Broken
+         realid = scheduleDB.createNewSchedule(dept);
+         System.out.println("New schedule id: " + realid);
+      }
+      else
+      {
+         System.out.println("Using existing schedule");
+         scheduleDB = new ScheduleDB(sqldb, realid, dept);
+      }
+      instructorDB = new InstructorDB(sqldb, realid);
+      courseDB = new CourseDB(sqldb, realid);
+      locationDB = new LocationDB(sqldb, realid);
+      this.scheduleID = realid;
    }
 
    /**

@@ -37,6 +37,20 @@ public class InstructorDB implements DatabaseAPI<Instructor>
       pullData();
       return data;
    }
+   
+   @Override
+   public void saveData(Instructor data)
+   {
+      data.verify();
+      if(sqldb.doesInstructorExist(data))
+      {
+         editData(data);
+      }
+      else
+      {
+         addData(data);
+      }
+   }
 
    private void initDB()
    {

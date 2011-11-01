@@ -10,6 +10,12 @@ public interface DatabaseAPI<T>
    // Pulls data from SQLDB, getting the same data that is on the server
    public void pullData();
 
+   /**
+    * Use this method to save all data. It will insert new items into the
+    * database or edit items in the database if the data already exists.
+    */
+   public void saveData(T data);
+
    // Adds an item to the database
    public void addData(T data);
 

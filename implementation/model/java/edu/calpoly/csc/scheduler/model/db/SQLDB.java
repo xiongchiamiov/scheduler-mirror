@@ -11,6 +11,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
+import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
+import edu.calpoly.csc.scheduler.model.db.ldb.Location;
+import edu.calpoly.csc.scheduler.model.schedule.Schedule;
 
 /**
  * This class provides for direct access to a MySQL database. Though it a user
@@ -660,6 +663,7 @@ public class SQLDB {
       return rs;
 	}
 	
+	@Deprecated
 	public boolean doesScheduleIDExist(int scheduleid)
 	{
 		System.out.println("Does " + scheduleid + " exist?");
@@ -691,5 +695,93 @@ public class SQLDB {
 	    	  System.out.println("no, sqlexception");
 	         return false;
 	      }
+	}
+	
+	//Does ___ exist methods
+	public boolean doesCourseExist(Course data)
+	{
+	   //Check if dept, catalognum, and type already exist
+	   String query = "select dept, catalognum, type from schedules where dept = ? and catalognum = ? and type = ?";
+	   PreparedStatement stmt = getPrepStmt(query);
+	   try
+      {
+         stmt.setString(1, data.getDept());
+         stmt.setInt(2, data.getCatalogNum());
+         stmt.setString(3, data.getType().toString());
+      }
+      catch (SQLException e)
+      {
+         e.printStackTrace();
+      }
+	   return doesItExist(stmt);
+	}
+	
+	public boolean doesInstructorExist(Instructor data)
+	{
+	   //Check if userid already exists
+	   String query = "select userid from instructors where userid = ?";
+	   PreparedStatement stmt = getPrepStmt(query);
+	   try
+	   {
+	      stmt.setString(1, data.getUserID());
+	   }
+	   catch (SQLException e)
+	   {
+	      e.printStackTrace();
+	   }
+	   return doesItExist(stmt);
+	}
+	
+	public boolean doesLocationExist(Location data)
+	{
+	   //Check if building and room already exist
+	   String query = "select building, room from instructors where building = ? and room = ?";
+	   PreparedStatement stmt = getPrepStmt(query);
+	   try
+	   {
+	      stmt.setString(1, data.getBuilding());
+	      stmt.setString(1, data.getRoom());
+	   }
+	   catch (SQLException e)
+	   {
+	      e.printStackTrace();
+	   }
+	   return doesItExist(stmt);
+	}
+	
+	public boolean doesScheduleExist(Schedule data)
+	{
+	   //Check if scheduleid and name already exist
+	   String query = "select scheduleid, name from schedules where scheduleid = ? and name = ?";
+	   PreparedStatement stmt = getPrepStmt(query);
+	   try
+	   {
+	      stmt.setInt(1, data.getId());
+	      stmt.setString(1, data.getName());
+	   }
+	   catch (SQLException e)
+	   {
+	      e.printStackTrace();
+	   }
+	   return doesItExist(stmt);
+	}
+	
+	private boolean doesItExist(PreparedStatement stmt)
+	{
+	   ResultSet rs;
+      try {
+         rs = stmt.executeQuery();
+         if(rs.next())
+         {
+            return true;
+         }
+         else
+         {
+            return false;
+         }
+      } catch (SQLException e) {
+         e.printStackTrace();
+         return false;
+      }
 	}
 }

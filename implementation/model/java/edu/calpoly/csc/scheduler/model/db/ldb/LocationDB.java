@@ -46,7 +46,20 @@ public class LocationDB implements DatabaseAPI<Location>
       pullData();
       return data;
    }
-
+   
+   @Override
+   public void saveData(Location data)
+   {
+      data.verify();
+      if(sqldb.doesLocationExist(data))
+      {
+         editData(data);
+      }
+      else
+      {
+         addData(data);
+      }
+   }
    private void initDB()
    {
       data = new ArrayList<Location>();

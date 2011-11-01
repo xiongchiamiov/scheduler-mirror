@@ -42,6 +42,20 @@ public class CourseDB implements DatabaseAPI<Course>
       pullData();
       return data;
    }
+   
+   @Override
+   public void saveData(Course data)
+   {
+      data.verify();
+      if(sqldb.doesCourseExist(data))
+      {
+         editData(data);
+      }
+      else
+      {
+         addData(data);
+      }
+   }
 
    private void initDB()
    {
