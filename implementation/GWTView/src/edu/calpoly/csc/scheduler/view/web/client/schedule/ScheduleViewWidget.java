@@ -37,9 +37,11 @@ import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 
 /**
- * This class generates a widget that displays a schedule.
+ * This class generates a widget that displays a schedule in calendar form. It also has a listbox of
+ * available classes and another listbox of classes to be included in the schedule. The user may drag items
+ * between these lists and the calendar.
  * 
- * @author Mike McMahon
+ * @author Mike McMahon, Tyler Yero
  */
 public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 	private GreetingServiceAsync greetingService;
@@ -53,8 +55,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 	private static final int numberOfTimeSlots = 30;
 	private static final int numberOfDays = 5;
 
-	// For each day, this variable holds the number of columns spanned by that
-	// day
+	// For each day, this variable holds the number of columns spanned by that day
 	private ArrayList<Integer> dayColumnSpans;
 	private FiltersViewWidget filtersDialog = new FiltersViewWidget();
 	PickupDragController dragController = new PickupDragController(
@@ -272,8 +273,8 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 	/**
 	 * Expands a day column to a span that is one bigger than its previous span.
 	 * 
-	 * @param The
-	 *            day to expand.
+	 * @param day
+	 *            The day to expand.
 	 */
 	private void expandDay(int day) {
 		int i, j, col;
@@ -400,18 +401,18 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 						if (result != null) {
 							// Sort result by start times in ascending order
 							Collections.sort(result);
-							// Reset column and row spans, remove any items
-							// already placed
+							
+							// Reset column and row spans, remove any items already placed
 							resetSchedule();
 							scheduleItems = new ArrayList<ScheduleItemGWT>();
 							for (ScheduleItemGWT item : result) {
 								scheduleItems.add(item);
 							}
-							// Add the attributes of the retrieved items to the
-							// filters list
+							
+							// Add the attributes of the retrieved items to the filters list
 							filtersDialog.addItems(scheduleItems);
-							// Place schedule items with any previously set
-							// filters
+							
+							// Place schedule items with any previously set filters
 							filterScheduleItems(searchBox.getText());
 						}
 					}
@@ -505,6 +506,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 				filtersDialog.center();
 			}
 		}));
+		
 		/*
 		 * Causes this class' onClose method to be called when the filters
 		 * dialog is closed
@@ -550,26 +552,29 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 
 	private void layoutBoxesAndSchedule() {
 		boxesAndSchedulePanel = new HorizontalPanel();
-
+		
 		verticalPanelAvailable = new VerticalPanel();
 		labelAvailableList = new Label("Available");
-		labelIncludedList = new Label("Included");
-		verticalPanelIncluded = new VerticalPanel();
-
 		listBoxAvailable = new ListBox(true);
-		listBoxIncluded = new ListBox(true);
-		verticalPanelAvailable.add(labelAvailableList);
-		verticalPanelIncluded.add(labelIncludedList);
-		verticalPanelAvailable.add(listBoxAvailable);
-		verticalPanelIncluded.add(listBoxIncluded);
-
 		listBoxAvailable.setVisibleItemCount(10);
+		
+		verticalPanelAvailable.add(labelAvailableList);
+		verticalPanelAvailable.add(listBoxAvailable);
+		
+		verticalPanelIncluded = new VerticalPanel();
+		labelIncludedList = new Label("Included");			
+		listBoxIncluded = new ListBox(true);
 		listBoxIncluded.setVisibleItemCount(10);
+		
+		verticalPanelIncluded.add(labelIncludedList);		
+		verticalPanelIncluded.add(listBoxIncluded);
+				
 		addCoursesToBoxes();
-		boxesAndSchedulePanel
-				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		
+		boxesAndSchedulePanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		boxesAndSchedulePanel.add(verticalPanelAvailable);
 		boxesAndSchedulePanel.add(verticalPanelIncluded);
+		
 		layoutDaysAndTimes();
 		mainPanel.add(boxesAndSchedulePanel);
 	}
