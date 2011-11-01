@@ -62,6 +62,9 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 			RootPanel.get(), false);
 	TextBox searchBox;
 
+	private DualListBox dualListBoxCourses;
+	private ListBoxDragController listBoxDragController;
+	
 	private VerticalPanel verticalPanelAvailable;
 	private VerticalPanel verticalPanelIncluded;
 	private Label labelAvailableList;
@@ -538,10 +541,20 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 							System.out.println(result.size());
 							for (CourseGWT course : result) {
 								availableCourses.add(course);
+								
+								dualListBoxCourses.addLeft(course.getDept()
+										+ course.getCatalogNum());
+								
 								listBoxAvailable.addItem(course.getDept()
 										+ course.getCatalogNum());
 							}
+							
 							includedCourses.add(availableCourses.get(0));
+							
+							dualListBoxCourses.addRight(includedCourses.get(0)
+									.getDept()
+									+ includedCourses.get(0).getCatalogNum());
+							
 							listBoxIncluded.addItem(includedCourses.get(0)
 									.getDept()
 									+ includedCourses.get(0).getCatalogNum());
@@ -553,6 +566,13 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 	private void layoutBoxesAndSchedule() {
 		boxesAndSchedulePanel = new HorizontalPanel();
 		
+		dualListBoxCourses = new DualListBox(10, "10em");
+		listBoxDragController = new ListBoxDragController(dualListBoxCourses);
+		
+		// add some items to the list
+
+	    boxesAndSchedulePanel.add(dualListBoxCourses);
+	    
 		verticalPanelAvailable = new VerticalPanel();
 		labelAvailableList = new Label("Available");
 		listBoxAvailable = new ListBox(true);
@@ -572,8 +592,8 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 		addCoursesToBoxes();
 		
 		boxesAndSchedulePanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-		boxesAndSchedulePanel.add(verticalPanelAvailable);
-		boxesAndSchedulePanel.add(verticalPanelIncluded);
+		//boxesAndSchedulePanel.add(verticalPanelAvailable);
+		//boxesAndSchedulePanel.add(verticalPanelIncluded);
 		
 		layoutDaysAndTimes();
 		mainPanel.add(boxesAndSchedulePanel);

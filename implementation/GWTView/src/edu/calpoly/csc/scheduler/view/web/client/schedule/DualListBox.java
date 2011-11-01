@@ -11,8 +11,6 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import com.allen_sauer.gwt.dnd.client.DragController;
-
 import java.util.ArrayList;
 
 /**
@@ -114,8 +112,21 @@ public class DualListBox extends AbsolutePanel {
   public void addLeft(Widget widget) {
     left.add(widget);
   }
+	  
+  /**
+   * Adds an widget to the right list box.
+   *
+   * @param widget the text of the item to be added
+   */
+  public void addRight(Widget widget) {
+     right.add(widget);
+  }
+  
+  public void addRight(String string) {
+	 right.add(string);
+  }
 
-  public DragController getDragController() {
+  public ListBoxDragController getDragController() {
     return dragController;
   }
 
