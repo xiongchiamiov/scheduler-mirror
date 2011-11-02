@@ -740,7 +740,7 @@ public class SQLDB {
 	   try
 	   {
 	      stmt.setString(1, data.getBuilding());
-	      stmt.setString(1, data.getRoom());
+	      stmt.setString(2, data.getRoom());
 	   }
 	   catch (SQLException e)
 	   {
@@ -757,7 +757,7 @@ public class SQLDB {
 	   try
 	   {
 	      stmt.setInt(1, data.getId());
-	      stmt.setString(1, data.getName());
+	      stmt.setString(2, data.getName());
 	   }
 	   catch (SQLException e)
 	   {
@@ -788,8 +788,8 @@ public class SQLDB {
 	/**
 	 * Copies all data from "master" tables to a new user's tables
 	 */
-//	public void copyAllData(String newUserID, int masterScheduleID)
-//	{
-//		String 
-//	}
+	public void copyAllData(String newUserID, int masterScheduleID)
+	{
+		String copystring = "";
+	}
 }
