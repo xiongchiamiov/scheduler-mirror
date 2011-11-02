@@ -3,7 +3,7 @@ first, make sure you have the GWT plugin for eclipse.
 checkout the project
 copy the file ".project template" and name it to ".project"
 copy the file ".classpath template" and name it to ".classpath"
-import the GWTView project into eclipse (import -> existing projects)
+import the GWTView project into eclipse (import -> General -> existing projects)
 do a clean and a build. you should get a fuckton of errors about various classes not found. this is normal.
 right click on the GWTView project, hit properties
 under java build path screen's source tab, hit Link Source
