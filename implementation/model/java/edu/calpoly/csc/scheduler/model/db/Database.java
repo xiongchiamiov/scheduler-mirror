@@ -55,7 +55,8 @@ public class Database
     */
    public String getDept(String userid)
    {
-      return sqldb.getDeptByUserID(userid);
+	   this.dept = sqldb.getDeptByUserID(userid);
+      return dept;
    }
 
    /**
@@ -92,6 +93,14 @@ public class Database
       if (!(sqldb.doesScheduleExist(temp)))
       {
          System.out.println("Creating new schedule");
+         if(dept == null)
+         {
+        	 System.err.println("ERROR: DEPT IS NULL");
+         }
+         else
+         {
+        	 System.out.println("Using dept: " + dept);
+         }
          scheduleDB = new ScheduleDB(sqldb, this.dept);
          realid = scheduleDB.createNewSchedule(scheduleName);
          System.out.println("New schedule id: " + realid);

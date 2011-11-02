@@ -765,6 +765,22 @@ public class SQLDB {
 	   }
 	   return doesItExist(stmt);
 	}
+
+	public boolean doesUserExist(String username)
+	{
+		//Check if username already exists
+		String query = "select userid from users where userid = ?";
+		PreparedStatement stmt = getPrepStmt(query);
+		try
+		{
+			stmt.setString(1, username);
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		return doesItExist(stmt);
+	}
 	
 	private boolean doesItExist(PreparedStatement stmt)
 	{
@@ -788,8 +804,13 @@ public class SQLDB {
 	/**
 	 * Copies all data from "master" tables to a new user's tables
 	 */
-	public void copyAllData(String newUserID, int masterScheduleID)
+	public void copyAllData(String newUserID)
 	{
-		String copystring = "";
+		//Make new user
+		
+		//Make new schedule
+		
+		//Copy all data
+		String coursecopy = "insert into courses";
 	}
 }
