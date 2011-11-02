@@ -284,9 +284,17 @@ public class CTableBuilder implements TableBuilder<CourseGWT>{
 		list.add(new ColumnObject<CourseGWT>(maxEnroll, TableConstants.COURSE_MAX_ENROLLMENT));
 		
 		
-		// lab		    
+		// lab
+		ArrayList<String> labOptions = new ArrayList<String>();
+		for(CourseGWT c : dataProvider.getList()){
+			if(c.getType().equals(TableConstants.LAB) && 
+					!c.getDept().trim().equals("")){
+				labOptions.add(c.getDept().trim() + c.getCatalogNum());
+			}
+		}
+		SelectionCell selectionCellLab = new SelectionCell(labOptions);
 		Column<CourseGWT, String> lab = 
-				new Column<CourseGWT, String>(new EditTextCell()) {
+				new Column<CourseGWT, String>(selectionCellLab) {
 		      @Override
 		      public String getValue(CourseGWT course) {
 		        return "";//course.getLab();
