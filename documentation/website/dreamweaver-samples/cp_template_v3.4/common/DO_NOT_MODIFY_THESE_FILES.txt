@@ -1,0 +1,6 @@
+Do not modify or add to the files within the "common" folder.
+
+Make CSS changes in the print.css and the screen.css files in the "css" folder
+
+Add new images in the "images" folder.
+Do not add images to the "common" folder.

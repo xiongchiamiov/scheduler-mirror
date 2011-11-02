@@ -1,0 +1,86 @@
+Processing development
+Formatting for html; be patient, this may take a while for large files.
+Loading 00fink-vars...
+Loading /sw/etc/emacs22/site-start.d/50sml-mode.el (source)...
+Mark set
+Replaced 1 occurrence
+Mark set
+Mark set
+Replaced 1 occurrence
+Wrote /Users/gfisher/work/scheduler/documentation/website/content/development.html
+Processing examples
+Formatting for html; be patient, this may take a while for large files.
+Loading 00fink-vars...
+Loading /sw/etc/emacs22/site-start.d/50sml-mode.el (source)...
+Mark set
+Replaced 1 occurrence
+Mark set
+Mark set
+Replaced 1 occurrence
+Wrote /Users/gfisher/work/scheduler/documentation/website/content/examples.html
+Processing index
+Formatting for html; be patient, this may take a while for large files.
+Loading 00fink-vars...
+Loading /sw/etc/emacs22/site-start.d/50sml-mode.el (source)...
+Mark set
+Replaced 1 occurrence
+Mark set
+Mark set
+Replaced 1 occurrence
+Wrote /Users/gfisher/work/scheduler/documentation/website/content/index.html
+Processing people
+Formatting for html; be patient, this may take a while for large files.
+Loading 00fink-vars...
+Loading /sw/etc/emacs22/site-start.d/50sml-mode.el (source)...
+Mark set
+Replaced 1 occurrence
+Mark set
+Mark set
+Replaced 1 occurrence
+Wrote /Users/gfisher/work/scheduler/documentation/website/content/people.html
+Processing planning
+Formatting for html; be patient, this may take a while for large files.
+Loading 00fink-vars...
+Loading /sw/etc/emacs22/site-start.d/50sml-mode.el (source)...
+Mark set
+Replaced 1 occurrence
+Mark set
+Mark set
+Replaced 1 occurrence
+Wrote /Users/gfisher/work/scheduler/documentation/website/content/planning.html
+Processing wiki
+Formatting for html; be patient, this may take a while for large files.
+Loading 00fink-vars...
+Loading /sw/etc/emacs22/site-start.d/50sml-mode.el (source)...
+Mark set
+Replaced 1 occurrence
+Mark set
+Mark set
+Replaced 1 occurrence
+Wrote /Users/gfisher/work/scheduler/documentation/website/content/wiki.html
+Syncing with scheduler VM
+sending incremental file list
+documentation/website/development.html
+documentation/website/examples.html
+documentation/website/index.html
+documentation/website/people.html
+documentation/website/planning.html
+documentation/website/wiki.html
+documentation/website/content/
+documentation/website/content/.make.log
+documentation/website/content/development.html
+documentation/website/content/development.html~
+documentation/website/content/examples.html
+documentation/website/content/examples.html~
+documentation/website/content/index.html
+documentation/website/content/index.html~
+documentation/website/content/people.html
+documentation/website/content/people.html~
+documentation/website/content/planning.html
+documentation/website/content/planning.html~
+documentation/website/content/planning.me
+documentation/website/content/wiki.html
+documentation/website/content/wiki.html~
+
+sent 10169 bytes  received 1359 bytes  1773.54 bytes/sec
+total size is 2216588  speedup is 192.28

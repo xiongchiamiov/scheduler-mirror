@@ -1,0 +1,165 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-us"><!-- InstanceBegin template="/Templates/master_template.dwt" codeOutsideHTMLIsLocked="false" -->
+<head>
+<!--
+Cal Poly Web Template v3.4
+
+Code developed by
+Information Technology Services
+California Polytechnic State University
+San Luis Obispo, CA 93407
+-->
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<!-- InstanceBeginEditable name="doctitle" -->
+<title>Page Title - Department - Cal Poly</title>
+<!-- InstanceEndEditable -->
+<meta name="codebase" content="3.4" />
+<meta name="layout" content="cp template" />
+<meta name="author" content="author's name here" />
+<meta name="keywords" content="keywords go here" />
+<meta name="description" content="department's description goes here" />
+<!--Externally linked stylesheet that stylizes the template-->
+<link href="../common/css/cp_screen_3.4.css" rel="stylesheet" type="text/css" media="screen" />
+<link href="../common/css/cp_print_3.4.css" rel="stylesheet" type="text/css" media="print" />
+<link href="../css/screen.css" rel="stylesheet" type="text/css" media="screen" />
+<link href="../css/print.css" rel="stylesheet" type="text/css" media="print" />
+<!-- InstanceBeginEditable name="head" --><!-- TemplateBeginEditable name="head" --><!-- TemplateEndEditable --><!-- InstanceEndEditable -->
+<!--Favicon-->
+<link rel="shortcut icon" href="../common/images/favicon.ico" />
+</head>
+<body>
+<!--Container div that encloses the whole template-->
+<div id="container">
+  <!--This skiplink provides easier accessibility-->
+  <div id="skiplink"><a href="#content">Skip to Content</a></div>
+  <!--Header-->
+  <div id="header">
+    <!--Cal Poly Logo-->
+    <div id="cplogo"><a href="http://www.calpoly.edu/"><img src="../common/images/header/cp_logo.gif" alt="Cal Poly" title="Go to Cal Poly Home" width="166" height="60" /></a></div>
+    <!--The Content Area of the Header-->
+    <div id="headercontent">
+      <!--Dept Logo-->
+      <a href="index.html"><img src="../common/images/header/placeholder_logo.gif" alt="dept logo" title="Go to department home page" id="headerimage" height="50" width="50" /></a>
+      <!--Dept Name-->
+      <div id="deptname">
+        <p id="department_name"><a href="../index.html">Department Name</a></p>
+        <!--Dept Info-->
+        <p id="optional_deptinfo">Optional Department Information</p>
+      </div>
+    </div>
+    <!--Search Box-->
+    <div id="search">
+      <form id="gs" method="get" title="Search Form" action="http://search.calstate.edu/search">
+        <div>
+          <input type="hidden" name="site" value="slo-CalPoly" />
+          <input type="hidden" name="output" value="xml_no_dtd" />
+          <input type="hidden" name="client" value="slo-CalPoly" />
+          <input type="hidden" name="proxystylesheet" value="slo-CalPoly" />
+          <input type="hidden" name="sitesearch" value="departmentURL.calpoly.edu" />
+          <label for="q">Search Department Name</label>
+          <br />
+          <input type="text" name="q" id="q" title="Search Text" size="12" maxlength="256" alt="Search Text" />
+          <input type="image" name="submit" id="submit" src="../common/images/utli_search/search.png" alt="Go" title="Submit Search Query" />
+        </div>
+      </form>
+    </div>
+    <!--California Polytechnic State University-->
+    <div id="cp">
+      <p>California Polytechnic State University</p>
+    </div>
+  </div>
+  <!--End Header-->
+  <!--Main Image-->
+  <div id="main-image"></div>
+  <!-- InstanceBeginEditable name="maincontent" -->
+  <!--Left Navigation-->
+  <div id="leftnav">
+    <!--For accessibility reasons, this "Navigation" text has been added for readability for screen readers-->
+    <h1>Navigation</h1>
+    <!-- #BeginLibraryItem "/Library/leftnav.lbi" --><h2>Menu Header (h2)</h2>
+<ul>
+  <li><a href="#">First-level link</a></li>
+  <li><a href="Copy of 2col_template.dwt">First-level link with two lines of text</a></li>
+  <li><a href="#">First-level link</a></li>
+</ul>
+<h2><a href="#">Menu Header with two lines of text (h2)</a></h2>
+<ul>
+  <li><a href="#">First-level link</a></li>
+  <li><a href="#">First-level link </a>
+    <ul>
+      <li><a href="#">Sub-level indented link</a></li>
+      <li><a href="#">Sub-level indented link with two lines of text</a></li>
+      <li><a href="#">Sub-level indented link</a>
+        <ul>
+          <li><a href="#">Third-level indented link</a></li>
+          <li><a href="#">Third-level indented link with two lines</a></li>
+          <li><a href="#">Third-level indented link</a></li>
+        </ul>
+      </li>
+      <li><a href="#">Sub-level indented link</a></li>
+      <li><a href="#">Sub-level indented link</a></li>
+    </ul>
+  </li>
+</ul>
+<!-- #EndLibraryItem --><!--Nav Content Area 1-->
+    <div id="navcontent1"> <!-- TemplateBeginEditable name="navcontent1" --><!-- TemplateEndEditable --> </div>
+  </div>
+  <!--Defines 2-Column Layout-->
+  <div id="content-2col">
+    <!--Breadcrumb-->
+    <div id="breadcrumb"><!-- #BeginLibraryItem "/Library/breadcrumb.lbi" --><a href="#">Department Name</a>&nbsp; <!-- #EndLibraryItem --><!-- TemplateBeginEditable name="breadcrumb" -->&gt; Page Title<!-- TemplateEndEditable --></div>
+    <!--Begin Main Body Content-->
+    <div id="content"> <!-- TemplateBeginEditable name="content" -->
+      <h1>Heading 1 - to be used for Page Titles</h1>
+      <p><img src="../images/float-right-example.jpg" alt="image floated right" width="150" height="212" class="imageright" title="Example of an image that is floated to the right side" />Every page should have a Page Title using Heading 1.</p>
+      <p><a href="http://warc.calpoly.edu/universityid/templates/instructions.html">Instructions for editing the Cal Poly Web template</a> are available online.</p>
+      <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</p>
+      <h2>Heading 2 - Section Headings</h2>
+      <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.</p>
+      <img src="../images/float-left-example.jpg" alt="image floated left" width="150" height="212" class="imageleft" title="Example of an image that is floated to the left side" />
+      <h3>Heading 3 - Sub-section Headings </h3>
+      <p> This is what standard paragraph text looks like. <a href="#">Linked text will look like this</a>. <em>Emphasized text will look like this</em>. Here's an example of <strong>strong (bolded) text</strong>. </p>
+      <p>Dolor sit  adipiscing elit. Vestibulum  pharetra, risus quis iaculis adipiscing, est mauris facilisis erat, ut  cursus nisi ligula et risus. Proin egestas orci eu nisl. Nunc elit. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Cras commodo  loborts tortor. Phasellus ultricies est sit amet risus.</p>
+      <p> Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Vestibulum  pharetra, risus quis iaculis adipiscing, est mauris facilisis erat, ut  cursus nisi ligula et risus. Proin egestas orci eu nisl. Nunc elit.  Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Cras commodo loborts tortor.</p>
+      <p>&nbsp;</p>
+      <h3>Additional sample content can be found in the template root folder (see links below)</h3>
+      <ul>
+        <li><a href="../sample_content.html">Text and Image Styles (sample_content.html)</a></li>
+        <li><a href="../sample_forms.html">Form Styles (sample_forms.html)</a></li>
+        <li><a href="../sample_tables.html">Table Styles (sample_tables.html)</a></li>
+      </ul>
+      <!-- TemplateEndEditable --> </div>
+    <!--End Main Body Content-->
+  </div>
+  <!-- InstanceEndEditable -->
+  <!--Footer-->
+  <div id="footer">
+    <!--Footer Gold Bar Links-->
+    <div id="footer_links">
+      <p> <a href="http://www.calpoly.edu/" title="Cal Poly Home">CP Home</a> <span class="textBullet">&bull;</span> <a href="http://www.calpoly.edu/cpfindit.html" title="Cal Poly Find-It, Directories and Search">CP Find It</a> </p>
+      <p> <a href="http://get.adobe.com/reader/" title="Download Adobe Reader for viewing PDFs">Get Adobe Reader</a> <span class="textBullet">&bull;</span> <a href="http://office.microsoft.com/en-us/downloads/default.aspx" title="Microsoft Office Converters &amp; Viewers">Microsoft Viewers</a> </p>
+    </div>
+    <!--Footer Dept Links-->
+    <div id="footer_deptlinks">
+     <div><!--<p>Footer content top left</p>--></div>
+      <ul>
+        <li class="removeBullet"><a href="#">Department Link 1</a></li>
+        <li><a href="#">Department Link 2</a></li>
+        <li><a href="#">Department Link 3</a></li>
+      </ul>
+      <div><!--<p>Footer content bottom left</p>--></div>
+      <p>Last Update: <!-- InstanceBeginEditable name="lastupdate" -->mm/dd/yyyy<!-- InstanceEndEditable --></p>
+    </div>
+    <!--Footer Dept Info-->
+    <div id="footer_deptinfo">
+      <p>Department Name<br />
+        California Polytechnic State University<br />
+        San Luis Obispo, CA 93407<br />
+        805.756.XXXX<br />
+        <a href="mailto:email@calpoly.edu">email@calpoly.edu</a></p>
+    </div>
+  </div>
+  <!--End Footer-->
+</div>
+</body>
+<!-- InstanceEnd --></html>

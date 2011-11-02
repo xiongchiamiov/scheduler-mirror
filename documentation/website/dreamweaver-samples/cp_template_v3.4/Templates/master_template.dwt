@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-us">
+<head>
+<!--
+Cal Poly Web Template v3.4
+
+Code developed by
+Information Technology Services
+California Polytechnic State University
+San Luis Obispo, CA 93407
+-->
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<!-- TemplateBeginEditable name="doctitle" -->
+<title>Page Title - Department - Cal Poly</title>
+<!-- TemplateEndEditable -->
+<meta name="codebase" content="3.4" />
+<meta name="layout" content="cp template" />
+<meta name="author" content="author's name here" />
+<meta name="keywords" content="keywords go here" />
+<meta name="description" content="department's description goes here" />
+<!--Externally linked stylesheet that stylizes the template-->
+<link href="../common/css/cp_screen_3.4.css" rel="stylesheet" type="text/css" media="screen" />
+<link href="../common/css/cp_print_3.4.css" rel="stylesheet" type="text/css" media="print" />
+<link href="../css/screen.css" rel="stylesheet" type="text/css" media="screen" />
+<link href="../css/print.css" rel="stylesheet" type="text/css" media="print" />
+<!-- TemplateBeginEditable name="head" --><!-- TemplateEndEditable -->
+<!--Favicon-->
+<link rel="shortcut icon" href="../common/images/favicon.ico" />
+</head>
+<body>
+<!--Container div that encloses the whole template-->
+<div id="container">
+  <!--This skiplink provides easier accessibility-->
+  <div id="skiplink"><a href="#content">Skip to Content</a></div>
+  <!--Header-->
+  <div id="header">
+    <!--Cal Poly Logo-->
+    <div id="cplogo"><a href="http://www.calpoly.edu/"><img src="../common/images/header/cp_logo.gif" alt="Cal Poly" title="Go to Cal Poly Home" width="166" height="60" /></a></div>
+    <!--The Content Area of the Header-->
+    <div id="headercontent">
+      <!--Dept Logo-->
+      <a href="index.html"><img src="../common/images/header/placeholder_logo.gif" alt="dept logo" title="Go to department home page" id="headerimage" height="50" width="50" /></a>
+      <!--Dept Name-->
+      <div id="deptname">
+        <p id="department_name"><a href="../index.html">Department Name</a></p>
+        <!--Dept Info-->
+        <p id="optional_deptinfo">Optional Department Information</p>
+      </div>
+    </div>
+    <!--Search Box-->
+    <div id="search">
+      <form id="gs" method="get" title="Search Form" action="http://search.calstate.edu/search">
+        <div>
+          <input type="hidden" name="site" value="slo-CalPoly" />
+          <input type="hidden" name="output" value="xml_no_dtd" />
+          <input type="hidden" name="client" value="slo-CalPoly" />
+          <input type="hidden" name="proxystylesheet" value="slo-CalPoly" />
+          <input type="hidden" name="sitesearch" value="departmentURL.calpoly.edu" />
+          <label for="q">Search Department Name</label>
+          <br />
+          <input type="text" name="q" id="q" title="Search Text" size="12" maxlength="256" alt="Search Text" />
+          <input type="image" name="submit" id="submit" src="../common/images/utli_search/search.png" alt="Go" title="Submit Search Query" />
+        </div>
+      </form>
+    </div>
+    <!--California Polytechnic State University-->
+    <div id="cp">
+      <p>California Polytechnic State University</p>
+    </div>
+  </div>
+  <!--End Header-->
+  <!--Main Image-->
+  <div id="main-image"></div>
+  <!-- TemplateBeginEditable name="maincontent" --><!-- TemplateEndEditable -->
+  <!--Footer-->
+  <div id="footer">
+    <!--Footer Gold Bar Links-->
+    <div id="footer_links">
+      <p> <a href="http://www.calpoly.edu/" title="Cal Poly Home">CP Home</a> <span class="textBullet">&bull;</span> <a href="http://www.calpoly.edu/cpfindit.html" title="Cal Poly Find-It, Directories and Search">CP Find It</a> </p>
+      <p> <a href="http://get.adobe.com/reader/" title="Download Adobe Reader for viewing PDFs">Get Adobe Reader</a> <span class="textBullet">&bull;</span> <a href="http://office.microsoft.com/en-us/downloads/default.aspx" title="Microsoft Office Converters &amp; Viewers">Microsoft Viewers</a> </p>
+    </div>
+    <!--Footer Dept Links-->
+    <div id="footer_deptlinks">
+     <div><!--<p>Footer content top left</p>--></div>
+      <ul>
+        <li class="removeBullet"><a href="#">Department Link 1</a></li>
+        <li><a href="#">Department Link 2</a></li>
+        <li><a href="#">Department Link 3</a></li>
+      </ul>
+      <div><!--<p>Footer content bottom left</p>--></div>
+      <p>Last Update: <!-- TemplateBeginEditable name="lastupdate" -->mm/dd/yyyy<!-- TemplateEndEditable --></p>
+    </div>
+    <!--Footer Dept Info-->
+    <div id="footer_deptinfo">
+      <p>Department Name<br />
+        California Polytechnic State University<br />
+        San Luis Obispo, CA 93407<br />
+        805.756.XXXX<br />
+        <a href="mailto:email@calpoly.edu">email@calpoly.edu</a></p>
+    </div>
+  </div>
+  <!--End Footer-->
+</div>
+</body>
+</html>
