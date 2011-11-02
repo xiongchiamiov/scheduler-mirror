@@ -2,6 +2,12 @@ package edu.calpoly.csc.scheduler.view.web.client.table;
 
 public class TableConstants {
 
+	/** lec lab constants */
+	public static final String LAB = "LAB";
+	
+	public static final String LEC = "LEC";
+	
+	
 	/** Default key */
 	public static final String DEFAULT_KEY = "0";
 	

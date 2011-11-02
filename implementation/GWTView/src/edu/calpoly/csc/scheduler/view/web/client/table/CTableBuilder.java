@@ -6,14 +6,18 @@ import java.util.Vector;
 
 import com.google.gwt.cell.client.EditTextCell;
 import com.google.gwt.cell.client.FieldUpdater;
+import com.google.gwt.cell.client.SelectionCell;
+import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.view.client.ListDataProvider;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.DayGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.WeekGWT;
 
 public class CTableBuilder implements TableBuilder<CourseGWT>{
@@ -26,7 +30,10 @@ public class CTableBuilder implements TableBuilder<CourseGWT>{
 	
 	@Override
 	public ArrayList<ColumnObject<CourseGWT>> getColumns(
-			ListHandler<CourseGWT> sortHandler) {
+			CellTable<CourseGWT> table, ListDataProvider<CourseGWT> dataProvider, ListHandler<CourseGWT> sortHandler) {
+		
+		final ListDataProvider<CourseGWT> fdataProvider = dataProvider;
+		final CellTable<CourseGWT> ftable = table;
 		
 		ArrayList<ColumnObject<CourseGWT>> list = 
 				new ArrayList<ColumnObject<CourseGWT>>();
@@ -75,8 +82,10 @@ public class CTableBuilder implements TableBuilder<CourseGWT>{
 		    		  i = Integer.parseInt(value);
 		    	  }catch(Exception e){}
 		    	  
-		    	  if(i == null){
-		    		  Window.alert(TableConstants.COURSE_CATALOG_NUM + " must be a number. \'" + value + "\' is invalid.");
+		    	  if(i == null || i < 0){
+		    		  object.setCatalogNum(0);
+		    		  ftable.redraw();
+		    		  Window.alert(TableConstants.COURSE_CATALOG_NUM + " must be a positive number. \'" + value + "\' is invalid.");
 		    	  }
 		    	  else{
 		    		  object.setCatalogNum(i);
@@ -130,8 +139,10 @@ public class CTableBuilder implements TableBuilder<CourseGWT>{
 		    		  i = Integer.parseInt(value);
 		    	  }catch(Exception e){}
 		    	  
-		    	  if(i == null){
-		    		  Window.alert(TableConstants.COURSE_WTU + " must be a number. \'" + value + "\' is invalid.");
+		    	  if(i == null || i < 1){
+		    		  object.setWtu(1);
+		    		  ftable.redraw();
+		    		  Window.alert(TableConstants.COURSE_WTU + " must be a positive number non-zero. \'" + value + "\' is invalid.");
 		    	  }
 		    	  else{
 		    		  object.setWtu(i);
@@ -163,11 +174,13 @@ public class CTableBuilder implements TableBuilder<CourseGWT>{
 		    		  i = Integer.parseInt(value);
 		    	  }catch(Exception e){}
 		    	  
-		    	  if(i == null){
-		    		  Window.alert(TableConstants.COURSE_SCU + " must be a number. \'" + value + "\' is invalid.");
+		    	  if(i == null || i < 1){
+		    		  object.setScu(1);
+		    		  ftable.redraw();
+		    		  Window.alert(TableConstants.COURSE_SCU + " must be a positive number non-zero. \'" + value + "\' is invalid.");
 		    	  }
 		    	  else{
-		    		  object.setScu(i);
+		    		  object.setScu(0);
 		    	  }
 		      }
 		});
@@ -196,11 +209,13 @@ public class CTableBuilder implements TableBuilder<CourseGWT>{
 		    		  i = Integer.parseInt(value);
 		    	  }catch(Exception e){}
 		    	  
-		    	  if(i == null){
-		    		  Window.alert(TableConstants.COURSE_NUM_SECTIONS + " must be a number. \'" + value + "\' is invalid.");
+		    	  if(i == null || i < 1){
+		    		  object.setNumSections(1);
+		    		  ftable.redraw();
+		    		  Window.alert(TableConstants.COURSE_NUM_SECTIONS + " must be a positive number non-zero. \'" + value + "\' is invalid.");
 		    	  }
 		    	  else{
-		    		  object.setNumSections(i);
+		    		  object.setNumSections(0);
 		    	  }
 		      }
 		});
@@ -208,9 +223,13 @@ public class CTableBuilder implements TableBuilder<CourseGWT>{
 		list.add(new ColumnObject<CourseGWT>(numSections, TableConstants.COURSE_NUM_SECTIONS));
 		
 		
-		// course type		    
+		// course type
+		ArrayList<String> typeOptions = new ArrayList<String>();
+		typeOptions.add(TableConstants.LEC);
+		typeOptions.add(TableConstants.LAB);
+		SelectionCell selectionCellType = new SelectionCell(typeOptions);
 		Column<CourseGWT, String> type = 
-				new Column<CourseGWT, String>(new EditTextCell()) {
+				new Column<CourseGWT, String>(selectionCellType) {
 		      @Override
 		      public String getValue(CourseGWT course) {
 		        return course.getType();
@@ -251,8 +270,10 @@ public class CTableBuilder implements TableBuilder<CourseGWT>{
 		    		  i = Integer.parseInt(value);
 		    	  }catch(Exception e){}
 		    	  
-		    	  if(i == null){
-		    		  Window.alert(TableConstants.COURSE_MAX_ENROLLMENT + " must be a number. \'" + value + "\' is invalid.");
+		    	  if(i == null || i < 1){
+		    		  object.setMaxEnroll(1);
+		    		  ftable.redraw();
+		    		  Window.alert(TableConstants.COURSE_MAX_ENROLLMENT + " must be a positive number non-zero. \'" + value + "\' is invalid.");
 		    	  }
 		    	  else{
 		    		  object.setMaxEnroll(i);
@@ -308,11 +329,11 @@ public class CTableBuilder implements TableBuilder<CourseGWT>{
 		
 		course.setQuarterID("");
 		course.setScheduleID(0);
-		course.setMaxEnroll(0);
+		course.setMaxEnroll(1);
 		course.setCourseName("");
-		course.setNumSections(0);
-		course.setScu(0);
-		course.setWtu(0);
+		course.setNumSections(1);
+		course.setScu(1);
+		course.setWtu(1);
 		course.setType("");
 		return course;
 	}

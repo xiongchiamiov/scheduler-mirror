@@ -23,11 +23,11 @@ import com.google.gwt.view.client.ListDataProvider;
 public class Table<T> {
 	
 	private VerticalPanel mainPanel;
-	private HorizontalPanel showColPanel;
+	private VerticalPanel showColPanel;
 	private CellTable<T> table;
 	private ListDataProvider<T> dataProvider;
 	private ListHandler<T> sortHandler;
-	private Button saveButton, addButton;
+	private Button saveButton, addButton, filterButton;
 	private TableBuilder<T> builder;
 	
 	public Table(TableBuilder<T> builder){
@@ -43,7 +43,7 @@ public class Table<T> {
 	    table.addColumnSortHandler(sortHandler);
 	    
 	    // hide/show columns
-	    showColPanel = new HorizontalPanel(); 
+	    showColPanel = new VerticalPanel(); 
 	    
 	    // create columns
 	    removeColumn();
@@ -55,12 +55,16 @@ public class Table<T> {
 	    // add button
 	    addButton();
 
+	    // filter button
+	    filterButton();
+	    
 	    // add everything to panel
 	    dataProvider.addDataDisplay(table);
 	    
 	    HorizontalPanel buttonPanel = new HorizontalPanel();
 	    buttonPanel.add(saveButton);
 	    buttonPanel.add(addButton);
+	    buttonPanel.add(filterButton);
 	    buttonPanel.setSpacing(14);
 	    
 	    mainPanel = new VerticalPanel();
@@ -93,16 +97,9 @@ public class Table<T> {
 	 * Add an object to the table
 	 */
 	public void add(T object){
-		
-		ArrayList<T> newList = new ArrayList<T>();
-		newList.add(object);
-		
-		List<T> list = dataProvider.getList();
-		int oldSize = list.size();
-		list.add(object);
-		
-		table.setRowCount(list.size(), true);
-		table.setRowData(oldSize, newList);
+
+		dataProvider.getList().add(0, object);
+		table.redraw();
 	}
 	
 	
@@ -198,7 +195,7 @@ public class Table<T> {
 	 */
 	private void createColumns(){
 		
-		ArrayList<ColumnObject<T>> columnObjs = builder.getColumns(sortHandler);
+		ArrayList<ColumnObject<T>> columnObjs = builder.getColumns(table, dataProvider, sortHandler);
 		
 		for(ColumnObject<T> c : columnObjs){
 			
@@ -211,6 +208,24 @@ public class Table<T> {
 			table.addColumn(column, label);
 		}		
 	}
+	
+	
+	/**
+	 * Filter button
+	 */
+	private void filterButton(){
+		
+		filterButton = new Button("Filter");
+		filterButton.addStyleName("tableButton");
+		
+		filterButton.addClickHandler(new ClickHandler(){
+			public void onClick(ClickEvent event){
+				
+				/** TODO */
+			}
+		});
+	}
+	
 	
 	/**
 	 * Create check box for showing, hiding column
