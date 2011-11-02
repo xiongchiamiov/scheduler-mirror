@@ -8,6 +8,7 @@ import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -54,15 +55,15 @@ public class HomeView extends ScrollPanel {
 		vp.add(new Button("Open", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				int existingScheduleID = Integer.parseInt(listBox.getValue(listBox.getSelectedIndex()));
-				service.openExistingSchedule(existingScheduleID, new AsyncCallback<Void>() {
+				String existingScheduleStr = listBox.getValue(listBox.getSelectedIndex());
+				service.openExistingSchedule(existingScheduleStr, new AsyncCallback<Void>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						// TODO Auto-generated method stub
 						
 					}
 					@Override
-					public void onSuccess(Void result) {
+					public void onSuccess(Void derp) {
 						container.clear();
 						container.add(new QuarterView(container, service));
 					}
@@ -73,38 +74,25 @@ public class HomeView extends ScrollPanel {
 		vp.add(new Button("New Schedule", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				String schedName = Window.prompt("What would you like to name your new schedule?", "");
-				
-				service.openNewSchedule(schedName, new AsyncCallback<Void>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						Window.alert("Failed to create new schedule: " + caught.getMessage());
-					}
-					
-					@Override
-					public void onSuccess(Void result) {
-						container.clear();
-						container.add(new QuarterView(container, service));
-					}
-				});
+				displayNewSchedPopup();
 			}
 		}));
 	}
 	
 	private void populateSchedules() {
-		service.getScheduleNames(new AsyncCallback<Map<Integer,String>>() {
+		
+		service.getScheduleNames(new AsyncCallback<Map<String,Integer>>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				Window.alert("Error getting schedule names: " + caught.getMessage());
+				// TODO Auto-generated method stub
+				
 			}
-			
 			@Override
-			public void onSuccess(Map<Integer, String> schedulesIDsAndNames) {
-				for (Integer scheduleID : schedulesIDsAndNames.keySet())
-					listBox.addItem(schedulesIDsAndNames.get(scheduleID), scheduleID.toString());
+			public void onSuccess(Map<String, Integer> schedulesIDsAndNames) {
+				for (String scheduleID : schedulesIDsAndNames.keySet())
+					listBox.addItem(scheduleID);
 			}
 		});
-		
 	}
 	
 	private Widget createTitleBar() {
@@ -149,11 +137,36 @@ public class HomeView extends ScrollPanel {
 		return vp;
 	}
 	
-	public String displayNewSchedPopup() {
-		PopupPanel popup = new PopupPanel();
+	public void displayNewSchedPopup() {
+		final TextBox tb = new TextBox();
+		final DialogBox db = new DialogBox(false);
+		VerticalPanel vp = new VerticalPanel();
 		
-		popup.add(new TextBox());
+		db.setText("Name Schedule");
+		vp.add(new HTML("<center>Specify a new schedule name.</center>"));
+		vp.add(tb);
+		vp.add(new Button("Create Schedule", new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {		
+				db.hide();
+				
+				service.openNewSchedule(tb.getText(), new AsyncCallback<Void>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						//TODO Auto-generated method stub				
+					}
+					
+					@Override
+					public void onSuccess(Void result) {
+						// TODO Auto-generated method stub
+						container.clear();
+						container.add(new QuarterView(container, service));
+					}
+				});
+			}
+		}));
 		
-		return new String();
+		db.setWidget(vp);
+		db.center();
 	}
 }
