@@ -28,7 +28,6 @@ public class ScheduleDB implements DatabaseAPI<Schedule>
    public ScheduleDB(SQLDB sqldb, String dept)
    {
       this.sqldb = sqldb;
-      this.dept = dept;
       initDB();
    }
 

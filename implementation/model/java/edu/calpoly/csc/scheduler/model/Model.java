@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import edu.calpoly.csc.scheduler.model.db.*;
-import edu.calpoly.csc.scheduler.model.schedule.*;
+
 
 /**
  * The top-level model. Views will be passed this object when they are 
