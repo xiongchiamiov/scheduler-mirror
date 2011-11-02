@@ -35,7 +35,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
     	model = new Model(username);
     }
     
-    public Map<Integer, String> getScheduleNames() {
+    public Map<String, Integer> getScheduleNames() {
     	return model.getSchedules();
     }
     
@@ -43,8 +43,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		model.openNewSchedule(newScheduleName);
     }
     
-    public void openExistingSchedule(int scheduleID) {
-    	model.openExistingSchedule(scheduleID);
+    public void openExistingSchedule(String schedName) {
+    	model.openExistingSchedule(schedName);
     }
 
 	public ArrayList<InstructorGWT> getInstructors() throws IllegalArgumentException {
