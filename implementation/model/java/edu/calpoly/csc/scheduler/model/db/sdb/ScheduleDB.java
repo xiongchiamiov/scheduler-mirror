@@ -137,9 +137,9 @@ public class ScheduleDB implements DatabaseAPI<Schedule>
          e.printStackTrace();
       }
       // Execute
-      int newid = sqldb.executePrepStmt(stmt);
-      this.scheduleID = newid;
-      return newid;
+      sqldb.executePrepStmt(stmt);
+      this.scheduleID = sqldb.getScheduleID(name);
+      return this.scheduleID;
    }
 
    public void saveSchedule(Schedule data)

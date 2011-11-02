@@ -801,14 +801,36 @@ public class SQLDB {
       }
 	}
 	
+	//Find new scheduleid when course is made
+	public int getScheduleID(String name)
+	{
+		String query = "select scheduleid from schedules where name = ?";
+	      PreparedStatement stmt = getPrepStmt(query);
+	      ResultSet rs;
+	      try {
+	         stmt.setString(1, name);
+	         rs = stmt.executeQuery();
+	         if(rs.next())
+	         {
+	        	 return rs.getInt("scheduleid");
+	         }
+	      } catch (SQLException e) {
+	    	  e.printStackTrace();
+	      }
+	      System.err.println("ERROR: Schedule name not found");
+	      return -1;
+	}
+	
 	/**
 	 * Copies all data from "master" tables to a new user's tables
+	 * THIS SHOULD ONLY HAPPEN THE FIRST TIME A NEW USER MAKES A NEW SCHEDULE
+	 * Copy data from scheduleid 1354
 	 */
 	public void copyAllData(String newUserID)
 	{
 		//Make new user
 		
-		//Make new schedule
+		//Make new schedule?
 		
 		//Copy all data
 		String coursecopy = "insert into courses";
