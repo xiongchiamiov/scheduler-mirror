@@ -1,0 +1,23 @@
+Usability Plan:
+--Have 402 class (and clients) attempt to do common tasks.
+--Set up the testing in the usability lab.
+
+Preliminary Testing:
+--This is not testing a finished product, so we can make "drastic" changes to
+the UI as needed.
+--Once we finish testing the prototype, such drastic UI changes should not take
+place.
+--Run as many tests as necessary to get the right data we need for the
+prototype.
+
+Sample Tasks:
+--Create a new schedule. (Use a template).
+--Add a new professor to the roster. (Add to a specific department).
+--Find a class at a given time, and see which other professors teach it.
+(Same department).
+--Add a new section of the class with the new professor that was just added. We
+can have them add themselves to the teacher roster, just to make it easy.
+
+I don't think we need to use multiple views. Something we can just do is let
+them set which kind of schedule view they like, and then see which one people
+like the most, or code multiple schedule views in.
