@@ -21,7 +21,7 @@ public class Model implements Serializable
    public static final int serialVersionUID = 42;
    
    private Database db;
-   private String dept; 
+   private String dept;
    
    public Model (String userId)
    {
@@ -38,7 +38,7 @@ public class Model implements Serializable
     * 
     * @see Database#getSchedules(String)
     */
-   public Map<Integer, String> getSchedules ()
+   public Map<String, Integer> getSchedules ()
    {
       return db.getSchedules(this.dept);
    }
