@@ -91,36 +91,14 @@ public class Database
       if (!(sqldb.doesScheduleExist(temp)))
       {
          System.out.println("Creating new schedule");
-         scheduleDB = new ScheduleDB(sqldb, dept);
+         scheduleDB = new ScheduleDB(sqldb, this.dept);
          realid = scheduleDB.createNewSchedule(scheduleName);
          System.out.println("New schedule id: " + realid);
       }
       else
       {
          System.out.println("Using existing schedule");
-         scheduleDB = new ScheduleDB(sqldb, realid, dept);
-      }
-      instructorDB = new InstructorDB(sqldb, realid);
-      courseDB = new CourseDB(sqldb, realid);
-      locationDB = new LocationDB(sqldb, realid);
-      this.scheduleID = realid;
-   }
-   @Deprecated
-   public void openDB(int scheduleid)
-   {
-      int realid = scheduleid;
-      if (!(sqldb.doesScheduleIDExist(scheduleid)))
-      {
-         System.out.println("Creating new schedule");
-         scheduleDB = new ScheduleDB(sqldb, dept);
-         //Broken
-         realid = scheduleDB.createNewSchedule(dept);
-         System.out.println("New schedule id: " + realid);
-      }
-      else
-      {
-         System.out.println("Using existing schedule");
-         scheduleDB = new ScheduleDB(sqldb, realid, dept);
+         scheduleDB = new ScheduleDB(sqldb, realid, this.dept);
       }
       instructorDB = new InstructorDB(sqldb, realid);
       courseDB = new CourseDB(sqldb, realid);

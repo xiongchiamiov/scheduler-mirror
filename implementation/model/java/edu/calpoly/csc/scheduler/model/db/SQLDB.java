@@ -784,4 +784,12 @@ public class SQLDB {
          return false;
       }
 	}
+	
+	/**
+	 * Copies all data from "master" tables to a new user's tables
+	 */
+//	public void copyAllData(String newUserID, int masterScheduleID)
+//	{
+//		String 
+//	}
 }

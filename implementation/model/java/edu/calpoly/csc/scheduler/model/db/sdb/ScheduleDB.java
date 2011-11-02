@@ -35,6 +35,7 @@ public class ScheduleDB implements DatabaseAPI<Schedule>
    {
       this.sqldb = sqldb;
       this.scheduleID = scheduleID;
+      this.dept = dept;
       initDB();
    }
 
@@ -63,8 +64,7 @@ public class ScheduleDB implements DatabaseAPI<Schedule>
       }
    }
 
-   @Override
-   public void pullData()
+   private void pullData()
    {
       System.err.println("SID: " + scheduleID);
       ResultSet rs = sqldb.getSQLSchedules(scheduleID);
@@ -183,8 +183,7 @@ public class ScheduleDB implements DatabaseAPI<Schedule>
       sqldb.executePrepStmt(stmt);
    }
 
-   @Override
-   public void addData(Schedule data)
+   private void addData(Schedule data)
    {
 
       // Create insert string
@@ -220,8 +219,7 @@ public class ScheduleDB implements DatabaseAPI<Schedule>
       sqldb.executePrepStmt(stmt);
    }
 
-   @Override
-   public void editData(Schedule data)
+   private void editData(Schedule data)
    {
       // Create insert string
       String updateString = "update schedules set name = ?, quarterid = ?, schedule = ?, dept = ? where scheduleid = ?";

@@ -22,13 +22,6 @@ public class CourseDB implements DatabaseAPI<Course>
    private SQLDB             sqldb;
    private int               scheduleID;
 
-   @Deprecated
-   public CourseDB(SQLDB sqldb)
-   {
-      this.sqldb = sqldb;
-      initDB();
-   }
-
    public CourseDB(SQLDB sqldb, int scheduleID)
    {
       this.sqldb = sqldb;
@@ -65,8 +58,7 @@ public class CourseDB implements DatabaseAPI<Course>
       pullData();
    }
 
-   @Override
-   public void pullData()
+   private void pullData()
    {
       data = new ArrayList<Course>();
       ResultSet rs = sqldb.getSQLCourses(scheduleID);
@@ -164,8 +156,6 @@ public class CourseDB implements DatabaseAPI<Course>
             }
          }
 
-         //TODO: Tyler, no more lab pad
-         
          String quarterid = rs.getString("quarterid");
          toAdd.setQuarterId(quarterid);
 
@@ -175,15 +165,13 @@ public class CourseDB implements DatabaseAPI<Course>
       }
       catch (SQLException e)
       {
-         // TODO Auto-generated catch block
          e.printStackTrace();
       }
       toAdd.verify();
       return toAdd;
    }
 
-   @Override
-   public void addData(Course data)
+   private void addData(Course data)
    {
       data.verify();
       // Create insert string
@@ -251,8 +239,7 @@ public class CourseDB implements DatabaseAPI<Course>
       sqldb.executePrepStmt(stmt);
    }
 
-   @Override
-   public void editData(Course data)
+   private void editData(Course data)
    {
       data.verify();
       // Create update string

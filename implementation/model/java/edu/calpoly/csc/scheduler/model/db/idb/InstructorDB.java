@@ -17,13 +17,6 @@ public class InstructorDB implements DatabaseAPI<Instructor>
    private SQLDB                 sqldb;
    private int                   scheduleID;
 
-   @Deprecated
-   public InstructorDB(SQLDB sqldb)
-   {
-      this.sqldb = sqldb;
-      initDB();
-   }
-
    public InstructorDB(SQLDB sqldb, int scheduleID)
    {
       this.sqldb = sqldb;
@@ -55,13 +48,10 @@ public class InstructorDB implements DatabaseAPI<Instructor>
    private void initDB()
    {
       data = new ArrayList<Instructor>();
-      // TODO: REMOVE THIS
-      // addData(new Instructor().getCannedData());
       pullData();
    }
 
-   @Override
-   public void pullData()
+   private void pullData()
    {
       data = new ArrayList<Instructor>();
       ResultSet rs = sqldb.getSQLInstructors(scheduleID);
@@ -210,8 +200,7 @@ public class InstructorDB implements DatabaseAPI<Instructor>
       return toAdd;
    }
 
-   @Override
-   public void addData(Instructor data)
+   private void addData(Instructor data)
    {
       data.verify();
       // Create insert string
@@ -295,8 +284,7 @@ public class InstructorDB implements DatabaseAPI<Instructor>
       sqldb.executePrepStmt(stmt);
    }
 
-   @Override
-   public void editData(Instructor data)
+   private void editData(Instructor data)
    {
       data.verify();
       // Create update string
@@ -405,7 +393,7 @@ public class InstructorDB implements DatabaseAPI<Instructor>
 
    public void clearData()
    {
-      PreparedStatement stmt = sqldb.getPrepStmt("delete from instructors;");
+      PreparedStatement stmt = sqldb.getPrepStmt("delete from instructors");
       sqldb.executePrepStmt(stmt);
    }
 }

@@ -26,13 +26,6 @@ public class LocationDB implements DatabaseAPI<Location>
    private SQLDB               sqldb;
    private int                 scheduleID;
 
-   @Deprecated
-   public LocationDB(SQLDB sqldb)
-   {
-      this.sqldb = sqldb;
-      initDB();
-   }
-
    public LocationDB(SQLDB sqldb, int scheduleID)
    {
       this.sqldb = sqldb;
@@ -63,13 +56,10 @@ public class LocationDB implements DatabaseAPI<Location>
    private void initDB()
    {
       data = new ArrayList<Location>();
-      // TODO: REMOVE
-      // addData(new Location().getCannedData());
       pullData();
    }
 
-   @Override
-   public void pullData()
+   private void pullData()
    {
       data = new ArrayList<Location>();
       ResultSet rs = sqldb.getSQLLocations(scheduleID);
@@ -155,8 +145,7 @@ public class LocationDB implements DatabaseAPI<Location>
       return toAdd;
    }
 
-   @Override
-   public void addData(Location data)
+   private void addData(Location data)
    {
       data.verify();
       // Create insert string
@@ -211,8 +200,7 @@ public class LocationDB implements DatabaseAPI<Location>
       sqldb.executePrepStmt(stmt);
    }
 
-   @Override
-   public void editData(Location data)
+   private void editData(Location data)
    {
        data.verify();
       // Create update string
