@@ -24,26 +24,30 @@ import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
  * The server side implementation of the RPC service.
  */
 @SuppressWarnings("serial")
-public class GreetingServiceImpl extends RemoteServiceServlet implements
-		GreetingService {
+public class GreetingServiceImpl extends RemoteServiceServlet implements GreetingService {
 
 	private Model model;
-	
     private Schedule schedule;
     private HashMap<String, Course> cannedCourses;
     private HashMap<String, ScheduleItem> scheduleItems;
 	
-    public Map<Integer, String> getScheduleNames(String username) {
-    	if (model == null)
-    		model = new Model();
-    	return model.getSchedules(username);
+    public void login(String username) {
+    	model = new Model(username);
     }
     
-    public void selectSchedule(Integer scheduleID) {
-		model.initDbs(scheduleID);
+    public Map<Integer, String> getScheduleNames() {
+    	return model.getSchedules();
     }
     
-	public ArrayList<InstructorGWT> getInstructorNames() throws IllegalArgumentException {
+    public void openNewSchedule(String newScheduleName) {
+		model.openNewSchedule(newScheduleName);
+    }
+    
+    public void openExistingSchedule(int scheduleID) {
+    	model.openExistingSchedule(scheduleID);
+    }
+
+	public ArrayList<InstructorGWT> getInstructors() throws IllegalArgumentException {
 		ArrayList<InstructorGWT> results = new ArrayList<InstructorGWT>();
 		for (Instructor instructor : model.getDb().getInstructorDB().getData()) {
 			System.out.println("Model returning instructor " + instructor.getFirstName() + " has prefs? " + hasPreferences(instructor));
@@ -53,7 +57,6 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		return results;
 	}
 	
-	
 	public void saveInstructors(ArrayList<InstructorGWT> instructors) throws IllegalArgumentException {
 		assert(model != null);
 		
@@ -61,17 +64,11 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		
 		idb.clearData();
 		for (InstructorGWT instructor : instructors)
-			idb.addData(Conversion.fromGWT(instructor));
+			idb.saveData(Conversion.fromGWT(instructor));
 		
 		assert(model.getDb().getInstructorDB().getData().size() == instructors.size());
 	}
 
-	public void newSchedule(String schedName) {		
-		selectSchedule(Integer.valueOf(-1));
-		int newID = model.getDb().getScheduleDB().createNewSchedule(schedName);
-		selectSchedule(newID);
-	}
-	
 	public ArrayList<ScheduleItemGWT> generateSchedule() {
 		assert(model != null);
 		Database db = model.getDb();
@@ -291,7 +288,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	}
 	
 	@Override
-	public ArrayList<LocationGWT> getLocationNames() {
+	public ArrayList<LocationGWT> getLocations() {
 		ArrayList<LocationGWT> results = new ArrayList<LocationGWT>();
 		for (Location location : model.getDb().getLocationDB().getData())
 			results.add(Conversion.toGWT(location));
@@ -304,7 +301,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		LocationDB ldb = model.getDb().getLocationDB();
 		ldb.clearData();
 		for (LocationGWT location : locations)
-			ldb.addData(Conversion.fromGWT(location));
+			ldb.saveData(Conversion.fromGWT(location));
 	}
 	
 	@Override
@@ -323,7 +320,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		CourseDB cdb = model.getDb().getCourseDB();
 		cdb.clearData();
 		for (CourseGWT course : courses)
-			cdb.addData(Conversion.fromGWT(course));
+			cdb.saveData(Conversion.fromGWT(course));
 	}
 
 	private boolean hasPreferences(Instructor instructor) {
@@ -342,6 +339,6 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	public void saveInstructor(InstructorGWT instructorGWT) {
 		Instructor instructor = Conversion.fromGWT(instructorGWT);
 		System.out.println("calling editdata. has prefs? " + hasPreferences(instructor));
-		model.getDb().getInstructorDB().editData(instructor);
+		model.getDb().getInstructorDB().saveData(instructor);
 	}
 }

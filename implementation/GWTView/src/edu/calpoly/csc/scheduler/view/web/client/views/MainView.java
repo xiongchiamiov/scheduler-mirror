@@ -27,7 +27,7 @@ public class MainView extends DockLayoutPanel {
 		
 		SimplePanel topPanel = new SimplePanel();
 		topPanel.addStyleName("topPanel");
-		topPanel.add(new HTML("Schedulizerifier"));
+		topPanel.add(new HTML("The Scheduler Project"));
 		addNorth(topPanel, 5);
 		
 		add(contents = new SimplePanel());

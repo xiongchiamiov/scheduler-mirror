@@ -50,7 +50,7 @@ public class InstructorsView extends ScrollPanel {
 	public void populateInstructors() {
 		iTable.clear();
 		
-		service.getInstructorNames(new AsyncCallback<ArrayList<InstructorGWT>>() {
+		service.getInstructors(new AsyncCallback<ArrayList<InstructorGWT>>() {
 			public void onFailure(Throwable caught) {
 				Window.alert("Failed to get professors: " + caught.toString());
 			}

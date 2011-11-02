@@ -13,11 +13,13 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 
 public class QuarterView extends DockLayoutPanel {
+	HomeView homeView;
+	
 	Panel container;
 	GreetingServiceAsync service;
 	Panel contentPanel;
 	
-	QuarterView(Panel container, GreetingServiceAsync service) {
+	QuarterView(HomeView homeView, Panel container, GreetingServiceAsync service) {
 		super(Unit.EM);
 		
 		this.container = container;
@@ -62,7 +64,7 @@ public class QuarterView extends DockLayoutPanel {
 			@Override
 			public void onClick(ClickEvent event) {
 				container.clear();
-				container.add(new HomeView(container, service, "gfisher"));
+				container.add(homeView);
 			}
 		}));
 		

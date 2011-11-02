@@ -18,34 +18,27 @@ import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
  */
 @RemoteServiceRelativePath("greet")
 public interface GreetingService extends RemoteService {
-	ArrayList<InstructorGWT> getInstructorNames() throws IllegalArgumentException;
+	void login(String username);
+	Map<Integer, String> getScheduleNames();
 	
+	void openNewSchedule(String newScheduleName);
+	void openExistingSchedule(int scheduleID);
+
+	void saveInstructor(InstructorGWT instructor);	
+	ArrayList<InstructorGWT> getInstructors() throws IllegalArgumentException;
 	void saveInstructors(ArrayList<InstructorGWT> instructors) throws IllegalArgumentException;
 	
-	void selectSchedule(Integer scheduleID);
-	
-	Map<Integer, String> getScheduleNames(String username);
-	
 	ArrayList<ScheduleItemGWT> getGWTScheduleItems(ArrayList<CourseGWT> courses) throws IllegalArgumentException;
+	ArrayList<ScheduleItemGWT> generateSchedule();	
+	ArrayList<ScheduleItemGWT> rescheduleCourse(ScheduleItemGWT scheduleItem,
+			ArrayList<Integer> days, int startHour, boolean atHalfHour);
 	
-	ArrayList<ScheduleItemGWT> getTestGWTScheduleItems() throws IllegalArgumentException;
-
-	ArrayList<LocationGWT> getLocationNames();
-
+	ArrayList<LocationGWT> getLocations();
 	void saveLocations(ArrayList<LocationGWT> locations);
 	
 	ArrayList<CourseGWT> getCourses();
+	void saveCourses(ArrayList<CourseGWT> locations);
 
 	ArrayList<CourseGWT> getCannedCourses();
-
-	void newSchedule(String schedName);
-
-	void saveCourses(ArrayList<CourseGWT> locations);
-	
-	ArrayList<ScheduleItemGWT> generateSchedule();
-	
-	ArrayList<ScheduleItemGWT> rescheduleCourse(ScheduleItemGWT scheduleItem,
-			ArrayList<Integer> days, int startHour, boolean atHalfHour);
-
-	void saveInstructor(InstructorGWT instructor);
+	ArrayList<ScheduleItemGWT> getTestGWTScheduleItems() throws IllegalArgumentException;
 }

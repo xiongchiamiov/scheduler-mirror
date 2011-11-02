@@ -44,7 +44,7 @@ public class RoomsView extends ScrollPanel {
 	public void populateLocations() {
 		lTable.clear();
 		
-		service.getLocationNames(new AsyncCallback<ArrayList<LocationGWT>>() {
+		service.getLocations(new AsyncCallback<ArrayList<LocationGWT>>() {
 			public void onFailure(Throwable caught) {
 				Window.alert("Failed to get courses: " + caught.toString());
 			}
