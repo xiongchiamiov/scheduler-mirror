@@ -3,6 +3,7 @@ package edu.calpoly.csc.scheduler.model;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 import edu.calpoly.csc.scheduler.model.db.*;
 
@@ -22,6 +23,7 @@ public class Model implements Serializable
    
    private Database db;
    private String dept;
+   private Map<String, Integer> sched_map = new HashMap<String, Integer>();
    
    public Model (String userId)
    {
@@ -40,7 +42,15 @@ public class Model implements Serializable
     */
    public Map<String, Integer> getSchedules ()
    {
-      return db.getSchedules(this.dept);
+      return (this.sched_map = db.getSchedules(this.dept));
+   }
+   
+   public Database openExistingSchedule (String scheduleName)
+   {
+      int sid = this.sched_map.get(scheduleName);
+      db.openDB(sid, scheduleName);
+      
+      return this.db;
    }
    
    public Database openExistingSchedule (Integer sid)
