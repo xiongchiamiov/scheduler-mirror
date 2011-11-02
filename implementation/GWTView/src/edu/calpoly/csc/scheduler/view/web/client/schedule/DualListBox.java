@@ -1,5 +1,6 @@
 package edu.calpoly.csc.scheduler.view.web.client.schedule;
 
+import com.allen_sauer.gwt.dnd.client.drop.DropController;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.AbsolutePanel;
@@ -130,6 +131,11 @@ public class DualListBox extends AbsolutePanel {
     return dragController;
   }
 
+  public void registerScheduleDrop(DropController dropController)
+  {
+   dragController.registerDropController(dropController);
+  }
+  
   protected void moveItems(MouseListBox from, MouseListBox to, boolean justSelectedItems) {
     ArrayList<Widget> widgetList = justSelectedItems ? dragController.getSelectedWidgets(from)
         : from.widgetList();

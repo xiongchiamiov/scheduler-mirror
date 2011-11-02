@@ -31,10 +31,13 @@ public interface GreetingServiceAsync {
 	void saveCourses(ArrayList<CourseGWT> courses, AsyncCallback<Void> callback) throws IllegalArgumentException;
 
     void getGWTScheduleItems(ArrayList<CourseGWT> courses, AsyncCallback<ArrayList<ScheduleItemGWT>> scheduleItems) throws IllegalArgumentException;
-	void rescheduleCourse(ScheduleItemGWT scheduleItem, ArrayList<Integer> days, int startHour, boolean atHalfHour, AsyncCallback<ArrayList<ScheduleItemGWT>> callback) throws IllegalArgumentException;
+	void rescheduleCourse(ScheduleItemGWT scheduleItem, 
+			ArrayList<Integer> days, int startHour, boolean atHalfHour, 
+			boolean isScheduled, 
+			AsyncCallback<ArrayList<ScheduleItemGWT>> callback) 
+					throws IllegalArgumentException;
 	void generateSchedule(AsyncCallback<ArrayList<ScheduleItemGWT>> scheduleItems) throws IllegalArgumentException;
 	
-	void getCannedCourses(AsyncCallback<ArrayList<CourseGWT>> callback) throws IllegalArgumentException;
     void getTestGWTScheduleItems(AsyncCallback<ArrayList<ScheduleItemGWT>> scheduleItems) throws IllegalArgumentException;
 
 }

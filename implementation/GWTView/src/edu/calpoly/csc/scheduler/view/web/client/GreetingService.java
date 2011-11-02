@@ -31,7 +31,8 @@ public interface GreetingService extends RemoteService {
 	ArrayList<ScheduleItemGWT> getGWTScheduleItems(ArrayList<CourseGWT> courses) throws IllegalArgumentException;
 	ArrayList<ScheduleItemGWT> generateSchedule();	
 	ArrayList<ScheduleItemGWT> rescheduleCourse(ScheduleItemGWT scheduleItem,
-			ArrayList<Integer> days, int startHour, boolean atHalfHour);
+			ArrayList<Integer> days, int startHour, boolean atHalfHour,
+			boolean inSchedule);
 	
 	ArrayList<LocationGWT> getLocations();
 	void saveLocations(ArrayList<LocationGWT> locations);
@@ -39,6 +40,5 @@ public interface GreetingService extends RemoteService {
 	ArrayList<CourseGWT> getCourses();
 	void saveCourses(ArrayList<CourseGWT> locations);
 
-	ArrayList<CourseGWT> getCannedCourses();
 	ArrayList<ScheduleItemGWT> getTestGWTScheduleItems() throws IllegalArgumentException;
 }

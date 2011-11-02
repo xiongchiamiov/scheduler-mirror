@@ -28,7 +28,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 
 	private Model model;
     private Schedule schedule;
-    private HashMap<String, Course> cannedCourses;
+    private HashMap<String, Course> availableCourses;
     private HashMap<String, ScheduleItem> scheduleItems;
 	
     public void login(String username) {
@@ -152,63 +152,6 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	 
 	 return gwtItems;
 	}
-		
-	public void setCannedCourses()
-	{
-		assert(model != null);
-		cannedCourses = new HashMap<String, Course>();
-		Week mwf = new Week(new Day[]{Day.MON, Day.WED, Day.FRI});
-		 Week tr = new Week(new Day[]{Day.TUE, Day.THU});
-		Course c1 = new Course("one oh one", "CPE", 101);
-		 c1.setDept("CPE");
-		 c1.setLength(6);
-		 c1.setNumOfSections(1);
-		 c1.setDays(mwf);
-		 Course c2 = new Course("one oh two", "CPE", 102);
-	     c2.setDept("CPE");
-		 c2.setLength(6);
-		 c2.setNumOfSections(1);
-		 c2.setDays(mwf);
-	     Course c3 = new Course("one oh three", "CPE", 103);
-	     c3.setDept("CPE");
-		 c3.setLength(6);
-		 c3.setNumOfSections(1);
-		 c3.setDays(mwf);
-         Course c4 = new Course("one oh four", "CPE", 104);
-	     c4.setDept("CPE");
-		 c4.setLength(6);
-		 c4.setNumOfSections(1);
-		 c4.setDays(mwf);
-         Course c5 = new Course("one oh five", "CPE", 105);
-	     c5.setDept("CPE");
-		 c5.setLength(6);
-		 c5.setNumOfSections(1);
-		 c5.setDays(mwf);
-	     Course c6 = new Course("one oh six", "CPE", 106);
-	     c6.setDept("CPE");
-		 c6.setLength(6);
-		 c6.setNumOfSections(1);
-		 c6.setDays(mwf);
-        cannedCourses.put(c1.getDept()+c1.getCatalogNum(), c1);
-		cannedCourses.put(c2.getDept()+c2.getCatalogNum(), c2);
-		cannedCourses.put(c3.getDept()+c3.getCatalogNum(), c3);
-		cannedCourses.put(c4.getDept()+c4.getCatalogNum(), c4);
-		cannedCourses.put(c5.getDept()+c5.getCatalogNum(), c5);
-		cannedCourses.put(c6.getDept()+c6.getCatalogNum(), c6);	
-	}
-	
-	public ArrayList<CourseGWT> getCannedCourses()
-	{
-	 setCannedCourses();
-	 
-	 ArrayList<CourseGWT> results = new ArrayList<CourseGWT>();
-		
-		ArrayList<Course> courses = new ArrayList<Course>(cannedCourses.values());
-		System.out.println("Size of course list: " + courses.size());
-		for (Course course : courses)
-		    results.add(Conversion.toGWT(course));
-		return results;
-	}
 	
 	public ArrayList<ScheduleItemGWT> getGWTScheduleItems(ArrayList<CourseGWT> courses)
 	{
@@ -217,14 +160,14 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	 CourseDB cdb = db.getCourseDB();
 	 ArrayList<Instructor> instructors = db.getInstructorDB().getData();
      ArrayList<Location> locations = db.getLocationDB().getData();
-     ArrayList<Course> modelCourses = new ArrayList<Course>();//new ArrayList<Course>();
+     ArrayList<Course> modelCourses = new ArrayList<Course>();
      scheduleItems = new HashMap<String, ScheduleItem>();
      
      for(CourseGWT course : courses)
      {
-      modelCourses.add(cannedCourses.get(course.getDept() + course.getCatalogNum()));	 
+      modelCourses.add(availableCourses.get(course.getDept() + course.getCatalogNum()));	 
      }
-     schedule = new Schedule(new Vector<Instructor>(), new Vector<Location>());
+     schedule = new Schedule(new Vector<Instructor>(instructors), new Vector<Location>(locations));
 	 schedule.generate(modelCourses);		
 	 ArrayList<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
 	
@@ -238,13 +181,11 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	 return gwtItems;
 	}
 	
-	
 	public ArrayList<ScheduleItemGWT> rescheduleCourse(ScheduleItemGWT scheduleItem,
-			ArrayList<Integer> days, int startHour, boolean atHalfHour)
+			ArrayList<Integer> days, int startHour, boolean atHalfHour, boolean inSchedule)
 	{
 	 assert(model != null);
 	 ArrayList<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
-	 ScheduleItem rescheduled;
 	 Course course;
 	 int numberOfDays = days.size();
 	 Day[] daysScheduled = new Day[numberOfDays];
@@ -269,13 +210,17 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	  }
 	 }
 	 
-	 course = cannedCourses.get(scheduleItem.getDept() + scheduleItem.getCatalogNum()); 
+	 course = availableCourses.get(scheduleItem.getDept() + 
+			 scheduleItem.getCatalogNum()); 
 	 daysInWeek = new Week(daysScheduled);
 	 startTime = new Time(startHour, (atHalfHour? 30 : 0));
 	 
-	 moved = scheduleItems.get(schdItemKey);
-	 schedule.remove(moved);
-	 rescheduled = schedule.genItem(course, daysInWeek, startTime);
+	 if(inSchedule)
+	 {
+	  moved = scheduleItems.get(schdItemKey);
+	  schedule.remove(moved);
+	 }
+	 schedule.genItem(course, daysInWeek, startTime);
 	 scheduleItems = new HashMap<String, ScheduleItem>();
 	 for(ScheduleItem item : schedule.getItems())
 	 {         
@@ -307,8 +252,13 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	@Override
 	public ArrayList<CourseGWT> getCourses() {		
 		ArrayList<CourseGWT> results = new ArrayList<CourseGWT>();
+		availableCourses = new HashMap<String, Course>();
 		for (Course course : model.getDb().getCourseDB().getData())
+		{
+			course.setLength(6);
+			availableCourses.put(course.getDept()+course.getCatalogNum(), course);
 			results.add(Conversion.toGWT(course));
+		}
 		return results;
 	}
 

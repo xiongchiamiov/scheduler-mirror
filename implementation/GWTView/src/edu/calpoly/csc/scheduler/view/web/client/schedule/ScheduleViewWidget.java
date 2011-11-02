@@ -110,6 +110,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 				dropController = new ScheduleCellDropController(
 						(ScheduleCell) cell, this);
 				dragController.registerDropController(dropController);
+				dualListBoxCourses.registerScheduleDrop(dropController);
 			}
 		}
 	}
@@ -197,7 +198,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 	 * Lays out an initial empty schedule with just days columns and time rows.
 	 */
 	private void layoutDaysAndTimes() {
-		scheduleGrid.setBorderWidth(1);
+		//scheduleGrid.addStyleName("scheduleTable");
 		setDaysOfWeek();
 		setTimes();
 		resetRowSpans();
@@ -395,6 +396,15 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 	 * Retrieves a schedule items from a generated schedule from the server.
 	 */
 	private void getScheduleItems() {
+		if(availableCourses.size() == 0)
+		{
+		 Window.alert("No courses to schedule");
+		 return;
+		}
+		for(CourseGWT course : availableCourses)
+		{
+	     includedCourses.add(course);
+		}
 		greetingService.getGWTScheduleItems(includedCourses,
 				new AsyncCallback<ArrayList<ScheduleItemGWT>>() {
 					public void onFailure(Throwable caught) {
@@ -531,7 +541,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 		includedCourses = new ArrayList<CourseGWT>();
 
 		greetingService
-				.getCannedCourses(new AsyncCallback<ArrayList<CourseGWT>>() {
+				.getCourses(new AsyncCallback<ArrayList<CourseGWT>>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						Window.alert("Failed to retrieve courses");
@@ -545,21 +555,14 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 								availableCourses.add(course);
 								
 								dualListBoxCourses.addLeft(course.getDept()
-										+ course.getCatalogNum());
-								
-								listBoxAvailable.addItem(course.getDept()
-										+ course.getCatalogNum());
+										+ " " + course.getCatalogNum());
 							}
 							
-							includedCourses.add(availableCourses.get(0));
+							//includedCourses.add(availableCourses.get(0));
 							
-							dualListBoxCourses.addRight(includedCourses.get(0)
+							/*dualListBoxCourses.addRight(includedCourses.get(0)
 									.getDept()
-									+ includedCourses.get(0).getCatalogNum());
-							
-							listBoxIncluded.addItem(includedCourses.get(0)
-									.getDept()
-									+ includedCourses.get(0).getCatalogNum());
+									+ includedCourses.get(0).getCatalogNum());*/
 						}
 					}
 				});
@@ -638,11 +641,13 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 	}
 
 	public void moveItem(final ScheduleItemGWT scheduleItem,
-			ArrayList<Integer> days, int row) {
+			ArrayList<Integer> days, int row, boolean inSchedule) {
 		final int startHour = getHourFromRow(row);
 		final boolean atHalfHour = rowIsAtHalfHour(row);
 		greetingService.rescheduleCourse(scheduleItem, days, startHour,
-				atHalfHour, new AsyncCallback<ArrayList<ScheduleItemGWT>>() {
+				atHalfHour, inSchedule, 
+				new AsyncCallback<ArrayList<ScheduleItemGWT>>() 
+				{
 					@Override
 					public void onFailure(Throwable caught) {
 						Window.alert("Failed to retrieve rescheduled item");
@@ -664,5 +669,14 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 						filterScheduleItems(searchBox.getText());
 					}
 				});
-	}
+	}	
+	
+  public void highlightRow(int row)
+  {
+   scheduleGrid.getRowFormatter().setStyleName(row, "highlightedBorder");
+  }
+  public void unhighlightRow(int row)
+  {
+   scheduleGrid.getRowFormatter().removeStyleName(row, "highlightedBorder");
+  }
 }

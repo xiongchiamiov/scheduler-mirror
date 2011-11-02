@@ -2,6 +2,8 @@ package edu.calpoly.csc.scheduler.view.web.client.schedule;
 
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 
@@ -14,10 +16,27 @@ public class ScheduleCell extends SimplePanel implements CloseHandler<PopupPanel
  int col = -1;
  ReschedulePopup rescheduler;
  ScheduleViewWidget schedule;
+ boolean rescheduling;
  
  public ScheduleCell(ScheduleViewWidget schedule)
  {
   this.schedule = schedule;
+  sinkEvents(Event.ONMOUSEOVER);
+  sinkEvents(Event.ONMOUSEOUT);
+ }
+ 
+ public void onBrowserEvent(Event event)
+ {
+  System.out.println("EVENT");
+  switch(DOM.eventGetType(event))
+  {
+   case Event.ONMOUSEOVER:
+    schedule.highlightRow(row);
+	break;
+   case Event.ONMOUSEOUT:
+    schedule.unhighlightRow(row);
+  }
+  super.onBrowserEvent(event);
  }
  
  public void setScheduleItem(ScheduleItemGWT item)
@@ -47,12 +66,14 @@ public class ScheduleCell extends SimplePanel implements CloseHandler<PopupPanel
 
  public void onClose(CloseEvent<PopupPanel> event) 
  {
-  System.out.println("Closed");
-  schedule.moveItem(rescheduler.getItem(), rescheduler.getDays(), rescheduler.getRow());	
+  schedule.moveItem(rescheduler.getItem(), rescheduler.getDays(), 
+		  rescheduler.getRow(), rescheduling);	
  }
 
- public void promptForDays(ScheduleItemGWT rescheduled, int row) 
+ public void promptForDays(ScheduleItemGWT rescheduled, int row, 
+		 boolean inScheduled) 
  {
+  rescheduling = inScheduled;
   rescheduler = new ReschedulePopup(rescheduled, row);
   rescheduler.addCloseHandler(this);
   rescheduler.center();
