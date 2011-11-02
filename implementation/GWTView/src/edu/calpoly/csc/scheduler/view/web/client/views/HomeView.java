@@ -50,8 +50,6 @@ public class HomeView extends ScrollPanel {
 		vp.add(listBox);
 		
 		populateSchedules();
-		
-		final HomeView self = this;
 
 		vp.add(new Button("Open", new ClickHandler() {
 			@Override
@@ -66,7 +64,7 @@ public class HomeView extends ScrollPanel {
 					@Override
 					public void onSuccess(Void result) {
 						container.clear();
-						container.add(new QuarterView(self, container, service));
+						container.add(new QuarterView(container, service));
 					}
 				});
 			}
@@ -86,7 +84,7 @@ public class HomeView extends ScrollPanel {
 					@Override
 					public void onSuccess(Void result) {
 						container.clear();
-						container.add(new QuarterView(self, container, service));
+						container.add(new QuarterView(container, service));
 					}
 				});
 			}
