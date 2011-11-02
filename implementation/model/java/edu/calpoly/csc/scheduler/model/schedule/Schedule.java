@@ -104,7 +104,11 @@ public class Schedule implements Serializable
    
    /**
     * Generates and adds a ScheduleItem to teach a given course on a given set 
-    * of days in a given time range.
+    * of days in a given time range.<br>
+    * <br>
+    * If the Course has a lab associated with it, <b>it is not considered</b>. 
+    * That way, moving one SI around won't have an impact on other parts of the
+    * schedule.
     * 
     * @param c Course to teach
     * @param days Days to teach
@@ -116,7 +120,11 @@ public class Schedule implements Serializable
    {
       Course clone = new Course(c);
       clone.setDays(days);
-
+      /*
+       * If we have labs, don't consider them
+       */
+      clone.setLab(null);
+      
       /*
        * We'll lie to 'generate'. We've been asked to place this Course in a 
        * very specific time window. This makes the Schedule think the only 
@@ -135,67 +143,6 @@ public class Schedule implements Serializable
       return this.getItems().lastElement();
    }
    
-   /**
-    * Creates a ScheduleItem to teach a given course on a given set of days in a
-    * given time range.
-    * 
-    * @param c Course to teach
-    * @param days Days to teach
-    * @param s Time of day the course should start
-    * 
-    * @return A ScheduleItem w/ an instructor and location aptly suited for
-    *         teaching with the given parameters.
-    * 
-    * @throws CouldNotBeScheduledException If no instructor or location can be
-    *         found which is compatible w/ the given parameters.
-    */
-   public ScheduleItem makeItem (Course c, Week days, Time s)
-      throws CouldNotBeScheduledException
-   {
-      //TODO: Figure labs into this
-      Vector<ScheduleItem> sis = new Vector<ScheduleItem>();
-
-      TimeRange tr = new TimeRange(s, c.splitLengthOverDays(days.size()));
-
-      ScheduleItem si = new ScheduleItem();
-      si.setCourse(c);
-      si.setDays(days);
-      si.setTimeRange(tr);
-
-      for (Instructor i : this.iSourceList)
-      {
-         if (i.isAvailable(days, tr))
-         {
-            ScheduleItem clone = si.clone();
-            clone.setInstructor(i);
-            List<ScheduleItem> list = Arrays.asList(new ScheduleItem[]
-            {
-               clone
-            });
-
-            sis.addAll(list);
-         }
-      }
-
-      /*
-       * With our times, days, course, and instructor selected, we can just
-       * throw locations at the problem. SiMap'll sort out everything and let
-       * the best choice float to the top.
-       */
-      SiMap si_map = new SiMap(findLocations(sis));
-
-      /*
-       * If not even one not-impossible ScheduleItem was created, we'll have to
-       * balk
-       */
-      if (si_map.size() == 0)
-      {
-         throw new CouldNotBeScheduledException();
-      }
-
-      return si_map.getBest();
-   }
-
    /**
     * Removes a given ScheduleItem from the schedule. Updates instructor and
     * location availability to show this new free time. The course's number of
@@ -516,30 +463,66 @@ public class Schedule implements Serializable
    /**
     * Generates a ScheduleItem for a given instructor. Guarantees that no other
     * ScheduleItem could be created which this instructor would want <b>more</b>
-    * than this one.
+    * than this one.<br>
+    * <br> 
+    * If there is no way that our 'base' ScheduleItem's instructor can teach
+    * at any time in the supplied time range, this will change the considered
+    * instructor to STAFF. Consequently, <i>this method guarantees that a valid
+    * ScheduleItem will be generated</i>. It is <b>not</b> guaranteed that the
+    * instructor will be the one in 'base', nor is it guaranteed the location 
+    * will not be TBA.
     * 
-    * @param i Instructor build ScheduleItems for
+    * @param base ScheduleItem containing basic info for generating. In 
+    *        particular, the instructor and course must already be defined
+    * @param tr TimeRange we'll look within when scheduling
     * 
     * @return A ScheduleItem which this instructor wants to teach at least as
     *         much as every other ScheduleItem that might be produced
     * 
-    * @throws InstructorCanTeachNothingException if no course exists which the
-    *         Instructor wants to teach and/or no course exists which does not
-    *         exceed the Instructor's WTU limit.
-    * 
-    * @throws CouldNotBeScheduledException if no time/location could be found
-    *         for the Instructor to teach the course (and possible its lab)
-    * 
     * @see SiMap#put(ScheduleItem)
     * @see ScheduleItem#getValue()
+    * @see Staff#getStaff()
+    * @see Tba#getTba()
+    * @see #findTimes(Course, List<Instructor>)
     */
    private ScheduleItem genBestTime (ScheduleItem base, TimeRange tr)
    {
       Vector<ScheduleItem> si_list = new Vector<ScheduleItem>();
 
+      /*
+       * If we can't find times for the instructor in our base, we'll have to 
+       * try other instructors until we find one w/ at least one time he
+       * can teach
+       */
       si_list = findTimes(base, tr);
+      if (si_list.isEmpty())
+      {
+         ScheduleItem clone = base.clone();
+         Course c = base.getCourse();
+         
+         /*
+          * Keep track of instructors we've tried so we don't use them again. 
+          * Eventually, if none are found, we'll end up using STAFF, which is
+          * eager to please.
+          */
+         Vector<Instructor> haveTried = new Vector<Instructor>();
+         haveTried.add(clone.getInstructor());
+         do
+         {
+            Instructor i = findInstructor(c, haveTried);
+            
+            debug ("NO TIMES FOUND FOR " + base.getInstructor());
+            debug ("TRYING " + i);
+            
+            clone.setInstructor(i);
+            si_list = findTimes(clone, tr);
+            haveTried.add(i);
+            
+         } while (si_list.isEmpty());
+      }
+      
       debug("GOT " + si_list.size() + " TIMES");
-
+      
       si_list = findLocations(si_list);
       debug("GOT " + si_list.size() + " LOCATIONS");
 
@@ -767,6 +750,35 @@ public class Schedule implements Serializable
       return tr;
    }
 
+   private Instructor findInstructor (Course c, List<Instructor> doNotPick)
+   {
+      Instructor r = Staff.getStaff();
+      int curMaxPref = 0;
+      
+      debug ("FINDING INSTRUCTOR FOR " + c);
+      
+      for (Instructor i : this.iSourceList)
+      {
+         if (doNotPick != null && !doNotPick.contains(i))
+         {
+            debug ("NOT EXCLUDED");
+            if (i.canTeach(c))
+            {
+               debug ("CAN");
+               int pref = i.getPreference(c);
+               if (pref > curMaxPref)
+               {
+                  debug ("WANTS MORE: " + pref + " > " + curMaxPref);
+                  r = i;
+                  curMaxPref = pref;
+               }
+            }
+         }
+      }
+      
+      return r;
+   }
+   
    /**
     * Finds an instructor who wants to teach a given course.
     * 
@@ -779,32 +791,7 @@ public class Schedule implements Serializable
     */
    private Instructor findInstructor (Course c)
    {
-      Instructor r = null;
-      int curMaxPref = 0;
-
-      debug ("FINDING INSTRUCTOR FOR " + c);
-      
-      for (Instructor i : this.iSourceList)
-      {
-         if (i.canTeach(c))
-         {
-            int pref = i.getPreference(c);
-            if (pref > curMaxPref)
-            {
-               r = i;
-               curMaxPref = pref;
-            }
-         }
-      }
-
-      if (r == null)
-      {
-         r = Staff.getStaff();
-      }
-      
-      debug ("FOUND " + r);
-      
-      return r;
+      return findInstructor(c, null);
    }
 
    /***********************
