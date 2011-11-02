@@ -43,9 +43,9 @@ public class Model implements Serializable
       return db.getSchedules(dept);
    }
    
-   public Database initDbs (Integer sid)
+   public Database initDbs (Integer sid, String scheduleName)
    {
-      db.openDB(sid);
+      db.openDB(sid, scheduleName);
       return this.db;
    }
    
