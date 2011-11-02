@@ -43,9 +43,15 @@ public class Model implements Serializable
       return db.getSchedules(dept);
    }
    
-   public Database initDbs (Integer sid, String scheduleName)
+   public Database openExistingSchedule (Integer sid)
    {
-      db.openDB(sid, scheduleName);
+      db.openDB(sid, "");
+      return this.db;
+   }
+
+   public Database openNewSchedule (String scheduleName)
+   {
+      db.openDB(-1, scheduleName);
       return this.db;
    }
    
