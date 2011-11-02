@@ -701,7 +701,7 @@ public class SQLDB {
 	public boolean doesCourseExist(Course data)
 	{
 	   //Check if dept, catalognum, and type already exist
-	   String query = "select dept, catalognum, type from schedules where dept = ? and catalognum = ? and type = ?";
+	   String query = "select dept, catalognum, type from courses where dept = ? and catalognum = ? and type = ?";
 	   PreparedStatement stmt = getPrepStmt(query);
 	   try
       {
@@ -735,7 +735,7 @@ public class SQLDB {
 	public boolean doesLocationExist(Location data)
 	{
 	   //Check if building and room already exist
-	   String query = "select building, room from instructors where building = ? and room = ?";
+	   String query = "select building, room from locations where building = ? and room = ?";
 	   PreparedStatement stmt = getPrepStmt(query);
 	   try
 	   {
