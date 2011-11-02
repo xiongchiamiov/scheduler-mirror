@@ -19,10 +19,10 @@ import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 @RemoteServiceRelativePath("greet")
 public interface GreetingService extends RemoteService {
 	void login(String username);
-	Map<Integer, String> getScheduleNames();
+	Map<String, Integer> getScheduleNames();
 	
 	void openNewSchedule(String newScheduleName);
-	void openExistingSchedule(int scheduleID);
+	void openExistingSchedule(String scheduleID);
 
 	void saveInstructor(InstructorGWT instructor);	
 	ArrayList<InstructorGWT> getInstructors() throws IllegalArgumentException;
