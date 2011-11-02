@@ -7,6 +7,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -44,18 +45,24 @@ public class InstructorsView extends ScrollPanel {
 		
 		iTable = TableFactory.instructor(service);
 		vp.add(iTable.getWidget());
-		populateInstructors();
-	}
-	
-	public void populateInstructors() {
+		
 		iTable.clear();
+
+
+		final LoadingPopup popup = new LoadingPopup();
+		popup.show();
+		
 		
 		service.getInstructors(new AsyncCallback<ArrayList<InstructorGWT>>() {
 			public void onFailure(Throwable caught) {
+				popup.hide();
+				
 				Window.alert("Failed to get professors: " + caught.toString());
 			}
 			
 			public void onSuccess(ArrayList<InstructorGWT> result){
+				popup.hide();
+				
 				if (result != null) {
 					for (InstructorGWT ins : result)
 						ins.verify();

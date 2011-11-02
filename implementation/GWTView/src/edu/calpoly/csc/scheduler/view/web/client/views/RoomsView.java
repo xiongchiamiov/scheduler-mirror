@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -38,18 +40,21 @@ public class RoomsView extends ScrollPanel {
 		
 		lTable = TableFactory.location(service);
 		vp.add(lTable.getWidget());
-		populateLocations();
-	}
-	
-	public void populateLocations() {
+		
+		
 		lTable.clear();
+
+		final LoadingPopup popup = new LoadingPopup();
+		popup.show();
 		
 		service.getLocations(new AsyncCallback<ArrayList<LocationGWT>>() {
 			public void onFailure(Throwable caught) {
+				popup.hide();
 				Window.alert("Failed to get courses: " + caught.toString());
 			}
 			
 			public void onSuccess(ArrayList<LocationGWT> result){
+				popup.hide();
 				if (result != null) {
 					lTable.set(result);
 				}

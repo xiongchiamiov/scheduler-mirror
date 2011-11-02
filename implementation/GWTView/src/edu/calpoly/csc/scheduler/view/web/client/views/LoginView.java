@@ -9,6 +9,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasAlignment;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TextBox;
@@ -29,7 +30,7 @@ public class LoginView extends ScrollPanel {
 	public void onLoad() {
 		super.onLoad();
 		
-		VerticalPanel panel = new VerticalPanel();
+		final VerticalPanel panel = new VerticalPanel();
 		panel.setWidth("100%");
 		add(panel);
 		panel.setHorizontalAlignment(HasAlignment.ALIGN_CENTER);
@@ -46,16 +47,21 @@ public class LoginView extends ScrollPanel {
 					Window.alert("Please enter a username.");
 					return;
 				}
+
+				final LoadingPopup popup = new LoadingPopup();
+				popup.show();
 				
 				service.login(textBox.getText(), new AsyncCallback<Void>() {
 					@Override
 					public void onSuccess(Void derp) {
+						popup.hide();
 						container.clear();
 						container.add(new HomeView(container, service));
 					}
 					
 					@Override
 					public void onFailure(Throwable caught) {
+						popup.hide();
 						Window.alert("Failed to log in: " + caught.getMessage());
 					}
 				});

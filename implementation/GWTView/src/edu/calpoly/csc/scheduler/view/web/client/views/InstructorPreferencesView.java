@@ -9,6 +9,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -39,7 +40,7 @@ public class InstructorPreferencesView extends ScrollPanel {
 		setWidth("100%");
 		setHeight("100%");
 		
-		VerticalPanel vp = new VerticalPanel();
+		final VerticalPanel vp = new VerticalPanel();
 		add(vp);
 		
 		final InstructorTimePreferencesWidget timePrefs = new InstructorTimePreferencesWidget(service, new InstructorTimePreferencesWidget.Strategy() {
@@ -53,14 +54,21 @@ public class InstructorPreferencesView extends ScrollPanel {
 		vp.add(new Button("Save All Preferences", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
+
+				final LoadingPopup popup = new LoadingPopup();
+				popup.show();
+				
+				
 				service.saveInstructor(instructor, new AsyncCallback<Void>() {
 					@Override
 					public void onFailure(Throwable caught) {
+						popup.hide();
 						Window.alert("Error saving instructor: " + caught.getMessage());
 					}
 
 					@Override
 					public void onSuccess(Void result) {
+						popup.hide();
 						savedInstructor = instructor;
 						instructor = instructor.clone();
 						timePrefs.redoColors();

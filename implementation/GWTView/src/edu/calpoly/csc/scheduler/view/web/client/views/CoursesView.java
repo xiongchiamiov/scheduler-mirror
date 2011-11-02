@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -32,23 +33,30 @@ public class CoursesView extends ScrollPanel {
 		vp.add(new HTML("<h2>Fall Quarter 2010 Final Schedule Courses</h2>"));
 		
 		cTable = TableFactory.course(service);
+		
 		vp.add(cTable.getWidget());
-		populateCourses();
-	}
-	
-	public void populateCourses() {
 		cTable.clear();
+
+		final LoadingPopup popup = new LoadingPopup();
+		popup.show();
 		
 		service.getCourses(new AsyncCallback<ArrayList<CourseGWT>>() {
 			public void onFailure(Throwable caught) {
+				popup.hide();
+				
 				Window.alert("Failed to get courses: " + caught.toString());
 			}
 			
 			public void onSuccess(ArrayList<CourseGWT> result){
+				popup.hide();
+				
 				if (result != null) {
 					cTable.set(result);
 				}
 			}
 		});
+	}
+	
+	public void populateCourses() {
 	}
 }

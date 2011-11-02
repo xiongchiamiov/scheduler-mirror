@@ -28,7 +28,7 @@ body {
 }
 
 .quarterViewMenu {
-	background-color: #C0E080;
+	background-color: #D0D0D0;
 }
 
 .selectQuarterView {
@@ -219,4 +219,11 @@ h1 {
 
 .timePreferencesTable .desireCell:hover {
 	background-color: #E0E0E0;
+}
+
+.loadingLabel {
+	font-size: 2em;
+	font-weight: bold;
+	color: #A0A0A0;
+	text-align: center;
 }
