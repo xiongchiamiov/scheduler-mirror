@@ -60,7 +60,7 @@ public class LoginView extends ScrollPanel {
 						
 						popup.hide();
 						container.clear();
-						container.add(new HomeView(container, service));
+						container.add(new SelectScheduleView(container, service));
 					}
 					
 					@Override

@@ -14,19 +14,22 @@ import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.client.HTMLUtilities;
 
 public class ScheduleNavView extends DockLayoutPanel {
-	HomeView homeView;
+	SelectScheduleView selectScheduleView;
 	
 	Panel container;
 	GreetingServiceAsync service;
 	Panel contentPanel;
+	int selectedScheduleID;
 
-	ScheduleNavView(HomeView homeView, Panel container, GreetingServiceAsync service) {
+	ScheduleNavView(SelectScheduleView homeView, Panel container, GreetingServiceAsync service, int selectedScheduleID) {
 		super(Unit.EM);
 		
-		this.homeView = homeView;
+		this.selectScheduleView = homeView;
 		
 		this.container = container;
 		this.service = service;
+		
+		this.selectedScheduleID = selectedScheduleID;
 	}
 	
 	@Override
@@ -47,13 +50,13 @@ public class ScheduleNavView extends DockLayoutPanel {
 	protected Widget createLeftPanel() {
 		FlowPanel leftMenuVP = new FlowPanel();
 		
-		leftMenuVP.add(new HTML("Schedule Name Here"));
+		leftMenuVP.add(selectScheduleView.createMiniSelectWidget(selectedScheduleID));
 		
 		leftMenuVP.add(HTMLUtilities.createLink("<b>Back to Select Quarter</b>", "inAppLink", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				container.clear();
-				container.add(new HomeView(container, service));
+				container.add(selectScheduleView);
 			}
 		}));
 		

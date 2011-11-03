@@ -17,8 +17,8 @@ public interface GreetingServiceAsync {
 	void login(String username, AsyncCallback<Void> callback) throws IllegalArgumentException;
 	void getScheduleNames(AsyncCallback<Map<String, Integer>> callback) throws IllegalArgumentException;
 	
-	void openNewSchedule(String newScheduleName, AsyncCallback<Void> callback) throws IllegalArgumentException;
-	void openExistingSchedule(String scheduleID, AsyncCallback<Void> callback) throws IllegalArgumentException;
+	void openNewSchedule(String newScheduleName, AsyncCallback<Integer> callback) throws IllegalArgumentException;
+	void openExistingSchedule(int scheduleID, AsyncCallback<Void> callback) throws IllegalArgumentException;
 
 	void getInstructors(AsyncCallback<ArrayList<InstructorGWT>> callback) throws IllegalArgumentException;
 	void saveInstructor(InstructorGWT instructor, AsyncCallback<Void> asyncCallback);

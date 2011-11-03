@@ -21,8 +21,8 @@ public interface GreetingService extends RemoteService {
 	void login(String username);
 	Map<String, Integer> getScheduleNames();
 	
-	void openNewSchedule(String newScheduleName);
-	void openExistingSchedule(String scheduleID);
+	Integer openNewSchedule(String newScheduleName);
+	void openExistingSchedule(int scheduleID);
 
 	void saveInstructor(InstructorGWT instructor);	
 	ArrayList<InstructorGWT> getInstructors() throws IllegalArgumentException;

@@ -19,6 +19,10 @@ import edu.calpoly.csc.scheduler.model.db.ldb.*;
 public class Schedule implements Serializable
 {
    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1778968142419846280L;
+/**
     * Used for debugging. Toggle it to get debugging output
     */
    public static final boolean DEBUG = true;

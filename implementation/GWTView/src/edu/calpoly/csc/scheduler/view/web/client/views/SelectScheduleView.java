@@ -2,6 +2,8 @@ package edu.calpoly.csc.scheduler.view.web.client.views;
 
 import java.util.Map;
 
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
@@ -21,20 +23,17 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.client.HTMLUtilities;
 
-public class HomeView extends ScrollPanel {
+public class SelectScheduleView extends ScrollPanel {
 	private GreetingServiceAsync service;
 	private Panel container;
 	private ListBox listBox;
 	private VerticalPanel vp;
 	
-	public HomeView(Panel container, GreetingServiceAsync service) {
+	Map<String, Integer> schedulesIDsAndNames;
+	
+	public SelectScheduleView(Panel container, GreetingServiceAsync service) {
 		this.container = container;
 		this.service = service;
-	}
-	
-	@Override
-	public void onLoad() {
-		super.onLoad();
 
 		addStyleName("homeView");
 		
@@ -43,35 +42,16 @@ public class HomeView extends ScrollPanel {
 		vp.setWidth("100%");
 		vp.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		
-		vp.add(createTitleBar());
+		vp.add(new HTMLPanel("<h2>Select a Schedule</h2>"));
 		
 		listBox = new ListBox();
 		vp.add(listBox);
-		
-		populateSchedules();
-		
-		final HomeView self = this;
 
 		vp.add(new Button("Open", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				final LoadingPopup popup = new LoadingPopup();
-				popup.show();
-				
-				String existingScheduleStr = listBox.getValue(listBox.getSelectedIndex());
-				service.openExistingSchedule(existingScheduleStr, new AsyncCallback<Void>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						popup.hide();
-						Window.alert("Failed to open schedule in: " + caught.getMessage());
-					}
-					@Override
-					public void onSuccess(Void derp) {
-						popup.hide();
-						container.clear();
-						container.add(new ScheduleNavView(self, container, service));
-					}
-				});
+				int existingScheduleID = Integer.parseInt(listBox.getValue(listBox.getSelectedIndex()));
+				selectSchedule(existingScheduleID);
 			}
 		}));
 		
@@ -83,66 +63,50 @@ public class HomeView extends ScrollPanel {
 		}));
 	}
 	
-	private void populateSchedules() {
-		
+	@Override
+	public void onLoad() {
+		super.onLoad();
+
 		service.getScheduleNames(new AsyncCallback<Map<String,Integer>>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				// TODO Auto-generated method stub
-				
+				Window.alert("There was an error getting the schedules: " + caught.getMessage());
 			}
+			
 			@Override
-			public void onSuccess(Map<String, Integer> schedulesIDsAndNames) {
-				for (String scheduleID : schedulesIDsAndNames.keySet())
-					listBox.addItem(scheduleID);
+			public void onSuccess(Map<String, Integer> result) {
+				schedulesIDsAndNames = result;
+				
+				listBox.clear();
+				for (String scheduleName : schedulesIDsAndNames.keySet())
+					listBox.addItem(scheduleName, schedulesIDsAndNames.get(scheduleName).toString());
 			}
 		});
 	}
 	
-	private Widget createTitleBar() {
-		return new HTMLPanel("<h2>Select a Schedule</h2><h4>Previous Schedules</h4>");
-	}
-	
-	private Widget createDBInfoPanel() {
-		VerticalPanel vp = new VerticalPanel();
+	private void selectSchedule(final int scheduleID) {		
+		final SelectScheduleView self = this;
+
+		final LoadingPopup popup = new LoadingPopup();
+		popup.show();
 		
-		vp.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-		
-		vp.add(new HTML("<br /><b>13</b> Instructors"));
-		
-		vp.add(HTMLUtilities.createLink("Modify Instructors", "inAppLink", new ClickHandler() {
+		service.openExistingSchedule(scheduleID, new AsyncCallback<Void>() {
 			@Override
-			public void onClick(ClickEvent event) {
-				container.clear();
-				container.add(new InstructorsView(container, service));
+			public void onFailure(Throwable caught) {
+				popup.hide();
+				Window.alert("Failed to open schedule in: " + caught.getMessage());
 			}
-		}));
-		
-		vp.add(new HTML("<b>32</b> Courses"));
-		
-		vp.add(HTMLUtilities.createLink("Modify Courses", "inAppLink", new ClickHandler() {
 			@Override
-			public void onClick(ClickEvent event) {
+			public void onSuccess(Void derp) {
+				popup.hide();
 				container.clear();
-				container.add(new CoursesView(container, service));
+				container.add(new ScheduleNavView(self, container, service, scheduleID));
 			}
-		}));
-		
-		vp.add(new HTML("<b>7</b> Locations"));
-		
-		vp.add(HTMLUtilities.createLink("Modify Locations", "inAppLink", new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				container.clear();
-				container.add(new RoomsView(container, service));
-			}
-		}));
-		
-		return vp;
+		});
 	}
 	
 	public void displayNewSchedPopup() {
-		final HomeView self = this;
+		final SelectScheduleView self = this;
 		
 		final TextBox tb = new TextBox();
 		final DialogBox db = new DialogBox(false);
@@ -159,7 +123,7 @@ public class HomeView extends ScrollPanel {
 			    final LoadingPopup popup = new LoadingPopup();
 			    popup.show();
 				
-				service.openNewSchedule(tb.getText(), new AsyncCallback<Void>() {
+				service.openNewSchedule(tb.getText(), new AsyncCallback<Integer>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						popup.hide();
@@ -167,10 +131,10 @@ public class HomeView extends ScrollPanel {
 					}
 					
 					@Override
-					public void onSuccess(Void result) {
+					public void onSuccess(Integer newScheduleID) {
 						popup.hide();
 						container.clear();
-						container.add(new ScheduleNavView(self, container, service));
+						container.add(new ScheduleNavView(self, container, service, newScheduleID));
 					}
 				});
 			}
@@ -178,5 +142,27 @@ public class HomeView extends ScrollPanel {
 		
 		db.setWidget(vp);
 		db.center();
+	}
+
+	public Widget createMiniSelectWidget(int selectedScheduleID) {
+		final ListBox box = new ListBox();
+
+		int index = 0;
+		for (String scheduleName : schedulesIDsAndNames.keySet()) {
+			Integer id = schedulesIDsAndNames.get(scheduleName);
+			box.addItem(scheduleName, id.toString());
+			if (id == selectedScheduleID)
+				box.setSelectedIndex(index);
+			index++;
+		}
+		
+		box.addChangeHandler(new ChangeHandler() {
+			@Override
+			public void onChange(ChangeEvent event) {
+				selectSchedule(Integer.parseInt(box.getValue(box.getSelectedIndex())));
+			}
+		});
+		
+		return box;
 	}
 }
