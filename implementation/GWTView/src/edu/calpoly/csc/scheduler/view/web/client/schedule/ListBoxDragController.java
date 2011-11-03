@@ -2,6 +2,7 @@ package edu.calpoly.csc.scheduler.view.web.client.schedule;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import com.allen_sauer.gwt.dnd.client.DragContext;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 class ListBoxDragController extends PickupDragController {
 
   ListBoxDragController(DualListBox dualListBox) {
-    super(dualListBox, false);
+    super(RootPanel.get(), false);
     setBehaviorDragProxy(true);
     setBehaviorMultipleSelection(true);
   }

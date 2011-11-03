@@ -608,6 +608,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 		boxesAndSchedulePanel.add(verticalPanelIncluded);
 		
 		layoutDaysAndTimes();
+		registerDrops();
 		mainPanel.add(boxesAndSchedulePanel);
 	}
 

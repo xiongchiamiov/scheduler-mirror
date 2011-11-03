@@ -28,7 +28,6 @@ public class ScheduleCellDropController extends SimpleDropController
   String[] deptAndCatalogNum;
   super.onDrop(context);
   
-  Window.alert("Dropped");
   if(context.draggable.getClass() == ScheduleItemHTML.class)
   {
    droppedItem = (ScheduleItemHTML)context.draggable;
