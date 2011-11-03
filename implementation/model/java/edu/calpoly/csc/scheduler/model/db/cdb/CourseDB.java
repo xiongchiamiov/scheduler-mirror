@@ -246,7 +246,7 @@ public class CourseDB implements DatabaseAPI<Course>
       String updateString = "update courses set name = ?, catalognum = ?, "
             + "dept = ?, wtu = ?, scu = ?, numofsections = ?, "
             + "type = ?, length = ?, days = ?, enrollment = ?, "
-            + "lab = ?, labid = ?, quarterid = ?, scheduleid = ? where catalognum = ? "
+            + "lab = ?, labpad = ?, quarterid = ?, scheduleid = ? where catalognum = ? "
             + "and dept = ? and type = ? and quarterid = ?";
       // Create prepared statement
       PreparedStatement stmt = sqldb.getPrepStmt(updateString);
