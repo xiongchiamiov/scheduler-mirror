@@ -1,20 +1,24 @@
 The following is a description of the subdirectories of this website directory.
 
-The content subdirectory has HTML files for each of the project website pages.
-This content is included in the Dreamweaver files by having symbolic links from
-the dreamweaver/Library to content/*.html.  Things are done this way in case we
-want to abandon Dreamweaver at some point.  If we do this, we'll have clean
-HTML content files that we can use in some other HTML editor, or edit by hand.
+The 'content' subdirectory has HTML files for each of the project website
+pages.  The HTML content is what appears in the right middle frame of a
+WARC-layout web page.  The 'content' subdirectory also has groff files of the
+same root filenames as the HTML files.  The HTML files are generated from the
+groff files in the build script named .make.csh.
 
-There are two dreamweaver subdirectories, one with the "-samples" suffix, the
-other without the suffix.  These two subdirectories are used to separate the
-actual website content from the Poly samples.  These need to be separated
-because when dreamweaver goes to apply a template, it does a recursive
-directory search for all .dwt files.  We don't want to change the sample .dwts
-when we change the scheduler website, so the samples are put in the sibling
-suffixed directory named "dreamweaver-samples".
+The 'dreamweaver' subdirectory has HTML wrapper files.  These files contain
+all of the WARC-created foo-foo, plus UNIX '.so' commands to include the
+content.  The content is included using the standard UNIX 'soelim' command,
+which is run in the build script ../content/.make.csh.
 
-So far, I've found Dreamweaver to be way more trouble than it's worth.  I'm
-sticking with it for now, in case its benefits become apparent at some future
-date.  If this doesn't happen soon, I'll be happy to go with hand editing or
-some other HTML editor.
+There's another 'dreamweaver-samples' subdirectory that has as-is WARC samples
+The two dreaamwearver subdirectories are used to separate the actual website
+content from the Poly samples.  These need to be separated because when
+Dreamweaver goes to apply a template, it does a recursive directory search for
+all .dwt files.  We don't want to change the sample .dwts when we change the
+scheduler website, so the samples are put in the sibling suffixed directory
+named "dreamweaver-samples".  Since we're not using Dreamweaver at this point,
+this separation is moot, but it's left in place in case we do return to
+Dreamweaver at some point, however unlikely that may be.  If we do go back to
+Dreamweaver, the HTML content files can be physically placed back into the
+dreamweaver files, where the corresponding .so commands are.
