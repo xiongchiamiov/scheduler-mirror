@@ -19,130 +19,135 @@ import java.util.ArrayList;
  */
 public class DualListBox extends AbsolutePanel {
 
-  private static final String CSS_DEMO_DUAL_LIST_EXAMPLE_CENTER = "demo-DualListExample-center";
+	private static final String CSS_DEMO_DUAL_LIST_EXAMPLE_CENTER = "demo-DualListExample-center";
 
-  private static final int LIST_SIZE = 10;
+	private static final int LIST_SIZE = 10;
 
-  private Button allLeft;
+	private Button allLeft;
 
-  private Button allRight;
+	private Button allRight;
 
-  private ListBoxDragController dragController;
+	private ListBoxDragController dragController;
 
-  private MouseListBox left;
+	private MouseListBox left;
 
-  private Button oneLeft;
+	private Button oneLeft;
 
-  private Button oneRight;
+	private Button oneRight;
 
-  private MouseListBox right;
+	private MouseListBox right;
 
-  public DualListBox(int visibleItems, String width) {
-    HorizontalPanel horizontalPanel = new HorizontalPanel();
-    add(horizontalPanel);
-    horizontalPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+	public DualListBox(int visibleItems, String width) {
+		HorizontalPanel horizontalPanel = new HorizontalPanel();
+		add(horizontalPanel);
+		horizontalPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 
-    VerticalPanel verticalPanel = new VerticalPanel();
-    verticalPanel.addStyleName(CSS_DEMO_DUAL_LIST_EXAMPLE_CENTER);
-    verticalPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		VerticalPanel verticalPanel = new VerticalPanel();
+		// verticalPanel.addStyleName(CSS_DEMO_DUAL_LIST_EXAMPLE_CENTER);
+		verticalPanel
+				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 
-    dragController = new ListBoxDragController(this);
-    left = new MouseListBox(dragController, LIST_SIZE);
-    right = new MouseListBox(dragController, LIST_SIZE);
+		dragController = new ListBoxDragController(this);
+		left = new MouseListBox(dragController, LIST_SIZE);
+		right = new MouseListBox(dragController, LIST_SIZE);
 
-    left.setWidth(width);
-    right.setWidth(width);
+		left.setWidth(width);
+		right.setWidth(width);
 
-    horizontalPanel.add(left);
-    horizontalPanel.add(verticalPanel);
-    horizontalPanel.add(right);
+		horizontalPanel.add(left);
+		horizontalPanel.add(verticalPanel);
+		horizontalPanel.add(right);
 
-    oneRight = new Button("&gt;");
-    oneLeft = new Button("&lt;");
-    allRight = new Button("&gt;&gt;");
-    allLeft = new Button("&lt;&lt;");
-    verticalPanel.add(oneRight);
-    verticalPanel.add(oneLeft);
-    verticalPanel.add(new HTML("&nbsp;"));
-    verticalPanel.add(allRight);
-    verticalPanel.add(allLeft);
+		oneRight = new Button("&gt;");
+		oneLeft = new Button("&lt;");
+		allRight = new Button("&gt;&gt;");
+		allLeft = new Button("&lt;&lt;");
+		verticalPanel.add(oneRight);
+		verticalPanel.add(oneLeft);
+		verticalPanel.add(new HTML("&nbsp;"));
+		verticalPanel.add(allRight);
+		verticalPanel.add(allLeft);
 
-    allRight.addClickHandler(new ClickHandler() {
-      @Override
-      public void onClick(ClickEvent event) {
-        moveItems(left, right, false);
-      }
-    });
+		allRight.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				moveItems(left, right, false);
+			}
+		});
 
-    allLeft.addClickHandler(new ClickHandler() {
-      @Override
-      public void onClick(ClickEvent event) {
-        moveItems(right, left, false);
-      }
-    });
+		allLeft.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				moveItems(right, left, false);
+			}
+		});
 
-    oneRight.addClickHandler(new ClickHandler() {
-      @Override
-      public void onClick(ClickEvent event) {
-        moveItems(left, right, true);
-      }
-    });
+		oneRight.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				moveItems(left, right, true);
+			}
+		});
 
-    oneLeft.addClickHandler(new ClickHandler() {
-      @Override
-      public void onClick(ClickEvent event) {
-        moveItems(right, left, true);
-      }
-    });
+		oneLeft.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				moveItems(right, left, true);
+			}
+		});
 
-    ListBoxDropController leftDropController = new ListBoxDropController(left);
-    ListBoxDropController rightDropController = new ListBoxDropController(right);
-    dragController.registerDropController(leftDropController);
-    dragController.registerDropController(rightDropController);
-  }
+		ListBoxDropController leftDropController = new ListBoxDropController(
+				left);
+		ListBoxDropController rightDropController = new ListBoxDropController(
+				right);
+		dragController.registerDropController(leftDropController);
+		dragController.registerDropController(rightDropController);
+	}
 
-  public void addLeft(String string) {
-    left.add(string);
-  }
+	public void addLeft(String string) {
+		left.add(string);
+	}
 
-  /**
-   * Adds an widget to the left list box.
-   *
-   * @param widget the text of the item to be added
-   */
-  public void addLeft(Widget widget) {
-    left.add(widget);
-  }
-	  
-  /**
-   * Adds an widget to the right list box.
-   *
-   * @param widget the text of the item to be added
-   */
-  public void addRight(Widget widget) {
-     right.add(widget);
-  }
-  
-  public void addRight(String string) {
-	 right.add(string);
-  }
+	/**
+	 * Adds an widget to the left list box.
+	 * 
+	 * @param widget
+	 *            the text of the item to be added
+	 */
+	public void addLeft(Widget widget) {
+		left.add(widget);
+	}
 
-  public ListBoxDragController getDragController() {
-    return dragController;
-  }
+	/**
+	 * Adds an widget to the right list box.
+	 * 
+	 * @param widget
+	 *            the text of the item to be added
+	 */
+	public void addRight(Widget widget) {
+		right.add(widget);
+	}
 
-  public void registerScheduleDrop(DropController dropController)
-  {
-   dragController.registerDropController(dropController);
-  }
-  
-  protected void moveItems(MouseListBox from, MouseListBox to, boolean justSelectedItems) {
-    ArrayList<Widget> widgetList = justSelectedItems ? dragController.getSelectedWidgets(from)
-        : from.widgetList();
-    for (Widget widget : widgetList) {
-      // TODO let widget.removeFromParent() take care of from.remove()
-      from.remove(widget);
-      to.add(widget);
-    }
-  }
+	public void addRight(String string) {
+		right.add(string);
+	}
+
+	public ListBoxDragController getDragController() {
+		return dragController;
+	}
+
+	public void registerScheduleDrop(DropController dropController) {
+		dragController.registerDropController(dropController);
+	}
+
+	protected void moveItems(MouseListBox from, MouseListBox to,
+			boolean justSelectedItems) {
+		ArrayList<Widget> widgetList = justSelectedItems ? dragController
+				.getSelectedWidgets(from) : from.widgetList();
+		for (Widget widget : widgetList) {
+			// TODO let widget.removeFromParent() take care of from.remove()
+			from.remove(widget);
+			to.add(widget);
+		}
+	}
 }
