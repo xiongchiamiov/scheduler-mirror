@@ -1,11 +1,10 @@
 package edu.calpoly.csc.scheduler.view.web.shared;
 
 import java.io.Serializable;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.Vector;
-
-import com.google.gwt.user.client.Window;
 
 
 public class InstructorGWT implements Serializable{
@@ -57,6 +56,13 @@ public class InstructorGWT implements Serializable{
 		}
 		instructor.settPrefs(newTPrefs);
 		
+		Map<CourseGWT, Integer> newCoursePrefs = new LinkedHashMap<CourseGWT, Integer>();
+		for (CourseGWT course : coursePrefs.keySet())
+			newCoursePrefs.put(course.clone(), coursePrefs.get(course));
+		instructor.setCoursePreferences(newCoursePrefs);
+		
+		instructor.verify();
+		
 		return instructor;
 	}
 	
@@ -72,20 +78,13 @@ public class InstructorGWT implements Serializable{
 	}
 
 	public void verify() {
-		if (userID == null)
-			Window.alert("zerp1");
-		if (firstName == null)
-			Window.alert("zerp2");
-		if (lastName == null)
-			Window.alert("zerp3");
-		if (roomNumber == null)
-			Window.alert("zerp4");
-		if (building == null)
-			Window.alert("zerp5");
-		if (coursePrefs == null)
-			Window.alert("zerp8");
-		if (itemsTaught == null)
-			Window.alert("zerp10");
+		assert(userID != null);
+		assert(firstName != null);
+		assert(lastName != null);
+		assert(roomNumber != null);
+		assert(building != null);
+		assert(coursePrefs != null);
+		assert(itemsTaught != null);
 	}
 
 	public Vector<ScheduleItemGWT> getItemsTaugh(){

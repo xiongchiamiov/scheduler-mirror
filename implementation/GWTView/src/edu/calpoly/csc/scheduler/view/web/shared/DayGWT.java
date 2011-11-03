@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import edu.calpoly.csc.scheduler.model.schedule.Day;
 
-public class DayGWT implements Serializable, Comparable {
+public class DayGWT implements Serializable, Comparable<DayGWT> {
 	   /** Sunday */
 	   public static final DayGWT SUN = new DayGWT(0);
 	   /** Monday */
@@ -39,10 +39,17 @@ public class DayGWT implements Serializable, Comparable {
 	}
 
 	@Override
-	public int compareTo(Object that_) {
-		DayGWT that = (DayGWT)that_;
-		if (num != that.num)
-			return num - that.num;
-		return 0;
+	public int compareTo(DayGWT that) {
+		return num - that.num;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		return obj instanceof DayGWT && compareTo((DayGWT)obj) == 0;
+	}
+	
+	@Override
+	public int hashCode() {
+		return num;
 	}
 }

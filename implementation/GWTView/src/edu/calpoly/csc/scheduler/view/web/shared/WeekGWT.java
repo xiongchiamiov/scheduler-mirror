@@ -13,4 +13,13 @@ public class WeekGWT implements Serializable {
 	public void setDays(Vector<DayGWT> days) {
 		this.days = days;
 	}
+	
+	public WeekGWT clone() {
+		WeekGWT newWeek = new WeekGWT();
+		Vector<DayGWT> newDays = new Vector<DayGWT>();
+		for (DayGWT day : days)
+			newDays.add(day.clone());
+		newWeek.days = newDays;
+		return newWeek;
+	}
 }

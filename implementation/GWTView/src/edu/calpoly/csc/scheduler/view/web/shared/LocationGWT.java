@@ -58,48 +58,13 @@ public class LocationGWT implements Serializable{
 	 */
 //   private WeekAvail availability;
 
-	static void printException(Throwable e) {
-		String st = e.getClass().getName() + ": " + e.getMessage();
-		for (StackTraceElement ste : e.getStackTrace())
-			st += "<br />" + ste.toString();
-		RootPanel.get().clear();
-		RootPanel.get().add(new HTML(st));
-	}
-
 	public void verify() {
-		try {
-			if (building == null){
-				Window.alert("derp");
-				throw new NullGWTDataException();
-			}
-			if (room == null){
-				Window.alert("derp2");
-				throw new NullGWTDataException();
-			}
-			if (type == null){
-				Window.alert("derp3");
-				throw new NullGWTDataException();
-			}
-			if (equipmentList == null){
-//				Window.alert("derp4");
-//				throw new NullGWTDataException();
-				equipmentList = "";
-			}
-			if (availability == null) {
-//				availability = new 
-//				Window.alert("derp5");
-//				throw new NullGWTDataException();
-				availability = "";
-			}
-			if (quarterID == null) {
-//				Window.alert("derp6");
-//				throw new NullGWTDataException();
-				quarterID = "";
-			}
-		}
-		catch (Exception e) {
-			printException(e);
-		}
+		assert(building != null);
+		assert(room != null);
+		assert(type != null);
+		assert(equipmentList != null);
+		assert(availability != null);
+		assert(quarterID != null);
 	}
 
 	public LocationGWT(){

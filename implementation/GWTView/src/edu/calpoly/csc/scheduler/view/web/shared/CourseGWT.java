@@ -2,12 +2,8 @@ package edu.calpoly.csc.scheduler.view.web.shared;
 
 import java.io.Serializable;
 
-import com.google.gwt.user.client.Window;
 
-import edu.calpoly.csc.scheduler.model.db.cdb.Lab;
-
-
-public class CourseGWT implements Serializable{
+public class CourseGWT implements Serializable, Comparable<CourseGWT> {
 	private static final long serialVersionUID = -3337091550673507081L;
 	
 	private String courseName;
@@ -23,17 +19,31 @@ public class CourseGWT implements Serializable{
 	private String quarterID;
 	private int scheduleID;
 	
+	public CourseGWT clone() {
+		CourseGWT newCourse = new CourseGWT();
+		newCourse.courseName = courseName;
+		newCourse.catalogNum = catalogNum;
+		newCourse.dept = dept;
+		newCourse.wtu = wtu;
+		newCourse.scu = scu;
+		newCourse.numSections = numSections;
+		newCourse.type = type;
+		newCourse.maxEnroll = maxEnroll;
+		newCourse.labId = labId;
+		newCourse.labPad = labPad;
+		newCourse.length = length;
+		newCourse.days = days.clone();
+		newCourse.quarterID = quarterID;
+		newCourse.scheduleID = scheduleID;
+		return newCourse;
+	}
+	
 	public void verify() {
-		if (courseName == null)
-			Window.alert("flerp1");
-		if (dept == null)
-			Window.alert("flerp2");
-		if (type == null)
-			Window.alert("flerp3");
-		if (days == null)
-			Window.alert("flerp5");
-		if (quarterID == null)
-			Window.alert("flerp6");
+		assert(courseName != null);
+		assert(dept != null);
+		assert(type != null);
+		assert(days != null);
+		assert(quarterID != null);
 	}
 
 	public void setQuarterID(String quarter)
@@ -168,6 +178,12 @@ public class CourseGWT implements Serializable{
 		this.length = length;
 	}
 
+	@Override
+	public int compareTo(CourseGWT o) {
+		if (catalogNum != o.catalogNum)
+			return catalogNum - o.catalogNum;
+		return dept.compareTo(o.dept);
+	}
 	public String toString() {
 		return this.courseName + " " + Integer.toString(this.catalogNum);
 	}

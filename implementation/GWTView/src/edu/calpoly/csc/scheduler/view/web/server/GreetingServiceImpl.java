@@ -61,10 +61,18 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		assert(model != null);
 		
 		InstructorDB idb = model.getDb().getInstructorDB();
+
+		HashMap<String, Instructor> newInstructorsByUserID = new LinkedHashMap<String, Instructor>();
+
+		for (InstructorGWT instructorGWT : instructors) {
+			Instructor instructor = Conversion.fromGWT(instructorGWT);
+			newInstructorsByUserID.put(instructor.getUserID(), instructor);
+			idb.saveData(instructor);
+		}
 		
-		idb.clearData();
-		for (InstructorGWT instructor : instructors)
-			idb.saveData(Conversion.fromGWT(instructor));
+		for (Instructor instructor : model.getDb().getInstructorDB().getData())
+			if (newInstructorsByUserID.get(instructor.getUserID()) == null)
+				idb.removeData(instructor);
 		
 		assert(model.getDb().getInstructorDB().getData().size() == instructors.size());
 	}
@@ -252,9 +260,20 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	@Override
 	public void saveLocations(ArrayList<LocationGWT> locations) {
 		LocationDB ldb = model.getDb().getLocationDB();
-		ldb.clearData();
-		for (LocationGWT location : locations)
-			ldb.saveData(Conversion.fromGWT(location));
+
+		HashMap<String, Location> newLocationsByUserID = new LinkedHashMap<String, Location>();
+
+		for (LocationGWT locationGWT : locations) {
+			Location location = Conversion.fromGWT(locationGWT);
+			newLocationsByUserID.put(location.getBuilding() + "-" + location.getRoom(), location);
+			ldb.saveData(location);
+		}
+		
+		for (Location location : model.getDb().getLocationDB().getData())
+			if (newLocationsByUserID.get(location.getBuilding() + "-" + location.getRoom()) == null)
+				ldb.removeData(location);
+
+		assert(model.getDb().getLocationDB().getData().size() == locations.size());
 	}
 	
 	@Override
@@ -273,12 +292,22 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 
 	@Override
 	public void saveCourses(ArrayList<CourseGWT> courses) {
-		for (CourseGWT course : courses)
-			course.verify();
 		CourseDB cdb = model.getDb().getCourseDB();
-		cdb.clearData();
-		for (CourseGWT course : courses)
-			cdb.saveData(Conversion.fromGWT(course));
+
+		HashMap<String, Course> newLocationsByUserID = new LinkedHashMap<String, Course>();
+
+		for (CourseGWT courseGWT : courses) {
+			Course course = Conversion.fromGWT(courseGWT);
+			newLocationsByUserID.put(course.getDept() + "-" + course.getCatalogNum(), course);
+			cdb.saveData(course);
+		}
+		
+		for (Course course : model.getDb().getCourseDB().getData())
+			if (newLocationsByUserID.get(course.getDept() + "-" + course.getCatalogNum()) == null)
+				cdb.removeData(course);
+
+		
+		assert(model.getDb().getCourseDB().getData().size() == courses.size());
 	}
 
 	private boolean hasPreferences(Instructor instructor) {

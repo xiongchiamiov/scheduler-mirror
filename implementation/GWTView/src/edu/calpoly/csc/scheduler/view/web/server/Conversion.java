@@ -105,13 +105,44 @@ public abstract class Conversion {
 		ins.setDisability(instructor.getDisabilities());
 		ins.setGenerosity(instructor.getGenerosity());
 		ins.setAvailability(new WeekAvail());
-		ins.setCoursePreferences(new HashMap<Course,Integer>());
-		ins.setTimePreferences(new HashMap<Day, LinkedHashMap<Time, TimePreference>>());
+		
+		HashMap<Course,Integer> coursePrefs = new HashMap<Course,Integer>();
+		for (CourseGWT course : instructor.getCoursePreferences().keySet()) {
+			Integer desire = instructor.getCoursePreferences().get(course);
+			coursePrefs.put(fromGWT(course), desire);
+		}
+		ins.setCoursePreferences(coursePrefs);
+		
+		HashMap<Day, LinkedHashMap<Time, TimePreference>> prefs = new HashMap<Day, LinkedHashMap<Time, TimePreference>>();
+		for (DayGWT sourceDay : instructor.gettPrefs().keySet()) {
+			Map<TimeGWT, TimePreferenceGWT> sourceDayPrefs = instructor.gettPrefs().get(sourceDay);
+			
+			Day day = fromGWT(sourceDay);
+			LinkedHashMap<Time, TimePreference> dayPrefs = new LinkedHashMap<Time, TimePreference>();
+			
+			for (TimeGWT sourceTime : sourceDayPrefs.keySet()) {
+				TimePreferenceGWT sourceTimePrefs = sourceDayPrefs.get(sourceTime);
+				dayPrefs.put(fromGWT(sourceTime), fromGWT(sourceTimePrefs));
+			}
+			
+			prefs.put(day, dayPrefs);
+		}
+		ins.setTimePreferences(prefs);
+		
 		ins.setItemsTaught(new Vector<ScheduleItem>());
+		
 		ins.setQuarterId("");
 		ins.verify();
 		
 		return ins;
+	}
+
+	private static Time fromGWT(TimeGWT sourceTime) {
+		return new Time(sourceTime.getHour(), sourceTime.getMinute());
+	}
+
+	private static TimePreference fromGWT(TimePreferenceGWT sourceTimePrefs) {
+		return new TimePreference(fromGWT(sourceTimePrefs.getTime()), sourceTimePrefs.getDesire());
 	}
 
 	public static ScheduleItemGWT toGWT(ScheduleItem schdItem) {

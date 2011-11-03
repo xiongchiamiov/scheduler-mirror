@@ -9,6 +9,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
@@ -49,6 +50,9 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 		this.strategy = strategy;
 
 		selectedCells = new LinkedList<CellWidget>();
+
+		strategy.getInstructor().verify();
+		strategy.getSavedInstructor().verify();
 	}
 
 	static void printException(Throwable e) {
@@ -61,78 +65,76 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 
 	void setSelectedCellsContents(int value) {
 		for (CellWidget cell : selectedCells)
-			setPreference(cell.halfHour, cell.day, value);
+			setPreference(cell, value);
+		redoColors();
 	}
 
-	void setPreference(int halfHour, int dayNum, int desire) {
+	void setPreference(CellWidget cell, int desire) {
 		InstructorGWT instructor = strategy.getInstructor();
 		
-		try {
-			int hour = halfHour / 2 + 7; // divide by two to get hours 0-15. Add 7 to get hours 7-22.
-			
-//			Window.alert("derp1");
-			TimeGWT time = new TimeGWT();
-			time.setHour(hour);
-			time.setMinute(halfHour % 2 * 30);
+		int hour = cell.halfHour / 2 + 7; // divide by two to get hours 0-15. Add 7 to get hours 7-22.
+		
+		TimeGWT time = new TimeGWT();
+		time.setHour(hour);
+		time.setMinute(cell.halfHour % 2 * 30);
 
-//			Window.alert("derp2");
-			DayGWT day = new DayGWT();
-			day.setNum(dayNum);
+		DayGWT day = new DayGWT();
+		day.setNum(cell.day);
 
-//			Window.alert("derp3");
-			if (instructor.gettPrefs().get(day) == null) {
-//				Window.alert("derp3.1");
-				Map<TimeGWT, TimePreferenceGWT> newmap = new HashMap<TimeGWT, TimePreferenceGWT>();
-//				Window.alert("derp3.15");
-				assert(newmap.get(time) == null);
-//				Window.alert("derp3.2");
-				instructor.gettPrefs().put(day, newmap);
-//				Window.alert("derp3.3");
-				assert(instructor.gettPrefs().get(day) == newmap);
-//				Window.alert("derp3.4");
-				assert(instructor.gettPrefs().get(day).get(time) == null);
-//				Window.alert("derp3.5");
-//				assert(false);
-			}
-//			Window.alert("derp4");
-			assert(instructor.gettPrefs().get(day) != null);
-
-//			Window.alert("derp5");
-			if (instructor.gettPrefs().get(day).get(time) == null) {
-//				Window.alert("derp5.5");
-				TimePreferenceGWT pref = new TimePreferenceGWT();
-				pref.setDesire(0);
-				pref.setTime(time);
-//				Window.alert("derp5.6");
-				instructor.gettPrefs().get(day).put(time, pref);
-//				Window.alert("derp5.7");
-			}
-//			Window.alert("derp1");
-			assert(instructor.gettPrefs().get(day).get(time) != null);
-
-//			Window.alert("derp6");
-			instructor.gettPrefs().get(day).get(time).setDesire(desire);
-//			Window.alert("derp7");
-			assert(instructor.gettPrefs().get(day).get(time).getDesire() == desire);
-//			Window.alert("derp1");
-			
-			CellWidget cell = cells[halfHour][dayNum];
-//			Window.alert("derp8");
-			assert(cell != null);
-			cell.clear();
-			cell.add(new HTML(new Integer(desire).toString()));
-//			Window.alert("derp9");
+		if (instructor.gettPrefs().get(day) == null) {
+			Map<TimeGWT, TimePreferenceGWT> newmap = new HashMap<TimeGWT, TimePreferenceGWT>();
+			assert(newmap.get(time) == null);
+			instructor.gettPrefs().put(day, newmap);
+			assert(instructor.gettPrefs().get(day) == newmap);
+			assert(instructor.gettPrefs().get(day).get(time) == null);
 		}
-		catch (Exception e) {
-			printException(e);
+		assert(instructor.gettPrefs().get(day) != null);
+
+		if (instructor.gettPrefs().get(day).get(time) == null) {
+			TimePreferenceGWT pref = new TimePreferenceGWT();
+			pref.setDesire(desire);
+			pref.setTime(time);
+			instructor.gettPrefs().get(day).put(time, pref);
 		}
+		assert(instructor.gettPrefs().get(day).get(time) != null);
+
+		instructor.gettPrefs().get(day).get(time).setDesire(desire);
+		
+		time = new TimeGWT();
+		time.setHour(hour);
+		time.setMinute(cell.halfHour % 2 * 30);
+
+		day = new DayGWT();
+		day.setNum(cell.day);
+		
+		assert(instructor.gettPrefs().get(day).get(time).getDesire() == desire);
+		
+		assert(getPreference(instructor, cell.halfHour, cell.day) == desire);
+		
+		assert(cell != null);
+		cell.clear();
+		cell.add(new HTML(new Integer(getPreference(instructor, cell.halfHour, cell.day)).toString()));
 	}
-	
+
+	int getPreference(InstructorGWT ins, int halfHour, int dayNum) {
+		int hour = halfHour / 2 + 7; // divide by two to get hours 0-15. Add 7 to get hours 7-22.
+		
+		TimeGWT time = new TimeGWT();
+		time.setHour(hour);
+		time.setMinute(halfHour % 2 * 30);
+		
+		DayGWT day = new DayGWT();
+		day.setNum(dayNum);
+		
+		if (ins.gettPrefs().get(day) != null && ins.gettPrefs().get(day).get(time) != null)
+			return ins.gettPrefs().get(day).get(time).getDesire();
+		else
+			return 0;
+	}
+
 	@Override
 	protected void onLoad() {
-		// TODO Auto-generated method stub
 		super.onLoad();
-		
 		
 		FocusPanel focus = new FocusPanel();
 		add(focus);
@@ -162,18 +164,18 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 			timePrefsTable.setWidget(row, 0, new HTML(string));
 		}
 		
-		String days[] = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" };
-		for (int day = 0; day < 5; day++) {
+		String days[] = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
+		for (int day = 0; day < 7; day++) {
 			int col = day + 1;
 			timePrefsTable.setWidget(0, col, new HTML(days[day]));
 		}
 
-		cells = new CellWidget[30][5];
+		cells = new CellWidget[30][7];
 		
 		for (int halfHour = 0; halfHour < 30; halfHour++) {
 			int row = halfHour + 1;
 			
-			for (int dayNum = 0; dayNum < 5; dayNum++) {
+			for (int dayNum = 0; dayNum < 7; dayNum++) {
 				int col = dayNum + 1;
 
 				int desire = this.getPreference(strategy.getInstructor(), halfHour, dayNum);
@@ -230,19 +232,6 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 				selectCell(cells[halfHour][day]);
 	}
 	
-	int getPreference(InstructorGWT ins, int halfHour, int dayNum) {
-		int hour = halfHour / 2 + 7; // divide by two to get hours 0-15. Add 7 to get hours 7-22.
-		TimeGWT time = new TimeGWT();
-		time.setHour(hour);
-		time.setMinute(halfHour % 2 * 30);
-		DayGWT day = new DayGWT();
-		day.setNum(dayNum);
-		if (ins.gettPrefs().get(day) != null && ins.gettPrefs().get(day).get(time) != null)
-			return ins.gettPrefs().get(day).get(time).getDesire();
-		else
-			return 0;
-	}
-
 	void setAnchorCell(CellWidget cell) {
 		if (anchorCell != null) {
 			anchorCell.removeStyleName("anchorCell");
@@ -286,7 +275,7 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 			time.setHour(hour);
 			time.setMinute(halfHour % 2 * 30);
 			
-			for (int dayNum = 0; dayNum < 5; dayNum++) {
+			for (int dayNum = 0; dayNum < 7; dayNum++) {
 				DayGWT day = new DayGWT();
 				day.setNum(dayNum);
 
