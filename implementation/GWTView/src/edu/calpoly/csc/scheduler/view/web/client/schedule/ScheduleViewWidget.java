@@ -64,18 +64,8 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 
 	private DualListBox dualListBoxCourses;
 	private ListBoxDragController listBoxDragController;
-	private HorizontalPanel horizontalPanelLabels;
 	
-	private VerticalPanel verticalPanelLists;
-	private VerticalPanel verticalPanelAvailable;
-	private VerticalPanel verticalPanelIncluded;
-	private Label labelAvailableList;
-	private Label labelIncludedList;
-	private ListBox listBoxAvailable;
-	private ListBox listBoxIncluded;
 	private HorizontalPanel boxesAndSchedulePanel;
-	private ArrayList<CourseGWT> availableCourses;
-	private ArrayList<CourseGWT> includedCourses;
 
 	/**
 	 * Places a ScheduleCell in each cell for dragging and dropping schedule
@@ -534,9 +524,6 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 	}
 
 	private void addCoursesToBoxes() {
-		availableCourses = new ArrayList<CourseGWT>();
-		includedCourses = new ArrayList<CourseGWT>();
-
 		greetingService
 				.getCourses(new AsyncCallback<ArrayList<CourseGWT>>() {
 					@Override
@@ -547,9 +534,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 					@Override
 					public void onSuccess(ArrayList<CourseGWT> result) {
 						if (result != null) {
-							for (CourseGWT course : result) {
-								availableCourses.add(course);
-								
+							for (CourseGWT course : result) {								
 								dualListBoxCourses.addLeft(new CourseListItem(course));
 							}
 						}
@@ -559,42 +544,15 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 
 	private void layoutBoxesAndSchedule() {
 		boxesAndSchedulePanel = new HorizontalPanel();
-		horizontalPanelLabels = new HorizontalPanel();
-		verticalPanelIncluded = new VerticalPanel();
-		verticalPanelAvailable = new VerticalPanel();
-		verticalPanelLists = new VerticalPanel();
-		
-		labelAvailableList = new Label("Available");
-		listBoxAvailable = new ListBox(true);
-		listBoxAvailable.setVisibleItemCount(10);
-		
-		verticalPanelAvailable.add(labelAvailableList);
-		//verticalPanelAvailable.add(listBoxAvailable);
-				
-		labelIncludedList = new Label("Included");			
-		listBoxIncluded = new ListBox(true);
-		listBoxIncluded.setVisibleItemCount(10);		
-		
-		verticalPanelIncluded.add(labelIncludedList);		
-		//verticalPanelIncluded.add(listBoxIncluded);
-		
-		horizontalPanelLabels.add(verticalPanelIncluded);
-		horizontalPanelLabels.add(verticalPanelAvailable);
 						
 		dualListBoxCourses = new DualListBox(10, "10em");
 		listBoxDragController = new ListBoxDragController(dualListBoxCourses);
 		
-		verticalPanelLists.add(dualListBoxCourses);
-		verticalPanelLists.add(horizontalPanelLabels);
-		
 		// add some items to the list
-	    boxesAndSchedulePanel.add(verticalPanelLists);
-				
 		addCoursesToBoxes();
-		
+
+		boxesAndSchedulePanel.add(dualListBoxCourses);		
 		boxesAndSchedulePanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-		boxesAndSchedulePanel.add(verticalPanelAvailable);
-		boxesAndSchedulePanel.add(verticalPanelIncluded);
 		
 		layoutDaysAndTimes();
 		registerDrops();

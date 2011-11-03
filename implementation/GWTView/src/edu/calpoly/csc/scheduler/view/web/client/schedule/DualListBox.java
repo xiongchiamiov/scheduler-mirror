@@ -9,6 +9,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -48,7 +49,9 @@ public class DualListBox extends AbsolutePanel {
 		// verticalPanel.addStyleName(CSS_DEMO_DUAL_LIST_EXAMPLE_CENTER);
 		verticalPanel
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-
+        VerticalPanel availablePanel = new VerticalPanel();
+        VerticalPanel includedPanel = new VerticalPanel();
+        
 		dragController = new ListBoxDragController(this);
 		left = new MouseListBox(dragController, LIST_SIZE);
 		right = new MouseListBox(dragController, LIST_SIZE);
@@ -56,9 +59,13 @@ public class DualListBox extends AbsolutePanel {
 		left.setWidth(width);
 		right.setWidth(width);
 
-		horizontalPanel.add(left);
+		availablePanel.add(new HTML("<b>Available Courses</b>"));
+		availablePanel.add(left);
+		includedPanel.add(new HTML("<b>Courses to Schedule</b>"));
+		includedPanel.add(right);
+		horizontalPanel.add(availablePanel);
 		horizontalPanel.add(verticalPanel);
-		horizontalPanel.add(right);
+		horizontalPanel.add(includedPanel);
 
 		oneRight = new Button("&gt;");
 		oneLeft = new Button("&lt;");
