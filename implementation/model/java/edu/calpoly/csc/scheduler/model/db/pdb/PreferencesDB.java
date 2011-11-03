@@ -892,7 +892,7 @@ public class PreferencesDB extends Observable {
     */
    public void setLocalDFCWithThisFromFile (Collection<DaysForClasses> data)
    {
-      this.localDPrefs = new Vector(data);
+      this.localDPrefs = new Vector<DaysForClasses>(data);
       this.setChanged();
       this.notifyObservers();
    }
