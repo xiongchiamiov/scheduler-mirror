@@ -45,7 +45,10 @@ public class CourseDayAvail extends GenAvail<Course>
                                   BitSet tSlot)
    {
       /*
-       * A course can always overlap itself
+       * A course can always overlap itself. This is gross, but here's the gist:
+       * if this course already booked the slot for this time range, say 
+       * that it didn't. If we end up scheduling ourselves into the slot, we'll
+       * end up undoing this, so all's well w/ the world. 
        */
       timeSlot.set(getBit(c), false);
       if (!timeSlot.isEmpty())
