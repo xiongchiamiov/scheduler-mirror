@@ -396,16 +396,13 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 	 * Retrieves a schedule items from a generated schedule from the server.
 	 */
 	private void getScheduleItems() {
-		if(availableCourses.size() == 0)
+		if(dualListBoxCourses.getIncludedCourses().size() == 0)
 		{
 		 Window.alert("No courses to schedule");
 		 return;
 		}
-		for(CourseGWT course : availableCourses)
-		{
-	     includedCourses.add(course);
-		}
-		greetingService.getGWTScheduleItems(includedCourses,
+		
+		greetingService.getGWTScheduleItems(dualListBoxCourses.getIncludedCourses(),
 				new AsyncCallback<ArrayList<ScheduleItemGWT>>() {
 					public void onFailure(Throwable caught) {
 						Window.alert("Failed to get schedule: "
@@ -550,19 +547,11 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 					@Override
 					public void onSuccess(ArrayList<CourseGWT> result) {
 						if (result != null) {
-							System.out.println(result.size());
 							for (CourseGWT course : result) {
 								availableCourses.add(course);
 								
-								dualListBoxCourses.addLeft(course.getDept()
-										+ " " + course.getCatalogNum());
+								dualListBoxCourses.addLeft(new CourseListItem(course));
 							}
-							
-							//includedCourses.add(availableCourses.get(0));
-							
-							/*dualListBoxCourses.addRight(includedCourses.get(0)
-									.getDept()
-									+ includedCourses.get(0).getCatalogNum());*/
 						}
 					}
 				});

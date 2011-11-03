@@ -12,6 +12,8 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
+
 import java.util.ArrayList;
 
 /**
@@ -140,6 +142,21 @@ public class DualListBox extends AbsolutePanel {
 		dragController.registerDropController(dropController);
 	}
 
+	public ArrayList<CourseGWT> getIncludedCourses()
+	{
+	 ArrayList<CourseGWT> courses = new ArrayList<CourseGWT>();
+	 
+	 for(Widget courseItem : right.widgetList())
+	 {
+	  if(courseItem instanceof CourseListItem)
+	  {
+	   courses.add(((CourseListItem)courseItem).getCourse());
+	  }
+	 }
+	 
+	 return courses;
+	}
+	
 	protected void moveItems(MouseListBox from, MouseListBox to,
 			boolean justSelectedItems) {
 		ArrayList<Widget> widgetList = justSelectedItems ? dragController
