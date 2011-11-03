@@ -168,5 +168,8 @@ public class CourseGWT implements Serializable{
 		this.length = length;
 	}
 
+	public String toString() {
+		return this.courseName + " " + Integer.toString(this.catalogNum);
+	}
 	
 }
