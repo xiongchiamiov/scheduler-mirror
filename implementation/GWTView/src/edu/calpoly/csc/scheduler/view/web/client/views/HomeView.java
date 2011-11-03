@@ -55,15 +55,19 @@ public class HomeView extends ScrollPanel {
 		vp.add(new Button("Open", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
+				final LoadingPopup popup = new LoadingPopup();
+				popup.show();
+				
 				String existingScheduleStr = listBox.getValue(listBox.getSelectedIndex());
 				service.openExistingSchedule(existingScheduleStr, new AsyncCallback<Void>() {
 					@Override
 					public void onFailure(Throwable caught) {
-						// TODO Auto-generated method stub
-						
+						popup.hide();
+						Window.alert("Failed to open schedule in: " + caught.getMessage());
 					}
 					@Override
 					public void onSuccess(Void derp) {
+						popup.hide();
 						container.clear();
 						container.add(new QuarterView(container, service));
 					}
@@ -150,15 +154,19 @@ public class HomeView extends ScrollPanel {
 			public void onClick(ClickEvent event) {		
 				db.hide();
 				
+			    final LoadingPopup popup = new LoadingPopup();
+			    popup.show();
+				
 				service.openNewSchedule(tb.getText(), new AsyncCallback<Void>() {
 					@Override
 					public void onFailure(Throwable caught) {
-						//TODO Auto-generated method stub				
+						popup.hide();
+						Window.alert("Failed to open new schedule in: " + caught.getMessage());
 					}
 					
 					@Override
 					public void onSuccess(Void result) {
-						// TODO Auto-generated method stub
+						popup.hide();
 						container.clear();
 						container.add(new QuarterView(container, service));
 					}
