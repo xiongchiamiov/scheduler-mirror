@@ -44,9 +44,16 @@ public class ScheduleCellDropController extends SimpleDropController
    targetCell.promptForDays(courseHolder, targetCell.getRow(), false);
   }
  }
- 
+  
  public void onEnter(DragContext context)
  {
   super.onEnter(context);
+  targetCell.highlightRow();
+ }
+ 
+ public void onLeave(DragContext context)
+ {
+  super.onLeave(context);
+  targetCell.unhighlightRow();
  }
 }

@@ -32,7 +32,7 @@ public class ReschedulePopup extends DialogBox
   layoutDaysPanel();
   mainPanel = new VerticalPanel();
   mainPanel.add(daysPanel);
-  mainPanel.add(new Button("Reschedule", 
+  mainPanel.add(new Button("Schedule Course", 
    new ClickHandler()
    {
 	@Override

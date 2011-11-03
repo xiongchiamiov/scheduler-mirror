@@ -198,7 +198,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 	 * Lays out an initial empty schedule with just days columns and time rows.
 	 */
 	private void layoutDaysAndTimes() {
-		//scheduleGrid.addStyleName("scheduleTable");
+		scheduleGrid.addStyleName("scheduleTable");
 		setDaysOfWeek();
 		setTimes();
 		resetRowSpans();
@@ -674,10 +674,11 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 	
   public void highlightRow(int row)
   {
-   scheduleGrid.getRowFormatter().setStyleName(row, "highlightedBorder");
+   scheduleGrid.getRowFormatter().addStyleName(row, "highlightedBorder");
   }
   public void unhighlightRow(int row)
   {
    scheduleGrid.getRowFormatter().removeStyleName(row, "highlightedBorder");
+   scheduleGrid.getRowFormatter().removeStyleName(row-1, "highlightedBorder");
   }
 }

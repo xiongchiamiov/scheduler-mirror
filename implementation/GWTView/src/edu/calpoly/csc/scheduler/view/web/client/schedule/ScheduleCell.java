@@ -21,22 +21,6 @@ public class ScheduleCell extends SimplePanel implements CloseHandler<PopupPanel
  public ScheduleCell(ScheduleViewWidget schedule)
  {
   this.schedule = schedule;
-  sinkEvents(Event.ONMOUSEOVER);
-  sinkEvents(Event.ONMOUSEOUT);
- }
- 
- public void onBrowserEvent(Event event)
- {
-  System.out.println("EVENT");
-  switch(DOM.eventGetType(event))
-  {
-   case Event.ONMOUSEOVER:
-    schedule.highlightRow(row);
-	break;
-   case Event.ONMOUSEOUT:
-    schedule.unhighlightRow(row);
-  }
-  super.onBrowserEvent(event);
  }
  
  public void setScheduleItem(ScheduleItemGWT item)
@@ -77,5 +61,15 @@ public class ScheduleCell extends SimplePanel implements CloseHandler<PopupPanel
   rescheduler = new ReschedulePopup(rescheduled, row);
   rescheduler.addCloseHandler(this);
   rescheduler.center();
+ }
+ 
+ public void highlightRow()
+ {
+  schedule.highlightRow(row);
+ }
+ 
+ public void unhighlightRow()
+ {
+  schedule.unhighlightRow(row);
  }
 }
