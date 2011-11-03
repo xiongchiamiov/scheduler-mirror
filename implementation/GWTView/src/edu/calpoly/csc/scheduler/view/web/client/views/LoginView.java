@@ -1,7 +1,5 @@
 package edu.calpoly.csc.scheduler.view.web.client.views;
 
-import java.util.Map;
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
@@ -9,7 +7,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasAlignment;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TextBox;
@@ -18,10 +15,13 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 
 public class LoginView extends ScrollPanel {
+	MainView mainView; // Kept around so we can tell it to change the username
+	
 	Panel container;
 	GreetingServiceAsync service;
 	
-	LoginView(Panel container, GreetingServiceAsync service) {
+	LoginView(MainView mainView, Panel container, GreetingServiceAsync service) {
+		this.mainView = mainView;
 		this.container = container;
 		this.service = service;
 	}
@@ -43,7 +43,9 @@ public class LoginView extends ScrollPanel {
 		panel.add(new Button("Login", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				if ("".equals(textBox.getText())) {
+				final String username = textBox.getText();
+				
+				if ("".equals(username)) {
 					Window.alert("Please enter a username.");
 					return;
 				}
@@ -51,9 +53,11 @@ public class LoginView extends ScrollPanel {
 				final LoadingPopup popup = new LoadingPopup();
 				popup.show();
 				
-				service.login(textBox.getText(), new AsyncCallback<Void>() {
+				service.login(username, new AsyncCallback<Void>() {
 					@Override
 					public void onSuccess(Void derp) {
+						mainView.onUserLoggedIn(username);
+						
 						popup.hide();
 						container.clear();
 						container.add(new HomeView(container, service));

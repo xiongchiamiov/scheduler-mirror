@@ -4,7 +4,6 @@ import java.util.Map;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -14,7 +13,6 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -51,6 +49,8 @@ public class HomeView extends ScrollPanel {
 		vp.add(listBox);
 		
 		populateSchedules();
+		
+		final HomeView self = this;
 
 		vp.add(new Button("Open", new ClickHandler() {
 			@Override
@@ -69,7 +69,7 @@ public class HomeView extends ScrollPanel {
 					public void onSuccess(Void derp) {
 						popup.hide();
 						container.clear();
-						container.add(new QuarterView(container, service));
+						container.add(new ScheduleNavView(self, container, service));
 					}
 				});
 			}
@@ -142,6 +142,8 @@ public class HomeView extends ScrollPanel {
 	}
 	
 	public void displayNewSchedPopup() {
+		final HomeView self = this;
+		
 		final TextBox tb = new TextBox();
 		final DialogBox db = new DialogBox(false);
 		VerticalPanel vp = new VerticalPanel();
@@ -168,7 +170,7 @@ public class HomeView extends ScrollPanel {
 					public void onSuccess(Void result) {
 						popup.hide();
 						container.clear();
-						container.add(new QuarterView(container, service));
+						container.add(new ScheduleNavView(self, container, service));
 					}
 				});
 			}

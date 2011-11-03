@@ -1,6 +1,7 @@
 package edu.calpoly.csc.scheduler.view.web.client.views;
 
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Panel;
@@ -10,7 +11,6 @@ import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 
 public class MainView extends DockLayoutPanel {
 	GreetingServiceAsync service;
-	
 	Panel contents;
 	
 	public MainView(GreetingServiceAsync service) {
@@ -31,6 +31,10 @@ public class MainView extends DockLayoutPanel {
 		addNorth(topPanel, 5);
 		
 		add(contents = new SimplePanel());
-		contents.add(new LoginView(contents, service));
+		contents.add(new LoginView(this, contents, service));
+	}
+	
+	public void onUserLoggedIn(String newUsername) {
+		System.out.println("Hilton, put code here");
 	}
 }
