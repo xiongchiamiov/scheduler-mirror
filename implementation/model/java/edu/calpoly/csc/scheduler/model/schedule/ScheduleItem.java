@@ -88,6 +88,12 @@ public class ScheduleItem implements Serializable, Cloneable,
     */
    protected ScheduleItem () { }
    
+   /**
+    * Creates a new ScheduleItem whose fields are identical to a given 
+    * ScheduleItem
+    * 
+    * @param si ScheduleItem we'll get all our fields from
+    */
    protected ScheduleItem (ScheduleItem si)
    {
       this.i = si.getInstructor();
@@ -99,27 +105,24 @@ public class ScheduleItem implements Serializable, Cloneable,
    }
 
    /**
-    * A jacked up constructor.
+    * Creates a ScheduleItem w/ its fields initialized to the give values
     * 
-    * @param i
-    * @param c
-    * @param l
-    * @param section
-    * @param days
-    * @param s
-    * @param e
-    * 
-    * @deprecated Stop using this
+    * @param i Instructor teaching the item
+    * @param c Course the item teaches
+    * @param l Location the item will be taught in
+    * @param section Section of the course
+    * @param days Days the item will be taught
+    * @param tr TimeRange the item is taught in
     */
-   public ScheduleItem (Instructor i, Course c, Location l, int section, 
-      Week days, Time s, Time e)
+   protected ScheduleItem (Instructor i, Course c, Location l, int section, 
+      Week days, TimeRange tr)
    {
       this.i = i;
       this.c = c;
       this.location = l;
       this.section = section;
       this.days = days;
-      this.tr = new TimeRange(s, e);
+      this.tr = new TimeRange(tr);
    }
    
    public ScheduleItem clone()
