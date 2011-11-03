@@ -1396,21 +1396,21 @@ function filters()
 }
 </script>
 <body>
-	<H1>Schedule View</H1>
+	<h2 style="color: black" align="center">Schedule View</h2>
 		<div id="blah" style="width:100px;display:block;background-color:orange;visibility:hidden;">Blah</div>
 		<div> <strong>Search:</strong> <input type="text" class="gwt-TextBox"> 
 		&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
 		<input type="radio" name="view" value="week" /> Weekly
 		<input type="radio" name="view" value="list" /> List
 		<input type="radio" name="view" value="table" /> Class Table &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-		<input type="button" name="filter" value="Filter" />
+		<input class="gwt-button" type="button" value="Filter" />
 		</div>
-		
+<center>		
 		<table id="hor-minimalist-b" summary="Schdule View" style="border-spacing: 0px;">
 		<thead>
 		<tr>
 		<th scope="col">Time
-		<input type="button" onclick="filters()" value="Show alert box">
+		<input class="gwt-button" type="button" value="Show alert box" />
 		</th>
 		<th scope="col">Monday
 		<SELECT style= "width:15px;">
@@ -2001,5 +2001,6 @@ function filters()
 		</tr>
 		</tbody>
 		</table>
+	</center>
 </body>
 </HTML>
