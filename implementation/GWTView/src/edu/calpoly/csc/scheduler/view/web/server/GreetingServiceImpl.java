@@ -167,7 +167,10 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
      {
       modelCourses.add(availableCourses.get(course.getDept() + course.getCatalogNum()));	 
      }
-     schedule = new Schedule(new Vector<Instructor>(instructors), new Vector<Location>(locations));
+     if(schedule == null)
+     {
+      schedule = new Schedule(new Vector<Instructor>(instructors), new Vector<Location>(locations));
+     }
 	 schedule.generate(modelCourses);		
 	 ArrayList<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
 	
@@ -198,6 +201,11 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			  scheduleItem.getCatalogNum() + 
 			  scheduleItem.getSection();
 	 
+	 if(schedule == null)
+	 {
+	  schedule = new Schedule(db.getInstructorDB().getData(), 
+			  db.getLocationDB().getData());
+	 }
 	 for(i = 0; i < numberOfDays; i++)
 	 {
 	  switch(days.get(i))
