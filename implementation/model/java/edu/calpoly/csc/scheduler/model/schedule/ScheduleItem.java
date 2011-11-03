@@ -86,9 +86,9 @@ public class ScheduleItem implements Serializable, Cloneable,
    /**
     * Builds an empty Schedule Item. None of its fields will be initialized.
     */
-   public ScheduleItem () { }
+   protected ScheduleItem () { }
    
-   public ScheduleItem (ScheduleItem si)
+   protected ScheduleItem (ScheduleItem si)
    {
       this.i = si.getInstructor();
       this.c = si.getCourse();
@@ -328,7 +328,7 @@ public class ScheduleItem implements Serializable, Cloneable,
       double lab = 0, course = 0, time = 0;
       boolean hasLab = false, hasCourse = false, hasTime = false;
 
-      if (hasLab = this.hasLab())
+      if (hasLab = this.hasLabs())
       {
          for (ScheduleItem lab_si: this.labs)
          {
@@ -404,7 +404,7 @@ public class ScheduleItem implements Serializable, Cloneable,
     * 
     * @return this.labs != null && this.labs.size() > 0
     */
-   public boolean hasLab () 
+   public boolean hasLabs () 
    {
       return this.labs != null && this.labs.size() > 0;
    }
@@ -522,7 +522,7 @@ public class ScheduleItem implements Serializable, Cloneable,
               "Ends:\t\t" + this.tr.getE() + "\n" + 
               "Locked:\t\t" + this.locked + "\n" +
               "Value :\t\t" + this.getValue() + "\n");
-      if (this.hasLab())
+      if (this.hasLabs())
       {
          r += this.getLabs().toString();
       }

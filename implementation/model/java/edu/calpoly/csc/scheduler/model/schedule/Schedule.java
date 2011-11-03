@@ -60,6 +60,15 @@ public class Schedule implements Serializable
    private TimeRange bounds = new TimeRange(new Time(7, 0), new Time(22, 0));
 
    /**
+    * The TimeRange within which you want lectures to be taught
+    */
+   private TimeRange lec_bounds = new TimeRange(bounds);
+   /**
+    * The TimeRange within which you want labs to be taught
+    */
+   private TimeRange lab_bounds = new TimeRange(bounds);
+   
+   /**
     * List of ScheduleItems which generation will create. This is the "schedule"
     * that the user will see.
     */
@@ -104,43 +113,71 @@ public class Schedule implements Serializable
    
    /**
     * Generates and adds a ScheduleItem to teach a given course on a given set 
-    * of days in a given time range.<br>
-    * <br>
-    * If the Course has a lab associated with it, <b>it is not considered</b>. 
-    * That way, moving one SI around won't have an impact on other parts of the
-    * schedule.
+    * of days in a given time range. This method will also generate labs to 
+    * go with the given Course, if it has any lab component
     * 
     * @param c Course to teach
     * @param days Days to teach
     * @param s Time of day the course should start
     * 
+    * @see #lec_bounds
+    * @see #lab_bounds
     * @see #generate(List<Course>)
     */
-   public ScheduleItem genItem (Course c, Week days, Time s)
+   public void genItem (Course c, Week days, Time s)
    {
+      /*
+       * We'll need a clone b/c we have to reach in and change some of its 
+       * fields (such as 'days' and its lab(s)).
+       */
       Course clone = new Course(c);
+      
+      /*
+       * We'll limit the range the course can be taught so it ends up right 
+       * where the user wants it
+       */
+      TimeRange oldBounds = 
+         setLecBounds(new TimeRange(s, clone.splitLengthOverDays(days.size())));
+      
       clone.setDays(days);
-      /*
-       * If we have labs, don't consider them
-       */
-      clone.setLab(null);
-      
-      /*
-       * We'll lie to 'generate'. We've been asked to place this Course in a 
-       * very specific time window. This makes the Schedule think the only 
-       * times available for consideration *are* this window.
-       */
-      TimeRange oldBounds = this.bounds;
-      this.bounds = new TimeRange(s, clone.splitLengthOverDays(days.size()));
-      
       generate(new Vector<Course>(Arrays.asList(new Course[]{clone})));
       
       /*
-       * Once we're done w/ the lie, we'll set things right
+       * Reset lec_bounds back to whatever it was before we did this
        */
-      this.bounds = oldBounds;
+      setLecBounds(oldBounds);
+   }
+   
+   /**
+    * Moves an already-existing ScheduleItem from one place on the schedule 
+    * to another. If this ScheduleItem has teathered lab ScheduleItems attached
+    * to it, those labs will be moved as well. 
+    * 
+    * @param si ScheduleItem to move
+    * @param days Days you want the ScheduleItem to be taught on
+    * @param s The start time you want the ScheduleItem to be taught on
+    * 
+    * @return The new ScheduleItem, w/ its fields updated to where it was placed
+    * 
+    * @throws CouldNotBeScheduledException If you've moved the ScheduleItem to
+    *         a time where the location is in use or the instructor is already
+    *         teaching. 
+    */
+   public ScheduleItem move (ScheduleItem si, Week days, Time s) 
+      throws CouldNotBeScheduledException
+   {
+      ScheduleItem fresh_si = new ScheduleItem(si);
+      if (this.remove(si))
+      {
+         Course c = si.getCourse();
+         TimeRange tr = new TimeRange(s, c.splitLengthOverDays(days.size()));
       
-      return this.getItems().lastElement();
+         fresh_si.setDays(days);
+         fresh_si.setTimeRange(tr);
+      
+         this.add(fresh_si);
+      }
+      return fresh_si;
    }
    
    /**
@@ -152,10 +189,13 @@ public class Schedule implements Serializable
     * @param si ScheduleItem to remove
     * @return
     */
-   public ScheduleItem remove (ScheduleItem si)
+   public boolean remove (ScheduleItem si)
    {
+      boolean r = false;
       if (this.items.contains(si))
       {
+         r = true;
+         
          Course c = si.getCourse();
          Instructor i = si.getInstructor();
          Location l = si.getLocation();
@@ -172,10 +212,29 @@ public class Schedule implements Serializable
 
          SectionTracker st = getSectionTracker(c);
          st.removeSection(si.getSection());
+         
+         /*
+          * Remove the labs only if they're teathered to the course
+          */
+         if (si.hasLabs())
+         {
+            if (c.getLab().isTethered())
+            {
+               remove(si.getLabs());
+            }
+         }
       }
-      return si;
+      return r;
    }
-
+   
+   public void remove (List<ScheduleItem> toRemove)
+   {
+      for (ScheduleItem si: toRemove)
+      {
+         remove(si);
+      }
+   }
+   
    /**
     * Adds the given ScheduleItem to this schedule. Before an add is done, the
     * ScheduleItem is verified to make sure it doesn't double-book an
@@ -373,6 +432,7 @@ public class Schedule implements Serializable
                       * which is good. So, don't screw w/ the order here
                       */
                      add(lab_si);
+                     lec_si.addLab(lab_si);
                      curEnrollment += lab.getEnrollment();
                   }
                   catch (CouldNotBeScheduledException e)
@@ -424,7 +484,7 @@ public class Schedule implements Serializable
       lec_si.setCourse(lec);
       lec_si.setInstructor(findInstructor(lec));
 
-      return genBestTime(lec_si, this.bounds);
+      return genBestTime(lec_si, this.lec_bounds);
    }
 
    /**
@@ -451,7 +511,7 @@ public class Schedule implements Serializable
       lab_si.setCourse(lab);
       lab_si.setInstructor(getLabInstructor(lab, lec_si));
 
-      TimeRange tr = this.bounds;
+      TimeRange tr = this.lab_bounds;
       if (lab.isTethered())
       {
          tr = new TimeRange(lec_si.getStart(), lab.getDayLength());
@@ -948,5 +1008,19 @@ public class Schedule implements Serializable
    {
       this.lSourceList = new Vector<Location>(lSourceList);
       this.lSourceList.add(Tba.getTba());
+   }
+
+   /**
+    * Sets the lecture time bounds
+    * 
+    * @param tr Bounds you want lectures to be taught within
+    * 
+    * @return The old lec_bounds value
+    */
+   private TimeRange setLecBounds (TimeRange tr)
+   {
+      TimeRange oldBounds = this.lec_bounds;
+      this.lec_bounds = tr;
+      return oldBounds;
    }
 }
