@@ -7,17 +7,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import com.google.gwt.cell.client.ButtonCell;
 import com.google.gwt.cell.client.CheckboxCell;
 import com.google.gwt.cell.client.EditTextCell;
 import com.google.gwt.cell.client.FieldUpdater;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.view.client.ListDataProvider;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
+import edu.calpoly.csc.scheduler.view.web.client.views.InstructorPreferencesView;
+import edu.calpoly.csc.scheduler.view.web.client.views.InstructorsView;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.DayGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
@@ -227,6 +233,28 @@ public class ITableBuilder implements TableBuilder<InstructorGWT>{
 		      }
 		});
 		list.add(new ColumnObject<InstructorGWT>(disable, TableConstants.INSTR_DISABILITIES));
+		
+		// preferences
+		Button prefButton = new Button(TableConstants.INSTR_PREFERENCES);
+		prefButton.addClickHandler(new ClickHandler(){
+			public void onClick(ClickEvent event){
+				
+			}
+		});
+		Column<InstructorGWT, String> preferences = 
+				new Column<InstructorGWT, String>(new ButtonCell()) {
+		      @Override
+		      public String getValue(InstructorGWT instr) {
+		        return TableConstants.INSTR_PREFERENCES;
+		      }
+		};
+		preferences.setFieldUpdater(new FieldUpdater<InstructorGWT, String>() {
+		      public void update(int index, InstructorGWT object, String value) {
+		    	InstructorsView.container.clear();
+		    	InstructorsView.container.add(new InstructorPreferencesView(InstructorsView.container, InstructorsView.service, object));
+		      }
+		});
+		list.add(new ColumnObject<InstructorGWT>(preferences, TableConstants.INSTR_PREFERENCES));
 		
 
 		return list;

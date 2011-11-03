@@ -19,8 +19,8 @@ import edu.calpoly.csc.scheduler.view.web.client.table.TableFactory;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 
 public class InstructorsView extends ScrollPanel {
-	private Panel container;
-	private GreetingServiceAsync service;
+	public static Panel container;
+	public static GreetingServiceAsync service;
 	private Table<InstructorGWT> iTable;
 	private VerticalPanel vp;
 
@@ -68,21 +68,6 @@ public class InstructorsView extends ScrollPanel {
 						ins.verify();
 					
 					iTable.set(result);
-
-					// TODO Auto-generated method stub
-					for (InstructorGWT instructorBlerk : result) {
-						final InstructorGWT instructor = instructorBlerk;
-						HTML link = new HTML(instructor.getLastName() + ", " + instructor.getFirstName());
-						link.addStyleName("inAppLink");
-						link.addClickHandler(new ClickHandler() {
-							@Override
-							public void onClick(ClickEvent event) {
-								container.clear();
-								container.add(new InstructorPreferencesView(container, service, instructor));
-							}
-						});
-						vp.add(link);
-					}
 				}
 			}
 		});
