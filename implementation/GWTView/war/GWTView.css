@@ -227,3 +227,24 @@ h1 {
 	color: #A0A0A0;
 	text-align: center;
 }
+
+.scheduleTable {
+	border-width: 1px;
+	border-style: solid;
+	border-collapse: collapse;
+	text-align: center;
+	table-layout: fixed;
+	width: 100%;
+}
+
+.scheduleTable td {
+	border-width: 1px;
+	border-style: solid;
+	width: 100px;
+}
+
+.highlightedBorder {
+	border-width: 2px;
+	border-style: solid;
+	border-color: yellow;
+}
