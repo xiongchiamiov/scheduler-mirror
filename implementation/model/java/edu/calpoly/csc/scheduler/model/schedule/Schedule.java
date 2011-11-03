@@ -170,12 +170,27 @@ public class Schedule implements Serializable
       if (this.remove(si))
       {
          Course c = si.getCourse();
+         
          TimeRange tr = new TimeRange(s, c.splitLengthOverDays(days.size()));
       
          fresh_si.setDays(days);
          fresh_si.setTimeRange(tr);
       
          this.add(fresh_si);
+         
+         /*
+          * If the lab for the SI was teathered, we need to move it to just 
+          * after the fresh_si
+          */
+         Lab lab = c.getLab();
+         if (lab != null && lab.isTethered())
+         {
+            Time lab_s = tr.getE();
+            for (ScheduleItem lab_si: si.getLabs())
+            {
+               move(lab_si, days, lab_s);
+            }
+         }
       }
       return fresh_si;
    }
