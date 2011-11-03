@@ -4,8 +4,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 
+import edu.calpoly.csc.scheduler.model.db.cdb.Course;
 import edu.calpoly.csc.scheduler.model.db.cdb.CourseDB;
+import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
 import edu.calpoly.csc.scheduler.model.db.idb.InstructorDB;
+import edu.calpoly.csc.scheduler.model.db.ldb.Location;
 import edu.calpoly.csc.scheduler.model.db.ldb.LocationDB;
 import edu.calpoly.csc.scheduler.model.db.sdb.ScheduleDB;
 import edu.calpoly.csc.scheduler.model.schedule.Schedule;
@@ -40,6 +43,12 @@ public class Database
 
    /** The current department */
    private String       dept;
+   
+   /** If we are setting up a new user */
+   private boolean newUser = false;
+   
+   /** Example Chem Schedule template scheduleid */
+   private static final int templateScheduleID = 1354;
 
    /**
     * STEP 1 This constructor will create the SQLDB object.
@@ -55,7 +64,20 @@ public class Database
     */
    public String getDept(String userid)
    {
-	   this.dept = sqldb.getDeptByUserID(userid);
+	   if(sqldb.doesUserExist(userid))
+	   {
+		   newUser = false;
+		   //If it exists, get dept
+		   this.dept = sqldb.getDeptByUserID(userid);
+	   }
+	   else
+	   {
+		   //Make a new user
+		   sqldb.makeNewUser(userid);
+		   //New dept will be userid
+		   newUser = true;
+		   this.dept = userid;
+	   }
       return dept;
    }
 
@@ -114,6 +136,33 @@ public class Database
       courseDB = new CourseDB(sqldb, realid);
       locationDB = new LocationDB(sqldb, realid);
       this.scheduleID = realid;
+      if(newUser)
+      {
+    	  System.out.println("Copying data from Example Chem Schedule");
+    	  //Copy data into the new schedule
+    	  //Make temporary db's with scheduleid = Example Chem Schedule (1354)
+    	  InstructorDB tempInstructorDB = new InstructorDB(sqldb, templateScheduleID);
+    	  CourseDB tempCourseDB = new CourseDB(sqldb, templateScheduleID);
+    	  LocationDB tempLocationDB = new LocationDB(sqldb, templateScheduleID);
+    	  
+    	  //Copy data from temp dbs to real dbs
+    	  //Copy instructors
+    	  for(Instructor instructor : tempInstructorDB.getData())
+    	  {
+    		  instructorDB.saveData(instructor);
+    	  }
+    	  //Copy courses
+    	  for(Course course : tempCourseDB.getData())
+    	  {
+    		  courseDB.saveData(course);
+    	  }
+    	  //Copy locations
+    	  for(Location location : tempLocationDB.getData())
+    	  {
+    		  locationDB.saveData(location);
+    	  }
+    	  newUser = false;
+      }
    }
 
    /**

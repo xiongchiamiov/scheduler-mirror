@@ -44,6 +44,7 @@ public class LocationDB implements DatabaseAPI<Location>
    public void saveData(Location data)
    {
       data.verify();
+      data.setScheduleId(scheduleID);
       if(sqldb.doesLocationExist(data))
       {
          editData(data);

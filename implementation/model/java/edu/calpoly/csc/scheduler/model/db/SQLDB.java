@@ -701,13 +701,14 @@ public class SQLDB {
 	public boolean doesCourseExist(Course data)
 	{
 	   //Check if dept, catalognum, and type already exist
-	   String query = "select dept, catalognum, type from courses where dept = ? and catalognum = ? and type = ?";
+	   String query = "select dept, catalognum, type, scheduleid from courses where dept = ? and catalognum = ? and type = ? and scheduleid = ?";
 	   PreparedStatement stmt = getPrepStmt(query);
 	   try
       {
          stmt.setString(1, data.getDept());
          stmt.setInt(2, data.getCatalogNum());
          stmt.setString(3, data.getType().toString());
+         stmt.setInt(4, data.getScheduleId());
       }
       catch (SQLException e)
       {
@@ -719,11 +720,12 @@ public class SQLDB {
 	public boolean doesInstructorExist(Instructor data)
 	{
 	   //Check if userid already exists
-	   String query = "select userid from instructors where userid = ?";
+	   String query = "select userid, scheduleid from instructors where userid = ? and scheduleid = ?";
 	   PreparedStatement stmt = getPrepStmt(query);
 	   try
 	   {
 	      stmt.setString(1, data.getUserID());
+	      stmt.setInt(2, data.getScheduleId());
 	   }
 	   catch (SQLException e)
 	   {
@@ -735,12 +737,13 @@ public class SQLDB {
 	public boolean doesLocationExist(Location data)
 	{
 	   //Check if building and room already exist
-	   String query = "select building, room from locations where building = ? and room = ?";
+	   String query = "select building, room, scheduleid from locations where building = ? and room = ? and scheduleid = ?";
 	   PreparedStatement stmt = getPrepStmt(query);
 	   try
 	   {
 	      stmt.setString(1, data.getBuilding());
 	      stmt.setString(2, data.getRoom());
+	      stmt.setInt(3, data.getScheduleId());
 	   }
 	   catch (SQLException e)
 	   {
@@ -821,18 +824,17 @@ public class SQLDB {
 	      return -1;
 	}
 	
-	/**
-	 * Copies all data from "master" tables to a new user's tables
-	 * THIS SHOULD ONLY HAPPEN THE FIRST TIME A NEW USER MAKES A NEW SCHEDULE
-	 * Copy data from scheduleid 1354
-	 */
-	public void copyAllData(String newUserID)
+	public void makeNewUser(String newUserID)
 	{
-		//Make new user
-		
-		//Make new schedule?
-		
-		//Copy all data
-		String coursecopy = "insert into courses";
+		try {
+			//Make new user
+			String newuser = "insert into users values (?, ?)";
+			PreparedStatement userstmt = getPrepStmt(newuser);
+			userstmt.setString(1, newUserID);
+			userstmt.setString(2, newUserID);
+			executePrepStmt(userstmt);
+		 } catch (SQLException e) {
+			 e.printStackTrace();
+		 }
 	}
 }

@@ -49,6 +49,7 @@ public class ScheduleDB implements DatabaseAPI<Schedule>
    @Override
    public ArrayList<Schedule> getData()
    {
+	   pullData();
       return data;
    }
 

@@ -40,12 +40,15 @@ public class CourseDB implements DatabaseAPI<Course>
    public void saveData(Course data)
    {
       data.verify();
+      data.setScheduleId(scheduleID);
       if(sqldb.doesCourseExist(data))
       {
+    	  System.out.println("Editing data: course");
          editData(data);
       }
       else
       {
+    	  System.out.println("Adding data: course");
          addData(data);
       }
    }

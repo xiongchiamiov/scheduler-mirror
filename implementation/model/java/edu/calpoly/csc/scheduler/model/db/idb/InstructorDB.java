@@ -35,6 +35,7 @@ public class InstructorDB implements DatabaseAPI<Instructor>
    public void saveData(Instructor data)
    {
       data.verify();
+      data.setScheduleId(scheduleID);
       if(sqldb.doesInstructorExist(data))
       {
          editData(data);
