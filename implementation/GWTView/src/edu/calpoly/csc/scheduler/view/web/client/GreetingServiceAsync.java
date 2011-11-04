@@ -37,4 +37,5 @@ public interface GreetingServiceAsync {
 			AsyncCallback<ArrayList<ScheduleItemGWT>> callback) 
 					throws IllegalArgumentException;
 	void generateSchedule(AsyncCallback<ArrayList<ScheduleItemGWT>> scheduleItems) throws IllegalArgumentException;
+	void resetSchedule(AsyncCallback<Void> asyncCallback);
 }

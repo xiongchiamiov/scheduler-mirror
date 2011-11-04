@@ -1,5 +1,7 @@
 package edu.calpoly.csc.scheduler.view.web.client.views;
 
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -22,11 +24,22 @@ public class ScheduleView extends ScrollPanel {
 		setWidth("100%");
 		setHeight("100%");
 		
-		VerticalPanel panel = new VerticalPanel();
+		final VerticalPanel panel = new VerticalPanel();
 
-		panel.add(new HTML("<h2>Fall Quarter 2010 Final Schedule</h2>"));
-		ScheduleViewWidget schdView = new ScheduleViewWidget();
-		panel.add(schdView.getWidget(service));
-		this.add(panel);
+		service.resetSchedule(
+				new AsyncCallback<Void>()
+				{
+				 public void onFailure(Throwable caught) 
+				 {
+				  Window.alert("Failed to reset schedule");
+				 }
+				 public void onSuccess(Void result) 
+				 {
+				  panel.add(new HTML("<h2>Fall Quarter 2010 Final Schedule</h2>"));
+				  ScheduleViewWidget schdView = new ScheduleViewWidget();
+				  panel.add(schdView.getWidget(service));
+				  ScheduleView.this.add(panel);		
+				 }				
+				});
 	}
 }

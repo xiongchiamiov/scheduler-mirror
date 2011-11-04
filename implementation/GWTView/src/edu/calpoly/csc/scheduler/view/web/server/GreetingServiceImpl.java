@@ -110,10 +110,6 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
      {
       modelCourses.add(availableCourses.get(course.getDept() + course.getCatalogNum()));	 
      }
-     if(schedule == null)
-     {
-      schedule = new Schedule(new Vector<Instructor>(instructors), new Vector<Location>(locations));
-     }
 	 schedule.generate(modelCourses);		
 	 ArrayList<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
 	
@@ -144,11 +140,6 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			  scheduleItem.getCatalogNum() + 
 			  scheduleItem.getSection();
 	 
-	 if(schedule == null)
-	 {
-	  schedule = new Schedule(db.getInstructorDB().getData(), 
-			  db.getLocationDB().getData());
-	 }
 	 for(i = 0; i < numberOfDays; i++)
 	 {
 	  switch(days.get(i))
@@ -262,5 +253,13 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		Instructor instructor = Conversion.fromGWT(instructorGWT);
 		System.out.println("calling editdata. has prefs? " + hasPreferences(instructor));
 		model.getDb().getInstructorDB().saveData(instructor);
+	}
+
+	@Override
+	public void resetSchedule() 
+	{
+	 schedule = new Schedule(model.getDb().getInstructorDB().getData(),
+			     model.getDb().getLocationDB().getData());
+	 scheduleItems = new HashMap<String, ScheduleItem>();
 	}
 }

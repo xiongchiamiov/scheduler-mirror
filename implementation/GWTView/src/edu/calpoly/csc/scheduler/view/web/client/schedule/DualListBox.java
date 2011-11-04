@@ -9,7 +9,6 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -168,7 +167,6 @@ public class DualListBox extends AbsolutePanel {
 	   courses.add(((CourseListItem)courseItem).getCourse());
 	  }
 	 }
-	 
 	 return courses;
 	}
 	

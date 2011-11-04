@@ -25,8 +25,8 @@ class ListBoxDropController extends AbstractDropController {
     MouseListBox from = (MouseListBox) context.draggable.getParent().getParent();
     for (Widget widget : context.selectedWidgets) {
       if (widget.getParent().getParent() == from) {
-        HTML htmlClone = new HTML(DOM.getInnerHTML(widget.getElement()));
-        mouseListBox.add(htmlClone);
+        //HTML htmlClone = new HTML(DOM.getInnerHTML(widget.getElement()));
+    	mouseListBox.add(new CourseListItem(((CourseListItem)widget).getCourse()));
       }
     }
     super.onDrop(context);
