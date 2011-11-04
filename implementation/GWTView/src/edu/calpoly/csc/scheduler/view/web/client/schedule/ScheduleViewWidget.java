@@ -562,6 +562,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 
 	private void layoutBoxesAndSchedule() {
 		boxesAndSchedulePanel = new HorizontalPanel();
+		boxesAndSchedulePanel.setSpacing(2);
 		
 		// add some items to the list
 		addCoursesToBoxes();

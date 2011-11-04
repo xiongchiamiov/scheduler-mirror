@@ -43,7 +43,7 @@ class MouseListBox extends Composite {
     initWidget(grid);
     grid.setCellPadding(0);
     grid.setCellSpacing(0);
-    addStyleName(CSS_DEMO_MOUSELISTBOX);
+    grid.addStyleName("courseListBox");
     for (int i = 0; i < size; i++) {
       grid.getCellFormatter().addStyleName(i, 0, CSS_DEMO_DUAL_LIST_EXAMPLE_ITEM);
       setWidget(i, null);
