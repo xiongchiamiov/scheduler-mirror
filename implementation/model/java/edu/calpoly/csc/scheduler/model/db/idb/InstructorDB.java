@@ -1,15 +1,27 @@
 package edu.calpoly.csc.scheduler.model.db.idb;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Vector;
 
-import edu.calpoly.csc.scheduler.model.db.*;
+import edu.calpoly.csc.scheduler.model.db.DatabaseAPI;
+import edu.calpoly.csc.scheduler.model.db.SQLDB;
+import edu.calpoly.csc.scheduler.model.db.Time;
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
 import edu.calpoly.csc.scheduler.model.db.ldb.Location;
-import edu.calpoly.csc.scheduler.model.schedule.*;
+import edu.calpoly.csc.scheduler.model.schedule.Day;
+import edu.calpoly.csc.scheduler.model.schedule.ScheduleItem;
+import edu.calpoly.csc.scheduler.model.schedule.WeekAvail;
 
 public class InstructorDB implements DatabaseAPI<Instructor>
 {
@@ -21,7 +33,6 @@ public class InstructorDB implements DatabaseAPI<Instructor>
    {
       this.sqldb = sqldb;
       this.scheduleID = scheduleID;
-      initDB();
    }
 
    @Override
@@ -44,12 +55,6 @@ public class InstructorDB implements DatabaseAPI<Instructor>
       {
          addData(data);
       }
-   }
-
-   private void initDB()
-   {
-      data = new ArrayList<Instructor>();
-      pullData();
    }
 
    private void pullData()
@@ -378,12 +383,13 @@ public class InstructorDB implements DatabaseAPI<Instructor>
    {
       data.verify();
       // Create delete string
-      String deleteString = "delete from instructors where userid = ?";
+      String deleteString = "delete from instructors where userid = ? and scheduleid = ?";
       // Create prepared statement
       PreparedStatement stmt = sqldb.getPrepStmt(deleteString);
       try
       {
          stmt.setString(1, data.getUserID());
+         stmt.setInt(2, scheduleID);
       }
       catch (SQLException e)
       {

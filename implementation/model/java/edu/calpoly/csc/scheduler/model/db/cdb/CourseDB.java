@@ -26,7 +26,6 @@ public class CourseDB implements DatabaseAPI<Course>
    {
       this.sqldb = sqldb;
       this.scheduleID = scheduleID;
-      initDB();
    }
 
    @Override
@@ -51,14 +50,6 @@ public class CourseDB implements DatabaseAPI<Course>
     	  System.out.println("Adding data: course");
          addData(data);
       }
-   }
-
-   private void initDB()
-   {
-      data = new ArrayList<Course>();
-      // TODO: REMOVE THIS
-      // addData(new Course().getCannedData());
-      pullData();
    }
 
    private void pullData()
@@ -316,7 +307,7 @@ public class CourseDB implements DatabaseAPI<Course>
       data.verify();
       // Create delete string
       String deleteString = "delete from courses where catalognum = ? "
-            + "and dept = ? and type = ? and quarterid = ?";
+            + "and dept = ? and type = ? and quarterid = ? and scheduleid = ?";
       // Create prepared statement
       PreparedStatement stmt = sqldb.getPrepStmt(deleteString);
       try
@@ -325,6 +316,7 @@ public class CourseDB implements DatabaseAPI<Course>
          stmt.setString(2, data.getDept());
          stmt.setString(3, data.getType().toString());
          stmt.setString(4, data.getQuarterId());
+         stmt.setInt(5, scheduleID);
       }
       catch (SQLException e)
       {

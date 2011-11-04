@@ -17,7 +17,6 @@ import edu.calpoly.csc.scheduler.model.db.DatabaseAPI;
 import edu.calpoly.csc.scheduler.model.db.SQLDB;
 import edu.calpoly.csc.scheduler.model.db.TimeRange;
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
-import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
 import edu.calpoly.csc.scheduler.model.schedule.WeekAvail;
 
 public class LocationDB implements DatabaseAPI<Location>
@@ -30,7 +29,6 @@ public class LocationDB implements DatabaseAPI<Location>
    {
       this.sqldb = sqldb;
       this.scheduleID = scheduleID;
-      initDB();
    }
 
    @Override
@@ -55,11 +53,6 @@ public class LocationDB implements DatabaseAPI<Location>
          System.out.println("Adding data: location");
          addData(data);
       }
-   }
-   private void initDB()
-   {
-      data = new ArrayList<Location>();
-      pullData();
    }
 
    private void pullData()
@@ -276,13 +269,14 @@ public class LocationDB implements DatabaseAPI<Location>
    {
        data.verify();
       // Create delete string
-      String deleteString = "delete from locations where building = ? and room = ?";
+      String deleteString = "delete from locations where building = ? and room = ? and scheduleid = ?";
       // Create prepared statement
       PreparedStatement stmt = sqldb.getPrepStmt(deleteString);
       try
       {
          stmt.setString(1, data.getBuilding());
          stmt.setString(2, data.getRoom());
+         stmt.setInt(3, scheduleID);
       }
       catch (SQLException e)
       {

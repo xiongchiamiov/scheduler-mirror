@@ -11,7 +11,6 @@ import edu.calpoly.csc.scheduler.model.db.idb.InstructorDB;
 import edu.calpoly.csc.scheduler.model.db.ldb.Location;
 import edu.calpoly.csc.scheduler.model.db.ldb.LocationDB;
 import edu.calpoly.csc.scheduler.model.db.sdb.ScheduleDB;
-import edu.calpoly.csc.scheduler.model.schedule.Schedule;
 
 /**
  * This class holds all of the individual database objects. The view will
@@ -124,11 +123,11 @@ public class Database
             }
             scheduleDB = new ScheduleDB(sqldb, this.dept);
             realid = scheduleDB.createNewSchedule(scheduleName);
-            scheduleDB.setScheduleID(realid);
             System.out.println("New schedule id: " + realid);
          }
          else
          {
+        	 //Called new schedule, but name already exists
             System.err
                   .println("ERROR: Schedule name already exists, opening existing one");
             realid = sqldb.getScheduleIDByName(scheduleName, dept);

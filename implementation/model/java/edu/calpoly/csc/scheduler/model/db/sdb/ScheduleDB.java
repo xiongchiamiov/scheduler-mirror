@@ -10,16 +10,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Random;
 
 import edu.calpoly.csc.scheduler.model.db.DatabaseAPI;
 import edu.calpoly.csc.scheduler.model.db.SQLDB;
-import edu.calpoly.csc.scheduler.model.db.cdb.Course;
 import edu.calpoly.csc.scheduler.model.schedule.Schedule;
 
 public class ScheduleDB implements DatabaseAPI<Schedule>
 {
-
    private ArrayList<Schedule> data;
    private SQLDB               sqldb;
    private int                 scheduleID;
@@ -29,7 +26,6 @@ public class ScheduleDB implements DatabaseAPI<Schedule>
    {
       this.sqldb = sqldb;
       this.dept = dept;
-      initDB();
    }
 
    public ScheduleDB(SQLDB sqldb, int scheduleID, String dept)
@@ -37,19 +33,12 @@ public class ScheduleDB implements DatabaseAPI<Schedule>
       this.sqldb = sqldb;
       this.scheduleID = scheduleID;
       this.dept = dept;
-      initDB();
-   }
-
-   private void initDB()
-   {
-      data = new ArrayList<Schedule>();
-      pullData();
    }
 
    @Override
    public ArrayList<Schedule> getData()
    {
-	   pullData();
+	  pullData();
       return data;
    }
 
@@ -68,6 +57,7 @@ public class ScheduleDB implements DatabaseAPI<Schedule>
 
    private void pullData()
    {
+	   data = new ArrayList<Schedule>();
       System.err.println("SID: " + scheduleID);
       ResultSet rs = sqldb.getSQLSchedules(scheduleID);
       try
@@ -176,6 +166,7 @@ public class ScheduleDB implements DatabaseAPI<Schedule>
             e.printStackTrace();
          }
          stmt.setString(4, data.getDept());
+         stmt.setInt(5, scheduleID);
       }
       catch (SQLException e)
       {
@@ -247,7 +238,7 @@ public class ScheduleDB implements DatabaseAPI<Schedule>
          }
          // Where clause
          stmt.setString(4, data.getDept());
-         stmt.setInt(5, data.getId());
+         stmt.setInt(5, scheduleID);
       }
       catch (SQLException e)
       {
