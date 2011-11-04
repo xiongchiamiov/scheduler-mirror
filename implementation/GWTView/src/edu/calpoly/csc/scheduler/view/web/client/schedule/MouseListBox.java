@@ -118,7 +118,7 @@ class MouseListBox extends Composite {
     return widget;
   }
 
-  private void setWidget(int index, Widget widget) {
+  void setWidget(int index, Widget widget) {
     removeWidget(index);
     if (widget == null) {
       widget = new SpacerHTML();
@@ -131,16 +131,22 @@ class MouseListBox extends Composite {
     grid.setWidget(index, 0, widget);
   }
   
-  boolean contains(CourseListItem item)
+  int contains(CourseListItem item)
   {
-   for(Widget widget : widgetList())
+   ArrayList<Widget>items = widgetList();
+   int i;
+   Widget widget;
+   
+   for(i = 0; i < items.size(); i++)
    {
-	if(((CourseListItem)widget).getCourse().equals(item.getCourse()))
+	widget = items.get(i);
+	if(widget instanceof CourseListItem && 
+			((CourseListItem)widget).getCourse().equals(item.getCourse()))
 	{
-	 return true;
+	 return i;
 	}
    }
-   return false;
+   return -1;
   }
   
   boolean isAvailableBox()

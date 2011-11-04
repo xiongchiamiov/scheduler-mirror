@@ -60,7 +60,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 
 	private DualListBox dualListBoxCourses;
 	private ListBoxDragController listBoxDragController;
-	
+	private MouseListBox includedListBox;
 	private HorizontalPanel boxesAndSchedulePanel;
 
 	/**
@@ -94,7 +94,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 			cell = allCells.next();
 			if (cell.getClass().equals(ScheduleCell.class)) {
 				dropController = new ScheduleCellDropController(
-						(ScheduleCell) cell, this);
+						(ScheduleCell) cell, this, includedListBox);
 				dragController.registerDropController(dropController);
 				dualListBoxCourses.registerScheduleDrop(dropController);
 				dualListBoxCourses.reregisterBoxDrops();
@@ -529,6 +529,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 					{
 						Window.alert("Failed to retrieve courses");
 						dualListBoxCourses = new DualListBox(10, "10em", 10);
+						includedListBox = dualListBoxCourses.getIncludedListBox();
 						listBoxDragController = new ListBoxDragController(dualListBoxCourses);
 						boxesAndSchedulePanel.add(dualListBoxCourses);		
 
@@ -543,7 +544,8 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 						if (result != null) {
 
 							dualListBoxCourses = new DualListBox(10, "10em", result.size());
-							listBoxDragController = new ListBoxDragController(dualListBoxCourses);
+							includedListBox = dualListBoxCourses.getIncludedListBox();
+                            listBoxDragController = new ListBoxDragController(dualListBoxCourses);
 							boxesAndSchedulePanel.add(dualListBoxCourses);		
 							
 							for (CourseGWT course : result) 

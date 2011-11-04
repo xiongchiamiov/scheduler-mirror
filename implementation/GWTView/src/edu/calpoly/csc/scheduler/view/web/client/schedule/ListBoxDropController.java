@@ -1,6 +1,7 @@
 package edu.calpoly.csc.scheduler.view.web.client.schedule;
 
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -26,7 +27,18 @@ class ListBoxDropController extends AbstractDropController {
     for (Widget widget : context.selectedWidgets) {
       if (widget.getParent().getParent() == from) {
         //HTML htmlClone = new HTML(DOM.getInnerHTML(widget.getElement()));
-    	mouseListBox.add(new CourseListItem(((CourseListItem)widget).getCourse()));
+    	if(!mouseListBox.isAvailableBox())
+    	{
+    	 if(((CourseListItem)context.draggable).isScheduled() || 
+    			 mouseListBox.contains((CourseListItem)context.draggable) >= 0)
+    	 {
+    	  Window.alert("Course is already scheduled");
+    	 }
+    	 else
+    	 {
+    	  mouseListBox.add(new CourseListItem(((CourseListItem)widget).getCourse()));
+    	 }
+    	}
       }
     }
     super.onDrop(context);

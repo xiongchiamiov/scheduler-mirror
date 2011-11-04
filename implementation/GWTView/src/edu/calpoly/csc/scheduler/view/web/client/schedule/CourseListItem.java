@@ -7,6 +7,7 @@ import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 public class CourseListItem extends Label
 {
  private CourseGWT course;
+ private boolean isScheduled = false;
  
  public CourseListItem(CourseGWT course)
  {
@@ -17,5 +18,15 @@ public class CourseListItem extends Label
  CourseGWT getCourse()
  {
   return course;
+ }
+
+ public void setIsScheduled() 
+ {
+  isScheduled  = true;
+ }
+ 
+ public boolean isScheduled()
+ {
+  return isScheduled;
  }
 }

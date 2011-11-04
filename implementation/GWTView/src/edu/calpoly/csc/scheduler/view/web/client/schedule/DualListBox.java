@@ -173,7 +173,8 @@ public class DualListBox extends AbsolutePanel {
 	{
 	 for(Widget widget : left.widgetList())
 	 {
-	  if(!right.contains(((CourseListItem)widget)))
+	  if(right.contains(((CourseListItem)widget)) < 0 && 
+			  !((CourseListItem)widget).isScheduled())
 	  {
 	   right.add(new CourseListItem(((CourseListItem)widget).getCourse()));
 	  }
@@ -197,5 +198,10 @@ public class DualListBox extends AbsolutePanel {
 			from.remove(widget);
 			to.add(widget);
 		}
+	}
+
+	public MouseListBox getIncludedListBox() 
+	{
+		return right;
 	}
 }
