@@ -152,17 +152,29 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	  }
 	 }
 	 
-	 course = availableCourses.get(scheduleItem.getDept() + 
-			 scheduleItem.getCatalogNum()); 
 	 daysInWeek = new Week(daysScheduled);
 	 startTime = new Time(startHour, (atHalfHour? 30 : 0));
 	 
 	 if(inSchedule)
 	 {
 	  moved = scheduleItems.get(schdItemKey);
-	  schedule.remove(moved);
+	  try
+	  {
+	   schedule.move(moved, daysInWeek, startTime);
+	  }
+	  catch(CouldNotBeScheduledException e)
+	  {
+	   System.out.println("Could not be scheduled");
+	   return null;
+	  }
 	 }
-	 schedule.genItem(course, daysInWeek, startTime);
+	 else
+	 {
+	  course = availableCourses.get(scheduleItem.getDept() + 
+				 scheduleItem.getCatalogNum()); 
+	  schedule.genItem(course, daysInWeek, startTime);
+	 }
+	 
 	 scheduleItems = new HashMap<String, ScheduleItem>();
 	 for(ScheduleItem item : schedule.getItems())
 	 {         
