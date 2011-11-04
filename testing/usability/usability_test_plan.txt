@@ -18,6 +18,10 @@ Sample Tasks:
 --Add a new section of the class with the new professor that was just added. We
 can have them add themselves to the teacher roster, just to make it easy.
 
+Data we will record:
+--How long it takes to perform tasks
+--Clickmap of how people navigate the site
+
 I don't think we need to use multiple views. Something we can just do is let
 them set which kind of schedule view they like, and then see which one people
 like the most, or code multiple schedule views in.
