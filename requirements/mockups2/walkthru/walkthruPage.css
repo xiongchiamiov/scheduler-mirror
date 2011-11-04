@@ -1,0 +1,51 @@
+* {
+   padding: 0px;
+   margin: 0px;
+   border: none;
+}
+
+#blurb {
+   position: absolute;
+   top: 0;
+   right: 20px;
+   left: 20px;
+   color: #000000;
+   text-align: center;
+}
+
+#blurb p {
+   margin-top: 10px;
+}
+
+#blurb h2, #links {
+   margin: 0 0 9px 0;
+}
+
+#blurb a {
+   margin: 0 8px 0 8px;
+}
+
+#screenshot {
+   position: absolute;
+   top: 140px;
+   right: 5px;
+   bottom: 5px;
+   left: 5px;
+   border: 2px solid #AAAAAA;
+   overflow: auto;
+   text-align: left;
+   display: table-cell;
+}
+
+#screenshot * {  
+   vertical-align: middle;
+}
+
+#screenshot {
+    display: block;
+}
+#screenshot span {
+    display: inline-block;
+    height: 100%;
+    width: 1px;
+}
