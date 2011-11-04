@@ -101,6 +101,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 						(ScheduleCell) cell, this);
 				dragController.registerDropController(dropController);
 				dualListBoxCourses.registerScheduleDrop(dropController);
+				dualListBoxCourses.reregisterBoxDrops();
 			}
 		}
 	}
@@ -456,6 +457,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 		setDaysOfWeek();
 		placePanels();
 		dragController.unregisterDropControllers();
+		dualListBoxCourses.getDragController().unregisterDropControllers();
 	}
 
 	/**

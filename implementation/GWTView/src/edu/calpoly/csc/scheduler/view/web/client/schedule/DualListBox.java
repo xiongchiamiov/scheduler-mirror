@@ -39,7 +39,9 @@ public class DualListBox extends AbsolutePanel {
 	private Button oneRight;
 
 	private MouseListBox right;
-
+	ListBoxDropController leftDropController; 
+	ListBoxDropController rightDropController;
+	
 	public DualListBox(int visibleItems, String width) {
 		HorizontalPanel horizontalPanel = new HorizontalPanel();
 		add(horizontalPanel);
@@ -105,9 +107,9 @@ public class DualListBox extends AbsolutePanel {
 			}
 		});
 
-		ListBoxDropController leftDropController = new ListBoxDropController(
+		leftDropController = new ListBoxDropController(
 				left);
-		ListBoxDropController rightDropController = new ListBoxDropController(
+		rightDropController = new ListBoxDropController(
 				right);
 		dragController.registerDropController(leftDropController);
 		dragController.registerDropController(rightDropController);
@@ -149,6 +151,12 @@ public class DualListBox extends AbsolutePanel {
 		dragController.registerDropController(dropController);
 	}
 
+	public void reregisterBoxDrops()
+	{
+		dragController.registerDropController(leftDropController);
+		dragController.registerDropController(rightDropController);
+	}
+	
 	public ArrayList<CourseGWT> getIncludedCourses()
 	{
 	 ArrayList<CourseGWT> courses = new ArrayList<CourseGWT>();
