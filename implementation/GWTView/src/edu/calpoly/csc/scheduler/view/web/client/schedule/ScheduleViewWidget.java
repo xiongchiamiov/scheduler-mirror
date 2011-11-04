@@ -525,16 +525,36 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 		greetingService
 				.getCourses(new AsyncCallback<ArrayList<CourseGWT>>() {
 					@Override
-					public void onFailure(Throwable caught) {
+					public void onFailure(Throwable caught) 
+					{
 						Window.alert("Failed to retrieve courses");
+						dualListBoxCourses = new DualListBox(10, "10em", 10);
+						listBoxDragController = new ListBoxDragController(dualListBoxCourses);
+						boxesAndSchedulePanel.add(dualListBoxCourses);		
+
+						boxesAndSchedulePanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+						layoutDaysAndTimes();
+						registerDrops();
+						mainPanel.add(boxesAndSchedulePanel);
 					}
 
 					@Override
 					public void onSuccess(ArrayList<CourseGWT> result) {
 						if (result != null) {
-							for (CourseGWT course : result) {								
+
+							dualListBoxCourses = new DualListBox(10, "10em", result.size());
+							listBoxDragController = new ListBoxDragController(dualListBoxCourses);
+							boxesAndSchedulePanel.add(dualListBoxCourses);		
+							
+							for (CourseGWT course : result) 
+							{	
 								dualListBoxCourses.addLeft(new CourseListItem(course));
 							}
+
+							boxesAndSchedulePanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+							layoutDaysAndTimes();
+							registerDrops();
+							mainPanel.add(boxesAndSchedulePanel);
 						}
 					}
 				});
@@ -542,19 +562,9 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 
 	private void layoutBoxesAndSchedule() {
 		boxesAndSchedulePanel = new HorizontalPanel();
-						
-		dualListBoxCourses = new DualListBox(10, "10em");
-		listBoxDragController = new ListBoxDragController(dualListBoxCourses);
 		
 		// add some items to the list
 		addCoursesToBoxes();
-
-		boxesAndSchedulePanel.add(dualListBoxCourses);		
-		boxesAndSchedulePanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-		
-		layoutDaysAndTimes();
-		registerDrops();
-		mainPanel.add(boxesAndSchedulePanel);
 	}
 
 	/**

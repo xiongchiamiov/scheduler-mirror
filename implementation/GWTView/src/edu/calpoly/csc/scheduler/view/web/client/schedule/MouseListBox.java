@@ -32,6 +32,8 @@ class MouseListBox extends Composite {
 
   private int widgetCount = 0;
 
+  private boolean isAvailableBox;
+
   /**
    * Used by {@link ListBoxDragController} to create a draggable listbox containing the selected
    * items.
@@ -51,8 +53,11 @@ class MouseListBox extends Composite {
   /**
    * Used by {@link DualListBox} to create the left and right list boxes.
    */
-  MouseListBox(ListBoxDragController dragController, int size) {
+  MouseListBox(ListBoxDragController dragController, int size, 
+		  boolean isAvailableBox) 
+  {
     this(size);
+	this.isAvailableBox = isAvailableBox;
     this.dragController = dragController;
   }
 
@@ -124,6 +129,23 @@ class MouseListBox extends Composite {
       }
     }
     grid.setWidget(index, 0, widget);
+  }
+  
+  boolean contains(CourseListItem item)
+  {
+   for(Widget widget : widgetList())
+   {
+	if(((CourseListItem)widget).getCourse().equals(item.getCourse()))
+	{
+	 return true;
+	}
+   }
+   return false;
+  }
+  
+  boolean isAvailableBox()
+  {
+   return isAvailableBox;
   }
 }
 

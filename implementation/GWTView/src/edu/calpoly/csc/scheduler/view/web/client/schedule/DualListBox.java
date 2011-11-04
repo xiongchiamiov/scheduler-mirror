@@ -7,7 +7,6 @@ import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -22,8 +21,6 @@ import java.util.ArrayList;
 public class DualListBox extends AbsolutePanel {
 
 	private static final String CSS_DEMO_DUAL_LIST_EXAMPLE_CENTER = "demo-DualListExample-center";
-
-	private static final int LIST_SIZE = 10;
 
 	private Button allLeft;
 
@@ -41,10 +38,10 @@ public class DualListBox extends AbsolutePanel {
 	ListBoxDropController leftDropController; 
 	ListBoxDropController rightDropController;
 	
-	public DualListBox(int visibleItems, String width) {
+	public DualListBox(int visibleItems, String width, int totalItems) {
 		HorizontalPanel horizontalPanel = new HorizontalPanel();
 		add(horizontalPanel);
-		horizontalPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+		//horizontalPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 
 		VerticalPanel verticalPanel = new VerticalPanel();
 		// verticalPanel.addStyleName(CSS_DEMO_DUAL_LIST_EXAMPLE_CENTER);
@@ -54,8 +51,8 @@ public class DualListBox extends AbsolutePanel {
         VerticalPanel includedPanel = new VerticalPanel();
         
 		dragController = new ListBoxDragController(this);
-		left = new MouseListBox(dragController, LIST_SIZE);
-		right = new MouseListBox(dragController, LIST_SIZE);
+		left = new MouseListBox(dragController, totalItems, true);
+		right = new MouseListBox(dragController, totalItems, false);
 
 		left.setWidth(width);
 		right.setWidth(width);
@@ -68,12 +65,12 @@ public class DualListBox extends AbsolutePanel {
 		horizontalPanel.add(verticalPanel);
 		horizontalPanel.add(includedPanel);
 
-		oneRight = new Button("&gt;");
-		oneLeft = new Button("&lt;");
+		//oneRight = new Button("&gt;");
+		//oneLeft = new Button("&lt;");
 		allRight = new Button("&gt;&gt;");
 		allLeft = new Button("&lt;&lt;");
-		verticalPanel.add(oneRight);
-		verticalPanel.add(oneLeft);
+		//verticalPanel.add(oneRight);
+		//verticalPanel.add(oneLeft);
 		verticalPanel.add(new HTML("&nbsp;"));
 		verticalPanel.add(allRight);
 		verticalPanel.add(allLeft);
@@ -81,30 +78,32 @@ public class DualListBox extends AbsolutePanel {
 		allRight.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				moveItems(left, right, false);
+				moveAllToIncluded();
+				//moveItems(left, right, false);
 			}
 		});
 
 		allLeft.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				moveItems(right, left, false);
+				removeAllFromIncluded();
+				//moveItems(right, left, false);
 			}
 		});
 
-		oneRight.addClickHandler(new ClickHandler() {
+		/*oneRight.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				moveItems(left, right, true);
 			}
-		});
+		});*/
 
-		oneLeft.addClickHandler(new ClickHandler() {
+		/*oneLeft.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				moveItems(right, left, true);
 			}
-		});
+		});*/
 
 		leftDropController = new ListBoxDropController(
 				left);
@@ -168,6 +167,25 @@ public class DualListBox extends AbsolutePanel {
 	  }
 	 }
 	 return courses;
+	}
+	
+	private void moveAllToIncluded()
+	{
+	 for(Widget widget : left.widgetList())
+	 {
+	  if(!right.contains(((CourseListItem)widget)))
+	  {
+	   right.add(new CourseListItem(((CourseListItem)widget).getCourse()));
+	  }
+	 }
+	}
+	
+	private void removeAllFromIncluded()
+	{
+	 for(Widget widget : right.widgetList())
+	 {
+	  right.remove(widget);
+	 }
 	}
 	
 	protected void moveItems(MouseListBox from, MouseListBox to,
