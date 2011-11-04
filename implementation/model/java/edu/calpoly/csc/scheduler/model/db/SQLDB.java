@@ -663,40 +663,6 @@ public class SQLDB {
       return rs;
 	}
 	
-	@Deprecated
-	public boolean doesScheduleIDExist(int scheduleid)
-	{
-		System.out.println("Does " + scheduleid + " exist?");
-		String selectString = "select scheduleid from schedules where scheduleid = ?";
-	      PreparedStatement stmt = getPrepStmt(selectString);
-	      ResultSet rs;
-	      try {
-	         stmt.setInt(1, scheduleid);
-	         rs = stmt.executeQuery();
-	         if(rs.next())
-	         {
-	        	 if(rs.getInt("scheduleid") == scheduleid)
-	        	 {
-	        		 System.out.println("yes");
-	        		 return true;
-	        	 }
-	        	 else
-	        	 {
-	        		 System.out.println("no");
-	        		 return false;
-	        	 }
-	         }
-	         else
-	         {
-	        	 System.out.println("No, nothing in resultset");
-	        	 return false;
-	         }
-	      } catch (SQLException e) {
-	    	  System.out.println("no, sqlexception");
-	         return false;
-	      }
-	}
-	
 	//Does ___ exist methods
 	public boolean doesCourseExist(Course data)
 	{
@@ -768,6 +734,38 @@ public class SQLDB {
 	   }
 	   return doesItExist(stmt);
 	}
+	
+	  public boolean doesScheduleIDExist(int id)
+	   {
+	      //Check if scheduleid already exists
+	      String query = "select scheduleid from schedules where scheduleid = ?";
+	      PreparedStatement stmt = getPrepStmt(query);
+	      try
+	      {
+	         stmt.setInt(1, id);
+	      }
+	      catch (SQLException e)
+	      {
+	         e.printStackTrace();
+	      }
+	      return doesItExist(stmt);
+	   }
+	   
+	   public boolean doesScheduleNameExist(String name)
+	   {
+	      //Check if name already exists
+	      String query = "select name from schedules where name = ?";
+	      PreparedStatement stmt = getPrepStmt(query);
+	      try
+	      {
+	         stmt.setString(1, name);
+	      }
+	      catch (SQLException e)
+	      {
+	         e.printStackTrace();
+	      }
+	      return doesItExist(stmt);
+	   }
 
 	public boolean doesUserExist(String username)
 	{
@@ -805,13 +803,14 @@ public class SQLDB {
 	}
 	
 	//Find new scheduleid when course is made
-	public int getScheduleID(String name)
+	public int getScheduleIDByName(String name, String dept)
 	{
-		String query = "select scheduleid from schedules where name = ?";
+		String query = "select scheduleid from schedules where name = ? and dept = ?";
 	      PreparedStatement stmt = getPrepStmt(query);
 	      ResultSet rs;
 	      try {
 	         stmt.setString(1, name);
+	         stmt.setString(2, dept);
 	         rs = stmt.executeQuery();
 	         if(rs.next())
 	         {

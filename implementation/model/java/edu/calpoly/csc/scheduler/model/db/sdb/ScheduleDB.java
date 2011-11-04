@@ -139,7 +139,7 @@ public class ScheduleDB implements DatabaseAPI<Schedule>
       }
       // Execute
       sqldb.executePrepStmt(stmt);
-      this.scheduleID = sqldb.getScheduleID(name);
+      this.scheduleID = sqldb.getScheduleIDByName(name, dept);
       return this.scheduleID;
    }
 
@@ -274,5 +274,21 @@ public class ScheduleDB implements DatabaseAPI<Schedule>
       }
       // Execute
       sqldb.executePrepStmt(stmt);
+   }
+
+   /**
+    * @return the scheduleID
+    */
+   public int getScheduleID()
+   {
+      return scheduleID;
+   }
+
+   /**
+    * @param scheduleID the scheduleID to set
+    */
+   public void setScheduleID(int scheduleID)
+   {
+      this.scheduleID = scheduleID;
    }
 }

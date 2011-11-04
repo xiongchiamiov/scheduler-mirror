@@ -13,7 +13,6 @@ import edu.calpoly.csc.scheduler.model.db.ldb.LocationDB;
 import edu.calpoly.csc.scheduler.model.db.sdb.ScheduleDB;
 import edu.calpoly.csc.scheduler.model.schedule.Schedule;
 
-
 /**
  * This class holds all of the individual database objects. The view will
  * interact with this class to get the individual databases.
@@ -24,29 +23,29 @@ import edu.calpoly.csc.scheduler.model.schedule.Schedule;
 public class Database
 {
    /** The SQLDB object to pass to other database objects */
-   private SQLDB        sqldb;
+   private SQLDB            sqldb;
 
    /** The instructor database. */
-   private InstructorDB instructorDB;
+   private InstructorDB     instructorDB;
 
    /** The course database. */
-   private CourseDB     courseDB;
+   private CourseDB         courseDB;
 
    /** The location database. */
-   private LocationDB   locationDB;
+   private LocationDB       locationDB;
 
    /** The schedule database. */
-   private ScheduleDB   scheduleDB;
+   private ScheduleDB       scheduleDB;
 
    /** The current schedule id */
-   private int          scheduleID;
+   private int              scheduleID;
 
    /** The current department */
-   private String       dept;
-   
+   private String           dept;
+
    /** If we are setting up a new user */
-   private boolean newUser = false;
-   
+   private boolean          newUser            = false;
+
    /** Example Chem Schedule template scheduleid */
    private static final int templateScheduleID = 1354;
 
@@ -64,20 +63,20 @@ public class Database
     */
    public String getDept(String userid)
    {
-	   if(sqldb.doesUserExist(userid))
-	   {
-		   newUser = false;
-		   //If it exists, get dept
-		   this.dept = sqldb.getDeptByUserID(userid);
-	   }
-	   else
-	   {
-		   //Make a new user
-		   sqldb.makeNewUser(userid);
-		   //New dept will be userid
-		   newUser = true;
-		   this.dept = userid;
-	   }
+      if (sqldb.doesUserExist(userid))
+      {
+         newUser = false;
+         // If it exists, get dept
+         this.dept = sqldb.getDeptByUserID(userid);
+      }
+      else
+      {
+         // Make a new user
+         sqldb.makeNewUser(userid);
+         // New dept will be userid
+         newUser = true;
+         this.dept = userid;
+      }
       return dept;
    }
 
@@ -108,24 +107,32 @@ public class Database
     */
    public void openDB(int scheduleid, String scheduleName)
    {
+      System.out.println("ID: " + scheduleid + ", name: " + scheduleName);
       int realid = scheduleid;
-      Schedule temp = new Schedule();
-      temp.setId(scheduleid);
-      temp.setName(scheduleName);
-      if (!(sqldb.doesScheduleExist(temp)))
+      if (!(sqldb.doesScheduleIDExist(scheduleid)))
       {
-         System.out.println("Creating new schedule");
-         if(dept == null)
+         if (!(sqldb.doesScheduleNameExist(scheduleName)))
          {
-        	 System.err.println("ERROR: DEPT IS NULL");
+            System.out.println("Creating new schedule");
+            if (dept == null)
+            {
+               System.err.println("ERROR: DEPT IS NULL");
+            }
+            else
+            {
+               System.out.println("Using dept: " + dept);
+            }
+            scheduleDB = new ScheduleDB(sqldb, this.dept);
+            realid = scheduleDB.createNewSchedule(scheduleName);
+            scheduleDB.setScheduleID(realid);
+            System.out.println("New schedule id: " + realid);
          }
          else
          {
-        	 System.out.println("Using dept: " + dept);
+            System.err
+                  .println("ERROR: Schedule name already exists, opening existing one");
+            realid = sqldb.getScheduleIDByName(scheduleName, dept);
          }
-         scheduleDB = new ScheduleDB(sqldb, this.dept);
-         realid = scheduleDB.createNewSchedule(scheduleName);
-         System.out.println("New schedule id: " + realid);
       }
       else
       {
@@ -136,32 +143,33 @@ public class Database
       courseDB = new CourseDB(sqldb, realid);
       locationDB = new LocationDB(sqldb, realid);
       this.scheduleID = realid;
-      if(newUser)
+      if (newUser)
       {
-    	  System.out.println("Copying data from Example Chem Schedule");
-    	  //Copy data into the new schedule
-    	  //Make temporary db's with scheduleid = Example Chem Schedule (1354)
-    	  InstructorDB tempInstructorDB = new InstructorDB(sqldb, templateScheduleID);
-    	  CourseDB tempCourseDB = new CourseDB(sqldb, templateScheduleID);
-    	  LocationDB tempLocationDB = new LocationDB(sqldb, templateScheduleID);
-    	  
-    	  //Copy data from temp dbs to real dbs
-    	  //Copy instructors
-    	  for(Instructor instructor : tempInstructorDB.getData())
-    	  {
-    		  instructorDB.saveData(instructor);
-    	  }
-    	  //Copy courses
-    	  for(Course course : tempCourseDB.getData())
-    	  {
-    		  courseDB.saveData(course);
-    	  }
-    	  //Copy locations
-    	  for(Location location : tempLocationDB.getData())
-    	  {
-    		  locationDB.saveData(location);
-    	  }
-    	  newUser = false;
+         System.out.println("Copying data from Example Chem Schedule");
+         // Copy data into the new schedule
+         // Make temporary db's with scheduleid = Example Chem Schedule (1354)
+         InstructorDB tempInstructorDB = new InstructorDB(sqldb,
+               templateScheduleID);
+         CourseDB tempCourseDB = new CourseDB(sqldb, templateScheduleID);
+         LocationDB tempLocationDB = new LocationDB(sqldb, templateScheduleID);
+
+         // Copy data from temp dbs to real dbs
+         // Copy instructors
+         for (Instructor instructor : tempInstructorDB.getData())
+         {
+            instructorDB.saveData(instructor);
+         }
+         // Copy courses
+         for (Course course : tempCourseDB.getData())
+         {
+            courseDB.saveData(course);
+         }
+         // Copy locations
+         for (Location location : tempLocationDB.getData())
+         {
+            locationDB.saveData(location);
+         }
+         newUser = false;
       }
    }
 
