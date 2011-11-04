@@ -250,7 +250,7 @@ public class CourseDB implements DatabaseAPI<Course>
             + "dept = ?, wtu = ?, scu = ?, numofsections = ?, "
             + "type = ?, length = ?, days = ?, enrollment = ?, "
             + "lab = ?, labpad = ?, quarterid = ?, scheduleid = ? where catalognum = ? "
-            + "and dept = ? and type = ? and quarterid = ?";
+            + "and dept = ? and type = ? and scheduleid = ?";
       // Create prepared statement
       PreparedStatement stmt = sqldb.getPrepStmt(updateString);
       try
@@ -300,7 +300,7 @@ public class CourseDB implements DatabaseAPI<Course>
          stmt.setInt(15, data.getCatalogNum());
          stmt.setString(16, data.getDept());
          stmt.setString(17, data.getType().toString());
-         stmt.setString(18, data.getQuarterId());
+         stmt.setInt(18, scheduleID);
       }
       catch (SQLException e)
       {

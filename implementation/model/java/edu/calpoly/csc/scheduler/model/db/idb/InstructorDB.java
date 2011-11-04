@@ -293,7 +293,7 @@ public class InstructorDB implements DatabaseAPI<Instructor>
             + "userid = ?, maxwtu = ?, curwtu = ?, office = ?, "
             + "fairness = ?, disability = ?, generosity = ?, availability = ?, "
             + "coursepreferences = ?, tprefs = ?, itemstaught = ?, quarterid = ?, "
-            + "scheduleid = ? where userid = ?";
+            + "scheduleid = ? where userid = ? and scheduleid = ?";
       // Create prepared statement
       PreparedStatement stmt = sqldb.getPrepStmt(updateString);
       // Set values
@@ -362,6 +362,7 @@ public class InstructorDB implements DatabaseAPI<Instructor>
 
          // Where clause
          stmt.setString(16, data.getUserID());
+         stmt.setInt(17, scheduleID);
       }
       catch (SQLException e)
       {

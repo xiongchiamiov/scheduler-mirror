@@ -170,6 +170,7 @@ public class Database
             locationDB.saveData(location);
          }
          newUser = false;
+         System.out.println("Done copying data");
       }
    }
 

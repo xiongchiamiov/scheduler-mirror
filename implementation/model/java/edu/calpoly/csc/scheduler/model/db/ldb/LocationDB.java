@@ -47,10 +47,12 @@ public class LocationDB implements DatabaseAPI<Location>
       data.setScheduleId(scheduleID);
       if(sqldb.doesLocationExist(data))
       {
+         System.out.println("Editing data: location");
          editData(data);
       }
       else
       {
+         System.out.println("Adding data: location");
          addData(data);
       }
    }
@@ -208,7 +210,7 @@ public class LocationDB implements DatabaseAPI<Location>
       String updateString = "update locations set building = ?, room = ?,"
             + "maxoccupancy = ?, type = ?, providedequipment = ?, "
             + "adacompliant = ?, availability = ?, quarterid = ?, scheduleid = ? "
-            + "where building = ? and room = ?";
+            + "where building = ? and room = ? and scheduleid = ?";
       // Create prepared statement
       PreparedStatement stmt = sqldb.getPrepStmt(updateString);
       // Set values
@@ -251,6 +253,7 @@ public class LocationDB implements DatabaseAPI<Location>
          // Where clause
          stmt.setString(10, data.getBuilding());
          stmt.setString(11, data.getRoom());
+         stmt.setInt(12, scheduleID);
 
       }
       catch (SQLException e)
