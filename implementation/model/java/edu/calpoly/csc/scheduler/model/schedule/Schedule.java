@@ -18,11 +18,9 @@ import edu.calpoly.csc.scheduler.model.db.ldb.*;
  */
 public class Schedule implements Serializable
 {
-   /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1778968142419846280L;
-/**
+   public static final long serialVersionUID = 1778968142419846280L;
+
+	/**
     * Used for debugging. Toggle it to get debugging output
     */
    public static final boolean DEBUG = true;
@@ -299,16 +297,23 @@ public class Schedule implements Serializable
     */
    private void book (ScheduleItem si)
    {
+      Course c = si.getCourse();
       Instructor i = si.getInstructor();
       Location l = si.getLocation();
       Week days = si.getDays();
       TimeRange tr = si.getTimeRange();
 
+      debug ("BOOKING");
+      
       i.book(true, days, tr);
       l.book(true, days, tr);
 
       int wtu = i.getCurWtu();
-      wtu += si.getWtuTotal();
+      debug ("WTU BEFORE: " + wtu);
+      wtu += c.getWtu();
+      debug ("ADDING " + c.getWtu());
+      debug ("EQ'N: " + wtu +  " + " + c.getWtu());
+      debug ("NOW AT " + wtu);
       i.setCurWtu(wtu);
 
       this.items.add(si);
@@ -316,6 +321,7 @@ public class Schedule implements Serializable
       SectionTracker st = getSectionTracker(si.getCourse());
       if (st.addSection())
       {
+         si.setSection(st.getCurSection());
          debug ("JUST ADDED A SECTION OF " + si.getCourse());
       }
    }
@@ -429,7 +435,7 @@ public class Schedule implements Serializable
                System.err.println("GENERATION MADE A BAD LEC");
                System.err.println(lec_si);
             }
-            
+         
             Lab lab = c.getLab();
             if (lab != null)
             {
@@ -702,9 +708,10 @@ public class Schedule implements Serializable
          if (i.isAvailable(days, tr))
          {
             debug("AVAILABLE");
-            if (i.getAvgPrefForTimeRange(days, tr) > 0)
+            double pref;
+            if ((pref = i.getAvgPrefForTimeRange(days, tr)) > 0)
             {
-               debug("WANTS");
+               debug("WANTS: " + pref);
                ScheduleItem toAdd = si.clone();
                toAdd.setDays(days);
                toAdd.setTimeRange(new TimeRange(tr));
@@ -829,22 +836,34 @@ public class Schedule implements Serializable
       return tr;
    }
 
+   /**
+    * Finds an instructor for the given course, excluding any instructors 
+    * in a given list
+    * 
+    * @param c Course to find an instructor for
+    * @param doNotPick List of instructor to <b>not</b> choose
+    * 
+    * @return An intsructor to teach 'c'. This can be STAFF if no instructor
+    *         if capable of teaching
+    */
    private Instructor findInstructor (Course c, List<Instructor> doNotPick)
    {
       Instructor r = Staff.getStaff();
       int curMaxPref = 0;
       
       debug ("FINDING INSTRUCTOR FOR " + c);
-      
+      debug ("EXLUDING: " + doNotPick);
       for (Instructor i : this.iSourceList)
       {
-         if (doNotPick != null && !doNotPick.contains(i))
+         debug ("CONSIDERING " + i);
+         if (doNotPick == null || !doNotPick.contains(i))
          {
             debug ("NOT EXCLUDED");
             if (i.canTeach(c))
             {
                debug ("CAN");
                int pref = i.getPreference(c);
+               debug ("DESIRE: " + pref);
                if (pref > curMaxPref)
                {
                   debug ("WANTS MORE: " + pref + " > " + curMaxPref);
@@ -853,6 +872,11 @@ public class Schedule implements Serializable
                }
             }
          }
+      }
+      
+      if (r.equals(Staff.getStaff()))
+      {
+         debug ("NOBODY FOUND. GOING WITH STAFF");
       }
       
       return r;
