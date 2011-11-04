@@ -7,6 +7,7 @@ import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -65,16 +66,17 @@ public class DualListBox extends AbsolutePanel {
 		horizontalPanel.add(verticalPanel);
 		horizontalPanel.add(includedPanel);
 
-		//oneRight = new Button("&gt;");
-		//oneLeft = new Button("&lt;");
+		oneRight = new Button("&gt;");
+		oneLeft = new Button("&lt;");
 		allRight = new Button("&gt;&gt;");
 		allLeft = new Button("&lt;&lt;");
-		//verticalPanel.add(oneRight);
-		//verticalPanel.add(oneLeft);
+		verticalPanel.add(oneRight);
+		verticalPanel.add(oneLeft);
 		verticalPanel.add(new HTML("&nbsp;"));
 		verticalPanel.add(allRight);
 		verticalPanel.add(allLeft);
-
+        verticalPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+		
 		allRight.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -91,19 +93,19 @@ public class DualListBox extends AbsolutePanel {
 			}
 		});
 
-		/*oneRight.addClickHandler(new ClickHandler() {
+		oneRight.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				moveItems(left, right, true);
+				moveSelectedToIncluded();
 			}
-		});*/
+		});
 
-		/*oneLeft.addClickHandler(new ClickHandler() {
+		oneLeft.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				moveItems(right, left, true);
+				removeSelectedFromIncluded();
 			}
-		});*/
+		});
 
 		leftDropController = new ListBoxDropController(
 				left);
@@ -187,6 +189,28 @@ public class DualListBox extends AbsolutePanel {
 	 {
 	  right.remove(widget);
 	 }
+	}
+	
+	private void moveSelectedToIncluded()
+	{
+	 ArrayList<Widget> selectedItems = dragController.getSelectedWidgets(left);
+	 for(Widget item : selectedItems)
+	 {
+	  if(right.contains(((CourseListItem)item)) < 0 && 
+			  !((CourseListItem)item).isScheduled())
+	  {
+	   right.add(new CourseListItem(((CourseListItem)item).getCourse()));
+	  }
+	 }
+	}
+	
+	private void removeSelectedFromIncluded()
+	{
+		ArrayList<Widget> selectedItems = dragController.getSelectedWidgets(right);
+		 for(Widget item : selectedItems)
+		 {
+		  right.remove(item);
+		 }
 	}
 	
 	protected void moveItems(MouseListBox from, MouseListBox to,

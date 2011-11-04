@@ -40,6 +40,11 @@ public class ScheduleCellDropController extends SimpleDropController
   }
   else
   {
+   if(((CourseListItem)context.draggable).isScheduled())
+   {
+	Window.alert("Course is already scheduled");
+	return;
+   }
    deptAndCatalogNum = ((CourseListItem)context.draggable).getText().split(" ");
    courseHolder = new ScheduleItemGWT("", deptAndCatalogNum[0], 
 		   Integer.valueOf(deptAndCatalogNum[1]), 1, 
