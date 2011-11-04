@@ -1,16 +1,30 @@
 package edu.calpoly.csc.scheduler.view.web.client.table;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Vector;
 
+import com.google.gwt.cell.client.ButtonCell;
+import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.EditTextCell;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.SelectionCell;
+import com.google.gwt.cell.client.ValueUpdater;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.InputElement;
+import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
@@ -27,9 +41,10 @@ public class CTableBuilder implements TableBuilder<CourseGWT>{
 	}
 	
 	@Override
-	public ArrayList<ColumnObject<CourseGWT>> getColumns(
+	public ArrayList<ColumnObject<CourseGWT>> getColumns(Widget hidden,
 			ListDataProvider<CourseGWT> dataProvider, ListHandler<CourseGWT> sortHandler) {
 		
+		final Label fhidden = (Label)hidden;
 		final ListDataProvider<CourseGWT> fdataProvider = dataProvider;
 		
 		ArrayList<ColumnObject<CourseGWT>> list = 
@@ -217,29 +232,115 @@ public class CTableBuilder implements TableBuilder<CourseGWT>{
 		
 		
 		// lab
-		ArrayList<String> labOptions = new ArrayList<String>();
-		for(CourseGWT c : dataProvider.getList()){
-			if(c.getType().equals(TableConstants.LAB) && 
-					!c.getDept().trim().equals("")){
-				labOptions.add(c.getDept().trim() + c.getCatalogNum());
-			}
-		}
-		SelectionCell selectionCellLab = new SelectionCell(labOptions);
 		Column<CourseGWT, String> lab = 
-				new Column<CourseGWT, String>(selectionCellLab) {
-		      @Override
-		      public String getValue(CourseGWT course) {
-		        return "";//course.getLab();
-		      }
+				new Column<CourseGWT, String>(new ButtonCell()){ 
+		
+				@Override
+			      public String getValue(CourseGWT course) {
+			    	  if(course.getLabDept().trim().equals("")){
+			    		  return "";
+			    	  }
+			    	  return course.getLabDept().trim() + course.getLabCatalogNum();
+			      
+				}
 		};
 		sortHandler.setComparator(lab, new Comparator<CourseGWT>() {
 	        public int compare(CourseGWT o1, CourseGWT o2) {
-	          return 0;//o1.getLab().compareTo(o2.getLab());
+	        	if(!o1.getLabDept().equals(o2.getLabDept())){
+	        		return o1.getLabDept().compareTo(o2.getLabDept());
+	        	}
+	        	return o1.getLabCatalogNum() - o2.getLabCatalogNum();
 	        }
 	    });
 		lab.setFieldUpdater(new FieldUpdater<CourseGWT, String>() {
 		      public void update(int index, CourseGWT object, String value) {
-		        //object.setLab(value);
+		    	  /*
+		    	  value = value.trim();
+		    	  if(value.equals("")){
+	  					object.setLabDept("");
+	  					object.setLabName("");
+	  					object.setLabCatalogNum(0);
+	  				}
+	  				else{
+	  					
+	  					// get first integer
+	  					int i;
+	  					for(i = 0; !Character.isDigit(value.charAt(i)) && i < value.length(); i++){}
+	  					try{
+	  						int cnum = Integer.parseInt(value.substring(i));
+	  						object.setLabDept(value.substring(0, i));
+		  					object.setLabName("");
+		  					object.setLabCatalogNum(cnum);
+	  						
+	  						
+	  					}catch(Exception e){
+	  						object.setLabDept("");
+		  					object.setLabName("");
+		  					object.setLabCatalogNum(0);
+	  					}
+	  				}
+		    	  
+		    	  */
+		    	  
+		    	  
+		    	  final PopupPanel popup = new PopupPanel(true);
+		    	  final CourseGWT fobject = object;
+		    	// get lab options
+		    	ArrayList<String> labOptions = new ArrayList<String>();
+		    	labOptions.add("");
+		  		for(CourseGWT c : fdataProvider.getList()){
+		  			//
+		  			if(c.getType().equals(TableConstants.LAB) && 
+		  					!c.getDept().trim().equals("")){
+		  				labOptions.add(c.getDept().trim() + c.getCatalogNum());
+		  			}
+		  			//
+		  			labOptions.add(c.getDept().trim() + c.getCatalogNum());
+		  		}
+		  		
+		  		Collections.sort(labOptions);
+		  		
+		  		final ListBox listbox = new ListBox();
+		  		listbox.addChangeHandler(new ChangeHandler(){
+		  			public void onChange(ChangeEvent event){
+		  				String value = listbox.getValue(listbox.getSelectedIndex());
+		  				if(value.equals("")){
+		  					fobject.setLabDept("");
+		  					fobject.setLabName("");
+		  					fobject.setLabCatalogNum(0);
+		  				}
+		  				else{
+		  					
+		  					// get first integer
+		  					int i;
+		  					for(i = 0; !Character.isDigit(value.charAt(i)) && i < value.length(); i++){}
+		  					try{
+		  						int cnum = Integer.parseInt(value.substring(i));
+		  						fobject.setLabDept(value.substring(0, i));
+			  					fobject.setLabName("");
+			  					fobject.setLabCatalogNum(cnum);
+		  						
+		  						
+		  					}catch(Exception e){
+		  						fobject.setLabDept("");
+			  					fobject.setLabName("");
+			  					fobject.setLabCatalogNum(0);
+		  					}
+		  				}
+		  				popup.hide();
+		  			}
+		  		});
+		  		
+		  		for(int i = 0; i < labOptions.size(); i++){
+		  			String s = labOptions.get(i);
+		  			listbox.addItem(s);
+		  			if((object.getLabDept().trim() + object.getLabCatalogNum()).equals(s)){
+		  				listbox.setSelectedIndex(i);
+		  			}
+		  		}
+		    	
+		  		popup.setWidget(listbox);
+		  		popup.showRelativeTo(fhidden);
 		      }
 		});
 		lab.setCellStyleNames("tableColumnWidthString");
@@ -275,6 +376,9 @@ public class CTableBuilder implements TableBuilder<CourseGWT>{
 		course.setScu(1);
 		course.setWtu(1);
 		course.setType("");
+		course.setLabCatalogNum(0);
+		course.setLabName("");
+		course.setLabDept("");
 		return course;
 	}
 

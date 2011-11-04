@@ -1,17 +1,27 @@
 package edu.calpoly.csc.scheduler.view.web.client.table;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import com.google.gwt.cell.client.ButtonCell;
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.EditTextCell;
 import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 
+import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
 
@@ -235,5 +245,68 @@ public class TableValidate {
     	else{
     		object.setRoom(newValue);
     	}
+	}
+	
+	
+	/***************
+	 * Course Labs *
+	 ***************/
+	public static ButtonCell labButtonCell(Widget hidden, ListDataProvider<CourseGWT> dataProvider){
+		
+		final Label fhidden = (Label)hidden;
+		final ListDataProvider<CourseGWT> fdataProvider = dataProvider;
+		
+		return new ButtonCell(){
+			@Override
+			public void onBrowserEvent(Cell.Context context, Element parent, String value,
+					NativeEvent event, ValueUpdater<String> valueUpdater){
+				// call super
+				super.onBrowserEvent(context, parent, value,
+						event, valueUpdater);
+				
+				
+				// Ignore events that don't target the input
+				Element target = event.getEventTarget().cast();
+				if(!parent.getFirstChildElement().isOrHasChild(target)){
+					return;
+				}
+				
+				final PopupPanel popup = new PopupPanel(true);
+		    	
+				// get lab options
+		    	ArrayList<String> labOptions = new ArrayList<String>();
+		    	labOptions.add("");
+		  		for(CourseGWT c : fdataProvider.getList()){
+		  			
+		  			if(c.getType().equals(TableConstants.LAB) && 
+		  					!c.getDept().trim().equals("")){
+		  				labOptions.add(c.getDept().trim() + c.getCatalogNum());
+		  			}
+		  			
+		  		}
+		  		final InputElement input = parent.getFirstChild().cast();
+		  		Collections.sort(labOptions);
+		  		
+		  		final ListBox listbox = new ListBox();
+		  		listbox.addChangeHandler(new ChangeHandler(){
+		  			public void onChange(ChangeEvent event){
+		  				String newValue = listbox.getValue(listbox.getSelectedIndex());
+		  				input.setValue(newValue);
+		  				popup.hide();
+		  			}
+		  		});
+		  		
+		  		for(int i = 0; i < labOptions.size(); i++){
+		  			String s = labOptions.get(i);
+		  			listbox.addItem(s);
+		  			if(value.equals(s)){
+		  				listbox.setSelectedIndex(i);
+		  			}
+		  		}
+		    	
+		  		popup.setWidget(listbox);
+		  		popup.showRelativeTo(fhidden);
+			}
+		};
 	}
 }

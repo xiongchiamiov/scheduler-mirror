@@ -9,6 +9,7 @@ import java.util.Vector;
 
 import edu.calpoly.csc.scheduler.model.db.Time;
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
+import edu.calpoly.csc.scheduler.model.db.cdb.Lab;
 import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
 import edu.calpoly.csc.scheduler.model.db.idb.TimePreference;
 import edu.calpoly.csc.scheduler.model.db.ldb.Location;
@@ -182,6 +183,17 @@ public abstract class Conversion {
 		newCourse.setWtu(course.getWtu());
 		newCourse.setQuarterID(course.getQuarterId());
 		//newCourse.setScheduleID(course.getScheduleId());
+		Lab lab = course.getLab();
+		if(lab != null){
+			newCourse.setLabDept(lab.getDept());
+			newCourse.setLabName(lab.getName());
+			newCourse.setLabCatalogNum(lab.getCatalogNum());
+		}
+		else{
+			newCourse.setLabDept("");
+			newCourse.setLabName("");
+			newCourse.setLabCatalogNum(0);
+		}
 	    return newCourse;
 	}
 
@@ -255,7 +267,12 @@ public abstract class Conversion {
 		System.out.println("fromGWT course scu " + course.getScu());
 		newCourse.setType(course.getType());
 		newCourse.setEnrollment(course.getMaxEnroll());
-		newCourse.setLab(null);
+		if(!course.getLabDept().equals("")){
+			newCourse.setLab(new Lab(course.getLabName(), course.getLabDept(), course.getLabCatalogNum()));
+		}
+		else{
+			newCourse.setLab(null);
+		}
 		newCourse.setLabPad(course.getLabPad());
 		newCourse.setQuarterId(course.getQuarterID());
 		newCourse.setScheduleId(course.getScheduleID());

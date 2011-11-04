@@ -10,13 +10,11 @@ import com.google.gwt.cell.client.ButtonCell;
 import com.google.gwt.cell.client.CheckboxCell;
 import com.google.gwt.cell.client.EditTextCell;
 import com.google.gwt.cell.client.FieldUpdater;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
@@ -38,7 +36,7 @@ public class ITableBuilder implements TableBuilder<InstructorGWT>{
 	}
 	
 	@Override
-	public ArrayList<ColumnObject<InstructorGWT>> getColumns(
+	public ArrayList<ColumnObject<InstructorGWT>> getColumns(Widget hidden,
 			ListDataProvider<InstructorGWT> dataProvider, ListHandler<InstructorGWT> sortHandler) {
 		
 		final ListDataProvider<InstructorGWT> fdataProvider = dataProvider;
@@ -196,15 +194,10 @@ public class ITableBuilder implements TableBuilder<InstructorGWT>{
 		        object.setDisabilities(value);
 		      }
 		});
+		disable.setCellStyleNames("tableColumnWidthInt");
 		list.add(new ColumnObject<InstructorGWT>(disable, TableConstants.INSTR_DISABILITIES));
 		
 		// preferences
-		Button prefButton = new Button(TableConstants.INSTR_PREFERENCES);
-		prefButton.addClickHandler(new ClickHandler(){
-			public void onClick(ClickEvent event){
-				
-			}
-		});
 		Column<InstructorGWT, String> preferences = 
 				new Column<InstructorGWT, String>(new ButtonCell()) {
 		      @Override
@@ -218,6 +211,7 @@ public class ITableBuilder implements TableBuilder<InstructorGWT>{
 		    	InstructorsView.container.add(new InstructorPreferencesView(InstructorsView.container, InstructorsView.service, object));
 		      }
 		});
+		preferences.setCellStyleNames("tableColumnWidthString");
 		list.add(new ColumnObject<InstructorGWT>(preferences, TableConstants.INSTR_PREFERENCES));
 		
 

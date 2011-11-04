@@ -14,6 +14,7 @@ import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
@@ -27,7 +28,7 @@ public class LTableBuilder implements TableBuilder<LocationGWT>{
 	}
 	
 	@Override
-	public ArrayList<ColumnObject<LocationGWT>> getColumns(
+	public ArrayList<ColumnObject<LocationGWT>> getColumns(Widget hidden,
 			ListDataProvider<LocationGWT> dataProvider, ListHandler<LocationGWT> sortHandler) {
 		
 		final ListDataProvider<LocationGWT> fdataProvider = dataProvider;
@@ -154,6 +155,7 @@ public class LTableBuilder implements TableBuilder<LocationGWT>{
 		        object.setADACompliant(value);
 		      }
 		});
+		adaCompliant.setCellStyleNames("tableColumnWidthInt");
 		list.add(new ColumnObject<LocationGWT>(adaCompliant, TableConstants.LOC_ADACOMPLIANT));
 		
 		

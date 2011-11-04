@@ -3,7 +3,7 @@ package edu.calpoly.csc.scheduler.view.web.client.table;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gwt.cell.client.CheckboxCell;
+import com.google.gwt.cell.client.ButtonCell;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -17,7 +17,10 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 
 public class Table<T> {
@@ -29,11 +32,14 @@ public class Table<T> {
 	private ListHandler<T> sortHandler;
 	private Button saveButton, addButton, filterButton;
 	private TableBuilder<T> builder;
+	private PopupPanel filterPopup;
+	private Widget hidden;
 	
 	public Table(TableBuilder<T> builder){
 		this.builder = builder;
 		
 		// Create table objects
+		hidden = new Label();
 		dataProvider = new ListDataProvider<T>();
 		table = new CellTable<T>();
 	    table.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
@@ -44,6 +50,8 @@ public class Table<T> {
 	    
 	    // hide/show columns
 	    showColPanel = new VerticalPanel(); 
+	    filterPopup = new PopupPanel(true);
+	    filterPopup.setWidget(showColPanel);
 	    
 	    // create columns
 	    removeColumn();
@@ -67,10 +75,13 @@ public class Table<T> {
 	    buttonPanel.add(filterButton);
 	    buttonPanel.setSpacing(14);
 	    
+	    HorizontalPanel tablePanel = new HorizontalPanel();
+	    tablePanel.add(table);
+	    tablePanel.add(hidden);
+	    
 	    mainPanel = new VerticalPanel();
 	    mainPanel.add(buttonPanel);
-	    mainPanel.add(showColPanel);
-	    mainPanel.add(table);
+	    mainPanel.add(tablePanel);
 	    mainPanel.setSpacing(14);
 	}
 	
@@ -162,30 +173,26 @@ public class Table<T> {
 	private void removeColumn(){
 		
 		// remove
-		Column<T, Boolean> remove = 
-				new Column<T, Boolean>(new CheckboxCell(true, false)) {
+		Column<T, String> remove = 
+				new Column<T, String>(new ButtonCell()) {
 		      @Override
-		      public Boolean getValue(T value) {
-		        return false;
+		      public String getValue(T value) {
+		        return "x";
 		      }
 		};
 		
-		remove.setFieldUpdater(new FieldUpdater<T, Boolean>() {
-		      public void update(int index, T object, Boolean value) {
-		        
-		    	  if(value){
-		    		  
-		    		  boolean confirm = Window.confirm("Remove " + builder.getLabel(object) + "?");
-		    		  if(confirm){
-		    			  dataProvider.getList().remove(object);
-		    		  }
-		    		  
-		    		  table.redraw();
-		    		  
-		    		  saveButton.setEnabled(true);
-		    	  }
+		remove.setFieldUpdater(new FieldUpdater<T, String>() {
+		      public void update(int index, T object, String value) {
+
+	    		  boolean confirm = Window.confirm("Remove " + builder.getLabel(object) + "?");
+	    		  if(confirm){
+	    			  dataProvider.getList().remove(object);
+	    		  }
+	    		  
+	    		  table.redraw();
 		      }
 		});
+		remove.setCellStyleNames("tableColumnWidthInt");
 		table.addColumn(remove, "REMOVE");
 	}
 	
@@ -195,7 +202,7 @@ public class Table<T> {
 	 */
 	private void createColumns(){
 		
-		ArrayList<ColumnObject<T>> columnObjs = builder.getColumns(dataProvider, sortHandler);
+		ArrayList<ColumnObject<T>> columnObjs = builder.getColumns(hidden, dataProvider, sortHandler);
 		
 		for(ColumnObject<T> c : columnObjs){
 			
@@ -221,7 +228,11 @@ public class Table<T> {
 		filterButton.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent event){
 				
-				/** TODO */
+				if(filterPopup.isShowing()){
+					filterPopup.hide();
+				}else{
+					filterPopup.showRelativeTo(filterButton);
+				}
 			}
 		});
 	}
