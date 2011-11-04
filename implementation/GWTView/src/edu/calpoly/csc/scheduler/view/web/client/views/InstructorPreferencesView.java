@@ -29,6 +29,7 @@ public class InstructorPreferencesView extends ScrollPanel {
 	GreetingServiceAsync service;
 	InstructorGWT instructor;
 	InstructorGWT savedInstructor;
+	List<CourseGWT> courses;
 	
 	Map<CourseGWT, ListBox> listBoxesByCourse = new TreeMap<CourseGWT, ListBox>();
 	
@@ -84,39 +85,21 @@ public class InstructorPreferencesView extends ScrollPanel {
 				populateCourses(result);
 			}
 		});
-
-		vp.add(new HTML("Which building do you prefer to be nearest to?"));
-		final TextBox nearestBuilding = new TextBox();
-		vp.add(nearestBuilding);
-		nearestBuilding.addChangeHandler(new ChangeHandler() {
-			@Override
-			public void onChange(ChangeEvent event) {
-				nearestBuilding.addStyleName("changed");
-			}
-		});
-		
-		vp.add(new HTML("How far are you willing to walk to rooms?"));
-		final TextBox maxDistance = new TextBox();
-		vp.add(maxDistance);
-		maxDistance.addChangeHandler(new ChangeHandler() {
-			@Override
-			public void onChange(ChangeEvent event) {
-				maxDistance.addStyleName("changed");
-			}
-		});
 	}
 	
 	void populateCourses(List<CourseGWT> result) {
+		courses = result;
+		
 		int row = 1;
-		for (final CourseGWT course : result) {
+		for (final CourseGWT course : courses) {
 			coursePrefs.setWidget(row, 0, new HTML(course.getCourseName()));
 			
 			final ListBox list = new ListBox();
 			listBoxesByCourse.put(course, list);
-			list.addItem("Preferred", "0");
-			list.addItem("Acceptable", "1");
-			list.addItem("Not Preferred", "2");
-			list.addItem("Not Qualified", "3");
+			list.addItem("Not Qualified");
+			list.addItem("Not Preferred");
+			list.addItem("Acceptable");
+			list.addItem("Preferred");
 			coursePrefs.setWidget(row, 1, list);
 			
 			list.setSelectedIndex(getCoursePreference(instructor, course));
@@ -148,7 +131,6 @@ public class InstructorPreferencesView extends ScrollPanel {
 				popup.hide();
 				savedInstructor = instructor;
 				instructor = instructor.clone();
-				timePrefs.redoColors();
 				redoColors();
 			}
 		});
@@ -162,17 +144,20 @@ public class InstructorPreferencesView extends ScrollPanel {
 	}
 	
 	void setCoursePreference(CourseGWT course, int newDesire) {
-		ListBox list = listBoxesByCourse.get(course);
-		
 		instructor.getCoursePreferences().put(course, newDesire);
-		
-		if (getCoursePreference(instructor, course) != getCoursePreference(savedInstructor, course))
-			list.addStyleName("changed");
-		else
-			list.removeStyleName("changed");
+		redoColors();
 	}
 	
 	void redoColors() {
-		//TODO: implement
+		timePrefs.redoColors();
+		
+		for (CourseGWT course : courses) {
+			ListBox list = listBoxesByCourse.get(course);
+			assert(list == null);
+			if (getCoursePreference(instructor, course) != getCoursePreference(savedInstructor, course))
+				list.addStyleName("changed");
+			else
+				list.removeStyleName("changed");
+		}
 	}
 }

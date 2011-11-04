@@ -252,6 +252,7 @@ public abstract class Conversion {
 		newCourse.setCatalogNum(course.getCatalogNum());
 		newCourse.setWtu(course.getWtu());
 		newCourse.setScu(course.getScu());
+		System.out.println("fromGWT course scu " + course.getScu());
 		newCourse.setType(course.getType());
 		newCourse.setEnrollment(course.getMaxEnroll());
 		newCourse.setLab(null);
