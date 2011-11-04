@@ -20,8 +20,9 @@ public class ScheduleNavView extends DockLayoutPanel {
 	GreetingServiceAsync service;
 	Panel contentPanel;
 	int selectedScheduleID;
+	final String scheduleName;
 
-	ScheduleNavView(SelectScheduleView homeView, Panel container, GreetingServiceAsync service, int selectedScheduleID) {
+	ScheduleNavView(SelectScheduleView homeView, Panel container, GreetingServiceAsync service, int selectedScheduleID, String scheduleName) {
 		super(Unit.EM);
 		
 		this.selectScheduleView = homeView;
@@ -30,6 +31,7 @@ public class ScheduleNavView extends DockLayoutPanel {
 		this.service = service;
 		
 		this.selectedScheduleID = selectedScheduleID;
+		this.scheduleName = scheduleName;
 	}
 	
 	@Override
@@ -72,19 +74,19 @@ public class ScheduleNavView extends DockLayoutPanel {
 		leftMenuVP.add(HTMLUtilities.createLink("Instructors", "inAppLink indented", new ClickHandler() {
 			public void onClick(ClickEvent events) {
 				contentPanel.clear();
-				contentPanel.add(new InstructorsView(contentPanel, service));
+				contentPanel.add(new InstructorsView(contentPanel, service, scheduleName));
 			}
 		}));
 		leftMenuVP.add(HTMLUtilities.createLink("Locations", "inAppLink indented", new ClickHandler() {
 			public void onClick(ClickEvent events) {
 				contentPanel.clear();
-				contentPanel.add(new RoomsView(contentPanel, service));
+				contentPanel.add(new RoomsView(contentPanel, service, scheduleName));
 			}
 		}));
 		leftMenuVP.add(HTMLUtilities.createLink("Courses", "inAppLink indented", new ClickHandler() {
 			public void onClick(ClickEvent events) {
 				contentPanel.clear();
-				contentPanel.add(new CoursesView(contentPanel, service));
+				contentPanel.add(new CoursesView(service, scheduleName));
 			}
 		}));
 				

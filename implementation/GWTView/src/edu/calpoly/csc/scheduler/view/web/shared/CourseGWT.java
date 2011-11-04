@@ -20,7 +20,7 @@ public class CourseGWT implements Serializable, Comparable<CourseGWT> {
 	private int length;
 	private WeekGWT days;
 	private String quarterID;
-	private int scheduleID;
+	private Integer scheduleID;
 	
 	public CourseGWT clone() {
 		CourseGWT newCourse = new CourseGWT();
@@ -62,12 +62,12 @@ public class CourseGWT implements Serializable, Comparable<CourseGWT> {
 		return quarterID;
 	}
 	
-	public void setScheduleID(int schedule)
+	public void setScheduleID(Integer schedule)
 	{
 		this.scheduleID = schedule;
 	}
 	
-	public int getScheduleID()
+	public Integer getScheduleID()
 	{
 		return scheduleID;
 	}
@@ -215,5 +215,18 @@ public class CourseGWT implements Serializable, Comparable<CourseGWT> {
 	}
 	public String toString() {
 		return this.courseName + " " + Integer.toString(this.catalogNum);
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof CourseGWT))
+			return false;
+		CourseGWT that = (CourseGWT)obj;
+		return dept.equals(that.dept) && catalogNum == that.catalogNum; 
+	}
+	
+	@Override
+	public int hashCode() {
+		return dept.hashCode() + catalogNum * 1337;
 	}
 }

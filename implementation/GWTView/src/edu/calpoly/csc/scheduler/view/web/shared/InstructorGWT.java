@@ -21,7 +21,7 @@ public class InstructorGWT implements Serializable{
 
 	Map<CourseGWT, Integer> coursePrefs;
 	
-	private int scheduleID;
+	private Integer scheduleID;
 	
 	public InstructorGWT clone() {
 		InstructorGWT instructor = new InstructorGWT();
@@ -111,11 +111,11 @@ public class InstructorGWT implements Serializable{
 		this.curwtu = curWtu;
 	}
 	
-	public int getScheduleID(){
+	public Integer getScheduleID(){
 		return scheduleID;
 	}
 	
-	public void setScheduleID(int sched){
+	public void setScheduleID(Integer sched){
 		this.scheduleID = sched;
 	}
 	

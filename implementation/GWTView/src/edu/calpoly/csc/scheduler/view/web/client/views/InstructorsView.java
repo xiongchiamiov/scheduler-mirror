@@ -19,16 +19,20 @@ import edu.calpoly.csc.scheduler.view.web.client.table.TableFactory;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 
 public class InstructorsView extends ScrollPanel {
+	// These static variables are a temporary hack to get around the table bug
 	public static Panel container;
 	public static GreetingServiceAsync service;
+	
+	private final String scheduleName;
 	private Table<InstructorGWT> iTable;
 	private VerticalPanel vp;
 
-	public InstructorsView(Panel container, GreetingServiceAsync service) {
+	public InstructorsView(Panel container, GreetingServiceAsync service, String scheduleName) {
 		assert(service != null);
 		
-		this.container = container;
-		this.service = service;
+		InstructorsView.container = container;
+		InstructorsView.service = service;
+		this.scheduleName = scheduleName;
 	}
 	
 	@Override
@@ -41,7 +45,7 @@ public class InstructorsView extends ScrollPanel {
 		vp = new VerticalPanel();
 		this.add(vp);
 
-		vp.add(new HTML("<h2>Fall Quarter 2010 Final Schedule Instructors</h2>"));
+		vp.add(new HTML("<h2>" + scheduleName + " - Instructors</h2>"));
 		
 		iTable = TableFactory.instructor(service);
 		vp.add(iTable.getWidget());

@@ -51,7 +51,8 @@ public class SelectScheduleView extends ScrollPanel {
 			@Override
 			public void onClick(ClickEvent event) {
 				int existingScheduleID = Integer.parseInt(listBox.getValue(listBox.getSelectedIndex()));
-				selectSchedule(existingScheduleID);
+				String scheduleName = listBox.getItemText(listBox.getSelectedIndex());
+				selectSchedule(existingScheduleID, scheduleName);
 			}
 		}));
 		
@@ -84,7 +85,7 @@ public class SelectScheduleView extends ScrollPanel {
 		});
 	}
 	
-	private void selectSchedule(final int scheduleID) {		
+	private void selectSchedule(final int scheduleID, final String scheduleName) {		
 		final SelectScheduleView self = this;
 
 		final LoadingPopup popup = new LoadingPopup();
@@ -100,7 +101,7 @@ public class SelectScheduleView extends ScrollPanel {
 			public void onSuccess(Void derp) {
 				popup.hide();
 				container.clear();
-				container.add(new ScheduleNavView(self, container, service, scheduleID));
+				container.add(new ScheduleNavView(self, container, service, scheduleID, scheduleName));
 			}
 		});
 	}
@@ -122,8 +123,10 @@ public class SelectScheduleView extends ScrollPanel {
 				
 			    final LoadingPopup popup = new LoadingPopup();
 			    popup.show();
+			    
+			    final String scheduleName = tb.getText();
 				
-				service.openNewSchedule(tb.getText(), new AsyncCallback<Integer>() {
+				service.openNewSchedule(scheduleName, new AsyncCallback<Integer>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						popup.hide();
@@ -134,7 +137,7 @@ public class SelectScheduleView extends ScrollPanel {
 					public void onSuccess(Integer newScheduleID) {
 						popup.hide();
 						container.clear();
-						container.add(new ScheduleNavView(self, container, service, newScheduleID));
+						container.add(new ScheduleNavView(self, container, service, newScheduleID, scheduleName));
 					}
 				});
 			}
@@ -159,7 +162,7 @@ public class SelectScheduleView extends ScrollPanel {
 		box.addChangeHandler(new ChangeHandler() {
 			@Override
 			public void onChange(ChangeEvent event) {
-				selectSchedule(Integer.parseInt(box.getValue(box.getSelectedIndex())));
+				selectSchedule(Integer.parseInt(box.getValue(box.getSelectedIndex())), box.getItemText(box.getSelectedIndex()));
 			}
 		});
 		

@@ -42,7 +42,7 @@ public class LocationGWT implements Serializable{
 	
 	private String quarterID;
 	
-	private int scheduleID;
+	private Integer scheduleID;
 	/**
 	 * Provided equuipment in this location.
 	 */
@@ -116,12 +116,12 @@ public class LocationGWT implements Serializable{
 		this.quarterID = quarter;
 	}
 	
-	public int getScheduleID()
+	public Integer getScheduleID()
 	{
 		return scheduleID;
 	}
 	
-	public void setScheduleID(int id)
+	public void setScheduleID(Integer id)
 	{
 		this.scheduleID = id;
 	}

@@ -157,10 +157,10 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 		timePrefsTable.setCellSpacing(0);
 		timePrefsTable.setCellPadding(0);
 		
-		for (int halfHour = 0; halfHour <= 30; halfHour++) { // There are 30 half-hours between 7am and 10pm
+		for (int halfHour = 0; halfHour < 30; halfHour++) { // There are 30 half-hours between 7am and 10pm
 			int row = halfHour + 1;
 			int hour = halfHour / 2 + 7; // divide by two to get hours 0-15. Add 7 to get hours 7-22.
-			String string = hour % 12 + ":" + (halfHour == 0 ? "00" : "30") + (hour < 12 ? "am" : "pm");
+			String string = ((hour + 12 - 1) % 12 + 1) + ":" + (halfHour % 2 == 0 ? "00" : "30") + (hour < 12 ? "am" : "pm");
 			timePrefsTable.setWidget(row, 0, new HTML(string));
 		}
 		

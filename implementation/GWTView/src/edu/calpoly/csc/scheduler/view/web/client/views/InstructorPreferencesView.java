@@ -17,7 +17,6 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.ScrollPanel;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
@@ -153,7 +152,7 @@ public class InstructorPreferencesView extends ScrollPanel {
 		
 		for (CourseGWT course : courses) {
 			ListBox list = listBoxesByCourse.get(course);
-			assert(list == null);
+			assert(list != null);
 			if (getCoursePreference(instructor, course) != getCoursePreference(savedInstructor, course))
 				list.addStyleName("changed");
 			else

@@ -171,8 +171,9 @@ public class LTableBuilder implements TableBuilder<LocationGWT>{
 	@Override
 	public LocationGWT newObject() {
 		LocationGWT loc = new LocationGWT();
-		loc.setAvailability("derp?");
-		loc.setQuarterID("qid?");
+		loc.setAvailability("");
+		loc.setQuarterID("");
+		loc.setScheduleID(null);
 		return loc;
 	}
 

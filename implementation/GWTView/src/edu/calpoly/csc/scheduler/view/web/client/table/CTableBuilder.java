@@ -369,7 +369,7 @@ public class CTableBuilder implements TableBuilder<CourseGWT>{
 		course.setDays(week);
 		
 		course.setQuarterID("");
-		course.setScheduleID(0);
+		course.setScheduleID(null);
 		course.setMaxEnroll(1);
 		course.setCourseName("");
 		course.setNumSections(1);

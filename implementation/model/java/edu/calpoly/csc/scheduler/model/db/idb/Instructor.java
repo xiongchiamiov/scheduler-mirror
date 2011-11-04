@@ -956,8 +956,6 @@ public class Instructor extends DbData
 		  throw new NullDataException();
 	  if (quarterId           == null)
 		  throw new NullDataException();
-      if (scheduleId          == null)
-    	  throw new NullDataException();
       if (tPrefs              == null)
     	  throw new NullDataException();
       if (userID              == null)

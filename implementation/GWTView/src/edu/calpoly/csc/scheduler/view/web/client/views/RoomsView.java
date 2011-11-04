@@ -20,10 +20,12 @@ public class RoomsView extends ScrollPanel {
 	private Panel container;
 	private GreetingServiceAsync service;
 	private Table<LocationGWT> lTable;
+	private final String scheduleName;
 
-	public RoomsView(Panel container, GreetingServiceAsync service) {
+	public RoomsView(Panel container, GreetingServiceAsync service, String scheduleName) {
 		this.container = container;
 		this.service = service;
+		this.scheduleName = scheduleName;
 	}
 	
 	@Override
@@ -36,7 +38,7 @@ public class RoomsView extends ScrollPanel {
 		VerticalPanel vp = new VerticalPanel();
 		this.add(vp);
 
-		vp.add(new HTML("<h2>Fall Quarter 2010 Final Schedule Locations</h2>"));
+		vp.add(new HTML("<h2>" + scheduleName + " - Locations</h2>"));
 		
 		lTable = TableFactory.location(service);
 		vp.add(lTable.getWidget());

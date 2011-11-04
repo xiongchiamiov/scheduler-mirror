@@ -16,29 +16,32 @@ import edu.calpoly.csc.scheduler.view.web.client.table.TableFactory;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 
 public class CoursesView extends ScrollPanel {
-	private Panel container;
 	private GreetingServiceAsync service;
 	private Table<CourseGWT> cTable;
 
-	public CoursesView(Panel container, GreetingServiceAsync greetingService) {
-		this.container = container;
+	public CoursesView(GreetingServiceAsync greetingService, String scheduleName) {
 		this.service = greetingService;
-		
+
 		setWidth("100%");
 		setHeight("100%");
 		
 		VerticalPanel vp = new VerticalPanel();
 		this.add(vp);
 
-		vp.add(new HTML("<h2>Fall Quarter 2010 Final Schedule Courses</h2>"));
+		vp.add(new HTML("<h2>" + scheduleName + " - Courses</h2>"));
 		
 		cTable = TableFactory.course(service);
-		
 		vp.add(cTable.getWidget());
-		cTable.clear();
+	}
+	
+	@Override
+	protected void onLoad() {
+		super.onLoad();
 
 		final LoadingPopup popup = new LoadingPopup();
 		popup.show();
+
+		cTable.clear();
 		
 		service.getCourses(new AsyncCallback<ArrayList<CourseGWT>>() {
 			public void onFailure(Throwable caught) {
@@ -55,8 +58,5 @@ public class CoursesView extends ScrollPanel {
 				}
 			}
 		});
-	}
-	
-	public void populateCourses() {
 	}
 }

@@ -51,10 +51,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	public ArrayList<InstructorGWT> getInstructors() throws IllegalArgumentException {
 		ArrayList<InstructorGWT> results = new ArrayList<InstructorGWT>();
 		for (Instructor instructor : model.getDb().getInstructorDB().getData()) {
-			System.out.println("Model returning instructor " + instructor.getFirstName() + " has prefs? " + hasPreferences(instructor));
 			results.add(Conversion.toGWT(instructor));
 		}
-		System.out.println("Model returning " + results.size() + " instructors");
 		return results;
 	}
 	
@@ -68,6 +66,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		for (InstructorGWT instructorGWT : instructors) {
 			Instructor instructor = Conversion.fromGWT(instructorGWT);
 			newInstructorsByUserID.put(instructor.getUserID(), instructor);
+			
+			displayInstructorPrefs(instructor);
+			
 			idb.saveData(instructor);
 		}
 		
@@ -76,6 +77,14 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 				idb.removeData(instructor);
 		
 		assert(model.getDb().getInstructorDB().getData().size() == instructors.size());
+	}
+	
+	private void displayInstructorPrefs(Instructor instructor) {
+		System.out.println("Prefs for instructor " + instructor.getLastName());
+		
+		for (Day day : instructor.getTimePreferences().keySet())
+			for (Time time : instructor.getTimePreferences().get(day).keySet())
+				System.out.println("Day " + day.getNum() + " time " + time.getHour() + ":" + time.getMinute() + " is " + instructor.getTimePreferences().get(day).get(time).getDesire());
 	}
 
 	public ArrayList<ScheduleItemGWT> generateSchedule() {
@@ -263,7 +272,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	@Override
 	public void saveInstructor(InstructorGWT instructorGWT) {
 		Instructor instructor = Conversion.fromGWT(instructorGWT);
-		System.out.println("calling editdata. has prefs? " + hasPreferences(instructor));
+		
+		displayInstructorPrefs(instructor);
+
 		model.getDb().getInstructorDB().saveData(instructor);
 	}
 
