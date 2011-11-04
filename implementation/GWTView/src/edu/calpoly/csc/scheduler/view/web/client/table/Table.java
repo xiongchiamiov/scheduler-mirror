@@ -195,7 +195,7 @@ public class Table<T> {
 	 */
 	private void createColumns(){
 		
-		ArrayList<ColumnObject<T>> columnObjs = builder.getColumns(table, dataProvider, sortHandler);
+		ArrayList<ColumnObject<T>> columnObjs = builder.getColumns(dataProvider, sortHandler);
 		
 		for(ColumnObject<T> c : columnObjs){
 			

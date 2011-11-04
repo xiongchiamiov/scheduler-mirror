@@ -3,7 +3,6 @@ package edu.calpoly.csc.scheduler.view.web.client.table;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
@@ -13,7 +12,6 @@ import com.google.gwt.cell.client.EditTextCell;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.client.Window;
@@ -41,10 +39,9 @@ public class ITableBuilder implements TableBuilder<InstructorGWT>{
 	
 	@Override
 	public ArrayList<ColumnObject<InstructorGWT>> getColumns(
-			CellTable<InstructorGWT> table, ListDataProvider<InstructorGWT> dataProvider, ListHandler<InstructorGWT> sortHandler) {
+			ListDataProvider<InstructorGWT> dataProvider, ListHandler<InstructorGWT> sortHandler) {
 		
 		final ListDataProvider<InstructorGWT> fdataProvider = dataProvider;
-		final CellTable<InstructorGWT> ftable = table;
 		
 		ArrayList<ColumnObject<InstructorGWT>> list = 
 				new ArrayList<ColumnObject<InstructorGWT>>();
@@ -94,7 +91,7 @@ public class ITableBuilder implements TableBuilder<InstructorGWT>{
 		
 		// id
 		Column<InstructorGWT, String> id = 
-				new Column<InstructorGWT, String>(new EditTextCell()) {
+				new Column<InstructorGWT, String>(TableValidate.instrIDValidateCell(fdataProvider)) {
 		      @Override
 		      public String getValue(InstructorGWT instr) {
 		        return instr.getUserID();
@@ -107,26 +104,7 @@ public class ITableBuilder implements TableBuilder<InstructorGWT>{
 	    });
 		id.setFieldUpdater(new FieldUpdater<InstructorGWT, String>() {
 		      public void update(int index, InstructorGWT object, String value) {
-		        
-		    	  value = value.trim();
-		    	  
-		    	  boolean valid = true;
-		    	  List<InstructorGWT> list = fdataProvider.getList();
-		    	  for(int i = 0; valid && i < list.size(); i++){
-		    		  
-		    		  if(list.get(i).getUserID().trim().equals(value)){
-		    			  valid = false;
-		    		  }
-		    	  }
-		    	  
-		    	  if(valid){
-		    		  object.setUserID(value);
-		    	  }
-		    	  else{
-		    		  object.setUserID("");
-		    		  ftable.redraw();
-		    		  Window.alert("There is already a user with the ID: \'" + value + "\'");
-		    	  }
+		    	  object.setUserID(value);
 		      }
 		});
 		id.setCellStyleNames("tableColumnWidthString");
@@ -134,7 +112,7 @@ public class ITableBuilder implements TableBuilder<InstructorGWT>{
 		
 		// max wtu
 		Column<InstructorGWT, String> maxwtu = 
-				new Column<InstructorGWT, String>(new EditTextCell()) {
+				new Column<InstructorGWT, String>(TableValidate.intValidateCell(TableConstants.INSTR_MAX_WTU, true)) {
 		      @Override
 		      public String getValue(InstructorGWT instr) {
 		        return "" + instr.getMaxWtu();
@@ -147,21 +125,7 @@ public class ITableBuilder implements TableBuilder<InstructorGWT>{
 	    });
 		maxwtu.setFieldUpdater(new FieldUpdater<InstructorGWT, String>() {
 		      public void update(int index, InstructorGWT object, String value) {
-		        
-		    	  value = value.trim();
-		    	  Integer i = null;
-		    	  try{
-		    		  i = Integer.parseInt(value);
-		    	  }catch(Exception e){}
-		    	  
-		    	  if(i == null || i < 0){
-		    		  object.setMaxWtu(0);
-		    		  ftable.redraw();
-		    		  Window.alert(TableConstants.INSTR_MAX_WTU + " must be a positive number. \'" + value + "\' is invalid.");
-		    	  }
-		    	  else{
-		    		  object.setMaxWtu(i);
-		    	  }
+		    	  object.setMaxWtu(TableValidate.positiveInt(value, true));
 		      }
 		});
 		maxwtu.setCellStyleNames("tableColumnWidthInt");

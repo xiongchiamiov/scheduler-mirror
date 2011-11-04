@@ -2,13 +2,14 @@ package edu.calpoly.csc.scheduler.view.web.client.table;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 
+import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.CheckboxCell;
 import com.google.gwt.cell.client.EditTextCell;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.SelectionCell;
-import com.google.gwt.user.cellview.client.CellTable;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.client.Window;
@@ -27,10 +28,9 @@ public class LTableBuilder implements TableBuilder<LocationGWT>{
 	
 	@Override
 	public ArrayList<ColumnObject<LocationGWT>> getColumns(
-			CellTable<LocationGWT> table, ListDataProvider<LocationGWT> dataProvider, ListHandler<LocationGWT> sortHandler) {
+			ListDataProvider<LocationGWT> dataProvider, ListHandler<LocationGWT> sortHandler) {
 		
 		final ListDataProvider<LocationGWT> fdataProvider = dataProvider;
-		final CellTable<LocationGWT> ftable = table;
 		
 		ArrayList<ColumnObject<LocationGWT>> list = 
 				new ArrayList<ColumnObject<LocationGWT>>();
@@ -42,37 +42,19 @@ public class LTableBuilder implements TableBuilder<LocationGWT>{
 		      public String getValue(LocationGWT location) {
 		        return location.getBuilding();
 		      }
+		      
+		      @Override
+		      public void onBrowserEvent(Cell.Context context, Element elem, LocationGWT object, NativeEvent event){
+					super.onBrowserEvent(context, elem, object, event);
+					
+					TableValidate.validateLoc(true, fdataProvider, context, elem, object, event);
+		      }
 		};
 		sortHandler.setComparator(building, new Comparator<LocationGWT>() {
 	        public int compare(LocationGWT o1, LocationGWT o2) {
 	          return o1.getBuilding().compareTo(o2.getBuilding());
 	        }
 	    });
-		building.setFieldUpdater(new FieldUpdater<LocationGWT, String>() {
-		      public void update(int index, LocationGWT object, String value) {
-		        
-		    	  value = value.trim();
-		    	  
-		    	  boolean valid = true;
-		    	  List<LocationGWT> list = fdataProvider.getList();
-		    	  for(int i = 0; valid && i < list.size(); i++){
-		    		  
-		    		  if(list.get(i).getBuilding().trim().equals(value) &&
-		    				  list.get(i).getRoom().trim().equals(object.getRoom().trim())){
-		    			  valid = false;
-		    		  }
-		    	  }
-		    	  
-		    	  if(valid){
-		    		  object.setBuilding(value);
-		    	  }
-		    	  else{
-		    		  object.setBuilding("");
-		    		  ftable.redraw();
-		    		  Window.alert("There is already a location with building: \'" + value + "\' room: \'" + object.getRoom().trim() + "\'");
-		    	  }
-		      }
-		});
 		building.setCellStyleNames("tableColumnWidthInt");
 		list.add(new ColumnObject<LocationGWT>(building, TableConstants.LOC_BUILDING));
 		
@@ -84,37 +66,19 @@ public class LTableBuilder implements TableBuilder<LocationGWT>{
 		      public String getValue(LocationGWT location) {
 		        return location.getRoom();
 		      }
+		      
+		      @Override
+		      public void onBrowserEvent(Cell.Context context, Element elem, LocationGWT object, NativeEvent event){
+					super.onBrowserEvent(context, elem, object, event);
+					
+					TableValidate.validateLoc(false, fdataProvider, context, elem, object, event);
+		      }
 		};
 		sortHandler.setComparator(room, new Comparator<LocationGWT>() {
 	        public int compare(LocationGWT o1, LocationGWT o2) {
 	          return o1.getRoom().compareTo(o2.getRoom());
 	        }
 	    });
-		room.setFieldUpdater(new FieldUpdater<LocationGWT, String>() {
-		      public void update(int index, LocationGWT object, String value) {
-		        
-		    	  value = value.trim();
-		    	  
-		    	  boolean valid = true;
-		    	  List<LocationGWT> list = fdataProvider.getList();
-		    	  for(int i = 0; valid && i < list.size(); i++){
-		    		  
-		    		  if(list.get(i).getRoom().trim().equals(value) &&
-		    				  list.get(i).getBuilding().trim().equals(object.getBuilding().trim())){
-		    			  valid = false;
-		    		  }
-		    	  }
-		    	  
-		    	  if(valid){
-		    		  object.setRoom(value);
-		    	  }
-		    	  else{
-		    		  object.setRoom("");
-		    		  ftable.redraw();
-		    		  Window.alert("There is already a location with building: \'" + object.getBuilding().trim() + "\' room: \'" + value + "\'");
-		    	  }
-		      }
-		});
 		room.setCellStyleNames("tableColumnWidthInt");
 		list.add(new ColumnObject<LocationGWT>(room, TableConstants.LOC_ROOM));
 
@@ -147,7 +111,7 @@ public class LTableBuilder implements TableBuilder<LocationGWT>{
 		
 		// max occupancy		    
 		Column<LocationGWT, String> maxOcc = 
-				new Column<LocationGWT, String>(new EditTextCell()) {
+				new Column<LocationGWT, String>(TableValidate.intValidateCell(TableConstants.LOC_MAX_OCCUPANCY, true)) {
 		      @Override
 		      public String getValue(LocationGWT course) {
 		        return "" + course.getMaxOccupancy();
@@ -160,21 +124,7 @@ public class LTableBuilder implements TableBuilder<LocationGWT>{
 	    });
 		maxOcc.setFieldUpdater(new FieldUpdater<LocationGWT, String>() {
 		      public void update(int index, LocationGWT object, String value) {
-		    	  
-		    	  value = value.trim();
-		    	  Integer i = null;
-		    	  try{
-		    		  i = Integer.parseInt(value);
-		    	  }catch(Exception e){}
-		    	  
-		    	  if(i == null || i < 0){
-		    		  object.setMaxOccupancy(0);
-		    		  ftable.redraw();
-		    		  Window.alert(TableConstants.LOC_MAX_OCCUPANCY + " must be a positive number. \'" + value + "\' is invalid.");
-		    	  }
-		    	  else{
-		    		  object.setMaxOccupancy(i);
-		    	  }
+		    	  object.setMaxOccupancy(TableValidate.positiveInt(value, true));
 		      }
 		});
 		maxOcc.setCellStyleNames("tableColumnWidthInt");
