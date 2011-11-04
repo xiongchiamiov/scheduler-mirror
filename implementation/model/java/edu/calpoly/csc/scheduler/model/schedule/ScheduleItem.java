@@ -61,6 +61,8 @@ public class ScheduleItem implements Serializable, Cloneable,
     */
    private Week days = new Week();
 
+   private double value = 0;
+   
    /**
     * Time range representing when this ScheduleItem starts/ends. This is what 
     * is used in place of "start" and "end". However, when I added this new 
@@ -78,10 +80,6 @@ public class ScheduleItem implements Serializable, Cloneable,
     * The lab that goes with the class this SI represents, if any
     */
    private List<ScheduleItem> labs = new Vector<ScheduleItem>();
-   /**
-    * How "valuable" this course/time combination is to the Instructor.
-    */
-   private int value;
    
    /**
     * Builds an empty Schedule Item. None of its fields will be initialized.
@@ -117,12 +115,12 @@ public class ScheduleItem implements Serializable, Cloneable,
    protected ScheduleItem (Instructor i, Course c, Location l, int section, 
       Week days, TimeRange tr)
    {
-      this.i = i;
-      this.c = c;
-      this.location = l;
-      this.section = section;
-      this.days = days;
-      this.tr = new TimeRange(tr);
+      setInstructor(i);
+      setCourse(c);
+      setLocation(l);
+      setSection(section);
+      setDays(days);
+      setTimeRange(tr);
    }
    
    public ScheduleItem clone()
@@ -316,67 +314,14 @@ public class ScheduleItem implements Serializable, Cloneable,
    /**
     * Returns how "valuable" this ScheduleItem is. "value" is determined by how 
     * closely the fields of this object adhere to the preferences of the 
-    * instructor it represents.<br> 
-    * <br>
-    * The fields applied to the "lab" field are also considered, but only if
-    * the lab is actually defined. If the lab of this ScheduleItem overlaps 
-    * with this ScheduleItem, IMPOSSIBLE will eventually be returned, as you 
-    * can't teach both a lecture and a lab at the same time.
+    * instructor it represents.
     *
     * @return the sum of all the instructors preferences for this object's 
     *         fields. Thus, a higher number means a higher value.
     */
    public double getValue ()
    {
-      double lab = 0, course = 0, time = 0;
-      boolean hasLab = false, hasCourse = false, hasTime = false;
-
-      if (hasLab = this.hasLabs())
-      {
-         for (ScheduleItem lab_si: this.labs)
-         {
-            lab += lab_si.getValue();
-         }
-         
-         /*
-          * A lecture and lab which overlap cannot be taught
-          */
-         if (this.overlaps(this.labs))
-         {
-            lab = 0;
-         }
-      }
-      /*
-       * You can call "getValue" on an SI regarldess of whether all its fields
-       * are ready. If they aren't, they just won't be considered.
-       */
-      if (this.i != null)
-      {
-         if (hasCourse = (this.c != null))
-         {
-            course = this.i.getPreference(this.c);
-         }
-         if (hasTime = (this.days != null && this.tr != null))
-         {
-            time = i.getAvgPrefForTimeRange(this.days, 
-                                            this.tr.getS(), 
-                                            this.tr.getE());
-         }
-      }
-
-      /*
-       * If any one part of the value was 0, its impossible for the instructor
-       * should teach this SI, so our value should reflect that with the 
-       * IMPOSSIBLE.
-       */
-      if ((hasLab    && ((int)lab    == 0))  ||
-          (hasCourse && ((int)course == 0))  ||
-          (hasTime   && ((int)time    == 0)))
-      {
-         return IMPOSSIBLE;
-      }
-
-      return lab + course + time;
+      return value;
    }
 
    /**
@@ -453,7 +398,7 @@ public class ScheduleItem implements Serializable, Cloneable,
    public void setCourse (Course c)
    {
       this.c = c;
-      this.section = c.getNumOfSections();
+      updateValue();
    }
 
    /**
@@ -464,6 +409,7 @@ public class ScheduleItem implements Serializable, Cloneable,
    public void setDays (Week days)
    {
       this.days = days;
+      updateValue();
    }
 
    /** 
@@ -509,8 +455,55 @@ public class ScheduleItem implements Serializable, Cloneable,
    public void setTimeRange (TimeRange tr)
    {
       this.tr = new TimeRange(tr.getS(), tr.getE());
+      updateValue();
    }
 
+   /**
+    * Updates the value of this ScheduleItem. Uses the instructor's preferences
+    * for this item's course and days/times to compute the value. If the 
+    * instrutor is null, nothing is done. And, if there is no course and/or 
+    * days/times, they are simply not considered. If any one preference is 0, 
+    * IMPOSSIBLE will be returned. 
+    */
+   private void updateValue()
+   {
+      double course = 0, time = 0;
+      boolean hasCourse = false, hasTime = false;
+
+      /*
+       * You can call "getValue" on an SI regarldess of whether all its fields
+       * are ready. If they aren't, they just won't be considered.
+       */
+      if (this.i != null)
+      {
+         if (hasCourse = (this.c != null))
+         {
+            course = this.i.getPreference(this.c);
+         }
+         if (hasTime = (this.days != null && this.tr != null))
+         {
+            time = i.getAvgPrefForTimeRange(this.days, 
+                                            this.tr.getS(), 
+                                            this.tr.getE());
+         }
+      }
+
+      /*
+       * If any one part of the value was 0, its impossible for the instructor
+       * should teach this SI, so our value should reflect that with the 
+       * IMPOSSIBLE.
+       */
+      if ((hasCourse && ((int)course == 0))  ||
+          (hasTime   && ((int)time    == 0)))
+      {
+         this.value = IMPOSSIBLE;
+      }
+      else
+      {
+         this.value = course + time;
+      }
+   }
+   
    /**
     * Displays all this object's fields in a visually easy-to-read form.
     */
