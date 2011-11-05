@@ -428,6 +428,9 @@ font-family: Arial, Helvetica, sans-serif;
 	float:left;
 }
 
+.topBarMenu .gwt-ListBox{
+	float:right;
+}
 
 .courseListBox {
   border-width: 1px;

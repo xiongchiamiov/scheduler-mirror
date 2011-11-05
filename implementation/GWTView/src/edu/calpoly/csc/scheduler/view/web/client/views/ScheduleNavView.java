@@ -52,7 +52,7 @@ public class ScheduleNavView extends DockLayoutPanel {
 	
 	protected Widget createTopPanel() {
 		FlowPanel topPanel = new FlowPanel();
-			
+		topPanel.add(selectScheduleView.createMiniSelectWidget(selectedScheduleID));
 		topPanel.add(HTMLUtilities.createLink(scheduleName, "topBarTermLink", new ClickHandler() {
 			public void onClick(ClickEvent events) {
 				contentPanel.clear();
