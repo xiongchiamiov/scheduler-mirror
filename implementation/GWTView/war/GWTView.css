@@ -248,6 +248,187 @@ h1 {
 	border-color: yellow;
 }
 
+	/*==============================|  Global Top Bar |==============================*/
+	
+#topBar{ 
+position: absolute; 
+overflow-x: hidden; 
+overflow-y: hidden; 
+left: 0em; 
+top: 0em; 
+right: 0em; 
+height: 82px;
+background-image:url('imgs/header_bg.gif');
+background-repeat-x: no-repeat;
+background-repeat-y: no-repeat;
+background-attachment: initial;
+background-position-x: 0%;
+background-position-y: 0%;
+background-origin: initial;
+background-clip: initial;
+background-color: #030;
+background-repeat:no-repeat;
+font-family: Arial, Helvetica, sans-serif;
+}
+#topBar #loginStatus
+{
+	float:right;
+	height:60px;
+}
+#goldBar{
+	clear: both;
+	text-align: right;
+	background: url('imgs/goldbar.gif') left top repeat-x #D1BD4A;
+	border-bottom: #9E8E31 solid 1px;
+	height: 21px;
+	width:100%;
+	font-size: 70%;
+	color: #000;
+	padding: 0px 0;
+	background: url(imgs/goldbar.gif) top right repeat-x #d1bd4a;
+	text-align: left;
+	border-left: #A09727 solid 1px;
+}
+
+ .goldMenuBar{
+	display:inline;
+	color: #000;
+	margin: 0 0 0 0px;
+	background: url(imgs/goldbar.gif) top right repeat-x #d1bd4a;
+	text-align: left;
+	border-left: #A09727 solid 1px;
+	width:300px;
+}
+.goldMenuBar a {
+	
+	}
+
+
+#goldBar ul {
+	font-size: 110%;
+	color: #000;
+	margin: 0 0 0 0px;
+	padding: 3px 0;
+	background: url(imgs/goldbar.gif) top right repeat-x #d1bd4a;
+	text-align: left;
+	border-left: #A09727 solid 1px;
+	}
+#goldBar ul li {
+	display: inline;
+	}
+#goldBar ul li a {
+	color: #000;
+	text-decoration: none;
+	padding: 3px 7px 3px 10px;
+	border-right: #A09727 solid 1px;
+	margin-right: -3px;
+	}
+#goldBar ul li a:link,
+#goldBar ul li a:visited {
+	text-decoration: none;
+	}
+#goldBar ul li a:focus,
+#goldBar ul li a:hover, 
+#goldBar ul li a:active {
+	background: #FFE6AF;
+	text-decoration: none;
+	}
+#topBar #SchedName{
+	width:140px;
+	height:100%;
+	display:block;
+}
+
+
+#goldBar ul {
+	font-size: 110%;
+	color: #000;
+	margin: 0 0 0 0px;
+	padding: 3px 0;
+	background: url(imgs/goldbar.gif) top right repeat-x #d1bd4a;
+	text-align: left;
+	border-left: #A09727 solid 1px;
+	}
+#goldBar ul li {
+	display: inline;
+	}
+#goldBar ul li gwt-HTML topBarLink {
+	color: #000;
+	text-decoration: none;
+	padding: 3px 7px 3px 10px;
+	border-right: #A09727 solid 1px;
+	margin-right: -3px;
+	}
+#goldBar ul li gwt-HTML topBarLink:link,
+#goldBar ul li gwt-HTML topBarLink:visited {
+	text-decoration: none;
+	}
+#goldBar ul li gwt-HTML topBarLink:focus,
+#goldBar ul li gwt-HTML topBarLink:hover, 
+#goldBar ul li gwt-HTML topBarLink:active {
+	background: #FFE6AF;
+	text-decoration: none;
+	}
+#topBar #SchedName{
+	width:140px;
+	height:100%;
+	display:block;
+}
+
+
+#gwt-HTML topBarLink{
+	background-color:orange;
+	display:inline;
+}
+.gwt-HTML topBarLink{
+	background-color:blue;
+	display:inline;
+}
+
+.topBarMenu{
+	clear: both;
+	text-align: right;
+	background: url('imgs/goldbar.gif') left top repeat-x #D1BD4A;
+	border-bottom: #9E8E31 solid 1px;
+	height: 21px;
+	width:100%;
+	font-size: 100%;
+	color: #000;
+	padding: 0px 0;
+	background: url(imgs/goldbar.gif) top right repeat-x #d1bd4a;
+	text-align: left;
+	border-left: #A09727 solid 1px;
+}
+	
+.topBarTermLink{
+	font-size: 110%;
+	color: #000;
+	margin: 0 0 0 0px;
+	padding: 3px 0;
+	background: url(imgs/goldbar.gif) top right repeat-x #d1bd4a;
+	text-align: left;
+	border-left: #A09727 solid 1px;
+	display:inline ;
+	float:left;
+	width:184px;
+	
+}
+.topBarLink{
+	font-size: 110%;
+	color: #000;
+	margin: 0 0 0 0px;
+	padding-left:4px ;
+	padding-right:4px;
+	padding-top:4px;
+	margin-left:6px;
+	background: url(imgs/goldbar.gif) top right repeat-x #d1bd4a;
+	text-align: left;
+	border-left: #A09727 solid 1px;
+	display:inline ;
+	float:left;
+}
+
+
 .courseListBox {
   border-width: 1px;
   border-style: solid;
