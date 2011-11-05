@@ -18,7 +18,7 @@ import java.io.Serializable;
 public class Instructor extends DbData 
                         implements Comparable<Instructor>, Serializable
 {
-   public static final int serialVersionUID = 42;
+   public static final long serialVersionUID = 42;
 
    public static final int DEFAULT_PREF = 5;
 
@@ -656,8 +656,20 @@ public class Instructor extends DbData
     */
    public int getPreference (Day d, Time time)
    {
+      System.out.println("Instructor prefs for " + getLastName());
+
+      for (Day day: this.tPrefs.keySet())
+      {
+         System.out.println ("COMPARING " + day + " with " + d);
+         if (d.hashCode() == day.hashCode() && d.equals(day))
+         {
+            System.out.println (d + " IS ALREADY HERE");
+         }
+      }
+      
       if (!this.tPrefs.containsKey(d))
       {
+         System.err.println ("HAVE TO FILL");
          fillDayWithTPrefs(d);
       }
       if (this.tPrefs.get(d).get(time) == null)
@@ -696,6 +708,7 @@ public class Instructor extends DbData
          for (int i = 0; i < length; i++, tempS.addHalf())
          {
             int desire = getPreference(d, tempS);
+            System.err.println ("PREF FOR " + tempS + ": " + desire);
             /*
              * If a zero is encountered, immediately break out and return 0 to
              * let the caller know that this Time range (or some part of it)
@@ -956,6 +969,8 @@ public class Instructor extends DbData
 		  throw new NullDataException();
 	  if (quarterId           == null)
 		  throw new NullDataException();
+      if (scheduleId          == null)
+    	  throw new NullDataException();
       if (tPrefs              == null)
     	  throw new NullDataException();
       if (userID              == null)
