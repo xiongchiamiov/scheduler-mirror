@@ -321,6 +321,8 @@ public class Schedule implements Serializable
          si.setSection(st.getCurSection());
          debug ("JUST ADDED A SECTION OF " + si.getCourse());
       }
+      
+      debug ("ITEM COUNT AT : " + this.items.size());
    }
 
    /**
@@ -467,6 +469,8 @@ public class Schedule implements Serializable
          }
       }
 
+      debug ("GENERATION FINISHED W/: " + this.getItems().size());
+      
       return this.getItems();
    }
 
@@ -618,63 +622,6 @@ public class Schedule implements Serializable
    }
 
    /**
-    * Finds a course which a given instructor wants to teach and can teach. This
-    * means that the course returned will not exceed his WTU limit. Furthermore,
-    * the instructor's preference for the class is at least as high as his
-    * preference for every other class.
-    * 
-    * @param si ScheduleItem with the instructor we're to find a course for
-    * 
-    * @return A ScheduleItem w/ its course value set
-    * 
-    * @throws InstructorCanTeachNothingException If no course exists which this
-    *         instructor can teach (has a preference > 0)
-    * @throws InstructorWTUMaxedException if no course exists which will not
-    *         push this instructor's WTUs over his limit
-    */
-   private ScheduleItem findCourse (ScheduleItem si)
-      throws InstructorCanTeachNothingException
-   {
-      Instructor i = si.getInstructor();
-      Course bestC = null;
-      int bestPref = 0;
-      boolean canWTU = false;
-      boolean canPref = false;
-
-      /*
-       * Exhaustively find the best course.
-       */
-      for (Course temp : this.cSourceList)
-      {
-         debug("TRY COURSE " + temp);
-         int pref = i.getPreference(temp);
-         debug("PREF IS: " + pref);
-         /*
-          * If prof wants this course more than previous "best".
-          */
-         if (pref > bestPref)
-         {
-            canPref = true;
-            if (i.canTeach(temp))
-            {
-               canWTU = true;
-               bestC = temp;
-               bestPref = pref;
-            }
-         }
-      }
-
-      if (!canPref || !canPref)
-      {
-         throw new InstructorCanTeachNothingException();
-      }
-
-      debug("BEST: " + bestC);
-      si.setCourse(bestC);
-      return si;
-   }
-
-   /**
     * Gets all the possible time ranges that an instructor can teach a given
     * course. The days that are considered for teaching are the days defined by
     * the course to be taught. Each ScheduleItem returned is a clone of the
@@ -695,9 +642,7 @@ public class Schedule implements Serializable
       Vector<ScheduleItem> sis = new Vector<ScheduleItem>();
       Course c = si.getCourse();
       Instructor i = si.getInstructor();
-
-      assert(c.getDayLength() > 0);
-      assert(c.getLength() > 0);
+      
       TimeRange tr = new TimeRange(range.getS(), c.getDayLength());
       for (; tr.getE().compareTo(range.getE()) < 1; tr.addHalf())
       {
