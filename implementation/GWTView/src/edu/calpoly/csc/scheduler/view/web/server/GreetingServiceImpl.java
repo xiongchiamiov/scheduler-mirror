@@ -91,7 +91,13 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 
 	public ArrayList<ScheduleItemGWT> generateSchedule() {
 		assert(model != null);
-		return model.generateSchedule();
+		
+		Collection<ScheduleItem> scheduleItems = model.generateSchedule();
+
+		ArrayList<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
+	    for(ScheduleItem item : scheduleItems)
+	    	gwtItems.add(Conversion.toGWT(item));
+		return gwtItems;
 	}
 	
 	public ArrayList<ScheduleItemGWT> getGWTScheduleItems(ArrayList<CourseGWT> courses)

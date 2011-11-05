@@ -114,7 +114,7 @@ public class Model implements Serializable
 		db.getCourseDB().removeData(course);
 	}
 
-	public ArrayList<ScheduleItemGWT> generateSchedule() {
+	public Collection<ScheduleItem> generateSchedule() {
 		Collection<Course> courses = getCourses();
 		
 		for (Course course : courses) {
@@ -125,11 +125,7 @@ public class Model implements Serializable
 		
 		Schedule schedule = new Schedule();
 		schedule.generate(new Vector<Course>(courses));
-		
-		ArrayList<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
-	    for(ScheduleItem item : schedule.getItems())
-	    	gwtItems.add(Conversion.toGWT(item));
-		return gwtItems;
+		return schedule.getItems();
 	}
    
 }
