@@ -2,6 +2,9 @@ package edu.calpoly.csc.scheduler.view.web.client.views;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -38,38 +41,52 @@ public class LoginView extends ScrollPanel {
 		panel.add(new HTML("<h2>Login</h2>"));
 
 		final TextBox textBox = new TextBox();
+		textBox.addKeyPressHandler(new KeyPressHandler() {
+			@Override
+			public void onKeyPress(KeyPressEvent event) {
+				if (event.getCharCode() == KeyCodes.KEY_ENTER)
+					login(textBox.getText());
+			}
+		});
 		panel.add(textBox);
 		
 		panel.add(new Button("Login", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				final String username = textBox.getText();
-				
-				if ("".equals(username)) {
-					Window.alert("Please enter a username.");
-					return;
-				}
-
-				final LoadingPopup popup = new LoadingPopup();
-				popup.show();
-				
-				service.login(username, new AsyncCallback<Void>() {
-					@Override
-					public void onSuccess(Void derp) {
-						mainView.onUserLoggedIn(username);
-						
-						popup.hide();
-						container.clear();
-						container.add(new SelectScheduleView(container, service));
-					}
-					
-					@Override
-					public void onFailure(Throwable caught) {
-						popup.hide();
-						Window.alert("Failed to log in: " + caught.getMessage());
-					}
-				});
+				login(textBox.getText());
 			}
 		}));
+	}
+	
+	private void login(final String username) {
+		if ("".equals(username)) {
+			Window.alert("Please enter a username.");
+			return;
+		}
+		
+		if (!username.matches("^[A-Za-z0-9_]+$")) {
+			Window.alert("A username must contain only letters and numbers.");
+			return;
+		}
+
+		final LoadingPopup popup = new LoadingPopup();
+		popup.show();
+		
+		service.login(username, new AsyncCallback<Void>() {
+			@Override
+			public void onSuccess(Void derp) {
+				mainView.onUserLoggedIn(username);
+				
+				popup.hide();
+				container.clear();
+				container.add(new SelectScheduleView(container, service));
+			}
+			
+			@Override
+			public void onFailure(Throwable caught) {
+				popup.hide();
+				Window.alert("Failed to log in: " + caught.getMessage());
+			}
+		});
 	}
 }
