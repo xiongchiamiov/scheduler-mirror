@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -103,15 +104,18 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	public ArrayList<ScheduleItemGWT> getGWTScheduleItems(ArrayList<CourseGWT> courses)
 	{
 	 assert(model != null);
-	 Collection<Course> modelCourses = model.getCourses();
      scheduleItems = new HashMap<String, ScheduleItem>();
      
+	 Collection<Course> extraCourses = new LinkedList<Course>();
+     
      for(CourseGWT course : courses)
-     {
-      modelCourses.add(availableCourses.get(course.getDept() + course.getCatalogNum()));	 
-     }
-	 schedule.generate(modelCourses);		
+    	 extraCourses.add(availableCourses.get(course.getDept() + course.getCatalogNum()));
+
+		model.generateSchedule(extraCourses);
+				
 	 ArrayList<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
+	 
+	 System.out.println("size of return: " + schedule.getItems().size());
 	
 	 for(ScheduleItem item : schedule.getItems())
 	 {         

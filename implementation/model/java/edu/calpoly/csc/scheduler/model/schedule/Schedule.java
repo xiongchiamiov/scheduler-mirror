@@ -94,6 +94,7 @@ public class Schedule implements Serializable
     */
    public Schedule ()
    {
+	   this.setlSourceList(null);
    }
 
    /**
@@ -694,7 +695,9 @@ public class Schedule implements Serializable
       Vector<ScheduleItem> sis = new Vector<ScheduleItem>();
       Course c = si.getCourse();
       Instructor i = si.getInstructor();
-      
+
+      assert(c.getDayLength() > 0);
+      assert(c.getLength() > 0);
       TimeRange tr = new TimeRange(range.getS(), c.getDayLength());
       for (; tr.getE().compareTo(range.getE()) < 1; tr.addHalf())
       {

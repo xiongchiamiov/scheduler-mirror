@@ -14,7 +14,9 @@ import edu.calpoly.csc.scheduler.model.schedule.Week;
  */
 public class Course extends DbData implements Serializable
 {
-   /**
+	private static final long serialVersionUID = -4639635097950307886L;
+
+/**
     * Represents the type of a course. The values currently defined are for
     * lecutres (LEC) and labs (LAB)
     * 

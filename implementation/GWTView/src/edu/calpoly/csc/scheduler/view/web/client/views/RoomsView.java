@@ -5,13 +5,13 @@ import java.util.ArrayList;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
+import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
+import edu.calpoly.csc.scheduler.view.web.client.table.StringColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.Table;
 import edu.calpoly.csc.scheduler.view.web.client.table.TableFactory;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
@@ -28,6 +28,7 @@ public class RoomsView extends ScrollPanel {
 		this.scheduleName = scheduleName;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void onLoad() {
 		super.onLoad();
@@ -62,5 +63,17 @@ public class RoomsView extends ScrollPanel {
 				}
 			}
 		});
+//		
+//		vp.add(new OsmTable<LocationGWT>(new OsmTable.IColumn[] {
+//				new StringColumn<LocationGWT>("Building") {
+//					public String getValue(LocationGWT object) {
+//						return object.getBuilding();
+//					}
+//
+//					public void setValue(LocationGWT object, String newValue) {
+//						object.setBuilding(newValue);
+//					}
+//				}
+//		}));
 	}
 }

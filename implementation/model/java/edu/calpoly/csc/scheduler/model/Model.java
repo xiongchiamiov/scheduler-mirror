@@ -4,8 +4,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
+
+import com.google.gwt.dev.util.collect.HashSet;
 
 import edu.calpoly.csc.scheduler.model.db.Database;
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
@@ -111,17 +115,26 @@ public class Model implements Serializable
 	public void removeCourse(Course course) {
 		db.getCourseDB().removeData(course);
 	}
-
+	
 	public Collection<ScheduleItem> generateSchedule() {
-		Collection<Course> courses = getCourses();
+		return generateSchedule(new LinkedList<Course>());
+	}
+
+	public Collection<ScheduleItem> generateSchedule(Collection<Course> extraCourses) {
+		Set<Course> courses = new HashSet<Course>();
+		courses.addAll(getCourses());
+		courses.addAll(extraCourses);
 		
+		// TODO: fix this hack.
 		for (Course course : courses) {
-			System.out.println("course length " + course.getLength() + " daylength " + course.getDayLength());
-			assert(course.getLength() > 0);
-			assert(course.getDayLength() > 0);
+			assert(course.getDays().size() > 0);
+			if (course.getLength() < course.getDays().size() * 2) {
+				course.setLength(course.getDays().size() * 2);
+				System.err.println("Warning: the course length was too low, automatically set it to " + course.getLength());
+			}
 		}
 		
-		Schedule schedule = new Schedule();
+		Schedule schedule = new Schedule(getInstructors(), getLocations());
 		schedule.generate(new Vector<Course>(courses));
 		return schedule.getItems();
 	}
