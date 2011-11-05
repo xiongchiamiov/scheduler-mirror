@@ -104,13 +104,13 @@ public class Schedule implements Serializable
     * Creates a schedule w/ the given lists of Instructors and Locations taken
     * into consideration when it generates.
     * 
-    * @param i_list List of instructors to use
-    * @param l_list List of locations to use
+    * @param collection List of instructors to use
+    * @param collection2 List of locations to use
     */
-   public Schedule (List<Instructor> i_list, List<Location> l_list)
+   public Schedule (Collection<Instructor> collection, Collection<Location> collection2)
    {
-      this.iSourceList = new Vector<Instructor>(i_list);
-      this.setlSourceList(l_list);
+      this.iSourceList = new Vector<Instructor>(collection);
+      this.setlSourceList(collection2);
    }
    
    /**
@@ -405,7 +405,7 @@ public class Schedule implements Serializable
     * 
     * @param c_list List of courses you want scheduled
     */
-   public Vector<ScheduleItem> generate (List<Course> c_list)
+   public Vector<ScheduleItem> generate (Collection<Course> c_list)
    {
       initGenData(c_list);
 
@@ -481,7 +481,7 @@ public class Schedule implements Serializable
     * 
     * @see Tba
     */
-   private void initGenData (List<Course> c_list)
+   private void initGenData (Collection<Course> c_list)
    {
       cSourceList = new Vector<Course>(c_list);
    }
@@ -1047,7 +1047,7 @@ public class Schedule implements Serializable
     * 
     * @param lSourceList the lSourceList to set
     */
-   public void setlSourceList (List<Location> lSourceList)
+   public void setlSourceList (Collection<Location> lSourceList)
    {
       this.lSourceList = new Vector<Location>(lSourceList);
       this.lSourceList.add(Tba.getTba());

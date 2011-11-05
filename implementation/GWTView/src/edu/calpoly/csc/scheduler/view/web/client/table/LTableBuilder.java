@@ -172,7 +172,6 @@ public class LTableBuilder implements TableBuilder<LocationGWT>{
 	public LocationGWT newObject() {
 		LocationGWT loc = new LocationGWT();
 		loc.setAvailability("");
-		loc.setQuarterID("");
 		loc.setScheduleID(null);
 		return loc;
 	}

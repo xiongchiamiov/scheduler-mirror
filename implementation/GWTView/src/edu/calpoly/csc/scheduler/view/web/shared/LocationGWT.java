@@ -40,8 +40,6 @@ public class LocationGWT implements Serializable{
 	
 	private String availability; //will be an object
 	
-	private String quarterID;
-	
 	private Integer scheduleID;
 	/**
 	 * Provided equuipment in this location.
@@ -64,7 +62,6 @@ public class LocationGWT implements Serializable{
 		assert(type != null);
 		assert(equipmentList != null);
 		assert(availability != null);
-		assert(quarterID != null);
 	}
 
 	public LocationGWT(){
@@ -104,16 +101,6 @@ public class LocationGWT implements Serializable{
 	public void setAvailability(String availability)
 	{
 		this.availability = availability;
-	}
-	
-	public String getQuarterID()
-	{
-		return quarterID;
-	}
-	
-	public void setQuarterID(String quarter)
-	{
-		this.quarterID = quarter;
 	}
 	
 	public Integer getScheduleID()

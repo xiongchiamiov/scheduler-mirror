@@ -1,19 +1,24 @@
 package edu.calpoly.csc.scheduler.view.web.server;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Vector;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import edu.calpoly.csc.scheduler.model.Model;
-import edu.calpoly.csc.scheduler.model.db.*;
-import edu.calpoly.csc.scheduler.model.db.cdb.*;
-import edu.calpoly.csc.scheduler.model.db.idb.*;
-import edu.calpoly.csc.scheduler.model.db.ldb.*;
-import edu.calpoly.csc.scheduler.model.schedule.*;
+import edu.calpoly.csc.scheduler.model.db.Time;
+import edu.calpoly.csc.scheduler.model.db.cdb.Course;
+import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
+import edu.calpoly.csc.scheduler.model.db.idb.TimePreference;
+import edu.calpoly.csc.scheduler.model.db.ldb.Location;
+import edu.calpoly.csc.scheduler.model.schedule.CouldNotBeScheduledException;
+import edu.calpoly.csc.scheduler.model.schedule.Day;
+import edu.calpoly.csc.scheduler.model.schedule.Schedule;
+import edu.calpoly.csc.scheduler.model.schedule.ScheduleItem;
+import edu.calpoly.csc.scheduler.model.schedule.Week;
 import edu.calpoly.csc.scheduler.view.web.client.GreetingService;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
@@ -41,7 +46,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
     
     public Integer openNewSchedule(String newScheduleName) {
 		model.openNewSchedule(newScheduleName);
-		return model.getDb().getScheduleID();
+		return model.getScheduleID();
     }
     
     public void openExistingSchedule(int scheduleID) {
@@ -50,7 +55,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 
 	public ArrayList<InstructorGWT> getInstructors() throws IllegalArgumentException {
 		ArrayList<InstructorGWT> results = new ArrayList<InstructorGWT>();
-		for (Instructor instructor : model.getDb().getInstructorDB().getData()) {
+		for (Instructor instructor : model.getInstructors()) {
 			results.add(Conversion.toGWT(instructor));
 		}
 		return results;
@@ -58,8 +63,6 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	
 	public void saveInstructors(ArrayList<InstructorGWT> instructors) throws IllegalArgumentException {
 		assert(model != null);
-		
-		InstructorDB idb = model.getDb().getInstructorDB();
 
 		HashMap<String, Instructor> newInstructorsByUserID = new LinkedHashMap<String, Instructor>();
 
@@ -69,14 +72,13 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			
 			displayInstructorPrefs(instructor);
 			
-			idb.saveData(instructor);
+			model.saveInstructor(instructor);
 		}
 		
-		for (Instructor instructor : model.getDb().getInstructorDB().getData())
+		for (Instructor instructor : model.getInstructors())
 			if (newInstructorsByUserID.get(instructor.getUserID()) == null)
-				idb.removeData(instructor);
-		
-		assert(model.getDb().getInstructorDB().getData().size() == instructors.size());
+				model.removeInstructor(instructor);
+		assert(model.getInstructors().size() == instructors.size());
 	}
 	
 	private void displayInstructorPrefs(Instructor instructor) {
@@ -89,30 +91,13 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 
 	public ArrayList<ScheduleItemGWT> generateSchedule() {
 		assert(model != null);
-		Database db = model.getDb();
-		ArrayList<Instructor> instructors = db.getInstructorDB().getData();
-		ArrayList<Course> courses = db.getCourseDB().getData();
-		ArrayList<Location> locations = db.getLocationDB().getData();
-		
-		Schedule schedule = new Schedule();
-		schedule.generate(new Vector<Course>(courses));
-		
-		ArrayList<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
-		
-	    for(ScheduleItem item : schedule.getItems())
-	    	gwtItems.add(Conversion.toGWT(item));
-	    
-		return gwtItems;
+		return model.generateSchedule();
 	}
 	
 	public ArrayList<ScheduleItemGWT> getGWTScheduleItems(ArrayList<CourseGWT> courses)
 	{
 	 assert(model != null);
-	 Database db = model.getDb();
-	 CourseDB cdb = db.getCourseDB();
-	 ArrayList<Instructor> instructors = db.getInstructorDB().getData();
-     ArrayList<Location> locations = db.getLocationDB().getData();
-     ArrayList<Course> modelCourses = new ArrayList<Course>();
+	 Collection<Course> modelCourses = model.getCourses();
      scheduleItems = new HashMap<String, ScheduleItem>();
      
      for(CourseGWT course : courses)
@@ -142,7 +127,6 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	 Day[] daysScheduled = new Day[numberOfDays];
 	 Week daysInWeek;
 	 Time startTime;
-	 Database db = model.getDb();
 	 int i;
 	 ScheduleItem moved; 
 	 String schdItemKey = scheduleItem.getDept() + 
@@ -198,7 +182,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	@Override
 	public ArrayList<LocationGWT> getLocations() {
 		ArrayList<LocationGWT> results = new ArrayList<LocationGWT>();
-		for (Location location : model.getDb().getLocationDB().getData())
+		for (Location location : model.getLocations())
 			results.add(Conversion.toGWT(location));
 		return results;
 	}
@@ -206,28 +190,26 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 
 	@Override
 	public void saveLocations(ArrayList<LocationGWT> locations) {
-		LocationDB ldb = model.getDb().getLocationDB();
-
 		HashMap<String, Location> newLocationsByUserID = new LinkedHashMap<String, Location>();
 
 		for (LocationGWT locationGWT : locations) {
 			Location location = Conversion.fromGWT(locationGWT);
 			newLocationsByUserID.put(location.getBuilding() + "-" + location.getRoom(), location);
-			ldb.saveData(location);
+			model.saveLocation(location);
 		}
 		
-		for (Location location : model.getDb().getLocationDB().getData())
+		for (Location location : model.getLocations())
 			if (newLocationsByUserID.get(location.getBuilding() + "-" + location.getRoom()) == null)
-				ldb.removeData(location);
+				model.removeLocation(location);
 
-		assert(model.getDb().getLocationDB().getData().size() == locations.size());
+		assert(model.getLocations().size() == locations.size());
 	}
 	
 	@Override
 	public ArrayList<CourseGWT> getCourses() {		
 		ArrayList<CourseGWT> results = new ArrayList<CourseGWT>();
 		availableCourses = new HashMap<String, Course>();
-		for (Course course : model.getDb().getCourseDB().getData())
+		for (Course course : model.getCourses())
 		{
 			course.setLength(6);
 			availableCourses.put(course.getDept()+course.getCatalogNum(), course);
@@ -239,22 +221,20 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 
 	@Override
 	public void saveCourses(ArrayList<CourseGWT> courses) {
-		CourseDB cdb = model.getDb().getCourseDB();
-
 		HashMap<String, Course> newLocationsByUserID = new LinkedHashMap<String, Course>();
 
 		for (CourseGWT courseGWT : courses) {
 			Course course = Conversion.fromGWT(courseGWT);
 			newLocationsByUserID.put(course.getDept() + "-" + course.getCatalogNum(), course);
-			cdb.saveData(course);
+			model.saveCourse(course);
 		}
 		
-		for (Course course : model.getDb().getCourseDB().getData())
+		for (Course course : model.getCourses())
 			if (newLocationsByUserID.get(course.getDept() + "-" + course.getCatalogNum()) == null)
-				cdb.removeData(course);
+				model.removeCourse(course);
 
 		
-		assert(model.getDb().getCourseDB().getData().size() == courses.size());
+		assert(model.getCourses().size() == courses.size());
 	}
 
 	private boolean hasPreferences(Instructor instructor) {
@@ -275,14 +255,13 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		
 		displayInstructorPrefs(instructor);
 
-		model.getDb().getInstructorDB().saveData(instructor);
+		model.saveInstructor(instructor);
 	}
 
 	@Override
 	public void resetSchedule() 
 	{
-	 schedule = new Schedule(model.getDb().getInstructorDB().getData(),
-			     model.getDb().getLocationDB().getData());
+	 schedule = new Schedule(model.getInstructors(), model.getLocations());
 	 scheduleItems = new HashMap<String, ScheduleItem>();
 	}
 }

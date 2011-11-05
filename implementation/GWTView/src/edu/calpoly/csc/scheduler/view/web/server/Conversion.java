@@ -269,6 +269,7 @@ public abstract class Conversion {
 		else{
 			newCourse.setLab(null);
 		}
+		newCourse.setLabPad(course.getLabPad());
 		newCourse.setScheduleId(course.getScheduleID());
 		newCourse.setDept(course.getDept());
 		newCourse.setLength(course.getLength());

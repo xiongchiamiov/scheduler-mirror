@@ -207,7 +207,7 @@ public class CTableBuilder implements TableBuilder<CourseGWT>{
 		});
 		type.setCellStyleNames("tableColumnWidthString");
 		list.add(new ColumnObject<CourseGWT>(type, TableConstants.COURSE_TYPE));
-		
+
 		
 		// max enroll		    
 		Column<CourseGWT, String> maxEnroll = 
@@ -229,6 +229,28 @@ public class CTableBuilder implements TableBuilder<CourseGWT>{
 		});
 		maxEnroll.setCellStyleNames("tableColumnWidthInt");
 		list.add(new ColumnObject<CourseGWT>(maxEnroll, TableConstants.COURSE_MAX_ENROLLMENT));
+
+		
+		// max enroll		    
+		Column<CourseGWT, String> length = 
+				new Column<CourseGWT, String>(TableValidate.intValidateCell(TableConstants.COURSE_MAX_ENROLLMENT, false)) {
+		      @Override
+		      public String getValue(CourseGWT course) {
+		        return "" + course.getLength() / 2.0;
+		      }
+		};
+		sortHandler.setComparator(length, new Comparator<CourseGWT>() {
+	        public int compare(CourseGWT o1, CourseGWT o2) {
+	          return o1.getLength() - o2.getLength();
+	        }
+	    });
+		length.setFieldUpdater(new FieldUpdater<CourseGWT, String>() {
+		      public void update(int index, CourseGWT object, String value) {
+		    	  object.setLength((int)Math.round(TableValidate.positiveMultipleOfHalf(value, 1.0) * 2));
+		      }
+		});
+		length.setCellStyleNames("tableColumnWidthInt");
+		list.add(new ColumnObject<CourseGWT>(length, TableConstants.COURSE_LENGTH));
 		
 		
 		// lab
@@ -368,7 +390,6 @@ public class CTableBuilder implements TableBuilder<CourseGWT>{
 		week.setDays(new Vector<DayGWT>());
 		course.setDays(week);
 		
-		course.setQuarterID("");
 		course.setScheduleID(null);
 		course.setMaxEnroll(1);
 		course.setCourseName("");

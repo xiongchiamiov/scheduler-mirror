@@ -309,4 +309,18 @@ public class TableValidate {
 			}
 		};
 	}
+
+
+	public static double positiveMultipleOfHalf(String valueStr, double defaultValue) {
+		try {
+			double value = Double.parseDouble(valueStr);
+			double nearestHalf = Math.round(defaultValue * 2) / 2.0;
+			if (Math.abs(value - nearestHalf) >= .05)
+				throw new NumberFormatException();
+			return nearestHalf;
+		}
+		catch (NumberFormatException e) {
+			return defaultValue;
+		}
+	}
 }
