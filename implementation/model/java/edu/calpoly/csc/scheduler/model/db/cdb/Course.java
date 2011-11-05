@@ -2,8 +2,8 @@ package edu.calpoly.csc.scheduler.model.db.cdb;
 
 import java.io.Serializable;
 
-import edu.calpoly.csc.scheduler.model.db.*;
-import edu.calpoly.csc.scheduler.model.schedule.Day;
+import edu.calpoly.csc.scheduler.model.db.DbData;
+import edu.calpoly.csc.scheduler.model.db.NullDataException;
 import edu.calpoly.csc.scheduler.model.schedule.Week;
 
 /**
@@ -79,11 +79,6 @@ public class Course extends DbData implements Serializable
     * This course's lab. Can be null, which means it has no lab
     */
    private Lab lab = null;
-   
-   /**
-    * The quarter this course applies to
-    */
-   private String quarterId = "";
    /**
     * The scheduler this course applies to
     */
@@ -131,7 +126,6 @@ public class Course extends DbData implements Serializable
       this.days = c.getDays();
       this.enrollment = new Integer(c.getEnrollment());
       this.lab = c.getLab();
-      this.quarterId = c.getQuarterId();
       this.scheduleId = c.getScheduleId();
    }
    
@@ -206,26 +200,6 @@ public class Course extends DbData implements Serializable
    public void setCatalogNum (int catalogNum)
    {
       this.catalogNum = catalogNum;
-   }
-
-   /**
-    * Returns the quarterId
-    * 
-    * @return the quarterId
-    */
-   public String getQuarterId ()
-   {
-      return quarterId;
-   }
-
-   /**
-    * Sets the quarterId to the given parameter.
-    *
-    * @param quarterId the quarterId to set
-    */
-   public void setQuarterId (String quarterId)
-   {
-      this.quarterId = quarterId;
    }
 
    /**
@@ -524,7 +498,6 @@ public class Course extends DbData implements Serializable
     *    <li>length</li>
     *    <li>name</li>
     *    <li>numOfSections</li>
-    *    <li>quarterId</li>
     *    <li>scu</li>
     *    <li>type></li>
     *    <li>wtu</li>
@@ -593,7 +566,6 @@ public class Course extends DbData implements Serializable
       c.setDays(new Week());
       c.setEnrollment(50);
       c.setLab(new Lab());;
-      c.setQuarterId("w2011");
       c.setScheduleId(1);
       return c;
    }

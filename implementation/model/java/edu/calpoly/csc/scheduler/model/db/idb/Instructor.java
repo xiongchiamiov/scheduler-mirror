@@ -23,10 +23,6 @@ public class Instructor extends DbData
    public static final int DEFAULT_PREF = 5;
 
    /**
-    * Quarter this Instructor is a part of
-    */
-   private String quarterId;
-   /**
     * Schedule this Instructor is a part of
     */
    private Integer scheduleId;
@@ -559,26 +555,6 @@ public class Instructor extends DbData
    }
 
    /**
-    * Returns the quarterId
-    * 
-    * @return the quarterId
-    */
-   public String getQuarterId ()
-   {
-      return quarterId;
-   }
-
-   /**
-    * Sets the quarterId to the given parameter.
-    *
-    * @param quarterId the quarterId to set
-    */
-   public void setQuarterId (String quarterId)
-   {
-      this.quarterId = quarterId;
-   }
-
-   /**
     * Returns the scheduleId
     * 
     * @return the scheduleId
@@ -946,7 +922,6 @@ public class Instructor extends DbData
     *    <li>curWtu</li>
     *    <li>maxWtu</li>
     *    <li>office</li>
-    *    <li>quarterId</li>
     *    <li>scheduleId</li>
     *    <li>tPrefs</li>
     *    <li>userID</li>
@@ -967,8 +942,6 @@ public class Instructor extends DbData
 		  throw new NullDataException();
 	  if (office              == null)
 		  throw new NullDataException();
-      if (scheduleId          == null)
-    	  throw new NullDataException();
       if (tPrefs              == null)
     	  throw new NullDataException();
       if (userID              == null)
@@ -991,7 +964,6 @@ public class Instructor extends DbData
       i.setCoursePreferences(coursePreferences);
       i.settPrefs(new HashMap<Day, LinkedHashMap<Time, TimePreference>>());
       i.setItemsTaught(itemsTaught);
-      i.setQuarterId("w2011");
       i.setScheduleId(1);
       return i;
    }

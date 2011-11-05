@@ -63,10 +63,6 @@ public class Location extends DbData implements Serializable
    private WeekAvail         availability = new WeekAvail();
 
    /**
-    * Quarter this location is a part of
-    */
-   private String            quarterId;
-   /**
     * Schedule this location is a part of
     */
    private Integer           scheduleId;
@@ -216,27 +212,6 @@ public class Location extends DbData implements Serializable
    public String getType()
    {
       return this.type;
-   }
-
-   /**
-    * Returns the quarterId
-    * 
-    * @return the quarterId
-    */
-   public String getQuarterId()
-   {
-      return quarterId;
-   }
-
-   /**
-    * Sets the quarterId to the given parameter.
-    * 
-    * @param quarterId
-    *           the quarterId to set
-    */
-   public void setQuarterId(String quarterId)
-   {
-      this.quarterId = quarterId;
    }
 
    /**
@@ -549,7 +524,6 @@ public class Location extends DbData implements Serializable
       l.setProvidedEquipment(e);
       l.setAdaCompliant(true);
       l.setAvailability(new WeekAvail());
-      l.setQuarterId("w2011");
       l.setScheduleId(1);
       return l;
    }
@@ -564,7 +538,6 @@ public class Location extends DbData implements Serializable
     * <li>building</li>
     * <li>maxOccupancy</li>
     * <li>providedEquipment</li>
-    * <li>quarterId</li>
     * <li>room</li>
     * <li>scheduleId</li>
     * <li>type</li>
@@ -579,7 +552,7 @@ public class Location extends DbData implements Serializable
    {
       if (adaCompliant == null || building == null || maxOccupancy == null
             || providedEquipment == null || room == null
-            || scheduleId == null || type == null)
+            || type == null)
       {
          throw new NullDataException();
       }
