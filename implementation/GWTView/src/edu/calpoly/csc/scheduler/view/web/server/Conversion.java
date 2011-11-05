@@ -133,7 +133,6 @@ public abstract class Conversion {
 		
 		ins.setItemsTaught(new Vector<ScheduleItem>());
 		
-		ins.setQuarterId("");
 		ins.verify();
 		
 		return ins;
@@ -176,13 +175,11 @@ public abstract class Conversion {
 		newCourse.setDept(course.getDept());
 		newCourse.setDays(Conversion.toGWT(course.getDays()));
 		newCourse.setLength(course.getLength());
-		newCourse.setLabPad(course.getLabPad());
 		newCourse.setMaxEnroll(course.getEnrollment());
 		newCourse.setNumSections(course.getNumOfSections());
 		newCourse.setScu(course.getScu());
 		newCourse.setType(course.getType().toString());
 		newCourse.setWtu(course.getWtu());
-		newCourse.setQuarterID(course.getQuarterId());
 		//newCourse.setScheduleID(course.getScheduleId());
 		Lab lab = course.getLab();
 		if(lab != null){
@@ -250,7 +247,6 @@ public abstract class Conversion {
 		loc.setBuilding(location.getBuilding());
 		loc.setMaxOccupancy(location.getMaxOccupancy());
 		loc.setProvidedEquipment(loc.new ProvidedEquipment());
-		loc.setQuarterId(location.getQuarterID());
 		loc.setRoom(location.getRoom());
 		loc.setScheduleId(location.getScheduleID());
 		loc.setType(location.getType());
@@ -273,8 +269,6 @@ public abstract class Conversion {
 		else{
 			newCourse.setLab(null);
 		}
-		newCourse.setLabPad(course.getLabPad());
-		newCourse.setQuarterId(course.getQuarterID());
 		newCourse.setScheduleId(course.getScheduleID());
 		newCourse.setDept(course.getDept());
 		newCourse.setLength(course.getLength());
