@@ -14,7 +14,7 @@ import java.io.Serializable;
 public class Time implements Comparable<Time>, Serializable
 {
    /** Serial Version UID */
-   public static final int serialVersionUID = 42;
+   public static final long serialVersionUID = 42;
 
    /**
     * A list of all the half-hour time slots in a day.

@@ -58,24 +58,24 @@ public class Staff extends Instructor
    @Override
    public int getPreference (Course c)
    {
-      return 10;
+      return 1;
    }
    
    @Override
    public int getPreference (Day d, Time t)
    {
-      return 10;
+      return 1;
    }
    
    @Override
    public double getAvgPrefForTimeRange (Week w, Time s, Time e)
    {
-      return 10;
+      return 1;
    }
    
    @Override
    public double getAvgPrefForTimeRange (Week w, TimeRange tr)
    {
-      return 10;
+      return 1;
    }
 }
