@@ -126,10 +126,6 @@ public class LocationDB implements DatabaseAPI<Location>
                e.printStackTrace();
             }
          }
-
-         String quarterid = rs.getString("quarterid");
-         toAdd.setQuarterId(quarterid);
-
          int scheduleid = rs.getInt("scheduleid");
          toAdd.setScheduleId(scheduleid);
       }
@@ -147,8 +143,8 @@ public class LocationDB implements DatabaseAPI<Location>
       // Create insert string
       String insertString = "insert into locations ("
             + "building, room, maxoccupancy, type, providedequipment,"
-            + " adacompliant, availability, quarterid, scheduleid)"
-            + "values (?,?,?,?,?,?,?,?,?)";
+            + " adacompliant, availability, scheduleid)"
+            + "values (?,?,?,?,?,?,?,?)";
       // Create prepared statement
       PreparedStatement stmt = sqldb.getPrepStmt(insertString);
       // Set values
@@ -185,8 +181,7 @@ public class LocationDB implements DatabaseAPI<Location>
          {
             e.printStackTrace();
          }
-         stmt.setString(8, data.getQuarterId());
-         stmt.setInt(9, scheduleID);
+         stmt.setInt(8, scheduleID);
       }
       catch (SQLException e)
       {
@@ -202,7 +197,7 @@ public class LocationDB implements DatabaseAPI<Location>
       // Create update string
       String updateString = "update locations set building = ?, room = ?,"
             + "maxoccupancy = ?, type = ?, providedequipment = ?, "
-            + "adacompliant = ?, availability = ?, quarterid = ?, scheduleid = ? "
+            + "adacompliant = ?, availability = ?, scheduleid = ? "
             + "where building = ? and room = ? and scheduleid = ?";
       // Create prepared statement
       PreparedStatement stmt = sqldb.getPrepStmt(updateString);
@@ -240,13 +235,12 @@ public class LocationDB implements DatabaseAPI<Location>
          {
             e.printStackTrace();
          }
-         stmt.setString(8, data.getQuarterId());
-         stmt.setInt(9, scheduleID);
+         stmt.setInt(8, scheduleID);
 
          // Where clause
-         stmt.setString(10, data.getBuilding());
-         stmt.setString(11, data.getRoom());
-         stmt.setInt(12, scheduleID);
+         stmt.setString(9, data.getBuilding());
+         stmt.setString(10, data.getRoom());
+         stmt.setInt(11, scheduleID);
 
       }
       catch (SQLException e)
@@ -256,12 +250,6 @@ public class LocationDB implements DatabaseAPI<Location>
       // Execute
       sqldb.executePrepStmt(stmt);
 
-   }
-
-   public void clearData()
-   {
-      PreparedStatement stmt = sqldb.getPrepStmt("delete from locations;");
-      sqldb.executePrepStmt(stmt);
    }
 
    @Override

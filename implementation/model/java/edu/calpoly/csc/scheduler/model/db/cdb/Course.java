@@ -565,10 +565,6 @@ public class Course extends DbData implements Serializable
       {
          throw new NullDataException ();
       }
-      if (quarterId     == null)
-      {
-         throw new NullDataException ();
-      }
       if (scu           == null)
       {
          throw new NullDataException ();

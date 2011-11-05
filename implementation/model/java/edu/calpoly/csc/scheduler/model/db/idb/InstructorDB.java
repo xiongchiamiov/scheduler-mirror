@@ -191,10 +191,6 @@ public class InstructorDB implements DatabaseAPI<Instructor>
                e.printStackTrace();
             }
          }
-
-         String quarterid = rs.getString("quarterid");
-         toAdd.setQuarterId(quarterid);
-
          int scheduleid = rs.getInt("scheduleid");
          toAdd.setScheduleId(scheduleid);
       }
@@ -213,8 +209,8 @@ public class InstructorDB implements DatabaseAPI<Instructor>
       String insertString = "insert into instructors ("
             + "firstname, lastname, userid, maxwtu, curwtu, office, "
             + "fairness, disability, generosity, availability, coursepreferences, "
-            + "tprefs, itemstaught, quarterid, scheduleid)"
-            + "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            + "tprefs, itemstaught, scheduleid)"
+            + "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
       // Create prepared statement
       PreparedStatement stmt = sqldb.getPrepStmt(insertString);
       // Set values
@@ -278,8 +274,7 @@ public class InstructorDB implements DatabaseAPI<Instructor>
             e.printStackTrace();
          }
 
-         stmt.setString(14, data.getQuarterId());
-         stmt.setInt(15, scheduleID);
+         stmt.setInt(14, scheduleID);
 
       }
       catch (SQLException e)
@@ -297,7 +292,7 @@ public class InstructorDB implements DatabaseAPI<Instructor>
       String updateString = "update instructors set firstname = ?, lastname = ?,"
             + "userid = ?, maxwtu = ?, curwtu = ?, office = ?, "
             + "fairness = ?, disability = ?, generosity = ?, availability = ?, "
-            + "coursepreferences = ?, tprefs = ?, itemstaught = ?, quarterid = ?, "
+            + "coursepreferences = ?, tprefs = ?, itemstaught = ?, "
             + "scheduleid = ? where userid = ? and scheduleid = ?";
       // Create prepared statement
       PreparedStatement stmt = sqldb.getPrepStmt(updateString);
@@ -362,12 +357,11 @@ public class InstructorDB implements DatabaseAPI<Instructor>
             e.printStackTrace();
          }
 
-         stmt.setString(14, data.getQuarterId());
-         stmt.setInt(15, scheduleID);
+         stmt.setInt(14, scheduleID);
 
          // Where clause
-         stmt.setString(16, data.getUserID());
-         stmt.setInt(17, scheduleID);
+         stmt.setString(15, data.getUserID());
+         stmt.setInt(16, scheduleID);
       }
       catch (SQLException e)
       {

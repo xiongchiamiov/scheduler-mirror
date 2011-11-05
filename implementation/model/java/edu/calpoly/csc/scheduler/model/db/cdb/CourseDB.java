@@ -149,10 +149,6 @@ public class CourseDB implements DatabaseAPI<Course>
                e.printStackTrace();
             }
          }
-
-         String quarterid = rs.getString("quarterid");
-         toAdd.setQuarterId(quarterid);
-
          int scheduleid = rs.getInt("scheduleid");
          toAdd.setScheduleId(scheduleid);
 
@@ -172,8 +168,8 @@ public class CourseDB implements DatabaseAPI<Course>
       String insertString = "insert into courses ("
             + "name, catalognum, dept, wtu, scu, "
             + "numofsections, type, length, days, "
-            + "enrollment, lab, labpad, quarterid, scheduleid)"
-            + "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            + "enrollment, lab, labpad, scheduleid)"
+            + "values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
       // Create prepared statement
       PreparedStatement stmt = sqldb.getPrepStmt(insertString);
       try
@@ -216,20 +212,13 @@ public class CourseDB implements DatabaseAPI<Course>
          }
          //TODO: Tyler, remove lab pad from stuff
          stmt.setInt(12, 1);
-         stmt.setString(13, data.getQuarterId());
-         stmt.setInt(14, scheduleID);
+         stmt.setInt(13, scheduleID);
       }
       catch (SQLException e)
       {
          e.printStackTrace();
       }
       // Execute
-      sqldb.executePrepStmt(stmt);
-   }
-
-   public void clearData()
-   {
-      PreparedStatement stmt = sqldb.getPrepStmt("delete from courses;");
       sqldb.executePrepStmt(stmt);
    }
 
@@ -240,7 +229,7 @@ public class CourseDB implements DatabaseAPI<Course>
       String updateString = "update courses set name = ?, catalognum = ?, "
             + "dept = ?, wtu = ?, scu = ?, numofsections = ?, "
             + "type = ?, length = ?, days = ?, enrollment = ?, "
-            + "lab = ?, labpad = ?, quarterid = ?, scheduleid = ? where catalognum = ? "
+            + "lab = ?, labpad = ?, scheduleid = ? where catalognum = ? "
             + "and dept = ? and type = ? and scheduleid = ?";
       // Create prepared statement
       PreparedStatement stmt = sqldb.getPrepStmt(updateString);
@@ -284,14 +273,13 @@ public class CourseDB implements DatabaseAPI<Course>
          }
          //TODO: Tyler, remove lab pad from stuff
          stmt.setInt(12, 1);
-         stmt.setString(13, data.getQuarterId());
-         stmt.setInt(14, scheduleID);
+         stmt.setInt(13, scheduleID);
 
          // Where clause
-         stmt.setInt(15, data.getCatalogNum());
-         stmt.setString(16, data.getDept());
-         stmt.setString(17, data.getType().toString());
-         stmt.setInt(18, scheduleID);
+         stmt.setInt(14, data.getCatalogNum());
+         stmt.setString(15, data.getDept());
+         stmt.setString(16, data.getType().toString());
+         stmt.setInt(17, scheduleID);
       }
       catch (SQLException e)
       {
@@ -307,7 +295,7 @@ public class CourseDB implements DatabaseAPI<Course>
       data.verify();
       // Create delete string
       String deleteString = "delete from courses where catalognum = ? "
-            + "and dept = ? and type = ? and quarterid = ? and scheduleid = ?";
+            + "and dept = ? and type = ? and scheduleid = ?";
       // Create prepared statement
       PreparedStatement stmt = sqldb.getPrepStmt(deleteString);
       try
@@ -315,8 +303,7 @@ public class CourseDB implements DatabaseAPI<Course>
          stmt.setInt(1, data.getCatalogNum());
          stmt.setString(2, data.getDept());
          stmt.setString(3, data.getType().toString());
-         stmt.setString(4, data.getQuarterId());
-         stmt.setInt(5, scheduleID);
+         stmt.setInt(4, scheduleID);
       }
       catch (SQLException e)
       {

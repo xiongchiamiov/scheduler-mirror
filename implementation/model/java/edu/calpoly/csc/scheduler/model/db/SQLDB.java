@@ -836,4 +836,64 @@ public class SQLDB {
 			 e.printStackTrace();
 		 }
 	}
+	
+	//Helper methods for easily using string constants
+	public String insertHelper(String table, ArrayList<String> fields)
+	{
+		int counter = 0;
+		String result = "insert into " + table + " (";
+		//Put in fields
+		for(String field : fields)
+		{
+			result = result.concat(field + ",");
+			counter++;
+		}
+		//Remove last comma
+		result = result.substring(0, result.length() - 1);
+		//Move on to values
+		result = result.concat(") values (");
+		while(counter > 0)
+		{
+			result = result.concat("?,");
+			counter--;
+		}
+		//Remove last comma
+		result = result.substring(0, result.length() - 1);
+		//Finish
+		result = result.concat(")");
+		return result;
+	}
+	
+	public String updateHelper(String table, ArrayList<String> fields, ArrayList<String> wheres)
+	{
+		String result = "update " + table + " set ";
+		//Put in sets
+		for(String field : fields)
+		{
+			result = result.concat(field + " = ?,");
+		}
+		//Remove last comma
+		result = result.substring(0, result.length() - 1);
+		//Do where clause
+		result = result.concat(" where ");
+		for(String where : wheres)
+		{
+			result = result.concat(where + " = ?, and");
+		}
+		//Remove last comma and "and"
+		result = result.substring(0, result.length() - 5);
+		return result;
+	}
+	
+	public String deleteHelper(String table, ArrayList<String> wheres)
+	{
+		String result = "delete from " + table + " where ";
+		for(String where : wheres)
+		{
+			result = result.concat(where + " = ?, and");
+		}
+		//Remove last comma and "and"
+		result = result.substring(0, result.length() - 5);
+		return result;
+	}
 }

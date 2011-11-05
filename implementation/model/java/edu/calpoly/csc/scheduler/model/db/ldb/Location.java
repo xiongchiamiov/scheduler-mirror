@@ -578,7 +578,7 @@ public class Location extends DbData implements Serializable
    public void verify() throws NullDataException
    {
       if (adaCompliant == null || building == null || maxOccupancy == null
-            || providedEquipment == null || quarterId == null || room == null
+            || providedEquipment == null || room == null
             || scheduleId == null || type == null)
       {
          throw new NullDataException();
