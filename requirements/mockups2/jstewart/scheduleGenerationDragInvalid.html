@@ -1363,11 +1363,7 @@
 
 	}
 	
-#hor-minimalist-b{font-family:"Lucida Sans Unicode", 
-	"Lucida Grande", Sans-Serif;font-size:12px;background:#fff;
-	width:480px;border-collapse:collapse;text-align:left;margin:20px;}
-	
-#hor-minimalist-b th{font-size:14px;font-weight:normal;color:black;border-bottom:2px solid #6678b1;padding:10px 8px;}#hor-minimalist-b td{border-bottom:1px solid #ccc;color:black;padding:6px 8px;}#hor-minimalist-b tbody tr:hover td{color:black;}
+#hor-minimalist-b{font-family:"Lucida Sans Unicode", "Lucida Grande", Sans-Serif;font-size:12px;background:#fff;width:480px;border-collapse:collapse;text-align:left;margin:20px;}#hor-minimalist-b th{font-size:14px;font-weight:normal;color:black;border-bottom:2px solid #6678b1;padding:10px 8px;}#hor-minimalist-b td{border-bottom:1px solid #ccc;color:black;padding:6px 8px;}#hor-minimalist-b tbody tr:hover td{color:black;}
 
 #course-option {
    background-color: #FFFFCC;
@@ -1375,6 +1371,18 @@
    border-style: solid;
    border-width: 1px;
 }
+
+.rightColumnCell{
+	border-right-style:solid;
+	border-right-width:2px;
+	border-color: #000000;
+}	
+
+.leftColumnCell{
+	border-left-style:solid;
+	border-left-width:2px;
+	border-color: #000000;
+}	
 	
 	</style>
 <body>		
@@ -1390,6 +1398,7 @@
 		<tr>
 				<td valign="top">
 				  <h4 align="center"><font color="black">Department Courses</h4>
+				  </br>
                   <select size="35" multiple style="width: 150px" title="Department Courses">
 					<option id="course-option">CHEM 110 (LEC)</option>
                     <option id="course-option">CHEM 110 (LAB)</option>
@@ -1412,16 +1421,16 @@
                     <option id="course-option">CHEM 528</option>
                     <option id="course-option">CHEM 590</option>
 					<option id="course-option"></option>
-					<option id="course-option"></option>
-                    <option id="course-option"></option>
-                    <option id="course-option"></option>
-                    <option id="course-option"></option>
-                    <option id="course-option"></option>
                     <option id="course-option"></option>
                     <option id="course-option"></option>
 					<option id="course-option"></option>
                     <option id="course-option"></option>
-					<option id="course-option"></option>
+                    <option id="course-option"></option>
+                    <option id="course-option"></option>
+                    <option id="course-option"></option>
+                    <option id="course-option"></option>
+                    <option id="course-option"></option>
+                    <option id="course-option"></option>
                     <option id="course-option"></option>
                     <option id="course-option"></option>
                     <option id="course-option"></option>
@@ -1463,143 +1472,293 @@
                     <option id="course-option"></option>
                     <option id="course-option"></option>
                     <option id="course-option"></option>
-					<option id="course-option"></option>
+                    <option id="course-option"></option>
                     <option id="course-option"></option>
                     <option id="course-option"></option>
                   </select>
 				  <h4><div align="center"><input class="gwt-button" type="button" value="Auto Fill" /></h4>
                 </td>
-        <td valign="top"> <table id="hor-minimalist-b" summary="Schdule View" style="border-spacing: 0px;" frame="box" >
+        <td> <table id="hor-minimalist-b" summary="Schdule View" style="border-spacing: 0px;" rules="cols">
 		<thead>
 		<tr>
 		<th scope="col">Time</th>
-		<th scope="col">Monday</th>
-		<th scope="col">Tuesday</th>
-		<th scope="col">Wednesday</th>
-		<th scope="col">Thursday</th>
-		<th scope="col">Friday</th>
+		<th scope="col" colspan=3>Monday</th>
+		<th scope="col" colspan=3>Tuesday</th>
+		<th scope="col" colspan=3>Wednesday</th>
+		<th scope="col" colspan=3>Thursday</th>
+		<th scope="col" colspan=3>Friday</th>
 		</tr>
 		</thead>
 		<tbody>
 		<tr>
 		<td>7:00-8:00am</td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 317</td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 439</td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 474</td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 252</td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 317</td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 439</td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 474</td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 252</td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 317</td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 439</td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 474</td>
 		</tr>
 		<tr>
 		<td>8:00-9:00am</td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 317</td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 439</td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 474</td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 252</td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 317</td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 439</td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 474</td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 252</td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 317</td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 439</td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 474</td>
 		</tr>
 		<tr>
 		<td>9:00-10:00am</td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 110</td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:#FFC561;text-align:center;"><font color="black">CHEM 590</td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 110</td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:#D61A1A;text-align:center;">CHEM 461<font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:#FFC561;text-align:center;"><font color="black">CHEM 590</td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 110</td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:#D61A1A;text-align:center;">CHEM 461<font color="black"></td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 110</td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
 		</tr>
 		<tr>
 		<td>10:00-11:00am</td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:#FFC561;text-align:center;"><font color="black">CHEM 590</td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 461</td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:#FFC561;text-align:center;"><font color="black">CHEM 590</td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 461</td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
 		</tr><tr>
 		<td>11:00-12:00pm</td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:#FFC561;text-align:center;"><font color="black">CHEM 590</td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 461</td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:#FFC561;text-align:center;"><font color="black">CHEM 590</td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 461</td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
 		</tr>
 		<tr>
 		<td>12:00-1:00pm</td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 128</div> </td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 377</td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 461</td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 128</td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 377</td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 461</td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 128</td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
 		</tr><tr>
 		<td>1:00-2:00pm</td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 128</td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 377</td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 128</td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 377</td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 128</td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
 		</tr>
 		<tr>
 		<td>2:00-3:00pm</td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 124</td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 124</td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 128</td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 124</td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 124</td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 128</td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 124</td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 124</td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 128</td>
 		</tr><tr>
 		<td>3:00-4:00pm</td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 124</td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 124</td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 128</td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 124</td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 124</td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 128</td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 124</td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 124</td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 128</td>
 		</tr>
 		<tr>
 		<td>4:00-5:00pm</td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
 		</tr>
 		<tr>
 		<td>5:00-6:00pm</td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
 		</tr>
 		<tr>
 		<td>6:00-7:00pm</td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
 		</tr>
 		<tr>
 		<td>7:00-8:00pm</td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
 		</tr>
 		<tr>
 		<td>8:00-9:00pm</td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
 		</tr>
 		<tr>
 		<td>9:00-10:00pm</td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:200px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
 		</tr>
 		</tbody>
-		</table> 
+		</table>
 		</td>                
 		</tr>
 		</tbody>
