@@ -13,8 +13,6 @@ import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
 import edu.calpoly.csc.scheduler.model.db.ldb.Location;
 import edu.calpoly.csc.scheduler.model.schedule.Schedule;
 import edu.calpoly.csc.scheduler.model.schedule.ScheduleItem;
-import edu.calpoly.csc.scheduler.view.web.server.Conversion;
-import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 
 
 /**
