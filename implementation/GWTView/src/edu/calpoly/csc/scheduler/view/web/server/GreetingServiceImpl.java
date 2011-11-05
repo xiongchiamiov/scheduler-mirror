@@ -93,7 +93,18 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	public ArrayList<ScheduleItemGWT> generateSchedule() {
 		assert(model != null);
 		
-		Collection<ScheduleItem> scheduleItems = model.generateSchedule();
+		Collection<Course> coursesToGenerate = model.getCourses();
+		
+		// TODO: fix this hack.
+		for (Course course : coursesToGenerate) {
+			assert(course.getDays().size() > 0);
+			if (course.getLength() < course.getDays().size() * 2) {
+				course.setLength(course.getDays().size() * 2);
+				System.err.println("Warning: the course length was too low, automatically set it to " + course.getLength());
+			}
+		}
+		Collection<ScheduleItem> scheduleItems = schedule.generate(coursesToGenerate);
+		System.out.println("schedule items: " + schedule.getItems().size());
 
 		ArrayList<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
 	    for(ScheduleItem item : scheduleItems)
@@ -106,17 +117,24 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	 assert(model != null);
      scheduleItems = new HashMap<String, ScheduleItem>();
      
-	 Collection<Course> extraCourses = new LinkedList<Course>();
-     
+	 Collection<Course> coursesToGenerate = new LinkedList<Course>(model.getCourses());
      for(CourseGWT course : courses)
-    	 extraCourses.add(availableCourses.get(course.getDept() + course.getCatalogNum()));
+    	 coursesToGenerate.add(availableCourses.get(course.getDept() + course.getCatalogNum()));
 
-		model.generateSchedule(extraCourses);
-				
+		// TODO: fix this hack.
+		for (Course course : coursesToGenerate) {
+			assert(course.getDays().size() > 0);
+			if (course.getLength() < course.getDays().size() * 2) {
+				course.setLength(course.getDays().size() * 2);
+				System.err.println("Warning: the course length was too low, automatically set it to " + course.getLength());
+			}
+		}
+		
+     schedule.generate(coursesToGenerate);
+		
 	 ArrayList<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
-	 
-	 System.out.println("size of return: " + schedule.getItems().size());
-	
+
+		System.out.println("schedule items: " + schedule.getItems().size());
 	 for(ScheduleItem item : schedule.getItems())
 	 {         
 	  gwtItems.add(Conversion.toGWT(item));

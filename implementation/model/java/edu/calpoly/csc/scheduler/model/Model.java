@@ -115,28 +115,5 @@ public class Model implements Serializable
 	public void removeCourse(Course course) {
 		db.getCourseDB().removeData(course);
 	}
-	
-	public Collection<ScheduleItem> generateSchedule() {
-		return generateSchedule(new LinkedList<Course>());
-	}
 
-	public Collection<ScheduleItem> generateSchedule(Collection<Course> extraCourses) {
-		Set<Course> courses = new HashSet<Course>();
-		courses.addAll(getCourses());
-		courses.addAll(extraCourses);
-		
-		// TODO: fix this hack.
-		for (Course course : courses) {
-			assert(course.getDays().size() > 0);
-			if (course.getLength() < course.getDays().size() * 2) {
-				course.setLength(course.getDays().size() * 2);
-				System.err.println("Warning: the course length was too low, automatically set it to " + course.getLength());
-			}
-		}
-		
-		Schedule schedule = new Schedule(getInstructors(), getLocations());
-		schedule.generate(new Vector<Course>(courses));
-		return schedule.getItems();
-	}
-   
 }

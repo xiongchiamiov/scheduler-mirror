@@ -31,15 +31,22 @@ public class OsmTable<ObjectType> extends VerticalPanel {
 			table.setWidget(0, colIndex, new HTML(columns[colIndex].getName()));
 		}
 		
+		add(table);
+		
 		objects = new ArrayList<ObjectType>();
 	}
 	
-	void addRow(ObjectType object) {
+	public void addRow(ObjectType object) {
 		int newObjectIndex = objects.size();
 		int newRowIndex = newObjectIndex + 1;
 		objects.add(object);
 		for (int colIndex = 0; colIndex < columns.length; colIndex++) {
 			table.setWidget(newRowIndex, colIndex, columns[colIndex].createCellWidget(object));
 		}
+	}
+	
+	public void addRows(Iterable<ObjectType> objects) {
+		for (ObjectType object : objects)
+			addRow(object);
 	}
 }
