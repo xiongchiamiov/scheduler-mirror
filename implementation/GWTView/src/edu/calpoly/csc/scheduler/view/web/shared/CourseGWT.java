@@ -16,7 +16,6 @@ public class CourseGWT implements Serializable, Comparable<CourseGWT> {
 	private String labName;
 	private String labDept;
 	private int labCatalogNum;
-	private int labPad;
 	private int length;
 	private WeekGWT days;
 	private Integer scheduleID;
@@ -32,7 +31,6 @@ public class CourseGWT implements Serializable, Comparable<CourseGWT> {
 		newCourse.type = type;
 		newCourse.maxEnroll = maxEnroll;
 		newCourse.labId = labId;
-		newCourse.labPad = labPad;
 		newCourse.length = length;
 		newCourse.days = days.clone();
 		newCourse.scheduleID = scheduleID;
@@ -57,16 +55,6 @@ public class CourseGWT implements Serializable, Comparable<CourseGWT> {
 	public Integer getScheduleID()
 	{
 		return scheduleID;
-	}
-	
-	public void setLabPad(int labpad)
-	{
-		this.labPad = labpad;
-	}
-	
-	public int getLabPad()
-	{
-		return labPad;
 	}
 	
 	public void setDays(WeekGWT days)

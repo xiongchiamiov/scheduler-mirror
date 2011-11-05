@@ -382,7 +382,6 @@ public class CTableBuilder implements TableBuilder<CourseGWT>{
 		CourseGWT course = new CourseGWT();
 		course.setCatalogNum(0);
 		course.setLabId(0);
-		course.setLabPad(0);
 		course.setLength(0);
 		course.setDept("");
 		
