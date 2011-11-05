@@ -40,13 +40,51 @@ public class ScheduleNavView extends DockLayoutPanel {
 
 		setWidth("100%");
 		setHeight("100%");
-		
-		Widget leftPanel = createLeftPanel();
-		addWest(leftPanel, 15);
-		getWidgetContainerElement(leftPanel).addClassName("quarterViewMenu");
+
+		Widget topPanel = createTopPanel();
+		addNorth(topPanel,2);
+		getWidgetContainerElement(topPanel).addClassName("topBarMenu");
 		
 		add(contentPanel = new SimplePanel());
 		contentPanel.add(new ScheduleView(contentPanel, service));
+	}
+	
+	
+	protected Widget createTopPanel() {
+		FlowPanel topPanel = new FlowPanel();
+			
+		topPanel.add(HTMLUtilities.createLink(scheduleName, "topBarTermLink", new ClickHandler() {
+			public void onClick(ClickEvent events) {
+				contentPanel.clear();
+				contentPanel.add(new ScheduleView(contentPanel, service));
+			}
+		}));
+		
+		topPanel.add(HTMLUtilities.createLink("Schedule", "topBarLink", new ClickHandler() {
+			public void onClick(ClickEvent events) {
+				contentPanel.clear();
+				contentPanel.add(new ScheduleView(contentPanel, service));
+			}
+		}));
+		topPanel.add(HTMLUtilities.createLink("Instructors", "topBarLink", new ClickHandler() {
+			public void onClick(ClickEvent events) {
+				contentPanel.clear();
+				contentPanel.add(new InstructorsView(contentPanel, service, scheduleName));
+			}
+		}));
+		topPanel.add(HTMLUtilities.createLink("Locations", "topBarLink", new ClickHandler() {
+			public void onClick(ClickEvent events) {
+				contentPanel.clear();
+				contentPanel.add(new RoomsView(contentPanel, service, scheduleName));
+			}
+		}));
+		topPanel.add(HTMLUtilities.createLink("Courses", "topBarLink", new ClickHandler() {
+			public void onClick(ClickEvent events) {
+				contentPanel.clear();
+				contentPanel.add(new CoursesView(service,scheduleName));
+			}
+		}));
+		return topPanel;
 	}
 	
 	protected Widget createLeftPanel() {
@@ -69,7 +107,7 @@ public class ScheduleNavView extends DockLayoutPanel {
 				contentPanel.add(new ScheduleView(contentPanel, service));
 			}
 		}));
-		
+		/*
 		leftMenuVP.add(new HTML("<b>Manage</b>"));
 		leftMenuVP.add(HTMLUtilities.createLink("Instructors", "inAppLink indented", new ClickHandler() {
 			public void onClick(ClickEvent events) {
@@ -89,7 +127,7 @@ public class ScheduleNavView extends DockLayoutPanel {
 				contentPanel.add(new CoursesView(service, scheduleName));
 			}
 		}));
-				
+				*/
 		return leftMenuVP;
 	}
 }
