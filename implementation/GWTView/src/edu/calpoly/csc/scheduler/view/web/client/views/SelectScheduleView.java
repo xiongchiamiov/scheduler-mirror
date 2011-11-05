@@ -6,6 +6,9 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -50,8 +53,12 @@ public class SelectScheduleView extends ScrollPanel {
 		vp.add(new Button("Open", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				int existingScheduleID = Integer.parseInt(listBox.getValue(listBox.getSelectedIndex()));
-				String scheduleName = listBox.getItemText(listBox.getSelectedIndex());
+				int index = listBox.getSelectedIndex();
+				if (index < 0)
+					return;
+				
+				int existingScheduleID = Integer.parseInt(listBox.getValue(index));
+				String scheduleName = listBox.getItemText(index);
 				selectSchedule(existingScheduleID, scheduleName);
 			}
 		}));
@@ -112,11 +119,7 @@ public class SelectScheduleView extends ScrollPanel {
 		final TextBox tb = new TextBox();
 		final DialogBox db = new DialogBox(false);
 		VerticalPanel vp = new VerticalPanel();
-		
-		db.setText("Name Schedule");
-		vp.add(new HTML("<center>Specify a new schedule name.</center>"));
-		vp.add(tb);
-		vp.add(new Button("Create Schedule", new ClickHandler() {
+		final Button butt = new Button("Create Schedule", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {		
 				db.hide();
@@ -141,7 +144,20 @@ public class SelectScheduleView extends ScrollPanel {
 					}
 				});
 			}
-		}));
+		});
+		
+		tb.addKeyPressHandler(new KeyPressHandler() {
+			@Override
+			public void onKeyPress(KeyPressEvent event) {
+				if (event.getCharCode() == KeyCodes.KEY_ENTER)
+					butt.click();
+			}
+		});
+		
+		db.setText("Name Schedule");
+		vp.add(new HTML("<center>Specify a new schedule name.</center>"));
+		vp.add(tb);
+		vp.add(butt);
 		
 		db.setWidget(vp);
 		db.center();
