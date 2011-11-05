@@ -494,7 +494,6 @@ public class Course extends DbData implements Serializable
     *    <li>days</li>
     *    <li>dept</li>
     *    <li>enrollment</li>
-    *    <li>labPad</li>
     *    <li>length</li>
     *    <li>name</li>
     *    <li>numOfSections</li>
@@ -568,21 +567,5 @@ public class Course extends DbData implements Serializable
       c.setLab(new Lab());;
       c.setScheduleId(1);
       return c;
-   }
-
-   /**
-    * @deprecated This is no longer used/needed
-    */
-   public int getLabPad ()
-   {
-      return 0;
-   }
-   
-   /**
-    * @deprecated This is no longer used/needed
-    */
-   public void setLabPad (int p)
-   {
-      
    }
 }

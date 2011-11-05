@@ -18,14 +18,51 @@ import edu.calpoly.csc.scheduler.model.schedule.Week;
 
 public class CourseDB implements DatabaseAPI<Course>
 {
+	//String constants to describe database
+	public static final String TABLENAME = "courses";
+	public static final String NAME = "name";
+	public static final String CATALOGNUM = "catalognum";
+	public static final String DEPT = "dept";
+	public static final String WTU = "wtu";
+	public static final String SCU = "scu";
+	public static final String NUMOFSECTIONS = "numofsections";
+	public static final String TYPE = "type";
+	public static final String LENGTH = "length";
+	public static final String DAYS = "days";
+	public static final String ENROLLMENT = "enrollment";
+	public static final String LAB = "lab";
+	public static final String SCHEDULEID = "scheduleid";
+	//Other data
    private ArrayList<Course> data;
    private SQLDB             sqldb;
    private int               scheduleID;
+   private ArrayList<String> fields;
+   private ArrayList<String> wheres;
 
    public CourseDB(SQLDB sqldb, int scheduleID)
    {
       this.sqldb = sqldb;
       this.scheduleID = scheduleID;
+      //Create fields
+      fields = new ArrayList<String>();
+      fields.add(NAME);
+      fields.add(CATALOGNUM);
+      fields.add(DEPT);
+      fields.add(WTU);
+      fields.add(SCU);
+      fields.add(NUMOFSECTIONS);
+      fields.add(TYPE);
+      fields.add(LENGTH);
+      fields.add(DAYS);
+      fields.add(ENROLLMENT);
+      fields.add(LAB);
+      fields.add(SCHEDULEID);
+  	  //Create where clause
+      wheres = new ArrayList<String>();
+      wheres.add(CATALOGNUM);
+      wheres.add(DEPT);
+      wheres.add(TYPE);
+      wheres.add(SCHEDULEID);
    }
 
    @Override
@@ -165,11 +202,7 @@ public class CourseDB implements DatabaseAPI<Course>
    {
       data.verify();
       // Create insert string
-      String insertString = "insert into courses ("
-            + "name, catalognum, dept, wtu, scu, "
-            + "numofsections, type, length, days, "
-            + "enrollment, lab, labpad, scheduleid)"
-            + "values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+      String insertString = sqldb.insertHelper(TABLENAME, fields);
       // Create prepared statement
       PreparedStatement stmt = sqldb.getPrepStmt(insertString);
       try
@@ -210,9 +243,7 @@ public class CourseDB implements DatabaseAPI<Course>
          {
             e.printStackTrace();
          }
-         //TODO: Tyler, remove lab pad from stuff
-         stmt.setInt(12, 1);
-         stmt.setInt(13, scheduleID);
+         stmt.setInt(12, scheduleID);
       }
       catch (SQLException e)
       {
@@ -226,11 +257,7 @@ public class CourseDB implements DatabaseAPI<Course>
    {
       data.verify();
       // Create update string
-      String updateString = "update courses set name = ?, catalognum = ?, "
-            + "dept = ?, wtu = ?, scu = ?, numofsections = ?, "
-            + "type = ?, length = ?, days = ?, enrollment = ?, "
-            + "lab = ?, labpad = ?, scheduleid = ? where catalognum = ? "
-            + "and dept = ? and type = ? and scheduleid = ?";
+      String updateString = sqldb.updateHelper(TABLENAME, fields, wheres);
       // Create prepared statement
       PreparedStatement stmt = sqldb.getPrepStmt(updateString);
       try
@@ -271,15 +298,13 @@ public class CourseDB implements DatabaseAPI<Course>
          {
             e.printStackTrace();
          }
-         //TODO: Tyler, remove lab pad from stuff
-         stmt.setInt(12, 1);
-         stmt.setInt(13, scheduleID);
+         stmt.setInt(12, scheduleID);
 
          // Where clause
-         stmt.setInt(14, data.getCatalogNum());
-         stmt.setString(15, data.getDept());
-         stmt.setString(16, data.getType().toString());
-         stmt.setInt(17, scheduleID);
+         stmt.setInt(13, data.getCatalogNum());
+         stmt.setString(14, data.getDept());
+         stmt.setString(15, data.getType().toString());
+         stmt.setInt(16, scheduleID);
       }
       catch (SQLException e)
       {
@@ -294,8 +319,7 @@ public class CourseDB implements DatabaseAPI<Course>
    {
       data.verify();
       // Create delete string
-      String deleteString = "delete from courses where catalognum = ? "
-            + "and dept = ? and type = ? and scheduleid = ?";
+      String deleteString = sqldb.deleteHelper(TABLENAME, wheres);
       // Create prepared statement
       PreparedStatement stmt = sqldb.getPrepStmt(deleteString);
       try

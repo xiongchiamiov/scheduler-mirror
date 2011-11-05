@@ -21,6 +21,17 @@ import edu.calpoly.csc.scheduler.model.schedule.WeekAvail;
 
 public class LocationDB implements DatabaseAPI<Location>
 {
+	//String constants to describe the database
+	public static final String BUILDING = "building";
+	public static final String ROOM = "room";
+	public static final String MAXOCCUPANCY = "maxoccupancy";
+	public static final String TYPE = "type";
+	public static final String PROVIDEDEQUIPMENT = "providedequipment";
+	public static final String ADACOMPLIANT = "adacompliant";
+	public static final String AVAILABILITY = "availability";
+	public static final String SCHEDULEID = "scheduleid";
+	public static final String TABLENAME = "locations";
+	//Other data
    private ArrayList<Location> data;
    private SQLDB               sqldb;
    private int                 scheduleID;
@@ -141,10 +152,16 @@ public class LocationDB implements DatabaseAPI<Location>
    {
       data.verify();
       // Create insert string
-      String insertString = "insert into locations ("
-            + "building, room, maxoccupancy, type, providedequipment,"
-            + " adacompliant, availability, scheduleid)"
-            + "values (?,?,?,?,?,?,?,?)";
+      ArrayList<String> fields = new ArrayList<String>();
+      fields.add(BUILDING);
+      fields.add(ROOM);
+      fields.add(MAXOCCUPANCY);
+      fields.add(TYPE);
+      fields.add(PROVIDEDEQUIPMENT);
+      fields.add(ADACOMPLIANT);
+      fields.add(AVAILABILITY);
+      fields.add(SCHEDULEID);
+      String insertString = sqldb.insertHelper(TABLENAME, fields);
       // Create prepared statement
       PreparedStatement stmt = sqldb.getPrepStmt(insertString);
       // Set values
@@ -194,11 +211,23 @@ public class LocationDB implements DatabaseAPI<Location>
    private void editData(Location data)
    {
        data.verify();
+       //Create fields
+       ArrayList<String> fields = new ArrayList<String>();
+       fields.add(BUILDING);
+       fields.add(ROOM);
+       fields.add(MAXOCCUPANCY);
+       fields.add(TYPE);
+       fields.add(PROVIDEDEQUIPMENT);
+       fields.add(ADACOMPLIANT);
+       fields.add(AVAILABILITY);
+       fields.add(SCHEDULEID);
+       //Create where clause
+       ArrayList<String> wheres = new ArrayList<String>();
+       wheres.add(BUILDING);
+       wheres.add(ROOM);
+       wheres.add(SCHEDULEID);
       // Create update string
-      String updateString = "update locations set building = ?, room = ?,"
-            + "maxoccupancy = ?, type = ?, providedequipment = ?, "
-            + "adacompliant = ?, availability = ?, scheduleid = ? "
-            + "where building = ? and room = ? and scheduleid = ?";
+      String updateString = sqldb.updateHelper(TABLENAME, fields, wheres);
       // Create prepared statement
       PreparedStatement stmt = sqldb.getPrepStmt(updateString);
       // Set values
@@ -256,8 +285,13 @@ public class LocationDB implements DatabaseAPI<Location>
    public void removeData(Location data)
    {
        data.verify();
+       //Create where clause
+       ArrayList<String> wheres = new ArrayList<String>();
+       wheres.add(BUILDING);
+       wheres.add(ROOM);
+       wheres.add(SCHEDULEID);
       // Create delete string
-      String deleteString = "delete from locations where building = ? and room = ? and scheduleid = ?";
+      String deleteString = sqldb.deleteHelper(TABLENAME, wheres);
       // Create prepared statement
       PreparedStatement stmt = sqldb.getPrepStmt(deleteString);
       try

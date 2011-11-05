@@ -81,10 +81,6 @@ public class Schedule implements Serializable
     */
    private Integer id;
    /**
-    * The quarter id to link this schedule w/ a particular quarter
-    */
-   private String quarterId;
-   /**
     * Human-readable string to identify this schedule
     */
    private String name;
@@ -929,26 +925,6 @@ public class Schedule implements Serializable
    public void setId (Integer id)
    {
       this.id = id;
-   }
-
-   /**
-    * Returns the quarterId
-    * 
-    * @return the quarterId
-    */
-   public String getQuarterId ()
-   {
-      return quarterId;
-   }
-
-   /**
-    * Sets the quarterId to the given parameter.
-    * 
-    * @param quarterId the quarterId to set
-    */
-   public void setQuarterId (String quarterId)
-   {
-      this.quarterId = quarterId;
    }
 
    /**
