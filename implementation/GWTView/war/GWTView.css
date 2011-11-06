@@ -14,7 +14,6 @@ body {
 
 .mainWidget {
 	width: 100%;
-	height: 100%;
 }
 
 .topPanel {
@@ -250,25 +249,13 @@ h1 {
 
 	/*==============================|  Global Top Bar |==============================*/
 	
-#topBar{ 
-position: absolute; 
-overflow-x: hidden; 
-overflow-y: hidden; 
-left: 0em; 
-top: 0em; 
-right: 0em; 
+#topBar{
+width:100%; 
 height: 82px;
-background-image:url('imgs/header_bg.gif');
-background-repeat-x: no-repeat;
-background-repeat-y: no-repeat;
+background:url('imgs/header_bg.gif') no-repeat #003300;
 background-attachment: initial;
-background-position-x: 0%;
-background-position-y: 0%;
 background-origin: initial;
 background-clip: initial;
-background-color: #030;
-background-repeat:no-repeat;
-font-family: Arial, Helvetica, sans-serif;
 }
 #topBar #loginStatus
 {
