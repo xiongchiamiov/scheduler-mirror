@@ -17,13 +17,11 @@ import edu.calpoly.csc.scheduler.view.web.client.table.TableFactory;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
 
 public class RoomsView extends ScrollPanel {
-	private Panel container;
 	private GreetingServiceAsync service;
 	private Table<LocationGWT> lTable;
 	private final String scheduleName;
 
-	public RoomsView(Panel container, GreetingServiceAsync service, String scheduleName) {
-		this.container = container;
+	public RoomsView(GreetingServiceAsync service, String scheduleName) {
 		this.service = service;
 		this.scheduleName = scheduleName;
 	}

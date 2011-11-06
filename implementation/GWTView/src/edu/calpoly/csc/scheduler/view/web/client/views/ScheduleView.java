@@ -13,7 +13,7 @@ import edu.calpoly.csc.scheduler.view.web.client.schedule.ScheduleViewWidget;
 public class ScheduleView extends ScrollPanel {
 	private GreetingServiceAsync service;
 
-	public ScheduleView(Panel container, GreetingServiceAsync greetingService) {
+	public ScheduleView(GreetingServiceAsync greetingService) {
 		this.service = greetingService;
 	}
 	

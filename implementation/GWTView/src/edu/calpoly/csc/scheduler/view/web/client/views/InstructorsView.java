@@ -20,8 +20,8 @@ import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 
 public class InstructorsView extends ScrollPanel {
 	// These static variables are a temporary hack to get around the table bug
-	public static Panel container;
 	public static GreetingServiceAsync service;
+	public static Panel container;
 	
 	private final String scheduleName;
 	private Table<InstructorGWT> iTable;
@@ -29,8 +29,8 @@ public class InstructorsView extends ScrollPanel {
 
 	public InstructorsView(Panel container, GreetingServiceAsync service, String scheduleName) {
 		assert(service != null);
+		this.container = container;
 		
-		InstructorsView.container = container;
 		InstructorsView.service = service;
 		this.scheduleName = scheduleName;
 	}

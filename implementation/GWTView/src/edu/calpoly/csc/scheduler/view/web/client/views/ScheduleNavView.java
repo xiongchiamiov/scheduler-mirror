@@ -3,7 +3,6 @@ package edu.calpoly.csc.scheduler.view.web.client.views;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -20,6 +19,8 @@ public class ScheduleNavView extends VerticalPanel {
 	Panel contentPanel;
 	int selectedScheduleID;
 	final String scheduleName;
+	
+	Widget instructorsLink, coursesLink, locationsLink, scheduleLink;
 
 	ScheduleNavView(SelectScheduleView homeView, Panel container, GreetingServiceAsync service, int selectedScheduleID, String scheduleName) {
 		this.selectScheduleView = homeView;
@@ -38,11 +39,11 @@ public class ScheduleNavView extends VerticalPanel {
 		setWidth("100%");
 		setHeight("100%");
 
-		Widget topPanel = createTopPanel();
-		add(topPanel);
+		add(createTopPanel());
 		
 		add(contentPanel = new SimplePanel());
-		contentPanel.add(new ScheduleView(contentPanel, service));
+		
+		switchToView(new ScheduleView(service));
 	}
 	
 	
@@ -55,74 +56,51 @@ public class ScheduleNavView extends VerticalPanel {
 		scheduleSelectWidget.addStyleName("topBarScheduleSelect");
 		topPanel.add(scheduleSelectWidget);
 		
-		topPanel.add(HTMLUtilities.createLink("Instructors", "topBarLink first", new ClickHandler() {
+		topPanel.add(instructorsLink = HTMLUtilities.createLink("Instructors", "topBarLink first", new ClickHandler() {
 			public void onClick(ClickEvent events) {
-				contentPanel.clear();
-				contentPanel.add(new InstructorsView(contentPanel, service, scheduleName));
+				switchToView(new InstructorsView(contentPanel, service, scheduleName));
 			}
 		}));
-		topPanel.add(HTMLUtilities.createLink("Locations", "topBarLink", new ClickHandler() {
+		topPanel.add(locationsLink = HTMLUtilities.createLink("Locations", "topBarLink", new ClickHandler() {
 			public void onClick(ClickEvent events) {
-				contentPanel.clear();
-				contentPanel.add(new RoomsView(contentPanel, service, scheduleName));
+				switchToView(new RoomsView(service, scheduleName));
 			}
 		}));
-		topPanel.add(HTMLUtilities.createLink("Courses", "topBarLink", new ClickHandler() {
+		topPanel.add(coursesLink = HTMLUtilities.createLink("Courses", "topBarLink", new ClickHandler() {
 			public void onClick(ClickEvent events) {
-				contentPanel.clear();
-				contentPanel.add(new CoursesView(service,scheduleName));
+				switchToView(new CoursesView(service,scheduleName));
 			}
 		}));
-		topPanel.add(HTMLUtilities.createLink("Schedule", "topBarLink", new ClickHandler() {
+		topPanel.add(scheduleLink = HTMLUtilities.createLink("Schedule", "topBarLink", new ClickHandler() {
 			public void onClick(ClickEvent events) {
-				contentPanel.clear();
-				contentPanel.add(new ScheduleView(contentPanel, service));
+				switchToView(new ScheduleView(service));
 			}
 		}));
 		return topPanel;
 	}
 	
-	protected Widget createLeftPanel() {
-		FlowPanel leftMenuVP = new FlowPanel();
+	public void switchToView(Widget widget) {
+		instructorsLink.removeStyleName("currentView");
+		locationsLink.removeStyleName("currentView");
+		coursesLink.removeStyleName("currentView");
+		scheduleLink.removeStyleName("currentView");
 		
-		leftMenuVP.add(selectScheduleView.createMiniSelectWidget(selectedScheduleID));
+		if (widget instanceof InstructorsView) {
+			instructorsLink.addStyleName("currentView");
+		}
+		else if (widget instanceof RoomsView) {
+			locationsLink.addStyleName("currentView");
+		}
+		else if (widget instanceof CoursesView) {
+			coursesLink.addStyleName("currentView");
+		}
+		else if (widget instanceof ScheduleView) {
+			scheduleLink.addStyleName("currentView");
+		}
+		else
+			assert(false);
 		
-		leftMenuVP.add(HTMLUtilities.createLink("<b>Back to Select Quarter</b>", "inAppLink", new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				container.clear();
-				container.add(selectScheduleView);
-			}
-		}));
-		
-		leftMenuVP.add(new HTML("<b>Schedule</b>"));
-		leftMenuVP.add(HTMLUtilities.createLink("Build / View", "inAppLink indented", new ClickHandler() {
-			public void onClick(ClickEvent events) {
-				contentPanel.clear();
-				contentPanel.add(new ScheduleView(contentPanel, service));
-			}
-		}));
-		/*
-		leftMenuVP.add(new HTML("<b>Manage</b>"));
-		leftMenuVP.add(HTMLUtilities.createLink("Instructors", "inAppLink indented", new ClickHandler() {
-			public void onClick(ClickEvent events) {
-				contentPanel.clear();
-				contentPanel.add(new InstructorsView(contentPanel, service, scheduleName));
-			}
-		}));
-		leftMenuVP.add(HTMLUtilities.createLink("Locations", "inAppLink indented", new ClickHandler() {
-			public void onClick(ClickEvent events) {
-				contentPanel.clear();
-				contentPanel.add(new RoomsView(contentPanel, service, scheduleName));
-			}
-		}));
-		leftMenuVP.add(HTMLUtilities.createLink("Courses", "inAppLink indented", new ClickHandler() {
-			public void onClick(ClickEvent events) {
-				contentPanel.clear();
-				contentPanel.add(new CoursesView(service, scheduleName));
-			}
-		}));
-				*/
-		return leftMenuVP;
+		contentPanel.clear();
+		contentPanel.add(widget);
 	}
 }

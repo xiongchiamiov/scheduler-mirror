@@ -404,10 +404,9 @@ font-family: Arial, Helvetica, sans-serif;
 	cursor: pointer;
 }
 
-.topBarLink.currentPage {
-	background: url(imgs/black20alpha.png) repeat;
-}
-
+.topBarLink.currentView {
+	background: url(imgs/CurrentView.png) repeat-x bottom;
+	border-bottom: 1px solid white;
 }
 
 .courseListBox {
