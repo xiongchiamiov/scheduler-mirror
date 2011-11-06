@@ -18,19 +18,17 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
-import edu.calpoly.csc.scheduler.view.web.client.HTMLUtilities;
 
-public class SelectScheduleView extends ScrollPanel {
+public class SelectScheduleView extends VerticalPanel {
 	private GreetingServiceAsync service;
 	private Panel container;
 	private ListBox listBox;
-	private VerticalPanel vp;
 	
 	Map<String, Integer> schedulesIDsAndNames;
 	
@@ -39,18 +37,21 @@ public class SelectScheduleView extends ScrollPanel {
 		this.service = service;
 
 		addStyleName("homeView");
+
+		setWidth("100%");
+		setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		
-        vp = new VerticalPanel();
-		add(vp);
-		vp.setWidth("100%");
-		vp.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		SimplePanel fakeTopPanel = new SimplePanel();
+		fakeTopPanel.setWidth("100%");
+		fakeTopPanel.addStyleName("topBarMenu");
+		add(fakeTopPanel);
 		
-		vp.add(new HTMLPanel("<h2>Select a Schedule</h2>"));
+		add(new HTMLPanel("<h2>Select a Schedule</h2>"));
 		
 		listBox = new ListBox();
-		vp.add(listBox);
+		add(listBox);
 
-		vp.add(new Button("Open", new ClickHandler() {
+		add(new Button("Open", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				int index = listBox.getSelectedIndex();
@@ -63,7 +64,7 @@ public class SelectScheduleView extends ScrollPanel {
 			}
 		}));
 		
-		vp.add(new Button("New Schedule", new ClickHandler() {
+		add(new Button("New Schedule", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				displayNewSchedPopup();

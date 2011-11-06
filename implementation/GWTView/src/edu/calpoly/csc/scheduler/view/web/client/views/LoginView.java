@@ -11,13 +11,13 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 
-public class LoginView extends ScrollPanel {
+public class LoginView extends VerticalPanel {
 	MainView mainView; // Kept around so we can tell it to change the username
 	
 	Panel container;
@@ -32,13 +32,16 @@ public class LoginView extends ScrollPanel {
 	@Override
 	public void onLoad() {
 		super.onLoad();
+
+		SimplePanel fakeTopPanel = new SimplePanel();
+		fakeTopPanel.setWidth("100%");
+		fakeTopPanel.addStyleName("topBarMenu");
+		add(fakeTopPanel);
 		
-		final VerticalPanel panel = new VerticalPanel();
-		panel.setWidth("100%");
-		add(panel);
-		panel.setHorizontalAlignment(HasAlignment.ALIGN_CENTER);
+		setWidth("100%");
+		setHorizontalAlignment(HasAlignment.ALIGN_CENTER);
 		
-		panel.add(new HTML("<h2>Login</h2>"));
+		add(new HTML("<h2>Login</h2>"));
 
 		final TextBox textBox = new TextBox();
 		textBox.addKeyPressHandler(new KeyPressHandler() {
@@ -48,9 +51,9 @@ public class LoginView extends ScrollPanel {
 					login(textBox.getText());
 			}
 		});
-		panel.add(textBox);
+		add(textBox);
 		
-		panel.add(new Button("Login", new ClickHandler() {
+		add(new Button("Login", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				login(textBox.getText());
