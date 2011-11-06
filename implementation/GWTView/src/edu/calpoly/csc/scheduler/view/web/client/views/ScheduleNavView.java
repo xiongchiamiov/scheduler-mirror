@@ -62,7 +62,7 @@ public class ScheduleNavView extends VerticalPanel {
 		}));
 		topPanel.add(locationsLink = HTMLUtilities.createLink("Locations", "topBarLink", new ClickHandler() {
 			public void onClick(ClickEvent events) {
-				switchToView(new RoomsView(service, scheduleName));
+				switchToView(new LocationsView(service, scheduleName));
 			}
 		}));
 		topPanel.add(coursesLink = HTMLUtilities.createLink("Courses", "topBarLink", new ClickHandler() {
@@ -87,7 +87,7 @@ public class ScheduleNavView extends VerticalPanel {
 		if (widget instanceof InstructorsView) {
 			instructorsLink.addStyleName("currentView");
 		}
-		else if (widget instanceof RoomsView) {
+		else if (widget instanceof LocationsView) {
 			locationsLink.addStyleName("currentView");
 		}
 		else if (widget instanceof CoursesView) {
