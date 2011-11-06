@@ -28,7 +28,6 @@ public class RoomsView extends ScrollPanel {
 		this.scheduleName = scheduleName;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public void onLoad() {
 		super.onLoad();
@@ -50,23 +49,23 @@ public class RoomsView extends ScrollPanel {
 		final LoadingPopup popup = new LoadingPopup();
 		popup.show();
 
-		final OsmTable<LocationGWT> table = new OsmTable<LocationGWT>(new OsmTable.IColumn[] {
-				new StringColumn<LocationGWT>("Building") {
-					public String getValue(LocationGWT object) {
-						return object.getBuilding();
-					}
-					public void setValue(LocationGWT object, String newValue) {
-						object.setBuilding(newValue);
-					}
-					public int compare(LocationGWT a, LocationGWT b) {
-						if (a.getBuilding().compareTo(b.getBuilding()) != 0)
-							return a.getBuilding().compareTo(b.getBuilding());
-						return a.getRoom().compareTo(b.getRoom());
-					}
-				}
-		});
+//		final OsmTable<LocationGWT> table = new OsmTable<LocationGWT>(new OsmTable.IColumn<LocationGWT>[] {
+//				new StringColumn<LocationGWT>("Building") {
+//					public String getValue(LocationGWT object) {
+//						return object.getBuilding();
+//					}
+//					public void setValue(LocationGWT object, String newValue) {
+//						object.setBuilding(newValue);
+//					}
+//					public int compare(LocationGWT a, LocationGWT b) {
+//						if (a.getBuilding().compareTo(b.getBuilding()) != 0)
+//							return a.getBuilding().compareTo(b.getBuilding());
+//						return a.getRoom().compareTo(b.getRoom());
+//					}
+//				}
+//		});
 		
-		vp.add(table);
+//		vp.add(table);
 		
 		service.getLocations(new AsyncCallback<ArrayList<LocationGWT>>() {
 			public void onFailure(Throwable caught) {
@@ -79,9 +78,9 @@ public class RoomsView extends ScrollPanel {
 				if (result != null) {
 					lTable.set(result);
 				}
-				table.addRows(result);
+//				table.addRows(result);
 			}
 		});
-//		
+		
 	}
 }

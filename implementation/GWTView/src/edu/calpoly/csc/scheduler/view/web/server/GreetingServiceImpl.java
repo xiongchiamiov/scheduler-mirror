@@ -103,6 +103,10 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 				System.err.println("Warning: the course length was too low, automatically set it to " + course.getLength());
 			}
 		}
+		
+		for (Instructor instructor : model.getInstructors())
+			System.out.println("outside, num instructor day prefs for " + instructor.getLastName() + ": " + instructor.getTimePreferences().size());
+		
 		Collection<ScheduleItem> scheduleItems = schedule.generate(coursesToGenerate);
 		System.out.println("schedule items: " + schedule.getItems().size());
 
@@ -129,6 +133,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 				System.err.println("Warning: the course length was too low, automatically set it to " + course.getLength());
 			}
 		}
+
+		for (Instructor instructor : model.getInstructors())
+			System.out.println("num instructor day prefs for " + instructor.getLastName() + ": " + instructor.getTimePreferences().size());
 		
      schedule.generate(coursesToGenerate);
 		

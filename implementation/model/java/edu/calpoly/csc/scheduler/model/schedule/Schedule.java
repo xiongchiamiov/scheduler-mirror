@@ -23,7 +23,7 @@ public class Schedule implements Serializable
 	/**
     * Used for debugging. Toggle it to get debugging output
     */
-   public static final boolean DEBUG = true;
+   public static final boolean DEBUG = false;
 
    /**
     * Prints a message if DEBUG is true
@@ -406,6 +406,10 @@ public class Schedule implements Serializable
     */
    public Vector<ScheduleItem> generate (Collection<Course> c_list)
    {
+
+		for (Instructor instructor : getiSourceList())
+			System.out.println("inside, num instructor day prefs for " + instructor.getLastName() + ": " + instructor.getTimePreferences().size());
+		
       initGenData(c_list);
 
       debug("GENERATING");

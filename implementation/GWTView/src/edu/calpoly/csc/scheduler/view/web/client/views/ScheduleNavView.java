@@ -1,19 +1,18 @@
 package edu.calpoly.csc.scheduler.view.web.client.views;
 
-import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.client.HTMLUtilities;
 
-public class ScheduleNavView extends DockLayoutPanel {
+public class ScheduleNavView extends VerticalPanel {
 	SelectScheduleView selectScheduleView;
 	
 	Panel container;
@@ -23,8 +22,6 @@ public class ScheduleNavView extends DockLayoutPanel {
 	final String scheduleName;
 
 	ScheduleNavView(SelectScheduleView homeView, Panel container, GreetingServiceAsync service, int selectedScheduleID, String scheduleName) {
-		super(Unit.EM);
-		
 		this.selectScheduleView = homeView;
 		
 		this.container = container;
@@ -42,8 +39,7 @@ public class ScheduleNavView extends DockLayoutPanel {
 		setHeight("100%");
 
 		Widget topPanel = createTopPanel();
-		addNorth(topPanel,2);
-		getWidgetContainerElement(topPanel).addClassName("topBarMenu");
+		add(topPanel);
 		
 		add(contentPanel = new SimplePanel());
 		contentPanel.add(new ScheduleView(contentPanel, service));
@@ -52,21 +48,14 @@ public class ScheduleNavView extends DockLayoutPanel {
 	
 	protected Widget createTopPanel() {
 		FlowPanel topPanel = new FlowPanel();
-		topPanel.add(selectScheduleView.createMiniSelectWidget(selectedScheduleID));
-		topPanel.add(HTMLUtilities.createLink(scheduleName, "topBarTermLink", new ClickHandler() {
-			public void onClick(ClickEvent events) {
-				contentPanel.clear();
-				contentPanel.add(new ScheduleView(contentPanel, service));
-			}
-		}));
+		topPanel.setWidth("100%");
+		topPanel.addStyleName("topBarMenu");
 		
-		topPanel.add(HTMLUtilities.createLink("Schedule", "topBarLink", new ClickHandler() {
-			public void onClick(ClickEvent events) {
-				contentPanel.clear();
-				contentPanel.add(new ScheduleView(contentPanel, service));
-			}
-		}));
-		topPanel.add(HTMLUtilities.createLink("Instructors", "topBarLink", new ClickHandler() {
+		Widget scheduleSelectWidget = selectScheduleView.createMiniSelectWidget(selectedScheduleID);
+		scheduleSelectWidget.addStyleName("topBarScheduleSelect");
+		topPanel.add(scheduleSelectWidget);
+		
+		topPanel.add(HTMLUtilities.createLink("Instructors", "topBarLink first", new ClickHandler() {
 			public void onClick(ClickEvent events) {
 				contentPanel.clear();
 				contentPanel.add(new InstructorsView(contentPanel, service, scheduleName));
@@ -82,6 +71,12 @@ public class ScheduleNavView extends DockLayoutPanel {
 			public void onClick(ClickEvent events) {
 				contentPanel.clear();
 				contentPanel.add(new CoursesView(service,scheduleName));
+			}
+		}));
+		topPanel.add(HTMLUtilities.createLink("Schedule", "topBarLink", new ClickHandler() {
+			public void onClick(ClickEvent events) {
+				contentPanel.clear();
+				contentPanel.add(new ScheduleView(contentPanel, service));
 			}
 		}));
 		return topPanel;

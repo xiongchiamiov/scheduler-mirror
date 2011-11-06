@@ -62,6 +62,7 @@ public abstract class Conversion {
 			timePreferences.put(day, timePreferencesForDay);
 		}
 		result.settPrefs(timePreferences);
+		assert(result.gettPrefs().size() == instructor.getTimePreferences().size());
 		
 		Vector<ScheduleItem> sourceItemsTaught = instructor.getItemsTaught();
 		Vector<ScheduleItemGWT> itemsTaught = new Vector<ScheduleItemGWT>();
