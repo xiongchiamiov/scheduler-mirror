@@ -37,7 +37,6 @@ public class ScheduleNavView extends VerticalPanel {
 		super.onLoad();
 
 		setWidth("100%");
-		setHeight("100%");
 
 		add(createTopPanel());
 		
