@@ -11,7 +11,7 @@ public class CourseListItem extends Label
  
  public CourseListItem(CourseGWT course)
  {
-  super(course.getDept() + " " + course.getCatalogNum());
+  super(course.getDept() + " " + course.getCatalogNum() + " (" + course.getNumSections() + ")");
   this.course = course;
  }
  

@@ -121,7 +121,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	 assert(model != null);
      scheduleItems = new HashMap<String, ScheduleItem>();
      
-	 Collection<Course> coursesToGenerate = new LinkedList<Course>(model.getCourses());
+	 Collection<Course> coursesToGenerate = new LinkedList<Course>();
      for(CourseGWT course : courses)
     	 coursesToGenerate.add(availableCourses.get(course.getDept() + course.getCatalogNum()));
 
@@ -141,7 +141,6 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		
 	 ArrayList<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
 
-		System.out.println("schedule items: " + schedule.getItems().size());
 	 for(ScheduleItem item : schedule.getItems())
 	 {         
 	  gwtItems.add(Conversion.toGWT(item));
