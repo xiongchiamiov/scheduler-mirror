@@ -1,15 +1,9 @@
 package edu.calpoly.csc.scheduler.model.db.ldb;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Vector;
 
@@ -21,20 +15,22 @@ import edu.calpoly.csc.scheduler.model.schedule.WeekAvail;
 
 public class LocationDB implements DatabaseAPI<Location>
 {
-	//String constants to describe the database
-	public static final String BUILDING = "building";
-	public static final String ROOM = "room";
-	public static final String MAXOCCUPANCY = "maxoccupancy";
-	public static final String TYPE = "type";
-	public static final String PROVIDEDEQUIPMENT = "providedequipment";
-	public static final String ADACOMPLIANT = "adacompliant";
-	public static final String AVAILABILITY = "availability";
-	public static final String SCHEDULEID = "scheduleid";
-	public static final String TABLENAME = "locations";
-	//Other data
-   private ArrayList<Location> data;
-   private SQLDB               sqldb;
-   private int                 scheduleID;
+   // String constants to describe the database
+   public static final String            TABLENAME         = "locations";
+   public static final String            BUILDING          = "building";
+   public static final String            ROOM              = "room";
+   public static final String            MAXOCCUPANCY      = "maxoccupancy";
+   public static final String            TYPE              = "type";
+   public static final String            PROVIDEDEQUIPMENT = "providedequipment";
+   public static final String            ADACOMPLIANT      = "adacompliant";
+   public static final String            AVAILABILITY      = "availability";
+   public static final String            SCHEDULEID        = "scheduleid";
+   // Other data
+   private ArrayList<Location>           data;
+   private SQLDB                         sqldb;
+   private int                           scheduleID;
+   private LinkedHashMap<String, Object> fields;
+   private LinkedHashMap<String, Object> wheres;
 
    public LocationDB(SQLDB sqldb, int scheduleID)
    {
@@ -48,13 +44,13 @@ public class LocationDB implements DatabaseAPI<Location>
       pullData();
       return data;
    }
-   
+
    @Override
    public void saveData(Location data)
    {
       data.verify();
       data.setScheduleId(scheduleID);
-      if(sqldb.doesLocationExist(data))
+      if (sqldb.doesLocationExist(data))
       {
          System.out.println("Editing data: location");
          editData(data);
@@ -100,43 +96,16 @@ public class LocationDB implements DatabaseAPI<Location>
          String type = rs.getString("type");
          toAdd.setType(type);
 
-         // Deserialize ProvidedEquipment
          byte[] equipBuf = rs.getBytes("providedequipment");
-         if (equipBuf != null)
-         {
-            try
-            {
-               ObjectInputStream objectIn;
-               objectIn = new ObjectInputStream(new ByteArrayInputStream(
-                     equipBuf));
-               toAdd.setProvidedEquipment((Location.ProvidedEquipment) objectIn
-                     .readObject());
-            }
-            catch (Exception e)
-            {
-               e.printStackTrace();
-            }
-         }
+         toAdd.setProvidedEquipment((Location.ProvidedEquipment) sqldb
+               .deserialize(equipBuf));
 
          boolean adacompliant = rs.getBoolean("adacompliant");
          toAdd.setAdaCompliant(adacompliant);
 
-         // Deserialize Availability
          byte[] availBuf = rs.getBytes("availability");
-         if (availBuf != null)
-         {
-            try
-            {
-               ObjectInputStream objectIn;
-               objectIn = new ObjectInputStream(new ByteArrayInputStream(
-                     availBuf));
-               toAdd.setAvailability((WeekAvail) objectIn.readObject());
-            }
-            catch (Exception e)
-            {
-               e.printStackTrace();
-            }
-         }
+         toAdd.setAvailability((WeekAvail) sqldb.deserialize(availBuf));
+
          int scheduleid = rs.getInt("scheduleid");
          toAdd.setScheduleId(scheduleid);
       }
@@ -150,162 +119,42 @@ public class LocationDB implements DatabaseAPI<Location>
 
    private void addData(Location data)
    {
-      data.verify();
-      // Create insert string
-      ArrayList<String> fields = new ArrayList<String>();
-      fields.add(BUILDING);
-      fields.add(ROOM);
-      fields.add(MAXOCCUPANCY);
-      fields.add(TYPE);
-      fields.add(PROVIDEDEQUIPMENT);
-      fields.add(ADACOMPLIANT);
-      fields.add(AVAILABILITY);
-      fields.add(SCHEDULEID);
-      String insertString = sqldb.insertHelper(TABLENAME, fields);
-      // Create prepared statement
-      PreparedStatement stmt = sqldb.getPrepStmt(insertString);
-      // Set values
-      try
-      {
-         stmt.setString(1, data.getBuilding());
-         stmt.setString(2, data.getRoom());
-         stmt.setInt(3, data.getMaxOccupancy());
-         stmt.setString(4, data.getType());
-         // Serialize ProvidedEquipment
-         try
-         {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ObjectOutput out = new ObjectOutputStream(baos);
-            out.writeObject(data.getProvidedEquipment());
-            out.close();
-            stmt.setBytes(5, baos.toByteArray());
-         }
-         catch (IOException e)
-         {
-            e.printStackTrace();
-         }
-         stmt.setBoolean(6, data.getAdaCompliant());
-         // Serialize Availability
-         try
-         {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ObjectOutput out = new ObjectOutputStream(baos);
-            out.writeObject(data.getAvailability());
-            out.close();
-            stmt.setBytes(7, baos.toByteArray());
-         }
-         catch (IOException e)
-         {
-            e.printStackTrace();
-         }
-         stmt.setInt(8, scheduleID);
-      }
-      catch (SQLException e)
-      {
-         e.printStackTrace();
-      }
-      // Execute
-      sqldb.executePrepStmt(stmt);
+      fillMaps(data);
+      sqldb.executeInsert(TABLENAME, fields);
    }
 
    private void editData(Location data)
    {
-       data.verify();
-       //Create fields
-       ArrayList<String> fields = new ArrayList<String>();
-       fields.add(BUILDING);
-       fields.add(ROOM);
-       fields.add(MAXOCCUPANCY);
-       fields.add(TYPE);
-       fields.add(PROVIDEDEQUIPMENT);
-       fields.add(ADACOMPLIANT);
-       fields.add(AVAILABILITY);
-       fields.add(SCHEDULEID);
-       //Create where clause
-       ArrayList<String> wheres = new ArrayList<String>();
-       wheres.add(BUILDING);
-       wheres.add(ROOM);
-       wheres.add(SCHEDULEID);
-      // Create update string
-      String updateString = sqldb.updateHelper(TABLENAME, fields, wheres);
-      // Create prepared statement
-      PreparedStatement stmt = sqldb.getPrepStmt(updateString);
-      // Set values
-      try
-      {
-         stmt.setString(1, data.getBuilding());
-         stmt.setString(2, data.getRoom());
-         stmt.setInt(3, data.getMaxOccupancy());
-         stmt.setString(4, data.getType());
-         // Serialize ProvidedEquipment
-         try
-         {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ObjectOutput out = new ObjectOutputStream(baos);
-            out.writeObject(data.getProvidedEquipment());
-            out.close();
-            stmt.setBytes(5, baos.toByteArray());
-         }
-         catch (IOException e)
-         {
-            e.printStackTrace();
-         }
-         stmt.setBoolean(6, data.getAdaCompliant());
-         // Serialize Availability
-         try
-         {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ObjectOutput out = new ObjectOutputStream(baos);
-            out.writeObject(data.getAvailability());
-            out.close();
-            stmt.setBytes(7, baos.toByteArray());
-         }
-         catch (IOException e)
-         {
-            e.printStackTrace();
-         }
-         stmt.setInt(8, scheduleID);
-
-         // Where clause
-         stmt.setString(9, data.getBuilding());
-         stmt.setString(10, data.getRoom());
-         stmt.setInt(11, scheduleID);
-
-      }
-      catch (SQLException e)
-      {
-         e.printStackTrace();
-      }
-      // Execute
-      sqldb.executePrepStmt(stmt);
-
+      fillMaps(data);
+      sqldb.executeUpdate(TABLENAME, fields, wheres);
    }
 
    @Override
    public void removeData(Location data)
    {
-       data.verify();
-       //Create where clause
-       ArrayList<String> wheres = new ArrayList<String>();
-       wheres.add(BUILDING);
-       wheres.add(ROOM);
-       wheres.add(SCHEDULEID);
-      // Create delete string
-      String deleteString = sqldb.deleteHelper(TABLENAME, wheres);
-      // Create prepared statement
-      PreparedStatement stmt = sqldb.getPrepStmt(deleteString);
-      try
-      {
-         stmt.setString(1, data.getBuilding());
-         stmt.setString(2, data.getRoom());
-         stmt.setInt(3, scheduleID);
-      }
-      catch (SQLException e)
-      {
-         e.printStackTrace();
-      }
-      // Execute
-      sqldb.executePrepStmt(stmt);
+      data.verify();
+      fillMaps(data);
+      sqldb.executeDelete(TABLENAME, wheres);
+   }
+
+   private void fillMaps(Location data)
+   {
+      // Set fields and values
+      fields = new LinkedHashMap<String, Object>();
+      fields.put(BUILDING, data.getBuilding());
+      fields.put(ROOM, data.getRoom());
+      fields.put(MAXOCCUPANCY, data.getMaxOccupancy());
+      fields.put(TYPE, data.getType());
+      fields.put(PROVIDEDEQUIPMENT,
+            sqldb.serialize(data.getProvidedEquipment()));
+      fields.put(ADACOMPLIANT, data.getAdaCompliant());
+      fields.put(AVAILABILITY, sqldb.serialize(data.getAvailability()));
+      fields.put(SCHEDULEID, scheduleID);
+      // Where clause
+      wheres = new LinkedHashMap<String, Object>();
+      wheres.put(BUILDING, data.getBuilding());
+      wheres.put(ROOM, data.getRoom());
+      wheres.put(SCHEDULEID, scheduleID);
    }
 
    public Location getLocation(String id)

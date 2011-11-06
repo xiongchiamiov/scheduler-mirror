@@ -1,12 +1,5 @@
 package edu.calpoly.csc.scheduler.model.db.idb;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -25,9 +18,28 @@ import edu.calpoly.csc.scheduler.model.schedule.WeekAvail;
 
 public class InstructorDB implements DatabaseAPI<Instructor>
 {
-   private ArrayList<Instructor> data;
-   private SQLDB                 sqldb;
-   private int                   scheduleID;
+   // String constants to describe the database
+   public static final String            TABLENAME         = "instructors";
+   public static final String            FIRSTNAME         = "firstname";
+   public static final String            LASTNAME          = "lastname";
+   public static final String            USERID            = "userid";
+   public static final String            MAXWTU            = "maxwtu";
+   public static final String            CURWTU            = "curwtu";
+   public static final String            OFFICE            = "office";
+   public static final String            FAIRNESS          = "fairness";
+   public static final String            DISABILITY        = "disability";
+   public static final String            GENEROSITY        = "generosity";
+   public static final String            AVAILABILITY      = "availability";
+   public static final String            COURSEPREFERENCES = "coursepreferences";
+   public static final String            TPREFS            = "tprefs";
+   public static final String            ITEMSTAUGHT       = "itemstaught";
+   public static final String            SCHEDULEID        = "scheduleid";
+   // Other data
+   private ArrayList<Instructor>         data;
+   private SQLDB                         sqldb;
+   private int                           scheduleID;
+   private LinkedHashMap<String, Object> fields;
+   private LinkedHashMap<String, Object> wheres;
 
    public InstructorDB(SQLDB sqldb, int scheduleID)
    {
@@ -41,13 +53,13 @@ public class InstructorDB implements DatabaseAPI<Instructor>
       pullData();
       return data;
    }
-   
+
    @Override
    public void saveData(Instructor data)
    {
       data.verify();
       data.setScheduleId(scheduleID);
-      if(sqldb.doesInstructorExist(data))
+      if (sqldb.doesInstructorExist(data))
       {
          editData(data);
       }
@@ -95,22 +107,8 @@ public class InstructorDB implements DatabaseAPI<Instructor>
          int curwtu = rs.getInt("curwtu");
          toAdd.setCurWtu(curwtu);
 
-         // Deserialize office
          byte[] officeBuf = rs.getBytes("office");
-         if (officeBuf != null)
-         {
-            try
-            {
-               ObjectInputStream objectIn;
-               objectIn = new ObjectInputStream(new ByteArrayInputStream(
-                     officeBuf));
-               toAdd.setOffice((Location) objectIn.readObject());
-            }
-            catch (Exception e)
-            {
-               e.printStackTrace();
-            }
-         }
+         toAdd.setOffice((Location) sqldb.deserialize(officeBuf));
 
          int fairness = rs.getInt("fairness");
          toAdd.setFairness(fairness);
@@ -121,76 +119,21 @@ public class InstructorDB implements DatabaseAPI<Instructor>
          int generosity = rs.getInt("generosity");
          toAdd.setGenerosity(generosity);
 
-         // Deserialize availability
          byte[] availBuf = rs.getBytes("availability");
-         if (availBuf != null)
-         {
-            try
-            {
-               ObjectInputStream objectIn;
-               objectIn = new ObjectInputStream(new ByteArrayInputStream(
-                     availBuf));
-               toAdd.setAvailability((WeekAvail) objectIn.readObject());
-            }
-            catch (Exception e)
-            {
-               e.printStackTrace();
-            }
-         }
+         toAdd.setAvailability((WeekAvail) sqldb.deserialize(availBuf));
 
-         // Deserialize coursepreferences
          byte[] coursePrefBuf = rs.getBytes("coursepreferences");
-         if (coursePrefBuf != null)
-         {
-            try
-            {
-               ObjectInputStream objectIn;
-               objectIn = new ObjectInputStream(new ByteArrayInputStream(
-                     coursePrefBuf));
-               toAdd.setCoursePreferences((HashMap<Course, Integer>) objectIn
-                     .readObject());
-            }
-            catch (Exception e)
-            {
-               e.printStackTrace();
-            }
-         }
+         toAdd.setCoursePreferences((HashMap<Course, Integer>) sqldb
+               .deserialize(coursePrefBuf));
 
-         // Deserialize tprefs
          byte[] tprefBuf = rs.getBytes("tprefs");
-         if (tprefBuf != null)
-         {
-            try
-            {
-               ObjectInputStream objectIn;
-               objectIn = new ObjectInputStream(new ByteArrayInputStream(
-                     tprefBuf));
-               toAdd.settPrefs((HashMap<Day, LinkedHashMap<Time, TimePreference>>) objectIn
-                     .readObject());
-            }
-            catch (Exception e)
-            {
-               e.printStackTrace();
-            }
-         }
+         toAdd.settPrefs((HashMap<Day, LinkedHashMap<Time, TimePreference>>) sqldb
+               .deserialize(tprefBuf));
 
-         // Deserialize itemstaught
          byte[] taughtBuf = rs.getBytes("itemstaught");
-         if (taughtBuf != null)
-         {
-            try
-            {
-               ObjectInputStream objectIn;
-               objectIn = new ObjectInputStream(new ByteArrayInputStream(
-                     taughtBuf));
-               toAdd.setItemsTaught((Vector<ScheduleItem>) objectIn
-                     .readObject());
-            }
-            catch (Exception e)
-            {
-               e.printStackTrace();
-            }
-         }
+         toAdd.setItemsTaught((Vector<ScheduleItem>) sqldb
+               .deserialize(taughtBuf));
+
          int scheduleid = rs.getInt("scheduleid");
          toAdd.setScheduleId(scheduleid);
       }
@@ -204,198 +147,46 @@ public class InstructorDB implements DatabaseAPI<Instructor>
 
    private void addData(Instructor data)
    {
-      data.verify();
-      // Create insert string
-      String insertString = "insert into instructors ("
-            + "firstname, lastname, userid, maxwtu, curwtu, office, "
-            + "fairness, disability, generosity, availability, coursepreferences, "
-            + "tprefs, itemstaught, scheduleid)"
-            + "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-      // Create prepared statement
-      PreparedStatement stmt = sqldb.getPrepStmt(insertString);
-      // Set values
-      try
-      {
-         stmt.setString(1, data.getFirstName());
-         stmt.setString(2, data.getLastName());
-         stmt.setString(3, data.getUserID());
-         stmt.setInt(4, data.getMaxWTU());
-         stmt.setInt(5, data.getCurWtu());
-         // Serialize office
-         try
-         {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ObjectOutput out = new ObjectOutputStream(baos);
-            out.writeObject(data.getOffice());
-            out.close();
-            stmt.setBytes(6, baos.toByteArray());
-         }
-         catch (IOException e)
-         {
-            e.printStackTrace();
-         }
-
-         stmt.setInt(7, data.getFairness());
-         stmt.setBoolean(8, data.getDisability());
-         stmt.setInt(9, data.getGenerosity());
-         // Serialize lots of things
-         try
-         {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ObjectOutput out = new ObjectOutputStream(baos);
-            // Serialize availability
-            out.writeObject(data.getAvailability());
-            out.close();
-            stmt.setBytes(10, baos.toByteArray());
-
-            // Serialize coursepreferences
-            baos = new ByteArrayOutputStream();
-            out = new ObjectOutputStream(baos);
-            out.writeObject(data.getCoursePreferences());
-            out.close();
-            stmt.setBytes(11, baos.toByteArray());
-
-            // Serialize tprefs
-            baos = new ByteArrayOutputStream();
-            out = new ObjectOutputStream(baos);
-            out.writeObject(data.gettPrefs());
-            out.close();
-            stmt.setBytes(12, baos.toByteArray());
-
-            // Serialize itemstaught
-            baos = new ByteArrayOutputStream();
-            out = new ObjectOutputStream(baos);
-            out.writeObject(data.getItemsTaught());
-            out.close();
-            stmt.setBytes(13, baos.toByteArray());
-         }
-         catch (IOException e)
-         {
-            e.printStackTrace();
-         }
-
-         stmt.setInt(14, scheduleID);
-
-      }
-      catch (SQLException e)
-      {
-         e.printStackTrace();
-      }
-      // Execute
-      sqldb.executePrepStmt(stmt);
+      fillMaps(data);
+      sqldb.executeInsert(TABLENAME, fields);
    }
 
    private void editData(Instructor data)
    {
-      data.verify();
-      // Create update string
-      String updateString = "update instructors set firstname = ?, lastname = ?,"
-            + "userid = ?, maxwtu = ?, curwtu = ?, office = ?, "
-            + "fairness = ?, disability = ?, generosity = ?, availability = ?, "
-            + "coursepreferences = ?, tprefs = ?, itemstaught = ?, "
-            + "scheduleid = ? where userid = ? and scheduleid = ?";
-      // Create prepared statement
-      PreparedStatement stmt = sqldb.getPrepStmt(updateString);
-      // Set values
-      try
-      {
-         stmt.setString(1, data.getFirstName());
-         stmt.setString(2, data.getLastName());
-         stmt.setString(3, data.getUserID());
-         stmt.setInt(4, data.getMaxWTU());
-         stmt.setInt(5, data.getCurWtu());
-         // Serialize office
-         try
-         {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ObjectOutput out = new ObjectOutputStream(baos);
-            out.writeObject(data.getOffice());
-            out.close();
-            stmt.setBytes(6, baos.toByteArray());
-         }
-         catch (IOException e)
-         {
-            e.printStackTrace();
-         }
-
-         stmt.setInt(7, data.getFairness());
-         stmt.setBoolean(8, data.getDisability());
-         stmt.setInt(9, data.getGenerosity());
-         // Serialize lots of things
-         try
-         {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ObjectOutput out = new ObjectOutputStream(baos);
-            // Serialize availability
-            out.writeObject(data.getAvailability());
-            out.close();
-            stmt.setBytes(10, baos.toByteArray());
-
-            // Serialize coursepreferences
-            baos = new ByteArrayOutputStream();
-            out = new ObjectOutputStream(baos);
-            out.writeObject(data.getCoursePreferences());
-            out.close();
-            stmt.setBytes(11, baos.toByteArray());
-
-            // Serialize tprefs
-            baos = new ByteArrayOutputStream();
-            out = new ObjectOutputStream(baos);
-            out.writeObject(data.gettPrefs());
-            out.close();
-            stmt.setBytes(12, baos.toByteArray());
-
-            // Serialize itemstaught
-            baos = new ByteArrayOutputStream();
-            out = new ObjectOutputStream(baos);
-            out.writeObject(data.getItemsTaught());
-            out.close();
-            stmt.setBytes(13, baos.toByteArray());
-         }
-         catch (IOException e)
-         {
-            e.printStackTrace();
-         }
-
-         stmt.setInt(14, scheduleID);
-
-         // Where clause
-         stmt.setString(15, data.getUserID());
-         stmt.setInt(16, scheduleID);
-      }
-      catch (SQLException e)
-      {
-         e.printStackTrace();
-      }
-      // Execute
-      sqldb.executePrepStmt(stmt);
-
+      fillMaps(data);
+      sqldb.executeUpdate(TABLENAME, fields, wheres);
    }
 
    @Override
    public void removeData(Instructor data)
    {
       data.verify();
-      // Create delete string
-      String deleteString = "delete from instructors where userid = ? and scheduleid = ?";
-      // Create prepared statement
-      PreparedStatement stmt = sqldb.getPrepStmt(deleteString);
-      try
-      {
-         stmt.setString(1, data.getUserID());
-         stmt.setInt(2, scheduleID);
-      }
-      catch (SQLException e)
-      {
-         e.printStackTrace();
-      }
-      // Execute
-      sqldb.executePrepStmt(stmt);
+      fillMaps(data);
+      sqldb.executeDelete(TABLENAME, wheres);
    }
 
-   public void clearData()
+   private void fillMaps(Instructor data)
    {
-      PreparedStatement stmt = sqldb.getPrepStmt("delete from instructors");
-      sqldb.executePrepStmt(stmt);
+      // Set fields and values
+      fields = new LinkedHashMap<String, Object>();
+      fields.put(FIRSTNAME, data.getFirstName());
+      fields.put(LASTNAME, data.getLastName());
+      fields.put(USERID, data.getUserID());
+      fields.put(MAXWTU, data.getMaxWtu());
+      fields.put(CURWTU, data.getCurWtu());
+      fields.put(OFFICE, sqldb.serialize(data.getOffice()));
+      fields.put(FAIRNESS, data.getFairness());
+      fields.put(DISABILITY, data.getDisability());
+      fields.put(GENEROSITY, data.getGenerosity());
+      fields.put(AVAILABILITY, sqldb.serialize(data.getAvailability()));
+      fields.put(COURSEPREFERENCES,
+            sqldb.serialize(data.getCoursePreferences()));
+      fields.put(TPREFS, sqldb.serialize(data.gettPrefs()));
+      fields.put(ITEMSTAUGHT, sqldb.serialize(data.getItemsTaught()));
+      fields.put(SCHEDULEID, scheduleID);
+      // Where clause
+      wheres = new LinkedHashMap<String, Object>();
+      wheres.put(USERID, data.getUserID());
+      wheres.put(SCHEDULEID, scheduleID);
    }
 }

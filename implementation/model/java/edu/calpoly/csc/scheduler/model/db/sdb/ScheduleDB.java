@@ -1,15 +1,9 @@
 package edu.calpoly.csc.scheduler.model.db.sdb;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 import edu.calpoly.csc.scheduler.model.db.DatabaseAPI;
 import edu.calpoly.csc.scheduler.model.db.SQLDB;
@@ -17,21 +11,25 @@ import edu.calpoly.csc.scheduler.model.schedule.Schedule;
 
 public class ScheduleDB implements DatabaseAPI<Schedule>
 {
-	//String constants
-	public static final String TABLENAME = "schedules";
-	public static final String SCHEDULEID = "scheduleid";
-	public static final String NAME = "name";
-	public static final String SCHEDULE = "schedule";
-	public static final String DEPT = "dept";
-	
-	//Other data
-   private ArrayList<Schedule> data;
-   private SQLDB               sqldb;
-   private int                 scheduleID;
-   private String              dept;
+   // String constants
+   public static final String            TABLENAME  = "schedules";
+   public static final String            SCHEDULEID = "scheduleid";
+   public static final String            NAME       = "name";
+   public static final String            SCHEDULE   = "schedule";
+   public static final String            DEPT       = "dept";
+
+   // Other data
+   private ArrayList<Schedule>           data;
+   private SQLDB                         sqldb;
+   private int                           scheduleID;
+   private String                        dept;
+   private LinkedHashMap<String, Object> fields;
+   private LinkedHashMap<String, Object> wheres;
 
    /**
-    * Schedules are unique by scheduleid. Also, they are unique by name per department.
+    * Schedules are unique by scheduleid. Also, they are unique by name per
+    * department.
+    * 
     * @param sqldb
     * @param dept
     */
@@ -51,14 +49,14 @@ public class ScheduleDB implements DatabaseAPI<Schedule>
    @Override
    public ArrayList<Schedule> getData()
    {
-	  pullData();
+      pullData();
       return data;
    }
 
    @Override
    public void saveData(Schedule data)
    {
-      if(sqldb.doesScheduleExist(data))
+      if (sqldb.doesScheduleExist(data))
       {
          saveSchedule(data);
       }
@@ -70,7 +68,7 @@ public class ScheduleDB implements DatabaseAPI<Schedule>
 
    private void pullData()
    {
-	   data = new ArrayList<Schedule>();
+      data = new ArrayList<Schedule>();
       System.err.println("SID: " + scheduleID);
       ResultSet rs = sqldb.getSQLSchedules(scheduleID);
       try
@@ -80,20 +78,7 @@ public class ScheduleDB implements DatabaseAPI<Schedule>
             Schedule toAdd = new Schedule();
             // Deserialize ALL THE SCHEDULE!
             byte[] scheduleBuf = rs.getBytes("schedule");
-            if (scheduleBuf != null)
-            {
-               try
-               {
-                  ObjectInputStream objectIn;
-                  objectIn = new ObjectInputStream(new ByteArrayInputStream(
-                        scheduleBuf));
-                  toAdd = (Schedule) objectIn.readObject();
-               }
-               catch (Exception e)
-               {
-                  e.printStackTrace();
-               }
-            }
+            toAdd = (Schedule) sqldb.deserialize(scheduleBuf);
             // Get ID since database maintains it
             toAdd.setId(rs.getInt("scheduleid"));
             data.add(toAdd);
@@ -107,114 +92,44 @@ public class ScheduleDB implements DatabaseAPI<Schedule>
 
    public int createNewSchedule(String name)
    {
-      // Create insert string and set fields
-	   ArrayList<String> fields = new ArrayList<String>();
-	   fields.add(NAME);
-	   fields.add(SCHEDULE);
-	   fields.add(DEPT);
-	   String insertString = sqldb.insertHelper(TABLENAME, fields);
-      // Create prepared statement
-      PreparedStatement stmt = sqldb.getPrepStmt(insertString);
-      // Set values
-      try
-      {
-         stmt.setString(1, name);
-         // Get Schedule through Serializable
-         Schedule data = new Schedule();
-         data.setDept(dept);
-         data.setName(name);
-         try
-         {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ObjectOutput out = new ObjectOutputStream(baos);
-            out.writeObject(data);
-            out.close();
-            stmt.setBytes(2, baos.toByteArray());
-         }
-         catch (IOException e)
-         {
-            e.printStackTrace();
-         }
-         stmt.setString(3, dept);
-      }
-      catch (SQLException e)
-      {
-         e.printStackTrace();
-      }
-      // Execute
-      sqldb.executePrepStmt(stmt);
+      Schedule data = new Schedule();
+      data.setDept(dept);
+      data.setName(name);
+      fillMaps(data);
+      sqldb.executeInsert(TABLENAME, fields);
       this.scheduleID = sqldb.getScheduleIDByName(name, dept);
       return this.scheduleID;
    }
 
    public void saveSchedule(Schedule data)
    {
-      saveSchedule(data, data.getName());
+      fillMaps(data);
+      sqldb.executeUpdate(TABLENAME, fields, wheres);
    }
 
    public void saveSchedule(Schedule data, String name)
    {
-      // Make sure data in schedule and given name are correct
       data.setName(name);
-      // Create update string
-      ArrayList<String> fields = new ArrayList<String>();
-      ArrayList<String> wheres = new ArrayList<String>();
-      //Set fields
-      fields.add(NAME);
-      fields.add(SCHEDULE);
-      fields.add(DEPT);
-      //Set where clause
-      wheres.add(SCHEDULEID);
-      String updateString = sqldb.updateHelper(TABLENAME, fields, wheres);
-      // Create prepared statement
-      PreparedStatement stmt = sqldb.getPrepStmt(updateString);
-      // Set values
-      try
-      {
-         stmt.setString(1, data.getName());
-         // Get Schedule through Serializable
-         try
-         {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ObjectOutput out = new ObjectOutputStream(baos);
-            out.writeObject(data);
-            out.close();
-            stmt.setBytes(2, baos.toByteArray());
-         }
-         catch (IOException e)
-         {
-            e.printStackTrace();
-         }
-         stmt.setString(3, data.getDept());
-         stmt.setInt(4, scheduleID);
-      }
-      catch (SQLException e)
-      {
-         e.printStackTrace();
-      }
-      // Execute
-      sqldb.executePrepStmt(stmt);
+      saveSchedule(data);
    }
 
    @Override
    public void removeData(Schedule data)
    {
-      // Create delete string
-	   ArrayList<String> wheres = new ArrayList<String>();
-	   wheres.add(SCHEDULEID);
-	   String deleteString = sqldb.deleteHelper(TABLENAME, wheres);
-      // Create prepared statement
-      PreparedStatement stmt = sqldb.getPrepStmt(deleteString);
-      try
-      {
-         stmt.setInt(1, data.getId());
-      }
-      catch (SQLException e)
-      {
-         e.printStackTrace();
-      }
-      // Execute
-      sqldb.executePrepStmt(stmt);
+      fillMaps(data);
+      sqldb.executeDelete(TABLENAME, wheres);
+   }
+
+   private void fillMaps(Schedule data)
+   {
+      // Set fields and values
+      fields = new LinkedHashMap<String, Object>();
+      fields.put(NAME, data.getName());
+      fields.put(SCHEDULE, sqldb.serialize(data));
+      fields.put(DEPT, data.getDept());
+      // Where clause
+      wheres = new LinkedHashMap<String, Object>();
+      wheres.put(SCHEDULEID, scheduleID);
    }
 
    /**
@@ -226,7 +141,8 @@ public class ScheduleDB implements DatabaseAPI<Schedule>
    }
 
    /**
-    * @param scheduleID the scheduleID to set
+    * @param scheduleID
+    *           the scheduleID to set
     */
    public void setScheduleID(int scheduleID)
    {

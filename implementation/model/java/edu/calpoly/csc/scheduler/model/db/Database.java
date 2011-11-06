@@ -127,7 +127,7 @@ public class Database
          }
          else
          {
-        	 //Called new schedule, but name already exists
+            // Called new schedule, but name already exists
             System.err
                   .println("ERROR: Schedule name already exists, opening existing one");
             realid = sqldb.getScheduleIDByName(scheduleName, dept);
