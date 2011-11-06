@@ -23,7 +23,7 @@ public class Schedule implements Serializable
 	/**
     * Used for debugging. Toggle it to get debugging output
     */
-   public static final boolean DEBUG = false;
+   public static final boolean DEBUG = true;
 
    /**
     * Prints a message if DEBUG is true
@@ -203,7 +203,7 @@ public class Schedule implements Serializable
     * @param si ScheduleItem to remove
     * @return
     */
-   public boolean remove (ScheduleItem si)
+   private boolean remove (ScheduleItem si)
    {
       boolean r = false;
       if (this.items.contains(si))
@@ -241,7 +241,7 @@ public class Schedule implements Serializable
       return r;
    }
    
-   public void remove (List<ScheduleItem> toRemove)
+   private void remove (List<ScheduleItem> toRemove)
    {
       for (ScheduleItem si: toRemove)
       {
@@ -406,10 +406,6 @@ public class Schedule implements Serializable
     */
    public Vector<ScheduleItem> generate (Collection<Course> c_list)
    {
-
-		for (Instructor instructor : getiSourceList())
-			System.out.println("inside, num instructor day prefs for " + instructor.getLastName() + ": " + instructor.getTimePreferences().size());
-		
       initGenData(c_list);
 
       debug("GENERATING");
@@ -977,6 +973,10 @@ public class Schedule implements Serializable
     */
    public void setlSourceList (Collection<Location> lSourceList)
    {
+      if (lSourceList == null)
+      {
+         lSourceList = new Vector<Location>();
+      }
       this.lSourceList = new Vector<Location>(lSourceList);
       this.lSourceList.add(Tba.getTba());
    }
