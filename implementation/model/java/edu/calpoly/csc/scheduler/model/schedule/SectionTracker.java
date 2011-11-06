@@ -38,6 +38,10 @@ public class SectionTracker
    
    /**
     * Adds the next available section to our list of sections taught
+    * 
+    * @return true if a section was actually added. False otherwise. 
+    * 
+    * @see #canBookAnotherSection()
     */
    public boolean addSection ()
    {

@@ -17,7 +17,7 @@ public class Week implements Serializable
    /**
     * For serializing
     */
-   public static final int serialVersionUID = 42;
+   public static final long serialVersionUID = 42;
 
    /** A 5-day week (Mon-Fri) */
    public static final Week fiveDayWeek = 

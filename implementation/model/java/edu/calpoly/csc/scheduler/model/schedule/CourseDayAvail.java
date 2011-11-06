@@ -12,7 +12,7 @@ import edu.calpoly.csc.scheduler.model.db.cdb.*;
 
 public class CourseDayAvail extends GenAvail<Course>
 {
-   private static final int serialVersionUID = 42;
+   private static final long serialVersionUID = 42;
 
    private BitSet ncoBitSet;
 

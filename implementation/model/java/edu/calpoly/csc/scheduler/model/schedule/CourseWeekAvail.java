@@ -13,7 +13,7 @@ import edu.calpoly.csc.scheduler.model.db.cdb.*;
 public class CourseWeekAvail extends GenWeekAvail<Course, CourseDayAvail> 
                              implements Serializable
 {
-   private static final int serialVersionUID = 42;
+   private static final long serialVersionUID = 42;
 
    public CourseWeekAvail (NoClassOverlap nco)
    {

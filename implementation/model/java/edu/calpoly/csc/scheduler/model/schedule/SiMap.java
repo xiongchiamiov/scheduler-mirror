@@ -22,6 +22,8 @@ import java.util.Vector;
  */
 public class SiMap extends TreeMap<ScheduleItem, Void>
 {
+   private static final long serialVersionUID = -8623034875284606343L;
+   
    /**
     * Used for debugging. Toggle it to get debugging output
     */

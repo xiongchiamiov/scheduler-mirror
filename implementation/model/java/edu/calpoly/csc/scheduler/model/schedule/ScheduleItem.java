@@ -31,7 +31,7 @@ import edu.calpoly.csc.scheduler.model.db.ldb.*;
 public class ScheduleItem implements Serializable, Cloneable, 
                                      Comparable<ScheduleItem>
 {
-   public static final int serialVersionUID = 42;
+   public static final long serialVersionUID = 42;
 
    /** 
     * Represents the value a ScheduleItem would have it it contains values

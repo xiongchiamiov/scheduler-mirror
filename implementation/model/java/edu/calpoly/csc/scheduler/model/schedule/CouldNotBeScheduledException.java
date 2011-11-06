@@ -12,6 +12,8 @@ import edu.calpoly.csc.scheduler.model.db.cdb.*;
  */
 public class CouldNotBeScheduledException extends Exception
 {
+   private static final long serialVersionUID = -6621453458031832605L;
+   
    protected Course c;
    protected ScheduleItem si;
 

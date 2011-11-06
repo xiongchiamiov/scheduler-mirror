@@ -20,7 +20,7 @@ import edu.calpoly.csc.scheduler.model.db.cdb.Course;
 public class CourseAvailList extends Vector<CourseWeekAvail> 
                              implements Serializable
 {
-   public static final int serialVersionUID = 42;
+   public static final long serialVersionUID = 42;
 
    public CourseAvailList ()
    {

@@ -12,12 +12,11 @@ import java.io.Serializable;
  * @version Oct 11, 2011
  */
 public class Day implements Serializable
-{
-   /** Sunday */
+{  
+   private static final long serialVersionUID = 3956064126215304948L;
+   
    public static final Day SUN = new Day(0, "SUN");
-   /** Monday */
    public static final Day MON = new Day(1, "MON");
-   /** Tuesday */
    public static final Day TUE = new Day(2, "TUE");
    public static final Day WED = new Day(3, "WED");
    public static final Day THU = new Day(4, "THU");
@@ -31,6 +30,16 @@ public class Day implements Serializable
    {
       this.num = num;
       this.name = name;
+   }
+   
+   public boolean equals (Day d)
+   {
+      return this.getNum() == d.getNum();
+   }
+   
+   public int hashCode ()
+   {
+      return this.num;
    }
    
    public int getNum ()

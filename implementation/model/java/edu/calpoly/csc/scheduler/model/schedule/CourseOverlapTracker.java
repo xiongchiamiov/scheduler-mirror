@@ -26,7 +26,7 @@ import edu.calpoly.csc.scheduler.model.db.pdb.SchedulePreference;
  */
 public class CourseOverlapTracker implements Serializable
 {
-   public static final int serialVersionUID = 42;
+   public static final long serialVersionUID = 42;
    private HashMap<Course, CourseAvailList> cBookings;
 
    /**
