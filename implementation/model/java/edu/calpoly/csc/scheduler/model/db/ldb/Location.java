@@ -63,11 +63,6 @@ public class Location extends DbData implements Serializable
    private WeekAvail         availability = new WeekAvail();
 
    /**
-    * Schedule this location is a part of
-    */
-   private Integer           scheduleId;
-
-   /**
     * Default constructor
     */
    public Location()
@@ -215,16 +210,6 @@ public class Location extends DbData implements Serializable
    }
 
    /**
-    * Returns the scheduleId
-    * 
-    * @return the scheduleId
-    */
-   public Integer getScheduleId()
-   {
-      return scheduleId;
-   }
-
-   /**
     * @return the providedEquipment
     */
    public ProvidedEquipment getProvidedEquipment()
@@ -292,17 +277,6 @@ public class Location extends DbData implements Serializable
    public void setAdaCompliant(Boolean adaCompliant)
    {
       this.adaCompliant = adaCompliant;
-   }
-
-   /**
-    * Sets the scheduleId to the given parameter.
-    * 
-    * @param scheduleId
-    *           the scheduleId to set
-    */
-   public void setScheduleId(Integer scheduleId)
-   {
-      this.scheduleId = scheduleId;
    }
 
    /**

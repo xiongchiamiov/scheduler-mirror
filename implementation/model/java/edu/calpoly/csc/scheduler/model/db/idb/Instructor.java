@@ -23,11 +23,6 @@ public class Instructor extends DbData
    public static final int DEFAULT_PREF = 5;
    
    private static final boolean DEBUG = false;
-
-   /**
-    * Schedule this Instructor is a part of
-    */
-   private Integer scheduleId;
    
    /**
     * First name of instructor.
@@ -554,26 +549,6 @@ public class Instructor extends DbData
    public int getAvailableWTU ()
    {
       return this.getCurWtu();
-   }
-
-   /**
-    * Returns the scheduleId
-    * 
-    * @return the scheduleId
-    */
-   public Integer getScheduleId ()
-   {
-      return scheduleId;
-   }
-
-   /**
-    * Sets the scheduleId to the given parameter.
-    *
-    * @param scheduleId the scheduleId to set
-    */
-   public void setScheduleId (Integer scheduleId)
-   {
-      this.scheduleId = scheduleId;
    }
 
    /**

@@ -81,10 +81,6 @@ public class Course extends DbData implements Serializable
     * This course's lab. Can be null, which means it has no lab
     */
    private Lab lab = null;
-   /**
-    * The scheduler this course applies to
-    */
-   private Integer scheduleId;
    
    /**
     * Default constructor. Does nothing.
@@ -128,7 +124,7 @@ public class Course extends DbData implements Serializable
       this.days = c.getDays();
       this.enrollment = new Integer(c.getEnrollment());
       this.lab = c.getLab();
-      this.scheduleId = c.getScheduleId();
+      this.setScheduleId(c.getScheduleId());
    }
    
    /**
@@ -202,26 +198,6 @@ public class Course extends DbData implements Serializable
    public void setCatalogNum (int catalogNum)
    {
       this.catalogNum = catalogNum;
-   }
-
-   /**
-    * Returns the scheduleId
-    * 
-    * @return the scheduleId
-    */
-   public Integer getScheduleId ()
-   {
-      return scheduleId;
-   }
-
-   /**
-    * Sets the scheduleId to the given parameter.
-    *
-    * @param scheduleId the scheduleId to set
-    */
-   public void setScheduleId (Integer scheduleId)
-   {
-      this.scheduleId = scheduleId;
    }
 
    /**
