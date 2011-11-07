@@ -37,70 +37,12 @@ public class LocationDB extends AbstractDatabase<Location>
       return data;
    }
 
-   protected Location make (ResultSet rs)
-   {
-      Location toAdd = new Location();
-      try
-      {
-         String bldg = rs.getString("building");
-         toAdd.setBuilding(bldg);
-
-         String room = rs.getString("room");
-         toAdd.setRoom(room);
-
-         int occupancy = rs.getInt("maxoccupancy");
-         toAdd.setMaxOccupancy(occupancy);
-
-         String type = rs.getString("type");
-         toAdd.setType(type);
-
-         byte[] equipBuf = rs.getBytes("providedequipment");
-         toAdd.setProvidedEquipment((Location.ProvidedEquipment) sqldb
-               .deserialize(equipBuf));
-
-         boolean adacompliant = rs.getBoolean("adacompliant");
-         toAdd.setAdaCompliant(adacompliant);
-
-         byte[] availBuf = rs.getBytes("availability");
-         toAdd.setAvailability((WeekAvail) sqldb.deserialize(availBuf));
-
-         int scheduleid = rs.getInt("scheduleid");
-         toAdd.setScheduleId(scheduleid);
-      }
-      catch (SQLException e)
-      {
-         e.printStackTrace();
-      }
-      toAdd.verify();
-      return toAdd;
-   }
-
    @Override
    public void removeData(Location data)
    {
       data.verify();
       fillMaps(data);
       sqldb.executeDelete(TABLENAME, wheres);
-   }
-
-   protected void fillMaps(Location data)
-   {
-      // Set fields and values
-      fields = new LinkedHashMap<String, Object>();
-      fields.put(BUILDING, data.getBuilding());
-      fields.put(ROOM, data.getRoom());
-      fields.put(MAXOCCUPANCY, data.getMaxOccupancy());
-      fields.put(TYPE, data.getType());
-      fields.put(PROVIDEDEQUIPMENT,
-            sqldb.serialize(data.getProvidedEquipment()));
-      fields.put(ADACOMPLIANT, data.getAdaCompliant());
-      fields.put(AVAILABILITY, sqldb.serialize(data.getAvailability()));
-      fields.put(SCHEDULEID, scheduleId);
-      // Where clause
-      wheres = new LinkedHashMap<String, Object>();
-      wheres.put(BUILDING, data.getBuilding());
-      wheres.put(ROOM, data.getRoom());
-      wheres.put(SCHEDULEID, scheduleId);
    }
 
    public Location getLocation(String id)
@@ -142,9 +84,67 @@ public class LocationDB extends AbstractDatabase<Location>
       return rooms;
    }
 
+   protected void fillMaps(Location data)
+   {
+      // Set fields and values
+      fields = new LinkedHashMap<String, Object>();
+      fields.put(BUILDING, data.getBuilding());
+      fields.put(ROOM, data.getRoom());
+      fields.put(MAXOCCUPANCY, data.getMaxOccupancy());
+      fields.put(TYPE, data.getType());
+      fields.put(PROVIDEDEQUIPMENT,
+            sqldb.serialize(data.getProvidedEquipment()));
+      fields.put(ADACOMPLIANT, data.getAdaCompliant());
+      fields.put(AVAILABILITY, sqldb.serialize(data.getAvailability()));
+      fields.put(SCHEDULEID, scheduleId);
+      // Where clause
+      wheres = new LinkedHashMap<String, Object>();
+      wheres.put(BUILDING, data.getBuilding());
+      wheres.put(ROOM, data.getRoom());
+      wheres.put(SCHEDULEID, scheduleId);
+   }
+   
    protected ResultSet getDataByScheduleId (int sid)
    {
       return this.sqldb.getSQLLocations(sid);
+   }
+
+   protected Location make (ResultSet rs)
+   {
+      Location toAdd = new Location();
+      try
+      {
+         String bldg = rs.getString("building");
+         toAdd.setBuilding(bldg);
+
+         String room = rs.getString("room");
+         toAdd.setRoom(room);
+
+         int occupancy = rs.getInt("maxoccupancy");
+         toAdd.setMaxOccupancy(occupancy);
+
+         String type = rs.getString("type");
+         toAdd.setType(type);
+
+         byte[] equipBuf = rs.getBytes("providedequipment");
+         toAdd.setProvidedEquipment((Location.ProvidedEquipment) sqldb
+               .deserialize(equipBuf));
+
+         boolean adacompliant = rs.getBoolean("adacompliant");
+         toAdd.setAdaCompliant(adacompliant);
+
+         byte[] availBuf = rs.getBytes("availability");
+         toAdd.setAvailability((WeekAvail) sqldb.deserialize(availBuf));
+
+         int scheduleid = rs.getInt("scheduleid");
+         toAdd.setScheduleId(scheduleid);
+      }
+      catch (SQLException e)
+      {
+         e.printStackTrace();
+      }
+      toAdd.verify();
+      return toAdd;
    }
    
    public String getTableName ()
