@@ -3,7 +3,7 @@ package edu.calpoly.csc.scheduler.model.db;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Vector;
 import java.io.Serializable;
@@ -14,17 +14,16 @@ import java.io.Serializable;
  * @version Nov 7, 2011
  */
 public abstract class AbstractDatabase<T extends DbData> 
-   implements Serializable
 {
    public static final long serialVersionUID = 42;
    
-   private Collection<T> data;
-   private int scheduleId;
-   private SQLDB sqldb;
-   private LinkedHashMap<String, Object> fields;
-   private LinkedHashMap<String, Object> wheres;
+   protected ArrayList<T> data;
+   protected int scheduleId;
+   protected SQLDB sqldb;
+   protected LinkedHashMap<String, Object> fields;
+   protected LinkedHashMap<String, Object> wheres;
    
-   public Collection<T> getData()
+   public ArrayList<T> getData()
    {
       pullData();
       return data;
@@ -67,9 +66,9 @@ public abstract class AbstractDatabase<T extends DbData>
    
    protected void pullData ()
    {
-      data = new Vector<T>();
+      data = new ArrayList<T>();
 
-      ResultSet rs = getDataByScheduleId(scheduleId);
+      ResultSet rs = this.getDataByScheduleId(scheduleId);
       try
       {
          while (rs.next())
