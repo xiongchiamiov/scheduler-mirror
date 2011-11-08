@@ -38,7 +38,7 @@ public class TableConstants {
 	
 	public static final String INSTR_BUILDING = "Building";
 
-	public static final String INSTR_ROOMNUMBER = "Room #";
+	public static final String INSTR_ROOMNUMBER = "Room#";
 
 	public static final String INSTR_DISABILITIES = "Disabilities";
 	

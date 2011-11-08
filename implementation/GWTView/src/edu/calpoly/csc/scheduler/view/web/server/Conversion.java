@@ -70,7 +70,6 @@ public abstract class Conversion {
 			itemsTaught.add(Conversion.toGWT(item));
 		result.setItemsTaught(itemsTaught);
 		
-		result.setScheduleID(instructor.getScheduleId());
 		return result;
 	}
 	
@@ -97,7 +96,6 @@ public abstract class Conversion {
 	public static Instructor fromGWT(InstructorGWT instructor) {
 		instructor.verify();
 		Instructor ins = new Instructor();
-		ins.setScheduleId(instructor.getScheduleID());
 		ins.setFirstName(instructor.getFirstName());
 		ins.setLastName(instructor.getLastName());
 		ins.setUserID(instructor.getUserID());
@@ -181,7 +179,6 @@ public abstract class Conversion {
 		newCourse.setScu(course.getScu());
 		newCourse.setType(course.getType().toString());
 		newCourse.setWtu(course.getWtu());
-		//newCourse.setScheduleID(course.getScheduleId());
 		Lab lab = course.getLab();
 		if(lab != null){
 			newCourse.setLabDept(lab.getDept());
@@ -249,7 +246,6 @@ public abstract class Conversion {
 		loc.setMaxOccupancy(location.getMaxOccupancy());
 		loc.setProvidedEquipment(loc.new ProvidedEquipment());
 		loc.setRoom(location.getRoom());
-		loc.setScheduleId(location.getScheduleID());
 		loc.setType(location.getType());
 		loc.verify();
 		
@@ -270,7 +266,6 @@ public abstract class Conversion {
 		else{
 			newCourse.setLab(null);
 		}
-		newCourse.setScheduleId(course.getScheduleID());
 		newCourse.setDept(course.getDept());
 		newCourse.setLength(course.getLength());
 		newCourse.setNumOfSections(course.getNumSections());
