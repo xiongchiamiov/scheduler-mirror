@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>2.3.3 Schedule Generation</title>
+</head>
+<body bgcolor="#ffffff">
+<h3>2.3.3 Schedule generation </h3>
+<p>After the user selects the <strong>New Schedule</strong> option from the 
+<a href="../walkthru/walkthru-home.html"><font color="black">Home Screen</font></a>, the user is presented with
+a list of available <em>Department Courses</em> in the left-most table. The user can drag courses from the <em>Department Courses</em>
+table directly onto their preferred time slot on the calendar. If the user prefers for the Scheduling program to allocate the course days and
+times automatically, they can either double-click or drag the course onto the <em>Auto-Generate Courses</em> table on the right. 
+</p>
+<p></p>
+<hr>
+<p align="center"> <a name="New Schedule"> <img src="../images/ScheduleGenerationBlank.png"></a> </p>
+<p align="center">Figure 1: Schedule Generation - New Schedule</p>
+<hr>
+
+<p align="left"> Once the user's has populated the <em>Auto-Generate Courses</em> table, the user presses the <strong>Auto Fill</strong>
+button at the bottom of the <em>Auto-Generate Courses</em> table, to automatically assign all courses found in the <em>Auto-Generate Courses</em> to specific time slots on the calendar.
+</p>
+<hr>
+<p align="center"> <a name="Populated Schedule"> <img src="../images/ScheduleGenerationPopulated.png"></a></p>
+<p align="center">Figure 2: New Schedule Auto-Generate Courses</p>
+<hr>
+</p>
+<p align="left">After the courses in the <em>Auto-Generate Courses</em> table are scheduled into the calendar, the <em>Auto-Generate Courses</em> table
+is cleared. The courses are displayed in their appropriate time slots and are colored light green, which indicates that the scheduled time is preferred
+based on the preferences of an instructor. If the user wishes to get more information about a scheduled course, the user hovers the mouse on a specific
+course and additional information <em>(course title, course number/section, course location, course instructor, schedules course time)</em> will appear in a small text box
+as shown in <em>Figure 3</em> for CHEM 461.
+</p>
+
+
+<hr>
+<p align="center"> <a name="Hover Schedule"> <img src="../images/ScheduleGenerationHover.png"></a></p>
+<p align="center">Figure 3: Schedule Generation - Hover View</p>
+<hr>
+
+<h4>2.3.1.1 Schedule Generation Valid Drag</h4>
+
+<p>If the user wishes to manually edit the schedule, the user can drag a course from the <em>Department Courses</em> table directly onto a time slot 
+on the calendar. The user clicks and holds down on the specific course and drags the selected course onto the calendar. If the course meets the university requirements 
+and is preferred based on the preferences of the instructor the course is colored bright green. In <em>Figure 4</em> the user is attempting to drag CHEM 252
+to the 7AM - 9AM Tuesday/Thursday time slot. Once the user unclicks, the course turns light green and is scheduled 
+in the specified time slot and after clicking the <strong>Save Schedule</strong> button the schedule is saved to the database.
+</p>
+<hr>
+<p align="center"> <a name="Valid Drag"> <img src="../images/ScheduleGenerationDragAccepted.png"></a></p>
+<p align="center">Figure 4: Schedule Generation - Valid Drag</p>
+<hr>
+<p> If the user places a course on a day that can be scheduled multiple ways the user is presented with a pop-up box to choose the preferred schedule.
+In <em>Figure 5</em> the user attempts to schedule CHEM 474 from 7AM - 9AM but the course can be offered on both Monday, Wednesday, Friday or 
+Monday, Wednesday, Thursday from 7AM - 9AM. In the example the user selects MWR 7AM - 9AM and presses the <strong>Save Schedule</strong> button to save it to the 
+database.
+</p>
+<hr>
+<p align="center"> <a name="Drag Choose"> <img src="../images/ScheduleGenerationDragSelectAlt.png"></a></p>
+<p align="center">Figure 5: Schedule Generation - Day/Time Selection</p>
+<hr>
+<p align="left"><b><a name="change"></a>2.3.3.2 Schedule Generation Not Preferred Drag</b></p>
+
+<p> If the user wishes to manually edit the schedule, the user can drag a course from the <em>Department Courses</em> table directly onto a time slot 
+on the calendar. The user clicks and holds down on the specific course and drags the selected course onto the calendar. If the course is colored bright orange
+while attempting to place the course into a specific time slot it means the course is scheduled in a time that is <em>Not Preferred</em> due to the preferences
+of an instructor. In <em>Figure 6</em> the user attempt to schedule CHEM 590 from 9AM - 12PM but the course is not prefered due the preferences of the instructors
+in the database. The course is colored bright orange until the user unclicks and places the course in the time slot, then the course is colored light orange.
+</p>
+<p></p>
+<hr>
+<p align="center">
+<a name="Not Preferred Drag">
+<img src="../images/ScheduleGenerationDragNotPrefer.png" ></a></p>
+<p align="center">Figure 6: Schedule Generation - Not Preferred Drag</p>
+<p align="center"></p>
+<hr>
+</a><p align="left"><a name="Figure Change Room"><b></b></a><b><a name="remove"></a>2.3.3.3 Schedule Generation Invalid Drag</b></p>
+<p> If the user wishes to manually edit the schedule, the user can drag a course from the <em>Department Courses</em> table directly onto a time slot 
+on the calendar. The user clicks and holds down on the specific course and drags the selected course onto the calendar. If the course is in direct conflict
+with the scheduling algorithm, university scheduling constraints, or instructor preferences the course is colored red. Once the user attempts to place the 
+course into the time slot the course automatically jumps back to the <em>Department Courses</em> table because it is unable to be scheduled.
+</p>
+<hr>
+<p align="center"> <a name="Invalid Drag"> <img src="../images/ScheduleGenerationDragInvalid.png"></a></p>
+<p align="center"><a name="Figure Removing Room">Figure 7: Schedule Generation - Invalid Drag</a></p>
+
+<center>
+<hr size="3" width="80%"><font size="-1"><font color="black"> Prev: </font></font></a><font size="-1"><a href="index.html">Database Management: Course</a> | <font color="black">
+Next: </font><a href="index.html">Advanced Scheduler Generation</a> | <font color="black"> Up: </font><a href="index.html">Database Management</a>
+| <font color="black"> Top: </font><a href="index.html">index</a></font>
+<hr size="3" width="80%"></center>
+<hr size="3" width="80%">
+</body></html>
