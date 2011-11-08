@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Vector;
 
+import edu.calpoly.csc.scheduler.model.db.AbstractDatabase;
 import edu.calpoly.csc.scheduler.model.db.DatabaseAPI;
 import edu.calpoly.csc.scheduler.model.db.SQLDB;
 import edu.calpoly.csc.scheduler.model.db.Time;
@@ -16,77 +17,70 @@ import edu.calpoly.csc.scheduler.model.schedule.Day;
 import edu.calpoly.csc.scheduler.model.schedule.ScheduleItem;
 import edu.calpoly.csc.scheduler.model.schedule.WeekAvail;
 
-public class InstructorDB implements DatabaseAPI<Instructor>
+public class InstructorDB extends AbstractDatabase<Instructor>
 {
    // String constants to describe the database
-   public static final String            TABLENAME         = "instructors";
-   public static final String            FIRSTNAME         = "firstname";
-   public static final String            LASTNAME          = "lastname";
-   public static final String            USERID            = "userid";
-   public static final String            MAXWTU            = "maxwtu";
-   public static final String            CURWTU            = "curwtu";
-   public static final String            OFFICE            = "office";
-   public static final String            FAIRNESS          = "fairness";
-   public static final String            DISABILITY        = "disability";
-   public static final String            GENEROSITY        = "generosity";
-   public static final String            AVAILABILITY      = "availability";
-   public static final String            COURSEPREFERENCES = "coursepreferences";
-   public static final String            TPREFS            = "tprefs";
-   public static final String            ITEMSTAUGHT       = "itemstaught";
-   public static final String            SCHEDULEID        = "scheduleid";
-   // Other data
-   private ArrayList<Instructor>         data;
-   private SQLDB                         sqldb;
-   private int                           scheduleID;
-   private LinkedHashMap<String, Object> fields;
-   private LinkedHashMap<String, Object> wheres;
+   public static final String TABLENAME         = "instructors";
+   public static final String FIRSTNAME         = "firstname";
+   public static final String LASTNAME          = "lastname";
+   public static final String USERID            = "userid";
+   public static final String MAXWTU            = "maxwtu";
+   public static final String CURWTU            = "curwtu";
+   public static final String OFFICE            = "office";
+   public static final String FAIRNESS          = "fairness";
+   public static final String DISABILITY        = "disability";
+   public static final String GENEROSITY        = "generosity";
+   public static final String AVAILABILITY      = "availability";
+   public static final String COURSEPREFERENCES = "coursepreferences";
+   public static final String TPREFS            = "tprefs";
+   public static final String ITEMSTAUGHT       = "itemstaught";
+   public static final String SCHEDULEID        = "scheduleid";
 
    public InstructorDB(SQLDB sqldb, int scheduleID)
    {
       this.sqldb = sqldb;
-      this.scheduleID = scheduleID;
+      this.scheduleId = scheduleID;
    }
 
-   @Override
-   public ArrayList<Instructor> getData()
+   protected boolean exists(Instructor data)
    {
-      pullData();
-      return data;
+      return false;
    }
+   
 
-   @Override
-   public void saveData(Instructor data)
+   protected void fillMaps(Instructor data)
    {
-      data.verify();
-      data.setScheduleId(scheduleID);
-      if (sqldb.doesInstructorExist(data))
-      {
-         editData(data);
-      }
-      else
-      {
-         addData(data);
-      }
+      // Set fields and values
+      fields = new LinkedHashMap<String, Object>();
+      fields.put(FIRSTNAME, data.getFirstName());
+      fields.put(LASTNAME, data.getLastName());
+      fields.put(USERID, data.getUserID());
+      fields.put(MAXWTU, data.getMaxWtu());
+      fields.put(CURWTU, data.getCurWtu());
+      fields.put(OFFICE, sqldb.serialize(data.getOffice()));
+      fields.put(FAIRNESS, data.getFairness());
+      fields.put(DISABILITY, data.getDisability());
+      fields.put(GENEROSITY, data.getGenerosity());
+      fields.put(AVAILABILITY, sqldb.serialize(data.getAvailability()));
+      fields.put(COURSEPREFERENCES,
+            sqldb.serialize(data.getCoursePreferences()));
+      fields.put(TPREFS, sqldb.serialize(data.gettPrefs()));
+      fields.put(ITEMSTAUGHT, sqldb.serialize(data.getItemsTaught()));
+      fields.put(SCHEDULEID, scheduleId);
+      // Where clause
+      wheres = new LinkedHashMap<String, Object>();
+      wheres.put(USERID, data.getUserID());
+      wheres.put(SCHEDULEID, scheduleId);
    }
+   
 
-   private void pullData()
+   protected ResultSet getDataByScheduleId(int sid)
    {
-      data = new ArrayList<Instructor>();
-      ResultSet rs = sqldb.getSQLInstructors(scheduleID);
-      try
-      {
-         while (rs.next())
-         {
-            data.add(makeInstructor(rs));
-         }
-      }
-      catch (SQLException e)
-      {
-         e.printStackTrace();
-      }
+      return this.sqldb.getSQLInstructors(sid);
    }
+   
 
-   private Instructor makeInstructor(ResultSet rs)
+   protected Instructor make(ResultSet rs)
    {
       Instructor toAdd = new Instructor();
       try
@@ -144,49 +138,10 @@ public class InstructorDB implements DatabaseAPI<Instructor>
       toAdd.verify();
       return toAdd;
    }
+   
 
-   private void addData(Instructor data)
+   protected String getTableName()
    {
-      fillMaps(data);
-      sqldb.executeInsert(TABLENAME, fields);
-   }
-
-   private void editData(Instructor data)
-   {
-      fillMaps(data);
-      sqldb.executeUpdate(TABLENAME, fields, wheres);
-   }
-
-   @Override
-   public void removeData(Instructor data)
-   {
-      data.verify();
-      fillMaps(data);
-      sqldb.executeDelete(TABLENAME, wheres);
-   }
-
-   private void fillMaps(Instructor data)
-   {
-      // Set fields and values
-      fields = new LinkedHashMap<String, Object>();
-      fields.put(FIRSTNAME, data.getFirstName());
-      fields.put(LASTNAME, data.getLastName());
-      fields.put(USERID, data.getUserID());
-      fields.put(MAXWTU, data.getMaxWtu());
-      fields.put(CURWTU, data.getCurWtu());
-      fields.put(OFFICE, sqldb.serialize(data.getOffice()));
-      fields.put(FAIRNESS, data.getFairness());
-      fields.put(DISABILITY, data.getDisability());
-      fields.put(GENEROSITY, data.getGenerosity());
-      fields.put(AVAILABILITY, sqldb.serialize(data.getAvailability()));
-      fields.put(COURSEPREFERENCES,
-            sqldb.serialize(data.getCoursePreferences()));
-      fields.put(TPREFS, sqldb.serialize(data.gettPrefs()));
-      fields.put(ITEMSTAUGHT, sqldb.serialize(data.getItemsTaught()));
-      fields.put(SCHEDULEID, scheduleID);
-      // Where clause
-      wheres = new LinkedHashMap<String, Object>();
-      wheres.put(USERID, data.getUserID());
-      wheres.put(SCHEDULEID, scheduleID);
+      return TABLENAME;
    }
 }

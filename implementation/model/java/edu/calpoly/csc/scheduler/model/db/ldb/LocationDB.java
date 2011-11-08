@@ -30,21 +30,6 @@ public class LocationDB extends AbstractDatabase<Location>
       this.scheduleId = scheduleID;
    }
 
-   @Override
-   public ArrayList<Location> getData()
-   {
-      pullData();
-      return data;
-   }
-
-   @Override
-   public void removeData(Location data)
-   {
-      data.verify();
-      fillMaps(data);
-      sqldb.executeDelete(TABLENAME, wheres);
-   }
-
    public Location getLocation(String id)
    {
       String[] stuff = id.split("-");
@@ -152,7 +137,7 @@ public class LocationDB extends AbstractDatabase<Location>
       return toAdd;
    }
    
-   public String getTableName ()
+   protected String getTableName ()
    {
       return TABLENAME;
    }

@@ -5,12 +5,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
+import edu.calpoly.csc.scheduler.model.db.AbstractDatabase;
 import edu.calpoly.csc.scheduler.model.db.DatabaseAPI;
 import edu.calpoly.csc.scheduler.model.db.SQLDB;
 import edu.calpoly.csc.scheduler.model.schedule.Day;
 import edu.calpoly.csc.scheduler.model.schedule.Week;
 
-public class CourseDB implements DatabaseAPI<Course>
+public class CourseDB extends AbstractDatabase<Course>
 {
    // String constants to describe database
    public static final String            TABLENAME     = "courses";
@@ -26,147 +27,20 @@ public class CourseDB implements DatabaseAPI<Course>
    public static final String            ENROLLMENT    = "enrollment";
    public static final String            LAB           = "lab";
    public static final String            SCHEDULEID    = "scheduleid";
-   // Other data
-   private ArrayList<Course>             data;
-   private SQLDB                         sqldb;
-   private int                           scheduleID;
-   private LinkedHashMap<String, Object> fields;
-   private LinkedHashMap<String, Object> wheres;
 
    public CourseDB(SQLDB sqldb, int scheduleID)
    {
       this.sqldb = sqldb;
-      this.scheduleID = scheduleID;
+      this.scheduleId = scheduleID;
    }
 
-   @Override
-   public ArrayList<Course> getData()
+   
+   protected boolean exists(Course data)
    {
-      pullData();
-      return data;
+      return sqldb.doesCourseExist(data);
    }
-
-   @Override
-   public void saveData(Course data)
-   {
-      data.verify();
-      data.setScheduleId(scheduleID);
-      if (sqldb.doesCourseExist(data))
-      {
-         System.out.println("Editing data: course");
-         editData(data);
-      }
-      else
-      {
-         System.out.println("Adding data: course");
-         addData(data);
-      }
-   }
-
-   private void pullData()
-   {
-      data = new ArrayList<Course>();
-      ResultSet rs = sqldb.getSQLCourses(scheduleID);
-      try
-      {
-         while (rs.next())
-         {
-            data.add(makeCourse(rs));
-         }
-      }
-      catch (SQLException e)
-      {
-         e.printStackTrace();
-      }
-   }
-
-   public Course getCourseByID(int id)
-   {
-      return makeCourse(sqldb.getSQLCourseByID(id));
-   }
-
-   public Course getCourse(String dept, int catalogNum)
-   {
-      return makeCourse(sqldb.getSQLCourse(dept, catalogNum, scheduleID));
-   }
-
-   private Course makeCourse(ResultSet rs)
-   {
-      // Retrieve by column name
-      Course toAdd = new Course();
-      try
-      {
-         String name = rs.getString("name");
-         toAdd.setName(name);
-
-         int catalogNum = rs.getInt("catalognum");
-         toAdd.setCatalogNum(catalogNum);
-
-         String dept = rs.getString("dept");
-         toAdd.setDept(dept);
-
-         int wtu = rs.getInt("wtu");
-         toAdd.setWtu(wtu);
-
-         int scu = rs.getInt("scu");
-         toAdd.setScu(scu);
-
-         int numOfSections = rs.getInt("numofsections");
-         toAdd.setNumOfSections(numOfSections);
-
-         String courseType = rs.getString("type");
-         toAdd.setType(courseType);
-
-         int length = rs.getInt("length");
-         toAdd.setLength(length);
-
-         byte[] daysBuf = rs.getBytes("days");
-         // toAdd.setDays((Week) sqldb.deserialize(daysBuf));
-         // TODO: Remove this later
-         Week temp = new Week(new Day[]
-         { Day.MON, Day.WED, Day.FRI });
-         toAdd.setDays(temp);
-
-         int enrollment = rs.getInt("enrollment");
-         toAdd.setEnrollment(enrollment);
-
-         // Deserialize Lab
-         byte[] labBuf = rs.getBytes("lab");
-         toAdd.setLab((Lab) sqldb.deserialize(labBuf));
-
-         int scheduleid = rs.getInt("scheduleid");
-         toAdd.setScheduleId(scheduleid);
-
-      }
-      catch (SQLException e)
-      {
-         e.printStackTrace();
-      }
-      toAdd.verify();
-      return toAdd;
-   }
-
-   private void addData(Course data)
-   {
-      fillMaps(data);
-      sqldb.executeInsert(TABLENAME, fields);
-   }
-
-   private void editData(Course data)
-   {
-      fillMaps(data);
-      sqldb.executeUpdate(TABLENAME, fields, wheres);
-   }
-
-   @Override
-   public void removeData(Course data)
-   {
-      data.verify();
-      fillMaps(data);
-      sqldb.executeDelete(TABLENAME, wheres);
-   }
-
-   private void fillMaps(Course data)
+   
+   protected void fillMaps(Course data)
    {
       // Set fields and values
       fields = new LinkedHashMap<String, Object>();
@@ -181,12 +55,85 @@ public class CourseDB implements DatabaseAPI<Course>
       fields.put(DAYS, sqldb.serialize(data.getDays()));
       fields.put(ENROLLMENT, data.getEnrollment());
       fields.put(LAB, sqldb.serialize(data.getLab()));
-      fields.put(SCHEDULEID, scheduleID);
+      fields.put(SCHEDULEID, scheduleId);
       // Where clause
       wheres = new LinkedHashMap<String, Object>();
       wheres.put(CATALOGNUM, data.getCatalogNum());
       wheres.put(DEPT, data.getDept());
       wheres.put(TYPE, data.getType().toString());
-      wheres.put(SCHEDULEID, scheduleID);
+      wheres.put(SCHEDULEID, scheduleId);
    }
+   
+   protected ResultSet getDataByScheduleId(int sid)
+   {
+      return this.sqldb.getSQLCourses(sid);
+   }
+   
+   protected Course make(ResultSet rs)
+   {
+      // Retrieve by column name
+      Course toAdd = new Course();
+      try
+      {
+         String name = rs.getString("name");
+         toAdd.setName(name);
+         
+         int catalogNum = rs.getInt("catalognum");
+         toAdd.setCatalogNum(catalogNum);
+         
+         String dept = rs.getString("dept");
+         toAdd.setDept(dept);
+         
+         int wtu = rs.getInt("wtu");
+         toAdd.setWtu(wtu);
+         
+         int scu = rs.getInt("scu");
+         toAdd.setScu(scu);
+         
+         int numOfSections = rs.getInt("numofsections");
+         toAdd.setNumOfSections(numOfSections);
+         
+         String courseType = rs.getString("type");
+         toAdd.setType(courseType);
+         
+         int length = rs.getInt("length");
+         toAdd.setLength(length);
+         
+         byte[] daysBuf = rs.getBytes("days");
+         // toAdd.setDays((Week) sqldb.deserialize(daysBuf));
+         // TODO: Remove this later
+         Week temp = new Week(new Day[]
+               { Day.MON, Day.WED, Day.FRI });
+         toAdd.setDays(temp);
+         
+         int enrollment = rs.getInt("enrollment");
+         toAdd.setEnrollment(enrollment);
+         
+         // Deserialize Lab
+         byte[] labBuf = rs.getBytes("lab");
+         toAdd.setLab((Lab) sqldb.deserialize(labBuf));
+         
+         int scheduleid = rs.getInt("scheduleid");
+         toAdd.setScheduleId(scheduleid);
+         
+      }
+      catch (SQLException e)
+      {
+         e.printStackTrace();
+      }
+      toAdd.verify();
+      return toAdd;
+   }
+   
+   protected String getTableName()
+   {
+      return TABLENAME;
+   }
+   
+   public Course getCourse(String dept, int catalogNum)
+   {
+      return make(sqldb.getSQLCourse(dept, catalogNum, scheduleId));
+   }
+
+
 }

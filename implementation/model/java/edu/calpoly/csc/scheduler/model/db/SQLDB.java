@@ -657,29 +657,6 @@ public class SQLDB
    }
 
    /**
-    * Retrieves the course with matching ID from the database
-    * 
-    * @return The result of a query for courses with given id
-    */
-   public ResultSet getSQLCourseByID(int id)
-   {
-
-      String selectString = "select * from courses where id = ?";
-      PreparedStatement stmt = getPrepStmt(selectString);
-      ResultSet rs = null;
-      try
-      {
-         stmt.setInt(1, id);
-         rs = stmt.executeQuery();
-      }
-      catch (SQLException e)
-      {
-         e.printStackTrace();
-      }
-      return rs;
-   }
-
-   /**
     * Retrieves the course with matching department and catalog number from the
     * database
     * 
