@@ -236,6 +236,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 				System.err.println("WARNING: location had neither LAB nor LEC, so defaulted to LEC!");
 				location.setType("LEC");
 			}
+			System.out.println("saving location for " + location.getBuilding() + "-" + location.getRoom());
 			model.saveLocation(location);
 		}
 		
