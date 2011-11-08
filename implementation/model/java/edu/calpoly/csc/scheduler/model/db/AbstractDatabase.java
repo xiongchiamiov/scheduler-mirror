@@ -34,14 +34,13 @@ public abstract class AbstractDatabase<T extends DbData>
       data.verify();
 
       data.setScheduleId(this.scheduleId);
-      //TODO: Add this method to SQLDB.java
-//      if (sqldb.exists(data))
+      if (exists(data))
       {
          editData(data);
       }
-//      else
+      else
       {
-//         addData(data);
+         addData(data);
       }
    }
 
@@ -82,6 +81,7 @@ public abstract class AbstractDatabase<T extends DbData>
       }
    }
    
+   protected abstract boolean exists (T data);
    protected abstract void fillMaps (T data);
    protected abstract ResultSet getDataByScheduleId (int sid);
    protected abstract T make (ResultSet rs);

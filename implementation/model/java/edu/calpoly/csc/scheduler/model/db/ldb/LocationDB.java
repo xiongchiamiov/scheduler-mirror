@@ -84,6 +84,11 @@ public class LocationDB extends AbstractDatabase<Location>
       return rooms;
    }
 
+   protected boolean exists (Location l)
+   {
+      return sqldb.doesLocationExist(l);
+   }
+   
    protected void fillMaps(Location data)
    {
       // Set fields and values
