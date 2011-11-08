@@ -6,7 +6,7 @@ import java.util.LinkedHashMap;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 
-public class SelectColumn<ObjectType> extends OsmTable.ValueColumn<ObjectType, String> {
+public class SelectColumn<ObjectType extends Comparable<ObjectType>> extends OsmTable.ValueColumn<ObjectType, String> {
 	private LinkedHashMap<String, String> options;
 
 	public SelectColumn(String name, String width, LinkedHashMap<String, String> options, StaticGetter<ObjectType, String> getter, StaticSetter<ObjectType, String> setter, Comparator<String> sorter) {

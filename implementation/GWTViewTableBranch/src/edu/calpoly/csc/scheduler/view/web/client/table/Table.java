@@ -1,6 +1,7 @@
 package edu.calpoly.csc.scheduler.view.web.client.table;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import com.google.gwt.cell.client.ButtonCell;
@@ -117,7 +118,7 @@ public class Table<T> {
 	/**
 	 * Set the list of objects to the table (clears current entries)
 	 */
-	public void set(ArrayList<T> objects){
+	public void set(Collection<T> objects){
 		
 		List<T> list = dataProvider.getList();
 		list.clear();

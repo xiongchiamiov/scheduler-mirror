@@ -6,7 +6,7 @@ import com.google.gwt.user.client.Window;
 
 // TODO: make the intcolumn handle up and down arrows, thatd be sick.
 
-public class IntColumn<ObjectType> extends StringColumn<ObjectType> {
+public class IntColumn<ObjectType extends Comparable<ObjectType>> extends StringColumn<ObjectType> {
 	public IntColumn(String name, String width, final StaticGetter<ObjectType, Integer> getter, final StaticSetter<ObjectType, Integer> setter) {
 		super(name, width, new StaticGetter<ObjectType, String>() {
 			public String getValueForObject(ObjectType object) {

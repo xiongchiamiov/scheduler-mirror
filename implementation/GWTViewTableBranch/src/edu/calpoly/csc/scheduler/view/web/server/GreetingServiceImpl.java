@@ -54,15 +54,15 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
     	model.openExistingSchedule(scheduleID);
     }
 
-	public ArrayList<InstructorGWT> getInstructors() throws IllegalArgumentException {
-		ArrayList<InstructorGWT> results = new ArrayList<InstructorGWT>();
+	public Collection<InstructorGWT> getInstructors() throws IllegalArgumentException {
+		Collection<InstructorGWT> results = new ArrayList<InstructorGWT>();
 		for (Instructor instructor : model.getInstructors()) {
 			results.add(Conversion.toGWT(instructor));
 		}
 		return results;
 	}
 	
-	public void saveInstructors(ArrayList<InstructorGWT> instructors) throws IllegalArgumentException {
+	public void saveInstructors(Collection<InstructorGWT> instructors) throws IllegalArgumentException {
 		assert(model != null);
 
 		HashMap<String, Instructor> newInstructorsByUserID = new LinkedHashMap<String, Instructor>();
@@ -90,7 +90,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 				System.out.println("Day " + day.getNum() + " time " + time.getHour() + ":" + time.getMinute() + " is " + instructor.getTimePreferences().get(day).get(time).getDesire());
 	}
 
-	public ArrayList<ScheduleItemGWT> generateSchedule() {
+	public Collection<ScheduleItemGWT> generateSchedule() {
 		assert(model != null);
 		
 		Collection<Course> coursesToGenerate = model.getCourses();
@@ -110,13 +110,13 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		Collection<ScheduleItem> scheduleItems = schedule.generate(coursesToGenerate);
 		System.out.println("schedule items: " + schedule.getItems().size());
 
-		ArrayList<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
+		Collection<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
 	    for(ScheduleItem item : scheduleItems)
 	    	gwtItems.add(Conversion.toGWT(item));
 		return gwtItems;
 	}
 	
-	public ArrayList<ScheduleItemGWT> getGWTScheduleItems(ArrayList<CourseGWT> courses)
+	public Collection<ScheduleItemGWT> getGWTScheduleItems(Collection<CourseGWT> courses)
 	{
 	 assert(model != null);
      scheduleItems = new HashMap<String, ScheduleItem>();
@@ -139,7 +139,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		
      schedule.generate(coursesToGenerate);
 		
-	 ArrayList<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
+	 Collection<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
 
 	 for(ScheduleItem item : schedule.getItems())
 	 {         
@@ -151,25 +151,24 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	 return gwtItems;
 	}
 	
-	public ArrayList<ScheduleItemGWT> rescheduleCourse(ScheduleItemGWT scheduleItem,
-			ArrayList<Integer> days, int startHour, boolean atHalfHour, boolean inSchedule)
+	public Collection<ScheduleItemGWT> rescheduleCourse(ScheduleItemGWT scheduleItem,
+			Collection<Integer> days, int startHour, boolean atHalfHour, boolean inSchedule)
 	{
 	 assert(model != null);
-	 ArrayList<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
+	 Collection<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
 	 Course course;
 	 int numberOfDays = days.size();
 	 Day[] daysScheduled = new Day[numberOfDays];
 	 Week daysInWeek;
 	 Time startTime;
-	 int i;
+	 int i = 0;
 	 ScheduleItem moved; 
 	 String schdItemKey = scheduleItem.getDept() + 
 			  scheduleItem.getCatalogNum() + 
 			  scheduleItem.getSection();
 	 
-	 for(i = 0; i < numberOfDays; i++)
-	 {
-	  switch(days.get(i))
+	 for (Integer day : days) {
+	  switch(day)
 	  {
 	   case 1 : daysScheduled[i] = (Day.MON); break;
 	   case 2 : daysScheduled[i] = (Day.TUE); break;
@@ -177,6 +176,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	   case 4 : daysScheduled[i] = (Day.THU); break;
 	   case 5 : daysScheduled[i] = (Day.FRI); break;
 	  }
+	  i++;
 	 }
 	 
 	 daysInWeek = new Week(daysScheduled);
@@ -214,8 +214,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	}
 	
 	@Override
-	public ArrayList<LocationGWT> getLocations() {
-		ArrayList<LocationGWT> results = new ArrayList<LocationGWT>();
+	public Collection<LocationGWT> getLocations() {
+		Collection<LocationGWT> results = new ArrayList<LocationGWT>();
 		int id = 1;
 		for (Location location : model.getLocations()) {
 			System.out.println("location type " + location.getType());
@@ -226,7 +226,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 
 
 	@Override
-	public void saveLocations(ArrayList<LocationGWT> locations) {
+	public Collection<LocationGWT> saveLocations(Collection<LocationGWT> locations) {
 		HashMap<String, Location> newLocationsByUserID = new LinkedHashMap<String, Location>();
 
 		for (LocationGWT locationGWT : locations) {
@@ -243,12 +243,16 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			if (newLocationsByUserID.get(location.getBuilding() + "-" + location.getRoom()) == null)
 				model.removeLocation(location);
 
+		System.out.println("in model: " + model.getLocations().size());
+		System.out.println("in input: " + locations.size());
 		assert(model.getLocations().size() == locations.size());
+		
+		return getLocations();
 	}
 	
 	@Override
-	public ArrayList<CourseGWT> getCourses() {		
-		ArrayList<CourseGWT> results = new ArrayList<CourseGWT>();
+	public Collection<CourseGWT> getCourses() {		
+		Collection<CourseGWT> results = new ArrayList<CourseGWT>();
 		availableCourses = new HashMap<String, Course>();
 		for (Course course : model.getCourses())
 		{
@@ -261,7 +265,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 
 
 	@Override
-	public void saveCourses(ArrayList<CourseGWT> courses) {
+	public void saveCourses(Collection<CourseGWT> courses) {
 		HashMap<String, Course> newLocationsByUserID = new LinkedHashMap<String, Course>();
 
 		for (CourseGWT courseGWT : courses) {

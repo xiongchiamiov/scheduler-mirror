@@ -1,12 +1,10 @@
 package edu.calpoly.csc.scheduler.view.web.client.views;
 
-import java.util.ArrayList;
+import java.util.Collection;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -43,14 +41,14 @@ public class CoursesView extends ScrollPanel {
 
 		cTable.clear();
 		
-		service.getCourses(new AsyncCallback<ArrayList<CourseGWT>>() {
+		service.getCourses(new AsyncCallback<Collection<CourseGWT>>() {
 			public void onFailure(Throwable caught) {
 				popup.hide();
 				
 				Window.alert("Failed to get courses: " + caught.toString());
 			}
 			
-			public void onSuccess(ArrayList<CourseGWT> result){
+			public void onSuccess(Collection<CourseGWT> result){
 				popup.hide();
 				
 				if (result != null) {

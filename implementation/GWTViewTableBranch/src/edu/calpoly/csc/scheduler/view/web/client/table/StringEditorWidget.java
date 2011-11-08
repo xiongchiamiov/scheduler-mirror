@@ -63,7 +63,7 @@ class StringEditorWidget extends FocusPanel {
 	void enterReadingMode() {
 		editing = false;
 		clear();
-		add(new HTML(getter.getValue()));
+		add(new HTML(getter.getValue() + "&#160;"));
 		addStyleName("reading");
 	}
 }

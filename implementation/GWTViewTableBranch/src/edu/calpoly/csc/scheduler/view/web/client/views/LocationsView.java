@@ -1,6 +1,6 @@
 package edu.calpoly.csc.scheduler.view.web.client.views;
 
-import java.util.ArrayList;
+import java.util.Collection;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -9,7 +9,6 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
-import edu.calpoly.csc.scheduler.view.web.client.table.AddRemoveTable;
 import edu.calpoly.csc.scheduler.view.web.client.table.CheckboxColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.Factory;
 import edu.calpoly.csc.scheduler.view.web.client.table.IntColumn;
@@ -24,6 +23,7 @@ public class LocationsView extends ScrollPanel {
 	private GreetingServiceAsync service;
 	private final String scheduleName;
 	int nextLocationID = 1;
+	OsmTable<LocationGWT> table;
 
 	public LocationsView(GreetingServiceAsync service, String scheduleName) {
 		this.service = service;
@@ -45,14 +45,20 @@ public class LocationsView extends ScrollPanel {
 		final LoadingPopup popup = new LoadingPopup();
 		popup.show();
 
-		final OsmTable<LocationGWT> table = new AddRemoveTable<LocationGWT>(new Factory<LocationGWT>() {
-			public LocationGWT create() {
-				return new LocationGWT(nextLocationID++, "", "", "LEC", 20, false);
-			}
-			public LocationGWT createHistoryFor(LocationGWT location) {
-				return new LocationGWT(-location.getID(), location);
-			}
-		});
+		table = new OsmTable<LocationGWT>(
+				new Factory<LocationGWT>() {
+					public LocationGWT create() {
+						return new LocationGWT(nextLocationID++, "", "", "LEC", 20, false);
+					}
+					public LocationGWT createHistoryFor(LocationGWT location) {
+						return new LocationGWT(-location.getID(), location);
+					}
+				},
+				new OsmTable.SaveHandler<LocationGWT>() {
+					public void saveButtonClicked() {
+						save();
+					}
+				});
 
 		table.addColumn(new StringColumn<LocationGWT>("Building", "6em",
 				new StaticGetter<LocationGWT, String>() {
@@ -99,13 +105,13 @@ public class LocationsView extends ScrollPanel {
 		
 		vp.add(table);
 		
-		service.getLocations(new AsyncCallback<ArrayList<LocationGWT>>() {
+		service.getLocations(new AsyncCallback<Collection<LocationGWT>>() {
 			public void onFailure(Throwable caught) {
 				popup.hide();
 				Window.alert("Failed to get courses: " + caught.toString());
 			}
 			
-			public void onSuccess(ArrayList<LocationGWT> result){
+			public void onSuccess(Collection<LocationGWT> result){
 				assert(result != null);
 				popup.hide();
 				for (LocationGWT location : result)
@@ -114,5 +120,20 @@ public class LocationsView extends ScrollPanel {
 			}
 		});
 		
+	}
+	
+	private void save() {
+		service.saveLocations(table.getAddedUntouchedAndEditedObjects(), new AsyncCallback<Collection<LocationGWT>>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				// TODO Auto-generated method stub
+				
+			}
+			@Override
+			public void onSuccess(Collection<LocationGWT> result) {
+				table.clear();
+				table.addRows(result);
+			}
+		});
 	}
 }

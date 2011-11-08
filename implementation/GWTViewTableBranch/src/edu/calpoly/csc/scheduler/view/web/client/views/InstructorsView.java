@@ -1,6 +1,6 @@
 package edu.calpoly.csc.scheduler.view.web.client.views;
 
-import java.util.ArrayList;
+import java.util.Collection;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -46,14 +46,14 @@ public class InstructorsView extends VerticalPanel {
 		popup.show();
 		
 		
-		service.getInstructors(new AsyncCallback<ArrayList<InstructorGWT>>() {
+		service.getInstructors(new AsyncCallback<Collection<InstructorGWT>>() {
 			public void onFailure(Throwable caught) {
 				popup.hide();
 				
 				Window.alert("Failed to get professors: " + caught.toString());
 			}
 			
-			public void onSuccess(ArrayList<InstructorGWT> result){
+			public void onSuccess(Collection<InstructorGWT> result){
 				popup.hide();
 				
 				if (result != null) {

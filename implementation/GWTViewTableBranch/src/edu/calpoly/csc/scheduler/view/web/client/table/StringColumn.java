@@ -5,7 +5,7 @@ import java.util.Comparator;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 
-public class StringColumn<ObjectType> extends OsmTable.ValueColumn<ObjectType, String> {
+public class StringColumn<ObjectType extends Comparable<ObjectType>> extends OsmTable.ValueColumn<ObjectType, String> {
 	// Checks to see if value is acceptable input. If its not, can alert the user and return false.
 	// Feel free to override
 	public boolean valid(String newValue) {

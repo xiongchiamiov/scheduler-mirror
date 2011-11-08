@@ -2,7 +2,7 @@ package edu.calpoly.csc.scheduler.view.web.client;
 
 
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Map;
 
 import com.google.gwt.user.client.rpc.RemoteService;
@@ -25,20 +25,20 @@ public interface GreetingService extends RemoteService {
 	void openExistingSchedule(int scheduleID);
 
 	void saveInstructor(InstructorGWT instructor);	
-	ArrayList<InstructorGWT> getInstructors() throws IllegalArgumentException;
-	void saveInstructors(ArrayList<InstructorGWT> instructors) throws IllegalArgumentException;
+	Collection<InstructorGWT> getInstructors() throws IllegalArgumentException;
+	void saveInstructors(Collection<InstructorGWT> instructors) throws IllegalArgumentException;
 	
-	ArrayList<ScheduleItemGWT> getGWTScheduleItems(ArrayList<CourseGWT> courses) throws IllegalArgumentException;
-	ArrayList<ScheduleItemGWT> generateSchedule();	
-	ArrayList<ScheduleItemGWT> rescheduleCourse(ScheduleItemGWT scheduleItem,
-			ArrayList<Integer> days, int startHour, boolean atHalfHour,
+	Collection<ScheduleItemGWT> getGWTScheduleItems(Collection<CourseGWT> courses) throws IllegalArgumentException;
+	Collection<ScheduleItemGWT> generateSchedule();	
+	Collection<ScheduleItemGWT> rescheduleCourse(ScheduleItemGWT scheduleItem,
+			Collection<Integer> days, int startHour, boolean atHalfHour,
 			boolean inSchedule);
 	
-	ArrayList<LocationGWT> getLocations();
-	void saveLocations(ArrayList<LocationGWT> locations);
+	Collection<LocationGWT> getLocations();
+	Collection<LocationGWT> saveLocations(Collection<LocationGWT> locations);
 	
-	ArrayList<CourseGWT> getCourses();
-	void saveCourses(ArrayList<CourseGWT> locations);
+	Collection<CourseGWT> getCourses();
+	void saveCourses(Collection<CourseGWT> locations);
 	
 	void resetSchedule();
 }

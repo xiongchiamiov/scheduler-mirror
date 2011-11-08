@@ -2,8 +2,6 @@ package edu.calpoly.csc.scheduler.view.web.shared;
 
 import java.io.Serializable;
 
-import edu.calpoly.csc.scheduler.model.schedule.Day;
-
 public class DayGWT implements Serializable, Comparable<DayGWT> {
 	   /** Sunday */
 	   public static final DayGWT SUN = new DayGWT(0);
