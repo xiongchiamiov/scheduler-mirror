@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.cell.client.ButtonCell;
+import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
@@ -174,10 +177,15 @@ public class Table<T> {
 		
 		// remove
 		Column<T, String> remove = 
-				new Column<T, String>(new ButtonCell()) {
+				new Column<T, String>(new ButtonCell(){
+					@Override
+				    public void render(Cell.Context context, SafeHtml data, SafeHtmlBuilder sb){
+					      sb.appendHtmlConstant("<img src=\"" + TableConstants.IMG_DELETE + "\" alt=\"Remove\" style=\"cursor:pointer\"/>");
+				    }
+				}) {
 		      @Override
 		      public String getValue(T value) {
-		        return "x";
+		        return "";
 		      }
 		};
 		

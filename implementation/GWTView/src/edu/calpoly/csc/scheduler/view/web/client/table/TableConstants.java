@@ -2,6 +2,9 @@ package edu.calpoly.csc.scheduler.view.web.client.table;
 
 public class TableConstants {
 
+	/** Images */
+	public static final String IMG_DELETE = "imgs/delete.png";
+	
 	/** lec lab constants */
 	public static final String LAB = "LAB";
 	
