@@ -21,6 +21,7 @@ import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -28,8 +29,10 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
+import edu.calpoly.csc.scheduler.view.web.client.table.ITableBuilder.NewIPanel;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.DayGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.WeekGWT;
 
 public class CTableBuilder implements TableBuilder<CourseGWT>{
@@ -417,5 +420,49 @@ public class CTableBuilder implements TableBuilder<CourseGWT>{
 				Window.alert("Successfully saved");
 			}
 		});
+	}
+	
+	
+	/**
+	 * Panel for creating a new object
+	 * @author David Seltzer
+	 *
+	 */
+	public class NewIPanel implements NewObjPanel<CourseGWT>{
+
+		private Grid grid;
+		
+		public NewIPanel(){
+			grid = new Grid(2, 2);
+		}
+		
+		@Override
+		public Grid getGrid() {
+			return grid;
+		}
+
+		@Override
+		public CourseGWT getObject(ListDataProvider<CourseGWT> dataProvider) {
+			// TODO Auto-generated method stub
+			return new CourseGWT();
+		}
+
+		@Override
+		public String getError() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public void focus() {
+			// TODO Auto-generated method stub
+			
+		}
+	}
+
+
+	@Override
+	public NewObjPanel<CourseGWT> newObjPanel() {
+		return new NewIPanel();
 	}
 }

@@ -2,6 +2,7 @@ package edu.calpoly.csc.scheduler.view.web.client.table;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.CheckboxCell;
@@ -14,6 +15,11 @@ import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 
@@ -209,5 +215,120 @@ public class LTableBuilder implements TableBuilder<LocationGWT>{
 		catch (RuntimeException e) {
 			Window.alert("exception: " + e.getClass().getName() + " " + e.getMessage());
 		}
+	}
+	
+	/**
+	 * Panel for creating a new object
+	 * @author David Seltzer
+	 *
+	 */
+	public class NewIPanel implements NewObjPanel<LocationGWT>{
+
+		private Grid grid;
+		private LocationGWT loc;
+		
+		// error
+		private String error;
+		
+		// input fields
+		private TextBox building = new TextBox();
+		private TextBox room = new TextBox();
+		private ListBox type = new ListBox();
+		private TextBox maxocc = new TextBox();
+		private CheckBox ada = new CheckBox();
+		
+		public NewIPanel(){
+			loc = newObject();
+			
+			// build grid
+			grid = new Grid(2, 5);
+			
+			// headers
+			grid.setWidget(0, 0, new Label(TableConstants.LOC_BUILDING));
+			grid.setWidget(0, 1, new Label(TableConstants.LOC_ROOM));
+			grid.setWidget(0, 2, new Label(TableConstants.LOC_TYPE));
+			grid.setWidget(0, 3, new Label(TableConstants.LOC_MAX_OCCUPANCY));
+			grid.setWidget(0, 4, new Label(TableConstants.LOC_ADACOMPLIANT));
+			
+			// type
+			type.addItem(TableConstants.LEC);
+			type.addItem(TableConstants.LAB);
+			
+			// input fields
+			grid.setWidget(1, 0, building);
+			grid.setWidget(1, 1, room);
+			grid.setWidget(1, 2, type);
+			grid.setWidget(1, 3, maxocc);
+			grid.setWidget(1, 4, ada);
+			
+		}
+		
+		@Override
+		public Grid getGrid() {
+			return grid;
+		}
+
+		@Override
+		public LocationGWT getObject(ListDataProvider<LocationGWT> dataProvider) {
+			// update object with input values
+			loc.setBuilding(building.getText().trim());
+			loc.setRoom(room.getText().trim());
+			loc.setType(type.getValue(type.getSelectedIndex()));
+			Integer occ = Table.parseInt(maxocc.getText());
+			if(occ == null){ occ = -1; }
+			loc.setMaxOccupancy(occ);
+			loc.setADACompliant(ada.getValue());
+			
+			// validate
+			error = validate(dataProvider);
+			if(error != null){
+				return null;
+			}
+			
+			return loc;
+		}
+
+		@Override
+		public String getError() {
+			return error;
+		}
+
+		@Override
+		public void focus() {
+			building.setFocus(true);
+		}
+		
+		
+		// validation
+		private String validate(ListDataProvider<LocationGWT> dataProvider){
+			
+			// check for duplicate building - room
+			String b = loc.getBuilding().trim();
+			String r = loc.getRoom().trim();
+	    	List<LocationGWT> list = dataProvider.getList();
+	    	for(int i = 0; i < list.size(); i++){
+	    		  
+	    		if(list.get(i).getBuilding().trim().equals(b) &&
+	    				list.get(i).getRoom().trim().equals(r)){
+	    			return "There is already a location with building: \'" + b + "\' room: \'" + r + "\'";
+	    		}
+	    	}
+			
+			
+	    	// check max wtu
+	    	int occ = loc.getMaxOccupancy();
+	    	if(occ < 0){
+	    		return TableConstants.LOC_MAX_OCCUPANCY + " must be a non-negative number";
+	    	}
+	    	
+	    	// no errors
+			return null;
+		}
+	}
+
+
+	@Override
+	public NewObjPanel<LocationGWT> newObjPanel() {
+		return new NewIPanel();
 	}
 }

@@ -19,6 +19,7 @@ import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSe
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -164,7 +165,45 @@ public class Table<T> {
 		addButton.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent event){
 				
-				add(builder.newObject());
+				// create new object dialog
+				final DialogBox dialog = new DialogBox(false, true);
+				final NewObjPanel<T> nopanel = builder.newObjPanel();
+				VerticalPanel widgetpanel = new VerticalPanel();
+				dialog.setWidget(widgetpanel);
+				widgetpanel.add(nopanel.getGrid());
+				
+				// create save, close
+				HorizontalPanel savepanel = new HorizontalPanel();
+				savepanel.add(new Button("Cancel", new ClickHandler(){
+					public void onClick(ClickEvent event){
+						dialog.hide();
+					}
+				}));
+				
+				savepanel.add(new Button("Save", new ClickHandler(){
+					public void onClick(ClickEvent event){
+						
+						T obj = nopanel.getObject(dataProvider);
+						
+						// error checking
+						if(obj == null){
+							PopupPanel error = new PopupPanel(true);
+							error.setWidget(new Label(nopanel.getError()));
+							error.showRelativeTo(addButton);
+						}
+						
+						// save new object
+						else{
+							add(obj);
+							dialog.hide();
+						}
+					}
+				}));
+				widgetpanel.add(savepanel);
+				
+				// show
+				dialog.showRelativeTo(addButton);
+				nopanel.focus();
 			}
 		});
 	}
@@ -273,5 +312,17 @@ public class Table<T> {
 		cb.addStyleName("tableColumnCheckBox");
 		
 		return cb;
+	}
+	
+	
+	public static Integer parseInt(String value){
+		
+		value = value.trim();
+  	  	Integer i = null;
+  	  	try{
+  	  		i = Integer.parseInt(value);
+  	  	}catch(Exception e){}
+  	  
+  	  	return i;
 	}
 }

@@ -16,4 +16,6 @@ public interface TableBuilder<T> {
 	public T newObject();
 
 	public void save(ArrayList<T> list);
+	
+	public NewObjPanel<T> newObjPanel();
 }

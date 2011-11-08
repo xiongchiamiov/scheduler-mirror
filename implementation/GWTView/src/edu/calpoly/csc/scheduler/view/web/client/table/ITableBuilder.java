@@ -3,6 +3,7 @@ package edu.calpoly.csc.scheduler.view.web.client.table;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
@@ -14,6 +15,10 @@ import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 
@@ -265,5 +270,122 @@ public class ITableBuilder implements TableBuilder<InstructorGWT>{
 			}
 		});
 		}
+	}
+	
+	
+	/**
+	 * Panel for creating a new object
+	 * @author David Seltzer
+	 *
+	 */
+	public class NewIPanel implements NewObjPanel<InstructorGWT>{
+
+		private Grid grid;
+		private InstructorGWT instr;
+		
+		// error
+		private String error;
+		
+		// input fields
+		private TextBox firstName = new TextBox();
+		private TextBox lastName = new TextBox();
+		private TextBox id = new TextBox();
+		private TextBox maxwtu = new TextBox();
+		private TextBox building = new TextBox();
+		private TextBox room = new TextBox();
+		private CheckBox disable = new CheckBox();
+		
+		public NewIPanel(){
+			instr = newObject();
+			
+			// build grid
+			grid = new Grid(2, 7);
+			
+			// headers
+			grid.setWidget(0, 0, new Label(TableConstants.INSTR_FIRSTNAME));
+			grid.setWidget(0, 1, new Label(TableConstants.INSTR_LASTNAME));
+			grid.setWidget(0, 2, new Label(TableConstants.INSTR_ID));
+			grid.setWidget(0, 3, new Label(TableConstants.INSTR_MAX_WTU));
+			grid.setWidget(0, 4, new Label(TableConstants.INSTR_BUILDING));
+			grid.setWidget(0, 5, new Label(TableConstants.INSTR_ROOMNUMBER));
+			grid.setWidget(0, 6, new Label(TableConstants.INSTR_DISABILITIES));
+			
+			// input fields
+			grid.setWidget(1, 0, firstName);
+			grid.setWidget(1, 1, lastName);
+			grid.setWidget(1, 2, id);
+			grid.setWidget(1, 3, maxwtu);
+			grid.setWidget(1, 4, building);
+			grid.setWidget(1, 5, room);
+			grid.setWidget(1, 6, disable);
+			
+		}
+		
+		@Override
+		public Grid getGrid() {
+			return grid;
+		}
+
+		@Override
+		public InstructorGWT getObject(ListDataProvider<InstructorGWT> dataProvider) {
+			
+			// update object with input values
+			instr.setFirstName(firstName.getText().trim());
+			instr.setLastName(lastName.getText().trim());
+			instr.setUserID(id.getText().trim());
+			Integer wtu = Table.parseInt(maxwtu.getText());
+			if(wtu == null){ wtu = -1; }
+			instr.setMaxWtu(wtu);
+			instr.setBuilding(building.getText().trim());
+			instr.setRoomNumber(room.getText().trim());
+			instr.setDisabilities(disable.getValue());
+			
+			// validate
+			error = validate(dataProvider);
+			if(error != null){
+				return null;
+			}
+			
+			return instr;
+		}
+		
+		@Override
+		public void focus(){
+			firstName.setFocus(true);
+		}
+
+		@Override
+		public String getError() {
+			return error;
+		}
+		
+		// validation
+		private String validate(ListDataProvider<InstructorGWT> dataProvider){
+			
+			// check for duplicate id
+			String id = instr.getUserID().trim();
+	    	List<InstructorGWT> list = dataProvider.getList();
+	    	for(int i = 0; i < list.size(); i++){
+	    		  
+	    		if(list.get(i).getUserID().trim().equals(id)){
+	    			return "There is already a user with the ID: \'" + id + "\'";
+	    		}
+	    	}
+			
+	    	// check max wtu
+	    	int wtu = instr.getMaxWtu();
+	    	if(wtu < 0){
+	    		return TableConstants.INSTR_MAX_WTU + " must be a non-negative number";
+	    	}
+	    	
+	    	// no errors
+			return null;
+		}
+	}
+
+
+	@Override
+	public NewObjPanel<InstructorGWT> newObjPanel() {
+		return new NewIPanel();
 	}
 }
