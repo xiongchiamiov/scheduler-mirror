@@ -2,10 +2,9 @@ package edu.calpoly.csc.scheduler.view.web.client.table;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NodeList;
@@ -17,6 +16,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
+import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -52,87 +52,56 @@ public class OsmTable<ObjectType extends Comparable<ObjectType>> extends Vertica
 		}
 	}
 	
-	public static abstract class ValueColumn<ObjectType extends Comparable<ObjectType>, ValType> extends Column<ObjectType> {
-		protected StaticGetter<ObjectType, ValType> getter;
-		protected StaticSetter<ObjectType, ValType> setter;
-		protected Comparator<ValType> sorter;
-		
-		public ValueColumn(String name, String width, StaticGetter<ObjectType, ValType> getter, StaticSetter<ObjectType, ValType> setter, Comparator<ValType> sorter) {
-			super(name, width);
-			this.sorter = sorter;
-			this.getter = getter;
-			this.setter = setter;
-		}
-	}
-	
-	public Collection<ObjectType> getAddedObjects() {
-		Collection<ObjectType> added = new ArrayList<ObjectType>();
-		for (Row row : addedRows)
-			added.add(row.object);
-		return added;
-	}
-	
-	public Collection<ObjectType> getEditedObjects() {
-		Collection<ObjectType> edited = new ArrayList<ObjectType>();
-		for (Row row : editedRows)
-			edited.add(row.object);
-		return edited;
-	}
-	
-	public Collection<ObjectType> getRemovedObjects() {
-		Collection<ObjectType> removed = new ArrayList<ObjectType>();
-		for (Row row : rowsToRemove)
-			removed.add(row.object);
-		return removed;
-	}
-	
-	public Collection<ObjectType> getAddedUntouchedAndEditedObjects() {
-		return new ArrayList<ObjectType>(rows.keySet());
-	}
-	
 	protected class Row {
 		public final ObjectType object;
-		public final Element row;
-		public final Widget[] widgets;
-		public Row(ObjectType object, Element row, Widget[] widgets) {
+		public final Element trElement;
+		public final Widget[] widgetsInCells;
+		public Row(ObjectType object, Element trElement, Widget[] widgetsInCells) {
 			this.object = object;
-			this.row = row;
-			this.widgets = widgets;
+			this.trElement = trElement;
+			this.widgetsInCells = widgetsInCells;
 		}
+	}
+	
+	private class CssClassedSet implements Iterable<Row> {
+		final String cssClassName;
+		HashSet<Row> set = new HashSet<Row>();
+		
+		CssClassedSet(String cssClassName) {
+			this.cssClassName = cssClassName;
+		}
+		
+		public void add(Row row) {
+			addClass(row);
+			set.add(row);
+		}
+		
+		public void remove(Row row) {
+			removeClass(row);
+			set.remove(row);
+		}
+		
+		public void clear() {
+			for (Row row : set)
+				removeClass(row);
+			set.clear();
+		}
+		
+		public boolean contains(Row row) { return set.contains(row); }
+		public Iterator<Row> iterator() { return set.iterator(); }
+
+		private void addClass(Row row) { row.trElement.addClassName(cssClassName); }
+		private void removeClass(Row row) { row.trElement.removeClassName(cssClassName); }
 	}
 	
 	protected Factory<ObjectType> factory;
-	private FlexTable table;
-	private ArrayList<Column<ObjectType>> columns = new ArrayList<Column<ObjectType>>();
+	protected FlexTable table;
+	protected ArrayList<Column<ObjectType>> columns = new ArrayList<Column<ObjectType>>();
 	protected LinkedHashMap<ObjectType, Row> rows = new LinkedHashMap<ObjectType, Row>();
-	Collection<Row> rowsToRemove = new HashSet<Row>();
-	Collection<Row> editedRows = new HashSet<Row>();
-	Collection<Row> addedRows = new HashSet<Row>();
-	private LinkedHashMap<ObjectType, ObjectType> historyByObject = new LinkedHashMap<ObjectType, ObjectType>();
-
-	public void clear() {
-		ArrayList<Column<ObjectType>> savedColumns = this.columns;
-		
-		columns.clear();
-		rows.clear();
-		rowsToRemove.clear();
-		editedRows.clear();
-		addedRows.clear();
-		historyByObject.clear();
-		table.clear();
-		
-		for (Column<ObjectType> column : savedColumns)
-			addColumn(column);
-	}
-	
-	void toggleRowRemoved(Row row) {
-		if (rowsToRemove.contains(row))
-			rowsToRemove.remove(row);
-		else
-			rowsToRemove.add(row);
-		
-		colorRows();
-	}
+	protected CssClassedSet rowsToRemove = new CssClassedSet("removed");
+	protected CssClassedSet editedRows = new CssClassedSet("edited");
+	protected CssClassedSet addedRows = new CssClassedSet("added");
+	protected LinkedHashMap<ObjectType, ObjectType> historyByObject = new LinkedHashMap<ObjectType, ObjectType>();
 	
 	public OsmTable(Factory<ObjectType> factory, final SaveHandler<ObjectType> saveHandler) {
 		this.factory = factory;
@@ -184,45 +153,57 @@ public class OsmTable<ObjectType extends Comparable<ObjectType>> extends Vertica
 					}
 				}));
 	}
-	
-	public OsmTable(Factory<ObjectType> factory, SaveHandler<ObjectType> saveHandler, Column<ObjectType> newColumns[]) {
-		this(factory, saveHandler);
-		for (Column<ObjectType> column : newColumns)
-			addColumn(column);
-	}
 
-	// Subclass may override this if he wants to know when objects have been changed.
-	protected void objectChanged(ObjectType object) {
-		Row row = rows.get(object);
-		assert(row != null);
+	public Collection<ObjectType> getAddedObjects() {
+		Collection<ObjectType> added = new ArrayList<ObjectType>();
+		for (Row row : addedRows)
+			added.add(row.object);
+		return added;
+	}
+	
+	public Collection<ObjectType> getEditedObjects() {
+		Collection<ObjectType> edited = new ArrayList<ObjectType>();
+		for (Row row : editedRows)
+			edited.add(row.object);
+		return edited;
+	}
+	
+	public Collection<ObjectType> getRemovedObjects() {
+		Collection<ObjectType> removed = new ArrayList<ObjectType>();
+		for (Row row : rowsToRemove)
+			removed.add(row.object);
+		return removed;
+	}
+	
+	public Collection<ObjectType> getAddedUntouchedAndEditedObjects() {
+		return new ArrayList<ObjectType>(rows.keySet());
+	}
+	
+	public void clear() {
+		for (int i = 0; i < rows.size(); i++)
+			table.removeRow(1);
 		
-		ObjectType history = historyByObject.get(object);
-		assert(history != null);
-		
-		if (object.compareTo(history) == 0)
-			editedRows.remove(row);
+		rowsToRemove.clear();
+		editedRows.clear();
+		addedRows.clear();
+		historyByObject.clear();
+		rows.clear();
+	}
+	
+	private void toggleRowRemoved(Row row) {
+		if (rowsToRemove.contains(row))
+			rowsToRemove.remove(row);
 		else
-			editedRows.add(row);
-		
-		colorRows();
+			rowsToRemove.add(row);
 	}
-	
-	private void deleteRow(Row row) {
-		addedRows.remove(row);
-		editedRows.remove(row);
-		rowsToRemove.remove(row);
-		
-		row.row.removeFromParent();
-	}
-	
-	public final void addNewRow() {
-		Row newRow = addRowAndDontColor(factory.create());
-		addedRows.add(newRow);
-		colorRows();
 
-		for (Widget widget : newRow.widgets) {
-			if (widget instanceof FocusPanel) {
-				((FocusPanel)widget).setFocus(true);
+	public final void addNewRow() {
+		Row newRow = addRow(factory.create());
+		addedRows.add(newRow);
+
+		for (Widget widget : newRow.widgetsInCells) {
+			if (widget instanceof Focusable) {
+				((Focusable)widget).setFocus(true);
 				break;
 			}
 		}
@@ -243,8 +224,8 @@ public class OsmTable<ObjectType extends Comparable<ObjectType>> extends Vertica
 		
 		columns.add(column);
 	}
-	
-	protected Row addRowAndDontColor(ObjectType object) {
+
+	public final Row addRow(ObjectType object) {
 		int newObjectIndex = rows.size();
 		int rowIndex = newObjectIndex + 1;
 
@@ -273,47 +254,29 @@ public class OsmTable<ObjectType extends Comparable<ObjectType>> extends Vertica
 		return newRow;
 	}
 	
-	public final void addRow(ObjectType object) {
-		addRowAndDontColor(object);
-		colorRows();
-	}
-	
 	public final void addRows(Collection<ObjectType> objects) {
 		for (ObjectType object : objects)
-			addRowAndDontColor(object);
-		colorRows();
+			addRow(object);
+	}
+
+	protected void objectChanged(ObjectType object) {
+		Row row = rows.get(object);
+		assert(row != null);
+		
+		ObjectType history = historyByObject.get(object);
+		assert(history != null);
+		
+		if (object.compareTo(history) == 0)
+			editedRows.remove(row);
+		else
+			editedRows.add(row);
 	}
 	
-	protected void colorRows() {
-		Element tableElement = table.getElement();
+	private void deleteRow(Row row) {
+		addedRows.remove(row);
+		editedRows.remove(row);
+		rowsToRemove.remove(row);
 		
-		NodeList<Element> elements = tableElement.getElementsByTagName("tr");
-		for (int index = 1; index < elements.getLength(); index++) {
-			if (index % 2 == 0)
-				elements.getItem(index).addClassName("evenRow");
-			else
-				elements.getItem(index).removeClassName("evenRow");
-		}
-
-		for (Row row : rows.values()) {
-			row.row.removeClassName("edited");
-			row.row.removeClassName("added");
-			row.row.removeClassName("removed");
-		}
-
-		for (Row row : addedRows)
-			row.row.addClassName("added");
-		
-		for (Row row : editedRows)
-			row.row.addClassName("edited");
-
-		for (Row row : rowsToRemove)
-			row.row.addClassName("removed");
-	}
-
-	public void commitToHistory() {
-		for (ObjectType object : new LinkedList<ObjectType>(historyByObject.keySet()))
-			historyByObject.put(object, factory.createHistoryFor(object));
-		colorRows();
+		row.trElement.removeFromParent();
 	}
 }

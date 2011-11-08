@@ -5,15 +5,22 @@ import java.util.Comparator;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 
-public class StringColumn<ObjectType extends Comparable<ObjectType>> extends OsmTable.ValueColumn<ObjectType, String> {
+public class StringColumn<ObjectType extends Comparable<ObjectType>> extends OsmTable.Column<ObjectType> {
+	protected StaticGetter<ObjectType, String> getter;
+	protected StaticSetter<ObjectType, String> setter;
+	protected Comparator<String> sorter;
+	
+	public StringColumn(String name, String width, StaticGetter<ObjectType, String> getter, StaticSetter<ObjectType, String> setter, Comparator<String> sorter) {
+		super(name, width);
+		this.getter = getter;
+		this.setter = setter;
+		this.sorter = sorter;
+	}
+
 	// Checks to see if value is acceptable input. If its not, can alert the user and return false.
 	// Feel free to override
 	public boolean valid(String newValue) {
 		return true;
-	}
-	
-	public StringColumn(String name, String width, StaticGetter<ObjectType, String> getter, StaticSetter<ObjectType, String> setter, Comparator<String> sorter) {
-		super(name, width, getter, setter, sorter);
 	}
 	
 	public Widget createCellWidget(final ObjectType object) {
