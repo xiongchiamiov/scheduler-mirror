@@ -16,21 +16,21 @@ import edu.calpoly.csc.scheduler.model.db.ldb.*;
  * @author Eric Liebowitz
  * @version Oct 25, 2011
  */
-public class Schedule extends DbData implements Serializable
+public class Schedule implements Serializable
 {
    public static final long serialVersionUID = 1778968142419846280L;
 
 	/**
     * Used for debugging. Toggle it to get debugging output
     */
-   public static final boolean DEBUG = true;
-
+   private static final boolean DEBUG = true;
+   
    /**
-    * Prints a message if DEBUG is true
+    * Prints a message to STDERR if DEBUG is true
     * 
     * @param s String to print
     */
-   public static void debug (String s)
+   private static void debug (String s)
    {
       if (DEBUG)
       {
@@ -993,23 +993,5 @@ public class Schedule extends DbData implements Serializable
       TimeRange oldBounds = this.lec_bounds;
       this.lec_bounds = tr;
       return oldBounds;
-   }
-   
-   /**
-    * Verifies that the vital fields of this Object  (i.e. those essential 
-    * for generation of identification in a DB) are not null. "Vital" fields
-    * are as follows:
-    * 
-    * <ul>
-    *    <li></li>
-    * </ul>
-    * 
-    * @throws NullDataException if any field vital to generation or storage is
-    *         null
-    *
-    * @see edu.calpoly.csc.scheduler.model.db.DbData#verify()
-    */
-   public void verify () throws NullDataException
-   {
    }
 }
