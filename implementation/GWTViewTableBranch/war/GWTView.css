@@ -425,10 +425,9 @@ background-clip: initial;
 	border-bottom: 2px solid #6F7277;
 	font-weight: bold;
     color: #4B4A4A;
-    overflow: hidden;
     text-align: left;
     text-shadow: 1px 1px 0 #DDDDFF;
-	padding: 3px;
+	padding: 3px .4em;
 }
 
 .osmtable tr:nth-child(odd) {
@@ -449,7 +448,7 @@ background-clip: initial;
 .editedLegend,
 .removedLegend,
 .addedLegend {
-	margin-left: 2em;
+	margin-left: 1em;
 	padding-left: 2em;
 	display: inline-block;
 }
@@ -471,12 +470,19 @@ background-clip: initial;
 }
 
 
-.newObjectPanel {
-	text-align: center;
-	border: 1px dashed #6F7277;
-	font-weight: bold;
-    color: #4B4A4A;
-    text-shadow: 1px 1px 0 #DDDDFF;
-	padding: 3px;
-	cursor: pointer;
+.resizeableHeader {
+	position: relative;
+	display: block;
+	border-right: 2px dotted #6F7277;
+}
+
+.resizer {
+	position: absolute;
+	top: 0px;
+	bottom: 0px;
+	right: -.4em;
+	width: .7em;
+	display: block;
+	cursor: col-resize;
+	z-index: 1;
 }

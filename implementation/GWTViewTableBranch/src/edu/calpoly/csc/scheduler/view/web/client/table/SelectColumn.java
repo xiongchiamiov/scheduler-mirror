@@ -10,24 +10,27 @@ public class SelectColumn<ObjectType extends Comparable<ObjectType>> extends Osm
 	private LinkedHashMap<String, String> options;
 	protected StaticGetter<ObjectType, String> getter;
 	protected StaticSetter<ObjectType, String> setter;
-	protected Comparator<String> sorter;
 
-	public SelectColumn(String name, String width, LinkedHashMap<String, String> options, StaticGetter<ObjectType, String> getter, StaticSetter<ObjectType, String> setter, Comparator<String> sorter) {
-		super(name, width);
+	public SelectColumn(String name, String width, LinkedHashMap<String, String> options, final StaticGetter<ObjectType, String> getter, StaticSetter<ObjectType, String> setter, final Comparator<String> sorter) {
+		super(name, width, sorter == null ? null : new Comparator<ObjectType>() {
+			public int compare(ObjectType o1, ObjectType o2) {
+				return sorter.compare(getter.getValueForObject(o1), getter.getValueForObject(o2));
+			}
+		});
 		this.getter = getter;
 		this.setter = setter;
-		this.sorter = sorter;
 		this.options = options;
+	}
+	
+	private static LinkedHashMap<String, String> identityMap(String[] array) {
+		LinkedHashMap<String, String> options = new LinkedHashMap<String, String>();
+		for (String option : array)
+			options.put(option, option);
+		return options;
 	}
 
 	public SelectColumn(String name, String width, String[] options, StaticGetter<ObjectType, String> getter, StaticSetter<ObjectType, String> setter, Comparator<String> sorter) {
-		super(name, width);
-		this.getter = getter;
-		this.setter = setter;
-		this.sorter = sorter;
-		this.options = new LinkedHashMap<String, String>();
-		for (String option : options)
-			this.options.put(option, option);
+		this(name, width, identityMap(options), getter, setter, sorter);
 	}
 	
 	public Widget createCellWidget(final ObjectType object) {

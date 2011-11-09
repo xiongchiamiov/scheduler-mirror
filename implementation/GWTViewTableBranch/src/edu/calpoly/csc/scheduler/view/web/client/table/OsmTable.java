@@ -2,16 +2,18 @@ package edu.calpoly.csc.scheduler.view.web.client.table;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -23,7 +25,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.client.HTMLUtilities;
 
-public class OsmTable<ObjectType extends Comparable<ObjectType>> extends VerticalPanel {
+public class OsmTable<ObjectType extends Comparable<ObjectType>> extends FocusPanel {
 	public interface SaveHandler<ObjectType extends Comparable<ObjectType>> {
 		void saveButtonClicked();
 	}
@@ -32,6 +34,7 @@ public class OsmTable<ObjectType extends Comparable<ObjectType>> extends Vertica
 		private OsmTable<ObjectType> table;
 		final public String name;
 		final public String width;
+		public final Comparator<ObjectType> sortComparator;
 
 		public void attachedToTable(OsmTable<ObjectType> table) {
 			assert(this.table == null);
@@ -46,9 +49,10 @@ public class OsmTable<ObjectType extends Comparable<ObjectType>> extends Vertica
 		
 		public abstract Widget createCellWidget(ObjectType object);
 		
-		Column(String name, String width) {
+		Column(String name, String width, Comparator<ObjectType> sortComparator) {
 			this.name = name;
 			this.width = width;
+			this.sortComparator = sortComparator;
 		}
 	}
 	
@@ -87,6 +91,11 @@ public class OsmTable<ObjectType extends Comparable<ObjectType>> extends Vertica
 			set.clear();
 		}
 		
+		public void refresh() {
+			for (Row row : set)
+				addClass(row);
+		}
+		
 		public boolean contains(Row row) { return set.contains(row); }
 		public Iterator<Row> iterator() { return set.iterator(); }
 
@@ -104,6 +113,9 @@ public class OsmTable<ObjectType extends Comparable<ObjectType>> extends Vertica
 	protected LinkedHashMap<ObjectType, ObjectType> historyByObject = new LinkedHashMap<ObjectType, ObjectType>();
 	
 	public OsmTable(Factory<ObjectType> factory, final SaveHandler<ObjectType> saveHandler) {
+		VerticalPanel vp = new VerticalPanel();
+		add(vp);
+		
 		this.factory = factory;
 		
 		FlowPanel controlBar = new FlowPanel();
@@ -116,32 +128,33 @@ public class OsmTable<ObjectType extends Comparable<ObjectType>> extends Vertica
 		}));
 
 		controlBar.add(new HTML(
-				"<div class=\"addedLegend\"><div>To Be Added</div></div>" +
-				"<div class=\"editedLegend\"><div>To Be Modified</div></div>" +
-				"<div class=\"removedLegend\"><div>To Be Removed</div></div>"));
+				"<div class=\"addedLegend\"><div>Added</div></div>" +
+				"<div class=\"editedLegend\"><div>Modified</div></div>" +
+				"<div class=\"removedLegend\"><div>Removed</div></div>"));
 		
-		add(controlBar);
+		vp.add(controlBar);
 		
 		table = new FlexTable();
 		table.addStyleName("osmtable");
 		table.setCellPadding(0);
 		table.setCellSpacing(0);
-		add(table);
+		vp.add(table);
 		
 		FocusPanel newObjectPanel = new FocusPanel();
-		newObjectPanel.addStyleName("newObjectPanel");
-		newObjectPanel.add(new HTML("New"));
 		newObjectPanel.addFocusHandler(new FocusHandler() {
 			public void onFocus(FocusEvent event) {
 				addNewRow();
 			}
 		});
-		newObjectPanel.addClickHandler(new ClickHandler() {
+		vp.add(newObjectPanel);
+		
+		vp.add(new Button("New", new ClickHandler() {
+			
+			@Override
 			public void onClick(ClickEvent event) {
 				addNewRow();
 			}
-		});
-		add(newObjectPanel);
+		}));
 
 		addColumn(new ButtonColumn<ObjectType>("Delete", "4em", "X",
 				new ButtonColumn.ClickCallback<ObjectType>() {
@@ -209,20 +222,46 @@ public class OsmTable<ObjectType extends Comparable<ObjectType>> extends Vertica
 		}
 	}
 	
-	public void addColumn(Column<ObjectType> column) {
+	public void addColumn(final Column<ObjectType> column) {
 		assert(rows.size() == 0);
 		
 		column.attachedToTable(this);
 		
 		int newColumnIndex = columns.size();
-		Widget contents = new HTML(column.name);
+		FocusPanel contents = new ResizeableHeader(this, new HTML(column.name));
 		contents.addStyleName("header");
 		table.setWidget(0, newColumnIndex, contents);
 		
 		Element td = HTMLUtilities.getClosestContainingElementOfType(contents.getElement(), "td");
 		td.setAttribute("style", td.getAttribute("style") + "; width: " + column.width);
 		
+		contents.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				sortByColumn(column);
+			}
+		});
+		
 		columns.add(column);
+	}
+	
+	void sortByColumn(Column<ObjectType> column) {
+		ArrayList<ObjectType> sortedList = new ArrayList<ObjectType>(this.rows.keySet());
+		Collections.sort(sortedList, column.sortComparator);
+
+		for (Row row : this.rows.values())
+			row.trElement.removeFromParent();
+
+		Element tableElement = table.getElement();
+		assert(tableElement.getNodeName().equalsIgnoreCase("table"));
+		Element tbodyElement = tableElement.getElementsByTagName("tbody").getItem(0);
+		assert(tbodyElement.getNodeName().equalsIgnoreCase("tbody"));
+		assert(tbodyElement.getChildCount() == 1);
+		
+		for (int i = 0; i < sortedList.size(); i++) {
+			ObjectType object = sortedList.get(i);
+			Row row = rows.get(object);
+			tbodyElement.appendChild(row.trElement);
+		}
 	}
 
 	public final Row addRow(ObjectType object) {

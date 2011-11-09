@@ -8,13 +8,15 @@ import com.google.gwt.user.client.ui.Widget;
 public class StringColumn<ObjectType extends Comparable<ObjectType>> extends OsmTable.Column<ObjectType> {
 	protected StaticGetter<ObjectType, String> getter;
 	protected StaticSetter<ObjectType, String> setter;
-	protected Comparator<String> sorter;
 	
-	public StringColumn(String name, String width, StaticGetter<ObjectType, String> getter, StaticSetter<ObjectType, String> setter, Comparator<String> sorter) {
-		super(name, width);
+	public StringColumn(String name, String width, final StaticGetter<ObjectType, String> getter, StaticSetter<ObjectType, String> setter, final Comparator<String> sorter) {
+		super(name, width, sorter == null ? null : new Comparator<ObjectType>() {
+			public int compare(ObjectType o1, ObjectType o2) {
+				return sorter.compare(getter.getValueForObject(o1), getter.getValueForObject(o2));
+			}
+		});
 		this.getter = getter;
 		this.setter = setter;
-		this.sorter = sorter;
 	}
 
 	// Checks to see if value is acceptable input. If its not, can alert the user and return false.

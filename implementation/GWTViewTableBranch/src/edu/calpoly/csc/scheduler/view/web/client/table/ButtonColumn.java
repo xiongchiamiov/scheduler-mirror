@@ -14,7 +14,7 @@ public class ButtonColumn<ObjectType extends Comparable<ObjectType>> extends Osm
 	private String buttonLabel;
 	
 	public ButtonColumn(String name, String width, String buttonLabel, ClickCallback<ObjectType> click) {
-		super(name, width);
+		super(name, width, null);
 		this.clickHandler = click;
 		this.buttonLabel = buttonLabel;
 	}
