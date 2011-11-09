@@ -31,6 +31,7 @@ public abstract class AbstractDatabase<T extends DbData>
       data.verify();
 
       data.setScheduleId(this.scheduleId);
+      assert(this.scheduleId != -1);
       if (exists(data))
       {
          editData(data);
