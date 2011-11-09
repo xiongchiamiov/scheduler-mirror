@@ -5,26 +5,18 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
-import edu.calpoly.csc.scheduler.model.db.DatabaseAPI;
+import edu.calpoly.csc.scheduler.model.db.AbstractDatabase;
 import edu.calpoly.csc.scheduler.model.db.SQLDB;
 import edu.calpoly.csc.scheduler.model.schedule.Schedule;
 
-public class ScheduleDB implements DatabaseAPI<Schedule>
+public class ScheduleDB extends AbstractDatabase<Schedule>
 {
    // String constants
-   public static final String            TABLENAME  = "schedules";
-   public static final String            SCHEDULEID = "scheduleid";
-   public static final String            NAME       = "name";
-   public static final String            SCHEDULE   = "schedule";
-   public static final String            DEPT       = "dept";
-
-   // Other data
-   private ArrayList<Schedule>           data;
-   private SQLDB                         sqldb;
-   private int                           scheduleID;
-   private String                        dept;
-   private LinkedHashMap<String, Object> fields;
-   private LinkedHashMap<String, Object> wheres;
+   public static final String TABLENAME  = "schedules";
+   public static final String SCHEDULEID = "scheduleid";
+   public static final String NAME       = "name";
+   public static final String SCHEDULE   = "schedule";
+   public static final String DEPT       = "dept";
 
    /**
     * Schedules are unique by scheduleid. Also, they are unique by name per
@@ -33,94 +25,17 @@ public class ScheduleDB implements DatabaseAPI<Schedule>
     * @param sqldb
     * @param dept
     */
-   public ScheduleDB(SQLDB sqldb, String dept)
+   public ScheduleDB(SQLDB sqldb)
    {
       this.sqldb = sqldb;
-      this.dept = dept;
    }
 
-   public ScheduleDB(SQLDB sqldb, int scheduleID, String dept)
+   protected boolean exists(Schedule data)
    {
-      this.sqldb = sqldb;
-      this.scheduleID = scheduleID;
-      this.dept = dept;
+      return sqldb.doesScheduleExist(data);
    }
 
-   @Override
-   public ArrayList<Schedule> getData()
-   {
-      pullData();
-      return data;
-   }
-
-   @Override
-   public void saveData(Schedule data)
-   {
-      if (sqldb.doesScheduleExist(data))
-      {
-         saveSchedule(data);
-      }
-      else
-      {
-         createNewSchedule(data.getName());
-      }
-   }
-
-   private void pullData()
-   {
-      data = new ArrayList<Schedule>();
-      System.err.println("SID: " + scheduleID);
-      ResultSet rs = sqldb.getSQLSchedules(scheduleID);
-      try
-      {
-         while (rs.next())
-         {
-            Schedule toAdd = new Schedule();
-            // Deserialize ALL THE SCHEDULE!
-            byte[] scheduleBuf = rs.getBytes("schedule");
-            toAdd = (Schedule) sqldb.deserialize(scheduleBuf);
-            // Get ID since database maintains it
-            toAdd.setId(rs.getInt("scheduleid"));
-            data.add(toAdd);
-         }
-      }
-      catch (SQLException e)
-      {
-         e.printStackTrace();
-      }
-   }
-
-   public int createNewSchedule(String name)
-   {
-      Schedule data = new Schedule();
-      data.setDept(dept);
-      data.setName(name);
-      fillMaps(data);
-      sqldb.executeInsert(TABLENAME, fields);
-      this.scheduleID = sqldb.getScheduleIDByName(name, dept);
-      return this.scheduleID;
-   }
-
-   public void saveSchedule(Schedule data)
-   {
-      fillMaps(data);
-      sqldb.executeUpdate(TABLENAME, fields, wheres);
-   }
-
-   public void saveSchedule(Schedule data, String name)
-   {
-      data.setName(name);
-      saveSchedule(data);
-   }
-
-   @Override
-   public void removeData(Schedule data)
-   {
-      fillMaps(data);
-      sqldb.executeDelete(TABLENAME, wheres);
-   }
-
-   private void fillMaps(Schedule data)
+   protected void fillMaps(Schedule data)
    {
       // Set fields and values
       fields = new LinkedHashMap<String, Object>();
@@ -129,15 +44,51 @@ public class ScheduleDB implements DatabaseAPI<Schedule>
       fields.put(DEPT, data.getDept());
       // Where clause
       wheres = new LinkedHashMap<String, Object>();
-      wheres.put(SCHEDULEID, scheduleID);
+      wheres.put(SCHEDULEID, scheduleId);
+   }
+
+   protected ResultSet getDataByScheduleId(int sid)
+   {
+      return sqldb.getSQLSchedules(scheduleId);
+   }
+
+   protected Schedule make(ResultSet rs)
+   {
+      Schedule toAdd = new Schedule();
+      try
+      {
+         while (rs.next())
+         {
+            // Deserialize ALL THE SCHEDULE!
+            byte[] scheduleBuf = rs.getBytes(SCHEDULE);
+            toAdd = (Schedule) sqldb.deserialize(scheduleBuf);
+            // Get ID since database maintains it
+            toAdd.setId(rs.getInt(SCHEDULEID));
+            data.add(toAdd);
+         }
+      }
+      catch (SQLException e)
+      {
+         e.printStackTrace();
+      }
+      toAdd.verify();
+      return toAdd;
+   }
+
+   @Override
+   protected String getTableName()
+   {
+      return TABLENAME;
    }
 
    /**
     * @return the scheduleID
     */
-   public int getScheduleID()
+   public int getScheduleID(Schedule data)
    {
-      return scheduleID;
+      this.scheduleId = sqldb.getScheduleIDByName(data.getName(),
+            data.getDept());
+      return scheduleId;
    }
 
    /**
@@ -146,6 +97,7 @@ public class ScheduleDB implements DatabaseAPI<Schedule>
     */
    public void setScheduleID(int scheduleID)
    {
-      this.scheduleID = scheduleID;
+      this.scheduleId = scheduleID;
    }
+
 }

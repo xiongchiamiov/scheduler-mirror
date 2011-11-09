@@ -134,6 +134,4 @@ public class CourseDB extends AbstractDatabase<Course>
    {
       return make(sqldb.getSQLCourse(dept, catalogNum, scheduleId));
    }
-
-
 }

@@ -2,11 +2,8 @@ package edu.calpoly.csc.scheduler.model.db;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.Vector;
-import java.io.Serializable;
 
 /**
  *

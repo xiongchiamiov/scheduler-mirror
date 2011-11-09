@@ -11,6 +11,7 @@ import edu.calpoly.csc.scheduler.model.db.idb.InstructorDB;
 import edu.calpoly.csc.scheduler.model.db.ldb.Location;
 import edu.calpoly.csc.scheduler.model.db.ldb.LocationDB;
 import edu.calpoly.csc.scheduler.model.db.sdb.ScheduleDB;
+import edu.calpoly.csc.scheduler.model.schedule.Schedule;
 
 /**
  * This class holds all of the individual database objects. The view will
@@ -108,35 +109,35 @@ public class Database
    {
       System.out.println("ID: " + scheduleid + ", name: " + scheduleName);
       int realid = scheduleid;
-      if (!(sqldb.doesScheduleIDExist(scheduleid)))
+      Schedule data = new Schedule();
+      data.setDept(dept);
+      data.setName(scheduleName);
+      data.setScheduleId(realid);
+      scheduleDB = new ScheduleDB(sqldb);
+
+      if (sqldb.doesScheduleIDExist(realid))
       {
-         if (!(sqldb.doesScheduleNameExist(scheduleName)))
-         {
-            System.out.println("Creating new schedule");
-            if (dept == null)
-            {
-               System.err.println("ERROR: DEPT IS NULL");
-            }
-            else
-            {
-               System.out.println("Using dept: " + dept);
-            }
-            scheduleDB = new ScheduleDB(sqldb, this.dept);
-            realid = scheduleDB.createNewSchedule(scheduleName);
-            System.out.println("New schedule id: " + realid);
-         }
-         else
-         {
-            // Called new schedule, but name already exists
-            System.err
-                  .println("ERROR: Schedule name already exists, opening existing one");
-            realid = sqldb.getScheduleIDByName(scheduleName, dept);
-         }
+         // Use this schedule
+         System.out.println("Using existing schedule");
       }
       else
       {
-         System.out.println("Using existing schedule");
-         scheduleDB = new ScheduleDB(sqldb, realid, this.dept);
+         // Check schedule name inside dept
+         if (sqldb.doesScheduleNameExist(scheduleName, dept))
+         {
+            // TODO: Change to throw error or something
+            // Open existing schedule with that name
+            System.err
+                  .println("ERROR: Schedule name already exists, opening existing one");
+            realid = sqldb.getScheduleIDByName(scheduleName, dept);
+            scheduleDB.setScheduleID(realid);
+         }
+         else
+         {
+            //Create a new schedule with given name and dept
+            scheduleDB.saveData(data);
+            realid = scheduleDB.getScheduleID(data);
+         }
       }
       instructorDB = new InstructorDB(sqldb, realid);
       courseDB = new CourseDB(sqldb, realid);

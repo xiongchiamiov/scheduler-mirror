@@ -842,19 +842,7 @@ public class SQLDB
 
    public boolean doesScheduleExist(Schedule data)
    {
-      // Check if scheduleid and name already exist
-      String query = "select scheduleid, name from schedules where scheduleid = ? and name = ?";
-      PreparedStatement stmt = getPrepStmt(query);
-      try
-      {
-         stmt.setInt(1, data.getId());
-         stmt.setString(2, data.getName());
-      }
-      catch (SQLException e)
-      {
-         e.printStackTrace();
-      }
-      return doesItExist(stmt);
+     return doesScheduleIDExist(data.getScheduleId());
    }
 
    public boolean doesScheduleIDExist(int id)
@@ -873,14 +861,15 @@ public class SQLDB
       return doesItExist(stmt);
    }
 
-   public boolean doesScheduleNameExist(String name)
+   public boolean doesScheduleNameExist(String name, String dept)
    {
       // Check if name already exists
-      String query = "select name from schedules where name = ?";
+      String query = "select name from schedules where name = ? and dept = ?";
       PreparedStatement stmt = getPrepStmt(query);
       try
       {
          stmt.setString(1, name);
+         stmt.setString(2, dept);
       }
       catch (SQLException e)
       {

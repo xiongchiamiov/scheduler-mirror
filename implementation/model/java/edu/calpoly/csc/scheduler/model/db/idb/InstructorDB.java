@@ -44,7 +44,7 @@ public class InstructorDB extends AbstractDatabase<Instructor>
 
    protected boolean exists(Instructor data)
    {
-      return false;
+      return sqldb.doesInstructorExist(data);
    }
    
 

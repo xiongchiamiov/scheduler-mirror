@@ -16,7 +16,7 @@ import edu.calpoly.csc.scheduler.model.db.ldb.*;
  * @author Eric Liebowitz
  * @version Oct 25, 2011
  */
-public class Schedule implements Serializable
+public class Schedule extends DbData implements Serializable
 {
    public static final long serialVersionUID = 1778968142419846280L;
 
@@ -993,5 +993,23 @@ public class Schedule implements Serializable
       TimeRange oldBounds = this.lec_bounds;
       this.lec_bounds = tr;
       return oldBounds;
+   }
+   
+   /**
+    * Verifies that the vital fields of this Object  (i.e. those essential 
+    * for generation of identification in a DB) are not null. "Vital" fields
+    * are as follows:
+    * 
+    * <ul>
+    *    <li></li>
+    * </ul>
+    * 
+    * @throws NullDataException if any field vital to generation or storage is
+    *         null
+    *
+    * @see edu.calpoly.csc.scheduler.model.db.DbData#verify()
+    */
+   public void verify () throws NullDataException
+   {
    }
 }
