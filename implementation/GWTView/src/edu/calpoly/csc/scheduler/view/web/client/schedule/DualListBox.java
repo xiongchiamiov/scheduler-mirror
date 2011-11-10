@@ -228,4 +228,10 @@ public class DualListBox extends AbsolutePanel {
 	{
 		return right;
 	}
+
+	public void setListLength(int size) 
+	{
+	 left.resetGrid(size);
+	 right.resetGrid(size);
+	}
 }
