@@ -16,7 +16,7 @@ import edu.calpoly.csc.scheduler.model.db.ldb.*;
  * @author Eric Liebowitz
  * @version Oct 25, 2011
  */
-public class Schedule implements Serializable
+public class Schedule extends DbData implements Serializable
 {
    public static final long serialVersionUID = 1778968142419846280L;
 
@@ -308,16 +308,13 @@ public class Schedule implements Serializable
       int wtu = i.getCurWtu();
       debug ("WTU BEFORE: " + wtu);
       wtu += c.getWtu();
-      debug ("ADDING " + c.getWtu());
-      debug ("EQ'N: " + wtu +  " + " + c.getWtu());
       debug ("NOW AT " + wtu);
       i.setCurWtu(wtu);
-
-      this.items.add(si);
 
       SectionTracker st = getSectionTracker(si.getCourse());
       if (st.addSection())
       {
+         this.items.add(si);
          si.setSection(st.getCurSection());
          debug ("JUST ADDED A SECTION OF " + si.getCourse());
       }
@@ -416,7 +413,7 @@ public class Schedule implements Serializable
       for (Course c : this.cSourceList)
       {
          debug ("MAKING SI's FOR COURSE " + c);
-         SectionTracker st = this.getSectionTracker(c);
+         SectionTracker st = this.sections.get(c);
          while (st.canBookAnotherSection())
          {
             debug ("SECTIONS SCHEDULED: " + st.getCurSection()
@@ -476,7 +473,9 @@ public class Schedule implements Serializable
 
    /**
     * Clears the record-keeping data associated w/ generation. Sets the list of
-    * courses, instructors, and locations to the provides arguments.
+    * courses to the provided list. Resets all section tracker objects to use 
+    * the section information contained in the courses provided in the given 
+    * list. 
     * 
     * @param c_list List of Courses that'll be put into the schedule
     * 
@@ -484,7 +483,19 @@ public class Schedule implements Serializable
     */
    private void initGenData (Collection<Course> c_list)
    {
-      cSourceList = new Vector<Course>(c_list);
+      for (Course c: (cSourceList = new Vector<Course>(c_list)))
+      {
+         SectionTracker st = this.sections.get(c);
+         if (st != null)
+         {
+            st.resetSectionCount(c.getNumOfSections());
+         }
+         else
+         {
+            this.sections.put(c, new SectionTracker(c));
+         }
+      }
+      
    }
 
    /**
@@ -993,5 +1004,37 @@ public class Schedule implements Serializable
       TimeRange oldBounds = this.lec_bounds;
       this.lec_bounds = tr;
       return oldBounds;
+   }
+
+   public void verify ()
+   {
+      if (cSourceList == null)
+      {
+         throw new NullDataException();
+      }
+      if (iSourceList == null)
+      {
+         throw new NullDataException();
+      }
+      if (lSourceList == null)
+      {
+         throw new NullDataException();
+      }
+      if (items == null)
+      {
+         throw new NullDataException();
+      }
+      if (id ==  null)
+      {
+         throw new NullDataException();
+      }
+      if (name == null)
+      {
+         throw new NullDataException();
+      }
+      if (dept == null)
+      {
+         throw new NullDataException();
+      }
    }
 }

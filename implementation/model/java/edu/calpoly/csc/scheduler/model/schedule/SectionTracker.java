@@ -13,10 +13,6 @@ import java.util.BitSet;
 public class SectionTracker
 {
    /**
-    * The current section we've most recently added
-    */
-   private int curSection = 0;
-   /**
     * List of section numbers that've been added
     */
    private BitSet sections;
@@ -25,6 +21,10 @@ public class SectionTracker
     */
    private Course c;
    /**
+    * Current number of sections
+    */
+   private int curSection;
+   /**
     * Max number of sections
     */
    private int maxSections;
@@ -32,6 +32,7 @@ public class SectionTracker
    public SectionTracker (Course c)
    {
       this.c = c;
+      this.curSection = 0;
       this.maxSections = c.getNumOfSections();
       sections = new BitSet(this.maxSections);
    }
@@ -49,8 +50,8 @@ public class SectionTracker
       
       if (r = canBookAnotherSection())
       {
-         this.curSection = getNextSection();
-         sections.set(this.curSection, true);
+         sections.set(getNextSection(), true);
+         curSection ++;
       }
       
       return r;
@@ -65,7 +66,11 @@ public class SectionTracker
     */
    public void removeSection (int s)
    {
-      this.sections.set(s, false);
+      if (this.sections.get(s))
+      {
+         this.sections.set(s, false);
+         curSection --;
+      }
    }
    
    /**
@@ -87,7 +92,19 @@ public class SectionTracker
     */
    public boolean canBookAnotherSection ()
    {
-      return this.sections.cardinality() != this.maxSections;
+      return this.curSection < this.maxSections;
+   }
+  
+   /**
+    * Resets section counting information for this tracker. Current section
+    * is set to zero, and max number of sections is set to the given value
+    * 
+    * @param newMax New maximum number of sections
+    */
+   public void resetSectionCount (int newMax)
+   {
+      this.curSection = 0;
+      this.maxSections = newMax;
    }
    
    /**
@@ -99,7 +116,7 @@ public class SectionTracker
    {
       return curSection;
    }
-   
+
    /**
     * Returns the maxSections
     * 
