@@ -25,6 +25,7 @@ public class ScheduleView extends ScrollPanel {
 		setHeight("100%");
 		
 		final VerticalPanel panel = new VerticalPanel();
+        final LoadingPopup loading = new LoadingPopup();
 
 		service.resetSchedule(
 				new AsyncCallback<Void>()
@@ -32,13 +33,16 @@ public class ScheduleView extends ScrollPanel {
 				 public void onFailure(Throwable caught) 
 				 {
 				  Window.alert("Failed to reset schedule");
+				  loading.hide();
 				 }
 				 public void onSuccess(Void result) 
 				 {
+				  loading.show();
 				  panel.add(new HTML("<h2>Fall Quarter 2010 Final Schedule</h2>"));
 				  ScheduleViewWidget schdView = new ScheduleViewWidget();
 				  panel.add(schdView.getWidget(service));
-				  ScheduleView.this.add(panel);		
+				  ScheduleView.this.add(panel);
+				  loading.hide();
 				 }				
 				});
 	}
