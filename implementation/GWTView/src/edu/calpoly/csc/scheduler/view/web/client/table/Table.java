@@ -8,6 +8,8 @@ import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.FocusEvent;
+import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -165,47 +167,69 @@ public class Table<T> {
 		addButton.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent event){
 				
-				// create new object dialog
-				final DialogBox dialog = new DialogBox(false, true);
-				final NewObjPanel<T> nopanel = builder.newObjPanel();
-				VerticalPanel widgetpanel = new VerticalPanel();
-				dialog.setWidget(widgetpanel);
-				widgetpanel.add(nopanel.getGrid());
-				
-				// create save, close
-				HorizontalPanel savepanel = new HorizontalPanel();
-				savepanel.add(new Button("Cancel", new ClickHandler(){
-					public void onClick(ClickEvent event){
-						dialog.hide();
-					}
-				}));
-				
-				savepanel.add(new Button("Save", new ClickHandler(){
-					public void onClick(ClickEvent event){
-						
-						T obj = nopanel.getObject(dataProvider);
-						
-						// error checking
-						if(obj == null){
-							PopupPanel error = new PopupPanel(true);
-							error.setWidget(new Label(nopanel.getError()));
-							error.showRelativeTo(addButton);
-						}
-						
-						// save new object
-						else{
-							add(obj);
-							dialog.hide();
-						}
-					}
-				}));
-				widgetpanel.add(savepanel);
-				
-				// show
-				dialog.showRelativeTo(addButton);
-				nopanel.focus();
+				addHandler();
 			}
 		});
+	}
+	
+	
+	private void addHandler(){
+		
+		// create new object dialog
+		final DialogBox dialog = new DialogBox(true, false);
+		final NewObjPanel<T> nopanel = builder.newObjPanel();
+		VerticalPanel widgetpanel = new VerticalPanel();
+		dialog.setWidget(widgetpanel);
+		widgetpanel.add(nopanel.getGrid());
+		
+		// save
+		Button save = new Button("+", new ClickHandler(){
+			public void onClick(ClickEvent event){
+				
+				T obj = nopanel.getObject(dataProvider);
+				
+				// error checking
+				if(obj == null){
+					PopupPanel error = new PopupPanel(true);
+					error.setWidget(new Label(nopanel.getError()));
+					error.showRelativeTo(addButton);
+				}
+				
+				// save new object
+				else{
+					add(obj);
+					dialog.hide();
+				}
+			}
+		});
+		
+		save.addFocusHandler(new FocusHandler(){
+			public void onFocus(FocusEvent event){
+				
+				T obj = nopanel.getObject(dataProvider);
+				
+				// error checking
+				if(obj == null){
+					PopupPanel error = new PopupPanel(true);
+					error.setWidget(new Label(nopanel.getError()));
+					error.showRelativeTo(addButton);
+				}
+				
+				// save new object
+				else{
+					add(obj);
+					dialog.hide();
+					addHandler();
+				}
+			}
+		});
+		
+		
+		widgetpanel.add(save);
+		
+		// show
+		dialog.showRelativeTo(addButton);
+		nopanel.focus();
 	}
 	
 	
