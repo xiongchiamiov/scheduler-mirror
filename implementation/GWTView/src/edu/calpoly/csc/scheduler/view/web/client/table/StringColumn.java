@@ -2,14 +2,18 @@ package edu.calpoly.csc.scheduler.view.web.client.table;
 
 import java.util.Comparator;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
+
+import edu.calpoly.csc.scheduler.view.web.client.table.StaticValidator.InvalidValueException;
 
 public class StringColumn<ObjectType extends Comparable<ObjectType>> extends OsmTable.Column<ObjectType> {
 	protected StaticGetter<ObjectType, String> getter;
 	protected StaticSetter<ObjectType, String> setter;
+	protected StaticValidator<ObjectType, String> validator;
 	
-	public StringColumn(String name, String width, final StaticGetter<ObjectType, String> getter, StaticSetter<ObjectType, String> setter, final Comparator<String> sorter) {
+	public StringColumn(String name, String width, final StaticGetter<ObjectType, String> getter, StaticSetter<ObjectType, String> setter, final Comparator<String> sorter, StaticValidator<ObjectType, String> validator) {
 		super(name, width, sorter == null ? null : new Comparator<ObjectType>() {
 			public int compare(ObjectType o1, ObjectType o2) {
 				return sorter.compare(getter.getValueForObject(o1), getter.getValueForObject(o2));
@@ -17,14 +21,9 @@ public class StringColumn<ObjectType extends Comparable<ObjectType>> extends Osm
 		});
 		this.getter = getter;
 		this.setter = setter;
+		this.validator = validator;
 	}
 
-	// Checks to see if value is acceptable input. If its not, can alert the user and return false.
-	// Feel free to override
-	public boolean valid(String newValue) {
-		return true;
-	}
-	
 	public Widget createCellWidget(final ObjectType object) {
 		if (setter != null) {
 			return new StringEditorWidget(new Getter<String>() {
@@ -33,9 +32,14 @@ public class StringColumn<ObjectType extends Comparable<ObjectType>> extends Osm
 				}
 			}, new Setter<String>() {
 				public void setValue(String newValue) {
-					if (valid(newValue)) {
+					try {
+						if (validator != null)
+							validator.validate(object, newValue);
 						setter.setValueInObject(object, newValue);
 						objectChanged(object);
+					}
+					catch (InvalidValueException ex) {
+						Window.alert(ex.getMessage());
 					}
 				}
 			});

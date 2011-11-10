@@ -16,6 +16,7 @@ import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
 import edu.calpoly.csc.scheduler.view.web.client.table.SelectColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.StaticGetter;
 import edu.calpoly.csc.scheduler.view.web.client.table.StaticSetter;
+import edu.calpoly.csc.scheduler.view.web.client.table.StaticValidator;
 import edu.calpoly.csc.scheduler.view.web.client.table.StringColumn;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
 
@@ -67,7 +68,13 @@ public class LocationsView extends ScrollPanel {
 				new StaticSetter<LocationGWT, String>() {
 					public void setValueInObject(LocationGWT object, String newValue) { object.setBuilding(newValue); }
 				},
-				String.CASE_INSENSITIVE_ORDER));
+				String.CASE_INSENSITIVE_ORDER,
+				new StaticValidator<LocationGWT, String>() {
+					public void validate(LocationGWT object, String newBuilding) throws InvalidValueException {
+						if (locationExists(newBuilding, object.getRoom()))
+							throw new InvalidValueException("Location " + newBuilding + "-" + object.getRoom() + " already exists.");
+					}
+				}));
 
 		table.addColumn(new StringColumn<LocationGWT>("Room", "6em",
 				new StaticGetter<LocationGWT, String>() {
@@ -76,7 +83,13 @@ public class LocationsView extends ScrollPanel {
 				new StaticSetter<LocationGWT, String>() {
 					public void setValueInObject(LocationGWT object, String newValue) { object.setRoom(newValue); }
 				},
-				String.CASE_INSENSITIVE_ORDER));
+				String.CASE_INSENSITIVE_ORDER,
+				new StaticValidator<LocationGWT, String>() {
+					public void validate(LocationGWT object, String newRoom) throws InvalidValueException {
+						if (locationExists(object.getBuilding(), newRoom))
+							throw new InvalidValueException("Location " + object.getBuilding() + "-" + newRoom + " already exists.");
+					}
+				}));
 		
 		table.addColumn(new SelectColumn<LocationGWT>("Type", "6em",
 				new String[] { "LEC", "LAB" },
@@ -91,9 +104,11 @@ public class LocationsView extends ScrollPanel {
 		table.addColumn(new IntColumn<LocationGWT>("Occupancy", "4em",
 				new StaticGetter<LocationGWT, Integer>() {
 					public Integer getValueForObject(LocationGWT object) { return object.getMaxOccupancy(); }
-				}, new StaticSetter<LocationGWT, Integer>() {
+				},
+				new StaticSetter<LocationGWT, Integer>() {
 					public void setValueInObject(LocationGWT object, Integer newValue) { object.setMaxOccupancy(newValue); }
-				}));
+				},
+				null));
 		
 		table.addColumn(new CheckboxColumn<LocationGWT>("ADA", "4em",
 				new StaticGetter<LocationGWT, Boolean>() {
@@ -135,5 +150,12 @@ public class LocationsView extends ScrollPanel {
 				table.addRows(result);
 			}
 		});
+	}
+	
+	boolean locationExists(String building, String room) {
+		for (LocationGWT location : table.getAddedUntouchedAndEditedObjects())
+			if (location.getBuilding().equals(building) && location.getRoom().equals(room))
+				return true;
+		return false;
 	}
 }
