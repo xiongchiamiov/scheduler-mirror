@@ -1,15 +1,17 @@
 package edu.calpoly.csc.scheduler.view.web.shared;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.Vector;
 
 
-public class InstructorGWT implements Serializable{
+public class InstructorGWT implements Serializable, Comparable<InstructorGWT>{
 	private static final long serialVersionUID = -4982539363690274674L;
 	
+	private int id;
 	private String userID;
 	private String firstName, lastName, roomNumber, building;
 	private boolean disabilities;
@@ -21,8 +23,30 @@ public class InstructorGWT implements Serializable{
 
 	Map<CourseGWT, Integer> coursePrefs;
 	
-	private Integer scheduleID;
 	
+	
+	public InstructorGWT() {
+		super();
+	}
+
+	public InstructorGWT(int id) {
+		super();
+		this.id = id;
+		this.userID = "";
+		this.firstName = "";
+		this.lastName = "";
+		this.roomNumber = "";
+		this.building = "";
+		this.disabilities = false;
+		this.maxwtu = 4;
+		this.curwtu = 0;
+		this.fairness = 0;
+		this.generosity = 0;
+		this.itemsTaught = new Vector<ScheduleItemGWT>();
+		this.tPrefs = new HashMap<DayGWT, Map<TimeGWT, TimePreferenceGWT>>();
+		this.coursePrefs = new HashMap<CourseGWT, Integer>();
+	}
+
 	public InstructorGWT clone() {
 		InstructorGWT instructor = new InstructorGWT();
 		instructor.setUserID(userID);
@@ -111,14 +135,6 @@ public class InstructorGWT implements Serializable{
 		this.curwtu = curWtu;
 	}
 	
-	public Integer getScheduleID(){
-		return scheduleID;
-	}
-	
-	public void setScheduleID(Integer sched){
-		this.scheduleID = sched;
-	}
-	
 	public int getFairness(){
 		return fairness;
 	}
@@ -197,5 +213,29 @@ public class InstructorGWT implements Serializable{
 
 	public void setDisabilities(boolean disabilities) {
 		this.disabilities = disabilities;
+	}
+	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+	
+	@Override
+	public int compareTo(InstructorGWT that) {
+		/** TODO */
+		return 0;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		return obj instanceof InstructorGWT && id == ((InstructorGWT)obj).id;
+	}
+	
+	@Override
+	public int hashCode() {
+		return id;
 	}
 }

@@ -82,6 +82,34 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		assert(model.getInstructors().size() == instructors.size());
 	}
 	
+	@Override
+	public Collection<InstructorGWT> saveInstructors(Collection<InstructorGWT> instructors) {
+		HashMap<String, Instructor> newLocationsByUserID = new LinkedHashMap<String, Instructor>();
+
+		for (InstructorGWT instructorGWT : instructors) {
+			Instructor instructor = Conversion.fromGWT(instructorGWT);
+			newLocationsByUserID.put(instructor.getUserID(), instructor);
+			model.saveInstructor(instructor);
+		}
+		
+		for (Instructor instructor : model.getInstructors())
+			if (newLocationsByUserID.get(instructor.getUserID()) == null)
+				model.removeInstructor(instructor);
+
+		assert(model.getInstructors().size() == instructors.size());
+		
+		return getInstructors();
+	}
+	
+	@Override
+	public ArrayList<InstructorGWT> getInstructors2() {
+		ArrayList<InstructorGWT> results = new ArrayList<InstructorGWT>();
+		int id = 1;
+		for (Instructor instructor : model.getInstructors())
+			results.add(Conversion.toGWT(id++, instructor));
+		return results;
+	}
+	
 	private void displayInstructorPrefs(Instructor instructor) {
 		System.out.println("Prefs for instructor " + instructor.getLastName());
 		

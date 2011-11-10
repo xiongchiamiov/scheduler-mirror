@@ -239,7 +239,6 @@ public class ITableBuilder implements TableBuilder<InstructorGWT>{
 		instructor.setCoursePreferences(new HashMap<CourseGWT, Integer>());
 		instructor.settPrefs(new HashMap<DayGWT, Map<TimeGWT,TimePreferenceGWT>>());
 		instructor.setItemsTaught(new Vector<ScheduleItemGWT>());
-		instructor.setScheduleID(null);
 		instructor.verify();
 		return instructor;
 	}

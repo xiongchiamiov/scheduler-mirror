@@ -136,6 +136,12 @@ public abstract class Conversion {
 		
 		return ins;
 	}
+	
+	public static InstructorGWT toGWT(int id, Instructor instructor) {
+		InstructorGWT i = toGWT(instructor);
+		i.setId(id);
+		return i;
+	}
 
 	private static Time fromGWT(TimeGWT sourceTime) {
 		return new Time(sourceTime.getHour(), sourceTime.getMinute());
