@@ -19,6 +19,7 @@ import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 
@@ -423,9 +424,57 @@ public class CTableBuilder implements TableBuilder<CourseGWT>{
 	public class NewIPanel implements NewObjPanel<CourseGWT>{
 
 		private Grid grid;
+		private CourseGWT course;
+		
+		// error
+		private String error;
+		
+		// input fields
+		private TextBox courseName = new TextBox();
+		private TextBox catalogNum = new TextBox();
+		private TextBox dept = new TextBox();
+		private TextBox wtu = new TextBox();
+		private TextBox scu = new TextBox();
+		private TextBox numSections = new TextBox();
+		private ListBox type = new ListBox();
+		private TextBox maxEnroll = new TextBox();
+		private TextBox hrsPerWeek = new TextBox();
+		// private ListBox lab = new ListBox();
+		
 		
 		public NewIPanel(){
-			grid = new Grid(2, 2);
+			course = newObject();
+			
+			// build grid
+			grid = new Grid(2, 9);
+			
+			// headers
+			grid.setWidget(0, 0, new Label(TableConstants.COURSE_NAME));
+			grid.setWidget(0, 1, new Label(TableConstants.COURSE_CATALOG_NUM));
+			grid.setWidget(0, 2, new Label(TableConstants.COURSE_DEPARTMENT));
+			grid.setWidget(0, 3, new Label(TableConstants.COURSE_WTU));
+			grid.setWidget(0, 4, new Label(TableConstants.COURSE_SCU));
+			grid.setWidget(0, 5, new Label(TableConstants.COURSE_NUM_SECTIONS));
+			grid.setWidget(0, 6, new Label(TableConstants.COURSE_TYPE));
+			grid.setWidget(0, 7, new Label(TableConstants.COURSE_MAX_ENROLLMENT));
+			grid.setWidget(0, 8, new Label(TableConstants.COURSE_LENGTH));
+			// grid.setWidget(0, 9, new Label(TableConstants.COURSE_LAB));
+			
+			// type
+			type.addItem(TableConstants.LEC);
+			type.addItem(TableConstants.LAB);
+			
+			// input fields
+			grid.setWidget(1, 0, courseName);
+			grid.setWidget(1, 1, catalogNum);
+			grid.setWidget(1, 2, dept);
+			grid.setWidget(1, 3, wtu);
+			grid.setWidget(1, 4, scu);
+			grid.setWidget(1, 5, numSections);
+			grid.setWidget(1, 6, type);
+			grid.setWidget(1, 7, maxEnroll);
+			grid.setWidget(1, 8, hrsPerWeek);
+			// grid.setWidget(1, 9, lab);
 		}
 		
 		@Override
@@ -435,20 +484,68 @@ public class CTableBuilder implements TableBuilder<CourseGWT>{
 
 		@Override
 		public CourseGWT getObject(ListDataProvider<CourseGWT> dataProvider) {
-			// TODO Auto-generated method stub
-			return new CourseGWT();
+			// update object with input values
+			course.setCourseName(courseName.getText().trim());
+			
+			Integer cNum = Table.parseInt(catalogNum.getText());
+			if(cNum == null){ cNum = -1; }
+			course.setCatalogNum(cNum);
+			
+			course.setDept(dept.getText().trim());
+			
+			Integer wtuNum = Table.parseInt(wtu.getText());
+			if(wtuNum == null){ wtuNum = -1; }
+			course.setWtu(wtuNum);
+			
+			Integer scuNum = Table.parseInt(scu.getText());
+			if(scuNum == null){ scuNum = -1; }
+			course.setScu(scuNum);
+			
+			Integer secNum = Table.parseInt(numSections.getText());
+			if(secNum == null){ secNum = -1; }
+			course.setNumSections(secNum);
+			
+			course.setType(type.getValue(type.getSelectedIndex()));
+			
+			Integer maxEnNum = Table.parseInt(maxEnroll.getText());
+			if(maxEnNum == null){ maxEnNum = -1; }
+			course.setMaxEnroll(maxEnNum);
+			
+			Integer hrsNum = Table.parseInt(hrsPerWeek.getText());
+			if(hrsNum == null){ hrsNum = -1; }
+			course.setLength(hrsNum);
+			
+			
+			// validate
+			error = validate(dataProvider);
+			if(error != null){
+				return null;
+			}
+			
+			return course;
 		}
 
 		@Override
 		public String getError() {
-			// TODO Auto-generated method stub
-			return null;
+			return error;
 		}
 
 		@Override
 		public void focus() {
-			// TODO Auto-generated method stub
+			courseName.setFocus(true);
+		}
+		
+		// validation
+		private String validate(ListDataProvider<CourseGWT> dataProvider){
 			
+			
+			
+			/** TODO validation */
+			
+			
+			
+	    	// no errors
+			return null;
 		}
 	}
 
