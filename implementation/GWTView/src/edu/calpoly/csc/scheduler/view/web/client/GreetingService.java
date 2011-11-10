@@ -3,6 +3,7 @@ package edu.calpoly.csc.scheduler.view.web.client;
 
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Map;
 
 import com.google.gwt.user.client.rpc.RemoteService;
@@ -34,8 +35,8 @@ public interface GreetingService extends RemoteService {
 			ArrayList<Integer> days, int startHour, boolean atHalfHour,
 			boolean inSchedule);
 	
-	ArrayList<LocationGWT> getLocations();
-	void saveLocations(ArrayList<LocationGWT> locations);
+	Collection<LocationGWT> getLocations();
+	Collection<LocationGWT> saveLocations(Collection<LocationGWT> collection);
 	
 	ArrayList<CourseGWT> getCourses();
 	void saveCourses(ArrayList<CourseGWT> locations);

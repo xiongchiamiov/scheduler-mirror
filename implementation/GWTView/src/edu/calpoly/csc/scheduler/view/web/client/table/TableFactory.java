@@ -14,8 +14,4 @@ public class TableFactory {
 	public static Table<CourseGWT> course(GreetingServiceAsync service){
 		return new Table<CourseGWT>(new CTableBuilder(service));
 	}
-	
-	public static Table<LocationGWT> location(GreetingServiceAsync service){
-		return new Table<LocationGWT>(new LTableBuilder(service));
-	}
 }

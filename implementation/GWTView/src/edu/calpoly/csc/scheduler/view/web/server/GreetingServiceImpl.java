@@ -216,14 +216,15 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	@Override
 	public ArrayList<LocationGWT> getLocations() {
 		ArrayList<LocationGWT> results = new ArrayList<LocationGWT>();
+		int id = 1;
 		for (Location location : model.getLocations())
-			results.add(Conversion.toGWT(location));
+			results.add(Conversion.toGWT(id++, location));
 		return results;
 	}
 
 
 	@Override
-	public void saveLocations(ArrayList<LocationGWT> locations) {
+	public Collection<LocationGWT> saveLocations(Collection<LocationGWT> locations) {
 		HashMap<String, Location> newLocationsByUserID = new LinkedHashMap<String, Location>();
 
 		for (LocationGWT locationGWT : locations) {
@@ -237,6 +238,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 				model.removeLocation(location);
 
 		assert(model.getLocations().size() == locations.size());
+		
+		return getLocations();
 	}
 	
 	@Override

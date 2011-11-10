@@ -228,16 +228,17 @@ public abstract class Conversion {
 		return null;
 	}
 
-	public static LocationGWT toGWT(Location location) {
-	    return new LocationGWT(location.getBuilding(), location.getRoom(),
-                location.getMaxOccupancy(), location.getType(),
-                location.isSmartRoom(), location.hasLaptopConnectivity(),
-                location.isADACompliant(), location.hasOverhead());
+	public static LocationGWT toGWT(int id, Location location) {
+		return new LocationGWT(
+				id,
+				location.getBuilding(),
+				location.getRoom(),
+				location.getType(),
+				location.getMaxOccupancy(),
+				location.getAdaCompliant());
 	}
 	
 	public static Location fromGWT(LocationGWT location) {
-		location.verify();
-		
 		Location loc = new Location();
 		loc.setRoom(location.getRoom());
 		loc.setAdaCompliant(location.isADACompliant());
@@ -248,7 +249,6 @@ public abstract class Conversion {
 		loc.setRoom(location.getRoom());
 		loc.setType(location.getType());
 		loc.verify();
-		
 		return loc;
 	}
 	

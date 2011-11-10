@@ -1,5 +1,6 @@
 package edu.calpoly.csc.scheduler.view.web.client;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.HTML;
 
@@ -14,5 +15,14 @@ public class HTMLUtilities {
 		HTML result = new HTML(label);
 		result.addStyleName(styleName);
 		return result;
+	}
+	
+	public static Element getClosestContainingElementOfType(Element element, String type) {
+		assert(element != null);
+		while (!element.getNodeName().equalsIgnoreCase(type)) {
+			element = element.getParentElement();
+			assert(element != null);
+		}
+		return element;
 	}
 }

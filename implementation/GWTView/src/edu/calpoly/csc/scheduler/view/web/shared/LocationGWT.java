@@ -2,167 +2,73 @@ package edu.calpoly.csc.scheduler.view.web.shared;
 
 import java.io.Serializable;
 
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.RootPanel;
 
-
-public class LocationGWT implements Serializable{
+public class LocationGWT implements Serializable, Comparable<LocationGWT> {
 	private static final long serialVersionUID = 1015108352203434920L;
-	
-	public class NullGWTDataException extends RuntimeException {
-		
-	}
 
-	/**
-	 * Building number of location.
-	 */
+	private int id;
 	private String building;
-	
-	/**
-	 * Room number of location.
-	 */
 	private String room;
-
-	/**
-	 * Type of this location.
-	 */
-	private String type; 
-
-	/**
-	 * Maximum occupancy of this location.
-	 */
+	private String type;
 	private int maxOccupancy;
-	
-	private String equipmentList; //will be an object
-	
 	private boolean adacompliant;
 	
-	private String availability; //will be an object
-	
-	private Integer scheduleID;
-	/**
-	 * Provided equuipment in this location.
-	 */
-//	private ProvidedEquipment providedEquipment;
+	public LocationGWT() { }
 
-	/**
-	 * Whether this location is compliant to those with disabilities.
-	 */
-//	private boolean adaCompliant;
-
-	/**
-    * Represents a location's availabilty throughout the week.
-	 */
-//   private WeekAvail availability;
-
-	public void verify() {
-		assert(building != null);
-		assert(room != null);
-		assert(type != null);
-		assert(equipmentList != null);
-		assert(availability != null);
-	}
-
-	public LocationGWT(){
-		building = "";
-		room = "";
-		type = "";
-		maxOccupancy = 0;
-		equipmentList = "";
-		adacompliant = false;
-	}
-
-	public LocationGWT(String building, String name, String room, String type,
-			int maxOccupancy, String equipmentList, String additionalDetails) {
+	public LocationGWT(int id, String building, String room, String type, int maxOccupancy, boolean adacompliant) {
 		super();
+		this.id = id;
 		this.building = building;
 		this.room = room;
 		this.type = type;
 		this.maxOccupancy = maxOccupancy;
-		this.equipmentList = equipmentList;
-	}
-	
-	public LocationGWT(String building, String room, int maxOccupancy, String type,
-			boolean smartroom, boolean laptopconnectivity, boolean adacompliant,
-			boolean overhead) {
-		this.building = building;
-		this.room = room;
-		this.maxOccupancy = maxOccupancy;
-		this.type = type;
 		this.adacompliant = adacompliant;
 	}
+
+	public LocationGWT(int id, LocationGWT other) {
+		this.id = id;
+		this.building = other.building;
+		this.room = other.room;
+		this.type = other.type;
+		this.maxOccupancy = other.maxOccupancy;
+		this.adacompliant = other.adacompliant;
+	}
+
+	@Override
+	public int compareTo(LocationGWT that) {
+		if (building.compareTo(that.building) != 0)
+			return building.compareTo(that.building);
+		if (room.compareTo(that.room) != 0)
+			return room.compareTo(that.room);
+		if (type.compareTo(that.type) != 0)
+			return type.compareTo(that.type);
+		if (maxOccupancy != that.maxOccupancy)
+			return maxOccupancy - that.maxOccupancy;
+		if (adacompliant != that.adacompliant)
+			return (adacompliant ? 1 : 0) - (that.adacompliant ? 1 : 0);
+		return 0;
+	}
 	
-	public String getAvailability()
-	{
-		return availability;
+	@Override
+	public boolean equals(Object obj) {
+		return obj instanceof LocationGWT && id == ((LocationGWT)obj).id;
 	}
 	
-	public void setAvailability(String availability)
-	{
-		this.availability = availability;
+	@Override
+	public int hashCode() {
+		return id;
 	}
 	
-	public Integer getScheduleID()
-	{
-		return scheduleID;
-	}
-	
-	public void setScheduleID(Integer id)
-	{
-		this.scheduleID = id;
-	}
-	
-	public boolean isADACompliant() {
-		return adacompliant;
-	}
-	
-	public void setADACompliant(boolean compliant)
-	{
-		this.adacompliant = compliant;
-	}
+	public int getID() { return id; }
+	public boolean isADACompliant() { return adacompliant; }
+	public void setADACompliant(boolean compliant) { this.adacompliant = compliant; }
+	public String getBuilding() { return building; }
+	public void setBuilding(String building) { this.building = building; }
+	public String getRoom() { return room; }
+	public void setRoom(String room) { this.room = room; }
+	public String getType() { return type; }
+	public void setType(String type) { this.type = type; }
+	public int getMaxOccupancy() { return maxOccupancy; }
+	public void setMaxOccupancy(int maxOccupancy) { this.maxOccupancy = maxOccupancy; }
 
-	public String getBuilding() {
-		return building;
-	}
-
-	public void setBuilding(String building) {
-		this.building = building;
-	}
-
-	public String getRoom() {
-		return room;
-	}
-
-	public void setRoom(String room) {
-		this.room = room;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	public int getMaxOccupancy() {
-		return maxOccupancy;
-	}
-
-	public void setMaxOccupancy(int maxOccupancy) {
-		this.maxOccupancy = maxOccupancy;
-	}
-
-	public String getEquipmentList() {
-		return equipmentList;
-	}
-
-	public void setEquipmentList(String equipmentList) {
-		this.equipmentList = equipmentList;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
 }

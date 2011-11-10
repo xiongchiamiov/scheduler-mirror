@@ -402,3 +402,87 @@ background-clip: initial;
   border-collapse: collapse;
   text-align: center;
 }
+
+.osmtable {
+	border-spacing: collapse;
+}
+
+.osmtable .stringcell.writing input {
+	padding: 0px;
+	width: 100%;
+}
+
+.osmtable .stringcell.reading div {
+	padding: 1px;
+	white-space: nowrap;
+}
+
+.osmtable .selectcell.reading div {
+	padding-right: 2.5em;
+}
+
+.osmtable .header {
+	border-bottom: 2px solid #6F7277;
+	font-weight: bold;
+    color: #4B4A4A;
+    text-align: left;
+    text-shadow: 1px 1px 0 #DDDDFF;
+	padding: 3px .4em;
+}
+
+.osmtable tr:nth-child(odd) {
+	background-color: #F8FBFE;
+}
+
+
+.osmtable tr + tr:hover { background-color: #EEEEEE; }
+
+.osmtable tr.edited, .editedLegend { background-color: #FFFF00; }
+.osmtable tr.added, .addedLegend { background-color: #80FF80; }
+.osmtable tr.removed, .removedLegend { background-color: #FFC0C0; }
+
+.osmtable tr + tr.edited:hover  { background-color: #F8F800; }
+.osmtable tr + tr.added:hover   { background-color: #80E080; }
+.osmtable tr + tr.removed:hover { background-color: #FFB0B0; }
+
+.editedLegend,
+.removedLegend,
+.addedLegend {
+	margin-left: 1em;
+	padding-left: 2em;
+	display: inline-block;
+}
+
+.addedLegend div,
+.editedLegend div,
+.removedLegend div {
+	padding: 3px;
+	background-color: #FFFFFF;
+	display: inline-block;
+}
+
+.controlBar {
+	text-align: right;
+}
+
+.controlBar button {
+	float: left;
+}
+
+
+.resizeableHeader {
+	position: relative;
+	display: block;
+	border-right: 2px dotted #6F7277;
+}
+
+.resizer {
+	position: absolute;
+	top: 0px;
+	bottom: 0px;
+	right: -.4em;
+	width: .7em;
+	display: block;
+	cursor: col-resize;
+	z-index: 1;
+}

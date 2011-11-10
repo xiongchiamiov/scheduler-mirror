@@ -1,6 +1,7 @@
 package edu.calpoly.csc.scheduler.view.web.client;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Map;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -24,8 +25,8 @@ public interface GreetingServiceAsync {
 	void saveInstructor(InstructorGWT instructor, AsyncCallback<Void> asyncCallback);
 	void saveInstructors(ArrayList<InstructorGWT> instructors, AsyncCallback<Void> callback) throws IllegalArgumentException;
 
-	void getLocations(AsyncCallback<ArrayList<LocationGWT>> callback) throws IllegalArgumentException;
-	void saveLocations(ArrayList<LocationGWT> locations, AsyncCallback<Void> callback) throws IllegalArgumentException;
+	void getLocations(AsyncCallback<Collection<LocationGWT>> asyncCallback) throws IllegalArgumentException;
+	void saveLocations(Collection<LocationGWT> collection, AsyncCallback<Collection<LocationGWT>> asyncCallback) throws IllegalArgumentException;
 	
 	void getCourses(AsyncCallback<ArrayList<CourseGWT>> callback) throws IllegalArgumentException;
 	void saveCourses(ArrayList<CourseGWT> courses, AsyncCallback<Void> callback) throws IllegalArgumentException;
