@@ -2,11 +2,9 @@ package edu.calpoly.csc.scheduler.model.db.cdb;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 import edu.calpoly.csc.scheduler.model.db.AbstractDatabase;
-import edu.calpoly.csc.scheduler.model.db.DatabaseAPI;
 import edu.calpoly.csc.scheduler.model.db.SQLDB;
 import edu.calpoly.csc.scheduler.model.schedule.Day;
 import edu.calpoly.csc.scheduler.model.schedule.Week;
@@ -27,6 +25,7 @@ public class CourseDB extends AbstractDatabase<Course>
    public static final String            ENROLLMENT    = "enrollment";
    public static final String            LAB           = "lab";
    public static final String            SCHEDULEID    = "scheduleid";
+   public static final String NOTE = "note";
 
    public CourseDB(SQLDB sqldb, int scheduleID)
    {
@@ -56,6 +55,7 @@ public class CourseDB extends AbstractDatabase<Course>
       fields.put(ENROLLMENT, data.getEnrollment());
       fields.put(LAB, sqldb.serialize(data.getLab()));
       fields.put(SCHEDULEID, scheduleId);
+      fields.put(NOTE, data.getNote());
       // Where clause
       wheres = new LinkedHashMap<String, Object>();
       wheres.put(CATALOGNUM, data.getCatalogNum());
@@ -116,6 +116,8 @@ public class CourseDB extends AbstractDatabase<Course>
          int scheduleid = rs.getInt("scheduleid");
          toAdd.setScheduleId(scheduleid);
          
+         String note = rs.getString(NOTE);
+         toAdd.setNote(note);
       }
       catch (SQLException e)
       {

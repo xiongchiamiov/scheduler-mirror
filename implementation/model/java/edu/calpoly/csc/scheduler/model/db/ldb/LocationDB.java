@@ -23,6 +23,7 @@ public class LocationDB extends AbstractDatabase<Location>
    public static final String            ADACOMPLIANT      = "adacompliant";
    public static final String            AVAILABILITY      = "availability";
    public static final String            SCHEDULEID        = "scheduleid";
+   public static final String NOTE = "note";
 
    public LocationDB(SQLDB sqldb, int scheduleID)
    {
@@ -87,6 +88,7 @@ public class LocationDB extends AbstractDatabase<Location>
       fields.put(ADACOMPLIANT, data.getAdaCompliant());
       fields.put(AVAILABILITY, sqldb.serialize(data.getAvailability()));
       fields.put(SCHEDULEID, scheduleId);
+      fields.put(NOTE, data.getNote());
       // Where clause
       wheres = new LinkedHashMap<String, Object>();
       wheres.put(BUILDING, data.getBuilding());
@@ -128,6 +130,9 @@ public class LocationDB extends AbstractDatabase<Location>
 
          int scheduleid = rs.getInt("scheduleid");
          toAdd.setScheduleId(scheduleid);
+         
+         String note = rs.getString(NOTE);
+         toAdd.setNote(note);
       }
       catch (SQLException e)
       {

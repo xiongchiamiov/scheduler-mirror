@@ -2,13 +2,11 @@ package edu.calpoly.csc.scheduler.model.db.idb;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Vector;
 
 import edu.calpoly.csc.scheduler.model.db.AbstractDatabase;
-import edu.calpoly.csc.scheduler.model.db.DatabaseAPI;
 import edu.calpoly.csc.scheduler.model.db.SQLDB;
 import edu.calpoly.csc.scheduler.model.db.Time;
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
@@ -35,6 +33,7 @@ public class InstructorDB extends AbstractDatabase<Instructor>
    public static final String TPREFS            = "tprefs";
    public static final String ITEMSTAUGHT       = "itemstaught";
    public static final String SCHEDULEID        = "scheduleid";
+   public static final String NOTE = "note";
 
    public InstructorDB(SQLDB sqldb, int scheduleID)
    {
@@ -67,6 +66,7 @@ public class InstructorDB extends AbstractDatabase<Instructor>
       fields.put(TPREFS, sqldb.serialize(data.gettPrefs()));
       fields.put(ITEMSTAUGHT, sqldb.serialize(data.getItemsTaught()));
       fields.put(SCHEDULEID, scheduleId);
+      fields.put(NOTE, data.getNote());
       // Where clause
       wheres = new LinkedHashMap<String, Object>();
       wheres.put(USERID, data.getUserID());
@@ -130,6 +130,9 @@ public class InstructorDB extends AbstractDatabase<Instructor>
 
          int scheduleid = rs.getInt("scheduleid");
          toAdd.setScheduleId(scheduleid);
+         
+         String note = rs.getString(NOTE);
+         toAdd.setNote(note);
       }
       catch (SQLException e)
       {

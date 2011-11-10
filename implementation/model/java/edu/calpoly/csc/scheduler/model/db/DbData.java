@@ -8,6 +8,7 @@ package edu.calpoly.csc.scheduler.model.db;
 public abstract class DbData
 {
    private Integer scheduleId;
+   private String note;
    
    /**
     * Returns the scheduleId
@@ -27,6 +28,34 @@ public abstract class DbData
    public void setScheduleId (int scheduleId)
    {
       this.scheduleId = scheduleId;
+   }
+   
+   /**
+    * Returns the note
+    * 
+    * @return the note
+    */
+   public String getNote ()
+   {
+	   if(note == null)
+	   {
+		   note = "";
+	   }
+	   return note;
+   }
+   
+   /**
+    * Sets the note to the given parameter.
+    *
+    * @param note the note to set
+    */
+   public void setNote (String note)
+   {
+	   if(note == null)
+	   {
+		   note = "";
+	   }
+	   this.note = note;
    }
 
    public abstract void verify () throws NullDataException;

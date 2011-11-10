@@ -101,6 +101,21 @@ public class Database
       }
       return schedules;
    }
+   
+   /**
+    * Step 3.5 Copies a schedule from an existing one
+    * @return scheduleid The copied schedules scheduleid
+    */
+   public int copySchedule(int scheduleid, String name)
+   {
+	   scheduleDB = new ScheduleDB(sqldb);
+	   Schedule old = scheduleDB.getSchedule(scheduleid);
+	   //Set new fields
+	   old.setId(-2);
+	   old.setName(name);
+	   scheduleDB.saveData(old);
+	   return scheduleDB.getScheduleID(old);
+   }
 
    /**
     * STEP 4 Initialize databases with given schedule id
@@ -113,7 +128,10 @@ public class Database
       data.setDept(dept);
       data.setName(scheduleName);
       data.setScheduleId(realid);
-      scheduleDB = new ScheduleDB(sqldb);
+      if(scheduleDB == null)
+      {
+    	  scheduleDB = new ScheduleDB(sqldb);
+      }
 
       if (sqldb.doesScheduleIDExist(realid))
       {

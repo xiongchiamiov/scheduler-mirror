@@ -99,5 +99,12 @@ public class ScheduleDB extends AbstractDatabase<Schedule>
    {
       this.scheduleId = scheduleID;
    }
-
+   
+   /**
+    * Gets a schedule by scheduleid for copying
+    */
+   public Schedule getSchedule(int scheduleid)
+   {
+	   return make(sqldb.getSQLSchedules(scheduleid));
+   }
 }
