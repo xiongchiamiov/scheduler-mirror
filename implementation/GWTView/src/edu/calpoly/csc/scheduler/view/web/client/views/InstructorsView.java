@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -149,7 +150,7 @@ public class InstructorsView extends VerticalPanel {
 				new StaticValidator<InstructorGWT, Integer>() {
 					public void validate(InstructorGWT object, Integer newWtu) throws InvalidValueException {
 						if (newWtu < 0)
-							throw new InvalidValueException(TableConstants.INSTR_MAX_WTU + " must be a positive: " + newWtu + " is invalid.");
+							throw new InvalidValueException(TableConstants.INSTR_MAX_WTU + " must be positive: " + newWtu + " is invalid.");
 					}
 				}));
 		
@@ -179,11 +180,15 @@ public class InstructorsView extends VerticalPanel {
 					public void setValueInObject(InstructorGWT object, Boolean newValue) { object.setDisabilities(newValue); }
 				}));
 		
-		table.addColumn(new ButtonColumn<InstructorGWT>(TableConstants.INSTR_PREFERENCES, "4em", TableConstants.INSTR_PREFERENCES,
+		table.addColumn(new ButtonColumn<InstructorGWT>(TableConstants.INSTR_PREFERENCES, "4em",
 				new ClickCallback<InstructorGWT>(){
-					public void buttonClickedForObject(InstructorGWT object) {
+					public void buttonClickedForObject(InstructorGWT object, Button button) {
 						InstructorsView.container.clear();
 				    	InstructorsView.container.add(new InstructorPreferencesView(InstructorsView.container, InstructorsView.service, object));
+					}
+
+					public String initialLabel(InstructorGWT object) {
+						return TableConstants.INSTR_PREFERENCES;
 					}
 		}));
 		
@@ -192,7 +197,7 @@ public class InstructorsView extends VerticalPanel {
 		service.getInstructors2(new AsyncCallback<Collection<InstructorGWT>>() {
 			public void onFailure(Throwable caught) {
 				popup.hide();
-				Window.alert("Failed to get courses: " + caught.toString());
+				Window.alert("Failed to get instructors: " + caught.toString());
 			}
 			
 			public void onSuccess(Collection<InstructorGWT> result){
