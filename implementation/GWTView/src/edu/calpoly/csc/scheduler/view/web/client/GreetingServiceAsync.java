@@ -33,10 +33,13 @@ public interface GreetingServiceAsync {
 	void getCourses(AsyncCallback<ArrayList<CourseGWT>> callback) throws IllegalArgumentException;
 	void saveCourses(ArrayList<CourseGWT> courses, AsyncCallback<Void> callback) throws IllegalArgumentException;
 
+	void getCourses2(AsyncCallback<Collection<CourseGWT>> asyncCallback) throws IllegalArgumentException;
+	void saveCourses(Collection<CourseGWT> collection, AsyncCallback<Collection<CourseGWT>> asyncCallback) throws IllegalArgumentException;
+	
     void getGWTScheduleItems(ArrayList<CourseGWT> courses, AsyncCallback<ArrayList<ScheduleItemGWT>> scheduleItems) throws IllegalArgumentException;
 	void rescheduleCourse(ScheduleItemGWT scheduleItem, 
 			ArrayList<Integer> days, int startHour, boolean atHalfHour, 
-			boolean isScheduled,
+			boolean isScheduled, 
 			AsyncCallback<ArrayList<ScheduleItemGWT>> callback) 
 					throws IllegalArgumentException;
 	void generateSchedule(AsyncCallback<ArrayList<ScheduleItemGWT>> scheduleItems) throws IllegalArgumentException;

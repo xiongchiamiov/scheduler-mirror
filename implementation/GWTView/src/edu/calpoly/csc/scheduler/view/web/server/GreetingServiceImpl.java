@@ -304,6 +304,34 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		
 		assert(model.getCourses().size() == courses.size());
 	}
+	
+	@Override
+	public Collection<CourseGWT> saveCourses(Collection<CourseGWT> courses) {
+		HashMap<String, Course> newLocationsByUserID = new LinkedHashMap<String, Course>();
+
+		for (CourseGWT courseGWT : courses) {
+			Course crs = Conversion.fromGWT(courseGWT);
+			newLocationsByUserID.put(courseGWT.getDept() + "-" + courseGWT.getCatalogNum(), crs);
+			model.saveCourse(crs);
+		}
+		
+		for (Course course : model.getCourses())
+			if (newLocationsByUserID.get(course.getDept() + "-" + course.getCatalogNum()) == null)
+				model.removeCourse(course);
+
+		assert(model.getCourses().size() == courses.size());
+		
+		return getCourses();
+	}
+	
+	@Override
+	public ArrayList<CourseGWT> getCourses2() {
+		ArrayList<CourseGWT> results = new ArrayList<CourseGWT>();
+		int id = 1;
+		for (Course course : model.getCourses())
+			results.add(Conversion.toGWT(id++, course));
+		return results;
+	}
 
 	private boolean hasPreferences(Instructor instructor) {
 		int totalDesire = 0;
