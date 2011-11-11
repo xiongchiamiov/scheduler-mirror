@@ -12,6 +12,7 @@ import edu.calpoly.csc.scheduler.model.db.Database;
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
 import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
 import edu.calpoly.csc.scheduler.model.db.ldb.Location;
+import edu.calpoly.csc.scheduler.model.schedule.Schedule;
 
 
 /**
@@ -116,4 +117,7 @@ public class Model implements Serializable
 //		return db.getScheduleDB().copySchedule(existingScheduleID, scheduleName);
 	}
 
+	public String exportToCSV(Schedule schedule) {
+		return new CSV().export(this, schedule);
+	}
 }

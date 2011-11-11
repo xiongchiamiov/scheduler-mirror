@@ -363,6 +363,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 
 	@Override
 	public int copySchedule(int existingScheduleID, String scheduleName) {
-		return model.copySchedule(existingScheduleID, scheduleName);
+		int newSchedule = model.copySchedule(existingScheduleID, scheduleName);
+		openExistingSchedule(newSchedule);
+		return newSchedule;
 	}
 }
