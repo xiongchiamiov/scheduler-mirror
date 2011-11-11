@@ -18,6 +18,9 @@ import edu.calpoly.csc.scheduler.view.web.client.table.StaticGetter;
 import edu.calpoly.csc.scheduler.view.web.client.table.StaticSetter;
 import edu.calpoly.csc.scheduler.view.web.client.table.StaticValidator;
 import edu.calpoly.csc.scheduler.view.web.client.table.StringColumn;
+import edu.calpoly.csc.scheduler.view.web.client.table.TableConstants;
+import edu.calpoly.csc.scheduler.view.web.client.table.StaticValidator.InvalidValueException;
+import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
 
 public class LocationsView extends ScrollPanel {
@@ -108,7 +111,12 @@ public class LocationsView extends ScrollPanel {
 				new StaticSetter<LocationGWT, Integer>() {
 					public void setValueInObject(LocationGWT object, Integer newValue) { object.setMaxOccupancy(newValue); }
 				},
-				null));
+				new StaticValidator<LocationGWT, Integer>() {
+					public void validate(LocationGWT object, Integer newMaxOcc) throws InvalidValueException {
+						if (newMaxOcc < 0)
+							throw new InvalidValueException(TableConstants.LOC_MAX_OCCUPANCY + " must be a positive: " + newMaxOcc + " is invalid.");
+					}
+				}));
 		
 		table.addColumn(new CheckboxColumn<LocationGWT>("ADA", "4em",
 				new StaticGetter<LocationGWT, Boolean>() {
