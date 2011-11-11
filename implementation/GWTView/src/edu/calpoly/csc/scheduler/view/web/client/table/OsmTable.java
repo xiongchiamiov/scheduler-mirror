@@ -160,13 +160,19 @@ public class OsmTable<ObjectType extends Comparable<ObjectType>> extends FocusPa
 	}
 	
 	public void addDeleteColumn() {
-		addColumn(new ButtonColumn<ObjectType>("Delete", "4em", "X",
+		addColumn(new ButtonColumn<ObjectType>("Delete", "4em",
 				new ButtonColumn.ClickCallback<ObjectType>() {
-					public void buttonClickedForObject(ObjectType object) {
+					public void buttonClickedForObject(ObjectType object,
+							Button button) {
 						Row row = rows.get(object);
 						if (addedRows.contains(row))
 							deleteRow(row);
 						toggleRowRemoved(row);
+					}
+
+					@Override
+					public String initialLabel(ObjectType object) {
+						return "X";
 					}
 				}));
 	}
