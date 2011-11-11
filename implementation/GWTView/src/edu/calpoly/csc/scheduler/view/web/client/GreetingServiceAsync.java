@@ -44,4 +44,6 @@ public interface GreetingServiceAsync {
 					throws IllegalArgumentException;
 	void generateSchedule(AsyncCallback<ArrayList<ScheduleItemGWT>> scheduleItems) throws IllegalArgumentException;
 	void resetSchedule(AsyncCallback<Void> asyncCallback);
+	void copySchedule(int existingScheduleID, String scheduleName,
+			AsyncCallback<Integer> asyncCallback);
 }

@@ -6,6 +6,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.NotImplementedException;
+
 import edu.calpoly.csc.scheduler.model.db.Database;
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
 import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
@@ -107,6 +109,11 @@ public class Model implements Serializable
 
 	public void removeCourse(Course course) {
 		db.getCourseDB().removeData(course);
+	}
+
+	public int copySchedule(int existingScheduleID, String scheduleName) {
+		throw new NotImplementedException();
+//		return db.getScheduleDB().copySchedule(existingScheduleID, scheduleName);
 	}
 
 }

@@ -47,4 +47,5 @@ public interface GreetingService extends RemoteService {
 	Collection<CourseGWT> saveCourses(Collection<CourseGWT> collection);
 	
 	void resetSchedule();
+	int copySchedule(int existingScheduleID, String scheduleName);
 }

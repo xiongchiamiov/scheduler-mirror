@@ -32,7 +32,7 @@ public class SelectScheduleView extends VerticalPanel {
 	
 	Map<String, Integer> schedulesIDsAndNames;
 	
-	public SelectScheduleView(Panel container, GreetingServiceAsync service) {
+	public SelectScheduleView(final Panel container, final GreetingServiceAsync service) {
 		this.container = container;
 		this.service = service;
 
@@ -63,11 +63,68 @@ public class SelectScheduleView extends VerticalPanel {
 				selectSchedule(existingScheduleID, scheduleName);
 			}
 		}));
+
+		final SelectScheduleView self = this;
+		
+		add(new Button("Copy and Open", new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				int index = listBox.getSelectedIndex();
+				if (index < 0)
+					return;
+
+				final int existingScheduleID = Integer.parseInt(listBox.getValue(index));
+
+				displayNewSchedPopup("Name Schedule Copy", new NameScheduleCallback() {
+					@Override
+					public void namedSchedule(final String scheduleName) {
+					    final LoadingPopup popup = new LoadingPopup();
+					    popup.show();
+					    
+						service.copySchedule(existingScheduleID, scheduleName, new AsyncCallback<Integer>() {
+							@Override
+							public void onFailure(Throwable caught) {
+								popup.hide();
+								Window.alert("Failed to open new schedule in: " + caught.getMessage());
+							}
+							
+							@Override
+							public void onSuccess(Integer newScheduleID) {
+								popup.hide();
+								container.clear();
+								container.add(new ScheduleNavView(self, container, service, newScheduleID, scheduleName));
+							}
+						});
+					}
+				});
+			}
+		}));
 		
 		add(new Button("New Schedule", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				displayNewSchedPopup();
+				displayNewSchedPopup("Create Schedule", new NameScheduleCallback() {
+					@Override
+					public void namedSchedule(final String scheduleName) {
+					    final LoadingPopup popup = new LoadingPopup();
+					    popup.show();
+					    
+						service.openNewSchedule(scheduleName, new AsyncCallback<Integer>() {
+							@Override
+							public void onFailure(Throwable caught) {
+								popup.hide();
+								Window.alert("Failed to open new schedule in: " + caught.getMessage());
+							}
+							
+							@Override
+							public void onSuccess(Integer newScheduleID) {
+								popup.hide();
+								container.clear();
+								container.add(new ScheduleNavView(self, container, service, newScheduleID, scheduleName));
+							}
+						});
+					}
+				});
 			}
 		}));
 	}
@@ -114,36 +171,22 @@ public class SelectScheduleView extends VerticalPanel {
 		});
 	}
 	
-	public void displayNewSchedPopup() {
-		final SelectScheduleView self = this;
-		
+	interface NameScheduleCallback {
+		void namedSchedule(String name);
+	}
+	
+	public void displayNewSchedPopup(String buttonLabel, final NameScheduleCallback callback) {
 		final TextBox tb = new TextBox();
 		final DialogBox db = new DialogBox(false);
 		VerticalPanel vp = new VerticalPanel();
-		final Button butt = new Button("Create Schedule", new ClickHandler() {
+		final Button butt = new Button(buttonLabel, new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {		
 				db.hide();
 				
-			    final LoadingPopup popup = new LoadingPopup();
-			    popup.show();
-			    
 			    final String scheduleName = tb.getText();
-				
-				service.openNewSchedule(scheduleName, new AsyncCallback<Integer>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						popup.hide();
-						Window.alert("Failed to open new schedule in: " + caught.getMessage());
-					}
-					
-					@Override
-					public void onSuccess(Integer newScheduleID) {
-						popup.hide();
-						container.clear();
-						container.add(new ScheduleNavView(self, container, service, newScheduleID, scheduleName));
-					}
-				});
+			    
+			    callback.namedSchedule(scheduleName);
 			}
 		});
 		

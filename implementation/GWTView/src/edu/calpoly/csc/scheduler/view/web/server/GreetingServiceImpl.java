@@ -360,4 +360,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	 schedule = new Schedule(model.getInstructors(), model.getLocations());
 	 scheduleItems = new HashMap<String, ScheduleItem>();
 	}
+
+	@Override
+	public int copySchedule(int existingScheduleID, String scheduleName) {
+		return model.copySchedule(existingScheduleID, scheduleName);
+	}
 }
