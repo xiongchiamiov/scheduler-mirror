@@ -17,6 +17,7 @@ import edu.calpoly.csc.scheduler.view.web.client.table.IntColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
 import edu.calpoly.csc.scheduler.view.web.client.table.StaticGetter;
 import edu.calpoly.csc.scheduler.view.web.client.table.StaticSetter;
+import edu.calpoly.csc.scheduler.view.web.client.table.StaticValidator;
 import edu.calpoly.csc.scheduler.view.web.client.table.StringColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.Table;
 import edu.calpoly.csc.scheduler.view.web.client.table.TableConstants;
@@ -131,14 +132,26 @@ public class InstructorsView extends VerticalPanel {
 				new StaticSetter<InstructorGWT, String>() {
 					public void setValueInObject(InstructorGWT object, String newValue) { object.setUserID(newValue); }
 				},
-				String.CASE_INSENSITIVE_ORDER, null));
+				String.CASE_INSENSITIVE_ORDER, 
+				new StaticValidator<InstructorGWT, String>() {
+					public void validate(InstructorGWT object, String newId) throws InvalidValueException {
+						if (userIdExists(newId))
+							throw new InvalidValueException("There is already a user with ID: " + newId);
+					}
+				}));
 
 		table.addColumn(new IntColumn<InstructorGWT>(TableConstants.INSTR_MAX_WTU, "4em",
 				new StaticGetter<InstructorGWT, Integer>() {
 					public Integer getValueForObject(InstructorGWT object) { return object.getMaxWtu(); }
 				}, new StaticSetter<InstructorGWT, Integer>() {
 					public void setValueInObject(InstructorGWT object, Integer newValue) { object.setMaxWtu(newValue); }
-				}, null));
+				}, 
+				new StaticValidator<InstructorGWT, Integer>() {
+					public void validate(InstructorGWT object, Integer newWtu) throws InvalidValueException {
+						if (newWtu < 0)
+							throw new InvalidValueException(TableConstants.INSTR_MAX_WTU + " must be a positive: " + newWtu + " is invalid.");
+					}
+				}));
 		
 		table.addColumn(new StringColumn<InstructorGWT>(TableConstants.INSTR_BUILDING, "6em",
 				new StaticGetter<InstructorGWT, String>() {
@@ -185,8 +198,8 @@ public class InstructorsView extends VerticalPanel {
 			public void onSuccess(Collection<InstructorGWT> result){
 				assert(result != null);
 				popup.hide();
-				for (InstructorGWT location : result)
-					nextLocationID = Math.max(nextLocationID, location.getId() + 1);
+				for (InstructorGWT instr : result)
+					nextLocationID = Math.max(nextLocationID, instr.getId() + 1);
 				table.addRows(result);
 			}
 		});
@@ -206,5 +219,12 @@ public class InstructorsView extends VerticalPanel {
 				table.addRows(result);
 			}
 		});
+	}
+	
+	private boolean userIdExists(String userId) {
+		for (InstructorGWT instr : table.getAddedUntouchedAndEditedObjects())
+			if (instr.getUserID().equals(userId))
+				return true;
+		return false;
 	}
 }

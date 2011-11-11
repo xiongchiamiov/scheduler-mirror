@@ -225,7 +225,17 @@ public class InstructorGWT implements Serializable, Comparable<InstructorGWT>{
 	
 	@Override
 	public int compareTo(InstructorGWT that) {
-		/** TODO */
+		if(!this.userID.equals(that.userID)){ return this.userID.compareTo(that.userID);}
+		if(!this.firstName.equals(that.firstName)){ return this.firstName.compareTo(that.firstName);}
+		if(!this.lastName.equals(that.lastName)){ return this.lastName.compareTo(that.lastName);}
+		if(!this.roomNumber.equals(that.roomNumber)){ return this.roomNumber.compareTo(that.roomNumber);}
+		if(!this.building.equals(that.building)){ return this.building.compareTo(that.building);}
+		if(this.disabilities != that.disabilities){ return (this.disabilities ? 1 : -1); }
+		if(this.maxwtu != that.maxwtu){ return this.maxwtu - that.maxwtu; }
+		if(this.curwtu != that.curwtu){ return this.curwtu - that.curwtu; }
+		if(this.fairness != that.fairness){ return this.fairness - that.fairness; }
+		if(this.generosity != that.generosity){ return this.generosity - that.generosity; }
+		
 		return 0;
 	}
 	
