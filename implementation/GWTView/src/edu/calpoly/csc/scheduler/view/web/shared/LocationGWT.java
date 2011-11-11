@@ -4,6 +4,31 @@ import java.io.Serializable;
 
 
 public class LocationGWT implements Serializable, Comparable<LocationGWT> {
+	public static class ProvidedEquipmentGWT implements Serializable, Comparable<ProvidedEquipmentGWT> {
+		private static final long serialVersionUID = 42;
+		public boolean hasOverhead = false;
+		public boolean isSmartRoom = false;
+		public boolean hasLaptopConnectivity = false;
+		
+		ProvidedEquipmentGWT(ProvidedEquipmentGWT that) {
+			this.hasLaptopConnectivity = that.hasLaptopConnectivity;
+			this.hasOverhead = that.hasOverhead;
+			this.isSmartRoom = that.isSmartRoom;
+		}
+		
+		public ProvidedEquipmentGWT() { }
+
+		public int compareTo(ProvidedEquipmentGWT that) {
+			if (hasOverhead != that.hasOverhead)
+				return (this.hasOverhead ? 1 : 0) - (that.hasOverhead ? 1 : 0);
+			if (isSmartRoom != that.isSmartRoom)
+				return (this.isSmartRoom ? 1 : 0) - (that.isSmartRoom ? 1 : 0);
+			if (hasOverhead != that.hasOverhead)
+				return (this.hasLaptopConnectivity ? 1 : 0) - (that.hasLaptopConnectivity ? 1 : 0);
+			return 0;
+		}
+	}
+
 	private static final long serialVersionUID = 1015108352203434920L;
 
 	private int id;
@@ -12,10 +37,11 @@ public class LocationGWT implements Serializable, Comparable<LocationGWT> {
 	private String type;
 	private int maxOccupancy;
 	private boolean adacompliant;
+	private ProvidedEquipmentGWT equipment;
 	
 	public LocationGWT() { }
 
-	public LocationGWT(int id, String building, String room, String type, int maxOccupancy, boolean adacompliant) {
+	public LocationGWT(int id, String building, String room, String type, int maxOccupancy, boolean adacompliant, ProvidedEquipmentGWT equipment) {
 		super();
 		this.id = id;
 		this.building = building;
@@ -23,6 +49,7 @@ public class LocationGWT implements Serializable, Comparable<LocationGWT> {
 		this.type = type;
 		this.maxOccupancy = maxOccupancy;
 		this.adacompliant = adacompliant;
+		this.equipment = equipment;
 	}
 
 	public LocationGWT(int id, LocationGWT other) {
@@ -32,6 +59,7 @@ public class LocationGWT implements Serializable, Comparable<LocationGWT> {
 		this.type = other.type;
 		this.maxOccupancy = other.maxOccupancy;
 		this.adacompliant = other.adacompliant;
+		this.equipment = new ProvidedEquipmentGWT(other.equipment);
 	}
 
 	@Override
@@ -46,7 +74,7 @@ public class LocationGWT implements Serializable, Comparable<LocationGWT> {
 			return maxOccupancy - that.maxOccupancy;
 		if (adacompliant != that.adacompliant)
 			return (adacompliant ? 1 : 0) - (that.adacompliant ? 1 : 0);
-		return 0;
+		return equipment.compareTo(that.equipment);
 	}
 	
 	@Override
@@ -70,5 +98,6 @@ public class LocationGWT implements Serializable, Comparable<LocationGWT> {
 	public void setType(String type) { this.type = type; }
 	public int getMaxOccupancy() { return maxOccupancy; }
 	public void setMaxOccupancy(int maxOccupancy) { this.maxOccupancy = maxOccupancy; }
-
+	public ProvidedEquipmentGWT getEquipment() { return equipment; }
+	public void setEquipment(ProvidedEquipmentGWT equipment) { this.equipment = equipment; }
 }

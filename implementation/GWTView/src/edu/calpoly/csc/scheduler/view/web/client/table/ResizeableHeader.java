@@ -12,17 +12,22 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class ResizeableHeader extends FocusPanel {
+	public interface ResizeCallback {
+		int getWidth();
+		void setWidth(int newWidthPixels);
+	}
+	
 	private boolean dragging = false;
 	private int dragAnchorX;
 	private int widthPixels;
 	
-	public ResizeableHeader(FocusPanel draggableArea, final Widget contents) {
+	public ResizeableHeader(FocusPanel draggableArea, Widget contents, final ResizeCallback callback) {
 		FlowPanel panel = new FlowPanel();
 		add(panel);
 		
-		panel.addStyleName("resizeableHeader");
-		
 		panel.add(contents);
+		
+		panel.addStyleName("resizeableHeader");
 		
 		SimplePanel resizer = new SimplePanel();
 		resizer.addStyleName("resizer");
@@ -32,7 +37,7 @@ public class ResizeableHeader extends FocusPanel {
 			public void onMouseDown(MouseDownEvent event) {
 				dragging = true;
 				dragAnchorX = event.getClientX();
-				widthPixels = getOffsetWidth();
+				widthPixels = callback.getWidth();
 				event.preventDefault();
 			}
 		});
@@ -43,7 +48,7 @@ public class ResizeableHeader extends FocusPanel {
 					int dragX = event.getClientX();
 					widthPixels += dragX - dragAnchorX;
 					dragAnchorX = dragX;
-					contents.setWidth(widthPixels + "px");
+					callback.setWidth(widthPixels);
 					event.preventDefault();
 				}
 			}

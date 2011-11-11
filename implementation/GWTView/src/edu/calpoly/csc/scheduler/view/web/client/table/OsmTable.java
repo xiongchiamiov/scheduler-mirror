@@ -13,7 +13,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -24,6 +23,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.client.HTMLUtilities;
+import edu.calpoly.csc.scheduler.view.web.client.table.ResizeableHeader.ResizeCallback;
 
 public class OsmTable<ObjectType extends Comparable<ObjectType>> extends FocusPanel {
 	public interface SaveHandler<ObjectType extends Comparable<ObjectType>> {
@@ -35,6 +35,8 @@ public class OsmTable<ObjectType extends Comparable<ObjectType>> extends FocusPa
 		final public String name;
 		final public String width;
 		public final Comparator<ObjectType> sortComparator;
+		public Widget headerContents;
+		public Element headerTDElement;
 
 		public void attachedToTable(OsmTable<ObjectType> table) {
 			assert(this.table == null);
@@ -155,7 +157,9 @@ public class OsmTable<ObjectType extends Comparable<ObjectType>> extends FocusPa
 				addNewRow();
 			}
 		}));
-
+	}
+	
+	public void addDeleteColumn() {
 		addColumn(new ButtonColumn<ObjectType>("Delete", "4em", "X",
 				new ButtonColumn.ClickCallback<ObjectType>() {
 					public void buttonClickedForObject(ObjectType object) {
@@ -222,18 +226,37 @@ public class OsmTable<ObjectType extends Comparable<ObjectType>> extends FocusPa
 		}
 	}
 	
+	void setColumnWidth(Column<ObjectType> column, int widthPixels) {
+		column.headerTDElement.setAttribute("style", "");
+		
+		column.headerContents.setWidth(widthPixels + "px");
+		
+		int columnIndex = columns.indexOf(column);
+		
+		for (Row row : rows.values())
+			row.widgetsInCells[columnIndex].setWidth(widthPixels + "px");
+	}
+	
 	public void addColumn(final Column<ObjectType> column) {
 		assert(rows.size() == 0);
 		
 		column.attachedToTable(this);
-		
+
 		int newColumnIndex = columns.size();
-		FocusPanel contents = new ResizeableHeader(this, new HTML(column.name));
+		
+		column.headerContents = new HTML(column.name);
+		column.headerContents.addStyleName("headerContents");
+		
+		FocusPanel contents = new ResizeableHeader(this, column.headerContents, new ResizeCallback() {
+			public int getWidth() { return column.headerContents.getOffsetWidth(); }
+			public void setWidth(int newWidthPixels) { setColumnWidth(column, newWidthPixels); }
+		});
 		contents.addStyleName("header");
 		table.setWidget(0, newColumnIndex, contents);
 		
-		Element td = HTMLUtilities.getClosestContainingElementOfType(contents.getElement(), "td");
-		td.setAttribute("style", td.getAttribute("style") + "; width: " + column.width);
+		column.headerTDElement = HTMLUtilities.getClosestContainingElementOfType(contents.getElement(), "td");
+		if (column.width != null)
+			column.headerTDElement.setAttribute("style", "width: " + column.width);
 		
 		contents.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
@@ -276,7 +299,8 @@ public class OsmTable<ObjectType extends Comparable<ObjectType>> extends FocusPa
 			table.setWidget(rowIndex, colIndex, widget);
 
 			Element td = HTMLUtilities.getClosestContainingElementOfType(widget.getElement(), "td");
-			td.setAttribute("style", td.getAttribute("style") + "; width: " + column.width);
+			if (column.width != null)
+				td.setAttribute("style", td.getAttribute("style") + "; width: " + column.width);
 		}
 		
 		// Get containing tr

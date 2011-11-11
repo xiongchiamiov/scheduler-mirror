@@ -13,6 +13,7 @@ import edu.calpoly.csc.scheduler.model.db.cdb.Lab;
 import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
 import edu.calpoly.csc.scheduler.model.db.idb.TimePreference;
 import edu.calpoly.csc.scheduler.model.db.ldb.Location;
+import edu.calpoly.csc.scheduler.model.db.ldb.Location.ProvidedEquipment;
 import edu.calpoly.csc.scheduler.model.schedule.Day;
 import edu.calpoly.csc.scheduler.model.schedule.ScheduleItem;
 import edu.calpoly.csc.scheduler.model.schedule.Week;
@@ -21,6 +22,7 @@ import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.DayGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT.ProvidedEquipmentGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.TimeGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.TimePreferenceGWT;
@@ -241,7 +243,16 @@ public abstract class Conversion {
 				location.getRoom(),
 				location.getType(),
 				location.getMaxOccupancy(),
-				location.getAdaCompliant());
+				location.getAdaCompliant(),
+				toGWT(location.getProvidedEquipment()));
+	}
+	
+	public static LocationGWT.ProvidedEquipmentGWT toGWT(Location.ProvidedEquipment equipment) {
+		LocationGWT.ProvidedEquipmentGWT result = new LocationGWT.ProvidedEquipmentGWT();
+		result.hasLaptopConnectivity = equipment.hasLaptopConnectivity;
+		result.hasOverhead = equipment.hasOverhead;
+		result.isSmartRoom = equipment.isSmartRoom;
+		return result;
 	}
 	
 	public static Location fromGWT(LocationGWT location) {
@@ -251,13 +262,22 @@ public abstract class Conversion {
 		loc.setAvailability(new WeekAvail());
 		loc.setBuilding(location.getBuilding());
 		loc.setMaxOccupancy(location.getMaxOccupancy());
-		loc.setProvidedEquipment(loc.new ProvidedEquipment());
+		loc.setProvidedEquipment(fromGWT(location.getEquipment()));
 		loc.setRoom(location.getRoom());
 		loc.setType(location.getType());
+		loc.setProvidedEquipment(fromGWT(location.getEquipment()));
 		loc.verify();
 		return loc;
 	}
 	
+	private static ProvidedEquipment fromGWT(ProvidedEquipmentGWT equipment) {
+		ProvidedEquipment result = new ProvidedEquipment();
+		result.hasLaptopConnectivity = equipment.hasLaptopConnectivity;
+		result.hasOverhead = equipment.hasOverhead;
+		result.isSmartRoom = equipment.isSmartRoom;
+		return result;
+	}
+
 	public static Course fromGWT(CourseGWT course) {
 		Course newCourse = new Course();
 		newCourse.setName(course.getCourseName());

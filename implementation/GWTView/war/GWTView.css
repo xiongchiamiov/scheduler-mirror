@@ -421,13 +421,14 @@ background-clip: initial;
 	padding-right: 2.5em;
 }
 
-.osmtable .header {
+.osmtable .headerContents {
 	border-bottom: 2px solid #6F7277;
 	font-weight: bold;
     color: #4B4A4A;
     text-align: left;
     text-shadow: 1px 1px 0 #DDDDFF;
 	padding: 3px .4em;
+	white-space: nowrap;
 }
 
 .osmtable tr:nth-child(odd) {
@@ -485,4 +486,8 @@ background-clip: initial;
 	display: block;
 	cursor: col-resize;
 	z-index: 1;
+}
+
+.osmtable td {
+	overflow: hidden;
 }
