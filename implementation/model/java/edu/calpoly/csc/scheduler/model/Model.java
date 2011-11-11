@@ -6,13 +6,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.lang.NotImplementedException;
-
 import edu.calpoly.csc.scheduler.model.db.Database;
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
 import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
 import edu.calpoly.csc.scheduler.model.db.ldb.Location;
-import edu.calpoly.csc.scheduler.model.schedule.Schedule;
 
 
 /**
@@ -113,11 +110,7 @@ public class Model implements Serializable
 	}
 
 	public int copySchedule(int existingScheduleID, String scheduleName) {
-		throw new NotImplementedException();
-//		return db.getScheduleDB().copySchedule(existingScheduleID, scheduleName);
+		return db.copySchedule(existingScheduleID, scheduleName);
 	}
 
-	public String exportToCSV(Schedule schedule) {
-		return new CSV().export(this, schedule);
-	}
 }
