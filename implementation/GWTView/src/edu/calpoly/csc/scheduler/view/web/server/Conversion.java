@@ -298,4 +298,10 @@ public abstract class Conversion {
 		newCourse.setDays(fromGWT(course.getDays()));
 		return newCourse;
 	}
+	
+	public static CourseGWT toGWT(int id, Course course) {
+		CourseGWT i = toGWT(course);
+		i.setId(id);
+		return i;
+	}
 }
