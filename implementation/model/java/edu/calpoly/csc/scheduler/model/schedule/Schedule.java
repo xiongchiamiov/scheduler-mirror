@@ -863,6 +863,59 @@ public class Schedule extends DbData implements Serializable
     ***********************/
 
    /**
+    * Adds a ScheduleItem to our list of bad/conflicting ScheduleItems. The item
+    * will only be added if 1) It's actually a conflicting item and 2) It's not
+    * already present in our list of conflicting items
+    *  
+    * @param si Conflicting Item to add
+    * 
+    * @return true if the item was added to our list. False otherwise. 
+    */
+   public boolean addConflictingItem (ScheduleItem si)
+   {
+      boolean isDirty = false;
+      try
+      {
+         verify(si);
+      }
+      catch (CouldNotBeScheduledException e)
+      {
+         isDirty = true;
+      }
+      
+      boolean r = false;
+      if (isDirty)
+      {
+         r = this.dirtyList.add(si);
+      }
+      
+      return r;
+   }
+   
+   /**
+    * Removes a ScheduleItem from our list of conflicting items. 
+    * 
+    * @param si ScheduleItem to remove from the list
+    * 
+    * @return true if the item actually existed in our list and was removed. 
+    *         False otherwise.
+    */
+   public boolean removeConflictingItem (ScheduleItem si)
+   {
+      return this.dirtyList.remove(si);
+   }
+   
+   /**
+    * Returns the list of conflicting items
+    * 
+    * @return the list of conflicting items.
+    */
+   public HashSet<ScheduleItem> getDirtyList ()
+   {
+      return this.dirtyList;
+   }
+   
+   /**
     * Returns the items
     * 
     * @return the items

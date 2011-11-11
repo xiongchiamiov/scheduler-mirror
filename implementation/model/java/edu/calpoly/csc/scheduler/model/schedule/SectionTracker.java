@@ -21,7 +21,11 @@ public class SectionTracker
     */
    private Course c;
    /**
-    * Current number of sections
+    * Current number of sections that have been scheduled
+    */
+   private int numSections;
+   /**
+    * Current section that was just added
     */
    private int curSection;
    /**
@@ -32,6 +36,7 @@ public class SectionTracker
    public SectionTracker (Course c)
    {
       this.c = c;
+      this.numSections = 0;
       this.curSection = 0;
       this.maxSections = c.getNumOfSections();
       sections = new BitSet(this.maxSections);
@@ -50,8 +55,8 @@ public class SectionTracker
       
       if (r = canBookAnotherSection())
       {
-         sections.set(getNextSection(), true);
-         curSection ++;
+         sections.set(curSection = getNextSection(), true);
+         numSections ++;
       }
       
       return r;
@@ -69,7 +74,7 @@ public class SectionTracker
       if (this.sections.get(s))
       {
          this.sections.set(s, false);
-         curSection --;
+         numSections --;
       }
    }
    
@@ -92,7 +97,7 @@ public class SectionTracker
     */
    public boolean canBookAnotherSection ()
    {
-      return this.curSection < this.maxSections;
+      return this.numSections < this.maxSections;
    }
   
    /**
@@ -117,6 +122,18 @@ public class SectionTracker
       return curSection;
    }
 
+   /**
+    * Returns the current number of sections that have been added by this 
+    * tracker.
+    * 
+    * @return the current number of sections that have been added by this 
+    *         tracker.
+    */
+   public int getNumSections ()
+   {
+      return this.numSections;
+   }
+   
    /**
     * Returns the maxSections
     * 
