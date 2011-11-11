@@ -8,6 +8,8 @@ import edu.calpoly.csc.scheduler.model.db.cdb.*;
 import edu.calpoly.csc.scheduler.model.db.idb.*;
 import edu.calpoly.csc.scheduler.model.db.ldb.*;
 
+import edu.calpoly.csc.scheduler.model.schedule.CouldNotBeScheduledException.*;
+
 /**
  * Represents a schedule. Supports methods for generating data from a list of
  * courses, instructors, and locations. Guarantees that a location/instructor
@@ -76,6 +78,17 @@ public class Schedule extends DbData implements Serializable
     */
    private Vector<ScheduleItem> items = new Vector<ScheduleItem>();
 
+   /**
+    * Set of currently conflicting schedule items. These are <b>not</b> 
+    * considered during generation. They're stored here for the view's purposes
+    * so it can accurately display/color conflicting things that need to be 
+    * fixed.<br>
+    * <br>
+    * It's a HashSet so that you don't add duplicate conflicting items (I'm not
+    * sure why you'd try to do that, but...) 
+    */
+   private HashSet<ScheduleItem> dirtyList = new HashSet<ScheduleItem>();
+   
    /**
     * This schedule's id
     */
@@ -269,10 +282,6 @@ public class Schedule extends DbData implements Serializable
       {
          book(si);
       }
-      else
-      {
-         throw new CouldNotBeScheduledException();
-      }
 
       return r;
    }
@@ -361,10 +370,8 @@ public class Schedule extends DbData implements Serializable
     * 
     * @see Instructor#canTeach(Course)
     */
-   private boolean verify (ScheduleItem si)
+   private boolean verify (ScheduleItem si) throws CouldNotBeScheduledException
    {
-      boolean r = true;
-
       Week days = si.getDays();
       Course c = si.getCourse();
       TimeRange tr = si.getTimeRange();
@@ -373,27 +380,28 @@ public class Schedule extends DbData implements Serializable
 
       if (!i.isAvailable(days, tr))
       {
-         r = false;
+         throw new CouldNotBeScheduledException(ConflictType.I_DBL_BK, si);
       }
       if (!l.isAvailable(days, tr))
       {
-         r = false;
+         throw new CouldNotBeScheduledException(ConflictType.L_DBL_BK, si);
       }
       if (i.getAvgPrefForTimeRange(days, tr) == 0)
       {
-         r = false;
+         throw new CouldNotBeScheduledException(ConflictType.NO_DESIRE, si);
       }
       if (!i.canTeach(c))
       {
-         r = false;
+         throw new CouldNotBeScheduledException(ConflictType.CANNOT_TEACH, si);
       }
       SectionTracker st = this.getSectionTracker(c);
       if (!st.canBookAnotherSection())
       {
-         r = false;
+         throw new CouldNotBeScheduledException(ConflictType.NO_SECTIONS_LEFT, 
+            si);
       }
 
-      return r;
+      return true;
    }
 
    /**
@@ -478,8 +486,6 @@ public class Schedule extends DbData implements Serializable
     * list. 
     * 
     * @param c_list List of Courses that'll be put into the schedule
-    * 
-    * @see Tba
     */
    private void initGenData (Collection<Course> c_list)
    {
