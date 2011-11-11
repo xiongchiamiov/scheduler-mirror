@@ -146,13 +146,18 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	
 	public ArrayList<ScheduleItemGWT> getGWTScheduleItems(ArrayList<CourseGWT> courses)
 	{
+	 Course courseWithSections;
+	 
 	 assert(model != null);
      scheduleItems = new HashMap<String, ScheduleItem>();
      
 	 Collection<Course> coursesToGenerate = new LinkedList<Course>();
      for(CourseGWT course : courses)
-    	 coursesToGenerate.add(availableCourses.get(course.getDept() + course.getCatalogNum()));
-
+     {
+    	 courseWithSections = new Course(availableCourses.get(course.getDept() + course.getCatalogNum()));
+    	 courseWithSections.setNumOfSections(course.getNumSections());
+    	 coursesToGenerate.add(courseWithSections);
+     }
 		// TODO: fix this hack.
 		for (Course course : coursesToGenerate) {
 			assert(course.getDays().size() > 0);
@@ -162,9 +167,6 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			}
 		}
 
-		for (Instructor instructor : model.getInstructors())
-			System.out.println("num instructor day prefs for " + instructor.getLastName() + ": " + instructor.getTimePreferences().size());
-		
      schedule.generate(coursesToGenerate);
 		
 	 ArrayList<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
@@ -180,7 +182,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	}
 	
 	public ArrayList<ScheduleItemGWT> rescheduleCourse(ScheduleItemGWT scheduleItem,
-			ArrayList<Integer> days, int startHour, boolean atHalfHour, boolean inSchedule)
+			ArrayList<Integer> days, int startHour, boolean atHalfHour, 
+			boolean inSchedule)
 	{
 	 assert(model != null);
 	 ArrayList<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
@@ -219,14 +222,14 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	  }
 	  catch(CouldNotBeScheduledException e)
 	  {
-	   System.out.println("Could not be scheduled");
 	   return null;
 	  }
 	 }
 	 else
 	 {
-	  course = availableCourses.get(scheduleItem.getDept() + 
-				 scheduleItem.getCatalogNum()); 
+	  course = new Course(availableCourses.get(scheduleItem.getDept() + 
+				 scheduleItem.getCatalogNum())); 
+	  course.setNumOfSections(1);
 	  schedule.genItem(course, daysInWeek, startTime);
 	 }
 	 

@@ -17,82 +17,85 @@ import java.util.ArrayList;
  */
 class ListBoxDragController extends PickupDragController {
 
-  ListBoxDragController(DualListBox dualListBox) {
-    super(RootPanel.get(), false);
-    setBehaviorDragProxy(true);
-    setBehaviorMultipleSelection(true);
-  }
+	ListBoxDragController(DualListBox dualListBox) {
+		super(RootPanel.get(), false);
+		setBehaviorDragProxy(true);
+		setBehaviorMultipleSelection(true);
+	}
 
-  @Override
-  public void dragEnd() {
-    // process drop first
-    super.dragEnd();
+	@Override
+	public void dragEnd() {
+		// process drop first
+		super.dragEnd();
 
-    if (context.vetoException == null) {
-      // remove original items
-      MouseListBox currentMouseListBox = (MouseListBox) context.draggable.getParent().getParent();
-      while (!context.selectedWidgets.isEmpty()) {
-        Widget widget = context.selectedWidgets.get(0);
-        toggleSelection(widget);
-        if(!currentMouseListBox.isAvailableBox())
-        {
-         currentMouseListBox.remove(widget);
-        }
-      }
-    }
-  }
+		if (context.vetoException == null) {
+			// remove original items
+			MouseListBox currentMouseListBox = (MouseListBox) context.draggable
+					.getParent().getParent();
+			while (!context.selectedWidgets.isEmpty()) {
+				Widget widget = context.selectedWidgets.get(0);
+				toggleSelection(widget);
+				/*if (!currentMouseListBox.isAvailableBox()) {
+					currentMouseListBox.remove(widget);
+				}*/
+			}
+		}
+	}
 
-  @Override
-  public void previewDragStart() throws VetoDragException {
-    super.previewDragStart();
-    if (context.selectedWidgets.isEmpty()) {
-      throw new VetoDragException();
-    }
-  }
+	@Override
+	public void previewDragStart() throws VetoDragException {
+		super.previewDragStart();
+		if (context.selectedWidgets.isEmpty()) {
+			throw new VetoDragException();
+		}
+	}
 
-  @Override
-  public void setBehaviorDragProxy(boolean dragProxyEnabled) {
-    if (!dragProxyEnabled) {
-      throw new IllegalArgumentException();
-    }
-    super.setBehaviorDragProxy(dragProxyEnabled);
-  }
+	@Override
+	public void setBehaviorDragProxy(boolean dragProxyEnabled) {
+		if (!dragProxyEnabled) {
+			throw new IllegalArgumentException();
+		}
+		super.setBehaviorDragProxy(dragProxyEnabled);
+	}
 
-  @Override
-  public void toggleSelection(Widget draggable) {
-    super.toggleSelection(draggable);
-    MouseListBox currentMouseListBox = (MouseListBox) draggable.getParent().getParent();
-    ArrayList<Widget> otherWidgets = new ArrayList<Widget>();
-    for (Widget widget : context.selectedWidgets) {
-      if (widget.getParent().getParent() != currentMouseListBox) {
-        otherWidgets.add(widget);
-      }
-    }
-    for (Widget widget : otherWidgets) {
-      super.toggleSelection(widget);
-    }
-  }
+	@Override
+	public void toggleSelection(Widget draggable) {
+		super.toggleSelection(draggable);
+		MouseListBox currentMouseListBox = (MouseListBox) draggable.getParent()
+				.getParent();
+		ArrayList<Widget> otherWidgets = new ArrayList<Widget>();
+		for (Widget widget : context.selectedWidgets) {
+			if (widget.getParent().getParent() != currentMouseListBox) {
+				otherWidgets.add(widget);
+			}
+		}
+		for (Widget widget : otherWidgets) {
+			super.toggleSelection(widget);
+		}
+	}
 
-  @Override
-  protected Widget newDragProxy(DragContext context) {
-    MouseListBox currentMouseListBox = (MouseListBox) context.draggable.getParent().getParent();
-    MouseListBox proxyMouseListBox = new MouseListBox(context.selectedWidgets.size());
-    proxyMouseListBox.setWidth(DOMUtil.getClientWidth(currentMouseListBox.getElement()) + "px");
-    for (Widget widget : context.selectedWidgets) {
-      HTML htmlClone = new HTML(DOM.getInnerHTML(widget.getElement()));
-      proxyMouseListBox.add(htmlClone);
-    }
-    return proxyMouseListBox;
-  }
+	@Override
+	protected Widget newDragProxy(DragContext context) {
+		MouseListBox currentMouseListBox = (MouseListBox) context.draggable
+				.getParent().getParent();
+		MouseListBox proxyMouseListBox = new MouseListBox(
+				context.selectedWidgets.size());
+		proxyMouseListBox.setWidth(DOMUtil.getClientWidth(currentMouseListBox
+				.getElement()) + "px");
+		for (Widget widget : context.selectedWidgets) {
+			HTML htmlClone = new HTML(DOM.getInnerHTML(widget.getElement()));
+			proxyMouseListBox.add(htmlClone);
+		}
+		return proxyMouseListBox;
+	}
 
-  ArrayList<Widget> getSelectedWidgets(MouseListBox mouseListBox) {
-    ArrayList<Widget> widgetList = new ArrayList<Widget>();
-    for (Widget widget : context.selectedWidgets) {
-      if (widget.getParent().getParent() == mouseListBox) {
-        widgetList.add(widget);
-      }
-    }
-    return widgetList;
-  }
+	ArrayList<Widget> getSelectedWidgets(MouseListBox mouseListBox) {
+		ArrayList<Widget> widgetList = new ArrayList<Widget>();
+		for (Widget widget : context.selectedWidgets) {
+			if (widget.getParent().getParent() == mouseListBox) {
+				widgetList.add(widget);
+			}
+		}
+		return widgetList;
+	}
 }
-

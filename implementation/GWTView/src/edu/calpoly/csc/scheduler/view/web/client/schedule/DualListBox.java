@@ -36,21 +36,22 @@ public class DualListBox extends AbsolutePanel {
 	private Button oneRight;
 
 	private MouseListBox right;
-	ListBoxDropController leftDropController; 
+	ListBoxDropController leftDropController;
 	ListBoxDropController rightDropController;
-	
-	public DualListBox(int visibleItems, String width, int totalItems) {
+
+	public DualListBox(int visibleItems, String width, int totalItems,
+			ScheduleViewWidget schedule) {
 		HorizontalPanel horizontalPanel = new HorizontalPanel();
 		add(horizontalPanel);
-		//horizontalPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+		// horizontalPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 
 		VerticalPanel verticalPanel = new VerticalPanel();
 		// verticalPanel.addStyleName(CSS_DEMO_DUAL_LIST_EXAMPLE_CENTER);
 		verticalPanel
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-        VerticalPanel availablePanel = new VerticalPanel();
-        VerticalPanel includedPanel = new VerticalPanel();
-        
+		VerticalPanel availablePanel = new VerticalPanel();
+		VerticalPanel includedPanel = new VerticalPanel();
+
 		dragController = new ListBoxDragController(this);
 		left = new MouseListBox(dragController, totalItems, true);
 		right = new MouseListBox(dragController, totalItems, false);
@@ -70,18 +71,18 @@ public class DualListBox extends AbsolutePanel {
 		oneLeft = new Button("&lt;");
 		allRight = new Button("&gt;&gt;");
 		allLeft = new Button("&lt;&lt;");
+		verticalPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 		verticalPanel.add(oneRight);
 		verticalPanel.add(oneLeft);
 		verticalPanel.add(new HTML("&nbsp;"));
 		verticalPanel.add(allRight);
 		verticalPanel.add(allLeft);
-        verticalPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-		
+
 		allRight.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				moveAllToIncluded();
-				//moveItems(left, right, false);
+				// moveItems(left, right, false);
 			}
 		});
 
@@ -89,7 +90,7 @@ public class DualListBox extends AbsolutePanel {
 			@Override
 			public void onClick(ClickEvent event) {
 				removeAllFromIncluded();
-				//moveItems(right, left, false);
+				// moveItems(right, left, false);
 			}
 		});
 
@@ -107,10 +108,8 @@ public class DualListBox extends AbsolutePanel {
 			}
 		});
 
-		leftDropController = new ListBoxDropController(
-				left);
-		rightDropController = new ListBoxDropController(
-				right);
+		leftDropController = new ListBoxDropController(left, schedule);
+		rightDropController = new ListBoxDropController(right, schedule);
 		dragController.registerDropController(leftDropController);
 		dragController.registerDropController(rightDropController);
 	}
@@ -151,82 +150,64 @@ public class DualListBox extends AbsolutePanel {
 		dragController.registerDropController(dropController);
 	}
 
-	public void reregisterBoxDrops()
-	{
+	public void reregisterBoxDrops() {
 		dragController.registerDropController(leftDropController);
 		dragController.registerDropController(rightDropController);
 	}
-	
-	public ArrayList<CourseGWT> getIncludedCourses()
-	{
-	 ArrayList<CourseGWT> courses = new ArrayList<CourseGWT>();
-	 
-	 for(Widget courseItem : right.widgetList())
-	 {
-	  if(courseItem instanceof CourseListItem)
-	  {
-	   courses.add(((CourseListItem)courseItem).getCourse());
-	  }
-	 }
-	 return courses;
+
+	public ArrayList<CourseGWT> getIncludedCourses() {
+		ArrayList<CourseGWT> courses = new ArrayList<CourseGWT>();
+
+		for (Widget courseItem : right.widgetList()) {
+			if (courseItem instanceof CourseListItem) {
+				courses.add(((CourseListItem) courseItem).getCourse());
+			}
+		}
+		return courses;
 	}
-	
-	private void moveAllToIncluded()
-	{
-	 for(Widget widget : left.widgetList())
-	 {
-	  if(right.contains(((CourseListItem)widget)) < 0 && 
-			  !((CourseListItem)widget).isScheduled())
-	  {
-	   right.add(new CourseListItem(((CourseListItem)widget).getCourse()));
-	  }
-	 }
-	}
-	
-	private void removeAllFromIncluded()
-	{
-	 for(Widget widget : right.widgetList())
-	 {
-	  right.remove(widget);
-	 }
-	}
-	
-	private void moveSelectedToIncluded()
-	{
-	 ArrayList<Widget> selectedItems = dragController.getSelectedWidgets(left);
-	 for(Widget item : selectedItems)
-	 {
-	  if(right.contains(((CourseListItem)item)) < 0 && 
-			  !((CourseListItem)item).isScheduled())
-	  {
-	   right.add(new CourseListItem(((CourseListItem)item).getCourse()));
-	  }
-	 }
-	}
-	
-	private void removeSelectedFromIncluded()
-	{
-		ArrayList<Widget> selectedItems = dragController.getSelectedWidgets(right);
-		 for(Widget item : selectedItems)
-		 {
-		  right.remove(item);
-		 }
-	}
-	
-	protected void moveItems(MouseListBox from, MouseListBox to,
-			boolean justSelectedItems) {
-		ArrayList<Widget> widgetList = justSelectedItems ? dragController
-				.getSelectedWidgets(from) : from.widgetList();
-		for (Widget widget : widgetList) {
-			// TODO let widget.removeFromParent() take care of from.remove()
-			from.remove(widget);
-			to.add(widget);
+
+	private void moveAllToIncluded() {
+		for (Widget widget : left.widgetList()) {
+			if (right.contains(((CourseListItem) widget)) < 0
+					&& !((CourseListItem) widget).isScheduled()) {
+				right.add(new CourseListItem(((CourseListItem) widget)
+						.getCourse()));
+			}
 		}
 	}
 
-	public MouseListBox getIncludedListBox() 
-	{
+	private void removeAllFromIncluded() {
+		for (Widget widget : right.widgetList()) {
+			right.remove(widget);
+		}
+	}
+
+	private void moveSelectedToIncluded() {
+		ArrayList<Widget> selectedItems = dragController
+				.getSelectedWidgets(left);
+		for (Widget item : selectedItems) {
+			if (right.contains(((CourseListItem) item)) < 0
+					&& !((CourseListItem) item).isScheduled()) {
+				right.add(new CourseListItem(((CourseListItem) item)
+						.getCourse()));
+			}
+		}
+	}
+
+	private void removeSelectedFromIncluded() {
+		ArrayList<Widget> selectedItems = dragController
+				.getSelectedWidgets(right);
+		for (Widget item : selectedItems) {
+			right.remove(item);
+		}
+	}
+
+	public MouseListBox getIncludedListBox() {
 		return right;
+	}
+	
+	public MouseListBox getAvailableListBox() {
+		return left;
 	}
 
 	public void setListLength(int size) 

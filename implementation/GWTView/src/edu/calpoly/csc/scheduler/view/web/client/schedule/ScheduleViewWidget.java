@@ -44,13 +44,13 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 	private HorizontalPanel interfacePanel = new HorizontalPanel();
 
 	private FiltersViewWidget filtersDialog = new FiltersViewWidget();
-	PickupDragController dragController = new PickupDragController(
+	private PickupDragController dragController = new PickupDragController(
 			RootPanel.get(), false);
-	TextBox searchBox;
-
+	private TextBox searchBox;
 	private DualListBox dualListBoxCourses;
 	private ListBoxDragController listBoxDragController;
 	private MouseListBox includedListBox;
+	private MouseListBox availableListBox;
 	private HorizontalPanel boxesAndSchedulePanel;
 
 	/**
@@ -65,7 +65,8 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 			cell = allCells.next();
 			if (cell.getClass().equals(ScheduleCell.class)) {
 				dropController = new ScheduleCellDropController(
-						(ScheduleCell) cell, this, includedListBox);
+						(ScheduleCell) cell, this, includedListBox, 
+						availableListBox);
 				dragController.registerDropController(dropController);
 				dualListBoxCourses.registerScheduleDrop(dropController);
 				dualListBoxCourses.reregisterBoxDrops();
@@ -77,6 +78,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 	 * Retrieves a schedule items from a generated schedule from the server.
 	 */
 	private void getScheduleItemsFromServer() {
+
 		if (dualListBoxCourses.getIncludedCourses().size() == 0) {
 			Window.alert("No courses to schedule");
 			return;
@@ -226,7 +228,6 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 					for (CourseGWT course : result) {
 						dualListBoxCourses.addLeft(new CourseListItem(course));
 					}
-
 					registerDrops();
 				}
 			}
@@ -239,15 +240,15 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 		boxesAndSchedulePanel.setSpacing(2);
 		boxesAndSchedulePanel
 				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-		dualListBoxCourses = new DualListBox(10, "10em", 10);
+		dualListBoxCourses = new DualListBox(10, "10em", 10, this);
 		includedListBox = dualListBoxCourses.getIncludedListBox();
+		availableListBox = dualListBoxCourses.getAvailableListBox();
 		listBoxDragController = new ListBoxDragController(
 				dualListBoxCourses);
 		boxesAndSchedulePanel.add(dualListBoxCourses);
 		scheduleGrid.layoutDaysAndTimes();
 		scheduleGrid.placePanels();
 		boxesAndSchedulePanel.add(scheduleGrid);
-
 		// add some items to the list
 		addCoursesToBoxes();
 		mainPanel.add(boxesAndSchedulePanel);
@@ -290,10 +291,15 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 	 * course from one of the lists is dropped onto the schedule
 	 */
 	public void moveItem(final ScheduleItemGWT scheduleItem,
-			ArrayList<Integer> days, int row, boolean inSchedule) {
+			ArrayList<Integer> days, int row, final boolean inSchedule, 
+			final boolean fromIncluded) {
 		final int startHour = getHourFromRow(row);
 		final boolean atHalfHour = rowIsAtHalfHour(row);
-		greetingService.rescheduleCourse(scheduleItem, days, startHour,
+        CourseGWT course = new CourseGWT();
+        course.setDept(scheduleItem.getDept());
+        course.setCatalogNum(scheduleItem.getCatalogNum());
+		
+        greetingService.rescheduleCourse(scheduleItem, days, startHour,
 				atHalfHour, inSchedule,
 				new AsyncCallback<ArrayList<ScheduleItemGWT>>() {
 					@Override
@@ -303,10 +309,38 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 
 					@Override
 					public void onSuccess(ArrayList<ScheduleItemGWT> rescheduled) {
+						CourseGWT courseHolder;
+						int sectionsIncluded, itemIndex;
+						
 						if (rescheduled == null) {
 							Window.alert("Course could not be rescheduled at time "
 									+ startHour + (atHalfHour ? ":30" : ":00"));
 						} else {
+							if(!inSchedule)
+							{
+							 courseHolder = new CourseGWT();
+							 courseHolder.setDept(scheduleItem.getDept());
+							 courseHolder.setCatalogNum(scheduleItem.getCatalogNum());
+							 sectionsIncluded = includedListBox.getSectionsInBox(courseHolder);
+							 itemIndex = includedListBox.contains(new CourseListItem(courseHolder));
+							 if(itemIndex >= 0)
+							 {
+							  if(fromIncluded || sectionsIncluded + getSectionsOnSchedule(courseHolder) == availableListBox.getSectionsInBox(courseHolder) - 1)
+							  {
+							   if(sectionsIncluded > 1)
+							   {
+							    courseHolder = ((CourseListItem)includedListBox.getWidget(itemIndex)).getCourse();
+							    courseHolder.setNumSections(courseHolder.getNumSections() - 1);
+							    includedListBox.setWidget(itemIndex, new CourseListItem(courseHolder));
+							   }
+							   else
+							   {
+							    includedListBox.setWidget(itemIndex, null);
+							   }
+							  }
+							 }
+							}
+							
 							scheduleItems = new ArrayList<ScheduleItemGWT>();
 							for (ScheduleItemGWT schdItem : rescheduled) {
 								scheduleItems.add(schdItem);
@@ -317,6 +351,20 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 						filterScheduleItems(searchBox.getText());
 					}
 				});
+	}
+
+	public int getSectionsOnSchedule(CourseGWT course) {
+		String dept = course.getDept();
+		int catalogNum = course.getCatalogNum();
+		int count = 0;
+
+		for (ScheduleItemGWT item : scheduleItems) {
+			if (item.getDept() == dept && item.getCatalogNum() == catalogNum) {
+				count++;
+			}
+		}
+
+		return count;
 	}
 
 	/*Highlights the border of a row*/

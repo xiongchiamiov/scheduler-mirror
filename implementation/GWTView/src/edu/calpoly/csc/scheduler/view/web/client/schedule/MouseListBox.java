@@ -6,6 +6,9 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
+import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
+
 import java.util.ArrayList;
 
 /**
@@ -95,7 +98,7 @@ class MouseListBox extends Composite {
 		return widgetList;
 	}
 
-	private Widget getWidget(int index) {
+	Widget getWidget(int index) {
 		return grid.getWidget(index, 0);
 	}
 
@@ -142,8 +145,7 @@ class MouseListBox extends Composite {
 		for (i = 0; i < items.size(); i++) {
 			widget = items.get(i);
 			if (widget instanceof CourseListItem
-					&& ((CourseListItem) widget).getCourse().equals(
-							item.getCourse())) {
+					&& ((CourseListItem) widget).sameCourse(item)) {
 				return i;
 			}
 		}
@@ -152,6 +154,28 @@ class MouseListBox extends Composite {
 
 	boolean isAvailableBox() {
 		return isAvailableBox;
+	}
+
+	void updateSectionCount(CourseGWT course) {
+		int i;
+		ArrayList<Widget> courseItems = widgetList();
+		for (i = 0; i < courseItems.size(); i++) {
+			if (((CourseListItem) courseItems.get(i)).getCourse() == course) {
+				setWidget(i, courseItems.get(i));
+			}
+		}
+	}
+
+	public int getSectionsInBox(CourseGWT course) {
+		int count = 0;
+        int itemIndex = contains(new CourseListItem(course));
+		
+		if(itemIndex >= 0)
+		{
+		 return ((CourseListItem)getWidget(itemIndex)).getCourse().getNumSections();
+		}
+
+		return count;
 	}
 
 	public void resetGrid(int size) {
