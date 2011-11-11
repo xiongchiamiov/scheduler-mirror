@@ -6,6 +6,10 @@ import java.util.Vector;
 public class WeekGWT implements Serializable {
    private Vector<DayGWT> days;
 	
+   public WeekGWT(){
+	   days = new Vector<DayGWT>();
+   }
+   
 	public Vector<DayGWT> getDays() {
 		return days;
 	}

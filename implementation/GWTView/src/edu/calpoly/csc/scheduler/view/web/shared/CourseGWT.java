@@ -19,6 +19,7 @@ public class CourseGWT implements Serializable, Comparable<CourseGWT> {
 	private int length;
 	private WeekGWT days;
 	private Integer scheduleID;
+	private int id;
 	
 	public CourseGWT clone() {
 		CourseGWT newCourse = new CourseGWT();
@@ -38,6 +39,43 @@ public class CourseGWT implements Serializable, Comparable<CourseGWT> {
 		newCourse.labDept = labDept;
 		newCourse.labName = labName;
 		return newCourse;
+	}
+	
+	public CourseGWT() {
+		super();
+		courseName = "";
+		catalogNum = 0;
+		dept = "";
+		wtu = 4;
+		scu = 4;
+		numSections = 0;
+		type = "LEC";
+		maxEnroll = 0;
+		labId = 0;
+		length = 0;
+		days = new WeekGWT();
+		labCatalogNum = 0;
+		labDept = "";
+		labName = "";
+	}
+
+	public CourseGWT(int id) {
+		super();
+		this.id = id;
+		courseName = "";
+		catalogNum = 0;
+		dept = "";
+		wtu = 4;
+		scu = 4;
+		numSections = 0;
+		type = "LEC";
+		maxEnroll = 0;
+		labId = 0;
+		length = 0;
+		days = new WeekGWT();
+		labCatalogNum = 0;
+		labDept = "";
+		labName = "";
 	}
 	
 	public void verify() {
@@ -180,6 +218,15 @@ public class CourseGWT implements Serializable, Comparable<CourseGWT> {
 
 	public void setLength(int length) {
 		this.length = length;
+	}
+	
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	@Override
