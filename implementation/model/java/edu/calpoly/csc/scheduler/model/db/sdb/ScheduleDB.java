@@ -64,7 +64,6 @@ public class ScheduleDB extends AbstractDatabase<Schedule>
             toAdd = (Schedule) sqldb.deserialize(scheduleBuf);
             // Get ID since database maintains it
             toAdd.setId(rs.getInt(SCHEDULEID));
-            data.add(toAdd);
          }
       }
       catch (SQLException e)

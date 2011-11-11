@@ -46,6 +46,12 @@ public class Database
    /** If we are setting up a new user */
    private boolean          newUser            = false;
 
+   /** If we are copying data */
+   private boolean          copying            = false;
+
+   /** If we are copying data */
+   private int              oldScheduleID      = -3;
+
    /** Example Chem Schedule template scheduleid */
    private static final int templateScheduleID = 1354;
 
@@ -101,20 +107,24 @@ public class Database
       }
       return schedules;
    }
-   
+
    /**
     * Step 3.5 Copies a schedule from an existing one
+    * 
     * @return scheduleid The copied schedules scheduleid
     */
-   public int copySchedule(int scheduleid, String name)
+   public int copySchedule(int oldscheduleid, String name)
    {
-	   scheduleDB = new ScheduleDB(sqldb);
-	   Schedule old = scheduleDB.getSchedule(scheduleid);
-	   //Set new fields
-	   old.setId(-2);
-	   old.setName(name);
-	   scheduleDB.saveData(old);
-	   return scheduleDB.getScheduleID(old);
+      this.oldScheduleID = oldscheduleid;
+      copying = true;
+      scheduleDB = new ScheduleDB(sqldb);
+      Schedule old = scheduleDB.getSchedule(oldscheduleid);
+      // Set new fields
+      old.setId(-2);
+      old.setName(name);
+      scheduleDB.saveData(old);
+      this.scheduleID = scheduleDB.getScheduleID(old);
+      return this.scheduleID;
    }
 
    /**
@@ -128,9 +138,9 @@ public class Database
       data.setDept(dept);
       data.setName(scheduleName);
       data.setScheduleId(realid);
-      if(scheduleDB == null)
+      if (scheduleDB == null)
       {
-    	  scheduleDB = new ScheduleDB(sqldb);
+         scheduleDB = new ScheduleDB(sqldb);
       }
 
       if (sqldb.doesScheduleIDExist(realid))
@@ -152,7 +162,7 @@ public class Database
          }
          else
          {
-            //Create a new schedule with given name and dept
+            // Create a new schedule with given name and dept
             scheduleDB.saveData(data);
             realid = scheduleDB.getScheduleID(data);
          }
@@ -164,32 +174,43 @@ public class Database
       if (newUser)
       {
          System.out.println("Copying data from Example Chem Schedule");
-         // Copy data into the new schedule
          // Make temporary db's with scheduleid = Example Chem Schedule (1354)
-         InstructorDB tempInstructorDB = new InstructorDB(sqldb,
-               templateScheduleID);
-         CourseDB tempCourseDB = new CourseDB(sqldb, templateScheduleID);
-         LocationDB tempLocationDB = new LocationDB(sqldb, templateScheduleID);
-
-         // Copy data from temp dbs to real dbs
-         // Copy instructors
-         for (Instructor instructor : tempInstructorDB.getData())
-         {
-            instructorDB.saveData(instructor);
-         }
-         // Copy courses
-         for (Course course : tempCourseDB.getData())
-         {
-            courseDB.saveData(course);
-         }
-         // Copy locations
-         for (Location location : tempLocationDB.getData())
-         {
-            locationDB.saveData(location);
-         }
+         copyAllData(templateScheduleID);
          newUser = false;
-         System.out.println("Done copying data");
       }
+      else if (copying)
+      {
+         System.out.println("Copying data from scheduleid " + oldScheduleID);
+         // Make temporary db's with scheduleid = whatever copying had
+         copyAllData(oldScheduleID);
+         copying = false;
+      }
+   }
+
+   private void copyAllData(int oldScheduleID)
+   {
+      // Copy data into the new schedule
+      InstructorDB tempInstructorDB = new InstructorDB(sqldb, oldScheduleID);
+      CourseDB tempCourseDB = new CourseDB(sqldb, oldScheduleID);
+      LocationDB tempLocationDB = new LocationDB(sqldb, oldScheduleID);
+
+      // Copy data from temp dbs to real dbs
+      // Copy instructors
+      for (Instructor instructor : tempInstructorDB.getData())
+      {
+         instructorDB.saveData(instructor);
+      }
+      // Copy courses
+      for (Course course : tempCourseDB.getData())
+      {
+         courseDB.saveData(course);
+      }
+      // Copy locations
+      for (Location location : tempLocationDB.getData())
+      {
+         locationDB.saveData(location);
+      }
+      System.out.println("Done copying data");
    }
 
    /**
