@@ -23,6 +23,7 @@ public abstract class AbstractDatabase<T extends DbData>
    public ArrayList<T> getData()
    {
       pullData();
+      data = new ArrayList<T>();
       return data;
    }
    

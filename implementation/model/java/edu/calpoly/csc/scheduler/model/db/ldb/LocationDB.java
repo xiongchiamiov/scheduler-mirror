@@ -112,7 +112,7 @@ public class LocationDB extends AbstractDatabase<Location>
          String room = rs.getString("room");
          toAdd.setRoom(room);
 
-         int occupancy = rs.getInt("maxoccupancy");
+         int occupancy = rs.getInt(MAXOCCUPANCY);
          toAdd.setMaxOccupancy(occupancy);
 
          String type = rs.getString("type");
