@@ -205,14 +205,13 @@ public class DualListBox extends AbsolutePanel {
 	public MouseListBox getIncludedListBox() {
 		return right;
 	}
-	
+
 	public MouseListBox getAvailableListBox() {
 		return left;
 	}
 
-	public void setListLength(int size) 
-	{
-	 left.resetGrid(size);
-	 right.resetGrid(size);
+	public void setListLength(int size) {
+		left.resetGrid(size);
+		right.resetGrid(size);
 	}
 }

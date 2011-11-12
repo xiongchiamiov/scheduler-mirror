@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import edu.calpoly.csc.scheduler.model.Model;
@@ -25,6 +26,7 @@ import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemList;
 
 /**
  * The server side implementation of the RPC service.
@@ -140,7 +142,13 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 
 		ArrayList<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
 	    for(ScheduleItem item : scheduleItems)
-	    	gwtItems.add(Conversion.toGWT(item));
+	    {
+	    	gwtItems.add(Conversion.toGWT(item, false));
+	    }
+	    for(ScheduleItem item : schedule.getDirtyList())
+	    {
+      gwtItems.add(Conversion.toGWT(item, true));
+	    }
 		return gwtItems;
 	}
 	
@@ -173,20 +181,27 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 
 	 for(ScheduleItem item : schedule.getItems())
 	 {         
-	  gwtItems.add(Conversion.toGWT(item));
+	  gwtItems.add(Conversion.toGWT(item, false));
 	  scheduleItems.put(item.getCourse().getDept() + 
 	   item.getCourse().getCatalogNum() + 
 	   item.getSection(), item);
-	 } 
+	 }
+	 for(ScheduleItem item : schedule.getDirtyList())
+  {         
+   gwtItems.add(Conversion.toGWT(item, true));
+   scheduleItems.put(item.getCourse().getDept() + 
+    item.getCourse().getCatalogNum() + 
+    item.getSection(), item);
+  }
 	 return gwtItems;
 	}
 	
-	public ArrayList<ScheduleItemGWT> rescheduleCourse(ScheduleItemGWT scheduleItem,
+	public ScheduleItemList rescheduleCourse(ScheduleItemGWT scheduleItem,
 			ArrayList<Integer> days, int startHour, boolean atHalfHour, 
 			boolean inSchedule)
 	{
 	 assert(model != null);
-	 ArrayList<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
+	 ScheduleItemList gwtItems = new ScheduleItemList();
 	 Course course;
 	 int numberOfDays = days.size();
 	 Day[] daysScheduled = new Day[numberOfDays];
@@ -197,6 +212,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	 String schdItemKey = scheduleItem.getDept() + 
 			  scheduleItem.getCatalogNum() + 
 			  scheduleItem.getSection();
+	 String conflict = "";
 	 
 	 for(i = 0; i < numberOfDays; i++)
 	 {
@@ -216,31 +232,44 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	 if(inSchedule)
 	 {
 	  moved = scheduleItems.get(schdItemKey);
+	  schedule.removeConflictingItem(moved);
 	  try
 	  {
 	   schedule.move(moved, daysInWeek, startTime);
 	  }
 	  catch(CouldNotBeScheduledException e)
 	  {
-	   return null;
+	   conflict = e.toString();
+	   schedule.addConflictingItem(e.getSi());
 	  }
 	 }
 	 else
 	 {
-	  course = new Course(availableCourses.get(scheduleItem.getDept() + 
-				 scheduleItem.getCatalogNum())); 
+	  course = availableCourses.get(scheduleItem.getDept() + 
+				 scheduleItem.getCatalogNum()); 
 	  course.setNumOfSections(1);
 	  schedule.genItem(course, daysInWeek, startTime);
 	 }
 	 
 	 scheduleItems = new HashMap<String, ScheduleItem>();
+	 
 	 for(ScheduleItem item : schedule.getItems())
 	 {         
-	  gwtItems.add(Conversion.toGWT(item));
+	  gwtItems.add(Conversion.toGWT(item, false));
 	  scheduleItems.put(item.getCourse().getDept() + 
 	   item.getCourse().getCatalogNum() + 
 	   item.getSection(), item);
-	 } 
+	 }
+	 for(ScheduleItem item : schedule.getDirtyList())
+	 {
+   gwtItems.add(Conversion.toGWT(item, true));
+   scheduleItems.put(item.getCourse().getDept() + 
+    item.getCourse().getCatalogNum() + 
+    item.getSection(), item);
+	  
+	 }
+	 
+	 gwtItems.conflict = conflict;
 	 return gwtItems;
 	}
 	

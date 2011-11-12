@@ -68,6 +68,8 @@ public class ScheduleTable extends FlexTable {
 				setWidget(row, col, schdCell);
 				schdCell.setRow(row);
 				// schdCell.setCol(col);
+				getFlexCellFormatter().removeStyleName(row, col, "scheduleItemNoConflict");
+    getFlexCellFormatter().removeStyleName(row, col, "scheduleItemConflicted");
 			}
 		}
 	}
@@ -278,13 +280,20 @@ public class ScheduleTable extends FlexTable {
 				schdItem = new ScheduleItemHTML(placedSchdItem);
 				scheduleController.getItemDragController().makeDraggable(
 						schdItem);
-				// Place the schedule item at it's start time
-				((ScheduleCell) getWidget(rowRangeStart, dayCol))
-						.setWidget(schdItem);
 				// Set the schedule item to span rows which its time occupies
 				getFlexCellFormatter().setRowSpan(rowRangeStart, dayCol,
 						rowRangeEnd - rowRangeStart);
-
+				// Place the schedule item at it's start time
+				((ScheduleCell) getWidget(rowRangeStart, dayCol))
+						.setScheduleItem(schdItem, getFlexCellFormatter().getElement(rowRangeStart, dayCol).getClientHeight());
+				if(placedSchdItem.isConflicted())
+		  {
+		   getFlexCellFormatter().addStyleName(rowRangeStart, dayCol, "scheduleItemConflicted");
+		  }
+		  else
+		  {
+     getFlexCellFormatter().addStyleName(rowRangeStart, dayCol, "scheduleItemNoConflict");
+		  }
 				// The next schedule item placed at this time will go 1 column
 				// to the right
 				cods = columnsOfDays.get(rowRangeStart - 1);
@@ -292,10 +301,11 @@ public class ScheduleTable extends FlexTable {
 				columnsOfDays.set(rowRangeStart - 1, cods);
 				/*
 				 * Every row which was spanned upon will bump one column
-				 * forward, like this: |0,0|0,1|0,2|0,3| Cell 0,0 spans 3 rows
-				 * |0,0|0,1|0,2|0,3| |1,0|1,1|1,2|1,3| -------------------->
-				 * |0,0|1,0|1,1|1,2|1,3| |2,0|2,1|2,2|2,3| |0,0|2,0|2,1|2,2|2,3|
-				 * |3,0|3,1|3,2|3,3| |3,0|3,1|3,2|3,3|
+				 * forward, like this: 
+				 * |0,0|0,1|0,2|0,3| Cell 0,0 spans 3 rows |0,0|0,1|0,2|0,3| 
+				 * |1,0|1,1|1,2|1,3| --------------------> |0,0|1,0|1,1|1,2|1,3| 
+				 * |2,0|2,1|2,2|2,3|                       |0,0|2,0|2,1|2,2|2,3|
+				 * |3,0|3,1|3,2|3,3|                       |3,0|3,1|3,2|3,3|
 				 */
 				for (j = rowRangeStart; j < rowRangeEnd - 1; j++) {
 					cods = columnsOfDays.get(j);

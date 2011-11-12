@@ -239,6 +239,7 @@ h1 {
 	border-width: 1px;
 	border-style: solid;
 	width: 130px;
+	height: 100%;
 }
 
 .highlightedBorder {
@@ -247,6 +248,28 @@ h1 {
 	border-color: yellow;
 }
 
+.courseListBox {
+  border-width: 1px;
+  border-style: solid;
+  border-collapse: collapse;
+  text-align: center;
+  background: #FFFFCC
+}
+
+.scheduleItemNoConflict {
+	background: #CCFF99;
+	height: 100%;
+}
+
+.scheduleItemConflicted {
+	background: #CC0000;
+}
+
+.scheduleItemHoverText {
+	background: #F0F0F0;
+	font-size: 0.75em;
+	box-shadow: 3px 3px 3px #606060;
+}
 	/*==============================|  Global Top Bar |==============================*/
 	
 #topBar{
@@ -394,13 +417,6 @@ background-clip: initial;
 .topBarLink.currentView {
 	background: url(imgs/CurrentView.png) repeat-x bottom;
 	border-bottom: 1px solid white;
-}
-
-.courseListBox {
-  border-width: 1px;
-  border-style: solid;
-  border-collapse: collapse;
-  text-align: center;
 }
 
 .osmtable {

@@ -35,9 +35,10 @@ class ListBoxDragController extends PickupDragController {
 			while (!context.selectedWidgets.isEmpty()) {
 				Widget widget = context.selectedWidgets.get(0);
 				toggleSelection(widget);
-				/*if (!currentMouseListBox.isAvailableBox()) {
-					currentMouseListBox.remove(widget);
-				}*/
+				/*
+				 * if (!currentMouseListBox.isAvailableBox()) {
+				 * currentMouseListBox.remove(widget); }
+				 */
 			}
 		}
 	}

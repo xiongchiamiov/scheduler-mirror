@@ -168,11 +168,11 @@ class MouseListBox extends Composite {
 
 	public int getSectionsInBox(CourseGWT course) {
 		int count = 0;
-        int itemIndex = contains(new CourseListItem(course));
-		
-		if(itemIndex >= 0)
-		{
-		 return ((CourseListItem)getWidget(itemIndex)).getCourse().getNumSections();
+		int itemIndex = contains(new CourseListItem(course));
+
+		if (itemIndex >= 0) {
+			return ((CourseListItem) getWidget(itemIndex)).getCourse()
+					.getNumSections();
 		}
 
 		return count;

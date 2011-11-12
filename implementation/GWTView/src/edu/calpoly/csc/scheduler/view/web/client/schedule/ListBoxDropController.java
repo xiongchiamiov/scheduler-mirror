@@ -36,7 +36,7 @@ class ListBoxDropController extends AbstractDropController {
 					itemIndex = mouseListBox.contains((CourseListItem) widget);
 					course = ((CourseListItem) widget).getCourse().clone();
 					sectionsIncluded = mouseListBox.getSectionsInBox(course);
-					
+
 					if (course.getNumSections() > sectionsIncluded
 							+ schedule.getSectionsOnSchedule(course)) {
 						if (itemIndex >= 0) {

@@ -43,18 +43,20 @@ public class ScheduleCellDropController extends SimpleDropController {
 		} else {
 			courseDropped = ((CourseListItem) context.draggable).getCourse();
 
-			if(availableListBox.getSectionsInBox(courseDropped) <= schedule.getSectionsOnSchedule(courseDropped))
-			{
-			 Window.alert("No more sections to schedule");
-			 return;
+			if (availableListBox.getSectionsInBox(courseDropped) <= schedule
+					.getSectionsOnSchedule(courseDropped)) {
+				Window.alert("No more sections to schedule");
+				return;
 			}
-			
+
 			dept = courseDropped.getDept();
 			catalogNum = courseDropped.getCatalogNum();
-			courseHolder = new ScheduleItemGWT("", dept, catalogNum, 1,
-					new ArrayList<Integer>(), 0, 0, 0, 0, "");
-			fromIncluded = !((MouseListBox)context.draggable.getParent().getParent()).isAvailableBox();
-			targetCell.promptForDays(courseHolder, targetCell.getRow(), false, fromIncluded);
+			courseHolder = new ScheduleItemGWT("", "", dept, catalogNum, 1,
+					new ArrayList<Integer>(), 0, 0, 0, 0, "", false);
+			fromIncluded = !((MouseListBox) context.draggable.getParent()
+					.getParent()).isAvailableBox();
+			targetCell.promptForDays(courseHolder, targetCell.getRow(), false,
+					fromIncluded);
 		}
 	}
 

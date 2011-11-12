@@ -10,6 +10,7 @@ import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemList;
 
 /**
  * The async counterpart of <code>GreetingService</code>.
@@ -39,8 +40,7 @@ public interface GreetingServiceAsync {
     void getGWTScheduleItems(ArrayList<CourseGWT> courses, AsyncCallback<ArrayList<ScheduleItemGWT>> scheduleItems) throws IllegalArgumentException;
 	void rescheduleCourse(ScheduleItemGWT scheduleItem, 
 			ArrayList<Integer> days, int startHour, boolean atHalfHour, 
-			boolean isScheduled, 
-			AsyncCallback<ArrayList<ScheduleItemGWT>> callback) 
+			boolean isScheduled, AsyncCallback<ScheduleItemList> callback) 
 					throws IllegalArgumentException;
 	void generateSchedule(AsyncCallback<ArrayList<ScheduleItemGWT>> scheduleItems) throws IllegalArgumentException;
 	void resetSchedule(AsyncCallback<Void> asyncCallback);

@@ -13,6 +13,7 @@ import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemList;
 
 /**
  * The client side stub for the RPC service.
@@ -33,7 +34,7 @@ public interface GreetingService extends RemoteService {
 	
 	ArrayList<ScheduleItemGWT> getGWTScheduleItems(ArrayList<CourseGWT> courses) throws IllegalArgumentException;
 	ArrayList<ScheduleItemGWT> generateSchedule();	
-	ArrayList<ScheduleItemGWT> rescheduleCourse(ScheduleItemGWT scheduleItem,
+	ScheduleItemList rescheduleCourse(ScheduleItemGWT scheduleItem,
 			ArrayList<Integer> days, int startHour, boolean atHalfHour,
 			boolean inSchedule);
 	
