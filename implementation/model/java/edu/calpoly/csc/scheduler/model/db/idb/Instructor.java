@@ -927,7 +927,6 @@ public class Instructor extends DbData
     	  throw new NullDataException();
       if (userID              == null)
     	  throw new NullDataException();
-      office.verify();
    }
    
    public Instructor getCannedData()
