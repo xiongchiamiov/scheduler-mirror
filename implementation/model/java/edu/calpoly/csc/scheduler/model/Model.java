@@ -1,5 +1,6 @@
 package edu.calpoly.csc.scheduler.model;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,6 +11,7 @@ import edu.calpoly.csc.scheduler.model.db.Database;
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
 import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
 import edu.calpoly.csc.scheduler.model.db.ldb.Location;
+import edu.calpoly.csc.scheduler.model.schedule.Schedule;
 
 
 /**
@@ -113,4 +115,13 @@ public class Model implements Serializable
 		return db.copySchedule(existingScheduleID, scheduleName);
 	}
 
+	public String exportToCSV(Schedule schedule) {
+		try {
+			return new CSV().export(this, schedule);
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 }

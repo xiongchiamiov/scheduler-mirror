@@ -233,6 +233,9 @@ public class OsmTable<ObjectType extends Comparable<ObjectType>> extends FocusPa
 	}
 	
 	void setColumnWidth(Column<ObjectType> column, int widthPixels) {
+		if (widthPixels < 0)
+			return;
+		
 		column.headerTDElement.setAttribute("style", "");
 		
 		column.headerContents.setWidth(widthPixels + "px");

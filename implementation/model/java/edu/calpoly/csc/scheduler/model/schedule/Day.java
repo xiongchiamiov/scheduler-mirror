@@ -22,6 +22,7 @@ public class Day implements Serializable
    public static final Day THU = new Day(4, "THU");
    public static final Day FRI = new Day(5, "FRI");
    public static final Day SAT = new Day(6, "SAT");
+   public static final Day[] ALL_DAYS = new Day[] { Day.SUN, Day.MON, Day.TUE, Day.WED, Day.THU, Day.FRI, Day.SAT };
    
    private int num;
    private String name;

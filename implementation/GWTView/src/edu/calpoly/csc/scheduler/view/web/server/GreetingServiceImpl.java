@@ -359,6 +359,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	{
 	 schedule = new Schedule(model.getInstructors(), model.getLocations());
 	 scheduleItems = new HashMap<String, ScheduleItem>();
+ 	System.out.println(model.exportToCSV(schedule));
 	}
 
 	@Override
