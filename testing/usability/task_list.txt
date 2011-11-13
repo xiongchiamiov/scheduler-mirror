@@ -1,0 +1,12 @@
+List of Usability Tasks:
+1) Make a new schedule titled "Spring 2013".
+2) Add yourself as an instructor, using your first name, your last name, Max WTU of 16, with an office
+   of building 14 room 200.
+3) Add building 14 (Computer Science) room 256, with room for 20 people, as a lecture room to the database.
+4) Add CSC 101 (Intro to Comp Sci) with catalog number 101, WTU 4, SCU 4, 1 section, lecture, 3 hours a week
+   to the databse. There is no lab.
+5) Now, set the instructor preferences for yourself. Set yourself to "preferred" to teach Intro to Comp Sci,
+   and set your preferences to be available from 12:00 pm to 5:00 pm.
+6) Schedule CHEM 128 to be at 5:00 pm on Monday, Wednesday, and Friday, and then have all the other classes
+   be automatically scheduled.
+7) Now, create a new empty schedule called Summer 2013.
