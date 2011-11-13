@@ -121,6 +121,8 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
        // Place schedule items with any previously set
        // filters
        filterScheduleItems(searchBox.getText());
+       
+       dualListBoxCourses.removeAllFromIncluded();
       }
      }
     });
@@ -367,7 +369,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
         // total number of sections
         if (fromIncluded
           || sectionsIncluded + getSectionsOnSchedule(courseHolder) == availableListBox
-            .getSectionsInBox(courseHolder) - 1)
+            .getSectionsInBox(courseHolder))
         {
          // Decrement by one if there is more than one section
          if (sectionsIncluded > 1)
@@ -378,10 +380,10 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
           includedListBox
             .setWidget(itemIndex, new CourseListItem(courseHolder));
          }
-         //Remove the course if there is only one section 
+         // Remove the course if there is only one section
          else
          {
-          includedListBox.setWidget(itemIndex, null);
+          includedListBox.remove(includedListBox.getWidget(itemIndex));
          }
         }
        }
@@ -396,8 +398,8 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
 
       filtersDialog.addItems(scheduleItems);
       filterScheduleItems(searchBox.getText());
-      
-      if(rescheduled.conflict.length() > 0)
+
+      if (rescheduled.conflict.length() > 0)
       {
        Window.alert(rescheduled.conflict);
       }

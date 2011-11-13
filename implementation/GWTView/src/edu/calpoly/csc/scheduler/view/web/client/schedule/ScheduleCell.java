@@ -12,115 +12,124 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 
 public class ScheduleCell extends SimplePanel implements
-		CloseHandler<PopupPanel> {
+  CloseHandler<PopupPanel>
+{
 
+ private class HoverTextPopup extends PopupPanel
+ {
+  public HoverTextPopup(String hoverText)
+  {
+   super(true);
+   setWidget(new HTML(hoverText));
+   setStyleName("scheduleItemHoverText");
+  }
+ }
 
-	private class HoverTextPopup extends PopupPanel
-	{
-		public HoverTextPopup(String hoverText)
-		{
-		 super(true);
-		 setWidget(new HTML(hoverText));
-		 setStyleName("scheduleItemHoverText");
-		}
-	}
+ ScheduleItemGWT scheduleItem = null;
+ int row = -1;
+ int col = -1;
+ ReschedulePopup rescheduler;
+ ScheduleViewWidget schedule;
+ boolean rescheduling;
+ boolean fromIncluded;
+ HoverTextPopup hoverPopup;
 
-	ScheduleItemGWT scheduleItem = null;
-	int row = -1;
-	int col = -1;
-	ReschedulePopup rescheduler;
-	ScheduleViewWidget schedule;
-	boolean rescheduling;
-	boolean fromIncluded;
-    HoverTextPopup hoverPopup;
+ public ScheduleCell(ScheduleViewWidget schedule)
+ {
+  this.schedule = schedule;
+ }
 
-	public ScheduleCell(ScheduleViewWidget schedule) {
-		this.schedule = schedule;
-	}
+ public void setScheduleItem(ScheduleItemHTML item, int height)
+ {
+  scheduleItem = item.getScheduleItem();
+  setWidget(item);
 
-	public void setScheduleItem(ScheduleItemHTML item, int height) {
-		scheduleItem = item.getScheduleItem();
-		setWidget(item);
-		
-		if(item.getScheduleItem().isConflicted())
-		{
-	  addStyleName("scheduleItemConflicted");
-		}
-		else
-		{
-		 addStyleName("scheduleItemNoConflict");
-		}
-		
-		if(height > item.getOffsetHeight())
-		{
-		 setSize("100%", height+"px");
-		}
-		else
-		{
-		 setSize("100%", "100%");
-		}
-		
-		item.setSize("100%", "100%");
-		hoverPopup = new HoverTextPopup(scheduleItem.getHoverText());
-	    sinkEvents(Event.ONMOUSEOVER);
-	    sinkEvents(Event.ONMOUSEOUT);
-	}
+  if (item.getScheduleItem().isConflicted())
+  {
+   addStyleName("scheduleItemConflicted");
+  } else
+  {
+   addStyleName("scheduleItemNoConflict");
+  }
 
-	public int getRow() {
-		return row;
-	}
+  if (height > item.getOffsetHeight())
+  {
+   setSize("100%", "100%");
+  } else
+  {
+   setSize("100%", "100%");
+  }
 
-	public int getCol() {
-		return col;
-	}
+  item.setSize("100%", "100%");
+  hoverPopup = new HoverTextPopup(scheduleItem.getHoverText());
+  sinkEvents(Event.ONMOUSEOVER);
+  sinkEvents(Event.ONMOUSEOUT);
+ }
 
-	public void setRow(int row) {
-		this.row = row;
-	}
+ public int getRow()
+ {
+  return row;
+ }
 
-	public void setCol(int col) {
-		this.col = col;
-	}
+ public int getCol()
+ {
+  return col;
+ }
 
-	public void onClose(CloseEvent<PopupPanel> event) {
-		schedule.moveItem(rescheduler.getItem(), rescheduler.getDays(),
-				rescheduler.getRow(), rescheduling, fromIncluded);
-	}
+ public void setRow(int row)
+ {
+  this.row = row;
+ }
 
-	public void promptForDays(ScheduleItemGWT rescheduled, int row,
-			boolean inScheduled, boolean fromIncluded) {
-		rescheduling = inScheduled;
-		this.fromIncluded = fromIncluded;
-		rescheduler = new ReschedulePopup(rescheduled, row);
-		rescheduler.addCloseHandler(this);
-		rescheduler.center();
-	}
+ public void setCol(int col)
+ {
+  this.col = col;
+ }
 
-	public void highlightRow() {
-		schedule.highlightRow(row);
-	}
+ public void onClose(CloseEvent<PopupPanel> event)
+ {
+  schedule.moveItem(rescheduler.getItem(), rescheduler.getDays(),
+    rescheduler.getRow(), rescheduling, fromIncluded);
+ }
 
-	public void unhighlightRow() {
-		schedule.unhighlightRow(row);
-	}
-	
-	public void onBrowserEvent(Event event)
-	{
-		switch(DOM.eventGetType(event))
-		{
-			case Event.ONMOUSEOVER :
-				if(hoverPopup != null && !hoverPopup.isShowing())
-				{
-				 hoverPopup.setPopupPosition(getAbsoluteLeft()+getOffsetWidth(), getAbsoluteTop());
-				 hoverPopup.show();
-				}
-				break;
-			case Event.ONMOUSEOUT :
-				if(hoverPopup != null)
-				{
-				 hoverPopup.hide();
-				}
-				break;
-		}
-	}
+ public void promptForDays(ScheduleItemGWT rescheduled, int row,
+   boolean inScheduled, boolean fromIncluded)
+ {
+  rescheduling = inScheduled;
+  this.fromIncluded = fromIncluded;
+  rescheduler = new ReschedulePopup(rescheduled, row);
+  rescheduler.addCloseHandler(this);
+  rescheduler.center();
+ }
+
+ public void highlightRow()
+ {
+  schedule.highlightRow(row);
+ }
+
+ public void unhighlightRow()
+ {
+  schedule.unhighlightRow(row);
+ }
+
+ public void onBrowserEvent(Event event)
+ {
+  switch (DOM.eventGetType(event))
+  {
+  case Event.ONMOUSEOVER:
+   if (hoverPopup != null && !hoverPopup.isShowing())
+   {
+    hoverPopup.setPopupPosition(getAbsoluteLeft() + getOffsetWidth(),
+      getAbsoluteTop());
+    hoverPopup.show();
+   }
+   break;
+  case Event.ONMOUSEOUT:
+   if (hoverPopup != null)
+   {
+    hoverPopup.hide();
+   }
+   break;
+  }
+ }
 }
