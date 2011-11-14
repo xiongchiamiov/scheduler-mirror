@@ -14,7 +14,7 @@ import edu.calpoly.csc.scheduler.model.db.cdb.*;
  */
 public class CoursePreference implements Serializable
 {
-	public static final int serialVersionUID = 42;
+	public static final long serialVersionUID = 42;
 
 	/** The prefered course */
 	private Course course;

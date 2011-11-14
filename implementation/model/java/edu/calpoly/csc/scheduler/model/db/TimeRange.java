@@ -5,6 +5,10 @@ import java.util.Vector;
 
 public class TimeRange implements Serializable
 {
+   /**
+    * 
+    */
+   private static final long serialVersionUID = -7492152557062000805L;
    /** Start time*/
    private Time s;
    /** End time */

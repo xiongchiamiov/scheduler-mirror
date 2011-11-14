@@ -10,4 +10,9 @@ import java.util.Vector;
 public class NullDataException extends RuntimeException
 {
 
+   /**
+    * 
+    */
+   private static final long serialVersionUID = 6141972863651406348L;
+
 }

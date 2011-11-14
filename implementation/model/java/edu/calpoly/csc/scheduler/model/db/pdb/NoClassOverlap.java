@@ -27,6 +27,10 @@ import edu.calpoly.csc.scheduler.model.db.cdb.*;
 public class NoClassOverlap extends SchedulePreference 
    implements Comparable<NoClassOverlap>, Serializable
 {
+   /**
+    * 
+    */
+   private static final long serialVersionUID = -873957353656762065L;
    public HashSet<Course> cs = new HashSet<Course>();
    private BitSet bitSet = new BitSet();
 

@@ -8,4 +8,9 @@ package edu.calpoly.csc.scheduler.model.db.idb;
 public class NullPreferenceException extends Exception
 {
 
+   /**
+    * 
+    */
+   private static final long serialVersionUID = 1633427123130273795L;
+
 }

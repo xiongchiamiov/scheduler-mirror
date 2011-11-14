@@ -10,6 +10,11 @@ public class NullCourseException extends Exception
 {
 
    /**
+    * 
+    */
+   private static final long serialVersionUID = -3042849948466801486L;
+
+   /**
     * Calls the exception constructor.
     */
    protected NullCourseException ()

@@ -11,6 +11,11 @@ package edu.calpoly.csc.scheduler.model.db.pdb;
 public class PreferenceExistsException extends Exception 
 {
    /**
+    * 
+    */
+   private static final long serialVersionUID = -578939791182001924L;
+
+   /**
     * Constructor calls the exception constructor.
     * 
     */

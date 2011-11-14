@@ -7,6 +7,10 @@ package edu.calpoly.csc.scheduler.model.db.cdb;
  */
 public class Lab extends Course
 {
+   /**
+    * 
+    */
+   private static final long serialVersionUID = 7582528666017509306L;
    private boolean tethered;
    private Course component;
    private boolean useLectureInstructor;

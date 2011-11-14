@@ -15,6 +15,10 @@ import edu.calpoly.csc.scheduler.model.schedule.Week;
  */
 public class Tba extends Location
 {
+   /**
+    * 
+    */
+   private static final long serialVersionUID = -5815827644512540632L;
    private static final Tba me = new Tba();
    
    private Tba ()

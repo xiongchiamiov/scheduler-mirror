@@ -484,6 +484,11 @@ public class PreferencesDB extends Observable {
 
     /**Preference does not already exists exception thrown in the set methods.  */
     public static class PreferenceDoesNotExistException extends Exception {
+         /**
+       * 
+       */
+      private static final long serialVersionUID = 426170238785583526L;
+
          public PreferenceDoesNotExistException() {
          /**
           * Constructor calls the exception constructor.
@@ -495,7 +500,12 @@ public class PreferencesDB extends Observable {
 
     public static class PreferenceExistsException extends Exception {
 
-        public PreferenceExistsException() {
+        /**
+       * 
+       */
+      private static final long serialVersionUID = 4879794661002864035L;
+
+      public PreferenceExistsException() {
             super();
         }
 

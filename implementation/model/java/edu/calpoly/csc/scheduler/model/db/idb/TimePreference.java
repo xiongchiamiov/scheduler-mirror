@@ -14,7 +14,12 @@ import edu.calpoly.csc.scheduler.model.db.Time;
  */
 public class TimePreference implements Serializable
 {
-	/** The desired time */
+	/**
+    * 
+    */
+   private static final long serialVersionUID = 3504977515321766168L;
+
+   /** The desired time */
 	private Time time;
 	
 	/** The desire value */

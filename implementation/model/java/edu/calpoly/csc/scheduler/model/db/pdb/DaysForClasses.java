@@ -29,7 +29,7 @@ public class DaysForClasses extends SchedulePreference
    /** 
     * For serializing
     */
-   public static final int serialVersionUID = 42;
+   public static final long serialVersionUID = 42;
 
    /**
     * Conveniently-defined preference for teaching a class any/all five days 

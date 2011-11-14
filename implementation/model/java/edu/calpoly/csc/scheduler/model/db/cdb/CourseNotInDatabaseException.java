@@ -9,6 +9,11 @@ package edu.calpoly.csc.scheduler.model.db.cdb;
 public class CourseNotInDatabaseException extends Exception
 {
    /**
+    * 
+    */
+   private static final long serialVersionUID = -1536316557832337635L;
+
+   /**
     * Calls the exception constructor.
     */
    public CourseNotInDatabaseException ()

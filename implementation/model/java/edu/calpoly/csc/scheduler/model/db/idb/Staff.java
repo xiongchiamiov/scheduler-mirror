@@ -13,6 +13,10 @@ import edu.calpoly.csc.scheduler.model.db.ldb.Tba;
  */
 public class Staff extends Instructor
 {
+   /**
+    * 
+    */
+   private static final long serialVersionUID = 7424550318179981929L;
    private static final Staff me = new Staff();
    
    private Staff ()

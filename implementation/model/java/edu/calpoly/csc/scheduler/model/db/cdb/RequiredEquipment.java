@@ -12,6 +12,10 @@ import java.io.Serializable;
  */
 public class RequiredEquipment implements Cloneable, Serializable
 {
+      /**
+    * 
+    */
+   private static final long serialVersionUID = 1298435314657134693L;
       /** Whether the course requires a smartroom or not. */
    private boolean smartroom;
       /** Whether the course requires an overhead. */

@@ -14,6 +14,10 @@ import java.io.Serializable;
  */
 public class SchedulePreference implements Serializable
 {
+   /**
+    * 
+    */
+   private static final long serialVersionUID = 1115416267979724044L;
    /** The name of the preference */
    public String name;
    /** The weight of the preference */
