@@ -15,11 +15,14 @@ import edu.calpoly.csc.scheduler.model.schedule.*;
 public class Location extends DbData implements Serializable
 {
    private static final long serialVersionUID = 42;
+   
+   private static final int      DEFAULT_OCCUPANCY = 30;
+   private static final boolean  DEFAULT_ADA       = false;
 
    /**
     * This class contains the equipment provided at a location.
     */
-   public static class ProvidedEquipment implements Serializable
+   public class ProvidedEquipment implements Serializable
    {
       private static final long serialVersionUID = 42;
       public boolean            hasOverhead = false;

@@ -109,6 +109,7 @@ public class SectionTracker
    public void resetSectionCount (int newMax)
    {
       this.curSection = 0;
+      this.numSections = 0;
       this.maxSections = newMax;
    }
    

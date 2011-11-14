@@ -154,8 +154,9 @@ public class Course extends DbData implements Serializable
     */
    public int hashCode ()
    {
-      return this.getName().hashCode() + this.getCatalogNum()
-         + this.getType().hashCode();
+      return this.getName().hashCode() + 
+             this.getCatalogNum()      + 
+             this.getType().hashCode();
    }
 
    /**

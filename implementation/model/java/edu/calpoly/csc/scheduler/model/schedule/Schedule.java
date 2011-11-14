@@ -11,9 +11,7 @@ import edu.calpoly.csc.scheduler.model.db.ldb.*;
 import edu.calpoly.csc.scheduler.model.schedule.CouldNotBeScheduledException.*;
 
 /**
- * Represents a schedule. Supports methods for generating data from a list of
- * courses, instructors, and locations. Guarantees that a location/instructor
- * will never be double-booked.
+ * 
  * 
  * @author Eric Liebowitz
  * @version Oct 25, 2011
@@ -345,7 +343,6 @@ public class Schedule extends DbData implements Serializable
       {
          this.sections.put(c, new SectionTracker(c));
       }
-
       return this.sections.get(c);
    }
 
@@ -491,17 +488,9 @@ public class Schedule extends DbData implements Serializable
    {
       for (Course c: (cSourceList = new Vector<Course>(c_list)))
       {
-         SectionTracker st = this.sections.get(c);
-         if (st != null)
-         {
-            st.resetSectionCount(c.getNumOfSections());
-         }
-         else
-         {
-            this.sections.put(c, new SectionTracker(c));
-         }
+         SectionTracker st = getSectionTracker(c);
+         st.resetSectionCount(c.getNumOfSections());
       }
-      
    }
 
    /**
