@@ -40,8 +40,6 @@ public class Model implements Serializable
    /**
     * Returns a list of schedules which a given user has access to.
     * 
-    * @param userId Userid of the person who's asking for the schedules
-    * 
     * @return Map, keyed by schedule ids which yields schedule names.
     * 
     * @see Database#getSchedules(String)
@@ -123,5 +121,19 @@ public class Model implements Serializable
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	public void saveSchedule (Schedule s)
+	{
+	   db.getScheduleDB().saveData(s);
+	}
+
+	public void deleteSchedule (String s)
+	{
+	   int sid = sched_map.get(s);
+	   Schedule sched = new Schedule();
+	   sched.setId(sid);
+	   
+	   db.getScheduleDB().removeData(sched);
 	}
 }
