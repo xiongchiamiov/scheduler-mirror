@@ -8,7 +8,7 @@ import java.util.BitSet;
 /**
  *
  * @author Eric Liebowitz
- * @version Oct 29, 2011
+ * @version Nov 14, 2011
  */
 public class SectionTracker
 {
@@ -66,8 +66,6 @@ public class SectionTracker
     * Removes the given section from our list of sections taught
     * 
     * @param s Section to remove
-    * 
-    * @return true if the section exists and is thusly removed
     */
    public void removeSection (int s)
    {
