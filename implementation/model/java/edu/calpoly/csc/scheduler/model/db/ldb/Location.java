@@ -22,7 +22,7 @@ public class Location extends DbData implements Serializable
    /**
     * This class contains the equipment provided at a location.
     */
-   public class ProvidedEquipment implements Serializable
+   public static class ProvidedEquipment implements Serializable
    {
       private static final long serialVersionUID = 42;
       public boolean            hasOverhead = false;
