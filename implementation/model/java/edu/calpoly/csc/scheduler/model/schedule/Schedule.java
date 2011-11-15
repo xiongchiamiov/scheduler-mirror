@@ -276,7 +276,7 @@ public class Schedule extends DbData implements Serializable
     * @return if the specified item was removed or not. It will not be removed
     *         if it does not exist in our list of items
     */
-   private boolean remove (ScheduleItem si)
+   public boolean remove (ScheduleItem si)
    {
       boolean r = false;
       if (this.items.contains(si))
