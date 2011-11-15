@@ -77,7 +77,7 @@ public class InstructorPreferencesView extends ScrollPanel {
 		service.getCourses(new AsyncCallback<ArrayList<CourseGWT>>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				Window.alert(caught.getMessage());
+				Window.alert("Failed to get courses.");
 			}
 			
 			public void onSuccess(ArrayList<CourseGWT> result) {

@@ -39,7 +39,7 @@ public class StringColumn<ObjectType extends Comparable<ObjectType>> extends Osm
 						objectChanged(object);
 					}
 					catch (InvalidValueException ex) {
-						Window.alert(ex.getMessage());
+						Window.alert("Invalid Value");
 					}
 				}
 			});

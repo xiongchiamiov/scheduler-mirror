@@ -406,8 +406,7 @@ public class CTableBuilder implements TableBuilder<CourseGWT>{
 		service.saveCourses(list, new AsyncCallback<Void>(){
 			public void onFailure(Throwable caught){ 
 				
-				Window.alert("Error saving:\n" + 
-						caught.getLocalizedMessage());
+				Window.alert("Error saving courses.");
 			}
 			public void onSuccess(Void result){
 				Window.alert("Successfully saved");
