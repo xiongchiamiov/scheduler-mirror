@@ -58,6 +58,10 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
     public void openExistingSchedule(int scheduleID) {
     	db = model.openExistingSchedule(scheduleID);
     }
+    
+    public void removeSchedule(String schedName) {
+    	model.deleteSchedule(schedName);
+    }
 
 	public ArrayList<InstructorGWT> getInstructors() throws IllegalArgumentException {
 		ArrayList<InstructorGWT> results = new ArrayList<InstructorGWT>();
