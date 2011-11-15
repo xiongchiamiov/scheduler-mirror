@@ -5,16 +5,24 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.dom.client.MouseMoveEvent;
+import com.google.gwt.event.dom.client.MouseUpEvent;
+import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.event.dom.client.HandlesAllMouseEvents;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.shared.DayGWT;
@@ -182,10 +190,24 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 				final CellWidget cell = new CellWidget(halfHour, dayNum);
 				cell.addStyleName("desireCell");
 				cell.add(new HTML(Integer.toString(desire)));
-				cell.addClickHandler(new ClickHandler() {
+				/*cell.addClickHandler(new ClickHandler() {
 					@Override
 					public void onClick(ClickEvent event) {
 						cellWidgetClicked(cell, event);
+					}
+				});*/
+				
+				cell.addMouseDownHandler(new MouseDownHandler() {
+					@Override
+					public void onMouseDown(MouseDownEvent event) {
+						cellWidgetMouseDown(cell, event);
+					}
+				});
+				
+				cell.addMouseUpHandler(new MouseUpHandler() {
+					@Override
+					public void onMouseUp(MouseUpEvent event) {
+						cellWidgetMouseUp(cell, event);
 					}
 				});
 				
@@ -194,6 +216,23 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 				cells[halfHour][dayNum] = cell;
 			}
 		}
+	}
+	
+	void cellWidgetMouseDown(CellWidget cell, MouseDownEvent event)
+	{
+		if (!event.isControlKeyDown()) {
+			clearSelectedCells();
+			anchorCell = null;
+		}
+		if (anchorCell == null)
+			anchorCell = cell;
+		selectRangeOfCells(anchorCell.halfHour, anchorCell.day, cell.halfHour, cell.day);
+	}
+	
+	void cellWidgetMouseUp(CellWidget cell, MouseUpEvent event)
+	{
+		selectRangeOfCells(anchorCell.halfHour, anchorCell.day, cell.halfHour, cell.day);
+		anchorCell = null;
 	}
 
 	void cellWidgetClicked(CellWidget cell, ClickEvent event) {
@@ -207,7 +246,16 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 			else
 				selectRangeOfCells(anchorCell.halfHour, anchorCell.day, cell.halfHour, cell.day);
 		}
+		else if (event.getNativeButton() == NativeEvent.BUTTON_LEFT){
+			if (anchorCell == null)
+				anchorCell = cell;
+			while (event.getNativeButton() == NativeEvent.BUTTON_LEFT){
+					selectRangeOfCells(anchorCell.halfHour, anchorCell.day, cell.halfHour, cell.day);
+					System.out.println("Got to this spot++++++++++");
+			}
+		}
 		else {
+			System.out.println("Got to this spot!!!!!!!!!!");
 			clearSelectedCells();
 			selectCell(cell);
 			anchorCell = cell;
