@@ -1,0 +1,45 @@
+.TS
+center allbox;
+c l l l l
+c | l | l | l | l.
+\fBCase No.\fP	\fBUser Inputs and Command\fP	\fBExpected Output\fP	\fBRemarks\fP\ \ \ \ \ \ \ \ \ \ \ \  \ \ \ \ \ 	\fBResults\fP\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 
+. sp .2v
+_
+. sp .2v
+1	T{
+.na
+Type  "gfisher", then  key press the 'Enter' or 'Return' key
+T}	T{
+.na
+Login is operation is successful, meaning the program displays the next
+screen, with "gfisher" as the logged-in user.  The schedules saved under this
+user name are available in the list of schedules.
+T}	T{
+.na
+Hoping for keyobard short cut; OK that it's not there yet.
+T}	T{
+Fail
+T}
+2	T{
+.na
+Enter "gfisher", then press the 'Login' button.
+T}	T{
+.na
+Same as case 2.
+T}	T{
+Pass
+T}
+3	T{
+.na
+Type "xxx",  then press the 'Login' button.
+T}	T{
+.na
+Login is operation is successful, meaning the program displays the next
+screen, with "xxxr" as the logged-in user.  Assuming that there is no other
+user named "xxx", there will be no schedules saved under this
+user name, and hence the list of available schedules is empty.
+T}	T{
+Pass
+T}
+. sp .2v
+.TE
