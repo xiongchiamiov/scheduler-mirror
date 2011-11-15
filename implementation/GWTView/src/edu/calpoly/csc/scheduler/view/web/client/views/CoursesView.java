@@ -36,7 +36,7 @@ import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 public class CoursesView extends ScrollPanel {
 	private GreetingServiceAsync service;
 	private Table<CourseGWT> cTable;
-	private OsmTable<CourseGWT> table;
+	private static OsmTable<CourseGWT> table;
 	int nextLocationID = 1;
 	private String scheduleName;
 
@@ -336,5 +336,17 @@ public class CoursesView extends ScrollPanel {
 			}
 		}
 		
+	}
+	
+	
+	public static boolean isSaved(){
+		if(table == null){ return true; }
+		return table.isSaved();
+	}
+	
+	public static void clearChanges(){
+		if(table != null){
+			table.clearChanges();
+		}
 	}
 }

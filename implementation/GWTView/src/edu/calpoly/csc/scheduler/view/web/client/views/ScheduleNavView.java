@@ -2,6 +2,7 @@ package edu.calpoly.csc.scheduler.view.web.client.views;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -57,22 +58,22 @@ public class ScheduleNavView extends VerticalPanel {
 		
 		topPanel.add(instructorsLink = HTMLUtilities.createLink("Instructors", "topBarLink first", new ClickHandler() {
 			public void onClick(ClickEvent events) {
-				switchToView(new InstructorsView(contentPanel, service, scheduleName));
+				checkforUnsavedTable(new InstructorsView(contentPanel, service, scheduleName));
 			}
 		}));
 		topPanel.add(locationsLink = HTMLUtilities.createLink("Locations", "topBarLink", new ClickHandler() {
 			public void onClick(ClickEvent events) {
-				switchToView(new LocationsView(service, scheduleName));
+				checkforUnsavedTable(new LocationsView(service, scheduleName));
 			}
 		}));
 		topPanel.add(coursesLink = HTMLUtilities.createLink("Courses", "topBarLink", new ClickHandler() {
 			public void onClick(ClickEvent events) {
-				switchToView(new CoursesView(service,scheduleName));
+				checkforUnsavedTable(new CoursesView(service,scheduleName));
 			}
 		}));
 		topPanel.add(scheduleLink = HTMLUtilities.createLink("Schedule", "topBarLink", new ClickHandler() {
 			public void onClick(ClickEvent events) {
-				switchToView(new ScheduleView(service));
+				checkforUnsavedTable(new ScheduleView(service));
 			}
 		}));
 		return topPanel;
@@ -101,5 +102,30 @@ public class ScheduleNavView extends VerticalPanel {
 		
 		contentPanel.clear();
 		contentPanel.add(widget);
+	}
+	
+	
+	private void checkforUnsavedTable(Widget w){
+		
+		boolean isSaved = true;
+		if(!InstructorsView.isSaved() || !LocationsView.isSaved() || !CoursesView.isSaved()){
+			isSaved = false;
+		}
+		
+		if(isSaved){
+			switchToView(w);
+		}
+		
+		else{
+			boolean confirm = Window.confirm("You have unsaved data which will be lost. Are you sure you want to navigate away?");
+			if(confirm){
+				
+				InstructorsView.clearChanges();
+				LocationsView.clearChanges();
+				CoursesView.clearChanges();
+				
+				switchToView(w);
+			}
+		}
 	}
 }

@@ -31,7 +31,7 @@ public class InstructorsView extends VerticalPanel {
 	
 	private final String scheduleName;
 	private Table<InstructorGWT> iTable;
-	private OsmTable<InstructorGWT> table;
+	private static OsmTable<InstructorGWT> table;
 	int nextLocationID = 1;
 
 	public InstructorsView(Panel container, GreetingServiceAsync service, String scheduleName) {
@@ -231,5 +231,17 @@ public class InstructorsView extends VerticalPanel {
 			if (instr.getUserID().equals(userId))
 				return true;
 		return false;
+	}
+	
+	
+	public static boolean isSaved(){
+		if(table == null){ return true; }
+		return table.isSaved();
+	}
+	
+	public static void clearChanges(){
+		if(table != null){
+			table.clearChanges();
+		}
 	}
 }

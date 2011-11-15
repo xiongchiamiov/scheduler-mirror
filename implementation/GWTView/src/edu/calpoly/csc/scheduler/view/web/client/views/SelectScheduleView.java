@@ -222,10 +222,35 @@ public class SelectScheduleView extends VerticalPanel {
 		box.addChangeHandler(new ChangeHandler() {
 			@Override
 			public void onChange(ChangeEvent event) {
-				selectSchedule(Integer.parseInt(box.getValue(box.getSelectedIndex())), box.getItemText(box.getSelectedIndex()));
+				checkforUnsavedTable(box);
 			}
 		});
 		
 		return box;
+	}
+	
+	
+	private void checkforUnsavedTable(ListBox box){
+		
+		boolean isSaved = true;
+		if(!InstructorsView.isSaved() || !LocationsView.isSaved() || !CoursesView.isSaved()){
+			isSaved = false;
+		}
+		
+		if(isSaved){
+			selectSchedule(Integer.parseInt(box.getValue(box.getSelectedIndex())), box.getItemText(box.getSelectedIndex()));
+		}
+		
+		else{
+			boolean confirm = Window.confirm("You have unsaved data which will be lost. Are you sure you want to navigate away?");
+			if(confirm){
+				
+				InstructorsView.clearChanges();
+				LocationsView.clearChanges();
+				CoursesView.clearChanges();
+				
+				selectSchedule(Integer.parseInt(box.getValue(box.getSelectedIndex())), box.getItemText(box.getSelectedIndex()));
+			}
+		}
 	}
 }

@@ -103,6 +103,9 @@ public class OsmTable<ObjectType extends Comparable<ObjectType>> extends FocusPa
 
 		private void addClass(Row row) { row.trElement.addClassName(cssClassName); }
 		private void removeClass(Row row) { row.trElement.removeClassName(cssClassName); }
+		public boolean isEmpty(){
+			return set.isEmpty();
+		}
 	}
 	
 	protected Factory<ObjectType> factory;
@@ -350,5 +353,29 @@ public class OsmTable<ObjectType extends Comparable<ObjectType>> extends FocusPa
 		rowsToRemove.remove(row);
 		
 		row.trElement.removeFromParent();
+	}
+	
+	
+	/**
+	 * 
+	 * @return true if the table has been saved, false if there are unsaved changes in the table
+	 */
+	public boolean isSaved(){
+		
+		if(!rowsToRemove.isEmpty()){ return false; }
+		if(!editedRows.isEmpty()){ return false; }
+		if(!addedRows.isEmpty()){ return false; }
+			
+		return true;
+	}
+	
+	
+	/**
+	 * Clear all changes so that the table will report isSaved to be true
+	 */
+	public void clearChanges(){
+		rowsToRemove.clear();
+		editedRows.clear();
+		addedRows.clear();
 	}
 }

@@ -33,7 +33,7 @@ public class LocationsView extends ScrollPanel {
 	private GreetingServiceAsync service;
 	private final String scheduleName;
 	int nextLocationID = 1;
-	OsmTable<LocationGWT> table;
+	private static OsmTable<LocationGWT> table;
 
 	public LocationsView(GreetingServiceAsync service, String scheduleName) {
 		this.service = service;
@@ -199,5 +199,16 @@ public class LocationsView extends ScrollPanel {
 			if (location.getBuilding().equals(building) && location.getRoom().equals(room))
 				return location;
 		return null;
+	}
+	
+	public static boolean isSaved(){
+		if(table == null){ return true; }
+		return table.isSaved();
+	}
+	
+	public static void clearChanges(){
+		if(table != null){
+			table.clearChanges();
+		}
 	}
 }
