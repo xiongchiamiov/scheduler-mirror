@@ -30,7 +30,7 @@ public class CourseAvailList extends Vector<CourseWeekAvail>
    /**
     * Adds a NcoWeekAvail object to this object's list of WeekAvail's
     *
-    * @param wa The NcoWeekAvail to add
+    * @param cwa The NcoWeekAvail to add
     */
    public void addWeekAvail (CourseWeekAvail cwa)
    {

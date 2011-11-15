@@ -11,10 +11,70 @@ import edu.calpoly.csc.scheduler.model.db.ldb.*;
 import edu.calpoly.csc.scheduler.model.schedule.CouldNotBeScheduledException.*;
 
 /**
+ * <h1>Automated Scheduling Process</h1>
  * 
+ * The scheduling algorithm follows a step-by-step process to schedule courses.
+ * It is exhaustive and guarantees that all courses given to the algorithm will
+ * be scheduled.
+ * 
+ * <h2>Choosing Course</h2>
+ * 
+ * Courses are not algorithmically "chosen". Instead, the algorithm simply loops
+ * through every course "c" until all sections of "c" are scheduled. You'll want
+ * to check out {@link SectionTracker}, 
+ * {@link #initGenData(Collection<Course>)}, and 
+ * {@link #getSectionTracker(Course)} to see how we keep track of course 
+ * sections.
+ * 
+ * <h2>Choosing Instructor</h2>
+ * 
+ * Instructors are chosen based on who most desires to teach a given course. If
+ * the one who most wants to teach it no longer can (i.e. his WTU's are maxed), 
+ * he'll be removed from consideration and more instructors will be tested. Take
+ * a look at {@link #findInstructor(Course, List<Instructor>)} to see how this 
+ * is implemented.
+ * 
+ * If no Instructor can be found (no one is capable of teaching the Course, 
+ * which can be b/c of preference or wtu reasons), the special {@link Staff} 
+ * Instructor is used. This person always wants to teach a course and is always
+ * available to teach at any time.
+ * 
+ * <h2>Choosing Times</h2>
+ * 
+ * Finding times depends on the type of course you're finding a time for. If 
+ * you're scheduling a lecture course, it's easy. Lab courses, on the other 
+ * hand, are a horse of a different color.<br>
+ * <br>
+ * Times per day will be figured by dividing the Course's length across the days
+ * it's to be taught ({@link Course#getDayLength()}).<br> 
+ * <br>
+ * Times are selected by picking the time range across the Course's days 
+ * ({@link Course#getDays()}) for which the chosen instructor want to teach
+ * the most; the {@link TimeRange} for which he has the highest average 
+ * preference ({@link Instructor#getAvgPrefForTimeRange(Week, TimeRange)}). If
+ * an instructor has a pref of '0' for any time slot within the time 
+ * {@link TimeRange}, the entire range will be disregarded.<br> 
+ * <br>
+ * 
+ * <h3>Finding Lecture Times</h3>
+ * 
+ * Lecture times are found within the time bounds specified in the 
+ * {@link #lec_bounds}. By default, this is 7a-10p. (My understanding of this is 
+ * that this time is global throughout all Cal Poly).<br>
+ * <br> 
+ *
+ * <h2>Choosing Location</h2>
+ * 
+ * Blah blah blah.
+ * 
+ * <h1>Selecting the Best Item</h1>
+ * 
+ * <h1>Further Design Suggestions/Options</h1>
+ * 
+ * Blah blah blah.
  * 
  * @author Eric Liebowitz
- * @version Oct 25, 2011
+ * @version Nov 14, 2011
  */
 public class Schedule extends DbData implements Serializable
 {
@@ -132,7 +192,7 @@ public class Schedule extends DbData implements Serializable
     * 
     * @see #lec_bounds
     * @see #lab_bounds
-    * @see #generate(List<Course>)
+    * @see #generate(List\<Course\>)
     */
    public void genItem (Course c, Week days, Time s)
    {
@@ -212,7 +272,9 @@ public class Schedule extends DbData implements Serializable
     * to be taught, it will be added back to our cSourceList.
     * 
     * @param si ScheduleItem to remove
-    * @return
+    * 
+    * @return if the specified item was removed or not. It will not be removed
+    *         if it does not exist in our list of items
     */
    private boolean remove (ScheduleItem si)
    {
@@ -295,8 +357,6 @@ public class Schedule extends DbData implements Serializable
     * @param si The ScheduleItem w/ the days, times, etc. which'll be booked in
     *        the schedule
     * 
-    * @return true if the ScheduleItem was added. False otherwise.
-    * 
     * @see #verify(ScheduleItem)
     */
    private void book (ScheduleItem si)
@@ -352,18 +412,19 @@ public class Schedule extends DbData implements Serializable
     * the lecture/lab w/o exceeding his max wtu limit. The instructor must also
     * be able to teach during the times specified.<br>
     * <br>
-    * If the given ScheduleItem has a lab, it will also be verified. Should
-    * either lab or lecture verification fail, you'll get false.<br>
-    * <br>
     * Section counts are checked to ensure you don't overbook a course.<br>
     * <br>
     * If this method returns true, it is safe to call 'book(si)'.
     * 
     * @param si ScheduleItem to verify
     * 
-    * @return true if 'si' (and lab, if applicable) can be taught by its
-    *         instructor at its location, and the instructor can teach the
-    *         course. I
+    * @return true if 'si' can be taught by its instructor, at its location, 
+    *         and the instructor can teach the course.
+    * 
+    * @throws CouldNotBeScheduledException if a time/location conflict is 
+    *         encountered, the instructor cannot teach during the given times, 
+    *         the instructor cannot teach the course, or if no more sections of
+    *         the given course can be taught 
     * 
     * @see Instructor#canTeach(Course)
     */
@@ -575,7 +636,7 @@ public class Schedule extends DbData implements Serializable
     * @see ScheduleItem#getValue()
     * @see Staff#getStaff()
     * @see Tba#getTba()
-    * @see #findTimes(Course, List<Instructor>)
+    * @see #findTimes(Course, List\<Instructor\>)
     */
    private ScheduleItem genBestTime (ScheduleItem base, TimeRange tr)
    {
