@@ -148,10 +148,6 @@ public class Schedule extends DbData implements Serializable
    private HashSet<ScheduleItem> dirtyList = new HashSet<ScheduleItem>();
    
    /**
-    * This schedule's id
-    */
-   private Integer id;
-   /**
     * Human-readable string to identify this schedule
     */
    private String name;
@@ -982,7 +978,7 @@ public class Schedule extends DbData implements Serializable
     */
    public Integer getId ()
    {
-      return id;
+      return getScheduleId();
    }
 
    /**
@@ -992,7 +988,7 @@ public class Schedule extends DbData implements Serializable
     */
    public void setId (Integer id)
    {
-      this.id = id;
+      setScheduleId(id);
    }
 
    /**
@@ -1117,23 +1113,7 @@ public class Schedule extends DbData implements Serializable
 
    public void verify ()
    {
-      if (cSourceList == null)
-      {
-         throw new NullDataException();
-      }
-      if (iSourceList == null)
-      {
-         throw new NullDataException();
-      }
-      if (lSourceList == null)
-      {
-         throw new NullDataException();
-      }
-      if (items == null)
-      {
-         throw new NullDataException();
-      }
-      if (id ==  null)
+      if (getScheduleId() ==  null)
       {
          throw new NullDataException();
       }
