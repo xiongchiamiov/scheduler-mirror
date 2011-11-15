@@ -51,4 +51,6 @@ public interface GreetingService extends RemoteService {
 	
 	ArrayList<ScheduleItemGWT> getSchedule();
 	int copySchedule(int existingScheduleID, String scheduleName);
+	
+	void removeSchedule(String schedName);
 }

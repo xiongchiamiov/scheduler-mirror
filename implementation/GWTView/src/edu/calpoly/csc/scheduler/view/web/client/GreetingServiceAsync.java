@@ -21,6 +21,7 @@ public interface GreetingServiceAsync {
 	
 	void openNewSchedule(String newScheduleName, AsyncCallback<Integer> callback) throws IllegalArgumentException;
 	void openExistingSchedule(int scheduleID, AsyncCallback<Void> callback) throws IllegalArgumentException;
+	void removeSchedule(String schedName, AsyncCallback<Void> callback) throws IllegalArgumentException;
 
 	void getInstructors(AsyncCallback<ArrayList<InstructorGWT>> callback) throws IllegalArgumentException;
 	void saveInstructor(InstructorGWT instructor, AsyncCallback<Void> asyncCallback);
