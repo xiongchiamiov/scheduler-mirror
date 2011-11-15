@@ -127,6 +127,39 @@ public class SelectScheduleView extends VerticalPanel {
 				});
 			}
 		}));
+		
+		add(new Button("Remove Schedule", new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				String schedName = listBox.getValue(listBox.getSelectedIndex());
+				
+				service.removeSchedule(schedName, new AsyncCallback<Void>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						Window.alert("Failed to remove schedule in: " + caught.getMessage());
+					}
+					
+					@Override
+					public void onSuccess(Void derp) {
+						service.getScheduleNames(new AsyncCallback<Map<String,Integer>>() {
+							@Override
+							public void onFailure(Throwable caught) {
+								Window.alert("There was an error getting the schedules: " + caught.getMessage());
+							}
+							
+							@Override
+							public void onSuccess(Map<String, Integer> result) {
+								schedulesIDsAndNames = result;
+								
+								listBox.clear();
+								for (String scheduleName : schedulesIDsAndNames.keySet())
+									listBox.addItem(scheduleName, schedulesIDsAndNames.get(scheduleName).toString());
+							}
+						});
+					}
+				});
+			}
+		}));
 	}
 	
 	@Override
