@@ -2,11 +2,13 @@ package edu.calpoly.csc.scheduler.model.db.sdb;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 import edu.calpoly.csc.scheduler.model.db.AbstractDatabase;
 import edu.calpoly.csc.scheduler.model.db.SQLDB;
+import edu.calpoly.csc.scheduler.model.db.cdb.CourseDB;
+import edu.calpoly.csc.scheduler.model.db.idb.InstructorDB;
+import edu.calpoly.csc.scheduler.model.db.ldb.LocationDB;
 import edu.calpoly.csc.scheduler.model.schedule.Schedule;
 
 public class ScheduleDB extends AbstractDatabase<Schedule>
@@ -72,6 +74,18 @@ public class ScheduleDB extends AbstractDatabase<Schedule>
       }
       toAdd.verify();
       return toAdd;
+   }
+   
+   @Override
+   public void removeData(Schedule data)
+   {
+	   super.removeData(data);
+	   // Where clause
+       wheres = new LinkedHashMap<String, Object>();
+       wheres.put(SCHEDULEID, data.getId());
+       sqldb.executeDelete(CourseDB.TABLENAME, wheres);
+       sqldb.executeDelete(InstructorDB.TABLENAME, wheres);
+	   sqldb.executeDelete(LocationDB.TABLENAME, wheres);
    }
 
    @Override
