@@ -25,6 +25,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
+import edu.calpoly.csc.scheduler.view.web.client.views.LoadingPopup;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemList;
@@ -76,6 +77,8 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
     dualListBoxCourses.reregisterBoxDrops();
    }
   }
+  dragController.registerDropController(dualListBoxCourses.getAvailableDropController());
+  dragController.registerDropController(dualListBoxCourses.getIncludedDropController());  
  }
 
  /**
@@ -170,7 +173,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
   for (ScheduleItemGWT item : scheduleItems)
   {
    if (filtInstructors.contains(item.getProfessor())
-     && filtCourses.contains(item.getCourse())
+     && filtCourses.contains(item.getCourseString())
      && filtRooms.contains(item.getRoom())
      && item.getSchdItemText().contains(search))
    {
@@ -225,6 +228,17 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
   filtersDialog.addCloseHandler(this);
   interfacePanel.add(new Button("Generate Schedule",
     new GenerateScheduleClickHandler()));
+  
+  interfacePanel.add(new Button("Save Schedule", new ClickHandler()
+  {
+   public void onClick(ClickEvent event)
+   {
+    // Causes the filters dialog to appear in the center of this
+    // widget
+    saveSchedule();
+   }
+  }));
+  
   mainPanel.add(interfacePanel);
  }
 
@@ -297,6 +311,40 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
   greetingService = service;
   layoutInterface();
   layoutBoxesAndSchedule();
+  final LoadingPopup loading = new LoadingPopup();
+  
+  loading.show();
+  greetingService.getSchedule(
+    new AsyncCallback<ArrayList<ScheduleItemGWT>>()
+    {
+     @Override
+     public void onFailure(Throwable caught)
+     {
+      Window.alert("Failed to retrieve schedule.");
+      loading.hide();
+     }
+
+     @Override
+     public void onSuccess(ArrayList<ScheduleItemGWT> result)
+     {
+      scheduleItems = new ArrayList<ScheduleItemGWT>();
+      for (ScheduleItemGWT item : result)
+      {
+       scheduleItems.add(item);
+      }
+
+      Collections.sort(scheduleItems);
+      // Add the attributes of the retrieved items to the
+      // filters list
+      filtersDialog.addItems(scheduleItems);
+
+      // Place schedule items with any previously set
+      // filters
+      filterScheduleItems(searchBox.getText());
+      loading.hide();
+     }
+     
+    });
   return mainPanel;
  }
 
@@ -447,5 +495,58 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
  public PickupDragController getItemDragController()
  {
   return dragController;
+ }
+
+ public void removeItem(ScheduleItemGWT removed)
+ {
+  greetingService.removeScheduleItem(removed, 
+    new AsyncCallback<ArrayList<ScheduleItemGWT>>()
+    {
+     @Override
+     public void onFailure(Throwable caught)
+     {
+      Window.alert("Failed to remove item.");
+     }
+
+     @Override
+     public void onSuccess(ArrayList<ScheduleItemGWT> result)
+     {
+      scheduleItems = new ArrayList<ScheduleItemGWT>();
+      for (ScheduleItemGWT schdItem : result)
+      {
+       scheduleItems.add(schdItem);
+      }
+      Collections.sort(scheduleItems);
+
+      filtersDialog.addItems(scheduleItems);
+      filterScheduleItems(searchBox.getText());
+     }   
+    });
+ }
+ 
+ public void saveSchedule()
+ {
+  Window.alert("This feature is not yet functional, so this schedule won't be saved if the page is refreshed.");
+  /*This throws exceptions!
+  final LoadingPopup loading = new LoadingPopup();
+  loading.show();
+  greetingService.saveSchedule(
+    new AsyncCallback<Void>()
+    {
+
+     @Override
+     public void onFailure(Throwable caught)
+     {
+      loading.hide();
+      Window.alert("Failed to save schedule.");
+     }
+
+     @Override
+     public void onSuccess(Void result)
+     {
+      loading.hide();
+      Window.alert("Schedule successfully saved.");
+     }
+    });*/
  }
 }

@@ -42,8 +42,10 @@ public interface GreetingServiceAsync {
 			ArrayList<Integer> days, int startHour, boolean atHalfHour, 
 			boolean isScheduled, AsyncCallback<ScheduleItemList> callback) 
 					throws IllegalArgumentException;
+	void removeScheduleItem(ScheduleItemGWT removed, AsyncCallback<ArrayList<ScheduleItemGWT>> scheduleItems);
 	void generateSchedule(AsyncCallback<ArrayList<ScheduleItemGWT>> scheduleItems) throws IllegalArgumentException;
-	void resetSchedule(AsyncCallback<Void> asyncCallback);
+	void getSchedule(AsyncCallback<ArrayList<ScheduleItemGWT>> asyncCallback);
+	void saveSchedule(AsyncCallback<Void> asyncCallback);
 	void copySchedule(int existingScheduleID, String scheduleName,
 			AsyncCallback<Integer> asyncCallback);
 }

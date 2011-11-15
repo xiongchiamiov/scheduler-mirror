@@ -56,7 +56,7 @@ public class ScheduleCellDropController extends SimpleDropController
 
    dept = courseDropped.getDept();
    catalogNum = courseDropped.getCatalogNum();
-   courseHolder = new ScheduleItemGWT("", "", dept, catalogNum, 1,
+   courseHolder = new ScheduleItemGWT(null, "", "", dept, catalogNum, 1,
      new ArrayList<Integer>(), 0, 0, 0, 0, "", false);
    fromIncluded = !((MouseListBox) context.draggable.getParent().getParent())
      .isAvailableBox();

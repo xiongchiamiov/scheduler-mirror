@@ -3,6 +3,7 @@ package edu.calpoly.csc.scheduler.view.web.server;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -11,6 +12,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import edu.calpoly.csc.scheduler.model.Model;
+import edu.calpoly.csc.scheduler.model.db.Database;
 import edu.calpoly.csc.scheduler.model.db.Time;
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
 import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
@@ -35,6 +37,7 @@ import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemList;
 public class GreetingServiceImpl extends RemoteServiceServlet implements GreetingService {
 
 	private Model model;
+	private Database db;
     private Schedule schedule;
     private HashMap<String, Course> availableCourses;
     private HashMap<String, ScheduleItem> scheduleItems;
@@ -48,12 +51,12 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
     }
     
     public Integer openNewSchedule(String newScheduleName) {
-		model.openNewSchedule(newScheduleName);
+		db = model.openNewSchedule(newScheduleName);
 		return model.getScheduleID();
     }
     
     public void openExistingSchedule(int scheduleID) {
-    	model.openExistingSchedule(scheduleID);
+    	db = model.openExistingSchedule(scheduleID);
     }
 
 	public ArrayList<InstructorGWT> getInstructors() throws IllegalArgumentException {
@@ -384,11 +387,36 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	}
 
 	@Override
-	public void resetSchedule() 
+	public ArrayList<ScheduleItemGWT> getSchedule() 
 	{
-	 schedule = new Schedule(model.getInstructors(), model.getLocations());
+  ArrayList<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
+  ScheduleItemGWT gwtItem;
+  
+  if(schedule == null)
+  {
+   schedule = new Schedule(model.getInstructors(), model.getLocations());
+  }
+/*This throws exceptions!
+	  schedule = db.getScheduleDB().getSchedule(model.getScheduleID());
+  */
 	 scheduleItems = new HashMap<String, ScheduleItem>();
- 	System.out.println(model.exportToCSV(schedule));
+	 
+	 for(ScheduleItem item : schedule.getItems())
+	 {
+	  gwtItem = Conversion.toGWT(item, false);
+	  scheduleItems.put(gwtItem.getDept()+gwtItem.getCatalogNum()+gwtItem.getSection(), item);
+	  gwtItems.add(gwtItem);
+	 }
+	 
+	 for(ScheduleItem item : schedule.getDirtyList())
+  {
+   gwtItem = Conversion.toGWT(item, true);
+   scheduleItems.put(gwtItem.getDept()+gwtItem.getCatalogNum()+gwtItem.getSection(), item);
+   gwtItems.add(gwtItem);
+  }
+ 	//System.out.println(model.exportToCSV(schedule));
+ 	
+ 	return gwtItems;
 	}
 
 	@Override
@@ -397,4 +425,38 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		openExistingSchedule(newSchedule);
 		return newSchedule;
 	}
+
+ @Override
+ public ArrayList<ScheduleItemGWT> removeScheduleItem(ScheduleItemGWT removed)
+ {
+  String schdItemKey = removed.getDept() + removed.getCatalogNum() + removed.getSection();
+  ScheduleItemGWT gwtItem;
+  ArrayList<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
+  
+  schedule.remove(scheduleItems.get(schdItemKey));
+  scheduleItems = new HashMap<String, ScheduleItem>();
+  
+  for(ScheduleItem item : schedule.getItems())
+  {
+   gwtItem = Conversion.toGWT(item, false);
+   schdItemKey = gwtItem.getDept() + gwtItem.getCatalogNum() + gwtItem.getSection();
+   scheduleItems.put(schdItemKey, item);
+   gwtItems.add(gwtItem);
+  }
+  for(ScheduleItem item : schedule.getDirtyList())
+  {
+   gwtItem = Conversion.toGWT(item, true);
+   schdItemKey = gwtItem.getCourseString() + gwtItem.getCatalogNum() + gwtItem.getSection();
+   scheduleItems.put(schdItemKey, item);
+   gwtItems.add(gwtItem);
+  }
+  
+  return gwtItems;
+ }
+
+ @Override
+ public void saveSchedule()
+ {
+  model.saveSchedule(schedule);  
+ }
 }

@@ -28,35 +28,62 @@ class ListBoxDropController extends AbstractDropController
  @Override
  public void onDrop(DragContext context)
  {
-  MouseListBox from = (MouseListBox) context.draggable.getParent().getParent();
+  MouseListBox from;
   CourseGWT course;
   int itemIndex, sectionsIncluded;
 
-  for (Widget widget : context.selectedWidgets)
+  if (context.draggable instanceof ScheduleItemHTML)
   {
-   if (widget.getParent().getParent() == from)
+   schedule.removeItem(((ScheduleItemHTML)context.draggable).getScheduleItem());
+   
+   if(!mouseListBox.isAvailableBox())
    {
-    if (!mouseListBox.isAvailableBox())
+    course = ((ScheduleItemHTML)context.draggable).getScheduleItem().getCourse().clone();
+    itemIndex = mouseListBox.contains(new CourseListItem(course));
+    sectionsIncluded = mouseListBox.getSectionsInBox(course);
+    if (itemIndex >= 0)
     {
-     itemIndex = mouseListBox.contains((CourseListItem) widget);
-     course = ((CourseListItem) widget).getCourse().clone();
-     sectionsIncluded = mouseListBox.getSectionsInBox(course);
-
-     if (course.getNumSections() > sectionsIncluded
-       + schedule.getSectionsOnSchedule(course))
+     course.setNumSections(sectionsIncluded + 1);
+     mouseListBox.setWidget(itemIndex, new CourseListItem(course));
+    } else
+    {
+     course.setNumSections(1);
+     mouseListBox.add(new CourseListItem(course));
+    }
+   }
+  } else
+  {
+   from = (MouseListBox) context.draggable.getParent().getParent();
+   for (Widget widget : context.selectedWidgets)
+   {
+    if (widget.getParent().getParent() == from)
+    {
+     if (mouseListBox.isAvailableBox())
      {
-      if (itemIndex >= 0)
+      from.remove(widget);
+     }
+     else
+     {
+      itemIndex = mouseListBox.contains((CourseListItem) widget);
+      course = ((CourseListItem) widget).getCourse().clone();
+      sectionsIncluded = mouseListBox.getSectionsInBox(course);
+
+      if (course.getNumSections() > sectionsIncluded
+        + schedule.getSectionsOnSchedule(course))
       {
-       course.setNumSections(sectionsIncluded + 1);
-       mouseListBox.setWidget(itemIndex, new CourseListItem(course));
+       if (itemIndex >= 0)
+       {
+        course.setNumSections(sectionsIncluded + 1);
+        mouseListBox.setWidget(itemIndex, new CourseListItem(course));
+       } else
+       {
+        course.setNumSections(1);
+        mouseListBox.add(new CourseListItem(course));
+       }
       } else
       {
-       course.setNumSections(1);
-       mouseListBox.add(new CourseListItem(course));
+       Window.alert("No more sections to schedule");
       }
-     } else
-     {
-      Window.alert("No more sections to schedule");
      }
     }
    }
@@ -67,10 +94,13 @@ class ListBoxDropController extends AbstractDropController
  @Override
  public void onPreviewDrop(DragContext context) throws VetoDragException
  {
-  MouseListBox from = (MouseListBox) context.draggable.getParent().getParent();
-  if (from == mouseListBox)
+  if(context.draggable instanceof CourseListItem)
   {
-   throw new VetoDragException();
+   MouseListBox from = (MouseListBox) context.draggable.getParent().getParent();
+   if (from == mouseListBox)
+   {
+    throw new VetoDragException();
+   }
   }
   super.onPreviewDrop(context);
  }

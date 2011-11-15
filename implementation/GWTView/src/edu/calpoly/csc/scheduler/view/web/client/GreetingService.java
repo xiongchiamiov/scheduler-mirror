@@ -37,6 +37,8 @@ public interface GreetingService extends RemoteService {
 	ScheduleItemList rescheduleCourse(ScheduleItemGWT scheduleItem,
 			ArrayList<Integer> days, int startHour, boolean atHalfHour,
 			boolean inSchedule);
+	ArrayList<ScheduleItemGWT> removeScheduleItem(ScheduleItemGWT removed);
+	void saveSchedule();
 	
 	Collection<LocationGWT> getLocations();
 	Collection<LocationGWT> saveLocations(Collection<LocationGWT> collection);
@@ -47,6 +49,6 @@ public interface GreetingService extends RemoteService {
 	Collection<CourseGWT> getCourses2();
 	Collection<CourseGWT> saveCourses(Collection<CourseGWT> collection);
 	
-	void resetSchedule();
+	ArrayList<ScheduleItemGWT> getSchedule();
 	int copySchedule(int existingScheduleID, String scheduleName);
 }

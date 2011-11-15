@@ -103,7 +103,7 @@ public class FiltersViewWidget extends DialogBox
   for (ScheduleItemGWT item : items)
   {
    itemInstr = item.getProfessor();
-   itemCourse = item.getCourse();
+   itemCourse = item.getCourseString();
    itemRoom = item.getRoom();
 
    if (!instructors.contains(itemInstr))

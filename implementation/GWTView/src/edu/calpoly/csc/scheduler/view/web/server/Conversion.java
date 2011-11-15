@@ -182,8 +182,9 @@ public abstract class Conversion {
 		int endTimeMin = schdItem.getEnd().getMinute();
 		String location = (schdItem.getLocation() == null ? "" : schdItem
 				.getLocation().toString());
+		CourseGWT course = toGWT(schdItem.getCourse());
 
-		return new ScheduleItemGWT(courseName, instructor, courseDept,
+		return new ScheduleItemGWT(course, courseName, instructor, courseDept,
 				courseNum, section, dayNums, startTimeHour, startTimeMin,
 				endTimeHour, endTimeMin, location, isConflicted);
 	}

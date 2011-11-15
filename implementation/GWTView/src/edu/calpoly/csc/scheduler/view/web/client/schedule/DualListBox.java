@@ -173,6 +173,16 @@ public class DualListBox extends AbsolutePanel
   dragController.registerDropController(rightDropController);
  }
 
+ public ListBoxDropController getAvailableDropController()
+ {
+  return leftDropController;
+ }
+ 
+ public ListBoxDropController getIncludedDropController()
+ {
+  return rightDropController;
+ }
+ 
  public ArrayList<CourseGWT> getIncludedCourses()
  {
   ArrayList<CourseGWT> courses = new ArrayList<CourseGWT>();

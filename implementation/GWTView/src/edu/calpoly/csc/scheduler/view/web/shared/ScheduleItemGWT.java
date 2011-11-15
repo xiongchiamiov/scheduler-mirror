@@ -21,14 +21,16 @@ public class ScheduleItemGWT implements Serializable, Comparable {
 	private boolean placed = false;
 	private String room;
 	private boolean isConflicted;
-
+ private CourseGWT course;
+ 
 	public ScheduleItemGWT() {
 	}
 
-	public ScheduleItemGWT(String cName, String prof, String dept,
+	public ScheduleItemGWT(CourseGWT course, String cName, String prof, String dept,
 			int cNum, int sec, ArrayList<Integer> dNums, int sth, int stm,
 			int eth, int etm, String rm, boolean conflicted) {
-        courseName = cName;
+  this.course = course;
+	 courseName = cName;
 		professor = prof;
 		courseDept = dept;
 		courseNum = cNum;
@@ -43,6 +45,11 @@ public class ScheduleItemGWT implements Serializable, Comparable {
 		isConflicted = conflicted;
 	}
 
+	public CourseGWT getCourse()
+	{
+	 return course;
+	}
+	
 	private String getDayString(ArrayList<Integer> dayNums) {
 		String dayString = new String();
 		for (int day : dayNums) {
@@ -128,7 +135,7 @@ public class ScheduleItemGWT implements Serializable, Comparable {
 		return professor;
 	}
 
-	public String getCourse() {
+	public String getCourseString() {
 		return courseDept + " " + courseNum;
 	}
 
