@@ -49,44 +49,16 @@ public class AdminConfigView extends ScrollPanel {
 	protected void onLoad() {
 		super.onLoad();
 
-		super.onLoad();
-
 		setWidth("100%");
 		setHeight("100%");
 		
-		VerticalPanel vp = new VerticalPanel();
+		VerticalPanel vp = new VerticalPanel();		
+		vp.add(new HTML("<h2>" + scheduleName + " - Configuration</h2>"));
 		this.add(vp);
-
-		vp.add(new HTML("<h2>" + scheduleName + " - Courses</h2>"));
-
+		
 		final LoadingPopup popup = new LoadingPopup();
 		popup.show();
-		
-		/*
-		final LoadingPopup popup = new LoadingPopup();
-		popup.show();
-
-		
-		cTable.clear();
-		
-		service.getCourses(new AsyncCallback<ArrayList<CourseGWT>>() {
-			public void onFailure(Throwable caught) {
-				popup.hide();
-				
-				Window.alert("Failed to get courses: " + caught.toString());
-			}
-			
-			public void onSuccess(ArrayList<CourseGWT> result){
-				popup.hide();
-				
-				if (result != null) {
-					cTable.set(result);
-				}
-			}
-		});
-		*/
-		
-		
+						
 		table = new OsmTable<CourseGWT>(
 				new Factory<CourseGWT>() {
 					public CourseGWT create() {
@@ -103,38 +75,7 @@ public class AdminConfigView extends ScrollPanel {
 						save();
 					}
 				});
-
-		table.addColumn(new StringColumn<CourseGWT>(TableConstants.COURSE_NAME, "6em",
-				new StaticGetter<CourseGWT, String>() {
-					public String getValueForObject(CourseGWT object) { return object.getCourseName(); }
-				},
-				new StaticSetter<CourseGWT, String>() {
-					public void setValueInObject(CourseGWT object, String newValue) { object.setCourseName(newValue); }
-				},
-				String.CASE_INSENSITIVE_ORDER, null));
-		
-		table.addColumn(new IntColumn<CourseGWT>(TableConstants.COURSE_CATALOG_NUM, "4em",
-				new StaticGetter<CourseGWT, Integer>() {
-					public Integer getValueForObject(CourseGWT object) { return object.getCatalogNum(); }
-				}, new StaticSetter<CourseGWT, Integer>() {
-					public void setValueInObject(CourseGWT object, Integer newValue) { object.setCatalogNum(newValue); }
-				}, 
-				new StaticValidator<CourseGWT, Integer>() {
-					public void validate(CourseGWT object, Integer newValue) throws InvalidValueException {
-						if (newValue < 0)
-							throw new InvalidValueException(TableConstants.COURSE_CATALOG_NUM + " must be positive: " + newValue + " is invalid.");
-					}
-				}));
-		
-		table.addColumn(new StringColumn<CourseGWT>(TableConstants.COURSE_DEPARTMENT, "6em",
-				new StaticGetter<CourseGWT, String>() {
-					public String getValueForObject(CourseGWT object) { return object.getDept(); }
-				},
-				new StaticSetter<CourseGWT, String>() {
-					public void setValueInObject(CourseGWT object, String newValue) { object.setDept(newValue); }
-				},
-				String.CASE_INSENSITIVE_ORDER, null));
-		
+				
 		table.addColumn(new IntColumn<CourseGWT>(TableConstants.COURSE_WTU, "4em",
 				new StaticGetter<CourseGWT, Integer>() {
 					public Integer getValueForObject(CourseGWT object) { return object.getWtu(); }
@@ -148,73 +89,14 @@ public class AdminConfigView extends ScrollPanel {
 					}
 				}));
 		
-		table.addColumn(new IntColumn<CourseGWT>(TableConstants.COURSE_SCU, "4em",
-				new StaticGetter<CourseGWT, Integer>() {
-					public Integer getValueForObject(CourseGWT object) { return object.getScu(); }
-				}, new StaticSetter<CourseGWT, Integer>() {
-					public void setValueInObject(CourseGWT object, Integer newValue) { object.setScu(newValue); }
-				}, 
-				new StaticValidator<CourseGWT, Integer>() {
-					public void validate(CourseGWT object, Integer newValue) throws InvalidValueException {
-						if (newValue < 1)
-							throw new InvalidValueException(TableConstants.COURSE_SCU + " must be greater than 0: " + newValue + " is invalid.");
-					}
-				}));
-		
-		table.addColumn(new IntColumn<CourseGWT>(TableConstants.COURSE_NUM_SECTIONS, "4em",
-				new StaticGetter<CourseGWT, Integer>() {
-					public Integer getValueForObject(CourseGWT object) { return object.getNumSections(); }
-				}, new StaticSetter<CourseGWT, Integer>() {
-					public void setValueInObject(CourseGWT object, Integer newValue) { object.setNumSections(newValue); }
-				}, 
-				new StaticValidator<CourseGWT, Integer>() {
-					public void validate(CourseGWT object, Integer newValue) throws InvalidValueException {
-						if (newValue < 1)
-							throw new InvalidValueException(TableConstants.COURSE_NUM_SECTIONS + " must be greater than 0: " + newValue + " is invalid.");
-					}
-				}));
-		
-		table.addColumn(new SelectColumn<CourseGWT>(TableConstants.COURSE_TYPE, "6em",
-				new String[] { "LEC", "LAB" },
-				new StaticGetter<CourseGWT, String>() {
-					public String getValueForObject(CourseGWT object) { return object.getType(); }
-				},
-				new StaticSetter<CourseGWT, String>() {
-					public void setValueInObject(CourseGWT object, String newValue) { object.setType(newValue); }
-				},
-				String.CASE_INSENSITIVE_ORDER));
-		
-		table.addColumn(new IntColumn<CourseGWT>(TableConstants.COURSE_MAX_ENROLLMENT, "4em",
-				new StaticGetter<CourseGWT, Integer>() {
-					public Integer getValueForObject(CourseGWT object) { return object.getMaxEnroll(); }
-				}, new StaticSetter<CourseGWT, Integer>() {
-					public void setValueInObject(CourseGWT object, Integer newValue) { object.setMaxEnroll(newValue); }
-				}, 
-				new StaticValidator<CourseGWT, Integer>() {
-					public void validate(CourseGWT object, Integer newValue) throws InvalidValueException {
-						if (newValue < 1)
-							throw new InvalidValueException(TableConstants.COURSE_MAX_ENROLLMENT + " must be greater than 0: " + newValue + " is invalid.");
-					}
-				}));
-		
-		table.addColumn(new IntColumn<CourseGWT>(TableConstants.COURSE_LENGTH, "4em",
-				new StaticGetter<CourseGWT, Integer>() {
-					public Integer getValueForObject(CourseGWT object) { return object.getLength() / 2; }
-				}, new StaticSetter<CourseGWT, Integer>() {
-					public void setValueInObject(CourseGWT object, Integer newValue) { object.setLength(newValue * 2); }
-				}, 
-				new StaticValidator<CourseGWT, Integer>() {
-					public void validate(CourseGWT object, Integer newValue) throws InvalidValueException {
-						if (newValue < 1)
-							throw new InvalidValueException(TableConstants.COURSE_LENGTH + " must be greater than 0: " + newValue + " is invalid.");
-					}
-				}));
-		
 		table.addColumn(new ButtonColumn<CourseGWT>(TableConstants.COURSE_LAB, "4em",
 				new ClickCallback<CourseGWT>(){
 				
 					public String initialLabel(CourseGWT object) {
-						if(object.getLabDept().trim().equals("")){ return ""; }
+						if(object.getLabDept().trim().equals("")) { 
+							return ""; 
+						}
+						
 						return object.getLabDept().trim() + object.getLabCatalogNum();
 					}
 			
@@ -235,13 +117,8 @@ public class AdminConfigView extends ScrollPanel {
 				    	// get lab options
 				    	ArrayList<String> labOptions = new ArrayList<String>();
 				    	labOptions.add("");
-				  		for(CourseGWT c : table.getAddedUntouchedAndEditedObjects()){
-				  			/*
-				  			if(c.getType().equals(TableConstants.LAB) && 
-				  					!c.getDept().trim().equals("")){
-				  				labOptions.add(c.getDept().trim() + c.getCatalogNum());
-				  			}
-				  			*/
+				    	
+				  		for(CourseGWT c : table.getAddedUntouchedAndEditedObjects()) {
 				  			labOptions.add(c.getDept().trim() + c.getCatalogNum());
 				  		}
 				  		
@@ -266,9 +143,7 @@ public class AdminConfigView extends ScrollPanel {
 				  		popup.center();
 					}
 		}));
-		
-		
-		
+						
 		vp.add(table);
 		
 		service.getCourses2(new AsyncCallback<Collection<CourseGWT>>() {
@@ -282,18 +157,16 @@ public class AdminConfigView extends ScrollPanel {
 				popup.hide();
 				for (CourseGWT crs : result)
 					nextLocationID = Math.max(nextLocationID, crs.getId() + 1);
-				table.addRows(result);
+				//table.addRows(result);
 			}
 		});
 	}
-	
-	
+		
 	private void save() {
 		service.saveCourses(table.getAddedUntouchedAndEditedObjects(), new AsyncCallback<Collection<CourseGWT>>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				// TODO Auto-generated method stub
-				
+				// TODO Auto-generated method stub				
 			}
 			@Override
 			public void onSuccess(Collection<CourseGWT> result) {
@@ -301,8 +174,7 @@ public class AdminConfigView extends ScrollPanel {
 				table.addRows(result);
 			}
 		});
-	}
-	
+	}	
 	
 	private void labSelectionHandler(ListBox listbox, CourseGWT object, Button button){
 		
@@ -316,31 +188,36 @@ public class AdminConfigView extends ScrollPanel {
 			fobject.setLabCatalogNum(0);
 			fButton.setText("");
 		}
-		else{
+		else{			
 			
 			// get first integer
 			int i;
 			for(i = 0; !Character.isDigit(value.charAt(i)) && i < value.length(); i++){}
+			
 			try{
 				int cnum = Integer.parseInt(value.substring(i));
+				
 				fobject.setLabDept(value.substring(0, i));
 				fobject.setLabName("");
 				fobject.setLabCatalogNum(cnum);
-				fButton.setText(value);
 				
-			}catch(Exception e){
+				fButton.setText(value);				
+			} catch(Exception e){
 				fobject.setLabDept("");
 				fobject.setLabName("");
 				fobject.setLabCatalogNum(0);
+				
 				fButton.setText("");
 			}
 		}
 		
 	}
-	
-	
+		
 	public static boolean isSaved(){
-		if(table == null){ return true; }
+		if(table == null) { 
+			return true; 
+		}
+		
 		return table.isSaved();
 	}
 	
