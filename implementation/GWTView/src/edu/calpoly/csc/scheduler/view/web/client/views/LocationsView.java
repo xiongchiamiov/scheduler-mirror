@@ -8,6 +8,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.client.table.CheckboxColumn;
@@ -21,11 +22,9 @@ import edu.calpoly.csc.scheduler.view.web.client.table.StaticSetter;
 import edu.calpoly.csc.scheduler.view.web.client.table.StaticValidator;
 import edu.calpoly.csc.scheduler.view.web.client.table.StringColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.TableConstants;
-import edu.calpoly.csc.scheduler.view.web.client.table.StaticValidator.InvalidValueException;
-import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
 
-public class LocationsView extends ScrollPanel {
+public class LocationsView extends ScrollPanel implements IView<ScheduleNavView> {
 	private static final String LAPTOP_CONNECTIVITY = "Laptop Connectivity";
 	private static final String OVERHEAD = "Overhead";
 	private static final String SMART_ROOM = "Smart Room";
@@ -38,6 +37,17 @@ public class LocationsView extends ScrollPanel {
 	public LocationsView(GreetingServiceAsync service, String scheduleName) {
 		this.service = service;
 		this.scheduleName = scheduleName;
+	}
+
+	@Override
+	public Widget getViewWidget() { return this; }
+
+	@Override
+	public boolean canCloseView() {
+		assert(table != null);
+		if (table.isSaved())
+			return true;
+		return Window.confirm("You have unsaved data which will be lost. Are you sure you want to navigate away?");
 	}
 	
 	@Override
@@ -200,15 +210,7 @@ public class LocationsView extends ScrollPanel {
 				return location;
 		return null;
 	}
-	
-	public static boolean isSaved(){
-		if(table == null){ return true; }
-		return table.isSaved();
-	}
-	
-	public static void clearChanges(){
-		if(table != null){
-			table.clearChanges();
-		}
-	}
+
+	@Override
+	public void willOpenView(ScheduleNavView container) { }
 }

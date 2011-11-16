@@ -19,21 +19,24 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
+import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.Pair;
 
-public class SelectScheduleView extends VerticalPanel {
+public class SelectScheduleView extends VerticalPanel implements IView<MainView> {
 	private GreetingServiceAsync service;
-	private Panel container;
 	private ListBox listBox;
+	private MainView mainView;
 	
 	Map<String, Integer> schedulesIDsAndNames;
 	
-	public SelectScheduleView(final Panel container, final GreetingServiceAsync service) {
-		this.container = container;
+	public SelectScheduleView(final MainView mainView, final GreetingServiceAsync service) {
+		this.mainView = mainView;
 		this.service = service;
 
 		addStyleName("homeView");
@@ -91,15 +94,71 @@ public class SelectScheduleView extends VerticalPanel {
 							@Override
 							public void onSuccess(Integer newScheduleID) {
 								popup.hide();
-								container.clear();
-								container.add(new ScheduleNavView(self, container, service, newScheduleID, scheduleName));
+								if (mainView.canCloseCurrentView())
+									mainView.switchToView(new AdminScheduleNavView(self, mainView, service, newScheduleID, scheduleName));
 							}
 						});
 					}
 				});
 			}
 		}));
-		
+
+		add(new Button("New Schedule from CSV File", new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+
+				final TextBox tb = new TextBox();
+				final TextArea ta = new TextArea();
+				final DialogBox db = new DialogBox(false);
+				VerticalPanel vp = new VerticalPanel();
+				final Button butt = new Button("Create", new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {		
+						db.hide();
+						
+					    final String scheduleName = tb.getText();
+
+					    final LoadingPopup popup = new LoadingPopup();
+					    popup.show();
+					    
+					    service.importFromCSV(scheduleName, ta.getValue(), new AsyncCallback<Integer>() {
+					    	@Override
+					    	public void onFailure(Throwable caught) {
+								popup.hide();
+								Window.alert("Failed to open new schedule in: " + caught.getMessage());
+					    		// TODO Auto-generated method stub
+					    		
+					    	}
+					    	@Override
+					    	public void onSuccess(Integer newScheduleID) {
+								popup.hide();
+								if (mainView.canCloseCurrentView())
+									mainView.switchToView(new AdminScheduleNavView(self, mainView, service, newScheduleID, scheduleName));
+					    	}
+					    });
+					}
+				});
+				
+				tb.addKeyPressHandler(new KeyPressHandler() {
+					@Override
+					public void onKeyPress(KeyPressEvent event) {
+						if (event.getCharCode() == KeyCodes.KEY_ENTER)
+							butt.click();
+					}
+				});
+				
+				db.setText("Name Schedule");
+				vp.add(new HTML("<center>Specify a new schedule name.</center>"));
+				vp.add(tb);
+				vp.add(new HTML("<center>Enter CSV contents.</center>"));
+				vp.add(ta);
+				vp.add(butt);
+				
+				db.setWidget(vp);
+				db.center();
+			}
+		}));
+
 		add(new Button("New Schedule", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -119,8 +178,8 @@ public class SelectScheduleView extends VerticalPanel {
 							@Override
 							public void onSuccess(Integer newScheduleID) {
 								popup.hide();
-								container.clear();
-								container.add(new ScheduleNavView(self, container, service, newScheduleID, scheduleName));
+								if (mainView.canCloseCurrentView())
+									mainView.switchToView(new AdminScheduleNavView(self, mainView, service, newScheduleID, scheduleName));
 							}
 						});
 					}
@@ -189,17 +248,34 @@ public class SelectScheduleView extends VerticalPanel {
 		final LoadingPopup popup = new LoadingPopup();
 		popup.show();
 		
-		service.openExistingSchedule(scheduleID, new AsyncCallback<Void>() {
+		service.openExistingSchedule(scheduleID, new AsyncCallback<Pair<Integer, InstructorGWT>>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				popup.hide();
 				Window.alert("Failed to open schedule in: " + caught.getMessage());
 			}
 			@Override
-			public void onSuccess(Void derp) {
+			public void onSuccess(Pair<Integer, InstructorGWT> permissionAndInstructor) {
 				popup.hide();
-				container.clear();
-				container.add(new ScheduleNavView(self, container, service, scheduleID, scheduleName));
+				
+				if (mainView.canCloseCurrentView()) {
+					int permission = permissionAndInstructor.getLeft();
+					InstructorGWT instructor = permissionAndInstructor.getRight();
+					
+					switch (permission) {
+					case 0: // todo: enumify
+						mainView.switchToView(new GuestScheduleNavView(self, mainView, service, scheduleID, scheduleName));
+						break;
+					case 1: // todo: enumify
+						mainView.switchToView(new InstructorScheduleNavView(self, mainView, service, scheduleID, scheduleName, instructor));
+						break;
+					case 2: // todo: enumify
+						mainView.switchToView(new AdminScheduleNavView(self, mainView, service, scheduleID, scheduleName));
+						break;
+					default:
+						assert(false);
+					}
+				}
 			}
 		});
 	}
@@ -255,35 +331,19 @@ public class SelectScheduleView extends VerticalPanel {
 		box.addChangeHandler(new ChangeHandler() {
 			@Override
 			public void onChange(ChangeEvent event) {
-				checkforUnsavedTable(box);
+				selectSchedule(Integer.parseInt(box.getValue(box.getSelectedIndex())), box.getItemText(box.getSelectedIndex()));
 			}
 		});
 		
 		return box;
 	}
-	
-	
-	private void checkforUnsavedTable(ListBox box){
-		
-		boolean isSaved = true;
-		if(!InstructorsView.isSaved() || !LocationsView.isSaved() || !CoursesView.isSaved()){
-			isSaved = false;
-		}
-		
-		if(isSaved){
-			selectSchedule(Integer.parseInt(box.getValue(box.getSelectedIndex())), box.getItemText(box.getSelectedIndex()));
-		}
-		
-		else{
-			boolean confirm = Window.confirm("You have unsaved data which will be lost. Are you sure you want to navigate away?");
-			if(confirm){
-				
-				InstructorsView.clearChanges();
-				LocationsView.clearChanges();
-				CoursesView.clearChanges();
-				
-				selectSchedule(Integer.parseInt(box.getValue(box.getSelectedIndex())), box.getItemText(box.getSelectedIndex()));
-			}
-		}
-	}
+
+	@Override
+	public Widget getViewWidget() { return this; }
+
+	@Override
+	public void willOpenView(MainView container) { }
+
+	@Override
+	public boolean canCloseView() { return true; }
 }

@@ -12,6 +12,7 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.Pair;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemList;
 
@@ -24,7 +25,7 @@ public interface GreetingService extends RemoteService {
 	Map<String, Integer> getScheduleNames();
 	
 	Integer openNewSchedule(String newScheduleName);
-	void openExistingSchedule(int scheduleID);
+	Pair<Integer, InstructorGWT> openExistingSchedule(int scheduleID);
 
 	void saveInstructor(InstructorGWT instructor);	
 	ArrayList<InstructorGWT> getInstructors() throws IllegalArgumentException;
@@ -51,6 +52,7 @@ public interface GreetingService extends RemoteService {
 	
 	ArrayList<ScheduleItemGWT> getSchedule();
 	int copySchedule(int existingScheduleID, String scheduleName);
+	int importFromCSV(String scheduleName, String value);
 	
 	void removeSchedule(String schedName);
 }

@@ -3,12 +3,10 @@ package edu.calpoly.csc.scheduler.view.web.server;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import edu.calpoly.csc.scheduler.model.Model;
@@ -27,6 +25,7 @@ import edu.calpoly.csc.scheduler.view.web.client.GreetingService;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.Pair;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemList;
 
@@ -54,16 +53,20 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	public Integer openNewSchedule(String newScheduleName) {
 		db = model.openNewSchedule(newScheduleName);
 		return model.getScheduleID();
-	}
-
-	public void openExistingSchedule(int scheduleID) {
-		db = model.openExistingSchedule(scheduleID);
-	}
-
-	public void removeSchedule(String schedName) {
-		model.deleteSchedule(schedName);
-	}
-
+    }
+    
+    // Returns 0, null if its a guest
+    // Returns 1, instructor if its an instructor
+    // Returns 2, null if its a admin
+    public Pair<Integer, InstructorGWT> openExistingSchedule(int scheduleID) {
+    	db = model.openExistingSchedule(scheduleID);
+    	return new Pair<Integer, InstructorGWT>(2, null); // tyero, change this
+    }
+    
+    public void removeSchedule(String schedName) {
+    	model.deleteSchedule(schedName);
+    }
+    
 	public ArrayList<InstructorGWT> getInstructors()
 			throws IllegalArgumentException {
 		ArrayList<InstructorGWT> results = new ArrayList<InstructorGWT>();
@@ -174,6 +177,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		return gwtItems;
 	}
 
+	@Override
 	public ArrayList<ScheduleItemGWT> getGWTScheduleItems(
 			ArrayList<CourseGWT> courses) {
 		Course courseWithSections;
@@ -480,5 +484,12 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public void saveSchedule() {
 		model.saveSchedule(schedule);
+	}
+
+	@Override
+	public int importFromCSV(String scheduleName, String value) {
+		model.openNewSchedule(scheduleName);
+		model.importFromCSV(value);
+		return model.getScheduleID();
 	}
 }

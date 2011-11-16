@@ -8,8 +8,11 @@ import java.util.Map;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
@@ -52,6 +55,7 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 	CellWidget[][] cells;
 	List<CellWidget> selectedCells;
 	CellWidget anchorCell;
+	CellWidget lastSelectedCell;
 	
 	public InstructorTimePreferencesWidget(GreetingServiceAsync service, Strategy strategy) {
 		this.service = service;
@@ -144,7 +148,7 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 	protected void onLoad() {
 		super.onLoad();
 		
-		FocusPanel focus = new FocusPanel();
+		final FocusPanel focus = new FocusPanel();
 		add(focus);
 		focus.addKeyDownHandler(new KeyDownHandler() {
 			@Override
@@ -154,8 +158,26 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 				int keyCode = event.getNativeKeyCode();
 				if (keyCode >= '0' && keyCode <= '9')
 					setSelectedCellsContents(keyCode - '0');
+				else if (keyCode == KeyCodes.KEY_ENTER) {
+					if (lastSelectedCell != null && lastSelectedCell.halfHour + 1 < 30) {
+						clearSelectedCells();
+						CellWidget cell = cells[lastSelectedCell.halfHour + 1][lastSelectedCell.day];
+						selectCell(cell);
+						lastSelectedCell = cell;
+					}
+				}
+				else if (event.getNativeKeyCode() == KeyCodes.KEY_TAB) {
+					if (lastSelectedCell != null && lastSelectedCell.day + 1 < 7) {
+						clearSelectedCells();
+						CellWidget cell = cells[lastSelectedCell.halfHour][lastSelectedCell.day + 1];
+						selectCell(cell);
+						lastSelectedCell = cell;
+					}
+				}
 			}
 		});
+
+
 
 		timePrefsTable = new FlexTable();
 		focus.add(timePrefsTable);
@@ -180,10 +202,13 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 
 		cells = new CellWidget[30][7];
 		
-		for (int halfHour = 0; halfHour < 30; halfHour++) {
+		final int totalHalfHours = 30;
+		final int totalDays = 7;
+		
+		for (int halfHour = 0; halfHour < totalHalfHours; halfHour++) {
 			int row = halfHour + 1;
 			
-			for (int dayNum = 0; dayNum < 7; dayNum++) {
+			for (int dayNum = 0; dayNum < totalDays; dayNum++) {
 				int col = dayNum + 1;
 
 				int desire = this.getPreference(strategy.getInstructor(), halfHour, dayNum);
@@ -208,9 +233,11 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 					@Override
 					public void onMouseUp(MouseUpEvent event) {
 						cellWidgetMouseUp(cell, event);
+						lastSelectedCell = cell;
+						focus.setFocus(true);
 					}
 				});
-				
+								
 				timePrefsTable.setWidget(row, col, cell);
 				
 				cells[halfHour][dayNum] = cell;
@@ -220,6 +247,8 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 	
 	void cellWidgetMouseDown(CellWidget cell, MouseDownEvent event)
 	{
+		event.preventDefault();
+		
 		if (!event.isControlKeyDown()) {
 			clearSelectedCells();
 			anchorCell = null;
@@ -231,6 +260,8 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 	
 	void cellWidgetMouseUp(CellWidget cell, MouseUpEvent event)
 	{
+		event.preventDefault();
+		
 		selectRangeOfCells(anchorCell.halfHour, anchorCell.day, cell.halfHour, cell.day);
 		anchorCell = null;
 	}

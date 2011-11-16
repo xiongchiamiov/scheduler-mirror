@@ -18,12 +18,13 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 
-public class InstructorPreferencesView extends ScrollPanel {
+public class InstructorPreferencesView extends ScrollPanel implements IView<ScheduleNavView> {
 	Panel container;
 	GreetingServiceAsync service;
 	InstructorGWT instructor;
@@ -35,8 +36,7 @@ public class InstructorPreferencesView extends ScrollPanel {
 	InstructorTimePreferencesWidget timePrefs;
 	FlexTable coursePrefs;
 	
-	public InstructorPreferencesView(Panel container, GreetingServiceAsync service, InstructorGWT instructor) {
-		this.container = container;
+	public InstructorPreferencesView(GreetingServiceAsync service, InstructorGWT instructor) {
 		this.service = service;
 		
 		instructor.verify();
@@ -66,6 +66,8 @@ public class InstructorPreferencesView extends ScrollPanel {
 				save();
 			}
 		}));
+		
+		vp.add(new HTML("Time preferences go from 0 to 9. 0 means you cannot teach at that time, 9 means you really want to teach at that time."));
 		
 		vp.add(timePrefs);
 		
@@ -159,4 +161,13 @@ public class InstructorPreferencesView extends ScrollPanel {
 				list.removeStyleName("changed");
 		}
 	}
+
+	@Override
+	public void willOpenView(ScheduleNavView container) { }
+
+	@Override
+	public boolean canCloseView() { return true; }
+	
+	@Override
+	public Widget getViewWidget() { return this; }
 }

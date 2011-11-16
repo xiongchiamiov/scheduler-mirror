@@ -10,7 +10,8 @@ import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 public class MainView extends VerticalPanel {
 	GreetingServiceAsync service;
 	Panel contents;
-	String userName = "null" ;
+	String userName = "null";
+	IView<MainView> currentView;
 	
 	public MainView(GreetingServiceAsync service) {
 		this.service = service;
@@ -37,11 +38,23 @@ public class MainView extends VerticalPanel {
 		add(topPanel);
 		
 		add(contents = new SimplePanel());
-		contents.add(new LoginView(this, contents, service));
+		contents.add(new LoginView(this, service));
 		
 	}
 	
 	public void onUserLoggedIn(String newUsername) {
-		this.userName = newUsername ;
+		this.userName = newUsername;
+	}
+
+	public boolean canCloseCurrentView() {
+		return currentView == null || currentView.canCloseView();
+	}
+
+	public void switchToView(IView<MainView> newView) {
+		assert(canCloseCurrentView());
+		currentView = newView;
+		currentView.willOpenView(this);
+		contents.clear();
+		contents.add(newView.getViewWidget());
 	}
 }

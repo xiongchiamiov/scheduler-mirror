@@ -16,6 +16,7 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.client.table.ButtonColumn;
@@ -28,21 +29,32 @@ import edu.calpoly.csc.scheduler.view.web.client.table.StaticGetter;
 import edu.calpoly.csc.scheduler.view.web.client.table.StaticSetter;
 import edu.calpoly.csc.scheduler.view.web.client.table.StaticValidator;
 import edu.calpoly.csc.scheduler.view.web.client.table.StringColumn;
-import edu.calpoly.csc.scheduler.view.web.client.table.Table;
 import edu.calpoly.csc.scheduler.view.web.client.table.TableConstants;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 
-public class CoursesView extends ScrollPanel {
+public class CoursesView extends ScrollPanel implements IView<ScheduleNavView> {
 	private GreetingServiceAsync service;
-	private Table<CourseGWT> cTable;
-	private static OsmTable<CourseGWT> table;
+	private OsmTable<CourseGWT> table;
 	int nextLocationID = 1;
 	private String scheduleName;
 
 	public CoursesView(GreetingServiceAsync greetingService, String scheduleName) {
 		this.service = greetingService;
 		this.scheduleName = scheduleName;
+	}
+
+	@Override
+	public Widget getViewWidget() { return this; }
+
+	@Override
+	public void willOpenView(ScheduleNavView container) { }
+
+	@Override
+	public boolean canCloseView() {
+		assert(table != null);
+		if (table.isSaved())
+			return true;
+		return Window.confirm("You have unsaved data which will be lost. Are you sure you want to navigate away?");
 	}
 	
 	@Override
@@ -334,17 +346,5 @@ public class CoursesView extends ScrollPanel {
 			}
 		}
 		
-	}
-	
-	
-	public static boolean isSaved(){
-		if(table == null){ return true; }
-		return table.isSaved();
-	}
-	
-	public static void clearChanges(){
-		if(table != null){
-			table.clearChanges();
-		}
 	}
 }

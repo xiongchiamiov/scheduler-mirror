@@ -2,8 +2,6 @@ package edu.calpoly.csc.scheduler.view.web.client.table;
 
 import java.util.Comparator;
 
-import com.google.gwt.user.client.Window;
-
 // TODO: make the intcolumn handle up and down arrows, thatd be sick.
 
 public class IntColumn<ObjectType extends Comparable<ObjectType>> extends StringColumn<ObjectType> {

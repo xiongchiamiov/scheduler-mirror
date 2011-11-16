@@ -20,7 +20,9 @@ public interface GreetingServiceAsync {
 	void getScheduleNames(AsyncCallback<Map<String, Integer>> callback) throws IllegalArgumentException;
 	
 	void openNewSchedule(String newScheduleName, AsyncCallback<Integer> callback) throws IllegalArgumentException;
-	void openExistingSchedule(int scheduleID, AsyncCallback<Void> callback) throws IllegalArgumentException;
+	void openExistingSchedule(
+			int scheduleID,
+			AsyncCallback<edu.calpoly.csc.scheduler.view.web.shared.Pair<Integer, InstructorGWT>> asyncCallback);
 	void removeSchedule(String schedName, AsyncCallback<Void> callback) throws IllegalArgumentException;
 
 	void getInstructors(AsyncCallback<ArrayList<InstructorGWT>> callback) throws IllegalArgumentException;
@@ -48,5 +50,7 @@ public interface GreetingServiceAsync {
 	void getSchedule(AsyncCallback<ArrayList<ScheduleItemGWT>> asyncCallback);
 	void saveSchedule(AsyncCallback<Void> asyncCallback);
 	void copySchedule(int existingScheduleID, String scheduleName,
+			AsyncCallback<Integer> asyncCallback);
+	void importFromCSV(String scheduleName, String value,
 			AsyncCallback<Integer> asyncCallback);
 }

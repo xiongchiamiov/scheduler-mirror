@@ -136,4 +136,13 @@ public class Model implements Serializable
 	   
 	   db.getScheduleDB().removeData(sched);
 	}
+
+	public void importFromCSV(String value) {
+		try {
+			new CSV().read(this, value);
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

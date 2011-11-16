@@ -23,9 +23,8 @@ public class LoginView extends VerticalPanel {
 	Panel container;
 	GreetingServiceAsync service;
 	
-	LoginView(MainView mainView, Panel container, GreetingServiceAsync service) {
+	LoginView(MainView mainView, GreetingServiceAsync service) {
 		this.mainView = mainView;
-		this.container = container;
 		this.service = service;
 	}
 	
@@ -81,8 +80,8 @@ public class LoginView extends VerticalPanel {
 				mainView.onUserLoggedIn(username);
 				
 				popup.hide();
-				container.clear();
-				container.add(new SelectScheduleView(container, service));
+				if (mainView.canCloseCurrentView())
+					mainView.switchToView(new SelectScheduleView(mainView, service));
 			}
 			
 			@Override

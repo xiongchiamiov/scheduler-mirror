@@ -1,43 +1,28 @@
 package edu.calpoly.csc.scheduler.view.web.client.views;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.event.logical.shared.CloseEvent;
-import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
-import edu.calpoly.csc.scheduler.view.web.client.table.ButtonColumn;
-import edu.calpoly.csc.scheduler.view.web.client.table.ButtonColumn.ClickCallback;
 import edu.calpoly.csc.scheduler.view.web.client.table.Factory;
-import edu.calpoly.csc.scheduler.view.web.client.table.IntColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
 import edu.calpoly.csc.scheduler.view.web.client.table.SelectColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.StaticGetter;
 import edu.calpoly.csc.scheduler.view.web.client.table.StaticSetter;
-import edu.calpoly.csc.scheduler.view.web.client.table.StaticValidator;
 import edu.calpoly.csc.scheduler.view.web.client.table.StringColumn;
-import edu.calpoly.csc.scheduler.view.web.client.table.Table;
 import edu.calpoly.csc.scheduler.view.web.client.table.TableConstants;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.UserGWT;
 
-public class AdminConfigView extends ScrollPanel {
+public class AdminConfigView extends ScrollPanel implements IView<ScheduleNavView> {
 	private GreetingServiceAsync service;
-	private Table<UserGWT> cTable;
-	private static OsmTable<UserGWT> table;
+	private OsmTable<UserGWT> table;
 	int nextLocationID = 1;
 	private String scheduleName;
 
@@ -130,56 +115,19 @@ public class AdminConfigView extends ScrollPanel {
 				//table.addRows(result);
 			}
 		});*/
-	}	
-	
-	private void labSelectionHandler(ListBox listbox, CourseGWT object, Button button){
-		
-    	final CourseGWT fobject = object;
-    	final Button fButton = button;
-		
-		String value = listbox.getValue(listbox.getSelectedIndex());
-		if(value.equals("")){
-			fobject.setLabDept("");
-			fobject.setLabName("");
-			fobject.setLabCatalogNum(0);
-			fButton.setText("");
-		}
-		else{			
-			
-			// get first integer
-			int i;
-			for(i = 0; !Character.isDigit(value.charAt(i)) && i < value.length(); i++){}
-			
-			try{
-				int cnum = Integer.parseInt(value.substring(i));
-				
-				fobject.setLabDept(value.substring(0, i));
-				fobject.setLabName("");
-				fobject.setLabCatalogNum(cnum);
-				
-				fButton.setText(value);				
-			} catch(Exception e){
-				fobject.setLabDept("");
-				fobject.setLabName("");
-				fobject.setLabCatalogNum(0);
-				
-				fButton.setText("");
-			}
-		}
-		
 	}
-		
-	public static boolean isSaved(){
-		if(table == null) { 
-			return true; 
-		}
-		
-		return table.isSaved();
-	}
-	
-	public static void clearChanges(){
-		if(table != null) {
-			table.clearChanges();
-		}
+
+	@Override
+	public Widget getViewWidget() { return this; }
+
+	@Override
+	public void willOpenView(ScheduleNavView container) { }
+
+	@Override
+	public boolean canCloseView() {
+		assert(table != null);
+		if (table.isSaved())
+			return true;
+		return Window.confirm("You have unsaved data which will be lost. Are you sure you want to navigate away?");
 	}
 }

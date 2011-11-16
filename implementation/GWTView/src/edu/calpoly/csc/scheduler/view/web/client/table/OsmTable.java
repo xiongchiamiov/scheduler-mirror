@@ -93,11 +93,6 @@ public class OsmTable<ObjectType extends Comparable<ObjectType>> extends FocusPa
 			set.clear();
 		}
 		
-		public void refresh() {
-			for (Row row : set)
-				addClass(row);
-		}
-		
 		public boolean contains(Row row) { return set.contains(row); }
 		public Iterator<Row> iterator() { return set.iterator(); }
 
@@ -367,15 +362,5 @@ public class OsmTable<ObjectType extends Comparable<ObjectType>> extends FocusPa
 		if(!addedRows.isEmpty()){ return false; }
 			
 		return true;
-	}
-	
-	
-	/**
-	 * Clear all changes so that the table will report isSaved to be true
-	 */
-	public void clearChanges(){
-		rowsToRemove.clear();
-		editedRows.clear();
-		addedRows.clear();
 	}
 }

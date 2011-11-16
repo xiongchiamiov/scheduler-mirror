@@ -8,6 +8,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.client.table.ButtonColumn;
@@ -20,27 +21,34 @@ import edu.calpoly.csc.scheduler.view.web.client.table.StaticGetter;
 import edu.calpoly.csc.scheduler.view.web.client.table.StaticSetter;
 import edu.calpoly.csc.scheduler.view.web.client.table.StaticValidator;
 import edu.calpoly.csc.scheduler.view.web.client.table.StringColumn;
-import edu.calpoly.csc.scheduler.view.web.client.table.Table;
 import edu.calpoly.csc.scheduler.view.web.client.table.TableConstants;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 
-public class InstructorsView extends VerticalPanel {
+public class InstructorsView extends VerticalPanel implements IView<ScheduleNavView> {
 	// These static variables are a temporary hack to get around the table bug
-	public static GreetingServiceAsync service;
-	public static Panel container;
+	public GreetingServiceAsync service;
 	
 	private final String scheduleName;
-	private Table<InstructorGWT> iTable;
-	private static OsmTable<InstructorGWT> table;
+	private OsmTable<InstructorGWT> table;
 	int nextLocationID = 1;
+	ScheduleNavView navView;
 
-	public InstructorsView(Panel container, GreetingServiceAsync service, String scheduleName) {
+	public InstructorsView(GreetingServiceAsync service, String scheduleName) {
 		assert(service != null);
-		InstructorsView.container = container;
-		InstructorsView.service = service;
+		this.service = service;
 		this.scheduleName = scheduleName;
 	}
-	
+
+	@Override
+	public Widget getViewWidget() { return this; }
+
+	@Override
+	public boolean canCloseView() {
+		assert(table != null);
+		if (table.isSaved())
+			return true;
+		return Window.confirm("You have unsaved data which will be lost. Are you sure you want to navigate away?");
+	}
 	@Override
 	public void onLoad() {
 		super.onLoad();
@@ -183,8 +191,8 @@ public class InstructorsView extends VerticalPanel {
 		table.addColumn(new ButtonColumn<InstructorGWT>(TableConstants.INSTR_PREFERENCES, "4em",
 				new ClickCallback<InstructorGWT>(){
 					public void buttonClickedForObject(InstructorGWT object, Button button) {
-						InstructorsView.container.clear();
-				    	InstructorsView.container.add(new InstructorPreferencesView(InstructorsView.container, InstructorsView.service, object));
+						if (navView.canCloseView())
+							navView.switchToView(null, new InstructorPreferencesView(service, object));
 					}
 
 					public String initialLabel(InstructorGWT object) {
@@ -232,16 +240,9 @@ public class InstructorsView extends VerticalPanel {
 				return true;
 		return false;
 	}
-	
-	
-	public static boolean isSaved(){
-		if(table == null){ return true; }
-		return table.isSaved();
-	}
-	
-	public static void clearChanges(){
-		if(table != null){
-			table.clearChanges();
-		}
+
+	@Override
+	public void willOpenView(ScheduleNavView container) {
+		navView = container;
 	}
 }

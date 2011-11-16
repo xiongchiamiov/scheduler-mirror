@@ -2,13 +2,18 @@ package edu.calpoly.csc.scheduler.model;
 
 import java.io.CharArrayWriter;
 import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.Map.Entry;
 import java.util.Vector;
 
+import com.csvreader.CsvReader;
 import com.csvreader.CsvWriter;
 
 import edu.calpoly.csc.scheduler.model.db.Time;
@@ -21,10 +26,23 @@ import edu.calpoly.csc.scheduler.model.schedule.Day;
 import edu.calpoly.csc.scheduler.model.schedule.Schedule;
 import edu.calpoly.csc.scheduler.model.schedule.ScheduleItem;
 import edu.calpoly.csc.scheduler.model.schedule.Week;
-import edu.calpoly.csc.scheduler.model.schedule.WeekAvail;
 
 public class CSV {
-	private ArrayList<String[]> weekAvails = new ArrayList<String[]>();
+	private static final String[] TOP_COMMENTS = new String[] {
+		"(This is a CSV file whose contents represent a schedule.)",
+		"(It is highly recommended you make a backup before modifying anything.)",
+		"(Feel free to modify it, but please do not modify any lines completely contained in parentheses.)"
+	};
+	
+	private static final String SCHEDULE_MARKER = "(Schedule)";
+	private static final String LOCATIONS_MARKER = "(Locations)";
+	private static final String INSTRUCTORS_MARKER = "(Instructors)";
+	private static final String COURSES_MARKER = "(Courses)";
+	private static final String INSTRUCTORS_ITEMS_TAUGHT_MARKER = "(Instructors' Items Taught)";
+	private static final String INSTRUCTORS_TIME_PREFS_MARKER = "(Instructors' Time Preferences)";
+	private static final String INSTRUCTORS_COURSE_PREFS_MARKER = "(Instructors' Course Preferences)";
+	private static final String SCHEDULE_ITEMS_MARKER = "(Schedule Items)";
+	
 	private ArrayList<String[]> locations = new ArrayList<String[]>();
 	private ArrayList<String[]> instructors = new ArrayList<String[]>();
 	private ArrayList<String[]> instructorsItemsTaught = new ArrayList<String[]>();
@@ -50,17 +68,10 @@ public class CSV {
 					Boolean.toString(location.getProvidedEquipment().hasLaptopConnectivity),
 					Boolean.toString(location.getProvidedEquipment().hasOverhead),
 					Boolean.toString(location.getProvidedEquipment().isSmartRoom),
-					Boolean.toString(location.getAdaCompliant()),
-					compileWeekAvail(location.getAvailability())});
+					Boolean.toString(location.getAdaCompliant())});
 		}
 		
 		return "location#" + index;
-	}
-	
-	private String compileWeekAvail(WeekAvail avail) {
-		int newIndex = weekAvails.size();
-		weekAvails.add(new String[] { "weekAvail#" + newIndex, "lolwut" });
-		return "weekAvail#" + newIndex;
 	}
 	
 	private String compileInstructor(Instructor instructor) {
@@ -78,7 +89,6 @@ public class CSV {
 					instructor.getOffice().getRoom(),
 					Integer.toString(instructor.getFairness()),
 					Boolean.toString(instructor.getDisability()),
-					compileWeekAvail(instructor.getAvailability()),
 					compileCoursePrefs(instructor.getCoursePreferences()),
 					compileTimePrefs(instructor.getTimePreferences()),
 					compileItemsTaught(instructor.getItemsTaught())
@@ -210,43 +220,40 @@ public class CSV {
 		Writer stringWriter = new CharArrayWriter();
 		CsvWriter writer = new CsvWriter(stringWriter, ',');
 
-		writer.endRecord();
-		writer.writeComment("Schedule");
-		writer.write("NameHere");
+		for (String topComment : TOP_COMMENTS)
+			writer.writeComment(topComment);
 		
 		writer.endRecord();
-		writer.writeComment("Availabilities");
-		for (int i = 0; i < weekAvails.size(); i++) {
-			writer.writeRecord(weekAvails.get(i));
-		}
+		writer.writeComment(SCHEDULE_MARKER);
+		writer.write("NameHere");
 		
 
 		writer.endRecord();
-		writer.writeComment("Locations");
+		writer.writeComment(LOCATIONS_MARKER);
 		for (int i = 0; i < locations.size(); i++) {
 			writer.writeRecord(locations.get(i));
 		}
 
 		writer.endRecord();
-		writer.writeComment("Instructors");
+		writer.writeComment(INSTRUCTORS_MARKER);
 		for (int i = 0; i < instructors.size(); i++) {
 			writer.writeRecord(instructors.get(i));
 		}
 
 		writer.endRecord();
-		writer.writeComment("Courses");
+		writer.writeComment(COURSES_MARKER);
 		for (int i = 0; i < courses.size(); i++) {
 			writer.writeRecord(courses.get(i));
 		}
 
 		writer.endRecord();
-		writer.writeComment("Instructors' Items Taught");
+		writer.writeComment(INSTRUCTORS_ITEMS_TAUGHT_MARKER);
 		for (int i = 0; i < instructorsItemsTaught.size(); i++) {
 			writer.writeRecord(instructorsItemsTaught.get(i));
 		}
 
 		writer.endRecord();
-		writer.writeComment("Instructors' Time Preferences");
+		writer.writeComment(INSTRUCTORS_TIME_PREFS_MARKER);
 		for (int i = 0; i < instructorsTimePrefs.size(); i++) {
 			writer.write("timePrefs#" + i + ":");
 			writer.endRecord();
@@ -256,7 +263,7 @@ public class CSV {
 		}
 
 		writer.endRecord();
-		writer.writeComment("Instructors' Course Preferences");
+		writer.writeComment(INSTRUCTORS_COURSE_PREFS_MARKER);
 		for (int i = 0; i < instructorsCoursePrefs.size(); i++) {
 			writer.write("coursePrefs#" + i + ":");
 			writer.endRecord();
@@ -266,7 +273,7 @@ public class CSV {
 		}
 
 		writer.endRecord();
-		writer.writeComment("Schedule Items");
+		writer.writeComment(SCHEDULE_ITEMS_MARKER);
 		for (int i = 0; i < scheduleItems.size(); i++) {
 			writer.writeRecord(scheduleItems.get(i));
 		}
@@ -277,5 +284,23 @@ public class CSV {
 		stringWriter.close();
 		
 		return stringWriter.toString();
+	}
+
+	public void read(Model model, String value) throws IOException {
+		Reader stringReader = new StringReader(value);
+		CsvReader reader = new CsvReader(stringReader);
+		
+		Collection<String[]> lines = new LinkedList<String[]>();
+		for (String[] line; (line = reader.getValues()) != null; ) {
+			if (line.length == 0)
+				continue;
+			if (line.length == 1 && line[0].trim().equals(""))
+				continue;
+			lines.add(line);
+		}
+		
+		for (String[] line : lines) {
+			System.out.println(line.length);
+		}
 	}
 }
