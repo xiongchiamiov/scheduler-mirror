@@ -1,0 +1,241 @@
+
+<!-- saved from url=(0082)http://users.csc.calpoly.edu/~gfisher/classes/309/handouts/acceptance-testing.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>
+User Acceptance Testing
+</title>
+</head>
+<body bgcolor="white">
+<p align="center">
+<font size="+2">
+<strong>CSC 402 User Acceptance Testing</strong>
+</font>
+</p>
+<br>
+<br>
+<h3>
+Overview
+</h3>
+
+</p><blockquote>
+<table align="center" border="1" cellpadding="4">
+  <tbody><tr>
+    <td valign="top"><strong>Case No.</strong>
+    </td><td valign="top"><strong>User Inputs and Command</strong>
+    </td><td valign="top"><strong>Expected Output</strong>
+    </td><td valign="top"><strong>Remarks</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </td><td valign="top"><strong>Results</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </td></tr><tr>
+    <td valign="top">1
+    </td><td valign="top">
+Description of user-supplied inputs, including all keyboard and mouse actions
+to provide input and perform command execution.
+    </td><td valign="top">
+Description of what user sees on output.
+    </td><td valign="top">
+Comments about this test case.
+    </td><td valign="top">
+Pass or fail, with explanation.
+  </td></tr>
+  <tr>
+    <td valign="top">1
+    </td><td valign="top">Login to the Scheduler Project with "Jstewart" username
+    </td><td valign="top">The user should be prompted with the Select Schedule / New Schedule screen
+    </td><td valign="top">   &nbsp;
+    </td><td valign="top">PASS - It brought me to the new schedule screen
+</td></tr><tr>
+    <td valign="top">2
+    </td><td valign="top">I will create a new schedule by clicking the "New Schedule" button
+    </td><td valign="top">User should have the ability to name the new schedule
+    </td><td valign="top">I was unable to select an already generate schedule as a template because the drop-down menu was empty
+    </td><td valign="top">PASS - A popup appeared that allows me to name the schedule
+</td></tr><tr>
+    <td valign="top">3
+    </td><td valign="top">Type in a schedule name for the newly created schedule, I will name the schedule "Fall2001"
+    </td><td valign="top">User should be brought to the schedule generation screen
+    </td><td valign="top">It didn't seem that there were any restrictions on what the user could name a schedule
+    </td><td valign="top">PASS - It brought me to the schedule generation screen
+</td></tr><tr>
+    <td valign="top">4
+    </td><td valign="top">Add classes to the "Courses to schedule" table and click the "Generate Schedule" button
+    </td><td valign="top">The algorithm should run and schedule all classes in the "Courses to schedule" to the appropriate time slots on the calendar
+    </td><td valign="top">After pressing the "Generate Schedule" button the courses should disappear from the "Courses to schedule" table
+    </td><td valign="top">PASS - The courses were scheduled in the calendar view
+</td></tr><tr>
+    <td valign="top">5
+    </td><td valign="top">Drag and drop CHEM 110 directly onto the calendar in a free time slot
+    </td><td valign="top">The algorithm should schedule the course in the appropriate time slot
+    </td><td valign="top">I was able to drag a course from the "Courses to Schedule" table to the calendar but not from the "Available Courses" table
+    </td><td valign="top">FAIL- It scheduled the course in the desired time slot only when being dragged from "Courses to Schedule"
+</td></tr><tr>
+    <td valign="top">6
+    </td><td valign="top">Drag and drop a course into a time slot that is full
+    </td><td valign="top">The row should just continue to expand horizontally 
+    </td><td valign="top">Good job on color coating the courses. The hover works as described.
+    </td><td valign="top">PASS - The row continued to expand horizontally to accommodate all the courses
+</td></tr><tr>
+    <td valign="top">7
+    </td><td valign="top">Click the "Filters" button 
+    </td><td valign="top">A popup window should appear that allows me to select the filters I wish to apply
+    </td><td valign="top">   &nbsp;
+    </td><td valign="top">PASS - A popup window appeared that allowed me to select filters for days, instructors, courses , and rooms
+</td></tr><tr>
+    <td valign="top">8
+    </td><td valign="top">Apply filters to the days, instructors, courses, and rooms for the current schedule by clicking the "Set Filters" button
+    </td><td valign="top">The calendar view should change to reflect the selected filters
+    </td><td valign="top">The days for the filters popup window are off. Have the ability to quickly turn off all filters.
+    </td><td valign="top">PASS - The filters were applied and the calendar view changed appropriately
+</td></tr><tr>
+    <td valign="top">9
+    </td><td valign="top">Type something into the filter search box and press enter
+    </td><td valign="top">The calendar view should change to reflect the text in the filter search box
+    </td><td valign="top">   &nbsp;
+    </td><td valign="top">PASS - The calendar changed to reflect the text written in the search box
+</td></tr><tr>
+    <td valign="top">10
+    </td><td valign="top">Click the "Courses" tab from the UI header
+    </td><td valign="top">The user should be brought to the Manage Courses scren that has a tabular list of all the courses currently available in the database
+    </td><td valign="top">   &nbsp;
+    </td><td valign="top">PASS - The view changed to the Manage Courses screen
+</td></tr><tr>
+    <td valign="top">11
+    </td><td valign="top">Remove a course by clicking the "X" button on the far left of each row
+    </td><td valign="top">The user should be prompted with a confirmation screen to proceed and the row should disappear to reflect the deletion
+    </td><td valign="top">   &nbsp;
+    </td><td valign="top">PASS - The row was colored red and once saved it is deleted and removed from the table
+</td></tr><tr>
+    <td valign="top">12
+    </td><td valign="top">Edit any text field for any course in the table by clicking on the text that the user wants to edit
+    </td><td valign="top">An editable text box should appear that allows the user to edit the field
+    </td><td valign="top">The modified rows aren't colored yellow to reflect modification
+    </td><td valign="top">PASS - Able to edit all course information
+</td></tr><tr>
+    <td valign="top">13
+    </td><td valign="top">Click the save button to save the information to the database
+    </td><td valign="top">The user should receive some notification indicating that the save was successful
+    </td><td valign="top">I would change the color of the "Save" button once the data has changed and needs to be saved. You can successfully save an empty course.
+    </td><td valign="top">PASS - Received a popup notification indicating a successful save
+</td></tr><tr>
+    <td valign="top">14
+    </td><td valign="top">Click the "+New" button to add a course to the database
+    </td><td valign="top">Should be prompted with a new row that I can edit
+    </td><td valign="top">When the "+New" button was clicked the Lab class name suddenly appeared for previously changed courses
+    </td><td valign="top">PASS - Prompted with a blank row, representing a new course, to edit
+</td></tr><tr>
+    <td valign="top">15
+    </td><td valign="top">Sorting the columns by clicking on the header for that column
+    </td><td valign="top">The colmn should show an arrow indicating if the column is sorted ascending or descending
+    </td><td valign="top">Didn't show an arrow indicating direction of the sort
+    </td><td valign="top">PASS - The colmn displays an up and down arrow when the column was clicked indicating ascending / descending
+</td></tr><tr>
+    <td valign="top">16
+    </td><td valign="top">Apply various filters by clicking the "Filters" button
+    </td><td valign="top">A popup window should appear letting the user select desired filters via checkbox
+    </td><td valign="top">The columns aren't reordered as they initially were presented
+    </td><td valign="top">PASS - The columns were removed as the checkboxes were clicked
+</td></tr><tr>
+    <td valign="top">17
+    </td><td valign="top">Click the "Locations" tab from the UI header
+    </td><td valign="top">Should be presented with the Manage Locations screen 
+    </td><td valign="top">   &nbsp;
+    </td><td valign="top">PASS - Was brough to the Manage Locations screen
+</td></tr><tr>
+    <td valign="top">18
+    </td><td valign="top">Remove a location by clicking the "X" button on the far left of each row
+    </td><td valign="top">The user should be prompted with a confirmation screen to proceed and the row should disappear to reflect the deletion
+    </td><td valign="top">   &nbsp;
+    </td><td valign="top">PASS - The row was colord red and once saved it was deleted and removed from the table
+</td></tr><tr>
+    <td valign="top">19
+    </td><td valign="top">Edit any text field for any location in the table by clicking on the text that the user wants to edit
+    </td><td valign="top">An editable text box should appear that allows the user to edit the field
+    </td><td valign="top">   &nbsp;
+    </td><td valign="top">PASS - Able to edit all location information
+</td></tr><tr>
+    <td valign="top">20
+    </td><td valign="top">Click the save button to save the information to the database
+    </td><td valign="top">The user should receive some notification indicating that the save was successful
+    </td><td valign="top">I would change the color of the "Save" button once the data has changed and needs to be saved. You can successfully save an empty location.
+    </td><td valign="top">FAIL - Didn't receive popup window confirming that the data was saved
+</td></tr><tr>
+    <td valign="top">21
+    </td><td valign="top">Click the "+New" button to add a location to the database
+    </td><td valign="top">Should be prompted with a new row that I can edit
+    </td><td valign="top">   &nbsp;
+    </td><td valign="top">PASS - Prompted with a blank row, representing a new location, to edit
+</td></tr><tr>
+    <td valign="top">22
+    </td><td valign="top">Sorting the columns by clicking on the header for that column
+    </td><td valign="top">The column should show an arrow indicating if the column is sorted ascending or descending
+    </td><td valign="top">   &nbsp;
+    </td><td valign="top">PASS - The column displayed an up and down arrow when the column was clicked indicating ascending / descending
+</td></tr><tr>
+    <td valign="top">23
+    </td><td valign="top">Apply various filters by clicking the "Filters" button in the Manage Locations
+    </td><td valign="top">A popup window should appear letting the user select desired filters via checkbox
+    </td><td valign="top">There was no filters button for the locations tab
+    </td><td valign="top">FAIL - There was no Filter button
+</td></tr><tr>
+    <td valign="top">24
+    </td><td valign="top">Click the "Instructors" tab
+    </td><td valign="top">Should be brought to the Manage Instructors window
+    </td><td valign="top">   &nbsp;
+    </td><td valign="top">PASS - Was taken to the Manage Instructors window
+</td></tr><tr>
+    <td valign="top">25
+    </td><td valign="top">Remove a instructor by clicking the "X" button on the far left of each row
+    </td><td valign="top">The user should be prompted with a confirmation screen to proceed and the row should disappear to reflect the deletion
+    </td><td valign="top">   &nbsp;
+    </td><td valign="top">PASS - The row was colored red and when you save the data the row is deleted and removed from the table
+</td></tr><tr>
+    <td valign="top">26
+    </td><td valign="top">Click the save button to save the information to the database
+    </td><td valign="top">The user should receive some notification indicating that the save was successful
+    </td><td valign="top">I would change the color of the "Save" button once the data has changed and needs to be saved
+    </td><td valign="top">PASS - Received popup window confirming that the data was saved
+</td></tr><tr>
+    <td valign="top">27
+    </td><td valign="top">Click the "+New" button to add a instructor to the database
+    </td><td valign="top">Should be prompted with a new row in which I can edit all fields
+    </td><td valign="top">Would be beneficial to be able to tab through the editable fields
+    </td><td valign="top">PASS - Prompted with a blank row, representing a new location, to edit
+</td></tr><tr>
+    <td valign="top">28
+    </td><td valign="top">Sorting the columns by clicking on the header for that column
+    </td><td valign="top">The column should show an arrow indicating if the column is sorted ascending or descending
+    </td><td valign="top">   &nbsp;
+    </td><td valign="top">PASS - The column header displayed an up and down arrow when the column was clicked indicating ascending / descending
+</td></tr><tr>
+    <td valign="top">29
+    </td><td valign="top">Apply various filters by clicking the "Filters" button
+    </td><td valign="top">A popup window should appear letting the user select desired filters via checkbox
+    </td><td valign="top">The columns aren't reordered as they initially were presented
+    </td><td valign="top">PASS - The columns were removed as the checkboxes were clicked
+</td></tr><tr>
+    <td valign="top">30
+    </td><td valign="top">Click the "Preferences" Button to access the preferences for the instructor of the corresponding row
+    </td><td valign="top">Should be presented with a new view that allows the user to specify their preferences for individual hourly time slots
+    </td><td valign="top">   &nbsp;
+    </td><td valign="top">PASS - Was presented with a table of time slots for all days of the week, intially set to 0 for all time preferences
+</td></tr><tr>
+    <td valign="top">31
+    </td><td valign="top">Fill out the time slots for the instructor with a valid integer
+    </td><td valign="top">The text box should change color and reflect the value entered
+    </td><td valign="top">Do the instructors really need to set their Saturday and Sunday time preferences?
+    </td><td valign="top">PASS - Was able to enter an integer 0-9 into the textbox
+</td></tr><tr>
+    <td valign="top">32
+    </td><td valign="top">Select from the drop down menu the instuctor's course preferences
+    </td><td valign="top">Give me a selection of choices that reflect the instructors desirability to teach
+    </td><td valign="top">   &nbsp;
+    </td><td valign="top">PASS - Was presented with a list of four options (Not Qualified, Not Preferred, Acceptable, Preferred)
+</td></tr><tr>
+    <td valign="top">33
+    </td><td valign="top">Click the "Save Preferences" button to save the information to the database
+    </td><td valign="top">The user should be presented with a confirmation popup dialog that confirms the save to the user
+    </td><td valign="top">   &nbsp;
+    </td><td valign="top">FAIL - Was not presented with a confirmation dialog
+</td></tr></tbody></table>
+</blockquote>
+
+</p></body></html>
