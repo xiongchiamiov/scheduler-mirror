@@ -46,9 +46,7 @@ public class TableConstants {
 	public static final String INSTR_DISABILITIES = "Disabilities";
 	
 	public static final String INSTR_PREFERENCES = "Preferences";
-
-	
-	
+		
 	/** Course table */
 	public static final String COURSE_NAME = "Course Name";
 
@@ -105,6 +103,12 @@ public class TableConstants {
 	public static final String LOC_MAX_OCCUPANCY = "Max Occupancy";
 	
 	public static final String LOC_EQIPMENT_LIST = "Equipment List";
-	
+		
 	public static final String LOC_ADDITIONAL_DETAILS = "Additional Details";
+	
+	/** configuration table */
+	public static final String CONFIG_USERNAME = "Username";
+	
+	public static final String CONFIG_LEVEL = "Permission Level";
+	
 }
