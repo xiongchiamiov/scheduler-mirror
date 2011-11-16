@@ -21,7 +21,7 @@ public class ScheduleNavView extends VerticalPanel {
 	int selectedScheduleID;
 	final String scheduleName;
 	
-	Widget instructorsLink, coursesLink, locationsLink, scheduleLink;
+	Widget instructorsLink, coursesLink, locationsLink, scheduleLink, configLink;
 
 	ScheduleNavView(SelectScheduleView homeView, Panel container, GreetingServiceAsync service, int selectedScheduleID, String scheduleName) {
 		this.selectScheduleView = homeView;
@@ -75,6 +75,11 @@ public class ScheduleNavView extends VerticalPanel {
 			public void onClick(ClickEvent events) {
 				checkforUnsavedTable(new ScheduleView(service));
 			}
+		}));		
+		topPanel.add(configLink = HTMLUtilities.createLink("Configuration", "topBarLink", new ClickHandler() {
+			public void onClick(ClickEvent events) {
+				checkforUnsavedTable(new AdminConfigView(service, scheduleName));
+			}
 		}));
 		return topPanel;
 	}
@@ -84,6 +89,7 @@ public class ScheduleNavView extends VerticalPanel {
 		locationsLink.removeStyleName("currentView");
 		coursesLink.removeStyleName("currentView");
 		scheduleLink.removeStyleName("currentView");
+		configLink.removeStyleName("currentView");
 		
 		if (widget instanceof InstructorsView) {
 			instructorsLink.addStyleName("currentView");
@@ -96,6 +102,9 @@ public class ScheduleNavView extends VerticalPanel {
 		}
 		else if (widget instanceof ScheduleView) {
 			scheduleLink.addStyleName("currentView");
+		}
+		else if (widget instanceof AdminConfigView) {
+			configLink.addStyleName("currentView");
 		}
 		else
 			assert(false);
@@ -123,6 +132,7 @@ public class ScheduleNavView extends VerticalPanel {
 				InstructorsView.clearChanges();
 				LocationsView.clearChanges();
 				CoursesView.clearChanges();
+				AdminConfigView.clearChanges();
 				
 				switchToView(w);
 			}
