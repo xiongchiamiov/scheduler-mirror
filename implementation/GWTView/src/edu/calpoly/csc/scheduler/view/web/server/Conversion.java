@@ -29,8 +29,9 @@ import edu.calpoly.csc.scheduler.view.web.shared.TimePreferenceGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.WeekGWT;
 
 public abstract class Conversion {
-	public static InstructorGWT toGWT(Instructor instructor) {
+	public static InstructorGWT toGWT(int id, Instructor instructor) {
 		InstructorGWT result = new InstructorGWT();
+		result.setId(id);
 		result.setUserID(instructor.getUserID());
 		result.setFirstName(instructor.getFirstName());
 		result.setLastName(instructor.getLastName());
@@ -46,7 +47,7 @@ public abstract class Conversion {
 				.getCoursePreferences();
 		HashMap<CourseGWT, Integer> coursePreferences = new LinkedHashMap<CourseGWT, Integer>();
 		for (Course course : sourceCoursePreferences.keySet()) {
-			coursePreferences.put(Conversion.toGWT(course),
+			coursePreferences.put(Conversion.toGWT(0, course),
 					sourceCoursePreferences.get(course));
 		}
 		result.setCoursePreferences(coursePreferences);
@@ -149,12 +150,6 @@ public abstract class Conversion {
 		return ins;
 	}
 
-	public static InstructorGWT toGWT(int id, Instructor instructor) {
-		InstructorGWT i = toGWT(instructor);
-		i.setId(id);
-		return i;
-	}
-
 	private static Time fromGWT(TimeGWT sourceTime) {
 		return new Time(sourceTime.getHour(), sourceTime.getMinute());
 	}
@@ -182,15 +177,16 @@ public abstract class Conversion {
 		int endTimeMin = schdItem.getEnd().getMinute();
 		String location = (schdItem.getLocation() == null ? "" : schdItem
 				.getLocation().toString());
-		CourseGWT course = toGWT(schdItem.getCourse());
+		CourseGWT course = toGWT(0, schdItem.getCourse());
 
 		return new ScheduleItemGWT(course, courseName, instructor, courseDept,
 				courseNum, section, dayNums, startTimeHour, startTimeMin,
 				endTimeHour, endTimeMin, location, isConflicted);
 	}
 
-	public static CourseGWT toGWT(Course course) {
+	public static CourseGWT toGWT(int id, Course course) {
 		CourseGWT newCourse = new CourseGWT();
+		newCourse.setId(id);
 		newCourse.setCatalogNum(course.getCatalogNum());
 		newCourse.setCourseName(course.getName());
 		newCourse.setDept(course.getDept());
@@ -306,11 +302,5 @@ public abstract class Conversion {
 		newCourse.setNumOfSections(course.getNumSections());
 		newCourse.setDays(fromGWT(course.getDays()));
 		return newCourse;
-	}
-	
-	public static CourseGWT toGWT(int id, Course course) {
-		CourseGWT i = toGWT(course);
-		i.setId(id);
-		return i;
 	}
 }

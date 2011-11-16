@@ -1,7 +1,7 @@
 package edu.calpoly.csc.scheduler.view.web.client;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -25,31 +25,33 @@ public interface GreetingServiceAsync {
 			AsyncCallback<edu.calpoly.csc.scheduler.view.web.shared.Pair<Integer, InstructorGWT>> asyncCallback);
 	void removeSchedule(String schedName, AsyncCallback<Void> callback) throws IllegalArgumentException;
 
-	void getInstructors(AsyncCallback<ArrayList<InstructorGWT>> callback) throws IllegalArgumentException;
+	void getInstructors(AsyncCallback<List<InstructorGWT>> callback) throws IllegalArgumentException;
 	void saveInstructor(InstructorGWT instructor, AsyncCallback<Void> asyncCallback);
-	void saveInstructors(Collection<InstructorGWT> collection, AsyncCallback<Collection<InstructorGWT>> asyncCallback) throws IllegalArgumentException;
-	void getInstructors2(AsyncCallback<Collection<InstructorGWT>> asyncCallback) throws IllegalArgumentException;
+	void saveInstructors(List<InstructorGWT> added, List<InstructorGWT> edited, List<InstructorGWT> removed, AsyncCallback<List<InstructorGWT>> asyncCallback) throws IllegalArgumentException;
 	
-	void getLocations(AsyncCallback<Collection<LocationGWT>> asyncCallback) throws IllegalArgumentException;
-	void saveLocations(Collection<LocationGWT> collection, AsyncCallback<Collection<LocationGWT>> asyncCallback) throws IllegalArgumentException;
+	void getLocations(AsyncCallback<List<LocationGWT>> asyncCallback) throws IllegalArgumentException;
 	
-	void getCourses(AsyncCallback<ArrayList<CourseGWT>> callback) throws IllegalArgumentException;
-	void saveCourses(ArrayList<CourseGWT> courses, AsyncCallback<Void> callback) throws IllegalArgumentException;
+	void getCourses(AsyncCallback<List<CourseGWT>> asyncCallback) throws IllegalArgumentException;
 
-	void getCourses2(AsyncCallback<Collection<CourseGWT>> asyncCallback) throws IllegalArgumentException;
-	void saveCourses(Collection<CourseGWT> collection, AsyncCallback<Collection<CourseGWT>> asyncCallback) throws IllegalArgumentException;
-	
-    void getGWTScheduleItems(ArrayList<CourseGWT> courses, AsyncCallback<ArrayList<ScheduleItemGWT>> scheduleItems) throws IllegalArgumentException;
-	void rescheduleCourse(ScheduleItemGWT scheduleItem, 
-			ArrayList<Integer> days, int startHour, boolean atHalfHour, 
-			boolean isScheduled, AsyncCallback<ScheduleItemList> callback) 
-					throws IllegalArgumentException;
-	void removeScheduleItem(ScheduleItemGWT removed, AsyncCallback<ArrayList<ScheduleItemGWT>> scheduleItems);
-	void generateSchedule(AsyncCallback<ArrayList<ScheduleItemGWT>> scheduleItems) throws IllegalArgumentException;
-	void getSchedule(AsyncCallback<ArrayList<ScheduleItemGWT>> asyncCallback);
+    void getGWTScheduleItems(List<CourseGWT> courses,
+			AsyncCallback<List<ScheduleItemGWT>> scheduleItems);
+	void rescheduleCourse(ScheduleItemGWT scheduleItem,
+			List<Integer> days, int startHour, boolean atHalfHour,
+			boolean inSchedule, AsyncCallback<ScheduleItemList> callback);
+	void removeScheduleItem(ScheduleItemGWT removed,
+			AsyncCallback<List<ScheduleItemGWT>> scheduleItems);
+	void generateSchedule(
+			AsyncCallback<List<ScheduleItemGWT>> scheduleItems);
+	void getSchedule(AsyncCallback<List<ScheduleItemGWT>> asyncCallback);
 	void saveSchedule(AsyncCallback<Void> asyncCallback);
 	void copySchedule(int existingScheduleID, String scheduleName,
 			AsyncCallback<Integer> asyncCallback);
 	void importFromCSV(String scheduleName, String value,
 			AsyncCallback<Integer> asyncCallback);
+	void saveCourses(List<CourseGWT> added, List<CourseGWT> edited,
+			List<CourseGWT> removed,
+			AsyncCallback<List<CourseGWT>> callback);
+	void saveLocations(List<LocationGWT> added,
+			List<LocationGWT> edited, List<LocationGWT> removed,
+			AsyncCallback<List<LocationGWT>> callback);
 }

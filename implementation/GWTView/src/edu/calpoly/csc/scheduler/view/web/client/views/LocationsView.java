@@ -2,6 +2,7 @@ package edu.calpoly.csc.scheduler.view.web.client.views;
 
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -172,13 +173,13 @@ public class LocationsView extends ScrollPanel implements IView<ScheduleNavView>
 		
 		vp.add(table);
 		
-		service.getLocations(new AsyncCallback<Collection<LocationGWT>>() {
+		service.getLocations(new AsyncCallback<List<LocationGWT>>() {
 			public void onFailure(Throwable caught) {
 				popup.hide();
 				Window.alert("Failed to get courses: " + caught.toString());
 			}
 			
-			public void onSuccess(Collection<LocationGWT> result){
+			public void onSuccess(List<LocationGWT> result){
 				assert(result != null);
 				popup.hide();
 				for (LocationGWT location : result)
@@ -190,18 +191,22 @@ public class LocationsView extends ScrollPanel implements IView<ScheduleNavView>
 	}
 	
 	private void save() {
-		service.saveLocations(table.getAddedUntouchedAndEditedObjects(), new AsyncCallback<Collection<LocationGWT>>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				// TODO Auto-generated method stub
-				
-			}
-			@Override
-			public void onSuccess(Collection<LocationGWT> result) {
-				table.clear();
-				table.addRows(result);
-			}
-		});
+		service.saveLocations(
+				table.getAddedObjects(),
+				table.getEditedObjects(),
+				table.getRemovedObjects(),
+				new AsyncCallback<List<LocationGWT>>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						// TODO Auto-generated method stub
+						
+					}
+					@Override
+					public void onSuccess(List<LocationGWT> result) {
+						table.clear();
+						table.addRows(result);
+					}
+				});
 	}
 	
 	LocationGWT locationExists(String building, String room) {

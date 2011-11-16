@@ -2,8 +2,7 @@ package edu.calpoly.csc.scheduler.view.web.client;
 
 
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.user.client.rpc.RemoteService;
@@ -21,37 +20,36 @@ import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemList;
  */
 @RemoteServiceRelativePath("greet")
 public interface GreetingService extends RemoteService {
+	// Managing User
 	void login(String username);
-	Map<String, Integer> getScheduleNames();
 	
+	// Managing Schedules
+	Map<String, Integer> getScheduleNames();
 	Integer openNewSchedule(String newScheduleName);
 	Pair<Integer, InstructorGWT> openExistingSchedule(int scheduleID);
-
-	void saveInstructor(InstructorGWT instructor);	
-	ArrayList<InstructorGWT> getInstructors() throws IllegalArgumentException;
-	Collection<InstructorGWT> saveInstructors(Collection<InstructorGWT> collection);
-	Collection<InstructorGWT> getInstructors2();
-	
-	ArrayList<ScheduleItemGWT> getGWTScheduleItems(ArrayList<CourseGWT> courses) throws IllegalArgumentException;
-	ArrayList<ScheduleItemGWT> generateSchedule();	
-	ScheduleItemList rescheduleCourse(ScheduleItemGWT scheduleItem,
-			ArrayList<Integer> days, int startHour, boolean atHalfHour,
-			boolean inSchedule);
-	ArrayList<ScheduleItemGWT> removeScheduleItem(ScheduleItemGWT removed);
-	void saveSchedule();
-	
-	Collection<LocationGWT> getLocations();
-	Collection<LocationGWT> saveLocations(Collection<LocationGWT> collection);
-	
-	ArrayList<CourseGWT> getCourses();
-	void saveCourses(ArrayList<CourseGWT> locations);
-	
-	Collection<CourseGWT> getCourses2();
-	Collection<CourseGWT> saveCourses(Collection<CourseGWT> collection);
-	
-	ArrayList<ScheduleItemGWT> getSchedule();
 	int copySchedule(int existingScheduleID, String scheduleName);
 	int importFromCSV(String scheduleName, String value);
-	
 	void removeSchedule(String schedName);
+
+	// Instructors
+	void saveInstructor(InstructorGWT instructor);	
+	List<InstructorGWT> getInstructors();
+	List<InstructorGWT> saveInstructors(List<InstructorGWT> added, List<InstructorGWT> edited, List<InstructorGWT> removed);
+	
+	// Courses
+	List<CourseGWT> saveCourses(List<CourseGWT> added, List<CourseGWT> edited, List<CourseGWT> removed);
+	List<CourseGWT> getCourses();
+	
+	// Locations
+	List<LocationGWT> getLocations();
+	List<LocationGWT> saveLocations(List<LocationGWT> added, List<LocationGWT> edited, List<LocationGWT> removed);
+	
+	// Schedule Items
+	List<ScheduleItemGWT> getGWTScheduleItems(List<CourseGWT> courses);
+	List<ScheduleItemGWT> generateSchedule();	
+	ScheduleItemList rescheduleCourse(ScheduleItemGWT scheduleItem, List<Integer> days, int startHour, boolean atHalfHour, boolean inSchedule);
+	List<ScheduleItemGWT> removeScheduleItem(ScheduleItemGWT removed);
+	void saveSchedule();
+	List<ScheduleItemGWT> getSchedule();
+	
 }

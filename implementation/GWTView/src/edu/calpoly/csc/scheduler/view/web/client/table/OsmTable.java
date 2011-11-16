@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -175,22 +176,22 @@ public class OsmTable<ObjectType extends Comparable<ObjectType>> extends FocusPa
 				}));
 	}
 
-	public Collection<ObjectType> getAddedObjects() {
-		Collection<ObjectType> added = new ArrayList<ObjectType>();
+	public List<ObjectType> getAddedObjects() {
+		List<ObjectType> added = new ArrayList<ObjectType>();
 		for (Row row : addedRows)
 			added.add(row.object);
 		return added;
 	}
 	
-	public Collection<ObjectType> getEditedObjects() {
-		Collection<ObjectType> edited = new ArrayList<ObjectType>();
+	public List<ObjectType> getEditedObjects() {
+		List<ObjectType> edited = new ArrayList<ObjectType>();
 		for (Row row : editedRows)
 			edited.add(row.object);
 		return edited;
 	}
 	
-	public Collection<ObjectType> getRemovedObjects() {
-		Collection<ObjectType> removed = new ArrayList<ObjectType>();
+	public List<ObjectType> getRemovedObjects() {
+		List<ObjectType> removed = new ArrayList<ObjectType>();
 		for (Row row : rowsToRemove)
 			removed.add(row.object);
 		return removed;
@@ -310,12 +311,10 @@ public class OsmTable<ObjectType extends Comparable<ObjectType>> extends FocusPa
 				td.setAttribute("style", td.getAttribute("style") + "; width: " + column.width);
 		}
 		
-		// Get containing tr
-		Element rowElement = widgets[0].getElement();
-		while (rowElement.getNodeName().compareToIgnoreCase("tr") != 0)
-			rowElement = rowElement.getParentElement();
+		Element rowElement = HTMLUtilities.getClosestContainingElementOfType(widgets[0].getElement(), "tr");
 
 		Row newRow = new Row(object, rowElement, widgets);
+		assert(!rows.containsKey(object));
 		rows.put(object, newRow);
 
 		historyByObject.put(object, factory.createHistoryFor(object));

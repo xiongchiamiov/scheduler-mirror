@@ -49,24 +49,20 @@ public class Model implements Serializable
       return (this.sched_map = db.getSchedules(this.dept));
    }
    
-   public Database openExistingSchedule (String scheduleName)
+   public void openExistingSchedule (String scheduleName)
    {
       int sid = this.sched_map.get(scheduleName);
       db.openDB(sid, scheduleName);
-      
-      return this.db;
    }
    
-   public Database openExistingSchedule (Integer sid)
+   public void openExistingSchedule (Integer sid)
    {
       db.openDB(sid, "");
-      return this.db;
    }
 
-   public Database openNewSchedule (String scheduleName)
+   public void openNewSchedule (String scheduleName)
    {
       db.openDB(-1, scheduleName);
-      return this.db;
    }
 
 	public void saveInstructor(Instructor instructor) {

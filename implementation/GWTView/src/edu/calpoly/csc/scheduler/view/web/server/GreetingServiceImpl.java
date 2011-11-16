@@ -1,20 +1,17 @@
 package edu.calpoly.csc.scheduler.view.web.server;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import edu.calpoly.csc.scheduler.model.Model;
-import edu.calpoly.csc.scheduler.model.db.Database;
 import edu.calpoly.csc.scheduler.model.db.Time;
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
 import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
-import edu.calpoly.csc.scheduler.model.db.idb.TimePreference;
 import edu.calpoly.csc.scheduler.model.db.ldb.Location;
 import edu.calpoly.csc.scheduler.model.schedule.CouldNotBeScheduledException;
 import edu.calpoly.csc.scheduler.model.schedule.Day;
@@ -37,7 +34,6 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		GreetingService {
 
 	private Model model;
-	private Database db;
 	private Schedule schedule;
 	private HashMap<String, Course> availableCourses;
 	private HashMap<String, ScheduleItem> scheduleItems;
@@ -54,7 +50,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 
 	@Override
 	public Integer openNewSchedule(String newScheduleName) {
-		db = model.openNewSchedule(newScheduleName);
+		model.openNewSchedule(newScheduleName);
 		return model.getScheduleID();
     }
     
@@ -63,7 +59,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
     // Returns 2, null if its a admin
 	@Override
     public Pair<Integer, InstructorGWT> openExistingSchedule(int scheduleID) {
-    	db = model.openExistingSchedule(scheduleID);
+    	model.openExistingSchedule(scheduleID);
     	return new Pair<Integer, InstructorGWT>(2, null); // tyero, change this
     }
 
@@ -73,44 +69,26 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
     }
 
 	@Override
-	public ArrayList<InstructorGWT> getInstructors()
-			throws IllegalArgumentException {
-		ArrayList<InstructorGWT> results = new ArrayList<InstructorGWT>();
-		for (Instructor instructor : model.getInstructors()) {
-			results.add(Conversion.toGWT(instructor));
-			System.out.println("Returning instructor to view: " + instructor.getLastName());
-		}
-		return results;
-	}
-
-	@Override
-	public Collection<InstructorGWT> saveInstructors(
-			Collection<InstructorGWT> instructors) {
-		HashMap<String, Instructor> newLocationsByUserID = new LinkedHashMap<String, Instructor>();
-
-		for (InstructorGWT instructorGWT : instructors) {
-			Instructor instructor = Conversion.fromGWT(instructorGWT);
-			newLocationsByUserID.put(instructor.getUserID(), instructor);
-			model.saveInstructor(instructor);
-			System.out.println("Instructor that will be in DB: " + instructor.getLastName());
-		}
-
-		for (Instructor instructor : model.getInstructors())
-			if (newLocationsByUserID.get(instructor.getUserID()) == null)
-				model.removeInstructor(instructor);
-
-		assert (model.getInstructors().size() == instructors.size());
-
-		return getInstructors();
-	}
-
-	@Override
-	public ArrayList<InstructorGWT> getInstructors2() {
-		ArrayList<InstructorGWT> results = new ArrayList<InstructorGWT>();
+	public ArrayList<InstructorGWT> getInstructors() throws IllegalArgumentException {
 		int id = 1;
+		ArrayList<InstructorGWT> results = new ArrayList<InstructorGWT>();
 		for (Instructor instructor : model.getInstructors())
 			results.add(Conversion.toGWT(id++, instructor));
 		return results;
+	}
+
+	@Override
+	public List<InstructorGWT> saveInstructors(List<InstructorGWT> added, List<InstructorGWT> edited, List<InstructorGWT> removed) {
+		for (InstructorGWT addedInstructor : added)
+			model.saveInstructor(Conversion.fromGWT(addedInstructor));
+		
+		for (InstructorGWT editedInstructor : edited)
+			model.saveInstructor(Conversion.fromGWT(editedInstructor));
+		
+		for (InstructorGWT removedInstructor : removed)
+			model.removeInstructor(Conversion.fromGWT(removedInstructor));
+
+		return getInstructors();
 	}
 
 //	private void displayInstructorPrefs(Instructor instructor) {
@@ -133,7 +111,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	public ArrayList<ScheduleItemGWT> generateSchedule() {
 		assert (model != null);
 
-		Collection<Course> coursesToGenerate = model.getCourses();
+		List<Course> coursesToGenerate = model.getCourses();
 
 		// TODO: fix this hack.
 		for (Course course : coursesToGenerate) {
@@ -151,7 +129,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 					+ instructor.getLastName() + ": "
 					+ instructor.getTimePreferences().size());
 
-		Collection<ScheduleItem> scheduleItems = schedule
+		List<ScheduleItem> scheduleItems = schedule
 				.generate(coursesToGenerate);
 		System.out.println("schedule items: " + schedule.getItems().size());
 
@@ -167,13 +145,14 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 
 	@Override
 	public ArrayList<ScheduleItemGWT> getGWTScheduleItems(
-			ArrayList<CourseGWT> courses) {
+			List<CourseGWT> courses) {
 		Course courseWithSections;
 
 		assert (model != null);
+		assert(availableCourses != null);
 		scheduleItems = new HashMap<String, ScheduleItem>();
 
-		Collection<Course> coursesToGenerate = new LinkedList<Course>();
+		List<Course> coursesToGenerate = new LinkedList<Course>();
 		for (CourseGWT course : courses) {
 			courseWithSections = new Course(availableCourses.get(course
 					.getDept() + course.getCatalogNum()));
@@ -212,7 +191,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 
 	@Override
 	public ScheduleItemList rescheduleCourse(ScheduleItemGWT scheduleItem,
-			ArrayList<Integer> days, int startHour, boolean atHalfHour,
+			List<Integer> days, int startHour, boolean atHalfHour,
 			boolean inSchedule) {
 		assert (model != null);
 		ScheduleItemList gwtItems = new ScheduleItemList();
@@ -296,109 +275,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
-	public Collection<LocationGWT> saveLocations(
-			Collection<LocationGWT> locations) {
-		HashMap<String, Location> newLocationsByUserID = new LinkedHashMap<String, Location>();
-
-		for (LocationGWT locationGWT : locations) {
-			Location location = Conversion.fromGWT(locationGWT);
-			newLocationsByUserID
-					.put(location.getBuilding() + "-" + location.getRoom(),
-							location);
-			model.saveLocation(location);
-		}
-
-		for (Location location : model.getLocations())
-			if (newLocationsByUserID.get(location.getBuilding() + "-"
-					+ location.getRoom()) == null)
-				model.removeLocation(location);
-
-		assert (model.getLocations().size() == locations.size());
-
-		return getLocations();
-	}
-	
-	@Override
-	public ArrayList<CourseGWT> getCourses() {
-		ArrayList<CourseGWT> results = new ArrayList<CourseGWT>();
-		availableCourses = new HashMap<String, Course>();
-		for (Course course : model.getCourses()) {
-			course.setLength(6);
-			availableCourses.put(course.getDept() + course.getCatalogNum(),
-					course);
-			results.add(Conversion.toGWT(course));
-		}
-		return results;
-	}
-
-	@Override
-	public void saveCourses(ArrayList<CourseGWT> courses) {
-		HashMap<String, Course> newLocationsByUserID = new LinkedHashMap<String, Course>();
-
-		for (CourseGWT courseGWT : courses) {
-			Course course = Conversion.fromGWT(courseGWT);
-			newLocationsByUserID.put(
-					course.getDept() + "-" + course.getCatalogNum(), course);
-			model.saveCourse(course);
-		}
-
-		for (Course course : model.getCourses())
-			if (newLocationsByUserID.get(course.getDept() + "-"
-					+ course.getCatalogNum()) == null)
-				model.removeCourse(course);
-
-		assert (model.getCourses().size() == courses.size());
-	}
-
-	@Override
-	public Collection<CourseGWT> saveCourses(Collection<CourseGWT> courses) {
-		HashMap<String, Course> newLocationsByUserID = new LinkedHashMap<String, Course>();
-
-		for (CourseGWT courseGWT : courses) {
-			Course crs = Conversion.fromGWT(courseGWT);
-			newLocationsByUserID.put(
-					courseGWT.getDept() + "-" + courseGWT.getCatalogNum(), crs);
-			model.saveCourse(crs);
-		}
-
-		for (Course course : model.getCourses())
-			if (newLocationsByUserID.get(course.getDept() + "-"
-					+ course.getCatalogNum()) == null)
-				model.removeCourse(course);
-
-		assert (model.getCourses().size() == courses.size());
-
-		return getCourses();
-	}
-
-	@Override
-	public ArrayList<CourseGWT> getCourses2() {
-		ArrayList<CourseGWT> results = new ArrayList<CourseGWT>();
-		int id = 1;
-		for (Course course : model.getCourses())
-			results.add(Conversion.toGWT(id++, course));
-		return results;
-	}
-
-//	private boolean hasPreferences(Instructor instructor) {
-//		int totalDesire = 0;
-//		for (Day day : instructor.getTimePreferences().keySet()) {
-//			LinkedHashMap<Time, TimePreference> dayPrefs = instructor
-//					.getTimePreferences().get(day);
-//			for (Time time : dayPrefs.keySet()) {
-//				TimePreference timePrefs = dayPrefs.get(time);
-//				totalDesire += timePrefs.getDesire();
-//			}
-//		}
-//		return totalDesire > 0;
-//	}
-
-	@Override
 	public void saveInstructor(InstructorGWT instructorGWT) {
 		Instructor instructor = Conversion.fromGWT(instructorGWT);
-
-//		displayInstructorPrefs(instructor);
-
 		model.saveInstructor(instructor);
 	}
 
@@ -481,4 +359,46 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		model.importFromCSV(value);
 		return model.getScheduleID();
 	}
+
+
+	@Override
+	public List<LocationGWT> saveLocations(List<LocationGWT> added, List<LocationGWT> edited, List<LocationGWT> removed) {
+		for (LocationGWT addedLocation : added)
+			model.saveLocation(Conversion.fromGWT(addedLocation));
+		
+		for (LocationGWT editedLocation : edited)
+			model.saveLocation(Conversion.fromGWT(editedLocation));
+		
+		for (LocationGWT removedLocation : removed)
+			model.removeLocation(Conversion.fromGWT(removedLocation));
+
+		return getLocations();
+	}
+
+	@Override
+	public ArrayList<CourseGWT> getCourses() throws IllegalArgumentException {
+		availableCourses = new HashMap<String, Course>();
+		int id = 1;
+		ArrayList<CourseGWT> results = new ArrayList<CourseGWT>();
+		for (Course course : model.getCourses()) {
+			availableCourses.put(course.getDept() + course.getCatalogNum(), course);
+			results.add(Conversion.toGWT(id++, course));
+		}
+		return results;
+	}
+
+	@Override
+	public List<CourseGWT> saveCourses(List<CourseGWT> added, List<CourseGWT> edited, List<CourseGWT> removed) {
+		for (CourseGWT addedCourse : added)
+			model.saveCourse(Conversion.fromGWT(addedCourse));
+		
+		for (CourseGWT editedCourse : edited)
+			model.saveCourse(Conversion.fromGWT(editedCourse));
+		
+		for (CourseGWT removedCourse : removed)
+			model.removeCourse(Conversion.fromGWT(removedCourse));
+
+		return getCourses();
+	}
+
 }

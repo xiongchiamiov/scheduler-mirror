@@ -1,6 +1,7 @@
 package edu.calpoly.csc.scheduler.view.web.client.views;
 
 import java.util.Collection;
+import java.util.List;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -203,13 +204,13 @@ public class InstructorsView extends VerticalPanel implements IView<ScheduleNavV
 		
 		vp.add(table);
 		
-		service.getInstructors2(new AsyncCallback<Collection<InstructorGWT>>() {
+		service.getInstructors(new AsyncCallback<List<InstructorGWT>>() {
 			public void onFailure(Throwable caught) {
 				popup.hide();
 				Window.alert("Failed to get instructors: " + caught.toString());
 			}
 			
-			public void onSuccess(Collection<InstructorGWT> result){
+			public void onSuccess(List<InstructorGWT> result){
 				assert(result != null);
 				popup.hide();
 				for (InstructorGWT instr : result)
@@ -221,18 +222,23 @@ public class InstructorsView extends VerticalPanel implements IView<ScheduleNavV
 	
 	
 	private void save() {
-		service.saveInstructors(table.getAddedUntouchedAndEditedObjects(), new AsyncCallback<Collection<InstructorGWT>>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				// TODO Auto-generated method stub
-				
-			}
-			@Override
-			public void onSuccess(Collection<InstructorGWT> result) {
-				table.clear();
-				table.addRows(result);
-			}
-		});
+		service.saveInstructors(
+				table.getAddedObjects(),
+				table.getEditedObjects(),
+				table.getRemovedObjects(),
+				new AsyncCallback<List<InstructorGWT>>() {
+					
+					@Override
+					public void onFailure(Throwable caught) {
+						// TODO Auto-generated method stub
+						
+					}
+					@Override
+					public void onSuccess(List<InstructorGWT> result) {
+						table.clear();
+						table.addRows(result);
+					}
+				});
 	}
 	
 	private boolean userIdExists(String userId) {

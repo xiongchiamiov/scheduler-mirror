@@ -1,6 +1,6 @@
 package edu.calpoly.csc.scheduler.view.web.client.views;
 
-import java.util.Collection;
+import java.util.List;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -87,13 +87,13 @@ public class AdminConfigView extends ScrollPanel implements IView<ScheduleNavVie
 						
 		vp.add(table);
 		
-		service.getCourses2(new AsyncCallback<Collection<CourseGWT>>() {
+		service.getCourses(new AsyncCallback<List<CourseGWT>>() {
 			public void onFailure(Throwable caught) {
 				popup.hide();
 				Window.alert("Failed to get courses: " + caught.toString());
 			}
 			
-			public void onSuccess(Collection<CourseGWT> result){
+			public void onSuccess(List<CourseGWT> result){
 				assert(result != null);
 				popup.hide();
 				for (CourseGWT crs : result)

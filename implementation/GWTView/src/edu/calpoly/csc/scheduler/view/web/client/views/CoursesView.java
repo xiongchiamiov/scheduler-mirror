@@ -3,6 +3,7 @@ package edu.calpoly.csc.scheduler.view.web.client.views;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -283,13 +284,13 @@ public class CoursesView extends ScrollPanel implements IView<ScheduleNavView> {
 		
 		vp.add(table);
 		
-		service.getCourses2(new AsyncCallback<Collection<CourseGWT>>() {
+		service.getCourses(new AsyncCallback<List<CourseGWT>>() {
 			public void onFailure(Throwable caught) {
 				popup.hide();
 				Window.alert("Failed to get courses: " + caught.toString());
 			}
 			
-			public void onSuccess(Collection<CourseGWT> result){
+			public void onSuccess(List<CourseGWT> result){
 				assert(result != null);
 				popup.hide();
 				for (CourseGWT crs : result)
@@ -301,18 +302,22 @@ public class CoursesView extends ScrollPanel implements IView<ScheduleNavView> {
 	
 	
 	private void save() {
-		service.saveCourses(table.getAddedUntouchedAndEditedObjects(), new AsyncCallback<Collection<CourseGWT>>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				// TODO Auto-generated method stub
-				
-			}
-			@Override
-			public void onSuccess(Collection<CourseGWT> result) {
-				table.clear();
-				table.addRows(result);
-			}
-		});
+		service.saveCourses(
+				table.getAddedObjects(),
+				table.getEditedObjects(),
+				table.getRemovedObjects(),
+				new AsyncCallback<List<CourseGWT>>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						// TODO Auto-generated method stub
+						
+					}
+					@Override
+					public void onSuccess(List<CourseGWT> result) {
+						table.clear();
+						table.addRows(result);
+					}
+				});
 	}
 	
 	

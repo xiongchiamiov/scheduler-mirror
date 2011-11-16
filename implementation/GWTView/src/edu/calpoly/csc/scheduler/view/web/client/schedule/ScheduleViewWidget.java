@@ -1,8 +1,10 @@
 package edu.calpoly.csc.scheduler.view.web.client.schedule;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 import com.allen_sauer.gwt.dnd.client.PickupDragController;
 import com.allen_sauer.gwt.dnd.client.drop.DropController;
@@ -94,14 +96,14 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
   }
 
   greetingService.getGWTScheduleItems(dualListBoxCourses.getIncludedCourses(),
-    new AsyncCallback<ArrayList<ScheduleItemGWT>>()
+    new AsyncCallback<List<ScheduleItemGWT>>()
     {
      public void onFailure(Throwable caught)
      {
       Window.alert("Failed to get schedule: " + caught.toString());
      }
 
-     public void onSuccess(ArrayList<ScheduleItemGWT> result)
+     public void onSuccess(List<ScheduleItemGWT> result)
      {
       if (result != null)
       {
@@ -251,7 +253,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
  /* Retrieves the course list and adds it to the available courses box */
  private void addCoursesToBoxes()
  {
-  greetingService.getCourses(new AsyncCallback<ArrayList<CourseGWT>>()
+  greetingService.getCourses(new AsyncCallback<List<CourseGWT>>()
   {
    @Override
    public void onFailure(Throwable caught)
@@ -261,7 +263,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
    }
 
    @Override
-   public void onSuccess(ArrayList<CourseGWT> result)
+   public void onSuccess(List<CourseGWT> result)
    {
     if (result != null)
     {
@@ -315,7 +317,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
   
   loading.show();
   greetingService.getSchedule(
-    new AsyncCallback<ArrayList<ScheduleItemGWT>>()
+    new AsyncCallback<List<ScheduleItemGWT>>()
     {
      @Override
      public void onFailure(Throwable caught)
@@ -325,7 +327,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
      }
 
      @Override
-     public void onSuccess(ArrayList<ScheduleItemGWT> result)
+     public void onSuccess(List<ScheduleItemGWT> result)
      {
       scheduleItems = new ArrayList<ScheduleItemGWT>();
       for (ScheduleItemGWT item : result)
@@ -500,7 +502,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
  public void removeItem(ScheduleItemGWT removed)
  {
   greetingService.removeScheduleItem(removed, 
-    new AsyncCallback<ArrayList<ScheduleItemGWT>>()
+    new AsyncCallback<List<ScheduleItemGWT>>()
     {
      @Override
      public void onFailure(Throwable caught)
@@ -509,7 +511,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
      }
 
      @Override
-     public void onSuccess(ArrayList<ScheduleItemGWT> result)
+     public void onSuccess(List<ScheduleItemGWT> result)
      {
       scheduleItems = new ArrayList<ScheduleItemGWT>();
       for (ScheduleItemGWT schdItem : result)

@@ -1,6 +1,6 @@
 package edu.calpoly.csc.scheduler.view.web.client.views;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -29,7 +29,7 @@ public class InstructorPreferencesView extends ScrollPanel implements IView<Sche
 	GreetingServiceAsync service;
 	InstructorGWT instructor;
 	InstructorGWT savedInstructor;
-	List<CourseGWT> courses;
+	Collection<CourseGWT> courses;
 	
 	Map<CourseGWT, ListBox> listBoxesByCourse = new TreeMap<CourseGWT, ListBox>();
 	
@@ -76,13 +76,13 @@ public class InstructorPreferencesView extends ScrollPanel implements IView<Sche
 		coursePrefs.setWidget(0, 0, new HTML("Course"));
 		coursePrefs.setWidget(0, 1, new HTML("Preference"));
 		
-		service.getCourses(new AsyncCallback<ArrayList<CourseGWT>>() {
+		service.getCourses(new AsyncCallback<List<CourseGWT>>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				Window.alert("Failed to get courses.");
 			}
 			
-			public void onSuccess(ArrayList<CourseGWT> result) {
+			public void onSuccess(List<CourseGWT> result) {
 				populateCourses(result);
 			}
 		});
