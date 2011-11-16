@@ -27,7 +27,6 @@ public interface GreetingServiceAsync {
 
 	void getInstructors(AsyncCallback<ArrayList<InstructorGWT>> callback) throws IllegalArgumentException;
 	void saveInstructor(InstructorGWT instructor, AsyncCallback<Void> asyncCallback);
-	void saveInstructors(ArrayList<InstructorGWT> instructors, AsyncCallback<Void> callback) throws IllegalArgumentException;
 	void saveInstructors(Collection<InstructorGWT> collection, AsyncCallback<Collection<InstructorGWT>> asyncCallback) throws IllegalArgumentException;
 	void getInstructors2(AsyncCallback<Collection<InstructorGWT>> asyncCallback) throws IllegalArgumentException;
 	

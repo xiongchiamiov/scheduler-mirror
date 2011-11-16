@@ -42,14 +42,17 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	private HashMap<String, Course> availableCourses;
 	private HashMap<String, ScheduleItem> scheduleItems;
 
+	@Override
 	public void login(String username) {
 		model = new Model(username);
 	}
 
+	@Override
 	public Map<String, Integer> getScheduleNames() {
 		return model.getSchedules();
 	}
 
+	@Override
 	public Integer openNewSchedule(String newScheduleName) {
 		db = model.openNewSchedule(newScheduleName);
 		return model.getScheduleID();
@@ -58,43 +61,26 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
     // Returns 0, null if its a guest
     // Returns 1, instructor if its an instructor
     // Returns 2, null if its a admin
+	@Override
     public Pair<Integer, InstructorGWT> openExistingSchedule(int scheduleID) {
     	db = model.openExistingSchedule(scheduleID);
     	return new Pair<Integer, InstructorGWT>(2, null); // tyero, change this
     }
-    
+
+	@Override
     public void removeSchedule(String schedName) {
     	model.deleteSchedule(schedName);
     }
-    
+
+	@Override
 	public ArrayList<InstructorGWT> getInstructors()
 			throws IllegalArgumentException {
 		ArrayList<InstructorGWT> results = new ArrayList<InstructorGWT>();
 		for (Instructor instructor : model.getInstructors()) {
 			results.add(Conversion.toGWT(instructor));
+			System.out.println("Returning instructor to view: " + instructor.getLastName());
 		}
 		return results;
-	}
-
-	public void saveInstructors(ArrayList<InstructorGWT> instructors)
-			throws IllegalArgumentException {
-		assert (model != null);
-
-		HashMap<String, Instructor> newInstructorsByUserID = new LinkedHashMap<String, Instructor>();
-
-		for (InstructorGWT instructorGWT : instructors) {
-			Instructor instructor = Conversion.fromGWT(instructorGWT);
-			newInstructorsByUserID.put(instructor.getUserID(), instructor);
-
-			displayInstructorPrefs(instructor);
-
-			model.saveInstructor(instructor);
-		}
-
-		for (Instructor instructor : model.getInstructors())
-			if (newInstructorsByUserID.get(instructor.getUserID()) == null)
-				model.removeInstructor(instructor);
-		assert (model.getInstructors().size() == instructors.size());
 	}
 
 	@Override
@@ -106,6 +92,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 			Instructor instructor = Conversion.fromGWT(instructorGWT);
 			newLocationsByUserID.put(instructor.getUserID(), instructor);
 			model.saveInstructor(instructor);
+			System.out.println("Instructor that will be in DB: " + instructor.getLastName());
 		}
 
 		for (Instructor instructor : model.getInstructors())
@@ -126,22 +113,23 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		return results;
 	}
 
-	private void displayInstructorPrefs(Instructor instructor) {
-		System.out.println("Prefs for instructor " + instructor.getLastName());
+//	private void displayInstructorPrefs(Instructor instructor) {
+//		System.out.println("Prefs for instructor " + instructor.getLastName());
+//
+//		for (Day day : instructor.getTimePreferences().keySet())
+//			for (Time time : instructor.getTimePreferences().get(day).keySet())
+//				System.out.println("Day "
+//						+ day.getNum()
+//						+ " time "
+//						+ time.getHour()
+//						+ ":"
+//						+ time.getMinute()
+//						+ " is "
+//						+ instructor.getTimePreferences().get(day).get(time)
+//								.getDesire());
+//	}
 
-		for (Day day : instructor.getTimePreferences().keySet())
-			for (Time time : instructor.getTimePreferences().get(day).keySet())
-				System.out.println("Day "
-						+ day.getNum()
-						+ " time "
-						+ time.getHour()
-						+ ":"
-						+ time.getMinute()
-						+ " is "
-						+ instructor.getTimePreferences().get(day).get(time)
-								.getDesire());
-	}
-
+	@Override
 	public ArrayList<ScheduleItemGWT> generateSchedule() {
 		assert (model != null);
 
@@ -222,6 +210,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		return gwtItems;
 	}
 
+	@Override
 	public ScheduleItemList rescheduleCourse(ScheduleItemGWT scheduleItem,
 			ArrayList<Integer> days, int startHour, boolean atHalfHour,
 			boolean inSchedule) {
@@ -391,24 +380,24 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		return results;
 	}
 
-	private boolean hasPreferences(Instructor instructor) {
-		int totalDesire = 0;
-		for (Day day : instructor.getTimePreferences().keySet()) {
-			LinkedHashMap<Time, TimePreference> dayPrefs = instructor
-					.getTimePreferences().get(day);
-			for (Time time : dayPrefs.keySet()) {
-				TimePreference timePrefs = dayPrefs.get(time);
-				totalDesire += timePrefs.getDesire();
-			}
-		}
-		return totalDesire > 0;
-	}
+//	private boolean hasPreferences(Instructor instructor) {
+//		int totalDesire = 0;
+//		for (Day day : instructor.getTimePreferences().keySet()) {
+//			LinkedHashMap<Time, TimePreference> dayPrefs = instructor
+//					.getTimePreferences().get(day);
+//			for (Time time : dayPrefs.keySet()) {
+//				TimePreference timePrefs = dayPrefs.get(time);
+//				totalDesire += timePrefs.getDesire();
+//			}
+//		}
+//		return totalDesire > 0;
+//	}
 
 	@Override
 	public void saveInstructor(InstructorGWT instructorGWT) {
 		Instructor instructor = Conversion.fromGWT(instructorGWT);
 
-		displayInstructorPrefs(instructor);
+//		displayInstructorPrefs(instructor);
 
 		model.saveInstructor(instructor);
 	}

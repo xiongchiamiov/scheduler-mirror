@@ -276,6 +276,8 @@ public class CoursesView extends ScrollPanel implements IView<ScheduleNavView> {
 				  		popup.center();
 					}
 		}));
+
+		table.addDeleteColumn();
 		
 		
 		

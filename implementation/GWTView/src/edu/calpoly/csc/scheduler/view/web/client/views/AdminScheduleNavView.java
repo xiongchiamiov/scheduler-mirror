@@ -13,19 +13,19 @@ public class AdminScheduleNavView extends ScheduleNavView {
 //			public IView<ScheduleNavView> createView() { return new AdminConfigView(service, scheduleName); }
 //		});
 		
-		addButton("Instructors", "topBarLink", new CreateViewCallback() {
+		addButton("Instructors", "topBarLink first", false, new CreateViewCallback() {
 			public IView<ScheduleNavView> createView() { return new InstructorsView(service, scheduleName); }
 		});
 		
-		addButton("Locations", "topBarLink", new CreateViewCallback() {
+		addButton("Locations", "topBarLink", false, new CreateViewCallback() {
 			public IView<ScheduleNavView> createView() { return new LocationsView(service, scheduleName); }
 		});
 		
-		addButton("Courses", "topBarLink", new CreateViewCallback() {
+		addButton("Courses", "topBarLink", false, new CreateViewCallback() {
 			public IView<ScheduleNavView> createView() { return new CoursesView(service, scheduleName); }
 		});
 
-		addButton("Schedule", "topBarLink", new CreateViewCallback() {
+		addButton("Schedule", "topBarLink", true, new CreateViewCallback() {
 			public IView<ScheduleNavView> createView() { return new ScheduleView(service); }
 		});
 	}

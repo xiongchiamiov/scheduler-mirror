@@ -29,7 +29,6 @@ public interface GreetingService extends RemoteService {
 
 	void saveInstructor(InstructorGWT instructor);	
 	ArrayList<InstructorGWT> getInstructors() throws IllegalArgumentException;
-	void saveInstructors(ArrayList<InstructorGWT> instructors) throws IllegalArgumentException;
 	Collection<InstructorGWT> saveInstructors(Collection<InstructorGWT> collection);
 	Collection<InstructorGWT> getInstructors2();
 	

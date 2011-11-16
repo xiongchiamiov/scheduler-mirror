@@ -6,7 +6,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -199,6 +198,8 @@ public class InstructorsView extends VerticalPanel implements IView<ScheduleNavV
 						return TableConstants.INSTR_PREFERENCES;
 					}
 		}));
+		
+		table.addDeleteColumn();
 		
 		vp.add(table);
 		

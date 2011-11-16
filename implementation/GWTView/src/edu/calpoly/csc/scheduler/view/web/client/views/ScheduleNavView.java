@@ -86,7 +86,7 @@ public abstract class ScheduleNavView extends VerticalPanel implements IView<Mai
 		contentPanel.add(currentView.getViewWidget());
 	}
 	
-	void addButton(String label, String styleNames, final CreateViewCallback creator) {
+	void addButton(String label, String styleNames, boolean defaultView, final CreateViewCallback creator) {
 		final FocusPanel newPanel = new FocusPanel();
 		newPanel.add(new HTML(label));
 		newPanel.addStyleName(styleNames);
@@ -98,9 +98,33 @@ public abstract class ScheduleNavView extends VerticalPanel implements IView<Mai
 			}
 		});
 		topPanel.add(newPanel);
+		
+		if (defaultView) {
+			currentNavButton = newPanel;
+			currentView = creator.createView();
+		}
 	}
 	
 	protected interface CreateViewCallback {
 		IView<ScheduleNavView> createView();
+	}
+	
+	@Override
+	protected void onLoad() {
+		super.onLoad();
+		
+		assert((currentNavButton == null) == (currentView == null));
+		
+		if (currentView != null) {
+			IView<ScheduleNavView> defaultView = currentView;
+			FocusPanel defaultButton = currentNavButton;
+			currentView = null;
+			currentNavButton = null;
+
+			defaultButton.setFocus(false);
+			if (closeCurrentView())
+				switchToView(defaultButton, defaultView);
+		}
+		
 	}
 }

@@ -8,7 +8,7 @@ public class GuestScheduleNavView extends ScheduleNavView {
 	GuestScheduleNavView(SelectScheduleView homeView, Panel container, final GreetingServiceAsync service, int selectedScheduleID, String scheduleName) {
 		super(homeView, container, service, selectedScheduleID, scheduleName);
 		
-		addButton("Schedule", "topBarLink", new CreateViewCallback() {
+		addButton("Schedule", "topBarLink", true, new CreateViewCallback() {
 			public IView<ScheduleNavView> createView() { return new ScheduleView(service); }
 		});
 	}
