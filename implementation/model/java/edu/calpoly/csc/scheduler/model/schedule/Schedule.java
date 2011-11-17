@@ -83,7 +83,7 @@ public class Schedule extends DbData implements Serializable
 	/**
     * Used for debugging. Toggle it to get debugging output
     */
-   private static final boolean DEBUG = true;
+   private static final boolean DEBUG = !true;
    
    /**
     * Prints a message to STDERR if DEBUG is true

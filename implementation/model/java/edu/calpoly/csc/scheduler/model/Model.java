@@ -28,12 +28,14 @@ public class Model implements Serializable
    public static final long serialVersionUID = 42;
    
    private Database db;
+   private String userId;
    private String dept;
    private Map<String, Integer> sched_map = new HashMap<String, Integer>();
    
    public Model (String userId)
    {
-      db = new Database();
+      this.userId = userId;
+      this.db = new Database();
       this.dept = db.getDept(userId);
    }
    
