@@ -13,12 +13,11 @@ import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
 import edu.calpoly.csc.scheduler.model.db.ldb.Location;
 import edu.calpoly.csc.scheduler.model.schedule.Schedule;
 
-
 /**
- * The top-level model. Views will be passed this object when they are 
- * instantiated. Any view interaction w/ underlying data will be done via
- * this class. Thus, the getters/setters here will determine how the view and
- * the model can interact. 
+ * The top-level model. Views will be passed this object when they are
+ * instantiated. Any view interaction w/ underlying data will be done via this
+ * class. Thus, the getters/setters here will determine how the view and the
+ * model can interact.
  * 
  * @author Eric Liebowitz
  * @version Oct 3, 2011
@@ -26,19 +25,19 @@ import edu.calpoly.csc.scheduler.model.schedule.Schedule;
 public class Model implements Serializable
 {
    public static final long serialVersionUID = 42;
-   
+
    private Database db;
    private String userId;
    private String dept;
    private Map<String, Integer> sched_map = new HashMap<String, Integer>();
-   
+
    public Model (String userId)
    {
       this.userId = userId;
       this.db = new Database();
       this.dept = db.getDept(userId);
    }
-   
+
    /**
     * Returns a list of schedules which a given user has access to.
     * 
@@ -50,13 +49,13 @@ public class Model implements Serializable
    {
       return (this.sched_map = db.getSchedules(this.dept));
    }
-   
+
    public void openExistingSchedule (String scheduleName)
    {
       int sid = this.sched_map.get(scheduleName);
       db.openDB(sid, scheduleName);
    }
-   
+
    public void openExistingSchedule (Integer sid)
    {
       db.openDB(sid, "");
@@ -67,80 +66,97 @@ public class Model implements Serializable
       db.openDB(-1, scheduleName);
    }
 
-	public void saveInstructor(Instructor instructor) {
-		db.getInstructorDB().saveData(instructor);
-	}
+   public void saveInstructor (Instructor instructor)
+   {
+      db.getInstructorDB().saveData(instructor);
+   }
 
-	public Collection<Instructor> getInstructors() {
-		return db.getInstructorDB().getData();
-	}
+   public Collection<Instructor> getInstructors ()
+   {
+      return db.getInstructorDB().getData();
+   }
 
-	public Integer getScheduleID() {
-		return db.getScheduleID();
-	}
+   public Integer getScheduleID ()
+   {
+      return db.getScheduleID();
+   }
 
-	public void removeInstructor(Instructor instructor) {
-		db.getInstructorDB().removeData(instructor);
-	}
+   public void removeInstructor (Instructor instructor)
+   {
+      db.getInstructorDB().removeData(instructor);
+   }
 
-	public ArrayList<Course> getCourses() {
-		return db.getCourseDB().getData();
-	}
+   public ArrayList<Course> getCourses ()
+   {
+      return db.getCourseDB().getData();
+   }
 
-	public Collection<Location> getLocations() {
-		return db.getLocationDB().getData();
-	}
+   public Collection<Location> getLocations ()
+   {
+      return db.getLocationDB().getData();
+   }
 
-	public void saveLocation(Location location) {
-		db.getLocationDB().saveData(location);
-	}
+   public void saveLocation (Location location)
+   {
+      db.getLocationDB().saveData(location);
+   }
 
-	public void removeLocation(Location location) {
-		db.getLocationDB().removeData(location);
-	}
+   public void removeLocation (Location location)
+   {
+      db.getLocationDB().removeData(location);
+   }
 
-	public void saveCourse(Course course) {
-		db.getCourseDB().saveData(course);
-	}
+   public void saveCourse (Course course)
+   {
+      db.getCourseDB().saveData(course);
+   }
 
-	public void removeCourse(Course course) {
-		db.getCourseDB().removeData(course);
-	}
+   public void removeCourse (Course course)
+   {
+      db.getCourseDB().removeData(course);
+   }
 
-	public int copySchedule(int existingScheduleID, String scheduleName) {
-		return db.copySchedule(existingScheduleID, scheduleName);
-	}
+   public int copySchedule (int existingScheduleID, String scheduleName)
+   {
+      return db.copySchedule(existingScheduleID, scheduleName);
+   }
 
-	public String exportToCSV(Schedule schedule) {
-		try {
-			return new CSV().export(this, schedule);
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
+   public String exportToCSV (Schedule schedule)
+   {
+      try
+      {
+         return new CSV().export(this, schedule);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+         return null;
+      }
+   }
 
-	public void saveSchedule (Schedule s)
-	{
-	   db.getScheduleDB().saveData(s);
-	}
+   public void saveSchedule (Schedule s)
+   {
+      db.getScheduleDB().saveData(s);
+   }
 
-	public void deleteSchedule (String s)
-	{
-	   int sid = sched_map.get(s);
-	   Schedule sched = new Schedule();
-	   sched.setId(sid);
-	   
-	   db.getScheduleDB().removeData(sched);
-	}
+   public void deleteSchedule (String s)
+   {
+      int sid = sched_map.get(s);
+      Schedule sched = new Schedule();
+      sched.setId(sid);
 
-	public void importFromCSV(String value) {
-		try {
-			new CSV().read(this, value);
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+      db.getScheduleDB().removeData(sched);
+   }
+
+   public void importFromCSV (String value)
+   {
+      try
+      {
+         new CSV().read(this, value);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+   }
 }

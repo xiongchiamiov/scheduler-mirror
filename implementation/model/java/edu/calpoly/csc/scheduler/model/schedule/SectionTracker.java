@@ -6,9 +6,13 @@ import java.util.Vector;
 import java.util.BitSet;
 
 /**
- *
+ * Used to keep track of what sections of a course have been scheduled. Provides
+ * methods to get unique, non-used numbers to apply to courses being taught. 
+ * You can also remove sections from the tracker. Subsequent calls to 
+ * 'addSection' will add the lowest, unused section number available. 
+ * 
  * @author Eric Liebowitz
- * @version Nov 14, 2011
+ * @version Nov 17, 2011
  */
 public class SectionTracker
 {
@@ -20,26 +24,16 @@ public class SectionTracker
     * The course this class tracks sections for
     */
    private Course c;
-   /**
-    * Current number of sections that have been scheduled
-    */
-   private int numSections;
+   
    /**
     * Current section that was just added
     */
    private int curSection;
-   /**
-    * Max number of sections
-    */
-   private int maxSections;
    
    public SectionTracker (Course c)
    {
       this.c = c;
-      this.numSections = 0;
       this.curSection = 0;
-      this.maxSections = c.getNumOfSections();
-      sections = new BitSet(this.maxSections);
    }
    
    /**
@@ -51,14 +45,26 @@ public class SectionTracker
     */
    public boolean addSection ()
    {
-      boolean r;
-      
-      if (r = canBookAnotherSection())
+      sections.set(curSection = getNextSection(), true);
+      return true;
+   }
+   
+   /**
+    * Adds the given section to our list of booked sections. The section is not
+    * added if it is already booked. 
+    * 
+    * @param s Section to add
+    * 
+    * @return true if the section did not exist and was thus added. False 
+    *         otherwise. 
+    */
+   public boolean addSection (int s)
+   {
+      boolean r = false;
+      if (r = !this.sections.get(s))
       {
-         sections.set(curSection = getNextSection(), true);
-         numSections ++;
+         this.sections.set(s, true);
       }
-      
       return r;
    }
    
@@ -72,7 +78,6 @@ public class SectionTracker
       if (this.sections.get(s))
       {
          this.sections.set(s, false);
-         numSections --;
       }
    }
    
@@ -86,29 +91,6 @@ public class SectionTracker
    private int getNextSection ()
    {
       return this.sections.nextClearBit(0);
-   }
-
-   /**
-    * Tells us whether another section can be booked 
-    * 
-    * @return this.sections.size() == this.c.getNumOfSections()
-    */
-   public boolean canBookAnotherSection ()
-   {
-      return this.numSections < this.maxSections;
-   }
-  
-   /**
-    * Resets section counting information for this tracker. Current section
-    * is set to zero, and max number of sections is set to the given value
-    * 
-    * @param newMax New maximum number of sections
-    */
-   public void resetSectionCount (int newMax)
-   {
-      this.curSection = 0;
-      this.numSections = 0;
-      this.maxSections = newMax;
    }
    
    /**
@@ -130,17 +112,7 @@ public class SectionTracker
     */
    public int getNumSections ()
    {
-      return this.numSections;
-   }
-   
-   /**
-    * Returns the maxSections
-    * 
-    * @return the maxSections
-    */
-   public int getMaxSections ()
-   {
-      return maxSections;
+      return this.sections.cardinality();
    }
 
    /**

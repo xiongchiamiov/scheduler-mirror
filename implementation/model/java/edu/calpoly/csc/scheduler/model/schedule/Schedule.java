@@ -369,19 +369,17 @@ public class Schedule extends DbData implements Serializable
       l.book(true, days, tr);
 
       int wtu = i.getCurWtu();
-      debug ("WTU BEFORE: " + wtu);
       wtu += c.getWtu();
-      debug ("NOW AT " + wtu);
       i.setCurWtu(wtu);
 
       SectionTracker st = getSectionTracker(si.getCourse());
-      if (st.addSection())
-      {
-         this.items.add(si);
-         si.setSection(st.getCurSection());
-         debug ("JUST ADDED A SECTION OF " + si.getCourse());
-      }
+      st.addSection();
+      si.setSection(st.getCurSection());
       
+      this.items.add(si);
+      
+      debug ("JUST ADDED SECTION " + st.getCurSection() + " OF " + 
+         si.getCourse());
       debug ("ITEM COUNT AT : " + this.items.size());
    }
 
@@ -408,9 +406,9 @@ public class Schedule extends DbData implements Serializable
     * the lecture/lab w/o exceeding his max wtu limit. The instructor must also
     * be able to teach during the times specified.<br>
     * <br>
-    * Section counts are checked to ensure you don't overbook a course.<br>
-    * <br>
-    * If this method returns true, it is safe to call 'book(si)'.
+    * If this method returns true, it is safe to call 'book(si)'. (In fact, 
+    * it'll always return true unless an exception gets thrown, in which case
+    * it'll never get a chance to return at all).
     * 
     * @param si ScheduleItem to verify
     * 
@@ -448,12 +446,6 @@ public class Schedule extends DbData implements Serializable
       {
          throw new CouldNotBeScheduledException(ConflictType.CANNOT_TEACH, si);
       }
-      SectionTracker st = this.getSectionTracker(c);
-      if (!st.canBookAnotherSection())
-      {
-         throw new CouldNotBeScheduledException(ConflictType.NO_SECTIONS_LEFT, 
-            si);
-      }
 
       return true;
    }
@@ -476,10 +468,10 @@ public class Schedule extends DbData implements Serializable
       {
          debug ("MAKING SI's FOR COURSE " + c);
          SectionTracker st = this.sections.get(c);
-         while (st.canBookAnotherSection())
+         for (int i = 0; i < c.getNumOfSections(); i ++)
          {
             debug ("SECTIONS SCHEDULED: " + st.getCurSection()
-               + " / " + st.getMaxSections());
+               + " / " + c.getNumOfSections());
             
             ScheduleItem lec_si = genLectureItem(c);
             debug ("MADE LEC_SI\n" + lec_si);
@@ -543,11 +535,7 @@ public class Schedule extends DbData implements Serializable
     */
    private void initGenData (Collection<Course> c_list)
    {
-      for (Course c: (cSourceList = new Vector<Course>(c_list)))
-      {
-         SectionTracker st = getSectionTracker(c);
-         st.resetSectionCount(c.getNumOfSections());
-      }
+      cSourceList = new Vector<Course>(c_list);
    }
 
    /**
