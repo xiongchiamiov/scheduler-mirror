@@ -1,0 +1,36 @@
+<html>
+<table align=center border=1 cellpadding=4>
+  <tr>
+    <td valign=top><strong>Case No.</strong>
+    <td valign=top><strong>User Inputs and Command</strong>
+    <td valign=top><strong>Expected Output</strong>
+    <td valign=top><strong>Result</strong>&nbsp;&nbsp;
+    <td valign=top><strong>Remarks</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <tr>
+    <td valign=top>1</td>
+    <td valign=top>Click 'Filter', only have Friday checked</td>
+    <td valign=top>Should only show Friday courses</td>
+    <td valign=top>Pass</td>
+    <td valign=top>Add filter reset button</td>
+  </tr>
+  <tr>
+    <td valign=top>2</td>
+    <td valign=top>Start with blank 'Courses to Schedule', multi-select CHEM 110, 128, and 316 using control, then drag from 'Available Course' to 'Courses to Schedule'.</td>
+    <td valign=top>CHEM 110, 128, and 316 should appear in 'Courses to Schedule'.</td>
+    <td valign=top>Fail</td>
+    <td valign=top>Error "Course is already scheduled". Ended up with only CHEM 110 and 128 under 'Courses to Schedule'</td>
+  </tr>
+  <tr>
+    <td valign=top>3</td>
+    <td valign=top>Move a course back to "Available Course"</td>
+    <td valign=top>Course should be removed from the schedule.</td>
+    <td valign=top>Pass</td>
+    <td valign=top></td>
+  </tr>
+</table>
+<h3>General notes:</h3>
+<ul>
+<li>Please allow cancellation or escape of a popup dialog such as when clicking on a course shown on the calendar.
+</ul>
+</body>
+</html>
