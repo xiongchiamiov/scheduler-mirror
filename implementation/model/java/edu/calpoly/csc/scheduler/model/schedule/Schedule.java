@@ -11,63 +11,105 @@ import edu.calpoly.csc.scheduler.model.db.ldb.*;
 import edu.calpoly.csc.scheduler.model.schedule.CouldNotBeScheduledException.*;
 
 /**
- * <h1>Automated Scheduling Process</h1>
+ * <h1>1: Scheduling Lectures</h1>
  * 
  * The scheduling algorithm follows a step-by-step process to schedule courses.
  * It is exhaustive and guarantees that all courses given to the algorithm will
- * be scheduled.
+ * be scheduled. The following sections walk you through the <b>exact</b> 
+ * process the algorithm executes while scheduling. 
  * 
- * <h2>Choosing Course</h2>
+ * <h2>1.1: Choosing Course</h2>
  * 
  * Courses are not algorithmically "chosen". Instead, the algorithm simply loops
- * through every course "c" until all sections of "c" are scheduled. You'll want
- * to check out {@link SectionTracker}, 
- * {@link #initGenData(Collection<Course>)}, and 
- * {@link #getSectionTracker(Course)} to see how we keep track of course 
- * sections.
+ * through every course "c" until all sections of "c" are scheduled. There is no
+ * global "max" number of sections. Instead, the algorithm will schedule as many
+ * sections of "c" as it has (see {@link Course#getNumOfSections()}).<br>
+ * <br>
+ * You'll want to check out {@link SectionTracker} to see how the algorithm 
+ * records unique section numbers of a given course.<br>
+ * <br>
  * 
- * <h2>Choosing Instructor</h2>
+ * <h2>1.2: Choosing Instructors</h2>
  * 
+ * The method you'll want to see for this is {@link #findInstructor(Course)} and
+ * {@link #findInstructor(Course, List)}.<br>
+ * <br>
  * Instructors are chosen based on who most desires to teach a given course. If
  * the one who most wants to teach it no longer can (i.e. his WTU's are maxed), 
- * he'll be removed from consideration and more instructors will be tested. Take
- * a look at {@link #findInstructor(Course, List<Instructor>)} to see how this 
- * is implemented.
- * 
+ * he'll be removed from consideration and more instructors will be tested.<br>
+ * <br> 
  * If no Instructor can be found (no one is capable of teaching the Course, 
  * which can be b/c of preference or wtu reasons), the special {@link Staff} 
  * Instructor is used. This person always wants to teach a course and is always
- * available to teach at any time.
+ * available to teach at any time. This instructor is a last resort: it's only 
+ * chosen if no one else is possible.
  * 
- * <h2>Choosing Times</h2>
+ * <h2>1.3: Choosing Times</h2>
  * 
  * Finding times depends on the type of course you're finding a time for. If 
  * you're scheduling a lecture course, it's easy. Lab courses, on the other 
  * hand, are a horse of a different color.<br>
  * <br>
+ * Half-hours are the resolution used to schedule courses. So, if a given time
+ * range doesn't work, the algorithm will shift the time range by a half hour
+ * and try again. Course lengths must be split on half-hour boundaries: you 
+ * can't have courses being taught for 1h45m or something.<br>
+ * <br>
  * Times per day will be figured by dividing the Course's length across the days
- * it's to be taught ({@link Course#getDayLength()}).<br> 
+ * it's to be taught (see {@link Course#getDayLength()}). Thus, a course taught
+ * for 7 hours a week could be taught for: 7 hours, 1 day; 3.5 hours, 2 days. 
+ * Other day combinations aren't possible, b/c they don't split 7 hours up into
+ * equal numbers of half-hours per day.<br> 
  * <br>
  * Times are selected by picking the time range across the Course's days 
  * ({@link Course#getDays()}) for which the chosen instructor want to teach
  * the most; the {@link TimeRange} for which he has the highest average 
  * preference ({@link Instructor#getAvgPrefForTimeRange(Week, TimeRange)}). If
- * an instructor has a pref of '0' for any time slot within the time 
- * {@link TimeRange}, the entire range will be disregarded.<br> 
+ * an instructor has a pref of '0' for any time slot within the TimeRange, 
+ * the entire range will be disregarded.<br> 
  * <br>
  * 
- * <h3>Finding Lecture Times</h3>
+ * <h3>1.3.1: Finding Lecture Times</h3>
  * 
+ * The methods you'll want to see for this are 
+ * {@link #genLecItem(Course)} and 
+ * {@link #findTimes(ScheduleItem, TimeRange)}.<br>
+ * <br>
  * Lecture times are found within the time bounds specified in the 
  * {@link #lec_bounds}. By default, this is 7a-10p. (My understanding of this is 
- * that this time is global throughout all Cal Poly).<br>
+ * that this time is global throughout all Cal Poly). If you wish to change
+ * this range, see {@link #setLecBounds(TimeRange)}, but be sure you put it
+ * back to its old value when you're done.<br>
  * <br> 
- *
- * <h2>Choosing Location</h2>
  * 
- * Blah blah blah.
+ * <h2>1.4: Choosing Location</h2>
  * 
- * <h1>Selecting the Best Item</h1>
+ * You'll want to see {@link #findLocations(Vector)} for details on
+ * how this is implemented.<br>
+ * <br>
+ * Locations are chosen based on whether they're available for a given time and
+ * whether they provide for the course to be taught. (Courses might need 
+ * certain equipment only present in select rooms). That's it.<br>
+ * <br>
+ * Refer to the 'Future Design Suggestions/Options' section for how this 
+ * implementation can/should change in the future.
+ * 
+ * <h2>1.5: Selecting the Best Item</h2>
+ * 
+ * Once a list of ScheduleItems have been created, each with unique times & 
+ * locations, they are put into an {@link SiMap}. This map sorts the items 
+ * according to their value defined in {@link ScheduleItem#getValue()} (this is
+ * also how {@link ScheduleItem#compareTo(ScheduleItem)} compares things) and
+ * {@link ScheduleItem#updateValue()}. Once all items have been added into the
+ * sorted map, it's easy to pluck out the best one: the highest value will 
+ * have floated to the top ({@link SiMap#getBest()}). 
+ * 
+ * <h1>2: Scheduling Labs</h1>
+ * 
+ * There's a difference in the type of labs which are scheduled. There are 
+ * <b>teathered</b> and <b>unteathered</b> labs. 
+ * 
+ * <h2>2.1: Teathered Labs</h2>
  * 
  * <h1>Further Design Suggestions/Options</h1>
  * 
@@ -188,7 +230,7 @@ public class Schedule extends DbData implements Serializable
     * 
     * @see #lec_bounds
     * @see #lab_bounds
-    * @see #generate(List\<Course\>)
+    * @see #generate(Collection)
     */
    public void genItem (Course c, Week days, Time s)
    {
@@ -473,7 +515,7 @@ public class Schedule extends DbData implements Serializable
             debug ("SECTIONS SCHEDULED: " + st.getCurSection()
                + " / " + c.getNumOfSections());
             
-            ScheduleItem lec_si = genLectureItem(c);
+            ScheduleItem lec_si = genLecItem(c);
             debug ("MADE LEC_SI\n" + lec_si);
             try
             {
@@ -553,7 +595,7 @@ public class Schedule extends DbData implements Serializable
     * @see Tba#getTba()
     * @see Staff#getStaff()
     */
-   private ScheduleItem genLectureItem (Course lec)
+   private ScheduleItem genLecItem (Course lec)
    {
       Vector<ScheduleItem> si_list = new Vector<ScheduleItem>();
       ScheduleItem lec_si = new ScheduleItem();
@@ -620,7 +662,7 @@ public class Schedule extends DbData implements Serializable
     * @see ScheduleItem#getValue()
     * @see Staff#getStaff()
     * @see Tba#getTba()
-    * @see #findTimes(Course, List\<Instructor\>)
+    * @see #findTimes(ScheduleItem, TimeRange)
     */
    private ScheduleItem genBestTime (ScheduleItem base, TimeRange tr)
    {
