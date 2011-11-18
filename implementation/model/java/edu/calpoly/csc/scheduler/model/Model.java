@@ -50,6 +50,11 @@ public class Model implements Serializable
       return (this.sched_map = db.getSchedules(this.dept));
    }
 
+   public Schedule loadSchedule (int sid)
+   {
+      return db.getScheduleDB().getSchedule(sid);
+   }
+   
    public void openExistingSchedule (String scheduleName)
    {
       int sid = this.sched_map.get(scheduleName);
