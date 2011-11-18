@@ -206,11 +206,14 @@ import edu.calpoly.csc.scheduler.model.schedule.CouldNotBeScheduledException.*;
  * </code>
  * 
  * <br>
- * Basically, this sol'n disregards the need for section numbers for labs. The
+ * Basically, this sol'n requires a user to enter correct data. The
  * number of lab sections determined by how many sections of it are needed to 
  * meet the enrollment requirements imposed by the lecture component.<br>
  * <br>
- * To implement this fix, the View will have to notify the user  
+ * To implement this fix, the View will have to notify the user when the number
+ * of lab sections they <i>say</i> they want is inconsistent with the number
+ * of sections that'll be computed from the above rule. If that rule is always
+ * enforced and the algorithm can rely on this, I believe this bug can be fixed. 
  * 
  * <h1>Further Design Suggestions/Options</h1>
  * 
