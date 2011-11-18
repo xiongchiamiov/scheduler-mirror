@@ -1,5 +1,6 @@
 package edu.calpoly.csc.scheduler.view.web.client.views;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,6 +20,7 @@ import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
@@ -56,6 +58,12 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 	List<CellWidget> selectedCells;
 	CellWidget anchorCell;
 	CellWidget lastSelectedCell;
+	CheckBox monday = new CheckBox("Monday", true);
+	CheckBox tuesday = new CheckBox("Tuesday", true);
+	CheckBox wednesday = new CheckBox("Wednesday", true);
+	CheckBox thursday = new CheckBox("Thursday", true);
+	CheckBox friday = new CheckBox("Friday", true);
+	final FocusPanel focus = new FocusPanel();
 	
 	public InstructorTimePreferencesWidget(GreetingServiceAsync service, Strategy strategy) {
 		this.service = service;
@@ -148,7 +156,46 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 	protected void onLoad() {
 		super.onLoad();
 		
-		final FocusPanel focus = new FocusPanel();
+		monday.setValue(true);
+		tuesday.setValue(true);
+		wednesday.setValue(true);
+		thursday.setValue(true);
+		friday.setValue(true);
+		add(monday);
+		add(tuesday);
+		add(wednesday);
+		add(thursday);
+		add(friday);
+		monday.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				focus.remove(timePrefsTable);
+				CheckBoxClicked(event);			}
+		});
+		tuesday.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				focus.remove(timePrefsTable);
+				CheckBoxClicked(event);			}
+		});
+		wednesday.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				focus.remove(timePrefsTable);
+				CheckBoxClicked(event);			}
+		});
+		thursday.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				focus.remove(timePrefsTable);
+				CheckBoxClicked(event);			}
+		});
+		friday.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				focus.remove(timePrefsTable);
+				CheckBoxClicked(event);			}
+		});
 		add(focus);
 		focus.addKeyDownHandler(new KeyDownHandler() {
 			@Override
@@ -176,9 +223,75 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 				}
 			}
 		});
+		redraw();
+		/*timePrefsTable = new FlexTable();
+		focus.add(timePrefsTable);
+		
+		timePrefsTable.addStyleName("timePreferencesTable");
+		timePrefsTable.setWidth("100%");
+		timePrefsTable.setCellSpacing(0);
+		timePrefsTable.setCellPadding(0);
+		
+		for (int halfHour = 0; halfHour < 30; halfHour++) { // There are 30 half-hours between 7am and 10pm
+			int row = halfHour + 1;
+			int hour = halfHour / 2 + 7; // divide by two to get hours 0-15. Add 7 to get hours 7-22.
+			String string = ((hour + 12 - 1) % 12 + 1) + ":" + (halfHour % 2 == 0 ? "00" : "30") + (hour < 12 ? "am" : "pm");
+			timePrefsTable.setWidget(row, 0, new HTML(string));
+		}
+		
+		String days[] = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" };
+		for (int day = 0; day < 5; day++) {
+			int col = day + 1;
+			timePrefsTable.setWidget(0, col, new HTML(days[day]));
+		}
 
+		cells = new CellWidget[30][5];
+		
+		final int totalHalfHours = 30;
+		final int totalDays = 5;
+		
+		for (int halfHour = 0; halfHour < totalHalfHours; halfHour++) {
+			int row = halfHour + 1;
+			
+			for (int dayNum = 0; dayNum < totalDays; dayNum++) {
+				int col = dayNum + 1;
 
-
+				int desire = this.getPreference(strategy.getInstructor(), halfHour, dayNum);
+				final CellWidget cell = new CellWidget(halfHour, dayNum);
+				cell.addStyleName("desireCell");
+				cell.add(new HTML(Integer.toString(desire)));
+				/*cell.addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						cellWidgetClicked(cell, event);
+					}
+				});
+				
+				cell.addMouseDownHandler(new MouseDownHandler() {
+					@Override
+					public void onMouseDown(MouseDownEvent event) {
+						cellWidgetMouseDown(cell, event);
+					}
+				});
+				
+				cell.addMouseUpHandler(new MouseUpHandler() {
+					@Override
+					public void onMouseUp(MouseUpEvent event) {
+						cellWidgetMouseUp(cell, event);
+						lastSelectedCell = cell;
+						focus.setFocus(true);
+					}
+				});
+								
+				timePrefsTable.setWidget(row, col, cell);
+				
+				cells[halfHour][dayNum] = cell;
+			}
+		}*/
+	}
+	
+	public void redraw()
+	{
 		timePrefsTable = new FlexTable();
 		focus.add(timePrefsTable);
 		
@@ -194,24 +307,35 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 			timePrefsTable.setWidget(row, 0, new HTML(string));
 		}
 		
-		String days[] = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
-		for (int day = 0; day < 7; day++) {
-			int col = day + 1;
-			timePrefsTable.setWidget(0, col, new HTML(days[day]));
+		//String days[] = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" };
+		ArrayList<String> days = new ArrayList<String>();
+		if(monday.getValue()) days.add("Monday");
+		if(tuesday.getValue()) days.add("Tuesday");
+		if(wednesday.getValue()) days.add("Wednesday");
+		if(thursday.getValue()) days.add("Thursday");
+		if(friday.getValue()) days.add("Friday");
+		for (int day = 0; day < days.size(); day++) {
+			timePrefsTable.setWidget(0, day + 1, new HTML(days.get(day)));
 		}
-
-		cells = new CellWidget[30][7];
+		cells = new CellWidget[30][days.size()];
 		
 		final int totalHalfHours = 30;
-		final int totalDays = 7;
+		final int totalDays = days.size();
 		
 		for (int halfHour = 0; halfHour < totalHalfHours; halfHour++) {
 			int row = halfHour + 1;
 			
 			for (int dayNum = 0; dayNum < totalDays; dayNum++) {
 				int col = dayNum + 1;
+				int prefCol = 0;
+				
+				if(days.get(dayNum).equals("Monday")) prefCol = 0;
+				if(days.get(dayNum).equals("Tuesday")) prefCol = 1;
+				if(days.get(dayNum).equals("Wednesday")) prefCol = 2;
+				if(days.get(dayNum).equals("Thursday")) prefCol = 3;
+				if(days.get(dayNum).equals("Friday")) prefCol = 4;
 
-				int desire = this.getPreference(strategy.getInstructor(), halfHour, dayNum);
+				int desire = this.getPreference(strategy.getInstructor(), halfHour, prefCol);
 				final CellWidget cell = new CellWidget(halfHour, dayNum);
 				cell.addStyleName("desireCell");
 				cell.add(new HTML(Integer.toString(desire)));
@@ -265,8 +389,13 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 		selectRangeOfCells(anchorCell.halfHour, anchorCell.day, cell.halfHour, cell.day);
 		anchorCell = null;
 	}
+	
+	void CheckBoxClicked(ClickEvent event)
+	{
+		redraw();
+	}
 
-	void cellWidgetClicked(CellWidget cell, ClickEvent event) {
+	/*void cellWidgetClicked(CellWidget cell, ClickEvent event) {
 		if (event.isControlKeyDown()) {
 			toggleCellSelected(cell);
 			anchorCell = cell;
@@ -291,7 +420,7 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 			selectCell(cell);
 			anchorCell = cell;
 		}
-	}
+	}*/
 
 	void selectRangeOfCells(int fromHalfHour, int fromDay, int toHalfHour, int toDay) {
 		if (toHalfHour < fromHalfHour) {
