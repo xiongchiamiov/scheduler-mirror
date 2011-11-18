@@ -1,0 +1,43 @@
+Instructor Time Prefs
+
+<table>
+<tr>
+<th>Case No.</th><th>User Inputs and Command</th><th>Expected Output</th><th>Results</th>
+</tr>
+<tr>
+<td>1</td><td>Click on Sunday at 7am cell and hit 7</td><td>Preference changes to 7</td><td>PASS</td>
+</tr>
+<tr>
+<td>2</td><td>Mouse down on sunday at 7am, mouse up Monday at 8.</td><td>6 cells highlighted.</td><td>PASS</td>
+</tr>
+<tr>
+<td>3</td><td>Do test 2, then hit 5.</td><td>Preferences change to 5.</td><td>PASS</td>
+</tr>
+<tr>
+<td>4</td><td>Do test 3, then click Thursday at noon.</td><td>Only 1 cell highlighted.</td><td>PASS</td>
+</tr>
+<tr>
+<td>5</td><td>Click on Tuesday at 1030. Ctrl+click wednesday at 11:00.</td><td>2 cells highlighted.</td><td>PASS</td>
+</tr>
+<tr>
+<td>6</td><td>Do test 5, hit 3.</td><td>Preferences on both cells change to 3</td><td>PASS</td>
+</tr>
+<tr>
+<td>7</td><td>Mouse down on monday at 5. Mouse drag (not release to wednesday at 6).</td><td>9 cells highlighted to show they are about to be selected.</td><td>FIX</td>
+</tr>
+<tr>
+<td>8</td><td>Do test 7. Drag back to monday at 5 (don't release).</td><td>1 cell highlighted to show they are about to be selected.</td><td>FIX</td>
+</tr>
+<tr>
+<td>9</td><td>Click on Monday.</td><td>All of monday selected.</td><td>FIX</td>
+</tr>
+<tr>
+<td>10</td><td>Click on monday, then ctrl+click on wednesday.</td><td>All of monday and wednesday selected.</td><td>FIX</td>
+</tr>
+<tr>
+<td>11</td><td>Click on tuesday, then ctrl+click on 4:00pm. All of tuesday, and every day's 4pm should be selected.</td><td>FIX</td>
+</tr>
+<tr>
+<td>12</td><td>Click on Sunday at 10:00am. Hit 5. Hit enter. Hit 5.</td><td>Both sunday at 10 and 10:30 should be 5.</td><td>PASS</td>
+</tr>
+</table>
