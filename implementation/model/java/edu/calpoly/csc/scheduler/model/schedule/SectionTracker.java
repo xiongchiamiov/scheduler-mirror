@@ -19,7 +19,7 @@ public class SectionTracker
    /**
     * List of section numbers that've been added
     */
-   private BitSet sections;
+   private BitSet sections = new BitSet();
    /**
     * The course this class tracks sections for
     */
