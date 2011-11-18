@@ -1,0 +1,73 @@
+<html>
+<head>
+<title>
+Acceptance Test for Usability Prototype
+</title>
+</head>
+<body bgcolor=white>
+<p align=center>
+<font size=+2>
+<strong>Acceptance Test for Usabilty Prototype Release</strong>
+</font>
+</p>
+<br>
+<br>
+<p align=center>
+<strong><em>Acceptance Test for COURSES:</em></strong>
+</p>
+<p>
+<table align=center border=1 cellpadding=4>
+  <tr>
+    <td valign=top><strong>Case No.</strong>
+    <td valign=top><strong>User Inputs and Command</strong>
+    <td valign=top><strong>Expected Output</strong>
+    <td valign=top><strong>Remarks</strong>
+    <td valign=top><strong>Results</strong>
+  <tr>
+    <td valign=top>
+		1
+    <td valign=top>
+		Click the new button on the Courses table	
+    <td valign=top>
+		A new row pops up so that I can enter in data
+    <td valign=top>
+		A new row opened with default values
+    <td valign=top>PASS
+  <tr>
+    <td valign=top>
+		2
+    <td valign=top>
+		Fill in Row with bogus data
+    <td valign=top>
+		An error that tells me that my data is invalid, and an inability to save that bogus data in the database
+    <td valign=top>	
+		I was able to save bogus data by not clicking outside the table but instead clicking directly on the "Save All" button
+    <td valign=top>FAIL
+  <tr>
+    <td valign=top>
+		3
+    <td valign=top>
+		Click on an X next to one of the rows 
+    <td valign=top>
+		A row will be delete from the view table and the database once I press save	
+    <td valign=top>This worked
+    <td valign=top>PASS
+  <tr>
+    <td valign=top>
+		4
+    <td valign=top>
+		Make a lecture course have a lab by clicking on the lab dropdown
+    <td valign=top>
+		Once I press save, the lab section for a lecture will save to the database
+    <td valign=top>There are issues with this, you can't save a course as a Lab, and you cant designate a Lab for a lecture because labs are essentially broken, therefore they don't save to the database
+    <td valign=top>FAIL
+</table>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+</body>
+</html>
