@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="1138.23">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    table.t1 {border-collapse: collapse}
+    td.td1 {width: 33.0px; border-style: solid; border-width: 1.0px 1.0px 1.0px 1.0px; border-color: #cbcbcb #cbcbcb #cbcbcb #cbcbcb; padding: 0.0px 5.0px 0.0px 5.0px}
+    td.td2 {width: 161.0px; border-style: solid; border-width: 1.0px 1.0px 1.0px 1.0px; border-color: #cbcbcb #cbcbcb #cbcbcb #cbcbcb; padding: 0.0px 5.0px 0.0px 5.0px}
+    td.td3 {width: 155.0px; border-style: solid; border-width: 1.0px 1.0px 1.0px 1.0px; border-color: #cbcbcb #cbcbcb #cbcbcb #cbcbcb; padding: 0.0px 5.0px 0.0px 5.0px}
+    td.td4 {width: 89.0px; border-style: solid; border-width: 1.0px 1.0px 1.0px 1.0px; border-color: #cbcbcb #cbcbcb #cbcbcb #cbcbcb; padding: 0.0px 5.0px 0.0px 5.0px}
+    td.td5 {width: 142.0px; border-style: solid; border-width: 1.0px 1.0px 1.0px 1.0px; border-color: #cbcbcb #cbcbcb #cbcbcb #cbcbcb; padding: 0.0px 5.0px 0.0px 5.0px}
+  </style>
+</head>
+<body>
+<p class="p1"><br></p>
+<table cellspacing="0" cellpadding="0" class="t1">
+  <tbody>
+    <tr>
+      <td valign="middle" class="td1">
+        <p class="p2"><b>Case No.</b></p>
+      </td>
+      <td valign="middle" class="td2">
+        <p class="p2"><b>User Inputs and Command</b></p>
+      </td>
+      <td valign="middle" class="td3">
+        <p class="p2"><b>Expected Output</b></p>
+      </td>
+      <td valign="middle" class="td4">
+        <p class="p2"><b>Remarks</b></p>
+      </td>
+      <td valign="middle" class="td5">
+        <p class="p2"><b>Results</b></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="middle" class="td1">
+        <p class="p2">1</p>
+      </td>
+      <td valign="middle" class="td2">
+        <p class="p2">Click 'New' to add a new location. Keep all default empty values.</p>
+      </td>
+      <td valign="middle" class="td3">
+        <p class="p2">Message prompt along the lines of "Invalid value" since Building field should not be blank. Location item is not added to the list.</p>
+      </td>
+      <td valign="middle" class="td4">
+        <p class="p2">Prompt appears but the invalid locations item is added anyway.</p>
+      </td>
+      <td valign="middle" class="td5">
+        <p class="p2">Pass - with changes needed</p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="middle" class="td1">
+        <p class="p2">2</p>
+      </td>
+      <td valign="middle" class="td2">
+        <p class="p2">Add a new item using 'New'. Change values to Temp (Building), LAB (Type). Click 'Save All'</p>
+      </td>
+      <td valign="middle" class="td3">
+        <p class="p2">Item's values are as set and is saved to the list of locations, and is viewable when switching to another tab and back to locations.</p>
+      </td>
+      <td valign="middle" class="td4">
+        <p class="p2">Pass</p>
+      </td>
+      <td valign="middle" class="td5">
+        <p class="p2">Pass</p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="middle" class="td1">
+        <p class="p2">3</p>
+      </td>
+      <td valign="middle" class="td2">
+        <p class="p2">Select 'Temp' from location list, change Building value to 'Business'.<span class="Apple-converted-space"> </span></p>
+      </td>
+      <td valign="middle" class="td3">
+        <p class="p2">Row is highlighted hello (Modified). After clicking 'Save All', row is uncolored.</p>
+      </td>
+      <td valign="middle" class="td4">
+        <p class="p2">Pass</p>
+      </td>
+      <td valign="middle" class="td5">
+        <p class="p2">Pass</p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="middle" class="td1">
+        <p class="p2">4</p>
+      </td>
+      <td valign="middle" class="td2">
+        <p class="p2">Create a row with a duplicate value.</p>
+      </td>
+      <td valign="middle" class="td3">
+        <p class="p2">A prompt to the user that a row is a duplicate value.</p>
+      </td>
+      <td valign="middle" class="td4">
+        <p class="p2">Pass - message is right now the default 'invalid value'. A more meaningful message would be preferred.</p>
+      </td>
+      <td valign="middle" class="td5">
+        <p class="p2">Pass</p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="middle" class="td1">
+        <p class="p2">5</p>
+      </td>
+      <td valign="middle" class="td2">
+        <p class="p2">Select 'X' for Delete in the 'Business' row. Click 'Save All'</p>
+      </td>
+      <td valign="middle" class="td3">
+        <p class="p2">Selected row is highlighted red; after it is saved, row is removed from the list.<span class="Apple-converted-space"> </span></p>
+      </td>
+      <td valign="middle" class="td4">
+        <p class="p2">Inconsistent. Does not always delete value. No confirmation window to delete item.</p>
+      </td>
+      <td valign="middle" class="td5">
+        <p class="p2">Fail</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<p class="p1"><br></p>
+<p class="p1"><br></p>
+</body>
+</html>
