@@ -18,6 +18,7 @@ import edu.calpoly.csc.scheduler.model.schedule.Day;
 import edu.calpoly.csc.scheduler.model.schedule.ScheduleItem;
 import edu.calpoly.csc.scheduler.model.schedule.Week;
 import edu.calpoly.csc.scheduler.model.schedule.WeekAvail;
+import edu.calpoly.csc.scheduler.model.udb.UserData;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.DayGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
@@ -26,9 +27,22 @@ import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT.ProvidedEquipmentGW
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.TimeGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.TimePreferenceGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.UserDataGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.WeekGWT;
 
 public abstract class Conversion {
+	public static UserDataGWT toGWT(int id, UserData user) {
+		return new UserDataGWT(id, user.getUserId(), user.getPermission(), user.getScheduleName());
+	}
+	
+	public static UserData fromGWT(UserDataGWT gwt) {
+		UserData user = new UserData();
+		user.setScheduleName(gwt.getScheduleName());
+		user.setPermission(gwt.getPermissionLevel());
+		user.setUserId(gwt.getUserName());
+		return user;
+	}
+	
 	public static InstructorGWT toGWT(int id, Instructor instructor) {
 		InstructorGWT result = new InstructorGWT();
 		result.setId(id);

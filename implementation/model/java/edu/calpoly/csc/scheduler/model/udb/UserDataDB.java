@@ -8,7 +8,7 @@ import edu.calpoly.csc.scheduler.model.db.AbstractDatabase;
 import edu.calpoly.csc.scheduler.model.db.DbData;
 import edu.calpoly.csc.scheduler.model.db.SQLDB;
 
-public class UserDataDB extends AbstractDatabase<UserData>
+/*public class UserDataDB extends AbstractDatabase<UserData>
 {
    public static final String TABLENAME    = "userdata";
    public static final String USERID       = "userid";
@@ -60,3 +60,4 @@ public class UserDataDB extends AbstractDatabase<UserData>
    }
 
 }
+*/

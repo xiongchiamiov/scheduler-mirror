@@ -18,11 +18,11 @@ import edu.calpoly.csc.scheduler.view.web.client.table.StaticSetter;
 import edu.calpoly.csc.scheduler.view.web.client.table.StringColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.TableConstants;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.UserGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.UserDataGWT;
 
 public class AdminConfigView extends ScrollPanel implements IView<ScheduleNavView> {
 	private GreetingServiceAsync service;
-	private OsmTable<UserGWT> table;
+	private OsmTable<UserDataGWT> table;
 	int nextLocationID = 1;
 	private String scheduleName;
 
@@ -45,42 +45,42 @@ public class AdminConfigView extends ScrollPanel implements IView<ScheduleNavVie
 		final LoadingPopup popup = new LoadingPopup();
 		popup.show();
 						
-		table = new OsmTable<UserGWT>(
-				new Factory<UserGWT>() {
-					public UserGWT create() {
-						return new UserGWT();
+		table = new OsmTable<UserDataGWT>(
+				new Factory<UserDataGWT>() {
+					public UserDataGWT create() {
+						return new UserDataGWT();
 					}
-					public UserGWT createHistoryFor(UserGWT course) {
-						UserGWT i = course.clone();
+					public UserDataGWT createHistoryFor(UserDataGWT course) {
+						UserDataGWT i = course.clone();
 //						i.setId(-course.getId());
 						return i;
 					}
 				},
-				new OsmTable.SaveHandler<UserGWT>() {
+				new OsmTable.SaveHandler<UserDataGWT>() {
 					public void saveButtonClicked() {
 						save();
 					}
 				});
 				
-		table.addColumn(new StringColumn<UserGWT>(TableConstants.CONFIG_USERNAME, "6em",
-				new StaticGetter<UserGWT, String>() {
-					public String getValueForObject(UserGWT object) { return object.getCourseName(); }
+		table.addColumn(new StringColumn<UserDataGWT>(TableConstants.CONFIG_USERNAME, "6em",
+				new StaticGetter<UserDataGWT, String>() {
+					public String getValueForObject(UserDataGWT object) { return object.getCourseName(); }
 				},
-				new StaticSetter<UserGWT, String>() {
-					public void setValueInObject(UserGWT object, String newValue) { object.setCourseName(newValue); }
+				new StaticSetter<UserDataGWT, String>() {
+					public void setValueInObject(UserDataGWT object, String newValue) { object.setCourseName(newValue); }
 				},
 				String.CASE_INSENSITIVE_ORDER, null));
 		
-		table.addColumn(new SelectColumn<UserGWT>(TableConstants.CONFIG_LEVEL, "6em",
+		table.addColumn(new SelectColumn<UserDataGWT>(TableConstants.CONFIG_LEVEL, "6em",
 				
 				new String[] { "0", "1", "2" },
 				
-				new StaticGetter<UserGWT, String>() {
-					public String getValueForObject(UserGWT object) { return object.getCourseName(); }
+				new StaticGetter<UserDataGWT, String>() {
+					public String getValueForObject(UserDataGWT object) { return object.getCourseName(); }
 				},
 				
-				new StaticSetter<UserGWT, String>() {
-					public void setValueInObject(UserGWT object, String newValue) { object.setCourseName(newValue); }
+				new StaticSetter<UserDataGWT, String>() {
+					public void setValueInObject(UserDataGWT object, String newValue) { object.setCourseName(newValue); }
 				},
 				
 				String.CASE_INSENSITIVE_ORDER));		
