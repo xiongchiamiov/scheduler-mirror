@@ -1,0 +1,49 @@
+<html>
+<table align=center border=1 cellpadding=4>
+  <tr>
+    <td valign=top><strong>Case No.</strong>
+    <td valign=top><strong>User Inputs and Command</strong>
+    <td valign=top><strong>Expected Output</strong>
+    <td valign=top><strong>Result</strong>&nbsp;&nbsp;
+    <td valign=top><strong>Remarks</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <tr>
+    <td valign=top>1
+    <td valign=top>
+Type  "tvitti", then press 'Enter'
+    <td valign=top>
+Program should log in, same as clicking 'Login'
+    <td valign=top>
+Fail
+    <td valign=top>
+Program does not respond to key press. Not mission-critical, but should be fixed at earliest convenience
+  <tr>
+    <td valign=top>2
+    <td valign=top>
+Enter "tvitti", then press the 'Login' button.
+    <td valign=top>
+Program should log in normally
+    <td valign=top>
+Pass
+  <tr>
+    <td valign=top>3
+    <td valign=top>
+Type "junk",  then press the 'Login' button.
+    <td valign=top>
+"junk" is not a user, so the login operation should fail.
+    <td valign=top>
+Fail
+    <td valign=top>
+This is actually acceptable behavior for usability, but some form of security should exist in the real prototype
+  <tr>
+    <td valign=top>4
+    <td valign=top>
+Press "F5"
+    <td valign=top>
+The page should refresh without altering or damaging the session
+    <td valign=top>
+Fail
+    <td valign=top>
+The program resets itself. Unacceptable behavior.
+</table>
+</body>
+</html>

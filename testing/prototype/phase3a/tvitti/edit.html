@@ -1,0 +1,125 @@
+<html>
+<table align=center border=1 cellpadding=4>
+  <tr>
+    <td valign=top><strong>Case No.</strong>
+    <td valign=top><strong>User Inputs and Command</strong>
+    <td valign=top><strong>Expected Output</strong>
+    <td valign=top><strong>Result</strong>&nbsp;&nbsp;
+    <td valign=top><strong>Remarks</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <tr>
+    <td valign=top>1
+    <td valign=top>
+Click 'Filter', then hide Friday
+    <td valign=top>
+Calendar should hide all Friday courses
+    <td valign=top>
+Pass
+    <td valign=top>
+Consider a button on the filter popup labelled 'Reset' to restore filters to default
+  <tr>
+    <td valign=top>2
+    <td valign=top>
+Drag class from 'Available' to 'To Schedule'. Repeat.
+    <td valign=top>
+'Sections to Offer' should increase by one
+    <td valign=top>
+Fail
+    <td valign=top>
+Error "No more courses to schedule". Each additional drag over should increase section count.
+  <tr>
+    <td valign=top>3
+    <td valign=top>
+Click 'Generate Schedule'
+    <td valign=top>
+Algorithm should find a legal location for sample course
+    <td valign=top>
+Fail
+    <td valign=top>
+Algorithm schedules class at 7am on Monday in 0-0, but Chem 110 is already in 0-0. Perhaps this should be room TBD (NOT 0-0)?
+  <tr>
+    <td valign=top>4
+    <td valign=top>
+Drag course back to 'Available' to remove from schedule
+    <td valign=top>
+Course should go away
+    <td valign=top>
+Pass
+    <td valign=top>
+  <tr>
+    <td valign=top>5
+    <td valign=top>
+Drag 'Chem 316' to another time and click 'Schedule Course' to apply
+    <td valign=top>
+Course moves to new slot on calendar
+    <td valign=top>
+Pass
+    <td valign=top>
+  <tr>
+    <td valign=top>6
+    <td valign=top>
+Double click 'Chem 316', change to MWF, and click 'Schedule Course' to apply
+    <td valign=top>
+Course is added to MWF time slot and time is shortened to match length requirement
+    <td valign=top>
+Pass
+    <td valign=top>
+  <tr>
+    <td valign=top>7
+    <td valign=top>
+Change 'Chem 316' to an illegal time pattern
+    <td valign=top>
+An error message will prevent this action
+    <td valign=top>
+Fail
+    <td valign=top>
+Error message works, but class is rescheduled as a red block. It should never have changed from its valid state!
+  <tr>
+    <td valign=top>8
+    <td valign=top>
+Drag 'Chem 371' to a new day and time
+    <td valign=top>
+Upon drop, 'Chem 371' snaps to the new time slot (if legal)
+    <td valign=top>
+Fail
+    <td valign=top>
+Day popup still appears, then class vanishes after clicking apply!!!
+  <tr>
+    <td valign=top>9
+    <td valign=top>
+Drag a course by its colored rectangle and hover around, using color-coding to find a spot
+    <td valign=top>
+Course drags with mouse and background changes to indicate validity of new time slot
+    <td valign=top>
+Fail
+    <td valign=top>
+Only text drags, no color changing
+  <tr>
+    <td valign=top>10
+    <td valign=top>
+Hover mouse over a course
+    <td valign=top>
+Tooltip should display all related information
+    <td valign=top>
+Pass
+    <td valign=top>
+  <tr>
+    <td valign=top>11
+    <td valign=top>
+Double-click a course in 'Available', 'To Schedule', or on calendar
+    <td valign=top>
+Go to view / edit mode for that course
+    <td valign=top>
+Fail
+    <td valign=top>
+Nothing happens, or day pattern popup appears
+</table>
+<h3>General notes:</h3>
+<ul>
+<li>New schedule has populated courses. Should be a blank calendar.
+<li>No available courses are shown, but home screen does not provide the ability to add courses before creating a new schedule.
+<li>Fake schedule shows red classes, not adhering to requirements slides.
+<li>Newly created schedule name does not display in top-level dropdown as current schedule.
+<li>Gridlines are confusing and differing in count, size, and spacing. Should be standardized, as per requirements.
+</ul>
+</body>
+</html>
