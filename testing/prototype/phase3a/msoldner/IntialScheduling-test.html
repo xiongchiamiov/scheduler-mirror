@@ -1,0 +1,110 @@
+<!-- saved from url=(0082)http://users.csc.calpoly.edu/~gfisher/classes/309/handouts/acceptance-testing.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>
+User Acceptance Testing
+</title>
+</head>
+<body bgcolor="white">
+<p align="center">
+<font size="+2">
+<strong>CSC 402 User Acceptance Testing</strong>
+</font>
+</p>
+<br>
+<br>
+
+<h3>
+Acceptance Test Plan
+</h3>
+<p>
+The tabular format of an acceptance test plan is the following:
+</p><blockquote>
+<table align="center" border="1" cellpadding="4">
+  <tbody><tr>
+    <td valign="top"><strong>Case No.</strong>
+    </td><td valign="top"><strong>User Inputs and Command</strong>
+    </td><td valign="top"><strong>Expected Output</strong>
+    </td><td valign="top"><strong>Remarks</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </td><td valign="top"><strong>Results</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </td></tr><tr>
+    <td valign="top">1
+    </td><td valign="top">Drag class onto schedule. 
+    </td><td valign="top">Class is sceduled and decremented.
+    </td><td valign="top">Needs to decriment.
+    </td><td valign="top">Didn't decrement from the list but added successfully.
+	</td></tr><tr>
+	<tr>
+    <td valign="top">2
+    </td><td valign="top">Delete a course from the schedule. 
+    </td><td valign="top">Class is deleted from the schedule and added back to the list.
+    </td><td valign="top">Can't delete the course from the slot. The name is gone but the block is still colored.
+    </td><td valign="top">Didn't decrement from the list but added successfully.
+	</td></tr><tr>
+	<tr>
+    <td valign="top">3
+    </td><td valign="top">Add one class to the autogenerate. 
+    </td><td valign="top">Class is moved to autofil.
+    </td><td valign="top">&nbsp
+    </td><td valign="top">Success.
+	</td></tr><tr>
+	<tr>
+    <td valign="top">4
+    </td><td valign="top">Add one class with multiple sections into autofill. 
+    </td><td valign="top">Class is moved and decremented.
+    </td><td valign="top">Needs to decriment.
+    </td><td valign="top">Didn't decrement from the list but all of them moved successfully.
+	</td></tr><tr>
+	<tr>
+    <td valign="top">5
+    </td><td valign="top">Move a class from the schedule to a different time. 
+    </td><td valign="top">Class is moved.
+    </td><td valign="top">&nbsp
+    </td><td valign="top">Success.
+	</td></tr><tr>
+	<tr>
+    <td valign="top">6
+    </td><td valign="top">Drag class from autofill to schedule. 
+    </td><td valign="top">Class is sceduled and decremented.
+    </td><td valign="top">&nbsp
+    </td><td valign="top">Success.
+	</td></tr><tr>
+	<tr>
+    <td valign="top">7
+    </td><td valign="top">Filter a class. 
+    </td><td valign="top">Schedule is filtered.
+    </td><td valign="top"&nbsp
+    </td><td valign="top">Success.
+	</td></tr><tr>
+	<tr>
+    <td valign="top">8
+    </td><td valign="top">Remove the filter. 
+    </td><td valign="top">Schedule restores to all scheduled classes.
+    </td><td valign="top">Can't get back to full schedule.
+    </td><td valign="top">Stuck with a filtered view.
+	</td></tr><tr>
+	<tr>
+    <td valign="top">9
+    </td><td valign="top">Filter a course. 
+    </td><td valign="top">Filtered course doesn't shown.
+    </td><td valign="top">&nbsp
+    </td><td valign="top">Success.
+	</td></tr><tr>
+	<tr>
+    <td valign="top">10
+    </td><td valign="top">Filter a room. 
+    </td><td valign="top">All classes not in that room are displayed.
+    </td><td valign="top">&nbsp
+    </td><td valign="top">Success.
+	</td></tr><tr>
+	<tr>
+    <td valign="top">11
+    </td><td valign="top">Save schedule.
+    </td><td valign="top">Schedule is saved.
+    </td><td valign="top">Obviously not implemented yet.
+    </td><td valign="top">Eventually implemented.
+	</td></tr><tr>
+</tbody></table>
+</blockquote>
+<p>Overall it's great. The filtering needs to be able to be removed completely so that you can see the whole schedule. Also a way to delete the scheduled course. Good work guys and gals!
+
+</p></body></html>
