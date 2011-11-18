@@ -1,5 +1,7 @@
 package edu.calpoly.csc.scheduler.view.web.client.views;
 
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.Window.ClosingEvent;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -40,6 +42,14 @@ public class MainView extends VerticalPanel {
 		add(contents = new SimplePanel());
 		contents.add(new LoginView(this, service));
 		
+		
+		// set exit handler
+		Window.addWindowClosingHandler(new Window.ClosingHandler() {
+			public void onWindowClosing(ClosingEvent event) {
+				
+				// turn on warning for navigating away
+				event.setMessage("You are about to navigate away. All unsaved data will be lost.");
+		}});
 	}
 	
 	public void onUserLoggedIn(String newUsername) {
