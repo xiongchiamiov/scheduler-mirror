@@ -39,16 +39,16 @@ class ListBoxDropController extends AbstractDropController
    if(!mouseListBox.isAvailableBox())
    {
     course = ((ScheduleItemHTML)context.draggable).getScheduleItem().getCourse().clone();
-    itemIndex = mouseListBox.contains(new CourseListItem(course));
+    itemIndex = mouseListBox.contains(new CourseListItem(course, true));
     sectionsIncluded = mouseListBox.getSectionsInBox(course);
     if (itemIndex >= 0)
     {
      course.setNumSections(sectionsIncluded + 1);
-     mouseListBox.setWidget(itemIndex, new CourseListItem(course));
+     mouseListBox.setWidget(itemIndex, new CourseListItem(course, true));
     } else
     {
      course.setNumSections(1);
-     mouseListBox.add(new CourseListItem(course));
+     mouseListBox.add(new CourseListItem(course, true));
     }
    }
   } else
@@ -74,11 +74,11 @@ class ListBoxDropController extends AbstractDropController
        if (itemIndex >= 0)
        {
         course.setNumSections(sectionsIncluded + 1);
-        mouseListBox.setWidget(itemIndex, new CourseListItem(course));
+        mouseListBox.setWidget(itemIndex, new CourseListItem(course, true));
        } else
        {
         course.setNumSections(1);
-        mouseListBox.add(new CourseListItem(course));
+        mouseListBox.add(new CourseListItem(course, true));
        }
       } else
       {

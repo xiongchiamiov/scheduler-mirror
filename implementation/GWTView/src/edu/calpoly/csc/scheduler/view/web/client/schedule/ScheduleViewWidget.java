@@ -276,7 +276,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
      }
      for (CourseGWT course : result)
      {
-      dualListBoxCourses.addLeft(new CourseListItem(course));
+      dualListBoxCourses.addLeft(new CourseListItem(course, false));
      }
      registerDrops();
     }
@@ -412,7 +412,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
        courseHolder.setDept(scheduleItem.getDept());
        courseHolder.setCatalogNum(scheduleItem.getCatalogNum());
        sectionsIncluded = includedListBox.getSectionsInBox(courseHolder);
-       itemIndex = includedListBox.contains(new CourseListItem(courseHolder));
+       itemIndex = includedListBox.contains(new CourseListItem(courseHolder, true));
        // If the included list box contains sections of this course
        if (itemIndex >= 0)
        {
@@ -431,7 +431,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
             .getCourse();
           courseHolder.setNumSections(courseHolder.getNumSections() - 1);
           includedListBox
-            .setWidget(itemIndex, new CourseListItem(courseHolder));
+            .setWidget(itemIndex, new CourseListItem(courseHolder, true));
          }
          // Remove the course if there is only one section
          else

@@ -199,7 +199,7 @@ class MouseListBox extends Composite
  public int getSectionsInBox(CourseGWT course)
  {
   int count = 0;
-  int itemIndex = contains(new CourseListItem(course));
+  int itemIndex = contains(new CourseListItem(course, true));
 
   if (itemIndex >= 0)
   {

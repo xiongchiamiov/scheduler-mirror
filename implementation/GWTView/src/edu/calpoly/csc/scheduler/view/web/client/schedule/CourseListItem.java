@@ -10,26 +10,22 @@ public class CourseListItem extends Label
  private boolean isScheduled = false;
  public int sectionsScheduled = 0;
 
- public CourseListItem(CourseGWT course)
+ public CourseListItem(CourseGWT course, boolean showSections)
  {
-  super(course.getDept() + " " + course.getCatalogNum() + " ("
-    + course.getNumSections() + ")");
+  String itemText = course.getDept() + " " + course.getCatalogNum() + "(" 
+   + course.getType() + ")"; 
+  
+  if(showSections)
+  {
+   itemText = itemText.concat(" (" + course.getNumSections() + ")");
+  }
+  setText(itemText);
   this.course = course;
  }
 
  CourseGWT getCourse()
  {
   return course;
- }
-
- public void setIsScheduled()
- {
-  isScheduled = true;
- }
-
- public boolean isScheduled()
- {
-  return isScheduled;
  }
 
  public boolean sameCourse(CourseListItem item)

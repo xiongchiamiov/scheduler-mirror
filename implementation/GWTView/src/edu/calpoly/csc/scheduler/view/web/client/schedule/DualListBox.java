@@ -204,7 +204,7 @@ public class DualListBox extends AbsolutePanel
    if (right.contains(((CourseListItem) widget)) < 0
      && scheduleController.getSectionsOnSchedule(((CourseListItem) widget).getCourse()) <= 0)
    {
-    right.add(new CourseListItem(((CourseListItem) widget).getCourse()));
+    right.add(new CourseListItem(((CourseListItem) widget).getCourse(), true));
    }
   }
  }
@@ -225,7 +225,7 @@ public class DualListBox extends AbsolutePanel
    if (right.contains(((CourseListItem) item)) < 0
      && scheduleController.getSectionsOnSchedule(((CourseListItem) item).getCourse()) <= 0)
    {
-    right.add(new CourseListItem(((CourseListItem) item).getCourse()));
+    right.add(new CourseListItem(((CourseListItem) item).getCourse(), true));
    }
   }
  }
