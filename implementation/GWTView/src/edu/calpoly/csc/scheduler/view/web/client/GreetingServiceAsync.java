@@ -54,4 +54,5 @@ public interface GreetingServiceAsync {
 	void saveLocations(List<LocationGWT> added,
 			List<LocationGWT> edited, List<LocationGWT> removed,
 			AsyncCallback<List<LocationGWT>> callback);
+	void exportCSV(AsyncCallback<Integer> asyncCallback);
 }

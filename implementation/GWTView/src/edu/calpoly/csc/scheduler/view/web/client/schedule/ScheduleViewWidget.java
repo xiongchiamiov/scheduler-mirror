@@ -241,6 +241,9 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
    }
   }));
   
+  interfacePanel.add(new CSVButton(greetingService).getButton());
+  
+  
   mainPanel.add(interfacePanel);
  }
 

@@ -1,6 +1,7 @@
 package edu.calpoly.csc.scheduler.view.web.server;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -400,5 +401,17 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 
 		return getCourses();
 	}
-
+	
+	@Override
+	public int exportCSV(){
+		
+		if (schedule == null) {
+			schedule = new Schedule(model.getInstructors(),
+					model.getLocations());
+		}
+		
+		/** TODO replace new Date with export to CSV String */
+		//return CSVDownload.save(model.exportToCSV(schedule));
+		return CSVDownload.save(new Date().toString());
+	}
 }

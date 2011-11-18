@@ -16,6 +16,15 @@
     <url-pattern>/gwtview/greet</url-pattern>
   </servlet-mapping>
   
+  <servlet>
+    <servlet-name>exportServlet</servlet-name>
+    <servlet-class>edu.calpoly.csc.scheduler.view.web.server.CSVDownload</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>exportServlet</servlet-name>
+    <url-pattern>/gwtview/export</url-pattern>
+  </servlet-mapping>
+  
   <!-- Default page to serve -->
   <welcome-file-list>
     <welcome-file>GWTView.html</welcome-file>

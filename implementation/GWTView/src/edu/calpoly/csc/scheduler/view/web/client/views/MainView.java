@@ -44,12 +44,7 @@ public class MainView extends VerticalPanel {
 		
 		
 		// set exit handler
-		Window.addWindowClosingHandler(new Window.ClosingHandler() {
-			public void onWindowClosing(ClosingEvent event) {
-				
-				// turn on warning for navigating away
-				event.setMessage("You are about to navigate away. All unsaved data will be lost.");
-		}});
+		//WindowHandler.setExitWarning(true);
 	}
 	
 	public void onUserLoggedIn(String newUsername) {

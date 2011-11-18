@@ -51,5 +51,5 @@ public interface GreetingService extends RemoteService {
 	List<ScheduleItemGWT> removeScheduleItem(ScheduleItemGWT removed);
 	void saveSchedule();
 	List<ScheduleItemGWT> getSchedule();
-	
+	int exportCSV();
 }
