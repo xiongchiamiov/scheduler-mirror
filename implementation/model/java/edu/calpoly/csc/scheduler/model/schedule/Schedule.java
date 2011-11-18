@@ -107,9 +107,110 @@ import edu.calpoly.csc.scheduler.model.schedule.CouldNotBeScheduledException.*;
  * <h1>2: Scheduling Labs</h1>
  * 
  * There's a difference in the type of labs which are scheduled. There are 
- * <b>teathered</b> and <b>unteathered</b> labs. 
+ * <b>teathered</b> and <b>unteathered</b> labs. <br>
+ * <br>
+ * Teathered labs cannot be dragged onto the schedule; teathered can be.<br>
+ * <br>
+ * If a lecture section is scheduled and that lecture has a lab, the lab will
+ * be automatically scheduled right after the lecture. <b>This is a bug!</b> See
  * 
  * <h2>2.1: Teathered Labs</h2>
+ * 
+ * Teathered labs are always scheduled directly after the lecture they're 
+ * paired with. For example, a 101 section taught MWF from 10a-11a would have 
+ * its lab on MWF from 11a-12p. Basically, the end time of the lecture is the
+ * start time of the lab.<br>
+ * <br>
+ * These labs should <b>not</b> be dragged and dropped onto the schedule. If you
+ * do that, there's no lecture information, so the labs don't know where they're 
+ * supposed to go. Thus, <b>the only way to schedule a teathered lab is to 
+ * schedule its corresponding lecture component first</b>.
+ * 
+ * <h2>2.2: Unteathered Labs</h2>
+ * 
+ * As you might guess, unteathered labs don't have to come direclty after 
+ * they're corresponding lectures. They can go on any day and be taught at any
+ * time. Additionally, they can be dragged and dropped onto the schedule, b/c 
+ * they don't need the info on their lecture components to place themselves on
+ * the schedule.<br>
+ * <br>
+ * Be aware of an unusual quirk of scheduling these types of labs: if they are
+ * dragged and dropped onto the schedule, the number of sections they contain
+ * will be the number of sections scheduled. However, if you schedule their 
+ * lecture component first, a different rule is used: lab sections will be 
+ * scheduled until the amount of lab enrollment available meets or exceeds the
+ * enrollment available from one section of a lecture. For example, a lecture 
+ * section with 90 students would get 3 sections of lab with 30 students.<br>
+ * <br>
+ * A possible solution to this would be to not auto-schedule labs for lectures
+ * by enrollment numbers unless they are teathered. Thus, a lecture containing
+ * an unteathered lab would not start up lab scheduling...that lab would only 
+ * be scheduling once it was encountered in the list of courses passed into 
+ * {@link #generate(Collection)}. 
+ * 
+ * <h2>2.3: Tracking Lab Sections</h2> 
+ * 
+ * Regardless of the type of lab, the correct SectionTracker will be found, so
+ * you'll always get good, unique section numbers for each lab.
+ * 
+ * <h2>2.4: Bug When Dragging Labs</h2>
+ * 
+ * Unteathered labs can be over-scheduled under the right conditions. 
+ * 
+ * <h3>Bug details</h3>
+ * 
+ * Imagine the following scenario:
+ * 
+ * <ul>
+ *    <li>
+ *       Lecture A (3 sections of 30 students) has Lab B (3 sections of 30 
+ *       students). Note that the ratio of lectures to labs is 1:1
+ *    </li>
+ *    <li> 
+ *       Lab B is unteathered.
+ *    </li>
+ *    <li>
+ *       User drags Lab B onto the schedule; one section is scheduled.
+ *    </li>
+ *    <li>
+ *       User does the above step twice more. At this point, there are 3 
+ *       sections of B on the schedule. This is the amount that should be 
+ *       scheduled.
+ *    </li>
+ *    <li>
+ *       User drags A onto the schedule, or calls the scheduling algorithm with
+ *       A in the list of courses to schedule
+ *    </li>
+ *    <li>
+ *       When A is scheduled, the algorith will see that has lab B and schedule
+ *       a section of it. At this point, there will be 4 sections of B when it
+ *       was only supposed to have 3.  
+ *    </li>
+ * </ul>
+ * 
+ * The above situation schedules more sections of a lab than was necessary. This
+ * is b/c enrollment info is not stored between instances of the scheduling 
+ * algorithm running. 
+ * 
+ * <h3>Possible Sol'n</h3>
+ * 
+ * Put in a HashMap, keyed by Course objects, which yield total enrollment the
+ * course provides. (So, 3 sections of a course with 35 students would have 
+ * the value 105 stored under its enrollment info). This sol'n relies on the 
+ * following, unwritten rule:<br>
+ * <br>
+ * 
+ * <code>
+ *  (# lecture sections * lecture enrollment) == 
+ *  (# lab sections * lab enrollment)"
+ * </code>
+ * 
+ * <br>
+ * Basically, this sol'n disregards the need for section numbers for labs. The
+ * number of lab sections determined by how many sections of it are needed to 
+ * meet the enrollment requirements imposed by the lecture component.<br>
+ * <br>
+ * To implement this fix, the View will have to notify the user  
  * 
  * <h1>Further Design Suggestions/Options</h1>
  * 
@@ -125,7 +226,7 @@ public class Schedule extends DbData implements Serializable
 	/**
     * Used for debugging. Toggle it to get debugging output
     */
-   private static final boolean DEBUG = !true;
+   private static final boolean DEBUG = !true; // !true == false ; )
    
    /**
     * Prints a message to STDERR if DEBUG is true
@@ -509,7 +610,7 @@ public class Schedule extends DbData implements Serializable
       for (Course c : this.cSourceList)
       {
          debug ("MAKING SI's FOR COURSE " + c);
-         SectionTracker st = this.sections.get(c);
+         SectionTracker st = getSectionTracker(c);
          for (int i = 0; i < c.getNumOfSections(); i ++)
          {
             debug ("SECTIONS SCHEDULED: " + st.getCurSection()
