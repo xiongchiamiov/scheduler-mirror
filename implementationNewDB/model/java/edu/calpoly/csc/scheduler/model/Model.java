@@ -147,7 +147,8 @@ public class Model implements Serializable
    {
       int sid = sched_map.get(s).getScheduleDBId();
       Schedule sched = new Schedule();
-      sched.setId(sid);
+      sched.setScheduleDBId(sid);
+      sched.setDbid(sid);
 
       db.getScheduleDB().removeData(sched);
    }
