@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
@@ -14,6 +15,7 @@ import edu.calpoly.csc.scheduler.model.db.Time;
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
 import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
 import edu.calpoly.csc.scheduler.model.db.ldb.Location;
+import edu.calpoly.csc.scheduler.model.db.udb.UserData;
 import edu.calpoly.csc.scheduler.model.schedule.CouldNotBeScheduledException;
 import edu.calpoly.csc.scheduler.model.schedule.Day;
 import edu.calpoly.csc.scheduler.model.schedule.Schedule;
@@ -26,6 +28,7 @@ import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.Pair;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemList;
+import edu.calpoly.csc.scheduler.view.web.shared.UserDataGWT;
 
 /**
  * The server side implementation of the RPC service.
@@ -45,8 +48,13 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
-	public Map<String, Integer> getScheduleNames() {
-		return model.getSchedules();
+	public Map<String, UserDataGWT> getScheduleNames() {
+		Map<String, UserDataGWT> availableSchedules = new HashMap<String, UserDataGWT>();
+		for (Entry<String, UserData> entry : model.getSchedules().entrySet()) {
+			assert(entry.getValue() != null);
+			availableSchedules.put(entry.getKey(), Conversion.toGWT(entry.getValue()));
+		}
+		return availableSchedules;
 	}
 
 	@Override

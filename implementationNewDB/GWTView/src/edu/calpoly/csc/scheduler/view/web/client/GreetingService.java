@@ -14,6 +14,7 @@ import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.Pair;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemList;
+import edu.calpoly.csc.scheduler.view.web.shared.UserDataGWT;
 
 /**
  * The client side stub for the RPC service.
@@ -24,7 +25,7 @@ public interface GreetingService extends RemoteService {
 	void login(String username);
 	
 	// Managing Schedules
-	Map<String, Integer> getScheduleNames();
+	Map<String, UserDataGWT> getScheduleNames();
 	Integer openNewSchedule(String newScheduleName);
 	Pair<Integer, InstructorGWT> openExistingSchedule(int scheduleID);
 	int copySchedule(int existingScheduleID, String scheduleName);

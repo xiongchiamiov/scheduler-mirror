@@ -17,7 +17,6 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
@@ -27,13 +26,14 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.Pair;
+import edu.calpoly.csc.scheduler.view.web.shared.UserDataGWT;
 
 public class SelectScheduleView extends VerticalPanel implements IView<MainView> {
 	private GreetingServiceAsync service;
 	private ListBox listBox;
 	private MainView mainView;
 	
-	Map<String, Integer> schedulesIDsAndNames;
+	Map<String, UserDataGWT> availableSchedulesByName;
 	
 	public SelectScheduleView(final MainView mainView, final GreetingServiceAsync service) {
 		this.mainView = mainView;
@@ -200,19 +200,19 @@ public class SelectScheduleView extends VerticalPanel implements IView<MainView>
 					
 					@Override
 					public void onSuccess(Void derp) {
-						service.getScheduleNames(new AsyncCallback<Map<String,Integer>>() {
+						service.getScheduleNames(new AsyncCallback<Map<String,UserDataGWT>>() {
 							@Override
 							public void onFailure(Throwable caught) {
 								Window.alert("There was an error getting the schedules: " + caught.getMessage());
 							}
 							
 							@Override
-							public void onSuccess(Map<String, Integer> result) {
-								schedulesIDsAndNames = result;
+							public void onSuccess(Map<String, UserDataGWT> result) {
+								availableSchedulesByName = result;
 								
 								listBox.clear();
-								for (String scheduleName : schedulesIDsAndNames.keySet())
-									listBox.addItem(scheduleName, schedulesIDsAndNames.get(scheduleName).toString());
+								for (String scheduleName : availableSchedulesByName.keySet())
+									listBox.addItem(scheduleName, availableSchedulesByName.get(scheduleName).getScheduleID().toString());
 							}
 						});
 					}
@@ -225,19 +225,19 @@ public class SelectScheduleView extends VerticalPanel implements IView<MainView>
 	public void onLoad() {
 		super.onLoad();
 
-		service.getScheduleNames(new AsyncCallback<Map<String,Integer>>() {
+		service.getScheduleNames(new AsyncCallback<Map<String,UserDataGWT>>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				Window.alert("There was an error getting the schedules: " + caught.getMessage());
 			}
 			
 			@Override
-			public void onSuccess(Map<String, Integer> result) {
-				schedulesIDsAndNames = result;
+			public void onSuccess(Map<String, UserDataGWT> result) {
+				availableSchedulesByName = result;
 				
 				listBox.clear();
-				for (String scheduleName : schedulesIDsAndNames.keySet())
-					listBox.addItem(scheduleName, schedulesIDsAndNames.get(scheduleName).toString());
+				for (String scheduleName : availableSchedulesByName.keySet())
+					listBox.addItem(scheduleName, availableSchedulesByName.get(scheduleName).getScheduleID().toString());
 			}
 		});
 	}
@@ -320,8 +320,8 @@ public class SelectScheduleView extends VerticalPanel implements IView<MainView>
 		final ListBox box = new ListBox();
 
 		int index = 0;
-		for (String scheduleName : schedulesIDsAndNames.keySet()) {
-			Integer id = schedulesIDsAndNames.get(scheduleName);
+		for (String scheduleName : availableSchedulesByName.keySet()) {
+			Integer id = availableSchedulesByName.get(scheduleName).getScheduleID();
 			box.addItem(scheduleName, id.toString());
 			if (id == selectedScheduleID)
 				box.setSelectedIndex(index);

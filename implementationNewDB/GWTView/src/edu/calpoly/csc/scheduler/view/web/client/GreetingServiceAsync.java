@@ -1,6 +1,5 @@
 package edu.calpoly.csc.scheduler.view.web.client;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -11,13 +10,14 @@ import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemList;
+import edu.calpoly.csc.scheduler.view.web.shared.UserDataGWT;
 
 /**
  * The async counterpart of <code>GreetingService</code>.
  */
 public interface GreetingServiceAsync {
 	void login(String username, AsyncCallback<Void> callback) throws IllegalArgumentException;
-	void getScheduleNames(AsyncCallback<Map<String, Integer>> callback) throws IllegalArgumentException;
+	void getScheduleNames(AsyncCallback<Map<String, UserDataGWT>> callback);
 	
 	void openNewSchedule(String newScheduleName, AsyncCallback<Integer> callback) throws IllegalArgumentException;
 	void openExistingSchedule(

@@ -64,10 +64,10 @@ public class AdminConfigView extends ScrollPanel implements IView<ScheduleNavVie
 				
 		table.addColumn(new StringColumn<UserDataGWT>(TableConstants.CONFIG_USERNAME, "6em",
 				new StaticGetter<UserDataGWT, String>() {
-					public String getValueForObject(UserDataGWT object) { return object.getCourseName(); }
+					public String getValueForObject(UserDataGWT object) { return object.getUserName(); }
 				},
 				new StaticSetter<UserDataGWT, String>() {
-					public void setValueInObject(UserDataGWT object, String newValue) { object.setCourseName(newValue); }
+					public void setValueInObject(UserDataGWT object, String newValue) { object.setUserName(newValue); }
 				},
 				String.CASE_INSENSITIVE_ORDER, null));
 		
@@ -76,11 +76,11 @@ public class AdminConfigView extends ScrollPanel implements IView<ScheduleNavVie
 				new String[] { "0", "1", "2" },
 				
 				new StaticGetter<UserDataGWT, String>() {
-					public String getValueForObject(UserDataGWT object) { return object.getCourseName(); }
+					public String getValueForObject(UserDataGWT object) { return object.getPermissionLevel().toString(); }
 				},
 				
 				new StaticSetter<UserDataGWT, String>() {
-					public void setValueInObject(UserDataGWT object, String newValue) { object.setCourseName(newValue); }
+					public void setValueInObject(UserDataGWT object, String newValue) { object.setPermissionLevel(Integer.parseInt(newValue)); }
 				},
 				
 				String.CASE_INSENSITIVE_ORDER));		
