@@ -544,8 +544,9 @@ public class SQLDB
       // Create fields and where clause for select statement
       LinkedHashMap<String, Object> fields = new LinkedHashMap<String, Object>();
       fields.put(ScheduleDB.SCHEDULENAME, 0);
-      fields.put(ScheduleDB.TABLENAME + "." + DbData.DBID, 0);
       fields.put(UserDataDB.PERMISSION, 0);
+      fields.put(UserDataDB.TABLENAME + "." + DbData.DBID, 0);
+      fields.put(UserDataDB.TABLENAME + "." + DbData.SCHEDULEDBID, 0);
       LinkedHashMap<String, Object> wheres = new LinkedHashMap<String, Object>();
       wheres.put(UserDataDB.USERID, userid);
 
@@ -561,8 +562,10 @@ public class SQLDB
          while (rs.next())
          {
             UserData p = new UserData();
-            p.setScheduleDBId(rs.getInt(DbData.DBID));
+            p.setUserId(userid);
             p.setPermission(rs.getInt(UserDataDB.PERMISSION));
+            p.setDbid(rs.getInt(DbData.DBID));
+            p.setScheduleDBId(rs.getInt(DbData.SCHEDULEDBID));
             schedules.put(rs.getString(ScheduleDB.SCHEDULENAME), p);
          }
       }

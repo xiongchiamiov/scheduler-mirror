@@ -148,6 +148,7 @@ public class Database
          // Use this schedule
          System.out.println("Using existing schedule");
          userdataDB = new UserDataDB(sqldb, realid);
+         scheduleDB.setScheduleDBID(realid);
       }
       else
       {

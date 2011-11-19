@@ -30,6 +30,7 @@ public class ScheduleDB extends AbstractDatabase<Schedule>
    public ScheduleDB(SQLDB sqldb)
    {
       this.sqldb = sqldb;
+      this.scheduleDBId = -1;
    }
    
    @Override
@@ -59,7 +60,16 @@ public class ScheduleDB extends AbstractDatabase<Schedule>
    {
       // Where clause
       wheres = new LinkedHashMap<String, Object>();
-      wheres.put(DbData.DBID, scheduleDBId);
+      if(this.scheduleDBId > 0)
+      {
+    	  //Use the held scheduleDBID
+    	  wheres.put(DbData.DBID, scheduleDBId);
+      }
+      else
+      {
+    	  //Use the one in data
+    	  wheres.put(DbData.DBID, data.getScheduleDBId());
+      }
    }
 
    protected Schedule make(ResultSet rs)
