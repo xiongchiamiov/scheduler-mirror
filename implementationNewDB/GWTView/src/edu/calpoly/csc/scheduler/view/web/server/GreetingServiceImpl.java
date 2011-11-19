@@ -1,0 +1,417 @@
+package edu.calpoly.csc.scheduler.view.web.server;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+
+import edu.calpoly.csc.scheduler.model.Model;
+import edu.calpoly.csc.scheduler.model.db.Time;
+import edu.calpoly.csc.scheduler.model.db.cdb.Course;
+import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
+import edu.calpoly.csc.scheduler.model.db.ldb.Location;
+import edu.calpoly.csc.scheduler.model.schedule.CouldNotBeScheduledException;
+import edu.calpoly.csc.scheduler.model.schedule.Day;
+import edu.calpoly.csc.scheduler.model.schedule.Schedule;
+import edu.calpoly.csc.scheduler.model.schedule.ScheduleItem;
+import edu.calpoly.csc.scheduler.model.schedule.Week;
+import edu.calpoly.csc.scheduler.view.web.client.GreetingService;
+import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.Pair;
+import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemList;
+
+/**
+ * The server side implementation of the RPC service.
+ */
+@SuppressWarnings("serial")
+public class GreetingServiceImpl extends RemoteServiceServlet implements
+		GreetingService {
+
+	private Model model;
+	private Schedule schedule;
+	private HashMap<String, Course> availableCourses;
+	private HashMap<String, ScheduleItem> scheduleItems;
+
+	@Override
+	public void login(String username) {
+		model = new Model(username);
+	}
+
+	@Override
+	public Map<String, Integer> getScheduleNames() {
+		return model.getSchedules();
+	}
+
+	@Override
+	public Integer openNewSchedule(String newScheduleName) {
+		model.openNewSchedule(newScheduleName);
+		return model.getScheduleID();
+    }
+    
+    // Returns 0, null if its a guest
+    // Returns 1, instructor if its an instructor
+    // Returns 2, null if its a admin
+	@Override
+    public Pair<Integer, InstructorGWT> openExistingSchedule(int scheduleID) {
+    	model.openExistingSchedule(scheduleID);
+    	return new Pair<Integer, InstructorGWT>(2, null); // tyero, change this
+    }
+
+	@Override
+    public void removeSchedule(String schedName) {
+    	model.deleteSchedule(schedName);
+    }
+
+	@Override
+	public ArrayList<InstructorGWT> getInstructors() throws IllegalArgumentException {
+		int id = 1;
+		ArrayList<InstructorGWT> results = new ArrayList<InstructorGWT>();
+		for (Instructor instructor : model.getInstructors())
+			results.add(Conversion.toGWT(id++, instructor));
+		return results;
+	}
+
+	@Override
+	public List<InstructorGWT> saveInstructors(List<InstructorGWT> added, List<InstructorGWT> edited, List<InstructorGWT> removed) {
+		for (InstructorGWT addedInstructor : added)
+			model.saveInstructor(Conversion.fromGWT(addedInstructor));
+		
+		for (InstructorGWT editedInstructor : edited)
+			model.saveInstructor(Conversion.fromGWT(editedInstructor));
+		
+		for (InstructorGWT removedInstructor : removed)
+			model.removeInstructor(Conversion.fromGWT(removedInstructor));
+
+		return getInstructors();
+	}
+
+//	private void displayInstructorPrefs(Instructor instructor) {
+//		System.out.println("Prefs for instructor " + instructor.getLastName());
+//
+//		for (Day day : instructor.getTimePreferences().keySet())
+//			for (Time time : instructor.getTimePreferences().get(day).keySet())
+//				System.out.println("Day "
+//						+ day.getNum()
+//						+ " time "
+//						+ time.getHour()
+//						+ ":"
+//						+ time.getMinute()
+//						+ " is "
+//						+ instructor.getTimePreferences().get(day).get(time)
+//								.getDesire());
+//	}
+
+	@Override
+	public ArrayList<ScheduleItemGWT> generateSchedule() {
+		assert (model != null);
+
+		List<Course> coursesToGenerate = model.getCourses();
+
+		// TODO: fix this hack.
+		for (Course course : coursesToGenerate) {
+			assert (course.getDays().size() > 0);
+			if (course.getLength() < course.getDays().size() * 2) {
+				course.setLength(course.getDays().size() * 2);
+				System.err
+						.println("Warning: the course length was too low, automatically set it to "
+								+ course.getLength());
+			}
+		}
+
+		for (Instructor instructor : model.getInstructors())
+			System.out.println("outside, num instructor day prefs for "
+					+ instructor.getLastName() + ": "
+					+ instructor.getTimePreferences().size());
+
+		List<ScheduleItem> scheduleItems = schedule
+				.generate(coursesToGenerate);
+		System.out.println("schedule items: " + schedule.getItems().size());
+
+		ArrayList<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
+		for (ScheduleItem item : scheduleItems) {
+			gwtItems.add(Conversion.toGWT(item, false));
+		}
+		for (ScheduleItem item : schedule.getDirtyList()) {
+			gwtItems.add(Conversion.toGWT(item, true));
+		}
+		return gwtItems;
+	}
+
+	@Override
+	public ArrayList<ScheduleItemGWT> getGWTScheduleItems(
+			List<CourseGWT> courses) {
+		Course courseWithSections;
+
+		assert (model != null);
+		assert(availableCourses != null);
+		scheduleItems = new HashMap<String, ScheduleItem>();
+
+		List<Course> coursesToGenerate = new LinkedList<Course>();
+		for (CourseGWT course : courses) {
+			courseWithSections = new Course(availableCourses.get(course
+					.getDept() + course.getCatalogNum()));
+			courseWithSections.setNumOfSections(course.getNumSections());
+			coursesToGenerate.add(courseWithSections);
+		}
+		// TODO: fix this hack.
+		for (Course course : coursesToGenerate) {
+			assert (course.getDays().size() > 0);
+			if (course.getLength() < course.getDays().size() * 2) {
+				course.setLength(course.getDays().size() * 2);
+				System.err
+						.println("Warning: the course length was too low, automatically set it to "
+								+ course.getLength());
+			}
+		}
+
+		schedule.generate(coursesToGenerate);
+
+		ArrayList<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
+
+		for (ScheduleItem item : schedule.getItems()) {
+			gwtItems.add(Conversion.toGWT(item, false));
+			scheduleItems.put(item.getCourse().getDept()
+					+ item.getCourse().getCatalogNum() + item.getSection(),
+					item);
+		}
+		for (ScheduleItem item : schedule.getDirtyList()) {
+			gwtItems.add(Conversion.toGWT(item, true));
+			scheduleItems.put(item.getCourse().getDept()
+					+ item.getCourse().getCatalogNum() + item.getSection(),
+					item);
+		}
+		return gwtItems;
+	}
+
+	@Override
+	public ScheduleItemList rescheduleCourse(ScheduleItemGWT scheduleItem,
+			List<Integer> days, int startHour, boolean atHalfHour,
+			boolean inSchedule) {
+		assert (model != null);
+		ScheduleItemList gwtItems = new ScheduleItemList();
+		Course course;
+		int numberOfDays = days.size();
+		Day[] daysScheduled = new Day[numberOfDays];
+		Week daysInWeek;
+		Time startTime;
+		int i;
+		ScheduleItem moved;
+		String schdItemKey = scheduleItem.getDept()
+				+ scheduleItem.getCatalogNum() + scheduleItem.getSection();
+		String conflict = "";
+
+		for (i = 0; i < numberOfDays; i++) {
+			switch (days.get(i)) {
+			case 1:
+				daysScheduled[i] = (Day.MON);
+				break;
+			case 2:
+				daysScheduled[i] = (Day.TUE);
+				break;
+			case 3:
+				daysScheduled[i] = (Day.WED);
+				break;
+			case 4:
+				daysScheduled[i] = (Day.THU);
+				break;
+			case 5:
+				daysScheduled[i] = (Day.FRI);
+				break;
+			}
+		}
+
+		daysInWeek = new Week(daysScheduled);
+		startTime = new Time(startHour, (atHalfHour ? 30 : 0));
+
+		if (inSchedule) {
+			moved = scheduleItems.get(schdItemKey);
+			schedule.removeConflictingItem(moved);
+			try {
+				schedule.move(moved, daysInWeek, startTime);
+			} catch (CouldNotBeScheduledException e) {
+				conflict = e.toString();
+				schedule.addConflictingItem(e.getSi());
+			}
+		} else {
+			course = availableCourses.get(scheduleItem.getDept()
+					+ scheduleItem.getCatalogNum());
+			course.setNumOfSections(1);
+			schedule.genItem(course, daysInWeek, startTime);
+		}
+
+		scheduleItems = new HashMap<String, ScheduleItem>();
+
+		for (ScheduleItem item : schedule.getItems()) {
+			gwtItems.add(Conversion.toGWT(item, false));
+			scheduleItems.put(item.getCourse().getDept()
+					+ item.getCourse().getCatalogNum() + item.getSection(),
+					item);
+		}
+		for (ScheduleItem item : schedule.getDirtyList()) {
+			gwtItems.add(Conversion.toGWT(item, true));
+			scheduleItems.put(item.getCourse().getDept()
+					+ item.getCourse().getCatalogNum() + item.getSection(),
+					item);
+
+		}
+
+		gwtItems.conflict = conflict;
+		return gwtItems;
+	}
+
+	@Override
+	public ArrayList<LocationGWT> getLocations() {
+		ArrayList<LocationGWT> results = new ArrayList<LocationGWT>();
+		int id = 1;
+		for (Location location : model.getLocations())
+			results.add(Conversion.toGWT(id++, location));
+		return results;
+	}
+
+	@Override
+	public void saveInstructor(InstructorGWT instructorGWT) {
+		Instructor instructor = Conversion.fromGWT(instructorGWT);
+		model.saveInstructor(instructor);
+	}
+
+	@Override
+	public ArrayList<ScheduleItemGWT> getSchedule() {
+		ArrayList<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
+		ScheduleItemGWT gwtItem;
+
+		if (schedule == null) {
+			schedule = new Schedule(model.getInstructors(),
+					model.getLocations());
+		}
+		/*
+		 * This throws exceptions! schedule =
+		 * db.getScheduleDB().getSchedule(model.getScheduleID());
+		 */
+		scheduleItems = new HashMap<String, ScheduleItem>();
+
+		for (ScheduleItem item : schedule.getItems()) {
+			gwtItem = Conversion.toGWT(item, false);
+			scheduleItems.put(gwtItem.getDept() + gwtItem.getCatalogNum()
+					+ gwtItem.getSection(), item);
+			gwtItems.add(gwtItem);
+		}
+
+		for (ScheduleItem item : schedule.getDirtyList()) {
+			gwtItem = Conversion.toGWT(item, true);
+			scheduleItems.put(gwtItem.getDept() + gwtItem.getCatalogNum()
+					+ gwtItem.getSection(), item);
+			gwtItems.add(gwtItem);
+		}
+		// System.out.println(model.exportToCSV(schedule));
+
+		return gwtItems;
+	}
+
+	@Override
+	public int copySchedule(int existingScheduleID, String scheduleName) {
+		int newSchedule = model.copySchedule(existingScheduleID, scheduleName);
+		openExistingSchedule(newSchedule);
+		return newSchedule;
+	}
+
+	@Override
+	public ArrayList<ScheduleItemGWT> removeScheduleItem(ScheduleItemGWT removed) {
+		String schdItemKey = removed.getDept() + removed.getCatalogNum()
+				+ removed.getSection();
+		ScheduleItemGWT gwtItem;
+		ArrayList<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
+
+		schedule.remove(scheduleItems.get(schdItemKey));
+		scheduleItems = new HashMap<String, ScheduleItem>();
+
+		for (ScheduleItem item : schedule.getItems()) {
+			gwtItem = Conversion.toGWT(item, false);
+			schdItemKey = gwtItem.getDept() + gwtItem.getCatalogNum()
+					+ gwtItem.getSection();
+			scheduleItems.put(schdItemKey, item);
+			gwtItems.add(gwtItem);
+		}
+		for (ScheduleItem item : schedule.getDirtyList()) {
+			gwtItem = Conversion.toGWT(item, true);
+			schdItemKey = gwtItem.getCourseString() + gwtItem.getCatalogNum()
+					+ gwtItem.getSection();
+			scheduleItems.put(schdItemKey, item);
+			gwtItems.add(gwtItem);
+		}
+
+		return gwtItems;
+	}
+
+	@Override
+	public void saveSchedule() {
+		model.saveSchedule(schedule);
+	}
+
+	@Override
+	public int importFromCSV(String scheduleName, String value) {
+		model.openNewSchedule(scheduleName);
+		model.importFromCSV(value);
+		return model.getScheduleID();
+	}
+
+
+	@Override
+	public List<LocationGWT> saveLocations(List<LocationGWT> added, List<LocationGWT> edited, List<LocationGWT> removed) {
+		for (LocationGWT addedLocation : added)
+			model.saveLocation(Conversion.fromGWT(addedLocation));
+		
+		for (LocationGWT editedLocation : edited)
+			model.saveLocation(Conversion.fromGWT(editedLocation));
+		
+		for (LocationGWT removedLocation : removed)
+			model.removeLocation(Conversion.fromGWT(removedLocation));
+
+		return getLocations();
+	}
+
+	@Override
+	public ArrayList<CourseGWT> getCourses() throws IllegalArgumentException {
+		availableCourses = new HashMap<String, Course>();
+		int id = 1;
+		ArrayList<CourseGWT> results = new ArrayList<CourseGWT>();
+		for (Course course : model.getCourses()) {
+			availableCourses.put(course.getDept() + course.getCatalogNum(), course);
+			results.add(Conversion.toGWT(id++, course));
+		}
+		return results;
+	}
+
+	@Override
+	public List<CourseGWT> saveCourses(List<CourseGWT> added, List<CourseGWT> edited, List<CourseGWT> removed) {
+		for (CourseGWT addedCourse : added)
+			model.saveCourse(Conversion.fromGWT(addedCourse));
+		
+		for (CourseGWT editedCourse : edited)
+			model.saveCourse(Conversion.fromGWT(editedCourse));
+		
+		for (CourseGWT removedCourse : removed)
+			model.removeCourse(Conversion.fromGWT(removedCourse));
+
+		return getCourses();
+	}
+	
+	@Override
+	public int exportCSV(){
+		
+		if (schedule == null) {
+			schedule = new Schedule(model.getInstructors(),
+					model.getLocations());
+		}
+		
+		/** TODO replace new Date with export to CSV String */
+		//return CSVDownload.save(model.exportToCSV(schedule));
+		return CSVDownload.save(new Date().toString());
+	}
+}
