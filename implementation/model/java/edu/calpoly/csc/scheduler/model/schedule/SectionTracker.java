@@ -2,6 +2,7 @@ package edu.calpoly.csc.scheduler.model.schedule;
 
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
 
+import java.io.Serializable;
 import java.util.Vector;
 import java.util.BitSet;
 
@@ -14,9 +15,13 @@ import java.util.BitSet;
  * @author Eric Liebowitz
  * @version Nov 17, 2011
  */
-public class SectionTracker
+public class SectionTracker implements Serializable
 {
    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 7335510502297286134L;
+/**
     * List of section numbers that've been added
     */
    private BitSet sections = new BitSet();
