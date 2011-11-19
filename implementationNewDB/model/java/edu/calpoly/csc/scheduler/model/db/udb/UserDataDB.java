@@ -12,13 +12,12 @@ public class UserDataDB extends AbstractDatabase<UserData>
 {
    public static final String TABLENAME    = "userdata";
    public static final String USERID       = "userid";
-   public static final String SCHEDULENAME = "schedulename";
    public static final String PERMISSION   = "permission";
 
    public UserDataDB(SQLDB sqldb, int scheduleID)
    {
       this.sqldb = sqldb;
-      this.scheduleId = scheduleID;
+      this.scheduleDBId = scheduleID;
    }
 
    protected void fillFields(UserData data)
@@ -26,9 +25,8 @@ public class UserDataDB extends AbstractDatabase<UserData>
       // Set fields and values
       fields = new LinkedHashMap<String, Object>();
       fields.put(USERID, data.getUserId());
-      fields.put(SCHEDULENAME, data.getScheduleName());
       fields.put(PERMISSION, data.getPermission());
-      fields.put(DbData.SCHEDULEID, scheduleId);
+      fields.put(DbData.SCHEDULEDBID, scheduleDBId);
    }
 
    protected UserData make(ResultSet rs)
@@ -39,8 +37,7 @@ public class UserDataDB extends AbstractDatabase<UserData>
       {
          toAdd.setUserId(rs.getString(USERID));
          toAdd.setPermission(rs.getInt(PERMISSION));
-         toAdd.setScheduleName(rs.getString(SCHEDULENAME));
-         toAdd.setScheduleId(rs.getInt(DbData.SCHEDULEID));
+         toAdd.setScheduleDBId(rs.getInt(DbData.SCHEDULEDBID));
          toAdd.setDbid(rs.getInt(DbData.DBID));
       }
       catch (SQLException e)

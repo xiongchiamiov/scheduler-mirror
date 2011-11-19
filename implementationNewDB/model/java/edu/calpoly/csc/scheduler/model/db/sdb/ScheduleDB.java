@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.LinkedHashMap;
 
 import edu.calpoly.csc.scheduler.model.db.AbstractDatabase;
+import edu.calpoly.csc.scheduler.model.db.DbData;
 import edu.calpoly.csc.scheduler.model.db.SQLDB;
 import edu.calpoly.csc.scheduler.model.db.cdb.CourseDB;
 import edu.calpoly.csc.scheduler.model.db.idb.InstructorDB;
@@ -16,11 +17,11 @@ public class ScheduleDB extends AbstractDatabase<Schedule>
 {
    // String constants
    public static final String TABLENAME  = "schedules";
-   public static final String SCHEDULEID = "scheduleid";
    public static final String SCHEDULE   = "schedule";
+   public static final String SCHEDULENAME = "schedulename";
 
    /**
-    * Schedules are unique by scheduleid. Also, they are unique by name per
+    * Schedules are unique by dbid. Also, they are unique by name per
     * department.
     * 
     * @param sqldb
@@ -49,6 +50,7 @@ public class ScheduleDB extends AbstractDatabase<Schedule>
    {
       // Set fields and values
       fields = new LinkedHashMap<String, Object>();
+      fields.put(SCHEDULENAME, data.getName());
       fields.put(SCHEDULE, sqldb.serialize(data));
    }
 
@@ -57,7 +59,7 @@ public class ScheduleDB extends AbstractDatabase<Schedule>
    {
       // Where clause
       wheres = new LinkedHashMap<String, Object>();
-      wheres.put(SCHEDULEID, scheduleId);
+      wheres.put(DbData.DBID, scheduleDBId);
    }
 
    protected Schedule make(ResultSet rs)
@@ -71,7 +73,8 @@ public class ScheduleDB extends AbstractDatabase<Schedule>
             byte[] scheduleBuf = rs.getBytes(SCHEDULE);
             toAdd = (Schedule) sqldb.deserialize(scheduleBuf);
             // Get ID since database maintains it
-            toAdd.setId(rs.getInt(SCHEDULEID));
+            toAdd.setScheduleDBId(rs.getInt(DbData.DBID));
+            toAdd.setName(rs.getString(SCHEDULENAME));
          }
       }
       catch (SQLException e)
@@ -88,7 +91,7 @@ public class ScheduleDB extends AbstractDatabase<Schedule>
       super.removeData(data);
       // Where clause
       wheres = new LinkedHashMap<String, Object>();
-      wheres.put(SCHEDULEID, data.getId());
+      wheres.put(DbData.DBID, data.getScheduleDBId());
       sqldb.executeDelete(CourseDB.TABLENAME, wheres);
       sqldb.executeDelete(InstructorDB.TABLENAME, wheres);
       sqldb.executeDelete(LocationDB.TABLENAME, wheres);
@@ -104,15 +107,15 @@ public class ScheduleDB extends AbstractDatabase<Schedule>
    /**
     * @return the scheduleID
     */
-   public int getScheduleID(Schedule data)
+   public int getScheduleDBID(Schedule data)
    {
-      this.scheduleId = sqldb.getLastGeneratedKey();
-      return scheduleId;
+      this.scheduleDBId = sqldb.getLastGeneratedKey();
+      return scheduleDBId;
    }
    
-   public void setScheduleID(int scheduleid)
+   public void setScheduleDBID(int scheduleid)
    {
-      this.scheduleId = scheduleid;
+      this.scheduleDBId = scheduleid;
    }
 
    /**

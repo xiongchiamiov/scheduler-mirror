@@ -37,7 +37,7 @@ public class InstructorDB extends AbstractDatabase<Instructor>
    public InstructorDB(SQLDB sqldb, int scheduleID)
    {
       this.sqldb = sqldb;
-      this.scheduleId = scheduleID;
+      this.scheduleDBId = scheduleID;
    }
 
    protected void fillFields(Instructor data)
@@ -58,7 +58,7 @@ public class InstructorDB extends AbstractDatabase<Instructor>
             sqldb.serialize(data.getCoursePreferences()));
       fields.put(TPREFS, sqldb.serialize(data.gettPrefs()));
       fields.put(ITEMSTAUGHT, sqldb.serialize(data.getItemsTaught()));
-      fields.put(DbData.SCHEDULEID, scheduleId);
+      fields.put(DbData.SCHEDULEDBID, scheduleDBId);
       fields.put(DbData.NOTE, data.getNote());
    }
 
@@ -110,8 +110,8 @@ public class InstructorDB extends AbstractDatabase<Instructor>
          toAdd.setItemsTaught((Vector<ScheduleItem>) sqldb
                .deserialize(taughtBuf));
 
-         int scheduleid = rs.getInt(DbData.SCHEDULEID);
-         toAdd.setScheduleId(scheduleid);
+         int scheduleid = rs.getInt(DbData.SCHEDULEDBID);
+         toAdd.setScheduleDBId(scheduleid);
 
          String note = rs.getString(DbData.NOTE);
          toAdd.setNote(note);

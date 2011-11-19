@@ -945,7 +945,7 @@ public class Instructor extends DbData
       i.setCoursePreferences(coursePreferences);
       i.settPrefs(new HashMap<Day, LinkedHashMap<Time, TimePreference>>());
       i.setItemsTaught(itemsTaught);
-      i.setScheduleId(1);
+      i.setScheduleDBId(1);
       return i;
    }
 }

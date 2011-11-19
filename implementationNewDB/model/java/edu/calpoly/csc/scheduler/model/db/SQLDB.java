@@ -444,7 +444,7 @@ public class SQLDB
    {
       // Where clause
       LinkedHashMap<String, Object> wheres = new LinkedHashMap<String, Object>();
-      wheres.put(DbData.SCHEDULEID, scheduleid);
+      wheres.put(DbData.SCHEDULEDBID, scheduleid);
 
       return executeSelect(tablename, null, wheres);
    }
@@ -543,22 +543,27 @@ public class SQLDB
       HashMap<String, UserData> schedules = new HashMap<String, UserData>();
       // Create fields and where clause for select statement
       LinkedHashMap<String, Object> fields = new LinkedHashMap<String, Object>();
-      fields.put(UserDataDB.SCHEDULENAME, 0);
-      fields.put(DbData.SCHEDULEID, 0);
+      fields.put(ScheduleDB.SCHEDULENAME, 0);
+      fields.put(ScheduleDB.TABLENAME + "." + DbData.DBID, 0);
       fields.put(UserDataDB.PERMISSION, 0);
       LinkedHashMap<String, Object> wheres = new LinkedHashMap<String, Object>();
       wheres.put(UserDataDB.USERID, userid);
 
+      // Make table join
+      String tablejoin = ScheduleDB.TABLENAME + " join " + UserDataDB.TABLENAME
+            + " on (" + ScheduleDB.TABLENAME + "." + DbData.DBID + " = "
+            + UserDataDB.TABLENAME + "." + DbData.SCHEDULEDBID + ")";
+
       // Execute select statement
-      ResultSet rs = executeSelect(UserDataDB.TABLENAME, fields, wheres);
+      ResultSet rs = executeSelect(tablejoin, fields, wheres);
       try
       {
          while (rs.next())
          {
             UserData p = new UserData();
-            p.setScheduleId(rs.getInt(DbData.SCHEDULEID));
+            p.setScheduleDBId(rs.getInt(DbData.DBID));
             p.setPermission(rs.getInt(UserDataDB.PERMISSION));
-            schedules.put(rs.getString(UserDataDB.SCHEDULENAME), p);
+            schedules.put(rs.getString(ScheduleDB.SCHEDULENAME), p);
          }
       }
       catch (SQLException e)

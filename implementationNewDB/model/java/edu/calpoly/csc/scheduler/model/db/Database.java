@@ -41,10 +41,10 @@ public class Database
    private ScheduleDB       scheduleDB;
 
    /** The userdata database. */
-   private UserDataDB         userdataDB;
+   private UserDataDB       userdataDB;
 
    /** The current schedule id */
-   private int              scheduleID;
+   private int              scheduleDBID;
 
    /** The current userid */
    private String           userid;
@@ -56,10 +56,10 @@ public class Database
    private boolean          copying            = false;
 
    /** If we are copying data */
-   private int              oldScheduleID      = -3;
+   private int              oldScheduleDBID      = -3;
 
    /** Example Chem Schedule template scheduleid */
-   private static final int templateScheduleID = 1;
+   private static final int templateScheduleDBID = 1;
 
    /**
     * STEP 1 This constructor will create the SQLDB object.
@@ -104,40 +104,40 @@ public class Database
     * 
     * @return scheduleid The copied schedules scheduleid
     */
-   public int copySchedule(int oldscheduleid, String name)
+   public int copySchedule(int oldscheduledbid, String name)
    {
-      this.oldScheduleID = oldscheduleid;
+      this.oldScheduleDBID = oldscheduledbid;
       copying = true;
       scheduleDB = new ScheduleDB(sqldb);
-      Schedule old = scheduleDB.getSchedule(oldscheduleid);
+      Schedule old = scheduleDB.getSchedule(oldscheduledbid);
       // Set new fields
       old.setId(-2);
       old.setName(name);
       scheduleDB.saveData(old);
-      this.scheduleID = sqldb.getLastGeneratedKey();
-      System.out.println("Just copied schedule from id: " + oldscheduleid
-            + " to new id: " + this.scheduleID);
+      this.scheduleDBID = sqldb.getLastGeneratedKey();
+      System.out.println("Just copied schedule from id: " + oldscheduledbid
+            + " to new id: " + this.scheduleDBID);
       // Insert new data in userdata
-      userdataDB = new UserDataDB(sqldb, scheduleID);
+      userdataDB = new UserDataDB(sqldb, scheduleDBID);
       UserData entry = new UserData();
       entry.setPermission(UserData.ADMIN);
-      entry.setScheduleId(scheduleID);
+      entry.setScheduleDBId(scheduleDBID);
       entry.setScheduleName(name);
       entry.setUserId(userid);
       userdataDB.saveData(entry);
-      return this.scheduleID;
+      return this.scheduleDBID;
    }
 
    /**
     * STEP 4 Initialize databases with given schedule id
     */
-   public void openDB(int scheduleid, String scheduleName)
+   public void openDB(int scheduledbid, String scheduleName)
    {
-      System.out.println("ID: " + scheduleid + ", name: " + scheduleName);
-      int realid = scheduleid;
+      System.out.println("ID: " + scheduledbid + ", name: " + scheduleName);
+      int realid = scheduledbid;
       Schedule data = new Schedule();
       data.setName(scheduleName);
-      data.setScheduleId(realid);
+      data.setScheduleDBId(realid);
       if (scheduleDB == null)
       {
          scheduleDB = new ScheduleDB(sqldb);
@@ -151,43 +151,18 @@ public class Database
       }
       else
       {
-         // Check if user already has a schedule of that name
-         LinkedHashMap<String, Object> wheres = new LinkedHashMap<String, Object>();
-         wheres.put(UserDataDB.USERID, userid);
-         wheres.put(UserDataDB.SCHEDULENAME, scheduleName);
-         ResultSet rs = sqldb.executeSelect(UserDataDB.TABLENAME, null, wheres);
-         if (sqldb.doesItExist(rs))
-         {
-            // TODO: Change to throw error or something
-            // Open existing schedule with that name
-            System.err
-                  .println("ERROR: Schedule name already exists, opening existing one");
-            try
-            {
-               realid = rs.getInt(DbData.SCHEDULEID);
-            }
-            catch (SQLException e)
-            {
-               e.printStackTrace();
-            }
-            scheduleDB.setScheduleID(realid);
-            userdataDB = new UserDataDB(sqldb, realid);
-         }
-         else
-         {
-            // Create a new schedule with given name and dept
-            scheduleDB.saveData(data);
-            realid = scheduleDB.getScheduleID(data);
-            userdataDB = new UserDataDB(sqldb, realid);
-            UserData entry = new UserData();
-            entry.setPermission(UserData.ADMIN);
-            entry.setScheduleId(realid);
-            entry.setScheduleName(scheduleName);
-            entry.setUserId(userid);
-            userdataDB.saveData(entry);
-         }
+         // Create a new schedule with given name
+         scheduleDB.saveData(data);
+         realid = scheduleDB.getScheduleDBID(data);
+         userdataDB = new UserDataDB(sqldb, realid);
+         UserData entry = new UserData();
+         entry.setPermission(UserData.ADMIN);
+         entry.setScheduleDBId(realid);
+         entry.setScheduleName(scheduleName);
+         entry.setUserId(userid);
+         userdataDB.saveData(entry);
       }
-      this.scheduleID = realid;
+      this.scheduleDBID = realid;
       instructorDB = new InstructorDB(sqldb, realid);
       courseDB = new CourseDB(sqldb, realid);
       locationDB = new LocationDB(sqldb, realid);
@@ -195,14 +170,14 @@ public class Database
       {
          System.out.println("Copying data from Example Chem Schedule");
          // Make temporary db's with scheduleid = Example Chem Schedule (1354)
-         copyAllData(templateScheduleID);
+         copyAllData(templateScheduleDBID);
          newUser = false;
       }
       else if (copying)
       {
-         System.out.println("Copying data from scheduleid " + oldScheduleID);
+         System.out.println("Copying data from scheduledbid " + oldScheduleDBID);
          // Make temporary db's with scheduleid = whatever copying had
-         copyAllData(oldScheduleID);
+         copyAllData(oldScheduleDBID);
          copying = false;
       }
    }
@@ -273,7 +248,7 @@ public class Database
     */
    public int getScheduleID()
    {
-      return scheduleID;
+      return scheduleDBID;
    }
 
    /**
@@ -282,6 +257,6 @@ public class Database
     */
    public void setScheduleID(int scheduleID)
    {
-      this.scheduleID = scheduleID;
+      this.scheduleDBID = scheduleID;
    }
 }

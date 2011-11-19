@@ -29,7 +29,7 @@ public class CourseDB extends AbstractDatabase<Course>
    public CourseDB(SQLDB sqldb, int scheduleID)
    {
       this.sqldb = sqldb;
-      this.scheduleId = scheduleID;
+      this.scheduleDBId = scheduleID;
    }
    
    protected void fillFields(Course data)
@@ -47,7 +47,7 @@ public class CourseDB extends AbstractDatabase<Course>
       fields.put(DAYS, sqldb.serialize(data.getDays()));
       fields.put(ENROLLMENT, data.getEnrollment());
       fields.put(LAB, sqldb.serialize(data.getLab()));
-      fields.put(DbData.SCHEDULEID, scheduleId);
+      fields.put(DbData.SCHEDULEDBID, scheduleDBId);
       fields.put(DbData.NOTE, data.getNote());
    }
    
@@ -75,7 +75,7 @@ public class CourseDB extends AbstractDatabase<Course>
          
          toAdd.setEnrollment(rs.getInt(ENROLLMENT));
          toAdd.setLab((Lab) sqldb.deserialize(rs.getBytes(LAB)));
-         toAdd.setScheduleId(rs.getInt(DbData.SCHEDULEID));
+         toAdd.setScheduleDBId(rs.getInt(DbData.SCHEDULEDBID));
          toAdd.setNote(rs.getString(DbData.NOTE));
          toAdd.setDbid(rs.getInt(DbData.DBID));
       }
@@ -94,6 +94,6 @@ public class CourseDB extends AbstractDatabase<Course>
    
    public Course getCourse(String dept, int catalogNum)
    {
-      return make(sqldb.getSQLCourse(dept, catalogNum, scheduleId));
+      return make(sqldb.getSQLCourse(dept, catalogNum, scheduleDBId));
    }
 }

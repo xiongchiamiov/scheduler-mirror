@@ -15,7 +15,7 @@ public abstract class AbstractDatabase<T extends DbData>
    public static final long                serialVersionUID = 42;
 
    protected ArrayList<T>                  data;
-   protected int                           scheduleId;
+   protected int                           scheduleDBId;
    protected SQLDB                         sqldb;
    protected LinkedHashMap<String, Object> fields;
    protected LinkedHashMap<String, Object> wheres;
@@ -31,8 +31,8 @@ public abstract class AbstractDatabase<T extends DbData>
    {
       data.verify();
 
-      data.setScheduleId(this.scheduleId);
-      assert (this.scheduleId != -1);
+      data.setScheduleDBId(this.scheduleDBId);
+      assert (this.scheduleDBId != -1);
       if (exists(data))
       {
          editData(data);
@@ -74,7 +74,7 @@ public abstract class AbstractDatabase<T extends DbData>
    {
       data = new ArrayList<T>();
 
-      ResultSet rs = sqldb.getDataByScheduleID(this.getTableName(), scheduleId);
+      ResultSet rs = sqldb.getDataByScheduleID(this.getTableName(), scheduleDBId);
       try
       {
          while (rs.next())

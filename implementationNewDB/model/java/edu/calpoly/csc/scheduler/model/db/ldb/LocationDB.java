@@ -26,7 +26,7 @@ public class LocationDB extends AbstractDatabase<Location>
    public LocationDB(SQLDB sqldb, int scheduleID)
    {
       this.sqldb = sqldb;
-      this.scheduleId = scheduleID;
+      this.scheduleDBId = scheduleID;
    }
 
    public Location getLocation(String id)
@@ -80,7 +80,7 @@ public class LocationDB extends AbstractDatabase<Location>
             sqldb.serialize(data.getProvidedEquipment()));
       fields.put(ADACOMPLIANT, data.getAdaCompliant());
       fields.put(AVAILABILITY, sqldb.serialize(data.getAvailability()));
-      fields.put(DbData.SCHEDULEID, scheduleId);
+      fields.put(DbData.SCHEDULEDBID, scheduleDBId);
       fields.put(DbData.NOTE, data.getNote());
    }
    
@@ -111,8 +111,8 @@ public class LocationDB extends AbstractDatabase<Location>
          byte[] availBuf = rs.getBytes(AVAILABILITY);
          toAdd.setAvailability((WeekAvail) sqldb.deserialize(availBuf));
 
-         int scheduleid = rs.getInt(DbData.SCHEDULEID);
-         toAdd.setScheduleId(scheduleid);
+         int scheduleid = rs.getInt(DbData.SCHEDULEDBID);
+         toAdd.setScheduleDBId(scheduleid);
          
          String note = rs.getString(DbData.NOTE);
          toAdd.setNote(note);

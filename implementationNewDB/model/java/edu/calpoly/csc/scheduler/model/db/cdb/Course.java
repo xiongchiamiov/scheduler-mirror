@@ -124,7 +124,7 @@ public class Course extends DbData implements Serializable
       this.days = c.getDays();
       this.enrollment = new Integer(c.getEnrollment());
       this.lab = c.getLab();
-      this.setScheduleId(c.getScheduleId());
+      this.setScheduleDBId(c.getScheduleDBId());
    }
    
    /**
@@ -544,7 +544,7 @@ public class Course extends DbData implements Serializable
       c.setDays(new Week());
       c.setEnrollment(50);
       c.setLab(new Lab());;
-      c.setScheduleId(1);
+      c.setScheduleDBId(1);
       return c;
    }
 }

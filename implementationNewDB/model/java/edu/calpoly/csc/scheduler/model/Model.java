@@ -56,7 +56,7 @@ public class Model implements Serializable
    
    public void openExistingSchedule (String scheduleName)
    {
-      int sid = this.sched_map.get(scheduleName).getScheduleId();
+      int sid = this.sched_map.get(scheduleName).getScheduleDBId();
       db.openDB(sid, scheduleName);
    }
 
@@ -145,7 +145,7 @@ public class Model implements Serializable
 
    public void deleteSchedule (String s)
    {
-      int sid = sched_map.get(s).getScheduleId();
+      int sid = sched_map.get(s).getScheduleDBId();
       Schedule sched = new Schedule();
       sched.setId(sid);
 

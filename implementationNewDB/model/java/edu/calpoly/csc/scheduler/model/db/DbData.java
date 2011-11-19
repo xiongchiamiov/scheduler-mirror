@@ -8,7 +8,7 @@ package edu.calpoly.csc.scheduler.model.db;
 public abstract class DbData
 {
    public static final String DBID       = "dbid";
-   public static final String SCHEDULEID = "scheduleid";
+   public static final String SCHEDULEDBID = "scheduledbid";
    public static final String NOTE       = "note";
 
    /**
@@ -16,7 +16,7 @@ public abstract class DbData
     * databases. This makes sure the exists() methods always work correctly
     */
    private Integer            dbid;
-   private Integer            scheduleId;
+   private Integer            scheduleDBId;
    private String             note;
 
    /**
@@ -41,9 +41,9 @@ public abstract class DbData
     * 
     * @return the scheduleId
     */
-   public Integer getScheduleId()
+   public Integer getScheduleDBId()
    {
-      return scheduleId;
+      return scheduleDBId;
    }
 
    /**
@@ -52,9 +52,9 @@ public abstract class DbData
     * @param scheduleId
     *           the scheduleId to set
     */
-   public void setScheduleId(int scheduleId)
+   public void setScheduleDBId(int scheduleDBId)
    {
-      this.scheduleId = scheduleId;
+      this.scheduleDBId = scheduleDBId;
    }
 
    /**
