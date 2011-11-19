@@ -46,7 +46,8 @@ public class Model implements Serializable
     */
    public Map<String, UserData> getSchedules ()
    {
-      return (this.sched_map = db.getSchedules());
+	   this.sched_map = db.getSchedules();
+      return sched_map;
    }
 
    public Schedule loadSchedule (int sid)
@@ -145,10 +146,13 @@ public class Model implements Serializable
 
    public void deleteSchedule (String s)
    {
-      int sid = sched_map.get(s).getScheduleDBId();
+	   System.out.println("Trying to remove schedule: " + s);
+	   UserData userdata = sched_map.get(s);
+      int sid = userdata.getScheduleDBId();
       Schedule sched = new Schedule();
       sched.setScheduleDBId(sid);
       sched.setDbid(sid);
+      sched.setName(s);
 
       db.getScheduleDB().removeData(sched);
    }

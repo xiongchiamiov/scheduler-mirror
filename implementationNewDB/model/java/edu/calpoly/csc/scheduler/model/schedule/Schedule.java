@@ -1255,9 +1255,5 @@ public class Schedule extends DbData implements Serializable
       {
          throw new NullDataException();
       }
-      if (dept == null)
-      {
-         throw new NullDataException();
-      }
    }
 }

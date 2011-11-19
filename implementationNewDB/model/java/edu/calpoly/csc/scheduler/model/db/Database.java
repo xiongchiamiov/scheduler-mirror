@@ -70,6 +70,7 @@ public class Database
       sqldb.open();
       checkUser(userid);
       this.userid = userid;
+      scheduleDB = new ScheduleDB(sqldb);
    }
 
    /**
