@@ -190,7 +190,7 @@ public class SelectScheduleView extends VerticalPanel implements IView<MainView>
 		add(new Button("Remove Schedule", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				String schedName = listBox.getValue(listBox.getSelectedIndex());
+				String schedName = listBox.getItemText(listBox.getSelectedIndex());
 				
 				service.removeSchedule(schedName, new AsyncCallback<Void>() {
 					@Override
