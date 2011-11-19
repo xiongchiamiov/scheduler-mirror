@@ -11,6 +11,7 @@ import edu.calpoly.csc.scheduler.model.db.Database;
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
 import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
 import edu.calpoly.csc.scheduler.model.db.ldb.Location;
+import edu.calpoly.csc.scheduler.model.db.udb.UserData;
 import edu.calpoly.csc.scheduler.model.schedule.Schedule;
 
 /**
@@ -28,14 +29,12 @@ public class Model implements Serializable
 
    private Database db;
    private String userId;
-   private String dept;
-   private Map<String, Integer> sched_map = new HashMap<String, Integer>();
+   private Map<String, UserData> sched_map = new HashMap<String, UserData>();
 
    public Model (String userId)
    {
       this.userId = userId;
-      this.db = new Database();
-      this.dept = db.getDept(userId);
+      this.db = new Database(userId);
    }
 
    /**
@@ -45,9 +44,9 @@ public class Model implements Serializable
     * 
     * @see Database#getSchedules(String)
     */
-   public Map<String, Integer> getSchedules ()
+   public Map<String, UserData> getSchedules ()
    {
-      return (this.sched_map = db.getSchedules(this.dept));
+      return (this.sched_map = db.getSchedules());
    }
 
    public Schedule loadSchedule (int sid)
@@ -57,7 +56,7 @@ public class Model implements Serializable
    
    public void openExistingSchedule (String scheduleName)
    {
-      int sid = this.sched_map.get(scheduleName);
+      int sid = this.sched_map.get(scheduleName).getScheduleId();
       db.openDB(sid, scheduleName);
    }
 
@@ -146,7 +145,7 @@ public class Model implements Serializable
 
    public void deleteSchedule (String s)
    {
-      int sid = sched_map.get(s);
+      int sid = sched_map.get(s).getScheduleId();
       Schedule sched = new Schedule();
       sched.setId(sid);
 

@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.model.udb;
+package edu.calpoly.csc.scheduler.model.db.udb;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,7 +8,7 @@ import edu.calpoly.csc.scheduler.model.db.AbstractDatabase;
 import edu.calpoly.csc.scheduler.model.db.DbData;
 import edu.calpoly.csc.scheduler.model.db.SQLDB;
 
-/*public class UserDataDB extends AbstractDatabase<UserData>
+public class UserDataDB extends AbstractDatabase<UserData>
 {
    public static final String TABLENAME    = "userdata";
    public static final String USERID       = "userid";
@@ -21,7 +21,7 @@ import edu.calpoly.csc.scheduler.model.db.SQLDB;
       this.scheduleId = scheduleID;
    }
 
-   protected void fillMaps(UserData data)
+   protected void fillFields(UserData data)
    {
       // Set fields and values
       fields = new LinkedHashMap<String, Object>();
@@ -29,10 +29,6 @@ import edu.calpoly.csc.scheduler.model.db.SQLDB;
       fields.put(SCHEDULENAME, data.getScheduleName());
       fields.put(PERMISSION, data.getPermission());
       fields.put(DbData.SCHEDULEID, scheduleId);
-      // Where clause
-      wheres = new LinkedHashMap<String, Object>();
-      wheres.put(USERID, data.getUserId());
-      wheres.put(DbData.SCHEDULEID, scheduleId);
    }
 
    protected UserData make(ResultSet rs)
@@ -45,6 +41,7 @@ import edu.calpoly.csc.scheduler.model.db.SQLDB;
          toAdd.setPermission(rs.getInt(PERMISSION));
          toAdd.setScheduleName(rs.getString(SCHEDULENAME));
          toAdd.setScheduleId(rs.getInt(DbData.SCHEDULEID));
+         toAdd.setDbid(rs.getInt(DbData.DBID));
       }
       catch (SQLException e)
       {
@@ -60,4 +57,3 @@ import edu.calpoly.csc.scheduler.model.db.SQLDB;
    }
 
 }
-*/

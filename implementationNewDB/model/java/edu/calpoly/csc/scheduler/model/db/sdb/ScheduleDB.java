@@ -9,6 +9,7 @@ import edu.calpoly.csc.scheduler.model.db.SQLDB;
 import edu.calpoly.csc.scheduler.model.db.cdb.CourseDB;
 import edu.calpoly.csc.scheduler.model.db.idb.InstructorDB;
 import edu.calpoly.csc.scheduler.model.db.ldb.LocationDB;
+import edu.calpoly.csc.scheduler.model.db.udb.UserDataDB;
 import edu.calpoly.csc.scheduler.model.schedule.Schedule;
 
 public class ScheduleDB extends AbstractDatabase<Schedule>
@@ -16,9 +17,7 @@ public class ScheduleDB extends AbstractDatabase<Schedule>
    // String constants
    public static final String TABLENAME  = "schedules";
    public static final String SCHEDULEID = "scheduleid";
-   public static final String NAME       = "name";
    public static final String SCHEDULE   = "schedule";
-   public static final String DEPT       = "dept";
 
    /**
     * Schedules are unique by scheduleid. Also, they are unique by name per
@@ -31,27 +30,34 @@ public class ScheduleDB extends AbstractDatabase<Schedule>
    {
       this.sqldb = sqldb;
    }
-
-   protected boolean exists(Schedule data)
+   
+   @Override
+   public void saveData (Schedule data)
    {
-      return sqldb.doesScheduleExist(data);
+      data.verify();
+      if (exists(data))
+      {
+         editData(data);
+      }
+      else
+      {
+         addData(data);
+      }
    }
 
-   protected void fillMaps(Schedule data)
+   protected void fillFields(Schedule data)
    {
       // Set fields and values
       fields = new LinkedHashMap<String, Object>();
-      fields.put(NAME, data.getName());
       fields.put(SCHEDULE, sqldb.serialize(data));
-      fields.put(DEPT, data.getDept());
+   }
+
+   @Override
+   protected void fillWheres(Schedule data)
+   {
       // Where clause
       wheres = new LinkedHashMap<String, Object>();
       wheres.put(SCHEDULEID, scheduleId);
-   }
-
-   protected ResultSet getDataByScheduleId(int sid)
-   {
-      return sqldb.getSQLSchedules(scheduleId);
    }
 
    protected Schedule make(ResultSet rs)
@@ -79,13 +85,14 @@ public class ScheduleDB extends AbstractDatabase<Schedule>
    @Override
    public void removeData(Schedule data)
    {
-	   super.removeData(data);
-	   // Where clause
-       wheres = new LinkedHashMap<String, Object>();
-       wheres.put(SCHEDULEID, data.getId());
-       sqldb.executeDelete(CourseDB.TABLENAME, wheres);
-       sqldb.executeDelete(InstructorDB.TABLENAME, wheres);
-	   sqldb.executeDelete(LocationDB.TABLENAME, wheres);
+      super.removeData(data);
+      // Where clause
+      wheres = new LinkedHashMap<String, Object>();
+      wheres.put(SCHEDULEID, data.getId());
+      sqldb.executeDelete(CourseDB.TABLENAME, wheres);
+      sqldb.executeDelete(InstructorDB.TABLENAME, wheres);
+      sqldb.executeDelete(LocationDB.TABLENAME, wheres);
+      sqldb.executeDelete(UserDataDB.TABLENAME, wheres);
    }
 
    @Override
@@ -99,25 +106,20 @@ public class ScheduleDB extends AbstractDatabase<Schedule>
     */
    public int getScheduleID(Schedule data)
    {
-      this.scheduleId = sqldb.getScheduleIDByName(data.getName(),
-            data.getDept());
+      this.scheduleId = sqldb.getLastGeneratedKey();
       return scheduleId;
    }
-
-   /**
-    * @param scheduleID
-    *           the scheduleID to set
-    */
-   public void setScheduleID(int scheduleID)
-   {
-      this.scheduleId = scheduleID;
-   }
    
+   public void setScheduleID(int scheduleid)
+   {
+      this.scheduleId = scheduleid;
+   }
+
    /**
     * Gets a schedule by scheduleid for copying
     */
    public Schedule getSchedule(int scheduleid)
    {
-	   return make(sqldb.getSQLSchedules(scheduleid));
+      return make(sqldb.getDataByScheduleID(TABLENAME, scheduleid));
    }
 }

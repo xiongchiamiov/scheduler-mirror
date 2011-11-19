@@ -22,8 +22,6 @@ public class LocationDB extends AbstractDatabase<Location>
    public static final String            PROVIDEDEQUIPMENT = "providedequipment";
    public static final String            ADACOMPLIANT      = "adacompliant";
    public static final String            AVAILABILITY      = "availability";
-   public static final String            SCHEDULEID        = "scheduleid";
-   public static final String NOTE = "note";
 
    public LocationDB(SQLDB sqldb, int scheduleID)
    {
@@ -70,12 +68,7 @@ public class LocationDB extends AbstractDatabase<Location>
       return rooms;
    }
 
-   protected boolean exists (Location l)
-   {
-      return sqldb.doesLocationExist(l);
-   }
-   
-   protected void fillMaps(Location data)
+   protected void fillFields(Location data)
    {
       // Set fields and values
       fields = new LinkedHashMap<String, Object>();
@@ -87,52 +80,44 @@ public class LocationDB extends AbstractDatabase<Location>
             sqldb.serialize(data.getProvidedEquipment()));
       fields.put(ADACOMPLIANT, data.getAdaCompliant());
       fields.put(AVAILABILITY, sqldb.serialize(data.getAvailability()));
-      fields.put(SCHEDULEID, scheduleId);
-      fields.put(NOTE, data.getNote());
-      // Where clause
-      wheres = new LinkedHashMap<String, Object>();
-      wheres.put(BUILDING, data.getBuilding());
-      wheres.put(ROOM, data.getRoom());
-      wheres.put(SCHEDULEID, scheduleId);
+      fields.put(DbData.SCHEDULEID, scheduleId);
+      fields.put(DbData.NOTE, data.getNote());
    }
    
-   protected ResultSet getDataByScheduleId (int sid)
-   {
-      return this.sqldb.getSQLLocations(sid);
-   }
-
    protected Location make (ResultSet rs)
    {
       Location toAdd = new Location();
       try
       {
-         String bldg = rs.getString("building");
+         String bldg = rs.getString(BUILDING);
          toAdd.setBuilding(bldg);
 
-         String room = rs.getString("room");
+         String room = rs.getString(ROOM);
          toAdd.setRoom(room);
 
          int occupancy = rs.getInt(MAXOCCUPANCY);
          toAdd.setMaxOccupancy(occupancy);
 
-         String type = rs.getString("type");
+         String type = rs.getString(TYPE);
          toAdd.setType(type);
 
-         byte[] equipBuf = rs.getBytes("providedequipment");
+         byte[] equipBuf = rs.getBytes(PROVIDEDEQUIPMENT);
          toAdd.setProvidedEquipment((Location.ProvidedEquipment) sqldb
                .deserialize(equipBuf));
 
-         boolean adacompliant = rs.getBoolean("adacompliant");
+         boolean adacompliant = rs.getBoolean(ADACOMPLIANT);
          toAdd.setAdaCompliant(adacompliant);
 
-         byte[] availBuf = rs.getBytes("availability");
+         byte[] availBuf = rs.getBytes(AVAILABILITY);
          toAdd.setAvailability((WeekAvail) sqldb.deserialize(availBuf));
 
-         int scheduleid = rs.getInt("scheduleid");
+         int scheduleid = rs.getInt(DbData.SCHEDULEID);
          toAdd.setScheduleId(scheduleid);
          
-         String note = rs.getString(NOTE);
+         String note = rs.getString(DbData.NOTE);
          toAdd.setNote(note);
+         
+         toAdd.setDbid(rs.getInt(DbData.DBID));
       }
       catch (SQLException e)
       {

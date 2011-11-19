@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.LinkedHashMap;
 
 import edu.calpoly.csc.scheduler.model.db.AbstractDatabase;
+import edu.calpoly.csc.scheduler.model.db.DbData;
 import edu.calpoly.csc.scheduler.model.db.SQLDB;
 import edu.calpoly.csc.scheduler.model.schedule.Day;
 import edu.calpoly.csc.scheduler.model.schedule.Week;
@@ -24,22 +25,14 @@ public class CourseDB extends AbstractDatabase<Course>
    public static final String            DAYS          = "days";
    public static final String            ENROLLMENT    = "enrollment";
    public static final String            LAB           = "lab";
-   public static final String            SCHEDULEID    = "scheduleid";
-   public static final String NOTE = "note";
 
    public CourseDB(SQLDB sqldb, int scheduleID)
    {
       this.sqldb = sqldb;
       this.scheduleId = scheduleID;
    }
-
    
-   protected boolean exists(Course data)
-   {
-      return sqldb.doesCourseExist(data);
-   }
-   
-   protected void fillMaps(Course data)
+   protected void fillFields(Course data)
    {
       // Set fields and values
       fields = new LinkedHashMap<String, Object>();
@@ -54,19 +47,8 @@ public class CourseDB extends AbstractDatabase<Course>
       fields.put(DAYS, sqldb.serialize(data.getDays()));
       fields.put(ENROLLMENT, data.getEnrollment());
       fields.put(LAB, sqldb.serialize(data.getLab()));
-      fields.put(SCHEDULEID, scheduleId);
-      fields.put(NOTE, data.getNote());
-      // Where clause
-      wheres = new LinkedHashMap<String, Object>();
-      wheres.put(CATALOGNUM, data.getCatalogNum());
-      wheres.put(DEPT, data.getDept());
-      wheres.put(TYPE, data.getType().toString());
-      wheres.put(SCHEDULEID, scheduleId);
-   }
-   
-   protected ResultSet getDataByScheduleId(int sid)
-   {
-      return this.sqldb.getSQLCourses(sid);
+      fields.put(DbData.SCHEDULEID, scheduleId);
+      fields.put(DbData.NOTE, data.getNote());
    }
    
    protected Course make(ResultSet rs)
@@ -75,49 +57,27 @@ public class CourseDB extends AbstractDatabase<Course>
       Course toAdd = new Course();
       try
       {
-         String name = rs.getString("name");
-         toAdd.setName(name);
+         toAdd.setName(rs.getString(NAME));
+         toAdd.setCatalogNum(rs.getInt(CATALOGNUM));
+         toAdd.setDept(rs.getString(DEPT));
+         toAdd.setWtu(rs.getInt(WTU));
+         toAdd.setScu(rs.getInt(SCU));
+         toAdd.setNumOfSections(rs.getInt(NUMOFSECTIONS));
+         toAdd.setType(rs.getString(TYPE));
+         toAdd.setLength(rs.getInt(LENGTH));
          
-         int catalogNum = rs.getInt("catalognum");
-         toAdd.setCatalogNum(catalogNum);
-         
-         String dept = rs.getString("dept");
-         toAdd.setDept(dept);
-         
-         int wtu = rs.getInt("wtu");
-         toAdd.setWtu(wtu);
-         
-         int scu = rs.getInt("scu");
-         toAdd.setScu(scu);
-         
-         int numOfSections = rs.getInt("numofsections");
-         toAdd.setNumOfSections(numOfSections);
-         
-         String courseType = rs.getString("type");
-         toAdd.setType(courseType);
-         
-         int length = rs.getInt("length");
-         toAdd.setLength(length);
-         
-         byte[] daysBuf = rs.getBytes("days");
+         byte[] daysBuf = rs.getBytes(DAYS);
          // toAdd.setDays((Week) sqldb.deserialize(daysBuf));
          // TODO: Remove this later
          Week temp = new Week(new Day[]
                { Day.MON, Day.WED, Day.FRI });
          toAdd.setDays(temp);
          
-         int enrollment = rs.getInt("enrollment");
-         toAdd.setEnrollment(enrollment);
-         
-         // Deserialize Lab
-         byte[] labBuf = rs.getBytes("lab");
-         toAdd.setLab((Lab) sqldb.deserialize(labBuf));
-         
-         int scheduleid = rs.getInt("scheduleid");
-         toAdd.setScheduleId(scheduleid);
-         
-         String note = rs.getString(NOTE);
-         toAdd.setNote(note);
+         toAdd.setEnrollment(rs.getInt(ENROLLMENT));
+         toAdd.setLab((Lab) sqldb.deserialize(rs.getBytes(LAB)));
+         toAdd.setScheduleId(rs.getInt(DbData.SCHEDULEID));
+         toAdd.setNote(rs.getString(DbData.NOTE));
+         toAdd.setDbid(rs.getInt(DbData.DBID));
       }
       catch (SQLException e)
       {

@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.model.udb;
+package edu.calpoly.csc.scheduler.model.db.udb;
 
 import edu.calpoly.csc.scheduler.model.db.DbData;
 import edu.calpoly.csc.scheduler.model.db.NullDataException;
