@@ -79,7 +79,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
     dualListBoxCourses.reregisterBoxDrops();
    }
   }
-  dragController.registerDropController(dualListBoxCourses.getAvailableDropController());
+  //dragController.registerDropController(dualListBoxCourses.getAvailableDropController());
   dragController.registerDropController(dualListBoxCourses.getIncludedDropController());  
  }
 
@@ -88,18 +88,20 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
   */
  private void getScheduleItemsFromServer()
  {
-
+  final LoadingPopup loading = new LoadingPopup();
+  
   if (dualListBoxCourses.getIncludedCourses().size() == 0)
   {
    Window.alert("No courses to schedule");
    return;
   }
-
+  loading.show();
   greetingService.getGWTScheduleItems(dualListBoxCourses.getIncludedCourses(),
     new AsyncCallback<List<ScheduleItemGWT>>()
     {
      public void onFailure(Throwable caught)
      {
+      loading.hide();
       Window.alert("Failed to get schedule: " + caught.toString());
      }
 
@@ -128,6 +130,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
        filterScheduleItems(searchBox.getText());
        
        dualListBoxCourses.removeAllFromIncluded();
+       loading.hide();
       }
      }
     });
@@ -277,6 +280,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
      for (CourseGWT course : result)
      {
       dualListBoxCourses.addLeft(new CourseListItem(course, false));
+      dualListBoxCourses.addRight(new CourseListItem(course, true));
      }
      registerDrops();
     }
@@ -384,6 +388,8 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
    ArrayList<Integer> days, int row, final boolean inSchedule,
    final boolean fromIncluded)
  {
+  final LoadingPopup loading = new LoadingPopup();
+  loading.show();
   final int startHour = getHourFromRow(row);
   final boolean atHalfHour = rowIsAtHalfHour(row);
   CourseGWT course = new CourseGWT();
@@ -396,6 +402,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
      @Override
      public void onFailure(Throwable caught)
      {
+      loading.hide();
       Window.alert("Failed to retrieve rescheduled item");
      }
 
@@ -452,6 +459,8 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
       filtersDialog.addItems(scheduleItems);
       filterScheduleItems(searchBox.getText());
 
+      loading.hide();
+      
       if (rescheduled.conflict.length() > 0)
       {
        Window.alert(rescheduled.conflict);
@@ -504,12 +513,16 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
 
  public void removeItem(ScheduleItemGWT removed)
  {
+  final LoadingPopup loading = new LoadingPopup();
+  loading.show();
+  
   greetingService.removeScheduleItem(removed, 
     new AsyncCallback<List<ScheduleItemGWT>>()
     {
      @Override
      public void onFailure(Throwable caught)
      {
+      loading.hide();
       Window.alert("Failed to remove item.");
      }
 
@@ -525,6 +538,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
 
       filtersDialog.addItems(scheduleItems);
       filterScheduleItems(searchBox.getText());
+      loading.hide();
      }   
     });
  }
