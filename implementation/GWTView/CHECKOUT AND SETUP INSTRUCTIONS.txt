@@ -13,6 +13,7 @@ hit Finish.
 Go to the libraries tab (still in java build path screen)
 Hit add external jar. add repo/implementation/model/java/mysql-connector-java-5.0.8-bin.jar.
 Hit add external jar. add repo/implementation/GWTView/gwt-dnd-3.1.2.jar.
+also add the "dnd" jar by clicking on "Add JARs..." and browsing under GWTView
 get out of the properties menu.
 Do a clean and a build. there should be no errors. (there may be some warnings) There might be a warning about some server missing.
 
