@@ -147,6 +147,7 @@ public class Database
       {
          // Use this schedule
          System.out.println("Using existing schedule");
+         scheduleDB.setScheduleID(realid);
       }
       else
       {

@@ -531,8 +531,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
  
  public void saveSchedule()
  {
-  Window.alert("This feature is not yet functional, so this schedule won't be saved if the page is refreshed.");
-  /*This throws exceptions!
+  //Window.alert("This feature is not yet functional, so this schedule won't be saved if the page is refreshed.");
   final LoadingPopup loading = new LoadingPopup();
   loading.show();
   greetingService.saveSchedule(
@@ -552,6 +551,6 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
       loading.hide();
       Window.alert("Schedule successfully saved.");
      }
-    });*/
+    });
  }
 }

@@ -286,14 +286,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		ArrayList<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
 		ScheduleItemGWT gwtItem;
 
-		if (schedule == null) {
-			schedule = new Schedule(model.getInstructors(),
-					model.getLocations());
-		}
-		/*
-		 * This throws exceptions! schedule =
-		 * db.getScheduleDB().getSchedule(model.getScheduleID());
-		 */
+		schedule = model.loadSchedule(model.getScheduleID());
 		scheduleItems = new HashMap<String, ScheduleItem>();
 
 		for (ScheduleItem item : schedule.getItems()) {
