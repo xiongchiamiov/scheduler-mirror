@@ -16,15 +16,16 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
+import edu.calpoly.csc.scheduler.view.web.client.IViewContents;
+import edu.calpoly.csc.scheduler.view.web.client.ViewFrame;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 
-public class InstructorPreferencesView extends ScrollPanel implements IView<ScheduleNavView> {
+public class InstructorPreferencesView extends VerticalPanel implements IViewContents {
 	Panel container;
 	GreetingServiceAsync service;
 	InstructorGWT instructor;
@@ -36,7 +37,7 @@ public class InstructorPreferencesView extends ScrollPanel implements IView<Sche
 	InstructorTimePreferencesWidget timePrefs;
 	FlexTable coursePrefs;
 	
-	public InstructorPreferencesView(GreetingServiceAsync service, InstructorGWT instructor) {
+	public InstructorPreferencesView(GreetingServiceAsync service, String scheduleName, InstructorGWT instructor) {
 		this.service = service;
 		
 		instructor.verify();
@@ -44,35 +45,30 @@ public class InstructorPreferencesView extends ScrollPanel implements IView<Sche
 		this.instructor = instructor;
 		this.savedInstructor = instructor.clone();
 	}
-	
-	@Override
-	public void onLoad() {
-		super.onLoad();
 
-		setWidth("100%");
-		setHeight("100%");
-		
-		final VerticalPanel vp = new VerticalPanel();
-		add(vp);
+	@Override
+	public void afterPush(ViewFrame frame) {
+		this.setWidth("100%");
+		this.setHeight("100%");
 		
 		timePrefs = new InstructorTimePreferencesWidget(service, new InstructorTimePreferencesWidget.Strategy() {
 			public InstructorGWT getSavedInstructor() { return savedInstructor; }
 			public InstructorGWT getInstructor() { return instructor; }
 		});
 
-		vp.add(new Button("Save All Preferences", new ClickHandler() {
+		this.add(new Button("Save All Preferences", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				save();
 			}
 		}));
 		
-		vp.add(new HTML("Time preferences go from 0 to 9. 0 means you cannot teach at that time, 9 means you really want to teach at that time."));
+		this.add(new HTML("Time preferences go from 0 to 9. 0 means you cannot teach at that time, 9 means you really want to teach at that time."));
 		
-		vp.add(timePrefs);
+		this.add(timePrefs);
 		
 		coursePrefs = new FlexTable();
-		vp.add(coursePrefs);
+		this.add(coursePrefs);
 		coursePrefs.setWidget(0, 0, new HTML("Course"));
 		coursePrefs.setWidget(0, 1, new HTML("Preference"));
 		
@@ -163,11 +159,13 @@ public class InstructorPreferencesView extends ScrollPanel implements IView<Sche
 	}
 
 	@Override
-	public void willOpenView(ScheduleNavView container) { }
-
+	public boolean canPop() { return true; }
 	@Override
-	public boolean canCloseView() { return true; }
-	
+	public void beforePop() { }
 	@Override
-	public Widget getViewWidget() { return this; }
+	public void beforeViewPushedAboveMe() { }
+	@Override
+	public void afterViewPoppedFromAboveMe() { }
+	@Override
+	public Widget getContents() { return this; }
 }
