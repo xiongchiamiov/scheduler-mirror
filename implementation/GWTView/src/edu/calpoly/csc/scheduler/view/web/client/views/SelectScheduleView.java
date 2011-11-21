@@ -116,7 +116,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 		this.setWidth("100%");
 		this.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		
-		this.add(new HTMLPanel("<h2>Select a Schedule</h2>"));
+		/*this.add(new HTMLPanel("<h2>Select a Schedule</h2>"));
 		
 		listBox = new ListBox();
 		this.add(listBox);
@@ -281,7 +281,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 					}
 				});
 			}
-		}));
+		}));*/
 	}
 	
 	@Override
@@ -312,6 +312,13 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 		menuBar.removeItem(fileMenuItem);
 	}
 	
+	/**
+	 * Private method for selecting a previously saved schedule from the database given the schedule ID
+	 * and the schedule name.
+	 * 
+	 * @param scheduleID ID of the schedule to open.
+	 * @param scheduleName Name of the schedule to open.
+	 */
 	private void selectSchedule(final int scheduleID, final String scheduleName) {
 		final LoadingPopup popup = new LoadingPopup();
 		popup.show();
@@ -347,10 +354,15 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 		void namedSchedule(String name);
 	}
 	
+	/**
+	 * Displays a popup for specifying a new schedule.
+	 * @param buttonLabel
+	 * @param callback
+	 */
 	public void displayNewSchedPopup(String buttonLabel, final NameScheduleCallback callback) {
 		final TextBox tb = new TextBox();
 		final DialogBox db = new DialogBox(false);
-		VerticalPanel vp = new VerticalPanel();
+		FlowPanel fp = new FlowPanel();
 		final Button butt = new Button(buttonLabel, new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {		
@@ -359,6 +371,12 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 			    final String scheduleName = tb.getText();
 			    
 			    callback.namedSchedule(scheduleName);
+			}
+		});
+		final Button cancelButton = new Button("Cancel", new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				db.hide();
 			}
 		});
 		
@@ -371,11 +389,12 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 		});
 		
 		db.setText("Name Schedule");
-		vp.add(new HTML("<center>Specify a new schedule name.</center>"));
-		vp.add(tb);
-		vp.add(butt);
+		fp.add(new HTML("<center>Specify a new schedule name.</center>"));
+		fp.add(tb);
+		fp.add(butt);
+		fp.add(cancelButton);
 		
-		db.setWidget(vp);
+		db.setWidget(fp);
 		db.center();
 	}
 	
