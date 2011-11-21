@@ -357,16 +357,16 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 		final DialogBox db = new DialogBox();
 		FlowPanel fp = new FlowPanel();
 		final ListBox listBox = new ListBox();
-		final Map<String,Integer> schedules = new HashMap<String,Integer>();
-		
-		service.getScheduleNames(new AsyncCallback<Map<String,Integer>>() {
+		final Map<String,UserDataGWT> schedules = new HashMap<String,UserDataGWT>();
+
+		service.getScheduleNames(new AsyncCallback<Map<String,UserDataGWT>>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				Window.alert("Failed to open schedule in: " + caught.getMessage());
 			}
 			
 			@Override
-			public void onSuccess(Map<String,Integer> result) {
+			public void onSuccess(Map<String,UserDataGWT> result) {
 				schedules.putAll(result);
 				for(String name : result.keySet())
 					listBox.addItem(name);
@@ -383,7 +383,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 			public void onClick(ClickEvent event) {
 				int index = listBox.getSelectedIndex();
 				String scheduleName = listBox.getItemText(index);
-				int scheduleID = schedules.get(scheduleName);
+				int scheduleID = schedules.get(scheduleName).getID();
 				selectSchedule(scheduleID, scheduleName);
 				db.hide();
 			}
