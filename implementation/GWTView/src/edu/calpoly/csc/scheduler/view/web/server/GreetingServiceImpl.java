@@ -113,8 +113,18 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 			model.saveInstructor(Conversion.fromGWT(editedInstructor, getCoursesByID()));
 		}
 		
-		for (InstructorGWT removedInstructor : removed)
-			model.removeInstructor(Conversion.fromGWT(removedInstructor, getCoursesByID()));
+		int numInstructors = model.getInstructors().size();
+		
+		System.out.println("Removing " + removed.size() + " instructors");
+		
+		for (InstructorGWT removedInstructorGWT : removed) {
+			System.out.println("Removing instructor " + removedInstructorGWT.getLastName() + " id " + removedInstructorGWT.getID());
+			Instructor removedInstructor = Conversion.fromGWT(removedInstructorGWT, getCoursesByID());
+			model.removeInstructor(removedInstructor);
+			assert(!model.getInstructors().contains(removedInstructor));
+		}
+		
+		assert(model.getInstructors().size() == numInstructors - removed.size());
 
 		return getInstructors();
 	}
