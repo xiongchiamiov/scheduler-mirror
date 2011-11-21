@@ -2,9 +2,11 @@ package edu.calpoly.csc.scheduler.view.web.client.table;
 
 import java.util.Comparator;
 
+import edu.calpoly.csc.scheduler.view.web.shared.Identified;
+
 // TODO: make the intcolumn handle up and down arrows, thatd be sick.
 
-public class IntColumn<ObjectType extends Comparable<ObjectType>> extends StringColumn<ObjectType> {
+public class IntColumn<ObjectType extends Identified> extends StringColumn<ObjectType> {
 	public IntColumn(String name, String width, final StaticGetter<ObjectType, Integer> getter, final StaticSetter<ObjectType, Integer> setter, final StaticValidator<ObjectType, Integer> validator) {
 		super(name, width,
 				new StaticGetter<ObjectType, String>() {

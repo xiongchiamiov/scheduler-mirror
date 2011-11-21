@@ -1,6 +1,9 @@
 package edu.calpoly.csc.scheduler.view.web.client.views;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Vector;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -24,6 +27,8 @@ import edu.calpoly.csc.scheduler.view.web.client.table.StaticValidator;
 import edu.calpoly.csc.scheduler.view.web.client.table.StringColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.TableConstants;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.TimePreferenceGWT;
 
 public class InstructorsView extends VerticalPanel implements IViewContents {
 	// These static variables are a temporary hack to get around the table bug
@@ -31,7 +36,7 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 	
 	private final String scheduleName;
 	private OsmTable<InstructorGWT> table;
-	int nextLocationID = 1;
+	int nextInstructorID = 1;
 	
 	ViewFrame myFrame;
 
@@ -97,13 +102,13 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 		table = new OsmTable<InstructorGWT>(
 				new Factory<InstructorGWT>() {
 					public InstructorGWT create() {
-						return new InstructorGWT(nextLocationID++);
+						return new InstructorGWT(
+								nextInstructorID++, "", "", "", "", "", false, 5, 5, 0, 0,
+								new HashMap<Integer, Map<Integer, TimePreferenceGWT>>(),
+								new HashMap<Integer, Integer>());
 					}
-					public InstructorGWT createHistoryFor(InstructorGWT location) {
-						InstructorGWT i = location.clone();
-						i.setId(-location.getId());
-						return i;
-					}
+					@Override
+					public InstructorGWT createCopy(InstructorGWT object) { return new InstructorGWT(object); }
 				},
 				new OsmTable.SaveHandler<InstructorGWT>() {
 					public void saveButtonClicked() {
@@ -211,7 +216,7 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 				assert(result != null);
 				popup.hide();
 				for (InstructorGWT instr : result)
-					nextLocationID = Math.max(nextLocationID, instr.getId() + 1);
+					nextInstructorID = Math.max(nextInstructorID, instr.getID() + 1);
 				table.addRows(result);
 			}
 		});
@@ -239,9 +244,13 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 	}
 	
 	private boolean userIdExists(String userId) {
-		for (InstructorGWT instr : table.getAddedUntouchedAndEditedObjects())
+		for (InstructorGWT instr : table.getAddedUntouchedAndEditedObjects()) {
+			assert(instr != null);
+			assert(instr.getUserID() != null);
+			assert(userId != null);
 			if (instr.getUserID().equals(userId))
 				return true;
+		}
 		return false;
 	}
 
@@ -254,3 +263,4 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 	@Override
 	public Widget getContents() { return this; }
 }
+ 

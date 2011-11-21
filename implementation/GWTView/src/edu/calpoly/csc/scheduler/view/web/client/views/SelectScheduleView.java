@@ -28,6 +28,7 @@ import edu.calpoly.csc.scheduler.view.web.client.IViewContents;
 import edu.calpoly.csc.scheduler.view.web.client.ViewFrame;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.Pair;
+import edu.calpoly.csc.scheduler.view.web.shared.UserDataGWT;
 
 public class SelectScheduleView extends VerticalPanel implements IViewContents {
 	private final GreetingServiceAsync service;
@@ -40,8 +41,8 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 	private ListBox listBox;
 	
 	private ViewFrame myFrame;
-	
-	Map<String, Integer> schedulesIDsAndNames;
+
+	Map<String, UserDataGWT> availableSchedulesByName;
 	
 	public SelectScheduleView(final GreetingServiceAsync service, final MenuBar menuBar, final int userID, final String username) {
 		this.service = service;
@@ -221,7 +222,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 		this.add(new Button("Remove Schedule", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				String schedName = listBox.getValue(listBox.getSelectedIndex());
+				String schedName = listBox.getItemText(listBox.getSelectedIndex());
 				
 				service.removeSchedule(schedName, new AsyncCallback<Void>() {
 					@Override
@@ -231,19 +232,19 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 					
 					@Override
 					public void onSuccess(Void derp) {
-						service.getScheduleNames(new AsyncCallback<Map<String,Integer>>() {
+						service.getScheduleNames(new AsyncCallback<Map<String,UserDataGWT>>() {
 							@Override
 							public void onFailure(Throwable caught) {
 								Window.alert("There was an error getting the schedules: " + caught.getMessage());
 							}
 							
 							@Override
-							public void onSuccess(Map<String, Integer> result) {
-								schedulesIDsAndNames = result;
+							public void onSuccess(Map<String, UserDataGWT> result) {
+								availableSchedulesByName = result;
 								
 								listBox.clear();
-								for (String scheduleName : schedulesIDsAndNames.keySet())
-									listBox.addItem(scheduleName, schedulesIDsAndNames.get(scheduleName).toString());
+								for (String scheduleName : availableSchedulesByName.keySet())
+									listBox.addItem(scheduleName, availableSchedulesByName.get(scheduleName).getScheduleID().toString());
 							}
 						});
 					}
@@ -256,19 +257,19 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 	public void afterPush(ViewFrame frame) {
 		this.myFrame = frame;
 		
-		service.getScheduleNames(new AsyncCallback<Map<String,Integer>>() {
+		service.getScheduleNames(new AsyncCallback<Map<String,UserDataGWT>>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				Window.alert("There was an error getting the schedules: " + caught.getMessage());
 			}
 			
 			@Override
-			public void onSuccess(Map<String, Integer> result) {
-				schedulesIDsAndNames = result;
+			public void onSuccess(Map<String, UserDataGWT> result) {
+				availableSchedulesByName = result;
 				
 				listBox.clear();
-				for (String scheduleName : schedulesIDsAndNames.keySet())
-					listBox.addItem(scheduleName, schedulesIDsAndNames.get(scheduleName).toString());
+				for (String scheduleName : availableSchedulesByName.keySet())
+					listBox.addItem(scheduleName, availableSchedulesByName.get(scheduleName).getScheduleID().toString());
 			}
 		});
 		

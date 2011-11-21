@@ -43,7 +43,7 @@ public class InstructorPreferencesView extends VerticalPanel implements IViewCon
 		instructor.verify();
 		
 		this.instructor = instructor;
-		this.savedInstructor = instructor.clone();
+		this.savedInstructor = new InstructorGWT(instructor);
 	}
 
 	@Override
@@ -127,7 +127,7 @@ public class InstructorPreferencesView extends VerticalPanel implements IViewCon
 			public void onSuccess(Void result) {
 				popup.hide();
 				savedInstructor = instructor;
-				instructor = instructor.clone();
+				instructor = new InstructorGWT(instructor);
 				redoColors();
 			}
 		});
@@ -141,7 +141,7 @@ public class InstructorPreferencesView extends VerticalPanel implements IViewCon
 	}
 	
 	void setCoursePreference(CourseGWT course, int newDesire) {
-		instructor.getCoursePreferences().put(course, newDesire);
+		instructor.getCoursePreferences().put(course.getID(), newDesire);
 		redoColors();
 	}
 	

@@ -5,7 +5,9 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Widget;
 
-public class ButtonColumn<ObjectType extends Comparable<ObjectType>> extends OsmTable.Column<ObjectType> {
+import edu.calpoly.csc.scheduler.view.web.shared.Identified;
+
+public class ButtonColumn<ObjectType extends Identified> extends OsmTable.Column<ObjectType> {
 	public interface ClickCallback<ObjectType> {
 		void buttonClickedForObject(ObjectType object, Button button);
 		String initialLabel(ObjectType object);

@@ -6,33 +6,24 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
-import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.Event;
-import com.google.gwt.event.dom.client.HandlesAllMouseEvents;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
-import edu.calpoly.csc.scheduler.view.web.shared.DayGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.TimeGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.TimePreferenceGWT;
 
 public class InstructorTimePreferencesWidget extends VerticalPanel {
@@ -94,15 +85,12 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 		
 		int hour = cell.halfHour / 2 + 7; // divide by two to get hours 0-15. Add 7 to get hours 7-22.
 		
-		TimeGWT time = new TimeGWT();
-		time.setHour(hour);
-		time.setMinute(cell.halfHour % 2 * 30);
+		Integer time = hour * 60 + cell.halfHour % 2 * 30;
 
-		DayGWT day = new DayGWT();
-		day.setNum(cell.day);
+		Integer day = cell.day;
 
 		if (instructor.gettPrefs().get(day) == null) {
-			Map<TimeGWT, TimePreferenceGWT> newmap = new HashMap<TimeGWT, TimePreferenceGWT>();
+			Map<Integer, TimePreferenceGWT> newmap = new HashMap<Integer, TimePreferenceGWT>();
 			assert(newmap.get(time) == null);
 			instructor.gettPrefs().put(day, newmap);
 			assert(instructor.gettPrefs().get(day) == newmap);
@@ -120,12 +108,9 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 
 		instructor.gettPrefs().get(day).get(time).setDesire(desire);
 		
-		time = new TimeGWT();
-		time.setHour(hour);
-		time.setMinute(cell.halfHour % 2 * 30);
+		time = hour * 60 + cell.halfHour % 2 * 30;
 
-		day = new DayGWT();
-		day.setNum(cell.day);
+		day = cell.day;
 		
 		assert(instructor.gettPrefs().get(day).get(time).getDesire() == desire);
 		
@@ -139,12 +124,9 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 	int getPreference(InstructorGWT ins, int halfHour, int dayNum) {
 		int hour = halfHour / 2 + 7; // divide by two to get hours 0-15. Add 7 to get hours 7-22.
 		
-		TimeGWT time = new TimeGWT();
-		time.setHour(hour);
-		time.setMinute(halfHour % 2 * 30);
+		Integer time = hour * 60 + halfHour % 2 * 30;
 		
-		DayGWT day = new DayGWT();
-		day.setNum(dayNum);
+		Integer day = dayNum;
 		
 		if (ins.gettPrefs().get(day) != null && ins.gettPrefs().get(day).get(time) != null)
 			return ins.gettPrefs().get(day).get(time).getDesire();
@@ -479,14 +461,9 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 		for (int halfHour = 0; halfHour < 30; halfHour++) {
 			int hour = halfHour / 2 + 7; // divide by two to get hours 0-15. Add 7 to get hours 7-22.
 			
-			TimeGWT time = new TimeGWT();
-			time.setHour(hour);
-			time.setMinute(halfHour % 2 * 30);
+			Integer time = hour * 60 + halfHour % 2 * 30;
 			
 			for (int dayNum = 0; dayNum < 7; dayNum++) {
-				DayGWT day = new DayGWT();
-				day.setNum(dayNum);
-
 				CellWidget cell = cells[halfHour][dayNum];
 				if (getPreference(strategy.getInstructor(), halfHour, dayNum) != getPreference(strategy.getSavedInstructor(), halfHour, dayNum))
 					cell.addStyleName("changed");

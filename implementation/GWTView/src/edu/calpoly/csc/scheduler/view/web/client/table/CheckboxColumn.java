@@ -7,7 +7,9 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Widget;
 
-public class CheckboxColumn<ObjectType extends Comparable<ObjectType>> extends OsmTable.Column<ObjectType> {
+import edu.calpoly.csc.scheduler.view.web.shared.Identified;
+
+public class CheckboxColumn<ObjectType extends Identified> extends OsmTable.Column<ObjectType> {
 	private StaticGetter<ObjectType, Boolean> getter;
 	private StaticSetter<ObjectType, Boolean> setter;
 	

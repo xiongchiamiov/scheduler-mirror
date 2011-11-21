@@ -44,14 +44,8 @@ public class AdminConfigView extends VerticalPanel implements IViewContents {
 						
 		table = new OsmTable<UserDataGWT>(
 				new Factory<UserDataGWT>() {
-					public UserDataGWT create() {
-						return new UserDataGWT();
-					}
-					public UserDataGWT createHistoryFor(UserDataGWT course) {
-						UserDataGWT i = course.clone();
-//						i.setId(-course.getId());
-						return i;
-					}
+					public UserDataGWT create() { return new UserDataGWT(); }
+					public UserDataGWT createCopy(UserDataGWT existing) { return new UserDataGWT(existing); }
 				},
 				new OsmTable.SaveHandler<UserDataGWT>() {
 					public void saveButtonClicked() {
@@ -61,10 +55,10 @@ public class AdminConfigView extends VerticalPanel implements IViewContents {
 				
 		table.addColumn(new StringColumn<UserDataGWT>(TableConstants.CONFIG_USERNAME, "6em",
 				new StaticGetter<UserDataGWT, String>() {
-					public String getValueForObject(UserDataGWT object) { return object.getCourseName(); }
+					public String getValueForObject(UserDataGWT object) { return object.getUserName(); }
 				},
 				new StaticSetter<UserDataGWT, String>() {
-					public void setValueInObject(UserDataGWT object, String newValue) { object.setCourseName(newValue); }
+					public void setValueInObject(UserDataGWT object, String newValue) { object.setUserName(newValue); }
 				},
 				String.CASE_INSENSITIVE_ORDER, null));
 		
@@ -73,11 +67,11 @@ public class AdminConfigView extends VerticalPanel implements IViewContents {
 				new String[] { "0", "1", "2" },
 				
 				new StaticGetter<UserDataGWT, String>() {
-					public String getValueForObject(UserDataGWT object) { return object.getCourseName(); }
+					public String getValueForObject(UserDataGWT object) { return object.getPermissionLevel().toString(); }
 				},
 				
 				new StaticSetter<UserDataGWT, String>() {
-					public void setValueInObject(UserDataGWT object, String newValue) { object.setCourseName(newValue); }
+					public void setValueInObject(UserDataGWT object, String newValue) { object.setPermissionLevel(Integer.parseInt(newValue)); }
 				},
 				
 				String.CASE_INSENSITIVE_ORDER));		
@@ -94,7 +88,7 @@ public class AdminConfigView extends VerticalPanel implements IViewContents {
 				assert(result != null);
 				popup.hide();
 				for (CourseGWT crs : result)
-					nextLocationID = Math.max(nextLocationID, crs.getId() + 1);
+					nextLocationID = Math.max(nextLocationID, crs.getID() + 1);
 				//table.addRows(result);
 			}
 		});

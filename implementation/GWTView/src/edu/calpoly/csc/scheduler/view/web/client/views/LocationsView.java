@@ -64,9 +64,7 @@ public class LocationsView extends VerticalPanel implements IViewContents {
 					public LocationGWT create() {
 						return new LocationGWT(nextLocationID++, "", "", "LEC", 20, false, new LocationGWT.ProvidedEquipmentGWT());
 					}
-					public LocationGWT createHistoryFor(LocationGWT location) {
-						return new LocationGWT(-location.getID(), location);
-					}
+					public LocationGWT createCopy(LocationGWT object) { return new LocationGWT(object); }
 				},
 				new OsmTable.SaveHandler<LocationGWT>() {
 					public void saveButtonClicked() {

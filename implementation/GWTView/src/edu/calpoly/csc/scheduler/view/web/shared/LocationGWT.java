@@ -3,8 +3,8 @@ package edu.calpoly.csc.scheduler.view.web.shared;
 import java.io.Serializable;
 
 
-public class LocationGWT implements Serializable, Comparable<LocationGWT> {
-	public static class ProvidedEquipmentGWT implements Serializable, Comparable<ProvidedEquipmentGWT> {
+public class LocationGWT implements Serializable, Identified {
+	public static class ProvidedEquipmentGWT implements Serializable {
 		private static final long serialVersionUID = 42;
 		public boolean hasOverhead = false;
 		public boolean isSmartRoom = false;
@@ -61,33 +61,13 @@ public class LocationGWT implements Serializable, Comparable<LocationGWT> {
 		this.adacompliant = other.adacompliant;
 		this.equipment = new ProvidedEquipmentGWT(other.equipment);
 	}
+	
+	public LocationGWT(LocationGWT that) {
+		this(that.id, that.building, that.room, that.type, that.maxOccupancy, that.adacompliant, new ProvidedEquipmentGWT(that.equipment));
+		// TODO Auto-generated constructor stub
+	}
 
-	@Override
-	public int compareTo(LocationGWT that) {
-		if (building.compareTo(that.building) != 0)
-			return building.compareTo(that.building);
-		if (room.compareTo(that.room) != 0)
-			return room.compareTo(that.room);
-		if (type.compareTo(that.type) != 0)
-			return type.compareTo(that.type);
-		if (maxOccupancy != that.maxOccupancy)
-			return maxOccupancy - that.maxOccupancy;
-		if (adacompliant != that.adacompliant)
-			return (adacompliant ? 1 : 0) - (that.adacompliant ? 1 : 0);
-		return equipment.compareTo(that.equipment);
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		return obj instanceof LocationGWT && id == ((LocationGWT)obj).id;
-	}
-	
-	@Override
-	public int hashCode() {
-		return id;
-	}
-	
-	public int getID() { return id; }
+	public Integer getID() { return id; }
 	public boolean isADACompliant() { return adacompliant; }
 	public void setADACompliant(boolean compliant) { this.adacompliant = compliant; }
 	public String getBuilding() { return building; }

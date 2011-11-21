@@ -32,6 +32,7 @@ import edu.calpoly.csc.scheduler.view.web.client.table.StaticValidator;
 import edu.calpoly.csc.scheduler.view.web.client.table.StringColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.TableConstants;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.WeekGWT;
 
 public class CoursesView extends VerticalPanel implements IViewContents {
 	private GreetingServiceAsync service;
@@ -90,13 +91,10 @@ public class CoursesView extends VerticalPanel implements IViewContents {
 		table = new OsmTable<CourseGWT>(
 				new Factory<CourseGWT>() {
 					public CourseGWT create() {
-						return new CourseGWT(nextLocationID++);
+						return new CourseGWT("", 0, "", 0, 0, 0, "", 0, 0, "", "", 0, 6, new WeekGWT(), 0, 0);
 					}
-					public CourseGWT createHistoryFor(CourseGWT course) {
-						CourseGWT i = course.clone();
-						i.setId(-course.getId());
-						return i;
-					}
+					@Override
+					public CourseGWT createCopy(CourseGWT object) { return new CourseGWT(object); }
 				},
 				new OsmTable.SaveHandler<CourseGWT>() {
 					public void saveButtonClicked() {
@@ -281,7 +279,7 @@ public class CoursesView extends VerticalPanel implements IViewContents {
 				assert(result != null);
 				popup.hide();
 				for (CourseGWT crs : result)
-					nextLocationID = Math.max(nextLocationID, crs.getId() + 1);
+					nextLocationID = Math.max(nextLocationID, crs.getID() + 1);
 				table.addRows(result);
 			}
 		});

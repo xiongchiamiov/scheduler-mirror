@@ -7,8 +7,9 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.client.table.StaticValidator.InvalidValueException;
+import edu.calpoly.csc.scheduler.view.web.shared.Identified;
 
-public class StringColumn<ObjectType extends Comparable<ObjectType>> extends OsmTable.Column<ObjectType> {
+public class StringColumn<ObjectType extends Identified> extends OsmTable.Column<ObjectType> {
 	protected StaticGetter<ObjectType, String> getter;
 	protected StaticSetter<ObjectType, String> setter;
 	protected StaticValidator<ObjectType, String> validator;

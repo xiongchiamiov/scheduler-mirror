@@ -1,8 +1,8 @@
 package edu.calpoly.csc.scheduler.view.web.client.schedule;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -42,6 +42,23 @@ import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemList;
  */
 public class ScheduleViewWidget implements CloseHandler<PopupPanel>
 {
+	class ScheduleItemComparator implements Comparator<ScheduleItemGWT> {
+  	  @Override
+  	public int compare(ScheduleItemGWT o1, ScheduleItemGWT o2) {
+  			if (o1.getStartTimeHour() > o2.getStartTimeHour()) {
+  				return 1;
+  			} else if (o1.getStartTimeHour() < o2.getStartTimeHour()) {
+  				return -1;
+  			} else if (o1.getStartTimeMin() > o2.getStartTimeMin()) {
+  				return 1;
+  			} else if (o1.getStartTimeMin() < o2.getStartTimeMin()) {
+  				return -1;
+  			}
+
+  			return 0;
+  	  }
+    };
+	
  private GreetingServiceAsync greetingService;
  private ArrayList<ScheduleItemGWT> scheduleItems = new ArrayList<ScheduleItemGWT>();
  private VerticalPanel mainPanel = new VerticalPanel();
@@ -110,7 +127,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
       if (result != null)
       {
        // Sort result by start times in ascending order
-       Collections.sort(result);
+       Collections.sort(result, new ScheduleItemComparator());
 
        // Reset column and row spans, remove any items
        // already placed
@@ -342,7 +359,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
        scheduleItems.add(item);
       }
 
-      Collections.sort(scheduleItems);
+      Collections.sort(scheduleItems, new ScheduleItemComparator());
       // Add the attributes of the retrieved items to the
       // filters list
       filtersDialog.addItems(scheduleItems);
@@ -454,7 +471,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
       {
        scheduleItems.add(schdItem);
       }
-      Collections.sort(scheduleItems);
+      Collections.sort(scheduleItems, new ScheduleItemComparator());
 
       filtersDialog.addItems(scheduleItems);
       filterScheduleItems(searchBox.getText());
@@ -534,7 +551,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
       {
        scheduleItems.add(schdItem);
       }
-      Collections.sort(scheduleItems);
+      Collections.sort(scheduleItems, new ScheduleItemComparator());
 
       filtersDialog.addItems(scheduleItems);
       filterScheduleItems(searchBox.getText());

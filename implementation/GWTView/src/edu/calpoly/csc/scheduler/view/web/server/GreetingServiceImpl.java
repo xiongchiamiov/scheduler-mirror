@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
@@ -14,6 +15,7 @@ import edu.calpoly.csc.scheduler.model.db.Time;
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
 import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
 import edu.calpoly.csc.scheduler.model.db.ldb.Location;
+import edu.calpoly.csc.scheduler.model.db.udb.UserData;
 import edu.calpoly.csc.scheduler.model.schedule.CouldNotBeScheduledException;
 import edu.calpoly.csc.scheduler.model.schedule.Day;
 import edu.calpoly.csc.scheduler.model.schedule.Schedule;
@@ -26,6 +28,7 @@ import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.Pair;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemList;
+import edu.calpoly.csc.scheduler.view.web.shared.UserDataGWT;
 
 /**
  * The server side implementation of the RPC service.
@@ -45,8 +48,13 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
-	public Map<String, Integer> getScheduleNames() {
-		return model.getSchedules();
+	public Map<String, UserDataGWT> getScheduleNames() {
+		Map<String, UserDataGWT> availableSchedules = new HashMap<String, UserDataGWT>();
+		for (Entry<String, UserData> entry : model.getSchedules().entrySet()) {
+			assert(entry.getValue() != null);
+			availableSchedules.put(entry.getKey(), Conversion.toGWT(entry.getValue()));
+		}
+		return availableSchedules;
 	}
 
 	@Override
@@ -78,16 +86,35 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		return results;
 	}
 
+	Map<Integer, Instructor> getInstructorsByID() {
+		Map<Integer, Instructor> result = new HashMap<Integer, Instructor>();
+		for (Instructor instructor : model.getInstructors())
+			result.put(instructor.getDbid(), instructor);
+		return result;
+	}
+
+	Map<Integer, Course> getCoursesByID() {
+		Map<Integer, Course> result = new HashMap<Integer, Course>();
+		for (Course course : model.getCourses())
+			result.put(course.getDbid(), course);
+		return result;
+	}
+
 	@Override
 	public List<InstructorGWT> saveInstructors(List<InstructorGWT> added, List<InstructorGWT> edited, List<InstructorGWT> removed) {
-		for (InstructorGWT addedInstructor : added)
-			model.saveInstructor(Conversion.fromGWT(addedInstructor));
-		
-		for (InstructorGWT editedInstructor : edited)
-			model.saveInstructor(Conversion.fromGWT(editedInstructor));
+		for (InstructorGWT addedInstructor : added) {
+			assert(!edited.contains(addedInstructor));
+			addedInstructor.setID(-1);
+			model.saveInstructor(Conversion.fromGWT(addedInstructor, getCoursesByID()));
+		}
+
+		for (InstructorGWT editedInstructor : edited) {
+			assert(!added.contains(editedInstructor));
+			model.saveInstructor(Conversion.fromGWT(editedInstructor, getCoursesByID()));
+		}
 		
 		for (InstructorGWT removedInstructor : removed)
-			model.removeInstructor(Conversion.fromGWT(removedInstructor));
+			model.removeInstructor(Conversion.fromGWT(removedInstructor, getCoursesByID()));
 
 		return getInstructors();
 	}
@@ -277,7 +304,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 
 	@Override
 	public void saveInstructor(InstructorGWT instructorGWT) {
-		Instructor instructor = Conversion.fromGWT(instructorGWT);
+		Instructor instructor = Conversion.fromGWT(instructorGWT, getCoursesByID());
 		model.saveInstructor(instructor);
 	}
 
