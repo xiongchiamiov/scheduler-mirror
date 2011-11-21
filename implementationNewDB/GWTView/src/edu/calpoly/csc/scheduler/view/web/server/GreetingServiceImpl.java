@@ -86,16 +86,30 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		return results;
 	}
 
+	Map<Integer, Instructor> getInstructorsByID() {
+		Map<Integer, Instructor> result = new HashMap<Integer, Instructor>();
+		for (Instructor instructor : model.getInstructors())
+			result.put(instructor.getDbid(), instructor);
+		return result;
+	}
+
+	Map<Integer, Course> getCoursesByID() {
+		Map<Integer, Course> result = new HashMap<Integer, Course>();
+		for (Course course : model.getCourses())
+			result.put(course.getDbid(), course);
+		return result;
+	}
+
 	@Override
 	public List<InstructorGWT> saveInstructors(List<InstructorGWT> added, List<InstructorGWT> edited, List<InstructorGWT> removed) {
 		for (InstructorGWT addedInstructor : added)
-			model.saveInstructor(Conversion.fromGWT(addedInstructor));
+			model.saveInstructor(Conversion.fromGWT(addedInstructor, getCoursesByID()));
 		
 		for (InstructorGWT editedInstructor : edited)
-			model.saveInstructor(Conversion.fromGWT(editedInstructor));
+			model.saveInstructor(Conversion.fromGWT(editedInstructor, getCoursesByID()));
 		
 		for (InstructorGWT removedInstructor : removed)
-			model.removeInstructor(Conversion.fromGWT(removedInstructor));
+			model.removeInstructor(Conversion.fromGWT(removedInstructor, getCoursesByID()));
 
 		return getInstructors();
 	}
@@ -285,7 +299,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 
 	@Override
 	public void saveInstructor(InstructorGWT instructorGWT) {
-		Instructor instructor = Conversion.fromGWT(instructorGWT);
+		Instructor instructor = Conversion.fromGWT(instructorGWT, getCoursesByID());
 		model.saveInstructor(instructor);
 	}
 
@@ -294,14 +308,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		ArrayList<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
 		ScheduleItemGWT gwtItem;
 
-		if (schedule == null) {
-			schedule = new Schedule(model.getInstructors(),
-					model.getLocations());
-		}
-		/*
-		 * This throws exceptions! schedule =
-		 * db.getScheduleDB().getSchedule(model.getScheduleID());
-		 */
+		schedule = model.loadSchedule(model.getScheduleID());
 		scheduleItems = new HashMap<String, ScheduleItem>();
 
 		for (ScheduleItem item : schedule.getItems()) {

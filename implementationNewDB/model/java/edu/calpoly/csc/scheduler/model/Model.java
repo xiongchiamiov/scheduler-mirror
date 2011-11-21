@@ -130,7 +130,7 @@ public class Model implements Serializable
    {
       try
       {
-         return new CSV().export(this, schedule);
+         return new CSVExporter().export(this, schedule);
       }
       catch (IOException e)
       {
@@ -161,7 +161,7 @@ public class Model implements Serializable
    {
       try
       {
-         new CSV().read(this, value);
+         new CSVImporter().read(this, value);
       }
       catch (IOException e)
       {

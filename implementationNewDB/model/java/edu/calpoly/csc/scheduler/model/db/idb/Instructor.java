@@ -15,8 +15,7 @@ import java.io.Serializable;
  * @version October 22, 2011
  */
 
-public class Instructor extends DbData 
-                        implements Comparable<Instructor>, Serializable
+public class Instructor extends DbData implements Comparable<Instructor>, Serializable
 {
    public static final long serialVersionUID = 42;
 

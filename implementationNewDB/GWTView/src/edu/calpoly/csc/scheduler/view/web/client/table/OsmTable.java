@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -25,13 +26,14 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.client.HTMLUtilities;
 import edu.calpoly.csc.scheduler.view.web.client.table.ResizeableHeader.ResizeCallback;
+import edu.calpoly.csc.scheduler.view.web.shared.Identified;
 
-public class OsmTable<ObjectType extends Comparable<ObjectType>> extends FocusPanel {
-	public interface SaveHandler<ObjectType extends Comparable<ObjectType>> {
+public class OsmTable<ObjectType extends Identified> extends FocusPanel {
+	public interface SaveHandler<ObjectType> {
 		void saveButtonClicked();
 	}
 	
-	public static abstract class Column<ObjectType extends Comparable<ObjectType>> {
+	public static abstract class Column<ObjectType extends Identified> {
 		private OsmTable<ObjectType> table;
 		final public String name;
 		final public String width;
@@ -107,11 +109,12 @@ public class OsmTable<ObjectType extends Comparable<ObjectType>> extends FocusPa
 	protected Factory<ObjectType> factory;
 	protected FlexTable table;
 	protected ArrayList<Column<ObjectType>> columns = new ArrayList<Column<ObjectType>>();
-	protected LinkedHashMap<ObjectType, Row> rows = new LinkedHashMap<ObjectType, Row>();
+	protected Map<Integer, Row> rowsByObjectID = new HashMap<Integer, Row>();
 	protected CssClassedSet rowsToRemove = new CssClassedSet("removed");
 	protected CssClassedSet editedRows = new CssClassedSet("edited");
 	protected CssClassedSet addedRows = new CssClassedSet("added");
-	protected LinkedHashMap<ObjectType, ObjectType> historyByObject = new LinkedHashMap<ObjectType, ObjectType>();
+	protected Map<Integer, ObjectType> objectsByID = new HashMap<Integer, ObjectType>();
+	protected Map<Integer, ObjectType> historyByObjectID = new HashMap<Integer, ObjectType>();
 	
 	public OsmTable(Factory<ObjectType> factory, final SaveHandler<ObjectType> saveHandler) {
 		VerticalPanel vp = new VerticalPanel();
@@ -161,9 +164,8 @@ public class OsmTable<ObjectType extends Comparable<ObjectType>> extends FocusPa
 	public void addDeleteColumn() {
 		addColumn(new ButtonColumn<ObjectType>("Delete", "4em",
 				new ButtonColumn.ClickCallback<ObjectType>() {
-					public void buttonClickedForObject(ObjectType object,
-							Button button) {
-						Row row = rows.get(object);
+					public void buttonClickedForObject(ObjectType object, Button button) {
+						Row row = rowsByObjectID.get(object.getID());
 						if (addedRows.contains(row))
 							deleteRow(row);
 						toggleRowRemoved(row);
@@ -197,19 +199,16 @@ public class OsmTable<ObjectType extends Comparable<ObjectType>> extends FocusPa
 		return removed;
 	}
 	
-	public Collection<ObjectType> getAddedUntouchedAndEditedObjects() {
-		return new ArrayList<ObjectType>(rows.keySet());
-	}
-	
 	public void clear() {
-		for (int i = 0; i < rows.size(); i++)
+		for (int i = 0; i < rowsByObjectID.size(); i++)
 			table.removeRow(1);
 		
 		rowsToRemove.clear();
 		editedRows.clear();
 		addedRows.clear();
-		historyByObject.clear();
-		rows.clear();
+		historyByObjectID.clear();
+		rowsByObjectID.clear();
+		objectsByID.clear();
 	}
 	
 	private void toggleRowRemoved(Row row) {
@@ -241,12 +240,12 @@ public class OsmTable<ObjectType extends Comparable<ObjectType>> extends FocusPa
 		
 		int columnIndex = columns.indexOf(column);
 		
-		for (Row row : rows.values())
+		for (Row row : rowsByObjectID.values())
 			row.widgetsInCells[columnIndex].setWidth(widthPixels + "px");
 	}
 	
 	public void addColumn(final Column<ObjectType> column) {
-		assert(rows.size() == 0);
+		assert(rowsByObjectID.size() == 0);
 		
 		column.attachedToTable(this);
 
@@ -276,10 +275,10 @@ public class OsmTable<ObjectType extends Comparable<ObjectType>> extends FocusPa
 	}
 	
 	void sortByColumn(Column<ObjectType> column) {
-		ArrayList<ObjectType> sortedList = new ArrayList<ObjectType>(this.rows.keySet());
+		ArrayList<ObjectType> sortedList = new ArrayList<ObjectType>(this.objectsByID.values());
 		Collections.sort(sortedList, column.sortComparator);
 
-		for (Row row : this.rows.values())
+		for (Row row : this.rowsByObjectID.values())
 			row.trElement.removeFromParent();
 
 		Element tableElement = table.getElement();
@@ -290,13 +289,20 @@ public class OsmTable<ObjectType extends Comparable<ObjectType>> extends FocusPa
 		
 		for (int i = 0; i < sortedList.size(); i++) {
 			ObjectType object = sortedList.get(i);
-			Row row = rows.get(object);
+			Row row = rowsByObjectID.get(object.getID());
 			tbodyElement.appendChild(row.trElement);
 		}
 	}
 
+	public Collection<ObjectType> getAddedUntouchedAndEditedObjects() {
+		ArrayList<ObjectType> result = new ArrayList<ObjectType>();
+		for (Integer id : rowsByObjectID.keySet())
+			result.add(objectsByID.get(id));
+		return result;
+	}
+	
 	public final Row addRow(ObjectType object) {
-		int newObjectIndex = rows.size();
+		int newObjectIndex = rowsByObjectID.size();
 		int rowIndex = newObjectIndex + 1;
 
 		Widget[] widgets = new Widget[columns.size()];
@@ -314,11 +320,11 @@ public class OsmTable<ObjectType extends Comparable<ObjectType>> extends FocusPa
 		Element rowElement = HTMLUtilities.getClosestContainingElementOfType(widgets[0].getElement(), "tr");
 
 		Row newRow = new Row(object, rowElement, widgets);
-		assert(!rows.containsKey(object));
-		rows.put(object, newRow);
+		assert(!rowsByObjectID.containsKey(object.getID()));
+		rowsByObjectID.put(object.getID(), newRow);
 
-		historyByObject.put(object, factory.createHistoryFor(object));
-		assert(object.compareTo(historyByObject.get(object)) == 0);
+		historyByObjectID.put(object.getID(), factory.createCopy(object));
+		assert(object.equals(historyByObjectID.get(object.getID())));
 		
 		return newRow;
 	}
@@ -329,13 +335,13 @@ public class OsmTable<ObjectType extends Comparable<ObjectType>> extends FocusPa
 	}
 
 	protected void objectChanged(ObjectType object) {
-		Row row = rows.get(object);
+		Row row = rowsByObjectID.get(object.getID());
 		assert(row != null);
 		
-		ObjectType history = historyByObject.get(object);
+		ObjectType history = historyByObjectID.get(object.getID());
 		assert(history != null);
 		
-		if (object.compareTo(history) == 0)
+		if (object.equals(history))
 			editedRows.remove(row);
 		else
 			editedRows.add(row);

@@ -38,7 +38,7 @@ class ListBoxDropController extends AbstractDropController
    
    if(!mouseListBox.isAvailableBox())
    {
-    course = ((ScheduleItemHTML)context.draggable).getScheduleItem().getCourse().clone();
+    course = new CourseGWT(((ScheduleItemHTML)context.draggable).getScheduleItem().getCourse());
     itemIndex = mouseListBox.contains(new CourseListItem(course, true));
     sectionsIncluded = mouseListBox.getSectionsInBox(course);
     if (itemIndex >= 0)
@@ -65,7 +65,7 @@ class ListBoxDropController extends AbstractDropController
      else
      {
       itemIndex = mouseListBox.contains((CourseListItem) widget);
-      course = ((CourseListItem) widget).getCourse().clone();
+      course = new CourseGWT(((CourseListItem) widget).getCourse());
       sectionsIncluded = mouseListBox.getSectionsInBox(course);
 
       if (course.getNumSections() > sectionsIncluded

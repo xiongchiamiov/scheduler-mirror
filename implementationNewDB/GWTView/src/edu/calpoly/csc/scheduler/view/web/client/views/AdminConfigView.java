@@ -5,11 +5,12 @@ import java.util.List;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
+import edu.calpoly.csc.scheduler.view.web.client.IViewContents;
+import edu.calpoly.csc.scheduler.view.web.client.ViewFrame;
 import edu.calpoly.csc.scheduler.view.web.client.table.Factory;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
 import edu.calpoly.csc.scheduler.view.web.client.table.SelectColumn;
@@ -20,7 +21,7 @@ import edu.calpoly.csc.scheduler.view.web.client.table.TableConstants;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.UserDataGWT;
 
-public class AdminConfigView extends ScrollPanel implements IView<ScheduleNavView> {
+public class AdminConfigView extends VerticalPanel implements IViewContents {
 	private GreetingServiceAsync service;
 	private OsmTable<UserDataGWT> table;
 	int nextLocationID = 1;
@@ -32,29 +33,19 @@ public class AdminConfigView extends ScrollPanel implements IView<ScheduleNavVie
 	}
 	
 	@Override
-	protected void onLoad() {
-		super.onLoad();
-
-		setWidth("100%");
-		setHeight("100%");
-		
-		VerticalPanel vp = new VerticalPanel();		
-		vp.add(new HTML("<h2>" + scheduleName + " - Configuration</h2>"));
-		this.add(vp);
+	public void afterPush(ViewFrame frame) {
+		this.setWidth("100%");
+		this.setHeight("100%");
+				
+		this.add(new HTML("<h2>" + scheduleName + " - Configuration</h2>"));
 		
 		final LoadingPopup popup = new LoadingPopup();
 		popup.show();
 						
 		table = new OsmTable<UserDataGWT>(
 				new Factory<UserDataGWT>() {
-					public UserDataGWT create() {
-						return new UserDataGWT();
-					}
-					public UserDataGWT createHistoryFor(UserDataGWT course) {
-						UserDataGWT i = course.clone();
-//						i.setId(-course.getId());
-						return i;
-					}
+					public UserDataGWT create() { return new UserDataGWT(); }
+					public UserDataGWT createCopy(UserDataGWT existing) { return new UserDataGWT(existing); }
 				},
 				new OsmTable.SaveHandler<UserDataGWT>() {
 					public void saveButtonClicked() {
@@ -85,7 +76,7 @@ public class AdminConfigView extends ScrollPanel implements IView<ScheduleNavVie
 				
 				String.CASE_INSENSITIVE_ORDER));		
 						
-		vp.add(table);
+		this.add(table);
 		
 		service.getCourses(new AsyncCallback<List<CourseGWT>>() {
 			public void onFailure(Throwable caught) {
@@ -97,7 +88,7 @@ public class AdminConfigView extends ScrollPanel implements IView<ScheduleNavVie
 				assert(result != null);
 				popup.hide();
 				for (CourseGWT crs : result)
-					nextLocationID = Math.max(nextLocationID, crs.getId() + 1);
+					nextLocationID = Math.max(nextLocationID, crs.getID() + 1);
 				//table.addRows(result);
 			}
 		});
@@ -118,16 +109,19 @@ public class AdminConfigView extends ScrollPanel implements IView<ScheduleNavVie
 	}
 
 	@Override
-	public Widget getViewWidget() { return this; }
-
-	@Override
-	public void willOpenView(ScheduleNavView container) { }
-
-	@Override
-	public boolean canCloseView() {
+	public boolean canPop() {
 		assert(table != null);
 		if (table.isSaved())
 			return true;
 		return Window.confirm("You have unsaved data which will be lost. Are you sure you want to navigate away?");
 	}
+
+	@Override
+	public void beforePop() { }
+	@Override
+	public void beforeViewPushedAboveMe() { }
+	@Override
+	public void afterViewPoppedFromAboveMe() { }
+	@Override
+	public Widget getContents() { return this; }
 }

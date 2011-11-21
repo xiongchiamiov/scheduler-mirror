@@ -6,7 +6,9 @@ import java.util.LinkedHashMap;
 
 import com.google.gwt.user.client.ui.Widget;
 
-public class MultiselectColumn<ObjectType extends Comparable<ObjectType>> extends OsmTable.Column<ObjectType> {
+import edu.calpoly.csc.scheduler.view.web.shared.Identified;
+
+public class MultiselectColumn<ObjectType extends Identified> extends OsmTable.Column<ObjectType> {
 	private LinkedHashMap<String, String> options;
 	protected StaticGetter<ObjectType, Collection<String>> getter;
 	protected StaticSetter<ObjectType, Collection<String>> setter;

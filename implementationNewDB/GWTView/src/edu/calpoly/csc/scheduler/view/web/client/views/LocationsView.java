@@ -7,11 +7,12 @@ import java.util.List;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
+import edu.calpoly.csc.scheduler.view.web.client.IViewContents;
+import edu.calpoly.csc.scheduler.view.web.client.ViewFrame;
 import edu.calpoly.csc.scheduler.view.web.client.table.CheckboxColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.Factory;
 import edu.calpoly.csc.scheduler.view.web.client.table.IntColumn;
@@ -25,7 +26,7 @@ import edu.calpoly.csc.scheduler.view.web.client.table.StringColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.TableConstants;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
 
-public class LocationsView extends ScrollPanel implements IView<ScheduleNavView> {
+public class LocationsView extends VerticalPanel implements IViewContents {
 	private static final String LAPTOP_CONNECTIVITY = "Laptop Connectivity";
 	private static final String OVERHEAD = "Overhead";
 	private static final String SMART_ROOM = "Smart Room";
@@ -41,10 +42,7 @@ public class LocationsView extends ScrollPanel implements IView<ScheduleNavView>
 	}
 
 	@Override
-	public Widget getViewWidget() { return this; }
-
-	@Override
-	public boolean canCloseView() {
+	public boolean canPop() {
 		assert(table != null);
 		if (table.isSaved())
 			return true;
@@ -52,16 +50,11 @@ public class LocationsView extends ScrollPanel implements IView<ScheduleNavView>
 	}
 	
 	@Override
-	public void onLoad() {
-		super.onLoad();
+	public void afterPush(ViewFrame frame) {
+		this.setWidth("100%");
+		this.setHeight("100%");
 
-		setWidth("100%");
-		setHeight("100%");
-		
-		VerticalPanel vp = new VerticalPanel();
-		this.add(vp);
-
-		vp.add(new HTML("<h2>" + scheduleName + " - Locations</h2>"));
+		this.add(new HTML("<h2>" + scheduleName + " - Locations</h2>"));
 
 		final LoadingPopup popup = new LoadingPopup();
 		popup.show();
@@ -71,9 +64,7 @@ public class LocationsView extends ScrollPanel implements IView<ScheduleNavView>
 					public LocationGWT create() {
 						return new LocationGWT(nextLocationID++, "", "", "LEC", 20, false, new LocationGWT.ProvidedEquipmentGWT());
 					}
-					public LocationGWT createHistoryFor(LocationGWT location) {
-						return new LocationGWT(-location.getID(), location);
-					}
+					public LocationGWT createCopy(LocationGWT object) { return new LocationGWT(object); }
 				},
 				new OsmTable.SaveHandler<LocationGWT>() {
 					public void saveButtonClicked() {
@@ -171,7 +162,7 @@ public class LocationsView extends ScrollPanel implements IView<ScheduleNavView>
 		
 		table.addDeleteColumn();
 		
-		vp.add(table);
+		this.add(table);
 		
 		service.getLocations(new AsyncCallback<List<LocationGWT>>() {
 			public void onFailure(Throwable caught) {
@@ -217,5 +208,11 @@ public class LocationsView extends ScrollPanel implements IView<ScheduleNavView>
 	}
 
 	@Override
-	public void willOpenView(ScheduleNavView container) { }
+	public void beforePop() { }
+	@Override
+	public void beforeViewPushedAboveMe() { }
+	@Override
+	public void afterViewPoppedFromAboveMe() { }
+	@Override
+	public Widget getContents() { return this; }
 }

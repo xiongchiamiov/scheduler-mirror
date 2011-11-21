@@ -2,13 +2,12 @@ package edu.calpoly.csc.scheduler.view.web.client.views;
 
 import java.util.Map;
 
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -17,44 +16,81 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.MenuBar;
+import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
+import edu.calpoly.csc.scheduler.view.web.client.IViewContents;
+import edu.calpoly.csc.scheduler.view.web.client.ViewFrame;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.Pair;
 import edu.calpoly.csc.scheduler.view.web.shared.UserDataGWT;
 
-public class SelectScheduleView extends VerticalPanel implements IView<MainView> {
-	private GreetingServiceAsync service;
-	private ListBox listBox;
-	private MainView mainView;
+public class SelectScheduleView extends VerticalPanel implements IViewContents {
+	private final GreetingServiceAsync service;
 	
+	private final MenuBar menuBar;
+	MenuItem fileMenuItem;
+	
+	private final int userID;
+	private final String username;
+	private ListBox listBox;
+	
+	private ViewFrame myFrame;
+
 	Map<String, UserDataGWT> availableSchedulesByName;
 	
-	public SelectScheduleView(final MainView mainView, final GreetingServiceAsync service) {
-		this.mainView = mainView;
+	public SelectScheduleView(final GreetingServiceAsync service, final MenuBar menuBar, final int userID, final String username) {
 		this.service = service;
+		this.menuBar = menuBar;
+		this.userID = userID;
+		this.username = username;
 
-		addStyleName("homeView");
 
-		setWidth("100%");
-		setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		MenuBar fileMenu = new MenuBar(true);
+		fileMenu.addItem(new MenuItem("Open", true, new Command() {
+			public void execute() {
+				Window.alert("Open!");
+			}
+		}));
+		fileMenu.addItem(new MenuItem("Import", true, new Command() {
+			public void execute() {
+				Window.alert("Import!");
+			}
+		}));
+		fileMenu.addItem(new MenuItem("Save", true, new Command() {
+			public void execute() {
+				Window.alert("Save!");
+			}
+		}));
+		fileMenu.addItem(new MenuItem("Save As...", true, new Command() {
+			public void execute() {
+				Window.alert("Save As!");
+			}
+		}));
+		fileMenu.addItem(new MenuItem("Export", true, new Command() {
+			public void execute() {
+				Window.alert("Export!!");
+			}
+		}));
 		
-		SimplePanel fakeTopPanel = new SimplePanel();
-		fakeTopPanel.setWidth("100%");
-		fakeTopPanel.addStyleName("topBarMenu");
-		add(fakeTopPanel);
+		fileMenuItem = new MenuItem("File v", true, fileMenu);
 		
-		add(new HTMLPanel("<h2>Select a Schedule</h2>"));
+		this.addStyleName("homeView");
+		
+		this.setWidth("100%");
+		this.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		
+		this.add(new HTMLPanel("<h2>Select a Schedule</h2>"));
 		
 		listBox = new ListBox();
-		add(listBox);
+		this.add(listBox);
 
-		add(new Button("Open", new ClickHandler() {
+		this.add(new Button("Open", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				int index = listBox.getSelectedIndex();
@@ -67,9 +103,7 @@ public class SelectScheduleView extends VerticalPanel implements IView<MainView>
 			}
 		}));
 
-		final SelectScheduleView self = this;
-		
-		add(new Button("Copy and Open", new ClickHandler() {
+		this.add(new Button("Copy and Open", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				int index = listBox.getSelectedIndex();
@@ -94,8 +128,7 @@ public class SelectScheduleView extends VerticalPanel implements IView<MainView>
 							@Override
 							public void onSuccess(Integer newScheduleID) {
 								popup.hide();
-								if (mainView.canCloseCurrentView())
-									mainView.switchToView(new AdminScheduleNavView(self, mainView, service, newScheduleID, scheduleName));
+								myFrame.frameViewAndPushAboveMe(new AdminScheduleNavView(service, menuBar, userID, username, newScheduleID, scheduleName));
 							}
 						});
 					}
@@ -103,7 +136,7 @@ public class SelectScheduleView extends VerticalPanel implements IView<MainView>
 			}
 		}));
 
-		add(new Button("New Schedule from CSV File", new ClickHandler() {
+		this.add(new Button("New Schedule from CSV File", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 
@@ -132,8 +165,8 @@ public class SelectScheduleView extends VerticalPanel implements IView<MainView>
 					    	@Override
 					    	public void onSuccess(Integer newScheduleID) {
 								popup.hide();
-								if (mainView.canCloseCurrentView())
-									mainView.switchToView(new AdminScheduleNavView(self, mainView, service, newScheduleID, scheduleName));
+								
+								myFrame.frameViewAndPushAboveMe(new AdminScheduleNavView(service, menuBar, userID, username, newScheduleID, scheduleName));
 					    	}
 					    });
 					}
@@ -159,7 +192,7 @@ public class SelectScheduleView extends VerticalPanel implements IView<MainView>
 			}
 		}));
 
-		add(new Button("New Schedule", new ClickHandler() {
+		this.add(new Button("New Schedule", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				displayNewSchedPopup("Create Schedule", new NameScheduleCallback() {
@@ -178,8 +211,7 @@ public class SelectScheduleView extends VerticalPanel implements IView<MainView>
 							@Override
 							public void onSuccess(Integer newScheduleID) {
 								popup.hide();
-								if (mainView.canCloseCurrentView())
-									mainView.switchToView(new AdminScheduleNavView(self, mainView, service, newScheduleID, scheduleName));
+								myFrame.frameViewAndPushAboveMe(new AdminScheduleNavView(service, menuBar, userID, username, newScheduleID, scheduleName));
 							}
 						});
 					}
@@ -187,7 +219,7 @@ public class SelectScheduleView extends VerticalPanel implements IView<MainView>
 			}
 		}));
 		
-		add(new Button("Remove Schedule", new ClickHandler() {
+		this.add(new Button("Remove Schedule", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				String schedName = listBox.getItemText(listBox.getSelectedIndex());
@@ -222,9 +254,9 @@ public class SelectScheduleView extends VerticalPanel implements IView<MainView>
 	}
 	
 	@Override
-	public void onLoad() {
-		super.onLoad();
-
+	public void afterPush(ViewFrame frame) {
+		this.myFrame = frame;
+		
 		service.getScheduleNames(new AsyncCallback<Map<String,UserDataGWT>>() {
 			@Override
 			public void onFailure(Throwable caught) {
@@ -240,11 +272,16 @@ public class SelectScheduleView extends VerticalPanel implements IView<MainView>
 					listBox.addItem(scheduleName, availableSchedulesByName.get(scheduleName).getScheduleID().toString());
 			}
 		});
+		
+		menuBar.addItem(fileMenuItem);
 	}
 	
-	private void selectSchedule(final int scheduleID, final String scheduleName) {		
-		final SelectScheduleView self = this;
-
+	@Override
+	public void beforePop() {
+		menuBar.removeItem(fileMenuItem);
+	}
+	
+	private void selectSchedule(final int scheduleID, final String scheduleName) {
 		final LoadingPopup popup = new LoadingPopup();
 		popup.show();
 		
@@ -258,23 +295,18 @@ public class SelectScheduleView extends VerticalPanel implements IView<MainView>
 			public void onSuccess(Pair<Integer, InstructorGWT> permissionAndInstructor) {
 				popup.hide();
 				
-				if (mainView.canCloseCurrentView()) {
-					int permission = permissionAndInstructor.getLeft();
-					InstructorGWT instructor = permissionAndInstructor.getRight();
-					
-					switch (permission) {
-					case 0: // todo: enumify
-						mainView.switchToView(new GuestScheduleNavView(self, mainView, service, scheduleID, scheduleName));
-						break;
-					case 1: // todo: enumify
-						mainView.switchToView(new InstructorScheduleNavView(self, mainView, service, scheduleID, scheduleName, instructor));
-						break;
-					case 2: // todo: enumify
-						mainView.switchToView(new AdminScheduleNavView(self, mainView, service, scheduleID, scheduleName));
-						break;
-					default:
-						assert(false);
-					}
+				switch (permissionAndInstructor.getLeft()) {
+				case 0: // todo: enumify
+					myFrame.frameViewAndPushAboveMe(new GuestScheduleNavView(service, menuBar, scheduleName));
+					break;
+				case 1: // todo: enumify
+					myFrame.frameViewAndPushAboveMe(new InstructorScheduleNavView(service, menuBar, scheduleName, permissionAndInstructor.getRight()));
+					break;
+				case 2: // todo: enumify
+					myFrame.frameViewAndPushAboveMe(new AdminScheduleNavView(service, menuBar, userID, username, scheduleID, scheduleName));
+					break;
+				default:
+					assert(false);
 				}
 			}
 		});
@@ -316,34 +348,12 @@ public class SelectScheduleView extends VerticalPanel implements IView<MainView>
 		db.center();
 	}
 
-	public Widget createMiniSelectWidget(int selectedScheduleID) {
-		final ListBox box = new ListBox();
-
-		int index = 0;
-		for (String scheduleName : availableSchedulesByName.keySet()) {
-			Integer id = availableSchedulesByName.get(scheduleName).getScheduleID();
-			box.addItem(scheduleName, id.toString());
-			if (id == selectedScheduleID)
-				box.setSelectedIndex(index);
-			index++;
-		}
-		
-		box.addChangeHandler(new ChangeHandler() {
-			@Override
-			public void onChange(ChangeEvent event) {
-				selectSchedule(Integer.parseInt(box.getValue(box.getSelectedIndex())), box.getItemText(box.getSelectedIndex()));
-			}
-		});
-		
-		return box;
-	}
-
 	@Override
-	public Widget getViewWidget() { return this; }
-
+	public boolean canPop() { return true; }
 	@Override
-	public void willOpenView(MainView container) { }
-
+	public void beforeViewPushedAboveMe() { }
 	@Override
-	public boolean canCloseView() { return true; }
+	public void afterViewPoppedFromAboveMe() { }
+	@Override
+	public Widget getContents() { return this; }
 }

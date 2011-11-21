@@ -4,25 +4,25 @@ import java.io.Serializable;
 import java.util.Vector;
 
 public class WeekGWT implements Serializable {
-   private Vector<DayGWT> days;
+   private Vector<Integer> days;
 	
    public WeekGWT(){
-	   days = new Vector<DayGWT>();
+	   days = new Vector<Integer>();
    }
    
-	public Vector<DayGWT> getDays() {
+	public Vector<Integer> getDays() {
 		return days;
 	}
 	
-	public void setDays(Vector<DayGWT> days) {
+	public void setDays(Vector<Integer> days) {
 		this.days = days;
 	}
 	
 	public WeekGWT clone() {
 		WeekGWT newWeek = new WeekGWT();
-		Vector<DayGWT> newDays = new Vector<DayGWT>();
-		for (DayGWT day : days)
-			newDays.add(day.clone());
+		Vector<Integer> newDays = new Vector<Integer>();
+		for (Integer day : days)
+			newDays.add(day);
 		newWeek.days = newDays;
 		return newWeek;
 	}

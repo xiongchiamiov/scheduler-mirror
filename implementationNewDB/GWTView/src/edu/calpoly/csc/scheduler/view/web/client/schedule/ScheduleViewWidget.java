@@ -1,8 +1,8 @@
 package edu.calpoly.csc.scheduler.view.web.client.schedule;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -42,6 +42,23 @@ import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemList;
  */
 public class ScheduleViewWidget implements CloseHandler<PopupPanel>
 {
+	class ScheduleItemComparator implements Comparator<ScheduleItemGWT> {
+  	  @Override
+  	public int compare(ScheduleItemGWT o1, ScheduleItemGWT o2) {
+  			if (o1.getStartTimeHour() > o2.getStartTimeHour()) {
+  				return 1;
+  			} else if (o1.getStartTimeHour() < o2.getStartTimeHour()) {
+  				return -1;
+  			} else if (o1.getStartTimeMin() > o2.getStartTimeMin()) {
+  				return 1;
+  			} else if (o1.getStartTimeMin() < o2.getStartTimeMin()) {
+  				return -1;
+  			}
+
+  			return 0;
+  	  }
+    };
+	
  private GreetingServiceAsync greetingService;
  private ArrayList<ScheduleItemGWT> scheduleItems = new ArrayList<ScheduleItemGWT>();
  private VerticalPanel mainPanel = new VerticalPanel();
@@ -79,7 +96,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
     dualListBoxCourses.reregisterBoxDrops();
    }
   }
-  dragController.registerDropController(dualListBoxCourses.getAvailableDropController());
+  //dragController.registerDropController(dualListBoxCourses.getAvailableDropController());
   dragController.registerDropController(dualListBoxCourses.getIncludedDropController());  
  }
 
@@ -88,18 +105,20 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
   */
  private void getScheduleItemsFromServer()
  {
-
+  final LoadingPopup loading = new LoadingPopup();
+  
   if (dualListBoxCourses.getIncludedCourses().size() == 0)
   {
    Window.alert("No courses to schedule");
    return;
   }
-
+  loading.show();
   greetingService.getGWTScheduleItems(dualListBoxCourses.getIncludedCourses(),
     new AsyncCallback<List<ScheduleItemGWT>>()
     {
      public void onFailure(Throwable caught)
      {
+      loading.hide();
       Window.alert("Failed to get schedule: " + caught.toString());
      }
 
@@ -108,7 +127,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
       if (result != null)
       {
        // Sort result by start times in ascending order
-       Collections.sort(result);
+       Collections.sort(result, new ScheduleItemComparator());
 
        // Reset column and row spans, remove any items
        // already placed
@@ -128,6 +147,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
        filterScheduleItems(searchBox.getText());
        
        dualListBoxCourses.removeAllFromIncluded();
+       loading.hide();
       }
      }
     });
@@ -277,6 +297,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
      for (CourseGWT course : result)
      {
       dualListBoxCourses.addLeft(new CourseListItem(course, false));
+      dualListBoxCourses.addRight(new CourseListItem(course, true));
      }
      registerDrops();
     }
@@ -338,7 +359,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
        scheduleItems.add(item);
       }
 
-      Collections.sort(scheduleItems);
+      Collections.sort(scheduleItems, new ScheduleItemComparator());
       // Add the attributes of the retrieved items to the
       // filters list
       filtersDialog.addItems(scheduleItems);
@@ -384,6 +405,8 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
    ArrayList<Integer> days, int row, final boolean inSchedule,
    final boolean fromIncluded)
  {
+  final LoadingPopup loading = new LoadingPopup();
+  loading.show();
   final int startHour = getHourFromRow(row);
   final boolean atHalfHour = rowIsAtHalfHour(row);
   CourseGWT course = new CourseGWT();
@@ -396,6 +419,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
      @Override
      public void onFailure(Throwable caught)
      {
+      loading.hide();
       Window.alert("Failed to retrieve rescheduled item");
      }
 
@@ -447,11 +471,13 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
       {
        scheduleItems.add(schdItem);
       }
-      Collections.sort(scheduleItems);
+      Collections.sort(scheduleItems, new ScheduleItemComparator());
 
       filtersDialog.addItems(scheduleItems);
       filterScheduleItems(searchBox.getText());
 
+      loading.hide();
+      
       if (rescheduled.conflict.length() > 0)
       {
        Window.alert(rescheduled.conflict);
@@ -504,12 +530,16 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
 
  public void removeItem(ScheduleItemGWT removed)
  {
+  final LoadingPopup loading = new LoadingPopup();
+  loading.show();
+  
   greetingService.removeScheduleItem(removed, 
     new AsyncCallback<List<ScheduleItemGWT>>()
     {
      @Override
      public void onFailure(Throwable caught)
      {
+      loading.hide();
       Window.alert("Failed to remove item.");
      }
 
@@ -521,18 +551,18 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
       {
        scheduleItems.add(schdItem);
       }
-      Collections.sort(scheduleItems);
+      Collections.sort(scheduleItems, new ScheduleItemComparator());
 
       filtersDialog.addItems(scheduleItems);
       filterScheduleItems(searchBox.getText());
+      loading.hide();
      }   
     });
  }
  
  public void saveSchedule()
  {
-  Window.alert("This feature is not yet functional, so this schedule won't be saved if the page is refreshed.");
-  /*This throws exceptions!
+  //Window.alert("This feature is not yet functional, so this schedule won't be saved if the page is refreshed.");
   final LoadingPopup loading = new LoadingPopup();
   loading.show();
   greetingService.saveSchedule(
@@ -552,6 +582,6 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
       loading.hide();
       Window.alert("Schedule successfully saved.");
      }
-    });*/
+    });
  }
 }

@@ -1,7 +1,6 @@
 package edu.calpoly.csc.scheduler.view.web.client.views;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -15,11 +14,12 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PopupPanel;
-import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
+import edu.calpoly.csc.scheduler.view.web.client.IViewContents;
+import edu.calpoly.csc.scheduler.view.web.client.ViewFrame;
 import edu.calpoly.csc.scheduler.view.web.client.table.ButtonColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.ButtonColumn.ClickCallback;
 import edu.calpoly.csc.scheduler.view.web.client.table.Factory;
@@ -32,8 +32,9 @@ import edu.calpoly.csc.scheduler.view.web.client.table.StaticValidator;
 import edu.calpoly.csc.scheduler.view.web.client.table.StringColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.TableConstants;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.WeekGWT;
 
-public class CoursesView extends ScrollPanel implements IView<ScheduleNavView> {
+public class CoursesView extends VerticalPanel implements IViewContents {
 	private GreetingServiceAsync service;
 	private OsmTable<CourseGWT> table;
 	int nextLocationID = 1;
@@ -45,13 +46,7 @@ public class CoursesView extends ScrollPanel implements IView<ScheduleNavView> {
 	}
 
 	@Override
-	public Widget getViewWidget() { return this; }
-
-	@Override
-	public void willOpenView(ScheduleNavView container) { }
-
-	@Override
-	public boolean canCloseView() {
+	public boolean canPop() {
 		assert(table != null);
 		if (table.isSaved())
 			return true;
@@ -59,16 +54,11 @@ public class CoursesView extends ScrollPanel implements IView<ScheduleNavView> {
 	}
 	
 	@Override
-	protected void onLoad() {
-		super.onLoad();
+	public void afterPush(ViewFrame frame) {		
+		this.setWidth("100%");
+		this.setHeight("100%");
 
-		setWidth("100%");
-		setHeight("100%");
-		
-		VerticalPanel vp = new VerticalPanel();
-		this.add(vp);
-
-		vp.add(new HTML("<h2>" + scheduleName + " - Courses</h2>"));
+		this.add(new HTML("<h2>" + scheduleName + " - Courses</h2>"));
 
 		final LoadingPopup popup = new LoadingPopup();
 		popup.show();
@@ -101,13 +91,10 @@ public class CoursesView extends ScrollPanel implements IView<ScheduleNavView> {
 		table = new OsmTable<CourseGWT>(
 				new Factory<CourseGWT>() {
 					public CourseGWT create() {
-						return new CourseGWT(nextLocationID++);
+						return new CourseGWT("", 0, "", 0, 0, 0, "", 0, 0, "", "", 0, 6, new WeekGWT(), 0, 0);
 					}
-					public CourseGWT createHistoryFor(CourseGWT course) {
-						CourseGWT i = course.clone();
-						i.setId(-course.getId());
-						return i;
-					}
+					@Override
+					public CourseGWT createCopy(CourseGWT object) { return new CourseGWT(object); }
 				},
 				new OsmTable.SaveHandler<CourseGWT>() {
 					public void saveButtonClicked() {
@@ -280,9 +267,7 @@ public class CoursesView extends ScrollPanel implements IView<ScheduleNavView> {
 
 		table.addDeleteColumn();
 		
-		
-		
-		vp.add(table);
+		this.add(table);
 		
 		service.getCourses(new AsyncCallback<List<CourseGWT>>() {
 			public void onFailure(Throwable caught) {
@@ -294,7 +279,7 @@ public class CoursesView extends ScrollPanel implements IView<ScheduleNavView> {
 				assert(result != null);
 				popup.hide();
 				for (CourseGWT crs : result)
-					nextLocationID = Math.max(nextLocationID, crs.getId() + 1);
+					nextLocationID = Math.max(nextLocationID, crs.getID() + 1);
 				table.addRows(result);
 			}
 		});
@@ -354,4 +339,13 @@ public class CoursesView extends ScrollPanel implements IView<ScheduleNavView> {
 		}
 		
 	}
+
+	@Override
+	public void beforePop() { }
+	@Override
+	public void beforeViewPushedAboveMe() { }
+	@Override
+	public void afterViewPoppedFromAboveMe() { }
+	@Override
+	public Widget getContents() { return this; }
 }

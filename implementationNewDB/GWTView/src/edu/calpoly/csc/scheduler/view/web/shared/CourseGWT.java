@@ -3,81 +3,59 @@ package edu.calpoly.csc.scheduler.view.web.shared;
 import java.io.Serializable;
 
 
-public class CourseGWT implements Serializable, Comparable<CourseGWT> {
+public class CourseGWT implements Serializable, Identified {
 	private static final long serialVersionUID = -3337091550673507081L;
 	
 	private String courseName;
-	private int catalogNum;
+	private Integer catalogNum;
 	private String dept;
-	private int wtu, scu, numSections;
+	private Integer wtu, scu, numSections;
 	private String type; //will be an object
-	private int maxEnroll;
-	private int labId;
+	private Integer maxEnroll;
+	private Integer labId;
 	private String labName;
 	private String labDept;
-	private int labCatalogNum;
-	private int length;
+	private Integer labCatalogNum;
+	private Integer length;
 	private WeekGWT days;
 	private Integer scheduleID;
-	private int id;
+	private Integer id;
 	
-	public CourseGWT clone() {
-		CourseGWT newCourse = new CourseGWT();
-		newCourse.courseName = courseName;
-		newCourse.catalogNum = catalogNum;
-		newCourse.dept = dept;
-		newCourse.wtu = wtu;
-		newCourse.scu = scu;
-		newCourse.numSections = numSections;
-		newCourse.type = type;
-		newCourse.maxEnroll = maxEnroll;
-		newCourse.labId = labId;
-		newCourse.length = length;
-		newCourse.days = days.clone();
-		newCourse.scheduleID = scheduleID;
-		newCourse.labCatalogNum = labCatalogNum;
-		newCourse.labDept = labDept;
-		newCourse.labName = labName;
-		return newCourse;
-	}
+	public CourseGWT() { }
 	
-	public CourseGWT() {
+	public CourseGWT(String courseName, Integer catalogNum, String dept,
+			Integer wtu, Integer scu, Integer numSections, String type,
+			Integer maxEnroll, Integer labId, String labName, String labDept,
+			Integer labCatalogNum, Integer length, WeekGWT days,
+			Integer scheduleID, Integer id) {
 		super();
-		courseName = "";
-		catalogNum = 0;
-		dept = "";
-		wtu = 4;
-		scu = 4;
-		numSections = 0;
-		type = "LEC";
-		maxEnroll = 0;
-		labId = 0;
-		length = 0;
-		days = new WeekGWT();
-		labCatalogNum = 0;
-		labDept = "";
-		labName = "";
+		this.courseName = courseName;
+		this.catalogNum = catalogNum;
+		this.dept = dept;
+		this.wtu = wtu;
+		this.scu = scu;
+		this.numSections = numSections;
+		this.type = type;
+		this.maxEnroll = maxEnroll;
+		this.labId = labId;
+		this.labName = labName;
+		this.labDept = labDept;
+		this.labCatalogNum = labCatalogNum;
+		this.length = length;
+		this.days = days;
+		this.scheduleID = scheduleID;
+		this.id = id;
 	}
 
-	public CourseGWT(int id) {
-		super();
-		this.id = id;
-		courseName = "";
-		catalogNum = 0;
-		dept = "";
-		wtu = 4;
-		scu = 4;
-		numSections = 0;
-		type = "LEC";
-		maxEnroll = 0;
-		labId = 0;
-		length = 0;
-		days = new WeekGWT();
-		labCatalogNum = 0;
-		labDept = "";
-		labName = "";
+
+
+	public CourseGWT(CourseGWT that) {
+		this(that.courseName, that.catalogNum, that.dept, that.wtu, that.scu,
+				that.numSections, that.type, that.maxEnroll, that.labId,
+				that.labName, that.labDept, that.labCatalogNum, that.length,
+				that.days, that.scheduleID, that.id);
 	}
-	
+
 	public void verify() {
 		assert(courseName != null);
 		assert(dept != null);
@@ -221,34 +199,43 @@ public class CourseGWT implements Serializable, Comparable<CourseGWT> {
 	}
 	
 
-	public int getId() {
+	public Integer getID() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setID(int id) {
 		this.id = id;
 	}
 
-	@Override
-	public int compareTo(CourseGWT o) {
-		if (catalogNum != o.catalogNum)
-			return catalogNum - o.catalogNum;
-		return dept.compareTo(o.dept);
-	}
 	public String toString() {
 		return this.courseName + " " + Integer.toString(this.catalogNum);
 	}
 	
 	@Override
+	public int hashCode() {
+		return dept.hashCode() + catalogNum * 1337;
+	}
+
+	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof CourseGWT))
 			return false;
 		CourseGWT that = (CourseGWT)obj;
-		return dept.equals(that.dept) && catalogNum == that.catalogNum; 
-	}
-	
-	@Override
-	public int hashCode() {
-		return dept.hashCode() + catalogNum * 1337;
+		assert(this.id.equals(that.id));
+		assert(this.scheduleID.equals(that.scheduleID));
+		return this.catalogNum.equals(that.catalogNum) &&
+				this.courseName.equals(that.courseName) &&
+				this.days.equals(that.days) &&
+				this.dept.equals(that.dept) &&
+				this.labCatalogNum.equals(that.labCatalogNum) &&
+				this.labDept.equals(that.labDept) &&
+				this.labId.equals(that.labId) &&
+				this.labName.equals(that.labName) &&
+				this.length.equals(that.length) &&
+				this.maxEnroll.equals(that.maxEnroll) &&
+				this.numSections.equals(that.numSections) &&
+				this.scu.equals(that.scu) &&
+				this.type.equals(that.type) &&
+				this.wtu.equals(that.wtu);
 	}
 }

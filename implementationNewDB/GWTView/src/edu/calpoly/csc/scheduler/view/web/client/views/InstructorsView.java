@@ -1,7 +1,9 @@
 package edu.calpoly.csc.scheduler.view.web.client.views;
 
-import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Vector;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -11,6 +13,8 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
+import edu.calpoly.csc.scheduler.view.web.client.IViewContents;
+import edu.calpoly.csc.scheduler.view.web.client.ViewFrame;
 import edu.calpoly.csc.scheduler.view.web.client.table.ButtonColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.ButtonColumn.ClickCallback;
 import edu.calpoly.csc.scheduler.view.web.client.table.CheckboxColumn;
@@ -23,15 +27,18 @@ import edu.calpoly.csc.scheduler.view.web.client.table.StaticValidator;
 import edu.calpoly.csc.scheduler.view.web.client.table.StringColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.TableConstants;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.TimePreferenceGWT;
 
-public class InstructorsView extends VerticalPanel implements IView<ScheduleNavView> {
+public class InstructorsView extends VerticalPanel implements IViewContents {
 	// These static variables are a temporary hack to get around the table bug
 	public GreetingServiceAsync service;
 	
 	private final String scheduleName;
 	private OsmTable<InstructorGWT> table;
 	int nextLocationID = 1;
-	ScheduleNavView navView;
+	
+	ViewFrame myFrame;
 
 	public InstructorsView(GreetingServiceAsync service, String scheduleName) {
 		assert(service != null);
@@ -40,26 +47,19 @@ public class InstructorsView extends VerticalPanel implements IView<ScheduleNavV
 	}
 
 	@Override
-	public Widget getViewWidget() { return this; }
-
-	@Override
-	public boolean canCloseView() {
+	public boolean canPop() {
 		assert(table != null);
 		if (table.isSaved())
 			return true;
 		return Window.confirm("You have unsaved data which will be lost. Are you sure you want to navigate away?");
 	}
+	
 	@Override
-	public void onLoad() {
-		super.onLoad();
+	public void afterPush(ViewFrame frame) {
+		this.setWidth("100%");
+		this.setHeight("100%");
 
-		setWidth("100%");
-		setHeight("100%");
-		
-		VerticalPanel vp = new VerticalPanel();
-		this.add(vp);
-
-		vp.add(new HTML("<h2>" + scheduleName + " - Instructors</h2>"));
+		this.add(new HTML("<h2>" + scheduleName + " - Instructors</h2>"));
 
 		final LoadingPopup popup = new LoadingPopup();
 		popup.show();
@@ -102,13 +102,14 @@ public class InstructorsView extends VerticalPanel implements IView<ScheduleNavV
 		table = new OsmTable<InstructorGWT>(
 				new Factory<InstructorGWT>() {
 					public InstructorGWT create() {
-						return new InstructorGWT(nextLocationID++);
+						return new InstructorGWT(
+								nextLocationID++, "", "", "", "", "", false, 5, 5, 0, 0,
+								new Vector<ScheduleItemGWT>(),
+								new HashMap<Integer, Map<Integer, TimePreferenceGWT>>(),
+								new HashMap<Integer, Integer>());
 					}
-					public InstructorGWT createHistoryFor(InstructorGWT location) {
-						InstructorGWT i = location.clone();
-						i.setId(-location.getId());
-						return i;
-					}
+					@Override
+					public InstructorGWT createCopy(InstructorGWT object) { return new InstructorGWT(object); }
 				},
 				new OsmTable.SaveHandler<InstructorGWT>() {
 					public void saveButtonClicked() {
@@ -191,8 +192,10 @@ public class InstructorsView extends VerticalPanel implements IView<ScheduleNavV
 		table.addColumn(new ButtonColumn<InstructorGWT>(TableConstants.INSTR_PREFERENCES, "4em",
 				new ClickCallback<InstructorGWT>(){
 					public void buttonClickedForObject(InstructorGWT object, Button button) {
-						if (navView.canCloseView())
-							navView.switchToView(null, new InstructorPreferencesView(service, object));
+						if (myFrame.canPopViewsAboveMe()) {
+							myFrame.popFramesAboveMe();
+							myFrame.frameViewAndPushAboveMe(new InstructorPreferencesView(service, scheduleName, object));
+						}	
 					}
 
 					public String initialLabel(InstructorGWT object) {
@@ -202,7 +205,7 @@ public class InstructorsView extends VerticalPanel implements IView<ScheduleNavV
 		
 		table.addDeleteColumn();
 		
-		vp.add(table);
+		this.add(table);
 		
 		service.getInstructors(new AsyncCallback<List<InstructorGWT>>() {
 			public void onFailure(Throwable caught) {
@@ -214,7 +217,7 @@ public class InstructorsView extends VerticalPanel implements IView<ScheduleNavV
 				assert(result != null);
 				popup.hide();
 				for (InstructorGWT instr : result)
-					nextLocationID = Math.max(nextLocationID, instr.getId() + 1);
+					nextLocationID = Math.max(nextLocationID, instr.getID() + 1);
 				table.addRows(result);
 			}
 		});
@@ -249,7 +252,11 @@ public class InstructorsView extends VerticalPanel implements IView<ScheduleNavV
 	}
 
 	@Override
-	public void willOpenView(ScheduleNavView container) {
-		navView = container;
-	}
+	public void beforePop() { }
+	@Override
+	public void beforeViewPushedAboveMe() { }
+	@Override
+	public void afterViewPoppedFromAboveMe() { }
+	@Override
+	public Widget getContents() { return this; }
 }

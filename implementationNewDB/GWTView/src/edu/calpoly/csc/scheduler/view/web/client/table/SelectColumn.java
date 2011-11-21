@@ -6,7 +6,9 @@ import java.util.LinkedHashMap;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 
-public class SelectColumn<ObjectType extends Comparable<ObjectType>> extends OsmTable.Column<ObjectType> {
+import edu.calpoly.csc.scheduler.view.web.shared.Identified;
+
+public class SelectColumn<ObjectType extends Identified> extends OsmTable.Column<ObjectType> {
 	private LinkedHashMap<String, String> options;
 	protected StaticGetter<ObjectType, String> getter;
 	protected StaticSetter<ObjectType, String> setter;

@@ -20,12 +20,10 @@ import edu.calpoly.csc.scheduler.model.schedule.ScheduleItem;
 import edu.calpoly.csc.scheduler.model.schedule.Week;
 import edu.calpoly.csc.scheduler.model.schedule.WeekAvail;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.DayGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT.ProvidedEquipmentGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.TimeGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.TimePreferenceGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.UserDataGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.WeekGWT;
@@ -33,7 +31,7 @@ import edu.calpoly.csc.scheduler.view.web.shared.WeekGWT;
 public abstract class Conversion {
 	public static UserData fromGWT(UserDataGWT gwt) {
 		UserData user = new UserData();
-		user.setDbid(gwt.getId());
+		user.setDbid(gwt.getID());
 		user.setPermission(gwt.getPermissionLevel());
 		user.setUserId(gwt.getUserName());
 		user.setScheduleDBId(gwt.getScheduleID());
@@ -42,7 +40,7 @@ public abstract class Conversion {
 	
 	public static InstructorGWT toGWT(int id, Instructor instructor) {
 		InstructorGWT result = new InstructorGWT();
-		result.setId(id);
+		result.setID(id);
 		result.setUserID(instructor.getUserID());
 		result.setFirstName(instructor.getFirstName());
 		result.setLastName(instructor.getLastName());
@@ -56,25 +54,25 @@ public abstract class Conversion {
 
 		HashMap<Course, Integer> sourceCoursePreferences = instructor
 				.getCoursePreferences();
-		HashMap<CourseGWT, Integer> coursePreferences = new LinkedHashMap<CourseGWT, Integer>();
+		HashMap<Integer, Integer> coursePreferences = new LinkedHashMap<Integer, Integer>();
 		for (Course course : sourceCoursePreferences.keySet()) {
-			coursePreferences.put(Conversion.toGWT(0, course),
+			coursePreferences.put(course.getDbid(),
 					sourceCoursePreferences.get(course));
 		}
 		result.setCoursePreferences(coursePreferences);
 
 		HashMap<Day, LinkedHashMap<Time, TimePreference>> sourceTimePreferences = instructor
 				.getTimePreferences();
-		Map<DayGWT, Map<TimeGWT, TimePreferenceGWT>> timePreferences = new TreeMap<DayGWT, Map<TimeGWT, TimePreferenceGWT>>();
+		Map<Integer, Map<Integer, TimePreferenceGWT>> timePreferences = new TreeMap<Integer, Map<Integer, TimePreferenceGWT>>();
 		for (Day sourceDay : sourceTimePreferences.keySet()) {
 			LinkedHashMap<Time, TimePreference> sourceTimePreferencesForDay = sourceTimePreferences
 					.get(sourceDay);
-			DayGWT day = Conversion.toGWT(sourceDay);
-			Map<TimeGWT, TimePreferenceGWT> timePreferencesForDay = new TreeMap<TimeGWT, TimePreferenceGWT>();
+			Integer day = Conversion.toGWT(sourceDay);
+			Map<Integer, TimePreferenceGWT> timePreferencesForDay = new TreeMap<Integer, TimePreferenceGWT>();
 			for (Time sourceTime : sourceTimePreferencesForDay.keySet()) {
 				TimePreference sourceTimePreferencesForTime = sourceTimePreferencesForDay
 						.get(sourceTime);
-				TimeGWT time = Conversion.toGWT(sourceTime);
+				Integer time = Conversion.toGWT(sourceTime);
 				TimePreferenceGWT timePreferencesForTime = Conversion
 						.toGWT(sourceTimePreferencesForTime);
 				timePreferencesForDay.put(time, timePreferencesForTime);
@@ -101,20 +99,15 @@ public abstract class Conversion {
 		return timePref;
 	}
 
-	private static TimeGWT toGWT(Time source) {
-		TimeGWT time = new TimeGWT();
-		time.setHour(source.getHour());
-		time.setMinute(source.getMinute());
-		return time;
+	private static Integer toGWT(Time source) {
+		return source.getHour() * 60 + source.getMinute();
 	}
 
-	private static DayGWT toGWT(Day sourceDay) {
-		DayGWT day = new DayGWT();
-		day.setNum(sourceDay.getNum());
-		return day;
+	private static Integer toGWT(Day sourceDay) {
+		return sourceDay.getNum();
 	}
 
-	public static Instructor fromGWT(InstructorGWT instructor) {
+	public static Instructor fromGWT(InstructorGWT instructor, Map<Integer, Course> coursesByID) {
 		instructor.verify();
 		Instructor ins = new Instructor();
 		ins.setFirstName(instructor.getFirstName());
@@ -130,24 +123,24 @@ public abstract class Conversion {
 		ins.setAvailability(new WeekAvail());
 
 		HashMap<Course, Integer> coursePrefs = new HashMap<Course, Integer>();
-		for (CourseGWT course : instructor.getCoursePreferences().keySet()) {
+		for (Integer course : instructor.getCoursePreferences().keySet()) {
 			Integer desire = instructor.getCoursePreferences().get(course);
-			coursePrefs.put(fromGWT(course), desire);
+			coursePrefs.put(coursesByID.get(course), desire);
 		}
 		ins.setCoursePreferences(coursePrefs);
 
 		HashMap<Day, LinkedHashMap<Time, TimePreference>> prefs = new HashMap<Day, LinkedHashMap<Time, TimePreference>>();
-		for (DayGWT sourceDay : instructor.gettPrefs().keySet()) {
-			Map<TimeGWT, TimePreferenceGWT> sourceDayPrefs = instructor
+		for (Integer sourceDay : instructor.gettPrefs().keySet()) {
+			Map<Integer, TimePreferenceGWT> sourceDayPrefs = instructor
 					.gettPrefs().get(sourceDay);
 
-			Day day = fromGWT(sourceDay);
+			Day day = dayFromGWT(sourceDay);
 			LinkedHashMap<Time, TimePreference> dayPrefs = new LinkedHashMap<Time, TimePreference>();
 
-			for (TimeGWT sourceTime : sourceDayPrefs.keySet()) {
+			for (Integer sourceTime : sourceDayPrefs.keySet()) {
 				TimePreferenceGWT sourceTimePrefs = sourceDayPrefs
 						.get(sourceTime);
-				dayPrefs.put(fromGWT(sourceTime), fromGWT(sourceTimePrefs));
+				dayPrefs.put(timeFromGWT(sourceTime), fromGWT(sourceTimePrefs));
 			}
 
 			prefs.put(day, dayPrefs);
@@ -161,12 +154,12 @@ public abstract class Conversion {
 		return ins;
 	}
 
-	private static Time fromGWT(TimeGWT sourceTime) {
-		return new Time(sourceTime.getHour(), sourceTime.getMinute());
+	private static Time timeFromGWT(Integer sourceTime) {
+		return new Time(sourceTime / 60, sourceTime % 60);
 	}
 
 	private static TimePreference fromGWT(TimePreferenceGWT sourceTimePrefs) {
-		return new TimePreference(fromGWT(sourceTimePrefs.getTime()),
+		return new TimePreference(timeFromGWT(sourceTimePrefs.getTime()),
 				sourceTimePrefs.getDesire());
 	}
 
@@ -197,7 +190,7 @@ public abstract class Conversion {
 
 	public static CourseGWT toGWT(int id, Course course) {
 		CourseGWT newCourse = new CourseGWT();
-		newCourse.setId(id);
+		newCourse.setID(id);
 		newCourse.setCatalogNum(course.getCatalogNum());
 		newCourse.setCourseName(course.getName());
 		newCourse.setDept(course.getDept());
@@ -223,7 +216,7 @@ public abstract class Conversion {
 
 	private static WeekGWT toGWT(Week source) {
 		WeekGWT result = new WeekGWT();
-		Vector<DayGWT> days = new Vector<DayGWT>();
+		Vector<Integer> days = new Vector<Integer>();
 		for (Day sourceDay : source.getDays())
 			days.add(toGWT(sourceDay));
 		result.setDays(days);
@@ -232,27 +225,16 @@ public abstract class Conversion {
 
 	private static Week fromGWT(WeekGWT days) {
 		Week week = new Week();
-		for (DayGWT day : days.getDays())
-			week.add(fromGWT(day));
+		for (Integer day : days.getDays())
+			week.add(dayFromGWT(day));
 		return week;
 	}
 
-	private static Day fromGWT(DayGWT day) {
-		if (day.getNum() == DayGWT.SUN.getNum())
-			return Day.SUN;
-		if (day.getNum() == DayGWT.MON.getNum())
-			return Day.MON;
-		if (day.getNum() == DayGWT.TUE.getNum())
-			return Day.TUE;
-		if (day.getNum() == DayGWT.WED.getNum())
-			return Day.WED;
-		if (day.getNum() == DayGWT.THU.getNum())
-			return Day.THU;
-		if (day.getNum() == DayGWT.FRI.getNum())
-			return Day.FRI;
-		if (day.getNum() == DayGWT.SAT.getNum())
-			return Day.SAT;
-		assert (false);
+	private static Day dayFromGWT(Integer dayNum) {
+		for (Day day : Day.ALL_DAYS)
+			if (dayNum == day.getNum())
+				return day;
+		assert(false);
 		return null;
 	}
 
@@ -318,7 +300,7 @@ public abstract class Conversion {
 	public static UserDataGWT toGWT(UserData value) {
 		UserDataGWT result = new UserDataGWT();
 		assert(value.getDbid() != null);
-		result.setId(value.getDbid());
+		result.setID(value.getDbid());
 		result.setPermissionLevel(value.getPermission());
 		result.setUserName(value.getUserId());
 		result.setScheduleID(value.getScheduleDBId());

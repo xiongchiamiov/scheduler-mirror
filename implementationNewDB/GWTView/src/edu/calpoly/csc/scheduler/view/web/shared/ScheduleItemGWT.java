@@ -3,9 +3,7 @@ package edu.calpoly.csc.scheduler.view.web.shared;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import com.google.gwt.user.client.ui.HTML;
-
-public class ScheduleItemGWT implements Serializable, Comparable {
+public class ScheduleItemGWT implements Serializable {
 	// private static final long serialVersionUID = 5345021880975658731L;
 	private String courseName;
 	private String professor;
@@ -141,24 +139,6 @@ public class ScheduleItemGWT implements Serializable, Comparable {
 
 	public String getRoom() {
 		return room;
-	}
-
-	public int compareTo(Object compared) {
-		if (this.startTimeHour > ((ScheduleItemGWT) compared)
-				.getStartTimeHour()) {
-			return 1;
-		} else if (this.startTimeHour < ((ScheduleItemGWT) compared)
-				.getStartTimeHour()) {
-			return -1;
-		} else if (this.startTimeMin > ((ScheduleItemGWT) compared)
-				.getStartTimeMin()) {
-			return 1;
-		} else if (this.startTimeMin < ((ScheduleItemGWT) compared)
-				.getStartTimeMin()) {
-			return -1;
-		}
-
-		return 0;
 	}
 
 	public boolean isPlaced() {
