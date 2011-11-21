@@ -444,7 +444,15 @@ public class SQLDB
    {
       // Where clause
       LinkedHashMap<String, Object> wheres = new LinkedHashMap<String, Object>();
-      wheres.put(DbData.SCHEDULEDBID, scheduleid);
+      // Because Evan wanted schedules to have dbid and not scheduleid
+      if (tablename.equals(ScheduleDB.TABLENAME))
+      {
+         wheres.put(DbData.DBID, scheduleid);
+      }
+      else
+      {
+         wheres.put(DbData.SCHEDULEDBID, scheduleid);
+      }
 
       return executeSelect(tablename, null, wheres);
    }
