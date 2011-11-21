@@ -54,11 +54,40 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 
 
 		MenuBar fileMenu = new MenuBar(true);
+		
+		fileMenu.addItem(new MenuItem("New", true, new Command() {
+			public void execute() {
+				displayNewSchedPopup("Create Schedule", new NameScheduleCallback() {
+					@Override
+					public void namedSchedule(final String scheduleName) {
+					    final LoadingPopup popup = new LoadingPopup();
+					    popup.show();
+					    
+						service.openNewSchedule(scheduleName, new AsyncCallback<Integer>() {
+							@Override
+							public void onFailure(Throwable caught) {
+								popup.hide();
+								Window.alert("Failed to open new schedule in: " + caught.getMessage());
+							}
+							
+							@Override
+							public void onSuccess(Integer newScheduleID) {
+								popup.hide();
+								myFrame.frameViewAndPushAboveMe(new AdminScheduleNavView(service, menuBar, userID, username, newScheduleID, scheduleName));
+							}
+						});
+					}
+				});
+			}
+		}));
+		
 		fileMenu.addItem(new MenuItem("Open", true, new Command() {
 			public void execute() {
 				displayOpenPopup();
 			}
 		}));
+		
+		
 		fileMenu.addItem(new MenuItem("Import", true, new Command() {
 			public void execute() {
 				Window.alert("Import!");
