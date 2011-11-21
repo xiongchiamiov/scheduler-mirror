@@ -1,5 +1,6 @@
 package edu.calpoly.csc.scheduler.view.web.client.views;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -12,6 +13,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -54,7 +56,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 		MenuBar fileMenu = new MenuBar(true);
 		fileMenu.addItem(new MenuItem("Open", true, new Command() {
 			public void execute() {
-				Window.alert("Open!");
+				displayOpenPopup();
 			}
 		}));
 		fileMenu.addItem(new MenuItem("Import", true, new Command() {
@@ -346,6 +348,59 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 		
 		db.setWidget(vp);
 		db.center();
+	}
+	
+	/**
+	 * Displays a popup for selecting and opening a previously saved schedule.
+	 */
+	public void displayOpenPopup() {
+		final DialogBox db = new DialogBox();
+		FlowPanel fp = new FlowPanel();
+		final ListBox listBox = new ListBox();
+		final Map<String,Integer> schedules = new HashMap<String,Integer>();
+		
+		service.getScheduleNames(new AsyncCallback<Map<String,Integer>>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert("Failed to open schedule in: " + caught.getMessage());
+			}
+			
+			@Override
+			public void onSuccess(Map<String,Integer> result) {
+				schedules.putAll(result);
+				for(String name : result.keySet())
+					listBox.addItem(name);
+			}
+		});
+		
+		listBox.setVisibleItemCount(5);
+		fp.add(listBox);
+		
+		fp.add(new HTML("<br />"));
+		
+		fp.add(new Button("Open", new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				int index = listBox.getSelectedIndex();
+				String scheduleName = listBox.getItemText(index);
+				int scheduleID = schedules.get(scheduleName);
+				selectSchedule(scheduleID, scheduleName);
+				db.hide();
+			}
+		}));
+		
+		fp.add(new Button("Cancel", new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				db.hide();
+			}
+		}));
+		
+		db.add(fp);
+		
+		db.setText("Open a Schedule");
+		db.center();
+		db.show();
 	}
 
 	@Override
