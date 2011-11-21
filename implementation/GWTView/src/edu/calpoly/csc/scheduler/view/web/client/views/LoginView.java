@@ -6,6 +6,7 @@ import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -34,6 +35,8 @@ public class LoginView extends VerticalPanel implements IViewContents {
 	public LoginView(GreetingServiceAsync service, MenuBar menuBar) {
 		this.service = service;
 		this.menuBar = menuBar;
+		
+		DOM.setElementAttribute(menuBar.getElement(), "id", "menu");
 
 		this.setWidth("100%");
 		this.setHorizontalAlignment(HasAlignment.ALIGN_CENTER);
@@ -41,6 +44,8 @@ public class LoginView extends VerticalPanel implements IViewContents {
 		this.add(new HTML("<h2>Login</h2>"));
 
 		final TextBox textBox = new TextBox();
+		DOM.setElementAttribute(textBox.getElement(), "id", "uname");
+		
 		textBox.addKeyPressHandler(new KeyPressHandler() {
 			@Override
 			public void onKeyPress(KeyPressEvent event) {
@@ -50,12 +55,15 @@ public class LoginView extends VerticalPanel implements IViewContents {
 		});
 		this.add(textBox);
 		
-		this.add(new Button("Login", new ClickHandler() {
+		Button login = new Button("Login", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				submitLogin(textBox.getText());
 			}
-		}));
+		});
+		
+	    DOM.setElementAttribute(login.getElement(), "id", "login");
+		this.add(login);	
 	}
 
 	private void submitLogin(final String username) {
@@ -112,6 +120,8 @@ public class LoginView extends VerticalPanel implements IViewContents {
 				}
 			}
 		});
+		
+		DOM.setElementAttribute(logoutMenuItem.getElement(), "id", "logout");
 		menuBar.addItem(logoutMenuItem);
 	}
 	
