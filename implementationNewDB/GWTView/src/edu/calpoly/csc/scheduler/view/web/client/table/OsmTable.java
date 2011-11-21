@@ -219,7 +219,11 @@ public class OsmTable<ObjectType extends Identified> extends FocusPanel {
 	}
 
 	public final void addNewRow() {
-		Row newRow = addRow(factory.create());
+		for (Integer id : rowsByObjectID.keySet())
+			assert(objectsByID.containsKey(id));
+		
+		ObjectType newObject = factory.create();
+		Row newRow = addRow(newObject);
 		addedRows.add(newRow);
 
 		for (Widget widget : newRow.widgetsInCells) {
@@ -228,6 +232,9 @@ public class OsmTable<ObjectType extends Identified> extends FocusPanel {
 				break;
 			}
 		}
+
+		for (Integer id : rowsByObjectID.keySet())
+			assert(objectsByID.containsKey(id));
 	}
 	
 	void setColumnWidth(Column<ObjectType> column, int widthPixels) {
@@ -296,8 +303,11 @@ public class OsmTable<ObjectType extends Identified> extends FocusPanel {
 
 	public Collection<ObjectType> getAddedUntouchedAndEditedObjects() {
 		ArrayList<ObjectType> result = new ArrayList<ObjectType>();
-		for (Integer id : rowsByObjectID.keySet())
+		for (Integer id : rowsByObjectID.keySet()) {
+			assert(objectsByID.containsKey(id));
+			assert(objectsByID.get(id) != null);
 			result.add(objectsByID.get(id));
+		}
 		return result;
 	}
 	
@@ -305,6 +315,9 @@ public class OsmTable<ObjectType extends Identified> extends FocusPanel {
 		int newObjectIndex = rowsByObjectID.size();
 		int rowIndex = newObjectIndex + 1;
 
+		assert(!objectsByID.containsKey(object.getID()));
+		objectsByID.put(object.getID(), object);
+		
 		Widget[] widgets = new Widget[columns.size()];
 		for (int colIndex = 0; colIndex < columns.size(); colIndex++) {
 			Column<ObjectType> column = columns.get(colIndex);
@@ -330,8 +343,14 @@ public class OsmTable<ObjectType extends Identified> extends FocusPanel {
 	}
 	
 	public final void addRows(Collection<ObjectType> objects) {
+		for (Integer id : rowsByObjectID.keySet())
+			assert(objectsByID.containsKey(id));
+		
 		for (ObjectType object : objects)
 			addRow(object);
+
+		for (Integer id : rowsByObjectID.keySet())
+			assert(objectsByID.containsKey(id));
 	}
 
 	protected void objectChanged(ObjectType object) {

@@ -83,12 +83,6 @@ public abstract class Conversion {
 		assert (result.gettPrefs().size() == instructor.getTimePreferences()
 				.size());
 
-		Vector<ScheduleItem> sourceItemsTaught = instructor.getItemsTaught();
-		Vector<ScheduleItemGWT> itemsTaught = new Vector<ScheduleItemGWT>();
-		for (ScheduleItem item : sourceItemsTaught)
-			itemsTaught.add(Conversion.toGWT(item, false));
-		result.setItemsTaught(itemsTaught);
-
 		return result;
 	}
 

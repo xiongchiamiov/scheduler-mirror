@@ -36,7 +36,7 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 	
 	private final String scheduleName;
 	private OsmTable<InstructorGWT> table;
-	int nextLocationID = 1;
+	int nextInstructorID = 1;
 	
 	ViewFrame myFrame;
 
@@ -103,8 +103,7 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 				new Factory<InstructorGWT>() {
 					public InstructorGWT create() {
 						return new InstructorGWT(
-								nextLocationID++, "", "", "", "", "", false, 5, 5, 0, 0,
-								new Vector<ScheduleItemGWT>(),
+								nextInstructorID++, "", "", "", "", "", false, 5, 5, 0, 0,
 								new HashMap<Integer, Map<Integer, TimePreferenceGWT>>(),
 								new HashMap<Integer, Integer>());
 					}
@@ -217,7 +216,7 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 				assert(result != null);
 				popup.hide();
 				for (InstructorGWT instr : result)
-					nextLocationID = Math.max(nextLocationID, instr.getID() + 1);
+					nextInstructorID = Math.max(nextInstructorID, instr.getID() + 1);
 				table.addRows(result);
 			}
 		});
@@ -245,9 +244,13 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 	}
 	
 	private boolean userIdExists(String userId) {
-		for (InstructorGWT instr : table.getAddedUntouchedAndEditedObjects())
+		for (InstructorGWT instr : table.getAddedUntouchedAndEditedObjects()) {
+			assert(instr != null);
+			assert(instr.getUserID() != null);
+			assert(userId != null);
 			if (instr.getUserID().equals(userId))
 				return true;
+		}
 		return false;
 	}
 
@@ -260,3 +263,4 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 	@Override
 	public Widget getContents() { return this; }
 }
+ 
