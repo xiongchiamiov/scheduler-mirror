@@ -180,22 +180,28 @@ public class OsmTable<ObjectType extends Identified> extends FocusPanel {
 
 	public List<ObjectType> getAddedObjects() {
 		List<ObjectType> added = new ArrayList<ObjectType>();
-		for (Row row : addedRows)
-			added.add(row.object);
+		for (Row row : addedRows) {
+			if (!rowsToRemove.contains(row))
+				added.add(row.object);
+		}
 		return added;
 	}
 	
 	public List<ObjectType> getEditedObjects() {
 		List<ObjectType> edited = new ArrayList<ObjectType>();
-		for (Row row : editedRows)
-			edited.add(row.object);
+		for (Row row : editedRows) {
+			if (!addedRows.contains(row) && !rowsToRemove.contains(row))
+				edited.add(row.object);
+		}
 		return edited;
 	}
 	
 	public List<ObjectType> getRemovedObjects() {
 		List<ObjectType> removed = new ArrayList<ObjectType>();
-		for (Row row : rowsToRemove)
-			removed.add(row.object);
+		for (Row row : rowsToRemove) {
+			if (!addedRows.contains(row))
+				removed.add(row.object);
+		}
 		return removed;
 	}
 	

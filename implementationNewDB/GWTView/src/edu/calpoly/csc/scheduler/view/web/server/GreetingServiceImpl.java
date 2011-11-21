@@ -102,11 +102,16 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 
 	@Override
 	public List<InstructorGWT> saveInstructors(List<InstructorGWT> added, List<InstructorGWT> edited, List<InstructorGWT> removed) {
-		for (InstructorGWT addedInstructor : added)
+		for (InstructorGWT addedInstructor : added) {
+			assert(!edited.contains(addedInstructor));
+			addedInstructor.setID(-1);
 			model.saveInstructor(Conversion.fromGWT(addedInstructor, getCoursesByID()));
-		
-		for (InstructorGWT editedInstructor : edited)
+		}
+
+		for (InstructorGWT editedInstructor : edited) {
+			assert(!added.contains(editedInstructor));
 			model.saveInstructor(Conversion.fromGWT(editedInstructor, getCoursesByID()));
+		}
 		
 		for (InstructorGWT removedInstructor : removed)
 			model.removeInstructor(Conversion.fromGWT(removedInstructor, getCoursesByID()));

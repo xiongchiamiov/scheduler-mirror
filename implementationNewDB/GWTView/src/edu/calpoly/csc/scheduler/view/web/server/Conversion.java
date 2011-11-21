@@ -104,13 +104,13 @@ public abstract class Conversion {
 	public static Instructor fromGWT(InstructorGWT instructor, Map<Integer, Course> coursesByID) {
 		instructor.verify();
 		Instructor ins = new Instructor();
+		ins.setDbid(instructor.getID());
 		ins.setFirstName(instructor.getFirstName());
 		ins.setLastName(instructor.getLastName());
 		ins.setUserID(instructor.getUserID());
 		ins.setMaxWtu(instructor.getMaxWtu());
 		ins.setCurWtu(instructor.getCurWtu());
-		ins.setOffice(new Location(instructor.getBuilding(), instructor
-				.getRoomNumber()));
+		ins.setOffice(new Location(instructor.getBuilding(), instructor.getRoomNumber()));
 		ins.setFairness(instructor.getFairness());
 		ins.setDisability(instructor.getDisabilities());
 		ins.setGenerosity(instructor.getGenerosity());
