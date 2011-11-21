@@ -79,10 +79,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 
 	@Override
 	public ArrayList<InstructorGWT> getInstructors() throws IllegalArgumentException {
-		int id = 1;
 		ArrayList<InstructorGWT> results = new ArrayList<InstructorGWT>();
 		for (Instructor instructor : model.getInstructors())
-			results.add(Conversion.toGWT(id++, instructor));
+			results.add(Conversion.toGWT(instructor));
 		return results;
 	}
 
@@ -306,9 +305,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public ArrayList<LocationGWT> getLocations() {
 		ArrayList<LocationGWT> results = new ArrayList<LocationGWT>();
-		int id = 1;
 		for (Location location : model.getLocations())
-			results.add(Conversion.toGWT(id++, location));
+			results.add(Conversion.toGWT(location));
 		return results;
 	}
 
@@ -409,11 +407,10 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public ArrayList<CourseGWT> getCourses() throws IllegalArgumentException {
 		availableCourses = new HashMap<String, Course>();
-		int id = 1;
 		ArrayList<CourseGWT> results = new ArrayList<CourseGWT>();
 		for (Course course : model.getCourses()) {
 			availableCourses.put(course.getDept() + course.getCatalogNum(), course);
-			results.add(Conversion.toGWT(id++, course));
+			results.add(Conversion.toGWT(course));
 		}
 		return results;
 	}

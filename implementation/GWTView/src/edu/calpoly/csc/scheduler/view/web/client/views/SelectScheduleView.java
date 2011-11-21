@@ -333,18 +333,22 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 			public void onSuccess(Pair<Integer, InstructorGWT> permissionAndInstructor) {
 				popup.hide();
 				
-				switch (permissionAndInstructor.getLeft()) {
-				case 0: // todo: enumify
-					myFrame.frameViewAndPushAboveMe(new GuestScheduleNavView(service, menuBar, scheduleName));
-					break;
-				case 1: // todo: enumify
-					myFrame.frameViewAndPushAboveMe(new InstructorScheduleNavView(service, menuBar, scheduleName, permissionAndInstructor.getRight()));
-					break;
-				case 2: // todo: enumify
-					myFrame.frameViewAndPushAboveMe(new AdminScheduleNavView(service, menuBar, userID, username, scheduleID, scheduleName));
-					break;
-				default:
-					assert(false);
+				if (myFrame.canPopViewsAboveMe()) {
+					myFrame.popFramesAboveMe();
+					
+					switch (permissionAndInstructor.getLeft()) {
+					case 0: // todo: enumify
+						myFrame.frameViewAndPushAboveMe(new GuestScheduleNavView(service, menuBar, scheduleName));
+						break;
+					case 1: // todo: enumify
+						myFrame.frameViewAndPushAboveMe(new InstructorScheduleNavView(service, menuBar, scheduleName, permissionAndInstructor.getRight()));
+						break;
+					case 2: // todo: enumify
+						myFrame.frameViewAndPushAboveMe(new AdminScheduleNavView(service, menuBar, userID, username, scheduleID, scheduleName));
+						break;
+					default:
+						assert(false);
+					}
 				}
 			}
 		});

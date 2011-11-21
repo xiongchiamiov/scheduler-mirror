@@ -38,9 +38,9 @@ public abstract class Conversion {
 		return user;
 	}
 	
-	public static InstructorGWT toGWT(int id, Instructor instructor) {
+	public static InstructorGWT toGWT(Instructor instructor) {
 		InstructorGWT result = new InstructorGWT();
-		result.setID(id);
+		result.setID(instructor.getDbid());
 		result.setUserID(instructor.getUserID());
 		result.setFirstName(instructor.getFirstName());
 		result.setLastName(instructor.getLastName());
@@ -175,16 +175,16 @@ public abstract class Conversion {
 		int endTimeMin = schdItem.getEnd().getMinute();
 		String location = (schdItem.getLocation() == null ? "" : schdItem
 				.getLocation().toString());
-		CourseGWT course = toGWT(0, schdItem.getCourse());
+		CourseGWT course = toGWT(schdItem.getCourse());
 
 		return new ScheduleItemGWT(course, courseName, instructor, courseDept,
 				courseNum, section, dayNums, startTimeHour, startTimeMin,
 				endTimeHour, endTimeMin, location, isConflicted);
 	}
 
-	public static CourseGWT toGWT(int id, Course course) {
+	public static CourseGWT toGWT(Course course) {
 		CourseGWT newCourse = new CourseGWT();
-		newCourse.setID(id);
+		newCourse.setID(course.getDbid());
 		newCourse.setCatalogNum(course.getCatalogNum());
 		newCourse.setCourseName(course.getName());
 		newCourse.setDept(course.getDept());
@@ -232,8 +232,8 @@ public abstract class Conversion {
 		return null;
 	}
 
-	public static LocationGWT toGWT(int id, Location location) {
-		return new LocationGWT(id, location.getBuilding(), location.getRoom(),
+	public static LocationGWT toGWT(Location location) {
+		return new LocationGWT(location.getDbid(), location.getBuilding(), location.getRoom(),
 				location.getType(), location.getMaxOccupancy(),
 				location.getAdaCompliant(),
 				toGWT(location.getProvidedEquipment()));
