@@ -14,56 +14,70 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 	GreetingServiceAsync service;
 	MenuBar menuBar;
 	String scheduleName;
-	MenuItem instructorsMenuItem, locationsMenuItem, coursesMenuItem, scheduleMenuItem;
-	
-	public AdminScheduleNavView(final GreetingServiceAsync service, final MenuBar MenuBar, int userID, String username, Integer scheduleID, final String scheduleName) {
+	MenuItem instructorsMenuItem, locationsMenuItem, coursesMenuItem,
+			scheduleMenuItem;
+
+	public AdminScheduleNavView(final GreetingServiceAsync service,
+			final MenuBar MenuBar, int userID, String username,
+			Integer scheduleID, final String scheduleName) {
 		this.service = service;
 		this.menuBar = MenuBar;
 		this.scheduleName = scheduleName;
 	}
 
 	@Override
-	public boolean canPop() { return true; }
+	public boolean canPop() {
+		return true;
+	}
+
 	@Override
 	public void afterPush(final ViewFrame frame) {
 
-		menuBar.addItem(instructorsMenuItem = new MenuItem("Instructors", true, new Command() {
-			public void execute() {
-				if (frame.canPopViewsAboveMe()) {
-					frame.popFramesAboveMe();
-					frame.frameViewAndPushAboveMe(new InstructorsView(service, scheduleName));
-				}
-			}
-		}));
+		menuBar.addItem(instructorsMenuItem = new MenuItem("Instructors", true,
+				new Command() {
+					public void execute() {
+						if (frame.canPopViewsAboveMe()) {
+							frame.popFramesAboveMe();
+							frame.frameViewAndPushAboveMe(new InstructorsView(
+									service, scheduleName));
+						}
+					}
+				}));
 
-		menuBar.addItem(locationsMenuItem = new MenuItem("Locations", true, new Command() {
-			public void execute() {
-				if (frame.canPopViewsAboveMe()) {
-					frame.popFramesAboveMe();
-					frame.frameViewAndPushAboveMe(new LocationsView(service, scheduleName));
-				}
-			}
-		}));
+		menuBar.addItem(locationsMenuItem = new MenuItem("Locations", true,
+				new Command() {
+					public void execute() {
+						if (frame.canPopViewsAboveMe()) {
+							frame.popFramesAboveMe();
+							frame.frameViewAndPushAboveMe(new LocationsView(
+									service, scheduleName));
+						}
+					}
+				}));
 
-		menuBar.addItem(coursesMenuItem = new MenuItem("Courses", true, new Command() {
-			public void execute() {
-				if (frame.canPopViewsAboveMe()) {
-					frame.popFramesAboveMe();
-					frame.frameViewAndPushAboveMe(new CoursesView(service, scheduleName));
-				}
-			}
-		}));
-		
-		menuBar.addItem(scheduleMenuItem = new MenuItem("Schedule", true, new Command() {
-			public void execute() {
-				if (frame.canPopViewsAboveMe()) {
-					frame.popFramesAboveMe();
-					frame.frameViewAndPushAboveMe(new ScheduleView(service, scheduleName));
-				}
-			}
-		}));
+		menuBar.addItem(coursesMenuItem = new MenuItem("Courses", true,
+				new Command() {
+					public void execute() {
+						if (frame.canPopViewsAboveMe()) {
+							frame.popFramesAboveMe();
+							frame.frameViewAndPushAboveMe(new CoursesView(
+									service, scheduleName));
+						}
+					}
+				}));
+
+		menuBar.addItem(scheduleMenuItem = new MenuItem("Schedule", true,
+				new Command() {
+					public void execute() {
+						if (frame.canPopViewsAboveMe()) {
+							frame.popFramesAboveMe();
+							frame.frameViewAndPushAboveMe(new ScheduleView(
+									service, scheduleName));
+						}
+					}
+				}));
 	}
-	
+
 	@Override
 	public void beforePop() {
 		menuBar.removeItem(scheduleMenuItem);
@@ -71,11 +85,17 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 		menuBar.removeItem(locationsMenuItem);
 		menuBar.removeItem(instructorsMenuItem);
 	}
-	
+
 	@Override
-	public void beforeViewPushedAboveMe() { }
+	public void beforeViewPushedAboveMe() {
+	}
+
 	@Override
-	public void afterViewPoppedFromAboveMe() { }
+	public void afterViewPoppedFromAboveMe() {
+	}
+
 	@Override
-	public Widget getContents() { return this; }
+	public Widget getContents() {
+		return this;
+	}
 }

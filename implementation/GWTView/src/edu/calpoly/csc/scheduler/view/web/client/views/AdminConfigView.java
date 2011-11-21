@@ -27,101 +27,123 @@ public class AdminConfigView extends VerticalPanel implements IViewContents {
 	int nextLocationID = 1;
 	private String scheduleName;
 
-	public AdminConfigView(GreetingServiceAsync greetingService, String scheduleName) {
+	public AdminConfigView(GreetingServiceAsync greetingService,
+			String scheduleName) {
 		this.service = greetingService;
 		this.scheduleName = scheduleName;
 	}
-	
+
 	@Override
 	public void afterPush(ViewFrame frame) {
 		this.setWidth("100%");
 		this.setHeight("100%");
-				
+
 		this.add(new HTML("<h2>" + scheduleName + " - Configuration</h2>"));
-		
+
 		final LoadingPopup popup = new LoadingPopup();
 		popup.show();
-						
-		table = new OsmTable<UserDataGWT>(
-				new Factory<UserDataGWT>() {
-					public UserDataGWT create() { return new UserDataGWT(); }
-					public UserDataGWT createCopy(UserDataGWT existing) { return new UserDataGWT(existing); }
-				},
-				new OsmTable.SaveHandler<UserDataGWT>() {
-					public void saveButtonClicked() {
-						save();
+
+		table = new OsmTable<UserDataGWT>(new Factory<UserDataGWT>() {
+			public UserDataGWT create() {
+				return new UserDataGWT();
+			}
+
+			public UserDataGWT createCopy(UserDataGWT existing) {
+				return new UserDataGWT(existing);
+			}
+		}, new OsmTable.SaveHandler<UserDataGWT>() {
+			public void saveButtonClicked() {
+				save();
+			}
+		});
+
+		table.addColumn(new StringColumn<UserDataGWT>(
+				TableConstants.CONFIG_USERNAME, "6em",
+				new StaticGetter<UserDataGWT, String>() {
+					public String getValueForObject(UserDataGWT object) {
+						return object.getUserName();
 					}
-				});
-				
-		table.addColumn(new StringColumn<UserDataGWT>(TableConstants.CONFIG_USERNAME, "6em",
-				new StaticGetter<UserDataGWT, String>() {
-					public String getValueForObject(UserDataGWT object) { return object.getUserName(); }
-				},
-				new StaticSetter<UserDataGWT, String>() {
-					public void setValueInObject(UserDataGWT object, String newValue) { object.setUserName(newValue); }
-				},
-				String.CASE_INSENSITIVE_ORDER, null));
-		
-		table.addColumn(new SelectColumn<UserDataGWT>(TableConstants.CONFIG_LEVEL, "6em",
-				
+				}, new StaticSetter<UserDataGWT, String>() {
+					public void setValueInObject(UserDataGWT object,
+							String newValue) {
+						object.setUserName(newValue);
+					}
+				}, String.CASE_INSENSITIVE_ORDER, null));
+
+		table.addColumn(new SelectColumn<UserDataGWT>(
+				TableConstants.CONFIG_LEVEL, "6em",
+
 				new String[] { "0", "1", "2" },
-				
+
 				new StaticGetter<UserDataGWT, String>() {
-					public String getValueForObject(UserDataGWT object) { return object.getPermissionLevel().toString(); }
+					public String getValueForObject(UserDataGWT object) {
+						return object.getPermissionLevel().toString();
+					}
 				},
-				
+
 				new StaticSetter<UserDataGWT, String>() {
-					public void setValueInObject(UserDataGWT object, String newValue) { object.setPermissionLevel(Integer.parseInt(newValue)); }
+					public void setValueInObject(UserDataGWT object,
+							String newValue) {
+						object.setPermissionLevel(Integer.parseInt(newValue));
+					}
 				},
-				
-				String.CASE_INSENSITIVE_ORDER));		
-						
+
+				String.CASE_INSENSITIVE_ORDER));
+
 		this.add(table);
-		
+
 		service.getCourses(new AsyncCallback<List<CourseGWT>>() {
 			public void onFailure(Throwable caught) {
 				popup.hide();
 				Window.alert("Failed to get courses: " + caught.toString());
 			}
-			
-			public void onSuccess(List<CourseGWT> result){
-				assert(result != null);
+
+			public void onSuccess(List<CourseGWT> result) {
+				assert (result != null);
 				popup.hide();
 				for (CourseGWT crs : result)
 					nextLocationID = Math.max(nextLocationID, crs.getID() + 1);
-				//table.addRows(result);
+				// table.addRows(result);
 			}
 		});
 	}
-		
+
 	private void save() {
-		/*service.saveCourses(table.getAddedUntouchedAndEditedObjects(), new AsyncCallback<Collection<CourseGWT>>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				// TODO Auto-generated method stub				
-			}
-			@Override
-			public void onSuccess(Collection<CourseGWT> result) {
-				table.clear();
-				//table.addRows(result);
-			}
-		});*/
+		/*
+		 * service.saveCourses(table.getAddedUntouchedAndEditedObjects(), new
+		 * AsyncCallback<Collection<CourseGWT>>() {
+		 * 
+		 * @Override public void onFailure(Throwable caught) { // TODO
+		 * Auto-generated method stub }
+		 * 
+		 * @Override public void onSuccess(Collection<CourseGWT> result) {
+		 * table.clear(); //table.addRows(result); } });
+		 */
 	}
 
 	@Override
 	public boolean canPop() {
-		assert(table != null);
+		assert (table != null);
 		if (table.isSaved())
 			return true;
-		return Window.confirm("You have unsaved data which will be lost. Are you sure you want to navigate away?");
+		return Window
+				.confirm("You have unsaved data which will be lost. Are you sure you want to navigate away?");
 	}
 
 	@Override
-	public void beforePop() { }
+	public void beforePop() {
+	}
+
 	@Override
-	public void beforeViewPushedAboveMe() { }
+	public void beforeViewPushedAboveMe() {
+	}
+
 	@Override
-	public void afterViewPoppedFromAboveMe() { }
+	public void afterViewPoppedFromAboveMe() {
+	}
+
 	@Override
-	public Widget getContents() { return this; }
+	public Widget getContents() {
+		return this;
+	}
 }

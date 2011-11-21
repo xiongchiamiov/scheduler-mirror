@@ -13,31 +13,43 @@ public class ScheduleView extends VerticalPanel implements IViewContents {
 	private GreetingServiceAsync service;
 	private String scheduleName;
 
-	public ScheduleView(GreetingServiceAsync greetingService, String scheduleName) {
+	public ScheduleView(GreetingServiceAsync greetingService,
+			String scheduleName) {
 		this.service = greetingService;
 		this.scheduleName = scheduleName;
 	}
-	
+
 	@Override
 	public void afterPush(ViewFrame frame) {
 		this.setWidth("100%");
 		this.setHeight("100%");
-		
-        this.add(new HTML("<h2>" + scheduleName + "</h2>"));
-        
-        ScheduleViewWidget schdView = new ScheduleViewWidget();
-        
-        this.add(schdView.getWidget(service));
+
+		this.add(new HTML("<h2>" + scheduleName + "</h2>"));
+
+		ScheduleViewWidget schdView = new ScheduleViewWidget();
+
+		this.add(schdView.getWidget(service));
 	}
 
 	@Override
-	public boolean canPop() { return true; }
+	public boolean canPop() {
+		return true;
+	}
+
 	@Override
-	public void beforePop() { }
+	public void beforePop() {
+	}
+
 	@Override
-	public void beforeViewPushedAboveMe() { }
+	public void beforeViewPushedAboveMe() {
+	}
+
 	@Override
-	public void afterViewPoppedFromAboveMe() { }
+	public void afterViewPoppedFromAboveMe() {
+	}
+
 	@Override
-	public Widget getContents() { return this; }
+	public Widget getContents() {
+		return this;
+	}
 }
