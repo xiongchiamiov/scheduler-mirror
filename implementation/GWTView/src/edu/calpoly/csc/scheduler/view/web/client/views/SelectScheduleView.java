@@ -71,7 +71,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 		}));
 		fileMenu.addItem(new MenuItem("Save As...", true, new Command() {
 			public void execute() {
-				Window.alert("Save As!");
+				displaySaveAsPopup();
 			}
 		}));
 		fileMenu.addItem(new MenuItem("Export", true, new Command() {
@@ -399,6 +399,50 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 		db.add(fp);
 		
 		db.setText("Open a Schedule");
+		db.center();
+		db.show();
+	}
+	
+	/**
+	 * Displays a popup to save the schedule under a different name.
+	 */
+	public void displaySaveAsPopup() {
+		final TextBox tb = new TextBox();
+		final DialogBox db = new DialogBox();
+		FlowPanel fp = new FlowPanel();
+		final Button saveButton = new Button("Save", new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {		
+				db.hide();
+				
+			    final String scheduleName = tb.getText();
+			    
+			    //TODO - Need to discuss the implementation of this 
+			}
+		});
+		
+		final Button cancelButton = new Button("Cancel", new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				db.hide();
+			}
+		});
+		
+		tb.addKeyPressHandler(new KeyPressHandler() {
+			@Override
+			public void onKeyPress(KeyPressEvent event) {
+				if (event.getCharCode() == KeyCodes.KEY_ENTER)
+					saveButton.click();
+			}
+		});
+		
+		db.setText("Name Schedule");
+		fp.add(new HTML("<center>Specify a name to save the schedule as...</center>"));
+		fp.add(tb);
+		fp.add(saveButton);
+		fp.add(cancelButton);
+		
+		db.setWidget(fp);
 		db.center();
 		db.show();
 	}
