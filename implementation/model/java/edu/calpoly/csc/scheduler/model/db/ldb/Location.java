@@ -501,7 +501,7 @@ public class Location extends DbData implements Serializable
       l.setProvidedEquipment(e);
       l.setAdaCompliant(true);
       l.setAvailability(new WeekAvail());
-      l.setScheduleId(1);
+      l.setScheduleDBId(1);
       return l;
    }
 

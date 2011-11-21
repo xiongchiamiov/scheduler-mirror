@@ -3,6 +3,7 @@ package edu.calpoly.csc.scheduler.model.db;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
 import edu.calpoly.csc.scheduler.model.db.cdb.CourseDB;
@@ -11,6 +12,8 @@ import edu.calpoly.csc.scheduler.model.db.idb.InstructorDB;
 import edu.calpoly.csc.scheduler.model.db.ldb.Location;
 import edu.calpoly.csc.scheduler.model.db.ldb.LocationDB;
 import edu.calpoly.csc.scheduler.model.db.sdb.ScheduleDB;
+import edu.calpoly.csc.scheduler.model.db.udb.UserData;
+import edu.calpoly.csc.scheduler.model.db.udb.UserDataDB;
 import edu.calpoly.csc.scheduler.model.schedule.Schedule;
 
 /**
@@ -37,11 +40,14 @@ public class Database
    /** The schedule database. */
    private ScheduleDB       scheduleDB;
 
-   /** The current schedule id */
-   private int              scheduleID;
+   /** The userdata database. */
+   private UserDataDB       userdataDB;
 
-   /** The current department */
-   private String           dept;
+   /** The current schedule id */
+   private int              scheduleDBID;
+
+   /** The current userid */
+   private String           userid;
 
    /** If we are setting up a new user */
    private boolean          newUser            = false;
@@ -50,62 +56,48 @@ public class Database
    private boolean          copying            = false;
 
    /** If we are copying data */
-   private int              oldScheduleID      = -3;
+   private int              oldScheduleDBID      = -3;
 
    /** Example Chem Schedule template scheduleid */
-   private static final int templateScheduleID = 1354;
+   private static final int templateScheduleDBID = 1;
 
    /**
     * STEP 1 This constructor will create the SQLDB object.
     **/
-   public Database()
+   public Database(String userid)
    {
       sqldb = new SQLDB();
       sqldb.open();
+      checkUser(userid);
+      this.userid = userid;
+      scheduleDB = new ScheduleDB(sqldb);
    }
 
    /**
-    * STEP 2 Returns the department the user is in
+    * STEP 2 Checks to see if it is a new user, and adds to database if it is
     */
-   public String getDept(String userid)
+   private void checkUser(String userid)
    {
-      if (sqldb.doesUserExist(userid))
+      // Create where clause for user to see if it exists
+      LinkedHashMap<String, Object> wheres = new LinkedHashMap<String, Object>();
+      wheres.put(UserDataDB.USERID, userid);
+      if (sqldb.doesItExist(sqldb.executeSelect(UserDataDB.TABLENAME, wheres,
+            wheres)))
       {
          newUser = false;
-         // If it exists, get dept
-         this.dept = sqldb.getDeptByUserID(userid);
       }
       else
       {
-         // Make a new user
-         sqldb.makeNewUser(userid);
-         // New dept will be userid
          newUser = true;
-         this.dept = userid;
       }
-      return dept;
    }
 
    /**
     * STEP 3 Returns the list of schedules for this department
     */
-   public HashMap<String, Integer> getSchedules(String dept)
+   public HashMap<String, UserData> getSchedules()
    {
-      this.dept = dept;
-      HashMap<String, Integer> schedules = new HashMap<String, Integer>();
-      ResultSet rs = sqldb.getSchedulesByDept(dept);
-      try
-      {
-         while (rs.next())
-         {
-            schedules.put(rs.getString("name"), rs.getInt("scheduleid"));
-         }
-      }
-      catch (SQLException e)
-      {
-         e.printStackTrace();
-      }
-      return schedules;
+      return sqldb.getSchedulePermissions(userid);
    }
 
    /**
@@ -113,77 +105,81 @@ public class Database
     * 
     * @return scheduleid The copied schedules scheduleid
     */
-   public int copySchedule(int oldscheduleid, String name)
+   public int copySchedule(int oldscheduledbid, String name)
    {
-      this.oldScheduleID = oldscheduleid;
+      this.oldScheduleDBID = oldscheduledbid;
       copying = true;
       scheduleDB = new ScheduleDB(sqldb);
-      Schedule old = scheduleDB.getSchedule(oldscheduleid);
+      Schedule old = scheduleDB.getSchedule(oldscheduledbid);
       // Set new fields
       old.setId(-2);
       old.setName(name);
       scheduleDB.saveData(old);
-      this.scheduleID = scheduleDB.getScheduleID(old);
-      return this.scheduleID;
+      this.scheduleDBID = sqldb.getLastGeneratedKey();
+      System.out.println("Just copied schedule from id: " + oldscheduledbid
+            + " to new id: " + this.scheduleDBID);
+      // Insert new data in userdata
+      userdataDB = new UserDataDB(sqldb, scheduleDBID);
+      UserData entry = new UserData();
+      entry.setPermission(UserData.ADMIN);
+      entry.setScheduleDBId(scheduleDBID);
+      entry.setScheduleName(name);
+      entry.setUserId(userid);
+      userdataDB.saveData(entry);
+      return this.scheduleDBID;
    }
 
    /**
     * STEP 4 Initialize databases with given schedule id
     */
-   public void openDB(int scheduleid, String scheduleName)
+   public void openDB(int scheduledbid, String scheduleName)
    {
-      System.out.println("ID: " + scheduleid + ", name: " + scheduleName);
-      int realid = scheduleid;
+      System.out.println("ID: " + scheduledbid + ", name: " + scheduleName);
+      int realid = scheduledbid;
       Schedule data = new Schedule();
-      data.setDept(dept);
       data.setName(scheduleName);
-      data.setScheduleId(realid);
+      data.setScheduleDBId(realid);
       if (scheduleDB == null)
       {
          scheduleDB = new ScheduleDB(sqldb);
       }
 
-      if (sqldb.doesScheduleIDExist(realid))
+      if (scheduleDB.exists(data))
       {
          // Use this schedule
          System.out.println("Using existing schedule");
-         scheduleDB.setScheduleID(realid);
+         userdataDB = new UserDataDB(sqldb, realid);
+         scheduleDB.setScheduleDBID(realid);
       }
       else
       {
-         // Check schedule name inside dept
-         if (sqldb.doesScheduleNameExist(scheduleName, dept))
-         {
-            // TODO: Change to throw error or something
-            // Open existing schedule with that name
-            System.err
-                  .println("ERROR: Schedule name already exists, opening existing one");
-            realid = sqldb.getScheduleIDByName(scheduleName, dept);
-            scheduleDB.setScheduleID(realid);
-         }
-         else
-         {
-            // Create a new schedule with given name and dept
-            scheduleDB.saveData(data);
-            realid = scheduleDB.getScheduleID(data);
-         }
+         // Create a new schedule with given name
+         scheduleDB.saveData(data);
+         realid = scheduleDB.getScheduleDBID(data);
+         userdataDB = new UserDataDB(sqldb, realid);
+         UserData entry = new UserData();
+         entry.setPermission(UserData.ADMIN);
+         entry.setScheduleDBId(realid);
+         entry.setScheduleName(scheduleName);
+         entry.setUserId(userid);
+         userdataDB.saveData(entry);
       }
+      this.scheduleDBID = realid;
       instructorDB = new InstructorDB(sqldb, realid);
       courseDB = new CourseDB(sqldb, realid);
       locationDB = new LocationDB(sqldb, realid);
-      this.scheduleID = realid;
       if (newUser)
       {
          System.out.println("Copying data from Example Chem Schedule");
          // Make temporary db's with scheduleid = Example Chem Schedule (1354)
-         copyAllData(templateScheduleID);
+         copyAllData(templateScheduleDBID);
          newUser = false;
       }
       else if (copying)
       {
-         System.out.println("Copying data from scheduleid " + oldScheduleID);
+         System.out.println("Copying data from scheduledbid " + oldScheduleDBID);
          // Make temporary db's with scheduleid = whatever copying had
-         copyAllData(oldScheduleID);
+         copyAllData(oldScheduleDBID);
          copying = false;
       }
    }
@@ -199,16 +195,19 @@ public class Database
       // Copy instructors
       for (Instructor instructor : tempInstructorDB.getData())
       {
+         instructor.setDbid(-1);
          instructorDB.saveData(instructor);
       }
       // Copy courses
       for (Course course : tempCourseDB.getData())
       {
+         course.setDbid(-1);
          courseDB.saveData(course);
       }
       // Copy locations
       for (Location location : tempLocationDB.getData())
       {
+         location.setDbid(-1);
          locationDB.saveData(location);
       }
       System.out.println("Done copying data");
@@ -251,7 +250,7 @@ public class Database
     */
    public int getScheduleID()
    {
-      return scheduleID;
+      return scheduleDBID;
    }
 
    /**
@@ -260,6 +259,6 @@ public class Database
     */
    public void setScheduleID(int scheduleID)
    {
-      this.scheduleID = scheduleID;
+      this.scheduleDBID = scheduleID;
    }
 }

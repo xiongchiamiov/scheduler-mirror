@@ -15,8 +15,7 @@ import java.io.Serializable;
  * @version October 22, 2011
  */
 
-public class Instructor extends DbData 
-                        implements Comparable<Instructor>, Serializable
+public class Instructor extends DbData implements Comparable<Instructor>, Serializable
 {
    public static final long serialVersionUID = 42;
 
@@ -945,7 +944,7 @@ public class Instructor extends DbData
       i.setCoursePreferences(coursePreferences);
       i.settPrefs(new HashMap<Day, LinkedHashMap<Time, TimePreference>>());
       i.setItemsTaught(itemsTaught);
-      i.setScheduleId(1);
+      i.setScheduleDBId(1);
       return i;
    }
 }

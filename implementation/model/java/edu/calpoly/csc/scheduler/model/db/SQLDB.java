@@ -19,10 +19,9 @@ import java.util.LinkedHashMap;
 import java.util.Set;
 
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
-import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
-import edu.calpoly.csc.scheduler.model.db.ldb.Location;
-import edu.calpoly.csc.scheduler.model.db.ldb.LocationDB;
-import edu.calpoly.csc.scheduler.model.schedule.Schedule;
+import edu.calpoly.csc.scheduler.model.db.sdb.ScheduleDB;
+import edu.calpoly.csc.scheduler.model.db.udb.UserData;
+import edu.calpoly.csc.scheduler.model.db.udb.UserDataDB;
 
 /**
  * This class provides for direct access to a MySQL database. Though it a user
@@ -36,16 +35,27 @@ public class SQLDB
 {
 
    /** The connection */
-   private Connection              conn    = null;
+   private Connection conn = null;
 
-   /** The map of fields to sql types */
-   private HashMap<String, String> sqltypes;
+   /** The last generated key (from an auto_increment) */
+   private int        lastGeneratedKey;
 
-   // String constants
-   private static final String     STRING  = "string";
-   private static final String     INT     = "int";
-   private static final String     BOOLEAN = "boolean";
-   private static final String     BLOB    = "blob";
+   /**
+    * @return the lastGeneratedKey
+    */
+   public int getLastGeneratedKey()
+   {
+      return lastGeneratedKey;
+   }
+
+   /**
+    * @param lastGeneratedKey
+    *           the lastGeneratedKey to set
+    */
+   public void setLastGeneratedKey(int lastGeneratedKey)
+   {
+      this.lastGeneratedKey = lastGeneratedKey;
+   }
 
    /**
     * This constructor will create the SQLDB object.
@@ -53,27 +63,7 @@ public class SQLDB
     **/
    public SQLDB()
    {
-      fillSQLTypes();
-   }
-
-   /**
-    * Fills the SQLTypes map
-    */
-   private void fillSQLTypes()
-   {
-      sqltypes = new HashMap<String, String>();
-      // Courses
-      // Instructors
-      // Locations
-      sqltypes.put(LocationDB.BUILDING, STRING);
-      sqltypes.put(LocationDB.ROOM, STRING);
-      sqltypes.put(LocationDB.MAXOCCUPANCY, INT);
-      sqltypes.put(LocationDB.TYPE, STRING);
-      sqltypes.put(LocationDB.PROVIDEDEQUIPMENT, BLOB);
-      sqltypes.put(LocationDB.ADACOMPLIANT, BOOLEAN);
-      sqltypes.put(LocationDB.AVAILABILITY, BLOB);
-      sqltypes.put(LocationDB.SCHEDULEID, INT);
-      // Schedules
+      lastGeneratedKey = -7;
    }
 
    /**
@@ -206,7 +196,7 @@ public class SQLDB
          Class.forName("com.mysql.jdbc.Driver");
          DriverManager.setLoginTimeout(5);
          conn = DriverManager.getConnection(
-               "jdbc:mysql://cslvm215.csc.calpoly.edu/newscheduler", "root",
+               "jdbc:mysql://cslvm215.csc.calpoly.edu/prototype", "root",
                "Abcd1234");
          System.out.println("Database connection established.");
       }
@@ -445,215 +435,26 @@ public class SQLDB
       }
    }
 
-   /*
-    * Methods for retrieving the various database entries from the central
-    * database server.
-    * 
-    * @author Michael McMahon
-    */
-
-   /*
-    * Retrieves all entries from the instructors database table
-    * 
-    * @return The result of a query for all instructors
-    */
-   @Deprecated
-   public ResultSet getSQLInstructors()
-   {
-
-      String queryForInstructors = "SELECT * FROM instructors";
-      Statement stmt;
-      ResultSet instructorsResult = null;
-
-      try
-      {
-         stmt = conn.createStatement();
-         instructorsResult = stmt.executeQuery(queryForInstructors);
-      }
-      catch (SQLException e)
-      {
-         e.printStackTrace();
-      }
-
-      return instructorsResult;
-   }
-
-   /*
-    * Retrieves all entries from the courses database table
-    * 
-    * 
-    * @return The result of a query for all courses
-    */
-   @Deprecated
-   public ResultSet getSQLCourses()
-   {
-
-      String queryForCourses = "SELECT * FROM courses";
-      Statement stmt;
-      ResultSet coursesResult = null;
-
-      try
-      {
-         stmt = conn.createStatement();
-         coursesResult = stmt.executeQuery(queryForCourses);
-      }
-      catch (SQLException e)
-      {
-         e.printStackTrace();
-      }
-
-      return coursesResult;
-   }
-
-   /*
-    * Retrieves all entries from the locations database table
-    * 
-    * @return The result of a query for all locations
-    */
-   @Deprecated
-   public ResultSet getSQLLocations()
-   {
-
-      String queryForLocations = "SELECT * FROM locations";
-      Statement stmt;
-      ResultSet locationsResult = null;
-
-      try
-      {
-         stmt = conn.createStatement();
-         locationsResult = stmt.executeQuery(queryForLocations);
-      }
-      catch (SQLException e)
-      {
-         e.printStackTrace();
-      }
-      return locationsResult;
-   }
-
-   /*
-    * Retrieves all entries from the schedule database table
-    * 
-    * @return The result of a query for all schedules
-    */
-   public ResultSet getSQLSchedules()
-   {
-
-      String queryForSchedules = "SELECT * FROM schedules";
-      Statement stmt;
-      ResultSet schedulesResult = null;
-
-      try
-      {
-         stmt = conn.createStatement();
-         schedulesResult = stmt.executeQuery(queryForSchedules);
-      }
-      catch (SQLException e)
-      {
-         e.printStackTrace();
-      }
-      return schedulesResult;
-   }
-
-   /*
-    * Retrieves entries from the instructors database table for given schedule
-    * id
+   /**
+    * Returns a ResultSet of all of the data in the given table by scheduleID
     * 
     * @return The result of a query for instructors in this schedule
     */
-   public ResultSet getSQLInstructors(int scheduleid)
+   public ResultSet getDataByScheduleID(String tablename, int scheduleid)
    {
-
-      String queryForInstructors = "SELECT * FROM instructors where scheduleid = ?";
-      PreparedStatement stmt;
-      ResultSet instructorsResult = null;
-
-      try
+      // Where clause
+      LinkedHashMap<String, Object> wheres = new LinkedHashMap<String, Object>();
+      // Because Evan wanted schedules to have dbid and not scheduleid
+      if (tablename.equals(ScheduleDB.TABLENAME))
       {
-         stmt = conn.prepareStatement(queryForInstructors);
-         stmt.setInt(1, scheduleid);
-         instructorsResult = stmt.executeQuery();
+         wheres.put(DbData.DBID, scheduleid);
       }
-      catch (SQLException e)
+      else
       {
-         e.printStackTrace();
-      }
-      return instructorsResult;
-   }
-
-   /*
-    * Retrieves entries from the courses database table for given schedule id
-    * 
-    * @return The result of a query for courses in this schedule
-    */
-   public ResultSet getSQLCourses(int scheduleid)
-   {
-
-      String queryForCourses = "SELECT * FROM courses where scheduleid = ?";
-      PreparedStatement stmt;
-      ResultSet coursesResult = null;
-
-      try
-      {
-         stmt = conn.prepareStatement(queryForCourses);
-         stmt.setInt(1, scheduleid);
-         coursesResult = stmt.executeQuery();
-      }
-      catch (SQLException e)
-      {
-         e.printStackTrace();
+         wheres.put(DbData.SCHEDULEDBID, scheduleid);
       }
 
-      return coursesResult;
-   }
-
-   /*
-    * Retrieves entries from the locations database table for given schedule id
-    * 
-    * @return The result of a query for locations in this schedule
-    */
-   public ResultSet getSQLLocations(int scheduleid)
-   {
-
-      String queryForLocations = "SELECT * FROM locations where scheduleid = ?";
-      PreparedStatement stmt;
-      ResultSet locationsResult = null;
-
-      try
-      {
-         stmt = conn.prepareStatement(queryForLocations);
-         stmt.setInt(1, scheduleid);
-         locationsResult = stmt.executeQuery();
-      }
-      catch (SQLException e)
-      {
-         e.printStackTrace();
-      }
-      return locationsResult;
-   }
-
-   /*
-    * Retrieves entries from the schedules database table for given schedule id
-    * 
-    * @return The result of a query for schedules in this schedule
-    */
-   public ResultSet getSQLSchedules(int scheduleid)
-   {
-
-      String queryForSchedules = "SELECT * FROM schedules where scheduleid = ?";
-      PreparedStatement stmt;
-      ResultSet schedulesResult = null;
-
-      try
-      {
-         stmt = conn.prepareStatement(queryForSchedules);
-         stmt.setInt(1, scheduleid);
-         schedulesResult = stmt.executeQuery();
-      }
-      catch (SQLException e)
-      {
-         e.printStackTrace();
-      }
-      return schedulesResult;
+      return executeSelect(tablename, null, wheres);
    }
 
    /**
@@ -729,6 +530,11 @@ public class SQLDB
       try
       {
          result = stmt.executeUpdate();
+         ResultSet rs = stmt.getGeneratedKeys();
+         if (rs.next())
+         {
+            lastGeneratedKey = rs.getInt(1);
+         }
          stmt.close();
       }
       catch (SQLException e)
@@ -739,222 +545,43 @@ public class SQLDB
       return result;
    }
 
-   public String getDeptByUserID(String userid)
+   public HashMap<String, UserData> getSchedulePermissions(String userid)
    {
-      String selectString = "select dept from users where userid = ?";
-      PreparedStatement stmt = getPrepStmt(selectString);
-      ResultSet rs = null;
-      String dept = "";
+      // Object to eventually return
+      HashMap<String, UserData> schedules = new HashMap<String, UserData>();
+      // Create fields and where clause for select statement
+      LinkedHashMap<String, Object> fields = new LinkedHashMap<String, Object>();
+      fields.put(ScheduleDB.SCHEDULENAME, 0);
+      fields.put(UserDataDB.PERMISSION, 0);
+      fields.put(UserDataDB.TABLENAME + "." + DbData.DBID, 0);
+      fields.put(UserDataDB.TABLENAME + "." + DbData.SCHEDULEDBID, 0);
+      LinkedHashMap<String, Object> wheres = new LinkedHashMap<String, Object>();
+      wheres.put(UserDataDB.USERID, userid);
+
+      // Make table join
+      String tablejoin = ScheduleDB.TABLENAME + " join " + UserDataDB.TABLENAME
+            + " on (" + ScheduleDB.TABLENAME + "." + DbData.DBID + " = "
+            + UserDataDB.TABLENAME + "." + DbData.SCHEDULEDBID + ")";
+
+      // Execute select statement
+      ResultSet rs = executeSelect(tablejoin, fields, wheres);
       try
       {
-         stmt.setString(1, userid);
-         rs = stmt.executeQuery();
-         System.out.println("about to call rs.next");
-         if (rs.next())
+         while (rs.next())
          {
-            System.out.println("called rs.next");
-            dept = rs.getString("dept");
-         }
-         else
-         {
-            System.out.println("rs empty");
-            assert (false);
-         }
-      }
-      catch (SQLException e)
-      {
-         e.printStackTrace();
-      }
-      return dept;
-   }
-
-   public ResultSet getSchedulesByDept(String dept)
-   {
-      String selectString = "select name, scheduleid from schedules where dept = ?";
-      PreparedStatement stmt = getPrepStmt(selectString);
-      ResultSet rs = null;
-      try
-      {
-         stmt.setString(1, dept);
-         rs = stmt.executeQuery();
-      }
-      catch (SQLException e)
-      {
-         e.printStackTrace();
-      }
-      return rs;
-   }
-
-   // Does ___ exist methods
-   public boolean doesCourseExist(Course data)
-   {
-      // Check if dept, catalognum, and type already exist
-      String query = "select dept, catalognum, type, scheduleid from courses where dept = ? and catalognum = ? and type = ? and scheduleid = ?";
-      PreparedStatement stmt = getPrepStmt(query);
-      try
-      {
-         stmt.setString(1, data.getDept());
-         stmt.setInt(2, data.getCatalogNum());
-         stmt.setString(3, data.getType().toString());
-         stmt.setInt(4, data.getScheduleId());
-      }
-      catch (SQLException e)
-      {
-         e.printStackTrace();
-      }
-      return doesItExist(stmt);
-   }
-
-   public boolean doesInstructorExist(Instructor data)
-   {
-      // Check if userid already exists
-      String query = "select userid, scheduleid from instructors where userid = ? and scheduleid = ?";
-      PreparedStatement stmt = getPrepStmt(query);
-      try
-      {
-         stmt.setString(1, data.getUserID());
-         stmt.setInt(2, data.getScheduleId());
-      }
-      catch (SQLException e)
-      {
-         e.printStackTrace();
-      }
-      return doesItExist(stmt);
-   }
-
-   public boolean doesLocationExist(Location data)
-   {
-      // Check if building and room already exist
-      String query = "select building, room, scheduleid from locations where building = ? and room = ? and scheduleid = ?";
-      PreparedStatement stmt = getPrepStmt(query);
-      try
-      {
-         stmt.setString(1, data.getBuilding());
-         stmt.setString(2, data.getRoom());
-         stmt.setInt(3, data.getScheduleId());
-      }
-      catch (SQLException e)
-      {
-         e.printStackTrace();
-      }
-      return doesItExist(stmt);
-   }
-
-   public boolean doesScheduleExist(Schedule data)
-   {
-     return doesScheduleIDExist(data.getScheduleId());
-   }
-
-   public boolean doesScheduleIDExist(int id)
-   {
-      // Check if scheduleid already exists
-      String query = "select scheduleid from schedules where scheduleid = ?";
-      PreparedStatement stmt = getPrepStmt(query);
-      try
-      {
-         stmt.setInt(1, id);
-      }
-      catch (SQLException e)
-      {
-         e.printStackTrace();
-      }
-      return doesItExist(stmt);
-   }
-
-   public boolean doesScheduleNameExist(String name, String dept)
-   {
-      // Check if name already exists
-      String query = "select name from schedules where name = ? and dept = ?";
-      PreparedStatement stmt = getPrepStmt(query);
-      try
-      {
-         stmt.setString(1, name);
-         stmt.setString(2, dept);
-      }
-      catch (SQLException e)
-      {
-         e.printStackTrace();
-      }
-      return doesItExist(stmt);
-   }
-
-   public boolean doesUserExist(String username)
-   {
-      // Check if username already exists
-      String query = "select userid from users where userid = ?";
-      PreparedStatement stmt = getPrepStmt(query);
-      try
-      {
-         stmt.setString(1, username);
-      }
-      catch (SQLException e)
-      {
-         e.printStackTrace();
-      }
-      return doesItExist(stmt);
-   }
-
-   private boolean doesItExist(PreparedStatement stmt)
-   {
-      ResultSet rs;
-      try
-      {
-         rs = stmt.executeQuery();
-         if (rs.next())
-         {
-            return true;
-         }
-         else
-         {
-            return false;
-         }
-      }
-      catch (SQLException e)
-      {
-         e.printStackTrace();
-         return false;
-      }
-   }
-
-   // Find new scheduleid when course is made
-   public int getScheduleIDByName(String name, String dept)
-   {
-      String query = "select scheduleid from schedules where name = ? and dept = ?";
-      PreparedStatement stmt = getPrepStmt(query);
-      ResultSet rs;
-      try
-      {
-         stmt.setString(1, name);
-         stmt.setString(2, dept);
-         rs = stmt.executeQuery();
-         if (rs.next())
-         {
-            return rs.getInt("scheduleid");
+            UserData p = new UserData();
+            p.setUserId(userid);
+            p.setPermission(rs.getInt(UserDataDB.PERMISSION));
+            p.setDbid(rs.getInt(DbData.DBID));
+            p.setScheduleDBId(rs.getInt(DbData.SCHEDULEDBID));
+            schedules.put(rs.getString(ScheduleDB.SCHEDULENAME), p);
          }
       }
       catch (SQLException e)
       {
          e.printStackTrace();
       }
-      System.err.println("ERROR: Schedule name not found");
-      return -1;
-   }
-
-   public void makeNewUser(String newUserID)
-   {
-      try
-      {
-         // Make new user
-         String newuser = "insert into users values (?, ?)";
-         PreparedStatement userstmt = getPrepStmt(newuser);
-         userstmt.setString(1, newUserID);
-         userstmt.setString(2, newUserID);
-         executePrepStmt(userstmt);
-      }
-      catch (SQLException e)
-      {
-         e.printStackTrace();
-      }
+      return schedules;
    }
 
    // Helper methods for creating sql strings
@@ -1018,6 +645,36 @@ public class SQLDB
       return result;
    }
 
+   public String selectHelper(String table, Set<String> fields,
+         Set<String> wheres)
+   {
+      String result = "select ";
+      // Put in data to get back
+      // If fields is null, select *
+      if (fields == null || fields.size() <= 0)
+      {
+         result = result.concat("*");
+      }
+      else
+      {
+         for (String field : fields)
+         {
+            result = result.concat(field + ",");
+         }
+         // Remove last comma
+         result = result.substring(0, result.length() - 1);
+      }
+      // Where stuff
+      result = result.concat(" from " + table + " where ");
+      for (String where : wheres)
+      {
+         result = result.concat(where + " = ? and ");
+      }
+      // Remove last comma and "and "
+      result = result.substring(0, result.length() - 5);
+      return result;
+   }
+
    // Methods for creating and filling PreparedStatements
    public void executeInsert(String table, LinkedHashMap<String, Object> fields)
    {
@@ -1029,27 +686,6 @@ public class SQLDB
       {
          try
          {
-            // Check to see what type it is
-            // if(sqltypes.get(key).equals(STRING))
-            // {
-            // stmt.setString(counter, (String)fields.get(key));
-            // }
-            // else if(sqltypes.get(key).equals(INT))
-            // {
-            // stmt.setInt(counter, (Integer)fields.get(key));
-            // }
-            // else if(sqltypes.get(key).equals(BOOLEAN))
-            // {
-            // stmt.setBoolean(counter, (Boolean)fields.get(key));
-            // }
-            // else if(sqltypes.get(key).equals(BLOB))
-            // {
-            // stmt.setBytes(counter, (byte[]) fields.get(key));
-            // }
-            // else
-            // {
-            // System.err.println("ERROR: Unrecognized type in executeInsert");
-            // }
             stmt.setObject(counter, fields.get(key));
             counter++;
          }
@@ -1117,6 +753,67 @@ public class SQLDB
          }
       }
       executePrepStmt(stmt);
+   }
+
+   public ResultSet executeSelect(String table,
+         LinkedHashMap<String, Object> fields,
+         LinkedHashMap<String, Object> wheres)
+   {
+      ResultSet rs = null;
+      int counter = 1;
+      Set<String> wherekeys = wheres.keySet();
+      PreparedStatement stmt;
+      if (fields == null)
+      {
+         stmt = getPrepStmt(selectHelper(table, null, wherekeys));
+      }
+      else
+      {
+         Set<String> fieldkeys = fields.keySet();
+         stmt = getPrepStmt(selectHelper(table, fieldkeys, wherekeys));
+      }
+      // Set ?'s
+      for (String key : wherekeys)
+      {
+         try
+         {
+            stmt.setObject(counter, wheres.get(key));
+            counter++;
+         }
+         catch (SQLException e)
+         {
+            e.printStackTrace();
+         }
+      }
+      try
+      {
+         rs = stmt.executeQuery();
+      }
+      catch (SQLException e)
+      {
+         e.printStackTrace();
+      }
+      return rs;
+   }
+
+   public boolean doesItExist(ResultSet rs)
+   {
+      try
+      {
+         if (rs.next())
+         {
+            return true;
+         }
+         else
+         {
+            return false;
+         }
+      }
+      catch (SQLException e)
+      {
+         e.printStackTrace();
+         return false;
+      }
    }
 
    // Serialization methods

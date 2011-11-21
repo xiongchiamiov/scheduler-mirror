@@ -6,33 +6,33 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 /**
- *
+ * 
  * @author Eric Liebowitz
  * @version Nov 7, 2011
  */
-public abstract class AbstractDatabase<T extends DbData> 
+public abstract class AbstractDatabase<T extends DbData>
 {
-   public static final long serialVersionUID = 42;
-   
-   protected ArrayList<T> data;
-   protected int scheduleId;
-   protected SQLDB sqldb;
+   public static final long                serialVersionUID = 42;
+
+   protected ArrayList<T>                  data;
+   protected int                           scheduleDBId;
+   protected SQLDB                         sqldb;
    protected LinkedHashMap<String, Object> fields;
    protected LinkedHashMap<String, Object> wheres;
-   
+
    public ArrayList<T> getData()
    {
       data = new ArrayList<T>();
       pullData();
       return data;
    }
-   
-   public void saveData (T data)
+
+   public void saveData(T data)
    {
       data.verify();
 
-      data.setScheduleId(this.scheduleId);
-      assert(this.scheduleId != -1);
+      data.setScheduleDBId(this.scheduleDBId);
+      assert (this.scheduleDBId != -1);
       if (exists(data))
       {
          editData(data);
@@ -43,30 +43,38 @@ public abstract class AbstractDatabase<T extends DbData>
       }
    }
 
-   private void addData (T data)
+   protected void addData(T data)
    {
-      fillMaps (data);
+      fillFields(data);
       sqldb.executeInsert(getTableName(), fields);
    }
-   
-   private void editData (T data)
+
+   protected void editData(T data)
    {
-      fillMaps (data);
+      fillFields(data);
+      fillWheres(data);
       sqldb.executeUpdate(getTableName(), fields, wheres);
    }
-   
-   public void removeData (T data)
+
+   public void removeData(T data)
    {
       data.verify();
-      fillMaps(data);
+      fillWheres(data);
       sqldb.executeDelete(getTableName(), wheres);
    }
-   
-   protected void pullData ()
+
+   public boolean exists(T data)
+   {
+      fillWheres(data);
+      return sqldb.doesItExist(sqldb.executeSelect(getTableName(), wheres,
+            wheres));
+   }
+
+   protected void pullData()
    {
       data = new ArrayList<T>();
 
-      ResultSet rs = this.getDataByScheduleId(scheduleId);
+      ResultSet rs = sqldb.getDataByScheduleID(this.getTableName(), scheduleDBId);
       try
       {
          while (rs.next())
@@ -79,10 +87,16 @@ public abstract class AbstractDatabase<T extends DbData>
          e.printStackTrace();
       }
    }
-   
-   protected abstract boolean exists (T data);
-   protected abstract void fillMaps (T data);
-   protected abstract ResultSet getDataByScheduleId (int sid);
-   protected abstract T make (ResultSet rs);
+
+   protected void fillWheres(T data)
+   {
+      wheres = new LinkedHashMap<String, Object>();
+      wheres.put(DbData.DBID, data.getDbid());
+   }
+
+   protected abstract void fillFields(T data);
+
+   protected abstract T make(ResultSet rs);
+
    protected abstract String getTableName();
 }

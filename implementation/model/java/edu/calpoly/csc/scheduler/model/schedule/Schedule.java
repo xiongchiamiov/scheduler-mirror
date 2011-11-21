@@ -1112,7 +1112,7 @@ public class Schedule extends DbData implements Serializable
     */
    public Integer getId ()
    {
-      return getScheduleId();
+      return getScheduleDBId();
    }
 
    /**
@@ -1122,7 +1122,7 @@ public class Schedule extends DbData implements Serializable
     */
    public void setId (Integer id)
    {
-      setScheduleId(id);
+      setScheduleDBId(id);
    }
 
    /**
@@ -1247,15 +1247,11 @@ public class Schedule extends DbData implements Serializable
 
    public void verify ()
    {
-      if (getScheduleId() ==  null)
+      if (getScheduleDBId() ==  null)
       {
          throw new NullDataException();
       }
       if (name == null)
-      {
-         throw new NullDataException();
-      }
-      if (dept == null)
       {
          throw new NullDataException();
       }
