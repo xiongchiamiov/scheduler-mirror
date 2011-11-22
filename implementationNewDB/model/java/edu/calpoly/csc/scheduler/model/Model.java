@@ -58,11 +58,13 @@ public class Model implements Serializable
    public void openExistingSchedule (String scheduleName)
    {
       int sid = this.sched_map.get(scheduleName).getScheduleDBId();
+      System.out.println("Opening existing schedule by schedulename, id:" + sid);
       db.openDB(sid, scheduleName);
    }
 
    public void openExistingSchedule (Integer sid)
    {
+	      System.out.println("Opening existing schedule by id, id:" + sid);
       db.openDB(sid, "");
    }
 
