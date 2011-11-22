@@ -285,7 +285,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 			public void onClick(ClickEvent event) {
 				int index = listBox.getSelectedIndex();
 				String scheduleName = listBox.getItemText(index);
-				int scheduleID = schedules.get(scheduleName).getID();
+				int scheduleID = schedules.get(scheduleName).getScheduleID();
 				selectSchedule(scheduleID, scheduleName);
 				db.hide();
 			}
