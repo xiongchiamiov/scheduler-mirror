@@ -1,0 +1,52 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>
+Inspection Test of Phase 3 Prototype
+</title>
+</head>
+<body bgcolor="white">
+<p align="center">
+<font size="+2">
+<strong>Inspection Test of Phase 3 Prototype</strong>
+</font>
+</p>
+<br>
+<br>
+<table align=center border=1 cellpadding=4>
+  <tr>
+    <td valign=top><strong>Case No.</strong>
+    <td valign=top><strong>User Inputs and Command</strong>
+    <td valign=top><strong>Expected Output</strong>
+    <td valign=top><strong>Remarks</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <td valign=top><strong>Results</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <tr>
+    <td valign=top>1
+    <td valign=top>Login as "new", create a new schedule, click Locations button
+    <td valign=top>An empty list appears
+    <td valign=top>A prefilled list appeared
+    <td valign=top>Fail
+  <tr>
+    <td valign=top>2
+    <td valign=top>Login as "new", create a new schedule, click Locations button, click new button, hit enter without entering any info.
+    <td valign=top>An "Invalid Value" warning appears
+    <td valign=top>Two "Invalid Value" warnings appeared.
+    <td valign=top>Fail
+  <tr>
+    <td valign=top>3
+    <td valign=top>Login as "new", create a new schedule, click Locations button, click new button, hit enter without entering any info, close warning popups, hit Save All.
+    <td valign=top>The empty row will not be saved because it contains invalid values.
+    <td valign=top>The empty row is saved.
+    <td valign=top>Fail
+  <tr>
+    <td valign=top>4
+    <td valign=top>Login as "new", create a new schedule, click Locations button, click new button, enter "building", hit tab key, enter "room", click Save All button, click the "building" text which was entered, delete the text (leaving the Building field empty), hit enter.
+    <td valign=top>An invalid value warning should appear
+    <td valign=top>No warning appears
+    <td valign=top>Fail
+  <tr>
+    <td valign=top>5
+    <td valign=top>Login as "new", create a new schedule, click Locations button, click new button, enter "building", hit tab key, enter "room", click Save All button, click the "building" text which was entered, delete the text (leaving the Building field empty), hit enter, click Save All button.
+    <td valign=top>Empty field should remain empty.
+    <td valign=top>Empty field is replaced with the previous value of "building"
+    <td valign=top>Fail
+</table>
+</body></html>
