@@ -1,6 +1,7 @@
 package edu.calpoly.csc.scheduler.view.web.client.views;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -13,20 +14,42 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.client.IViewContents;
 import edu.calpoly.csc.scheduler.view.web.client.ViewFrame;
-import edu.calpoly.csc.scheduler.view.web.client.table.CheckboxColumn;
-import edu.calpoly.csc.scheduler.view.web.client.table.Factory;
-import edu.calpoly.csc.scheduler.view.web.client.table.IntColumn;
-import edu.calpoly.csc.scheduler.view.web.client.table.MultiselectColumn;
+import edu.calpoly.csc.scheduler.view.web.client.table.IFactory;
+import edu.calpoly.csc.scheduler.view.web.client.table.IStaticGetter;
+import edu.calpoly.csc.scheduler.view.web.client.table.IStaticSetter;
+import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
-import edu.calpoly.csc.scheduler.view.web.client.table.SelectColumn;
-import edu.calpoly.csc.scheduler.view.web.client.table.StaticGetter;
-import edu.calpoly.csc.scheduler.view.web.client.table.StaticSetter;
-import edu.calpoly.csc.scheduler.view.web.client.table.StaticValidator;
-import edu.calpoly.csc.scheduler.view.web.client.table.StringColumn;
-import edu.calpoly.csc.scheduler.view.web.client.table.TableConstants;
+import edu.calpoly.csc.scheduler.view.web.client.table.columns.CheckboxColumn;
+import edu.calpoly.csc.scheduler.view.web.client.table.columns.IntColumn;
+import edu.calpoly.csc.scheduler.view.web.client.table.columns.MultiselectColumn;
+import edu.calpoly.csc.scheduler.view.web.client.table.columns.SelectColumn;
+import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingStringColumn;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
 
 public class LocationsView extends VerticalPanel implements IViewContents {
+	/** Location table */
+	public static final String LOC_BUILDING = "Building";
+	
+	public static final String LOC_SMARTROOM = "Smartroom";
+	
+	public static final String LOC_LAPTOPCONNECTIVITY = "Laptop Connectivity";
+	
+	public static final String LOC_ADACOMPLIANT = "ADA Compliant";
+	
+	public static final String LOC_OVERHEAD = "Overhead";
+	
+	public static final String LOC_NAME = "Name";
+	
+	public static final String LOC_ROOM = "Room";
+	
+	public static final String LOC_TYPE = "Type";
+	
+	public static final String LOC_MAX_OCCUPANCY = "Max Occupancy";
+	
+	public static final String LOC_EQIPMENT_LIST = "Equipment List";
+		
+	public static final String LOC_ADDITIONAL_DETAILS = "Additional Details";
+	
 	private static final String LAPTOP_CONNECTIVITY = "Laptop Connectivity";
 	private static final String OVERHEAD = "Overhead";
 	private static final String SMART_ROOM = "Smart Room";
@@ -60,105 +83,153 @@ public class LocationsView extends VerticalPanel implements IViewContents {
 		popup.show();
 
 		table = new OsmTable<LocationGWT>(
-				new Factory<LocationGWT>() {
+				new IFactory<LocationGWT>() {
 					public LocationGWT create() {
 						return new LocationGWT(nextLocationID++, "", "", "LEC", 20, false, new LocationGWT.ProvidedEquipmentGWT());
 					}
 					public LocationGWT createCopy(LocationGWT object) { return new LocationGWT(object); }
 				},
-				new OsmTable.SaveHandler<LocationGWT>() {
-					public void saveButtonClicked() {
-						save();
+				new OsmTable.ModifyHandler<LocationGWT>() {
+					@Override
+					public void objectsModified(List<LocationGWT> added,
+							List<LocationGWT> edited,
+							List<LocationGWT> removed,
+							AsyncCallback<Void> callback) {
+						service.saveLocations(added, edited, removed, callback);
 					}
 				});
 
-		table.addColumn(new StringColumn<LocationGWT>("Building", null,
-				new StaticGetter<LocationGWT, String>() {
-					public String getValueForObject(LocationGWT object) { return object.getBuilding(); }
-				},
-				new StaticSetter<LocationGWT, String>() {
-					public void setValueInObject(LocationGWT object, String newValue) { object.setBuilding(newValue); }
-				},
-				String.CASE_INSENSITIVE_ORDER,
-				new StaticValidator<LocationGWT, String>() {
-					public void validate(LocationGWT object, String newBuilding) throws InvalidValueException {
-						LocationGWT locationAtPlace = locationExists(newBuilding, object.getRoom());
-						if (locationAtPlace != null && locationAtPlace != object)
-							throw new InvalidValueException("Location " + newBuilding + "-" + object.getRoom() + " already exists.");
+		table.addColumn(
+				"Building",
+				null,
+				new Comparator<LocationGWT>() {
+					public int compare(LocationGWT o1, LocationGWT o2) {
+						return o1.getBuilding().compareTo(o2.getBuilding());
 					}
-				}));
+				},
+				new EditingStringColumn<LocationGWT>(
+						new IStaticGetter<LocationGWT, String>() {
+							public String getValueForObject(LocationGWT object) { return object.getBuilding(); }
+						},
+						new IStaticSetter<LocationGWT, String>() {
+							public void setValueInObject(LocationGWT object, String newValue) { object.setBuilding(newValue); }
+						},
+						new IStaticValidator<LocationGWT, String>() {
+							public void validate(LocationGWT object, String newBuilding) throws InvalidValueException {
+								LocationGWT locationAtPlace = locationExists(newBuilding, object.getRoom());
+								if (locationAtPlace != null && locationAtPlace != object)
+									throw new InvalidValueException("Location " + newBuilding + "-" + object.getRoom() + " already exists.");
+							}
+						}));
 
-		table.addColumn(new StringColumn<LocationGWT>("Room", null,
-				new StaticGetter<LocationGWT, String>() {
-					public String getValueForObject(LocationGWT object) { return object.getRoom(); }
-				},
-				new StaticSetter<LocationGWT, String>() {
-					public void setValueInObject(LocationGWT object, String newValue) { object.setRoom(newValue); }
-				},
-				String.CASE_INSENSITIVE_ORDER,
-				new StaticValidator<LocationGWT, String>() {
-					public void validate(LocationGWT object, String newRoom) throws InvalidValueException {
-						LocationGWT locationAtPlace = locationExists(object.getBuilding(), newRoom);
-						if (locationAtPlace != null && locationAtPlace != object)
-							throw new InvalidValueException("Location " + object.getBuilding() + "-" + newRoom + " already exists.");
-					}
-				}));
-		
-		table.addColumn(new SelectColumn<LocationGWT>("Type", null,
-				new String[] { "LEC", "LAB" },
-				new StaticGetter<LocationGWT, String>() {
-					public String getValueForObject(LocationGWT object) { return object.getType(); }
-				},
-				new StaticSetter<LocationGWT, String>() {
-					public void setValueInObject(LocationGWT object, String newValue) { object.setType(newValue); }
-				},
-				String.CASE_INSENSITIVE_ORDER));
-
-		table.addColumn(new IntColumn<LocationGWT>("Occupancy", null,
-				new StaticGetter<LocationGWT, Integer>() {
-					public Integer getValueForObject(LocationGWT object) { return object.getMaxOccupancy(); }
-				},
-				new StaticSetter<LocationGWT, Integer>() {
-					public void setValueInObject(LocationGWT object, Integer newValue) { object.setMaxOccupancy(newValue); }
-				},
-				new StaticValidator<LocationGWT, Integer>() {
-					public void validate(LocationGWT object, Integer newMaxOcc) throws InvalidValueException {
-						if (newMaxOcc < 0)
-							throw new InvalidValueException(TableConstants.LOC_MAX_OCCUPANCY + " must be a positive: " + newMaxOcc + " is invalid.");
-					}
-				}));
-		
-		table.addColumn(new CheckboxColumn<LocationGWT>("ADA", null,
-				new StaticGetter<LocationGWT, Boolean>() {
-					public Boolean getValueForObject(LocationGWT object) { return object.isADACompliant(); }
-				},
-				new StaticSetter<LocationGWT, Boolean>() {
-					public void setValueInObject(LocationGWT object, Boolean newValue) { object.setADACompliant(newValue); }
-				}));
-		
-		table.addColumn(new MultiselectColumn<LocationGWT>("Equipment", null,
-				new String[] { LAPTOP_CONNECTIVITY, OVERHEAD, SMART_ROOM },
-				new StaticGetter<LocationGWT, Collection<String>>() {
+		table.addColumn(
+				"Room",
+				null,
+				new Comparator<LocationGWT>() {
 					@Override
-					public Collection<String> getValueForObject(LocationGWT object) {
-						Collection<String> result = new LinkedList<String>();
-						if (object.getEquipment().hasLaptopConnectivity)
-							result.add(LAPTOP_CONNECTIVITY);
-						if (object.getEquipment().hasOverhead)
-							result.add(OVERHEAD);
-						if (object.getEquipment().isSmartRoom)
-							result.add(SMART_ROOM);
-						return result;
+					public int compare(LocationGWT o1, LocationGWT o2) {
+						return o1.getRoom().compareToIgnoreCase(o2.getRoom());
 					}
 				},
-				new StaticSetter<LocationGWT, Collection<String>>() {
-					public void setValueInObject(LocationGWT object, java.util.Collection<String> newValue) {
-						object.getEquipment().hasLaptopConnectivity = newValue.contains(LAPTOP_CONNECTIVITY);
-						object.getEquipment().hasOverhead = newValue.contains(OVERHEAD);
-						object.getEquipment().isSmartRoom = newValue.contains(SMART_ROOM);
+				new EditingStringColumn<LocationGWT>(
+						new IStaticGetter<LocationGWT, String>() {
+							public String getValueForObject(LocationGWT object) { return object.getRoom(); }
+						},
+						new IStaticSetter<LocationGWT, String>() {
+							public void setValueInObject(LocationGWT object, String newValue) { object.setRoom(newValue); }
+						},
+						new IStaticValidator<LocationGWT, String>() {
+							public void validate(LocationGWT object, String newRoom) throws InvalidValueException {
+								LocationGWT locationAtPlace = locationExists(object.getBuilding(), newRoom);
+								if (locationAtPlace != null && locationAtPlace != object)
+									throw new InvalidValueException("Location " + object.getBuilding() + "-" + newRoom + " already exists.");
+							}
+						}));
+		
+		table.addColumn(
+				"Type",
+				null,
+				new Comparator<LocationGWT>() {
+					@Override
+					public int compare(LocationGWT o1, LocationGWT o2) {
+						return o1.getType().compareToIgnoreCase(o2.getType());
 					}
 				},
-				null));
+				new SelectColumn<LocationGWT>(
+						new String[] { "LEC", "LAB" },
+						new IStaticGetter<LocationGWT, String>() {
+							public String getValueForObject(LocationGWT object) { return object.getType(); }
+						},
+						new IStaticSetter<LocationGWT, String>() {
+							public void setValueInObject(LocationGWT object, String newValue) { object.setType(newValue); }
+						}));
+
+		table.addColumn(
+				"Occupancy",
+				null,
+				new Comparator<LocationGWT>() {
+					@Override
+					public int compare(LocationGWT o1, LocationGWT o2) {
+						return o1.getMaxOccupancy() - o2.getMaxOccupancy();
+					}
+				},
+				new IntColumn<LocationGWT>(
+						new IStaticGetter<LocationGWT, Integer>() {
+							public Integer getValueForObject(LocationGWT object) { return object.getMaxOccupancy(); }
+						},
+						new IStaticSetter<LocationGWT, Integer>() {
+							public void setValueInObject(LocationGWT object, Integer newValue) { object.setMaxOccupancy(newValue); }
+						},
+						new IStaticValidator<LocationGWT, Integer>() {
+							public void validate(LocationGWT object, Integer newMaxOcc) throws InvalidValueException {
+								if (newMaxOcc < 0)
+									throw new InvalidValueException(LOC_MAX_OCCUPANCY + " must be a positive: " + newMaxOcc + " is invalid.");
+							}
+						}));
+		
+		table.addColumn(
+				"ADA",
+				null,
+				new Comparator<LocationGWT>() {
+					@Override
+					public int compare(LocationGWT o1, LocationGWT o2) {
+						return (o1.isADACompliant() ? 1 : 0) - (o2.isADACompliant() ? 1 : 0);
+					}
+				},
+				new CheckboxColumn<LocationGWT>(
+						new IStaticGetter<LocationGWT, Boolean>() {
+							public Boolean getValueForObject(LocationGWT object) { return object.isADACompliant(); }
+						},
+						new IStaticSetter<LocationGWT, Boolean>() {
+							public void setValueInObject(LocationGWT object, Boolean newValue) { object.setADACompliant(newValue); }
+						}));
+		
+		table.addColumn(
+				"Equipment",
+				null,
+				null,
+				new MultiselectColumn<LocationGWT>(
+						new String[] { LAPTOP_CONNECTIVITY, OVERHEAD, SMART_ROOM },
+						new IStaticGetter<LocationGWT, Collection<String>>() {
+							@Override
+							public Collection<String> getValueForObject(LocationGWT object) {
+								Collection<String> result = new LinkedList<String>();
+								if (object.getEquipment().hasLaptopConnectivity)
+									result.add(LAPTOP_CONNECTIVITY);
+								if (object.getEquipment().hasOverhead)
+									result.add(OVERHEAD);
+								if (object.getEquipment().isSmartRoom)
+									result.add(SMART_ROOM);
+								return result;
+							}
+						},
+						new IStaticSetter<LocationGWT, Collection<String>>() {
+							public void setValueInObject(LocationGWT object, java.util.Collection<String> newValue) {
+								object.getEquipment().hasLaptopConnectivity = newValue.contains(LAPTOP_CONNECTIVITY);
+								object.getEquipment().hasOverhead = newValue.contains(OVERHEAD);
+								object.getEquipment().isSmartRoom = newValue.contains(SMART_ROOM);
+							}
+						}));
 		
 		table.addDeleteColumn();
 		
@@ -181,27 +252,8 @@ public class LocationsView extends VerticalPanel implements IViewContents {
 		
 	}
 	
-	private void save() {
-		service.saveLocations(
-				table.getAddedObjects(),
-				table.getEditedObjects(),
-				table.getRemovedObjects(),
-				new AsyncCallback<List<LocationGWT>>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						// TODO Auto-generated method stub
-						
-					}
-					@Override
-					public void onSuccess(List<LocationGWT> result) {
-						table.clear();
-						table.addRows(result);
-					}
-				});
-	}
-	
 	LocationGWT locationExists(String building, String room) {
-		for (LocationGWT location : table.getAddedUntouchedAndEditedObjects())
+		for (LocationGWT location : table.getObjects())
 			if (location.getBuilding().equals(building) && location.getRoom().equals(room))
 				return location;
 		return null;

@@ -100,7 +100,11 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
-	public List<InstructorGWT> saveInstructors(List<InstructorGWT> added, List<InstructorGWT> edited, List<InstructorGWT> removed) {
+	public void saveInstructors(List<InstructorGWT> added, List<InstructorGWT> edited, List<InstructorGWT> removed) {
+		assert(added != null);
+		assert(edited != null);
+		assert(removed != null);
+		
 		for (InstructorGWT addedInstructor : added) {
 			assert(!edited.contains(addedInstructor));
 			addedInstructor.setID(-1);
@@ -111,21 +115,13 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 			assert(!added.contains(editedInstructor));
 			model.saveInstructor(Conversion.fromGWT(editedInstructor, getCoursesByID()));
 		}
-		
-		int numInstructors = model.getInstructors().size();
-		
-		System.out.println("Removing " + removed.size() + " instructors");
-		
+	
 		for (InstructorGWT removedInstructorGWT : removed) {
 			System.out.println("Removing instructor " + removedInstructorGWT.getLastName() + " id " + removedInstructorGWT.getID());
 			Instructor removedInstructor = Conversion.fromGWT(removedInstructorGWT, getCoursesByID());
 			model.removeInstructor(removedInstructor);
 			assert(!model.getInstructors().contains(removedInstructor));
 		}
-		
-		assert(model.getInstructors().size() == numInstructors - removed.size());
-
-		return getInstructors();
 	}
 
 //	private void displayInstructorPrefs(Instructor instructor) {
@@ -391,7 +387,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 
 
 	@Override
-	public List<LocationGWT> saveLocations(List<LocationGWT> added, List<LocationGWT> edited, List<LocationGWT> removed) {
+	public void saveLocations(List<LocationGWT> added, List<LocationGWT> edited, List<LocationGWT> removed) {
 		for (LocationGWT addedLocation : added)
 			model.saveLocation(Conversion.fromGWT(addedLocation));
 		
@@ -400,8 +396,6 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		
 		for (LocationGWT removedLocation : removed)
 			model.removeLocation(Conversion.fromGWT(removedLocation));
-
-		return getLocations();
 	}
 
 	@Override
@@ -416,7 +410,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
-	public List<CourseGWT> saveCourses(List<CourseGWT> added, List<CourseGWT> edited, List<CourseGWT> removed) {
+	public void saveCourses(List<CourseGWT> added, List<CourseGWT> edited, List<CourseGWT> removed) {
 		for (CourseGWT addedCourse : added)
 			model.saveCourse(Conversion.fromGWT(addedCourse));
 		
@@ -425,8 +419,6 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		
 		for (CourseGWT removedCourse : removed)
 			model.removeCourse(Conversion.fromGWT(removedCourse));
-
-		return getCourses();
 	}
 	
 	@Override

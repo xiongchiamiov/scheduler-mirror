@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
-import java.util.Vector;
 
 import com.csvreader.CsvWriter;
 
@@ -25,7 +24,6 @@ import edu.calpoly.csc.scheduler.model.schedule.Week;
 public class CSVExporter {
 	private ArrayList<String[]> locations = new ArrayList<String[]>();
 	private ArrayList<String[]> instructors = new ArrayList<String[]>();
-	private ArrayList<String[]> instructorsItemsTaught = new ArrayList<String[]>();
 	private ArrayList<String[][]> instructorsTimePrefs = new ArrayList<String[][]>();
 	private ArrayList<String[][]> instructorsCoursePrefs = new ArrayList<String[][]>();
 	private ArrayList<String[]> courses = new ArrayList<String[]>();
@@ -70,21 +68,10 @@ public class CSVExporter {
 					Integer.toString(instructor.getFairness()),
 					Boolean.toString(instructor.getDisability()),
 					compileCoursePrefs(instructor.getCoursePreferences()),
-					compileTimePrefs(instructor.getTimePreferences()),
-					compileItemsTaught(instructor.getItemsTaught())
+					compileTimePrefs(instructor.getTimePreferences())
 			});
 		}
 		return "instructor#" + index;
-	}
-	
-	private String compileItemsTaught(Vector<ScheduleItem> itemsTaught) {
-		int newIndex = itemsTaught.size();
-		String[] strings = new String[1 + itemsTaught.size()];
-		strings[0] = "itemsTaught#" + newIndex;
-		for (int i = 0; i < itemsTaught.size(); i++)
-			strings[i] = compileScheduleItem(itemsTaught.get(i));
-		instructorsItemsTaught.add(strings);
-		return "itemsTaught#" + newIndex;
 	}
 
 	private String compileTimePrefs(HashMap<Day, LinkedHashMap<Time, TimePreference>> timePreferences) {
@@ -229,13 +216,6 @@ public class CSVExporter {
 			writer.writeRecord(courses.get(i));
 		}
 		writer.writeComment(CSVStructure.COURSES_END_MARKER);
-
-		writer.endRecord();
-		writer.writeComment(CSVStructure.INSTRUCTORS_ITEMS_TAUGHT_MARKER);
-		for (int i = 0; i < instructorsItemsTaught.size(); i++) {
-			writer.writeRecord(instructorsItemsTaught.get(i));
-		}
-		writer.writeComment(CSVStructure.INSTRUCTORS_ITEMS_TAUGHT_END_MARKER);
 
 		writer.endRecord();
 		writer.writeComment(CSVStructure.INSTRUCTORS_TIME_PREFS_MARKER);

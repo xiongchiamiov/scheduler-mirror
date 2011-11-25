@@ -5,8 +5,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -15,108 +14,126 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.Window.ScrollEvent;
+import com.google.gwt.user.client.Window.ScrollHandler;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
-import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.client.HTMLUtilities;
 import edu.calpoly.csc.scheduler.view.web.client.table.ResizeableHeader.ResizeCallback;
+import edu.calpoly.csc.scheduler.view.web.client.table.columns.ButtonColumn;
+import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditSaveColumn;
 import edu.calpoly.csc.scheduler.view.web.shared.Identified;
 
 public class OsmTable<ObjectType extends Identified> extends FocusPanel {
-	public interface SaveHandler<ObjectType> {
-		void saveButtonClicked();
+	public interface ModifyHandler<ObjectType> {
+		void objectsModified(List<ObjectType> added, List<ObjectType> edited, List<ObjectType> removed, AsyncCallback<Void> callback);
 	}
 	
-	public static abstract class Column<ObjectType extends Identified> {
-		private OsmTable<ObjectType> table;
-		final public String name;
+	public interface Cell {
+		Widget getCellWidget();
+	}
+
+	public interface ReadingCell extends Cell {
+		Widget getCellWidget();
+		void enterReadingMode();
+	}
+	
+	public interface EditingCell extends ReadingCell {
+		void enterEditingMode();
+		void focus();
+	}
+
+	public static class SimpleCell implements OsmTable.Cell {
+		Widget widget;
+		public SimpleCell(Widget widget) { this.widget = widget; }
+		public Widget getCellWidget() { return widget; }
+	}
+	
+	private class Column {
 		final public String width;
-		public final Comparator<ObjectType> sortComparator;
 		public Widget headerContents;
 		public Element headerTDElement;
-
-		public void attachedToTable(OsmTable<ObjectType> table) {
-			assert(this.table == null);
-			this.table = table;
-		}
-
-		// Subclass must call this when the value is changed.
-		protected void objectChanged(ObjectType object) {
-			assert(table != null);
-			table.objectChanged(object);
-		}
+		IColumn<ObjectType> userColumn;
+		public Comparator<? super ObjectType> comparator;
 		
-		public abstract Widget createCellWidget(ObjectType object);
-		
-		Column(String name, String width, Comparator<ObjectType> sortComparator) {
-			this.name = name;
+		public Column(String width, Widget headerContents,
+				Element headerTDElement, Comparator<? super ObjectType> comparator, IColumn<ObjectType> userColumn) {
 			this.width = width;
-			this.sortComparator = sortComparator;
+			this.headerContents = headerContents;
+			this.headerTDElement = headerTDElement;
+			this.userColumn = userColumn;
 		}
 	}
 	
-	protected class Row {
+	public interface IColumn<ObjectType extends Identified> {
+		public abstract Cell createCell(IRowForColumn<ObjectType> object);
+	}
+	
+	public interface IReadingColumn<ObjectType extends Identified> extends IColumn<ObjectType> {
+		abstract public void updateFromObject(IRowForColumn<ObjectType> row, ReadingCell cell);
+	}
+	
+	public interface IEditingColumn<ObjectType extends Identified> extends IReadingColumn<ObjectType> {
+		abstract public void commitToObject(IRowForColumn<ObjectType> row, EditingCell cell);
+	}
+	
+	public interface IRowForCell {
+		void enterEditingMode(EditingCell focusedCell);
+		void enterReadingMode();
+//		void objectChanged(ObjectType object);
+	}
+	
+	public interface IRowForColumn<ObjectType> extends IRowForCell {
+		ObjectType getObject();
+	}
+	
+	protected class Row implements IRowForColumn<ObjectType> {
 		public final ObjectType object;
 		public final Element trElement;
-		public final Widget[] widgetsInCells;
-		public Row(ObjectType object, Element trElement, Widget[] widgetsInCells) {
+		public final Cell[] cells;
+		public boolean adding; // Whether or not this row was just added and has not yet been given to the handler
+		public boolean inEditingMode;
+		public Row(ObjectType object, Element trElement, Cell[] cells) {
 			this.object = object;
 			this.trElement = trElement;
-			this.widgetsInCells = widgetsInCells;
+			this.cells = cells;
+		}
+		
+		@Override
+		public ObjectType getObject() { return object; }
+		
+		@Override
+		public void enterEditingMode(EditingCell focusedCell) {
+			OsmTable.this.enterRowEditingMode(this, focusedCell);
+		}
+		
+		@Override
+		public void enterReadingMode() {
+			OsmTable.this.exitRowEditingMode(this);
 		}
 	}
 	
-	private class CssClassedSet implements Iterable<Row> {
-		final String cssClassName;
-		HashSet<Row> set = new HashSet<Row>();
-		
-		CssClassedSet(String cssClassName) {
-			this.cssClassName = cssClassName;
-		}
-		
-		public void add(Row row) {
-			addClass(row);
-			set.add(row);
-		}
-		
-		public void remove(Row row) {
-			removeClass(row);
-			set.remove(row);
-		}
-		
-		public void clear() {
-			for (Row row : set)
-				removeClass(row);
-			set.clear();
-		}
-		
-		public boolean contains(Row row) { return set.contains(row); }
-		public Iterator<Row> iterator() { return set.iterator(); }
-
-		private void addClass(Row row) { row.trElement.addClassName(cssClassName); }
-		private void removeClass(Row row) { row.trElement.removeClassName(cssClassName); }
-		public boolean isEmpty(){
-			return set.isEmpty();
-		}
-	}
+	protected final IFactory<ObjectType> factory;
+	protected final FlexTable table;
+	protected final ArrayList<Column> columns = new ArrayList<Column>();
+	protected final Map<Integer, Row> rowsByObjectID = new HashMap<Integer, Row>();
+	protected final ModifyHandler<ObjectType> saveHandler;
+	protected final Element headerTRElement;
+	protected final Element fakeHeaderTRElement;
+	protected boolean headerFloating;
 	
-	protected Factory<ObjectType> factory;
-	protected FlexTable table;
-	protected ArrayList<Column<ObjectType>> columns = new ArrayList<Column<ObjectType>>();
-	protected Map<Integer, Row> rowsByObjectID = new HashMap<Integer, Row>();
-	protected CssClassedSet rowsToRemove = new CssClassedSet("removed");
-	protected CssClassedSet editedRows = new CssClassedSet("edited");
-	protected CssClassedSet addedRows = new CssClassedSet("added");
-	protected Map<Integer, ObjectType> objectsByID = new HashMap<Integer, ObjectType>();
-	protected Map<Integer, ObjectType> historyByObjectID = new HashMap<Integer, ObjectType>();
-	
-	public OsmTable(Factory<ObjectType> factory, final SaveHandler<ObjectType> saveHandler) {
+	public OsmTable(IFactory<ObjectType> factory, final ModifyHandler<ObjectType> saveHandler) {
+		this.saveHandler = saveHandler;
+		
 		VerticalPanel vp = new VerticalPanel();
 		add(vp);
 		
@@ -124,12 +141,6 @@ public class OsmTable<ObjectType extends Identified> extends FocusPanel {
 		
 		FlowPanel controlBar = new FlowPanel();
 		controlBar.addStyleName("controlBar");
-		
-		controlBar.add(new Button("Save All", new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				saveHandler.saveButtonClicked();
-			}
-		}));
 
 		controlBar.add(new HTML(
 				"<div class=\"addedLegend\"><div>Added</div></div>" +
@@ -153,97 +164,187 @@ public class OsmTable<ObjectType extends Identified> extends FocusPanel {
 		vp.add(newObjectPanel);
 		
 		vp.add(new Button("New", new ClickHandler() {
-			
-			@Override
 			public void onClick(ClickEvent event) {
 				addNewRow();
 			}
 		}));
+
+		HTML placeholder = new HTML("Placeholder");
+		table.setWidget(0, 0, placeholder);
+		headerTRElement = HTMLUtilities.getClosestContainingElementOfType(placeholder.getElement(), "tr");
+		headerTRElement.addClassName("headerRow");
+		
+		placeholder = new HTML("Placeholder");
+		table.setWidget(1, 0, placeholder);
+		fakeHeaderTRElement = HTMLUtilities.getClosestContainingElementOfType(placeholder.getElement(), "tr");
+		fakeHeaderTRElement.addClassName("fakeHeaderRow");
+		fakeHeaderTRElement.addClassName("hidden");
+		
+		headerFloating = false;
+		
+		Window.addWindowScrollHandler(new ScrollHandler() {
+			public void onWindowScroll(ScrollEvent event) {
+				if (!headerFloating) {
+					if (event.getScrollTop() > table.getAbsoluteTop()) {
+						headerFloating = true;
+						headerTRElement.addClassName("floating");
+						fakeHeaderTRElement.removeClassName("hidden");
+					}
+				}
+				else {
+					if (event.getScrollTop() < table.getAbsoluteTop()) {
+						headerFloating = false;
+						headerTRElement.removeClassName("floating");
+						fakeHeaderTRElement.addClassName("hidden");
+					}
+				}
+			}
+		});
 	}
 	
 	public void addDeleteColumn() {
-		addColumn(new ButtonColumn<ObjectType>("Delete", "4em",
+		addColumn("Delete", "4em", null, new ButtonColumn<ObjectType>("X",
 				new ButtonColumn.ClickCallback<ObjectType>() {
 					public void buttonClickedForObject(ObjectType object, Button button) {
-						Row row = rowsByObjectID.get(object.getID());
-						if (addedRows.contains(row))
-							deleteRow(row);
-						toggleRowRemoved(row);
-					}
-
-					@Override
-					public String initialLabel(ObjectType object) {
-						return "X";
+						final Row row = rowsByObjectID.get(object.getID());
+						row.trElement.addClassName("sending");
+						
+						if (!Window.confirm("Are you sure you want to delete " + object.toString() + "?")) {
+							row.trElement.removeClassName("sending");
+							return;
+						}
+						
+						LinkedList<ObjectType> list = new LinkedList<ObjectType>();
+						list.add(object);
+						saveHandler.objectsModified(
+								new LinkedList<ObjectType>(),
+								new LinkedList<ObjectType>(),
+								list,
+								new AsyncCallback<Void>() {
+									public void onSuccess(Void result) {
+										row.trElement.removeClassName("sending");
+										deleteRow(row);
+									}
+									public void onFailure(Throwable caught) {
+										row.trElement.removeClassName("sending");
+										Window.alert("Failed to delete row: " + caught.getMessage());
+									}
+								});
 					}
 				}));
 	}
 
-	public List<ObjectType> getAddedObjects() {
-		List<ObjectType> added = new ArrayList<ObjectType>();
-		for (Row row : addedRows) {
-			if (!rowsToRemove.contains(row))
-				added.add(row.object);
-		}
-		return added;
+	private void deleteRow(Row row) {
+		rowsByObjectID.remove(row.object.getID());
+		row.trElement.removeFromParent();
 	}
 	
-	public List<ObjectType> getEditedObjects() {
-		List<ObjectType> edited = new ArrayList<ObjectType>();
-		for (Row row : editedRows) {
-			if (!addedRows.contains(row) && !rowsToRemove.contains(row))
-				edited.add(row.object);
+	public void addEditSaveColumn() {
+		addColumn("Edit", "4em", null, new EditSaveColumn<ObjectType>("Edit", "Save",
+				new EditSaveColumn.ClickCallback<ObjectType>() {
+					public void enteredMode(ObjectType object) { enterRowEditingMode(rowsByObjectID.get(object.getID()), null); }
+					public void exitedMode(ObjectType object) { exitRowEditingMode(rowsByObjectID.get(object.getID())); }
+				}));
+	}
+
+	protected void enterRowEditingMode(Row row, EditingCell focusedCell) {
+		assert(!row.inEditingMode);
+		row.inEditingMode = true;
+		
+		for (int colIndex = 0; colIndex < columns.size(); colIndex++) {
+			IColumn<ObjectType> rawColumn = columns.get(colIndex).userColumn;
+			if (rawColumn instanceof IEditingColumn) {
+				IEditingColumn<ObjectType> column = (IEditingColumn<ObjectType>)rawColumn;
+				EditingCell cell = (EditingCell)row.cells[colIndex];
+				column.updateFromObject(row, cell);
+				cell.enterEditingMode();
+			}
 		}
-		return edited;
+		
+		if (focusedCell != null) {
+			focusedCell.focus();
+		}
+		else {
+			for (Cell cell : row.cells) {
+				if (cell instanceof EditingCell) { 
+					((EditingCell) cell).focus();
+					break;
+				}
+			}
+		}
+	}
+
+	protected void enterRowReadingMode(final Row row) {
+		for (int colIndex = 0; colIndex < columns.size(); colIndex++) {
+			IColumn<ObjectType> rawColumn = columns.get(colIndex).userColumn;
+			if (rawColumn instanceof IReadingColumn) {
+				IReadingColumn<ObjectType> column = (IReadingColumn<ObjectType>)rawColumn;
+				EditingCell cell = (EditingCell)row.cells[colIndex];
+				cell.enterReadingMode();
+				column.updateFromObject(row, cell);
+			}
+		}
 	}
 	
-	public List<ObjectType> getRemovedObjects() {
-		List<ObjectType> removed = new ArrayList<ObjectType>();
-		for (Row row : rowsToRemove) {
-			if (!addedRows.contains(row))
-				removed.add(row.object);
+	protected void exitRowEditingMode(final Row row) {
+		assert(row.inEditingMode);
+		row.inEditingMode = false;
+
+		for (int colIndex = 0; colIndex < columns.size(); colIndex++) {
+			IColumn<ObjectType> rawColumn = columns.get(colIndex).userColumn;
+			if (rawColumn instanceof IEditingColumn) {
+				IEditingColumn<ObjectType> column = (IEditingColumn<ObjectType>)rawColumn;
+				EditingCell cell = (EditingCell)row.cells[colIndex];
+				column.commitToObject(row, cell);
+			}
 		}
-		return removed;
+		
+		row.trElement.addClassName("sending");
+
+		LinkedList<ObjectType> addedList = new LinkedList<ObjectType>();
+		LinkedList<ObjectType> editedList = new LinkedList<ObjectType>();
+		
+		if (row.adding)
+			addedList.add(row.getObject());
+		else
+			editedList.add(row.getObject());
+		
+		saveHandler.objectsModified(
+				addedList,
+				editedList,
+				new LinkedList<ObjectType>(),
+				new AsyncCallback<Void>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						row.trElement.removeClassName("sending");
+						enterRowEditingMode(row, null);
+						Window.alert("Failed to send updates to server: " + caught.getMessage());
+					}
+					
+					@Override
+					public void onSuccess(Void result) {
+						row.trElement.removeClassName("sending");
+					}
+				});
+		
+		enterRowReadingMode(row);
 	}
 	
 	public void clear() {
 		for (int i = 0; i < rowsByObjectID.size(); i++)
-			table.removeRow(1);
-		
-		rowsToRemove.clear();
-		editedRows.clear();
-		addedRows.clear();
-		historyByObjectID.clear();
+			table.removeRow(2);
 		rowsByObjectID.clear();
-		objectsByID.clear();
-	}
-	
-	private void toggleRowRemoved(Row row) {
-		if (rowsToRemove.contains(row))
-			rowsToRemove.remove(row);
-		else
-			rowsToRemove.add(row);
 	}
 
 	public final void addNewRow() {
-		for (Integer id : rowsByObjectID.keySet())
-			assert(objectsByID.containsKey(id));
-		
 		ObjectType newObject = factory.create();
 		Row newRow = addRow(newObject);
-		addedRows.add(newRow);
+		newRow.adding = true;
 
-		for (Widget widget : newRow.widgetsInCells) {
-			if (widget instanceof Focusable) {
-				((Focusable)widget).setFocus(true);
-				break;
-			}
-		}
-
-		for (Integer id : rowsByObjectID.keySet())
-			assert(objectsByID.containsKey(id));
+		enterRowEditingMode(newRow, null);
 	}
 	
-	void setColumnWidth(Column<ObjectType> column, int widthPixels) {
+	void setColumnWidth(Column column, int widthPixels) {
 		if (widthPixels < 0)
 			return;
 		
@@ -254,143 +355,127 @@ public class OsmTable<ObjectType extends Identified> extends FocusPanel {
 		int columnIndex = columns.indexOf(column);
 		
 		for (Row row : rowsByObjectID.values())
-			row.widgetsInCells[columnIndex].setWidth(widthPixels + "px");
+			row.cells[columnIndex].getCellWidget().setWidth(widthPixels + "px");
 	}
 	
-	public void addColumn(final Column<ObjectType> column) {
+	public void addColumn(String name, String width, Comparator<? super ObjectType> comparator, final IColumn<ObjectType> userColumn) {		
 		assert(rowsByObjectID.size() == 0);
 		
-		column.attachedToTable(this);
-
-		int newColumnIndex = columns.size();
+		final int newColumnIndex = columns.size();
 		
-		column.headerContents = new HTML(column.name);
-		column.headerContents.addStyleName("headerContents");
+		final Widget headerContents = new HTML(name);
+		headerContents.addStyleName("headerContents");
 		
-		FocusPanel contents = new ResizeableHeader(this, column.headerContents, new ResizeCallback() {
-			public int getWidth() { return column.headerContents.getOffsetWidth(); }
-			public void setWidth(int newWidthPixels) { setColumnWidth(column, newWidthPixels); }
+		table.setWidget(0, newColumnIndex, headerContents);
+		Element headerTDElement = HTMLUtilities.getClosestContainingElementOfType(headerContents.getElement(), "td");
+		
+		FocusPanel contents = new ResizeableHeader(this, headerContents, new ResizeCallback() {
+			public int getWidth() { return headerContents.getOffsetWidth(); }
+			public void setWidth(int newWidthPixels) { setColumnWidth(columns.get(newColumnIndex), newWidthPixels); }
 		});
 		contents.addStyleName("header");
 		table.setWidget(0, newColumnIndex, contents);
+		 
+		if (width != null)
+			headerTDElement.setAttribute("style", "width: " + width);
 		
-		column.headerTDElement = HTMLUtilities.getClosestContainingElementOfType(contents.getElement(), "td");
-		if (column.width != null)
-			column.headerTDElement.setAttribute("style", "width: " + column.width);
+		final Column column = new Column(width, headerContents, headerTDElement, comparator, userColumn);
 		
 		contents.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				sortByColumn(column);
 			}
 		});
+
+		SimplePanel fakeHeader = new SimplePanel();
+		SimplePanel fakeHeaderContents = new SimplePanel();
+		fakeHeader.add(fakeHeaderContents);
+		fakeHeaderContents.add(new HTML(name));
+		fakeHeader.addStyleName("header");
+		table.setWidget(1, newColumnIndex, fakeHeader);
 		
 		columns.add(column);
 	}
 	
-	void sortByColumn(Column<ObjectType> column) {
-		ArrayList<ObjectType> sortedList = new ArrayList<ObjectType>(this.objectsByID.values());
-		Collections.sort(sortedList, column.sortComparator);
-
-		for (Row row : this.rowsByObjectID.values())
-			row.trElement.removeFromParent();
-
-		Element tableElement = table.getElement();
-		assert(tableElement.getNodeName().equalsIgnoreCase("table"));
-		Element tbodyElement = tableElement.getElementsByTagName("tbody").getItem(0);
-		assert(tbodyElement.getNodeName().equalsIgnoreCase("tbody"));
-		assert(tbodyElement.getChildCount() == 1);
-		
-		for (int i = 0; i < sortedList.size(); i++) {
-			ObjectType object = sortedList.get(i);
-			Row row = rowsByObjectID.get(object.getID());
-			tbodyElement.appendChild(row.trElement);
+	void sortByColumn(Column column) {
+		if (column.comparator != null) {
+			ArrayList<ObjectType> sortedList = new ArrayList<ObjectType>();
+			for (Row row : rowsByObjectID.values())
+				sortedList.add(row.object);
+			Collections.sort(sortedList, column.comparator);
+	
+			for (Row row : this.rowsByObjectID.values())
+				row.trElement.removeFromParent();
+	
+			Element tableElement = table.getElement();
+			assert(tableElement.getNodeName().equalsIgnoreCase("table"));
+			Element tbodyElement = tableElement.getElementsByTagName("tbody").getItem(0);
+			assert(tbodyElement.getNodeName().equalsIgnoreCase("tbody"));
+			assert(tbodyElement.getChildCount() == 2);
+			
+			for (int i = 0; i < sortedList.size(); i++) {
+				ObjectType object = sortedList.get(i);
+				Row row = rowsByObjectID.get(object.getID());
+				tbodyElement.appendChild(row.trElement);
+			}
 		}
 	}
 
-	public Collection<ObjectType> getAddedUntouchedAndEditedObjects() {
+	public Collection<ObjectType> getObjects() {
 		ArrayList<ObjectType> result = new ArrayList<ObjectType>();
-		for (Integer id : rowsByObjectID.keySet()) {
-			assert(objectsByID.containsKey(id));
-			assert(objectsByID.get(id) != null);
-			result.add(objectsByID.get(id));
-		}
+		for (Row row : rowsByObjectID.values())
+			result.add(row.object);
 		return result;
 	}
 	
 	public final Row addRow(ObjectType object) {
 		int newObjectIndex = rowsByObjectID.size();
-		int rowIndex = newObjectIndex + 1;
+		int rowIndex = newObjectIndex + 2;
 
-		assert(!objectsByID.containsKey(object.getID()));
-		objectsByID.put(object.getID(), object);
+		HTML placeholder = new HTML();
+		table.setWidget(rowIndex, 0, placeholder);
+		Element rowElement = HTMLUtilities.getClosestContainingElementOfType(placeholder.getElement(), "tr");
+
+		Cell[] cells = new Cell[columns.size()];
 		
-		Widget[] widgets = new Widget[columns.size()];
+		Row newRow = new Row(object, rowElement, cells);
+		rowsByObjectID.put(object.getID(), newRow);
+		
 		for (int colIndex = 0; colIndex < columns.size(); colIndex++) {
-			Column<ObjectType> column = columns.get(colIndex);
-			Widget widget = column.createCellWidget(object);
-			widgets[colIndex] = widget;
-			table.setWidget(rowIndex, colIndex, widget);
+			Column column = columns.get(colIndex);
+			Cell cell = column.userColumn.createCell(newRow);
+			cells[colIndex] = cell;
+		}
+		
+		enterRowReadingMode(newRow);
+		
+		for (int colIndex = 0; colIndex < columns.size(); colIndex++) {
+			Column column = columns.get(colIndex);
+			Cell cell = cells[colIndex];
+			
+			assert(cell.getCellWidget() == cell.getCellWidget()); // make sure it returns the same instance every time
+			table.setWidget(rowIndex, colIndex, cell.getCellWidget());
 
-			Element td = HTMLUtilities.getClosestContainingElementOfType(widget.getElement(), "td");
+			Element td = HTMLUtilities.getClosestContainingElementOfType(cell.getCellWidget().getElement(), "td");
 			if (column.width != null)
 				td.setAttribute("style", td.getAttribute("style") + "; width: " + column.width);
 		}
-		
-		Element rowElement = HTMLUtilities.getClosestContainingElementOfType(widgets[0].getElement(), "tr");
 
-		Row newRow = new Row(object, rowElement, widgets);
-		assert(!rowsByObjectID.containsKey(object.getID()));
-		rowsByObjectID.put(object.getID(), newRow);
-
-		historyByObjectID.put(object.getID(), factory.createCopy(object));
-		assert(object.equals(historyByObjectID.get(object.getID())));
-		
 		return newRow;
 	}
 	
 	public final void addRows(Collection<ObjectType> objects) {
-		for (Integer id : rowsByObjectID.keySet())
-			assert(objectsByID.containsKey(id));
-		
 		for (ObjectType object : objects)
 			addRow(object);
-
-		for (Integer id : rowsByObjectID.keySet())
-			assert(objectsByID.containsKey(id));
-	}
-
-	protected void objectChanged(ObjectType object) {
-		Row row = rowsByObjectID.get(object.getID());
-		assert(row != null);
-		
-		ObjectType history = historyByObjectID.get(object.getID());
-		assert(history != null);
-		
-		if (object.equals(history))
-			editedRows.remove(row);
-		else
-			editedRows.add(row);
-	}
+	}	
 	
-	private void deleteRow(Row row) {
-		addedRows.remove(row);
-		editedRows.remove(row);
-		rowsToRemove.remove(row);
-		
-		row.trElement.removeFromParent();
-	}
-	
-	
-	/**
-	 * 
+	/** 
 	 * @return true if the table has been saved, false if there are unsaved changes in the table
 	 */
 	public boolean isSaved(){
-		
-		if(!rowsToRemove.isEmpty()){ return false; }
-		if(!editedRows.isEmpty()){ return false; }
-		if(!addedRows.isEmpty()){ return false; }
-			
+		for (Row row : rowsByObjectID.values())
+			if (row.inEditingMode)
+				return false;	
 		return true;
 	}
 }

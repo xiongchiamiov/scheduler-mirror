@@ -1,5 +1,5 @@
 package edu.calpoly.csc.scheduler.view.web.client.table;
 
-public interface StaticSetter<ObjectType, ValType> {
+public interface IStaticSetter<ObjectType, ValType> {
 	void setValueInObject(ObjectType object, ValType newValue);
 }

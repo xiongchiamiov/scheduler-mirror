@@ -437,18 +437,27 @@ background-clip: initial;
 	padding-right: 2.5em;
 }
 
-.osmtable .headerContents {
+.osmtable .header > div > div {
 	border-bottom: 2px solid #6F7277;
 	font-weight: bold;
-    color: #4B4A4A;
-    text-align: left;
-    text-shadow: 1px 1px 0 #DDDDFF;
+	color: #4B4A4A;
+	text-align: left;
+	text-shadow: 1px 1px 0 #DDDDFF;
 	padding: 3px .4em;
 	white-space: nowrap;
 }
 
 .osmtable tr:nth-child(odd) {
 	background-color: #F8FBFE;
+}
+
+.osmtable .headerRow,
+.osmtable .fakeHeaderRow {
+	background-color: white;
+}
+
+.osmtable .headerRow.floating {
+	opacity: .8;
 }
 
 
@@ -487,7 +496,7 @@ background-clip: initial;
 }
 
 
-.resizeableHeader {
+.header > div {
 	position: relative;
 	display: block;
 	border-right: 2px dotted #6F7277;
@@ -506,4 +515,13 @@ background-clip: initial;
 
 .osmtable td {
 	overflow: hidden;
+}
+
+.osmtable .headerRow.floating {
+	position: fixed;
+	top: 0;
+}
+
+.osmtable .fakeHeaderRow.hidden {
+	display: none;
 }

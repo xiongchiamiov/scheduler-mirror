@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.Vector;
 
+import edu.calpoly.csc.scheduler.view.web.client.table.IStaticGetter;
+
 
 public class InstructorGWT implements Serializable, Identified {
 	private static final long serialVersionUID = -4982539363690274674L;

@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.view.web.client.table;
+package edu.calpoly.csc.scheduler.view.web.client.table.columns;
 
 import java.util.LinkedHashMap;
 
@@ -8,17 +8,23 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
-import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.Widget;
 
-class SelectWidget extends FocusPanel {
-	Getter<String> getter;
-	Setter<String> setter;
+import edu.calpoly.csc.scheduler.view.web.client.table.IGetter;
+import edu.calpoly.csc.scheduler.view.web.client.table.ISetter;
+import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
+
+class SelectCell extends SimplePanel implements OsmTable.EditingCell {
+	IGetter<String> getter;
+	ISetter<String> setter;
 	boolean editing;
 	LinkedHashMap<String, String> options;
+	ListBox listBox;
 	
-	SelectWidget(LinkedHashMap<String, String> options, Getter<String> getter, Setter<String> setter) {
+	SelectCell(LinkedHashMap<String, String> options, IGetter<String> getter, ISetter<String> setter) {
 		this.getter = getter;
 		this.setter = setter;
 		
@@ -26,23 +32,24 @@ class SelectWidget extends FocusPanel {
 		
 		editing = false;
 		enterReadingMode();
-		addFocusHandler(new FocusHandler() {
-			@Override
-			public void onFocus(FocusEvent event) {
-				enterWritingMode();
-			}
-		});
+//		addFocusHandler(new FocusHandler() {
+//			@Override
+//			public void onFocus(FocusEvent event) {
+//				enterEditingMode();
+//			}
+//		});
 
 		this.options = options;
 	}
 	
-	void enterWritingMode() {
+	@Override
+	public void enterEditingMode() {
 		assert(!editing);
 		clear();
 		
 		String currentValue = getter.getValue();
 		
-		final ListBox listBox = new ListBox();
+		listBox = new ListBox();
 		int index = 0;
 		for (String key : options.keySet()) {
 			String value = options.get(key);
@@ -71,10 +78,19 @@ class SelectWidget extends FocusPanel {
 		addStyleName("writing");
 	}
 	
-	void enterReadingMode() {
+	@Override
+	public void enterReadingMode() {
 		editing = false;
 		clear();
 		add(new HTML(getter.getValue() + "&#160;"));
 		addStyleName("reading");
+	}
+	
+	@Override
+	public Widget getCellWidget() { return this; }
+	
+	@Override
+	public void focus() {
+		listBox.setFocus(true);
 	}
 }

@@ -35,15 +35,17 @@ public interface GreetingService extends RemoteService {
 	// Instructors
 	void saveInstructor(InstructorGWT instructor);	
 	List<InstructorGWT> getInstructors();
-	List<InstructorGWT> saveInstructors(List<InstructorGWT> added, List<InstructorGWT> edited, List<InstructorGWT> removed);
+	void saveInstructors(List<InstructorGWT> added, List<InstructorGWT> edited,
+			List<InstructorGWT> removed);
 	
-	// Courses
-	List<CourseGWT> saveCourses(List<CourseGWT> added, List<CourseGWT> edited, List<CourseGWT> removed);
+	void saveCourses(List<CourseGWT> added, List<CourseGWT> edited,
+			List<CourseGWT> removed);
 	List<CourseGWT> getCourses();
 	
 	// Locations
 	List<LocationGWT> getLocations();
-	List<LocationGWT> saveLocations(List<LocationGWT> added, List<LocationGWT> edited, List<LocationGWT> removed);
+	void saveLocations(List<LocationGWT> added, List<LocationGWT> edited,
+			List<LocationGWT> removed);
 	
 	// Schedule Items
 	List<ScheduleItemGWT> getGWTScheduleItems(List<CourseGWT> courses);

@@ -3,7 +3,6 @@ package edu.calpoly.csc.scheduler.view.web.client.views;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -15,22 +14,43 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.client.IViewContents;
 import edu.calpoly.csc.scheduler.view.web.client.ViewFrame;
-import edu.calpoly.csc.scheduler.view.web.client.table.ButtonColumn;
-import edu.calpoly.csc.scheduler.view.web.client.table.ButtonColumn.ClickCallback;
-import edu.calpoly.csc.scheduler.view.web.client.table.CheckboxColumn;
-import edu.calpoly.csc.scheduler.view.web.client.table.Factory;
-import edu.calpoly.csc.scheduler.view.web.client.table.IntColumn;
+import edu.calpoly.csc.scheduler.view.web.client.table.IFactory;
+import edu.calpoly.csc.scheduler.view.web.client.table.IStaticGetter;
+import edu.calpoly.csc.scheduler.view.web.client.table.IStaticSetter;
+import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator;
+import edu.calpoly.csc.scheduler.view.web.client.table.MemberIntegerComparator;
+import edu.calpoly.csc.scheduler.view.web.client.table.MemberStringComparator;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
-import edu.calpoly.csc.scheduler.view.web.client.table.StaticGetter;
-import edu.calpoly.csc.scheduler.view.web.client.table.StaticSetter;
-import edu.calpoly.csc.scheduler.view.web.client.table.StaticValidator;
-import edu.calpoly.csc.scheduler.view.web.client.table.StringColumn;
-import edu.calpoly.csc.scheduler.view.web.client.table.TableConstants;
+import edu.calpoly.csc.scheduler.view.web.client.table.columns.ButtonColumn;
+import edu.calpoly.csc.scheduler.view.web.client.table.columns.ButtonColumn.ClickCallback;
+import edu.calpoly.csc.scheduler.view.web.client.table.columns.CheckboxColumn;
+import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingStringColumn;
+import edu.calpoly.csc.scheduler.view.web.client.table.columns.IntColumn;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.TimePreferenceGWT;
 
 public class InstructorsView extends VerticalPanel implements IViewContents {
+	/** Instructor table */
+	public static final String INSTR_NAME = "Instructor Name";
+
+	public static final String INSTR_FIRSTNAME = "First Name";
+
+	public static final String INSTR_LASTNAME = "Last Name";
+
+	public static final String INSTR_ID = "ID";
+	
+	public static final String INSTR_MAX_WTU = "Max WTU";
+	
+	public static final String INSTR_OFFICE = "Office";
+	
+	public static final String INSTR_BUILDING = "Building";
+
+	public static final String INSTR_ROOMNUMBER = "Room#";
+
+	public static final String INSTR_DISABILITIES = "Disabilities";
+	
+	public static final String INSTR_PREFERENCES = "Preferences";
+
 	// These static variables are a temporary hack to get around the table bug
 	public GreetingServiceAsync service;
 	
@@ -64,144 +84,157 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 		final LoadingPopup popup = new LoadingPopup();
 		popup.show();
 		
-		/*
-		setWidth("100%");
-
-		add(new HTML("<h2>" + scheduleName + " - Instructors</h2>"));
-		
-		iTable = TableFactory.instructor(service);
-		add(iTable.getWidget());
-		
-		iTable.clear();
-
-
-		final LoadingPopup popup = new LoadingPopup();
-		popup.show();
-		
-		
-		service.getInstructors(new AsyncCallback<ArrayList<InstructorGWT>>() {
-			public void onFailure(Throwable caught) {
-				popup.hide();
-				
-				Window.alert("Failed to get professors: " + caught.toString());
-			}
-			
-			public void onSuccess(ArrayList<InstructorGWT> result){
-				popup.hide();
-				
-				if (result != null) {
-					for (InstructorGWT ins : result)
-						ins.verify();
-					
-					iTable.set(result);
-				}
-			}
-		});
-		*/
-		
 		table = new OsmTable<InstructorGWT>(
-				new Factory<InstructorGWT>() {
+				new IFactory<InstructorGWT>() {
 					public InstructorGWT create() {
 						return new InstructorGWT(
 								nextInstructorID++, "", "", "", "", "", false, 5, 5, 0, 0,
 								new HashMap<Integer, Map<Integer, TimePreferenceGWT>>(),
 								new HashMap<Integer, Integer>());
 					}
-					@Override
-					public InstructorGWT createCopy(InstructorGWT object) { return new InstructorGWT(object); }
+//					@Override
+//					public InstructorGWT createCopy(InstructorGWT object) { return new InstructorGWT(object); }
 				},
-				new OsmTable.SaveHandler<InstructorGWT>() {
-					public void saveButtonClicked() {
-						save();
+				new OsmTable.ModifyHandler<InstructorGWT>() {
+					@Override
+					public void objectsModified(List<InstructorGWT> added,
+							List<InstructorGWT> edited,
+							List<InstructorGWT> removed,
+							AsyncCallback<Void> callback) {
+						service.saveInstructors(added, edited, removed, callback);
 					}
 				});
 
-		table.addColumn(new StringColumn<InstructorGWT>(TableConstants.INSTR_FIRSTNAME, "6em",
-				new StaticGetter<InstructorGWT, String>() {
+		table.addColumn(
+				INSTR_FIRSTNAME,
+				"6em",
+				new MemberStringComparator<InstructorGWT>(new IStaticGetter<InstructorGWT, String>() {
 					public String getValueForObject(InstructorGWT object) { return object.getFirstName(); }
-				},
-				new StaticSetter<InstructorGWT, String>() {
-					public void setValueInObject(InstructorGWT object, String newValue) { object.setFirstName(newValue); }
-				},
-				String.CASE_INSENSITIVE_ORDER, null));
+				}),
+				new EditingStringColumn<InstructorGWT>(
+						new IStaticGetter<InstructorGWT, String>() {
+							public String getValueForObject(InstructorGWT object) { return object.getFirstName(); }
+						},
+						new IStaticSetter<InstructorGWT, String>() {
+							public void setValueInObject(InstructorGWT object, String newValue) { object.setFirstName(newValue); }
+						},
+						null));
 
-		table.addColumn(new StringColumn<InstructorGWT>(TableConstants.INSTR_LASTNAME, "6em",
-				new StaticGetter<InstructorGWT, String>() {
+		table.addColumn(
+				INSTR_LASTNAME,
+				"6em",
+				new MemberStringComparator<InstructorGWT>(new IStaticGetter<InstructorGWT, String>() {
 					public String getValueForObject(InstructorGWT object) { return object.getLastName(); }
-				},
-				new StaticSetter<InstructorGWT, String>() {
-					public void setValueInObject(InstructorGWT object, String newValue) { object.setLastName(newValue); }
-				},
-				String.CASE_INSENSITIVE_ORDER, null));
+				}),
+				new EditingStringColumn<InstructorGWT>(
+						new IStaticGetter<InstructorGWT, String>() {
+							public String getValueForObject(InstructorGWT object) { return object.getLastName(); }
+						},
+						new IStaticSetter<InstructorGWT, String>() {
+							public void setValueInObject(InstructorGWT object, String newValue) { object.setLastName(newValue); }
+						},
+						null));
 		
-		table.addColumn(new StringColumn<InstructorGWT>(TableConstants.INSTR_ID, "6em",
-				new StaticGetter<InstructorGWT, String>() {
+		table.addColumn(
+				INSTR_ID,
+				"6em",
+				new MemberStringComparator<InstructorGWT>(new IStaticGetter<InstructorGWT, String>() {
 					public String getValueForObject(InstructorGWT object) { return object.getUserID(); }
-				},
-				new StaticSetter<InstructorGWT, String>() {
-					public void setValueInObject(InstructorGWT object, String newValue) { object.setUserID(newValue); }
-				},
-				String.CASE_INSENSITIVE_ORDER, 
-				new StaticValidator<InstructorGWT, String>() {
-					public void validate(InstructorGWT object, String newId) throws InvalidValueException {
-						if (userIdExists(newId))
-							throw new InvalidValueException("There is already a user with ID: " + newId);
-					}
-				}));
+				}),
+				new EditingStringColumn<InstructorGWT>(
+						new IStaticGetter<InstructorGWT, String>() {
+							public String getValueForObject(InstructorGWT object) { return object.getUserID(); }
+						},
+						new IStaticSetter<InstructorGWT, String>() {
+							public void setValueInObject(InstructorGWT object, String newValue) { object.setUserID(newValue); }
+						}, 
+						new IStaticValidator<InstructorGWT, String>() {
+							public void validate(InstructorGWT object, String newId) throws InvalidValueException {
+								if (userIdExists(newId))
+									throw new InvalidValueException("There is already a user with ID: " + newId);
+							}
+						}));
 
-		table.addColumn(new IntColumn<InstructorGWT>(TableConstants.INSTR_MAX_WTU, "4em",
-				new StaticGetter<InstructorGWT, Integer>() {
+		table.addColumn(
+				INSTR_MAX_WTU,
+				"4em",
+				new MemberIntegerComparator<InstructorGWT>(new IStaticGetter<InstructorGWT, Integer>() {
 					public Integer getValueForObject(InstructorGWT object) { return object.getMaxWtu(); }
-				}, new StaticSetter<InstructorGWT, Integer>() {
-					public void setValueInObject(InstructorGWT object, Integer newValue) { object.setMaxWtu(newValue); }
-				}, 
-				new StaticValidator<InstructorGWT, Integer>() {
-					public void validate(InstructorGWT object, Integer newWtu) throws InvalidValueException {
-						if (newWtu < 0)
-							throw new InvalidValueException(TableConstants.INSTR_MAX_WTU + " must be positive: " + newWtu + " is invalid.");
-					}
-				}));
+				}),
+				new IntColumn<InstructorGWT>(
+						new IStaticGetter<InstructorGWT, Integer>() {
+							public Integer getValueForObject(InstructorGWT object) { return object.getMaxWtu(); }
+						},
+						new IStaticSetter<InstructorGWT, Integer>() {
+							public void setValueInObject(InstructorGWT object, Integer newValue) { object.setMaxWtu(newValue); }
+						}, 
+						new IStaticValidator<InstructorGWT, Integer>() {
+							public void validate(InstructorGWT object, Integer newWtu) throws InvalidValueException {
+								if (newWtu < 0)
+									throw new InvalidValueException(INSTR_MAX_WTU + " must be positive: " + newWtu + " is invalid.");
+							}
+						}));
 		
-		table.addColumn(new StringColumn<InstructorGWT>(TableConstants.INSTR_BUILDING, "6em",
-				new StaticGetter<InstructorGWT, String>() {
+		table.addColumn(
+				INSTR_BUILDING,
+				"6em",
+				new MemberStringComparator<InstructorGWT>(new IStaticGetter<InstructorGWT, String>() {
 					public String getValueForObject(InstructorGWT object) { return object.getBuilding(); }
-				},
-				new StaticSetter<InstructorGWT, String>() {
-					public void setValueInObject(InstructorGWT object, String newValue) { object.setBuilding(newValue); }
-				},
-				String.CASE_INSENSITIVE_ORDER, null));
+				}),
+				new EditingStringColumn<InstructorGWT>(
+						new IStaticGetter<InstructorGWT, String>() {
+							public String getValueForObject(InstructorGWT object) { return object.getBuilding(); }
+						},
+						new IStaticSetter<InstructorGWT, String>() {
+							public void setValueInObject(InstructorGWT object, String newValue) { object.setBuilding(newValue); }
+						},
+						null));
 		
-		table.addColumn(new StringColumn<InstructorGWT>(TableConstants.INSTR_ROOMNUMBER, "6em",
-				new StaticGetter<InstructorGWT, String>() {
+		table.addColumn(
+				INSTR_ROOMNUMBER,
+				"6em",
+				new MemberStringComparator<InstructorGWT>(new IStaticGetter<InstructorGWT, String>() {
 					public String getValueForObject(InstructorGWT object) { return object.getRoomNumber(); }
-				},
-				new StaticSetter<InstructorGWT, String>() {
-					public void setValueInObject(InstructorGWT object, String newValue) { object.setRoomNumber(newValue); }
-				},
-				String.CASE_INSENSITIVE_ORDER, null));
+				}),
+				new EditingStringColumn<InstructorGWT>(
+						new IStaticGetter<InstructorGWT, String>() {
+							public String getValueForObject(InstructorGWT object) { return object.getRoomNumber(); }
+						},
+						new IStaticSetter<InstructorGWT, String>() {
+							public void setValueInObject(InstructorGWT object, String newValue) { object.setRoomNumber(newValue); }
+						},
+						null));
 		
-		table.addColumn(new CheckboxColumn<InstructorGWT>(TableConstants.INSTR_DISABILITIES, "4em",
-				new StaticGetter<InstructorGWT, Boolean>() {
-					public Boolean getValueForObject(InstructorGWT object) { return object.getDisabilities(); }
-				},
-				new StaticSetter<InstructorGWT, Boolean>() {
-					public void setValueInObject(InstructorGWT object, Boolean newValue) { object.setDisabilities(newValue); }
-				}));
+		table.addColumn(
+				INSTR_DISABILITIES,
+				"4em",
+				new MemberIntegerComparator<InstructorGWT>(new IStaticGetter<InstructorGWT, Integer>() {
+					public Integer getValueForObject(InstructorGWT object) { return object.getDisabilities() ? 1 : 0; }
+				}),
+				new CheckboxColumn<InstructorGWT>(
+						new IStaticGetter<InstructorGWT, Boolean>() {
+							public Boolean getValueForObject(InstructorGWT object) { return object.getDisabilities(); }
+						},
+						new IStaticSetter<InstructorGWT, Boolean>() {
+							public void setValueInObject(InstructorGWT object, Boolean newValue) { object.setDisabilities(newValue); }
+						}));
 		
-		table.addColumn(new ButtonColumn<InstructorGWT>(TableConstants.INSTR_PREFERENCES, "4em",
-				new ClickCallback<InstructorGWT>(){
-					public void buttonClickedForObject(InstructorGWT object, Button button) {
-						if (myFrame.canPopViewsAboveMe()) {
-							myFrame.popFramesAboveMe();
-							myFrame.frameViewAndPushAboveMe(new InstructorPreferencesView(service, scheduleName, object));
-						}	
-					}
-
-					public String initialLabel(InstructorGWT object) {
-						return TableConstants.INSTR_PREFERENCES;
-					}
-		}));
+		table.addColumn(
+				INSTR_PREFERENCES,
+				"4em",
+				null,
+				new ButtonColumn<InstructorGWT>(
+						"Preferences",
+						new ClickCallback<InstructorGWT>(){
+							public void buttonClickedForObject(InstructorGWT object, Button button) {
+								if (myFrame.canPopViewsAboveMe()) {
+									myFrame.popFramesAboveMe();
+									myFrame.frameViewAndPushAboveMe(new InstructorPreferencesView(service, scheduleName, object));
+								}	
+							}
+						}));
 		
+		table.addEditSaveColumn();
 		table.addDeleteColumn();
 		
 		this.add(table);
@@ -223,28 +256,8 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 	}
 	
 	
-	private void save() {
-		service.saveInstructors(
-				table.getAddedObjects(),
-				table.getEditedObjects(),
-				table.getRemovedObjects(),
-				new AsyncCallback<List<InstructorGWT>>() {
-					
-					@Override
-					public void onFailure(Throwable caught) {
-						// TODO Auto-generated method stub
-						
-					}
-					@Override
-					public void onSuccess(List<InstructorGWT> result) {
-						table.clear();
-						table.addRows(result);
-					}
-				});
-	}
-	
 	private boolean userIdExists(String userId) {
-		for (InstructorGWT instr : table.getAddedUntouchedAndEditedObjects()) {
+		for (InstructorGWT instr : table.getObjects()) {
 			assert(instr != null);
 			assert(instr.getUserID() != null);
 			assert(userId != null);

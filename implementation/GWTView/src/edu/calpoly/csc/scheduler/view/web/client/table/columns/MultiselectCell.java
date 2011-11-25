@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.view.web.client.table;
+package edu.calpoly.csc.scheduler.view.web.client.table.columns;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -8,17 +8,23 @@ import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
-import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.Widget;
 
-class MultiselectWidget extends FocusPanel {
-	Getter<Collection<String>> getter;
-	Setter<Collection<String>> setter;
+import edu.calpoly.csc.scheduler.view.web.client.table.IGetter;
+import edu.calpoly.csc.scheduler.view.web.client.table.ISetter;
+import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
+
+class MultiselectCell extends SimplePanel implements OsmTable.EditingCell {
+	IGetter<Collection<String>> getter;
+	ISetter<Collection<String>> setter;
 	boolean editing;
 	LinkedHashMap<String, String> options;
+	ListBox listBox;
 	
-	MultiselectWidget(LinkedHashMap<String, String> options, Getter<Collection<String>> getter, Setter<Collection<String>> setter) {
+	MultiselectCell(LinkedHashMap<String, String> options, IGetter<Collection<String>> getter, ISetter<Collection<String>> setter) {
 		this.getter = getter;
 		this.setter = setter;
 		
@@ -26,23 +32,24 @@ class MultiselectWidget extends FocusPanel {
 		
 		editing = false;
 		enterReadingMode();
-		addFocusHandler(new FocusHandler() {
-			@Override
-			public void onFocus(FocusEvent event) {
-				enterWritingMode();
-			}
-		});
+//		addFocusHandler(new FocusHandler() {
+//			@Override
+//			public void onFocus(FocusEvent event) {
+//				enterEditingMode();
+//			}
+//		});
 
 		this.options = options;
 	}
 	
-	void enterWritingMode() {
+	@Override
+	public void enterEditingMode() {
 		assert(!editing);
 		clear();
 		
 		Collection<String> currentValues = getter.getValue();
 		
-		final ListBox listBox = new ListBox(true);
+		listBox = new ListBox(true);
 		int index = 0;
 		for (String key : options.keySet()) {
 			String value = options.get(key);
@@ -68,7 +75,8 @@ class MultiselectWidget extends FocusPanel {
 		addStyleName("writing");
 	}
 	
-	void enterReadingMode() {
+	@Override
+	public void enterReadingMode() {
 		editing = false;
 		clear();
 		String joined = "";
@@ -77,5 +85,13 @@ class MultiselectWidget extends FocusPanel {
 		
 		add(new HTML(joined + "&#160;"));
 		addStyleName("reading");
+	}
+
+	@Override
+	public Widget getCellWidget() { return this; }
+	
+	@Override
+	public void focus() {
+		listBox.setFocus(true);
 	}
 }

@@ -1,7 +1,9 @@
-package edu.calpoly.csc.scheduler.view.web.client.table;
+package edu.calpoly.csc.scheduler.view.web.client.table.validators;
+
+import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator;
 
 
-public class StaticNumberValidator<ObjectType> implements StaticValidator<ObjectType, String> {
+public class StaticNumberValidator<ObjectType> implements IStaticValidator<ObjectType, String> {
 	public void validate(ObjectType object, String newValue) throws InvalidValueException {
 		try {
 			Integer.parseInt(newValue);

@@ -1,5 +1,5 @@
 package edu.calpoly.csc.scheduler.view.web.client.table;
 
-public class MemberAccessor {
-
+public interface IGetter<ValType> {
+	ValType getValue();
 }
