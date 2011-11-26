@@ -14,26 +14,27 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ScrollEvent;
 import com.google.gwt.user.client.Window.ScrollHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.client.HTMLUtilities;
-import edu.calpoly.csc.scheduler.view.web.client.table.ResizeableHeader.ResizeCallback;
+import edu.calpoly.csc.scheduler.view.web.client.table.ResizeableWidget.ResizeCallback;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.ButtonColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditSaveColumn;
 import edu.calpoly.csc.scheduler.view.web.shared.Identified;
 
-public class OsmTable<ObjectType extends Identified> extends FocusPanel {
+public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 	public interface ModifyHandler<ObjectType> {
 		void objectsModified(List<ObjectType> added, List<ObjectType> edited, List<ObjectType> removed, AsyncCallback<Void> callback);
 	}
@@ -58,19 +59,19 @@ public class OsmTable<ObjectType extends Identified> extends FocusPanel {
 		public Widget getCellWidget() { return widget; }
 	}
 	
-	private class Column {
-		final public String width;
-		public Widget headerContents;
-		public Element headerTDElement;
-		IColumn<ObjectType> userColumn;
-		public Comparator<? super ObjectType> comparator;
-		
-		public Column(String width, Widget headerContents,
-				Element headerTDElement, Comparator<? super ObjectType> comparator, IColumn<ObjectType> userColumn) {
-			this.width = width;
-			this.headerContents = headerContents;
-			this.headerTDElement = headerTDElement;
-			this.userColumn = userColumn;
+	// Miscellaneous information about the column such as initial width, header, etc.
+	// For OsmTable's use only.
+	private class ColumnMetadata {
+		final IColumn<ObjectType> column;
+		final ResizeableWidget header;
+		final Comparator<? super ObjectType> comparator;
+		public ColumnMetadata(
+				IColumn<ObjectType> column,
+				ResizeableWidget header,
+				Comparator<? super ObjectType> comparator) {
+			this.column = column;
+			this.header = header;
+			this.comparator = comparator;
 		}
 	}
 	
@@ -123,62 +124,53 @@ public class OsmTable<ObjectType extends Identified> extends FocusPanel {
 	}
 	
 	protected final IFactory<ObjectType> factory;
-	protected final FlexTable table;
-	protected final ArrayList<Column> columns = new ArrayList<Column>();
-	protected final Map<Integer, Row> rowsByObjectID = new HashMap<Integer, Row>();
 	protected final ModifyHandler<ObjectType> saveHandler;
-	protected final Element headerTRElement;
-	protected final Element fakeHeaderTRElement;
+	protected final ArrayList<ColumnMetadata> columnMetadatas = new ArrayList<ColumnMetadata>();
+	protected final Map<Integer, Row> rowsByObjectID = new HashMap<Integer, Row>();
+	protected HorizontalPanel headers;
 	protected boolean headerFloating;
+	protected Element colgroupElement;
+	protected final FlexTable table;
 	
 	public OsmTable(IFactory<ObjectType> factory, final ModifyHandler<ObjectType> saveHandler) {
 		this.saveHandler = saveHandler;
-		
-		VerticalPanel vp = new VerticalPanel();
-		add(vp);
-		
 		this.factory = factory;
-		
-		FlowPanel controlBar = new FlowPanel();
-		controlBar.addStyleName("controlBar");
 
-		controlBar.add(new HTML(
-				"<div class=\"addedLegend\"><div>Added</div></div>" +
-				"<div class=\"editedLegend\"><div>Modified</div></div>" +
-				"<div class=\"removedLegend\"><div>Removed</div></div>"));
+		addStyleName("osmtableContainer");
 		
-		vp.add(controlBar);
+		createNewObjectButtons();
+		
+		createHeaders();
 		
 		table = new FlexTable();
 		table.addStyleName("osmtable");
 		table.setCellPadding(0);
 		table.setCellSpacing(0);
-		vp.add(table);
+		add(table);
 		
+		colgroupElement = DOM.createColGroup();
+		table.getElement().insertFirst(colgroupElement);
+	}
+	
+	private void createNewObjectButtons() {
 		FocusPanel newObjectPanel = new FocusPanel();
 		newObjectPanel.addFocusHandler(new FocusHandler() {
-			public void onFocus(FocusEvent event) {
-				addNewRow();
-			}
+			public void onFocus(FocusEvent event) { addNewRow(); }
 		});
-		vp.add(newObjectPanel);
+		add(newObjectPanel);
 		
-		vp.add(new Button("New", new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				addNewRow();
-			}
+		add(new Button("New", new ClickHandler() {
+			public void onClick(ClickEvent event) { addNewRow(); }
 		}));
-
-		HTML placeholder = new HTML("Placeholder");
-		table.setWidget(0, 0, placeholder);
-		headerTRElement = HTMLUtilities.getClosestContainingElementOfType(placeholder.getElement(), "tr");
-		headerTRElement.addClassName("headerRow");
+	}
+	
+	private void createHeaders() {
+		headers = new HorizontalPanel();
+		headers.addStyleName("headers");
+		add(headers);
 		
-		placeholder = new HTML("Placeholder");
-		table.setWidget(1, 0, placeholder);
-		fakeHeaderTRElement = HTMLUtilities.getClosestContainingElementOfType(placeholder.getElement(), "tr");
-		fakeHeaderTRElement.addClassName("fakeHeaderRow");
-		fakeHeaderTRElement.addClassName("hidden");
+		final SimplePanel substituteHeaders = new SimplePanel();
+		add(substituteHeaders);
 		
 		headerFloating = false;
 		
@@ -187,19 +179,61 @@ public class OsmTable<ObjectType extends Identified> extends FocusPanel {
 				if (!headerFloating) {
 					if (event.getScrollTop() > table.getAbsoluteTop()) {
 						headerFloating = true;
-						headerTRElement.addClassName("floating");
-						fakeHeaderTRElement.removeClassName("hidden");
+						substituteHeaders.setHeight(headers.getOffsetHeight() + "px");
+						headers.addStyleName("floating");
 					}
 				}
 				else {
 					if (event.getScrollTop() < table.getAbsoluteTop()) {
 						headerFloating = false;
-						headerTRElement.removeClassName("floating");
-						fakeHeaderTRElement.addClassName("hidden");
+						headers.removeStyleName("floating");
+						substituteHeaders.setHeight("");
 					}
 				}
 			}
 		});
+	}
+
+	public void addColumn(String name, String initialWidth, Comparator<? super ObjectType> comparator, final IColumn<ObjectType> column) {
+		assert(rowsByObjectID.size() == 0);
+		final int newColumnIndex = columnMetadatas.size();
+		
+		final Element colElement = DOM.createCol();
+		colElement.setId("col" + newColumnIndex);
+		colgroupElement.appendChild(colElement);
+		if (initialWidth != null)
+			colElement.setAttribute("style", "width: " + initialWidth);
+		
+		final Widget headerContents = new HTML(name);
+		headerContents.addStyleName("headerContents");
+		ResizeableWidget header = new ResizeableWidget(this, headerContents, new ResizeCallback() {
+			public void setWidth(int newWidthPixels) {
+				colElement.setAttribute("style", "width: " + newWidthPixels);
+				HTMLUtilities.getClosestContainingElementOfType(table.getWidget(0, newColumnIndex).getElement(), "td").setAttribute("style", "width: " + newWidthPixels + "px");
+			}
+			public int getWidth() {
+				if (rowsByObjectID.size() == 0)
+					return 0;
+				return HTMLUtilities.getClosestContainingElementOfType(table.getWidget(0, newColumnIndex).getElement(), "td").getOffsetWidth();
+			}
+		});
+		headers.add(header);
+		
+		final ColumnMetadata columnMetadata = new ColumnMetadata(column, header, comparator);
+
+//		header.addClickHandler(new ClickHandler() {
+//			public void onClick(ClickEvent event) {
+//				sortByColumn(column);
+//			}
+//		});
+//		
+//		sorter.setSortCallback(new SortCallback() {
+//			public void sort(boolean ascending) {
+//				sortByColumn(column, ascending);
+//			}
+//		});
+
+		columnMetadatas.add(columnMetadata);
 	}
 	
 	public void addDeleteColumn() {
@@ -251,8 +285,8 @@ public class OsmTable<ObjectType extends Identified> extends FocusPanel {
 		assert(!row.inEditingMode);
 		row.inEditingMode = true;
 		
-		for (int colIndex = 0; colIndex < columns.size(); colIndex++) {
-			IColumn<ObjectType> rawColumn = columns.get(colIndex).userColumn;
+		for (int colIndex = 0; colIndex < columnMetadatas.size(); colIndex++) {
+			IColumn<ObjectType> rawColumn = columnMetadatas.get(colIndex).column;
 			if (rawColumn instanceof IEditingColumn) {
 				IEditingColumn<ObjectType> column = (IEditingColumn<ObjectType>)rawColumn;
 				EditingCell cell = (EditingCell)row.cells[colIndex];
@@ -275,8 +309,8 @@ public class OsmTable<ObjectType extends Identified> extends FocusPanel {
 	}
 
 	protected void enterRowReadingMode(final Row row) {
-		for (int colIndex = 0; colIndex < columns.size(); colIndex++) {
-			IColumn<ObjectType> rawColumn = columns.get(colIndex).userColumn;
+		for (int colIndex = 0; colIndex < columnMetadatas.size(); colIndex++) {
+			IColumn<ObjectType> rawColumn = columnMetadatas.get(colIndex).column;
 			if (rawColumn instanceof IReadingColumn) {
 				IReadingColumn<ObjectType> column = (IReadingColumn<ObjectType>)rawColumn;
 				EditingCell cell = (EditingCell)row.cells[colIndex];
@@ -290,8 +324,8 @@ public class OsmTable<ObjectType extends Identified> extends FocusPanel {
 		assert(row.inEditingMode);
 		row.inEditingMode = false;
 
-		for (int colIndex = 0; colIndex < columns.size(); colIndex++) {
-			IColumn<ObjectType> rawColumn = columns.get(colIndex).userColumn;
+		for (int colIndex = 0; colIndex < columnMetadatas.size(); colIndex++) {
+			IColumn<ObjectType> rawColumn = columnMetadatas.get(colIndex).column;
 			if (rawColumn instanceof IEditingColumn) {
 				IEditingColumn<ObjectType> column = (IEditingColumn<ObjectType>)rawColumn;
 				EditingCell cell = (EditingCell)row.cells[colIndex];
@@ -344,65 +378,15 @@ public class OsmTable<ObjectType extends Identified> extends FocusPanel {
 		enterRowEditingMode(newRow, null);
 	}
 	
-	void setColumnWidth(Column column, int widthPixels) {
-		if (widthPixels < 0)
-			return;
-		
-		column.headerTDElement.setAttribute("style", "");
-		
-		column.headerContents.setWidth(widthPixels + "px");
-		
-		int columnIndex = columns.indexOf(column);
-		
-		for (Row row : rowsByObjectID.values())
-			row.cells[columnIndex].getCellWidget().setWidth(widthPixels + "px");
-	}
-	
-	public void addColumn(String name, String width, Comparator<? super ObjectType> comparator, final IColumn<ObjectType> userColumn) {		
-		assert(rowsByObjectID.size() == 0);
-		
-		final int newColumnIndex = columns.size();
-		
-		final Widget headerContents = new HTML(name);
-		headerContents.addStyleName("headerContents");
-		
-		table.setWidget(0, newColumnIndex, headerContents);
-		Element headerTDElement = HTMLUtilities.getClosestContainingElementOfType(headerContents.getElement(), "td");
-		
-		FocusPanel contents = new ResizeableHeader(this, headerContents, new ResizeCallback() {
-			public int getWidth() { return headerContents.getOffsetWidth(); }
-			public void setWidth(int newWidthPixels) { setColumnWidth(columns.get(newColumnIndex), newWidthPixels); }
-		});
-		contents.addStyleName("header");
-		table.setWidget(0, newColumnIndex, contents);
-		 
-		if (width != null)
-			headerTDElement.setAttribute("style", "width: " + width);
-		
-		final Column column = new Column(width, headerContents, headerTDElement, comparator, userColumn);
-		
-		contents.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				sortByColumn(column);
-			}
-		});
-
-		SimplePanel fakeHeader = new SimplePanel();
-		SimplePanel fakeHeaderContents = new SimplePanel();
-		fakeHeader.add(fakeHeaderContents);
-		fakeHeaderContents.add(new HTML(name));
-		fakeHeader.addStyleName("header");
-		table.setWidget(1, newColumnIndex, fakeHeader);
-		
-		columns.add(column);
-	}
-	
-	void sortByColumn(Column column) {
+	void sortByColumn(ColumnMetadata column, boolean ascending) {
 		if (column.comparator != null) {
 			ArrayList<ObjectType> sortedList = new ArrayList<ObjectType>();
 			for (Row row : rowsByObjectID.values())
 				sortedList.add(row.object);
 			Collections.sort(sortedList, column.comparator);
+			
+			if (!ascending)
+				Collections.reverse(sortedList);
 	
 			for (Row row : this.rowsByObjectID.values())
 				row.trElement.removeFromParent();
@@ -430,35 +414,31 @@ public class OsmTable<ObjectType extends Identified> extends FocusPanel {
 	
 	public final Row addRow(ObjectType object) {
 		int newObjectIndex = rowsByObjectID.size();
-		int rowIndex = newObjectIndex + 2;
+		int rowIndex = newObjectIndex;
 
 		HTML placeholder = new HTML();
 		table.setWidget(rowIndex, 0, placeholder);
 		Element rowElement = HTMLUtilities.getClosestContainingElementOfType(placeholder.getElement(), "tr");
 
-		Cell[] cells = new Cell[columns.size()];
+		Cell[] cells = new Cell[columnMetadatas.size()];
 		
 		Row newRow = new Row(object, rowElement, cells);
 		rowsByObjectID.put(object.getID(), newRow);
 		
-		for (int colIndex = 0; colIndex < columns.size(); colIndex++) {
-			Column column = columns.get(colIndex);
-			Cell cell = column.userColumn.createCell(newRow);
+		for (int colIndex = 0; colIndex < columnMetadatas.size(); colIndex++) {
+			ColumnMetadata column = columnMetadatas.get(colIndex);
+			Cell cell = column.column.createCell(newRow);
 			cells[colIndex] = cell;
 		}
 		
 		enterRowReadingMode(newRow);
 		
-		for (int colIndex = 0; colIndex < columns.size(); colIndex++) {
-			Column column = columns.get(colIndex);
+		for (int colIndex = 0; colIndex < columnMetadatas.size(); colIndex++) {
 			Cell cell = cells[colIndex];
-			
 			assert(cell.getCellWidget() == cell.getCellWidget()); // make sure it returns the same instance every time
 			table.setWidget(rowIndex, colIndex, cell.getCellWidget());
-
-			Element td = HTMLUtilities.getClosestContainingElementOfType(cell.getCellWidget().getElement(), "td");
-			if (column.width != null)
-				td.setAttribute("style", td.getAttribute("style") + "; width: " + column.width);
+			
+			columnMetadatas.get(colIndex).header.refreshWidth();
 		}
 
 		return newRow;

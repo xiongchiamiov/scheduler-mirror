@@ -48,6 +48,10 @@ public class Day implements Serializable
       return this.num;
    }
    
+   public String getName() {
+	   return this.name;
+   }
+   
    public String toString ()
    {
       return this.name;

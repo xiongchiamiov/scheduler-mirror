@@ -423,7 +423,6 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	
 	@Override
 	public int exportCSV(){
-		
 		if (schedule == null) {
 			schedule = new Schedule(model.getInstructors(),
 					model.getLocations());
@@ -431,6 +430,6 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		
 		/** TODO replace new Date with export to CSV String */
 		//return CSVDownload.save(model.exportToCSV(schedule));
-		return CSVDownload.save(new Date().toString());
+		return CSVDownload.save(model.exportToCSV(schedule));
 	}
 }

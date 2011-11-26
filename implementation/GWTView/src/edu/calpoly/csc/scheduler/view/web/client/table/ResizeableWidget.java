@@ -7,11 +7,10 @@ import com.google.gwt.event.dom.client.MouseMoveHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class ResizeableHeader extends FocusPanel {
+class ResizeableWidget extends FlowPanel {
 	public interface ResizeCallback {
 		int getWidth();
 		void setWidth(int newWidthPixels);
@@ -19,43 +18,50 @@ public class ResizeableHeader extends FocusPanel {
 	
 	private boolean dragging = false;
 	private int dragAnchorX;
-	private int widthPixels;
-	
-	public ResizeableHeader(FocusPanel draggableArea, Widget contents, final ResizeCallback callback) {
-		FlowPanel panel = new FlowPanel();
-		add(panel);
+	private int desiredWidthPixels;
+	final ResizeCallback callback;
+
+	public ResizeableWidget(Widget draggableArea, Widget contents, final ResizeCallback callback) {
+		this.callback = callback;
 		
-		panel.add(contents);
+		add(contents);
 		
-		panel.addStyleName("resizeableHeader");
+		addStyleName("resizeable");
 		
 		SimplePanel resizer = new SimplePanel();
 		resizer.addStyleName("resizer");
-		panel.add(resizer);
+		add(resizer);
 		
-		this.addMouseDownHandler(new MouseDownHandler() {
+		resizer.addDomHandler(new MouseDownHandler() {
 			public void onMouseDown(MouseDownEvent event) {
 				dragging = true;
 				dragAnchorX = event.getClientX();
-				widthPixels = callback.getWidth();
+				desiredWidthPixels = callback.getWidth();
 				event.preventDefault();
 			}
-		});
+		}, MouseDownEvent.getType());
 		
-		draggableArea.addMouseMoveHandler(new MouseMoveHandler() {
+		draggableArea.addDomHandler(new MouseMoveHandler() {
 			public void onMouseMove(MouseMoveEvent event) {
 				if (dragging) {
 					int dragX = event.getClientX();
-					widthPixels += dragX - dragAnchorX;
+					desiredWidthPixels += dragX - dragAnchorX;
 					dragAnchorX = dragX;
-					callback.setWidth(widthPixels);
+					callback.setWidth(desiredWidthPixels);
+					System.out.println("Setting width to " + desiredWidthPixels);
+					refreshWidth();
 					event.preventDefault();
 				}
 			}
-		});
+		}, MouseMoveEvent.getType());
 		
-		draggableArea.addMouseUpHandler(new MouseUpHandler() {
+		draggableArea.addDomHandler(new MouseUpHandler() {
 			public void onMouseUp(MouseUpEvent event) { dragging = false; }
-		});
+		}, MouseUpEvent.getType());
+	}
+
+	void refreshWidth() {
+		System.out.println("refreshing width to " + callback.getWidth() + "px");
+		setWidth(callback.getWidth() + "px");
 	}
 }

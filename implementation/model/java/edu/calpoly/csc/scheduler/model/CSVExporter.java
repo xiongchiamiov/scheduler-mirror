@@ -58,9 +58,9 @@ public class CSVExporter {
 			index = instructors.size();
 			instructors.add(new String[] {
 					"instructor#" + index,
-					instructor.getUserID(),
 					instructor.getFirstName(),
 					instructor.getLastName(),
+					instructor.getUserID(),
 					Integer.toString(instructor.getMaxWTU()),
 					Integer.toString(instructor.getCurWtu()),
 					instructor.getOffice().getBuilding(),
@@ -140,21 +140,24 @@ public class CSVExporter {
 		return "item#" + index;
 	}
 	
+	private String compileTime(Time time) {
+		return time.getHour() + ":" + time.getMinute();
+	}
+	
 	private String compileTimeRange(TimeRange timeRange) {
-		return timeRange.toString();
+		return compileTime(timeRange.getS()) + " to " + compileTime(timeRange.getE());
 	}
 
 	private String compileWeek(Week week) {
-		return week.toString();
+		String result = new String();
+		for (Day day : week.getDays())
+			result += (result.equals("") ? "" : " ") + day.getName();
+		return result;
 	}
 
 	private String compileCourse(Course course) {
 		int index = courses.indexOf(course);
 		if (index < 0) {
-			String labID = "none";
-			if (course.getLab() != null)
-				labID = compileCourse(course.getLab());
-			
 			index = courses.size();
 			courses.add(new String[] {
 					"course#" + index,
@@ -168,19 +171,22 @@ public class CSVExporter {
 					Integer.toString(course.getLength()),
 					compileWeek(course.getDays()),
 					Integer.toString(course.getEnrollment()),
-					labID});
+					"course#" + courses.indexOf(course.getLab())});
 		}
 		
 		return "course#" + index;
 	}
-
+	
 	public String export(Model model, Schedule schedule) throws IOException {
 		for (Location location : model.getLocations())
 			compileLocation(location);
+		
 		for (Instructor instructor : model.getInstructors())
 			compileInstructor(instructor);
+		
 		for (Course course : model.getCourses())
 			compileCourse(course);
+		
 		for (ScheduleItem item : schedule.getItems())
 			compileScheduleItem(item);
 		

@@ -28,6 +28,7 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.client.IViewContents;
 import edu.calpoly.csc.scheduler.view.web.client.ViewFrame;
+import edu.calpoly.csc.scheduler.view.web.client.schedule.CSVButton;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.Pair;
 import edu.calpoly.csc.scheduler.view.web.shared.UserDataGWT;
@@ -101,7 +102,18 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 		}));
 		fileMenu.addItem(new MenuItem("Export", true, new Command() {
 			public void execute() {
-				Window.alert("Exporting is for pansies!!");
+				service.exportCSV(new AsyncCallback<Integer>() {
+					public void onFailure(Throwable caught) {
+						Window.alert("Error exporting to CSV: 1");
+					}
+					public void onSuccess(Integer result) {
+						if(result == null)
+							Window.alert("Error exporting to CSV: 2");
+						else
+							Window.Location.replace("export?"
+								+ "param" + "=" + result);
+					}
+				});
 			}
 		}));
 		

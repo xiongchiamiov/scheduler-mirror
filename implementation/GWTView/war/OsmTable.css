@@ -1,0 +1,61 @@
+.osmtable {
+	border-spacing: collapse;
+}
+
+.osmtable .stringcell.writing input {
+	padding: 0px;
+	width: 100%;
+}
+
+.osmtable .stringcell.reading div {
+	padding: 1px;
+	white-space: nowrap;
+}
+
+.osmtable .selectcell.reading div {
+	padding-right: 2.5em;
+}
+
+.osmtable tr:nth-child(odd) {
+	background-color: #F8FBFE;
+}
+
+.osmtable tr + tr:hover { background-color: #EEEEEE; }
+
+.osmtable td {
+	overflow: hidden;
+}
+
+
+.headers.floating {
+	opacity: .8;
+	position: fixed;
+	top: 0;
+}
+
+.headers .resizeable {
+	position: relative;
+	display: block;
+	border-right: 2px dotted #6F7277;
+}
+
+.headers .resizeable .resizer {
+	position: absolute;
+	top: 0px;
+	bottom: 0px;
+	right: -.4em;
+	width: .7em;
+	display: block;
+	cursor: col-resize;
+	z-index: 1;
+}
+
+.headers .resizeable .headerContents {
+	border-bottom: 2px solid #6F7277;
+	font-weight: bold;
+	color: #4B4A4A;
+	text-align: left;
+	text-shadow: 1px 1px 0 #DDDDFF;
+	padding: 3px .4em;
+	white-space: nowrap;
+}
