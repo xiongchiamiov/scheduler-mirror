@@ -641,6 +641,10 @@ public class SQLDB
          result = result.concat(where + " = ? and ");
       }
       // Remove last comma and "and "
+      /*
+       * TODO: Look into Google Guava for "Joiner.on" stuff to make creation
+       * of lists like this easier
+       */
       result = result.substring(0, result.length() - 5);
       return result;
    }

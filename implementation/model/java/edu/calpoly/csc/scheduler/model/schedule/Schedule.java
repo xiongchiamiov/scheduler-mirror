@@ -38,6 +38,10 @@ import edu.calpoly.csc.scheduler.model.schedule.CouldNotBeScheduledException.*;
  * the one who most wants to teach it no longer can (i.e. his WTU's are maxed), 
  * he'll be removed from consideration and more instructors will be tested.<br>
  * <br> 
+ * There is currently no "prioritization" of instructors. So, if one instructor
+ * consistently wants to teach everything, he'll gobble up courses until he's
+ * unavailable to teach anymore or his WTU's max out.<br>
+ * <br> 
  * If no Instructor can be found (no one is capable of teaching the Course, 
  * which can be b/c of preference or wtu reasons), the special {@link Staff} 
  * Instructor is used. This person always wants to teach a course and is always
@@ -113,6 +117,7 @@ import edu.calpoly.csc.scheduler.model.schedule.CouldNotBeScheduledException.*;
  * <br>
  * If a lecture section is scheduled and that lecture has a lab, the lab will
  * be automatically scheduled right after the lecture. <b>This is a bug!</b> See
+ * section 2.4 for an explanation and possible solutions. 
  * 
  * <h2>2.1: Teathered Labs</h2>
  * 
@@ -140,13 +145,16 @@ import edu.calpoly.csc.scheduler.model.schedule.CouldNotBeScheduledException.*;
  * lecture component first, a different rule is used: lab sections will be 
  * scheduled until the amount of lab enrollment available meets or exceeds the
  * enrollment available from one section of a lecture. For example, a lecture 
- * section with 90 students would get 3 sections of lab with 30 students.<br>
+ * section with 90 students would get 3 sections of a lab with 30 students.<br>
  * <br>
  * A possible solution to this would be to not auto-schedule labs for lectures
  * by enrollment numbers unless they are teathered. Thus, a lecture containing
  * an unteathered lab would not start up lab scheduling...that lab would only 
- * be scheduling once it was encountered in the list of courses passed into 
- * {@link #generate(Collection)}. 
+ * be scheduled once it was encountered in the list of courses passed into 
+ * {@link #generate(Collection)}.<br>
+ * <br>
+ * The above functionality represent a known bug. See section 2.4 for details 
+ * and possibles solutions. 
  * 
  * <h2>2.3: Tracking Lab Sections</h2> 
  * 
@@ -157,14 +165,15 @@ import edu.calpoly.csc.scheduler.model.schedule.CouldNotBeScheduledException.*;
  * 
  * Unteathered labs can be over-scheduled under the right conditions. 
  * 
- * <h3>Bug details</h3>
+ * <h3>2.4.1: Bug details</h3>
  * 
  * Imagine the following scenario:
  * 
  * <ul>
  *    <li>
  *       Lecture A (3 sections of 30 students) has Lab B (3 sections of 30 
- *       students). Note that the ratio of lectures to labs is 1:1
+ *       students). Note that the ratio of lectures to labs is 1:1. This is not
+ *       pertinent to this bug, but it makes the example easier to follow.
  *    </li>
  *    <li> 
  *       Lab B is unteathered.
@@ -182,9 +191,10 @@ import edu.calpoly.csc.scheduler.model.schedule.CouldNotBeScheduledException.*;
  *       A in the list of courses to schedule
  *    </li>
  *    <li>
- *       When A is scheduled, the algorith will see that has lab B and schedule
- *       a section of it. At this point, there will be 4 sections of B when it
- *       was only supposed to have 3.  
+ *       When A is scheduled, the algorithm will see that A has lab B and 
+ *       schedule a section of it. (It'll only schedule one B for every A b/c 
+ *       their ration of enrollments is 1:1). At this point, there will be 4 
+ *       sections of B when it was only supposed to have 3.  
  *    </li>
  * </ul>
  * 
@@ -192,7 +202,7 @@ import edu.calpoly.csc.scheduler.model.schedule.CouldNotBeScheduledException.*;
  * is b/c enrollment info is not stored between instances of the scheduling 
  * algorithm running. 
  * 
- * <h3>Possible Sol'n</h3>
+ * <h3>2.4.2: Possible Sol'n 1</h3>
  * 
  * Put in a HashMap, keyed by Course objects, which yield total enrollment the
  * course provides. (So, 3 sections of a course with 35 students would have 
@@ -204,10 +214,10 @@ import edu.calpoly.csc.scheduler.model.schedule.CouldNotBeScheduledException.*;
  *  (# lecture sections * lecture enrollment) == 
  *  (# lab sections * lab enrollment)"
  * </code>
- * 
+ * <br>
  * <br>
  * Basically, this sol'n requires a user to enter correct data. The
- * number of lab sections determined by how many sections of it are needed to 
+ * number of lab sections is determined by how many sections of it are needed to 
  * meet the enrollment requirements imposed by the lecture component.<br>
  * <br>
  * To implement this fix, the View will have to notify the user when the number
@@ -215,12 +225,108 @@ import edu.calpoly.csc.scheduler.model.schedule.CouldNotBeScheduledException.*;
  * of sections that'll be computed from the above rule. If that rule is always
  * enforced and the algorithm can rely on this, I believe this bug can be fixed. 
  * 
- * <h1>Further Design Suggestions/Options</h1>
+ * <h3>2.4.3: Possible Sol'n 2</h3>
  * 
- * Blah blah blah.
+ * Don't automatically schedule non-teathered labs when their lecture component
+ * is scheduled. Since teathered labs can't be dragged and dropped, this bug
+ * can't be replicated for them. If we then remove unteathered labs from auto-
+ * scheduling consideration, we'll cover up the bug.<br>
+ * <br>
+ * To implement this, you'll want to alter some of the functionality in 
+ * {@link #generate(Collection)}. In particular, when/if a lecture is schedule 
+ * and has a lab component, only schedule that lab if it's teathered.<br>
+ * <br>
+ * This is also probably the easier one to implement and the one I recommend.
+ * 
+ * <h1>3: Further Design Suggestions/Options</h1>
+ * 
+ * There are several things which still need to be done with the algorithm. Due
+ * to my upcoming graduation, I (Eric Liebowitz) can't get to these. But future
+ * development will probably require these features to be implemented at some
+ * point.<br>
+ * <br>
+ * Some of the things mentioned here are already implemented in code but not 
+ * included in the algorithm. In these cases, I'll detail where they need to be
+ * placed to fit best with this code.<br>
+ * <br>
+ * 
+ * <h2>3.1: Implementation of Schedule Rules</h2>
+ * 
+ * The requirements want to provide ways to apply global preferences to schedule
+ * generation. These are things like "5XX and 4XX classes can't overlap'",  
+ * "no classes taught after 4p on Friday", etc. There are two ways of looking at
+ * these rules: <i>preferences</i> and <i>constraints</i>; their difference is 
+ * in whether they can be violated or not.<br> 
+ * <br>
+ * Regardless of which kind they are, there are two places that will want to 
+ * consider these rules: {@link ScheduleItem} and {@link SiMap}. ScheduleItems
+ * can adjust their value if they violate a preference; the SiMap can weed out 
+ * ScheduleItem which are views as impossible (i.e. they violate a 
+ * <i>constraint</i>)
+ * 
+ * <h3>3.1.1: Rules as Preferences</h3>
+ * 
+ * Schedule <i>preferences</i> come with a "weight" attached to them. This 
+ * "weight" influences a ScheduleItem's value ({@link ScheduleItem.getValue()} 
+ * and {@link ScheduleItem.updateValue()}). If a ScheduleItem violates a 
+ * preference, its value is decreased and will be placed lower down in list of
+ * sorted ScheduleItems. (See {@link SiMap} for the implemenation of how 
+ * ScheduleItem's are sorted and selected).<br>
+ * <br>
+ * If this type of preference were to be implemented, the scheduling algorithm 
+ * would have to shift to a dynamic implementation. Since the weight for these
+ * preferences determine whether its worth it to violate them or not, a dynamic
+ * solution would allow the algorithm to weigh and measure whether it's worth
+ * it to violate a given preference. See section 3.2 for details on making the
+ * algorithm dynamic.
+ * 
+ * <h4>3.1.1.1: Implementing</h4>
+ * 
+ * For ScheduleItems to reflect their adherence to preferences, you'd need to 
+ * add some way for them to know about all the preferences their trying to 
+ * fit within. You could create some type of generic, Preference interface that
+ * all preferences implemented. Then you could pass some list of preferences to
+ * each ScheduleItem's constructor. With this in formation, the 
+ * {@link ScheduleItem#updateValue()} method could take into account all the 
+ * preferences looking down on it.
+ * 
+ * <h3>3.1.2: Rules as Constraints</h3>
+ * 
+ * This implemenation is a bit more straightforward: if a constraint is 
+ * violated, don't even consider it as a possiblity. Weight and value are no
+ * longer important to these.
+ * 
+ * <h4>3.1.2.1: Implementing</h4>
+ * 
+ * To incoporate these into the algorithm, you could add functionality to either
+ * the {@link ScheduleItem} or {@link SiMap} classes. In a ScheduleItem, 
+ * violation of a constraint would immediately puts its value to 
+ * {@link ScheduleItem#IMPOSSIBLE}. In the SiMap, a violated constraint would 
+ * prevent an item from being added within its {@link SiMap#put(ScheduleItem)}.
+ * 
+ * <h2>3.2: How to consider rules</h2>
+ * 
+ * Whether they're preferences or constraints, there needs to be some way for 
+ * ScheduleItems and the SiMap to find them and consider them for any of their 
+ * computations. This could be most easily done by adding some kind of list
+ * to their constructors or providing getters/setters for the appropriate 
+ * rule lists in either of them.<br>
+ * <br>
+ * The bigger problem will be defining the base interface/abstract class from 
+ * which all schedule preferences/constraints will implement/extend.
+ * 
+ * <h2>3.2: Shift from greedy to dynamic algorithm</h2>
+ * 
+ * This task isn't actually as daunting as it seems. In fact, I'm not sure it
+ * constitutes a fully "dynamic" solution. But it's a shift what's already done,
+ * and it considers all possibilities as it proceeds.<br>
+ * <br>
+ * To consider all possibilities, the algorithm has to drop how it chooses a 
+ * single instructor to schedule for. Instead, <i>all</i> instructors must be
+ * considered. For each instructor
  * 
  * @author Eric Liebowitz
- * @version Nov 14, 2011
+ * @version Nov 19, 2011
  */
 public class Schedule extends DbData implements Serializable
 {
@@ -1245,6 +1351,9 @@ public class Schedule extends DbData implements Serializable
       return oldBounds;
    }
 
+   /**
+    * @see edu.calpoly.csc.scheduler.model.db.DbData#verify()
+    */
    public void verify ()
    {
       if (getScheduleDBId() ==  null)

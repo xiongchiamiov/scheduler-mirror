@@ -84,7 +84,7 @@ public class ScheduleItem implements Serializable, Cloneable,
    /**
     * Builds an empty Schedule Item. None of its fields will be initialized.
     */
-   protected ScheduleItem () { }
+   public ScheduleItem () { }
    
    /**
     * Creates a new ScheduleItem whose fields are identical to a given 
