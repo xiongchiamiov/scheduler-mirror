@@ -1,8 +1,7 @@
 package edu.calpoly.csc.scheduler.model;
 
 import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -24,23 +23,26 @@ import edu.calpoly.csc.scheduler.model.db.idb.TimePreference;
 import edu.calpoly.csc.scheduler.model.db.ldb.Location;
 import edu.calpoly.csc.scheduler.model.db.ldb.Location.ProvidedEquipment;
 import edu.calpoly.csc.scheduler.model.schedule.Day;
+import edu.calpoly.csc.scheduler.model.schedule.Schedule;
 import edu.calpoly.csc.scheduler.model.schedule.ScheduleItem;
 import edu.calpoly.csc.scheduler.model.schedule.Week;
 
 public class CSVImporter {
-	List<Course> courses;
-	List<Location> locations;
-	List<HashMap<Course, Integer>> instructorsCoursePrefs;
-	List<HashMap<Day, LinkedHashMap<Time, TimePreference>>> instructorsTimePrefs;
-	List<Instructor> instructors;
-	List<ScheduleItem> scheduleItems;
+	List<Course> courses = new ArrayList<Course>();
+	List<Location> locations = new ArrayList<Location>();
+	List<HashMap<Course, Integer>> instructorsCoursePrefs = new ArrayList<HashMap<Course, Integer>>();
+	List<HashMap<Day, LinkedHashMap<Time, TimePreference>>> instructorsTimePrefs = new ArrayList<HashMap<Day, LinkedHashMap<Time, TimePreference>>>();
+	List<Instructor> instructors = new ArrayList<Instructor>();
+	List<ScheduleItem> scheduleItems = new ArrayList<ScheduleItem>();
 	
-	public void read(Model model, String value) throws IOException {
-		Reader stringReader = new StringReader(value);
-		CsvReader reader = new CsvReader(stringReader);
+	public Schedule read(Model model, String value) throws IOException {
+		System.out.println("In read!");
+		
+		CsvReader reader = CsvReader.parse(value);
 		
 		Collection<List<String>> lines = new LinkedList<List<String>>();
-		for (String[] line; (line = reader.getValues()) != null; ) {
+		while (reader.readRecord()) {
+			String[] line = reader.getValues();
 			if (line.length == 0)
 				continue;
 			if (line.length == 1 && line[0].trim().equals(""))
@@ -50,23 +52,40 @@ public class CSVImporter {
 		
 		Iterator<List<String>> linesIterator = lines.iterator();
 		
-		readSchedule(linesIterator);
+		for (String comment : CSVStructure.TOP_COMMENTS)
+			skipBlanksUntilComment(linesIterator, comment);
+		
+		int derp = 0;
+		System.out.println(derp++);
+		
+		String name = readSchedule(linesIterator);
+		System.out.println(derp++);
 		
 		readCourses(linesIterator);
+		System.out.println(derp++);
 		
 		readLocations(linesIterator);
+		System.out.println(derp++);
 		
 		readAllInstructorsCoursePrefs(linesIterator);
+		System.out.println(derp++);
 		
 		readAllInstructorsTimePrefs(linesIterator);
+		System.out.println(derp++);
 		
 		readInstructors(linesIterator);
+		System.out.println(derp++);
 		
 		readScheduleItems(linesIterator);
+		System.out.println(derp++);
+		
+		Schedule result = new Schedule(instructors, locations);
+		result.setName(name);
+		return result;
 	}
 	
 	private HashMap<Course, Integer> readSingleInstructorsCoursePrefs(Iterator<List<String>> linesIterator) {
-		skipUntilComment(linesIterator, CSVStructure.INSTRUCTORS_COURSE_PREFS_MARKER);
+		skipBlanksUntilComment(linesIterator, CSVStructure.INSTRUCTOR_COURSE_PREFS_MARKER);
 
 		HashMap<Course, Integer> instructorCoursePrefs = new HashMap<Course, Integer>();
 		
@@ -74,7 +93,7 @@ public class CSVImporter {
 			assert(linesIterator.hasNext());
 
 			List<String> cells = linesIterator.next();
-			if (cells.size() == 1 && cells.get(0).equals(CSVStructure.INSTRUCTOR_COURSE_PREFS_END_MARKER))
+			if (cells.size() == 1 && cells.get(0).equals("#" + CSVStructure.INSTRUCTOR_COURSE_PREFS_END_MARKER))
 				break;
 
 			Iterator<String> cellI = cells.iterator();
@@ -83,19 +102,17 @@ public class CSVImporter {
 			instructorCoursePrefs.put(course, desire);
 		}
 		
-		instructorsCoursePrefs.add(instructorCoursePrefs);
-		
 		return instructorCoursePrefs;
 	}
 
 	private void readAllInstructorsCoursePrefs(Iterator<List<String>> linesIterator) {
-		skipUntilComment(linesIterator, CSVStructure.INSTRUCTORS_COURSE_PREFS_MARKER);
+		skipBlanksUntilComment(linesIterator, CSVStructure.INSTRUCTORS_COURSE_PREFS_MARKER);
 		
 		while (true) {
 			assert(linesIterator.hasNext());
 
 			List<String> cells = linesIterator.next();
-			if (cells.size() == 1 && cells.get(0).equals(CSVStructure.INSTRUCTORS_COURSE_PREFS_END_MARKER))
+			if (cells.size() == 1 && cells.get(0).equals("#" + CSVStructure.INSTRUCTORS_COURSE_PREFS_END_MARKER))
 				break;
 
 			Iterator<String> cellI = cells.iterator();
@@ -108,16 +125,17 @@ public class CSVImporter {
 	}
 	
 	private void readAllInstructorsTimePrefs(Iterator<List<String>> linesIterator) {
-		skipUntilComment(linesIterator, CSVStructure.INSTRUCTORS_COURSE_PREFS_MARKER);
+		skipBlanksUntilComment(linesIterator, CSVStructure.ALL_INSTRUCTORS_TIME_PREFS_MARKER);
 		
 		while (true) {
 			assert(linesIterator.hasNext());
 
 			List<String> cells = linesIterator.next();
-			if (cells.size() == 1 && cells.get(0).equals(CSVStructure.INSTRUCTORS_COURSE_PREFS_END_MARKER))
+			if (cells.size() == 1 && cells.get(0).equals("#" + CSVStructure.ALL_INSTRUCTORS_TIME_PREFS_END_MARKER))
 				break;
 
 			int instructorTimePrefIndex = instructorsTimePrefs.size();
+			assert(extractIndex("timePrefs#", cells.get(0)) == instructorTimePrefIndex);
 			
 			instructorsTimePrefs.add(readSingleInstructorsTimePrefs(instructorTimePrefIndex, linesIterator));
 		}
@@ -125,19 +143,17 @@ public class CSVImporter {
 
 	private HashMap<Day, LinkedHashMap<Time, TimePreference>> readSingleInstructorsTimePrefs(
 			int instructorTimePrefIndex, Iterator<List<String>> linesIterator) {
-		skipUntilComment(linesIterator, CSVStructure.INSTRUCTOR_TIME_PREFS_MARKER);
-		
-		List<String> indexLine = linesIterator.next();
-		assert(extractIndex("timePrefs#", indexLine.get(0)) == instructorTimePrefIndex);
+
+		skipBlanksUntilComment(linesIterator, CSVStructure.SINGLE_INSTRUCTOR_TIME_PREFS_MARKER);
 
 		List<String> headersLine = linesIterator.next();
 		Iterator<String> headerCellI = headersLine.iterator();
-		assert(headerCellI.next() == "Time");
+		assert(headerCellI.next().equals("Time"));
 		
 		HashMap<Day, LinkedHashMap<Time, TimePreference>> instructorTimePrefs = new HashMap<Day, LinkedHashMap<Time, TimePreference>>();
 
 		for (Day day : Day.ALL_DAYS) {
-			assert(headerCellI.next() == day.getName());
+			assert(headerCellI.next().equals(day.getName()));
 			instructorTimePrefs.put(day, new LinkedHashMap<Time, TimePreference>());
 		}
 
@@ -156,6 +172,8 @@ public class CSVImporter {
 			}
 		}
 
+		skipBlanksUntilComment(linesIterator, CSVStructure.SINGLE_INSTRUCTOR_TIME_PREFS_END_MARKER);
+
 		return instructorTimePrefs;
 	}
 
@@ -167,7 +185,7 @@ public class CSVImporter {
 	}
 	
 	void readCourses(Iterator<List<String>> linesIterator) {
-		skipUntilComment(linesIterator, CSVStructure.COURSES_MARKER);
+		skipBlanksUntilComment(linesIterator, CSVStructure.COURSES_MARKER);
 
 		HashMap<Integer, Integer> labIndexByCourseIndex = new HashMap<Integer, Integer>();
 		HashMap<Integer, Integer> componentIndexByLabIndex = new HashMap<Integer, Integer>();
@@ -176,7 +194,7 @@ public class CSVImporter {
 			assert(linesIterator.hasNext());
 			
 			List<String> cells = linesIterator.next();
-			if (cells.size() == 1 && cells.get(0).equals(CSVStructure.LOCATIONS_END_MARKER))
+			if (cells.size() == 1 && cells.get(0).equals("#" + CSVStructure.COURSES_END_MARKER))
 				break;
 	
 			Iterator<String> cellI = cells.iterator();
@@ -186,7 +204,7 @@ public class CSVImporter {
 			
 			CourseType type = CourseType.valueOf(cellI.next());
 			Course course = (type == CourseType.LEC ? new Course() : new Lab());
-			course.setType(cellI.next());
+			course.setType(type);
 			
 			course.setName(cellI.next());
 			course.setCatalogNum(Integer.parseInt(cellI.next()));
@@ -199,8 +217,10 @@ public class CSVImporter {
 			course.setEnrollment(Integer.parseInt(cellI.next()));
 			
 			Integer labIndex = extractIndex("course#", cellI.next());
-			if (labIndex != null)
+			if (labIndex != null) {
+				assert(labIndex != -1);
 				labIndexByCourseIndex.put(index, labIndex);
+			}
 			
 			if (course instanceof Lab) {
 				Lab lab = (Lab)course;
@@ -248,11 +268,11 @@ public class CSVImporter {
 	}
 
 	void readInstructors(Iterator<List<String>> linesIterator) {
-		skipUntilComment(linesIterator, CSVStructure.INSTRUCTORS_MARKER);
+		skipBlanksUntilComment(linesIterator, CSVStructure.INSTRUCTORS_MARKER);
 		while (true) {
 			assert(linesIterator.hasNext());
 			List<String> cells = linesIterator.next();
-			if (cells.size() == 1 && cells.get(0).equals(CSVStructure.INSTRUCTORS_END_MARKER))
+			if (cells.size() == 1 && cells.get(0).equals("#" + CSVStructure.INSTRUCTORS_END_MARKER))
 				return;
 
 			Iterator<String> cellI = cells.iterator();
@@ -283,17 +303,19 @@ public class CSVImporter {
 	}
 
 	void readLocations(Iterator<List<String>> linesIterator) {
-		skipUntilComment(linesIterator, CSVStructure.LOCATIONS_MARKER);
+		skipBlanksUntilComment(linesIterator, CSVStructure.LOCATIONS_MARKER);
 		while (true) {
 			assert(linesIterator.hasNext());
 			List<String> cells = linesIterator.next();
-			if (cells.size() == 1 && cells.get(0).equals(CSVStructure.LOCATIONS_END_MARKER))
+			if (cells.size() == 1 && cells.get(0).equals("#" + CSVStructure.LOCATIONS_END_MARKER))
 				return;
+			
+			System.out.println("Reading line " + cells);
 
 			Iterator<String> cellI = cells.iterator();
 
-			int index = instructors.size();
-			assert(extractIndex("instructor#", cellI.next()) == index);
+			int index = locations.size();
+			assert(extractIndex("location#", cellI.next()) == index);
 			
 			Location location = new Location();
 			location.setBuilding(cellI.next());
@@ -313,29 +335,32 @@ public class CSVImporter {
 		}
 	}
 	
-	void skipUntilComment(Iterator<List<String>> lineIterator, String comment) {
+	void skipBlanksUntilComment(Iterator<List<String>> lineIterator, String comment) {
 		while (lineIterator.hasNext()) {
 			List<String> line = lineIterator.next();
-			if (line.size() == 1 && line.get(0).equals(comment))
-				return;
+			if (line.size() == 0)
+				continue;
+			else if (line.size() == 1 && line.get(0).equals("#" + comment))
+				break;
+			else
+				assert(false);
 		}
-		
-		assert(false);
 	}
 	
-	void readSchedule(Iterator<List<String>> lineIterator) {
-		skipUntilComment(lineIterator, CSVStructure.SCHEDULE_MARKER);
+	String readSchedule(Iterator<List<String>> lineIterator) {
+		skipBlanksUntilComment(lineIterator, CSVStructure.SCHEDULE_MARKER);
 		List<String> line = lineIterator.next();
-		assert(line.size() == 1 && line.get(0).equals("NameHere"));
-		skipUntilComment(lineIterator, CSVStructure.SCHEDULE_END_MARKER);
+		String name = line.get(0);
+		skipBlanksUntilComment(lineIterator, CSVStructure.SCHEDULE_END_MARKER);
+		return name;
 	}
 
 	void readScheduleItems(Iterator<List<String>> linesIterator) {
-		skipUntilComment(linesIterator, CSVStructure.LOCATIONS_MARKER);
+		skipBlanksUntilComment(linesIterator, CSVStructure.SCHEDULE_ITEMS_MARKER);
 		while (true) {
 			assert(linesIterator.hasNext());
 			List<String> cells = linesIterator.next();
-			if (cells.size() == 1 && cells.get(0).equals(CSVStructure.LOCATIONS_END_MARKER))
+			if (cells.size() == 1 && cells.get(0).equals("#" + CSVStructure.SCHEDULE_ITEMS_END_MARKER))
 				return;
 
 			Iterator<String> cellI = cells.iterator();

@@ -1365,4 +1365,15 @@ public class Schedule extends DbData implements Serializable
          throw new NullDataException();
       }
    }
+   
+   @Override
+	public boolean equals(Object obj) {
+	   if (!(obj instanceof Schedule))
+		   return false;
+	   Schedule that = (Schedule)obj;
+	   
+	   // TODO: leboy, please fill these in
+	   
+	   return this.name.equals(that.name);
+	}
 }
