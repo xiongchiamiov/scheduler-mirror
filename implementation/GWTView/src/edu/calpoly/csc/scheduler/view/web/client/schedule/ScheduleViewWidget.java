@@ -192,6 +192,8 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
   ArrayList<String> filtCourses = filtersDialog.getCourses();
   ArrayList<String> filtRooms = filtersDialog.getRooms();
   ArrayList<Integer> filtDays = filtersDialog.getDays();
+  ArrayList<Integer> filtTimes = filtersDialog.getTimes();
+
   for (ScheduleItemGWT item : scheduleItems)
   {
    if (filtInstructors.contains(item.getProfessor())
@@ -199,13 +201,42 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
      && filtRooms.contains(item.getRoom())
      && item.getSchdItemText().contains(search))
    {
-    scheduleGrid.placeScheduleItem(item, filtDays);
+	if(isInFilteredTimeRange(item, filtTimes))
+	{
+     scheduleGrid.placeScheduleItem(item, filtDays);
+	}
    }
   }
   registerDrops();
  }
 
- /**
+ private boolean isInFilteredTimeRange(ScheduleItemGWT item,
+		ArrayList<Integer> filtTimes) 
+ {
+  int startTimeRow = 
+   ScheduleTable.getRowFromTime(item.getStartTimeHour(), 
+    item.startsAfterHalf());
+  int endTimeRow = 
+   ScheduleTable.getRowFromTime(item.getEndTimeHour(), 
+	item.endsAfterHalf()) - 1;
+  
+  if(filtTimes.isEmpty())
+  {
+   return true;
+  }
+  
+  for(Integer timeRow : filtTimes)
+  {
+   if(timeRow >= startTimeRow && timeRow <= endTimeRow)
+   {
+	return true;
+   }
+  }
+  
+  return false;
+ }
+
+/**
   * Contains the method called when the "Generate Schedule" button is clicked.
   */
  private class GenerateScheduleClickHandler implements ClickHandler

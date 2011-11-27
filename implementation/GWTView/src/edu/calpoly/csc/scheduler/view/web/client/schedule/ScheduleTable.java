@@ -19,6 +19,11 @@ public class ScheduleTable extends FlexTable
  // For each day, this variable holds the number of columns spanned by that
  // day
  private ArrayList<Integer> dayColumnSpans;
+ public static String times[] = { "7:00am", "7:30am", "8:00am", "8:30am", "9:00am",
+   "9:30am", "10:00am", "10:30am", "11:00am", "11:30am", "12:00pm", "12:30pm",
+   "1:00pm", "1:30pm", "2:00pm", "2:30pm", "3:00pm", "3:30pm", "4:00pm",
+   "4:30pm", "5:00pm", "5:30pm", "6:00pm", "6:30pm", "7:00pm", "7:30pm",
+   "8:00pm", "8:30pm", "9:00pm", "9:30pm" };
 
  public ScheduleTable(ScheduleViewWidget scheduleController)
  {
@@ -45,11 +50,6 @@ public class ScheduleTable extends FlexTable
   */
  void setTimes()
  {
-  String times[] = { "7:00am", "7:30am", "8:00am", "8:30am", "9:00am",
-    "9:30am", "10:00am", "10:30am", "11:00am", "11:30am", "12:00pm", "12:30pm",
-    "1:00pm", "1:30pm", "2:00pm", "2:30pm", "3:00pm", "3:30pm", "4:00pm",
-    "4:30pm", "5:00pm", "5:30pm", "6:00pm", "6:30pm", "7:00pm", "7:30pm",
-    "8:00pm", "8:30pm", "9:00pm", "9:30pm" };
   int i;
 
   for (i = 0; i < times.length; i++)
@@ -153,7 +153,7 @@ public class ScheduleTable extends FlexTable
   *         Whether the time goes over a half hour
   * @return The row corresponding to the provided time
   */
- private int getRowFromTime(int hour, boolean overHalfHour)
+ public static int getRowFromTime(int hour, boolean overHalfHour)
  {
   int halfHourRow = 0;
   if (overHalfHour)
