@@ -47,11 +47,11 @@ public class DualListBox extends AbsolutePanel
   scheduleController = schedule;
   HorizontalPanel horizontalPanel = new HorizontalPanel();
   add(horizontalPanel);
-  // horizontalPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+  horizontalPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 
   VerticalPanel verticalPanel = new VerticalPanel();
   // verticalPanel.addStyleName(CSS_DEMO_DUAL_LIST_EXAMPLE_CENTER);
-  verticalPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+  //verticalPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
   VerticalPanel availablePanel = new VerticalPanel();
   VerticalPanel includedPanel = new VerticalPanel();
 
@@ -66,8 +66,8 @@ public class DualListBox extends AbsolutePanel
   availablePanel.add(left);
   includedPanel.add(new HTML("<b>Courses to Schedule</b>"));
   includedPanel.add(right);
-  //horizontalPanel.add(availablePanel);
-  //horizontalPanel.add(verticalPanel);
+  horizontalPanel.add(availablePanel);
+  horizontalPanel.add(verticalPanel);
   horizontalPanel.add(includedPanel);
 
   oneRight = new Button("&gt;");
@@ -121,7 +121,7 @@ public class DualListBox extends AbsolutePanel
 
   leftDropController = new ListBoxDropController(left, schedule);
   rightDropController = new ListBoxDropController(right, schedule);
-  //dragController.registerDropController(leftDropController);
+  dragController.registerDropController(leftDropController);
   dragController.registerDropController(rightDropController);
  }
 
@@ -169,7 +169,7 @@ public class DualListBox extends AbsolutePanel
 
  public void reregisterBoxDrops()
  {
-  //dragController.registerDropController(leftDropController);
+  dragController.registerDropController(leftDropController);
   dragController.registerDropController(rightDropController);
  }
 

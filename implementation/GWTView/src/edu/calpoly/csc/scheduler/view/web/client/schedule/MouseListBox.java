@@ -1,5 +1,6 @@
 package edu.calpoly.csc.scheduler.view.web.client.schedule;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
@@ -200,12 +201,10 @@ class MouseListBox extends Composite
  {
   int count = 0;
   int itemIndex = contains(new CourseListItem(course, true));
-
   if (itemIndex >= 0)
   {
    return ((CourseListItem) getWidget(itemIndex)).getCourse().getNumSections();
   }
-
   return count;
  }
 

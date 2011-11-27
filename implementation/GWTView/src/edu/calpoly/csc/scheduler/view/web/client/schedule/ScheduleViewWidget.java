@@ -96,7 +96,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
     dualListBoxCourses.reregisterBoxDrops();
    }
   }
-  //dragController.registerDropController(dualListBoxCourses.getAvailableDropController());
+  dragController.registerDropController(dualListBoxCourses.getAvailableDropController());
   dragController.registerDropController(dualListBoxCourses.getIncludedDropController());  
  }
 
@@ -297,7 +297,6 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
      for (CourseGWT course : result)
      {
       dualListBoxCourses.addLeft(new CourseListItem(course, false));
-      dualListBoxCourses.addRight(new CourseListItem(course, true));
      }
      registerDrops();
     }
@@ -428,15 +427,13 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
      {
       CourseGWT courseHolder;
       int sectionsIncluded, itemIndex;
-
+      
       // If this course was dragged from a course list
       if (!inSchedule)
       {
-       courseHolder = new CourseGWT();
-       courseHolder.setDept(scheduleItem.getDept());
-       courseHolder.setCatalogNum(scheduleItem.getCatalogNum());
-       sectionsIncluded = includedListBox.getSectionsInBox(courseHolder);
-       itemIndex = includedListBox.contains(new CourseListItem(courseHolder, true));
+          courseHolder = scheduleItem.getCourse();
+          sectionsIncluded = includedListBox.getSectionsInBox(courseHolder);
+          itemIndex = includedListBox.contains(new CourseListItem(courseHolder, true));
        // If the included list box contains sections of this course
        if (itemIndex >= 0)
        {

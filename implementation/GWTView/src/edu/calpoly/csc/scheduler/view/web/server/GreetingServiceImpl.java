@@ -39,7 +39,6 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 
 	private Model model;
 	private Schedule schedule;
-	private HashMap<String, Course> availableCourses;
 	private HashMap<String, ScheduleItem> scheduleItems;
 
 	@Override
@@ -182,14 +181,11 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		Course courseWithSections;
 
 		assert (model != null);
-		assert(availableCourses != null);
 		scheduleItems = new HashMap<String, ScheduleItem>();
 
 		List<Course> coursesToGenerate = new LinkedList<Course>();
 		for (CourseGWT course : courses) {
-			courseWithSections = new Course(availableCourses.get(course
-					.getDept() + course.getCatalogNum()));
-			courseWithSections.setNumOfSections(course.getNumSections());
+			courseWithSections = Conversion.fromGWT(course);
 			coursesToGenerate.add(courseWithSections);
 		}
 		// TODO: fix this hack.
@@ -208,12 +204,20 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		ArrayList<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
 
 		for (ScheduleItem item : schedule.getItems()) {
+			if(item.getCourse().getDbid() == null)
+			{
+			 item.getCourse().setDbid(1);
+			}
 			gwtItems.add(Conversion.toGWT(item, false));
 			scheduleItems.put(item.getCourse().getDept()
 					+ item.getCourse().getCatalogNum() + item.getSection(),
 					item);
 		}
 		for (ScheduleItem item : schedule.getDirtyList()) {
+			if(item.getCourse().getDbid() == null)
+			{
+			 item.getCourse().setDbid(1);
+			}
 			gwtItems.add(Conversion.toGWT(item, true));
 			scheduleItems.put(item.getCourse().getDept()
 					+ item.getCourse().getCatalogNum() + item.getSection(),
@@ -272,21 +276,32 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 				schedule.addConflictingItem(e.getSi());
 			}
 		} else {
-			course = availableCourses.get(scheduleItem.getDept()
-					+ scheduleItem.getCatalogNum());
-			course.setNumOfSections(1);
+			course = Conversion.fromGWT(scheduleItem.getCourse());
+			
+			if(course.getScheduleDBId() == null)
+			{
+			 course.setScheduleDBId(1);
+			}
 			schedule.genItem(course, daysInWeek, startTime);
 		}
 
 		scheduleItems = new HashMap<String, ScheduleItem>();
 
 		for (ScheduleItem item : schedule.getItems()) {
+			if(item.getCourse().getDbid() == null)
+			{
+			 item.getCourse().setDbid(1);
+			}
 			gwtItems.add(Conversion.toGWT(item, false));
 			scheduleItems.put(item.getCourse().getDept()
 					+ item.getCourse().getCatalogNum() + item.getSection(),
 					item);
 		}
 		for (ScheduleItem item : schedule.getDirtyList()) {
+			if(item.getCourse().getDbid() == null)
+			{
+			 item.getCourse().setDbid(1);
+			}
 			gwtItems.add(Conversion.toGWT(item, true));
 			scheduleItems.put(item.getCourse().getDept()
 					+ item.getCourse().getCatalogNum() + item.getSection(),
@@ -400,10 +415,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 
 	@Override
 	public ArrayList<CourseGWT> getCourses() throws IllegalArgumentException {
-		availableCourses = new HashMap<String, Course>();
 		ArrayList<CourseGWT> results = new ArrayList<CourseGWT>();
 		for (Course course : model.getCourses()) {
-			availableCourses.put(course.getDept() + course.getCatalogNum(), course);
 			results.add(Conversion.toGWT(course));
 		}
 		return results;

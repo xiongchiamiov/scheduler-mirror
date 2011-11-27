@@ -31,9 +31,7 @@ public class ScheduleCellDropController extends SimpleDropController
  {
   ScheduleItemHTML droppedItem;
   ScheduleItemGWT courseHolder;
-  String dept;
-  int catalogNum, widgetIndex, sectionsIncluded;
-  CourseGWT courseDropped;
+  CourseGWT courseDropped, oneSectionCourse;
   boolean fromIncluded;
 
   super.onDrop(context);
@@ -54,9 +52,9 @@ public class ScheduleCellDropController extends SimpleDropController
     return;
    }
 
-   dept = courseDropped.getDept();
-   catalogNum = courseDropped.getCatalogNum();
-   courseHolder = new ScheduleItemGWT(null, "", "", dept, catalogNum, 1,
+   oneSectionCourse = new CourseGWT(courseDropped);
+   oneSectionCourse.setNumSections(1);
+   courseHolder = new ScheduleItemGWT(oneSectionCourse, "", "", "", 0, 1,
      new ArrayList<Integer>(), 0, 0, 0, 0, "", false);
    fromIncluded = !((MouseListBox) context.draggable.getParent().getParent())
      .isAvailableBox();
