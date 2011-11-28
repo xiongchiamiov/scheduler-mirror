@@ -189,21 +189,21 @@ public class ScheduleItem implements Serializable, Cloneable,
    /**
     * Compares to ScheduleItem's. 
     *
-    * @param s The object to compare with "this"
+    * @param that The object to compare with "this"
     *
     * @return true if all the fields in "s" are equal to those in "this". False
     *         otherwise. Note that the "locked" value is not incorporated in
     *         this check.
     */
-   public boolean equals (ScheduleItem s)
+   public boolean equals (ScheduleItem that)
    {
-      return (this.i.equals(s.i)          &&
-              this.c.equals(s.c)          &&
-              this.location.equals(s.location)          &&
-              this.section == s.section   &&
-              this.days.equals(s.days)    &&
-              this.tr.equals(s.getTimeRange()) &&
-              this.labs.equals(s.labs));
+      return (this.getInstructor().equals(that.getInstructor())   &&
+              this.getCourse().equals(that.getCourse())           &&
+              this.getLocation().equals(that.getLocation())       &&
+              this.getSection() == that.getSection()              &&
+              this.getDays().equals(that.getDays())               &&
+              this.getTimeRange().equals(that.getTimeRange())     &&
+              this.getLabs().equals(that.getLabs()));
    }
 
    /** 

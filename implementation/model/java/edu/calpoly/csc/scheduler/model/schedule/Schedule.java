@@ -1144,6 +1144,67 @@ public class Schedule extends DbData implements Serializable
       return findInstructor(c, null);
    }
 
+   /**
+    * Compares two schedules for equality. Two schedules are considered equal
+    * if <b>all</b> the following tenets are met:
+    * 
+    * <ul>
+    *    <li>Their names are equal</li>
+    *    <li>Their depts are equal</li>
+    *    <li>Their lists of courses, instructors, and locations are the same 
+    *    size and contain the same elements (though not necessarily in the same
+    *    order</li>
+    *    <li>Their lists of ScheduleItem objects are of the same size and 
+    *    contain the same elements (order is irrelevant)</li>
+    *    <li>Their list of "dirty" ScheduleItem objects are of the same size and
+    *    contain the same elements (order is irrelevant)</li>
+    * </ul>
+    *    
+    * @param that Schedule to compare this one to
+    * 
+    * @return true if the <b>all</b> the above conditions are met. False 
+    *         otherwise
+    * 
+    * @see areEqivalentLists(Collection, Collection)
+    */
+   public boolean equals (Schedule that)
+   {
+      boolean r = true;
+
+      r &= this.getName().equals(that.getName());
+      r &= this.getDept().equals(that.getDept());
+      r &= areEquivalentLists(this.getcSourceList(), that.getcSourceList());
+      r &= areEquivalentLists(this.getiSourceList(), that.getiSourceList());
+      r &= areEquivalentLists(this.getlSourceList(), that.getlSourceList());
+      r &= areEquivalentLists(this.getItems(), that.getItems());
+      r &= areEquivalentLists(this.getDirtyList(), that.getDirtyList());
+
+      return r;
+   }
+   
+   /**
+    * Tests whether two collections are "<i>equivalent</i>". Two collections
+    * c1 and c2 are equivalent if their size is the same and c2 contains all the
+    * elements in c1. Order is not important.  
+    *
+    * @param c1 First collection to compare
+    * @param c2 Second collection to compare with c1
+    * 
+    * @return if (c1.size() == c2.size()) and all the elements in c1 are in c2
+    */
+   private boolean areEquivalentLists (Collection c1, Collection c2)
+   {
+      boolean r = true;
+      
+      r &= (c1.size() == c2.size());
+      for (Object o: c1)
+      {
+         r &= c2.contains(o);
+      }
+      
+      return r;
+   }
+   
    /***********************
     * GETTERS & SETTERS *
     ***********************/
@@ -1365,15 +1426,4 @@ public class Schedule extends DbData implements Serializable
          throw new NullDataException();
       }
    }
-   
-   @Override
-	public boolean equals(Object obj) {
-	   if (!(obj instanceof Schedule))
-		   return false;
-	   Schedule that = (Schedule)obj;
-	   
-	   // TODO: leboy, please fill these in
-	   
-	   return this.name.equals(that.name);
-	}
 }
