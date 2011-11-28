@@ -20,36 +20,59 @@ schedule, using an existing schedule as a starting template, or modifying an exi
 <p align="center">Figure 2.2.1.1 Basic Schedule Creation New Schedule</p>
 <hr>
 
-<p>The left-most table consists of a list of available <em>Department Courses</em>. The user can drag courses from the <em>Department Courses</em>
-table directly onto their preferred time slot on the calendar. If the user prefers that the Scheduling program allocates the course days and
-times automatically, they can either double-click or drag the course onto the <em>Auto-Generate Courses</em> table on the right. <a href="#Figure 2.2.1.2">Figure 2.2.1.2</a> shows the screen after a user has added courses to the Auto-Generate Courses list.</p>
+<p>The left-most list consists of a list of available <em>Department Courses</em>. The user can drag courses from the <em>Department Courses</em>
+list directly onto their preferred time slot on the calendar. If the user prefers that the Scheduling program allocates the course days and
+times automatically, they can either double-click or drag the course onto the <em>Courses to schedule</em> list on the right. <a href="#Figure 2.2.1.2">Figure 2.2.1.2</a> 
+shows the screen after a user has added one section of CHEM 124 lecture and CHEM 124 lab to the <em>Courses to schedule</em> list.</p>
 <hr>
 <a name="Figure 2.2.1.2">
-<p align="center"> <a name="Populated Schedule"> <img src="images/ScheduleGenerationPopulated.png" border=2></a></p>
-<p align="center">Figure 2.2.1.2 Basic Schedule Creation Automatic SCheduling</p>
+<p align="center"> <a name="Populated Schedule"> <img src="images/ScheduleGenerationPopulation1.png" border=2></a></p>
+<p align="center">Figure 2.2.1.2 Basic Schedule Creation Automatic Scheduling</p>
 <hr>
 </p>
-<p align="left"> Once the user has populated the <em>Auto-Generate Courses</em> table, the user presses the <strong>Auto Fill</strong>
-button at the bottom of the <em>Auto-Generate Courses</em> table, to automatically assign all courses found in the <em>Auto-Generate Courses</em> to specific time slots on the calendar.
+
+<p> 
+The drag-and-drop action can be done repeatedly for a single course.  Each time the user drags a course again, it adds another section to be 
+offered, and shows the total number of sections to be offered in parentheses after the course.  <a href="#Figure 2.2.1.3">Figure 2.2.1.3</a> shows the result of the user having 
+dragged CHEM 110 lab and lecture; and the user having dragged a CHEM 124 lab and lecture for the second time from the <em>Department Courses</em> list to the <em>Courses to Schedule</em> list.
 </p>
-<p align="left">After the courses in the <em>Auto-Generate Courses</em> table are scheduled into the calendar, the <em>Auto-Generate Courses</em> table
+<p></p>
+<hr>
+<a name="Figure 2.2.1.3">
+<p align="center"> <a name="Schedule Generation Step1"> <img src="images/ScheduleGenerationPopulation2.png" border=2></a> </p>
+<p align="center">Figure 2.2.1.3 Basic Schedule Creation Adding Additional Sections</p>
+<hr>
+<p align="left"> <a href="#Figure 2.2.1.4">Figure 2.2.1.4</a> shows the result of the user having selected a full quarter's worth of courses to be scheduled for Spring 2012.  
+These selections were made by performing the drag-drop and editing actions illustrated in Figures 2.2.1.1 through 2.2.1.3.  
+Once the user has populated the <em>Courses to schedule</em> list, the user presses the <strong>Generate Schedule</strong>
+button at the bottom of the <em>Courses to schedule</em> list, to automatically assign all courses found in the <em>Courses to schedule</em> to specific time slots on the calendar.
+</p>
+<p></p>
+<hr>
+<a name="Figure 2.2.1.4">
+<p align="center"> <a name="Schedule Generation Step1"> <img src="images/ScheduleGenerationPopulated.png" border=2></a> </p>
+<p align="center">Figure 2.2.1.4 Basic Schedule Creation Generate Schedule</p>
+<hr>
+
+
+<p align="left">After the courses in the <em>Courses to schedule</em> list are scheduled into the calendar, the <em>Courses to schedule</em> list
 is cleared. The courses are displayed in their appropriate time slots and are colored light green, which indicates that the scheduled time is preferred
 based on the preferences of an instructor. If the user wishes to get more information about a scheduled course, the user hovers the mouse on a specific
 course and additional information <em>(course title, course number/section, course location, course instructor, schedules course time)</em> will appear in a small text box
-as shown in <a href="#Figure 2.2.1.3">Figure 2.2.1.3</a> for CHEM 461.
+as shown in <a href="#Figure 2.2.1.5">Figure 2.2.1.5</a> for CHEM 461.
 </p>
 
 
 <hr>
-<a name="Figure 2.2.1.3">
+<a name="Figure 2.2.1.5">
 <p align="center"> <a name="Hover Schedule"> <img src="images/ScheduleGenerationHover.png" border=2></a></p>
-<p align="center">Figure 2.2.1.3 Basic Schedule Creation Hover Popup</p>
+<p align="center">Figure 2.2.1.5 Basic Schedule Creation Hover Popup</p>
 <hr>
 
 <a name="manual_sched"><h3>2.2.2 Manual Scheduling</h3></a>
 
 <a name="valid"><h4>Manual Scheduling Valid Drag and Drop</h4></a>
-<p>If the user wishes to manually edit the schedule, the user can drag a course from the <em>Department Courses</em> table directly onto a time slot 
+<p>If the user wishes to manually edit the schedule, the user can drag a course from the <em>Department Courses</em> list directly onto a time slot 
 on the calendar. The user clicks and holds down on the specific course and drags the selected course onto the calendar. If the course meets the university requirements 
 and is preferred based on the preferences of the instructor, the course is colored bright green. In <a href="#Figure 2.2.2.1">Figure 2.2.2.1</a> the user is attempting to drag CHEM 252
 to the 7AM - 9AM Tuesday/Thursday time slot. Once the user unclicks, the course turns light green and is scheduled 
@@ -70,7 +93,7 @@ database.
 <hr>
 
 <a name="not_preferred"><h4>Manual Scheduling Not Preferred Drag and Drop</h4></a>
-<p> If the user wishes to manually edit the schedule, the user can drag a course from the <em>Department Courses</em> table directly onto a time slot 
+<p> If the user wishes to manually edit the schedule, the user can drag a course from the <em>Department Courses</em> list directly onto a time slot 
 on the calendar. The user clicks and holds down on the specific course and drags the selected course onto the calendar. If the course is colored bright orange
 while attempting to place the course into a specific time slot it means the course is scheduled in a time that is <em>Not Preferred</em> due to the preferences
 of an instructor. In <a href="#Figure 2.2.2.3">Figure 2.2.2.3</a> the user attempts to schedule CHEM 590 from 9AM - 12PM, but the course is not prefered due to the preferences of the instructors in the database. The course is colored bright orange until the user unclicks and places the course in the time slot, then the course is colored light orange.
@@ -86,10 +109,10 @@ of an instructor. In <a href="#Figure 2.2.2.3">Figure 2.2.2.3</a> the user attem
 </a>
 
 <a name="invalid"><h4>Manual Scheduling Invalid Drag and Drop</h4></a>
-<p> If the user wishes to manually edit the schedule, the user can drag a course from the <em>Department Courses</em> table directly onto a time slot 
+<p> If the user wishes to manually edit the schedule, the user can drag a course from the <em>Department Courses</em> list directly onto a time slot 
 on the calendar. The user clicks and holds down on the specific course and drags the selected course onto the calendar. If the course is in direct conflict
 with the scheduling algorithm, university scheduling constraints, or instructor preferences the course is colored red. Once the user attempts to place the 
-course into the time slot the course automatically jumps back to the <em>Department Courses</em> table because it is unable to be scheduled.
+course into the time slot the course automatically jumps back to the <em>Department Courses</em> list because it is unable to be scheduled.
 </p>
 <hr>
 <p align="center"> <a name="Invalid Drag"> <img src="images/ScheduleGenerationDragInvalid.png" border=2></a></p>
