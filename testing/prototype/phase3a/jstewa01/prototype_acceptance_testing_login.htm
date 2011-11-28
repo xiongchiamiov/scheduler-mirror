@@ -1,0 +1,75 @@
+
+<!-- saved from url=(0082)http://users.csc.calpoly.edu/~gfisher/classes/309/handouts/acceptance-testing.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>
+User Acceptance Testing
+</title>
+</head>
+<body bgcolor="white">
+<p align="center">
+<font size="+2">
+<strong>CSC 402 User Acceptance Testing For Prototype</strong>
+</font>
+</p>
+<br>
+<br>
+
+</p><blockquote>
+<table align="center" border="1" cellpadding="4">
+  <tbody><tr>
+    <td valign="top"><strong>Case No.</strong>
+    </td><td valign="top"><strong>User Inputs and Command</strong>
+    </td><td valign="top"><strong>Expected Output</strong>
+    </td><td valign="top"><strong>Remarks</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </td><td valign="top"><strong>Results</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </td></tr><tr>
+    <td valign="top">1
+    </td><td valign="top">Login with username "Jstewart1" and press the <strong>Enter</strong> key
+    </td><td valign="top">Bring me to the home screen
+    </td><td valign="top">
+    </td><td valign="top">PASS - It successfully brought me to the home screen
+  </td></tr>
+  <tr>
+    <td valign="top">2
+    </td><td valign="top">Login with username "Jstewart1" and press the <strong>Shift</strong> key
+    </td><td valign="top">Should do nothing 
+    </td><td valign="top">
+    </td><td valign="top">PASS - The program responded occordingly and did nothing
+  </td></tr><tr>
+    <td valign="top">3
+    </td><td valign="top">Login with username "Jstewart1" and click the <strong>Login</strong> button
+    </td><td valign="top">Bring me to the home screen
+    </td><td valign="top">
+    </td><td valign="top">PASS - It successfully brought me to the home screen
+  </td></tr><tr>
+    <td valign="top">4
+    </td><td valign="top">Login with a blank username and click the <strong>Login</strong> button
+    </td><td valign="top">Should not allow me to login
+    </td><td valign="top">Should prompt the user of the error ("Invalid Username" or "Invalid Blank Username")
+    </td><td valign="top">PASS - Greeted the user with an error stating: "Please enter a valid username"
+  </td></tr><tr>
+    <td valign="top">5
+    </td><td valign="top">Login with a blank username and hit the <strong>Enter<strong> key
+    </td><td valign="top">Should not allow me to login
+    </td><td valign="top">Should prompt the user of the error ("Invalid Username" or "Invalid Blank Username")
+    </td><td valign="top">PASS - Greeted the user with an error stating: "Please enter a valid username"
+  </td></tr></tbody></table>
+  <tr>
+    <td valign="top">6
+    </td><td valign="top">Login with the username "Jstewart1" and click the <strong>New Schedule<strong> button. Specify the name "Test" for the name
+	of the saved schedule and refresh the page to bring me back to the initial login. Login with "Jstewart1" username and the saved schedule named "Test" should
+	appear in the drop-down menu under "Select a Schedule"
+    </td><td valign="top">Should allow me to choose the previously saved schedule ("Test") as a template
+    </td><td valign="top">
+    </td><td valign="top">PASS - After logging back in as "Jstewart1" the saved schedule was available for selection from the drop-down menu
+  </td></tr>
+  <tr>
+    <td valign="top">7
+    </td><td valign="top">Login with a different username (anything besides the username "Jstewart1")
+    </td><td valign="top">Should not be allowed to select the "Test" schedule (previously saved under "Jstewart1" username)
+    </td><td valign="top">
+    </td><td valign="top">PASS - After logging back in as "Jstewart1" the saved schedule was not available for selection from the drop-down menu
+  </td></tr>
+</blockquote>
+
+</p></body></html>
