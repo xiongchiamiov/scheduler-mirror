@@ -92,7 +92,20 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 		}));
 		fileMenu.addItem(new MenuItem("Save", true, new Command() {
 			public void execute() {
-				Window.alert("You can't be saved...");
+				final LoadingPopup popup = new LoadingPopup();
+				popup.show();
+				service.saveSchedule(new AsyncCallback<Void>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						popup.hide();
+						Window.alert("There was an error saving the schedule: " + caught.getMessage());
+					}
+					@Override
+					public void onSuccess(Void derp) {
+						popup.hide();
+						Window.alert("Schedule has been saved successfully.");
+					}
+				});
 			}
 		}));
 		fileMenu.addItem(new MenuItem("Save As...", true, new Command() {
@@ -124,7 +137,30 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 		this.setWidth("100%");
 		this.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		
-		this.add(new HTMLPanel("<h2>Open a Schedule</h2>"));
+		Button newSchedButton = new Button("Create New Schedule", new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				final String tempName = "Untitled";
+				final LoadingPopup popup = new LoadingPopup();
+				popup.show();
+				
+				service.openNewSchedule(tempName, new AsyncCallback<Integer>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						popup.hide();
+						Window.alert("Failed to open new schedule in: " + caught.getMessage());
+					}
+					
+					@Override
+					public void onSuccess(Integer newSchedID) {
+						popup.hide();
+						myFrame.frameViewAndPushAboveMe(new AdminScheduleNavView(service, menuBar, userID, username, newSchedID, tempName));
+					}
+				});
+			}
+		});
+		
+		this.add(new HTMLPanel("<h3>Open a Schedule</h3>"));
 		
 		listBox = new ListBox();
 		listBox.setVisibleItemCount(5);
@@ -143,7 +179,11 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 			}
 		});
 		
-		this.add(openButton);
+		FlowPanel flow = new FlowPanel();
+        flow.add(newSchedButton);
+		flow.add(openButton);
+		
+		this.add(flow);
 	}
 	
 	@Override
