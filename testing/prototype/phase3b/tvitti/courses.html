@@ -1,0 +1,95 @@
+<html>
+<table align=center border=1 cellpadding=4>
+  <tr>
+    <td valign=top><strong>Case No.</strong>
+    <td valign=top><strong>User Inputs and Command</strong>
+    <td valign=top><strong>Expected Output</strong>
+    <td valign=top><strong>Result</strong>&nbsp;&nbsp;
+    <td valign=top><strong>Remarks</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <tr>
+    <td valign=top>1
+    <td valign=top>
+Click the 'new' button
+    <td valign=top>
+A new green row appears for editing
+    <td valign=top>
+Fail
+    <td valign=top>
+An error box appears with "value not in options". This should not appear.
+<br>Also does not allow more than two new entries; the second is deleted with each new addition.
+  <tr>
+    <td valign=top>2
+    <td valign=top>
+Data is entered, then 'save all' is clicked
+    <td valign=top>
+All new data is saved to database
+    <td valign=top>
+Pass
+    <td valign=top>&nbsp;
+  <tr>
+    <td valign=top>3
+    <td valign=top>
+Click the 'X' button to delete an old record, then click 'save all'
+    <td valign=top>
+The row is highlighted red, then removed
+    <td valign=top>
+Fail
+    <td valign=top>
+The row is highlighted red, but does not delete. Instead, any newly added rows are removed. This is a serious problem.
+  <tr>
+    <td valign=top>4
+    <td valign=top>
+Click the 'X' button to delete a new record
+    <td valign=top>
+The row is removed from the database
+    <td valign=top>
+Fail
+    <td valign=top>
+If two classes are added at once, then 'X' is clicked on the first course, it will remove the wrong course, after which the button fails to remove the last entry. It also performs the deletion immediately, allowing accidental erasure. Please fix.
+  <tr>
+    <td valign=top>5
+    <td valign=top>
+Click to edit an existing course, then click 'save all'
+    <td valign=top>
+Row highlights yellow, then updates
+    <td valign=top>
+Fail
+    <td valign=top>
+Row is highlighted, but does not update on save
+  <tr>
+    <td valign=top>6
+    <td valign=top>
+Click to edit an existing course, but click away without making a change
+    <td valign=top>
+Nothing happens
+    <td valign=top>
+Fail
+    <td valign=top>
+The row highlights yellow, denoting that a change has been made
+  <tr>
+    <td valign=top>7
+    <td valign=top>
+Attempt to use a lecture as a lab section
+    <td valign=top>
+Action is dis-allowed
+    <td valign=top>
+Fail
+    <td valign=top>
+Lecture is permitted as lab. Only labs are labs.
+  <tr>
+    <td valign=top>8
+    <td valign=top>
+Create a new lab course, then associate an existing lecture
+    <td valign=top>
+Lecture points to new lab section
+    <td valign=top>
+Fail
+    <td valign=top>
+Lab has a space to specify a lab. Labs cannot have labs.
+</table>
+<h3>General Notes:</h3>
+<ul>
+<li>The 'save all' button usually does not do anything. It seems to succeed only in saving new entries.
+</ul>
+</body>
+</html>
