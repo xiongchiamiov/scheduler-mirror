@@ -1,0 +1,71 @@
+<html>
+<table align=center border=1 cellpadding=4>
+  <tr>
+    <td valign=top><strong>Case No.</strong>
+    <td valign=top><strong>User Inputs and Command</strong>
+    <td valign=top><strong>Expected Output</strong>
+    <td valign=top><strong>Remarks</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <td valign=top><strong>Results</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <tr>
+    <td valign=top>1
+    <td valign=top>Press File->New
+    <td valign=top>Creates a new untitled schedule
+    <td valign=top>Takes you to blank screen. Makes more sense to take you to the schedule generation screen.
+    <td valign=top>Pass
+  <tr>
+    <td valign=top>2
+    <td valign=top>Press New on Courses menu
+    <td valign=top>Makes row for new course
+    <td valign=top>Error message "value  not in options"
+    <td valign=top>Fail
+  <tr>
+    <td valign=top>3
+    <td valign=top>Drag course onto schedule
+    <td valign=top>See option for selecting days to schedule course
+    <td valign=top>
+    <td valign=top>Pass
+  <tr>
+    <td valign=top>4
+    <td valign=top>Select days for course to be scheduled
+    <td valign=top>Course appears on schedule for selected days
+    <td valign=top>Error message "Failed to retrieve rescheduled item"
+    <td valign=top>Fail
+  <tr>
+    <td valign=top>5
+    <td valign=top>Delete Location from Locations list
+    <td valign=top>Location is no longer in list
+    <td valign=top>Row highlights red but is not deleted
+    <td valign=top>Fail
+  <tr>
+    <td valign=top>6
+    <td valign=top>Save Locations menu after deleting a Location
+    <td valign=top>Highlighted Location is removed from the list
+    <td valign=top>Location is still in the list, no longer highlighted red
+    <td valign=top>Fail
+  <tr>
+    <td valign=top>8
+    <td valign=top>Delete Instructor from Instructors list
+    <td valign=top>Row highlights red
+    <td valign=top>
+    <td valign=top>Pass
+  <tr>
+    <td valign=top>9
+    <td valign=top>Save Instructors menu after deleting an Instructor
+    <td valign=top>Highlighted Instructor is removed from the list
+    <td valign=top>
+    <td valign=top>Pass
+  <tr>
+    <td valign=top>10
+    <td valign=top>Create new Instructor, press tab
+    <td valign=top>Tab moves current editable field to the next field
+    <td valign=top>
+    <td valign=top>Pass
+  <tr>
+    <td valign=top>11
+    <td valign=top>Create new Location, Press X, Navigate away from page
+    <td valign=top>Newly created location should not be in the Locations menu and new page should appear
+    <td valign=top>Error message "You have unsaved data which will be lost. Are you sure you want to navigate away?"
+    <td valign=top>Fail
+</table>
+</body>
+</html>
