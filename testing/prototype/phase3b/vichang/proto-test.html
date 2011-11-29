@@ -1,0 +1,35 @@
+<html>
+<table align=center border=1 cellpadding=4>
+  <tr>
+    <td valign=top><strong>Case No.</strong>
+    <td valign=top><strong>User Inputs and Command</strong>
+    <td valign=top><strong>Expected Output</strong>
+    <td valign=top><strong>Result</strong>&nbsp;&nbsp;
+    <td valign=top><strong>Remarks</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <tr>
+    <td valign=top>1
+    <td valign=top>
+File -> New multiple times
+    <td valign=top>
+Should ask to save first or have multiple instances open
+    <td valign=top>
+Fail
+    <td valign=top>
+Looks to somewhat approach the multiple instances option, but the File menu bar begins to duplicate "Instructors Locations Courses Schedule" for each New. Only the far-right most set actually changes the view, but the preloaded data is missing.
+  <tr>
+    <td valign=top>2
+    <td valign=top>
+Click on any of the course data cells under Courses and then click away
+    <td valign=top>
+Should look just like before
+    <td valign=top>
+Fail
+    <td valign=top>
+That course's row ends up being marked as modified even though none of the fields were actually changed.
+</table>
+<h3>General Notes:</h3>
+<ul>
+<li>Made new user, File->New, File->Save, Error message: "You can't be saved..."
+</ul>
+</body>
+</html>
