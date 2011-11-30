@@ -1,0 +1,34 @@
+Used /usability/
+
+Clicked "new from csv" instead of new - no cancel button.
+"This is nice" on scheduler view; "equivalent to my Excel spreadsheet"
+"Can you do these [classes on grid] in different colors?"
+Rules (how many classes can be offered when) are important
+  - doesn't want a faculty interface for setting preferences
+
+Bug: extra class got added to schedule
+Need to add better feedback when a class is on the schedule, but you're trying to add it to second list
+Need throbber when dragging classes and things are recalculating
+
+Would rather schedule things herself than fix our algorithm
+Not obvious what filters were
+  - filters appear to be broken
+Add new courses every catalog cycle (2 years), but only then
+There are classes offered every fall, every winter, etc.
+
+Currently, the courses offered roll fall-to-fall, but times don't.  This department is fairly consistent; would rather have schedule prepopulated (and movable).
+
+*Max enrollment* and *enrollment limit* are separate, to allow crashing courses.
+
+No ownership of rooms, but does borrow some.
+
+Might need to do something about cross-listed classes.
+
+My note:  URL is always the same, so you can't copy+paste to someone else
+
+Would not use instructor prefs, even as admin.  Most professors have specified classes they teach.
+
+New version of PeopleSoft is coming - should check when doing import/export research.
+
+Should have enrollment limit same for lecture and lab (at least by default).
+
