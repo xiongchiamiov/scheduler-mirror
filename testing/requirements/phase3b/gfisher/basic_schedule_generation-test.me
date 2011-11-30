@@ -1,0 +1,127 @@
+.sz 11
+.ds ~ /users/gfisher/nroff
+. so \*~/stdhdr.me
+.(TI "Inspection Test of Basic Schedule Creation"
+.(S +2
+\fBInspection Test of Basic Schedule Creation\fP
+.)S
+.)TI
+.spt
+.TS
+center;
+l l l l lw(2i)
+l | l | l | l | lw(2i).
+\fBComponent\fP	\fBInspector\fP	\fBDate\fP	\fBStatus\fP	\fBRemarks\fP
+. sp .2v
+=
+. sp .2v
+2.2	GLF	21nov11	FIX	T{
+Add an introductory paragraph, that provides an overview of what automatic
+schedule generation entails.  Include a note that the Chem department is used
+throughout the requirements scenarios.  Explain that the Chem department
+provides a reasonably representative example of departments across campus.
+.pp
+Add a second introductory paragraph that describes the uniform coloring
+designation used throughout the scenarios, i.e.,
+.(Ah "http://scheduler.csc.calpoly.edu/releases/alpha//requirements/images/preference-colors-sketch.jpg"
+.)Ah
+Note that we have not fully determined which colors are appropriate for use in
+schedule generation.  At present, green, orange, and red are used.  We need to
+determine if yellow has any meaning in the context of schedule generation, and
+if so, add a use case that illustrates it.  The thinking as of Friday 18 Nov
+was the following:
+.(E
+.ee
+Green = preferred by both department and instructor
+.ee
+Yellow = preferred by department, not-preferred by instructor
+.ee
+Orange = not preferred by department, as well as not-preferred by instructor
+.ee
+Red = not possible, i.e., a hard scheduling conflict
+.)E
+T}
+. sp .2v
+2.2.1P1	GLF	21nov11	FIX	T{
+Refer explicitly to Figure 2.2.1.1.  Explain what it means for a course not to
+have an explicit LEC or LAB designation.  Consider having roll-over course
+details and/or the ability to perform an augmented-click to get details for a
+particular course.
+T}
+. sp .2v
+2.2.1I2.2.1.1	GLF	21nov11	FIX	T{
+Make consistent picture with prototype.  In particular, the prototype should
+not have a parenthesized number after the courses in the 'Dept Courses' column.
+I prefer the prototype column
+label of 'Courses to Schedule' instead of 'Auto Fill'.  I prefer the prototype
+button name 'Generate Schedule' to 'Auto Fill'.
+.pp
+Add vertical lines in body of table, delineating each day column.  Add a note
+that there is an scheduling too option for adding weekend days, and site later
+scenario section that explains that option.
+T}
+. sp .2v
+2.2.1P2	GLF	21nov11	FIX	T{
+See immediately preceding comments about column label and button name.
+.pp
+Also, add the detailed explanation of drag-drop that Tyler V gave during the
+Friday meeting.  That is, as course are dragged from the 'Department Courses'
+column into the 'Courses to Schedule' column, one section is dragged at a time.
+When more than one section is dragged, then there is '+\fIn\fP' next to the
+course in the 'Courses to Schedule' column, where \fIn\fP is the number of
+sections that have been dragged.  There needs to be an option-settable upper
+bound on the number of sections that can be dragged, to avoid the admittedly
+unusual problem of section overflow.
+.pp
+Also explain how a section is moved to the calendar schedule instead of
+the 'Courses to Schedule' column, in particular that the total number of
+sections to schedule is the of the \fIn\fP in the 'Courses to Schedule' column
+and the number of courses dragged into the calendar view.
+.pp
+Also explain how a section is removed from the 'Courses to Schedule' column or
+the calendar view.  This is presumably done by dragging the course back to
+the 'Department Courses' column, or even to some other place on the screen
+other than the 'Courses to Schedule' column or schedule.
+.pp
+As discussed on Friday, these updates to the content of 2.2.1P2
+T}
+. sp .2v
+2.2.1I2.2.1.2	GLF	21nov11	FIX	T{
+I would really like a feature to allow the user to explicitly (manually) specify
+the number of sections for each course to schedule.
+T}
+. sp .2v
+2.2.1P3	GLF	21nov11	DONE	\ 
+. sp .2v
+2.2.2	GLF	21nov11	FIX	T{
+Add a brief introductory paragraph, explaining the use cases in Section 2.2.2.
+T}
+. sp .2v
+2.2.2P1	GLF	21nov11	FIX	T{
+The last sentence refers to the 'Save Schedule' button.  See the discussion of
+this in the
+.(Ah
+userInterface inspection, and make the reference to saving
+consistent with the decision on how saving is done.
+T} 
+. sp .2v
+2.2.2I2.2.2.1	GLF	21nov11	DONE	\ 
+. sp .2v
+2.2.2P2	GLF	21nov11	DONE	\ 
+. sp .2v
+2.2.2I2.2.2.2	GLF	21nov11	DONE	\ 
+. sp .2v
+2.2.2P3	GLF	21nov11	FIX	T{
+If it is determined that a yellow color is meaningful in the context of
+schedule generation, then add a use case, i.e., a figure and explanatory
+paragraph.
+T}
+. sp .2v
+2.2.2I2.2.2.3	GLF	21nov11	DONE	\ 
+. sp .2v
+2.2.2P4	GLF	21nov11	DONE	\ 
+. sp .2v
+2.2.2I2.2.2.3	GLF	21nov11	DONE	\ 
+. sp .2v
+.TE
+.\" LocalWords:  lw sp GLF nov Chem LEC settable

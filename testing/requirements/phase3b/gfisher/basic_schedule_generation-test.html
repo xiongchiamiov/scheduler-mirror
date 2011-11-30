@@ -1,0 +1,184 @@
+<html>
+<head>
+<title>
+Inspection Test of Basic Schedule Creation
+</title>
+</head>
+<body bgcolor=white>
+<p align=center>
+<font size=+2>
+<strong>Inspection Test of Basic Schedule Creation</strong>
+</font>
+</p>
+<br>
+<br>
+<table align=center border=1 cellpadding=4>
+  <tr>
+    <td valign=top><strong>Component</strong>
+    <td valign=top><strong>Inspector</strong>
+    <td valign=top><strong>Date</strong>
+    <td valign=top><strong>Status</strong>
+    <td valign=top><strong>Remarks</strong>
+  <tr>
+    <td valign=top>2.2
+    <td valign=top>GLF
+    <td valign=top>21nov11
+    <td valign=top>FIX
+    <td valign=top>
+Add an introductory paragraph, that provides an overview of what automatic
+schedule generation entails.  Include a note that the Chem department is used
+throughout the requirements scenarios.  Explain that the Chem department
+provides a reasonably representative example of departments across campus.
+<p>
+Add a second introductory paragraph that describes the uniform coloring
+designation used throughout the scenarios, i.e.,
+<a href="http://scheduler.csc.calpoly.edu/releases/alpha//requirements/images/preference-colors-sketch.jpg"></a>
+Note that we have not fully determined which colors are appropriate for use in
+schedule generation.  At present, green, orange, and red are used.  We need to
+determine if yellow has any meaning in the context of schedule generation, and
+if so, add a use case that illustrates it.  The thinking as of Friday 18 Nov
+was the following:
+<ul>
+<li>
+Green = preferred by both department and instructor
+<li>
+Yellow = preferred by department, not-preferred by instructor
+<li>
+Orange = not preferred by department, as well as not-preferred by instructor
+<li>
+Red = not possible, i.e., a hard scheduling conflict
+</ul>
+  <tr>
+    <td valign=top>2.2.1P1
+    <td valign=top>GLF
+    <td valign=top>21nov11
+    <td valign=top>FIX
+    <td valign=top>
+Refer explicitly to Figure 2.2.1.1.  Explain what it means for a course not to
+have an explicit LEC or LAB designation.  Consider having roll-over course
+details and/or the ability to perform an augmented-click to get details for a
+particular course.
+  <tr>
+    <td valign=top>2.2.1I2.2.1.1
+    <td valign=top>GLF
+    <td valign=top>21nov11
+    <td valign=top>FIX
+    <td valign=top>
+Make consistent picture with prototype.  In particular, the prototype should
+not have a parenthesized number after the courses in the 'Dept Courses' column.
+I prefer the prototype column
+label of 'Courses to Schedule' instead of 'Auto Fill'.  I prefer the prototype
+button name 'Generate Schedule' to 'Auto Fill'.
+<p>
+Add vertical lines in body of table, delineating each day column.  Add a note
+that there is an scheduling too option for adding weekend days, and site later
+scenario section that explains that option.
+  <tr>
+    <td valign=top>2.2.1P2
+    <td valign=top>GLF
+    <td valign=top>21nov11
+    <td valign=top>FIX
+    <td valign=top>
+See immediately preceding comments about column label and button name.
+<p>
+Also, add the detailed explanation of drag-drop that Tyler V gave during the
+Friday meeting.  That is, as course are dragged from the 'Department Courses'
+column into the 'Courses to Schedule' column, one section is dragged at a time.
+When more than one section is dragged, then there is '+<em>n</em>' next to the
+course in the 'Courses to Schedule' column, where <em>n</em> is the number of
+sections that have been dragged.  There needs to be an option-settable upper
+bound on the number of sections that can be dragged, to avoid the admittedly
+unusual problem of section overflow.
+<p>
+Also explain how a section is moved to the calendar schedule instead of
+the 'Courses to Schedule' column, in particular that the total number of
+sections to schedule is the of the <em>n</em> in the 'Courses to Schedule' column
+and the number of courses dragged into the calendar view.
+<p>
+Also explain how a section is removed from the 'Courses to Schedule' column or
+the calendar view.  This is presumably done by dragging the course back to
+the 'Department Courses' column, or even to some other place on the screen
+other than the 'Courses to Schedule' column or schedule.
+<p>
+As discussed on Friday, these updates to the content of 2.2.1P2
+  <tr>
+    <td valign=top>2.2.1I2.2.1.2
+    <td valign=top>GLF
+    <td valign=top>21nov11
+    <td valign=top>FIX
+    <td valign=top>
+I would really like a feature to allow the user to explicitly (manually) specify
+the number of sections for each course to schedule.
+  <tr>
+    <td valign=top>2.2.1P3
+    <td valign=top>GLF
+    <td valign=top>21nov11
+    <td valign=top>DONE
+    <td valign=top>&nbsp;
+  <tr>
+    <td valign=top>2.2.2
+    <td valign=top>GLF
+    <td valign=top>21nov11
+    <td valign=top>FIX
+    <td valign=top>
+Add a brief introductory paragraph, explaining the use cases in Section 2.2.2.
+  <tr>
+    <td valign=top>2.2.2P1
+    <td valign=top>GLF
+    <td valign=top>21nov11
+    <td valign=top>FIX
+    <td valign=top>
+The last sentence refers to the 'Save Schedule' button.  See the discussion of
+this in the
+<a href="">
+userInterface inspection, and make the reference to saving
+consistent with the decision on how saving is done.
+T}
+  <tr>
+    <td valign=top>2.2.2I2.2.2.1
+    <td valign=top>GLF
+    <td valign=top>21nov11
+    <td valign=top>DONE
+    <td valign=top>&nbsp;
+  <tr>
+    <td valign=top>2.2.2P2
+    <td valign=top>GLF
+    <td valign=top>21nov11
+    <td valign=top>DONE
+    <td valign=top>&nbsp;
+  <tr>
+    <td valign=top>2.2.2I2.2.2.2
+    <td valign=top>GLF
+    <td valign=top>21nov11
+    <td valign=top>DONE
+    <td valign=top>&nbsp;
+  <tr>
+    <td valign=top>2.2.2P3
+    <td valign=top>GLF
+    <td valign=top>21nov11
+    <td valign=top>FIX
+    <td valign=top>
+If it is determined that a yellow color is meaningful in the context of
+schedule generation, then add a use case, i.e., a figure and explanatory
+paragraph.
+  <tr>
+    <td valign=top>2.2.2I2.2.2.3
+    <td valign=top>GLF
+    <td valign=top>21nov11
+    <td valign=top>DONE
+    <td valign=top>&nbsp;
+  <tr>
+    <td valign=top>2.2.2P4
+    <td valign=top>GLF
+    <td valign=top>21nov11
+    <td valign=top>DONE
+    <td valign=top>&nbsp;
+  <tr>
+    <td valign=top>2.2.2I2.2.2.3
+    <td valign=top>GLF
+    <td valign=top>21nov11
+    <td valign=top>DONE
+    <td valign=top>&nbsp;
+</table>
+</body>
+</html>

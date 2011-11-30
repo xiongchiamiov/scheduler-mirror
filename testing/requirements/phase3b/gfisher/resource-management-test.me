@@ -1,0 +1,218 @@
+.sz 11
+.ds ~ /users/gfisher/nroff
+. so \*~/stdhdr.me
+.(TI "Inspection Test of Resource Management"
+.(S +2
+\fBInspection Test of Resource Management\fP
+.)S
+.)TI
+
+.TS
+center;
+l l l l lw(2i)
+l | l | l | l | lw(2i).
+\fBComponent\fP	\fBInspector\fP	\fBDate\fP	\fBStatus\fP	\fBRemarks\fP
+. sp .2v
+=
+. sp .2v
+2.4	GLF	21nov11	FIX	T{
+Add introductory paragraph(s).  Discussion needs to be consistent with the
+decision we make on the
+.(Ah "userInterface.html#"
+top-level menu.
+.)Ah
+T}
+. sp .2v
+2.4.1P1 (Manage Instructors)	GLF	21nov11	DONE	\ 
+2.4.1P2	GLF	21nov11	FIX	T{
+As noted in remarks for the
+.(Ah "userInterface-test.html"
+User Interface Overview,
+.)Ah
+we need to be clear about when we're editing the data for the department as a
+whole, versus an individual schedule.  We will determine this at an upcoming
+meeting.
+T}
+
+2.4.1P3	GLF	21nov11	DONE	\ 
+
+2.4.1P4	GLF	21nov11	DONE	\ 
+
+2.4.1P5	GLF	21nov11	DONE	\ 
+
+T{
+.(An "2.4.1P6"
+2.4.1P6
+.)An
+T}	GLF	21nov11	FIX	T{
+The instructor data fields need to be made consistent with the prototype
+version of instructor data.  At this point, we'll do of the following:
+.(E .4v
+.ee
+Change the bulleted list to be \fITHE definitive version\fP of the instructor
+data fields.
+.hc p
+.ee
+If there is time, update Figures 2.4.1 through 2.4.3 to be consistent with the
+bulleted list.  If not, add the following italicized sentences after the
+bulleted list: "Note: Figures 2.4.1.1 through 2.4.1.3 are not fully consistent
+with the preceding bulleted list.  The list is the definitive description of
+the data components of an instructor."
+.hc p
+.ee
+Whether or not the prototype is updated, add the following additional
+italicized paragraph: "Note: In the event of any discrepancies between the
+preceding list and the prototype UI, the preceding list is the definitive
+description of instructor data components."
+.)E
+T}
+
+2.4.1P7 (Add Instructor)	GLF	21nov11	FIX	T{
+After you say that the user can "navigate away" in order not to save the
+information, you need to then say that when the user comes back, the unsaved
+information is still in the UI.  This is the idea of the persistent user
+workspace we've talked about in class discussion, where the user can type
+information without saving it, navigate away, and then come back with the
+unsaved type information still there.
+T}
+
+2.4.1I2.4.1.2	GLF	21nov11	DONE	\ 
+
+2.4.1P8 (Edit Instructor)	GLF	21nov11	FIX	DONE	\ 
+
+2.4.1I2.4.1.3	GLF	21nov11	DONE	\ 
+
+2.4.1P9	GLF	21nov11	FIX	T{
+Clarify why the ID can't be edited in this view, and explain where it can be
+edited.  If it can't be edited at all, then say that in order to change an
+instructor ID, the instructor record must be deleted and re-added.
+T}
+
+2.4.1P10	GLF	21nov11	DONE	\
+
+2.4.1P11 (Delete Instructor)	GLF	21nov11	FIX	T{
+I think it would be better to have this be a pop-up, instead of a separate
+view.
+T}
+
+2.4.1I2.4.1.4	GLF	21nov11	DONE	\
+
+2.4.1P12	GLF	21nov11	FIX	T{
+If it is a changed to a pop-up, then say "the pop-up is dismissed" instead of
+"the screen will return back".
+T}
+
+2.4.2P1 (Manage Courses)	GLF	21nov11	DONE	\ 
+
+2.4.2I2.4.2.1	GLF	21nov11	FIX	T{
+Change "STU" to "SCU".
+T}
+
+2.4.2P2	GLF	21nov11	FIX	T{
+As with the instructor information, we need to determine exactly what "saved
+for the department" means.  Again, we'll figure this out at our next meeting.
+T}
+
+2.4.2P3	GLF	21nov11	DONE	\ 
+
+2.4.2P4	GLF	21nov11	FIX	DONE	\ 
+
+2.4.2P5	GLF	21nov11	FIX	DONE	\ 
+
+2.4.2P6	GLF	21nov11	FIX	T{
+As with instructor information, the course data fields need to be made
+consistent with the prototype version of instructor data.  Deal with this issue
+in the same way as described above for instructors, in the remarks for
+.(Ah "#2.4.1P6"
+2.4.1P6.
+.)Ah
+T}
+
+2.4.2P7 (Add Course)	GLF	21nov11	FIX	T{
+As with 'Add Instructor', after you say that the user can "navigate away", you
+need to then say that when the user comes back, the unsaved information is
+still in the UI.
+T}
+
+2.4.2I2.4.2.2	GLF	21nov11	DONE	\ 
+
+2.4.2P8 (Edit Course)	GLF	21nov11	FIX	DONE	\ 
+
+2.4.2I2.4.2.3	GLF	21nov11	DONE	\ 
+
+2.4.2P9	GLF	21nov11	FIX	T{
+Change "the user's changes can be undone" to "the user's changes can be
+discarded".
+T}
+
+2.4.2P10 (Delete Course)	GLF	21nov11	FIX	T{
+As with 'Delete Instructor', I think it would be better to have this be a
+pop-up, instead of a separate view.
+T}
+
+2.4.2I2.4.2.4	GLF	21nov11	DONE	\
+
+2.4.2P11	GLF	21nov11	FIX	T{
+If it is a changed to a pop-up, then say "the pop-up is dismissed" instead of
+"the screen will return back".
+T}
+
+2.4.3P1 (Manage Locations)	GLF	21nov11	DONE	\ 
+
+2.4.3I2.4.3.1	GLF	21nov11	FIX	T{
+Change "STU" to "SCU".
+T}
+
+2.4.3P2	GLF	21nov11	FIX	T{
+As instructors and courses, we need to determine exactly what "saved
+for the department" means.  Again, we'll figure this out at our next meeting.
+T}
+
+2.4.3P3	GLF	21nov11	DONE	\ 
+
+2.4.3P4	GLF	21nov11	FIX	DONE	\ 
+
+2.4.3P5	GLF	21nov11	FIX	DONE	\ 
+
+2.4.3P6	GLF	21nov11	FIX	T{
+As with instructor and course information, the location data fields need to be
+made consistent with the prototype version of instructor data.  Deal with this
+issue in the same way as described above for instructors, in the remarks for
+.(Ah "#2.4.1P6"
+2.4.1P6.
+.)Ah
+T}
+
+2.4.3P7 (Add Location)	GLF	21nov11	FIX	T{
+As with 'Add Instructor' and 'Add Course', after you say that the user can
+"navigate away", you need to then say that when the user comes back, the
+unsaved information is still in the UI.
+T}
+
+2.4.3I2.4.3.2	GLF	21nov11	DONE	\ 
+
+2.4.3P8 (Edit Location)	GLF	21nov11	FIX	DONE	\ 
+
+2.4.3I2.4.3.3	GLF	21nov11	DONE	\ 
+
+2.4.3P9	GLF	21nov11	FIX	T{
+Change "the user's changes can be undone" to "the user's changes can be
+discarded".
+T}
+
+2.4.3P10 (Delete Location)	GLF	21nov11	FIX	T{
+As with 'Delete Instructor', I think it would be better to have this be a
+pop-up, instead of a separate view.
+T}
+
+2.4.3I2.4.3.4	GLF	21nov11	DONE	\
+
+2.4.3P11	GLF	21nov11	FIX	T{
+If it is a changed to a pop-up, then say "the pop-up is dismissed" instead of
+"the screen will return back".
+T}
+
+
+.TE
+
+\"  LocalWords:  lw sp GLF nov userInterface html bulleted UI STU SCU
