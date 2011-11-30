@@ -32,3 +32,5 @@ New version of PeopleSoft is coming - should check when doing import/export rese
 
 Should have enrollment limit same for lecture and lab (at least by default).
 
+Willing to do at least one more interview next quarter.
+
