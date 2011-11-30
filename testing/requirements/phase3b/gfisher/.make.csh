@@ -6,4 +6,4 @@ foreach f (*-test.me)
 end
 
 cd ..
-rsse gfisher thyme2:work/scheduler-vm/testing/requirements/phase3b
+# rsse gfisher thyme2:work/scheduler-vm/testing/requirements/phase3b
