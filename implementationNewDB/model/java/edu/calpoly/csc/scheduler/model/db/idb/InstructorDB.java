@@ -62,7 +62,8 @@ public class InstructorDB extends AbstractDatabase<Instructor>
       fields.put(DbData.NOTE, data.getNote());
    }
 
-   protected Instructor make(ResultSet rs)
+   @SuppressWarnings("unchecked")
+protected Instructor make(ResultSet rs)
    {
       Instructor toAdd = new Instructor();
       try
@@ -130,4 +131,28 @@ public class InstructorDB extends AbstractDatabase<Instructor>
    {
       return TABLENAME;
    }
+   
+	protected String getCreateTableString() {
+		String sqlstring = "CREATE TABLE " + TABLENAME + " (" +
+		FIRSTNAME + " " + SQLVARCHAR + " " + SQLNOTNULL + "," +
+		LASTNAME + " " + SQLVARCHAR + " " + SQLNOTNULL + "," +
+		USERID + " " + SQLVARCHAR + " " + SQLNOTNULL + "," +
+		MAXWTU + " " + SQLINT + " " + SQLNOTNULL + "," +
+		CURWTU + " " + SQLINT + " " + SQLNOTNULL + "," +
+		OFFICE + " " + SQLBLOB + "," +
+		FAIRNESS + " " + SQLINT + " " + SQLNOTNULL + "," +
+		DISABILITY + " " + SQLBOOLEAN + " " + SQLNOTNULL + "," +
+		GENEROSITY + " " + SQLINT + " " + SQLNOTNULL + "," +
+		AVAILABILITY + " " + SQLBLOB + "," +
+		COURSEPREFERENCES + " " + SQLBLOB + "," +
+		TPREFS + " " + SQLBLOB + "," +
+		ITEMSTAUGHT + " " + SQLBLOB + "," +
+		DbData.NOTE + " " + SQLVARCHAR + " " + SQLDEFAULTNULL + "," +
+		DbData.DBID + " " + SQLINT + " " + SQLNOTNULL + " " + SQLAUTOINC + "," +
+		DbData.SCHEDULEDBID + " " + SQLINT + " " + SQLNOTNULL + "," +
+		SQLPRIMARYKEY + " (" + DbData.DBID + "), " +
+		SQLUNIQUEKEY + " " + USERID + " (" + USERID + "," + DbData.SCHEDULEDBID + ")" +
+		")";
+		return sqlstring;
+	}
 }

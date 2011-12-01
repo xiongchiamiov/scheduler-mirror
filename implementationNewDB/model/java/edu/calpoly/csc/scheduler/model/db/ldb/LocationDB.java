@@ -2,12 +2,14 @@ package edu.calpoly.csc.scheduler.model.db.ldb;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Vector;
 
-import edu.calpoly.csc.scheduler.model.db.*;
+import edu.calpoly.csc.scheduler.model.db.AbstractDatabase;
+import edu.calpoly.csc.scheduler.model.db.DbData;
+import edu.calpoly.csc.scheduler.model.db.SQLDB;
+import edu.calpoly.csc.scheduler.model.db.TimeRange;
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
 import edu.calpoly.csc.scheduler.model.schedule.WeekAvail;
 
@@ -131,4 +133,22 @@ public class LocationDB extends AbstractDatabase<Location>
    {
       return TABLENAME;
    }
+   
+	protected String getCreateTableString() {
+		String sqlstring = "CREATE TABLE " + TABLENAME + " (" +
+		BUILDING + " " + SQLVARCHAR + " " + SQLNOTNULL + "," +
+		ROOM + " " + SQLVARCHAR + " " + SQLNOTNULL + "," +
+		MAXOCCUPANCY + " " + SQLINT + " " + SQLNOTNULL + "," +
+		TYPE + " " + SQLVARCHAR + " " + SQLNOTNULL + "," +
+		PROVIDEDEQUIPMENT + " " + SQLBLOB + " " + SQLNOTNULL + "," +
+		ADACOMPLIANT + " " + SQLBOOLEAN + " " + SQLNOTNULL + "," +
+		AVAILABILITY + " " + SQLBLOB + " " + SQLNOTNULL + "," +
+		DbData.NOTE + " " + SQLVARCHAR + " " + SQLDEFAULTNULL + "," +
+		DbData.DBID + " " + SQLINT + " " + SQLNOTNULL + " " + SQLAUTOINC + "," +
+		DbData.SCHEDULEDBID + " " + SQLINT + " " + SQLNOTNULL + "," +
+		SQLPRIMARYKEY + " (" + DbData.DBID + "), " +
+		SQLUNIQUEKEY + " " + BUILDING + " (" + BUILDING + "," + ROOM + "," + DbData.SCHEDULEDBID + ")" +
+		")";
+		return sqlstring;
+	}
 }

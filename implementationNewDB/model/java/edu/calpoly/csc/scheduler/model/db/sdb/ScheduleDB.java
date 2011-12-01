@@ -135,4 +135,14 @@ public class ScheduleDB extends AbstractDatabase<Schedule>
    {
       return make(sqldb.getDataByScheduleID(TABLENAME, scheduleid));
    }
+   
+	protected String getCreateTableString() {
+		String sqlstring = "CREATE TABLE " + TABLENAME + " (" +
+		SCHEDULE + " " + SQLBLOB + "," +
+		SCHEDULENAME + " " + SQLVARCHAR + " " + SQLNOTNULL + "," +
+		DbData.DBID + " " + SQLINT + " " + SQLNOTNULL + " " + SQLAUTOINC + "," +
+		SQLPRIMARYKEY + " (" + DbData.DBID + "), " +
+		")";
+		return sqlstring;
+	}
 }

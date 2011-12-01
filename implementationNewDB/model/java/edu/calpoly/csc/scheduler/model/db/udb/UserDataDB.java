@@ -52,5 +52,15 @@ public class UserDataDB extends AbstractDatabase<UserData>
    {
       return TABLENAME;
    }
-
+	protected String getCreateTableString() {
+		String sqlstring = "CREATE TABLE " + TABLENAME + " (" +
+		USERID + " " + SQLVARCHAR + " " + SQLNOTNULL + "," +
+		PERMISSION + " " + SQLINT + " " + SQLNOTNULL + "," +
+		DbData.DBID + " " + SQLINT + " " + SQLNOTNULL + " " + SQLAUTOINC + "," +
+		DbData.SCHEDULEDBID + " " + SQLINT + " " + SQLNOTNULL + "," +
+		SQLPRIMARYKEY + " (" + DbData.DBID + "), " +
+		SQLUNIQUEKEY + " " + USERID + " (" + USERID + "," + DbData.SCHEDULEDBID + ")" +
+		")";
+		return sqlstring;
+	}
 }
