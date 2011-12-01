@@ -64,6 +64,7 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 		assert(service != null);
 		this.service = service;
 		this.scheduleName = scheduleName;
+		this.addStyleName("iViewPadding");
 	}
 
 	@Override

@@ -12,6 +12,10 @@ body {
 	padding: 0px;
 }
 
+.iViewPadding{
+	padding-left: 4em;
+}
+
 .mainWidget {
 	width: 100%;
 }

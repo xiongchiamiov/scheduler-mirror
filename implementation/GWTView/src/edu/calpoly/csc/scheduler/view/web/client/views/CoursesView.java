@@ -80,6 +80,7 @@ public class CoursesView extends VerticalPanel implements IViewContents {
 	public CoursesView(GreetingServiceAsync greetingService, String scheduleName) {
 		this.service = greetingService;
 		this.scheduleName = scheduleName;
+		this.addStyleName("iViewPadding");
 	}
 
 	@Override

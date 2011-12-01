@@ -62,6 +62,7 @@ public class LocationsView extends VerticalPanel implements IViewContents {
 	public LocationsView(GreetingServiceAsync service, String scheduleName) {
 		this.service = service;
 		this.scheduleName = scheduleName;
+		this.addStyleName("iViewPadding");
 	}
 
 	@Override
