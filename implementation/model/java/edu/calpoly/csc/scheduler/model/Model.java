@@ -161,11 +161,11 @@ public class Model implements Serializable
       db.getScheduleDB().removeData(sched);
    }
 
-   public Schedule importFromCSV (String value)
+   public Schedule openNewScheduleFromCSV (String newScheduleName, String value)
    {
       try
       {
-         return new CSVImporter().read(db, value);
+         return new CSVImporter().read(this, newScheduleName, value);
       }
       catch (IOException e)
       {

@@ -21,8 +21,7 @@ public class CSVTest {
 		model.openExistingSchedule("Example Chem Schedule");
 		Schedule oldSchedule = model.getSchedule();
 		String csv = model.exportToCSV();
-		model.openNewSchedule("My New Schedule");
-		model.importFromCSV(csv);
+		model.openNewScheduleFromCSV("My New Schedule", csv);
 		Schedule newSchedule = model.getSchedule();
 		assert(newSchedule.equals(oldSchedule));
 	}

@@ -46,7 +46,7 @@ public class CSVImporter {
 	List<Instructor> instructors = new ArrayList<Instructor>();
 	List<Pair<Boolean, ScheduleItem>> scheduleItems = new ArrayList<Pair<Boolean, ScheduleItem>>(); // boolean is true if on conflicted list
 	
-	public Schedule read(Database db, String value) throws IOException {
+	public Schedule read(Model model, String newScheduleName, String value) throws IOException {
 		System.out.println("In read!");
 		
 		CsvReader reader = CsvReader.parse(value);
@@ -69,7 +69,7 @@ public class CSVImporter {
 		int derp = 0;
 		System.out.println(derp++);
 		
-		String name = readSchedule(linesIterator);
+		readSchedule(linesIterator);
 		System.out.println(derp++);
 		
 		readCourses(linesIterator);
@@ -93,27 +93,28 @@ public class CSVImporter {
 		Schedule schedule = new Schedule();
 		schedule.setDbid(-1);
 		schedule.setScheduleDBId(-1);
-		schedule.setName(name);
-		db.getScheduleDB().saveData(schedule);
+		schedule.setName(newScheduleName);
+		model.saveSchedule(schedule);
 		assert(schedule.getDbid() != -1);
 		assert(schedule.getScheduleDBId() != -1);
+		model.openExistingSchedule(schedule.getDbid());
 
 		for (Instructor instructor : instructors) {
 			instructor.setDbid(-1);
 			instructor.setScheduleDBId(schedule.getScheduleDBId());
-			db.getInstructorDB().saveData(instructor);
+			model.saveInstructor(instructor);
 		}
 		
 		for (Location location : locations) {
 			location.setDbid(-1);
 			location.setScheduleDBId(schedule.getScheduleDBId());
-			db.getLocationDB().saveData(location);
+			model.saveLocation(location);
 		}
 		
 		for (Course course : courses) {
 			course.setDbid(-1);
 			course.setScheduleDBId(schedule.getScheduleDBId());
-			db.getCourseDB().saveData(course);
+			model.saveCourse(course);
 		}
 		
 		schedule.setcSourceList(courses);
@@ -401,12 +402,11 @@ public class CSVImporter {
 		}
 	}
 	
-	String readSchedule(Iterator<List<String>> lineIterator) {
+	void readSchedule(Iterator<List<String>> lineIterator) {
 		skipBlanksUntilComment(lineIterator, CSVStructure.SCHEDULE_MARKER);
 		List<String> line = lineIterator.next();
 		String name = line.get(0);
 		skipBlanksUntilComment(lineIterator, CSVStructure.SCHEDULE_END_MARKER);
-		return name;
 	}
 
 	void readScheduleItems(Iterator<List<String>> linesIterator) {
