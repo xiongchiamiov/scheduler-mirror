@@ -1401,10 +1401,13 @@
 	<th scope="col">Department</th>
 	<th scope="col">WTU</th>
 	<th scope="col">SCU</th>
-	<th scope="col"># of <br>Sections</th>
+	<th scope="col"># of<br>Sections</th>
+	<th scope="col">Days</th>
+	<th scope="col">Hours per<br>Week</th>
 	<th scope="col">Course Type</th>
-	<th scope="col">Max Enrollment</th>
+	<th scope="col">Max<br>Enrollment</th>
 	<th scope="col">Lab</th>
+	<th scope="col">Details</th>
 	<th></th>
 	</tr>
 	</thead>
@@ -1415,12 +1418,21 @@
 	<th><input size="2"></th>
 	<th><input size="2"></th>
 	<th><input size="1"></th>
+	<th>
+		<input type="checkbox" align="left"/>M<br>
+		<input type="checkbox" align="left"/>T<br>
+		<input type="checkbox" align="left"/>W<br>
+		<input type="checkbox" align="left"/>R<br>
+		<input type="checkbox" align="left"/>F<br>
+		</th>
+	<th><input size="1"></th>
 	<th><select>
 		<option>LEC</option>
 		<option>LAB</option>
 		<option>SEM</option>
 		</select></th>
 	<th><input size="3"></th>
+	<th><input size="6"></th>
 	<th><input size="6"></th>
 	<th><button type="button" class="gwt-Button">Add</button><button type="button" class="gwt-Button">Clear</button></th>
 	</tr></tfoot>
@@ -1432,10 +1444,13 @@
 	<td>4</td>
 	<td>4</td>
 	<td>3</td>
+	<td>MTRF</td>
+	<td>4</td>
 	<td>LEC</td>
 	<td>300</td>
 	<td>None</td>
-	<td><button type="button" class="gwt-Button">Edit</button><button type="button" class="gwt-Button">Delete</button></td>
+	<td>Needs TA</td>
+	<td><button type="button" class="gwt-Button">Delete</button></td>
 	</tr>
 	<tr>
 	<td>General Chemistry</td>
@@ -1444,10 +1459,13 @@
 	<td>4</td>
 	<td>4</td>
 	<td>2</td>
+	<td>MTWR</td>
+	<td>4</td>
 	<td>LEC</td>
 	<td>300</td>
 	<td>None</td>
-	<td><button type="button" class="gwt-Button">Edit</button><button type="button" class="gwt-Button">Delete</button></td>
+	<td>Needs TA</td>
+	<td><button type="button" class="gwt-Button">Delete</button></td>
 	</tr>
 	<tr>
 	<td>Organic Chemistry I </td>
@@ -1456,10 +1474,13 @@
 	<td>5</td>
 	<td>5</td>
 	<td>1</td>
+	<td>MTWRF</td>
+	<td>4</td>
 	<td>LEC</td>
 	<td>30</td>
 	<td>None</td>
-	<td><button type="button" class="gwt-Button">Edit</button><button type="button" class="gwt-Button">Delete</button></td>
+	<td>Needs TA's</td>
+	<td><button type="button" class="gwt-Button">Delete</button></td>
 	</tr>
 	<tr>
 	<td> Organic Chemistry II</td>
@@ -1468,10 +1489,13 @@
 	<td>5</td>
 	<td>5</td>
 	<td>1</td>
-			<td>LEC</td>
+	<td>MTWRF</td>
+	<td>4</td>
+	<td>LEC</td>
 	<td>30</td>
 	<td>None</td>
-	<td><button type="button" class="gwt-Button">Edit</button><button type="button" class="gwt-Button">Delete</button></td>
+	<td>Needs TA's</td>
+	<td><button type="button" class="gwt-Button">Delete</button></td>
 	</tr>
 	<tr>
 	<td> Organic Chemistry III</td>
@@ -1480,10 +1504,13 @@
 	<td>5</td>
 	<td>5</td>
 	<td>1</td>
+	<td>MTWRF</td>
+	<td>4</td>
 	<td>LEC</td>
 	<td>30</td>
 	<td>None</td>
-	<td><button type="button" class="gwt-Button">Edit</button><button type="button" class="gwt-Button">Delete</button></td>
+	<td>Needs TA's</td>
+	<td><button type="button" class="gwt-Button">Delete</button></td>
 	</tr>
 		<tr>
 		<td>Advanced Organic Chemistry Lab</td>
@@ -1492,10 +1519,13 @@
 		<td>2</td>
 		<td>2</td>
 		<td>1</td>
+		<td>M</td>
+		<td>2</td>
 		<td>LAB</td>
 		<td>30</td>
 		<td>None</td>
-		<td><button type="button" class="gwt-Button">Edit</button><button type="button" class="gwt-Button">Delete</button></td>
+		<td></td>
+		<td><button type="button" class="gwt-Button">Delete</button></td>
 		</tr>
 	
 			<tr>
@@ -1505,10 +1535,13 @@
 			<td>5</td>
 			<td>5</td>
 			<td>1</td>
+			<td>MTWRF</td>
+			<td>5</td>
 			<td>LEC</td>
 			<td>30</td>
 			<td>None</td>
-			<td><button type="button" class="gwt-Button">Edit</button><button type="button" class="gwt-Button">Delete</button></td>
+			<td></td>
+			<td><button type="button" class="gwt-Button">Delete</button></td>
 			</tr>
 				<tr>
 				<td> Inorganic Chemistry</td>
@@ -1517,10 +1550,13 @@
 				<td>3</td>
 				<td>3</td>
 				<td>1</td>
+				<td>MWF</td>
+				<td>3</td>
 				<td>LEC</td>
 				<td>30</td>
 				<td>CHEM484</td>
-				<td><button type="button" class="gwt-Button">Edit</button><button type="button" class="gwt-Button">Delete</button></td>
+				<td>Can be in same room as lab</td>
+				<td><button type="button" class="gwt-Button">Delete</button></td>
 				</tr>
 				<tr>
 				<td>Inorganic Chemistry Lab</td>
@@ -1529,10 +1565,13 @@
 				<td>2</td>
 				<td>2</td>
 				<td>1</td>
+				<td>W</td>
+				<td>2</td>
 				<td>LAB</td>
 				<td>30</td>
 				<td>None</td>
-				<td><button type="button" class="gwt-Button">Edit</button><button type="button" class="gwt-Button">Delete</button></td>
+				<td>Goggles required</td>
+				<td><button type="button" class="gwt-Button">Delete</button></td>
 				</tr>
 
 	</tbody>
