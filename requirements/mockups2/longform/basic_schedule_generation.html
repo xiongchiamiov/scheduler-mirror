@@ -8,10 +8,29 @@ When the user wants to build a brand new schedule, use an existing schedule as a
 Creation view. In order to navigate to the Schedule Creation user interface, the user must click on the <a href="userInterface.html#user_interface">Schedule tab</a>
 located in the Scheduling tool's header at the top of the application. After clicking this tab the user is presented with the option of selecting a new
 schedule, using an existing schedule as a starting template, or modifying an existing schedule.
+</br></br>
+The user has the choice of letting the Scheduling tool assign all courses' time, location, and instructors using the automatic schedule generation feature.
+Based off of instructor  preferences, course preferences, and university constraints the Scheduling tool will assign all designated courses to their appopriate
+time slots.  The CHEM department is used throughout the requirements scenarios because the CHEM department provides a reasonably representative example of departments across campus.
+
+The uniform coloring designation used throughout this scenario for courses represents the current preference of the scheduled course.
+<BLOCKQUOTE>
+The color distribution is defined as follows:
+<ul>
+<li>Green = preferred by both department and instructor</li>
+<li>Yellow = preferred by department, not-preferred by instructor</li>
+<li>Orange = not preferred by department, as well as not-preferred by instructor</li>
+<li>Red = not possible, i.e., a hard scheduling conflict</li>
+</ul>
+</BLOCKQUOTE>
+
 <body bgcolor="#ffffff">
 <a name="automatic_sched"><h3>2.2.1 Automatic Scheduling</h3></a>
 <p>After the user selects the <strong>New Schedule</strong> option from the 
 <a href="userInterface.html#Home_Screen">Home Screen</a>, the user is presented with the screen show in <a href="#Figure 2.2.1.1">Figure 2.2.1.1</a>.
+The courses in <em>Department Courses</em> list are the ones being offered in the current department catalog and are labeled LEC/LAB to reflect
+the course has a lecture and lab portion. If the course has no indicator of LEC/LAB it means that the course is a typical Cal Poly lecture with no 
+associated lab portion.
 </p>
 <p></p>
 <hr>
@@ -71,7 +90,7 @@ as shown in <a href="#Figure 2.2.1.5">Figure 2.2.1.5</a> for CHEM 461.
 
 <a name="manual_sched"><h3>2.2.2 Manual Scheduling</h3></a>
 
-<a name="valid"><h4>Manual Scheduling Valid Drag and Drop</h4></a>
+<a name="valid"><h4>Manual Scheduling Preferred Drag and Drop</h4></a>
 <p>If the user wishes to manually edit the schedule, the user can drag a course from the <em>Department Courses</em> list directly onto a time slot 
 on the calendar. The user clicks and holds down on the specific course and drags the selected course onto the calendar. If the course meets the university requirements 
 and is preferred based on the preferences of the instructor, the course is colored bright green. In <a href="#Figure 2.2.2.1">Figure 2.2.2.1</a> the user is attempting to drag CHEM 252
@@ -81,7 +100,7 @@ in the specified time slot and after clicking the <strong>Save Schedule</strong>
 <hr>
 <a name="Figure 2.2.2.1">
 <p align="center"> <a name="Valid Drag"> <img src="images/ScheduleGenerationDragAccepted.png" border=2></a></p>
-<p align="center">Figure 2.2.2.1 Manual Scheduling Valid Drag and Drop</p>
+<p align="center">Figure 2.2.2.1 Manual Scheduling Preferred Drag and Drop</p>
 <hr>
 <p> If the user drags a course onto the schedule that can be offered over different sets of days during the same time slot, the user is presented with a pop-up box of all available offerings. In <a href="#Figure 2.2.2.2">Figure 2.2.2.2</a> the user attempts to schedule CHEM 474 from 7AM - 9AM but the course can be offered on both Monday, Wednesday, Friday or Monday, Wednesday, Thursday from 7AM - 9AM. In the example the user selects MWR 7AM - 9AM and presses the <strong>Save Schedule</strong> button to save it to the 
 database.
@@ -92,31 +111,50 @@ database.
 <p align="center">Figure 2.2.2.2 Manual Scheduling Day/Time Selection</p>
 <hr>
 
-<a name="not_preferred"><h4>Manual Scheduling Not Preferred Drag and Drop</h4></a>
+<a name="not_preferred"><h4>Manual Scheduling Yellow</h4></a>
 <p> If the user wishes to manually edit the schedule, the user can drag a course from the <em>Department Courses</em> list directly onto a time slot 
-on the calendar. The user clicks and holds down on the specific course and drags the selected course onto the calendar. If the course is colored bright orange
+on the calendar. The user clicks and holds down on the specific course and drags the selected course onto the calendar. If the course is colored bright yellow
 while attempting to place the course into a specific time slot it means the course is scheduled in a time that is <em>Not Preferred</em> due to the preferences
-of an instructor. In <a href="#Figure 2.2.2.3">Figure 2.2.2.3</a> the user attempts to schedule CHEM 590 from 9AM - 12PM, but the course is not prefered due to the preferences of the instructors in the database. The course is colored bright orange until the user unclicks and places the course in the time slot, then the course is colored light orange.
+of an instructor. In <a href="#Figure 2.2.2.3">Figure 2.2.2.3</a> the user attempts to schedule CHEM 316 from 10AM - 12PM on MWF, but the course is not prefered due to the preferences of the instructors in the database. 
+The course is colored bright yellow until the user unclicks and places the course in the time slot, then the course is colored light yellow.
 </p>
 <p></p>
 <hr>
 <p align="center">
 <a name="Figure 2.2.2.3">
-<img src="images/ScheduleGenerationDragNotPrefer.png" border=2></a></p>
-<p align="center">Figure 2.2.2.3 Manual Scheduling Not Preferred Drag and Drop</p>
+<img src="images/ScheduleGenerationDragConflict.png" border=2></a></p>
+<p align="center">Figure 2.2.2.3 Manual Scheduling Yellow</p>
 <p align="center"></p>
 <hr>
 </a>
 
-<a name="invalid"><h4>Manual Scheduling Invalid Drag and Drop</h4></a>
+<a name="not_preferred"><h4>Manual Scheduling Not Preferred Drag and Drop</h4></a>
+<p> If the user wishes to manually edit the schedule, the user can drag a course from the <em>Department Courses</em> list directly onto a time slot 
+on the calendar. The user clicks and holds down on the specific course and drags the selected course onto the calendar. If the course is colored bright orange
+while attempting to place the course into a specific time slot it means the course is scheduled in a time that is <em>Not Preferred</em> due to the preferences
+of an instructor and the department. In <a href="#Figure 2.2.2.4">Figure 2.2.2.4</a> the user attempts to schedule CHEM 590 from 9AM - 12PM on TR but the course 
+is not prefered due to the preferences of the instructors in the database and the department. The course is colored bright orange until the user unclicks and places the course in the time slot, then the course is colored light orange.
+</p>
+<p></p>
+<hr>
+<p align="center">
+<a name="Figure 2.2.2.4">
+<img src="images/ScheduleGenerationDragNotPrefer.png" border=2></a></p>
+<p align="center">Figure 2.2.2.4 Manual Scheduling Not Preferred Drag and Drop</p>
+<p align="center"></p>
+<hr>
+</a>
+
+<a name="invalid"><h4>Manual Scheduling Not Possible Drag and Drop</h4></a>
 <p> If the user wishes to manually edit the schedule, the user can drag a course from the <em>Department Courses</em> list directly onto a time slot 
 on the calendar. The user clicks and holds down on the specific course and drags the selected course onto the calendar. If the course is in direct conflict
 with the scheduling algorithm, university scheduling constraints, or instructor preferences the course is colored red. Once the user attempts to place the 
-course into the time slot the course automatically jumps back to the <em>Department Courses</em> list because it is unable to be scheduled.
+course into the time slot the course automatically jumps back to the <em>Department Courses</em> list because it is unable to be scheduled. In
+<a href="#Figure 2.2.2.5">Figure 2.2.2.5</a> the user attempts to drag CHEM 461 from 9AM - 10AM, but the course is <em>Not Possible</em> due to a hard scheduling conflict. 
 </p>
 <hr>
-<p align="center"> <a name="Invalid Drag"> <img src="images/ScheduleGenerationDragInvalid.png" border=2></a></p>
-<p align="center"><a name="Figure Removing Room">Figure 2.2.2.4 Manual Scheduling Invalid Drag and Drop</a></p>
+<p align="center"> <a name="Figure 2.2.2.5"> <img src="images/ScheduleGenerationDragInvalid.png" border=2></a></p>
+<p align="center"><a name="Figure Removing Room">Figure 2.2.2.5 Manual Scheduling Not Possible Drag and Drop</a></p>
 
 <center>
 <hr size="3" width="80%"><font size="-1"><font color="black"> Prev: </font></font></a><font size="-1"><a href="userInterface.html">User Interface Overview</a> | <font color="black">
