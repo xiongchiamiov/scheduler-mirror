@@ -36,6 +36,10 @@ public class Model implements Serializable
       this.userId = userId;
       this.db = new Database(userId);
    }
+   
+   public Schedule getSchedule() {
+	   return db.getScheduleDB().getSchedule(db.getScheduleID());
+   }
 
    /**
     * Returns a list of schedules which a given user has access to.
@@ -126,11 +130,11 @@ public class Model implements Serializable
       return db.copySchedule(existingScheduleID, scheduleName);
    }
 
-   public String exportToCSV (Schedule schedule)
+   public String exportToCSV ()
    {
       try
       {
-         return new CSVExporter().export(this, schedule);
+         return new CSVExporter().export(this);
       }
       catch (IOException e)
       {

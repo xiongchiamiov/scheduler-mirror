@@ -180,7 +180,9 @@ public class CSVExporter {
 		return "course#" + index;
 	}
 	
-	public String export(Model model, Schedule schedule) throws IOException {
+	public String export(Model model) throws IOException {
+		Schedule schedule = model.getSchedule();
+		
 		for (Location location : model.getLocations())
 			compileLocation(location);
 		
