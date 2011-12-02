@@ -61,4 +61,5 @@
 	padding: 3px 0;
 	white-space: nowrap;
 	overflow: hidden;
+	cursor: pointer;
 }

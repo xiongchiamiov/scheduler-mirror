@@ -35,6 +35,8 @@ import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditSaveColumn;
 import edu.calpoly.csc.scheduler.view.web.shared.Identified;
 
 public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
+	enum ColumnSortMode { NOT_SORTING, ASCENDING, DESCENDING }
+	
 	public interface ModifyHandler<ObjectType> {
 		void objectsModified(List<ObjectType> added, List<ObjectType> edited, List<ObjectType> removed, AsyncCallback<Void> callback);
 	}
@@ -62,6 +64,7 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 	// Miscellaneous information about the column such as initial width, header, etc.
 	// For OsmTable's use only.
 	private class ColumnMetadata {
+		ColumnSortMode sortMode = ColumnSortMode.NOT_SORTING;
 		final IColumn<ObjectType> column;
 		final ResizeableWidget header;
 		final boolean stretchWidthToAccommodateNewRows;
@@ -134,6 +137,7 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 	protected boolean headerFloating;
 	protected Element colgroupElement;
 	protected final FlexTable table;
+	protected ColumnMetadata currentSortedColumn;
 	
 	public OsmTable(IFactory<ObjectType> factory, final ModifyHandler<ObjectType> saveHandler) {
 		this.saveHandler = saveHandler;
@@ -211,17 +215,16 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 		if (initialWidth != null)
 			colElement.setAttribute("style", "width: " + initialWidth);
 		
-		final Widget headerContents = new HTML(name);
+		final HTML headerContents = new HTML(name);
 		headerContents.addStyleName("headerContents");
+		
 		ResizeableWidget header = new ResizeableWidget(this, headerContents, new ResizeCallback() {
 			public void setWidth(int newWidthPixels) {
-//				colElement.setAttribute("style", "width: " + newWidthPixels);
 				HTMLUtilities.getClosestContainingElementOfType(table.getWidget(0, newColumnIndex).getElement(), "td").setAttribute("style", "width: " + newWidthPixels + "px");
 			}
 			public int getWidth() {
 				if (rowsByObjectID.size() == 0)
 					return 0;
-//				return colElement.getOffsetWidth();
 				return HTMLUtilities.getClosestContainingElementOfType(table.getWidget(0, newColumnIndex).getElement(), "td").getOffsetWidth();
 			}
 		});
@@ -229,6 +232,12 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 		
 		final ColumnMetadata columnMetadata = new ColumnMetadata(column, header, stretchWidthToAccommodateNewRows, comparator);
 
+		headerContents.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				toggleSortingForColumn(columnMetadata);
+			}
+		});
+		
 //		header.addClickHandler(new ClickHandler() {
 //			public void onClick(ClickEvent event) {
 //				sortByColumn(column);
@@ -386,13 +395,35 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 		enterRowEditingMode(newRow, null);
 	}
 	
+	private void toggleSortingForColumn(ColumnMetadata column) {
+		if (column.sortMode == ColumnSortMode.ASCENDING)
+			sortByColumn(column, false);
+		else
+			sortByColumn(column, true);
+	}
+	
 	void sortByColumn(ColumnMetadata column, boolean ascending) {
+		assert(column != null);
+		
+		System.out.println("in sortbycolumn!");
+		
+		if (currentSortedColumn != null)
+			currentSortedColumn.sortMode = ColumnSortMode.NOT_SORTING;
+		currentSortedColumn = column;
+		currentSortedColumn.sortMode = ascending ? ColumnSortMode.ASCENDING : ColumnSortMode.DESCENDING;
+		
+		System.out.println(column.comparator != null);
+		
 		if (column.comparator != null) {
+			System.out.println("flerp");
+					
 			ArrayList<ObjectType> sortedList = new ArrayList<ObjectType>();
 			for (Row row : rowsByObjectID.values())
 				sortedList.add(row.object);
 			Collections.sort(sortedList, column.comparator);
 			
+			System.out.println("kerp");
+					
 			if (!ascending)
 				Collections.reverse(sortedList);
 	
@@ -403,9 +434,10 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 			assert(tableElement.getNodeName().equalsIgnoreCase("table"));
 			Element tbodyElement = tableElement.getElementsByTagName("tbody").getItem(0);
 			assert(tbodyElement.getNodeName().equalsIgnoreCase("tbody"));
-			assert(tbodyElement.getChildCount() == 2);
+			assert(tbodyElement.getChildCount() == 0);
 			
 			for (int i = 0; i < sortedList.size(); i++) {
+				System.out.println("derp " + i);
 				ObjectType object = sortedList.get(i);
 				Row row = rowsByObjectID.get(object.getID());
 				tbodyElement.appendChild(row.trElement);
