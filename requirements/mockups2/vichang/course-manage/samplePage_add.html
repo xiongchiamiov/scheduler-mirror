@@ -1407,6 +1407,7 @@
 	<th scope="col">Course Type</th>
 	<th scope="col">Max<br>Enrollment</th>
 	<th scope="col">Lab</th>
+	<th scope="col">Equipment<br>Needed</th>
 	<th scope="col">Details</th>
 	<th></th>
 	</tr>
@@ -1433,7 +1434,8 @@
 		</select></th>
 	<th><input size="3" value="30"></th>
 	<th><input size="6" value="None"></th>
-	<th><input size="6" value="Needs TA"></th>
+	<th><input size="10" value="Goggles"></th>
+	<th><input size="10" value="20% of class must fail"></th>
 	<th><button type="button" class="gwt-Button">Add</button><button type="button" class="gwt-Button">Clear</button></th>
 	</tr></tfoot>
 	<tbody>
@@ -1449,7 +1451,8 @@
 	<td>LEC</td>
 	<td>300</td>
 	<td>None</td>
-	<td>Needs TA</td>
+	<td>TA</td>
+	<td></td>
 	<td><button type="button" class="gwt-Button">Delete</button></td>
 	</tr>
 	<tr>
@@ -1464,7 +1467,8 @@
 	<td>LEC</td>
 	<td>300</td>
 	<td>None</td>
-	<td>Needs TA</td>
+	<td>TA</td>
+	<td></td>
 	<td><button type="button" class="gwt-Button">Delete</button></td>
 	</tr>
 	<tr>
@@ -1479,7 +1483,8 @@
 	<td>LEC</td>
 	<td>30</td>
 	<td>None</td>
-	<td>Needs TA's</td>
+	<td>TA's</td>
+	<td></td>
 	<td><button type="button" class="gwt-Button">Delete</button></td>
 	</tr>
 	<tr>
@@ -1494,7 +1499,8 @@
 	<td>LEC</td>
 	<td>30</td>
 	<td>None</td>
-	<td>Needs TA's</td>
+	<td>TA's</td>
+	<td></td>
 	<td><button type="button" class="gwt-Button">Delete</button></td>
 	</tr>
 	<tr>
@@ -1509,70 +1515,74 @@
 	<td>LEC</td>
 	<td>30</td>
 	<td>None</td>
-	<td>Needs TA's</td>
+	<td>TA's</td>
+	<td></td>
 	<td><button type="button" class="gwt-Button">Delete</button></td>
 	</tr>
-		<tr>
-		<td>Advanced Organic Chemistry Lab</td>
-		<td>319</td>
-		<td>CHEM</td>
-		<td>2</td>
-		<td>2</td>
-		<td>1</td>
-		<td>M</td>
-		<td>2</td>
-		<td>LAB</td>
-		<td>30</td>
-		<td>None</td>
-		<td></td>
-		<td><button type="button" class="gwt-Button">Delete</button></td>
-		</tr>
-	
-			<tr>
-			<td>  Quantitative Analysis</td>
-			<td>331</td>
-			<td>CHEM</td>
-			<td>5</td>
-			<td>5</td>
-			<td>1</td>
-			<td>MTWRF</td>
-			<td>5</td>
-			<td>LEC</td>
-			<td>30</td>
-			<td>None</td>
-			<td></td>
-			<td><button type="button" class="gwt-Button">Delete</button></td>
-			</tr>
-				<tr>
-				<td> Inorganic Chemistry</td>
-				<td>481</td>
-				<td>CHEM</td>
-				<td>3</td>
-				<td>3</td>
-				<td>1</td>
-				<td>MWF</td>
-				<td>3</td>
-				<td>LEC</td>
-				<td>30</td>
-				<td>CHEM484</td>
-				<td>Can be in same room as lab</td>
-				<td><button type="button" class="gwt-Button">Delete</button></td>
-				</tr>
-				<tr>
-				<td>Inorganic Chemistry Lab</td>
-				<td>484</td>
-				<td>CHEM</td>
-				<td>2</td>
-				<td>2</td>
-				<td>1</td>
-				<td>W</td>
-				<td>2</td>
-				<td>LAB</td>
-				<td>30</td>
-				<td>None</td>
-				<td>Goggles required</td>
-				<td><button type="button" class="gwt-Button">Delete</button></td>
-				</tr>
+	<tr>
+	<td>Advanced Organic Chemistry Lab</td>
+	<td>319</td>
+	<td>CHEM</td>
+	<td>2</td>
+	<td>2</td>
+	<td>1</td>
+	<td>M</td>
+	<td>2</td>
+	<td>LAB</td>
+	<td>30</td>
+	<td>None</td>
+	<td>Googles, TA</td>
+	<td></td>
+	<td><button type="button" class="gwt-Button">Delete</button></td>
+	</tr>
+	<tr>
+	<td>  Quantitative Analysis</td>
+	<td>331</td>
+	<td>CHEM</td>
+	<td>5</td>
+	<td>5</td>
+	<td>1</td>
+	<td>MTWRF</td>
+	<td>5</td>
+	<td>LEC</td>
+	<td>30</td>
+	<td>None</td>
+	<td></td>
+	<td></td>
+	<td><button type="button" class="gwt-Button">Delete</button></td>
+	</tr>
+	<tr>
+	<td> Inorganic Chemistry</td>
+	<td>481</td>
+	<td>CHEM</td>
+	<td>3</td>
+	<td>3</td>
+	<td>1</td>
+	<td>MWF</td>
+	<td>3</td>
+	<td>LEC</td>
+	<td>30</td>
+	<td>CHEM484</td>
+	<td></td>
+	<td>Can be in same room as lab</td>
+	<td><button type="button" class="gwt-Button">Delete</button></td>
+	</tr>
+	<tr>
+	<td>Inorganic Chemistry Lab</td>
+	<td>484</td>
+	<td>CHEM</td>
+	<td>2</td>
+	<td>2</td>
+	<td>1</td>
+	<td>W</td>
+	<td>2</td>
+	<td>LAB</td>
+	<td>30</td>
+	<td>None</td>
+	<td>Goggles</td>
+	<td></td>
+	<td><button type="button" class="gwt-Button">Delete</button></td>
+	</tr>
 
 	</tbody>
 </table>
