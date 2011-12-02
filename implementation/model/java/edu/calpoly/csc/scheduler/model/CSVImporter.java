@@ -95,6 +95,8 @@ public class CSVImporter {
 		schedule.setScheduleDBId(-1);
 		schedule.setName(name);
 		db.getScheduleDB().saveData(schedule);
+		assert(schedule.getDbid() != -1);
+		assert(schedule.getScheduleDBId() != -1);
 
 		for (Instructor instructor : instructors) {
 			instructor.setDbid(-1);
