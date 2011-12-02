@@ -13,6 +13,7 @@ import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -60,13 +61,16 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 		this.userID = userID;
 		this.username = username;
 
-
 		MenuBar fileMenu = new MenuBar(true);
+		DOM.setElementAttribute(fileMenu.getElement(), "id", "fileMenu");
 		
-		fileMenu.addItem(new MenuItem("New", true, new Command() {
+		MenuItem newItem = new MenuItem("New", true, new Command() {
 			public void execute() {
 				final String tempName = "Untitled";
 				final LoadingPopup popup = new LoadingPopup();
+				
+				DOM.setElementAttribute(popup.getElement(), "id", "failOpenSched");
+				
 				popup.show();
 				
 				service.openNewSchedule(tempName, new AsyncCallback<Integer>() {
@@ -83,21 +87,32 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 					}
 				});
 			}
-		}));
+		});
 		
-		fileMenu.addItem(new MenuItem("Open", true, new Command() {
+		DOM.setElementAttribute(newItem.getElement(), "id", "newScheduleBtn");
+		fileMenu.addItem(newItem);
+	
+		
+		MenuItem openItem = new MenuItem("Open", true, new Command() {
 			public void execute() {
 				displayOpenPopup();
 			}
-		}));
+		});
+		
+		DOM.setElementAttribute(openItem.getElement(), "id", "openItem");
+		fileMenu.addItem(openItem);
 		
 		
-		fileMenu.addItem(new MenuItem("Import", true, new Command() {
+		MenuItem importItem = new MenuItem("Import", true, new Command() {
 			public void execute() {
 				Window.alert("Import!  As long as it's not from China...");
 			}
-		}));
-		fileMenu.addItem(new MenuItem("Save", true, new Command() {
+		});
+		
+		DOM.setElementAttribute(importItem.getElement(), "id", "importItem");
+		fileMenu.addItem(importItem);
+		
+		MenuItem saveItem = new MenuItem("Save", true, new Command() {
 			public void execute() {
 				final LoadingPopup popup = new LoadingPopup();
 				popup.show();
@@ -114,13 +129,21 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 					}
 				});
 			}
-		}));
-		fileMenu.addItem(new MenuItem("Save As...", true, new Command() {
+		});
+		
+		DOM.setElementAttribute(saveItem.getElement(), "id", "saveItem");
+		fileMenu.addItem(saveItem);
+		
+		MenuItem saveAsItem = new MenuItem("Save As...", true, new Command() {
 			public void execute() {
 				displaySaveAsPopup();
 			}
-		}));
-		fileMenu.addItem(new MenuItem("Export", true, new Command() {
+		});
+		
+		DOM.setElementAttribute(saveAsItem.getElement(), "id", "saveAsItem");
+		fileMenu.addItem(saveAsItem);
+		
+		MenuItem exportItem = new MenuItem("Export", true, new Command() {
 			public void execute() {
 				service.exportCSV(new AsyncCallback<Integer>() {
 					public void onFailure(Throwable caught) {
@@ -135,9 +158,13 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 					}
 				});
 			}
-		}));
+		});
+		
+		DOM.setElementAttribute(exportItem.getElement(), "id", "exportItem");
+		fileMenu.addItem(exportItem);
 		
 		fileMenuItem = new MenuItem("File v", true, fileMenu);
+		DOM.setElementAttribute(fileMenuItem.getElement(), "id", "FileVIitem");
 		
 		this.addStyleName("homeView");
 		
@@ -150,6 +177,8 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 				final String tempName = "Untitled";
 				final LoadingPopup popup = new LoadingPopup();
 				popup.show();
+				
+				DOM.setElementAttribute(popup.getElement(), "id", "failSchedPopup");
 				
 				service.openNewSchedule(tempName, new AsyncCallback<Integer>() {
 					@Override
@@ -167,10 +196,15 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 			}
 		});
 		
+		DOM.setElementAttribute(newSchedButton.getElement(), "id", "newScheduleButton");
+		
 		this.add(new HTMLPanel("<h3>Open a Schedule</h3>"));
 		
 		listBox = new ListBox();
 		listBox.setVisibleItemCount(5);
+		
+		DOM.setElementAttribute(listBox.getElement(), "id", "listBox");
+		
 		this.add(listBox);
 
 		Button openButton = new Button("Open", new ClickHandler() {
@@ -185,6 +219,8 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 				selectSchedule(existingScheduleID, scheduleName);
 			}
 		});
+		
+		DOM.setElementAttribute(openButton.getElement(), "id", "openButton");
 		
 		FlowPanel flow = new FlowPanel();
         flow.add(newSchedButton);
