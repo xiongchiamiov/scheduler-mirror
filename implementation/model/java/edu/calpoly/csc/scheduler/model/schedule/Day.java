@@ -27,29 +27,14 @@ public class Day implements Serializable
    private int num;
    private String name;
    
-   private Day (int num, String name)
-   {
+   private Day (int num, String name) {
       this.num = num;
       this.name = name;
    }
    
-   public boolean equals (Day d)
-   {
-      return this.getNum() == d.getNum();
-   }
-   
-   public int hashCode ()
-   {
-      return this.num;
-   }
-   
-   public int getNum ()
-   {
-      return this.num;
-   }
-   
-   public String toString ()
-   {
-      return this.name;
-   }
+   public boolean equals (Day d) { return this.getNum() == d.getNum(); }
+   public int hashCode () { return this.num; }
+   public int getNum () { return this.num; }
+   public String toString () { return this.name; }
+	public String getName() { return this.name; }
 }

@@ -58,9 +58,9 @@ public class CSVExporter {
 			index = instructors.size();
 			instructors.add(new String[] {
 					"instructor#" + index,
-					instructor.getUserID(),
 					instructor.getFirstName(),
 					instructor.getLastName(),
+					instructor.getUserID(),
 					Integer.toString(instructor.getMaxWTU()),
 					Integer.toString(instructor.getCurWtu()),
 					instructor.getOffice().getBuilding(),
@@ -113,19 +113,20 @@ public class CSVExporter {
 		return "coursePrefs#" + newIndex;
 	}
 
-	private String compileScheduleItem(ScheduleItem item) {
+	private String compileScheduleItem(boolean conflictingScheduleItem, ScheduleItem item) {
 		int index = scheduleItems.indexOf(item);
 		if (index < 0) {
 			String labsString = "";
 			for (ScheduleItem lab : item.getLabs()) {
 				if (!labsString.equals(""))
 					labsString += " ";
-				labsString += compileScheduleItem(lab);
+				labsString += compileScheduleItem(false, lab);
 			}
 			
 			index = scheduleItems.size();
 			scheduleItems.add(new String[] {
 					"item#" + index,
+					Boolean.toString(conflictingScheduleItem),
 					compileInstructor(item.getInstructor()),
 					compileCourse(item.getCourse()),
 					compileLocation(item.getLocation()),
@@ -140,49 +141,60 @@ public class CSVExporter {
 		return "item#" + index;
 	}
 	
+	private String compileTime(Time time) {
+		return time.getHour() + ":" + time.getMinute();
+	}
+	
 	private String compileTimeRange(TimeRange timeRange) {
-		return timeRange.toString();
+		return compileTime(timeRange.getS()) + " to " + compileTime(timeRange.getE());
 	}
 
 	private String compileWeek(Week week) {
-		return week.toString();
+		String result = new String();
+		for (Day day : week.getDays())
+			result += (result.equals("") ? "" : " ") + day.getName();
+		return result;
 	}
 
 	private String compileCourse(Course course) {
 		int index = courses.indexOf(course);
 		if (index < 0) {
-			String labID = "none";
-			if (course.getLab() != null)
-				labID = compileCourse(course.getLab());
+			String labIndexString = course.getLab() == null ? "" : "course#" + courses.indexOf(course.getLab());
 			
 			index = courses.size();
 			courses.add(new String[] {
 					"course#" + index,
+					course.getType().toString(),
 					course.getName(),
 					Integer.toString(course.getCatalogNum()),
 					course.getDept(),
 					Integer.toString(course.getWtu()),
 					Integer.toString(course.getScu()),
 					Integer.toString(course.getNumOfSections()),
-					course.getType().toString(),
 					Integer.toString(course.getLength()),
 					compileWeek(course.getDays()),
 					Integer.toString(course.getEnrollment()),
-					labID});
+					labIndexString});
 		}
 		
 		return "course#" + index;
 	}
-
+	
 	public String export(Model model, Schedule schedule) throws IOException {
 		for (Location location : model.getLocations())
 			compileLocation(location);
+		
 		for (Instructor instructor : model.getInstructors())
 			compileInstructor(instructor);
+		
 		for (Course course : model.getCourses())
 			compileCourse(course);
+		
 		for (ScheduleItem item : schedule.getItems())
-			compileScheduleItem(item);
+			compileScheduleItem(false, item);
+		
+		for (ScheduleItem item : schedule.getDirtyList())
+			compileScheduleItem(true, item);
 		
 		Writer stringWriter = new CharArrayWriter();
 		CsvWriter writer = new CsvWriter(stringWriter, ',');
@@ -192,16 +204,51 @@ public class CSVExporter {
 		
 		writer.endRecord();
 		writer.writeComment(CSVStructure.SCHEDULE_MARKER);
-		writer.write("NameHere");
+		writer.write(schedule.getName());
+		writer.endRecord();
 		writer.writeComment(CSVStructure.SCHEDULE_END_MARKER);
 		
 
+		writer.endRecord();
+		writer.writeComment(CSVStructure.COURSES_MARKER);
+		for (int i = 0; i < courses.size(); i++) {
+			writer.writeRecord(courses.get(i));
+		}
+		writer.writeComment(CSVStructure.COURSES_END_MARKER);
+
+		
 		writer.endRecord();
 		writer.writeComment(CSVStructure.LOCATIONS_MARKER);
 		for (int i = 0; i < locations.size(); i++) {
 			writer.writeRecord(locations.get(i));
 		}
 		writer.writeComment(CSVStructure.LOCATIONS_END_MARKER);
+
+		writer.endRecord();
+		writer.writeComment(CSVStructure.INSTRUCTORS_COURSE_PREFS_MARKER);
+		for (int i = 0; i < instructorsCoursePrefs.size(); i++) {
+			writer.write("coursePrefs#" + i);
+			writer.endRecord();
+			writer.writeComment(CSVStructure.INSTRUCTOR_COURSE_PREFS_MARKER);
+			for (String[][] prefs : instructorsCoursePrefs)
+				for (String[] rec : prefs)
+					writer.writeRecord(rec);
+			writer.writeComment(CSVStructure.INSTRUCTOR_COURSE_PREFS_END_MARKER);
+		}
+		writer.writeComment(CSVStructure.INSTRUCTORS_COURSE_PREFS_END_MARKER);
+
+		writer.endRecord();
+		writer.writeComment(CSVStructure.ALL_INSTRUCTORS_TIME_PREFS_MARKER);
+		for (int i = 0; i < instructorsTimePrefs.size(); i++) {
+			writer.write("timePrefs#" + i);
+			writer.endRecord();
+			writer.writeComment(CSVStructure.SINGLE_INSTRUCTOR_TIME_PREFS_MARKER);
+			String[][] prefs = instructorsTimePrefs.get(i);
+			for (String[] rec : prefs)
+				writer.writeRecord(rec);
+			writer.writeComment(CSVStructure.SINGLE_INSTRUCTOR_TIME_PREFS_END_MARKER);
+		}
+		writer.writeComment(CSVStructure.ALL_INSTRUCTORS_TIME_PREFS_END_MARKER);
 
 		writer.endRecord();
 		writer.writeComment(CSVStructure.INSTRUCTORS_MARKER);
@@ -211,41 +258,11 @@ public class CSVExporter {
 		writer.writeComment(CSVStructure.INSTRUCTORS_END_MARKER);
 
 		writer.endRecord();
-		writer.writeComment(CSVStructure.COURSES_MARKER);
-		for (int i = 0; i < courses.size(); i++) {
-			writer.writeRecord(courses.get(i));
-		}
-		writer.writeComment(CSVStructure.COURSES_END_MARKER);
-
-		writer.endRecord();
-		writer.writeComment(CSVStructure.INSTRUCTORS_TIME_PREFS_MARKER);
-		for (int i = 0; i < instructorsTimePrefs.size(); i++) {
-			writer.write("timePrefs#" + i + ":");
-			writer.endRecord();
-			String[][] prefs = instructorsTimePrefs.get(i);
-			for (String[] rec : prefs)
-				writer.writeRecord(rec);
-		}
-		writer.writeComment(CSVStructure.INSTRUCTORS_TIME_PREFS_END_MARKER);
-
-		writer.endRecord();
-		writer.writeComment(CSVStructure.INSTRUCTORS_COURSE_PREFS_MARKER);
-		for (int i = 0; i < instructorsCoursePrefs.size(); i++) {
-			writer.write("coursePrefs#" + i + ":");
-			writer.endRecord();
-			for (String[][] prefs : instructorsCoursePrefs)
-				for (String[] rec : prefs)
-					writer.writeRecord(rec);
-		}
-		writer.writeComment(CSVStructure.INSTRUCTORS_COURSE_PREFS_END_MARKER);
-
-		writer.endRecord();
 		writer.writeComment(CSVStructure.SCHEDULE_ITEMS_MARKER);
-		for (int i = 0; i < scheduleItems.size(); i++) {
+		for (int i = 0; i < scheduleItems.size(); i++)
 			writer.writeRecord(scheduleItems.get(i));
-		}
 		writer.writeComment(CSVStructure.SCHEDULE_ITEMS_END_MARKER);
-		
+
 		writer.flush();
 		writer.close();
 		stringWriter.flush();
