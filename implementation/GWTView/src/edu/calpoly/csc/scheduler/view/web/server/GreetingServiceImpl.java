@@ -392,13 +392,13 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	public void saveSchedule() {
 		model.saveSchedule(schedule);
 	}
-
-	@Override
-	public int importFromCSV(String scheduleName, String value) {
-		model.openNewSchedule(scheduleName);
-		model.importFromCSV(value);
-		return model.getScheduleID();
-	}
+//
+//	@Override
+//	public int importFromCSV(String scheduleName, String value) {
+//		model.openNewSchedule(scheduleName);
+//		model.importFromCSV(value);
+//		return model.getScheduleID();
+//	}
 
 
 	@Override
@@ -427,8 +427,10 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		for (CourseGWT addedCourse : added)
 			model.saveCourse(Conversion.fromGWT(addedCourse));
 		
-		for (CourseGWT editedCourse : edited)
+		for (CourseGWT editedCourse : edited) {
+			System.out.println("Asking model to edit course " + editedCourse.getID());
 			model.saveCourse(Conversion.fromGWT(editedCourse));
+		}
 		
 		for (CourseGWT removedCourse : removed)
 			model.removeCourse(Conversion.fromGWT(removedCourse));
@@ -443,6 +445,6 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		
 		/** TODO replace new Date with export to CSV String */
 		//return CSVDownload.save(model.exportToCSV(schedule));
-		return CSVDownload.save(model.exportToCSV(schedule));
+		return CSVDownload.save(model.exportToCSV());
 	}
 }

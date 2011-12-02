@@ -29,7 +29,6 @@ public interface GreetingService extends RemoteService {
 	Integer openNewSchedule(String newScheduleName);
 	Pair<Integer, InstructorGWT> openExistingSchedule(int scheduleID);
 	int copySchedule(int existingScheduleID, String scheduleName);
-	int importFromCSV(String scheduleName, String value);
 	void removeSchedule(String schedName);
 
 	// Instructors

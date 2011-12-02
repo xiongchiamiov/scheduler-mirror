@@ -109,6 +109,7 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 		table.addColumn(
 				INSTR_FIRSTNAME,
 				"6em",
+				true,
 				new MemberStringComparator<InstructorGWT>(new IStaticGetter<InstructorGWT, String>() {
 					public String getValueForObject(InstructorGWT object) { return object.getFirstName(); }
 				}),
@@ -124,6 +125,7 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 		table.addColumn(
 				INSTR_LASTNAME,
 				"6em",
+				true,
 				new MemberStringComparator<InstructorGWT>(new IStaticGetter<InstructorGWT, String>() {
 					public String getValueForObject(InstructorGWT object) { return object.getLastName(); }
 				}),
@@ -139,6 +141,7 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 		table.addColumn(
 				INSTR_ID,
 				"6em",
+				true,
 				new MemberStringComparator<InstructorGWT>(new IStaticGetter<InstructorGWT, String>() {
 					public String getValueForObject(InstructorGWT object) { return object.getUserID(); }
 				}),
@@ -159,6 +162,7 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 		table.addColumn(
 				INSTR_MAX_WTU,
 				"4em",
+				false,
 				new MemberIntegerComparator<InstructorGWT>(new IStaticGetter<InstructorGWT, Integer>() {
 					public Integer getValueForObject(InstructorGWT object) { return object.getMaxWtu(); }
 				}),
@@ -177,38 +181,9 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 						}));
 		
 		table.addColumn(
-				INSTR_BUILDING,
-				"6em",
-				new MemberStringComparator<InstructorGWT>(new IStaticGetter<InstructorGWT, String>() {
-					public String getValueForObject(InstructorGWT object) { return object.getBuilding(); }
-				}),
-				new EditingStringColumn<InstructorGWT>(
-						new IStaticGetter<InstructorGWT, String>() {
-							public String getValueForObject(InstructorGWT object) { return object.getBuilding(); }
-						},
-						new IStaticSetter<InstructorGWT, String>() {
-							public void setValueInObject(InstructorGWT object, String newValue) { object.setBuilding(newValue); }
-						},
-						null));
-		
-		table.addColumn(
-				INSTR_ROOMNUMBER,
-				"6em",
-				new MemberStringComparator<InstructorGWT>(new IStaticGetter<InstructorGWT, String>() {
-					public String getValueForObject(InstructorGWT object) { return object.getRoomNumber(); }
-				}),
-				new EditingStringColumn<InstructorGWT>(
-						new IStaticGetter<InstructorGWT, String>() {
-							public String getValueForObject(InstructorGWT object) { return object.getRoomNumber(); }
-						},
-						new IStaticSetter<InstructorGWT, String>() {
-							public void setValueInObject(InstructorGWT object, String newValue) { object.setRoomNumber(newValue); }
-						},
-						null));
-		
-		table.addColumn(
 				INSTR_DISABILITIES,
 				"4em",
+				true,
 				new MemberIntegerComparator<InstructorGWT>(new IStaticGetter<InstructorGWT, Integer>() {
 					public Integer getValueForObject(InstructorGWT object) { return object.getDisabilities() ? 1 : 0; }
 				}),
@@ -223,6 +198,7 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 		table.addColumn(
 				INSTR_PREFERENCES,
 				"4em",
+				true,
 				null,
 				new ButtonColumn<InstructorGWT>(
 						"Preferences",
@@ -240,6 +216,8 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 		
 		this.add(table);
 		
+		System.out.println("sending request");
+		
 		service.getInstructors(new AsyncCallback<List<InstructorGWT>>() {
 			public void onFailure(Throwable caught) {
 				popup.hide();
@@ -247,6 +225,7 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 			}
 			
 			public void onSuccess(List<InstructorGWT> result){
+				System.out.println("onsuccess got response");
 				assert(result != null);
 				popup.hide();
 				for (InstructorGWT instr : result)

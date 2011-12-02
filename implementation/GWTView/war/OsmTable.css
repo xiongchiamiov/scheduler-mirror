@@ -28,23 +28,25 @@
 
 
 .headers.floating {
-	opacity: .8;
 	position: fixed;
 	top: 0;
+	background-color: white;
+	opacity: 0.9;
 }
 
 .headers .resizeable {
 	position: relative;
 	display: block;
-	border-right: 2px dotted #6F7277;
+	/*border-right: 2px dotted #6F7277;*/
 }
 
 .headers .resizeable .resizer {
 	position: absolute;
 	top: 0px;
 	bottom: 0px;
-	right: -.4em;
-	width: .7em;
+	right: -5px;
+	width: 10px;
+	background: url('imgs/resizer.gif') repeat-y;
 	display: block;
 	cursor: col-resize;
 	z-index: 1;
@@ -56,6 +58,7 @@
 	color: #4B4A4A;
 	text-align: left;
 	text-shadow: 1px 1px 0 #DDDDFF;
-	padding: 3px .4em;
+	padding: 3px 0;
 	white-space: nowrap;
+	overflow: hidden;
 }

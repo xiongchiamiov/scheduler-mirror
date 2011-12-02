@@ -77,6 +77,7 @@ public class AdminConfigView extends VerticalPanel implements IViewContents {	/*
 		table.addColumn(
 				CONFIG_USERNAME,
 				"6em",
+				true,
 				new Comparator<UserDataGWT>() {
 					@Override
 					public int compare(UserDataGWT o1, UserDataGWT o2) {
@@ -100,6 +101,7 @@ public class AdminConfigView extends VerticalPanel implements IViewContents {	/*
 		table.addColumn(
 				CONFIG_LEVEL,
 				"6em",
+				true,
 				new Comparator<UserDataGWT>() {
 					@Override
 					public int compare(UserDataGWT o1, UserDataGWT o2) {

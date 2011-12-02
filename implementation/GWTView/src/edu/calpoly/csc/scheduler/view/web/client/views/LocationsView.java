@@ -103,6 +103,7 @@ public class LocationsView extends VerticalPanel implements IViewContents {
 		table.addColumn(
 				"Building",
 				null,
+				true,
 				new Comparator<LocationGWT>() {
 					public int compare(LocationGWT o1, LocationGWT o2) {
 						return o1.getBuilding().compareTo(o2.getBuilding());
@@ -126,6 +127,7 @@ public class LocationsView extends VerticalPanel implements IViewContents {
 		table.addColumn(
 				"Room",
 				null,
+				true,
 				new Comparator<LocationGWT>() {
 					@Override
 					public int compare(LocationGWT o1, LocationGWT o2) {
@@ -150,6 +152,7 @@ public class LocationsView extends VerticalPanel implements IViewContents {
 		table.addColumn(
 				"Type",
 				null,
+				true,
 				new Comparator<LocationGWT>() {
 					@Override
 					public int compare(LocationGWT o1, LocationGWT o2) {
@@ -168,6 +171,7 @@ public class LocationsView extends VerticalPanel implements IViewContents {
 		table.addColumn(
 				"Occupancy",
 				null,
+				true,
 				new Comparator<LocationGWT>() {
 					@Override
 					public int compare(LocationGWT o1, LocationGWT o2) {
@@ -191,6 +195,7 @@ public class LocationsView extends VerticalPanel implements IViewContents {
 		table.addColumn(
 				"ADA",
 				null,
+				true,
 				new Comparator<LocationGWT>() {
 					@Override
 					public int compare(LocationGWT o1, LocationGWT o2) {
@@ -208,6 +213,7 @@ public class LocationsView extends VerticalPanel implements IViewContents {
 		table.addColumn(
 				"Equipment",
 				null,
+				true,
 				null,
 				new MultiselectColumn<LocationGWT>(
 						new String[] { LAPTOP_CONNECTIVITY, OVERHEAD, SMART_ROOM },

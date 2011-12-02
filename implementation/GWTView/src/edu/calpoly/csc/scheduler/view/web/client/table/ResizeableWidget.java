@@ -6,6 +6,7 @@ import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.event.dom.client.MouseMoveHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -18,7 +19,6 @@ class ResizeableWidget extends FlowPanel {
 	
 	private boolean dragging = false;
 	private int dragAnchorX;
-	private int desiredWidthPixels;
 	final ResizeCallback callback;
 
 	public ResizeableWidget(Widget draggableArea, Widget contents, final ResizeCallback callback) {
@@ -36,7 +36,6 @@ class ResizeableWidget extends FlowPanel {
 			public void onMouseDown(MouseDownEvent event) {
 				dragging = true;
 				dragAnchorX = event.getClientX();
-				desiredWidthPixels = callback.getWidth();
 				event.preventDefault();
 			}
 		}, MouseDownEvent.getType());
@@ -44,13 +43,12 @@ class ResizeableWidget extends FlowPanel {
 		draggableArea.addDomHandler(new MouseMoveHandler() {
 			public void onMouseMove(MouseMoveEvent event) {
 				if (dragging) {
-					int dragX = event.getClientX();
-					desiredWidthPixels += dragX - dragAnchorX;
-					dragAnchorX = dragX;
-					callback.setWidth(desiredWidthPixels);
-					System.out.println("Setting width to " + desiredWidthPixels);
-					refreshWidth();
 					event.preventDefault();
+					
+					int dragX = event.getClientX();
+					int difference = dragX - dragAnchorX;
+					dragAnchorX = dragX;
+					setBothWidths(getOffsetWidth() + difference);
 				}
 			}
 		}, MouseMoveEvent.getType());
@@ -60,8 +58,60 @@ class ResizeableWidget extends FlowPanel {
 		}, MouseUpEvent.getType());
 	}
 
-	void refreshWidth() {
-		System.out.println("refreshing width to " + callback.getWidth() + "px");
-		setWidth(callback.getWidth() + "px");
+	void synchronizeToMaximumOfBoth() {
+		setBothWidths(Math.max(callback.getWidth(), getOffsetWidth()));
+	}
+//	
+//	void synchronizeWidths(boolean stretchToAccommodateCallbackWidth) {
+//		int neededWidth = getOffsetWidth();
+//		if (stretchToAccommodateCallbackWidth)
+//			neededWidth = Math.max(callback.getWidth(), neededWidth);
+//		System.out.println("refreshing width to " + neededWidth + "px");
+//		
+//		callback.setWidth(neededWidth);
+//		if (callback.getWidth() != neededWidth) {
+//			System.out.println("Callback is not honoring its setwidth! we called setWidth with " + neededWidth + " but after that it returned " + callback.getWidth());
+//		}
+//		
+//		if (stretchToAccommodateCallbackWidth) {
+//			setWidth(neededWidth + "px");
+//			if (getOffsetWidth() != neededWidth) {
+//				System.out.println("i set my width but now im " + getOffsetWidth() + " and callback is returning " + callback.getWidth());
+//			}
+//		}
+//	}
+//	
+	void setBothWidths(int newWidth) {
+		if (newWidth < 0)
+			newWidth = 0;
+		
+		setWidth(newWidth + "px");
+		if (getOffsetWidth() != newWidth) {
+			System.out.println("Contents not honoring setwidth!");
+			// Will have to be synchronized
+		}
+		
+		callback.setWidth(newWidth);
+		if (callback.getWidth() != newWidth) {
+			System.out.println("Callback not honoring setwidth!");
+			// Will have to be synchronized
+		}
+		
+		synchronize();
+	}
+	
+	// Tries to conform to callback's first
+	void synchronize() {
+		if (callback.getWidth() != getOffsetWidth()) {
+			setWidth(callback.getWidth() + "px");
+		}
+
+		if (callback.getWidth() != getOffsetWidth()) {
+			callback.setWidth(getOffsetWidth());
+		}
+
+		if (callback.getWidth() != getOffsetWidth()) {
+			System.out.println("Resizeable and callback can't synchronize!");
+		}
 	}
 }

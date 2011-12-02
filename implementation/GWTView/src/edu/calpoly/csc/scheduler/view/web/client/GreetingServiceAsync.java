@@ -46,8 +46,6 @@ public interface GreetingServiceAsync {
 	void saveSchedule(AsyncCallback<Void> asyncCallback);
 	void copySchedule(int existingScheduleID, String scheduleName,
 			AsyncCallback<Integer> asyncCallback);
-	void importFromCSV(String scheduleName, String value,
-			AsyncCallback<Integer> asyncCallback);
 	void saveCourses(List<CourseGWT> added, List<CourseGWT> edited,
 			List<CourseGWT> removed,
 			AsyncCallback<Void> callback);
