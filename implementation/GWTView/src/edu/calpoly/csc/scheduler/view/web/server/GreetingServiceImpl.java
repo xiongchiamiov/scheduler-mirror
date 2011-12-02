@@ -403,8 +403,10 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 
 	@Override
 	public void saveLocations(List<LocationGWT> added, List<LocationGWT> edited, List<LocationGWT> removed) {
-		for (LocationGWT addedLocation : added)
+		for (LocationGWT addedLocation : added) {
+			addedLocation.setID(-1);
 			model.saveLocation(Conversion.fromGWT(addedLocation));
+		}
 		
 		for (LocationGWT editedLocation : edited)
 			model.saveLocation(Conversion.fromGWT(editedLocation));
@@ -424,8 +426,10 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 
 	@Override
 	public void saveCourses(List<CourseGWT> added, List<CourseGWT> edited, List<CourseGWT> removed) {
-		for (CourseGWT addedCourse : added)
+		for (CourseGWT addedCourse : added) {
+			addedCourse.setID(-1);
 			model.saveCourse(Conversion.fromGWT(addedCourse));
+		}
 		
 		for (CourseGWT editedCourse : edited) {
 			System.out.println("Asking model to edit course " + editedCourse.getID());

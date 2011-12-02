@@ -249,6 +249,7 @@ public abstract class Conversion {
 	
 	public static Location fromGWT(LocationGWT location) {
 		Location loc = new Location();
+		loc.setDbid(location.getID());
 		loc.setRoom(location.getRoom());
 		loc.setAdaCompliant(location.isADACompliant());
 		loc.setAvailability(new WeekAvail());
@@ -272,6 +273,7 @@ public abstract class Conversion {
 
 	public static Course fromGWT(CourseGWT course) {
 		Course newCourse = new Course();
+		newCourse.setDbid(course.getID());
 		newCourse.setName(course.getCourseName());
 		newCourse.setCatalogNum(course.getCatalogNum());
 		newCourse.setWtu(course.getWtu());

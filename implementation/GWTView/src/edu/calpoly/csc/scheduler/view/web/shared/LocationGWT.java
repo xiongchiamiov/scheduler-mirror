@@ -68,6 +68,7 @@ public class LocationGWT implements Serializable, Identified {
 	}
 
 	public Integer getID() { return id; }
+	public void setID(Integer id) { this.id = id; }
 	public boolean isADACompliant() { return adacompliant; }
 	public void setADACompliant(boolean compliant) { this.adacompliant = compliant; }
 	public String getBuilding() { return building; }
