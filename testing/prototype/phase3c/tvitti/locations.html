@@ -1,0 +1,76 @@
+<html>
+<table align=center border=1 cellpadding=4>
+  <tr>
+    <td valign=top><strong>Case No.</strong>
+    <td valign=top><strong>User Inputs and Command</strong>
+    <td valign=top><strong>Expected Output</strong>
+    <td valign=top><strong>Result</strong>&nbsp;&nbsp;
+    <td valign=top><strong>Remarks</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <tr>
+    <td valign=top>1
+    <td valign=top>
+Click 'new', enter data, click 'save all'
+    <td valign=top>
+A new location is added to the database
+    <td valign=top>
+Pass
+    <td valign=top>
+&nbsp;
+  <tr>
+    <td valign=top>2
+    <td valign=top>
+Use tab and shift-tab to move between data columns while editing
+    <td valign=top>
+Selected field changes with each press
+    <td valign=top>
+Fail
+    <td valign=top>
+Columns change size violently when selected. Shift-tab does not work.
+  <tr>
+    <td valign=top>3
+    <td valign=top>
+Edit a row, then click 'save all' to commit
+    <td valign=top>
+Row highlights yellow, then saves data and returns to white
+    <td valign=top>
+Fail
+    <td valign=top>
+Row turns yellow even if no data is changed
+  <tr>
+    <td valign=top>4
+    <td valign=top>
+Click 'x' to delete existing row, then click 'save all'
+    <td valign=top>
+Row turns red to show pending deletion, then dissapears
+    <td valign=top>
+Fail
+    <td valign=top>
+Row does not delete
+  <tr>
+    <td valign=top>5
+    <td valign=top>
+Create a new row, then click 'x' to delete it, then click 'save all'
+    <td valign=top>
+Row turns green, then red to show pending deletion, then dissapears
+    <td valign=top>
+Fail
+    <td valign=top>
+Row is deleted immediately. Perhaps this is desired behavior? Makes it too easy to accidently delete data.
+  <tr>
+    <td valign=top>6
+    <td valign=top>
+Create multiple new rows, then click 'x' to delete one
+    <td valign=top>
+The correct row is deleted
+    <td valign=top>
+Pass
+    <td valign=top>
+&nbsp;
+</table>
+<h3>General Notes:</h3>
+<ul>
+<li>Columns changing size upon selection is very disorienting. Please disable.
+<li>On a slow network connection (ie, CalPoly) there is no indication of progress when 'save all' is clicked. Operations are not performed but the application is still usable, implying failure
+</ul>
+</body>
+</html>
