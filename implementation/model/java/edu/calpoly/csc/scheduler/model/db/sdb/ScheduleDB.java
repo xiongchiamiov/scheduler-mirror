@@ -44,6 +44,8 @@ public class ScheduleDB extends AbstractDatabase<Schedule>
       else
       {
          addData(data);
+         data.setDbid(sqldb.getLastGeneratedKey());
+         data.setScheduleDBId(sqldb.getLastGeneratedKey());
       }
    }
 
