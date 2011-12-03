@@ -1390,15 +1390,36 @@
 		<center>
 		<table id="hor-minimalist-b">
 		<tbody>
-        <tr>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td><div align="right"></br><input class="gwt-button" type="button" value="Save Schedule" /></div></td>
+		<tr>	    
+            <input class="gwt-button" type="button" value="Generate Schedule"/>&nbsp&nbsp
+			<input class="gwt-button" type="button" value="Save Schedule"/>&nbsp&nbsp
+			<strong>Search:</strong> <input type="text" class="gwt-TextBox">&nbsp&nbsp
+			<input class="gwt-button" type="button" value="Filter"/>			
+			&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+			&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+			&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+			&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+			&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+			&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+			&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+			&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+			&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+			&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+			&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+			&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+			&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+			<strong>View:</strong>
+			<SELECT align=right>
+				<OPTION VALUE="o1">Weekly
+				<OPTION VALUE="o2">Weekly Condensed
+				<OPTION VALUE="o1">List
+				<OPTION VALUE="o1">Course Table
+			</SELECT>
         </tr>
 		<tr>
 				<td valign="top">
 				  <h4 align="center"><font color="black">Department Courses</h4>
-                  <select size="35" multiple style="width: 150px" title="Department Courses">
+                  <select size="39" multiple style="width: 150px" title="Department Courses">
 					<option id="course-option">CHEM 110 (LEC)</option>
                     <option id="course-option">CHEM 110 (LAB)</option>
                     <option id="course-option">CHEM 124 (LEC)</option>
@@ -1423,6 +1444,10 @@
                     <option id="course-option"></option>
                     <option id="course-option"></option>
 					<option id="course-option"></option>
+					<option id="course-option"></option>
+                    <option id="course-option"></option>
+                    <option id="course-option"></option>
+					<option id="course-option"></option>					
                     <option id="course-option"></option>
                     <option id="course-option"></option>
                     <option id="course-option"></option>
@@ -1438,7 +1463,7 @@
                 </td>
 				<td valign="top">
 				  <h4 align="center"><font color="black">Courses to Schedule</h4>
-                  <select size="35" multiple style="width: 150px">
+                  <select size="39" multiple style="width: 150px">
 				  	<option id="course-option"></option>
                     <option id="course-option"></option>
                     <option id="course-option"></option>
@@ -1447,6 +1472,10 @@
                     <option id="course-option"></option>
                     <option id="course-option"></option>
                     <option id="course-option"></option>
+					<option id="course-option"></option>
+                    <option id="course-option"></option>
+                    <option id="course-option"></option>
+					<option id="course-option"></option>					
                     <option id="course-option"></option>
                     <option id="course-option"></option>
                     <option id="course-option"></option>
@@ -1474,8 +1503,7 @@
                     <option id="course-option"></option>
                     <option id="course-option"></option>
                     <option id="course-option"></option>
-                  </select>
-				  <h4><div align="center"><input class="gwt-button" type="button" value="Generate Schedule" /></h4>
+                  </select>				  
                 </td>
         <td> <table id="hor-minimalist-b" summary="Schdule View" style="border-spacing: 0px;" rules="cols">
 		<thead>
@@ -1530,13 +1558,13 @@
 		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
 		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 110</td>
 		<td class="rightColumnCell" style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
-		<td style="width:70px;height:30px;background-color:#FFC561;text-align:center;"><font color="black">CHEM 590</td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
 		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 110</td>
 		<td class="rightColumnCell" style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
 		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
 		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
 		<td class="rightColumnCell" style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td style="width:70px;height:30px;background-color:#FFC561;text-align:center;"><font color="black">CHEM 590</td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
 		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 110</td>
 		<td class="rightColumnCell" style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
 		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
@@ -1548,16 +1576,16 @@
 		<td style="width:70px;height:30px;background-color:#FFEB21;text-align:center;"><font color="black"></td>
 		<td style="width:70px;height:30px;background-color:#FFEB21;text-align:center;"><font color="black">CHEM 316</td>
 		<td class="rightColumnCell" style="width:70px;height:30px;background-color:#FFEB21;text-align:center;"><font color="black"></td>
-		<td style="width:70px;height:30px;background-color:#FFC561;text-align:center;"><font color="black">CHEM 590</td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
 		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 461</td>
 		<td class="rightColumnCell" style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
 		<td style="width:70px;height:30px;background-color:#FFEB21;text-align:center;"><font color="black"></td>
 		<td style="width:70px;height:30px;background-color:#FFEB21;text-align:center;"><font color="black">CHEM 316</td>
 		<td class="rightColumnCell" style="width:70px;height:30px;background-color:#FFEB21;text-align:center;"><font color="black"></td>
-		<td style="width:70px;height:30px;background-color:#FFC561;text-align:center;"><font color="black">CHEM 590</td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
 		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 461</td>
 		<td class="rightColumnCell" style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
-		<td style="width:70px;height:30px;background-color:#FFEB21;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:#FFEB21;text-align:center;"><font color="black"></td>
 		<td style="width:70px;height:30px;background-color:#FFEB21;text-align:center;"><font color="black">CHEM 316</td>
 		<td style="width:70px;height:30px;background-color:#FFEB21;text-align:center;"><font color="black"></td>
 		</tr><tr>
@@ -1565,13 +1593,13 @@
 		<td style="width:70px;height:30px;background-color:#FFEB21;text-align:center;"><font color="black"></td>
 		<td style="width:70px;height:30px;background-color:#FFEB21;text-align:center;"><font color="black">CHEM 316</td>
 		<td class="rightColumnCell" style="width:70px;height:30px;background-color:#FFEB21;text-align:center;"><font color="black"></td>
-		<td style="width:70px;height:30px;background-color:#FFC561;text-align:center;"><font color="black">CHEM 590</td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
 		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 461</td>
 		<td class="rightColumnCell" style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
 		<td style="width:70px;height:30px;background-color:#FFEB21;text-align:center;"><font color="black"></td>
 		<td style="width:70px;height:30px;background-color:#FFEB21;text-align:center;"><font color="black">CHEM 316</td>
 		<td class="rightColumnCell" style="width:70px;height:30px;background-color:#FFEB21;text-align:center;"><font color="black"></td>
-		<td style="width:70px;height:30px;background-color:#FFC561;text-align:center;"><font color="black">CHEM 590</td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
 		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 461</td>
 		<td class="rightColumnCell" style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
 		<td style="width:70px;height:30px;background-color:#FFEB21;text-align:center;"><font color="black"></td>
@@ -1601,14 +1629,14 @@
 		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 128</td>
 		<td class="rightColumnCell" style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
 		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 377</td>
-		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td class="rightColumnCell" style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
 		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
 		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 128</td>
 		<td class="rightColumnCell" style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
 		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 377</td>
-		<td style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
-		<td class="rightColumnCell" style="width:70px;height:30px;background-color:white;text-align:center;"><font color="black"></td>
+		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
+		<td class="rightColumnCell" style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
 		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
 		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black">CHEM 128</td>
 		<td style="width:70px;height:30px;background-color:#BEFF84;text-align:center;"><font color="black"></td>
