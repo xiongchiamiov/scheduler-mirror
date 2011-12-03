@@ -1,0 +1,74 @@
+
+<!-- saved from url=(0082)http://users.csc.calpoly.edu/~gfisher/classes/309/handouts/acceptance-testing.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>
+User Acceptance Testing
+</title>
+</head>
+<body bgcolor="white">
+<p align="center">
+<font size="+2">
+<strong>CSC 402 User Acceptance Testing For Prototype</strong>
+</font>
+</p>
+<br>
+<br>
+
+</p><blockquote>
+<table align="center" border="1" cellpadding="4">
+  <tbody><tr>
+    <td valign="top"><strong>Case No.</strong>
+    </td><td valign="top"><strong>User Inputs and Command</strong>
+    </td><td valign="top"><strong>Expected Output</strong>
+    </td><td valign="top"><strong>Remarks</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </td><td valign="top"><strong>Results</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </td></tr><tr>
+    <td valign="top">1
+    </td><td valign="top">Press the New Button
+    </td><td valign="top">Present me with a blank row to input Course data
+    </td><td valign="top">Why is the default hours set to 3? Is that the university standards?
+    </td><td valign="top">FIX - presents me with a popup saying "value not in options" and after clicking OK presents me with a blank row
+  </td></tr>
+  <tr>
+    <td valign="top">2
+    </td><td valign="top">Input data into the New Course fields
+    </td><td valign="top">Input data into all fields and save it to the database
+    </td><td valign="top">Can't edit the data in the "Course Type" column. How do you select None for the "Lab" column?
+    </td><td valign="top">FIX - How do you save or make the editable fields disappear for the new course?
+  </td></tr><tr>
+    <td valign="top">3
+    </td><td valign="top">Click the "X" button to delete a course	
+    </td><td valign="top">The course should disappear from the list after being presented with a confirmation popup
+    </td><td valign="top">
+    </td><td valign="top">PASS - Presented the user with a confirmation popup and deleted it from the list
+  </td></tr><tr>
+    <td valign="top">4
+    </td><td valign="top">Order the various columns by clicking on the title header 
+    </td><td valign="top">The column should be sorted in ascending/descending order
+    </td><td valign="top">There is no indicator of asending or descending next to the column header
+    </td><td valign="top">FIX - Couldn't sor the following columns: "WTU", "SCU", "# Of Sections", "Max Enrollment", "Hours", "Lab"
+  </td></tr><tr>
+    <td valign="top">5
+    </td><td valign="top">Expand the columnns by clicking and dragging on each column's horizontal borders
+    </td><td valign="top">The columns should be able to expand and shrink
+    </td><td valign="top"> 
+    </td><td valign="top">PASS - All column were able to expand and shring
+  </td></tr>
+  <tr>
+    <td valign="top">6
+    </td><td valign="top">Saving
+    </td><td valign="top">Save the courses list
+    </td><td valign="top">
+    </td><td valign="top">FIX - Have no idea how to save. 
+	If it saves automatically then for some reason the editable fields on the courses I have edited are still visible and havn't disappeared.
+  </td></tr>
+  <tr>
+    <td valign="top">7
+    </td><td valign="top">Edit a class to have a lab section
+    </td><td valign="top">Click th "Lab" button and select from a drop-down menu the appropriate lab section
+    </td><td valign="top">Doesn't indicate the section number and doesn't have an option for no lab
+    </td><td valign="top">FIX - Add section numbers and provide a menu selection "None" or "N/A" or something that indicates no Lab for the particular course
+  </td></tr></tbody></table>
+</blockquote>
+
+</p></body></html>
