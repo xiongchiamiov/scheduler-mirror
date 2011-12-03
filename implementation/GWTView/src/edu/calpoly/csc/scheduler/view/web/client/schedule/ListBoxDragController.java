@@ -13,7 +13,8 @@ import com.allen_sauer.gwt.dnd.client.util.DOMUtil;
 import java.util.ArrayList;
 
 /**
- * DragController for {@link DualListExample}.
+ * A drag controller for the two courses lists.
+ * Based on example from Fred Sauer at 
  */
 class ListBoxDragController extends PickupDragController
 {
@@ -33,17 +34,11 @@ class ListBoxDragController extends PickupDragController
 
   if (context.vetoException == null)
   {
-   // remove original items
-   MouseListBox currentMouseListBox = (MouseListBox) context.draggable
-     .getParent().getParent();
+   // Unselect selected items
    while (!context.selectedWidgets.isEmpty())
    {
     Widget widget = context.selectedWidgets.get(0);
     toggleSelection(widget);
-    /*
-     * if (!currentMouseListBox.isAvailableBox()) {
-     * currentMouseListBox.remove(widget); }
-     */
    }
   }
  }

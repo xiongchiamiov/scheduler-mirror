@@ -113,7 +113,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
    return;
   }
   loading.show();
-  greetingService.getGWTScheduleItems(dualListBoxCourses.getIncludedCourses(),
+  greetingService.generateSchedule(dualListBoxCourses.getIncludedCourses(),
     new AsyncCallback<List<ScheduleItemGWT>>()
     {
      public void onFailure(Throwable caught)
@@ -281,16 +281,6 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
   filtersDialog.addCloseHandler(this);
   interfacePanel.add(new Button("Generate Schedule",
     new GenerateScheduleClickHandler()));
-  
-  interfacePanel.add(new Button("Save Schedule", new ClickHandler()
-  {
-   public void onClick(ClickEvent event)
-   {
-    // Causes the filters dialog to appear in the center of this
-    // widget
-    saveSchedule();
-   }
-  }));
   
   interfacePanel.add(new CSVButton(greetingService).getButton());
   
@@ -585,31 +575,6 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
       filterScheduleItems(searchBox.getText());
       loading.hide();
      }   
-    });
- }
- 
- public void saveSchedule()
- {
-  //Window.alert("This feature is not yet functional, so this schedule won't be saved if the page is refreshed.");
-  final LoadingPopup loading = new LoadingPopup();
-  loading.show();
-  greetingService.saveSchedule(
-    new AsyncCallback<Void>()
-    {
-
-     @Override
-     public void onFailure(Throwable caught)
-     {
-      loading.hide();
-      Window.alert("Failed to save schedule.");
-     }
-
-     @Override
-     public void onSuccess(Void result)
-     {
-      loading.hide();
-      Window.alert("Schedule successfully saved.");
-     }
     });
  }
 }

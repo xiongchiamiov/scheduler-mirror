@@ -47,11 +47,10 @@ public interface GreetingService extends RemoteService {
 			List<LocationGWT> removed);
 	
 	// Schedule Items
-	List<ScheduleItemGWT> getGWTScheduleItems(List<CourseGWT> courses);
-	List<ScheduleItemGWT> generateSchedule();	
+	List<ScheduleItemGWT> generateSchedule(List<CourseGWT> courses);
 	ScheduleItemList rescheduleCourse(ScheduleItemGWT scheduleItem, List<Integer> days, int startHour, boolean atHalfHour, boolean inSchedule);
 	List<ScheduleItemGWT> removeScheduleItem(ScheduleItemGWT removed);
-	void saveSchedule();
 	List<ScheduleItemGWT> getSchedule();
+	void saveSchedule();
 	int exportCSV();
 }

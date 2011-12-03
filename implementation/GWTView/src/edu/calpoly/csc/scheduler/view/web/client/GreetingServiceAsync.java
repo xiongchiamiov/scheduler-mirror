@@ -33,18 +33,16 @@ public interface GreetingServiceAsync {
 	
 	void getCourses(AsyncCallback<List<CourseGWT>> asyncCallback) throws IllegalArgumentException;
 
-    void getGWTScheduleItems(List<CourseGWT> courses,
+    void generateSchedule(List<CourseGWT> courses,
 			AsyncCallback<List<ScheduleItemGWT>> scheduleItems);
 	void rescheduleCourse(ScheduleItemGWT scheduleItem,
 			List<Integer> days, int startHour, boolean atHalfHour,
 			boolean inSchedule, AsyncCallback<ScheduleItemList> callback);
 	void removeScheduleItem(ScheduleItemGWT removed,
 			AsyncCallback<List<ScheduleItemGWT>> scheduleItems);
-	void generateSchedule(
-			AsyncCallback<List<ScheduleItemGWT>> scheduleItems);
-	void getSchedule(AsyncCallback<List<ScheduleItemGWT>> asyncCallback);
-	void saveSchedule(AsyncCallback<Void> asyncCallback);
-	void copySchedule(int existingScheduleID, String scheduleName,
+    void getSchedule(AsyncCallback<List<ScheduleItemGWT>> asyncCallback);
+	void saveSchedule(AsyncCallback<Void> hollaBack);
+    void copySchedule(int existingScheduleID, String scheduleName,
 			AsyncCallback<Integer> asyncCallback);
 	void saveCourses(List<CourseGWT> added, List<CourseGWT> edited,
 			List<CourseGWT> removed,

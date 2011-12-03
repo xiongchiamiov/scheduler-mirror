@@ -38,7 +38,6 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		GreetingService {
 
 	private Model model;
-	private Schedule schedule;
 	private HashMap<String, ScheduleItem> scheduleItems;
 
 	@Override
@@ -139,7 +138,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 //								.getDesire());
 //	}
 
-	@Override
+/*	@Override
 	public ArrayList<ScheduleItemGWT> generateSchedule() {
 		assert (model != null);
 
@@ -174,12 +173,13 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		}
 		return gwtItems;
 	}
-
+*/
 	@Override
-	public ArrayList<ScheduleItemGWT> getGWTScheduleItems(
+	public ArrayList<ScheduleItemGWT> generateSchedule(
 			List<CourseGWT> courses) {
 		Course courseWithSections;
-
+		Schedule schedule = model.getSchedule();
+		
 		assert (model != null);
 		scheduleItems = new HashMap<String, ScheduleItem>();
 
@@ -206,7 +206,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		for (ScheduleItem item : schedule.getItems()) {
 			if(item.getCourse().getDbid() == null)
 			{
-			 item.getCourse().setDbid(1);
+			 item.getCourse().setDbid(-1);
 			}
 			gwtItems.add(Conversion.toGWT(item, false));
 			scheduleItems.put(item.getCourse().getDept()
@@ -216,13 +216,15 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		for (ScheduleItem item : schedule.getDirtyList()) {
 			if(item.getCourse().getDbid() == null)
 			{
-			 item.getCourse().setDbid(1);
+			 item.getCourse().setDbid(-1);
 			}
 			gwtItems.add(Conversion.toGWT(item, true));
 			scheduleItems.put(item.getCourse().getDept()
 					+ item.getCourse().getCatalogNum() + item.getSection(),
 					item);
 		}
+		model.saveSchedule(schedule);
+		
 		return gwtItems;
 	}
 
@@ -242,6 +244,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		String schdItemKey = scheduleItem.getDept()
 				+ scheduleItem.getCatalogNum() + scheduleItem.getSection();
 		String conflict = "";
+		Schedule schedule = model.getSchedule();
 
 		for (i = 0; i < numberOfDays; i++) {
 			switch (days.get(i)) {
@@ -280,7 +283,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 			
 			if(course.getScheduleDBId() == null)
 			{
-			 course.setScheduleDBId(1);
+			 course.setScheduleDBId(-1);
 			}
 			schedule.genItem(course, daysInWeek, startTime);
 		}
@@ -290,7 +293,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		for (ScheduleItem item : schedule.getItems()) {
 			if(item.getCourse().getDbid() == null)
 			{
-			 item.getCourse().setDbid(1);
+			 item.getCourse().setDbid(-1);
 			}
 			gwtItems.add(Conversion.toGWT(item, false));
 			scheduleItems.put(item.getCourse().getDept()
@@ -300,7 +303,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		for (ScheduleItem item : schedule.getDirtyList()) {
 			if(item.getCourse().getDbid() == null)
 			{
-			 item.getCourse().setDbid(1);
+			 item.getCourse().setDbid(-1);
 			}
 			gwtItems.add(Conversion.toGWT(item, true));
 			scheduleItems.put(item.getCourse().getDept()
@@ -310,6 +313,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		}
 
 		gwtItems.conflict = conflict;
+		model.saveSchedule(schedule);
 		return gwtItems;
 	}
 
@@ -331,11 +335,15 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	public ArrayList<ScheduleItemGWT> getSchedule() {
 		ArrayList<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
 		ScheduleItemGWT gwtItem;
-
-		schedule = model.loadSchedule(model.getScheduleID());
+		Schedule schedule = model.getSchedule();
+		
 		scheduleItems = new HashMap<String, ScheduleItem>();
 
 		for (ScheduleItem item : schedule.getItems()) {
+			if(item.getCourse().getDbid() == null)
+			{
+			 item.getCourse().setDbid(-1);
+			}
 			gwtItem = Conversion.toGWT(item, false);
 			scheduleItems.put(gwtItem.getDept() + gwtItem.getCatalogNum()
 					+ gwtItem.getSection(), item);
@@ -343,6 +351,10 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		}
 
 		for (ScheduleItem item : schedule.getDirtyList()) {
+			if(item.getCourse().getDbid() == null)
+			{
+			 item.getCourse().setDbid(-1);
+			}
 			gwtItem = Conversion.toGWT(item, true);
 			scheduleItems.put(gwtItem.getDept() + gwtItem.getCatalogNum()
 					+ gwtItem.getSection(), item);
@@ -366,11 +378,18 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 				+ removed.getSection();
 		ScheduleItemGWT gwtItem;
 		ArrayList<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
-
+		Schedule schedule = model.getSchedule();
+		
+		System.out.println("before " + schedule.getItems().size() + " removing " + scheduleItems.get(schdItemKey));
 		schedule.remove(scheduleItems.get(schdItemKey));
+		System.out.println("after " + schedule.getItems().size());
 		scheduleItems = new HashMap<String, ScheduleItem>();
 
 		for (ScheduleItem item : schedule.getItems()) {
+			if(item.getCourse().getDbid() == null)
+			{
+			 item.getCourse().setDbid(-1);
+			}
 			gwtItem = Conversion.toGWT(item, false);
 			schdItemKey = gwtItem.getDept() + gwtItem.getCatalogNum()
 					+ gwtItem.getSection();
@@ -378,6 +397,10 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 			gwtItems.add(gwtItem);
 		}
 		for (ScheduleItem item : schedule.getDirtyList()) {
+			if(item.getCourse().getDbid() == null)
+			{
+			 item.getCourse().setDbid(-1);
+			}
 			gwtItem = Conversion.toGWT(item, true);
 			schdItemKey = gwtItem.getCourseString() + gwtItem.getCatalogNum()
 					+ gwtItem.getSection();
@@ -385,12 +408,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 			gwtItems.add(gwtItem);
 		}
 
-		return gwtItems;
-	}
-
-	@Override
-	public void saveSchedule() {
 		model.saveSchedule(schedule);
+		
+		return gwtItems;
 	}
 //
 //	@Override
@@ -440,8 +460,15 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 			model.removeCourse(Conversion.fromGWT(removedCourse));
 	}
 	
+	public void saveSchedule()
+	{
+	 Schedule schedule = model.getSchedule();
+	 model.saveSchedule(schedule);
+	}
+	
 	@Override
 	public int exportCSV(){
+		Schedule schedule = model.getSchedule();
 		if (schedule == null) {
 			schedule = new Schedule(model.getInstructors(),
 					model.getLocations());
