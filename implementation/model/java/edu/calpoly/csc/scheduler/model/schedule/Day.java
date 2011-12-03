@@ -36,5 +36,21 @@ public class Day implements Serializable
    public int hashCode () { return this.num; }
    public int getNum () { return this.num; }
    public String toString () { return this.name; }
-	public String getName() { return this.name; }
+   public String getName() { return this.name; }
+   public boolean equals(Object o)
+   {
+	if(o == null)
+	{
+	 return false;
+	}
+	if(this.getClass() != o.getClass())
+	{
+	 return false;
+	}
+	if(o == this)
+	{
+	 return true;
+	}
+	return this.equals((Day)o);
+   }
 }

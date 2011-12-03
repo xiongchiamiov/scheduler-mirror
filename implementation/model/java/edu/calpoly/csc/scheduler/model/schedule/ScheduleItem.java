@@ -524,4 +524,21 @@ public class ScheduleItem implements Serializable, Cloneable,
       }
       return r;
    }
+   
+   public boolean equals(Object o)
+   {
+	   if(o == null)
+	   {
+		   return false;
+	   }
+	   if(this.getClass() != o.getClass())
+	   {
+		   return false;
+	   }
+	   if(this == o)
+	   {
+		   return true;
+	   }
+	   return this.equals((ScheduleItem)o);
+   }
 }
