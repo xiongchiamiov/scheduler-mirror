@@ -1,0 +1,79 @@
+
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>
+User Acceptance Testing
+</title>
+</head>
+<body bgcolor="white">
+<p align="center">
+<font size="+2">
+<strong>CSC 402 User Acceptance Testing For Prototype</strong>
+</font>
+</p>
+<br>
+<br>
+
+</p><blockquote>
+<table align="center" border="1" cellpadding="4">
+  <tbody><tr>
+    <td valign="top"><strong>Case No.</strong>
+    </td><td valign="top"><strong>User Inputs and Command</strong>
+    </td><td valign="top"><strong>Expected Output</strong>
+    </td><td valign="top"><strong>Remarks</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </td><td valign="top"><strong>Results</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </td></tr><tr>
+    <td valign="top">1
+    </td><td valign="top">From Instructors menu, press Preferences
+    </td><td valign="top">See instructor preferences
+    </td><td valign="top">No new view is presented
+    </td><td valign="top">FAIL
+  </td></tr>
+  <tr>
+    <td valign="top">2
+    </td><td valign="top">File->New
+    </td><td valign="top">Creates new schedule and shows new areas for information
+    </td><td valign="top">
+    </td><td valign="top">PASS
+  </td></tr><tr>
+    <td valign="top">3
+    </td><td valign="top">Click Schedule on new area from pressing File->New
+    </td><td valign="top">Navigates to new schedule generation screen with blank lists and blank calendar view
+    </td><td valign="top">Works, but there is a message saying "Failed to load schedule"
+    </td><td valign="top">PASS
+  </td></tr><tr>
+    <td valign="top">4
+    </td><td valign="top">Export to CSV
+    </td><td valign="top">Information is exported to csv file
+    </td><td valign="top">
+    </td><td valign="top">PASS
+  </td></tr><tr>
+    <td valign="top">5
+    </td><td valign="top">File->Import
+    </td><td valign="top">File system viewer to import data
+    </td><td valign="top"> 
+    </td><td valign="top">FAIL
+  </td></tr>
+  <tr>
+    <td valign="top">6
+    </td><td valign="top">File->Save
+    </td><td valign="top">Save the courses list
+    </td><td valign="top">
+    </td><td valign="top">PASS 
+  </td></tr>
+  <tr>
+    <td valign="top">7
+    </td><td valign="top">Navigate through prototype
+    </td><td valign="top">If "Loading" popup appears, it goes away eventually
+    </td><td valign="top">Does not go away after navigating and receiving multiple errors
+    </td><td valign="top">FAIL
+  </td></tr>
+  <tr>
+    <td valign="top">8
+    </td><td valign="top">Click on cell in courses
+    </td><td valign="top">Makes the field editable and updates modified color
+    </td><td valign="top">It is modified, but this does not get updated until clicking out of the row
+    </td><td valign="top">PASS
+  </td></tr></tbody></table>
+</blockquote>
+
+</p></body></html>
