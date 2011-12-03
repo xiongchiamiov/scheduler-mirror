@@ -1,0 +1,52 @@
+<html>
+<table align=center border=1 cellpadding=4>
+  <tr>
+    <td valign=top><strong>Case No.</strong>
+    <td valign=top><strong>User Inputs and Command</strong>
+    <td valign=top><strong>Expected Output</strong>
+    <td valign=top><strong>Result</strong>&nbsp;&nbsp;
+    <td valign=top><strong>Remarks</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <tr>
+    <td valign=top>1
+    <td valign=top>
+Click 'new', enter data, save the new location
+    <td valign=top>
+A new location is added to the database
+    <td valign=top>
+Fail
+    <td valign=top>
+No apparent Save button, File->Save does not save the new location. 
+  <tr>
+    <td valign=top>2
+    <td valign=top>
+Click 'new', drag-adjust the width of the Room column
+    <td valign=top>
+Room column width adjusts to user's set width
+    <td valign=top>
+Fail
+    <td valign=top>
+Column width fights cursor and quickly becomes the widest column of them all and will not become narrow.
+  <tr>
+    <td valign=top>3
+    <td valign=top>
+Click the 'X' for a location, confirm deletion
+    <td valign=top>
+Location is deleted and no longer in the list
+    <td valign=top>
+Pass
+    <td valign=top>
+&nbsp;
+  <tr>
+    <td valign=top>4
+    <td valign=top>
+Click on a location to edit it, edit it, save
+    <td valign=top>
+That location's data has been correctly modified and persists
+    <td valign=top>
+Fail
+    <td valign=top>
+No apparent way to make the text input fields go away / return the row back to normal and no apparent Save button. File->Save does not save the changes.
+ 
+</table>
+</body>
+</html>
