@@ -32,6 +32,8 @@ public class ButtonColumn<ObjectType extends Identified> implements OsmTable.ICo
 			}
 		});
 		
+		button.addStyleName("courseTableLabButton");
+		
 		return new SimpleCell(button);
 	}
 }

@@ -20,6 +20,10 @@ body {
 	width: 100%;
 }
 
+.courseTableLabButton{
+	width: 6.5em;
+}
+
 .topPanel {
 	background: url('imgs/calpolybanner.gif') no-repeat #003300;
 	text-align: right;
