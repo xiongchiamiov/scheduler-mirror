@@ -17,6 +17,8 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
@@ -26,6 +28,7 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -105,7 +108,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 		
 		MenuItem importItem = new MenuItem("Import", true, new Command() {
 			public void execute() {
-				Window.alert("Import!  As long as it's not from China...");
+				Window.alert("Feature not implemented yet.");
 			}
 		});
 		
@@ -143,7 +146,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 		DOM.setElementAttribute(saveAsItem.getElement(), "id", "saveAsItem");
 		fileMenu.addItem(saveAsItem);
 		
-		MenuItem exportItem = new MenuItem("Export", true, new Command() {
+		MenuItem exportItem = new MenuItem("Download As...", true, new Command() {
 			public void execute() {
 				service.exportCSV(new AsyncCallback<Integer>() {
 					public void onFailure(Throwable caught) {
@@ -162,6 +165,15 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 		
 		DOM.setElementAttribute(exportItem.getElement(), "id", "exportItem");
 		fileMenu.addItem(exportItem);
+		
+		MenuItem mergeItem = new MenuItem("Merge", true, new Command() {
+			public void execute() {
+				displayMergePopup();
+			}
+		});
+		
+		DOM.setElementAttribute(saveAsItem.getElement(), "id", "mergeItem");
+		fileMenu.addItem(mergeItem);
 		
 		fileMenuItem = new MenuItem("File v", true, fileMenu);
 		DOM.setElementAttribute(fileMenuItem.getElement(), "id", "FileVIitem");
@@ -404,19 +416,33 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 	 * Displays a popup to save the schedule under a different name.
 	 */
 	public void displaySaveAsPopup() {
-		final ListBox lb = new ListBox();
-		ArrayList<String> schedNames = new ArrayList<String>();
+		final ListBox saveAsListBox = new ListBox();
+		final ArrayList<String> schedNames = new ArrayList<String>();
 		final TextBox tb = new TextBox();
 		final DialogBox db = new DialogBox();
 		FlowPanel fp = new FlowPanel();
 		final Button saveButton = new Button("Save", new ClickHandler() {
 			@Override
-			public void onClick(ClickEvent event) {		
-				db.hide();
-				
+			public void onClick(ClickEvent event) {			
 			    final String scheduleName = tb.getText();
 			    
-			    //TODO - Need to discuss the implementation of this 
+			    if(!scheduleName.isEmpty()) {
+			    
+			        if(schedNames.contains(scheduleName)) {
+			    	    boolean result = Window.confirm("The schedule \"" + scheduleName + "\" already exists.  Are you sure you want to replace it?");
+			    	
+			    	    if(result) {
+			    		    //Save the schedule
+			    	    	service.removeSchedule(scheduleName, null);
+			    	    	service.saveCurrentScheduleAs(scheduleName, null);
+			    	    }
+			        }
+			        else {
+			        	service.saveCurrentScheduleAs(scheduleName, null);
+			        }
+			    }
+			    
+				db.hide();
 			}
 		});
 		
@@ -435,13 +461,101 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 			}
 		});
 		
+		service.getScheduleNames(new AsyncCallback<Map<String,UserDataGWT>>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert("Failed to open schedule in: " + caught.getMessage());
+			}
+			
+			@Override
+			public void onSuccess(Map<String,UserDataGWT> result) {
+				for(String name : result.keySet()) {
+					saveAsListBox.addItem(name);
+					schedNames.add(name);
+				}
+			}
+		});
+		
 		db.setText("Name Schedule");
 		fp.add(new HTML("<center>Specify a name to save the schedule as...</center>"));
+		saveAsListBox.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				tb.setText(saveAsListBox.getValue(saveAsListBox.getSelectedIndex()));
+			}
+		});
+		saveAsListBox.setVisibleItemCount(5);
+		fp.add(saveAsListBox);
 		fp.add(tb);
 		fp.add(saveButton);
 		fp.add(cancelButton);
 		
 		db.setWidget(fp);
+		db.center();
+		db.show();
+	}
+	
+	/**
+	 * Display popup to merge schedules together
+	 */
+	public void displayMergePopup() {
+		final ArrayList<CheckBox> checkBoxList = new ArrayList<CheckBox>();
+		final DialogBox db = new DialogBox();
+		final VerticalPanel vp = new VerticalPanel();
+		final VerticalPanel checkBoxPanel = new VerticalPanel();
+		FlowPanel fp = new FlowPanel();
+		
+		final Button mergeButton = new Button("Merge", new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				int checkCount = 0;
+				
+				for(CheckBox cb : checkBoxList) {
+					if(cb.getValue())
+						checkCount++;
+				}
+				
+				if(checkCount >= 2) {
+					//TODO - Add merge call here when functionality is implemented
+				    db.hide();
+				}
+				else {
+					Window.alert("Please select 2 or more schedules to merge.");
+				}
+			}
+		});
+		
+		final Button cancelButton = new Button("Cancel", new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				db.hide();
+			}
+		});
+		
+		service.getScheduleNames(new AsyncCallback<Map<String,UserDataGWT>>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert("Failed to open schedule in: " + caught.getMessage());
+			}
+			
+			@Override
+			public void onSuccess(Map<String,UserDataGWT> result) {
+				for(String name : result.keySet()) {
+					CheckBox checkBox = new CheckBox(name);
+					checkBoxList.add(checkBox);
+					checkBoxPanel.add(checkBox);
+				}
+			}
+		});
+		
+		fp.add(mergeButton);
+		fp.add(cancelButton);
+		
+		vp.add(checkBoxPanel);
+		vp.add(fp);
+		
+		db.setText("Merge Schedules");
+		db.setWidget(vp);
 		db.center();
 		db.show();
 	}
