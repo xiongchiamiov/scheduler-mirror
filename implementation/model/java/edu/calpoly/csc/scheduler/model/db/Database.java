@@ -254,11 +254,32 @@ public class Database
    }
 
    /**
-    * @param scheduleID
-    *           the scheduleID to set
+    * This method sets the scheduleDBID to a new value and updates the other databases as well
+    * @param scheduleDBID
+    *           the scheduleDBID to set
     */
-   public void setScheduleID(int scheduleID)
+   public void setScheduleID(int scheduleDBID)
    {
-      this.scheduleDBID = scheduleID;
+      this.scheduleDBID = scheduleDBID;
+      if(locationDB != null)
+      {
+         locationDB.setScheduleDBID(scheduleDBID);
+      }
+      if(instructorDB != null)
+      {
+         instructorDB.setScheduleDBID(scheduleDBID);
+      }
+      if(courseDB != null)
+      {
+         courseDB.setScheduleDBID(scheduleDBID);
+      }
+      if(userdataDB != null)
+      {
+         userdataDB.setScheduleDBID(scheduleDBID);
+      }
+      if(scheduleDB != null)
+      {
+         scheduleDB.setScheduleDBID(scheduleDBID);
+      }
    }
 }

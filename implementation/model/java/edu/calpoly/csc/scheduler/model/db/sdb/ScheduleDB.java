@@ -121,6 +121,14 @@ public class ScheduleDB extends AbstractDatabase<Schedule>
     */
    public int getScheduleDBID(Schedule data)
    {
+      return getScheduleDBID();
+   }
+   
+   /**
+    * @return the scheduleID
+    */
+   public int getScheduleDBID()
+   {
       this.scheduleDBId = sqldb.getLastGeneratedKey();
       return scheduleDBId;
    }

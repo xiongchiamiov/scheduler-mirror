@@ -93,6 +93,11 @@ public abstract class AbstractDatabase<T extends DbData>
       wheres = new LinkedHashMap<String, Object>();
       wheres.put(DbData.DBID, data.getDbid());
    }
+   
+   protected void setScheduleDBID(int scheduledbid)
+   {
+      this.scheduleDBId = scheduledbid;
+   }
 
    protected abstract void fillFields(T data);
 
