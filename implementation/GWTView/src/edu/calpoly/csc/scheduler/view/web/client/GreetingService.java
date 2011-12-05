@@ -53,4 +53,6 @@ public interface GreetingService extends RemoteService {
 	List<ScheduleItemGWT> getSchedule();
 	void saveSchedule();
 	int exportCSV();
+	
+	void saveCurrentScheduleAs(String schedName);
 }

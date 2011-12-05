@@ -51,4 +51,6 @@ public interface GreetingServiceAsync {
 			List<LocationGWT> edited, List<LocationGWT> removed,
 			AsyncCallback<Void> callback);
 	void exportCSV(AsyncCallback<Integer> asyncCallback);
+	
+	void saveCurrentScheduleAs(String schedName, AsyncCallback<Void> callback);
 }
