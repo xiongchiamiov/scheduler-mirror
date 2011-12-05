@@ -466,6 +466,10 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	 model.saveSchedule(schedule);
 	}
 	
+	public void saveCurrentScheduleAs(String schedName) {
+		model.saveCurrentScheduleAs(schedName);
+	}
+	
 	@Override
 	public int exportCSV(){
 		Schedule schedule = model.getSchedule();
