@@ -1,0 +1,18 @@
+The following is the result of an in-class discussion of the top-level
+command bar, on Friday 18 November:
+
+      Schedules V    Generate    Instructors    Courses    Locations
+        Open
+        Import
+        Export
+        Close
+
+'Schedules' is a drop-down, as the the down-pointing arrow indicates.  This
+idea is consistent with Google's top-level interface, as well as other Google
+pages.  The idea is that the drop-down arrow distinguishes a menu form a
+navigation link.
+
+The 'Generate' link is currently labeled 'Schedule'.  The other three links are
+the same as they are now.  There was some discussion about the left-to-right
+order of the links.  This picture is based on order of presumed most frequent
+use.
