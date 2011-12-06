@@ -38,6 +38,7 @@ import com.google.gwt.view.client.SingleSelectionModel;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.client.IViewContents;
+import edu.calpoly.csc.scheduler.view.web.client.Import;
 import edu.calpoly.csc.scheduler.view.web.client.ViewFrame;
 import edu.calpoly.csc.scheduler.view.web.client.schedule.CSVButton;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
@@ -108,7 +109,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 		
 		MenuItem importItem = new MenuItem("Import", true, new Command() {
 			public void execute() {
-				Window.alert("Feature not implemented yet.");
+				Import.showImport();
 			}
 		});
 		
