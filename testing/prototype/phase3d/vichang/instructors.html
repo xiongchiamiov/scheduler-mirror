@@ -1,0 +1,52 @@
+<html>
+<table align=center border=1 cellpadding=4>
+  <tr>
+    <td valign=top><strong>Case No.</strong>
+    <td valign=top><strong>User Inputs and Command</strong>
+    <td valign=top><strong>Expected Output</strong>
+    <td valign=top><strong>Result</strong>&nbsp;&nbsp;
+    <td valign=top><strong>Remarks</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <tr>
+    <td valign=top>1
+    <td valign=top>
+Click 'new', enter data, save the new instructor
+    <td valign=top>
+A new instructor is added to the database
+    <td valign=top>
+Fail
+    <td valign=top>
+Clicked on the row's save button, instructor appears to be saved, but is gone when I went to Locations and back to Instructors
+  <tr>
+    <td valign=top>2
+    <td valign=top>
+Click 'new', drag-adjust the widths of the columns
+    <td valign=top>
+Column width adjusts to user's set width
+    <td valign=top>
+Pass
+    <td valign=top>
+&nbsp;
+  <tr>
+    <td valign=top>3
+    <td valign=top>
+Click the 'X' for an instructor, confirm deletion
+    <td valign=top>
+Instructor is deleted and no longer in the list
+    <td valign=top>
+Pass
+    <td valign=top>
+&nbsp;
+  <tr>
+    <td valign=top>4
+    <td valign=top>
+Click on an instructor to edit it, don't modify anything, save
+    <td valign=top>
+That instructor's data should not have changed and should return to an uneditable state
+    <td valign=top>
+Fail
+    <td valign=top>
+When save is attempted, an error message appears stating "There is already a user with ID: [id]"
+ 
+</table>
+</body>
+</html>
