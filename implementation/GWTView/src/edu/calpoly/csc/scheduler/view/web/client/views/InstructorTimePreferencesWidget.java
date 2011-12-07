@@ -300,6 +300,7 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 			timePrefsTable.setWidget(0, day + 1, new HTML(days.get(day)));
 		}
 		cells = new CellWidget[30][days.size()];
+		System.out.println("cells 2nd dim " + days.size());
 		
 		final int totalHalfHours = 30;
 		final int totalDays = days.size();
@@ -463,7 +464,7 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 			
 			Integer time = hour * 60 + halfHour % 2 * 30;
 			
-			for (int dayNum = 0; dayNum < 7; dayNum++) {
+			for (int dayNum = 0; dayNum < 5; dayNum++) {
 				CellWidget cell = cells[halfHour][dayNum];
 				if (getPreference(strategy.getInstructor(), halfHour, dayNum) != getPreference(strategy.getSavedInstructor(), halfHour, dayNum))
 					cell.addStyleName("changed");

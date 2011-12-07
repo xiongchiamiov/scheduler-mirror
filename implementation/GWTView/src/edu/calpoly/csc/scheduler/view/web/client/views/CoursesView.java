@@ -101,31 +101,6 @@ public class CoursesView extends VerticalPanel implements IViewContents {
 		final LoadingPopup popup = new LoadingPopup();
 		popup.show();
 		
-		/*
-		final LoadingPopup popup = new LoadingPopup();
-		popup.show();
-
-		
-		cTable.clear();
-		
-		service.getCourses(new AsyncCallback<ArrayList<CourseGWT>>() {
-			public void onFailure(Throwable caught) {
-				popup.hide();
-				
-				Window.alert("Failed to get courses: " + caught.toString());
-			}
-			
-			public void onSuccess(ArrayList<CourseGWT> result){
-				popup.hide();
-				
-				if (result != null) {
-					cTable.set(result);
-				}
-			}
-		});
-		*/
-		
-		
 		table = new OsmTable<CourseGWT>(
 				new IFactory<CourseGWT>() {
 					public CourseGWT create() {

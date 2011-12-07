@@ -87,13 +87,13 @@ class ResizeableWidget extends FlowPanel {
 		
 		setWidth(newWidth + "px");
 		if (getOffsetWidth() != newWidth) {
-			System.out.println("Contents not honoring setwidth!");
+//			System.out.println("Contents not honoring setwidth!");
 			// Will have to be synchronized
 		}
 		
 		callback.setWidth(newWidth);
 		if (callback.getWidth() != newWidth) {
-			System.out.println("Callback not honoring setwidth!");
+//			System.out.println("Callback not honoring setwidth!");
 			// Will have to be synchronized
 		}
 		
@@ -111,7 +111,7 @@ class ResizeableWidget extends FlowPanel {
 		}
 
 		if (callback.getWidth() != getOffsetWidth()) {
-			System.out.println("Resizeable and callback can't synchronize!");
+//			System.out.println("Resizeable and callback can't synchronize!");
 		}
 	}
 }

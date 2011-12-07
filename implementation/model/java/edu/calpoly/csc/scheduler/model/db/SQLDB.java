@@ -198,7 +198,7 @@ public class SQLDB
          conn = DriverManager.getConnection(
                "jdbc:mysql://cslvm215.csc.calpoly.edu/prototype", "root",
                "Abcd1234");
-         System.out.println("Database connection established.");
+//         System.out.println("Database connection established.");
       }
       catch (Exception e)
       {
@@ -223,7 +223,7 @@ public class SQLDB
          Class.forName("com.mysql.jdbc.Driver");
          DriverManager.setLoginTimeout(1);
          conn = DriverManager.getConnection("jdbc:" + url, "jseall", "");
-         System.out.println("Database connection to " + url + " established.");
+//         System.out.println("Database connection to " + url + " established.");
       }
       catch (Exception e)
       {
@@ -246,7 +246,7 @@ public class SQLDB
          try
          {
             conn.close();
-            System.out.println("Database connection terminated");
+//            System.out.println("Database connection terminated");
          }
          catch (Exception e)
          {

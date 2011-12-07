@@ -405,24 +405,24 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 	void sortByColumn(ColumnMetadata column, boolean ascending) {
 		assert(column != null);
 		
-		System.out.println("in sortbycolumn!");
+//		System.out.println("in sortbycolumn!");
 		
 		if (currentSortedColumn != null)
 			currentSortedColumn.sortMode = ColumnSortMode.NOT_SORTING;
 		currentSortedColumn = column;
 		currentSortedColumn.sortMode = ascending ? ColumnSortMode.ASCENDING : ColumnSortMode.DESCENDING;
 		
-		System.out.println(column.comparator != null);
+//		System.out.println(column.comparator != null);
 		
 		if (column.comparator != null) {
-			System.out.println("flerp");
+//			System.out.println("flerp");
 					
 			ArrayList<ObjectType> sortedList = new ArrayList<ObjectType>();
 			for (Row row : rowsByObjectID.values())
 				sortedList.add(row.object);
 			Collections.sort(sortedList, column.comparator);
 			
-			System.out.println("kerp");
+//			System.out.println("kerp");
 					
 			if (!ascending)
 				Collections.reverse(sortedList);
@@ -437,7 +437,7 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 			assert(tbodyElement.getChildCount() == 0);
 			
 			for (int i = 0; i < sortedList.size(); i++) {
-				System.out.println("derp " + i);
+//				System.out.println("derp " + i);
 				ObjectType object = sortedList.get(i);
 				Row row = rowsByObjectID.get(object.getID());
 				tbodyElement.appendChild(row.trElement);

@@ -77,6 +77,8 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 	
 	@Override
 	public void afterPush(ViewFrame frame) {
+		this.myFrame = frame;
+		
 		this.setWidth("100%");
 		this.setHeight("100%");
 
@@ -216,7 +218,7 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 		
 		this.add(table);
 		
-		System.out.println("sending request");
+//		System.out.println("sending request");
 		
 		service.getInstructors(new AsyncCallback<List<InstructorGWT>>() {
 			public void onFailure(Throwable caught) {
@@ -225,7 +227,7 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 			}
 			
 			public void onSuccess(List<InstructorGWT> result){
-				System.out.println("onsuccess got response");
+//				System.out.println("onsuccess got response");
 				assert(result != null);
 				popup.hide();
 				for (InstructorGWT instr : result)

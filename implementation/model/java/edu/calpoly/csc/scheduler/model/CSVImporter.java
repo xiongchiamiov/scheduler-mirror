@@ -47,7 +47,7 @@ public class CSVImporter {
 	List<Pair<Boolean, ScheduleItem>> scheduleItems = new ArrayList<Pair<Boolean, ScheduleItem>>(); // boolean is true if on conflicted list
 	
 	public Schedule read(Model model, String newScheduleName, String value) throws IOException {
-		System.out.println("In read!");
+//		System.out.println("In read!");
 		
 		CsvReader reader = CsvReader.parse(value);
 		
@@ -66,29 +66,29 @@ public class CSVImporter {
 		for (String comment : CSVStructure.TOP_COMMENTS)
 			skipBlanksUntilComment(linesIterator, comment);
 		
-		int derp = 0;
-		System.out.println(derp++);
+//		int derp = 0;
+//		System.out.println(derp++);
 		
 		readSchedule(linesIterator);
-		System.out.println(derp++);
+//		System.out.println(derp++);
 		
 		readCourses(linesIterator);
-		System.out.println(derp++);
+//		System.out.println(derp++);
 		
 		readLocations(linesIterator);
-		System.out.println(derp++);
+//		System.out.println(derp++);
 		
 		readAllInstructorsCoursePrefs(linesIterator);
-		System.out.println(derp++);
+//		System.out.println(derp++);
 		
 		readAllInstructorsTimePrefs(linesIterator);
-		System.out.println(derp++);
+//		System.out.println(derp++);
 		
 		readInstructors(linesIterator);
-		System.out.println(derp++);
+//		System.out.println(derp++);
 		
 		readScheduleItems(linesIterator);
-		System.out.println(derp++);
+//		System.out.println(derp++);
 		
 		Schedule schedule = new Schedule();
 		schedule.setDbid(-1);

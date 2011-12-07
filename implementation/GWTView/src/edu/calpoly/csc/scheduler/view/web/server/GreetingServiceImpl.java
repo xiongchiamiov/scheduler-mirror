@@ -115,7 +115,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		}
 	
 		for (InstructorGWT removedInstructorGWT : removed) {
-			System.out.println("Removing instructor " + removedInstructorGWT.getLastName() + " id " + removedInstructorGWT.getID());
+//			System.out.println("Removing instructor " + removedInstructorGWT.getLastName() + " id " + removedInstructorGWT.getID());
 			Instructor removedInstructor = Conversion.fromGWT(removedInstructorGWT, getCoursesByID());
 			model.removeInstructor(removedInstructor);
 			assert(!model.getInstructors().contains(removedInstructor));
@@ -155,14 +155,14 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 			}
 		}
 
-		for (Instructor instructor : model.getInstructors())
-			System.out.println("outside, num instructor day prefs for "
-					+ instructor.getLastName() + ": "
-					+ instructor.getTimePreferences().size());
+//		for (Instructor instructor : model.getInstructors())
+//			System.out.println("outside, num instructor day prefs for "
+//					+ instructor.getLastName() + ": "
+//					+ instructor.getTimePreferences().size());
 
 		List<ScheduleItem> scheduleItems = schedule
 				.generate(coursesToGenerate);
-		System.out.println("schedule items: " + schedule.getItems().size());
+//		System.out.println("schedule items: " + schedule.getItems().size());
 
 		ArrayList<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
 		for (ScheduleItem item : scheduleItems) {
@@ -452,7 +452,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		}
 		
 		for (CourseGWT editedCourse : edited) {
-			System.out.println("Asking model to edit course " + editedCourse.getID());
+//			System.out.println("Asking model to edit course " + editedCourse.getID());
 			model.saveCourse(Conversion.fromGWT(editedCourse));
 		}
 		

@@ -737,7 +737,7 @@ public class PreferencesDB extends Observable {
      * </pre>
      */
     public void removePreference(Preferences p) {
-        System.out.println("In PreferencesDB.removePreference");
+//        System.out.println("In PreferencesDB.removePreference");
         SQLDB sqldb = new SQLDB();
         String insert = "name = '" + p.getName() + "'";
         sqldb.open();
