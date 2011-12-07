@@ -1,0 +1,93 @@
+
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>
+User Acceptance Testing
+</title>
+</head>
+<body bgcolor="white">
+<p align="center">
+<font size="+2">
+<strong>CSC 402 User Acceptance Testing For Prototype</strong>
+</font>
+</p>
+<br>
+<br>
+
+</p><blockquote>
+<table align="center" border="1" cellpadding="4">
+  <tbody><tr>
+    <td valign="top"><strong>Case No.</strong>
+    </td><td valign="top"><strong>User Inputs and Command</strong>
+    </td><td valign="top"><strong>Expected Output</strong>
+    </td><td valign="top"><strong>Remarks</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </td><td valign="top"><strong>Results</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </td></tr><tr>
+    <td valign="top">1
+    </td><td valign="top">Save an instructor with in line button
+    </td><td valign="top">Instructor is saved and page can be navigated away from without warning
+    </td><td valign="top">
+    </td><td valign="top">PASS
+  </td></tr>
+  <tr>
+    <td valign="top">2
+    </td><td valign="top">Create an instructor with a name that is longer than the current column
+    </td><td valign="top">Column resizes to fit the name
+    </td><td valign="top">
+    </td><td valign="top">PASS
+  </td></tr><tr>
+    <td valign="top">3
+    </td><td valign="top">Scroll down long list of courses
+    </td><td valign="top">Header for each column stays at the top of the page
+    </td><td valign="top">
+    </td><td valign="top">PASS
+  </td></tr><tr>
+    <td valign="top">4
+    </td><td valign="top">Go to generated schedule and enter filter "316"
+    </td><td valign="top">Only classes with number 316 are shown
+    </td><td valign="top">
+    </td><td valign="top">PASS
+  </td></tr><tr>
+    <td valign="top">5
+    </td><td valign="top">Go to generated schedule and enter filter "chem"
+    </td><td valign="top">Only classes with chem are shown
+    </td><td valign="top">It seems to be case sensitive. When entering "chem" nothing shows, but CHEM shows all chem classes
+    </td><td valign="top">FAIL
+  </td></tr>
+  <tr>
+    <td valign="top">6
+    </td><td valign="top">Select button with two right arrows on the schedule tab
+    </td><td valign="top">All courses are moved to Courses to Schedule
+    </td><td valign="top">
+    </td><td valign="top">PASS 
+  </td></tr>
+  <tr>
+    <td valign="top">7
+    </td><td valign="top">Select button with two left arrows on the schedule tab
+    </td><td valign="top">All courses are removed from Courses to Schedule
+    </td><td valign="top">This works, but it does not make sense to move from the right to the left. It is simply removing all from Courses to Schedule
+    </td><td valign="top">PASS
+  </td></tr>
+  <tr>
+    <td valign="top">8
+    </td><td valign="top">Edit an existing instructor (with name change) and press save
+    </td><td valign="top">Updates info in database without error
+    </td><td valign="top">It is updated, but there is a warning about the user id already existing for a professor
+    </td><td valign="top">PASS
+  </td></tr>
+  <tr>
+    <td valign="top">9
+    </td><td valign="top">Select preferences for an instructor
+    </td><td valign="top">Navigate to a new page for editing preferences
+    </td><td valign="top">There is no info specifying which instructor's preferences I am updating
+    </td><td valign="top">PASS
+  </td></tr>
+  <tr>
+    <td valign="top">10
+    </td><td valign="top">Edit preferences for an instructor by changing time preferences
+    </td><td valign="top">Changes are reflected preferences
+    </td><td valign="top">Was able to change two times, but then it stopped working. Unable to update times in the table. Clicking on a number doesn't allow for edit
+    </td><td valign="top">FAIL
+  </td></tr></tbody></table>
+</blockquote>
+
+</p></body></html>
