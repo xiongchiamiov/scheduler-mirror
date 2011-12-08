@@ -1,0 +1,51 @@
+<html>
+<table align=center border=1 cellpadding=4>
+  <tr>
+    <td valign=top><strong>Case No.</strong>
+    <td valign=top><strong>User Inputs and Command</strong>
+    <td valign=top><strong>Expected Output</strong>
+    <td valign=top><strong>Remarks</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <td valign=top><strong>Results</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <tr>
+    <td valign=top>1
+    <td valign=top>
+Click "Generate Schedule" with the list of classes to schedule empty.
+    <td valign=top>
+The program replies "No courses to schedule".
+    <td valign=top>
+The program replies correctly, but afterwards it shows a loading dialog which does not go away.
+    <td valign=top>
+Fail
+  <tr>
+    <td valign=top>2
+    <td valign=top>
+Drag a class from "Available" to "Courses to schedule". Then click Generate Schedule
+    <td valign=top>
+The class is shown in the schedule.
+    <td valign=top>
+&nbsp;
+    <td valign=top>
+Pass
+  <tr>
+    <td valign=top>3
+    <td valign=top>
+Drag a class from the schedule to "Available" list.
+    <td valign=top>
+The class is removed from the schedule
+    <td valign=top>
+&nbsp;
+    <td valign=top>
+Pass
+  <tr>
+    <td valign=top>4
+    <td valign=top>
+Drag a class onto the schedule and select monday, tuesday on day prompt.
+    <td valign=top>
+The class is shown on monday and tuesday in the schedule.
+    <td valign=top>
+&nbsp;
+    <td valign=top>
+Pass
+</table>
+</body>
+</html>
