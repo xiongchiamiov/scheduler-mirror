@@ -1,0 +1,46 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>
+Inspection Test of Phase 3 Prototype
+</title>
+</head>
+<body bgcolor="white">
+<p align="center">
+<font size="+2">
+<strong>Inspection Test of Phase 3 Prototype</strong>
+</font>
+</p>
+<br>
+<br>
+<table align=center border=1 cellpadding=4>
+  <tr>
+    <td valign=top><strong>Case No.</strong>
+    <td valign=top><strong>User Inputs and Command</strong>
+    <td valign=top><strong>Expected Output</strong>
+    <td valign=top><strong>Remarks</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <td valign=top><strong>Results</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <tr>
+    <td valign=top>1
+    <td valign=top>Login as "chem", load "Example Chem Schedule", in Schedule tab: Drag a course from the Avaialable list on to the schedule, when prompted for days, don't select any days.
+    <td valign=top>Popup should appear saying that days must be selected.
+    <td valign=top>Popup appears saying "Could not reschedule schedule item".
+    <td valign=top>Fail
+  <tr>
+    <td valign=top>2
+    <td valign=top>Login as "chem", load "Example Chem Schedule", in Schedule tab: Note the latest timeslot that appears at the bottom of your screen, scroll down so that you can see later timeslots, try to drag a course to a time slot you would have to scroll down to get to.
+    <td valign=top>Course should be scheduled at timeslot.
+    <td valign=top>Course does not get scheduled. Notice that row highlighting isn't happening, this tells us that the DropController for these timeslots is not responding because rowhighlighting is called by the drop controller. This is a weird bug, I would start by looking at the registerDrops method in ScheduleViewWidget and see how many cells are registered versus how many actually appear on the schedule.
+    <td valign=top>Fail
+  <tr>
+    <td valign=top>3
+    <td valign=top>Login as "chem", load "Example Chem Schedule", in Schedule tab: Click the arrow button to send all courses to the To Be Scheduled list, click the generate schedule button, try to drag items around the schedule.
+    <td valign=top>The drags should happen without much lag.
+	    <td valign=top>Notice that the dragging becomes really slow at this point. This is because the Monday, Tuesday, and Friday columns have been expanded and thus created alot more cells in the schedule table. Since each cell has it's own DropController, and everyone of these DropControllers are registered to the schedule items drag controller, that DragController has a lot to process when its methods are called during the dragging of a schedule item. <b>Here's how to optimize this:</b> Instead of having a drop controller for each cell of the schedule table, just have one for each row. The rescheduling functionality only needs to know what time slot a course or schedule item was dragged to.
+    <td valign=top>Fail
+  <tr>
+    <td valign=top>4
+    <td valign=top>Login as "chem", load "Example Chem Schedule", in Schedule tab: Click the Generate button with no courses in the To Be Scheduled list.
+    <td valign=top>Loading popup should go away.
+    <td valign=top>Loading popup does not go away.
+    <td valign=top>Fail
+</table>
+</body></html>
