@@ -1,0 +1,308 @@
+<html>
+<head>
+<title>Acceptance Tests - Adam Armstrong</title>
+</head>
+
+<body>
+
+<h1 align="center">UI Overview</h1>
+
+<table border="1">
+<tr>
+  <td>Case No.</td>
+  <td>User Inputs and Commands</td>
+  <td>Expected Output</td>
+  <td>Remarks</td>
+  <td>Results</td>
+</tr>
+<tr>
+  <td>1</td>
+  <td>Enter valid username and password for login.</td>
+  <td>User is logged into the software.  The splash page should appear.</td>
+  <td>Currently only username is supported but not password.</td>
+  <td>FAIL</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td>Press the New Schedule button on the splash page.</td>
+  <td>The schedule view is loaded for a new "Untitled" schedule</td>
+  <td>N/A</td>
+  <td>PASS</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td>Press the Open Schedule button after selecting a schedule on the splash page.</td>
+  <td>The schedule view is loaded for the selected schedule.</td>
+  <td>N/A</td>
+  <td>PASS</td>
+</tr>
+</table>
+
+<h1 align="center">Basic Scheduling</h1>
+
+<table border="1">
+<tr>
+  <td>Case No.</td>
+  <td>User Inputs and Commands</td>
+  <td>Expected Output</td>
+  <td>Remarks</td>
+  <td>Results</td>
+</tr>
+<tr>
+  <td>1</td>
+  <td>Enter a term in the search box and press the Enter button.</td>
+  <td>I'm assuming the search box lets you search for a given course or something similar, but it's not very clear.</td>
+  <td>Extremely unclear what is actually done by the search.  If anything.</td>
+  <td>FAIL</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td>Press the Filter button</td>
+  <td>The Filter pop up appears and allows the user to specify which constraints to filter the schedule with.  Filters include days of the week, instructors, courses, rooms, and times.</td>
+  <td>N/A</td>
+  <td>PASS</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td>Press the Export to CSV button</td>
+  <td>Exports the current schedule to a CSV file.</td>
+  <td>Error popup occurs when attempting to export.</td>
+  <td>FAIL</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td>Drag a course from the Available Courses list to the 11am Monday slot on the calendar.</td>
+  <td>A popup should appear prompting for the days of the week for the class to be taught on.  After selecting the days, the course should appear in the selected time slot for those days of the week.</td>
+  <td>N/A</td>
+  <td>PASS</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td>Drag a course from the calendar back to the Available Courses list.</td>
+  <td>The course should be removed from the calendar and be added to the list of courses in the Available Courses list.</td>
+  <td>N/A</td>
+  <td>PASS</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td>Press the &gt; button.</td>
+  <td>If a course is selected in the Available Courses list it is moved to the Courses to Schedule list.  If no course is selected, nothing happens.</td>
+  <td>N/A</td>
+  <td>PASS</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td>Press the &lt; button.</td>
+  <td>If a course is selected in the Courses to Schedule list it is moved to the Available Courses list.  If no course is selected, nothing happens.</td>
+  <td>N/A</td>
+  <td>PASS</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td>Press the &gt;&gt; button.</td>
+  <td>All the courses in the Available Courses list should be moved to the Courses to Schedule list.</td>
+  <td>N/A</td>
+  <td>PASS</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td>Press the &lt;&lt; button.</td>
+  <td>All the courses in the Courses to Schedule list should be moved to the Available Courses list.</td>
+  <td>N/A</td>
+  <td>PASS</td>
+</tr>
+<tr>
+  <td>10</td>
+  <td>Press the Generate Schedule button with no schedules in the Courses to Schedule list or on the calendar.</td>
+  <td>Error message should popup stating no schedule could be generated.</td>
+  <td>Error message pops up correctly, however, the loading symbol appears and doesn't disappear.</td>
+  <td>FAIL</td>
+</tr>
+<tr>
+  <td>11</td>
+  <td>Press the Generate Schedule button with schedules in the Courses to Schedule list and on the calendar.</td>
+  <td>Schedule should be generated and all the scheduled courses should appear on the calendar.</td>
+  <td>N/A</td>
+  <td>PASS</td>
+</tr>
+</table>
+
+<h1 align="center">Instructors</h1>
+
+<table border="1">
+<tr>
+  <td>Case No.</td>
+  <td>User Inputs and Commands</td>
+  <td>Expected Output</td>
+  <td>Remarks</td>
+  <td>Results</td>
+</tr>
+<tr>
+  <td>1</td>
+  <td>Press the New button, enter in the instructor information, and then press the save button.</td>
+  <td>New row appears at the botton of the instructors list.  After the information is entered and the save button is pressed, the information appears as a normal row in the instructors table.</td>
+  <td>N/A</td>
+  <td>PASS</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td>Press the Edit button on one of the existing instructors, edit the instructor fields, and then press the save button.</td>
+  <td>Instructor fields change to editable text boxes.  After the changes are made and the save button is pressed, the information again appears as a normal row in the instructors table.</td>
+  <td>Edit works for instructor, however, a warning box pops up stating that the instructor id already exists in the database if the id is not edited.  This should only appear if a second instructor id is being added to the database.</td>
+  <td>PASS</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td>Press the X button to delete a row in the Instructors table</td>
+  <td>A warning box appears asking if the user really wants to delete the instructor.  If the user selects yes, the Instructor row with the X that was pressed is removed from the Instructors table</td>
+  <td>The deletion works correctly, the only thing I noticed is the popup asking if the user wants to delete the instructor doesn't specify the name of the instructor correctly (most likely a toString() method somewhere).</td>
+  <td>PASS</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td>Press the Preferences button on one of the instructor rows.</td>
+  <td>The view switches from the Instructors table view to the Instructor Preferences view.</td>
+  <td>N/A</td>
+  <td>PASS</td>
+</tr>
+</table>
+
+<h1 align="center">Courses</h1>
+
+<table border="1">
+<tr>
+  <td>Case No.</td>
+  <td>User Inputs and Commands</td>
+  <td>Expected Output</td>
+  <td>Remarks</td>
+  <td>Results</td>
+</tr>
+<tr>
+  <td>1</td>
+  <td>Press the New button, followed by entering information in the fields, followed by pressing the Add button.</td>
+  <td>New row is added at the bottom of the Course list with black fields.  After the Add button is pressed the row should be added to the Course list.</td>
+  <td>The blank row does appear, however there is no Add button and a warning pops up when the New button is pressed.  Additionally, if fields are left blank and the user attempts to save, warnings pop up saying the fields need to be filled, but the row is still saved to the list.</td>
+  <td>FAIL</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td>Click on a row to edit a row</td>
+  <td>Row becomes editable.  Hitting Enter saves the row and makes it uneditable again.</td>
+  <td>N/A</td>
+  <td>PASS</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td>Click on the X next to a row</td>
+  <td>Confirmation box pops up asking if the Course should be deleted.  After selecting the yes option, the row is removed from the Course list.</td>
+  <td>N/A</td>
+  <td>PASS</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td>Click on the column headers</td>
+  <td>The column should be sorted alphebetically or reverse alphebetically if it's a text field.  The column should be sorted in increasing or decreasing order if it's a number field.</td>
+  <td>Some columns don't quite sort the way they should.  The Course Type column resorts even when all the items contained in the column are LEC items.</td>
+  <td>FAIL</td>
+</tr>
+</table>
+
+<h1 align="center">Locations</h1>
+
+<table border="1">
+<tr>
+  <td>Case No.</td>
+  <td>User Inputs and Commands</td>
+  <td>Expected Output</td>
+  <td>Remarks</td>
+  <td>Results</td>
+</tr>
+<tr>
+  <td>1</td>
+  <td>Press the New button, enter in the location information, and then press the Enter key.</td>
+  <td>New row appears at the botton of the locations list.  After the information is entered and the save button is pressed, the information appears as a normal row in the instructors table.</td>
+  <td>Location is added to the list correctly, but if the fields are all blank this may not be the correct method.  A popup might be a better option here prompting the user to enter data.</td>
+  <td>PASS</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td>Click on a location row to edit</td>
+  <td>Location fields change to editable text boxes.  After the changes are made and the Enter button is pressed, the information again appears as a normal row in the locations table.</td>
+  <td>N/A</td>
+  <td>PASS</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td>Press the X button to delete a row in the Locations table</td>
+  <td>A warning box appears asking if the user really wants to delete the location.  If the user selects yes, the Location row with the X that was pressed is removed from the Locations table</td>
+  <td>The deletion works correctly, the only thing I noticed is the popup asking if the user wants to delete the instructor doesn't specify the name of the location correctly (most likely a toString() method somewhere).</td>
+  <td>PASS</td>
+</tr>
+</table>
+
+<h1 align="center">Other</h1>
+
+<h3>File Menu Tests</h3>
+
+<table border="1">
+<tr>
+  <td>Case No.</td>
+  <td>User Inputs and Commands</td>
+  <td>Expected Output</td>
+  <td>Remarks</td>
+  <td>Results</td>
+</tr>
+<tr>
+  <td>1</td>
+  <td>Select the New option from the file menu.</td>
+  <td>The schedule view is loaded for a new "Untitled" schedule.</td>
+  <td>N/A</td>
+  <td>PASS</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td>Select the Open option from the file menu.</td>
+  <td>A popup appears and allows the user to select the schedule they want to open.  When the open button is pressed, the schedule view appears for the selected schedule.</td>
+  <td>N/A</td>
+  <td>PASS</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td>Select the Import option from the file menu.</td>
+  <td>A popup appears allowing the user to select a .csv file to upload.</td>
+  <td>When a .csv file is selected and the Import button pressed nothing happens.</td>
+  <td>FAIL</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td>Select the Save option from the file menu.</td>
+  <td>A popup should appear stating that the current schedule was saved successfully.</td>
+  <td>If a schedule is currently loaded, the Save option works successfully.  If no schedule is loaded an error occurs.  We need to disable this option any time a schedule is not loaded.</td>
+  <td>FAIL</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td>Select the Save As option from the file menu.</td>
+  <td>A popup should appear prompting the user for the name to save the schedule as.  The user can type a name in the text box or select a previously saved schedule.</td>
+  <td>Same as the Save option, the Save As option works when a schedule is loaded, but not when there is no schedule loaded.  Option should be disabled when no schedule is currently loaded.</td>
+  <td>FAIL</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td>Select the Download As option from the file menu.</td>
+  <td>A list should appear letting the user specify what file type to download the schedule as.  Currently only .csv is supported so no list is shown.</td>
+  <td>Error occurs when exporting the schedule as a .csv file.</td>
+  <td>FAIL</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td>Select the Merge option from the file menu.</td>
+  <td>A popup should appear allowing the user to specifiy which schedules to merge.  Two or more schedules are required for this action.  If less than two schedules are selected, a warning popup will appear.</td>
+  <td>Nothing happens when two schedules are selected to be merged.</td>
+  <td>FAIL</td>
+</tr>
+</table>
+
+</body>
+
+</html>
