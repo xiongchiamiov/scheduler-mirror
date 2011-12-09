@@ -1,0 +1,19 @@
+<html>
+<body>
+	<h1 align=center>402 Self Evaluation for Mike McMahon</h1>
+<ul>
+<li>I learned how to develop with Google Web Toolkit. At the beginning of the quarter I had never used GWT, by the end of the quarter I felt competent developing software with it.</li>
+<li>I implemented everything under the Schedule tab in the prototype (except for Export to CSV). 
+<ul>
+	<li>Created a table that would act like a schedule. The table had to allow for schedule items to span multiple rows and had to expand day columns when items overlapped.</li> 
+	<li>Learned how to implement drag and drop with GWT. The standard GWT library does not include interfaces for drag and drop. I researched available options and found a drag and drop library that was open source. Since the library was not well documented, I also researched its source code to learn how the library worked.</li>
+	<li>Interfaced the Schedule view with Eric's model. Created methods that would react to actions from the view and then call the appropriate method in the model. This included genereating a schedule from a list of courses, generating a single section of a course at a specified time and day, rescheduling a schedule item to a different time and day, removing a schedule item from the schedule, and (of course) displaying a schedule of generated schedule items.</li>
+	<li>Implemented an interface and methods for filtering schedule items. This was done through the Filters dialog and allowed schedule items to be filtered by days, instructors, courses, locations, and times.</li>
+	<li>Implemented an interface and methods for filtering schedule items by a search term. This is done through the text box that appears in the upper left corner of the Schedule view. It will filter the schedule to only show items which appear in the search box.</li>
+	<li>Implemented color based feedback for schedule items. If a schedule item was placed at a bad time, it got colored red and an error message was displayed, otherwise the item appeared green.</li>
+	<li>Implemented the two course lists which appear in the Schedule tab. This involved keeping track of the total number of sections each course had and how many sections were either on the schedule or in the To Be Scheduled list.</li>
+</ul>	</li>
+	<li>I provided thorough test reports on all phases and gave feedback that was clear and helpful.</li>
+	<li>I went on 4 client interviews. On each one I tried to draw out requirements related data from the client. I discovered many requests for features and reported these in the transcripts.</li>
+</body>
+</html>
