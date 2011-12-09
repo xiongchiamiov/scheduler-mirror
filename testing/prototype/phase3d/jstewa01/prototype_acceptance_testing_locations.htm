@@ -1,0 +1,65 @@
+
+<!-- saved from url=(0082)http://users.csc.calpoly.edu/~gfisher/classes/309/handouts/acceptance-testing.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>
+User Acceptance Testing
+</title>
+</head>
+<body bgcolor="white">
+<p align="center">
+<font size="+2">
+<strong>CSC 402 User Acceptance Testing For Prototype</strong>
+</font>
+</p>
+<br>
+<br>
+
+</p><blockquote>
+<table align="center" border="1" cellpadding="4">
+  <tbody><tr>
+    <td valign="top"><strong>Case No.</strong>
+    </td><td valign="top"><strong>User Inputs and Command</strong>
+    </td><td valign="top"><strong>Expected Output</strong>
+    </td><td valign="top"><strong>Remarks</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </td><td valign="top"><strong>Results</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </td></tr><tr>
+    <td valign="top">1
+    </td><td valign="top">Click the "Locations" button located on the UI header
+    </td><td valign="top">Bring me to the list view that shows a list of all Locations
+    </td><td valign="top">The column headers should be autosized so that at least fit the name of the column entirely
+    </td><td valign="top">PASS - Brought me to a list view of all Locations
+  </td></tr>
+  <tr>
+    <td valign="top">2
+    </td><td valign="top">Click the "X" Button located under the Delete column to delete a location
+    </td><td valign="top">Be confronted with a popup confirmation window and after deletion the row (location) should disappear
+    </td><td valign="top">The popup confirmation window lists the name of the location as a "edu.calpoly.csc.scheduler.view.web.shared.LocationGWT@1536"
+    </td><td valign="top">PASS - The entry was deleted from the list
+  </td></tr><tr>
+    <td valign="top">3
+    </td><td valign="top">Click the "New" Button to add a location to the list
+    </td><td valign="top">A blank row of editable fields should show up at the bottom of the list
+    </td><td valign="top">Why is the default occupancy 20?
+    </td><td valign="top">PASS - A blank location entry with editable fields was created
+  </td></tr><tr>
+    <td valign="top">4
+    </td><td valign="top">Fill in all fields for the new Location created in the previous step
+    </td><td valign="top">The row will become uneditable and be added to the list
+    </td><td valign="top">The rows continue to remain editable
+    </td><td valign="top">FIX - Couldn't assign any equipment and couldn't change the "Type" from LEC to LAB
+  </td></tr><tr>
+    <td valign="top">5
+    </td><td valign="top">Sort the Building (and all other columns) by clicking on the column header
+    </td><td valign="top">Should sort the row in ascending/descending order 
+    </td><td valign="top">Would add an arrow indicating ascending or descending order for the columns
+    </td><td valign="top">FIX - Wasn't able to sort the equipment column
+  </td></tr><tr>
+    <td valign="top">6
+    </td><td valign="top">Edit the fields of a location entry by clicking on the field(s)
+    </td><td valign="top">All fields should become editable and a scrollable menu of equipment should appear
+    </td><td valign="top">
+    </td><td valign="top">FIX - Wasn't able to edit the "Type" column and a list under the "Equipment" column never appeared
+  </td></tr></tbody></table>
+</blockquote>
+
+</p></body></html>
