@@ -1,4 +1,4 @@
-<center><b><font size="5">Locations Acceptance Tests</font></b></center>
+<center><b><font size="5">Locations</font></b></center>
 
 <table border="1">
    <tr>
@@ -46,17 +46,13 @@
       </ol>
       </td>
       <td>
-      The column should "grow" to the right and then "shrink" to the left. 
-      Columns to the right of the separator should shift to the right or left
-      relative the resizing movement made.
+      The column should resize.
       </td>
       <td>
-      N/A
+      I can't resize the column back to its original size.
       </td>
       <td>
-      FAIL. I cannot shrink the "Occupancy" column back to its original size. 
-      It's like it has some hidden "min width", which does not match the width
-      of "Occupancy", or the max width of its fields. 
+      FAIL. 
       </td>
    </tr>
    <tr>
@@ -67,10 +63,10 @@
       Hitting the "X" button in the "Delete" column for an already-existing row.
       </td>
       <td>
-      The particular row is removed from the view.
+      That row is deleted.
       </td>
       <td>
-      I'm given a "confirmation" dialog, which is nice. 
+      
       </td>
       <td>
       PASS. 
@@ -85,14 +81,13 @@
       page (like "Schedule").
       </td>
       <td>
-      I'm taken to the Schedule Page
+      Go to schedule page.
       </td>
       <td>
-      I don't actually change the field. I also don't hit 'Enter'. I just click 
-      to give the field focus and then click away. 
+      Don't do anything.
       </td>
       <td>
-      FAIL. I'm told I have unsaved changes, though I have changed nothing. 
+      FAIL. Haven't changed anything and it complains about unsaved changes.
       </td>
    </tr>
    <tr>
@@ -103,10 +98,10 @@
       Double-clicking on a particular row's individual fields to edit them
       </td>
       <td>
-      The field becomes editable and the mouse cursor is placed in that field. 
+      Mouse cursor appears in field.
       </td>
       <td>
-      N/A
+      
       </td>
       <td>
       FAIL. I cannot edit the "Type" and "Equipment" fields. 
@@ -114,7 +109,7 @@
    </tr>
 </table>
 
-<center><b><font size="5">Instructors Acceptance Tests</font></b></center>
+<center><b><font size="5">Instructors</font></b></center>
 
 <table border="1">
    <tr>
@@ -155,7 +150,7 @@
       
       </td>
       <td>
-      N/A
+      
       </td>
       <td>
       PASS
@@ -181,8 +176,7 @@
       relative the resizing movement made.
       </td>
       <td>
-      There is no limit on stretching a column. Shrinking can only be done up
-      to the width of the longest field in the column.
+      Streching a column should have a size limit....
       </td>
       <td>
       PASS
@@ -197,17 +191,12 @@
       </td>
       <td>
       Data in the table should be arranged in ascending order using the values
-      in the column whose header was clicked to sort rows. (The "Preferences",
-      "Edit", and "Delete" columns are exempt from this test, as it doesn't 
-      make sense to sort according to these values).
+      in the column whose header was clicked to sort rows.
       </td>
       <td>
-      String columns are ASCI-betically sorted. Numerical columns appear
-      numerically sorted, but I can't tell if this is just ASCI-betical too. 
-      The "Disabilities" column sorts according to whether the value is 
-      "checked" or not.<br>
+      String columns are ASCI-betically sorted and number columns are sorted as well.
       <br>
-      Clicking on an already-sorted column reverses the sorting
+      
       </td>
       <td>
       PASS
@@ -232,7 +221,7 @@
    </tr>
 </table>
 
-<center><b><font size="5">Courses Acceptance Tests</font></b></center>
+<center><b><font size="5">Courses</font></b></center>
 
 <table border="1">
    <tr>
@@ -253,14 +242,13 @@
       Be presented with a table with all column headers displayed
       </td>
       <td>
-      Columns are only as wide as their widest field.
+      Columns are as wide as their widest field....kind of weird I think.
       </td>
       <td>
       FAIL
 	  <br>
       <br>
-      Column headers are "chopped off" if they are bigger than the widest field
-      in their column. "Hours Per Week" is an apt example of this.
+      Some column headers are cut off.
       </td>
    </tr>
   <tr>
@@ -278,12 +266,9 @@
       sort according to these values).
       </td>
       <td>
-      String columns are ASCI-betically sorted. Numerical columns appear
-      numerically sorted, but I can't tell if this is just ASCI-betical too. 
-      The "Disabilities" column sorts according to whether the value is 
-      "checked" or not.<br>
+      String columns are ASCI-betically sorted. Number colummns are sorted in order as well.
       <br>
-      Clicking on an already-sorted column reverses the sorting<br>
+      <br>
       <br>
       <br>
       </td>
@@ -350,10 +335,10 @@
       The particular row is removed from the view.
       </td>
       <td>
-      N/A
+      This button does nothing.
       </td>
       <td>
-      FAIL. Pressing the button does nothing. 
+      FAIL.
       </td>
    </tr>
 </table>
