@@ -1,0 +1,345 @@
+<center><b><font size="6">Locations Acceptance Tests</font></b></center>
+
+<table border="1">
+   <tr>
+      <td>Case No.</td>
+      <td>User Inputs and Commands</td>
+      <td>Expected Output</td>
+      <td>Remarks</td>
+      <td>Results</td>
+   </tr>
+  <tr>
+      <td>
+      1
+      </td>
+      <td>
+      Hit the "New" button.
+      </td>
+      <td>
+      Empty boxes show up with fields to enter in new location.
+      </td>
+      <td>
+      The columns are all smunched together and it doesn't look very good. There should be a default minimum size for the text boxes.<br>
+      <br>
+      They 'type' of location is only set for LEC, won't change to lab.
+      </td>
+      <td>
+      FAIL.<br>
+      </td>
+   </tr>
+   <tr>
+      <td>
+      2
+      </td>
+      <td>
+      Click and drag the lines in between the columns to resize columns
+      </td>
+      <td>
+      The columns should increase in size when dragged to the left, and shrink when dragged back to the right.
+      </td>
+      <td>
+      They resize appropriately
+      </td>
+      <td>
+      PASS.
+      </td>
+   </tr>
+   <tr>
+      <td>
+      3
+      </td>
+      <td>
+      Deleting rows by hitting the 'X' button on the right
+      </td>
+      <td>
+      The row is deleted from the table
+      </td>
+      <td>
+      The first one deleted just fine. After deleting the second one however, the column fields 
+      shrank, but the column titles at the top stayed in the same position so they didn't line up.
+      </td>
+      <td>
+      FAIL. 
+      </td>
+   </tr>
+   <tr>
+      <td>
+      4
+      </td>
+      <td>
+      I edit a cell and then click away from the row to unselect it
+      </td>
+      <td>
+      The row should autosave.
+      </td>
+      <td>
+      &nbsp;
+      </td>
+      <td>
+      PASS.
+      </td>
+   </tr>
+   <tr>
+      <td>
+      5
+      </td>
+      <td>
+      Edit a row and then click to another tab (Courses) without clicking away from the row.
+      </td>
+      <td>
+      A confirmation window should pop up asking if I want to leave before saving changes.
+      </td>
+      <td>
+      &nbsp;
+      </td>
+      <td>
+      PASS.
+      </td>
+   </tr>
+   <tr>
+      <td>
+      6
+      </td>
+      <td>
+      Scroll down a long list of locations
+      </td>
+      <td>
+      The title bar should scroll down with the table at the top of the page.
+      </td>
+      <td>
+      &nbsp;
+      </td>
+      <td>
+      PASS.
+      </td>
+   </tr>
+</table>
+
+<center><b><font size="6">Courses Acceptance Tests</font></b></center>
+
+<table border="1">
+   <tr>
+      <td>Case No.</td>
+      <td>User Inputs and Commands</td>
+      <td>Expected Output</td>
+      <td>Remarks</td>
+      <td>Results</td>
+   </tr>
+  <tr>
+      <td>
+      1
+      </td>
+      <td>
+      Click on the 'Courses' tab.
+      </td>
+      <td>
+      Navigate to the Courses table with an empty table, just with a title bar present.
+      </td>
+      <td>
+      Columns are smunched together. Many of the column titles are chopped off near the end.
+      </td>
+      <td>
+      FAIL.
+      </td>
+   </tr>
+  <tr>
+  <tr>
+      <td>
+      2
+      </td>
+      <td>
+      Hit 'New' to add a new Course.
+      </td>
+      <td>
+      A blank row should appear ready to be edited.
+      </td>
+      <td>
+      A blank row does appear, but for some reason a window pops up that says 
+      "value  not in options." I don't know why that appears
+      </td>
+      <td>
+      FAIL.
+      </td>
+   </tr>
+  <tr>
+      <td>
+      3
+      </td>
+      <td>
+      Hit the "New" button multiple times to keep adding courses.
+      </td>
+      <td>
+      More blank rows should keep popping up, ready to be filled in
+      </td>
+      <td>
+      It won't let me add more than two. When I try to hit new after the second one 
+      is already added, it just makes the second row blank... that's bad.
+      </td>
+      <td>
+      FAIL.
+      </td>
+   </tr>
+  <tr>
+  <tr>
+      <td>
+      4
+      </td>
+      <td>
+      Hitting the "New" button to add in information in all fields 
+      </td>
+      <td>
+      Every cell should be editable
+      </td>
+      <td>
+      Course Type cells are not editable yet.
+      </td>
+      <td>
+      FAIL.
+      </td>
+   </tr>
+   <tr>
+      <td>
+      5
+      </td>
+      <td>
+      Hit the 'X' button to delete a row
+      </td>
+      <td>
+      That row should be deleted from the table.
+      </td>
+      <td>
+      Sometimes it correctly deletes the row, but sometimes it does not. I hit delete with 2 rows 
+      and it deleted it. Then when I tried to delete the last row, it did not go away. But when 
+      I hit 'New' again, it didn't add a second row, it just made the first row all blank again...
+      </td>
+      <td>
+      FAIL.
+      </td>
+   </tr>
+   <tr>
+      <td>
+      6
+      </td>
+      <td>
+      Hit the 'Lab' to add a lab to the course
+      </td>
+      <td>
+      Something should pop up asking me what to make as the lab for that course
+      </td>
+      <td>
+      A list box popped up with the other courses in it, allowing me to choose 
+      which course to set as the lab for this one.
+      </td>
+      <td>
+      PASS.
+      </td>
+   </tr>
+</table>
+
+<center><b><font size="6">Schedule Acceptance Tests</font></b></center>
+
+<table border="1">
+   <tr>
+      <td>Case No.</td>
+      <td>User Inputs and Commands</td>
+      <td>Expected Output</td>
+      <td>Remarks</td>
+      <td>Results</td>
+   </tr>
+  <tr>
+  <tr>
+      <td>
+      1
+      </td>
+      <td>
+      Drag a course from the 'Available Courses' area to the 'Courses to Schedule' 
+      area
+      </td>
+      <td>
+      The courses are now also in the 'Courses to Schedule' area.
+      </td>
+      <td>
+      The courses are correctly added, and it won't let me drag the class over more 
+      times than there are sections of that class available.
+      </td>
+      <td>
+      PASS
+      </td>
+   </tr>
+  <tr>
+      <td>
+      2
+      </td>
+      <td>
+      Hit 'Generate Schedule' to create the schedule.
+      </td>
+      <td>
+      The courses should show up in the schedule based on the information it has 
+      about each course
+      </td>
+      <td>
+      &nbsp;
+      </td>
+      <td>
+      PASS.
+      </td>
+   </tr>
+  <tr>
+      <td>
+      3
+      </td>
+      <td>
+      Drag a course to another spot on the schedule to re-schedule it
+      </td>
+      <td>
+      The course should be reschuled after I'm prompted with a window asking what 
+      days to schedule it at.
+      </td>
+      <td>
+      The course is correctly scheduled in the new spot, but it still appears in the 
+      original spot also, so it is double-scheduled.
+      </td>
+      <td>
+      FAIL.
+      </td>
+   </tr>
+  <tr>
+      <td>
+      4
+      </td>
+      <td>
+      Click on the 'Export to CSV' button
+      </td>
+      <td>
+      Expect some type of prompt asking for file name or something.
+      </td>
+      <td>
+      It just pops up with a window saying that there was an error. At this point 
+      in the prototype, this is almost expected to fail though so it's not too 
+      bad.
+      </td>
+      <td>
+      FAIL.
+      </td>
+   </tr>
+  <tr>
+      <td>
+      5
+      </td>
+      <td>
+      Hit the 'Filters' button and deselect Tuesday and Thursday
+      </td>
+      <td>
+      Expect the entire columns, Monday and Tuesday, to be filtered from view.
+      </td>
+      <td>
+      Although the classes scheduled on those days do disappear, the actual columns 
+      still are there.
+      </td>
+      <td>
+      FAIL.
+      </td>
+   </tr>
+</table>
+
+<center><b><font size="6">Instructors Acceptance Tests (Done in 'Phase3a' testing)</font></b></center>
