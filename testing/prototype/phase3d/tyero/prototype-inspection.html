@@ -1,0 +1,465 @@
+<center><b><font size="5">Locations Acceptance Tests</font></b></center>
+
+<table border="1">
+   <tr>
+      <td>Case No.</td>
+      <td>User Inputs and Commands</td>
+      <td>Expected Output</td>
+      <td>Remarks</td>
+      <td>Results</td>
+   </tr>
+  <tr>
+      <td>
+      1
+      </td>
+      <td>
+      Hitting the "New" button.
+      </td>
+      <td>
+      Be allowed to enter in values for all fields displayed for locations
+      </td>
+      <td>
+      The fields for data entry don't line up w/ the columens. What should be 
+      for "Occupancy" lines up under "Equipment", which is very confusing.<br>
+      <br>
+      Columns stay out of allignment after the row is added.
+      </td>
+      <td>
+      FAIL.<br>
+      <br>
+      Can't change "type" for the location. I can't set
+      "Equipment".
+      </td>
+   </tr>
+   <tr>
+      <td>
+      2
+      </td>
+      <td>
+      Moving my mouse over the dotted-line separator between the "Occupancy" 
+      column and the "ADA" column. I will then do two things:
+      <ol>
+         <li>I left-click-and-hold and drag the separator to the right to 
+             stretch it. I then release the mouse button.</li>
+         <li>I left-click-and-hold the same separator again and drag it to the
+             left to shrink it.</li>
+      </ol>
+      </td>
+      <td>
+      The column should "grow" to the right and then "shrink" to the left. 
+      Columns to the right of the separator should shift to the right or left
+      relative the resizing movement made.
+      </td>
+      <td>
+      N/A
+      </td>
+      <td>
+      FAIL. I cannot shrink the "Occupancy" column back to its original size. 
+      It's like it has some hidden "min width", which does not match the width
+      of "Occupancy", or the max width of its fields. 
+      </td>
+   </tr>
+   <tr>
+      <td>
+      3
+      </td>
+      <td>
+      Hitting the "X" button in the "Delete" column for an already-existing row.
+      </td>
+      <td>
+      The particular row is removed from the view.
+      </td>
+      <td>
+      I'm given a "confirmation" dialog, which is nice. 
+      </td>
+      <td>
+      PASS. 
+      </td>
+   </tr>
+   <tr>
+      <td>
+      4
+      </td>
+      <td>
+      Clicking a cell to edit, changing nothing, and navigating to a different 
+      page (like "Schedule").
+      </td>
+      <td>
+      I'm taken to the Schedule Page
+      </td>
+      <td>
+      I don't actually change the field. I also don't hit 'Enter'. I just click 
+      to give the field focus and then click away. 
+      </td>
+      <td>
+      FAIL. I'm told I have unsaved changes, though I have changed nothing. 
+      </td>
+   </tr>
+   <tr>
+      <td>
+      5
+      </td>
+      <td>
+      Double-clicking on a particular row's individual fields to edit them
+      </td>
+      <td>
+      The field becomes editable and the mouse cursor is placed in that field. 
+      </td>
+      <td>
+      N/A
+      </td>
+      <td>
+      FAIL. I cannot edit the "Type" and "Equipment" fields. 
+      </td>
+   </tr>
+</table>
+
+<center><b><font size="5">Instructors Acceptance Tests</font></b></center>
+
+<table border="1">
+   <tr>
+      <td>Case No.</td>
+      <td>User Inputs and Commands</td>
+      <td>Expected Output</td>
+      <td>Remarks</td>
+      <td>Results</td>
+   </tr>
+   <tr>
+      <td>
+      1
+      </td>
+      <td>
+      Hit the "New" button. Enter information for a new instructor. Hit "Enter"
+      once data entry is complete. 
+      </td>
+      <td>
+      An empty row at the bottom of the list of instructors where I can input 
+      new instructor information. After data is entered and the 'Enter' key is
+      hit, the added row should look like the other rows in the table.
+      </td>
+      <td>
+      
+      </td>
+      <td>
+      PASS
+      </td>
+   </tr>
+   <tr>
+      <td>
+      2
+      </td>
+      <td>
+      Scrolling down the list of instructors. 
+      </td>
+      <td>
+      
+      </td>
+      <td>
+      N/A
+      </td>
+      <td>
+      PASS
+      </td>
+   </tr>
+  <tr>
+      <td>
+      3
+      </td>
+      <td>
+      Moving my mouse over the dotted-line separator between the "First Name" 
+      column and the "Last Name" column. I will then do two things:
+      <ol>
+         <li>I left-click-and-hold and drag the separator to the right to 
+             stretch it. I then release the mouse button.</li>
+         <li>I left-click-and-hold the same separator again and drag it to the
+             left to shrink it.</li>
+      </ol>
+      </td>
+      <td>
+      The column should "grow" to the right and then "shrink" to the left. 
+      Columns to the right of the separator should shift to the right or left
+      relative the resizing movement made.
+      </td>
+      <td>
+      There is no limit on stretching a column. Shrinking can only be done up
+      to the width of the longest field in the column.
+      </td>
+      <td>
+      PASS
+      </td>
+   </tr>
+  <tr>
+      <td>
+      4
+      </td>
+      <td>
+      Click on each column header, one at a time. 
+      </td>
+      <td>
+      Data in the table should be arranged in ascending order using the values
+      in the column whose header was clicked to sort rows. (The "Preferences",
+      "Edit", and "Delete" columns are exempt from this test, as it doesn't 
+      make sense to sort according to these values).
+      </td>
+      <td>
+      String columns are ASCI-betically sorted. Numerical columns appear
+      numerically sorted, but I can't tell if this is just ASCI-betical too. 
+      The "Disabilities" column sorts according to whether the value is 
+      "checked" or not.<br>
+      <br>
+      Clicking on an already-sorted column reverses the sorting
+      </td>
+      <td>
+      PASS
+      </td>
+   </tr>
+  <tr>
+      <td>
+      5
+      </td>
+      <td>
+      Hitting the "X" button of the "Delete" column for a given row. 
+      </td>
+      <td>
+      The row corresponding to the "X" button is removed from the table.
+      </td>
+      <td>
+      
+      </td>
+      <td>
+      PASS
+      </td>
+   </tr>
+</table>
+
+<center><b><font size="5">Courses Acceptance Tests</font></b></center>
+
+<table border="1">
+   <tr>
+      <td>Case No.</td>
+      <td>User Inputs and Commands</td>
+      <td>Expected Output</td>
+      <td>Remarks</td>
+      <td>Results</td>
+   </tr>
+  <tr>
+      <td>
+      1
+      </td>
+      <td>
+      Clicking on the "Courses" tab to navigate to the courses screen
+      </td>
+      <td>
+      Be presented with a table with all column headers displayed
+      </td>
+      <td>
+      Columns are only as wide as their widest field.
+      </td>
+      <td>
+      FAIL
+	  <br>
+      <br>
+      Column headers are "chopped off" if they are bigger than the widest field
+      in their column. "Hours Per Week" is an apt example of this.
+      </td>
+   </tr>
+  <tr>
+  <tr>
+      <td>
+      2
+      </td>
+      <td>
+      Click on each column header, one at a time. 
+      </td>
+      <td>
+      Data in the table should be arranged in ascending order using the values
+      in the column whose header was clicked to sort rows. (The "Lab" and 
+      "Delete" columns are exempt from this test, as it doesn't make sense to 
+      sort according to these values).
+      </td>
+      <td>
+      String columns are ASCI-betically sorted. Numerical columns appear
+      numerically sorted, but I can't tell if this is just ASCI-betical too. 
+      The "Disabilities" column sorts according to whether the value is 
+      "checked" or not.<br>
+      <br>
+      Clicking on an already-sorted column reverses the sorting<br>
+      <br>
+      <br>
+      </td>
+      <td>
+      FAIL
+	  <br>
+      <br>
+      Clicking on a column with all the same values (such as "Course Type" when 
+      all courses have a "LEC" course type") imposes some arbitrary sorting
+      on the rows.<br>
+      <br>
+      Cannot sort by "WTU", "SCU', "# of Sections", "Max Enrollment", or "Hours
+      Per Week"
+      </td>
+   </tr>
+  <tr>
+      <td>
+      3
+      </td>
+      <td>
+      Hitting the "New" button.
+      </td>
+      <td>
+      Be allowed to enter in values for all fields displayed for courses. 
+      </td>
+      <td>
+      
+      </td>
+      <td>
+      FAIL
+	  <br>
+      <br>
+      I cannot add/specify the "Course Type" field for a newly-added course.
+      </td>
+   </tr>
+  <tr>
+  <tr>
+      <td>
+      4
+      </td>
+      <td>
+      Hitting the "New" button. Entering in valid values for all fields, 
+      except that the "Catalog Number" field will be given a negative value. 
+      </td>
+      <td>
+      An error requiring a positive integer for the "Catalog Number" field.
+      </td>
+      <td>
+      
+      </td>
+      <td>
+      PASS
+      </td>
+   </tr>
+   <tr>
+      <td>
+      5
+      </td>
+      <td>
+      Hitting the "X" button in the "Delete" column for a newly-added, valid 
+      row. 
+      </td>
+      <td>
+      The particular row is removed from the view.
+      </td>
+      <td>
+      N/A
+      </td>
+      <td>
+      FAIL. Pressing the button does nothing. 
+      </td>
+   </tr>
+</table>
+
+<center><b><font size="5">Schedule Acceptance Tests</font></b></center>
+
+<table border="1">
+   <tr>
+      <td>Case No.</td>
+      <td>User Inputs and Commands</td>
+      <td>Expected Output</td>
+      <td>Remarks</td>
+      <td>Results</td>
+   </tr>
+  <tr>
+  <tr>
+      <td>
+      1
+      </td>
+      <td>
+      Dragging a course from the "Available Courses" list to the 9a slot on the
+      displayed schedule. When prompted for a selection of days to teach the 
+      course, I choose Monday/Wednesday/Friday.
+      </td>
+      <td>
+      The course I dragged is scheduled on MWF starting at 9a. 
+      </td>
+      <td>
+      
+      </td>
+      <td>
+      PASS
+      </td>
+   </tr>
+  <tr>
+      <td>
+      2
+      </td>
+      <td>
+      Dragging an already-scheduled course to a different time slot (11a) on the
+      schedule. When prompted for days to teach the course, I will select 
+      Tuesday/Thursday. 
+      </td>
+      <td>
+      The course I dragged is moved to be taught at 11a on Tuesday/Thursday. B/c
+      it is taught for less days, it should be taught for a longer period of 
+      time. 
+      </td>
+      <td>
+      
+      </td>
+      <td>
+      PASS
+      </td>
+   </tr>
+  <tr>
+      <td>
+      3
+      </td>
+      <td>
+      Hit the "Filters" button. Un-check Monday/Wednesday/Friday. Hit 
+      "Set Filters".
+      </td>
+      <td>
+      Why are MWF columns still here?
+      </td>
+      <td>
+      </td>
+      <td>
+      FAIL. Removes all the scheduled items but the columns should still go away.
+      </td>
+   </tr>
+  <tr>
+      <td>
+      4
+      </td>
+      <td>
+      Hit the "Filters" button. Select certain Instructors, Courses, rooms, and
+      times to display. 
+      </td>
+      <td>
+      Receive feedback that those items will actually be filtered. 
+      </td>
+      <td>
+      Note that I'm not hitting "Set Filters". See "Results" for why.
+      </td>
+      <td>
+      FAIL. Can't select anything.
+      </td>
+   </tr>
+  <tr>
+      <td>
+      5
+      </td>
+      <td>
+      Hit "Log Out" and then repeat my login with the same user name and 
+      selected schedule I used before.
+      </td>
+      <td>
+      See the scheduled items from my previous session. 
+      </td>
+      <td>
+      
+      </td>
+      <td>
+      PASS
+      </td>
+   </tr>
+
