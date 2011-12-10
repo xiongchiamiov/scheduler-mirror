@@ -1,0 +1,295 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="1138.23">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+    table.t1 {border-collapse: collapse}
+    td.td1 {border-style: solid; border-width: 1.0px 1.0px 1.0px 1.0px; border-color: #cbcbcb #cbcbcb #cbcbcb #cbcbcb; padding: 0.0px 5.0px 0.0px 5.0px}
+  </style>
+</head>
+<body>
+<p class="p1"><b>Instructors</b></p>
+<p class="p2"><br></p>
+<table cellspacing="0" cellpadding="0" class="t1">
+  <tbody>
+    <tr>
+      <td valign="middle" class="td1">
+        <p class="p1"><b>Case No.</b></p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1"><b>User Inputs and Commands</b></p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1"><b>Expected Output</b></p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1"><b>Remarks</b></p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1"><b>Results</b></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="middle" class="td1">
+        <p class="p1">1</p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1">Add an Instructor by clicking 'new', then filling in random data</p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1">A new row is added to the bottom of the list</p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p2"><br></p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1">PASS</p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="middle" class="td1">
+        <p class="p1">2</p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1">Click the save button on the new row</p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1">The item fields are deselected and the 'Save' button text is now' Edit'</p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p2"><br></p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1">PASS</p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="middle" class="td1">
+        <p class="p1">3</p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1">Click the X for Delete button on the top item in the list</p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1">A prompt to confirm deletion, then the row is deleted on 'OK'</p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1">There is a 'Prevent this page..' blurb on the prompt. If left unchecked, it shows up every other time when deleting elements. Also, instead of showing the instructor name to delete, it shows the full path 'edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT@1af3'</p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1">PASS with remarks</p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="middle" class="td1">
+        <p class="p2"><br></p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p2"><br></p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p2"><br></p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p2"><br></p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p2"><br></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<p class="p2"><br></p>
+<p class="p1"><b>Courses</b></p>
+<p class="p2"><br></p>
+<table cellspacing="0" cellpadding="0" class="t1">
+  <tbody>
+    <tr>
+      <td valign="middle" class="td1">
+        <p class="p1"><b>Case No.</b></p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1"><b>User Inputs and Commands</b></p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1"><b>Expected Output</b></p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1"><b>Remarks</b></p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1"><b>Results</b></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="middle" class="td1">
+        <p class="p1">1</p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1">Navigate to Courses tab, click 'new' button</p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1">A new row with default information filled in at the bottom of the Course List</p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1">Returned a failure prompt (see results) and then added the row. Regression issue? This did not happen before, as I recall</p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1">FAIL (returned error 'Value<span class="Apple-converted-space">  </span>not in options)</p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="middle" class="td1">
+        <p class="p1">2</p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1">Delete a row - click 'X' button on the 2nd row, 'General Chemistry II'</p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1">A confirmation prompt for deleting, the item is removed after 'Ok' is selected</p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p2"><br></p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1">PASS</p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="middle" class="td1">
+        <p class="p1">3</p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1">Select another tab (Instructors) then select the Courses tab again</p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1">Confirmation prompt on unsaved changes; click ok. Switch back and the new row added changes are gone</p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1">Previously it was an auto-save. Is there now no more auto-save? Not clear how to save a new row now.</p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1">PASS with remarks</p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="middle" class="td1">
+        <p class="p1">4</p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1">Click on 'Lab' for Chemistry of Drugs and Poisons</p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1">A lab prompt is shown, allowing a lab section to be selected. After selection, the class title is shown where Lab was on the button</p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1">The selection is not very useable, grays out the back screen and looks as though something is wrong.</p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1">Pass</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<p class="p2"><br></p>
+<p class="p1"><b>Scheduling</b></p>
+<p class="p2"><br></p>
+<table cellspacing="0" cellpadding="0" class="t1">
+  <tbody>
+    <tr>
+      <td valign="middle" class="td1">
+        <p class="p1"><b>Case No.</b></p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1"><b>User Inputs and Commands</b></p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1"><b>Expected Output</b></p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1"><b>Remarks</b></p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1"><b>Results</b></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="middle" class="td1">
+        <p class="p1">1</p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1">Drag course from Available Courses to 1pm slot on calendar</p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1">Popup to prompt for days of week. Select MWF, the course should appear in those spots at the 1pm slot</p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1">NA</p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1">PASS</p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="middle" class="td1">
+        <p class="p1">2</p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1">Drag the course item from calendar to course list</p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1">Course is removed from calendar</p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1">NA</p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1">PASS</p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="middle" class="td1">
+        <p class="p1">3</p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1">Generate Schedule button with no schedules on the calendar or on the Courses to Schedule List</p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1">An error notification stating that a schedule could not be generated</p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1">Known Bug here, the notification appears as expected but the loading symbol will appear without hiding, no matter where the user navigates to</p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1">FAIL</p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="middle" class="td1">
+        <p class="p1">4</p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1">Click on 'Export to CSV'</p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1">Expect a window prompt or confirmation</p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1">Knowingly unimplemented</p>
+      </td>
+      <td valign="middle" class="td1">
+        <p class="p1">FAIL</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<p class="p2"><br></p>
+<p class="p1">Locations and Login done in phase3a</p>
+</body>
+</html>
