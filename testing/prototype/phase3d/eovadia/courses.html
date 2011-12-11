@@ -1,0 +1,43 @@
+Courses View
+
+<table>
+<tr>
+<th>Case No.</th><th>User Inputs and Command</th><th>Expected Output</th><th>Results</th>
+</tr>
+<tr>
+<td>1</td><td>Hit the LEC on the first row.</td><td>Shows a drop down of possible Course Types, including LEC, LAB, and SEM.</td><td>FIX</td>
+</tr>
+<tr>
+<td>2</td><td>Scroll down the page, to below the first row</td><td>Header detaches from the page, and follows the top of the screen</td><td>PASS</td>
+</tr>
+<tr>
+<td>3</td><td>Hit the first row's course name</td><td>All text cells in the row become editable</td><td>PASS</td>
+</tr>
+<tr>
+<td>4</td><td>Do test 3, then change course name to Derp, then hit save.</td><td>All text cells in the row become non-editable, and the course name should still be Derp.</td><td>PASS</td>
+</tr>
+<tr>
+<td>5</td><td>Hit the X on the first row.</td><td>Popup should say "Are you sure you want to delete (course name here)?</td><td>PASS</td>
+</tr>
+<tr>
+<td>6</td><td>Do test 5. Hit OK.</td><td>Popup should disappear, row should be gone.</td><td>PASS</td>
+</tr>
+<tr>
+<td>7</td><td>Hit New</td><td>Empty row should appear at bottom, with all text fields editable.</td><td>PASS</td>
+</tr>
+<tr>
+<td>8</td><td>Do test 7, fill in "Grokka" for course name, and hit save.</td><td>New row should appear at bottom with Grokka as course name.</td><td>PASS</td>
+</tr>
+<tr>
+<td>9</td><td>Do test 3, hit Save</td><td>All text fields should be non-editable again, and no changes were made.</td><td>PASS</td>
+</tr>
+<tr>
+<td>10</td><td>Mouse down on the dotted line between Course Name and Catalog Number, then move mouse to the right, then mouse up.</td><td>Column should have resized along with mouse's movement.</td><td>PASS</td>
+</tr>
+<tr>
+<td>11</td><td>Do test 4, try navigating to the Generated page.</td><td>Should get an alert warning that there are unsaved changes.</td><td>PASS</td>
+</tr>
+<tr>
+<td>11</td><td>Click on Course Name</td><td>Should sort by course name, case-insensitive lexicographically.</td><td>FAIL</td>
+</tr>
+</table>
