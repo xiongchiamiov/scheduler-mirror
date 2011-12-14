@@ -10,6 +10,11 @@ import com.google.gwt.user.client.ui.Label;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 
+/**
+ * Handles drops onto the schedule table.
+ * 
+ * @author Mike McMahon
+ */
 public class ScheduleCellDropController extends SimpleDropController
 {
  ScheduleCell targetCell;
@@ -36,12 +41,15 @@ public class ScheduleCellDropController extends SimpleDropController
 
   super.onDrop(context);
 
+  //Handles the case of an existing schedule item being moved
   if (context.draggable.getClass() == ScheduleItemHTML.class)
   {
    droppedItem = (ScheduleItemHTML) context.draggable;
    targetCell.promptForDays(droppedItem.getScheduleItem(), targetCell.getRow(),
      true, false);
-  } else
+  } 
+  //Handles the case of a course dragged onto the schedule.
+  else
   {
    courseDropped = ((CourseListItem) context.draggable).getCourse();
 
@@ -52,8 +60,10 @@ public class ScheduleCellDropController extends SimpleDropController
     return;
    }
 
+   //Make a clone of the course, with one section because we only schedule one section at a time.
    oneSectionCourse = new CourseGWT(courseDropped);
    oneSectionCourse.setNumSections(1);
+   //The course is held in a schedule item because of my "make it up as you go" design... sorry.
    courseHolder = new ScheduleItemGWT(oneSectionCourse, "", "", "", 0, 1,
      new ArrayList<Integer>(), 0, 0, 0, 0, "", false);
    fromIncluded = !((MouseListBox) context.draggable.getParent().getParent())

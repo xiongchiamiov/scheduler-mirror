@@ -11,6 +11,11 @@ import com.google.gwt.user.client.ui.SimplePanel;
 
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 
+/**
+ * This SimplePanel lies in each cell of the schedule table.
+ * 
+ * @author Mike McMahon
+ */
 public class ScheduleCell extends SimplePanel implements
   CloseHandler<PopupPanel>
 {
@@ -44,6 +49,7 @@ public class ScheduleCell extends SimplePanel implements
   scheduleItem = item.getScheduleItem();
   setWidget(item);
 
+  //Color the schedule item
   if (item.getScheduleItem().isConflicted())
   {
    addStyleName("scheduleItemConflicted");
@@ -52,13 +58,7 @@ public class ScheduleCell extends SimplePanel implements
    addStyleName("scheduleItemNoConflict");
   }
 
-  if (height > item.getOffsetHeight())
-  {
-   setSize("100%", "100%");
-  } else
-  {
-   setSize("100%", "100%");
-  }
+  setSize("100%", "100%");
 
   item.setSize("100%", "100%");
   hoverPopup = new HoverTextPopup(scheduleItem.getHoverText());
@@ -86,12 +86,24 @@ public class ScheduleCell extends SimplePanel implements
   this.col = col;
  }
 
+ /**
+  * Called when the ReschedulerPopup is closed. Calls a method to move an 
+  * existing schedule item, or place a new course as a schedule item.
+  */
  public void onClose(CloseEvent<PopupPanel> event)
  {
   schedule.moveItem(rescheduler.getItem(), rescheduler.getDays(),
     rescheduler.getRow(), rescheduling, fromIncluded);
  }
 
+ /**
+  * Called when a schedule item is moved, or a course is dropped onto the 
+  * schedule.
+  * @param rescheduled The moved schedule item, or a schedule item containing the dropped course.
+  * @param row The row on which the drop happened.
+  * @param inScheduled True if an existing schedule item was dragged, false if a course was dragged from a list.
+  * @param fromIncluded True if course was dragged from the To Be Scheduled list.
+  */
  public void promptForDays(ScheduleItemGWT rescheduled, int row,
    boolean inScheduled, boolean fromIncluded)
  {

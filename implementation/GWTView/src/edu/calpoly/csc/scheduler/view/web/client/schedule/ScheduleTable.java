@@ -8,6 +8,11 @@ import com.google.gwt.user.client.ui.HTML;
 
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 
+/**
+ * An extension of a FlexTable for displaying a schedule.
+ * 
+ * @author Mike McMahon
+ */
 public class ScheduleTable extends FlexTable
 {
  // The scheduleViewWidget that this schedule resides in

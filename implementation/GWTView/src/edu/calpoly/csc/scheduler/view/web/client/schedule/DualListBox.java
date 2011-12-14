@@ -18,7 +18,10 @@ import java.util.ArrayList;
 /**
  * A panel which holds the two course lists. Has buttons for moving courses 
  * between the two lists.
- * Uses code from Fred Sauer's example at
+ * Uses modified code from Fred Sauer's example at
+ * http://allen-sauer.com/com.allen_sauer.gwt.dnd.demo.DragDropDemo/DragDropDemo.html#DualListExample
+ * 
+ * @authors Fred Sauer, Mike McMahon
  */
 public class DualListBox extends AbsolutePanel
 {

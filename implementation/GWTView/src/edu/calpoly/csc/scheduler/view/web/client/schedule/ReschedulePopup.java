@@ -12,6 +12,12 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 
+/**
+ * A DialogBox is displayed when a course is dragged onto the schedule or when
+ * a schedule item is dragged to a new time. 
+ * 
+ * @author Mike McMahon
+ */
 public class ReschedulePopup extends DialogBox
 {
  private VerticalPanel mainPanel;

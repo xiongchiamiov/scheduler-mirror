@@ -11,8 +11,10 @@ import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 
 /**
  * A drop controller for handling drops onto the course lists.
- * Based on example from Fred Sauer at 
- * DropController for {@link DualListExample}.
+ * Uses modified code from example by Fred Sauer at
+ * http://allen-sauer.com/com.allen_sauer.gwt.dnd.demo.DragDropDemo/DragDropDemo.html#DualListExample
+ * 
+ * @authors Fred Sauer, Mike McMahon
  */
 class ListBoxDropController extends AbstractDropController
 {
@@ -83,30 +85,37 @@ class ListBoxDropController extends AbstractDropController
    {
     if (widget.getParent().getParent() == from)
     {
-     //Only remove courses 
+     //Remove course from To Be Schedule list if dragged onto Available list
      if (mouseListBox.isAvailableBox())
      {
       from.remove(widget);
      }
+     //A drag from Available to To Be Scheduled
      else
      {
-      itemIndex = mouseListBox.contains((CourseListItem) widget);
       course = new CourseGWT(((CourseListItem) widget).getCourse());
       sectionsIncluded = mouseListBox.getSectionsInBox(course);
 
+      //Don't add another section to To Be Schedule list if it would allow more sections to be scheduled than what actually exisits
       if (course.getNumSections() > sectionsIncluded
         + schedule.getSectionsOnSchedule(course))
       {
+       itemIndex = mouseListBox.contains((CourseListItem) widget);
+       //If sections of the course are already in the To Be Scheduled list, increment the number of sections. 
        if (itemIndex >= 0)
        {
         course.setNumSections(sectionsIncluded + 1);
         mouseListBox.setWidget(itemIndex, new CourseListItem(course, true));
-       } else
+       } 
+       //If no sections exist, add a course with one section to the To Be Scheduled list.
+       else
        {
         course.setNumSections(1);
         mouseListBox.add(new CourseListItem(course, true));
        }
-      } else
+      }
+      //The To Be Scheduled list and Schedule Table already contain the maximum number of sections of the course
+      else
       {
        Window.alert("No more sections to schedule");
       }

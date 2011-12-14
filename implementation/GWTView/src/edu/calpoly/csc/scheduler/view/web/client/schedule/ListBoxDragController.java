@@ -14,7 +14,10 @@ import java.util.ArrayList;
 
 /**
  * A drag controller for the two courses lists.
- * Based on example from Fred Sauer at 
+ * Uses modified code from example by Fred Sauer at 
+ * http://allen-sauer.com/com.allen_sauer.gwt.dnd.demo.DragDropDemo/DragDropDemo.html#DualListExample
+ * 
+ * @authors Fred Sauer, Mike McMahon
  */
 class ListBoxDragController extends PickupDragController
 {

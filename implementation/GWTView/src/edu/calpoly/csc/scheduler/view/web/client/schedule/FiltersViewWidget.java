@@ -18,6 +18,12 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 
+/**
+ * A DialogBox which displays filters for viewing the schedule. Contains
+ * methods which allow another widget to see which filters are set.
+ * 
+ * @author Mike McMahon
+ */
 public class FiltersViewWidget extends DialogBox
 {
  private VerticalPanel mainPanel = new VerticalPanel();
