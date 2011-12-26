@@ -1,0 +1,188 @@
+<html>
+	<body>
+		<p>This is a review of the 3D release of the Scheduler Project's requirements documents, as seen at http://scheduler.csc.calpoly.edu/releases/rel3d/requirements/ .</p>
+		<table border="1">
+			<tr>
+				<th>Component</th>
+				<th>Status</th>
+				<th>Remarks</th>
+			</tr>
+			<tr>
+				<td>2</td>
+				<td>FIX</td>
+				<td>Not found.</td>
+			</tr>
+			<tr>
+				<td>2.1</td>
+				<td>FIX</td>
+				<td>Not found.</td>
+			</tr>
+			<tr>
+				<td>2.2</td>
+				<td>FIX</td>
+				<td>
+					<ul>
+						<li>The calendar section contains a misspelling: "gerneration".</li>
+						<li>The last sentence of that same paragraph contains a comma splice.</li>
+						<li>The Offered Course List section speaks about the design in a future tense, rather than the present tense used throughout the rest of the page.</li>
+						<li>The gold color used in a few elements of the sidebar in Figure 2.2.a doesn't mesh well with the tan used on other parts of the layout - they should probably be the same color.</li>
+						<li>There aren't really any visual cues for the dragging workflow mentioned in the requirements text; it doesn't seem apparent to me (merely from the image) that the courses are draggble, or to where they would be draggable.</li>
+						<li>Missing navigational footer.</li>
+					</ul>
+				</td>
+			</tr>
+			<tr>
+				<td>2.3</td>
+				<td>FIX</td>
+				<td>Not found.</td>
+			</tr>
+			<tr>
+				<td>2.3.1</td>
+				<td>FIX</td>
+				<td>
+					<ul>
+						<li>The "and" in "To remove and instructor" should be "an".</li>
+						<li>The text mentions a Remove button, while the image shows a button named "Delete".</li>
+						<li>The text describes "select[ing]" an instructor, but the image doesn't have checkboxes or other selection mechanisms.
+						<li>It was my impression that the Prev link should lead to section 2.2 (since we don't have a page for 2.3 general) and next to 2.3.1.1.</li>
+						<li>I'd like to have page titles title-cased in the footer, as they are on the actual pages.</li>
+					</ul>
+				</td>
+			</tr>
+			<tr>
+				<td>2.3.1.1</td>
+				<td>FIX</td>
+				<td>
+					<ul>
+						<li>The information that is prefilled in Figure 2.3.1.1a differs from that in Figure 2.3.1.1b.  I'm not sure if clicking the Add button in the first screen leads me to the second screen, or if I only end up there if I don't fill in all the fields.<li>
+						<li>Same footer comments as 2.3.1.</li>
+					</ul>
+				</td>
+			</tr>
+			<tr>
+				<td>2.3.1.2</td>
+				<td>FIX</td>
+				<td>
+					<ul>
+						<li>The text indicates that there should be a button labelled "Save", but the image labels it "Accept".</li>
+						<li>Why is editing done inline instead of using the interface shown in Figure 2.3.1.1b?</li>
+						<li>To avoid the extra "Edit Preferences" line from looking like a mid-table header, it shouldn't be separated from the instructor line by a border.  It may also help to apply a different background color to both lines while in edit mode.</li>
+						<li>What do the buttons in the "Edit Preferences" section do?</li>
+						<li>Same footer comments as 2.3.1.</li>
+					</ul>
+				</td>
+			</tr>
+			<tr>
+				<td>2.3.1.3</td>
+				<td>FIX</td>
+				<td>
+					<ul>
+						<li>The text describes a "popup", but the image appears to be a standard page inside of the template.</li>
+						<li>Same footer comments as 2.3.1.</li>
+					</ul>
+				</td>
+			</tr>
+			<tr>
+				<td>2.3.2</td>
+				<td>FIX</td>
+				<td>Not found.</td>
+			</tr>
+			<tr>
+				<td>2.3.3</td>
+				<td>FIX</td>
+				<td>
+					<ul>
+						<li>Images are all broken.</li>
+						<li>The caption for Figure 1 and the last sentence of the first paragraph have a misspelling: "Intial".</li>
+						<li>In the second sentence, "The scenarios below describes" should be "The scenarios below describe" or "The scenario below describes".</li>
+						<li>"The Remove button allows the user remove the..." is missing a word: "The Remove button allows the user to remove the...".</li>
+						<li>"Accomodations" is misspelled as "accomadations".</li>
+						<li>"Equipment" is misspelled as "equpipment".</li>
+						<li>"i.e. (Lab and/or Lecture)" seems like the parens should be enclosing the whole phrase.</li>
+					</ul>
+				</td>
+			</tr>
+			<tr>
+				<td>2.4</td>
+				<td>FIX</td>
+				<td>Not found.</td>
+			</tr>
+			<tr>
+				<td>2.4.1</td>
+				<td>FIX</td>
+				<td>Not found.</td>
+			</tr>
+			<tr>
+				<td>2.4.2</td>
+				<td>DONE</td>
+				<td>&#160;</td>
+			</tr>
+			<tr>
+				<td>2.4.2.1</td>
+				<td>FIX</td>
+				<td>
+					<ul>
+						<li>The text describes a draggable interface that differs from the drop-down selection the image shows.</li>
+						<li>The descriptions of the preference levels seem to leave out middling values - what do I select if I really want to teach a course but am only moderately qualified?</li>
+					</ul>
+				</td>
+			</tr>
+			<tr>
+				<td>2.4.2.2</td>
+				<td>FIX</td>
+				<td>
+					<ul>
+						<li><strike>Having to type in times and check days to delete a preference seems irritating and prone to error; perhaps some sort of eraser tool would be more suited?</strike> Oh, that's not the method at all.  From merely looking at the interface, however, this is what seems to be the case (Add and Delete are positioned so as to seem to apply to the same inputs), so the Delete button should instead appear on a section when clicked, or something.</li>
+						<li>What happens if I write in a time that isn't valid?  What happens if I only fill in the hours, and not the minutes?  What if end time is before the start time?  Why do I have to calculate 24-hour time when my world works in 12-hour am/pm?  Why aren't we using a time-selection widget?</li>
+						<li>The text describes selecting the preference level using a slider, but the image shows a drop-down.</li>
+						<li>Preference levels are described as being colorized, but in the image they are merely levels of grey.</li>
+						<li>If I want to change the preference level of a block of time, do I have to delete and recreate it?</li>
+					</ul>
+				</td>
+			</tr>
+			<tr>
+				<td>2.4.2.3</td>
+				<td>FIX</td>
+				<td>
+					<ul>
+						<li>The text describes a third input of a map that doesn't appear on the image.</li>
+						<li>Why do we have both miles and kilometers, both yards and meters?</li>
+						<li>I don't realy have any idea how far, say, Fisher Science is from Engineering East - it'd be much easier for me to draw a radius around my office on a map than to calculate distances in concrete units like feet.</li>
+						<li>I'm worried about changing what the distance means simply based upon whether or not a center point is chosen.  If these two preferences (distance between classes and distance from office) <i>must</i> be inputted in the same interface, the distinction needs to be more obvious.  For instance, there may be a two-option radio selection that hides the map input when the user has selected to specify distance between classes.  Care needs to be taken to make sure that it's apparent to the user that they are selecting one or the other, rather than flipping through multiple concurrent options.</li>
+					</ul>
+				</td>
+			</tr>
+			<tr>
+				<td>2.5</td>
+				<td>FIX</td>
+				<td>
+					<ul>
+						<li>There's no heading indicating the section number.</li>
+						<li>Images are not labelled.</li>
+						<li>Only the second image is not broken.</li>
+						<li>No navigational footer.</li>
+						<li>"entery" should be "entry".</li>
+						<li>While the text states that "Selections are colored to help distinguish them from empty timeslots.", it seems that <i>sections of courses</i>, selected or not, are what are colored.</li>
+						<li>If the behavior of the search box is as (briefly) described, is the view empty initially until the user has searched for classes?  Are classes previously searched for removed when a new search is made?  Or is the search box actually a filter box?</li>
+						<li>The images are all links to a non-existant page.</li>
+						<li>How does the search functionality distinguish between instructors, rooms, and departments?  Is there partial search (e.g. "ch" matches CHEM)?  What happens if there's an instructor with the last name of "Chem"?</li>
+						<li>"assiagned" should be "assigned".</li>
+						<li>The Filter button is described in section 2.5.1, but the text only gives a very vague description with no pointers to the aforementioned subsection.</li>
+					</ul>
+				</td>
+			</tr>
+			<tr>
+				<td>2.5.1</td>
+				<td>FIX</td>
+				<td>
+					<ul>
+						<li>The index lists this section as 2.1.</li>
+						<li>No heading with the section number.</li>
+						<li>No image.</li>
+					</ul>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>
+
