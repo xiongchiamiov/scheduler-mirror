@@ -1,0 +1,185 @@
+<html>
+	<body>
+		<h1 align="center">Login</h1>
+		<table border="1">
+			<tr>
+				<td>Case No.</td>
+				<td>User Inputs and Commands</td>
+				<td>Expected Output</td>
+				<td>Results</td>
+				<td>Remarks</td>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td>Leave field blank.  Press Login button.</td>
+				<td>An error of some sort indicating that a username needs to be specified.</td>
+				<td>PASS</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>2</td>
+				<td>Leave field blank.  Focus the field and hit the enter key.</td>
+				<td>Same as #1.</td>
+				<td>PASS</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>3</td>
+				<td>Enter "jmpearso'; DROP TABLE users;" into the field and press the login button.</td>
+				<td>A message about an invalid username.</td>
+				<td>PASS</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>4</td>
+				<td>Enter "jmpearso" into the field and press the login button.</td>
+				<td>The scheduler home view, with "jmpearso" shown as the name of the logged-in user.</td>
+				<td>PASS</td>
+				<td>Authentication won't be necessary in the future if we get authorization to use CAS.</td>
+			</tr>
+		</table>
+
+		<h1 align="center">Home View</h1>
+		<table border="1">
+			<tr>
+				<td>Case No.</td>
+				<td>User Inputs and Commands</td>
+				<td>Expected Output</td>
+				<td>Results</td>
+				<td>Remarks</td>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td>Click "Log Out".</td>
+				<td>The login screen.</td>
+				<td>PASS</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>2</td>
+				<td>Click "Open" without selecting a scheduler.</td>
+				<td>An error indicating that a schedule must be selected.</td>
+				<td>FAIL</td>
+				<td>No response of any kind even though button is clickable.</td>
+			<tr>
+				<td>3</td>
+				<td>Click "Create New Schedule".</td>
+				<td>A new, blank, schedule is created.</td>
+				<td>PASS</td>
+				<td></td>
+			</tr>
+		</table>
+
+		<h1 align="center">Instructors</h1>
+		<table border="1">
+			<tr>
+				<td>Case No.</td>
+				<td>User Inputs and Commands</td>
+				<td>Expected Output</td>
+				<td>Results</td>
+				<td>Remarks</td>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td>Click column headers.</td>
+				<td>The first click should sort the column in ascending order, and a second click should sort in descending order.</td>
+				<td>FIX</td>
+				<td>Sorting uses a naive ASCII-ordering approach; at the least, it should be case-insensitive.</td>
+			<tr>
+				<td>2</td>
+				<td>Click column headers.</td>
+				<td>An arrow or other visual indication should alert the user of the current sort direction.</td>
+				<td>FIX</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>3</td>
+				<td>Click column headers.</td>
+				<td>When a tie in sorts appears (due to multiple rows having the same value in that column), sorting should be done by the previous sort.</td>
+				<td>FIX</td>
+				<td>Whatever order is used for ties appears to be deterministic, but not anything apparent to me.</td>
+			</tr>
+			<tr>
+				<td>4</td>
+				<td>Click headers of columns for which sorting makes no sense (e.g. "Preferences").</td>
+				<td>Nothing should happen.</td>
+				<td>FIX</td>
+				<td>Indeed, nothing hapens.  However, it'd be best for the column headers to not be clickable at all.</td>
+			</tr>
+			<tr>
+				<td>5</td>
+				<td>Click and drag a column border as small as possible.</td>
+				<td>Columns should not be able to be resized so small that the user cannot resize them large again.</td>
+				<td>PASS</td>
+				<td></td>
+			<tr>
+				<td>6</td>
+				<td>Scroll down the page far enough that the top of the table is off the page.</td>
+				<td>The header should float and "follow" the user.</td>
+				<td>FIX</td>
+				<td>Only once it gets all the way off-screen does the header snap back down into a fully-visible position; it should do this as soon as the top of it hits the top of the screen.
+			</tr>
+			<tr>
+				<td>7</td>
+				<td>Check the Disabilities box in a row.</td>
+				<td>The box should be checked when revisiting the page.</td>
+				<td>FIX</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>8</td>
+				<td>Click the Preferences button in a row.</td>
+				<td>A dialog should open that allows the user to edit and save the instructor's preferences.</td>
+				<td>FIX</td>
+				<td>Preferences don't appear to be saved.  Only one course has a preference drop-down.  Javascript console shows an uncaught java.lang.ClassCastException.</td>
+			</tr>
+			<tr>
+				<td>9</td>
+				<td>Click the Edit button in a row.</td>
+				<td>A dialog should open that allows the user to edit and save the instructor's details.</td>
+				<td>PASS</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>10</td>
+				<td>Click the delete "X" button in a row.</td>
+				<td>The row should disappear and not come back when revisiting the page.</td>
+				<td>FIX</td>
+				<td>The confirmation message doesn't have a human-friendly representation of the instructor; otherwise, this is fine.</td>
+			</tr>
+		</table>
+
+		<h1 align="center">Locations</h1>
+		<table border="1">
+			<tr>
+				<td>Case No.</td>
+				<td>User Inputs and Commands</td>
+				<td>Expected Output</td>
+				<td>Results</td>
+				<td>Remarks</td>
+			</tr>
+		</table>
+
+		<h1 align="center">Courses</h1>
+		<table border="1">
+			<tr>
+				<td>Case No.</td>
+				<td>User Inputs and Commands</td>
+				<td>Expected Output</td>
+				<td>Results</td>
+				<td>Remarks</td>
+			</tr>
+		</table>
+
+		<h1 align="center">Schedule</h1>
+		<table border="1">
+			<tr>
+				<td>Case No.</td>
+				<td>User Inputs and Commands</td>
+				<td>Expected Output</td>
+				<td>Results</td>
+				<td>Remarks</td>
+			</tr>
+		</table>
+	</body>
+</html>
