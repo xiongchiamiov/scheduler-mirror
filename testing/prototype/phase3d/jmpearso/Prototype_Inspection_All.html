@@ -112,6 +112,7 @@
 				<td>Columns should not be able to be resized so small that the user cannot resize them large again.</td>
 				<td>PASS</td>
 				<td></td>
+			</tr>
 			<tr>
 				<td>6</td>
 				<td>Scroll down the page far enough that the top of the table is off the page.</td>
@@ -147,6 +148,13 @@
 				<td>FIX</td>
 				<td>The confirmation message doesn't have a human-friendly representation of the instructor; otherwise, this is fine.</td>
 			</tr>
+			<tr>
+				<td>11</td>
+				<td>Click the New button.</td>
+				<td>An interface for adding a new user should appear.</td>
+				<td>PASS</td>
+				<td></td>
+			</tr>
 		</table>
 
 		<h1 align="center">Locations</h1>
@@ -157,6 +165,68 @@
 				<td>Expected Output</td>
 				<td>Results</td>
 				<td>Remarks</td>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td>Click column headers.</td>
+				<td>The first click should sort the column in ascending order, and a second click should sort in descending order.</td>
+				<td>FIX</td>
+				<td>Sorting uses a naive ASCII-ordering approach; at the least, it should be case-insensitive.</td>
+			<tr>
+				<td>2</td>
+				<td>Click column headers.</td>
+				<td>An arrow or other visual indication should alert the user of the current sort direction.</td>
+				<td>FIX</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>3</td>
+				<td>Click column headers.</td>
+				<td>When a tie in sorts appears (due to multiple rows having the same value in that column), sorting should be done by the previous sort.</td>
+				<td>FIX</td>
+				<td>Whatever order is used for ties appears to be deterministic, but not anything apparent to me.</td>
+			</tr>
+			<tr>
+				<td>4</td>
+				<td>Click headers of columns for which sorting makes no sense (e.g. "Delete").</td>
+				<td>Nothing should happen.</td>
+				<td>FIX</td>
+				<td>Indeed, nothing hapens.  However, it'd be best for the column headers to not be clickable at all.</td>
+			</tr>
+			<tr>
+				<td>5</td>
+				<td>Click and drag a column border as small as possible.</td>
+				<td>Columns should not be able to be resized so small that the user cannot resize them large again.</td>
+				<td>PASS</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>6</td>
+				<td>Scroll down the page far enough that the top of the table is off the page.</td>
+				<td>The header should float and "follow" the user.</td>
+				<td>FIX</td>
+				<td>Only once it gets all the way off-screen does the header snap back down into a fully-visible position; it should do this as soon as the top of it hits the top of the screen.
+			</tr>
+			<tr>
+				<td>7</td>
+				<td>Check the ADA box in a row.</td>
+				<td>The box should be checked when revisiting the page.</td>
+				<td>FIX</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>8</td>
+				<td>Click the delete "X" button in a row.</td>
+				<td>The row should disappear and not come back when revisiting the page.</td>
+				<td>FIX</td>
+				<td>The confirmation message doesn't have a human-friendly representation of the instructor; otherwise, this is fine.</td>
+			</tr>
+			<tr>
+				<td>9</td>
+				<td>Click the New button.</td>
+				<td>An interface for adding a new user should appear.</td>
+				<td>FIX</td>
+				<td>Rather than a save button, as is shown on Instructors, this requires the Enter key to be pressed in a field.  These should be made consistent.</td>
 			</tr>
 		</table>
 
@@ -169,6 +239,68 @@
 				<td>Results</td>
 				<td>Remarks</td>
 			</tr>
+			<tr>
+				<td>1</td>
+				<td>Click column headers.</td>
+				<td>The first click should sort the column in ascending order, and a second click should sort in descending order.</td>
+				<td>FIX</td>
+				<td>Sorting uses a naive ASCII-ordering approach; at the least, it should be case-insensitive.</td>
+			<tr>
+				<td>2</td>
+				<td>Click column headers.</td>
+				<td>An arrow or other visual indication should alert the user of the current sort direction.</td>
+				<td>FIX</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>3</td>
+				<td>Click column headers.</td>
+				<td>When a tie in sorts appears (due to multiple rows having the same value in that column), sorting should be done by the previous sort.</td>
+				<td>FIX</td>
+				<td>Whatever order is used for ties appears to be deterministic, but not anything apparent to me.</td>
+			</tr>
+			<tr>
+				<td>4</td>
+				<td>Click headers of columns for which sorting makes no sense (e.g. "Delete").</td>
+				<td>Nothing should happen.</td>
+				<td>FIX</td>
+				<td>Indeed, nothing hapens.  However, it'd be best for the column headers to not be clickable at all.</td>
+			</tr>
+			<tr>
+				<td>5</td>
+				<td>Click and drag a column border as small as possible.</td>
+				<td>Columns should not be able to be resized so small that the user cannot resize them large again.</td>
+				<td>PASS</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>6</td>
+				<td>Scroll down the page far enough that the top of the table is off the page.</td>
+				<td>The header should float and "follow" the user.</td>
+				<td>FIX</td>
+				<td>Only once it gets all the way off-screen does the header snap back down into a fully-visible position; it should do this as soon as the top of it hits the top of the screen.
+			</tr>
+			<tr>
+				<td>7</td>
+				<td>Click the Lab button in a row.</td>
+				<td>An interface for selecting the corresponding lab number appears.</td>
+				<td>FIX</td>
+				<td>While the buttons all start off labelled "Lab", there is no way to select an option that will get them back to that state; selecting no class makes the label empty.  If the name of the lab is larger than the Lab column, the button overflows into the Delete column.</td>
+			</tr>
+			<tr>
+				<td>8</td>
+				<td>Click the delete "X" button in a row.</td>
+				<td>The row should disappear and not come back when revisiting the page.</td>
+				<td>PASS</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>9</td>
+				<td>Click the New button.</td>
+				<td>An interface for adding a new user should appear.</td>
+				<td>FIX</td>
+				<td>Rather than a save button, as is shown on Instructors, this requires the Enter key to be pressed in a field.  These should be made consistent.  Also, form validation is done (via annoying popups) immediately upon clicking the New button and when trying to save the row, but doesn't appear to prevent the row from being saved.</td>
+			</tr>
 		</table>
 
 		<h1 align="center">Schedule</h1>
@@ -179,6 +311,48 @@
 				<td>Expected Output</td>
 				<td>Results</td>
 				<td>Remarks</td>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td>Click the Filters button.</td>
+				<td>An interface for selecting and saving the filtering options for the current view should appear.</td>
+				<td>FIX</td>
+				<td>Clicking the Filters button again does not close the view; otherwise ok.</td>
+			</tr>
+			<tr>
+				<td>2</td>
+				<td>Click the Generate Schedule button with an empty Courses to Schedule list.</td>
+				<td>An empty schedule or an error message.</td>
+				<td>FIX</td>
+				<td>An error message appears, but a throbber also appears in the middle of the schedule (and doesn't disappear).</td>
+			</tr>
+			<tr>
+				<td>3</td>
+				<td>Click the Export to CSV button with an empty Courses to Schedule list.</td>
+				<td>An empty file or an error message.</td>
+				<td>FIX</td>
+				<td>It caused a 500 Internal Server Error.</td>
+			</tr>
+			<tr>
+				<td>4</td>
+				<td>Click the double-arrow buttons.</td>
+				<td>All courses should move between the two course lists.</td>
+				<td>FIX</td>
+				<td>While the Courses to Schedule list behaved as expected, courses continued to show as "available" even when they had been moved onto the "to schedule" list.</td>
+			</tr>
+			<tr>
+				<td>5</td>
+				<td>Click a course in the Available Courses list and then click the right arrow.</td>
+				<td>The course should move into the Courses to Schedule list.</td>
+				<td>FIX</td>
+				<td>It appears that only all sections of a class can be scheduled.</td>
+			</tr>
+			<tr>
+				<td>6</td>
+				<td>Drag a course from the Available Courses list into the right arrow.</td>
+				<td>The course should move into the Courses to Schedule list.</td>
+				<td>PASS</td>
+				<td>The behavior here is different from the arrows, in that it moves one section at a time.</td>
 			</tr>
 		</table>
 	</body>
