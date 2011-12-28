@@ -1,0 +1,191 @@
+.sz 11
+.ds ~ /users/gfisher/nroff
+. so \*~/stdhdr.me
+.(TI "Inspection Test of Phase 3a Release"
+.(S +2
+\fBInspection Test of Phase 3a Release\fP
+.)S
+.)TI
+.spt
+.(C
+\f[BI]Individual Slide Inspections:\fP
+.)C
+.pp
+.TS
+center;
+l | l | l| lw(3i).
+\fBSlide Title\fP	\fBStatus\fP	\fBRemarks\fP	\fBAssigned\fP
+. sp .2v
+=
+. sp .2v
+Scheduler GUI Walkthrough	FIX	T{
+needs styling and a bit of wordsmithing
+T}	Fisher
+Log In	FIX	T{
+Change "along the left" to "along the top"
+T}	Fisher
+Select a Term	FIX	T{
+Here and the remainder, the left nav frame is never explained, nor does it
+change highlight meaningfully with slide changes.  It should be,
+or removed entirely.  I vote for the latter.
+T}	Fisher, may others
+Generating Schedule	FIX	T{
+When we left on Wed, I thought we decided to use CHEM, not IME for all
+examples.  Did this decision change?
+.sp
+Also: titles inconsistent, overall width too wide, particularly if wrap is
+disabled in blurb text.
+T}	Fisher
+Scheduling Conflict	FIX	T{
+I think this should have a border of some form, as in fact, should all the
+windows.  Next link is inconsistent with index.  Title inconsistent with index.
+T}	Fisher, ?
+
+View Blank Schedule	FIX	T{
+Not properly linked in Prev/Next chain.  Not clear what user did to make it
+come up.
+T}	Fisher, ?
+View Generated Schedule	FIX	T{
+I still think the proliferation of colors is distracting, but I will defer if a
+substantial majority disagree.
+.pp
+Not properly linked in Prev/Next chain.  Not clear what user did to make it
+come up.
+T}	Fisher, ?
+View Instructor Schedule	FIX	T{
+Not properly labeled.
+T}	Fisher, ?
+View Course Schedule	FIX	T{
+Here also I am distracted by a lack of meaning to the colors.  I don't think
+random color selection is helpful, which judgment is backed up by UI research.
+T}	Fisher, ?
+View Department Schedule	FIX	T{
+I don't see this as different from the 'ScheduleViewFilled.html' slide.  If
+Tempus is department-specific, why do I need something called "department
+view".  Maybe this is just nomenclature, but in any case, I need to know if
+there's a difference between this and the 'ScheduleViewFilled.html' slide.
+T}	Fisher
+View Schedule Department, Hovering	DONE	T{
+Content alone is good, needs to be made consistent with all other slides, which
+I'll take as a global pattern issue.
+T}	Fisher
+
+Filters View	FIX	T{
+I know we're not doing full action/result scenarios here, but I would very much
+like to know how the user gets here
+T}	Fisher
+Filters View, Selected Days	FIX	T{
+Ditto.
+T}	Fisher
+Filters View, Selected Instructors	FIX	T{
+Ditto.
+T}	Fisher
+
+Instructor Management	FIX	T{
+Instructor information should be expanded to agree with current model.  How
+it's edited should be mentioned.
+T}	Fisher
+Add Instructor	FIX	T{
+Describe user action to get here (easy).
+T}	Fisher
+Add Instructor, Filled In	DONE	T{
+I like the empty/filled-in transition.  Would like to see more of this style
+throughout.
+T}	Fisher
+Edit Instructor	FIX	T{
+I like the empty/filled-in transition.  Would like to see more of this style
+throughout.
+T}	Fisher
+Remove Instructor	FIX	T{
+OK as stand-alone, but needs to be made consistent with course and room
+management.
+T}	Fisher
+Instructor Course Preferences	FIX	T{
+I'd like to see the signal color scheme used.  I'd like to see another screen
+with one of the menus pulled down.
+T}	Fisher
+Instructor Time Preferences	FIX	T{
+Needs a filled-in version, with color-scheme in use.
+T}	Fisher
+Instructor Distance Preference	FIX	T{
+Needs at least one more short sentence explaining how it affects scheduling.
+T}	
+Instructor Overview	FIX	T{
+404 not found
+T}	Fisher, ?
+
+Manage Courses	FIX	T{
+Blurb needs clarification regarding this screen as "starting point for various
+actions ... on the data".
+T}	Fisher, ?
+Add Course, Filled In	FIX	T{
+Inconsistency with instructor management needs to be reconciled.
+T}	Fisher, ?
+Edit Course	FIX	T{
+Inconsistency with instructor management needs to be reconciled.
+T}	Fisher, ?
+Remove Course	FIX	T{
+Inconsistency with instructor management needs to be reconciled.
+T}	Fisher, ?
+Manage Courses, Adding Course	FIX	T{
+Inconsistency with instructor management needs to be reconciled.
+T}	Fisher, ?
+
+Manage Rooms	FIX	T{
+In terms of interface style, this is consistent with course management.  In
+terms of look, it's inconsistent, most particular in terms of image, and
+therefore font size, as well as font color.  Such inconsistencies are not a
+huge deal, but they I they are entirely unnecessary, and potentially
+distracting.
+T}	Fisher, ?
+Add Room	FIX	T{
+See general room management remark.
+T}	Fisher, ?
+Remove Room	FIX	T{
+See general room management remark.
+T}	Fisher, ?
+Room Availability	FIX	T{
+See general room management remark.
+T}	Fisher, ?
+
+.TE
+.sp 2
+.(C
+\f[BI]Overall Presentation Inspection:\fP
+.)C
+.pp
+.TS
+center;
+l | l | l | lw(3i).
+\fBSlide Title\fP	\fBStatus\fP	\fBRemarks\fP	\fBAssigned\fP
+. sp .2v
+=
+. sp .2v
+\fIStory Line\fP	DONE		 
+\fIConsistent Look\fP	FIX 	T{
+If we're still TBD with the logo, we should leave it out all together.  If the
+objective of the banner is to instill brand identification, I don't think it
+works well at all with "Logo TBD".  Benefit of removing
+entire 'Logo ... Tempus ...' banner is simplification and improved focus on
+functionality.
+.sp
+Slide names in index need to match titles in slides.  E.g., "Generating
+Schedule" versus Schedule Generation
+.sp
+Font sizes are distractingly different sizes.
+.sp
+Banner-forced width is too wide for 17'' display screen.
+T}	Fisher and ?
+\fIConsistent Content\fP	FIX	T{
+Major problem: dialog-centric versus table-centric management of instructors
+versus courses is not consistent.
+.sp
+Side nav bar is not well integated, and inconsistent in places -- 'Manage' at
+bottom versus 'Export Schedule, Configuration'
+.sp
+Clerical: I would very much prefer present tense, not future.
+T}	Fisher
+.TE
+
+.\" LocalWords:  lw sp BI Walkthrough wordsmithing nav CHEM IME Prev UI html
+.\" LocalWords:  ScheduleViewFilled Tempus TBD centric
