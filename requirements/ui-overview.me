@@ -1,0 +1,285 @@
+.file ui-overview
+.prev 
+.next appt-scheduling
+.up functional
+.top index
+.sh 2 "User Interface Overview"
+.pp
+There are two separate user interfaces for the Scheduler program.  
+The primary interface is for 
+users to browse and edit their calendars.  This regular-user interface is
+provided by the program referred to as the "Calendar Tool".
+.pp
+A separate interface is provided for administrative users to maintain Calendar
+Tool databases and perform other administrative functions.  This interface is
+provided by the program referred to as "Calendar Tool Administration".
+
+.sh 3 "Regular User Interface"
+.pp
+When a user initially invokes the Calendar Tool, the screen appears as shown in
+Figure \n[FI].
+.(F "Initial screen for a regular user"
+.PIC images/initial-screen 4.35i "" "" j
+.)F
+The initial display consists of two windows: a command menubar and a monthly
+calendar view.  The name of the current calendar is displayed in the banner of
+the menubar, the initial default being a new unnamed calendar.  In the monthly
+display, the entry for the current date is highlighted with a widened border.
+The monthly display is the standard default view.  The user can change this and
+other default settings using the option commands.
+.pp
+Figure \n(FI shows an expansion of the command menus for the regular user
+interface.
+.(F "Expanded command menus for the regular user interface"
+.PIC images/menus 5.5i
+.)F
+The \fCFile\fP menu contains typical commands for manipulating data files and
+performing other system-level functions.  `\fCFile New\fP' creates a new empty
+calendar.  `\fCFile Open\fP' opens an existing calendar from a previously saved
+file.  `\fCFile Close\fP' closes the currently active calendar, offering to
+save if it has been modified since opening.  `\fCFile Close All\fP' closes all
+open calendars, offering to save any that have been modified.
+.pp
+`\fCFile Save\fP' saves the currently active calendar on the file from which it
+was opened, or on a new file if it was created from a new display.  `\fCFile
+Save As\fP' allows the current calendar to be saved on a different file from
+which it was opened or most recently saved upon.  `\fCFile Save All\fP' saves
+all currently open calendars.
+.pp
+The `\fCLoad Settings\fP' and `\fCSave Settings\fP' commands allow the user to
+load and save various settings used in the Calendar Tool.  There are
+calendar-specific settings that are individualized for each calendar, and
+session\-wide settings that are common to all calendars.
+.pp
+`\fCPage Setup\fP' allows the user to set printing parameters for particular
+operating environments.  `\fCFile Print\fP' prints the contents of one or more
+active display windows, per the page setup parameters.  `\fCFile Exit\fP' exits
+the Calendar Tool, offering to save any modified calendars if necessary.
+.pp
+The \fCEdit\fP menu contains commands for manipulating calendar data during
+editing.  `\fCEdit Undo\fP' undoes the most recently completed undoable
+command.  `\fCEdit Redo\fP' redoes the most recently undone command.  There is
+only a single level of undo/redo, i.e., undo cannot be executed multiple times
+in succession to undo a series of commands.
+.pp
+`\fCEdit Cut\fP' removes and copies the currently selected datum in the current
+display.  `\fCEdit Copy\fP' copies the currently selected datum without
+removing it. `\fCEdit Paste\fP' inserts the most recently cut or copied datum
+at the currently selected edit point in the current display.  `\fCEdit
+Delete\fP' removes the currently selected datum without copying it.  `\fCEdit
+Select All\fP' selects all editable data in the current display.
+.pp
+`\fCEdit Find\fP' performs a search for a text string.  The search is
+performed in all open calendars.  Successive invocations of search with an
+unchanged search string search for further occurrences of the string until all
+occurrences are found.
+.pp
+.(An "scheduled-item"
+The \fCSchedule\fP menu contains commands to schedule four types of item on a
+.)An
+calendar.  An \fIAppointment\fP is an item scheduled for an individual user,
+containing a title, time, date, and other information.  A \fIMeeting\fP is
+similar to an appointment, but may be scheduled for multiple users of the
+Calendar Tool.  A \fITask\fP is a form of "to do" item, with information
+similar to an appointment plus other task-related information.  An \fIEvent\fP
+is the simplest form of scheduled item, containing a subset of the information
+in an appointment.  Events are useful for scheduling simple, one-time items.
+.pp
+`\fCSchedule Categories\fP' allows the user to view and edit the categories
+of scheduled items.  A category is a descriptive, color-coded label used to
+help organize calendar items.
+.pp
+The \fCView\fP menu allows the user to browse through a calendar in a variety
+of ways.  `\fCView Item\fP' displays the scheduling details for a selected
+scheduled item.  `\fCView Day\fP' displays details of the currently selected
+calendar day.  `\fCView Week\fP' displays the seven-day week in which the
+currently selected day appears, with less detail than the daily display.  Weeks
+can be displayed in tabular or list format.  \&'View Month' displays a
+large-grain view of the current month.  `\fCView Year\fP' displays a very
+large-grain view of the current year.  Each of these view commands can display
+its results in a separate window.  With this feature, the user can create
+side-by-side displays to view any number of consecutive days, weeks, months, or
+years.
+.pp
+`\fCView Next\fP' and `\fCView Previous\fP' move forward and backward in the
+current display, based on the display granularity, i.e., item, day, week,
+month, or year.  `\fCView Today\fP' changes the current display to contain
+today's date.  `\fCView Goto Date\fP' displays a dialog for choosing a specific
+date to become the current date in the active display.
+.pp
+`\fCView Lists\fP' displays lists of currently scheduled items of the four
+schedule types -- \fIAppointments\fP, \fIMeetings\fP, \fITasks\fP, and
+\fIEvents\fP, or of all item types together.  Custom lists can also be created,
+showing selected items only.  `\fCView Filter\fP' allows the user to hide
+selected information from calendar displays.  Any or all of the four types of
+scheduled items can be selectively hidden.  The user can also construct custom
+viewing filters, based on a wide range of filtering criteria.  Custom filters
+apply to both calendar and list views uniformly.
+.pp
+`\fCView Other User\fP' allows the current user to view the publicly-visible
+portions of other users' or groups' calendars.  Each individual user controls
+the visibility of scheduled items that other users may see.
+.pp
+`\fCView Windows\fP' allows the user to select for viewing from all active
+display windows.  The `\fCClose\fP' command in the `\fCView Windows\fP' menu
+closes the current display window by removing it from the screen.
+.pp
+The `\fCWindowing Mode\fP' submenu provides three settings for the Calendar
+Tool windowing mode.  In `\fCTwo-Window\fP' mode, all views are shown in just
+two windows, one for calendars and the other for lists.  In the default
+`\fCPer-Level\fP' mode, each level of the calendar, from individual item
+through full year, is shown in a separate level-specific window; each type of
+list is also shown in a separate window.  In `\fCMulti-Window\fP' mode, the
+result of each and every view command is shown in a separate window, even for
+commands at the same level or the same type of list.  Multi-window mode allows
+the user to create side-by-side displays of adjacent calendar periods.
+.pp
+The \fCView Windows Magnetize\fP command controls the "magnetic" property of
+display windows.  When a window is magnetized, it "sticks to" an adjacent
+window when dragged next to it.
+.pp
+`\fCView Calendars\fP' lists the names of all currently open calendars.  The
+user selects from the list to make a calendar current.
+.pp
+The \fCAdmin\fP menu contains commands to connect to and access Calendar Tool
+central host computers.  `\fCAdmin Connect\fP' allows the user to establish
+central host connections.  The three commands below \fCConnect\fP provide
+access to central\-host databases -- users, groups, and locations; regular
+users have read-only access to the databases.  The \fIUser\fP database contains
+a record for each officially registered user of the Calendar Tool on a host.
+The \fIGroup\fP database defines user groups, primarily for meeting scheduling
+purposes.  The \fILocation\fP database defines rooms and other venues in which
+meetings can be held.
+.pp
+The user invokes the `\fCAdmin Password\fP' command to change the password on
+the currently-connected central host computer.  `\fCContact Admin\fP' allows
+the user to communicate, via electronic mail, with a Calendar Tool
+administrator for any known central host.
+.pp
+The `\fCOptions\fP' menu has commands for setting various system options.
+Calendar-specific options are organized in five major areas: `\fCTimes and
+Dates\fP', `\fCFonts\fP', `\fCScheduling\fP', `\fCViewing\fP', and
+`\fCAdministrative\fP'.  There are also `\fCGlobal\fP' options that apply to an
+entire Calendar Tool session, across all calendars.  The `\fCRestore
+Defaults\fP' command resets all option settings to their built-in values as of
+when the Calendar Tool was initially installed.
+.pp
+The \fCHelp\fP menu contains commands for viewing documentation of the Calendar
+Tool.  `\fCHelp About\fP' displays a brief description of the tool, including
+information about the tool developers and how they can be contacted.
+`\fCShow Quick Help\fP' activates brief help messages that appear when the
+user moves the mouse over various areas of the display screen.  `\fCDetailed
+Help\fP' displays an online version of the complete Calendar Tool users manual.
+
+.sh 3 "Administrative User Interface"
+.pp
+When an administrative user initially invokes the Calendar Tool Administration
+program and enters a valid administrator password, the system displays the
+interface shown in Figure \n[FI].
+.(F "Initial screen for system administrator"
+.PIC images/initial-admin-screen 3.5i "" "" j
+.)F
+The initial display consists of a command menu and a window for the Calendar
+Tool user database.  The menubar banner contains the name of the Calendar Tool
+central host computer on which the administration program is running.  The
+database dialog lists the names and IDs of registered Calendar Tool users.  The
+user database has no pre-defined entries.  There are commands to search for a
+user, add a new user, view the details of an existing user record, and cancel
+the user database dialog.
+.pp
+Figure \n(FI shows an expansion of the command menus for the Calendar Tool
+Administration program.
+.(F "Expanded command menus for the administrative interface"
+.PIC images/admin-menus 5.85i
+.)F
+The `\fCFile\fP' menu has a reduced set of commands, since databases and other
+administrative data are stored in specific files in a fixed location.  The
+`\fCFile Save\fP' command saves all data changes performed by the
+administrative user.  `\fCFile Save Copy\fP' saves a backup copy of
+administrative data in a selected file directory.
+.pp
+`\fCPage Setup\fP' allows the administrator to set printing parameters for
+particular operating environments.  `\fCFile Print\fP' prints the contents of
+one or more active display windows, per the page setup parameters.  `\fCFile
+Exit\fP' exits Calendar Tool Administration, offering to save if necessary.
+.pp
+The `\fCEdit Menu\fP' in the administrative interface is a proper subset of
+that in the regular user interface.  The edit commands that are present have
+the same functionality as in the regular interface, adapted as appropriate for
+administrative data.
+.pp
+The `\fCAdmin\fP' menu provides access to the three databases.  Administrative
+users can add, change, and delete database information.  The `\fCHost
+Status\fP' command allows the administrator to view and edit information about
+the Calendar Tool central host computer.  The `\fCPassword\fP' command is used
+to set the administrative access password.  `\fCEmail Address\fP' is used to
+set the email address through which regular users contact an administrator.
+.pp
+`\fCNotify Users \&...\fP' provides the means to send a message to some or all
+Calendar Tool users.
+.pp
+The `\fCOptions\fP' menu has a subset of the commands available in the
+regular-user options menu.  The `\fCTimes and Dates\fP' and `\fCFonts\fP'
+options are the same as for the regular user.  The `\fCAdministrative\fP'
+options are particular to the administrative user.  `\fCRestore Defaults\fP'
+serves the same purpose as in the regular-user interface.
+.pp
+The `\fCHelp\fP' functionality is same as for regular users.  Help content is
+modified accordingly to describe the commands that are particular to
+administrative users.
+
+.sh 3 "General Features of the User Interface"
+.pp
+Overall, the Calendar Tool user interface has the following general features:
+.(L a .2v 4n
+.le
+It is presented in a form independent of any particular computer operating
+system or platform.
+.le
+The layout style of the interface is generally in separate independent windows,
+rather than one or a few windows with tiled or stacked information.
+.le
+Unless explicitly stated to the contrary, all interface dialogs are "non-modal",
+meaning that dialogs do \fInot\fP disable other components of the overall
+interface.  When a non-modal dialog is running, the user may leave that dialog,
+perform any other interface commands, and then return to the dialog at some
+future point.
+.le
+The interface is presented in a plain and simple style, that focuses on
+functionality without extraneous aesthetic detail.
+.)L a
+Further details of the interface presentation conventions are covered in the
+.(Ah "http://www.csc.calpoly.edu/~gfisher/classes/205/handouts/standard-gui-and-menus.html"
+GUI conventions document
+.)Ah
+used in the undergraduate and graduate software engineering courses taught by
+Gene Fisher at Cal Poly university.
+
+.sh 3 "Screen Map"
+.pp
+In the online version of this document, click
+.(Ah "images/screen-map.gif"
+here
+.)Ah
+to view a hierarchical map of user interface screens for regular users.  Click
+on any thumbnail in the screen map to view the full-size version of the screen,
+in the context of its initial appearance in the requirements.
+.pp
+Due to its large size, the screen map is not available in the printed version
+of this document.
+.if 0  \{\
+Click
+.(Ah "admin-screen-map.gif"
+here
+.)Ah
+for the screen map of the administrative user interface.
+.\}
+.if \n2 \{\
+.ep
+.he 'CSC205-F02-Milestone 6 Excerpt''Page %'
+.m2 0v
+.bp
+.\}
+
+.\"  LocalWords:  appt BI FI menubar redoes editable submenu Magnetize Admin
+.\"  LocalWords:  pre admin aesthetic Poly CSC ui IDs undoable
