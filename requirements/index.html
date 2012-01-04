@@ -1,0 +1,272 @@
+<html>
+<head>
+<title>
+Requirements Specification for PolySched
+</title>
+</head>
+<body bgcolor=white>
+<p align=center>
+<font size=+2>
+<strong>Requirements Specification for PolySched
+<br>
+Version 0.2
+<br>
+9 November 2011</strong>
+</font>
+</p>
+<br>
+<br>
+<br>
+<blockquote>
+<html>
+<font size=+2>
+<p align=center>
+<strong>Contents</strong>
+</p>
+</font>
+<p>
+<!--<a href="intro.html#Introduction">-->
+<font size=+2>
+<strong>1.&nbsp;&nbsp;Introduction</strong>
+</font>
+<!--</a>-->
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="problem.html#Problem Statement">
+<font size=+1>
+1.1 Problem Statement
+</font>
+</a>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="personnel.html">
+<font size=+1>
+1.2 System Personnel
+</font>
+</a>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="personnel.html#402">
+1.2.1 CPE 402 Team Members
+</a>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="personnel.html#mailings">
+1.2.2 Clients who received Fall 2011 mailings
+</a>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="personnel.html#round1">
+1.2.3 Clients who participated in initial interviews
+</a>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="personnel.html#round2">
+1.2.4 Clients who participated in prototype interviews
+</a>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="personnel.html#308">
+1.2.5 Students who participated in usability tests
+</a>
+
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="setting.html#Operational Setting">
+<font size=+1>
+1.3 Operational Setting
+</font>
+</a>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="impacts.html#Impacts">
+<font size=+1>
+1.4 Impacts
+</font>
+</a>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="matrix.html">
+<font size=+1>
+1.5 Feature Comparison Matrix
+</font>
+</a>
+<p>
+<!--<a href="functional.html#Functional Requirements">-->
+<font size=+2>
+<strong>2.&nbsp;&nbsp;Functional Requirements</strong>
+</font>
+<!--</a>-->
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="userInterface.html">
+<font size=+1>
+2.1 User Interface Overview
+</font>
+</a>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="userInterface.html#user_interface">
+2.1.1 Main User Interface
+</a>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="userInterface.html#login">
+2.1.2 User Login
+</a>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="userInterface.html#Home_Screen">
+2.1.3 Selecting / Creating a Schedule
+</a>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="basic_schedule_generation.html">
+<font size=+1>
+2.2 Basic Schedule Creation
+</font>
+</a>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="basic_schedule_generation.html#automatic_sched">
+2.2.1 Automatic Scheduling via Algorithm
+</a>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="basic_schedule_generation.html#manual_sched">
+2.2.2 Manual Scheduling
+</a>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="ViewRequirements.html">
+<font size=+1>
+2.3 Viewing a Schedule
+</font>
+</a>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="ViewRequirements.html#list_view">
+2.3.1 Schedule List View
+</a>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="ViewRequirements.html#table_view">
+2.3.2 Schedule Table View
+</a>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="ViewRequirements.html#weekly_view">
+2.3.3 Schedule Weekly View
+</a>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="ViewRequirements.html">
+2.3.4 Filtered Viewing
+</a>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="resource-management.html">
+<font size=+1>
+2.4 Resource Management
+</font>
+</a>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="resource-management.html#Manage Instructors">
+2.4.1 Manage Instructors
+</a>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="resource-management.html#Manage Courses">
+2.4.2 Manage Courses
+</a>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="resource-management.html#Manage Locations">
+2.4.3 Manage Locations
+</a>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="instructor-preferences.html">
+<font size=+1>
+2.5 Instructor Management
+</font>
+</a>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="instructor-preferences.html#courses">
+2.5.1 Course Preferences
+</a>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="instructor-preferences.html#times">
+2.5.2 Time Preferences
+</a>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="instructor-preferences.html#distance">
+2.5.3 Distance Preferences
+</a>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="instructor-preferences.html#interface">
+2.5.4 Instructor Interface
+</a>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="fileMenu.html">
+<font size=+1>
+2.6 Contents of 'File' Menu
+</font>
+</a>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="installation.html">
+<font size=+1>
+2.7 Installation
+</font>
+</a>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="installation.html#server">
+2.7.1 Server Installation Configuration
+</a>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="futureWork.html">
+<font size=+1>
+2.8 Future Work
+</font>
+</a>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="futureWork.html#master">
+2.8.1 Master List
+</a>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="futureWork.html#peoplesoft">
+2.8.2 Integration with PeopleSoft
+</a>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="futureWork.html#lookandfeel">
+2.8.3 Look and Feel
+</a>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="futureWork.html#document">
+2.8.4 Document structure
+</a>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="futureWork.html#merging">
+2.8.5 Merging
+</a>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="futureWork.html#poweruser">
+2.8.6 Power User Language
+</a>
+</body>
+</html>

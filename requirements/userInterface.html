@@ -1,0 +1,118 @@
+
+<html> 
+<head> 
+<title> 
+2.1 User Interface Overview
+</title> 
+</head> 
+<h2>
+2.1 User Interface Overview
+</h2>
+<body bgcolor = white> 
+<a name="user_interface"> 
+<p>The User Interface Overview will deal will all the user interface objects that are common across multiple pages.  The specific user interface elements on each page will be explained on that specific page. <BR>
+	There will be no data preloaded, so the first time the system is opened, it will be without data.  There will need to be data entry when the system is first started.<BR>
+		Also, all these screens are what an Administrator would see. An Instructor would only see the Title Header (Figure 2.1.1), not the Full Header (Figure 2.1.2)
+	 </p>
+<h3> 
+2.1.1 Main User Interface
+</h3> 
+</a> 
+<p> 
+Before an administrator has logged in and chosen which schedule they want to work with, they will be presented with a simple header that is not dynamic, but is mostly just a placeholder. 
+<br> 
+<hr> 
+<a name="Title Header"> 
+<p align=center> 
+<img src="images/UI_GreenHeaderOnly.png" border="2"> 
+</p> 
+<p align=center> Figure 2.1.1: Title Header</p> 
+<hr> 
+</a> 
+<p>Once the administrator is logged in and has chosen a schedule to work with, they will see the full interface on every page they visit.  At any time they can use the links to jump to another section of the application. </p>
+
+<hr> 
+<a name="Full Header"> 
+<p align=center> 
+<img src="images/UI_TopBarNormal.png" border="2"> 
+</p> 
+<p align=center> Figure 2.1.2: Full Header</p> 
+<hr>
+<p>
+	On the far right of the header they will see the current logged in username, and there will be a link for them to log out. As seen in <a href="#Full Header">Figure 2.1.2.</a>
+	<BR><BR>
+The dropdown field shows the current schedule that is selected, and provides an easy way to switch between schedules.
+<br>
+The Schedule Button takes the administrator to the <a href="basic_schedule_generation.html">Schedule Setup</a> page where the administrator can view, edit and export a schedule.
+<br>
+The Instructors Button takes the administrator to the <a href="resource-management.html#Manage Instructors">Instructor Overview</a> page where the administrator can manage the Instructors data in the system.
+<br>
+The Courses Button takes the administrator to the <a href="resource-management.html#Manage Courses">Course Overview</a> page where the administrator can manage the Courses data in the system.
+<br>
+The Locations Button takes the administrator to the <a href="resource-management.html#Manage Locations">Location Overview</a> page where the administrator can manage the Locations data in the system.
+</p>  
+<p>When the administrator clicks on the current schedule name, they get a drop down menu with all the current schedules, and they can quickly choose to manage another schedule.
+This can be seen in <a href="#Schedule Chooser Menu">Figure 2.1.3.</a></p>
+<hr> 
+<a name="Schedule Chooser Menu"> 
+<p align=center> 
+<img src="images/UI_TopBarWithMenu.png" border="2"> 
+</p> 
+<p align=center> Figure 2.1.3: Schedule Chooser Menu</p> 
+<hr> 
+</a> 
+
+<a name="login">
+<h3>
+2.1.2 User Login
+</h3>
+</a>
+<p>
+Upon starting the application, the user is greeted with the main login screen, shown in <a href="#Figure 2.1.2.1">Figure 2.1.2.1</a>. The user enters their Cal Poly username and password, then clicks <strong>Login</strong>.</p>
+<hr>
+<p align="center">
+<a name="Figure 2.1.2.1">
+<img src="images/login.png" border="2">
+</p>
+<p align="center"> Figure 2.1.2.1:  The Login screen </p>
+<hr>
+<p>The system consults the user's credentials to determine if they are an administrator or instructor. Instructors are taken to the instructor page, where they may manage their <a href="instructor-preferences.html">preferences</a> and <a href="ViewRequirements.html">view</a> proposed schedules. Administrators are taken to the home page, shown below, and have access to the full program.</p>
+
+<a name="Home_Screen"> 
+<h3> 
+2.1.2 Selecting / Creating a Schedule
+</h3> 
+</a> 
+<p> 
+Once an administrator has successfully validated their credentials and logged in, they are greeted with the <em>Home</em> screen. This screen displays a list of all previous schedules, in addition to the ability to create a new schedule or edit the list of instructors, courses, or locations.
+<br> 
+<br> 
+<hr> 
+<a name="Home Screen"> 
+<p align=center> 
+<img src="images/Home.png" border="2"> 
+</p> 
+<p align=center> Figure 2.1.2.1:  The Home screen </p> 
+<hr> 
+</a> 
+<br> 
+<p>The <em>Previous Schedules</em> list displays a list of all schedules saved to the department. The user may view or edit any schedule by selecting it from the list and clicking <strong>Open</strong>. Doing so opens the schedule in the
+<a href="ViewRequirements.html#list_view">default list view</a>. From here, the user may print the schedule, 
+edit the schedule, or save a copy of the schedule. </p>
+
+<p>The ability to save a copy supports a wide array of functionality. If a user wishes to use an old schedule as a template for a new one, they may easily load up the old schedule and save a copy to be used as a template for the new quarter. The user may then load the new copy and edit it as appropriate for the quarter in question. This also makes it quick and easy to make backups or multiple versions of an in-progress schedule.</p>
+
+<p>The <em>Home</em> screen also provides the user the ability to create a new, blank schedule. Doing so will present the user with the 
+<a href="basic_schedule_generation.html">blank schedule</a> editor. See that slide for additional information on creating a new schedule. </p>
+
+<p>The <strong>Add/Remove</strong> links at the bottom of the <em>Home</em> screen allow the user to 
+<a href="resource-management.html#Manage Instructors">manage instructors</a>, <a href="resource-management.html#Manage Courses">courses</a>, and <a href="resource-management.html#Manage Locations">locations</a>. This functionality allows the user to edit instructors, courses, and rooms before creating a schedule. </p>
+The numbers next instructors, courses and locations correspond to the number of entries of each type in the permanent databases.
+</p>
+<center>
+<hr size="3" width="80%"><font size="-1"><font color="black"> Prev: </font></font></a><font size="-1">[none] | <font color="black">
+Next: </font><a href="basic_schedule_generation.html">Basic Schedule Creation</a> | <font color="black"> Up: </font>Functional Requirements
+| <font color="black"> Top: </font><a href="index.html">Index</a></font>
+<hr size="3" width="80%"></center>
+</body> 
+</html> 
