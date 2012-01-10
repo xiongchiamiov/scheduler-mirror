@@ -279,6 +279,7 @@ public abstract class Conversion {
 		newCourse.setWtu(course.getWtu());
 		newCourse.setScu(course.getScu());
 		newCourse.setType(course.getType());
+		System.out.println("model course " + newCourse.getCatalogNum() + " type is " + course.getType());
 		newCourse.setEnrollment(course.getMaxEnroll());
 		if (!course.getLabDept().equals("")) {
 			newCourse.setLab(new Lab(course.getLabName(), course.getLabDept(),

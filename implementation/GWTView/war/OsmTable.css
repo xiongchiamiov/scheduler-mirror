@@ -26,6 +26,9 @@
 	overflow: hidden;
 }
 
+.headers {
+	border-bottom: 2px solid #6F7277;
+}
 
 .headers.floating {
 	position: fixed;
@@ -53,7 +56,6 @@
 }
 
 .headers .resizeable .headerContents {
-	border-bottom: 2px solid #6F7277;
 	font-weight: bold;
 	color: #4B4A4A;
 	text-align: left;
@@ -61,5 +63,33 @@
 	padding: 3px 0;
 	white-space: nowrap;
 	overflow: hidden;
+	cursor: pointer;
+}
+
+.osmtable .icon {
+	width: 1.5em;
+	height: 1.5em;
+	background-size: 100% 100%;
+}
+
+.osmtable .icon.delete.enabled {
+	background-image: url('imgs/delete-icon.png') 
+}
+
+.osmtable .icon.delete.disabled {
+	background-image: url('imgs/delete-icon-disabled.png');
+	opacity: .2;
+	filter: alpha(opacity=20);
+}
+
+.osmtable .icon.edit {
+	background-image: url('imgs/edit-icon.png');
+}
+
+.osmtable .icon.accept {
+	background-image: url('imgs/accept-icon.png');
+}
+
+.osmtable .icon.enabled {
 	cursor: pointer;
 }

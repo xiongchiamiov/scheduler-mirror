@@ -30,8 +30,8 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.client.HTMLUtilities;
 import edu.calpoly.csc.scheduler.view.web.client.table.ResizeableWidget.ResizeCallback;
-import edu.calpoly.csc.scheduler.view.web.client.table.columns.ButtonColumn;
-import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditSaveColumn;
+import edu.calpoly.csc.scheduler.view.web.client.table.columns.DeleteColumn;
+import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditModeColumn;
 import edu.calpoly.csc.scheduler.view.web.shared.Identified;
 
 public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
@@ -44,14 +44,18 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 	public interface Cell {
 		Widget getCellWidget();
 	}
+	
+	public interface ReadingCell { }
 
-	public interface ReadingCell extends Cell {
-		Widget getCellWidget();
+	public interface ReadingModeAwareCell {
 		void enterReadingMode();
 	}
 	
-	public interface EditingCell extends ReadingCell {
+	public interface EditingModeAwareCell {
 		void enterEditingMode();
+	}
+	
+	public interface EditingCell {
 		void focus();
 	}
 
@@ -96,6 +100,7 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 	public interface IRowForCell {
 		void enterEditingMode(EditingCell focusedCell);
 		void enterReadingMode();
+		void delete();
 //		void objectChanged(ObjectType object);
 	}
 	
@@ -125,7 +130,12 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 		
 		@Override
 		public void enterReadingMode() {
+			assert(this != null);
 			OsmTable.this.exitRowEditingMode(this);
+		}
+		
+		public void delete() {
+			OsmTable.this.deleteRow(this);
 		}
 	}
 	
@@ -172,19 +182,19 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 	}
 	
 	private void createHeaders() {
+		final SimplePanel substituteHeaders = new SimplePanel();
+		add(substituteHeaders);
+		
 		headers = new HorizontalPanel();
 		headers.addStyleName("headers");
 		add(headers);
-		
-		final SimplePanel substituteHeaders = new SimplePanel();
-		add(substituteHeaders);
 		
 		headerFloating = false;
 		
 		Window.addWindowScrollHandler(new ScrollHandler() {
 			public void onWindowScroll(ScrollEvent event) {
 				if (!headerFloating) {
-					if (event.getScrollTop() > table.getAbsoluteTop()) {
+					if (event.getScrollTop() > substituteHeaders.getAbsoluteTop()) {
 						headerFloating = true;
 						substituteHeaders.setHeight(headers.getOffsetHeight() + "px");
 						headers.addStyleName("floating");
@@ -193,7 +203,7 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 					}
 				}
 				else {
-					if (event.getScrollTop() < table.getAbsoluteTop()) {
+					if (event.getScrollTop() < substituteHeaders.getAbsoluteTop()) {
 						headerFloating = false;
 						headers.removeStyleName("floating");
 						substituteHeaders.setHeight("");
@@ -205,7 +215,7 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 		});
 	}
 
-	public void addColumn(String name, String initialWidth, boolean stretchWidthToAccommodateNewRows, Comparator<? super ObjectType> comparator, final IColumn<ObjectType> column) {
+	public void addColumn(String name, String initialWidth, boolean resizable, boolean stretchWidthToAccommodateNewRows, Comparator<? super ObjectType> comparator, final IColumn<ObjectType> column) {
 		assert(rowsByObjectID.size() == 0);
 		final int newColumnIndex = columnMetadatas.size();
 		
@@ -218,8 +228,10 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 		final HTML headerContents = new HTML(name);
 		headerContents.addStyleName("headerContents");
 		
-		ResizeableWidget header = new ResizeableWidget(this, headerContents, new ResizeCallback() {
+		ResizeableWidget resizeableHeader = new ResizeableWidget(this, resizable, headerContents, new ResizeCallback() {
 			public void setWidth(int newWidthPixels) {
+				if (rowsByObjectID.size() == 0)
+					return;
 				HTMLUtilities.getClosestContainingElementOfType(table.getWidget(0, newColumnIndex).getElement(), "td").setAttribute("style", "width: " + newWidthPixels + "px");
 			}
 			public int getWidth() {
@@ -228,9 +240,9 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 				return HTMLUtilities.getClosestContainingElementOfType(table.getWidget(0, newColumnIndex).getElement(), "td").getOffsetWidth();
 			}
 		});
-		headers.add(header);
+		headers.add(resizeableHeader);
 		
-		final ColumnMetadata columnMetadata = new ColumnMetadata(column, header, stretchWidthToAccommodateNewRows, comparator);
+		final ColumnMetadata columnMetadata = new ColumnMetadata(column, resizeableHeader, stretchWidthToAccommodateNewRows, comparator);
 
 		headerContents.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
@@ -254,48 +266,38 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 	}
 	
 	public void addDeleteColumn() {
-		addColumn("Delete", "4em", true, null, new ButtonColumn<ObjectType>("X",
-				new ButtonColumn.ClickCallback<ObjectType>() {
-					public void buttonClickedForObject(ObjectType object, Button button) {
-						final Row row = rowsByObjectID.get(object.getID());
-						row.trElement.addClassName("sending");
-						
-						if (!Window.confirm("Are you sure you want to delete " + object.toString() + "?")) {
-							row.trElement.removeClassName("sending");
-							return;
-						}
-						
-						LinkedList<ObjectType> list = new LinkedList<ObjectType>();
-						list.add(object);
-						saveHandler.objectsModified(
-								new LinkedList<ObjectType>(),
-								new LinkedList<ObjectType>(),
-								list,
-								new AsyncCallback<Void>() {
-									public void onSuccess(Void result) {
-										row.trElement.removeClassName("sending");
-										deleteRow(row);
-									}
-									public void onFailure(Throwable caught) {
-										row.trElement.removeClassName("sending");
-										Window.alert("Failed to delete row: " + caught.getMessage());
-									}
-								});
-					}
-				}));
+		addColumn("", null, false, true, null, new DeleteColumn<ObjectType>());
 	}
 
-	private void deleteRow(Row row) {
-		rowsByObjectID.remove(row.object.getID());
-		row.trElement.removeFromParent();
+	private void deleteRow(final Row row) {
+		row.trElement.addClassName("sending");
+		
+		if (!Window.confirm("Are you sure you want to delete " + row.object.toString() + "?")) {
+			row.trElement.removeClassName("sending");
+			return;
+		}
+		
+		LinkedList<ObjectType> list = new LinkedList<ObjectType>();
+		list.add(row.object);
+		saveHandler.objectsModified(
+				new LinkedList<ObjectType>(),
+				new LinkedList<ObjectType>(),
+				list,
+				new AsyncCallback<Void>() {
+					public void onSuccess(Void result) {
+						row.trElement.removeClassName("sending");
+						rowsByObjectID.remove(row.object.getID());
+						row.trElement.removeFromParent();
+					}
+					public void onFailure(Throwable caught) {
+						row.trElement.removeClassName("sending");
+						Window.alert("Failed to delete row: " + caught.getMessage());
+					}
+				});
 	}
 	
 	public void addEditSaveColumn() {
-		addColumn("Edit", "4em", true, null, new EditSaveColumn<ObjectType>("Edit", "Save",
-				new EditSaveColumn.ClickCallback<ObjectType>() {
-					public void enteredMode(ObjectType object) { enterRowEditingMode(rowsByObjectID.get(object.getID()), null); }
-					public void exitedMode(ObjectType object) { exitRowEditingMode(rowsByObjectID.get(object.getID())); }
-				}));
+		addColumn("", null, false, true, null, new EditModeColumn<ObjectType>());
 	}
 
 	protected void enterRowEditingMode(Row row, EditingCell focusedCell) {
@@ -303,11 +305,16 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 		row.inEditingMode = true;
 		
 		for (int colIndex = 0; colIndex < columnMetadatas.size(); colIndex++) {
-			IColumn<ObjectType> rawColumn = columnMetadatas.get(colIndex).column;
-			if (rawColumn instanceof IEditingColumn) {
-				IEditingColumn<ObjectType> column = (IEditingColumn<ObjectType>)rawColumn;
-				EditingCell cell = (EditingCell)row.cells[colIndex];
+			Cell rawCell = row.cells[colIndex];
+			
+			if (rawCell instanceof ReadingCell) {
+				ReadingCell cell = (ReadingCell)rawCell;
+				IReadingColumn<ObjectType> column = (IReadingColumn<ObjectType>)columnMetadatas.get(colIndex).column;
 				column.updateFromObject(row, cell);
+			}
+			
+			if (rawCell instanceof EditingModeAwareCell) {
+				EditingModeAwareCell cell = (EditingModeAwareCell)rawCell;
 				cell.enterEditingMode();
 			}
 		}
@@ -327,25 +334,32 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 
 	protected void enterRowReadingMode(final Row row) {
 		for (int colIndex = 0; colIndex < columnMetadatas.size(); colIndex++) {
-			IColumn<ObjectType> rawColumn = columnMetadatas.get(colIndex).column;
-			if (rawColumn instanceof IReadingColumn) {
-				IReadingColumn<ObjectType> column = (IReadingColumn<ObjectType>)rawColumn;
-				EditingCell cell = (EditingCell)row.cells[colIndex];
-				cell.enterReadingMode();
+			Cell rawCell = row.cells[colIndex];
+			
+			if (rawCell instanceof ReadingCell) {
+				ReadingCell cell = (ReadingCell)rawCell;
+				IReadingColumn<ObjectType> column = (IReadingColumn<ObjectType>)columnMetadatas.get(colIndex).column;
 				column.updateFromObject(row, cell);
+			}
+
+			if (rawCell instanceof ReadingModeAwareCell) {
+				ReadingModeAwareCell cell = (ReadingModeAwareCell)rawCell;
+				cell.enterReadingMode();
 			}
 		}
 	}
 	
 	protected void exitRowEditingMode(final Row row) {
+		assert(row != null);
 		assert(row.inEditingMode);
 		row.inEditingMode = false;
 
 		for (int colIndex = 0; colIndex < columnMetadatas.size(); colIndex++) {
-			IColumn<ObjectType> rawColumn = columnMetadatas.get(colIndex).column;
-			if (rawColumn instanceof IEditingColumn) {
-				IEditingColumn<ObjectType> column = (IEditingColumn<ObjectType>)rawColumn;
-				EditingCell cell = (EditingCell)row.cells[colIndex];
+			Cell rawCell = row.cells[colIndex];
+			
+			if (rawCell instanceof EditingCell) {
+				EditingCell cell = (EditingCell)rawCell;
+				IEditingColumn<ObjectType> column = (IEditingColumn<ObjectType>)columnMetadatas.get(colIndex).column;
 				column.commitToObject(row, cell);
 			}
 		}
@@ -496,11 +510,12 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 	}
 	
 	private void refreshWidths() {
-		for (ColumnMetadata col : columnMetadatas)
+		for (ColumnMetadata col : columnMetadatas) {
 			if (col.stretchWidthToAccommodateNewRows)
 				col.header.synchronizeToMaximumOfBoth();
 			else
 				col.header.synchronize();
+		}
 	}
 	
 	public final void addRows(Collection<ObjectType> objects) {

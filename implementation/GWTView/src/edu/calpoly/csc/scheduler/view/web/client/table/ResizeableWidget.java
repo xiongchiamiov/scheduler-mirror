@@ -21,41 +21,43 @@ class ResizeableWidget extends FlowPanel {
 	private int dragAnchorX;
 	final ResizeCallback callback;
 
-	public ResizeableWidget(Widget draggableArea, Widget contents, final ResizeCallback callback) {
+	public ResizeableWidget(Widget draggableArea, boolean resizable, Widget contents, final ResizeCallback callback) {
 		this.callback = callback;
 		
 		add(contents);
 		
 		addStyleName("resizeable");
 		
-		SimplePanel resizer = new SimplePanel();
-		resizer.addStyleName("resizer");
-		add(resizer);
-		
-		resizer.addDomHandler(new MouseDownHandler() {
-			public void onMouseDown(MouseDownEvent event) {
-				dragging = true;
-				dragAnchorX = event.getClientX();
-				event.preventDefault();
-			}
-		}, MouseDownEvent.getType());
-		
-		draggableArea.addDomHandler(new MouseMoveHandler() {
-			public void onMouseMove(MouseMoveEvent event) {
-				if (dragging) {
+		if (resizable) {
+			SimplePanel resizer = new SimplePanel();
+			resizer.addStyleName("resizer");
+			add(resizer);
+			
+			resizer.addDomHandler(new MouseDownHandler() {
+				public void onMouseDown(MouseDownEvent event) {
+					dragging = true;
+					dragAnchorX = event.getClientX();
 					event.preventDefault();
-					
-					int dragX = event.getClientX();
-					int difference = dragX - dragAnchorX;
-					dragAnchorX = dragX;
-					setBothWidths(getOffsetWidth() + difference);
 				}
-			}
-		}, MouseMoveEvent.getType());
+			}, MouseDownEvent.getType());
 		
-		draggableArea.addDomHandler(new MouseUpHandler() {
-			public void onMouseUp(MouseUpEvent event) { dragging = false; }
-		}, MouseUpEvent.getType());
+			draggableArea.addDomHandler(new MouseMoveHandler() {
+				public void onMouseMove(MouseMoveEvent event) {
+					if (dragging) {
+						event.preventDefault();
+						
+						int dragX = event.getClientX();
+						int difference = dragX - dragAnchorX;
+						dragAnchorX = dragX;
+						setBothWidths(getOffsetWidth() + difference);
+					}
+				}
+			}, MouseMoveEvent.getType());
+			
+			draggableArea.addDomHandler(new MouseUpHandler() {
+				public void onMouseUp(MouseUpEvent event) { dragging = false; }
+			}, MouseUpEvent.getType());
+		}
 	}
 
 	void synchronizeToMaximumOfBoth() {

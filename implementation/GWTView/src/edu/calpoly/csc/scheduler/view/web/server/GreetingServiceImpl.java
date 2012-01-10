@@ -439,6 +439,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	public ArrayList<CourseGWT> getCourses() throws IllegalArgumentException {
 		ArrayList<CourseGWT> results = new ArrayList<CourseGWT>();
 		for (Course course : model.getCourses()) {
+			System.out.println("returning course " + course.getCatalogNum() + " type " + course.getType());
 			results.add(Conversion.toGWT(course));
 		}
 		return results;
@@ -451,7 +452,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 			model.saveCourse(Conversion.fromGWT(addedCourse));
 		}
 		
+		System.out.println("editing " + edited.size());
 		for (CourseGWT editedCourse : edited) {
+			System.out.println("course " + editedCourse.getCatalogNum() + " now type " + editedCourse.getType());
 //			System.out.println("Asking model to edit course " + editedCourse.getID());
 			model.saveCourse(Conversion.fromGWT(editedCourse));
 		}

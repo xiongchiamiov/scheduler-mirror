@@ -19,11 +19,11 @@ import edu.calpoly.csc.scheduler.view.web.client.table.IStaticGetter;
 import edu.calpoly.csc.scheduler.view.web.client.table.IStaticSetter;
 import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
-import edu.calpoly.csc.scheduler.view.web.client.table.columns.CheckboxColumn;
+import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingCheckboxColumn;
+import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingStringColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.IntColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.MultiselectColumn;
-import edu.calpoly.csc.scheduler.view.web.client.table.columns.SelectColumn;
-import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingStringColumn;
+import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingSelectColumn;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
 
 public class LocationsView extends VerticalPanel implements IViewContents {
@@ -100,9 +100,13 @@ public class LocationsView extends VerticalPanel implements IViewContents {
 					}
 				});
 
+		table.addEditSaveColumn();
+		table.addDeleteColumn();
+
 		table.addColumn(
 				"Building",
 				null,
+				true,
 				true,
 				new Comparator<LocationGWT>() {
 					public int compare(LocationGWT o1, LocationGWT o2) {
@@ -127,6 +131,7 @@ public class LocationsView extends VerticalPanel implements IViewContents {
 		table.addColumn(
 				"Room",
 				null,
+				true,
 				true,
 				new Comparator<LocationGWT>() {
 					@Override
@@ -153,13 +158,14 @@ public class LocationsView extends VerticalPanel implements IViewContents {
 				"Type",
 				null,
 				true,
+				true,
 				new Comparator<LocationGWT>() {
 					@Override
 					public int compare(LocationGWT o1, LocationGWT o2) {
 						return o1.getType().compareToIgnoreCase(o2.getType());
 					}
 				},
-				new SelectColumn<LocationGWT>(
+				new EditingSelectColumn<LocationGWT>(
 						new String[] { "LEC", "LAB" },
 						new IStaticGetter<LocationGWT, String>() {
 							public String getValueForObject(LocationGWT object) { return object.getType(); }
@@ -171,6 +177,7 @@ public class LocationsView extends VerticalPanel implements IViewContents {
 		table.addColumn(
 				"Occupancy",
 				null,
+				true,
 				true,
 				new Comparator<LocationGWT>() {
 					@Override
@@ -196,13 +203,14 @@ public class LocationsView extends VerticalPanel implements IViewContents {
 				"ADA",
 				null,
 				true,
+				true,
 				new Comparator<LocationGWT>() {
 					@Override
 					public int compare(LocationGWT o1, LocationGWT o2) {
 						return (o1.isADACompliant() ? 1 : 0) - (o2.isADACompliant() ? 1 : 0);
 					}
 				},
-				new CheckboxColumn<LocationGWT>(
+				new EditingCheckboxColumn<LocationGWT>(
 						new IStaticGetter<LocationGWT, Boolean>() {
 							public Boolean getValueForObject(LocationGWT object) { return object.isADACompliant(); }
 						},
@@ -213,6 +221,7 @@ public class LocationsView extends VerticalPanel implements IViewContents {
 		table.addColumn(
 				"Equipment",
 				null,
+				true,
 				true,
 				null,
 				new MultiselectColumn<LocationGWT>(
@@ -237,8 +246,6 @@ public class LocationsView extends VerticalPanel implements IViewContents {
 								object.getEquipment().isSmartRoom = newValue.contains(SMART_ROOM);
 							}
 						}));
-		
-		table.addDeleteColumn();
 		
 		this.add(table);
 		

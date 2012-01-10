@@ -23,7 +23,7 @@ import edu.calpoly.csc.scheduler.view.web.client.table.MemberStringComparator;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.ButtonColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.ButtonColumn.ClickCallback;
-import edu.calpoly.csc.scheduler.view.web.client.table.columns.CheckboxColumn;
+import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingCheckboxColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingStringColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.IntColumn;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
@@ -108,9 +108,13 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 					}
 				});
 
+		table.addDeleteColumn();
+		table.addEditSaveColumn();
+
 		table.addColumn(
 				INSTR_FIRSTNAME,
 				"6em",
+				true,
 				true,
 				new MemberStringComparator<InstructorGWT>(new IStaticGetter<InstructorGWT, String>() {
 					public String getValueForObject(InstructorGWT object) { return object.getFirstName(); }
@@ -128,6 +132,7 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 				INSTR_LASTNAME,
 				"6em",
 				true,
+				true,
 				new MemberStringComparator<InstructorGWT>(new IStaticGetter<InstructorGWT, String>() {
 					public String getValueForObject(InstructorGWT object) { return object.getLastName(); }
 				}),
@@ -143,6 +148,7 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 		table.addColumn(
 				INSTR_ID,
 				"6em",
+				true,
 				true,
 				new MemberStringComparator<InstructorGWT>(new IStaticGetter<InstructorGWT, String>() {
 					public String getValueForObject(InstructorGWT object) { return object.getUserID(); }
@@ -164,6 +170,7 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 		table.addColumn(
 				INSTR_MAX_WTU,
 				"4em",
+				true,
 				false,
 				new MemberIntegerComparator<InstructorGWT>(new IStaticGetter<InstructorGWT, Integer>() {
 					public Integer getValueForObject(InstructorGWT object) { return object.getMaxWtu(); }
@@ -186,10 +193,11 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 				INSTR_DISABILITIES,
 				"4em",
 				true,
+				true,
 				new MemberIntegerComparator<InstructorGWT>(new IStaticGetter<InstructorGWT, Integer>() {
 					public Integer getValueForObject(InstructorGWT object) { return object.getDisabilities() ? 1 : 0; }
 				}),
-				new CheckboxColumn<InstructorGWT>(
+				new EditingCheckboxColumn<InstructorGWT>(
 						new IStaticGetter<InstructorGWT, Boolean>() {
 							public Boolean getValueForObject(InstructorGWT object) { return object.getDisabilities(); }
 						},
@@ -200,6 +208,7 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 		table.addColumn(
 				INSTR_PREFERENCES,
 				"4em",
+				true,
 				true,
 				null,
 				new ButtonColumn<InstructorGWT>(
@@ -213,8 +222,6 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 							}
 						}));
 		
-		table.addEditSaveColumn();
-		table.addDeleteColumn();
 		
 		this.add(table);
 		

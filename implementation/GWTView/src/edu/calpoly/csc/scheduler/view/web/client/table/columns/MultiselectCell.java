@@ -6,8 +6,6 @@ import java.util.LinkedHashMap;
 
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
-import com.google.gwt.event.dom.client.FocusEvent;
-import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -17,7 +15,7 @@ import edu.calpoly.csc.scheduler.view.web.client.table.IGetter;
 import edu.calpoly.csc.scheduler.view.web.client.table.ISetter;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
 
-class MultiselectCell extends SimplePanel implements OsmTable.EditingCell {
+class MultiselectCell extends SimplePanel implements OsmTable.Cell, OsmTable.EditingCell, OsmTable.ReadingModeAwareCell, OsmTable.EditingModeAwareCell {
 	IGetter<Collection<String>> getter;
 	ISetter<Collection<String>> setter;
 	boolean editing;

@@ -10,16 +10,19 @@ import edu.calpoly.csc.scheduler.view.web.client.table.ISetter;
 import edu.calpoly.csc.scheduler.view.web.client.table.IStaticGetter;
 import edu.calpoly.csc.scheduler.view.web.client.table.IStaticSetter;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
+import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator.InvalidValueException;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.Cell;
+import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.EditingCell;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.IRowForColumn;
+import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.ReadingCell;
 import edu.calpoly.csc.scheduler.view.web.shared.Identified;
 
-public class SelectColumn<ObjectType extends Identified> implements OsmTable.IColumn<ObjectType> {
+public class EditingSelectColumn<ObjectType extends Identified> implements OsmTable.IEditingColumn<ObjectType> {
 	private LinkedHashMap<String, String> options;
 	protected IStaticGetter<ObjectType, String> getter;
 	protected IStaticSetter<ObjectType, String> setter;
 
-	public SelectColumn(LinkedHashMap<String, String> options, final IStaticGetter<ObjectType, String> getter, IStaticSetter<ObjectType, String> setter) {
+	public EditingSelectColumn(LinkedHashMap<String, String> options, final IStaticGetter<ObjectType, String> getter, IStaticSetter<ObjectType, String> setter) {
 //		super(name, width, sorter == null ? null : new Comparator<ObjectType>() {
 //			public int compare(ObjectType o1, ObjectType o2) {
 //				return sorter.compare(getter.getValueForObject(o1), getter.getValueForObject(o2));
@@ -37,7 +40,7 @@ public class SelectColumn<ObjectType extends Identified> implements OsmTable.ICo
 		return options;
 	}
 
-	public SelectColumn(String[] options, IStaticGetter<ObjectType, String> getter, IStaticSetter<ObjectType, String> setter) {
+	public EditingSelectColumn(String[] options, IStaticGetter<ObjectType, String> getter, IStaticSetter<ObjectType, String> setter) {
 		this(identityMap(options), getter, setter);
 	}
 	
@@ -46,13 +49,29 @@ public class SelectColumn<ObjectType extends Identified> implements OsmTable.ICo
 			Window.alert("value " + getter.getValueForObject(row.getObject()) + " not in options");
 		}
 		
-		return new SelectCell(options, new IGetter<String>() {
-				public String getValue() { return getter.getValueForObject(row.getObject()); }
-			}, new ISetter<String>() {
-				public void setValue(String newValue) {
-					setter.setValueInObject(row.getObject(), newValue);
-//					rowChanged(object);
-				}
-			});
+		return new EditingSelectCell(row, options);
+	}
+
+	@Override
+	public void updateFromObject(IRowForColumn<ObjectType> row, ReadingCell rawCell) {
+		assert(rawCell instanceof EditingSelectCell);
+		EditingSelectCell cell = (EditingSelectCell)rawCell;
+		cell.setValue(getter.getValueForObject(row.getObject()));
+	}
+
+	@Override
+	public void commitToObject(IRowForColumn<ObjectType> row, EditingCell rawCell) {
+		assert(rawCell instanceof EditingSelectCell);
+		EditingSelectCell cell = (EditingSelectCell)rawCell;
+		
+		try {
+			if (!options.values().contains(cell.getValue()))
+				throw new InvalidValueException(cell.getValue() + " is not in options!");
+			setter.setValueInObject(row.getObject(), cell.getValue());
+		}
+		catch (InvalidValueException ex) {
+			Window.alert(ex.getMessage());
+			cell.setValue(getter.getValueForObject(row.getObject()));
+		}
 	}
 }

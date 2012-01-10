@@ -6,10 +6,11 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.EditingCell;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditSaveColumn.ClickCallback;
 
-class EditSaveCell<ObjectType> extends SimplePanel implements EditingCell {
+class EditSaveCell<ObjectType> extends SimplePanel implements OsmTable.Cell, EditingCell, OsmTable.ReadingModeAwareCell, OsmTable.EditingModeAwareCell {
 	@Override
 	public Widget getCellWidget() { return this; }
 	

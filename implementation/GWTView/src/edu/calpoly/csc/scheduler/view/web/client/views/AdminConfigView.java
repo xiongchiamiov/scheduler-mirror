@@ -16,7 +16,7 @@ import edu.calpoly.csc.scheduler.view.web.client.table.IFactory;
 import edu.calpoly.csc.scheduler.view.web.client.table.IStaticGetter;
 import edu.calpoly.csc.scheduler.view.web.client.table.IStaticSetter;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
-import edu.calpoly.csc.scheduler.view.web.client.table.columns.SelectColumn;
+import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingSelectColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingStringColumn;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.UserDataGWT;
@@ -78,6 +78,7 @@ public class AdminConfigView extends VerticalPanel implements IViewContents {	/*
 				CONFIG_USERNAME,
 				"6em",
 				true,
+				true,
 				new Comparator<UserDataGWT>() {
 					@Override
 					public int compare(UserDataGWT o1, UserDataGWT o2) {
@@ -102,13 +103,14 @@ public class AdminConfigView extends VerticalPanel implements IViewContents {	/*
 				CONFIG_LEVEL,
 				"6em",
 				true,
+				true,
 				new Comparator<UserDataGWT>() {
 					@Override
 					public int compare(UserDataGWT o1, UserDataGWT o2) {
 						return o1.getPermissionLevel().compareTo(o2.getPermissionLevel());
 					}
 				},
-				new SelectColumn<UserDataGWT>(
+				new EditingSelectColumn<UserDataGWT>(
 						new String[] { "0", "1", "2" },
 						new IStaticGetter<UserDataGWT, String>() {
 							public String getValueForObject(UserDataGWT object) {
