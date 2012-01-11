@@ -1,0 +1,22 @@
+Class Notes 1.11.12
+
+How to fill out DEPARTMENT:
+
+Instructor: All for the department faculty who are teaching Winter 2012
+Courses: All courses offered Winter 1012
+Rooms: Department building, Rooms 10, 20, 30, 40, 50
+
+For each bug you find, search in Jira, if it exists, don't do anything, if it is a new bug, create an issue.
+
+Also, fill out the bug report initial-report found in 
+testing/acceptance/templates/initial-report.html. For each category, either put "All data enter successfully" or copy and paste the URLs to the Jira issues that you created also please answer the quality questions about generating a schedule. Once filled out, submit to repository at the following location: 
+testing/acceptance/NAMEOFYOURDEPARTMENT.
+
+Login convention:
+
+All uppercase name of your department, for example:
+
+Login: CHEM
+
+
+
