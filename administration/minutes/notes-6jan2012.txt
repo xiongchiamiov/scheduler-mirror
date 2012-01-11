@@ -1,0 +1,10 @@
+1.6.12 405 Class Notes
+
+For testing purposes please fill out the location information for your department to include rooms 1 through 10 of the building that the department uses. 
+
+End of week 3, if a feature isn't working yet, and isn't fit for outside consumption, we are going to stop working on it and branch and focus on the working components.
+
+No full regression test suite by phase 1, instead, full regression test suite is required by the end of phase 2.
+
+Potential Feature: we should have the ability to turn off incremental conflict checking while editing the schedule.
+
