@@ -46,6 +46,7 @@ public abstract class Conversion {
 		result.setLastName(instructor.getLastName());
 		result.setRoomNumber(instructor.getRoomNumber());
 		result.setBuilding(instructor.getBuilding());
+		System.out.println("instructor disabled on toGWT? " + instructor.getDisability());
 		result.setDisabilities(instructor.getDisability());
 		result.setMaxWtu(instructor.getMaxWTU());
 		result.setCurWtu(instructor.getCurWtu());
@@ -113,6 +114,7 @@ public abstract class Conversion {
 		ins.setOffice(new Location(instructor.getBuilding(), instructor.getRoomNumber()));
 		ins.setFairness(instructor.getFairness());
 		ins.setDisability(instructor.getDisabilities());
+		System.out.println("instructor disabled on fromGWT? " + ins.getDisability());
 		ins.setGenerosity(instructor.getGenerosity());
 		ins.setAvailability(new WeekAvail());
 

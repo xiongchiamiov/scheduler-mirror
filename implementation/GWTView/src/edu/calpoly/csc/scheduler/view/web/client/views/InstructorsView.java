@@ -95,8 +95,6 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 								new HashMap<Integer, Map<Integer, TimePreferenceGWT>>(),
 								new HashMap<Integer, Integer>());
 					}
-//					@Override
-//					public InstructorGWT createCopy(InstructorGWT object) { return new InstructorGWT(object); }
 				},
 				new OsmTable.ModifyHandler<InstructorGWT>() {
 					@Override
@@ -162,7 +160,7 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 						}, 
 						new IStaticValidator<InstructorGWT, String>() {
 							public void validate(InstructorGWT object, String newId) throws InvalidValueException {
-								if (userIdExists(newId))
+								if (!canSetUserID(object, newId))
 									throw new InvalidValueException("There is already a user with ID: " + newId);
 							}
 						}));
@@ -245,15 +243,14 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 	}
 	
 	
-	private boolean userIdExists(String userId) {
+	private boolean canSetUserID(InstructorGWT forObject, String newUserID) {
 		for (InstructorGWT instr : table.getObjects()) {
-			assert(instr != null);
-			assert(instr.getUserID() != null);
-			assert(userId != null);
-			if (instr.getUserID().equals(userId))
-				return true;
+			if (instr == forObject)
+				continue;
+			if (instr.getUserID().equals(newUserID))
+				return false;
 		}
-		return false;
+		return true;
 	}
 
 	@Override

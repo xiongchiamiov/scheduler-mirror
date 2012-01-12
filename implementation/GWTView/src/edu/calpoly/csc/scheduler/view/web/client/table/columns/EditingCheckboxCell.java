@@ -11,7 +11,7 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.IRowForCell;
 
-class EditingCheckboxCell extends SimplePanel implements OsmTable.Cell, OsmTable.EditingCell, OsmTable.ReadingModeAwareCell, OsmTable.EditingModeAwareCell {
+class EditingCheckboxCell extends SimplePanel implements OsmTable.Cell, OsmTable.ReadingCell, OsmTable.EditingCell, OsmTable.ReadingModeAwareCell, OsmTable.EditingModeAwareCell {
 	boolean editing;
 	IRowForCell row;
 	CheckBox checkbox;
@@ -32,6 +32,10 @@ class EditingCheckboxCell extends SimplePanel implements OsmTable.Cell, OsmTable
 				row.enterEditingMode(EditingCheckboxCell.this);
 			}
 		});
+
+		addStyleName("writing");
+		
+		enterReadingMode();
 	}
 	
 	@Override
@@ -47,6 +51,8 @@ class EditingCheckboxCell extends SimplePanel implements OsmTable.Cell, OsmTable
 	@Override
 	public void enterReadingMode() {
 		editing = false;
+		readingLabel.clear();
+		readingLabel.add(new HTML(checkbox.isChecked() ? "Yes" : "No"));
 		clear();
 		add(readingLabel);
 		addStyleName("reading");
@@ -60,9 +66,12 @@ class EditingCheckboxCell extends SimplePanel implements OsmTable.Cell, OsmTable
 		checkbox.setFocus(true);
 	}
 	
-	public Boolean getValue() { return checkbox.getValue(); }
+	public Boolean getValue() {
+		return checkbox.isChecked();
+	}
 	public void setValue(Boolean value) {
-		checkbox.setValue(value);
+		System.out.println("checkbox setting value to " + value);
+		checkbox.setChecked(value);
 		readingLabel.clear();
 		readingLabel.add(new HTML(value ? "Yes" : "No"));
 	}

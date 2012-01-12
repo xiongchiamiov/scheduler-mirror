@@ -29,6 +29,7 @@ public class EditingCheckboxColumn<ObjectType extends Identified> implements Osm
 	public void updateFromObject(IRowForColumn<ObjectType> row, ReadingCell rawCell) {
 		assert(rawCell instanceof EditingCheckboxCell);
 		EditingCheckboxCell cell = (EditingCheckboxCell)rawCell;
+		System.out.println("updateFromObject " + getter.getValueForObject(row.getObject()));
 		cell.setValue(getter.getValueForObject(row.getObject()));
 	}
 	
