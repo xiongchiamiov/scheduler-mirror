@@ -202,19 +202,20 @@ public class InstructorGWT implements Serializable, Identified {
 		if (!(obj instanceof InstructorGWT))
 			return false;
 		InstructorGWT that = (InstructorGWT)obj;
-		if (!(this.id == that.id &&
-				this.userID.equals(that.userID) &&
-				this.firstName.equals(that.firstName) &&
-				this.lastName.equals(that.lastName) &&
-				this.roomNumber.equals(that.roomNumber) &&
-				this.building.equals(that.building) &&
-				this.disabilities == that.disabilities &&
-				this.maxwtu == that.maxwtu &&
-				this.curwtu == that.curwtu &&
-				this.fairness == that.fairness &&
-				this.generosity == that.generosity))
-			return false;
-		// TODO: do we need to compare prefs and items taught?
-		return true;
+		return this.id == that.id;
+//		if (!(this.id == that.id &&
+//				this.userID.equals(that.userID) &&
+//				this.firstName.equals(that.firstName) &&
+//				this.lastName.equals(that.lastName) &&
+//				this.roomNumber.equals(that.roomNumber) &&
+//				this.building.equals(that.building) &&
+//				this.disabilities == that.disabilities &&
+//				this.maxwtu == that.maxwtu &&
+//				this.curwtu == that.curwtu &&
+//				this.fairness == that.fairness &&
+//				this.generosity == that.generosity))
+//			return false;
+//		// TODO: do we need to compare prefs and items taught?
+//		return true;
 	}
 }

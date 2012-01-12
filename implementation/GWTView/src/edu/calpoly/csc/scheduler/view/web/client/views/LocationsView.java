@@ -1,9 +1,10 @@
 package edu.calpoly.csc.scheduler.view.web.client.views;
 
-import java.util.Collection;
 import java.util.Comparator;
-import java.util.LinkedList;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Set;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -20,10 +21,10 @@ import edu.calpoly.csc.scheduler.view.web.client.table.IStaticSetter;
 import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingCheckboxColumn;
+import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingMultiselectColumn;
+import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingSelectColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingStringColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.IntColumn;
-import edu.calpoly.csc.scheduler.view.web.client.table.columns.MultiselectColumn;
-import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingSelectColumn;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
 
 public class LocationsView extends VerticalPanel implements IViewContents {
@@ -50,9 +51,9 @@ public class LocationsView extends VerticalPanel implements IViewContents {
 		
 	public static final String LOC_ADDITIONAL_DETAILS = "Additional Details";
 	
-	private static final String LAPTOP_CONNECTIVITY = "Laptop Connectivity";
-	private static final String OVERHEAD = "Overhead";
-	private static final String SMART_ROOM = "Smart Room";
+	private static final String LAPTOP_CONNECTIVITY = "LAPCON";
+	private static final String OVERHEAD = "OVERHEAD";
+	private static final String SMART_ROOM = "SMART";
 	
 	private GreetingServiceAsync service;
 	private final String scheduleName;
@@ -218,18 +219,22 @@ public class LocationsView extends VerticalPanel implements IViewContents {
 							public void setValueInObject(LocationGWT object, Boolean newValue) { object.setADACompliant(newValue); }
 						}));
 		
+		LinkedHashMap<String, String> valuesByLabel = new LinkedHashMap<String, String>();
+		valuesByLabel.put("Laptop Connectivity", LAPTOP_CONNECTIVITY);
+		valuesByLabel.put("Overhead", OVERHEAD);
+		valuesByLabel.put("Smart Room", SMART_ROOM);
 		table.addColumn(
 				"Equipment",
 				null,
 				true,
 				true,
 				null,
-				new MultiselectColumn<LocationGWT>(
-						new String[] { LAPTOP_CONNECTIVITY, OVERHEAD, SMART_ROOM },
-						new IStaticGetter<LocationGWT, Collection<String>>() {
+				new EditingMultiselectColumn<LocationGWT>(
+						valuesByLabel,
+						new IStaticGetter<LocationGWT, Set<String>>() {
 							@Override
-							public Collection<String> getValueForObject(LocationGWT object) {
-								Collection<String> result = new LinkedList<String>();
+							public Set<String> getValueForObject(LocationGWT object) {
+								Set<String> result = new HashSet<String>();
 								if (object.getEquipment().hasLaptopConnectivity)
 									result.add(LAPTOP_CONNECTIVITY);
 								if (object.getEquipment().hasOverhead)
@@ -239,8 +244,8 @@ public class LocationsView extends VerticalPanel implements IViewContents {
 								return result;
 							}
 						},
-						new IStaticSetter<LocationGWT, Collection<String>>() {
-							public void setValueInObject(LocationGWT object, java.util.Collection<String> newValue) {
+						new IStaticSetter<LocationGWT, Set<String>>() {
+							public void setValueInObject(LocationGWT object, Set<String> newValue) {
 								object.getEquipment().hasLaptopConnectivity = newValue.contains(LAPTOP_CONNECTIVITY);
 								object.getEquipment().hasOverhead = newValue.contains(OVERHEAD);
 								object.getEquipment().isSmartRoom = newValue.contains(SMART_ROOM);

@@ -118,6 +118,8 @@ public class Model implements Serializable
 
    public void saveCourse(Course course)
    {
+	   assert(course.getLength() >= 0);
+	   assert(course.getDays() != null);
       db.getCourseDB().saveData(course);
    }
 

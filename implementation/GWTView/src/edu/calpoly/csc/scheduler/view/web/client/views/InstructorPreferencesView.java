@@ -1,9 +1,8 @@
 package edu.calpoly.csc.scheduler.view.web.client.views;
 
-import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -30,9 +29,9 @@ public class InstructorPreferencesView extends VerticalPanel implements IViewCon
 	GreetingServiceAsync service;
 	InstructorGWT instructor;
 	InstructorGWT savedInstructor;
-	Collection<CourseGWT> courses;
+	Map<Integer, CourseGWT> coursesByID;
 	
-	Map<CourseGWT, ListBox> listBoxesByCourse = new TreeMap<CourseGWT, ListBox>();
+	Map<Integer, ListBox> listBoxesByCourseID = new HashMap<Integer, ListBox>();
 	
 	InstructorTimePreferencesWidget timePrefs;
 	FlexTable coursePrefs;
@@ -79,20 +78,23 @@ public class InstructorPreferencesView extends VerticalPanel implements IViewCon
 			}
 			
 			public void onSuccess(List<CourseGWT> result) {
-				populateCourses(result);
+				HashMap<Integer, CourseGWT> newCoursesByID = new HashMap<Integer, CourseGWT>();
+				for (CourseGWT course : result)
+					newCoursesByID.put(course.getID(), course);
+				populateCourses(newCoursesByID);
 			}
 		});
 	}
 	
-	void populateCourses(List<CourseGWT> result) {
-		courses = result;
+	void populateCourses(Map<Integer, CourseGWT> newCoursesByID) {
+		coursesByID = newCoursesByID;
 		
 		int row = 1;
-		for (final CourseGWT course : courses) {
+		for (final CourseGWT course : coursesByID.values()) {
 			coursePrefs.setWidget(row, 0, new HTML(course.getCourseName()));
 			
 			final ListBox list = new ListBox();
-			listBoxesByCourse.put(course, list);
+			listBoxesByCourseID.put(course.getID(), list);
 			list.addItem("Not Qualified");
 			list.addItem("Not Preferred");
 			list.addItem("Acceptable");
@@ -148,8 +150,8 @@ public class InstructorPreferencesView extends VerticalPanel implements IViewCon
 	void redoColors() {
 		timePrefs.redoColors();
 		
-		for (CourseGWT course : courses) {
-			ListBox list = listBoxesByCourse.get(course);
+		for (CourseGWT course : coursesByID.values()) {
+			ListBox list = listBoxesByCourseID.get(course.getID());
 			assert(list != null);
 			if (getCoursePreference(instructor, course) != getCoursePreference(savedInstructor, course))
 				list.addStyleName("changed");

@@ -291,6 +291,8 @@ public abstract class Conversion {
 		newCourse.setLength(course.getLength());
 		newCourse.setNumOfSections(course.getNumSections());
 		newCourse.setDays(fromGWT(course.getDays()));
+		assert(newCourse.getLength() >= 0);
+	   assert(newCourse.getDays() != null);
 		return newCourse;
 	}
 
