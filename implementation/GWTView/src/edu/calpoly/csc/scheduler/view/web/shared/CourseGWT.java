@@ -213,7 +213,8 @@ public class CourseGWT implements Serializable, Identified {
 	
 	@Override
 	public int hashCode() {
-		return dept.hashCode() + catalogNum * 1337;
+		assert(false); // don't use this object in a hash! use its ID instead please.
+		return 0;
 	}
 
 	@Override
@@ -221,21 +222,22 @@ public class CourseGWT implements Serializable, Identified {
 		if (!(obj instanceof CourseGWT))
 			return false;
 		CourseGWT that = (CourseGWT)obj;
-		assert(this.id.equals(that.id));
-		assert(this.scheduleID.equals(that.scheduleID));
-		return this.catalogNum.equals(that.catalogNum) &&
-				this.courseName.equals(that.courseName) &&
-				this.days.equals(that.days) &&
-				this.dept.equals(that.dept) &&
-				this.labCatalogNum.equals(that.labCatalogNum) &&
-				this.labDept.equals(that.labDept) &&
-				this.labId.equals(that.labId) &&
-				this.labName.equals(that.labName) &&
-				this.length.equals(that.length) &&
-				this.maxEnroll.equals(that.maxEnroll) &&
-				this.numSections.equals(that.numSections) &&
-				this.scu.equals(that.scu) &&
-				this.type.equals(that.type) &&
-				this.wtu.equals(that.wtu);
+		return id == that.id;
+//		assert(this.id.equals(that.id));
+//		assert(this.scheduleID.equals(that.scheduleID));
+//		return this.catalogNum.equals(that.catalogNum) &&
+//				this.courseName.equals(that.courseName) &&
+//				this.days.equals(that.days) &&
+//				this.dept.equals(that.dept) &&
+//				this.labCatalogNum.equals(that.labCatalogNum) &&
+//				this.labDept.equals(that.labDept) &&
+//				this.labId.equals(that.labId) &&
+//				this.labName.equals(that.labName) &&
+//				this.length.equals(that.length) &&
+//				this.maxEnroll.equals(that.maxEnroll) &&
+//				this.numSections.equals(that.numSections) &&
+//				this.scu.equals(that.scu) &&
+//				this.type.equals(that.type) &&
+//				this.wtu.equals(that.wtu);
 	}
 }

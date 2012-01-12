@@ -446,21 +446,22 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
-	public void saveCourses(List<CourseGWT> added, List<CourseGWT> edited, List<CourseGWT> removed) {
-		for (CourseGWT addedCourse : added) {
+	public void saveCourses(List<CourseGWT> addedCourses, List<CourseGWT> editedCourses, List<CourseGWT> removedCourses) {
+		for (CourseGWT addedCourse : addedCourses) {
+			System.out.println("Adding course " + addedCourse.getCourseName());
 			addedCourse.setID(-1);
 			model.saveCourse(Conversion.fromGWT(addedCourse));
 		}
 		
-		System.out.println("editing " + edited.size());
-		for (CourseGWT editedCourse : edited) {
-			System.out.println("course " + editedCourse.getCatalogNum() + " now type " + editedCourse.getType());
-//			System.out.println("Asking model to edit course " + editedCourse.getID());
+		for (CourseGWT editedCourse : editedCourses) {
+			System.out.println("Editing course " + editedCourse.getCourseName());
 			model.saveCourse(Conversion.fromGWT(editedCourse));
 		}
 		
-		for (CourseGWT removedCourse : removed)
+		for (CourseGWT removedCourse : removedCourses) {
+			System.out.println("Removing course " + removedCourse.getCourseName());
 			model.removeCourse(Conversion.fromGWT(removedCourse));
+		}
 	}
 	
 	public void saveSchedule()

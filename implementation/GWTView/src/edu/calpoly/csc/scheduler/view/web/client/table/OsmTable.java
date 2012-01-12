@@ -389,6 +389,7 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 					@Override
 					public void onSuccess(Void result) {
 						row.trElement.removeClassName("sending");
+						row.adding = false;
 					}
 				});
 		
