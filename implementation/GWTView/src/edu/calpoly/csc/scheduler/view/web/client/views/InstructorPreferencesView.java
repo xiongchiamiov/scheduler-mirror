@@ -137,9 +137,9 @@ public class InstructorPreferencesView extends VerticalPanel implements IViewCon
 	
 	int getCoursePreference(InstructorGWT instructor, CourseGWT course) {
 		assert(instructor.getCoursePreferences() != null);
-		if (instructor.getCoursePreferences().get(course) == null)
+		if (instructor.getCoursePreferences().get(course.getID()) == null)
 			return 0;
-		return instructor.getCoursePreferences().get(course);
+		return instructor.getCoursePreferences().get(course.getID());
 	}
 	
 	void setCoursePreference(CourseGWT course, int newDesire) {
