@@ -58,6 +58,7 @@ public abstract class AbstractDatabase<T extends DbData>
    {
       fillFields(data);
       sqldb.executeInsert(getTableName(), fields);
+      data.setDbid(sqldb.getLastGeneratedKey());
    }
 
    protected void editData(T data)
