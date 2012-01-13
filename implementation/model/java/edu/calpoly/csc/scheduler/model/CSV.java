@@ -2,13 +2,18 @@ package edu.calpoly.csc.scheduler.model;
 
 import java.io.CharArrayWriter;
 import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.Map.Entry;
 import java.util.Vector;
 
+import com.csvreader.CsvReader;
 import com.csvreader.CsvWriter;
 
 import edu.calpoly.csc.scheduler.model.db.Time;
@@ -22,7 +27,22 @@ import edu.calpoly.csc.scheduler.model.schedule.Schedule;
 import edu.calpoly.csc.scheduler.model.schedule.ScheduleItem;
 import edu.calpoly.csc.scheduler.model.schedule.Week;
 
-public class CSVExporter {
+public class CSV {
+	private static final String[] TOP_COMMENTS = new String[] {
+		"(This is a CSV file whose contents represent a schedule.)",
+		"(It is highly recommended you make a backup before modifying anything.)",
+		"(Feel free to modify it, but please do not modify any lines completely contained in parentheses.)"
+	};
+	
+	private static final String SCHEDULE_MARKER = "(Schedule)";
+	private static final String LOCATIONS_MARKER = "(Locations)";
+	private static final String INSTRUCTORS_MARKER = "(Instructors)";
+	private static final String COURSES_MARKER = "(Courses)";
+	private static final String INSTRUCTORS_ITEMS_TAUGHT_MARKER = "(Instructors' Items Taught)";
+	private static final String INSTRUCTORS_TIME_PREFS_MARKER = "(Instructors' Time Preferences)";
+	private static final String INSTRUCTORS_COURSE_PREFS_MARKER = "(Instructors' Course Preferences)";
+	private static final String SCHEDULE_ITEMS_MARKER = "(Schedule Items)";
+	
 	private ArrayList<String[]> locations = new ArrayList<String[]>();
 	private ArrayList<String[]> instructors = new ArrayList<String[]>();
 	private ArrayList<String[]> instructorsItemsTaught = new ArrayList<String[]>();
@@ -31,7 +51,7 @@ public class CSVExporter {
 	private ArrayList<String[]> courses = new ArrayList<String[]>();
 	private ArrayList<String[]> scheduleItems = new ArrayList<String[]>();
 	
-	public CSVExporter() { }
+	public CSV() { }
 	
 	private String compileLocation(Location location) {
 		location.verify();
@@ -200,45 +220,40 @@ public class CSVExporter {
 		Writer stringWriter = new CharArrayWriter();
 		CsvWriter writer = new CsvWriter(stringWriter, ',');
 
-		for (String topComment : CSVStructure.TOP_COMMENTS)
+		for (String topComment : TOP_COMMENTS)
 			writer.writeComment(topComment);
 		
 		writer.endRecord();
-		writer.writeComment(CSVStructure.SCHEDULE_MARKER);
+		writer.writeComment(SCHEDULE_MARKER);
 		writer.write("NameHere");
-		writer.writeComment(CSVStructure.SCHEDULE_END_MARKER);
 		
 
 		writer.endRecord();
-		writer.writeComment(CSVStructure.LOCATIONS_MARKER);
+		writer.writeComment(LOCATIONS_MARKER);
 		for (int i = 0; i < locations.size(); i++) {
 			writer.writeRecord(locations.get(i));
 		}
-		writer.writeComment(CSVStructure.LOCATIONS_END_MARKER);
 
 		writer.endRecord();
-		writer.writeComment(CSVStructure.INSTRUCTORS_MARKER);
+		writer.writeComment(INSTRUCTORS_MARKER);
 		for (int i = 0; i < instructors.size(); i++) {
 			writer.writeRecord(instructors.get(i));
 		}
-		writer.writeComment(CSVStructure.INSTRUCTORS_END_MARKER);
 
 		writer.endRecord();
-		writer.writeComment(CSVStructure.COURSES_MARKER);
+		writer.writeComment(COURSES_MARKER);
 		for (int i = 0; i < courses.size(); i++) {
 			writer.writeRecord(courses.get(i));
 		}
-		writer.writeComment(CSVStructure.COURSES_END_MARKER);
 
 		writer.endRecord();
-		writer.writeComment(CSVStructure.INSTRUCTORS_ITEMS_TAUGHT_MARKER);
+		writer.writeComment(INSTRUCTORS_ITEMS_TAUGHT_MARKER);
 		for (int i = 0; i < instructorsItemsTaught.size(); i++) {
 			writer.writeRecord(instructorsItemsTaught.get(i));
 		}
-		writer.writeComment(CSVStructure.INSTRUCTORS_ITEMS_TAUGHT_END_MARKER);
 
 		writer.endRecord();
-		writer.writeComment(CSVStructure.INSTRUCTORS_TIME_PREFS_MARKER);
+		writer.writeComment(INSTRUCTORS_TIME_PREFS_MARKER);
 		for (int i = 0; i < instructorsTimePrefs.size(); i++) {
 			writer.write("timePrefs#" + i + ":");
 			writer.endRecord();
@@ -246,10 +261,9 @@ public class CSVExporter {
 			for (String[] rec : prefs)
 				writer.writeRecord(rec);
 		}
-		writer.writeComment(CSVStructure.INSTRUCTORS_TIME_PREFS_END_MARKER);
 
 		writer.endRecord();
-		writer.writeComment(CSVStructure.INSTRUCTORS_COURSE_PREFS_MARKER);
+		writer.writeComment(INSTRUCTORS_COURSE_PREFS_MARKER);
 		for (int i = 0; i < instructorsCoursePrefs.size(); i++) {
 			writer.write("coursePrefs#" + i + ":");
 			writer.endRecord();
@@ -257,14 +271,12 @@ public class CSVExporter {
 				for (String[] rec : prefs)
 					writer.writeRecord(rec);
 		}
-		writer.writeComment(CSVStructure.INSTRUCTORS_COURSE_PREFS_END_MARKER);
 
 		writer.endRecord();
-		writer.writeComment(CSVStructure.SCHEDULE_ITEMS_MARKER);
+		writer.writeComment(SCHEDULE_ITEMS_MARKER);
 		for (int i = 0; i < scheduleItems.size(); i++) {
 			writer.writeRecord(scheduleItems.get(i));
 		}
-		writer.writeComment(CSVStructure.SCHEDULE_ITEMS_END_MARKER);
 		
 		writer.flush();
 		writer.close();
@@ -272,5 +284,23 @@ public class CSVExporter {
 		stringWriter.close();
 		
 		return stringWriter.toString();
+	}
+
+	public void read(Model model, String value) throws IOException {
+		Reader stringReader = new StringReader(value);
+		CsvReader reader = new CsvReader(stringReader);
+		
+		Collection<String[]> lines = new LinkedList<String[]>();
+		for (String[] line; (line = reader.getValues()) != null; ) {
+			if (line.length == 0)
+				continue;
+			if (line.length == 1 && line[0].trim().equals(""))
+				continue;
+			lines.add(line);
+		}
+		
+		for (String[] line : lines) {
+			System.out.println(line.length);
+		}
 	}
 }
