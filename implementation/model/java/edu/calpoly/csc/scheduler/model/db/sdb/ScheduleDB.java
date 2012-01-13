@@ -44,6 +44,8 @@ public class ScheduleDB extends AbstractDatabase<Schedule>
       else
       {
          addData(data);
+         data.setDbid(sqldb.getLastGeneratedKey());
+         data.setScheduleDBId(sqldb.getLastGeneratedKey());
       }
    }
 
@@ -118,6 +120,14 @@ public class ScheduleDB extends AbstractDatabase<Schedule>
     * @return the scheduleID
     */
    public int getScheduleDBID(Schedule data)
+   {
+      return getScheduleDBID();
+   }
+   
+   /**
+    * @return the scheduleID
+    */
+   public int getScheduleDBID()
    {
       this.scheduleDBId = sqldb.getLastGeneratedKey();
       return scheduleDBId;
