@@ -86,11 +86,6 @@ public abstract class DbData
       this.note = note;
    }
 
-   /**
-    * Verifies that the required fields for DB storage are valid.
-    * 
-    * @throws NullDataException if any of the DB-required fields are null.
-    */
    public abstract void verify() throws NullDataException;
 
 }

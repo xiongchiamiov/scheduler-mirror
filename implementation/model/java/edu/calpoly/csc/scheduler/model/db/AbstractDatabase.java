@@ -13,6 +13,17 @@ import java.util.LinkedHashMap;
 public abstract class AbstractDatabase<T extends DbData>
 {
    public static final long                serialVersionUID = 42;
+   //SQL Data types
+   public static final String SQLINT = "int";
+   public static final String SQLVARCHAR = "varchar(255)";
+   public static final String SQLBLOB = "blob";
+   public static final String SQLBOOLEAN = "tinyint";
+   //SQL extra conditions
+   public static final String SQLNOTNULL = "NOT NULL";
+   public static final String SQLDEFAULTNULL = "DEFAULT NULL";
+   public static final String SQLAUTOINC = "AUTO_INCREMENT";
+   public static final String SQLPRIMARYKEY = "PRIMARY KEY";
+   public static final String SQLUNIQUEKEY = "UNIQUE KEY";
 
    protected ArrayList<T>                  data;
    protected int                           scheduleDBId;
@@ -93,15 +104,12 @@ public abstract class AbstractDatabase<T extends DbData>
       wheres = new LinkedHashMap<String, Object>();
       wheres.put(DbData.DBID, data.getDbid());
    }
-   
-   protected void setScheduleDBID(int scheduledbid)
-   {
-      this.scheduleDBId = scheduledbid;
-   }
 
    protected abstract void fillFields(T data);
 
    protected abstract T make(ResultSet rs);
 
    protected abstract String getTableName();
+   
+   protected abstract String getCreateTableString();
 }

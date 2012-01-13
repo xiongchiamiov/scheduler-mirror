@@ -44,8 +44,6 @@ public class ScheduleDB extends AbstractDatabase<Schedule>
       else
       {
          addData(data);
-         data.setDbid(sqldb.getLastGeneratedKey());
-         data.setScheduleDBId(sqldb.getLastGeneratedKey());
       }
    }
 
@@ -121,14 +119,6 @@ public class ScheduleDB extends AbstractDatabase<Schedule>
     */
    public int getScheduleDBID(Schedule data)
    {
-      return getScheduleDBID();
-   }
-   
-   /**
-    * @return the scheduleID
-    */
-   public int getScheduleDBID()
-   {
       this.scheduleDBId = sqldb.getLastGeneratedKey();
       return scheduleDBId;
    }
@@ -145,4 +135,14 @@ public class ScheduleDB extends AbstractDatabase<Schedule>
    {
       return make(sqldb.getDataByScheduleID(TABLENAME, scheduleid));
    }
+   
+	protected String getCreateTableString() {
+		String sqlstring = "CREATE TABLE " + TABLENAME + " (" +
+		SCHEDULE + " " + SQLBLOB + "," +
+		SCHEDULENAME + " " + SQLVARCHAR + " " + SQLNOTNULL + "," +
+		DbData.DBID + " " + SQLINT + " " + SQLNOTNULL + " " + SQLAUTOINC + "," +
+		SQLPRIMARYKEY + " (" + DbData.DBID + "), " +
+		")";
+		return sqlstring;
+	}
 }

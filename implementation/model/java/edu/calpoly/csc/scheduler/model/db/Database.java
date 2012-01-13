@@ -116,8 +116,8 @@ public class Database
       old.setName(name);
       scheduleDB.saveData(old);
       this.scheduleDBID = sqldb.getLastGeneratedKey();
-//      System.out.println("Just copied schedule from id: " + oldscheduledbid
-//            + " to new id: " + this.scheduleDBID);
+      System.out.println("Just copied schedule from id: " + oldscheduledbid
+            + " to new id: " + this.scheduleDBID);
       // Insert new data in userdata
       userdataDB = new UserDataDB(sqldb, scheduleDBID);
       UserData entry = new UserData();
@@ -134,7 +134,7 @@ public class Database
     */
    public void openDB(int scheduledbid, String scheduleName)
    {
-//      System.out.println("ID: " + scheduledbid + ", name: " + scheduleName);
+      System.out.println("ID: " + scheduledbid + ", name: " + scheduleName);
       int realid = scheduledbid;
       Schedule data = new Schedule();
       data.setName(scheduleName);
@@ -147,7 +147,7 @@ public class Database
       if (scheduleDB.exists(data))
       {
          // Use this schedule
-//         System.out.println("Using existing schedule");
+         System.out.println("Using existing schedule");
          userdataDB = new UserDataDB(sqldb, realid);
          scheduleDB.setScheduleDBID(realid);
       }
@@ -170,14 +170,14 @@ public class Database
       locationDB = new LocationDB(sqldb, realid);
       if (newUser)
       {
-//         System.out.println("Copying data from Example Chem Schedule");
+         System.out.println("Copying data from Example Chem Schedule");
          // Make temporary db's with scheduleid = Example Chem Schedule (1354)
          copyAllData(templateScheduleDBID);
          newUser = false;
       }
       else if (copying)
       {
-//         System.out.println("Copying data from scheduledbid " + oldScheduleDBID);
+         System.out.println("Copying data from scheduledbid " + oldScheduleDBID);
          // Make temporary db's with scheduleid = whatever copying had
          copyAllData(oldScheduleDBID);
          copying = false;
@@ -210,7 +210,7 @@ public class Database
          location.setDbid(-1);
          locationDB.saveData(location);
       }
-//      System.out.println("Done copying data");
+      System.out.println("Done copying data");
    }
 
    /**
@@ -254,32 +254,11 @@ public class Database
    }
 
    /**
-    * This method sets the scheduleDBID to a new value and updates the other databases as well
-    * @param scheduleDBID
-    *           the scheduleDBID to set
+    * @param scheduleID
+    *           the scheduleID to set
     */
-   public void setScheduleID(int scheduleDBID)
+   public void setScheduleID(int scheduleID)
    {
-      this.scheduleDBID = scheduleDBID;
-      if(locationDB != null)
-      {
-         locationDB.setScheduleDBID(scheduleDBID);
-      }
-      if(instructorDB != null)
-      {
-         instructorDB.setScheduleDBID(scheduleDBID);
-      }
-      if(courseDB != null)
-      {
-         courseDB.setScheduleDBID(scheduleDBID);
-      }
-      if(userdataDB != null)
-      {
-         userdataDB.setScheduleDBID(scheduleDBID);
-      }
-      if(scheduleDB != null)
-      {
-         scheduleDB.setScheduleDBID(scheduleDBID);
-      }
+      this.scheduleDBID = scheduleID;
    }
 }
