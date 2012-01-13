@@ -739,6 +739,10 @@ public class Schedule extends DbData implements Serializable
             }
          
             Lab lab = c.getLab();
+            
+            //TODO - Take this line out and figure out why labs are not functioning correctly
+            lab = null;
+            
             if (lab != null)
             {
                debug ("HAVE LAB " + lab);
@@ -837,7 +841,8 @@ public class Schedule extends DbData implements Serializable
    {
       ScheduleItem lab_si = new ScheduleItem();
 
-      lab_si.setCourse(lab);
+      lab_si.setCourse(lab);  
+      
       lab_si.setInstructor(getLabInstructor(lab, lec_si));
 
       TimeRange tr = this.lab_bounds;
@@ -945,6 +950,8 @@ public class Schedule extends DbData implements Serializable
       Vector<ScheduleItem> sis = new Vector<ScheduleItem>();
       Course c = si.getCourse();
       Instructor i = si.getInstructor();
+      
+      assert(c != null);
       
       TimeRange tr = new TimeRange(range.getS(), c.getDayLength());
       for (; tr.getE().compareTo(range.getE()) < 1; tr.addHalf())
