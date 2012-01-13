@@ -1,7 +1,6 @@
 package edu.calpoly.csc.scheduler.view.web.server;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -95,31 +94,6 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		for (Course course : model.getCourses())
 			result.put(course.getDbid(), course);
 		return result;
-	}
-
-	@Override
-	public void saveInstructors(List<InstructorGWT> added, List<InstructorGWT> edited, List<InstructorGWT> removed) {
-		assert(added != null);
-		assert(edited != null);
-		assert(removed != null);
-		
-		for (InstructorGWT addedInstructor : added) {
-			assert(!edited.contains(addedInstructor));
-			addedInstructor.setID(-1);
-			model.saveInstructor(Conversion.fromGWT(addedInstructor, getCoursesByID()));
-		}
-
-		for (InstructorGWT editedInstructor : edited) {
-			assert(!added.contains(editedInstructor));
-			model.saveInstructor(Conversion.fromGWT(editedInstructor, getCoursesByID()));
-		}
-	
-		for (InstructorGWT removedInstructorGWT : removed) {
-//			System.out.println("Removing instructor " + removedInstructorGWT.getLastName() + " id " + removedInstructorGWT.getID());
-			Instructor removedInstructor = Conversion.fromGWT(removedInstructorGWT, getCoursesByID());
-			model.removeInstructor(removedInstructor);
-			assert(!model.getInstructors().contains(removedInstructor));
-		}
 	}
 
 //	private void displayInstructorPrefs(Instructor instructor) {
@@ -422,20 +396,6 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 
 
 	@Override
-	public void saveLocations(List<LocationGWT> added, List<LocationGWT> edited, List<LocationGWT> removed) {
-		for (LocationGWT addedLocation : added) {
-			addedLocation.setID(-1);
-			model.saveLocation(Conversion.fromGWT(addedLocation));
-		}
-		
-		for (LocationGWT editedLocation : edited)
-			model.saveLocation(Conversion.fromGWT(editedLocation));
-		
-		for (LocationGWT removedLocation : removed)
-			model.removeLocation(Conversion.fromGWT(removedLocation));
-	}
-
-	@Override
 	public ArrayList<CourseGWT> getCourses() throws IllegalArgumentException {
 		ArrayList<CourseGWT> results = new ArrayList<CourseGWT>();
 		for (Course course : model.getCourses()) {
@@ -445,25 +405,6 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		return results;
 	}
 
-	@Override
-	public void saveCourses(List<CourseGWT> addedCourses, List<CourseGWT> editedCourses, List<CourseGWT> removedCourses) {
-		for (CourseGWT addedCourse : addedCourses) {
-			System.out.println("Adding course " + addedCourse.getCourseName());
-			addedCourse.setID(-1);
-			model.saveCourse(Conversion.fromGWT(addedCourse));
-		}
-		
-		for (CourseGWT editedCourse : editedCourses) {
-			System.out.println("Editing course " + editedCourse.getCourseName());
-			model.saveCourse(Conversion.fromGWT(editedCourse));
-		}
-		
-		for (CourseGWT removedCourse : removedCourses) {
-			System.out.println("Removing course " + removedCourse.getCourseName());
-			model.removeCourse(Conversion.fromGWT(removedCourse));
-		}
-	}
-	
 	public void saveSchedule()
 	{
 	 Schedule schedule = model.getSchedule();
@@ -485,5 +426,74 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		/** TODO replace new Date with export to CSV String */
 		//return CSVDownload.save(model.exportToCSV(schedule));
 		return CSVDownload.save(model.exportToCSV());
+	}
+
+	@Override
+	public int addCourse(CourseGWT toAdd) {
+		toAdd.setID(-1);
+		Course course = Conversion.fromGWT(toAdd);
+		model.saveCourse(course);
+		assert(course.getDbid() != -1);
+		return course.getDbid();
+	}
+
+	@Override
+	public void editCourse(CourseGWT toEdit) {
+		Course course = Conversion.fromGWT(toEdit);
+		assert(course.getDbid() != -1);
+		model.saveCourse(course);
+	}
+
+	@Override
+	public void removeCourse(CourseGWT toRemove) {
+		Course course = Conversion.fromGWT(toRemove);
+		assert(course.getDbid() != -1);
+		model.removeCourse(course);
+	}
+
+	@Override
+	public int addInstructor(InstructorGWT toAdd) {
+		toAdd.setID(-1);
+		Instructor instructor = Conversion.fromGWT(toAdd, getCoursesByID());
+		model.saveInstructor(instructor);
+		assert(instructor.getDbid() != -1);
+		return instructor.getDbid();
+	}
+
+	@Override
+	public void editInstructor(InstructorGWT toEdit) {
+		Instructor instructor = Conversion.fromGWT(toEdit, getCoursesByID());
+		assert(instructor.getDbid() != -1);
+		model.saveInstructor(instructor);
+	}
+
+	@Override
+	public void removeInstructor(InstructorGWT toRemove) {
+		Instructor instructor = Conversion.fromGWT(toRemove, getCoursesByID());
+		assert(instructor.getDbid() != -1);
+		model.removeInstructor(instructor);
+	}
+
+	@Override
+	public int addLocation(LocationGWT toAdd) {
+		toAdd.setID(-1);
+		Location location = Conversion.fromGWT(toAdd);
+		model.saveLocation(location);
+		assert(location.getDbid() != -1);
+		return location.getDbid();
+	}
+
+	@Override
+	public void editLocation(LocationGWT toEdit) {
+		Location location = Conversion.fromGWT(toEdit);
+		assert(location.getDbid() != -1);
+		model.saveLocation(location);
+	}
+
+	@Override
+	public void removeLocation(LocationGWT toRemove) {
+		Location location = Conversion.fromGWT(toRemove);
+		assert(location.getDbid() != -1);
+		model.removeLocation(location);
 	}
 }

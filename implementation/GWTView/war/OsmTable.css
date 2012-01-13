@@ -2,9 +2,16 @@
 	border-spacing: collapse;
 }
 
+.osmtable td {
+	vertical-align: top;
+}
+
+.osmtable .gwt-CheckBox label {
+	white-space: nowrap;
+}
+
 .osmtable .stringcell.writing input {
 	padding: 0px;
-	width: 100%;
 }
 
 .osmtable .stringcell.reading div {
@@ -16,7 +23,8 @@
 	padding-right: 2.5em;
 }
 
-.osmtable tr:nth-child(odd) {
+.osmtable > tbody > tr:nth-child(odd),
+.osmtable > tr:nth-child(odd) {
 	background-color: #F8FBFE;
 }
 
@@ -47,23 +55,30 @@
 	position: absolute;
 	top: 0px;
 	bottom: 0px;
-	right: -5px;
-	width: 10px;
+	right: -3px;
+	width: 6px;
 	background: url('imgs/resizer.gif') repeat-y;
 	display: block;
 	cursor: col-resize;
 	z-index: 1;
 }
 
-.headers .resizeable .headerContents {
+.headerContents {
 	font-weight: bold;
 	color: #4B4A4A;
 	text-align: left;
 	text-shadow: 1px 1px 0 #DDDDFF;
-	padding: 3px 0;
+	padding: 3px !important;
 	white-space: nowrap;
-	overflow: hidden;
+	overflow-y: hidden;
+}
+
+.osmtableContainer .headers .headerContents {
 	cursor: pointer;
+}
+
+.osmtable .hiddenRow .headerContents {
+	height: 0px;
 }
 
 .osmtable .icon {

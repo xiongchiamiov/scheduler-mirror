@@ -45,6 +45,7 @@ class EditingCheckboxCell extends SimplePanel implements OsmTable.Cell, OsmTable
 		assert(editing);
 		clear();
 		add(checkbox);
+		removeStyleName("reading");
 		addStyleName("writing");
 	}
 
@@ -55,6 +56,7 @@ class EditingCheckboxCell extends SimplePanel implements OsmTable.Cell, OsmTable
 		readingLabel.add(new HTML(checkbox.isChecked() ? "Yes" : "No"));
 		clear();
 		add(readingLabel);
+		removeStyleName("writing");
 		addStyleName("reading");
 	}
 	
@@ -70,7 +72,6 @@ class EditingCheckboxCell extends SimplePanel implements OsmTable.Cell, OsmTable
 		return checkbox.isChecked();
 	}
 	public void setValue(Boolean value) {
-		System.out.println("checkbox setting value to " + value);
 		checkbox.setChecked(value);
 		readingLabel.clear();
 		readingLabel.add(new HTML(value ? "Yes" : "No"));

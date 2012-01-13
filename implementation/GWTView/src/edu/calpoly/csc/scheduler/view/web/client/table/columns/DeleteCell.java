@@ -1,5 +1,7 @@
 package edu.calpoly.csc.scheduler.view.web.client.table.columns;
 
+import java.rmi.server.RemoteStub;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.FocusPanel;
@@ -41,6 +43,7 @@ class DeleteCell extends SimplePanel implements OsmTable.Cell, OsmTable.EditingM
 		assert(editing);
 		clear();
 		add(editingIcon);
+		removeStyleName("reading");
 		addStyleName("writing");
 	}
 
@@ -49,6 +52,7 @@ class DeleteCell extends SimplePanel implements OsmTable.Cell, OsmTable.EditingM
 		editing = false;
 		clear();
 		add(readingIcon);
+		removeStyleName("writing");
 		addStyleName("reading");
 	}
 	

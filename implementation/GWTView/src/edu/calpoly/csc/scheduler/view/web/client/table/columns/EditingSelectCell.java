@@ -4,7 +4,6 @@ import java.util.LinkedHashMap;
 
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.ListBox;
@@ -41,6 +40,7 @@ class EditingSelectCell extends SimplePanel implements OsmTable.Cell, OsmTable.R
 		}
 		
 		listBox.setFocus(true);
+		removeStyleName("reading");
 		addStyleName("writing");
 		
 		enterReadingMode();
@@ -66,6 +66,7 @@ class EditingSelectCell extends SimplePanel implements OsmTable.Cell, OsmTable.R
 		readingLabel.add(new HTML(value));
 		clear();
 		add(readingLabel);
+		removeStyleName("writing");
 		addStyleName("reading");
 	}
 	

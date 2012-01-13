@@ -89,15 +89,21 @@ public class LocationsView extends VerticalPanel implements IViewContents {
 					public LocationGWT create() {
 						return new LocationGWT(nextLocationID++, "", "", "LEC", 20, false, new LocationGWT.ProvidedEquipmentGWT());
 					}
-					public LocationGWT createCopy(LocationGWT object) { return new LocationGWT(object); }
 				},
 				new OsmTable.ModifyHandler<LocationGWT>() {
 					@Override
-					public void objectsModified(List<LocationGWT> added,
-							List<LocationGWT> edited,
-							List<LocationGWT> removed,
-							AsyncCallback<Void> callback) {
-						service.saveLocations(added, edited, removed, callback);
+					public void add(LocationGWT toAdd, AsyncCallback<Integer> callback) {
+						service.addLocation(toAdd, callback);
+					}
+
+					@Override
+					public void edit(LocationGWT toEdit, AsyncCallback<Void> callback) {
+						service.editLocation(toEdit, callback);
+					}
+
+					@Override
+					public void remove(LocationGWT toRemove, AsyncCallback<Void> callback) {
+						service.removeLocation(toRemove, callback);
 					}
 				});
 
@@ -107,7 +113,6 @@ public class LocationsView extends VerticalPanel implements IViewContents {
 		table.addColumn(
 				"Building",
 				null,
-				true,
 				true,
 				new Comparator<LocationGWT>() {
 					public int compare(LocationGWT o1, LocationGWT o2) {
@@ -132,7 +137,6 @@ public class LocationsView extends VerticalPanel implements IViewContents {
 		table.addColumn(
 				"Room",
 				null,
-				true,
 				true,
 				new Comparator<LocationGWT>() {
 					@Override
@@ -159,7 +163,6 @@ public class LocationsView extends VerticalPanel implements IViewContents {
 				"Type",
 				null,
 				true,
-				true,
 				new Comparator<LocationGWT>() {
 					@Override
 					public int compare(LocationGWT o1, LocationGWT o2) {
@@ -178,7 +181,6 @@ public class LocationsView extends VerticalPanel implements IViewContents {
 		table.addColumn(
 				"Occupancy",
 				null,
-				true,
 				true,
 				new Comparator<LocationGWT>() {
 					@Override
@@ -204,7 +206,6 @@ public class LocationsView extends VerticalPanel implements IViewContents {
 				"ADA",
 				null,
 				true,
-				true,
 				new Comparator<LocationGWT>() {
 					@Override
 					public int compare(LocationGWT o1, LocationGWT o2) {
@@ -226,7 +227,6 @@ public class LocationsView extends VerticalPanel implements IViewContents {
 		table.addColumn(
 				"Equipment",
 				null,
-				true,
 				true,
 				null,
 				new EditingMultiselectColumn<LocationGWT>(

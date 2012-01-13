@@ -1,7 +1,6 @@
 package edu.calpoly.csc.scheduler.view.web.client;
 
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.Widget;
 
 public final class ViewFrame extends SimplePanel {
 	ViewFrame viewAboveMe;

@@ -9,10 +9,8 @@ import java.util.Set;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -58,7 +56,8 @@ class EditingMultiselectCell extends SimplePanel implements OsmTable.Cell, OsmTa
 		
 		checkboxesContainer.add(vp);
 		
-		
+
+		removeStyleName("reading");
 		addStyleName("writing");
 		
 		enterReadingMode();
@@ -73,11 +72,9 @@ class EditingMultiselectCell extends SimplePanel implements OsmTable.Cell, OsmTa
 	}
 	
 	private String assembleValuesString() {
-		System.out.println("assemmmble!");
 		String value = "";
 		for (Entry<String, CheckBox> entry : checkboxesByLabel.entrySet()) {
-			System.out.println("for entry " + entry.getKey() + " its " + entry.getValue().getValue() + " and " + entry.getValue().getFormValue() + " and " + entry.getValue().isChecked());
-			if (entry.getValue().getValue()) {
+			if (entry.getValue().isChecked()) {
 				if (!value.equals(""))
 					value += ", ";
 				value += entry.getKey();
@@ -98,6 +95,7 @@ class EditingMultiselectCell extends SimplePanel implements OsmTable.Cell, OsmTa
 		clear();
 		add(readingLabel);
 		addStyleName("reading");
+		removeStyleName("writing");
 	}
 	
 	@Override

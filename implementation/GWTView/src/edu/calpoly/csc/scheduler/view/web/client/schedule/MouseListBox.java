@@ -1,6 +1,7 @@
 package edu.calpoly.csc.scheduler.view.web.client.schedule;
 
-import com.google.gwt.user.client.Window;
+import java.util.ArrayList;
+
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
@@ -8,9 +9,6 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
-
-import java.util.ArrayList;
 
 /**
  * Either left or right hand side of a {@link DualListBox}.

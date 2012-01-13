@@ -27,7 +27,6 @@ public interface GreetingServiceAsync {
 
 	void getInstructors(AsyncCallback<List<InstructorGWT>> callback) throws IllegalArgumentException;
 	void saveInstructor(InstructorGWT instructor, AsyncCallback<Void> asyncCallback);
-	void saveInstructors(List<InstructorGWT> added, List<InstructorGWT> edited, List<InstructorGWT> removed, AsyncCallback<Void> asyncCallback) throws IllegalArgumentException;
 	
 	void getLocations(AsyncCallback<List<LocationGWT>> asyncCallback) throws IllegalArgumentException;
 	
@@ -44,13 +43,17 @@ public interface GreetingServiceAsync {
 	void saveSchedule(AsyncCallback<Void> hollaBack);
     void copySchedule(int existingScheduleID, String scheduleName,
 			AsyncCallback<Integer> asyncCallback);
-	void saveCourses(List<CourseGWT> added, List<CourseGWT> edited,
-			List<CourseGWT> removed,
-			AsyncCallback<Void> callback);
-	void saveLocations(List<LocationGWT> added,
-			List<LocationGWT> edited, List<LocationGWT> removed,
-			AsyncCallback<Void> callback);
 	void exportCSV(AsyncCallback<Integer> asyncCallback);
 	
 	void saveCurrentScheduleAs(String schedName, AsyncCallback<Void> callback);
+	
+	void addCourse(CourseGWT toAdd, AsyncCallback<Integer> callback);
+	void editCourse(CourseGWT toEdit, AsyncCallback<Void> callback);
+	void removeCourse(CourseGWT toRemove, AsyncCallback<Void> callback);
+	void addInstructor(InstructorGWT toAdd, AsyncCallback<Integer> callback);
+	void editInstructor(InstructorGWT toEdit, AsyncCallback<Void> callback);
+	void removeInstructor(InstructorGWT toRemove, AsyncCallback<Void> callback);
+	void addLocation(LocationGWT toAdd, AsyncCallback<Integer> callback);
+	void editLocation(LocationGWT toEdit, AsyncCallback<Void> callback);
+	void removeLocation(LocationGWT toRemove, AsyncCallback<Void> callback);
 }

@@ -98,11 +98,15 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 				},
 				new OsmTable.ModifyHandler<InstructorGWT>() {
 					@Override
-					public void objectsModified(List<InstructorGWT> added,
-							List<InstructorGWT> edited,
-							List<InstructorGWT> removed,
-							AsyncCallback<Void> callback) {
-						service.saveInstructors(added, edited, removed, callback);
+					public void add(InstructorGWT toAdd, AsyncCallback<Integer> callback) {
+						service.addInstructor(toAdd, callback);
+					}
+					@Override
+					public void edit(InstructorGWT toEdit, AsyncCallback<Void> callback) {
+						service.editInstructor(toEdit, callback);
+					}
+					public void remove(InstructorGWT toRemove, AsyncCallback<Void> callback) {
+						service.removeInstructor(toRemove, callback);
 					}
 				});
 
@@ -112,7 +116,6 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 		table.addColumn(
 				INSTR_FIRSTNAME,
 				"6em",
-				true,
 				true,
 				new MemberStringComparator<InstructorGWT>(new IStaticGetter<InstructorGWT, String>() {
 					public String getValueForObject(InstructorGWT object) { return object.getFirstName(); }
@@ -130,7 +133,6 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 				INSTR_LASTNAME,
 				"6em",
 				true,
-				true,
 				new MemberStringComparator<InstructorGWT>(new IStaticGetter<InstructorGWT, String>() {
 					public String getValueForObject(InstructorGWT object) { return object.getLastName(); }
 				}),
@@ -146,7 +148,6 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 		table.addColumn(
 				INSTR_ID,
 				"6em",
-				true,
 				true,
 				new MemberStringComparator<InstructorGWT>(new IStaticGetter<InstructorGWT, String>() {
 					public String getValueForObject(InstructorGWT object) { return object.getUserID(); }
@@ -169,7 +170,6 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 				INSTR_MAX_WTU,
 				"4em",
 				true,
-				false,
 				new MemberIntegerComparator<InstructorGWT>(new IStaticGetter<InstructorGWT, Integer>() {
 					public Integer getValueForObject(InstructorGWT object) { return object.getMaxWtu(); }
 				}),
@@ -191,7 +191,6 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 				INSTR_DISABILITIES,
 				"4em",
 				true,
-				true,
 				new MemberIntegerComparator<InstructorGWT>(new IStaticGetter<InstructorGWT, Integer>() {
 					public Integer getValueForObject(InstructorGWT object) { return object.getDisabilities() ? 1 : 0; }
 				}),
@@ -206,7 +205,6 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 		table.addColumn(
 				INSTR_PREFERENCES,
 				"4em",
-				true,
 				true,
 				null,
 				new ButtonColumn<InstructorGWT>(

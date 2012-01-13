@@ -1,7 +1,5 @@
 package edu.calpoly.csc.scheduler.view.web.client.table.columns;
 
-import java.util.Comparator;
-
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.CheckBox;

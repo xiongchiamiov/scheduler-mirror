@@ -33,7 +33,6 @@ class EditingStringCell extends SimplePanel implements OsmTable.Cell, OsmTable.R
 				if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
 					assert(row != null);
 					row.enterReadingMode();
-					enterReadingMode();
 				}
 			}
 		});
@@ -52,8 +51,11 @@ class EditingStringCell extends SimplePanel implements OsmTable.Cell, OsmTable.R
 		assert(!editing);
 		editing = true;
 		assert(editing);
+		int width = readingLabel.getOffsetWidth();
 		clear();
+		editingBox.setWidth(width + "px");
 		add(editingBox);
+		removeStyleName("reading");
 		addStyleName("writing");
 	}
 
@@ -62,6 +64,7 @@ class EditingStringCell extends SimplePanel implements OsmTable.Cell, OsmTable.R
 		editing = false;
 		clear();
 		add(readingLabel);
+		removeStyleName("writing");
 		addStyleName("reading");
 	}
 	

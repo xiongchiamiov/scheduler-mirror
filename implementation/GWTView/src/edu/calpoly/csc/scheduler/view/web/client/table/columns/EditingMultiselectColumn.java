@@ -3,18 +3,14 @@ package edu.calpoly.csc.scheduler.view.web.client.table.columns;
 import java.util.LinkedHashMap;
 import java.util.Set;
 
-import com.google.gwt.user.client.Window;
-
 import edu.calpoly.csc.scheduler.view.web.client.table.IStaticGetter;
 import edu.calpoly.csc.scheduler.view.web.client.table.IStaticSetter;
-import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator.InvalidValueException;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.Cell;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.EditingCell;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.IRowForColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.ReadingCell;
 import edu.calpoly.csc.scheduler.view.web.shared.Identified;
-import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
 
 public class EditingMultiselectColumn<ObjectType extends Identified> implements OsmTable.IEditingColumn<ObjectType> {
 	private LinkedHashMap<String, String> options;

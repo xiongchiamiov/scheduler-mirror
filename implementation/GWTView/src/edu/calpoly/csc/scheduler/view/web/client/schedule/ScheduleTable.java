@@ -2,7 +2,6 @@ package edu.calpoly.csc.scheduler.view.web.client.schedule;
 
 import java.util.ArrayList;
 
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 

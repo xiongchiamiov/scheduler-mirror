@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import com.allen_sauer.gwt.dnd.client.DragContext;
 import com.allen_sauer.gwt.dnd.client.drop.SimpleDropController;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Label;
 
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;

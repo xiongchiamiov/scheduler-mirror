@@ -2,7 +2,6 @@ package edu.calpoly.csc.scheduler.view.web.client.table.columns;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Image;
 
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;

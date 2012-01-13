@@ -14,7 +14,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ScrollEvent;
 import com.google.gwt.user.client.Window.ScrollHandler;
@@ -38,7 +37,9 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 	enum ColumnSortMode { NOT_SORTING, ASCENDING, DESCENDING }
 	
 	public interface ModifyHandler<ObjectType> {
-		void objectsModified(List<ObjectType> added, List<ObjectType> edited, List<ObjectType> removed, AsyncCallback<Void> callback);
+		void add(ObjectType toAdd, AsyncCallback<Integer> callback);
+		void edit(ObjectType toEdit, AsyncCallback<Void> callback);
+		void remove(ObjectType toRemove, AsyncCallback<Void> callback);
 	}
 	
 	public interface Cell {
@@ -71,16 +72,13 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 		ColumnSortMode sortMode = ColumnSortMode.NOT_SORTING;
 		final IColumn<ObjectType> column;
 		final ResizeableWidget header;
-		final boolean stretchWidthToAccommodateNewRows;
 		final Comparator<? super ObjectType> comparator;
 		public ColumnMetadata(
 				IColumn<ObjectType> column,
 				ResizeableWidget header,
-				boolean stretchWidthToAccommodateNewRows,
 				Comparator<? super ObjectType> comparator) {
 			this.column = column;
 			this.header = header;
-			this.stretchWidthToAccommodateNewRows = stretchWidthToAccommodateNewRows;
 			this.comparator = comparator;
 		}
 	}
@@ -145,9 +143,9 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 	protected final Map<Integer, Row> rowsByObjectID = new HashMap<Integer, Row>();
 	protected HorizontalPanel headers;
 	protected boolean headerFloating;
-	protected Element colgroupElement;
 	protected final FlexTable table;
 	protected ColumnMetadata currentSortedColumn;
+	protected Element hiddenRowThatMaintainsWidths;
 	
 	public OsmTable(IFactory<ObjectType> factory, final ModifyHandler<ObjectType> saveHandler) {
 		this.saveHandler = saveHandler;
@@ -164,9 +162,6 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 		table.setCellPadding(0);
 		table.setCellSpacing(0);
 		add(table);
-		
-		colgroupElement = DOM.createColGroup();
-		table.getElement().insertFirst(colgroupElement);
 	}
 	
 	private void createNewObjectButtons() {
@@ -199,7 +194,7 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 						substituteHeaders.setHeight(headers.getOffsetHeight() + "px");
 						headers.addStyleName("floating");
 						for (ColumnMetadata col : columnMetadatas)
-							col.header.synchronize();
+							col.header.updateWidth();
 					}
 				}
 				else {
@@ -208,65 +203,58 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 						headers.removeStyleName("floating");
 						substituteHeaders.setHeight("");
 						for (ColumnMetadata col : columnMetadatas)
-							col.header.synchronize();
+							col.header.updateWidth();
 					}
 				}
 			}
 		});
 	}
 
-	public void addColumn(String name, String initialWidth, boolean resizable, boolean stretchWidthToAccommodateNewRows, Comparator<? super ObjectType> comparator, final IColumn<ObjectType> column) {
+	public void addColumn(String name, String initialWidth, boolean resizable, Comparator<? super ObjectType> comparator, final IColumn<ObjectType> column) {
 		assert(rowsByObjectID.size() == 0);
 		final int newColumnIndex = columnMetadatas.size();
 		
-		final Element colElement = DOM.createCol();
-		colElement.setId("col" + newColumnIndex);
-		colgroupElement.appendChild(colElement);
-		if (initialWidth != null)
-			colElement.setAttribute("style", "width: " + initialWidth);
+		HTML hiddenCellThatMaintainsWidthsContents = new HTML(name);
+		hiddenCellThatMaintainsWidthsContents.addStyleName("headerContents");
+		table.setWidget(0, newColumnIndex, hiddenCellThatMaintainsWidthsContents);
+		final Element hiddenCellThatMaintainsWidths = HTMLUtilities.getClosestContainingElementOfType(hiddenCellThatMaintainsWidthsContents.getElement(), "td");
+		
+		if (hiddenRowThatMaintainsWidths == null) {
+			hiddenRowThatMaintainsWidths = HTMLUtilities.getClosestContainingElementOfType(hiddenCellThatMaintainsWidthsContents.getElement(), "tr");
+			hiddenRowThatMaintainsWidths.addClassName("hiddenRow");
+		}
 		
 		final HTML headerContents = new HTML(name);
 		headerContents.addStyleName("headerContents");
 		
-		ResizeableWidget resizeableHeader = new ResizeableWidget(this, resizable, headerContents, new ResizeCallback() {
-			public void setWidth(int newWidthPixels) {
-				if (rowsByObjectID.size() == 0)
-					return;
-				HTMLUtilities.getClosestContainingElementOfType(table.getWidget(0, newColumnIndex).getElement(), "td").setAttribute("style", "width: " + newWidthPixels + "px");
+		ResizeableWidget resizeableHeader = new ResizeableWidget(this, initialWidth, resizable, headerContents, new ResizeCallback() {
+			public void trySettingWidth(int newWidthPixels) {
+				hiddenCellThatMaintainsWidths.setAttribute("style", "width: " + newWidthPixels + "px");
+				if (hiddenCellThatMaintainsWidths.getOffsetWidth() != newWidthPixels) {
+					newWidthPixels = hiddenCellThatMaintainsWidths.getOffsetWidth();
+					hiddenCellThatMaintainsWidths.setAttribute("style", "width: " + newWidthPixels + "px");
+					assert(hiddenCellThatMaintainsWidths.getOffsetWidth() == newWidthPixels);
+				}
 			}
 			public int getWidth() {
-				if (rowsByObjectID.size() == 0)
-					return 0;
-				return HTMLUtilities.getClosestContainingElementOfType(table.getWidget(0, newColumnIndex).getElement(), "td").getOffsetWidth();
+				return hiddenCellThatMaintainsWidths.getOffsetWidth();
 			}
 		});
 		headers.add(resizeableHeader);
 		
-		final ColumnMetadata columnMetadata = new ColumnMetadata(column, resizeableHeader, stretchWidthToAccommodateNewRows, comparator);
+		final ColumnMetadata columnMetadata = new ColumnMetadata(column, resizeableHeader, comparator);
 
 		headerContents.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				toggleSortingForColumn(columnMetadata);
 			}
 		});
-		
-//		header.addClickHandler(new ClickHandler() {
-//			public void onClick(ClickEvent event) {
-//				sortByColumn(column);
-//			}
-//		});
-//		
-//		sorter.setSortCallback(new SortCallback() {
-//			public void sort(boolean ascending) {
-//				sortByColumn(column, ascending);
-//			}
-//		});
 
 		columnMetadatas.add(columnMetadata);
 	}
 	
 	public void addDeleteColumn() {
-		addColumn("", null, false, true, null, new DeleteColumn<ObjectType>());
+		addColumn("", null, false, null, new DeleteColumn<ObjectType>());
 	}
 
 	private void deleteRow(final Row row) {
@@ -277,27 +265,22 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 			return;
 		}
 		
-		LinkedList<ObjectType> list = new LinkedList<ObjectType>();
-		list.add(row.object);
-		saveHandler.objectsModified(
-				new LinkedList<ObjectType>(),
-				new LinkedList<ObjectType>(),
-				list,
-				new AsyncCallback<Void>() {
-					public void onSuccess(Void result) {
-						row.trElement.removeClassName("sending");
-						rowsByObjectID.remove(row.object.getID());
-						row.trElement.removeFromParent();
-					}
-					public void onFailure(Throwable caught) {
-						row.trElement.removeClassName("sending");
-						Window.alert("Failed to delete row: " + caught.getMessage());
-					}
-				});
+		saveHandler.remove(row.object, new AsyncCallback<Void>() {
+			public void onSuccess(Void result) {
+				row.trElement.removeClassName("sending");
+				rowsByObjectID.remove(row.object.getID());
+				row.trElement.removeFromParent();
+			}
+			
+			public void onFailure(Throwable caught) {
+				row.trElement.removeClassName("sending");
+				Window.alert("Failed to delete row: " + caught.getMessage());
+			}
+		});
 	}
 	
 	public void addEditSaveColumn() {
-		addColumn("", null, false, true, null, new EditModeColumn<ObjectType>());
+		addColumn("", null, false, null, new EditModeColumn<ObjectType>());
 	}
 
 	protected void enterRowEditingMode(Row row, EditingCell focusedCell) {
@@ -330,6 +313,8 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 				}
 			}
 		}
+
+		updateHeaderWidths();
 	}
 
 	protected void enterRowReadingMode(final Row row) {
@@ -347,6 +332,8 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 				cell.enterReadingMode();
 			}
 		}
+		
+		updateHeaderWidths();
 	}
 	
 	protected void exitRowEditingMode(final Row row) {
@@ -365,33 +352,45 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 		}
 		
 		row.trElement.addClassName("sending");
+		
+		final int oldObjectID = row.getObject().getID();
 
-		LinkedList<ObjectType> addedList = new LinkedList<ObjectType>();
-		LinkedList<ObjectType> editedList = new LinkedList<ObjectType>();
-		
-		if (row.adding)
-			addedList.add(row.getObject());
-		else
-			editedList.add(row.getObject());
-		
-		saveHandler.objectsModified(
-				addedList,
-				editedList,
-				new LinkedList<ObjectType>(),
-				new AsyncCallback<Void>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						row.trElement.removeClassName("sending");
-						enterRowEditingMode(row, null);
-						Window.alert("Failed to send updates to server: " + caught.getMessage());
-					}
+		if (row.adding) {
+			saveHandler.add(row.getObject(), new AsyncCallback<Integer>() {
+				@Override
+				public void onSuccess(Integer newObjectID) {
+					row.trElement.removeClassName("sending");
+					row.adding = false;
 					
-					@Override
-					public void onSuccess(Void result) {
-						row.trElement.removeClassName("sending");
-						row.adding = false;
-					}
-				});
+					rowsByObjectID.remove(oldObjectID);
+					rowsByObjectID.put(newObjectID, row);
+				}
+				
+				@Override
+				public void onFailure(Throwable caught) {
+					row.trElement.removeClassName("sending");
+					enterRowEditingMode(row, null);
+					Window.alert("Failed to send updates to server: " + caught.getMessage());
+				}
+			});
+		}
+		else {
+			saveHandler.edit(row.getObject(), new AsyncCallback<Void>() {
+				
+				@Override
+				public void onSuccess(Void result) {
+					row.trElement.removeClassName("sending");
+				}
+				
+				@Override
+				public void onFailure(Throwable caught) {
+					row.trElement.removeClassName("sending");
+					enterRowEditingMode(row, null);
+					Window.alert("Failed to send updates to server: " + caught.getMessage());
+				}
+			});
+			
+		}
 		
 		enterRowReadingMode(row);
 	}
@@ -449,10 +448,9 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 			assert(tableElement.getNodeName().equalsIgnoreCase("table"));
 			Element tbodyElement = tableElement.getElementsByTagName("tbody").getItem(0);
 			assert(tbodyElement.getNodeName().equalsIgnoreCase("tbody"));
-			assert(tbodyElement.getChildCount() == 0);
+			assert(tbodyElement.getChildCount() == 1);
 			
 			for (int i = 0; i < sortedList.size(); i++) {
-//				System.out.println("derp " + i);
 				ObjectType object = sortedList.get(i);
 				Row row = rowsByObjectID.get(object.getID());
 				tbodyElement.appendChild(row.trElement);
@@ -468,10 +466,8 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 	}
 	
 	private Row addAndReturnRowWithoutRefreshingWidths(ObjectType object) {
-//		System.out.println("adding " + object.getID());
-		
 		int newObjectIndex = rowsByObjectID.size();
-		int rowIndex = newObjectIndex;
+		int rowIndex = 1 + newObjectIndex;
 
 		HTML placeholder = new HTML();
 		table.setWidget(rowIndex, 0, placeholder);
@@ -501,28 +497,24 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 
 	private Row addAndReturnRow(ObjectType object) {
 		Row result = addAndReturnRowWithoutRefreshingWidths(object);
-		refreshWidths();
+		updateHeaderWidths();
 		return result;
 	}
 	
 	public final void addRow(ObjectType object) {
 		addAndReturnRowWithoutRefreshingWidths(object);
-		refreshWidths();
+		updateHeaderWidths();
 	}
 	
-	private void refreshWidths() {
-		for (ColumnMetadata col : columnMetadatas) {
-			if (col.stretchWidthToAccommodateNewRows)
-				col.header.synchronizeToMaximumOfBoth();
-			else
-				col.header.synchronize();
-		}
+	private void updateHeaderWidths() {
+		for (ColumnMetadata col : columnMetadatas)
+			col.header.updateWidth();
 	}
 	
 	public final void addRows(Collection<ObjectType> objects) {
 		for (ObjectType object : objects)
 			addAndReturnRowWithoutRefreshingWidths(object);
-		refreshWidths();
+		updateHeaderWidths();
 	}	
 	
 	/** 

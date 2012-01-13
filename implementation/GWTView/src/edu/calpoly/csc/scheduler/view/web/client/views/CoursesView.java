@@ -110,11 +110,14 @@ public class CoursesView extends VerticalPanel implements IViewContents {
 //					public CourseGWT createCopy(CourseGWT object) { return new CourseGWT(object); }
 				},
 				new OsmTable.ModifyHandler<CourseGWT>() {
-					@Override
-					public void objectsModified(List<CourseGWT> added,
-							List<CourseGWT> edited, List<CourseGWT> removed,
-							AsyncCallback<Void> callback) {
-						service.saveCourses(added, edited, removed, callback);
+					public void add(CourseGWT toAdd, AsyncCallback<Integer> callback) {
+						service.addCourse(toAdd, callback);
+					}
+					public void edit(CourseGWT toEdit, AsyncCallback<Void> callback) {
+						service.editCourse(toEdit, callback);
+					}
+					public void remove(CourseGWT toRemove, AsyncCallback<Void> callback) {
+						service.removeCourse(toRemove, callback);
 					}
 				});
 
@@ -124,7 +127,6 @@ public class CoursesView extends VerticalPanel implements IViewContents {
 		table.addColumn(
 				COURSE_NAME,
 				"6em",
-				true,
 				true,
 				new MemberStringComparator<CourseGWT>(new IStaticGetter<CourseGWT, String>() {
 					public String getValueForObject(CourseGWT object) { return object.getCourseName(); }
@@ -142,7 +144,6 @@ public class CoursesView extends VerticalPanel implements IViewContents {
 				COURSE_CATALOG_NUM,
 				"4em",
 				true,
-				false,
 				new MemberIntegerComparator<CourseGWT>(new IStaticGetter<CourseGWT, Integer>() {
 					public Integer getValueForObject(CourseGWT object) { return object.getCatalogNum(); }
 				}),
@@ -164,7 +165,6 @@ public class CoursesView extends VerticalPanel implements IViewContents {
 				COURSE_DEPARTMENT,
 				"6em",
 				true,
-				true,
 				new MemberStringComparator<CourseGWT>(new IStaticGetter<CourseGWT, String>() {
 					public String getValueForObject(CourseGWT object) { return object.getDept(); }
 				}),
@@ -177,7 +177,7 @@ public class CoursesView extends VerticalPanel implements IViewContents {
 						},
 						null));
 		
-		table.addColumn(COURSE_WTU, "4em", true, false, null, new IntColumn<CourseGWT>(
+		table.addColumn(COURSE_WTU, "4em", true, null, new IntColumn<CourseGWT>(
 				new IStaticGetter<CourseGWT, Integer>() {
 					public Integer getValueForObject(CourseGWT object) { return object.getWtu(); }
 				}, new IStaticSetter<CourseGWT, Integer>() {
@@ -190,7 +190,7 @@ public class CoursesView extends VerticalPanel implements IViewContents {
 					}
 				}));
 		
-		table.addColumn(COURSE_SCU, "4em", true, false, null, new IntColumn<CourseGWT>(
+		table.addColumn(COURSE_SCU, "4em", true, null, new IntColumn<CourseGWT>(
 				new IStaticGetter<CourseGWT, Integer>() {
 					public Integer getValueForObject(CourseGWT object) { return object.getScu(); }
 				}, new IStaticSetter<CourseGWT, Integer>() {
@@ -203,7 +203,7 @@ public class CoursesView extends VerticalPanel implements IViewContents {
 					}
 				}));
 		
-		table.addColumn(COURSE_NUM_SECTIONS, "4em", true, false, null, new IntColumn<CourseGWT>(
+		table.addColumn(COURSE_NUM_SECTIONS, "4em", true, null, new IntColumn<CourseGWT>(
 				new IStaticGetter<CourseGWT, Integer>() {
 					public Integer getValueForObject(CourseGWT object) { return object.getNumSections(); }
 				}, new IStaticSetter<CourseGWT, Integer>() {
@@ -220,7 +220,6 @@ public class CoursesView extends VerticalPanel implements IViewContents {
 				COURSE_TYPE,
 				"6em",
 				true,
-				true,
 				new MemberStringComparator<CourseGWT>(new IStaticGetter<CourseGWT, String>() {
 					public String getValueForObject(CourseGWT object) { return object.getType(); }
 				}),
@@ -235,7 +234,7 @@ public class CoursesView extends VerticalPanel implements IViewContents {
 							}
 						}));
 		
-		table.addColumn(COURSE_MAX_ENROLLMENT, "4em", true, false, null, new IntColumn<CourseGWT>(
+		table.addColumn(COURSE_MAX_ENROLLMENT, "4em", true, null, new IntColumn<CourseGWT>(
 				new IStaticGetter<CourseGWT, Integer>() {
 					public Integer getValueForObject(CourseGWT object) { return object.getMaxEnroll(); }
 				}, new IStaticSetter<CourseGWT, Integer>() {
@@ -248,7 +247,7 @@ public class CoursesView extends VerticalPanel implements IViewContents {
 					}
 				}));
 		
-		table.addColumn(COURSE_LENGTH, "4em", true, false, null, new IntColumn<CourseGWT>(
+		table.addColumn(COURSE_LENGTH, "4em", true, null, new IntColumn<CourseGWT>(
 				new IStaticGetter<CourseGWT, Integer>() {
 					public Integer getValueForObject(CourseGWT object) { return object.getLength() / 2; }
 				}, new IStaticSetter<CourseGWT, Integer>() {
@@ -264,7 +263,6 @@ public class CoursesView extends VerticalPanel implements IViewContents {
 		table.addColumn(
 				COURSE_LAB,
 				"4em",
-				true,
 				true,
 				null,
 				new ButtonColumn<CourseGWT>(

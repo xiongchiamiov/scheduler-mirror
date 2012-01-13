@@ -5,9 +5,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.Vector;
-
-import edu.calpoly.csc.scheduler.view.web.client.table.IStaticGetter;
 
 
 public class InstructorGWT implements Serializable, Identified {

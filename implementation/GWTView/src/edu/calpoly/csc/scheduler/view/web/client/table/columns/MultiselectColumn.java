@@ -1,7 +1,6 @@
 package edu.calpoly.csc.scheduler.view.web.client.table.columns;
 
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.LinkedHashMap;
 
 import edu.calpoly.csc.scheduler.view.web.client.table.IGetter;

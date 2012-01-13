@@ -1,16 +1,13 @@
 package edu.calpoly.csc.scheduler.view.web.client.table.columns;
 
-import java.util.Comparator;
 import java.util.LinkedHashMap;
 
 import com.google.gwt.user.client.Window;
 
-import edu.calpoly.csc.scheduler.view.web.client.table.IGetter;
-import edu.calpoly.csc.scheduler.view.web.client.table.ISetter;
 import edu.calpoly.csc.scheduler.view.web.client.table.IStaticGetter;
 import edu.calpoly.csc.scheduler.view.web.client.table.IStaticSetter;
-import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
 import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator.InvalidValueException;
+import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.Cell;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.EditingCell;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.IRowForColumn;

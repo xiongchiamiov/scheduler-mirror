@@ -48,6 +48,7 @@ class EditModeCell extends SimplePanel implements OsmTable.Cell, OsmTable.Readin
 		assert(editing);
 		clear();
 		add(editingIcon);
+		removeStyleName("reading");
 		addStyleName("writing");
 	}
 
@@ -56,6 +57,7 @@ class EditModeCell extends SimplePanel implements OsmTable.Cell, OsmTable.Readin
 		editing = false;
 		clear();
 		add(readingIcon);
+		removeStyleName("writing");
 		addStyleName("reading");
 	}
 	

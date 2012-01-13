@@ -34,17 +34,11 @@ public interface GreetingService extends RemoteService {
 	// Instructors
 	void saveInstructor(InstructorGWT instructor);	
 	List<InstructorGWT> getInstructors();
-	void saveInstructors(List<InstructorGWT> added, List<InstructorGWT> edited,
-			List<InstructorGWT> removed);
 	
-	void saveCourses(List<CourseGWT> added, List<CourseGWT> edited,
-			List<CourseGWT> removed);
 	List<CourseGWT> getCourses();
 	
 	// Locations
 	List<LocationGWT> getLocations();
-	void saveLocations(List<LocationGWT> added, List<LocationGWT> edited,
-			List<LocationGWT> removed);
 	
 	// Schedule Items
 	List<ScheduleItemGWT> generateSchedule(List<CourseGWT> courses);
@@ -55,4 +49,22 @@ public interface GreetingService extends RemoteService {
 	int exportCSV();
 	
 	void saveCurrentScheduleAs(String schedName);
+
+	int addCourse(CourseGWT toAdd);
+
+	void editCourse(CourseGWT toEdit);
+
+	void removeCourse(CourseGWT toRemove);
+
+	int addInstructor(InstructorGWT toAdd);
+
+	void editInstructor(InstructorGWT toEdit);
+
+	void removeInstructor(InstructorGWT toRemove);
+
+	int addLocation(LocationGWT toAdd);
+
+	void editLocation(LocationGWT toEdit);
+
+	void removeLocation(LocationGWT toRemove);
 }

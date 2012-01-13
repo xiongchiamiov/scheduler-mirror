@@ -70,6 +70,7 @@ class MultiselectCell extends SimplePanel implements OsmTable.Cell, OsmTable.Edi
 			}
 		});
 		listBox.setFocus(true);
+		removeStyleName("reading");
 		addStyleName("writing");
 	}
 	
@@ -82,6 +83,7 @@ class MultiselectCell extends SimplePanel implements OsmTable.Cell, OsmTable.Edi
 			joined = (joined.equals("") ? "" : joined + ", ") + value;
 		
 		add(new HTML(joined + "&#160;"));
+		removeStyleName("writing");
 		addStyleName("reading");
 	}
 

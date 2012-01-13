@@ -52,32 +52,27 @@ public class AdminConfigView extends VerticalPanel implements IViewContents {	/*
 			public UserDataGWT create() {
 				return new UserDataGWT();
 			}
-
-			public UserDataGWT createCopy(UserDataGWT existing) {
-				return new UserDataGWT(existing);
-			}
 		}, new OsmTable.ModifyHandler<UserDataGWT>() {
 			@Override
-			public void objectsModified(List<UserDataGWT> added,
-					List<UserDataGWT> edited, List<UserDataGWT> removed,
+			public void add(UserDataGWT toAdd, AsyncCallback<Integer> callback) {
+				throw new UnsupportedOperationException();
+			}
+
+			@Override
+			public void edit(UserDataGWT toEdit, AsyncCallback<Void> callback) {
+				throw new UnsupportedOperationException();
+			}
+
+			@Override
+			public void remove(UserDataGWT toRemove,
 					AsyncCallback<Void> callback) {
-				/*
-				 * service.saveCourses(table.getAddedUntouchedAndEditedObjects(), new
-				 * AsyncCallback<Collection<CourseGWT>>() {
-				 * 
-				 * @Override public void onFailure(Throwable caught) { // TODO
-				 * Auto-generated method stub }
-				 * 
-				 * @Override public void onSuccess(Collection<CourseGWT> result) {
-				 * table.clear(); //table.addRows(result); } });
-				 */
+				throw new UnsupportedOperationException();
 			}
 		});
 
 		table.addColumn(
 				CONFIG_USERNAME,
 				"6em",
-				true,
 				true,
 				new Comparator<UserDataGWT>() {
 					@Override
@@ -102,7 +97,6 @@ public class AdminConfigView extends VerticalPanel implements IViewContents {	/*
 		table.addColumn(
 				CONFIG_LEVEL,
 				"6em",
-				true,
 				true,
 				new Comparator<UserDataGWT>() {
 					@Override
