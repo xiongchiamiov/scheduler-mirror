@@ -49,9 +49,6 @@ public class Database
    /** The current userid */
    private String           userid;
 
-   /** If we are setting up a new user */
-   private boolean          newUser            = false;
-
    /** If we are copying data */
    private boolean          copying            = false;
 
@@ -68,28 +65,8 @@ public class Database
    {
       sqldb = new SQLDB();
       sqldb.open();
-      checkUser(userid);
       this.userid = userid;
       scheduleDB = new ScheduleDB(sqldb);
-   }
-
-   /**
-    * STEP 2 Checks to see if it is a new user, and adds to database if it is
-    */
-   private void checkUser(String userid)
-   {
-      // Create where clause for user to see if it exists
-      LinkedHashMap<String, Object> wheres = new LinkedHashMap<String, Object>();
-      wheres.put(UserDataDB.USERID, userid);
-      if (sqldb.doesItExist(sqldb.executeSelect(UserDataDB.TABLENAME, wheres,
-            wheres)))
-      {
-         newUser = false;
-      }
-      else
-      {
-         newUser = true;
-      }
    }
 
    /**
@@ -168,14 +145,7 @@ public class Database
       instructorDB = new InstructorDB(sqldb, realid);
       courseDB = new CourseDB(sqldb, realid);
       locationDB = new LocationDB(sqldb, realid);
-      if (newUser)
-      {
-         System.out.println("Copying data from Example Chem Schedule");
-         // Make temporary db's with scheduleid = Example Chem Schedule (1354)
-         copyAllData(templateScheduleDBID);
-         newUser = false;
-      }
-      else if (copying)
+      if (copying)
       {
          System.out.println("Copying data from scheduledbid " + oldScheduleDBID);
          // Make temporary db's with scheduleid = whatever copying had
