@@ -6,24 +6,49 @@
 	<body bgcolor = white> 
 		<a name="Installation_Screen"></a> 
 		<h2>2.7 Installation</h2>
-		
 		<p> 
-			The Scheduling Project is a web application. In order to run the
-			application the user simply points their browser to the URL of the
-			appropriate server. 
+			The Scheduling Project has two components - a server and a client.
 		</p>
 		
 		<a name="server">
-		<h3>2.7.1 Server Installation Configuration</h3>
-		
+		<h3>2.7.1 Server Installation</h3>
 		<p>
-			To setup the Scheduling Project server the user must first install
-			<a href="http://tomcat.apache.org/index.html">Apache Tomcat</a>.
-			For the next step in the process the user must install and
-			configure <a href="http://www.mysql.com/"> MySQL</a>.  The user
-			must then run the provided database setup scripts in order to
-			intialize the database.  For the last step the user must deploy the
-			WAR.
+			The server component of the Scheduling Project is a Java project.
+			Each department will need to install the server on a computer they
+			control, with the following minimum requirements:
+		</p>
+		<ul>
+			<!-- The Mac requirement can probably be lower. -->
+			<li>Windows XP, Mac OS X 10.6, Linux</li>
+			<li>Java 1.6</li>
+			<!-- To serve anything on port 80, we need root privs on Linux.  We
+			need to investigate this for the other OSs. -->
+			<li>Open port 80 for non-local use</li>
+		</ul>
+		<p>
+			The Scheduling Project will only be accessible when the server is
+			running, so departments will likely wish to choose a computer that
+			stays on 24/7.
+		</p>
+
+		<a name="client">
+		<h3>2.7.2 Client Installation</h3>
+		<p>
+			The Scheduling Project client is a web application; no additional
+			software installation is required if the system meets the following
+			minimum requirements:
+		</p>
+		<ul>
+			<!-- These should be browsers that we can and will test. -->
+			<li>Internet Explorer 8, Mozilla Firefox 3.5, Google Chrome, Safari
+			5.1</li>
+			<li>1024x768 or 1280x800 screen resolution</li>
+			<li>A network connection to the server</li>
+		</ul>
+		<p>
+			The client will also be available as a simple desktop application.
+			In addition to the above requirement, the desktop application will
+			require administrator privileges to install.
 		</p>
 		
 		<center>
