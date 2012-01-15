@@ -217,6 +217,7 @@ public abstract class Conversion {
 		newCourse.setMaxEnroll(course.getEnrollment());
 		newCourse.setNumSections(course.getNumOfSections());
 		newCourse.setScu(course.getScu());
+		System.out.println("recalling model course " + course.getCatalogNum() + " type is " + course.getType());
 		newCourse.setType(course.getType().toString());
 		newCourse.setWtu(course.getWtu());
 		Lab lab = course.getLab();
@@ -308,7 +309,7 @@ public abstract class Conversion {
 		newCourse.setWtu(course.getWtu());
 		newCourse.setScu(course.getScu());
 		newCourse.setType(course.getType());
-		System.out.println("model course " + newCourse.getCatalogNum() + " type is " + course.getType());
+		System.out.println("storing model course " + newCourse.getCatalogNum() + " type is " + course.getType());
 		newCourse.setEnrollment(course.getMaxEnroll());
 		if (!course.getLabDept().equals("")) {
 			newCourse.setLab(new Lab(course.getLabName(), course.getLabDept(),
