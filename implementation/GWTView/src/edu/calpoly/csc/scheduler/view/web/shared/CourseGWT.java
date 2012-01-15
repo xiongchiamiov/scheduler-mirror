@@ -7,7 +7,7 @@ public class CourseGWT implements Serializable, Identified {
 	private static final long serialVersionUID = -3337091550673507081L;
 	
 	private String courseName;
-	private Integer catalogNum;
+	private String catalogNum;
 	private String dept;
 	private Integer wtu, scu, numSections;
 	private String type; //will be an object
@@ -23,7 +23,7 @@ public class CourseGWT implements Serializable, Identified {
 	
 	public CourseGWT() { }
 	
-	public CourseGWT(String courseName, Integer catalogNum, String dept,
+	public CourseGWT(String courseName, String catalogNum, String dept,
 			Integer wtu, Integer scu, Integer numSections, String type,
 			Integer maxEnroll, Integer labId, String labName, String labDept,
 			Integer labCatalogNum, Integer length, WeekGWT days,
@@ -102,11 +102,11 @@ public class CourseGWT implements Serializable, Identified {
 		this.courseName = courseName;
 	}
 
-	public int getCatalogNum() {
+	public String getCatalogNum() {
 		return catalogNum;
 	}
 
-	public void setCatalogNum(int catalogNum) {
+	public void setCatalogNum(String catalogNum) {
 		this.catalogNum = catalogNum;
 	}
 
@@ -208,7 +208,7 @@ public class CourseGWT implements Serializable, Identified {
 	}
 
 	public String toString() {
-		return this.courseName + " " + Integer.toString(this.catalogNum);
+		return this.courseName + " " + this.catalogNum;
 	}
 	
 	@Override

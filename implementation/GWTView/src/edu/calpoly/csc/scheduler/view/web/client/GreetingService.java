@@ -50,19 +50,19 @@ public interface GreetingService extends RemoteService {
 	
 	void saveCurrentScheduleAs(String schedName);
 
-	int addCourse(CourseGWT toAdd);
+	CourseGWT addCourse(CourseGWT toAdd);
 
 	void editCourse(CourseGWT toEdit);
 
 	void removeCourse(CourseGWT toRemove);
 
-	int addInstructor(InstructorGWT toAdd);
+	InstructorGWT addInstructor(InstructorGWT toAdd);
 
 	void editInstructor(InstructorGWT toEdit);
 
 	void removeInstructor(InstructorGWT toRemove);
 
-	int addLocation(LocationGWT toAdd);
+	LocationGWT addLocation(LocationGWT toAdd);
 
 	void editLocation(LocationGWT toEdit);
 

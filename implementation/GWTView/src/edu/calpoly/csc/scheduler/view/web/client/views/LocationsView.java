@@ -24,7 +24,7 @@ import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingCheckboxCo
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingMultiselectColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingSelectColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingStringColumn;
-import edu.calpoly.csc.scheduler.view.web.client.table.columns.IntColumn;
+import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingIntColumn;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
 
 public class LocationsView extends VerticalPanel implements IViewContents {
@@ -57,9 +57,13 @@ public class LocationsView extends VerticalPanel implements IViewContents {
 	
 	private GreetingServiceAsync service;
 	private final String scheduleName;
-	int nextLocationID = 1;
+	int nextLocationID = -2;
 	private static OsmTable<LocationGWT> table;
 
+	private int generateTemporaryLocationID() {
+		return nextLocationID--;
+	}
+	
 	public LocationsView(GreetingServiceAsync service, String scheduleName) {
 		this.service = service;
 		this.scheduleName = scheduleName;
@@ -87,12 +91,12 @@ public class LocationsView extends VerticalPanel implements IViewContents {
 		table = new OsmTable<LocationGWT>(
 				new IFactory<LocationGWT>() {
 					public LocationGWT create() {
-						return new LocationGWT(nextLocationID++, "", "", "LEC", 20, false, new LocationGWT.ProvidedEquipmentGWT());
+						return new LocationGWT(generateTemporaryLocationID(), "", "", "LEC", 20, false, new LocationGWT.ProvidedEquipmentGWT());
 					}
 				},
 				new OsmTable.ModifyHandler<LocationGWT>() {
 					@Override
-					public void add(LocationGWT toAdd, AsyncCallback<Integer> callback) {
+					public void add(LocationGWT toAdd, AsyncCallback<LocationGWT> callback) {
 						service.addLocation(toAdd, callback);
 					}
 
@@ -188,7 +192,7 @@ public class LocationsView extends VerticalPanel implements IViewContents {
 						return o1.getMaxOccupancy() - o2.getMaxOccupancy();
 					}
 				},
-				new IntColumn<LocationGWT>(
+				new EditingIntColumn<LocationGWT>(
 						new IStaticGetter<LocationGWT, Integer>() {
 							public Integer getValueForObject(LocationGWT object) { return object.getMaxOccupancy(); }
 						},
@@ -263,8 +267,6 @@ public class LocationsView extends VerticalPanel implements IViewContents {
 			public void onSuccess(List<LocationGWT> result){
 				assert(result != null);
 				popup.hide();
-				for (LocationGWT location : result)
-					nextLocationID = Math.max(nextLocationID, location.getID() + 1);
 				table.addRows(result);
 			}
 		});

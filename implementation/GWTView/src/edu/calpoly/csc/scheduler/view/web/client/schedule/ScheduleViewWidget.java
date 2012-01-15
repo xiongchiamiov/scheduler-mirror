@@ -431,7 +431,11 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
   final boolean atHalfHour = rowIsAtHalfHour(row);
   CourseGWT course = new CourseGWT();
   course.setDept(scheduleItem.getDept());
-  course.setCatalogNum(scheduleItem.getCatalogNum());
+  
+  // TODO: yero make scheduleItem.getCatalogNum() return a string
+  int catalogNumInt = scheduleItem.getCatalogNum();
+  String catalogNumString = Integer.toString(catalogNumInt);
+  course.setCatalogNum(catalogNumString);
 
   greetingService.rescheduleCourse(scheduleItem, days, startHour, atHalfHour,
     inSchedule, new AsyncCallback<ScheduleItemList>()
@@ -507,12 +511,14 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel>
  public int getSectionsOnSchedule(CourseGWT course)
  {
   String dept = course.getDept();
-  int catalogNum = course.getCatalogNum();
+  String catalogNum = course.getCatalogNum();
+  int catalogNumInt = Integer.parseInt(catalogNum);
   int count = 0;
 
   for (ScheduleItemGWT item : scheduleItems)
   {
-   if (item.getDept() == dept && item.getCatalogNum() == catalogNum)
+	  // TODO: yero compare item.getCatalogNum() to catalogNum (the string) instead of catalogNumInt (the int)
+   if (item.getDept() == dept && item.getCatalogNum() == catalogNumInt)
    {
     count++;
    }

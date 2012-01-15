@@ -429,12 +429,12 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
-	public int addCourse(CourseGWT toAdd) {
+	public CourseGWT addCourse(CourseGWT toAdd) {
 		toAdd.setID(-1);
 		Course course = Conversion.fromGWT(toAdd);
 		model.saveCourse(course);
 		assert(course.getDbid() != -1);
-		return course.getDbid();
+		return Conversion.toGWT(course);
 	}
 
 	@Override
@@ -452,12 +452,12 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
-	public int addInstructor(InstructorGWT toAdd) {
+	public InstructorGWT addInstructor(InstructorGWT toAdd) {
 		toAdd.setID(-1);
 		Instructor instructor = Conversion.fromGWT(toAdd, getCoursesByID());
 		model.saveInstructor(instructor);
 		assert(instructor.getDbid() != -1);
-		return instructor.getDbid();
+		return Conversion.toGWT(instructor);
 	}
 
 	@Override
@@ -475,12 +475,12 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
-	public int addLocation(LocationGWT toAdd) {
+	public LocationGWT addLocation(LocationGWT toAdd) {
 		toAdd.setID(-1);
 		Location location = Conversion.fromGWT(toAdd);
 		model.saveLocation(location);
 		assert(location.getDbid() != -1);
-		return location.getDbid();
+		return Conversion.toGWT(location);
 	}
 
 	@Override

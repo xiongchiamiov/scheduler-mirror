@@ -46,43 +46,54 @@ public abstract class Conversion {
 		result.setLastName(instructor.getLastName());
 		result.setRoomNumber(instructor.getRoomNumber());
 		result.setBuilding(instructor.getBuilding());
-		System.out.println("instructor disabled on toGWT? " + instructor.getDisability());
 		result.setDisabilities(instructor.getDisability());
 		result.setMaxWtu(instructor.getMaxWTU());
 		result.setCurWtu(instructor.getCurWtu());
 		result.setFairness(instructor.getFairness());
 		result.setGenerosity(instructor.getGenerosity());
 
-		HashMap<Course, Integer> sourceCoursePreferences = instructor
-				.getCoursePreferences();
 		HashMap<Integer, Integer> coursePreferences = new LinkedHashMap<Integer, Integer>();
-		for (Course course : sourceCoursePreferences.keySet()) {
-			coursePreferences.put(course.getDbid(),
-					sourceCoursePreferences.get(course));
+		try {
+			HashMap<Course, Integer> sourceCoursePreferences = instructor
+					.getCoursePreferences();
+			for (Course course : sourceCoursePreferences.keySet()) {
+				coursePreferences.put(course.getDbid(),
+						sourceCoursePreferences.get(course));
+			}
+		}
+		catch (Exception e) {
+			System.out.println("Unable to convert course preferences!");
+			e.printStackTrace();
 		}
 		result.setCoursePreferences(coursePreferences);
-
-		HashMap<Day, LinkedHashMap<Time, TimePreference>> sourceTimePreferences = instructor
-				.getTimePreferences();
+	
+		
 		Map<Integer, Map<Integer, TimePreferenceGWT>> timePreferences = new TreeMap<Integer, Map<Integer, TimePreferenceGWT>>();
-		for (Day sourceDay : sourceTimePreferences.keySet()) {
-			LinkedHashMap<Time, TimePreference> sourceTimePreferencesForDay = sourceTimePreferences
-					.get(sourceDay);
-			Integer day = Conversion.toGWT(sourceDay);
-			Map<Integer, TimePreferenceGWT> timePreferencesForDay = new TreeMap<Integer, TimePreferenceGWT>();
-			for (Time sourceTime : sourceTimePreferencesForDay.keySet()) {
-				TimePreference sourceTimePreferencesForTime = sourceTimePreferencesForDay
-						.get(sourceTime);
-				Integer time = Conversion.toGWT(sourceTime);
-				TimePreferenceGWT timePreferencesForTime = Conversion
-						.toGWT(sourceTimePreferencesForTime);
-				timePreferencesForDay.put(time, timePreferencesForTime);
+		try {
+			HashMap<Day, LinkedHashMap<Time, TimePreference>> sourceTimePreferences = instructor
+					.getTimePreferences();
+			for (Day sourceDay : sourceTimePreferences.keySet()) {
+				LinkedHashMap<Time, TimePreference> sourceTimePreferencesForDay = sourceTimePreferences
+						.get(sourceDay);
+				Integer day = Conversion.toGWT(sourceDay);
+				Map<Integer, TimePreferenceGWT> timePreferencesForDay = new TreeMap<Integer, TimePreferenceGWT>();
+				for (Time sourceTime : sourceTimePreferencesForDay.keySet()) {
+					TimePreference sourceTimePreferencesForTime = sourceTimePreferencesForDay
+							.get(sourceTime);
+					Integer time = Conversion.toGWT(sourceTime);
+					TimePreferenceGWT timePreferencesForTime = Conversion
+							.toGWT(sourceTimePreferencesForTime);
+					timePreferencesForDay.put(time, timePreferencesForTime);
+				}
+				timePreferences.put(day, timePreferencesForDay);
 			}
-			timePreferences.put(day, timePreferencesForDay);
+		}
+		catch (Exception e) {
+			System.out.println("Unable to convert time preferences!");
+			e.printStackTrace();
 		}
 		result.settPrefs(timePreferences);
-		assert (result.gettPrefs().size() == instructor.getTimePreferences()
-				.size());
+		assert (result.gettPrefs().size() == instructor.getTimePreferences().size());
 
 		return result;
 	}
@@ -164,7 +175,11 @@ public abstract class Conversion {
 		String instructor = (schdItem.getInstructor() == null ? "" : schdItem
 				.getInstructor().getName());
 		String courseDept = schdItem.getCourse().getDept();
-		int courseNum = schdItem.getCourse().getCatalogNum();
+		
+		// TODO: holland make getCatalogNum() return a string
+		int courseNumInt = schdItem.getCourse().getCatalogNum();
+		String courseNum = Integer.toString(courseNumInt);
+		
 		int section = schdItem.getSection();
 
 		ArrayList<Integer> dayNums = new ArrayList<Integer>();
@@ -179,15 +194,22 @@ public abstract class Conversion {
 				.getLocation().toString());
 		CourseGWT course = toGWT(schdItem.getCourse());
 
+		// TODO: yero make this constructor take courseNum (string) instead of courseNumIntForSI (int)
+		int courseNumIntForSI = Integer.parseInt(courseNum);
 		return new ScheduleItemGWT(course, courseName, instructor, courseDept,
-				courseNum, section, dayNums, startTimeHour, startTimeMin,
+				courseNumIntForSI, section, dayNums, startTimeHour, startTimeMin,
 				endTimeHour, endTimeMin, location, isConflicted);
 	}
 
 	public static CourseGWT toGWT(Course course) {
 		CourseGWT newCourse = new CourseGWT();
 		newCourse.setID(course.getDbid());
-		newCourse.setCatalogNum(course.getCatalogNum());
+		
+		// TODO: holland make getCatalogNum() return a string
+		int courseNumInt = course.getCatalogNum();
+		String courseNumString = Integer.toString(courseNumInt);
+		newCourse.setCatalogNum(courseNumString);
+		
 		newCourse.setCourseName(course.getName());
 		newCourse.setDept(course.getDept());
 		newCourse.setDays(Conversion.toGWT(course.getDays()));
@@ -277,7 +299,12 @@ public abstract class Conversion {
 		Course newCourse = new Course();
 		newCourse.setDbid(course.getID());
 		newCourse.setName(course.getCourseName());
-		newCourse.setCatalogNum(course.getCatalogNum());
+		
+		// TODO: holland make setCatalogNum() take a string
+		String catalogNum = course.getCatalogNum();
+		int catalogNumInt = Integer.parseInt(catalogNum);
+		newCourse.setCatalogNum(catalogNumInt);
+		
 		newCourse.setWtu(course.getWtu());
 		newCourse.setScu(course.getScu());
 		newCourse.setType(course.getType());

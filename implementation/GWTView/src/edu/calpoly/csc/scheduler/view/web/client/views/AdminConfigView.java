@@ -54,7 +54,7 @@ public class AdminConfigView extends VerticalPanel implements IViewContents {	/*
 			}
 		}, new OsmTable.ModifyHandler<UserDataGWT>() {
 			@Override
-			public void add(UserDataGWT toAdd, AsyncCallback<Integer> callback) {
+			public void add(UserDataGWT toAdd, AsyncCallback<UserDataGWT> callback) {
 				throw new UnsupportedOperationException();
 			}
 

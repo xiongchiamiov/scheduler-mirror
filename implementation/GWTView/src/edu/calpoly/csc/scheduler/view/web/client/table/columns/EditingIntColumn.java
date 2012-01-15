@@ -8,8 +8,8 @@ import edu.calpoly.csc.scheduler.view.web.shared.Identified;
 
 // TODO: make the intcolumn handle up and down arrows, thatd be sick.
 
-public class IntColumn<ObjectType extends Identified> extends EditingStringColumn<ObjectType> {
-	public IntColumn(final IStaticGetter<ObjectType, Integer> getter, final IStaticSetter<ObjectType, Integer> setter, final IStaticValidator<ObjectType, Integer> validator) {
+public class EditingIntColumn<ObjectType extends Identified> extends EditingStringColumn<ObjectType> {
+	public EditingIntColumn(final IStaticGetter<ObjectType, Integer> getter, final IStaticSetter<ObjectType, Integer> setter, final IStaticValidator<ObjectType, Integer> validator) {
 		super(
 				new IStaticGetter<ObjectType, String>() {
 					public String getValueForObject(ObjectType object) {

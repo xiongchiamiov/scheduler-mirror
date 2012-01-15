@@ -6,8 +6,11 @@ import java.util.LinkedHashSet;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
@@ -48,7 +51,7 @@ class EditingMultiselectCell extends SimplePanel implements OsmTable.Cell, OsmTa
 		VerticalPanel vp = new VerticalPanel();
 		
 		for (Entry<String, String> entry : options.entrySet()) {
-			CheckBox cb = new CheckBox();
+			final CheckBox cb = new CheckBox();
 			cb.setText(entry.getKey());
 			checkboxesByLabel.put(entry.getKey(), cb);
 			vp.add(cb);
@@ -110,14 +113,14 @@ class EditingMultiselectCell extends SimplePanel implements OsmTable.Cell, OsmTa
 	public Set<String> getValue() {
 		Set<String> result = new LinkedHashSet<String>();
 		for (Entry<String, CheckBox> checkboxByLabel : checkboxesByLabel.entrySet())
-			if (checkboxByLabel.getValue().getValue())
+			if (checkboxByLabel.getValue().isChecked())
 				result.add(options.get(checkboxByLabel.getKey()));
 		return result;
 	}
 	
 	public void setValue(Set<String> wantedValues) {
 		for (Entry<String, CheckBox> entry : checkboxesByLabel.entrySet())
-			entry.getValue().setValue(wantedValues.contains(entry.getKey()));
+			entry.getValue().setChecked(wantedValues.contains(options.get(entry.getKey())));
 
 		readingLabel.clear();
 		readingLabel.add(new HTML(assembleValuesString()));

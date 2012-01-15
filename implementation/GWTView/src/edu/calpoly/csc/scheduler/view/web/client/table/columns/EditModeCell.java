@@ -2,6 +2,7 @@ package edu.calpoly.csc.scheduler.view.web.client.table.columns;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -13,28 +14,22 @@ class EditModeCell extends SimplePanel implements OsmTable.Cell, OsmTable.Readin
 	boolean editing;
 	IRowForCell row;
 	
-	FocusPanel editingIcon;
-	FocusPanel readingIcon;
+	Button doneButtonVisibleWhileEditing;
+	Button editButtonVisibleWhileReading;
 	
 	EditModeCell(final IRowForCell row) {
 		this.row = row;
 		
 		editing = false;
 
-		editingIcon = new FocusPanel();
-		editingIcon.addStyleName("icon accept enabled");
-		editingIcon.addClickHandler(new ClickHandler() {
-			@Override
+		doneButtonVisibleWhileEditing = new Button("Save", new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				row.enterReadingMode();
 				enterReadingMode();
 			}
 		});
-
-		readingIcon = new FocusPanel();
-		readingIcon.addStyleName("icon edit enabled");
-		readingIcon.addClickHandler(new ClickHandler() {
-			@Override
+		
+		editButtonVisibleWhileReading = new Button("Edit", new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				row.enterEditingMode(null);
 			}
@@ -47,7 +42,7 @@ class EditModeCell extends SimplePanel implements OsmTable.Cell, OsmTable.Readin
 		editing = true;
 		assert(editing);
 		clear();
-		add(editingIcon);
+		add(doneButtonVisibleWhileEditing);
 		removeStyleName("reading");
 		addStyleName("writing");
 	}
@@ -56,7 +51,7 @@ class EditModeCell extends SimplePanel implements OsmTable.Cell, OsmTable.Readin
 	public void enterReadingMode() {
 		editing = false;
 		clear();
-		add(readingIcon);
+		add(editButtonVisibleWhileReading);
 		removeStyleName("writing");
 		addStyleName("reading");
 	}

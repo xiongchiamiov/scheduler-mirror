@@ -37,7 +37,7 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 	enum ColumnSortMode { NOT_SORTING, ASCENDING, DESCENDING }
 	
 	public interface ModifyHandler<ObjectType> {
-		void add(ObjectType toAdd, AsyncCallback<Integer> callback);
+		void add(ObjectType toAdd, AsyncCallback<ObjectType> callback);
 		void edit(ObjectType toEdit, AsyncCallback<Void> callback);
 		void remove(ObjectType toRemove, AsyncCallback<Void> callback);
 	}
@@ -107,7 +107,7 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 	}
 	
 	protected class Row implements IRowForColumn<ObjectType> {
-		public final ObjectType object;
+		public ObjectType object;
 		public final Element trElement;
 		public final Cell[] cells;
 		public boolean adding; // Whether or not this row was just added and has not yet been given to the handler
@@ -356,14 +356,17 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 		final int oldObjectID = row.getObject().getID();
 
 		if (row.adding) {
-			saveHandler.add(row.getObject(), new AsyncCallback<Integer>() {
+			saveHandler.add(row.getObject(), new AsyncCallback<ObjectType>() {
 				@Override
-				public void onSuccess(Integer newObjectID) {
+				public void onSuccess(ObjectType newObject) {
 					row.trElement.removeClassName("sending");
 					row.adding = false;
 					
-					rowsByObjectID.remove(oldObjectID);
-					rowsByObjectID.put(newObjectID, row);
+					System.out.println("Changing " + oldObjectID + " to " + newObject.getID());
+
+					rowsByObjectID.remove(row.object.getID());
+					row.object = newObject;
+					rowsByObjectID.put(row.object.getID(), row);
 				}
 				
 				@Override

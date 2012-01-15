@@ -47,13 +47,13 @@ public interface GreetingServiceAsync {
 	
 	void saveCurrentScheduleAs(String schedName, AsyncCallback<Void> callback);
 	
-	void addCourse(CourseGWT toAdd, AsyncCallback<Integer> callback);
+	void addCourse(CourseGWT toAdd, AsyncCallback<CourseGWT> callback);
 	void editCourse(CourseGWT toEdit, AsyncCallback<Void> callback);
 	void removeCourse(CourseGWT toRemove, AsyncCallback<Void> callback);
-	void addInstructor(InstructorGWT toAdd, AsyncCallback<Integer> callback);
+	void addInstructor(InstructorGWT toAdd, AsyncCallback<InstructorGWT> callback);
 	void editInstructor(InstructorGWT toEdit, AsyncCallback<Void> callback);
 	void removeInstructor(InstructorGWT toRemove, AsyncCallback<Void> callback);
-	void addLocation(LocationGWT toAdd, AsyncCallback<Integer> callback);
+	void addLocation(LocationGWT toAdd, AsyncCallback<LocationGWT> callback);
 	void editLocation(LocationGWT toEdit, AsyncCallback<Void> callback);
 	void removeLocation(LocationGWT toRemove, AsyncCallback<Void> callback);
 }

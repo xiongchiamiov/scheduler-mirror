@@ -1,10 +1,8 @@
 package edu.calpoly.csc.scheduler.view.web.client.table.columns;
 
-import java.rmi.server.RemoteStub;
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.FocusPanel;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -15,45 +13,33 @@ class DeleteCell extends SimplePanel implements OsmTable.Cell, OsmTable.EditingM
 	boolean editing;
 	IRowForCell row;
 	
-	FocusPanel editingIcon;
-	FocusPanel readingIcon;
+	Button deleteButton;
 	
 	DeleteCell(final IRowForCell row) {
 		this.row = row;
 		
 		editing = false;
-
-		editingIcon = new FocusPanel();
-		editingIcon.addStyleName("delete icon disabled");
 		
-		readingIcon = new FocusPanel();
-		readingIcon.addStyleName("delete icon enabled");
-		readingIcon.addClickHandler(new ClickHandler() {
-			@Override
+		deleteButton = new Button("Delete", new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				row.delete();
 			}
 		});
+		
+		add(deleteButton);
 	}
 	
 	@Override
 	public void enterEditingMode() {
 		assert(!editing);
 		editing = true;
-		assert(editing);
-		clear();
-		add(editingIcon);
-		removeStyleName("reading");
-		addStyleName("writing");
+		deleteButton.setEnabled(false);
 	}
 
 	@Override
 	public void enterReadingMode() {
 		editing = false;
-		clear();
-		add(readingIcon);
-		removeStyleName("writing");
-		addStyleName("reading");
+		deleteButton.setEnabled(true);
 	}
 	
 	@Override

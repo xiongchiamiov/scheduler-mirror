@@ -25,7 +25,7 @@ import edu.calpoly.csc.scheduler.view.web.client.table.columns.ButtonColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.ButtonColumn.ClickCallback;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingCheckboxColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingStringColumn;
-import edu.calpoly.csc.scheduler.view.web.client.table.columns.IntColumn;
+import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingIntColumn;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.TimePreferenceGWT;
 
@@ -56,7 +56,7 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 	
 	private final String scheduleName;
 	private OsmTable<InstructorGWT> table;
-	int nextInstructorID = 1;
+	int nextInstructorID = -2;
 	
 	ViewFrame myFrame;
 
@@ -75,6 +75,10 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 		return Window.confirm("You have unsaved data which will be lost. Are you sure you want to navigate away?");
 	}
 	
+	private int generateTemporaryInstructorID() {
+		return nextInstructorID--;
+	}
+	
 	@Override
 	public void afterPush(ViewFrame frame) {
 		this.myFrame = frame;
@@ -91,14 +95,14 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 				new IFactory<InstructorGWT>() {
 					public InstructorGWT create() {
 						return new InstructorGWT(
-								nextInstructorID++, "", "", "", "", "", false, 5, 5, 0, 0,
+								generateTemporaryInstructorID(), "", "", "", "", "", false, 5, 5, 0, 0,
 								new HashMap<Integer, Map<Integer, TimePreferenceGWT>>(),
 								new HashMap<Integer, Integer>());
 					}
 				},
 				new OsmTable.ModifyHandler<InstructorGWT>() {
 					@Override
-					public void add(InstructorGWT toAdd, AsyncCallback<Integer> callback) {
+					public void add(InstructorGWT toAdd, AsyncCallback<InstructorGWT> callback) {
 						service.addInstructor(toAdd, callback);
 					}
 					@Override
@@ -173,7 +177,7 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 				new MemberIntegerComparator<InstructorGWT>(new IStaticGetter<InstructorGWT, Integer>() {
 					public Integer getValueForObject(InstructorGWT object) { return object.getMaxWtu(); }
 				}),
-				new IntColumn<InstructorGWT>(
+				new EditingIntColumn<InstructorGWT>(
 						new IStaticGetter<InstructorGWT, Integer>() {
 							public Integer getValueForObject(InstructorGWT object) { return object.getMaxWtu(); }
 						},
@@ -233,8 +237,6 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 //				System.out.println("onsuccess got response");
 				assert(result != null);
 				popup.hide();
-				for (InstructorGWT instr : result)
-					nextInstructorID = Math.max(nextInstructorID, instr.getID() + 1);
 				table.addRows(result);
 			}
 		});
