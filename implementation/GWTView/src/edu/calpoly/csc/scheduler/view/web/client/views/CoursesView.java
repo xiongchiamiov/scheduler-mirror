@@ -32,6 +32,7 @@ import edu.calpoly.csc.scheduler.view.web.client.table.columns.ButtonColumn.Clic
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingStringColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingIntColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingSelectColumn;
+import edu.calpoly.csc.scheduler.view.web.client.table.columns.StringColumn;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.WeekGWT;
 
@@ -263,66 +264,13 @@ public class CoursesView extends VerticalPanel implements IViewContents {
 				}));
 		
 		table.addColumn(
-				COURSE_LAB,
+				"Associations",
 				"4em",
 				true,
 				null,
-				new ButtonColumn<CourseGWT>(
-						"Lab",
-						new ClickCallback<CourseGWT>() {
-							public void buttonClickedForObject(CourseGWT object, Button button) {
-								
-								final PopupPanel popup = new PopupPanel(true);
-						    	final CourseGWT fobject = object;
-						    	final Button fButton = button;
-						    	final ListBox listbox = new ListBox();
-						    	
-						    	popup.setGlassEnabled(true);
-						    	popup.addCloseHandler(new CloseHandler<PopupPanel>(){
-									public void onClose(CloseEvent<PopupPanel> event) {
-										labSelectionHandler(listbox, fobject, fButton);
-									}
-						    	});
-						    	
-						    	// get lab options
-						    	ArrayList<String> labOptions = new ArrayList<String>();
-						    	labOptions.add("");
-						  		for(CourseGWT c : table.getObjects()){
-						  			/*
-						  			if(c.getType().equals(LAB) && 
-						  					!c.getDept().trim().equals("")){
-						  				labOptions.add(c.getDept().trim() + c.getCatalogNum());
-						  			}
-						  			*/
-						  			labOptions.add(c.getDept().trim() + c.getCatalogNum());
-						  		}
-						  		
-						  		Collections.sort(labOptions);
-						  		
-						  		listbox.addChangeHandler(new ChangeHandler(){
-						  			public void onChange(ChangeEvent event){
-						  				labSelectionHandler(listbox, fobject, fButton);
-						  				popup.hide();
-						  			}
-						  		});
-						  		
-						  		for(int i = 0; i < labOptions.size(); i++){
-						  			String s = labOptions.get(i);
-						  			listbox.addItem(s);
-						  			if((object.getLabDept().trim() + object.getLabCatalogNum()).equals(s)){
-						  				listbox.setSelectedIndex(i);
-						  			}
-						  		}
-						    	
-						  		popup.setWidget(listbox);
-						  		popup.center();
-		
-								if(object.getLabDept().trim().equals(""))
-									button.setHTML("(none)");
-								else
-									button.setHTML(object.getLabDept().trim() + object.getLabCatalogNum());
-							}
-							}));
+				new StringColumn<CourseGWT>(new IStaticGetter<CourseGWT, String>() {
+					public String getValueForObject(CourseGWT object) { return "Unimplemented"; }
+				}));
 
 		this.add(table);
 		

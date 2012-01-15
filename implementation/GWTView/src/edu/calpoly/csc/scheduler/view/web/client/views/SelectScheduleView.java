@@ -77,7 +77,10 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 					@Override
 					public void onSuccess(Integer newSchedID) {
 						popup.hide();
-						myFrame.frameViewAndPushAboveMe(new AdminScheduleNavView(service, menuBar, userID, username, newSchedID, tempName));
+						if (myFrame.canPopViewsAboveMe()) {
+							myFrame.popFramesAboveMe();
+							myFrame.frameViewAndPushAboveMe(new AdminScheduleNavView(service, menuBar, userID, username, newSchedID, tempName));
+						}
 					}
 				});
 			}

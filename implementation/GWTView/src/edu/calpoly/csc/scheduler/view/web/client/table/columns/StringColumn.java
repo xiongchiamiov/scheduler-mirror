@@ -1,7 +1,5 @@
 package edu.calpoly.csc.scheduler.view.web.client.table.columns;
 
-import java.util.Comparator;
-
 import com.google.gwt.user.client.ui.HTML;
 
 import edu.calpoly.csc.scheduler.view.web.client.table.IStaticGetter;
@@ -14,7 +12,7 @@ import edu.calpoly.csc.scheduler.view.web.shared.Identified;
 public class StringColumn<ObjectType extends Identified> implements OsmTable.IColumn<ObjectType> {
 	protected IStaticGetter<ObjectType, String> getter;
 	
-	public StringColumn(String name, String width, final IStaticGetter<ObjectType, String> getter, final Comparator<String> sorter) {
+	public StringColumn(final IStaticGetter<ObjectType, String> getter) {
 		this.getter = getter;
 	}
 
