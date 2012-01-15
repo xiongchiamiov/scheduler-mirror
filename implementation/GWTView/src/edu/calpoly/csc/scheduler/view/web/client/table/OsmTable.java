@@ -153,7 +153,7 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 
 		addStyleName("osmtableContainer");
 		
-		createNewObjectButtons();
+		addNewObjectButton();
 		
 		createHeaders();
 		
@@ -162,18 +162,25 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 		table.setCellPadding(0);
 		table.setCellSpacing(0);
 		add(table);
+		
+		createNewObjectTabThingAfterTable();
+
+		addNewObjectButton();
 	}
 	
-	private void createNewObjectButtons() {
+	private void addNewObjectButton() {
+		add(new Button("New", new ClickHandler() {
+			public void onClick(ClickEvent event) { addNewRow(); }
+		}));
+	}
+	
+	// Adds a focus panel after the table, so if you tab past everything else, it creates a new row
+	private void createNewObjectTabThingAfterTable() {
 		FocusPanel newObjectPanel = new FocusPanel();
 		newObjectPanel.addFocusHandler(new FocusHandler() {
 			public void onFocus(FocusEvent event) { addNewRow(); }
 		});
 		add(newObjectPanel);
-		
-		add(new Button("New", new ClickHandler() {
-			public void onClick(ClickEvent event) { addNewRow(); }
-		}));
 	}
 	
 	private void createHeaders() {
