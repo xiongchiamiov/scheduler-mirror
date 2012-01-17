@@ -1,0 +1,51 @@
+.sz 11
+.ds ~ /users/gfisher/nroff
+. so \*~/stdhdr.me
+.ds short_date 30mar04
+.ds long_date 30 March 2004
+.if !\nh \{\
+.    he ''''
+.    fo ''''
+.\}
+.(TI "Minutes of the 405 In-Class Meeting, 13 January 12"
+.(S +2
+\fBMinutes of the 405 In-Class Meeting
+Minutes of the X Team Meeting
+.hbr
+12:30 - 1:00PM Friday 13 January 12\fP
+.)S
+.)TI
+.spt
+\fBPresent\fP: Evan, Kaylene, Salome, Adam, James, Gene
+.sp .5v
+\fBAbsent\fP: None
+.sp .5v
+\fBExcused:\fP: Rest of class was working on acceptance testing
+.br
+.pp
+We discussed a few important issues of requirements related to course numbering
+and lecture/lab association.  The following decisions were made:
+.(L 1
+.le
+The course number will be represented as a string instead of an integer.
+.le
+A schedule item can be lecture, a lab associated with a course (aka, tethered),
+or a lab not associated with a course (aka, untethered).
+.le
+In the UI, a course will have a list of zero or more labs associated with it,
+and a lab will have zero or one course with which it is associated.  The
+lecture/lab associations are viewable in both directions in the UI.  That is,
+the user can see (a) what labs are associated with a course, and (b) the course
+with which a lab is associated.  As is currently the case, courses do not need
+to have any associated labs.  Adam had a specific idea for showing the
+lecture/lab association as an indented list of labs below each course that has
+labs.  This idea was viewed favorably by everyone.
+.)L 1
+.pep
+We discussed some additional ideas for the way the user interface will be
+updated to support these decisions, as well as how these decisions will affect
+the scheduling algorithm and data model.  Kaylene and Evan are going to do some
+mock ups of interface ideas.  Adam and Salome are going to study the algorithm
+and data model.  We will resume discussion in class during week 3.
+.pe
+.\" LocalWords:  nh fo Evan Kaylene Salome UI aka untethered
