@@ -12,12 +12,22 @@ Department</strong>
 </font>
 </p>
 <br>
-<br>
 <h3>
 Entering Resource Data
 </h3>
 <p>
-<em>See below for what to put here.</em>
+<u>Good</u>
+<ul>
+<li>Tabbed navigation and enter worked as expected.</li>
+<li>When editing, the images to the left of the row successfully changed between
+pencil/red x and checkmark.</li>
+</ul>
+<u>Issues</u>
+<ul>
+<li>There is no way to enter an ACT or IND type in the schedule.</li>
+<li>Labs cannot be associated with a lecture, and they are not stored as labs
+when refreshing the tab.</li>
+</ul>
 </p>
 
 <br>
@@ -25,7 +35,22 @@ Entering Resource Data
 Generating a Schedule
 </h3>
 <p>
-<em>See below for what to put here.</em>
+<u>Good</u>
+<ul>
+<li>All of the classes from the Courses tab were scheduled, but they
+did not have specific professors associated with a course.</li>
+</ul>
+<u>Issues</u>
+<ul>
+<li>Preferences are not working right now, so all classes were scheduled at 
+7am MWF.</li>
+<li>Classes were not scheduled for the appropriate amount of hours. Classes
+that are supposed to be 1 hour or 4 hours a week were all offered MWF 7-8am.</li>
+<li>Schedule generation took around 15-20 seconds, and the loading wheel animation
+froze partway through.
+<li>Courses that are crosslisted, such as MU 171 and MU 371, cannot be scheduled
+at the same time, even though they are essentially the same course.
+</ul>
 </p>
 
 <br>
@@ -33,7 +58,19 @@ Generating a Schedule
 Editing the Schedule
 </h3>
 <p>
-<em>See below for what to put here.</em>
+<u>Good</u>
+<ul>
+<li>Drag and drop works, although sluggish.</li>
+<li>Moving a course successfully updates the schedule and information about
+a scheduled item.</li>
+</ul>
+<u>Issues</u>
+<ul>
+<li>Editing the schedule is extremely sluggish (taking about 15-20 seconds 
+to refresh the view when moving an item).</li>
+<li>There is no way to cancel the movement of a schedule item after dragging
+to a new cell</li>
+</ul>
 </p>
 
 <br>
@@ -41,56 +78,11 @@ Editing the Schedule
 Other Issues
 </h3>
 <p>
-<em>See below for what to put here.</em>
+<ul>
+<li>The "New" button is always at the top of the page for resource management.
+This is very cumbersome when the page is full and you have to scroll to the top
+in order to create a new row.
+</ul>
 </p>
-
-<br>
-<br>
-<br>
-<font color=red><strong><em>The following are instructions for filling in this
-file; delete the instructions when done.</em></strong></font>
-<ol type=1>
-<p> <li>
-Fill in the appropriate department name where "X" appears above.
-<p>
-<p> <li>
-Under the heading "<strong>Entering Resource Data</strong>", describe any
-problems that arose when entering database records for instructors, courses, or
-locations.  If there were no problems, say "All data successfully entered."
-<p>
-<p> <li>
-Under the heading "<strong>Generating a Schedule</strong>", describe the
-quality of the schedule that was automatically generated, in particular:
-<ol type=a>
-<p> <li>
-Did it contain all classes?
-<p> <li>
-Were they at reasonable times?
-<p> <li>
-Were there any scheduling conflicts?
-</ol>
-<br>
-<br>
-If the exact Winter 2012 was generated directly, say "Winter 2012 schedule
-successfully generated, with no edits."
-<br>
-<br>
-<em>NOTE:</em> If you want to force the generation of a correct schedule, you
-can try to enter specific instructor preferences to ensure that one instructor
-gets exactly the classes that are scheduled for that instructor in the Winter
-2012.  It would be better to enter preferences more broadly, where the actual
-Winter 2012 times as courses are within the preference range of the instructor
-who got them.
-<p> <li>
-Under the heading "<strong>Editing the Schedule</strong>", describe how close
-you were able to get to the actual Winter 2012 schedule for the department,
-using the Scheduler program editing functionality.  I.e., you want to produce
-precisely the schedule that is published by the department for Winter 2012.  If
-there were no problems, say "Winter 2012 schedule successfully produced."
-<p> <li>
-Under the heading "<strong>Other Issues</strong>" Describe any other problems
-or issues that arose during the schedule generation process, including UI look-
-and-feel and overall usability.
-</ol>
 </body>
 </html>
