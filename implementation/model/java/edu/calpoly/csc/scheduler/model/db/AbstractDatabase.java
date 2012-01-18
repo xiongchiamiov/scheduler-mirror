@@ -16,7 +16,7 @@ public abstract class AbstractDatabase<T extends DbData>
    //SQL Data types
    public static final String SQLINT = "int";
    public static final String SQLVARCHAR = "varchar(255)";
-   public static final String SQLBLOB = "blob";
+   public static final String SQLBLOB = "longblob";
    public static final String SQLBOOLEAN = "tinyint";
    //SQL extra conditions
    public static final String SQLNOTNULL = "NOT NULL";
