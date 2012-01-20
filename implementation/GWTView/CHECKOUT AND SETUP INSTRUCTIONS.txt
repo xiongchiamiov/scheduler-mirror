@@ -1,6 +1,6 @@
 Get Java EE Eclipse
 
-make sure you have the GWT plugin for eclipse.
+make sure you have the GWT plugin for eclipse and GWT developer plugin for your respective browser
 
 checkout the project
 In /implementation/GWTView/:
