@@ -1,0 +1,58 @@
+<html>
+<head>
+<title>
+Initial Report on Generating Winter 2012 Schedule for X Department
+</title>
+</head>
+<body bgcolor=white>
+<p align=center>
+<font size=+2>
+<strong>Initial Report on Generating Winter 2012 Schedule for X
+Department</strong>
+</font>
+</p>
+<br>
+<br>
+<h3>
+Entering Resource Data
+</h3>
+<p>
+I found the following problems:<br />
+https://scheduler.atlassian.net/browse/SCHED-47 <br />
+https://scheduler.atlassian.net/browse/SCHED-52 <br />
+</p>
+
+<br>
+<h3>
+Generating a Schedule
+</h3>
+<p>
+a. The generated schedule did contain all the classes. <br />
+b. The algorithm scheduled all of the classes during the 7-8am time slot on MWF due to the fact preferences are not working correctly.<br />
+c. No scheduling conflicts were found.<br />
+</p>
+
+<br>
+<h3>
+Editing the Schedule
+</h3>
+<p>
+The BUS schedule was not fully created successfully. See some of the bugs linked above. Also the following:<br />
+https://scheduler.atlassian.net/browse/SCHED-108<br />
+Also, one other issue that I cannot reproduce. I auto-generated all of the BUS classes. Then when I noticed that it put them all at 7 every day, I dragged them each off individually. Then I tried to place them back on the schedule and I kept getting a 500 error. Something about the database? I haven't been able to reproduce the problem, though, so I don't want to log an official issue on this just yet.
+</p>
+
+<br>
+<h3>
+Other Issues
+</h3>
+<p>
+Just some trivial things that would be nice to have:<br />
+https://scheduler.atlassian.net/browse/SCHED-57<br />
+https://scheduler.atlassian.net/browse/SCHED-51 <br />
+</p>
+
+<br>
+<br>
+</body>
+</html>
