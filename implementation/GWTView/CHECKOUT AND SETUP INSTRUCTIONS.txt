@@ -1,8 +1,11 @@
-first, make sure you have the GWT plugin for eclipse.
+Get Java EE Eclipse
+
+make sure you have the GWT plugin for eclipse.
 
 checkout the project
-copy the file ".project template" and name it to ".project"
-copy the file ".classpath template" and name it to ".classpath"
+In /implementation/GWTView/:
+- copy the file ".project template" and name it to ".project"
+- copy the file ".classpath template" and name it to ".classpath"
 import the GWTView project into eclipse (import -> General -> existing projects)
 do a clean and a build. you should get a fuckton of errors about various classes not found. this is normal.
 right click on the GWTView project, hit properties
@@ -13,22 +16,33 @@ hit Finish.
 Go to the libraries tab (still in java build path screen)
 Hit add external jar. add repo/implementation/model/java/mysql-connector-java-5.0.8-bin.jar.
 Hit add external jar. add repo/implementation/GWTView/gwt-dnd-3.1.2.jar.
+Hit add external jar. add repo/implementation/GWTView/war/WEB-INF/lib/commons-fileupload-1.2.2.jar
+Hit add external jar. add repo/implementation/GWTView/war/WEB-INF/lib/guava-r09.jar
+Hit add external jar. add repo/implementation/model/java/javacsv.jar
+
 also add the "dnd" jar by clicking on "Add JARs..." and browsing under GWTView
 get out of the properties menu.
 Do a clean and a build. there should be no errors. (there may be some warnings) There might be a warning about some server missing.
 
-right click on project, Google -> GWT Compile. It should take twenty seconds to a minute, and eventually say Compilation succeeded.
 
-Go to Window -> Show View -> Other.
-Choose Server/Servers.
-Right click in the servers view, hit New -> Server
-Select Apache / Tomcat v7.0 Server, hit next.
-Move GWTView from the available list to the configured list.
+To run,
+Run As -> Web Application
 
-To rebuild and deploy:
-Right click on the project, Google -> GWT Compile.
-Once its done, right click on the project, Run As -> Run on Server
-On the dialog that comes up, hit Finish.
+
+
+Optional (only if you want to have the ability to compile a faster version, the compile takes longer though):
+	right click on project, Google -> GWT Compile. It should take twenty seconds to a minute, and eventually say Compilation succeeded.
+	Go to Window -> Show View -> Other.
+	Choose Server/Servers.
+	Right click in the servers view, hit New -> Server
+	Select Apache / Tomcat v7.0 Server, hit next.
+	Move GWTView from the available list to the configured list.
+
+	To rebuild and deploy:
+	Right click on the project, Google -> GWT Compile.
+	If it asks which entry point to use, select edu.calpoly.csc.scheduler.view.web.GWTView
+	Once its done, right click on the project, Run As -> Run on Server
+	On the dialog that comes up, hit Finish.
 
 
 If you ever get an error in the application that says "java.lang.ClassNotFoundException: com.mysql.jdbc.Driver" or "Error connecting to the database.":
