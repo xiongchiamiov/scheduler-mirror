@@ -1,0 +1,57 @@
+<html>
+<head>
+<title>
+Initial Report on Generating Winter 2012 Schedule for GRC Department
+</title>
+</head>
+<body bgcolor=white>
+<p align=center>
+<font size=+2>
+<strong>Initial Report on Generating Winter 2012 Schedule for GRC Department</strong>
+</font>
+</p>
+<br>
+<br>
+<h3>
+Entering Resource Data
+</h3>
+<p>
+There seems to be an issue creating labs. I made GRC 201, and another GRC 201 with the same course name as well, and it complained because they were identical. I then changed the course name for the lab section to end in "lab", and it stopped complaining. However, when I reload the page, the lecture section is gone. Apparently there was an error on the back end that never made it to the user, so the user continues thinking it got saved correctly.
+</p>
+<p>
+Course preferences do not work, either they aren't being saved or they aren't being loaded correctly, because it always reverts to the default.
+</p>
+
+<br>
+<h3>
+Generating a Schedule
+</h3>
+<p>
+The generated schedule I had put everything at 7-8am. On top of that, it was ridiculously slow. That was only when it did work. I used to get 500 errors, though I can't reproduce it now.
+</p>
+<p>
+It did appear to contain all of the classes from the courses tab. However, I couldn't enter a lot of the courses into the courses tab, so I suppose we don't know if the scheduling view will work with those courses.
+</p>
+<p>
+I didn't see any scheduling conflicts.
+</p>
+
+<br>
+<h3>
+Editing the Schedule
+</h3>
+<p>
+When it isn't giving me 500 errors, dragging and dropping is incredibly slow. Other than that, it worked fine.
+</p>
+
+<br>
+<h3>
+Other Issues
+</h3>
+<p>
+Many other smaller issues, see the JIRA.
+</p>
+
+<br>
+</body>
+</html>
