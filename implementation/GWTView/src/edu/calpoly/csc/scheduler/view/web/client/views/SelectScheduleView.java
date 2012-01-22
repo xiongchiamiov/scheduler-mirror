@@ -41,7 +41,6 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 	private final MenuBar menuBar;
 	MenuItem fileMenuItem;
 	
-	private final int userID;
 	private final String username;
 	private ListBox listBox;
 	
@@ -49,10 +48,9 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 
 	Map<String, UserDataGWT> availableSchedulesByName;
 	
-	public SelectScheduleView(final GreetingServiceAsync service, final MenuBar menuBar, final int userID, final String username) {
+	public SelectScheduleView(final GreetingServiceAsync service, final MenuBar menuBar, final String username) {
 		this.service = service;
 		this.menuBar = menuBar;
-		this.userID = userID;
 		this.username = username;
 
 		MenuBar fileMenu = new MenuBar(true);
@@ -79,7 +77,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 						popup.hide();
 						if (myFrame.canPopViewsAboveMe()) {
 							myFrame.popFramesAboveMe();
-							myFrame.frameViewAndPushAboveMe(new AdminScheduleNavView(service, menuBar, userID, username, newSchedID, tempName));
+							myFrame.frameViewAndPushAboveMe(new AdminScheduleNavView(service, menuBar, username, newSchedID, tempName));
 						}
 					}
 				});
@@ -109,29 +107,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 		DOM.setElementAttribute(importItem.getElement(), "id", "importItem");
 		fileMenu.addItem(importItem);
 		
-		MenuItem saveItem = new MenuItem("Save", true, new Command() {
-			public void execute() {
-				final LoadingPopup popup = new LoadingPopup();
-				popup.show();
-				service.saveSchedule(new AsyncCallback<Void>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						popup.hide();
-						Window.alert("There was an error saving the schedule: " + caught.getMessage());
-					}
-					@Override
-					public void onSuccess(Void derp) {
-						popup.hide();
-						Window.alert("Schedule has been saved successfully.");
-					}
-				});
-			}
-		});
-		
-		DOM.setElementAttribute(saveItem.getElement(), "id", "saveItem");
-		fileMenu.addItem(saveItem);
-		
-		MenuItem saveAsItem = new MenuItem("Save As...", true, new Command() {
+		MenuItem saveAsItem = new MenuItem("Copy As...", true, new Command() {
 			public void execute() {
 				displaySaveAsPopup();
 			}
@@ -196,7 +172,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 					@Override
 					public void onSuccess(Integer newSchedID) {
 						popup.hide();
-						myFrame.frameViewAndPushAboveMe(new AdminScheduleNavView(service, menuBar, userID, username, newSchedID, tempName));
+						myFrame.frameViewAndPushAboveMe(new AdminScheduleNavView(service, menuBar, username, newSchedID, tempName));
 					}
 				});
 			}
@@ -295,7 +271,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 						myFrame.frameViewAndPushAboveMe(new InstructorScheduleNavView(service, menuBar, scheduleName, permissionAndInstructor.getRight()));
 						break;
 					case 2: // todo: enumify
-						myFrame.frameViewAndPushAboveMe(new AdminScheduleNavView(service, menuBar, userID, username, scheduleID, scheduleName));
+						myFrame.frameViewAndPushAboveMe(new AdminScheduleNavView(service, menuBar, username, scheduleID, scheduleName));
 						break;
 					default:
 						assert(false);
@@ -415,7 +391,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 		final TextBox tb = new TextBox();
 		final DialogBox db = new DialogBox();
 		FlowPanel fp = new FlowPanel();
-		final Button saveButton = new Button("Save", new ClickHandler() {
+		final Button saveButton = new Button("Copy", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {			
 			    final String scheduleName = tb.getText();

@@ -11,7 +11,7 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.IRowForCell;
 
-class EditingCheckboxCell extends SimplePanel implements OsmTable.Cell, OsmTable.ReadingCell, OsmTable.EditingCell, OsmTable.ReadingModeAwareCell, OsmTable.EditingModeAwareCell {
+class EditingCheckboxCell extends SimplePanel implements OsmTable.Cell, OsmTable.ReadingCell, OsmTable.EditingCell, OsmTable.EditingModeAwareCell {
 	boolean editing;
 	IRowForCell row;
 	CheckBox checkbox;
@@ -35,7 +35,7 @@ class EditingCheckboxCell extends SimplePanel implements OsmTable.Cell, OsmTable
 
 		addStyleName("writing");
 		
-		enterReadingMode();
+		exitEditingMode();
 	}
 	
 	@Override
@@ -50,7 +50,7 @@ class EditingCheckboxCell extends SimplePanel implements OsmTable.Cell, OsmTable
 	}
 
 	@Override
-	public void enterReadingMode() {
+	public void exitEditingMode() {
 		editing = false;
 		readingLabel.clear();
 		readingLabel.add(new HTML(checkbox.isChecked() ? "Yes" : "No"));

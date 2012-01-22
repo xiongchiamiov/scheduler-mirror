@@ -12,21 +12,17 @@ public class CourseGWT implements Serializable, Identified {
 	private Integer wtu, scu, numSections;
 	private String type; //will be an object
 	private Integer maxEnroll;
-	private Integer labId;
-	private String labName;
-	private String labDept;
-	private Integer labCatalogNum;
 	private Integer length;
 	private WeekGWT days;
 	private Integer scheduleID;
 	private Integer id;
+	private Integer lectureID;
 	
 	public CourseGWT() { }
 	
 	public CourseGWT(String courseName, String catalogNum, String dept,
 			Integer wtu, Integer scu, Integer numSections, String type,
-			Integer maxEnroll, Integer labId, String labName, String labDept,
-			Integer labCatalogNum, Integer length, WeekGWT days,
+			Integer maxEnroll, Integer lectureID, Integer length, WeekGWT days,
 			Integer scheduleID, Integer id) {
 		super();
 		this.courseName = courseName;
@@ -37,10 +33,7 @@ public class CourseGWT implements Serializable, Identified {
 		this.numSections = numSections;
 		this.type = type;
 		this.maxEnroll = maxEnroll;
-		this.labId = labId;
-		this.labName = labName;
-		this.labDept = labDept;
-		this.labCatalogNum = labCatalogNum;
+		this.lectureID = lectureID;
 		this.length = length;
 		this.days = days;
 		this.scheduleID = scheduleID;
@@ -51,8 +44,7 @@ public class CourseGWT implements Serializable, Identified {
 
 	public CourseGWT(CourseGWT that) {
 		this(that.courseName, that.catalogNum, that.dept, that.wtu, that.scu,
-				that.numSections, that.type, that.maxEnroll, that.labId,
-				that.labName, that.labDept, that.labCatalogNum, that.length,
+				that.numSections, that.type, that.maxEnroll, that.lectureID, that.length,
 				that.days, that.scheduleID, that.id);
 	}
 
@@ -81,11 +73,6 @@ public class CourseGWT implements Serializable, Identified {
 	public WeekGWT getDays()
 	{
 		return days;
-	}
-
-	public int getLabID()
-	{
-	   return labId;
 	}
    
 
@@ -158,38 +145,6 @@ public class CourseGWT implements Serializable, Identified {
 		this.maxEnroll = maxEnroll;
 	}
 
-	public int getLabId() {
-		return labId;
-	}
-
-	public void setLabId(int labId) {
-		this.labId = labId;
-	}
-
-	public String getLabName() {
-		return labName;
-	}
-
-	public void setLabName(String labName) {
-		this.labName = labName;
-	}
-
-	public String getLabDept() {
-		return labDept;
-	}
-
-	public void setLabDept(String labDept) {
-		this.labDept = labDept;
-	}
-
-	public int getLabCatalogNum() {
-		return labCatalogNum;
-	}
-
-	public void setLabCatalogNum(int labCatalogNum) {
-		this.labCatalogNum = labCatalogNum;
-	}
-
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
@@ -239,5 +194,13 @@ public class CourseGWT implements Serializable, Identified {
 //				this.scu.equals(that.scu) &&
 //				this.type.equals(that.type) &&
 //				this.wtu.equals(that.wtu);
+	}
+
+	public int getLectureID() {
+		return lectureID;
+	}
+	
+	public void setLectureID(int lectureID) {
+		this.lectureID = lectureID;
 	}
 }

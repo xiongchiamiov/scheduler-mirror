@@ -21,7 +21,6 @@ import edu.calpoly.csc.scheduler.view.web.shared.UserDataGWT;
  */
 @RemoteServiceRelativePath("greet")
 public interface GreetingService extends RemoteService {
-	// Managing User
 	void login(String username);
 	
 	// Managing Schedules

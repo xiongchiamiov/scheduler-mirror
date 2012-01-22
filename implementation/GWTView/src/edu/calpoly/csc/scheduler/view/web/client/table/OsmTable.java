@@ -5,8 +5,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.dom.client.Element;
@@ -48,12 +46,9 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 	
 	public interface ReadingCell { }
 
-	public interface ReadingModeAwareCell {
-		void enterReadingMode();
-	}
-	
 	public interface EditingModeAwareCell {
 		void enterEditingMode();
+		void exitEditingMode();
 	}
 	
 	public interface EditingCell {
@@ -84,7 +79,7 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 	}
 	
 	public interface IColumn<ObjectType extends Identified> {
-		public abstract Cell createCell(IRowForColumn<ObjectType> object);
+		public abstract Cell createCell(IRowForColumn<ObjectType> row);
 	}
 	
 	public interface IReadingColumn<ObjectType extends Identified> extends IColumn<ObjectType> {
@@ -102,7 +97,8 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 //		void objectChanged(ObjectType object);
 	}
 	
-	public interface IRowForColumn<ObjectType> extends IRowForCell {
+	public interface IRowForColumn<ObjectType extends Identified> extends IRowForCell {
+		Cell getCellForColumn(IColumn<ObjectType> column);
 		ObjectType getObject();
 	}
 	
@@ -134,6 +130,16 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 		
 		public void delete() {
 			OsmTable.this.deleteRow(this);
+		}
+
+		@Override
+		public Cell getCellForColumn(IColumn<ObjectType> column) {
+			for (int i = 0; i < columnMetadatas.size(); i++)
+				if (columnMetadatas.get(i).column == column)
+					return cells[i];
+			assert(false);
+			// TODO Auto-generated method stub
+			return null;
 		}
 	}
 	
@@ -277,6 +283,8 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 				row.trElement.removeClassName("sending");
 				rowsByObjectID.remove(row.object.getID());
 				row.trElement.removeFromParent();
+				
+//				start here, tell the columns that the roster changed
 			}
 			
 			public void onFailure(Throwable caught) {
@@ -290,32 +298,88 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 		addColumn("", null, false, null, new EditModeColumn<ObjectType>());
 	}
 
+	private Row addAndReturnRowWithoutUpdatingHeaderWidths(ObjectType object) {
+		int newObjectIndex = rowsByObjectID.size();
+		int rowIndex = 1 + newObjectIndex;
+
+		HTML placeholder = new HTML();
+		table.setWidget(rowIndex, 0, placeholder);
+		Element rowElement = HTMLUtilities.getClosestContainingElementOfType(placeholder.getElement(), "tr");
+
+		Cell[] cells = new Cell[columnMetadatas.size()];
+		
+		Row newRow = new Row(object, rowElement, cells);
+		rowsByObjectID.put(object.getID(), newRow);
+		
+		// Create cells for this row
+		for (int colIndex = 0; colIndex < columnMetadatas.size(); colIndex++)
+			cells[colIndex] = columnMetadatas.get(colIndex).column.createCell(newRow);
+		
+		// Put cells into table
+		for (int colIndex = 0; colIndex < columnMetadatas.size(); colIndex++)
+			table.setWidget(rowIndex, colIndex, cells[colIndex].getCellWidget());
+
+		// Have all reading cells get updated from the object
+		for (int colIndex = 0; colIndex < columnMetadatas.size(); colIndex++) {
+			Cell rawCell = newRow.cells[colIndex];
+			IColumn<ObjectType> rawColumn = columnMetadatas.get(colIndex).column;
+			
+			assert((rawCell instanceof ReadingCell) == (rawColumn instanceof IReadingColumn));
+			if (rawCell instanceof ReadingCell && rawColumn instanceof IReadingColumn)
+				((IReadingColumn<ObjectType>)rawColumn).updateFromObject(newRow, (ReadingCell)rawCell);
+		}
+		
+		return newRow;
+	}
+
+	private Row addAndReturnRow(ObjectType object) {
+		Row result = addAndReturnRowWithoutUpdatingHeaderWidths(object);
+		updateHeaderWidths();
+		return result;
+	}
+	
+	public final void addRow(ObjectType object) {
+		addAndReturnRowWithoutUpdatingHeaderWidths(object);
+		updateHeaderWidths();
+	}
+
+	public final void addNewRow() {
+		ObjectType newObject = factory.create();
+		Row newRow = addAndReturnRow(newObject);
+		newRow.adding = true;
+
+		enterRowEditingMode(newRow, null);
+	}
+
 	protected void enterRowEditingMode(Row row, EditingCell focusedCell) {
 		assert(!row.inEditingMode);
 		row.inEditingMode = true;
-		
+
+		// Have all reading cells get updated from the object
 		for (int colIndex = 0; colIndex < columnMetadatas.size(); colIndex++) {
 			Cell rawCell = row.cells[colIndex];
+			IColumn<ObjectType> rawColumn = columnMetadatas.get(colIndex).column;
 			
-			if (rawCell instanceof ReadingCell) {
-				ReadingCell cell = (ReadingCell)rawCell;
-				IReadingColumn<ObjectType> column = (IReadingColumn<ObjectType>)columnMetadatas.get(colIndex).column;
-				column.updateFromObject(row, cell);
-			}
-			
-			if (rawCell instanceof EditingModeAwareCell) {
-				EditingModeAwareCell cell = (EditingModeAwareCell)rawCell;
-				cell.enterEditingMode();
-			}
+			assert((rawCell instanceof ReadingCell) == (rawColumn instanceof IReadingColumn));
+			if (rawCell instanceof ReadingCell && rawColumn instanceof IReadingColumn)
+				((IReadingColumn<ObjectType>)rawColumn).updateFromObject(row, (ReadingCell)rawCell);
 		}
 		
+		// Have all the editing cells enter editing mode
+		for (int colIndex = 0; colIndex < columnMetadatas.size(); colIndex++) {
+			Cell rawCell = row.cells[colIndex];
+			if (rawCell instanceof EditingModeAwareCell)
+				((EditingModeAwareCell)rawCell).enterEditingMode();
+		}
+		
+		// Focus on a cell.
 		if (focusedCell != null) {
 			focusedCell.focus();
 		}
-		else {
+		else { // If they didnt pass one in, find the first cell and focus that.
 			for (Cell cell : row.cells) {
 				if (cell instanceof EditingCell) { 
-					((EditingCell) cell).focus();
+					((EditingCell)cell).focus();
 					break;
 				}
 			}
@@ -324,38 +388,26 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 		updateHeaderWidths();
 	}
 
-	protected void enterRowReadingMode(final Row row) {
-		for (int colIndex = 0; colIndex < columnMetadatas.size(); colIndex++) {
-			Cell rawCell = row.cells[colIndex];
-			
-			if (rawCell instanceof ReadingCell) {
-				ReadingCell cell = (ReadingCell)rawCell;
-				IReadingColumn<ObjectType> column = (IReadingColumn<ObjectType>)columnMetadatas.get(colIndex).column;
-				column.updateFromObject(row, cell);
-			}
-
-			if (rawCell instanceof ReadingModeAwareCell) {
-				ReadingModeAwareCell cell = (ReadingModeAwareCell)rawCell;
-				cell.enterReadingMode();
-			}
-		}
-		
-		updateHeaderWidths();
-	}
-	
 	protected void exitRowEditingMode(final Row row) {
 		assert(row != null);
 		assert(row.inEditingMode);
 		row.inEditingMode = false;
 
+		// Have all the editing cells commit to their object
 		for (int colIndex = 0; colIndex < columnMetadatas.size(); colIndex++) {
 			Cell rawCell = row.cells[colIndex];
+			IColumn<ObjectType> rawColumn = columnMetadatas.get(colIndex).column;
 			
-			if (rawCell instanceof EditingCell) {
-				EditingCell cell = (EditingCell)rawCell;
-				IEditingColumn<ObjectType> column = (IEditingColumn<ObjectType>)columnMetadatas.get(colIndex).column;
-				column.commitToObject(row, cell);
-			}
+			assert((rawCell instanceof EditingCell) == (rawColumn instanceof IEditingColumn));
+			if (rawCell instanceof EditingCell && rawColumn instanceof IEditingColumn)
+				((IEditingColumn<ObjectType>)rawColumn).commitToObject(row, (EditingCell)rawCell);
+		}
+
+		// Have all editing cells exit editing mode
+		for (int colIndex = 0; colIndex < columnMetadatas.size(); colIndex++) {
+			Cell rawCell = row.cells[colIndex];
+			if (rawCell instanceof EditingModeAwareCell)
+				((EditingModeAwareCell)rawCell).exitEditingMode();
 		}
 		
 		row.trElement.addClassName("sending");
@@ -399,26 +451,27 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 					Window.alert("Failed to send updates to server: " + caught.getMessage());
 				}
 			});
+		}
+
+		// Have all reading cells get updated from the object
+		for (int colIndex = 0; colIndex < columnMetadatas.size(); colIndex++) {
+			Cell rawCell = row.cells[colIndex];
+			IColumn<ObjectType> rawColumn = columnMetadatas.get(colIndex).column;
 			
+			assert((rawCell instanceof ReadingCell) == (rawColumn instanceof IReadingColumn));
+			if (rawCell instanceof ReadingCell && rawColumn instanceof IReadingColumn)
+				((IReadingColumn<ObjectType>)rawColumn).updateFromObject(row, (ReadingCell)rawCell);
 		}
 		
-		enterRowReadingMode(row);
+		updateHeaderWidths();
 	}
 	
 	public void clear() {
 		for (int i = 0; i < rowsByObjectID.size(); i++)
-			table.removeRow(2);
+			table.removeRow(1);
 		rowsByObjectID.clear();
 	}
-
-	public final void addNewRow() {
-		ObjectType newObject = factory.create();
-		Row newRow = addAndReturnRow(newObject);
-		newRow.adding = true;
-
-		enterRowEditingMode(newRow, null);
-	}
-	
+		
 	private void toggleSortingForColumn(ColumnMetadata column) {
 		if (column.sortMode == ColumnSortMode.ASCENDING)
 			sortByColumn(column, false);
@@ -475,47 +528,6 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 		return result;
 	}
 	
-	private Row addAndReturnRowWithoutRefreshingWidths(ObjectType object) {
-		int newObjectIndex = rowsByObjectID.size();
-		int rowIndex = 1 + newObjectIndex;
-
-		HTML placeholder = new HTML();
-		table.setWidget(rowIndex, 0, placeholder);
-		Element rowElement = HTMLUtilities.getClosestContainingElementOfType(placeholder.getElement(), "tr");
-
-		Cell[] cells = new Cell[columnMetadatas.size()];
-		
-		Row newRow = new Row(object, rowElement, cells);
-		rowsByObjectID.put(object.getID(), newRow);
-		
-		for (int colIndex = 0; colIndex < columnMetadatas.size(); colIndex++) {
-			ColumnMetadata column = columnMetadatas.get(colIndex);
-			Cell cell = column.column.createCell(newRow);
-			cells[colIndex] = cell;
-		}
-		
-		enterRowReadingMode(newRow);
-		
-		for (int colIndex = 0; colIndex < columnMetadatas.size(); colIndex++) {
-			Cell cell = cells[colIndex];
-			assert(cell.getCellWidget() == cell.getCellWidget()); // make sure it returns the same instance every time
-			table.setWidget(rowIndex, colIndex, cell.getCellWidget());
-		}
-
-		return newRow;
-	}
-
-	private Row addAndReturnRow(ObjectType object) {
-		Row result = addAndReturnRowWithoutRefreshingWidths(object);
-		updateHeaderWidths();
-		return result;
-	}
-	
-	public final void addRow(ObjectType object) {
-		addAndReturnRowWithoutRefreshingWidths(object);
-		updateHeaderWidths();
-	}
-	
 	private void updateHeaderWidths() {
 		for (ColumnMetadata col : columnMetadatas)
 			col.header.updateWidth();
@@ -523,7 +535,7 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 	
 	public final void addRows(Collection<ObjectType> objects) {
 		for (ObjectType object : objects)
-			addAndReturnRowWithoutRefreshingWidths(object);
+			addAndReturnRowWithoutUpdatingHeaderWidths(object);
 		updateHeaderWidths();
 	}	
 	

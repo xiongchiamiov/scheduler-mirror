@@ -1,38 +1,27 @@
 package edu.calpoly.csc.scheduler.view.web.client.views;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.event.logical.shared.CloseEvent;
-import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
+import edu.calpoly.csc.scheduler.view.web.client.CourseCache;
 import edu.calpoly.csc.scheduler.view.web.client.IViewContents;
 import edu.calpoly.csc.scheduler.view.web.client.ViewFrame;
 import edu.calpoly.csc.scheduler.view.web.client.table.IFactory;
 import edu.calpoly.csc.scheduler.view.web.client.table.IStaticGetter;
 import edu.calpoly.csc.scheduler.view.web.client.table.IStaticSetter;
 import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator;
-import edu.calpoly.csc.scheduler.view.web.client.table.MemberIntegerComparator;
 import edu.calpoly.csc.scheduler.view.web.client.table.MemberStringComparator;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
-import edu.calpoly.csc.scheduler.view.web.client.table.columns.ButtonColumn;
-import edu.calpoly.csc.scheduler.view.web.client.table.columns.ButtonColumn.ClickCallback;
-import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingStringColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingIntColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingSelectColumn;
-import edu.calpoly.csc.scheduler.view.web.client.table.columns.StringColumn;
+import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingStringColumn;
+import edu.calpoly.csc.scheduler.view.web.client.views.AssociationsCell.GetCoursesCallback;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.WeekGWT;
 
@@ -73,7 +62,7 @@ public class CoursesView extends VerticalPanel implements IViewContents {
 	public static final String COURSE_LAB = "Lab";
 	
 	
-	private GreetingServiceAsync service;
+	private CourseCache courseCache;
 	private OsmTable<CourseGWT> table;
 	int nextCourseID = -2;
 	private String scheduleName;
@@ -82,8 +71,8 @@ public class CoursesView extends VerticalPanel implements IViewContents {
 		return nextCourseID--;
 	}
 	
-	public CoursesView(GreetingServiceAsync greetingService, String scheduleName) {
-		this.service = greetingService;
+	public CoursesView(CourseCache courseCache, String scheduleName) {
+		this.courseCache = courseCache;
 		this.scheduleName = scheduleName;
 		this.addStyleName("iViewPadding");
 	}
@@ -95,7 +84,7 @@ public class CoursesView extends VerticalPanel implements IViewContents {
 			return true;
 		return Window.confirm("You have unsaved data which will be lost. Are you sure you want to navigate away?");
 	}
-	
+		
 	@Override
 	public void afterPush(ViewFrame frame) {		
 		this.setWidth("100%");
@@ -109,18 +98,18 @@ public class CoursesView extends VerticalPanel implements IViewContents {
 		table = new OsmTable<CourseGWT>(
 				new IFactory<CourseGWT>() {
 					public CourseGWT create() {
-						return new CourseGWT("", "", "", 0, 0, 0, "LEC", 0, 0, "", "", 0, 6, new WeekGWT(), 0, generateTemporaryCourseID());
+						return new CourseGWT("", "", "", 0, 0, 0, "LEC", 0, null, 6, new WeekGWT(), 0, generateTemporaryCourseID());
 					}
 				},
 				new OsmTable.ModifyHandler<CourseGWT>() {
 					public void add(CourseGWT toAdd, AsyncCallback<CourseGWT> callback) {
-						service.addCourse(toAdd, callback);
+						courseCache.addCourse(toAdd, callback);
 					}
 					public void edit(CourseGWT toEdit, AsyncCallback<Void> callback) {
-						service.editCourse(toEdit, callback);
+						courseCache.editCourse(toEdit, callback);
 					}
 					public void remove(CourseGWT toRemove, AsyncCallback<Void> callback) {
-						service.removeCourse(toRemove, callback);
+						courseCache.removeCourse(toRemove, callback);
 					}
 				});
 
@@ -268,13 +257,15 @@ public class CoursesView extends VerticalPanel implements IViewContents {
 				"4em",
 				true,
 				null,
-				new StringColumn<CourseGWT>(new IStaticGetter<CourseGWT, String>() {
-					public String getValueForObject(CourseGWT object) { return "Unimplemented"; }
+				new AssociationsColumn(new GetCoursesCallback() {
+					public ArrayList<CourseGWT> getCourses() {
+						return courseCache.getCourses();
+					}
 				}));
 
 		this.add(table);
 		
-		service.getCourses(new AsyncCallback<List<CourseGWT>>() {
+		courseCache.getCourses(new AsyncCallback<List<CourseGWT>>() {
 			public void onFailure(Throwable caught) {
 				popup.hide();
 				Window.alert("Failed to get courses: " + caught.toString());
@@ -288,40 +279,6 @@ public class CoursesView extends VerticalPanel implements IViewContents {
 		});
 	}
 	
-	private void labSelectionHandler(ListBox listbox, CourseGWT object, Button button){
-		
-    	final CourseGWT fobject = object;
-    	final Button fButton = button;
-		
-		String value = listbox.getValue(listbox.getSelectedIndex());
-		if(value.equals("")){
-			fobject.setLabDept("");
-			fobject.setLabName("");
-			fobject.setLabCatalogNum(0);
-			fButton.setText("");
-		}
-		else{
-			
-			// get first integer
-			int i;
-			for(i = 0; !Character.isDigit(value.charAt(i)) && i < value.length(); i++){}
-			try{
-				int cnum = Integer.parseInt(value.substring(i));
-				fobject.setLabDept(value.substring(0, i));
-				fobject.setLabName("");
-				fobject.setLabCatalogNum(cnum);
-				fButton.setText(value);
-				
-			}catch(Exception e){
-				fobject.setLabDept("");
-				fobject.setLabName("");
-				fobject.setLabCatalogNum(0);
-				fButton.setText("");
-			}
-		}
-		
-	}
-
 	@Override
 	public void beforePop() { }
 	@Override

@@ -1,6 +1,13 @@
 package edu.calpoly.csc.scheduler.view.web.client.views;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -25,6 +32,26 @@ public class ScheduleView extends VerticalPanel implements IViewContents {
 		this.setHeight("100%");
 
 		this.add(new HTML("<h2>" + scheduleName + "</h2>"));
+		
+		this.add(new Button("Save", new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				final LoadingPopup popup = new LoadingPopup();
+				popup.show();
+				service.saveSchedule(new AsyncCallback<Void>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						popup.hide();
+						Window.alert("There was an error saving the schedule: " + caught.getMessage());
+					}
+					@Override
+					public void onSuccess(Void derp) {
+						popup.hide();
+						Window.alert("Schedule has been saved successfully.");
+					}
+				});
+			}
+		}));
+		
 
 		ScheduleViewWidget schdView = new ScheduleViewWidget();
 

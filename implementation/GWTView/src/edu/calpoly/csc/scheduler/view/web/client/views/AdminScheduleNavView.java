@@ -6,6 +6,7 @@ import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import edu.calpoly.csc.scheduler.view.web.client.CourseCache;
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.client.IViewContents;
 import edu.calpoly.csc.scheduler.view.web.client.ViewFrame;
@@ -18,7 +19,7 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 			scheduleMenuItem;
 
 	public AdminScheduleNavView(final GreetingServiceAsync service,
-			final MenuBar MenuBar, int userID, String username,
+			final MenuBar MenuBar, String username,
 			Integer scheduleID, final String scheduleName) {
 		this.service = service;
 		this.menuBar = MenuBar;
@@ -60,8 +61,7 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 					public void execute() {
 						if (frame.canPopViewsAboveMe()) {
 							frame.popFramesAboveMe();
-							frame.frameViewAndPushAboveMe(new CoursesView(
-									service, scheduleName));
+							frame.frameViewAndPushAboveMe(new CoursesView(new CourseCache(service), scheduleName));
 						}
 					}
 				}));

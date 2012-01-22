@@ -35,6 +35,12 @@ body {
 	font-family: Verdana;
 }
 
+.usernameAndLogout {
+	float: right;
+	color: #FFFFFF;
+	margin: .5em;
+}
+
 .quarterViewMenu {
 	background-color: #D0D0D0;
 }
@@ -281,7 +287,7 @@ h1 {
 }
 	/*==============================|  Global Top Bar |==============================*/
 	
-#topBar{
+.topBar{
 width:100%; 
 height: 82px;
 background:url('imgs/header_bg.gif') no-repeat #003300;

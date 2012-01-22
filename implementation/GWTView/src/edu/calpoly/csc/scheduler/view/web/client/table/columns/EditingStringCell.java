@@ -14,7 +14,7 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.IRowForCell;
 
-class EditingStringCell extends SimplePanel implements OsmTable.Cell, OsmTable.ReadingCell, OsmTable.EditingCell, OsmTable.ReadingModeAwareCell, OsmTable.EditingModeAwareCell {
+class EditingStringCell extends SimplePanel implements OsmTable.Cell, OsmTable.ReadingCell, OsmTable.EditingCell, OsmTable.EditingModeAwareCell {
 	boolean editing;
 	IRowForCell row;
 	TextBox editingBox;
@@ -44,6 +44,8 @@ class EditingStringCell extends SimplePanel implements OsmTable.Cell, OsmTable.R
 				row.enterEditingMode(EditingStringCell.this);
 			}
 		});
+
+		add(readingLabel);
 	}
 	
 	@Override
@@ -60,7 +62,7 @@ class EditingStringCell extends SimplePanel implements OsmTable.Cell, OsmTable.R
 	}
 
 	@Override
-	public void enterReadingMode() {
+	public void exitEditingMode() {
 		editing = false;
 		clear();
 		add(readingLabel);

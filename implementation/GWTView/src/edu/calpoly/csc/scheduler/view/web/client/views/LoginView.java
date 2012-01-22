@@ -14,11 +14,13 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
+import edu.calpoly.csc.scheduler.view.web.client.HTMLUtilities;
 import edu.calpoly.csc.scheduler.view.web.client.IViewContents;
 import edu.calpoly.csc.scheduler.view.web.client.ViewFrame;
 
@@ -26,12 +28,14 @@ public class LoginView extends VerticalPanel implements IViewContents {
 	GreetingServiceAsync service;
 	final MenuBar menuBar;
 	
-	Integer userID;
 	String username;
 	ViewFrame myFrame;
-	MenuItem logoutMenuItem;
+	final SimplePanel usernameContainer, logoutLinkContainer;
 
-	public LoginView(GreetingServiceAsync service, MenuBar menuBar) {
+	public LoginView(GreetingServiceAsync service, SimplePanel usernameContainer, SimplePanel logoutLinkContainer, MenuBar menuBar) {
+		this.usernameContainer = usernameContainer;
+		this.logoutLinkContainer = logoutLinkContainer;
+		
 		this.service = service;
 		this.menuBar = menuBar;
 		
@@ -83,7 +87,7 @@ public class LoginView extends VerticalPanel implements IViewContents {
 			@Override
 			public void onSuccess(Void derp) {
 				popup.hide();
-				loggedIn(-3, username);
+				loggedIn(username);
 			}
 			
 			@Override
@@ -94,47 +98,36 @@ public class LoginView extends VerticalPanel implements IViewContents {
 		});
 	}
 	
-	private void loggedIn(int userID, String username) {
-		this.userID = userID;
+	private void loggedIn(String username) {
 		this.username = username;
 		
 		assert(myFrame.canPopViewsAboveMe());
 		
 		myFrame.popFramesAboveMe();
-		myFrame.frameViewAndPushAboveMe(new SelectScheduleView(service, menuBar, userID, username));
+		myFrame.frameViewAndPushAboveMe(new SelectScheduleView(service, menuBar, username));
 	}
 	
 	@Override
 	public void beforeViewPushedAboveMe() {
-		assert(logoutMenuItem == null);
-//		logoutNavButton = new FocusPanel();
-//		logoutNavButton.addStyleName("topBarLink");
-//		logoutNavButton.add(new HTML("Log Out (" + username + ")"));
+		this.usernameContainer.add(new HTML(username));
 		
-		logoutMenuItem = new MenuItem("Log Out (" + username + ")", true, new Command() {
-			public void execute() {
+		this.logoutLinkContainer.add(HTMLUtilities.createLink("logout", "inAppLink", new ClickHandler() {
+			public void onClick(ClickEvent event) {
 				if (myFrame.canPopViewsAboveMe()) {
 					myFrame.popFramesAboveMe();
 					logout();
 				}
 			}
-		});
-		
-		DOM.setElementAttribute(logoutMenuItem.getElement(), "id", "logout");
-		menuBar.addItem(logoutMenuItem);
+		}));
 	}
 	
 	@Override
 	public void afterViewPoppedFromAboveMe() {
-		assert(logoutMenuItem != null);
-		
-		menuBar.removeItem(logoutMenuItem);
-		
-		logoutMenuItem = null;
+		this.usernameContainer.clear();
+		this.logoutLinkContainer.clear();
 	}
 	
 	private void logout() {
-		userID = 0;
 		username = null;
 	}
 

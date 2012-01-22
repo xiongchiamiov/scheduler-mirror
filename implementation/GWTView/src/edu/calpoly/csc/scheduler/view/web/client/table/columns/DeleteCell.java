@@ -9,7 +9,7 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.IRowForCell;
 
-class DeleteCell extends SimplePanel implements OsmTable.Cell, OsmTable.EditingModeAwareCell, OsmTable.ReadingModeAwareCell {
+class DeleteCell extends SimplePanel implements OsmTable.Cell, OsmTable.EditingModeAwareCell {
 	boolean editing;
 	IRowForCell row;
 	
@@ -37,7 +37,7 @@ class DeleteCell extends SimplePanel implements OsmTable.Cell, OsmTable.EditingM
 	}
 
 	@Override
-	public void enterReadingMode() {
+	public void exitEditingMode() {
 		editing = false;
 		deleteButton.setEnabled(true);
 	}

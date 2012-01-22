@@ -220,16 +220,12 @@ public abstract class Conversion {
 		System.out.println("recalling model course " + course.getCatalogNum() + " type is " + course.getType());
 		newCourse.setType(course.getType().toString());
 		newCourse.setWtu(course.getWtu());
-		Lab lab = course.getLab();
-		if (lab != null) {
-			newCourse.setLabDept(lab.getDept());
-			newCourse.setLabName(lab.getName());
-			newCourse.setLabCatalogNum(lab.getCatalogNum());
-		} else {
-			newCourse.setLabDept("");
-			newCourse.setLabName("");
-			newCourse.setLabCatalogNum(0);
-		}
+		
+		if (course.getNote() == null || course.getNote().equals(""))
+			course.setNote("-1");
+		System.out.println("Loading from db: " + course.getNote());
+		newCourse.setLectureID(Integer.parseInt(course.getNote()));
+		
 		return newCourse;
 	}
 
@@ -311,12 +307,10 @@ public abstract class Conversion {
 		newCourse.setType(course.getType());
 		System.out.println("storing model course " + newCourse.getCatalogNum() + " type is " + course.getType());
 		newCourse.setEnrollment(course.getMaxEnroll());
-		if (!course.getLabDept().equals("")) {
-			newCourse.setLab(new Lab(course.getLabName(), course.getLabDept(),
-					course.getLabCatalogNum()));
-		} else {
-			newCourse.setLab(null);
-		}
+		
+		newCourse.setNote(Integer.toString(course.getLectureID()));
+		System.out.println("Storing into note: " + newCourse.getNote());
+		
 		newCourse.setDept(course.getDept());
 		newCourse.setLength(course.getLength());
 		newCourse.setNumOfSections(course.getNumSections());

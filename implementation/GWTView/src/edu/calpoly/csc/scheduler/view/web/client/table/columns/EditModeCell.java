@@ -10,7 +10,7 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.IRowForCell;
 
-class EditModeCell extends SimplePanel implements OsmTable.Cell, OsmTable.ReadingModeAwareCell, OsmTable.EditingModeAwareCell {
+class EditModeCell extends SimplePanel implements OsmTable.Cell, OsmTable.EditingModeAwareCell {
 	boolean editing;
 	IRowForCell row;
 	
@@ -25,7 +25,7 @@ class EditModeCell extends SimplePanel implements OsmTable.Cell, OsmTable.Readin
 		doneButtonVisibleWhileEditing = new Button("Save", new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				row.enterReadingMode();
-				enterReadingMode();
+				exitEditingMode();
 			}
 		});
 		
@@ -34,6 +34,9 @@ class EditModeCell extends SimplePanel implements OsmTable.Cell, OsmTable.Readin
 				row.enterEditingMode(null);
 			}
 		});
+		
+		add(editButtonVisibleWhileReading);
+		addStyleName("reading");
 	}
 	
 	@Override
@@ -48,7 +51,7 @@ class EditModeCell extends SimplePanel implements OsmTable.Cell, OsmTable.Readin
 	}
 
 	@Override
-	public void enterReadingMode() {
+	public void exitEditingMode() {
 		editing = false;
 		clear();
 		add(editButtonVisibleWhileReading);

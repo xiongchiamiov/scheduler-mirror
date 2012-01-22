@@ -16,7 +16,7 @@ import edu.calpoly.csc.scheduler.view.web.shared.UserDataGWT;
  * The async counterpart of <code>GreetingService</code>.
  */
 public interface GreetingServiceAsync {
-	void login(String username, AsyncCallback<Void> callback) throws IllegalArgumentException;
+	void login(String username, AsyncCallback<Void> callback);
 	void getScheduleNames(AsyncCallback<Map<String, UserDataGWT>> callback);
 	
 	void openNewSchedule(String newScheduleName, AsyncCallback<Integer> callback) throws IllegalArgumentException;

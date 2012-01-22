@@ -13,7 +13,7 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.IRowForCell;
 
-class EditingSelectCell extends SimplePanel implements OsmTable.Cell, OsmTable.ReadingCell, OsmTable.EditingCell, OsmTable.ReadingModeAwareCell, OsmTable.EditingModeAwareCell {
+class EditingSelectCell extends SimplePanel implements OsmTable.Cell, OsmTable.ReadingCell, OsmTable.EditingCell, OsmTable.EditingModeAwareCell {
 	boolean editing;
 	LinkedHashMap<String, String> options;
 	ListBox listBox;
@@ -43,7 +43,7 @@ class EditingSelectCell extends SimplePanel implements OsmTable.Cell, OsmTable.R
 		removeStyleName("reading");
 		addStyleName("writing");
 		
-		enterReadingMode();
+		exitEditingMode();
 	}
 	
 	@Override
@@ -55,7 +55,7 @@ class EditingSelectCell extends SimplePanel implements OsmTable.Cell, OsmTable.R
 	}
 	
 	@Override
-	public void enterReadingMode() {
+	public void exitEditingMode() {
 		editing = false;
 		readingLabel.clear();
 		
