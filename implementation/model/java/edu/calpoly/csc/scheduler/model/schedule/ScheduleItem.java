@@ -333,15 +333,25 @@ public class ScheduleItem implements Serializable, Cloneable,
    {
       int wtu = 0;
       Course lec = getCourse();
-      Course lab = getCourse().getLab();
+      /*
+       * The following code has been removed since the 
+       *  Lab class is no longer being used. Instead a lectureID
+       *  field in the Course class represents whether a course is
+       *  a lecture or a lab.
+       *  
+       *  If the course is a lab, the lectureID will be the id 
+       *  of the lecture that the lab is associated with. If it is not
+       *  a lab, the lectureID will be -1.
       
+      Course lab = getCourse().getLab();
+      */
       if (lec != null)
       {
          wtu += lec.getWtu();
-         if (lab != null)
+         /*if (lab != null)
          {
             wtu += lab.getWtu();
-         }
+         }*/
       }
       
       return 0;

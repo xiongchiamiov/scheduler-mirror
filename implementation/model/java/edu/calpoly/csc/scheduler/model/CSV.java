@@ -185,9 +185,19 @@ public class CSV {
 		int index = courses.indexOf(course);
 		if (index < 0) {
 			String labID = "none";
-			if (course.getLab() != null)
+			assert(false);
+			/*
+			 * This was commented out because there is no longer
+			 * a "getLab()" method for a Course. Instead the getLectureID
+			 * method should be used. 
+			 * 
+			 * If a course is a lecture, the value
+			 * of the lectureID will be -1. If the course is a lab, the 
+			 * value of the lectureID will be equal to the lecture id.
+			 * 
+			    if (course.getLab() != null)
 				labID = compileCourse(course.getLab());
-			
+			*/
 			index = courses.size();
 			courses.add(new String[] {
 					"course#" + index,

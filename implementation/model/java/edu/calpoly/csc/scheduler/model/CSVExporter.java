@@ -159,7 +159,18 @@ public class CSVExporter {
 	private String compileCourse(Course course) {
 		int index = courses.indexOf(course);
 		if (index < 0) {
-			String labIndexString = course.getLab() == null ? "" : "course#" + courses.indexOf(course.getLab());
+		    assert(false);
+			/*
+             * The following was commented out because there is no longer
+             * a "getLab()" method for a Course. Instead the getLectureID
+             * method should be used. 
+             * 
+             * If a course is a lecture, the value
+             * of the lectureID will be -1. If the course is a lab, the 
+             * value of the lectureID will be equal to the lecture id.
+             * 
+			 * String labIndexString = course.getLab() == null ? "" : "course#" + courses.indexOf(course.getLab());
+			 */
 			
 			index = courses.size();
 			courses.add(new String[] {
@@ -173,8 +184,13 @@ public class CSVExporter {
 					Integer.toString(course.getNumOfSections()),
 					Integer.toString(course.getLength()),
 					compileWeek(course.getDays()),
-					Integer.toString(course.getEnrollment()),
-					labIndexString});
+					Integer.toString(course.getEnrollment())});
+			assert(false);
+			/*
+			 * Removed labIndexString since it no longer exists. If something
+			 * needs to be 
+			 */
+					//labIndexString});
 		}
 		
 		return "course#" + index;

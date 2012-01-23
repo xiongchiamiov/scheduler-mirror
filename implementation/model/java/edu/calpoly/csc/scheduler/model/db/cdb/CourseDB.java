@@ -23,7 +23,8 @@ public class CourseDB extends AbstractDatabase<Course> {
 	public static final String LENGTH = "length";
 	public static final String DAYS = "days";
 	public static final String ENROLLMENT = "enrollment";
-	public static final String LAB = "lab";
+	public static final String LECTUREID = "lectureid";
+	public static final String TETHERED = "tetheredtolecture";
 
 	public CourseDB(SQLDB sqldb, int scheduleID) {
 		this.sqldb = sqldb;
@@ -43,9 +44,10 @@ public class CourseDB extends AbstractDatabase<Course> {
 		fields.put(LENGTH, data.getLength());
 		fields.put(DAYS, sqldb.serialize(data.getDays()));
 		fields.put(ENROLLMENT, data.getEnrollment());
-		fields.put(LAB, sqldb.serialize(data.getLab()));
 		fields.put(DbData.SCHEDULEDBID, scheduleDBId);
 		fields.put(DbData.NOTE, data.getNote());
+		fields.put(LECTUREID, data.getLectureID());
+		fields.put(TETHERED, data.getTetheredToLecture());
 	}
 
 	protected Course make(ResultSet rs) {
@@ -68,10 +70,11 @@ public class CourseDB extends AbstractDatabase<Course> {
 			toAdd.setDays(temp);
 
 			toAdd.setEnrollment(rs.getInt(ENROLLMENT));
-			toAdd.setLab((Lab) sqldb.deserialize(rs.getBytes(LAB)));
+			toAdd.setLectureID(rs.getInt(LECTUREID));
 			toAdd.setScheduleDBId(rs.getInt(DbData.SCHEDULEDBID));
 			toAdd.setNote(rs.getString(DbData.NOTE));
 			toAdd.setDbid(rs.getInt(DbData.DBID));
+			toAdd.setTetheredToLecture(rs.getBoolean(TETHERED));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -95,7 +98,6 @@ public class CourseDB extends AbstractDatabase<Course> {
 		LENGTH + " " + SQLINT + " " + SQLNOTNULL + "," +
 		DAYS + " " + SQLBLOB + " " + SQLNOTNULL + "," +
 		ENROLLMENT + " " + SQLINT + " " + SQLNOTNULL + "," +
-		LAB + " " + SQLBLOB + "," +
 		DbData.NOTE + " " + SQLVARCHAR + " " + SQLDEFAULTNULL + "," +
 		DbData.DBID + " " + SQLINT + " " + SQLNOTNULL + " " + SQLAUTOINC + "," +
 		DbData.SCHEDULEDBID + " " + SQLINT + " " + SQLNOTNULL + "," +

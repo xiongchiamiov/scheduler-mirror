@@ -78,9 +78,17 @@ public class Course extends DbData implements Serializable
     */
    private Integer enrollment = 0;
    /**
-    * This course's lab. Can be null, which means it has no lab
+    * The integer to represent the unique id of a lecture
     */
-   private Lab lab = null;
+   private Integer lectureID;
+   /**
+    * The boolean to represent whether a lab is tethered
+    * to a lecture.
+    * 
+    * If lectureID is not -1, then this boolean says whether 
+    * or not the course is tethered to that lecture
+    */
+   private Boolean tetheredToLecture;
    
    /**
     * Default constructor. Does nothing.
@@ -107,7 +115,7 @@ public class Course extends DbData implements Serializable
     * Creates a new Course object whose fields are identical to the given 
     * parameter. This makes it easy to "clone" course objects
     * 
-    * @param c Coure to copy the information from
+    * @param c Course to copy the information from
     * 
     * @.todo Write this
     */
@@ -123,8 +131,9 @@ public class Course extends DbData implements Serializable
       this.length = c.getLength();
       this.days = c.getDays();
       this.enrollment = new Integer(c.getEnrollment());
-      this.lab = c.getLab();
+      this.lectureID = c.getLectureID();
       this.setScheduleDBId(c.getScheduleDBId());
+      this.tetheredToLecture = c.getTetheredToLecture();
    }
    
    /**
@@ -393,37 +402,47 @@ public class Course extends DbData implements Serializable
    }
 
    /**
-    * Stubbed. Returns the lab paired w/ this course. Can be null.
+    * Returns the lectureID
     * 
-    * @.todo Write this. It just returned 'null'.
-    * 
-    * @return The Course representing the lab. If there is none, null.
+    * @return -1 if the course is not a lab, or the id of the lecture
+    * that a lab is associated with.
     */
-   public Lab getLab ()
+   public int getLectureID ()
    {
-      return this.lab;
+      return this.lectureID;
    }
    
    /**
-    * Sets this course's lab
+    * Sets this course's lectureID. If this course is a lab,
+    * the lectureID will be equal to the id of the lecture it is
+    * associated with. If this course is not a lab, the lectureID
+    * will be -1.
     * 
-    * @param lab The lab this course is to now have
+    * @param id the lectureID representing the lecture this
     */
-   public void setLab (Lab lab)
+   public void setLectureID (int id)
    {
-      this.lab = lab;
+      this.lectureID = id;
    }
- 
+   
    /**
-    * Stubbed. Returns whether this course has a lab or not. 
+    * Returns whether this course is tethered to a lecture
     * 
-    * @.todo Write this. It always returns false right now.
-    * 
-    * @return getLab() != null
+    * @return true if the course is tethered to a lecture, otherwise false.
     */
-   public boolean hasLab ()
+   public boolean getTetheredToLecture ()
    {
-      return getLab() != null;
+      return this.tetheredToLecture;
+   }
+   
+   /**
+    * Sets whether this course is tethered to a lecture
+    * 
+    * @param tether true if the course is tethered to a lecture, otherwise false
+    */
+   public void setTetheredToLecture (Boolean tether)
+   {
+      this.tetheredToLecture = tether;
    }
       
    /**
@@ -528,6 +547,14 @@ public class Course extends DbData implements Serializable
       {
          throw new NullDataException ();
       }
+      if (lectureID     == null)
+      {
+         throw new NullDataException ();
+      }
+      if (tetheredToLecture  == null)
+      {
+         throw new NullDataException ();
+      }
    }
    
    public Course getCannedData()
@@ -543,8 +570,9 @@ public class Course extends DbData implements Serializable
       c.setLength(3);
       c.setDays(new Week());
       c.setEnrollment(50);
-      c.setLab(new Lab());;
-      c.setScheduleDBId(1);
+      c.setLectureID(0);;
+      c.setScheduleDBId(-1);
+      c.setTetheredToLecture(false);
       return c;
    }
 }

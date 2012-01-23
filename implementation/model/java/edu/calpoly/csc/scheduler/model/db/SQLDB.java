@@ -36,7 +36,7 @@ public class SQLDB {
 	private int lastGeneratedKey;
 
 	/** Name of the database we are using in MYSQL */
-	private static final String DATABASENAME = "prototype";
+	private static final String DATABASENAME = "dev";
 
 	/**
 	 * @return the lastGeneratedKey

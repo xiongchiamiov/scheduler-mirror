@@ -394,6 +394,9 @@ public class Schedule extends DbData implements Serializable
           * If the lab for the SI was teathered, we need to move it to just 
           * after the fresh_si
           */
+         assert(false);
+         /*
+          *  
          Lab lab = c.getLab();
          if (lab != null && lab.isTethered())
          {
@@ -402,7 +405,7 @@ public class Schedule extends DbData implements Serializable
             {
                move(lab_si, days, lab_s);
             }
-         }
+         }*/
       }
       return fresh_si;
    }
@@ -447,7 +450,7 @@ public class Schedule extends DbData implements Serializable
           */
          if (si.hasLabs())
          {
-            if (c.getLab().isTethered())
+            if (c.getTetheredToLecture())
             {
                remove(si.getLabs());
             }
@@ -632,6 +635,17 @@ public class Schedule extends DbData implements Serializable
                System.err.println(lec_si);
             }
          
+            assert(false);
+            /*
+             *  The following code has been removed since the 
+             *  Lab class is no longer being used. Instead a lectureID
+             *  field in the Course class represents whether a course is
+             *  a lecture or a lab.
+             *  
+             *  If the course is a lab, the lectureID will be the id 
+             *  of the lecture that the lab is associated with. If it is not
+             *  a lab, the lectureID will be -1.
+             *
             Lab lab = c.getLab();
             if (lab != null)
             {
@@ -639,7 +653,7 @@ public class Schedule extends DbData implements Serializable
                /*
                 * We need to schedule labs until we have enough enrollment to
                 * supply the lecture
-                */
+                
                int curEnrollment = 0;
                int goal = c.getEnrollment();
                while (curEnrollment < goal)
@@ -651,7 +665,7 @@ public class Schedule extends DbData implements Serializable
                      /*
                       * If the add fails, we won't consider its enrollment, 
                       * which is good. So, don't screw w/ the order here
-                      */
+                      
                      add(lab_si);
                      lec_si.addLab(lab_si);
                      curEnrollment += lab.getEnrollment();
@@ -662,7 +676,7 @@ public class Schedule extends DbData implements Serializable
                      System.err.println(lab_si);
                   }
                }
-            }
+            }*/
          }
       }
 

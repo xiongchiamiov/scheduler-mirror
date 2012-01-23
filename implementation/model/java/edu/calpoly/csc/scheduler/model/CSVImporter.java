@@ -294,7 +294,17 @@ public class CSVImporter {
 		for (Entry<Integer, Integer> entry : labIndexByCourseIndex.entrySet()) {
 			Integer courseIndex = entry.getKey();
 			Integer labIndex = entry.getValue();
-			courses.get(courseIndex).setLab((Lab)courses.get(labIndex));
+			assert(false);
+			/*
+			 * There is no longer a set lab within a course. This needs to be
+			 * updated to represent a lab as a lectureID.
+			 * 
+             * If a course is a lecture, the value
+             * of the lectureID will be -1. If the course is a lab, the 
+             * value of the lectureID will be equal to the lecture id.
+             * 
+			 * courses.get(courseIndex).setLab((Lab)courses.get(labIndex));
+			 */
 		}
 		
 		for (Entry<Integer, Integer> entry : componentIndexByLabIndex.entrySet()) {
