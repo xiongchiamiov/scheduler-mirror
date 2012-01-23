@@ -40,6 +40,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 	
 	private final MenuBar menuBar;
 	MenuItem fileMenuItem;
+	MenuItem settingsMenuItem;
 	
 	private final String username;
 	private ListBox listBox;
@@ -107,7 +108,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 		DOM.setElementAttribute(importItem.getElement(), "id", "importItem");
 		fileMenu.addItem(importItem);
 		
-		MenuItem saveAsItem = new MenuItem("Copy As...", true, new Command() {
+		MenuItem saveAsItem = new MenuItem("Save As...", true, new Command() {
 			public void execute() {
 				displaySaveAsPopup();
 			}
@@ -147,6 +148,39 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 		
 		fileMenuItem = new MenuItem("File v", true, fileMenu);
 		DOM.setElementAttribute(fileMenuItem.getElement(), "id", "FileVIitem");
+		
+		
+		
+
+		MenuBar settingsMenu = new MenuBar(true);
+		DOM.setElementAttribute(fileMenu.getElement(), "id", "settingsMenu");
+
+		MenuItem timesItem = new MenuItem("Times", true, new Command() {
+			public void execute() {
+				Window.alert("Unimplemented");
+			}
+		});
+		DOM.setElementAttribute(timesItem.getElement(), "id", "timesItem");
+		settingsMenu.addItem(timesItem);
+
+		MenuItem preferencesItem = new MenuItem("Preferences", true, new Command() {
+			public void execute() {
+				Window.alert("Unimplemented");
+			}
+		});
+		DOM.setElementAttribute(preferencesItem.getElement(), "id", "preferencesItem");
+		settingsMenu.addItem(preferencesItem);
+
+		MenuItem permissionsItem = new MenuItem("Permissions/Roles", true, new Command() {
+			public void execute() {
+				Window.alert("Unimplemented");
+			}
+		});
+		DOM.setElementAttribute(permissionsItem.getElement(), "id", "timesItem");
+		settingsMenu.addItem(permissionsItem);
+		
+		settingsMenuItem = new MenuItem("Settings v", true, settingsMenu);
+		DOM.setElementAttribute(settingsMenuItem.getElement(), "id", "SettingsItem");
 		
 		this.addStyleName("homeView");
 		
@@ -391,7 +425,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 		final TextBox tb = new TextBox();
 		final DialogBox db = new DialogBox();
 		FlowPanel fp = new FlowPanel();
-		final Button saveButton = new Button("Copy", new ClickHandler() {
+		final Button saveButton = new Button("Save", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {			
 			    final String scheduleName = tb.getText();
@@ -532,10 +566,17 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 
 	@Override
 	public boolean canPop() { return true; }
+	
 	@Override
-	public void beforeViewPushedAboveMe() { }
+	public void beforeViewPushedAboveMe() {
+		menuBar.addItem(settingsMenuItem);
+	}
+	
 	@Override
-	public void afterViewPoppedFromAboveMe() { }
+	public void afterViewPoppedFromAboveMe() {
+		menuBar.removeItem(settingsMenuItem);
+	}
+	
 	@Override
 	public Widget getContents() { return this; }
 }

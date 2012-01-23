@@ -111,7 +111,7 @@ public class LoginView extends VerticalPanel implements IViewContents {
 	public void beforeViewPushedAboveMe() {
 		this.usernameContainer.add(new HTML(username));
 		
-		this.logoutLinkContainer.add(HTMLUtilities.createLink("logout", "inAppLink", new ClickHandler() {
+		this.logoutLinkContainer.add(HTMLUtilities.createLink("Log Out", "inAppLink", new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				if (myFrame.canPopViewsAboveMe()) {
 					myFrame.popFramesAboveMe();

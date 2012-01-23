@@ -11,15 +11,13 @@
 <body bgcolor = white> 
 <a name="user_interface"> 
 <p>The User Interface Overview will deal will all the user interface objects that are common across multiple pages.  The specific user interface elements on each page will be explained on that specific page. <BR>
-	There will be no data preloaded, so the first time the system is opened, it will be without data.  There will need to be data entry when the system is first started.<BR>
-		Also, all these screens are what an Administrator would see. An Instructor would only see the Title Header (Figure 2.1.1), not the Full Header (Figure 2.1.2)
 	 </p>
 <h3> 
 2.1.1 Main User Interface
 </h3> 
 </a> 
-<p> 
-Before an administrator has logged in and chosen which schedule they want to work with, they will be presented with a simple header that is not dynamic, but is mostly just a placeholder. 
+<p>
+At the top of all pages will be the top green header, see Fig. 2.1.1.
 <br> 
 <hr> 
 <a name="Title Header"> 
@@ -29,39 +27,37 @@ Before an administrator has logged in and chosen which schedule they want to wor
 <p align=center> Figure 2.1.1: Title Header</p> 
 <hr> 
 </a> 
-<p>Once the administrator is logged in and has chosen a schedule to work with, they will see the full interface on every page they visit.  At any time they can use the links to jump to another section of the application. </p>
-
+<p>
+After the user has logged in via the login page, they will see two labels on the top right: their username, and a logout link.
+</p>
+<a name="Title Header"> 
+<p align=center> 
+<img src="images/UI_GreenHeaderWUsername.png" border="2"> 
+</p> 
+<p align=center> Figure 2.1.1: Title Header</p> 
+<hr> 
+</a>
+<p>
+In all pages except for the login page and the home page, they will see the full top interface on every page they visit, including the top green header and the menu bar. The menu bar is used for navigation. </p>
 <hr> 
 <a name="Full Header"> 
 <p align=center> 
-<img src="images/UI_TopBarNormal.png" border="2"> 
+<img src="images/UI_GreenHeaderWMenuBar.png" border="2"> 
 </p> 
 <p align=center> Figure 2.1.2: Full Header</p> 
 <hr>
 <p>
-	On the far right of the header they will see the current logged in username, and there will be a link for them to log out. As seen in <a href="#Full Header">Figure 2.1.2.</a>
-	<BR><BR>
-The dropdown field shows the current schedule that is selected, and provides an easy way to switch between schedules.
-<br>
-The Schedule Button takes the administrator to the <a href="basic_schedule_generation.html">Schedule Setup</a> page where the administrator can view, edit and export a schedule.
+The File button opens the File menu (see section 2.6).
 <br>
 The Instructors Button takes the administrator to the <a href="resource-management.html#Manage Instructors">Instructor Overview</a> page where the administrator can manage the Instructors data in the system.
 <br>
 The Courses Button takes the administrator to the <a href="resource-management.html#Manage Courses">Course Overview</a> page where the administrator can manage the Courses data in the system.
 <br>
 The Locations Button takes the administrator to the <a href="resource-management.html#Manage Locations">Location Overview</a> page where the administrator can manage the Locations data in the system.
-</p>  
-<p>When the administrator clicks on the current schedule name, they get a drop down menu with all the current schedules, and they can quickly choose to manage another schedule.
-This can be seen in <a href="#Schedule Chooser Menu">Figure 2.1.3.</a></p>
-<hr> 
-<a name="Schedule Chooser Menu"> 
-<p align=center> 
-<img src="images/UI_TopBarWithMenu.png" border="2"> 
-</p> 
-<p align=center> Figure 2.1.3: Schedule Chooser Menu</p> 
-<hr> 
-</a> 
-
+<br>
+The Schedule Button takes the administrator to the <a href="basic_schedule_generation.html">Schedule Setup</a> page where the administrator can view, edit and export a schedule.
+</p>
+<hr>
 <a name="login">
 <h3>
 2.1.2 User Login
@@ -76,7 +72,7 @@ Upon starting the application, the user is greeted with the main login screen, s
 </p>
 <p align="center"> Figure 2.1.2.1:  The Login screen </p>
 <hr>
-<p>The system consults the user's credentials to determine if they are an administrator or instructor. Instructors are taken to the instructor page, where they may manage their <a href="instructor-preferences.html">preferences</a> and <a href="ViewRequirements.html">view</a> proposed schedules. Administrators are taken to the home page, shown below, and have access to the full program.</p>
+<p>The user is taken to the home page, shown below.</p>
 
 <a name="Home_Screen"> 
 <h3> 
@@ -116,3 +112,7 @@ Next: </font><a href="basic_schedule_generation.html">Basic Schedule Creation</a
 <hr size="3" width="80%"></center>
 </body> 
 </html> 
+
+
+
+There will be no data preloaded, so the first time the system is opened, it will be without data.  There will need to be data entry when the system is first started.
