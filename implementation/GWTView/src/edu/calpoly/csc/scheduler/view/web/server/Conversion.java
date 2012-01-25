@@ -176,9 +176,7 @@ public abstract class Conversion {
 				.getInstructor().getName());
 		String courseDept = schdItem.getCourse().getDept();
 		
-		// TODO: holland make getCatalogNum() return a string
-		int courseNumInt = schdItem.getCourse().getCatalogNum();
-		String courseNum = Integer.toString(courseNumInt);
+		String courseNum = schdItem.getCourse().getCatalogNum();
 		
 		int section = schdItem.getSection();
 
@@ -206,8 +204,7 @@ public abstract class Conversion {
 		newCourse.setID(course.getDbid());
 		
 		// TODO: holland make getCatalogNum() return a string
-		int courseNumInt = course.getCatalogNum();
-		String courseNumString = Integer.toString(courseNumInt);
+		String courseNumString = course.getCatalogNum();
 		newCourse.setCatalogNum(courseNumString);
 		
 		newCourse.setCourseName(course.getName());
@@ -296,8 +293,7 @@ public abstract class Conversion {
 		
 		// TODO: holland make setCatalogNum() take a string
 		String catalogNum = course.getCatalogNum();
-		int catalogNumInt = Integer.parseInt(catalogNum);
-		newCourse.setCatalogNum(catalogNumInt);
+		newCourse.setCatalogNum(catalogNum);
 		
 		newCourse.setWtu(course.getWtu());
 		newCourse.setScu(course.getScu());
