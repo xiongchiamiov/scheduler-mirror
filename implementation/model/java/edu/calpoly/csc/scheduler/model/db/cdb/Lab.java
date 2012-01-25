@@ -17,7 +17,7 @@ public class Lab extends Course
 
    public Lab () { }
    
-   public Lab (String name, String dept, int catalogNum)
+   public Lab (String name, String dept, String catalogNum)
    {
       super(name, dept, catalogNum);
       setType(Course.CourseType.LAB);

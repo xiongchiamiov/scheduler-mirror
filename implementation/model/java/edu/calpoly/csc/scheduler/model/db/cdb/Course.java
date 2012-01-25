@@ -41,7 +41,7 @@ public class Course extends DbData implements Serializable
    /**
     * Course's number in the catalog (like "101")
     */
-   private Integer catalogNum = 0;
+   private String catalogNum = "";
    /**
     * Course's department prefix (like "CPE")
     */
@@ -104,7 +104,7 @@ public class Course extends DbData implements Serializable
     * @param dept Course department prefix
     * @param catalogNum Catalog number of the class
     */
-   public Course (String name, String dept, int catalogNum)
+   public Course (String name, String dept, String catalogNum)
    {
       this.name = name;
       this.dept = dept;
@@ -164,7 +164,7 @@ public class Course extends DbData implements Serializable
    public int hashCode ()
    {
       return this.getName().hashCode() + 
-             this.getCatalogNum()      + 
+             this.getCatalogNum().hashCode() + 
              this.getType().hashCode();
    }
 
@@ -194,7 +194,7 @@ public class Course extends DbData implements Serializable
     * 
     * @return the catalogNum
     */
-   public int getCatalogNum ()
+   public String getCatalogNum ()
    {
       return catalogNum;
    }
@@ -205,7 +205,7 @@ public class Course extends DbData implements Serializable
     * @param catalogNum
     *           the catalogNum to set
     */
-   public void setCatalogNum (int catalogNum)
+   public void setCatalogNum (String catalogNum)
    {
       this.catalogNum = catalogNum;
    }
@@ -561,7 +561,7 @@ public class Course extends DbData implements Serializable
    {
       Course c = new Course();
       c.setName("Test");
-      c.setCatalogNum(255);
+      c.setCatalogNum("255");
       c.setDept("CSC");
       c.setWtu(4);
       c.setScu(4);

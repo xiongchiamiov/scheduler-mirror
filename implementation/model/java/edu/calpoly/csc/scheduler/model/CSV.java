@@ -202,7 +202,7 @@ public class CSV {
 			courses.add(new String[] {
 					"course#" + index,
 					course.getName(),
-					Integer.toString(course.getCatalogNum()),
+					course.getCatalogNum(),
 					course.getDept(),
 					Integer.toString(course.getWtu()),
 					Integer.toString(course.getScu()),

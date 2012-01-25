@@ -262,7 +262,7 @@ public class CSVImporter {
 			course.setType(type);
 			
 			course.setName(cellI.next());
-			course.setCatalogNum(Integer.parseInt(cellI.next()));
+			course.setCatalogNum(cellI.next());
 			course.setDept(cellI.next());
 			course.setWtu(Integer.parseInt(cellI.next()));
 			course.setScu(Integer.parseInt(cellI.next()));

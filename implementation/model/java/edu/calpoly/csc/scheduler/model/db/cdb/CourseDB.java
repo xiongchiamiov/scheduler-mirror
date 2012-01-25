@@ -55,7 +55,7 @@ public class CourseDB extends AbstractDatabase<Course> {
 		Course toAdd = new Course();
 		try {
 			toAdd.setName(rs.getString(NAME));
-			toAdd.setCatalogNum(rs.getInt(CATALOGNUM));
+			toAdd.setCatalogNum(rs.getString(CATALOGNUM));
 			toAdd.setDept(rs.getString(DEPT));
 			toAdd.setWtu(rs.getInt(WTU));
 			toAdd.setScu(rs.getInt(SCU));

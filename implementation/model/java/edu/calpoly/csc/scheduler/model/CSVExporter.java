@@ -177,7 +177,7 @@ public class CSVExporter {
 					"course#" + index,
 					course.getType().toString(),
 					course.getName(),
-					Integer.toString(course.getCatalogNum()),
+					course.getCatalogNum(),
 					course.getDept(),
 					Integer.toString(course.getWtu()),
 					Integer.toString(course.getScu()),
