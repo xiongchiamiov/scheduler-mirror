@@ -21,6 +21,8 @@ public class AssociationsCell extends SimplePanel implements OsmTable.Cell, OsmT
 
 	final GetCoursesCallback getCourses;
 	CourseGWT selectedCourse;
+	
+	boolean courseIsLecture;
 	boolean editing;
 	
 	FocusPanel readingLabel;
@@ -39,30 +41,34 @@ public class AssociationsCell extends SimplePanel implements OsmTable.Cell, OsmT
 				row.enterEditingMode(AssociationsCell.this);
 			}
 		});
-		add(readingLabel);
+		
+		if (!courseIsLecture)
+			add(readingLabel);
 	}
 	
 	@Override
 	public void enterEditingMode() {
-		assert(listBox == null);
-		assert(courses == null);
-		
-		editing = true;
-		clear();
-
-		courses = getCourses.getCourses();
-		listBox = new ListBox();
-		listBox.addItem("(none)", "0");
-		for (CourseGWT course : courses) {
-			listBox.addItem(courseString(course), course.getID().toString());
+		if (!courseIsLecture) {
+			assert(listBox == null);
+			assert(courses == null);
+			
+			editing = true;
+			clear();
+	
+			courses = getCourses.getCourses();
+			listBox = new ListBox();
+			listBox.addItem("(none)", "0");
+			for (CourseGWT course : courses) {
+				listBox.addItem(courseString(course), course.getID().toString());
+			}
+			
+			if (selectedCourse == null)
+				listBox.setSelectedIndex(0);
+			else
+				listBox.setSelectedIndex(indexOfCourseWithID(selectedCourse.getID()));
+			
+			add(listBox);
 		}
-		
-		if (selectedCourse == null)
-			listBox.setSelectedIndex(0);
-		else
-			listBox.setSelectedIndex(indexOfCourseWithID(selectedCourse.getID()));
-		
-		add(listBox);
 	}
 	
 	private int indexOfCourseWithID(int courseID) {
@@ -76,17 +82,19 @@ public class AssociationsCell extends SimplePanel implements OsmTable.Cell, OsmT
 	public void setSelectedCourse(CourseGWT newSelectedCourse) {
 		selectedCourse = newSelectedCourse;
 		
-		if (editing) {
-			if (selectedCourse == null)
-				listBox.setSelectedIndex(0);
-			else
-				listBox.setSelectedIndex(indexOfCourseWithID(selectedCourse.getID()));
-		}
-		else {
-			clear();
-			readingLabel.clear();
-			readingLabel.add(new HTML(courseString(selectedCourse)));
-			add(readingLabel);
+		if (!courseIsLecture) {
+			if (editing) {
+				if (selectedCourse == null)
+					listBox.setSelectedIndex(0);
+				else
+					listBox.setSelectedIndex(indexOfCourseWithID(selectedCourse.getID()));
+			}
+			else {
+				clear();
+				readingLabel.clear();
+				readingLabel.add(new HTML(courseString(selectedCourse)));
+				add(readingLabel);
+			}
 		}
 	}
 	
@@ -107,22 +115,24 @@ public class AssociationsCell extends SimplePanel implements OsmTable.Cell, OsmT
 
 	@Override
 	public void exitEditingMode() {
-		assert(editing);
-		
-		if (listBox.getSelectedIndex() <= 0)
-			selectedCourse = null;
-		else
-			selectedCourse = getCourseWithID(Integer.parseInt(listBox.getValue(listBox.getSelectedIndex())));
-		
-		listBox = null;
-		courses = null;
-		
-		editing = false;
-
-		clear();
-		readingLabel.clear();
-		readingLabel.add(new HTML(courseString(selectedCourse)));
-		add(readingLabel);
+		if (!courseIsLecture) {
+			assert(editing);
+			
+			if (listBox.getSelectedIndex() <= 0)
+				selectedCourse = null;
+			else
+				selectedCourse = getCourseWithID(Integer.parseInt(listBox.getValue(listBox.getSelectedIndex())));
+			
+			listBox = null;
+			courses = null;
+			
+			editing = false;
+	
+			clear();
+			readingLabel.clear();
+			readingLabel.add(new HTML(courseString(selectedCourse)));
+			add(readingLabel);
+		}
 	}
 
 	@Override
@@ -135,9 +145,27 @@ public class AssociationsCell extends SimplePanel implements OsmTable.Cell, OsmT
 	public Widget getCellWidget() { return this; }
 
 	public int getSelectedCourseID() {
-		if (listBox.getSelectedIndex() <= 0)
+		if (selectedCourse == null)
 			return -1;
-		else
-			return getCourseWithID(Integer.parseInt(listBox.getValue(listBox.getSelectedIndex()))).getID();
+		return selectedCourse.getID();
+	}
+	
+	public void setCourseIsLecture(boolean courseIsNowLecture) {
+		if (courseIsLecture == courseIsNowLecture)
+			return;
+		
+		if (editing) {
+			assert(false); // implement
+		}
+		else {
+			if (courseIsNowLecture) {
+				clear();
+			}
+			else {
+				add(readingLabel);
+			}
+		}
+		
+		courseIsLecture = courseIsNowLecture;
 	}
 }
