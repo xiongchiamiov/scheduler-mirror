@@ -214,11 +214,13 @@ public abstract class Conversion {
 		newCourse.setMaxEnroll(course.getEnrollment());
 		newCourse.setNumSections(course.getNumOfSections());
 		newCourse.setScu(course.getScu());
-		System.out.println("recalling model course " + course.getCatalogNum() + " type is " + course.getType());
+		System.out.println("recalling model course " + course.getCatalogNum() + " type is " + course.getType() + " lec id is " + course.getLectureID());
 		newCourse.setType(course.getType().toString());
 		newCourse.setWtu(course.getWtu());
 		newCourse.setLectureID(course.getLectureID());
 		newCourse.setTetheredToLecture(course.getTetheredToLecture());
+		
+		System.out.println("recalled model course into gwt course lecture id is " + newCourse.getLectureID());
 		
 		return newCourse;
 	}

@@ -2,6 +2,8 @@ package edu.calpoly.csc.scheduler.view.web.client.views;
 
 import java.util.ArrayList;
 
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.user.client.ui.FocusPanel;
@@ -67,6 +69,21 @@ public class AssociationsCell extends SimplePanel implements OsmTable.Cell, OsmT
 			else
 				listBox.setSelectedIndex(indexOfCourseWithID(selectedCourse.getID()));
 			
+			listBox.addChangeHandler(new ChangeHandler() {
+				@Override
+				public void onChange(ChangeEvent event) {
+					// TODO Auto-generated method stub
+					assert(listBox.getSelectedIndex() >= 0);
+					if (listBox.getSelectedIndex() == 0) {
+						selectedCourse = null;
+					}
+					else {
+						selectedCourse = getCourseWithID(Integer.parseInt(listBox.getValue(listBox.getSelectedIndex())));
+						System.out.println("Setting selectedcourse to " + selectedCourse.getID());
+					}					
+				}
+			});
+			
 			add(listBox);
 		}
 	}
@@ -118,11 +135,6 @@ public class AssociationsCell extends SimplePanel implements OsmTable.Cell, OsmT
 		if (!courseIsLecture) {
 			assert(editing);
 			
-			if (listBox.getSelectedIndex() <= 0)
-				selectedCourse = null;
-			else
-				selectedCourse = getCourseWithID(Integer.parseInt(listBox.getValue(listBox.getSelectedIndex())));
-			
 			listBox = null;
 			courses = null;
 			
@@ -145,6 +157,7 @@ public class AssociationsCell extends SimplePanel implements OsmTable.Cell, OsmT
 	public Widget getCellWidget() { return this; }
 
 	public int getSelectedCourseID() {
+		System.out.println("reading selectedCourse id ");
 		if (selectedCourse == null)
 			return -1;
 		return selectedCourse.getID();

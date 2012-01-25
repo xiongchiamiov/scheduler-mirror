@@ -439,8 +439,10 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 
 	@Override
 	public void editCourse(CourseGWT toEdit) {
+		System.out.println("editCourse incoming gwt course " + toEdit.getCatalogNum() + " lectureid " + toEdit.getLectureID());
 		Course course = Conversion.fromGWT(toEdit);
 		assert(course.getDbid() != -1);
+		System.out.println("editCourse saving model course " + course.getCatalogNum() + " lectureid " + course.getLectureID());
 		model.saveCourse(course);
 	}
 
