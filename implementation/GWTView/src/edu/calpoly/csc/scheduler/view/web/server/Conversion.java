@@ -220,11 +220,8 @@ public abstract class Conversion {
 		System.out.println("recalling model course " + course.getCatalogNum() + " type is " + course.getType());
 		newCourse.setType(course.getType().toString());
 		newCourse.setWtu(course.getWtu());
-		
-		if (course.getNote() == null || course.getNote().equals(""))
-			course.setNote("-1");
-		System.out.println("Loading from db: " + course.getNote());
-		newCourse.setLectureID(Integer.parseInt(course.getNote()));
+		newCourse.setLectureID(course.getLectureID());
+		newCourse.setTetheredToLecture(course.getTetheredToLecture());
 		
 		return newCourse;
 	}
@@ -308,8 +305,8 @@ public abstract class Conversion {
 		System.out.println("storing model course " + newCourse.getCatalogNum() + " type is " + course.getType());
 		newCourse.setEnrollment(course.getMaxEnroll());
 		
-		newCourse.setNote(Integer.toString(course.getLectureID()));
-		System.out.println("Storing into note: " + newCourse.getNote());
+		newCourse.setLectureID(course.getLectureID());
+		newCourse.setTetheredToLecture(course.getTetheredToLecture());
 		
 		newCourse.setDept(course.getDept());
 		newCourse.setLength(course.getLength());

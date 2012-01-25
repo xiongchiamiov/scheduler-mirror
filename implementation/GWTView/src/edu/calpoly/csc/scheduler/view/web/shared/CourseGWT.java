@@ -17,13 +17,14 @@ public class CourseGWT implements Serializable, Identified {
 	private Integer scheduleID;
 	private Integer id;
 	private Integer lectureID;
+	private Boolean tetheredToLecture;
 	
 	public CourseGWT() { }
 	
 	public CourseGWT(String courseName, String catalogNum, String dept,
 			Integer wtu, Integer scu, Integer numSections, String type,
 			Integer maxEnroll, Integer lectureID, Integer length, WeekGWT days,
-			Integer scheduleID, Integer id) {
+			Integer scheduleID, Integer id, Boolean tetheredToLecture) {
 		super();
 		this.courseName = courseName;
 		this.catalogNum = catalogNum;
@@ -38,6 +39,7 @@ public class CourseGWT implements Serializable, Identified {
 		this.days = days;
 		this.scheduleID = scheduleID;
 		this.id = id;
+		this.tetheredToLecture = tetheredToLecture;
 	}
 
 
@@ -45,7 +47,7 @@ public class CourseGWT implements Serializable, Identified {
 	public CourseGWT(CourseGWT that) {
 		this(that.courseName, that.catalogNum, that.dept, that.wtu, that.scu,
 				that.numSections, that.type, that.maxEnroll, that.lectureID, that.length,
-				that.days, that.scheduleID, that.id);
+				that.days, that.scheduleID, that.id, that.tetheredToLecture);
 	}
 
 	public void verify() {
@@ -201,6 +203,18 @@ public class CourseGWT implements Serializable, Identified {
 	}
 	
 	public void setLectureID(int lectureID) {
+		this.lectureID = lectureID;
+	}
+	
+	public Boolean getTetheredToLecture() {
+		return tetheredToLecture;
+	}
+
+	public void setTetheredToLecture(Boolean tetheredToLecture) {
+		this.tetheredToLecture = tetheredToLecture;
+	}
+
+	public void setLectureID(Integer lectureID) {
 		this.lectureID = lectureID;
 	}
 }

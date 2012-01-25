@@ -98,7 +98,7 @@ public class CoursesView extends VerticalPanel implements IViewContents {
 		table = new OsmTable<CourseGWT>(
 				new IFactory<CourseGWT>() {
 					public CourseGWT create() {
-						return new CourseGWT("", "", "", 0, 0, 0, "LEC", 0, -1, 6, new WeekGWT(), 0, generateTemporaryCourseID());
+						return new CourseGWT("", "", "", 0, 0, 0, "LEC", 0, -1, 6, new WeekGWT(), 0, generateTemporaryCourseID(), false);
 					}
 				},
 				new OsmTable.ModifyHandler<CourseGWT>() {
