@@ -220,6 +220,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 		listBox.setVisibleItemCount(5);
 		
 		DOM.setElementAttribute(listBox.getElement(), "id", "listBox");
+		DOM.setElementAttribute(listBox.getElement(), "style", "min-width:188px");
 		
 		this.add(listBox);
 
