@@ -349,7 +349,7 @@ public class Course extends DbData implements Serializable
       }
       else if(type.equalsIgnoreCase("LAB"))
       {
-         this.type = CourseType.LEC;
+         this.type = CourseType.LAB;
       }
    }
 
