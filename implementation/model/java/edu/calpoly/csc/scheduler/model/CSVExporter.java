@@ -53,25 +53,26 @@ public class CSVExporter {
 	}
 	
 	private String compileInstructor(Instructor instructor) {
-		int index = instructors.indexOf(instructor);
-		if (index < 0) {
-			index = instructors.size();
-			instructors.add(new String[] {
-					"instructor#" + index,
-					instructor.getFirstName(),
-					instructor.getLastName(),
-					instructor.getUserID(),
-					Integer.toString(instructor.getMaxWTU()),
-					Integer.toString(instructor.getCurWtu()),
-					instructor.getOffice().getBuilding(),
-					instructor.getOffice().getRoom(),
-					Integer.toString(instructor.getFairness()),
-					Boolean.toString(instructor.getDisability()),
-					compileCoursePrefs(instructor.getCoursePreferences()),
-					compileTimePrefs(instructor.getTimePreferences())
-			});
-		}
-		return "instructor#" + index;
+//		int index = instructors.indexOf(instructor);
+//		if (index < 0) {
+//			index = instructors.size();
+//			instructors.add(new String[] {
+//					"instructor#" + index,
+//					instructor.getFirstName(),
+//					instructor.getLastName(),
+//					instructor.getUserID(),
+//					Integer.toString(instructor.getMaxWTU()),
+//					Integer.toString(instructor.getCurWtu()),
+//					instructor.getOffice().getBuilding(),
+//					instructor.getOffice().getRoom(),
+//					Integer.toString(instructor.getFairness()),
+//					Boolean.toString(instructor.getDisability()),
+//					compileCoursePrefs(instructor.getCoursePreferences()),
+//					compileTimePrefs(instructor.getTimePreferences())
+//			});
+//		}
+//		return "instructor#" + index;
+		return null;
 	}
 
 	private String compileTimePrefs(HashMap<Day, LinkedHashMap<Time, TimePreference>> timePreferences) {

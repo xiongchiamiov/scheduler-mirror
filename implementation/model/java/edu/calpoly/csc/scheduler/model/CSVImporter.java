@@ -333,38 +333,38 @@ public class CSVImporter {
 	}
 
 	void readInstructors(Iterator<List<String>> linesIterator) {
-		skipBlanksUntilComment(linesIterator, CSVStructure.INSTRUCTORS_MARKER);
-		while (true) {
-			assert(linesIterator.hasNext());
-			List<String> cells = linesIterator.next();
-			if (cells.size() == 1 && cells.get(0).equals("#" + CSVStructure.INSTRUCTORS_END_MARKER))
-				return;
-
-			Iterator<String> cellI = cells.iterator();
-
-			int index = instructors.size();
-			assert(extractIndex("instructor#", cellI.next()) == index);
-			
-			Instructor instructor = new Instructor();
-			instructor.setUserID(cellI.next());
-			instructor.setFirstName(cellI.next());
-			instructor.setLastName(cellI.next());
-			instructor.setMaxWtu(Integer.parseInt(cellI.next()));
-			instructor.setCurWtu(Integer.parseInt(cellI.next()));
-			
-			Location office = new Location();
-			office.setBuilding(cellI.next());
-			office.setRoom(cellI.next());
-			instructor.setOffice(office);
-
-			instructor.setFairness(Integer.parseInt(cellI.next()));
-			instructor.setDisability(Boolean.parseBoolean(cellI.next()));
-			
-			instructor.setCoursePreferences(instructorsCoursePrefs.get(extractIndex("coursePrefs#", cellI.next())));
-			instructor.setTimePreferences(instructorsTimePrefs.get(extractIndex("timePrefs#", cellI.next())));
-			
-			instructors.add(instructor);
-		}
+//		skipBlanksUntilComment(linesIterator, CSVStructure.INSTRUCTORS_MARKER);
+//		while (true) {
+//			assert(linesIterator.hasNext());
+//			List<String> cells = linesIterator.next();
+//			if (cells.size() == 1 && cells.get(0).equals("#" + CSVStructure.INSTRUCTORS_END_MARKER))
+//				return;
+//
+//			Iterator<String> cellI = cells.iterator();
+//
+//			int index = instructors.size();
+//			assert(extractIndex("instructor#", cellI.next()) == index);
+//			
+//			Instructor instructor = new Instructor();
+//			instructor.setUserID(cellI.next());
+//			instructor.setFirstName(cellI.next());
+//			instructor.setLastName(cellI.next());
+//			instructor.setMaxWtu(Integer.parseInt(cellI.next()));
+//			instructor.setCurWtu(Integer.parseInt(cellI.next()));
+//			
+//			Location office = new Location();
+//			office.setBuilding(cellI.next());
+//			office.setRoom(cellI.next());
+//			instructor.setOffice(office);
+//
+//			instructor.setFairness(Integer.parseInt(cellI.next()));
+//			instructor.setDisability(Boolean.parseBoolean(cellI.next()));
+//			
+//			instructor.setCoursePreferences(instructorsCoursePrefs.get(extractIndex("coursePrefs#", cellI.next())));
+//			instructor.setTimePreferences(instructorsTimePrefs.get(extractIndex("timePrefs#", cellI.next())));
+//			
+//			instructors.add(instructor);
+//		}
 	}
 
 	void readLocations(Iterator<List<String>> linesIterator) {

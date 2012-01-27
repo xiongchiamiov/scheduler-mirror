@@ -77,15 +77,23 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public ArrayList<InstructorGWT> getInstructors() throws IllegalArgumentException {
 		ArrayList<InstructorGWT> results = new ArrayList<InstructorGWT>();
-		for (Instructor instructor : model.getInstructors())
+		for (Instructor instructor : model.getInstructors()) {
+			System.out.println("Reading instructor, prefs:");
+			for (Entry<Integer, Integer> entry : instructor.getCoursePreferences().entrySet())
+				System.out.println("Course id " + entry.getKey() + " pref: " + entry.getValue());
 			results.add(Conversion.toGWT(instructor));
+		}
 		return results;
 	}
 
 	Map<Integer, Instructor> getInstructorsByID() {
 		Map<Integer, Instructor> result = new HashMap<Integer, Instructor>();
-		for (Instructor instructor : model.getInstructors())
+		for (Instructor instructor : model.getInstructors()) {
+			System.out.println("Reading instructor, prefs:");
+			for (Entry<Integer, Integer> entry : instructor.getCoursePreferences().entrySet())
+				System.out.println("Course id " + entry.getKey() + " pref: " + entry.getValue());
 			result.put(instructor.getDbid(), instructor);
+		}
 		return result;
 	}
 
@@ -302,6 +310,11 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public void saveInstructor(InstructorGWT instructorGWT) {
 		Instructor instructor = Conversion.fromGWT(instructorGWT, getCoursesByID());
+
+		System.out.println("Saving instructor, prefs:");
+		for (Entry<Integer, Integer> entry : instructor.getCoursePreferences().entrySet())
+			System.out.println("Course id " + entry.getKey() + " pref: " + entry.getValue());
+		
 		model.saveInstructor(instructor);
 	}
 
@@ -457,6 +470,11 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	public InstructorGWT addInstructor(InstructorGWT toAdd) {
 		toAdd.setID(-1);
 		Instructor instructor = Conversion.fromGWT(toAdd, getCoursesByID());
+
+		System.out.println("Adding (saving) instructor, prefs:");
+		for (Entry<Integer, Integer> entry : instructor.getCoursePreferences().entrySet())
+			System.out.println("Course id " + entry.getKey() + " pref: " + entry.getValue());
+		
 		model.saveInstructor(instructor);
 		assert(instructor.getDbid() != -1);
 		return Conversion.toGWT(instructor);
@@ -465,6 +483,11 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public void editInstructor(InstructorGWT toEdit) {
 		Instructor instructor = Conversion.fromGWT(toEdit, getCoursesByID());
+
+		System.out.println("Editing (saving) instructor, prefs:");
+		for (Entry<Integer, Integer> entry : instructor.getCoursePreferences().entrySet())
+			System.out.println("Course id " + entry.getKey() + " pref: " + entry.getValue());
+		
 		assert(instructor.getDbid() != -1);
 		model.saveInstructor(instructor);
 	}
@@ -472,6 +495,12 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public void removeInstructor(InstructorGWT toRemove) {
 		Instructor instructor = Conversion.fromGWT(toRemove, getCoursesByID());
+
+		System.out.println("Removing instructor, prefs:");
+		for (Entry<Integer, Integer> entry : instructor.getCoursePreferences().entrySet())
+			System.out.println("Course id " + entry.getKey() + " pref: " + entry.getValue());
+		
+		
 		assert(instructor.getDbid() != -1);
 		model.removeInstructor(instructor);
 	}
