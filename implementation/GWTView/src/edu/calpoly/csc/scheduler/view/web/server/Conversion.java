@@ -54,12 +54,12 @@ public abstract class Conversion {
 		
 		HashMap<Integer, Integer> coursePreferences = new LinkedHashMap<Integer, Integer>();
 		try {
-			HashMap<Course, Integer> sourceCoursePreferences = instructor
+			HashMap<Integer, Integer> sourceCoursePreferences = instructor
 					.getCoursePreferences();
-			for (Course course : sourceCoursePreferences.keySet()) {
-				if (course.getDbid() == null)
+			for (Integer dbID : sourceCoursePreferences.keySet()) {
+				if (dbID == null)
 					System.out.println("ERROR, course id is null when converting from model");
-				coursePreferences.put(course.getDbid(), sourceCoursePreferences.get(course));
+				coursePreferences.put(dbID, sourceCoursePreferences.get(dbID));
 			}
 		}
 		catch (Exception e) {
@@ -129,13 +129,13 @@ public abstract class Conversion {
 		ins.setGenerosity(instructor.getGenerosity());
 		ins.setAvailability(new WeekAvail());
 
-		HashMap<Course, Integer> coursePrefs = new HashMap<Course, Integer>();
+		HashMap<Integer, Integer> coursePrefs = new HashMap<Integer, Integer>();
 		for (Integer courseID : instructor.getCoursePreferences().keySet()) {
 			Integer desire = instructor.getCoursePreferences().get(courseID);
 			Course course = coursesByID.get(courseID);
 			if (course.getDbid() == null)
 				System.out.println("ERROR, course id is null when converting to model");
-			coursePrefs.put(course, desire);
+			coursePrefs.put(course.getDbid(), desire);
 		}
 		ins.setCoursePreferences(coursePrefs);
 
