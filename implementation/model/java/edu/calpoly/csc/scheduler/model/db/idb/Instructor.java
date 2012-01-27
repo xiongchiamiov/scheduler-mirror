@@ -77,8 +77,8 @@ public class Instructor extends DbData implements Comparable<Instructor>, Serial
    /**
     * Keeps track of an instructor course preferences.
     */
-   private HashMap<Course, Integer> coursePreferences = 
-      new HashMap<Course, Integer>();
+   private HashMap<Integer, Integer> coursePreferences = 
+      new HashMap<Integer, Integer>();
 
    /**
     * List of time preferences an instructor has for a course.
@@ -126,7 +126,7 @@ public class Instructor extends DbData implements Comparable<Instructor>, Serial
       this.maxWtu = i.maxWtu;
       this.office = i.office;
       // Preserve preferences!
-      this.coursePreferences = new HashMap<Course, Integer>(
+      this.coursePreferences = new HashMap<Integer, Integer>(
          i.getCoursePreferences());
       this.tPrefs = i.getTimePreferences();
    }
@@ -228,7 +228,7 @@ public class Instructor extends DbData implements Comparable<Instructor>, Serial
    {
       assert (cp != null);
 
-      coursePreferences.put(cp.getCourse(), cp.getDesire());
+      coursePreferences.put(cp.getCourse().getDbid(), cp.getDesire());
    }
 
    /**
@@ -297,7 +297,7 @@ public class Instructor extends DbData implements Comparable<Instructor>, Serial
     * 
     * @return the list of course preferences.
     */
-   public HashMap<Course, Integer> getCoursePreferences ()
+   public HashMap<Integer, Integer> getCoursePreferences ()
    {
       return this.coursePreferences;
    }
@@ -307,7 +307,7 @@ public class Instructor extends DbData implements Comparable<Instructor>, Serial
     * 
     * @param the list of course preferences.
     */
-   public void setCoursePreferences (HashMap<Course, Integer> cps)
+   public void setCoursePreferences (HashMap<Integer, Integer> cps)
    {
       this.coursePreferences = cps;
    }

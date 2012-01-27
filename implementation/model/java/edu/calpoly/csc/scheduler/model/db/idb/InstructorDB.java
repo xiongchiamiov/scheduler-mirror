@@ -100,7 +100,7 @@ protected Instructor make(ResultSet rs)
          toAdd.setAvailability((WeekAvail) sqldb.deserialize(availBuf));
 
          byte[] coursePrefBuf = rs.getBytes(COURSEPREFERENCES);
-         toAdd.setCoursePreferences((HashMap<Course, Integer>) sqldb
+         toAdd.setCoursePreferences((HashMap<Integer, Integer>) sqldb
                .deserialize(coursePrefBuf));
 
          byte[] tprefBuf = rs.getBytes(TPREFS);
