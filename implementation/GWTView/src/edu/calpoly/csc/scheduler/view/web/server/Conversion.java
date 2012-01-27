@@ -51,14 +51,15 @@ public abstract class Conversion {
 		result.setCurWtu(instructor.getCurWtu());
 		result.setFairness(instructor.getFairness());
 		result.setGenerosity(instructor.getGenerosity());
-
+		
 		HashMap<Integer, Integer> coursePreferences = new LinkedHashMap<Integer, Integer>();
 		try {
 			HashMap<Course, Integer> sourceCoursePreferences = instructor
 					.getCoursePreferences();
 			for (Course course : sourceCoursePreferences.keySet()) {
-				coursePreferences.put(course.getDbid(),
-						sourceCoursePreferences.get(course));
+				if (course.getDbid() == null)
+					System.out.println("ERROR, course id is null when converting from model");
+				coursePreferences.put(course.getDbid(), sourceCoursePreferences.get(course));
 			}
 		}
 		catch (Exception e) {
@@ -66,8 +67,7 @@ public abstract class Conversion {
 			e.printStackTrace();
 		}
 		result.setCoursePreferences(coursePreferences);
-	
-		
+
 		Map<Integer, Map<Integer, TimePreferenceGWT>> timePreferences = new TreeMap<Integer, Map<Integer, TimePreferenceGWT>>();
 		try {
 			HashMap<Day, LinkedHashMap<Time, TimePreference>> sourceTimePreferences = instructor
@@ -130,11 +130,15 @@ public abstract class Conversion {
 		ins.setAvailability(new WeekAvail());
 
 		HashMap<Course, Integer> coursePrefs = new HashMap<Course, Integer>();
-		for (Integer course : instructor.getCoursePreferences().keySet()) {
-			Integer desire = instructor.getCoursePreferences().get(course);
-			coursePrefs.put(coursesByID.get(course), desire);
+		for (Integer courseID : instructor.getCoursePreferences().keySet()) {
+			Integer desire = instructor.getCoursePreferences().get(courseID);
+			Course course = coursesByID.get(courseID);
+			if (course.getDbid() == null)
+				System.out.println("ERROR, course id is null when converting to model");
+			coursePrefs.put(course, desire);
 		}
 		ins.setCoursePreferences(coursePrefs);
+
 
 		HashMap<Day, LinkedHashMap<Time, TimePreference>> prefs = new HashMap<Day, LinkedHashMap<Time, TimePreference>>();
 		for (Integer sourceDay : instructor.gettPrefs().keySet()) {

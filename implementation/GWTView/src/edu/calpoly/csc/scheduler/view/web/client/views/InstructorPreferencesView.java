@@ -143,7 +143,11 @@ public class InstructorPreferencesView extends VerticalPanel implements IViewCon
 	}
 	
 	void setCoursePreference(CourseGWT course, int newDesire) {
+		for (Integer key : instructor.getCoursePreferences().keySet())
+			assert(key != null);
 		instructor.getCoursePreferences().put(course.getID(), newDesire);
+		for (Integer key : instructor.getCoursePreferences().keySet())
+			assert(key != null);
 		redoColors();
 	}
 	
