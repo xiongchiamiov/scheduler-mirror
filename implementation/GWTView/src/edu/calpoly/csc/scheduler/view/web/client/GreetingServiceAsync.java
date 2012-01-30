@@ -1,10 +1,12 @@
 package edu.calpoly.csc.scheduler.view.web.client;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
+import edu.calpoly.csc.scheduler.model.schedule.ScheduleItem;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
@@ -32,14 +34,13 @@ public interface GreetingServiceAsync {
 	
 	void getCourses(AsyncCallback<List<CourseGWT>> asyncCallback) throws IllegalArgumentException;
 
-    void generateSchedule(List<CourseGWT> courses,
-			AsyncCallback<List<ScheduleItemGWT>> scheduleItems);
+    void generateSchedule(List<CourseGWT> courses, HashMap<String, ScheduleItemGWT> schedItems, AsyncCallback<List<ScheduleItemGWT>> scheduleItems);
 	void rescheduleCourse(ScheduleItemGWT scheduleItem,
 			List<Integer> days, int startHour, boolean atHalfHour,
-			boolean inSchedule, AsyncCallback<ScheduleItemList> callback);
-	void removeScheduleItem(ScheduleItemGWT removed,
+			boolean inSchedule, HashMap<String, ScheduleItemGWT> scheduleItems, AsyncCallback<ScheduleItemList> callback);
+	void removeScheduleItem(ScheduleItemGWT removed, HashMap<String, ScheduleItemGWT> schedItems,
 			AsyncCallback<List<ScheduleItemGWT>> scheduleItems);
-    void getSchedule(AsyncCallback<List<ScheduleItemGWT>> asyncCallback);
+    void getSchedule(HashMap<String, ScheduleItemGWT> scheduleItems, AsyncCallback<List<ScheduleItemGWT>> asyncCallback);
 	void saveSchedule(AsyncCallback<Void> hollaBack);
     void copySchedule(int existingScheduleID, String scheduleName,
 			AsyncCallback<Integer> asyncCallback);

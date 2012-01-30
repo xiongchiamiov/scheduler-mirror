@@ -2,12 +2,14 @@ package edu.calpoly.csc.scheduler.view.web.client;
 
 
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
+import edu.calpoly.csc.scheduler.model.schedule.ScheduleItem;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
@@ -40,10 +42,10 @@ public interface GreetingService extends RemoteService {
 	List<LocationGWT> getLocations();
 	
 	// Schedule Items
-	List<ScheduleItemGWT> generateSchedule(List<CourseGWT> courses);
-	ScheduleItemList rescheduleCourse(ScheduleItemGWT scheduleItem, List<Integer> days, int startHour, boolean atHalfHour, boolean inSchedule);
-	List<ScheduleItemGWT> removeScheduleItem(ScheduleItemGWT removed);
-	List<ScheduleItemGWT> getSchedule();
+	List<ScheduleItemGWT> generateSchedule(List<CourseGWT> courses, HashMap<String, ScheduleItemGWT> scheduleItems);
+	ScheduleItemList rescheduleCourse(ScheduleItemGWT scheduleItem, List<Integer> days, int startHour, boolean atHalfHour, boolean inSchedule, HashMap<String, ScheduleItemGWT> scheduleItems);
+	List<ScheduleItemGWT> removeScheduleItem(ScheduleItemGWT removed, HashMap<String, ScheduleItemGWT> scheduleItems);
+	List<ScheduleItemGWT> getSchedule(HashMap<String, ScheduleItemGWT> scheduleItems);
 	void saveSchedule();
 	int exportCSV();
 	
