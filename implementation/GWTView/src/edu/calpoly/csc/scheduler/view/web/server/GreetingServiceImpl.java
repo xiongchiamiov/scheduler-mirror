@@ -36,8 +36,7 @@ import edu.calpoly.csc.scheduler.view.web.shared.UserDataGWT;
 public class GreetingServiceImpl extends RemoteServiceServlet implements
 		GreetingService {
 
-	private Model model;
-	private HashMap<String, ScheduleItem> scheduleItems;
+	private Model model;	
 
 	@Override
 	public void login(String username) {
@@ -47,10 +46,13 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public Map<String, UserDataGWT> getScheduleNames() {
 		Map<String, UserDataGWT> availableSchedules = new HashMap<String, UserDataGWT>();
+		
 		for (Entry<String, UserData> entry : model.getSchedules().entrySet()) {
-			assert(entry.getValue() != null);
-			availableSchedules.put(entry.getKey(), Conversion.toGWT(entry.getValue()));
+			assert (entry.getValue() != null);
+			availableSchedules.put(entry.getKey(),
+					Conversion.toGWT(entry.getValue()));
 		}
+		
 		return availableSchedules;
 	}
 
@@ -58,24 +60,25 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	public Integer openNewSchedule(String newScheduleName) {
 		model.openNewSchedule(newScheduleName);
 		return model.getScheduleID();
-    }
-    
-    // Returns 0, null if its a guest
-    // Returns 1, instructor if its an instructor
-    // Returns 2, null if its a admin
+	}
+
+	// Returns 0, null if its a guest
+	// Returns 1, instructor if its an instructor
+	// Returns 2, null if its a admin
 	@Override
-    public Pair<Integer, InstructorGWT> openExistingSchedule(int scheduleID) {
-    	model.openExistingSchedule(scheduleID);
-    	return new Pair<Integer, InstructorGWT>(2, null); // tyero, change this
-    }
+	public Pair<Integer, InstructorGWT> openExistingSchedule(int scheduleID) {
+		model.openExistingSchedule(scheduleID);
+		return new Pair<Integer, InstructorGWT>(2, null); // tyero, change this
+	}
 
 	@Override
-    public void removeSchedule(String schedName) {
-    	model.deleteSchedule(schedName);
-    }
+	public void removeSchedule(String schedName) {
+		model.deleteSchedule(schedName);
+	}
 
 	@Override
-	public ArrayList<InstructorGWT> getInstructors() throws IllegalArgumentException {
+	public ArrayList<InstructorGWT> getInstructors()
+			throws IllegalArgumentException {
 		ArrayList<InstructorGWT> results = new ArrayList<InstructorGWT>();
 		for (Instructor instructor : model.getInstructors()) {
 			System.out.println("Reading instructor, prefs:");
@@ -104,66 +107,29 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		return result;
 	}
 
-//	private void displayInstructorPrefs(Instructor instructor) {
-//		System.out.println("Prefs for instructor " + instructor.getLastName());
-//
-//		for (Day day : instructor.getTimePreferences().keySet())
-//			for (Time time : instructor.getTimePreferences().get(day).keySet())
-//				System.out.println("Day "
-//						+ day.getNum()
-//						+ " time "
-//						+ time.getHour()
-//						+ ":"
-//						+ time.getMinute()
-//						+ " is "
-//						+ instructor.getTimePreferences().get(day).get(time)
-//								.getDesire());
-//	}
+	// private void displayInstructorPrefs(Instructor instructor) {
+	// System.out.println("Prefs for instructor " + instructor.getLastName());
+	//
+	// for (Day day : instructor.getTimePreferences().keySet())
+	// for (Time time : instructor.getTimePreferences().get(day).keySet())
+	// System.out.println("Day "
+	// + day.getNum()
+	// + " time "
+	// + time.getHour()
+	// + ":"
+	// + time.getMinute()
+	// + " is "
+	// + instructor.getTimePreferences().get(day).get(time)
+	// .getDesire());
+	// }
 
-/*	@Override
-	public ArrayList<ScheduleItemGWT> generateSchedule() {
-		assert (model != null);
-
-		List<Course> coursesToGenerate = model.getCourses();
-
-		// TODO: fix this hack.
-		for (Course course : coursesToGenerate) {
-			assert (course.getDays().size() > 0);
-			if (course.getLength() < course.getDays().size() * 2) {
-				course.setLength(course.getDays().size() * 2);
-				System.err
-						.println("Warning: the course length was too low, automatically set it to "
-								+ course.getLength());
-			}
-		}
-
-//		for (Instructor instructor : model.getInstructors())
-//			System.out.println("outside, num instructor day prefs for "
-//					+ instructor.getLastName() + ": "
-//					+ instructor.getTimePreferences().size());
-
-		List<ScheduleItem> scheduleItems = schedule
-				.generate(coursesToGenerate);
-//		System.out.println("schedule items: " + schedule.getItems().size());
-
-		ArrayList<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
-		for (ScheduleItem item : scheduleItems) {
-			gwtItems.add(Conversion.toGWT(item, false));
-		}
-		for (ScheduleItem item : schedule.getDirtyList()) {
-			gwtItems.add(Conversion.toGWT(item, true));
-		}
-		return gwtItems;
-	}
-*/
 	@Override
-	public ArrayList<ScheduleItemGWT> generateSchedule(
-			List<CourseGWT> courses) {
+	public ArrayList<ScheduleItemGWT> generateSchedule(List<CourseGWT> courses, HashMap<String, ScheduleItemGWT> scheduleItems) {
 		Course courseWithSections;
 		Schedule schedule = model.getSchedule();
-		
+
 		assert (model != null);
-		scheduleItems = new HashMap<String, ScheduleItem>();
+		scheduleItems = new HashMap<String, ScheduleItemGWT>();
 
 		List<Course> coursesToGenerate = new LinkedList<Course>();
 		for (CourseGWT course : courses) {
@@ -186,34 +152,33 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		ArrayList<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
 
 		for (ScheduleItem item : schedule.getItems()) {
-			if(item.getCourse().getDbid() == null)
-			{
-			 item.getCourse().setDbid(-1);
+			if (item.getCourse().getDbid() == null) {
+				item.getCourse().setDbid(-1);
 			}
 			gwtItems.add(Conversion.toGWT(item, false));
-			scheduleItems.put(item.getCourse().getDept()
-					+ item.getCourse().getCatalogNum() + item.getSection(),
-					item);
+//			scheduleItems.put(item.getCourse().getDept()
+//					+ item.getCourse().getCatalogNum() + item.getSection(),
+//					item);
 		}
+		
 		for (ScheduleItem item : schedule.getDirtyList()) {
-			if(item.getCourse().getDbid() == null)
-			{
-			 item.getCourse().setDbid(-1);
+			if (item.getCourse().getDbid() == null) {
+				item.getCourse().setDbid(-1);
 			}
 			gwtItems.add(Conversion.toGWT(item, true));
-			scheduleItems.put(item.getCourse().getDept()
-					+ item.getCourse().getCatalogNum() + item.getSection(),
-					item);
+//			scheduleItems.put(item.getCourse().getDept()
+//					+ item.getCourse().getCatalogNum() + item.getSection(),
+//					item);
 		}
 		model.saveSchedule(schedule);
-		
+
 		return gwtItems;
 	}
 
 	@Override
 	public ScheduleItemList rescheduleCourse(ScheduleItemGWT scheduleItem,
 			List<Integer> days, int startHour, boolean atHalfHour,
-			boolean inSchedule) {
+			boolean inSchedule, HashMap<String, ScheduleItemGWT> scheduleItems) {
 		assert (model != null);
 		ScheduleItemList gwtItems = new ScheduleItemList();
 		Course course;
@@ -252,45 +217,44 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		startTime = new Time(startHour, (atHalfHour ? 30 : 0));
 
 		if (inSchedule) {
-			moved = scheduleItems.get(schdItemKey);
-			schedule.removeConflictingItem(moved);
-			try {
-				schedule.move(moved, daysInWeek, startTime);
-			} catch (CouldNotBeScheduledException e) {
-				conflict = e.toString();
-				schedule.addConflictingItem(e.getSi());
-			}
+			//moved = scheduleItems.get(schdItemKey);
+			//schedule.removeConflictingItem(moved);
+//			try {
+//				schedule.move(moved, daysInWeek, startTime);
+//			} catch (CouldNotBeScheduledException e) {
+//				conflict = e.toString();
+//				schedule.addConflictingItem(e.getSi());
+//			}
 		} else {
 			course = Conversion.fromGWT(scheduleItem.getCourse());
-			
-			if(course.getScheduleDBId() == null)
-			{
-			 course.setScheduleDBId(-1);
+
+			if (course.getScheduleDBId() == null) {
+				course.setScheduleDBId(-1);
 			}
 			schedule.genItem(course, daysInWeek, startTime);
 		}
 
-		scheduleItems = new HashMap<String, ScheduleItem>();
+		//scheduleItems = new HashMap<String, ScheduleItem>();
 
 		for (ScheduleItem item : schedule.getItems()) {
-			if(item.getCourse().getDbid() == null)
-			{
-			 item.getCourse().setDbid(-1);
+			if (item.getCourse().getDbid() == null) {
+				item.getCourse().setDbid(-1);
 			}
 			gwtItems.add(Conversion.toGWT(item, false));
-			scheduleItems.put(item.getCourse().getDept()
-					+ item.getCourse().getCatalogNum() + item.getSection(),
-					item);
+//			scheduleItems.put(item.getCourse().getDept()
+//					+ item.getCourse().getCatalogNum() + item.getSection(),
+//					item);
 		}
+		
 		for (ScheduleItem item : schedule.getDirtyList()) {
-			if(item.getCourse().getDbid() == null)
-			{
-			 item.getCourse().setDbid(-1);
+			if (item.getCourse().getDbid() == null) {
+				item.getCourse().setDbid(-1);
 			}
+			
 			gwtItems.add(Conversion.toGWT(item, true));
-			scheduleItems.put(item.getCourse().getDept()
-					+ item.getCourse().getCatalogNum() + item.getSection(),
-					item);
+//			scheduleItems.put(item.getCourse().getDept()
+//					+ item.getCourse().getCatalogNum() + item.getSection(),
+//					item);
 
 		}
 
@@ -309,7 +273,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 
 	@Override
 	public void saveInstructor(InstructorGWT instructorGWT) {
-		Instructor instructor = Conversion.fromGWT(instructorGWT, getCoursesByID());
+		Instructor instructor = Conversion.fromGWT(instructorGWT,
+				getCoursesByID());
 
 		System.out.println("Saving instructor, prefs:");
 		for (Entry<Integer, Integer> entry : instructor.getCoursePreferences().entrySet())
@@ -319,32 +284,30 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
-	public ArrayList<ScheduleItemGWT> getSchedule() {
+	public ArrayList<ScheduleItemGWT> getSchedule(HashMap<String, ScheduleItemGWT> scheduleItems) {
 		ArrayList<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
 		ScheduleItemGWT gwtItem;
 		Schedule schedule = model.getSchedule();
-		
-		scheduleItems = new HashMap<String, ScheduleItem>();
+
+		scheduleItems = new HashMap<String, ScheduleItemGWT>();
 
 		for (ScheduleItem item : schedule.getItems()) {
-			if(item.getCourse().getDbid() == null)
-			{
-			 item.getCourse().setDbid(-1);
+			if (item.getCourse().getDbid() == null) {
+				item.getCourse().setDbid(-1);
 			}
 			gwtItem = Conversion.toGWT(item, false);
-			scheduleItems.put(gwtItem.getDept() + gwtItem.getCatalogNum()
-					+ gwtItem.getSection(), item);
+//			scheduleItems.put(gwtItem.getDept() + gwtItem.getCatalogNum()
+//					+ gwtItem.getSection(), item);
 			gwtItems.add(gwtItem);
 		}
 
 		for (ScheduleItem item : schedule.getDirtyList()) {
-			if(item.getCourse().getDbid() == null)
-			{
-			 item.getCourse().setDbid(-1);
+			if (item.getCourse().getDbid() == null) {
+				item.getCourse().setDbid(-1);
 			}
 			gwtItem = Conversion.toGWT(item, true);
-			scheduleItems.put(gwtItem.getDept() + gwtItem.getCatalogNum()
-					+ gwtItem.getSection(), item);
+//			scheduleItems.put(gwtItem.getDept() + gwtItem.getCatalogNum()
+//					+ gwtItem.getSection(), item);
 			gwtItems.add(gwtItem);
 		}
 		// System.out.println(model.exportToCSV(schedule));
@@ -360,84 +323,75 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
-	public ArrayList<ScheduleItemGWT> removeScheduleItem(ScheduleItemGWT removed) {
+	public ArrayList<ScheduleItemGWT> removeScheduleItem(ScheduleItemGWT removed, HashMap<String, ScheduleItemGWT> scheduleItems) {
 		String schdItemKey = removed.getDept() + removed.getCatalogNum()
 				+ removed.getSection();
 		ScheduleItemGWT gwtItem;
 		ArrayList<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
 		Schedule schedule = model.getSchedule();
-		
-		System.out.println("before " + schedule.getItems().size() + " removing " + scheduleItems.get(schdItemKey));
-		schedule.remove(scheduleItems.get(schdItemKey));
+
+		System.out.println("before " + schedule.getItems().size()
+				+ " removing " + scheduleItems.get(schdItemKey));
+//		schedule.remove(scheduleItems.get(schdItemKey));
 		System.out.println("after " + schedule.getItems().size());
-		scheduleItems = new HashMap<String, ScheduleItem>();
+		scheduleItems = new HashMap<String, ScheduleItemGWT>();
 
 		for (ScheduleItem item : schedule.getItems()) {
-			if(item.getCourse().getDbid() == null)
-			{
-			 item.getCourse().setDbid(-1);
+			if (item.getCourse().getDbid() == null) {
+				item.getCourse().setDbid(-1);
 			}
 			gwtItem = Conversion.toGWT(item, false);
 			schdItemKey = gwtItem.getDept() + gwtItem.getCatalogNum()
 					+ gwtItem.getSection();
-			scheduleItems.put(schdItemKey, item);
+//			scheduleItems.put(schdItemKey, item);
 			gwtItems.add(gwtItem);
 		}
 		for (ScheduleItem item : schedule.getDirtyList()) {
-			if(item.getCourse().getDbid() == null)
-			{
-			 item.getCourse().setDbid(-1);
+			if (item.getCourse().getDbid() == null) {
+				item.getCourse().setDbid(-1);
 			}
 			gwtItem = Conversion.toGWT(item, true);
 			schdItemKey = gwtItem.getCourseString() + gwtItem.getCatalogNum()
 					+ gwtItem.getSection();
-			scheduleItems.put(schdItemKey, item);
+//			scheduleItems.put(schdItemKey, item);
 			gwtItems.add(gwtItem);
 		}
 
 		model.saveSchedule(schedule);
-		
+
 		return gwtItems;
 	}
-//
-//	@Override
-//	public int importFromCSV(String scheduleName, String value) {
-//		model.openNewSchedule(scheduleName);
-//		model.importFromCSV(value);
-//		return model.getScheduleID();
-//	}
-
 
 	@Override
 	public ArrayList<CourseGWT> getCourses() throws IllegalArgumentException {
 		ArrayList<CourseGWT> results = new ArrayList<CourseGWT>();
 		for (Course course : model.getCourses()) {
-			System.out.println("returning course " + course.getCatalogNum() + " type " + course.getType());
+			System.out.println("returning course " + course.getCatalogNum()
+					+ " type " + course.getType());
 			results.add(Conversion.toGWT(course));
 		}
 		return results;
 	}
 
-	public void saveSchedule()
-	{
-	 Schedule schedule = model.getSchedule();
-	 model.saveSchedule(schedule);
+	public void saveSchedule() {
+		Schedule schedule = model.getSchedule();
+		model.saveSchedule(schedule);
 	}
-	
+
 	public void saveCurrentScheduleAs(String schedName) {
 		model.saveCurrentScheduleAs(schedName);
 	}
-	
+
 	@Override
-	public int exportCSV(){
+	public int exportCSV() {
 		Schedule schedule = model.getSchedule();
 		if (schedule == null) {
 			schedule = new Schedule(model.getInstructors(),
 					model.getLocations());
 		}
-		
+
 		/** TODO replace new Date with export to CSV String */
-		//return CSVDownload.save(model.exportToCSV(schedule));
+		// return CSVDownload.save(model.exportToCSV(schedule));
 		return CSVDownload.save(model.exportToCSV());
 	}
 
@@ -446,7 +400,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		toAdd.setID(-1);
 		Course course = Conversion.fromGWT(toAdd);
 		model.saveCourse(course);
-		assert(course.getDbid() != -1);
+		assert (course.getDbid() != -1);
 		return Conversion.toGWT(course);
 	}
 
@@ -454,7 +408,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	public void editCourse(CourseGWT toEdit) {
 		System.out.println("editCourse incoming gwt course " + toEdit.getCatalogNum() + " lectureid " + toEdit.getLectureID());
 		Course course = Conversion.fromGWT(toEdit);
-		assert(course.getDbid() != -1);
+		assert (course.getDbid() != -1);
 		System.out.println("editCourse saving model course " + course.getCatalogNum() + " lectureid " + course.getLectureID());
 		model.saveCourse(course);
 	}
@@ -462,7 +416,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public void removeCourse(CourseGWT toRemove) {
 		Course course = Conversion.fromGWT(toRemove);
-		assert(course.getDbid() != -1);
+		assert (course.getDbid() != -1);
 		model.removeCourse(course);
 	}
 
@@ -476,32 +430,21 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 			System.out.println("Course id " + entry.getKey() + " pref: " + entry.getValue());
 		
 		model.saveInstructor(instructor);
-		assert(instructor.getDbid() != -1);
+		assert (instructor.getDbid() != -1);
 		return Conversion.toGWT(instructor);
 	}
 
 	@Override
 	public void editInstructor(InstructorGWT toEdit) {
 		Instructor instructor = Conversion.fromGWT(toEdit, getCoursesByID());
-
-		System.out.println("Editing (saving) instructor, prefs:");
-		for (Entry<Integer, Integer> entry : instructor.getCoursePreferences().entrySet())
-			System.out.println("Course id " + entry.getKey() + " pref: " + entry.getValue());
-		
-		assert(instructor.getDbid() != -1);
+		assert (instructor.getDbid() != -1);
 		model.saveInstructor(instructor);
 	}
 
 	@Override
 	public void removeInstructor(InstructorGWT toRemove) {
 		Instructor instructor = Conversion.fromGWT(toRemove, getCoursesByID());
-
-		System.out.println("Removing instructor, prefs:");
-		for (Entry<Integer, Integer> entry : instructor.getCoursePreferences().entrySet())
-			System.out.println("Course id " + entry.getKey() + " pref: " + entry.getValue());
-		
-		
-		assert(instructor.getDbid() != -1);
+		assert (instructor.getDbid() != -1);
 		model.removeInstructor(instructor);
 	}
 
@@ -510,21 +453,21 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		toAdd.setID(-1);
 		Location location = Conversion.fromGWT(toAdd);
 		model.saveLocation(location);
-		assert(location.getDbid() != -1);
+		assert (location.getDbid() != -1);
 		return Conversion.toGWT(location);
 	}
 
 	@Override
 	public void editLocation(LocationGWT toEdit) {
 		Location location = Conversion.fromGWT(toEdit);
-		assert(location.getDbid() != -1);
+		assert (location.getDbid() != -1);
 		model.saveLocation(location);
 	}
 
 	@Override
 	public void removeLocation(LocationGWT toRemove) {
 		Location location = Conversion.fromGWT(toRemove);
-		assert(location.getDbid() != -1);
+		assert (location.getDbid() != -1);
 		model.removeLocation(location);
 	}
 }
