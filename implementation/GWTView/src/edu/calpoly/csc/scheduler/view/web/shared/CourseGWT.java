@@ -165,7 +165,7 @@ public class CourseGWT implements Serializable, Identified {
 	}
 
 	public String toString() {
-		return this.courseName + " " + this.catalogNum;
+		return this.courseName + " " + this.catalogNum + " " + this.type;
 	}
 	
 	@Override

@@ -243,8 +243,10 @@ public class DualListBox extends AbsolutePanel
   for (Widget widget : left.widgetList())
   {
    //If the course is already on the schedule, or in the "Courses to be Scheduled" list then don't add it.
-   if (right.contains(((CourseListItem) widget)) < 0
-     && scheduleController.getSectionsOnSchedule(((CourseListItem) widget).getCourse()) <= 0)
+	  System.out.println(((CourseListItem) widget).getCourse().toString());
+	  
+			if (right.contains(((CourseListItem) widget)) < 0
+					&& scheduleController.getSectionsOnSchedule(((CourseListItem) widget).getCourse()) <= 0)
    {
     right.add(new CourseListItem(((CourseListItem) widget).getCourse(), true));
    }
