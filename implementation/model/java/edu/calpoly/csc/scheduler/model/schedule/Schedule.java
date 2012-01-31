@@ -606,6 +606,7 @@ public class Schedule extends DbData implements Serializable
     */
    public Vector<ScheduleItem> generate (Collection<Course> c_list)
    {
+	  items.clear();
       initGenData(c_list);
 
       debug("GENERATING");
