@@ -63,7 +63,7 @@ public class ScheduleCellDropController extends SimpleDropController
    oneSectionCourse = new CourseGWT(courseDropped);
    oneSectionCourse.setNumSections(1);
    //The course is held in a schedule item because of my "make it up as you go" design... sorry.
-   courseHolder = new ScheduleItemGWT(oneSectionCourse, "", "", "", 0, 1,
+   courseHolder = new ScheduleItemGWT(oneSectionCourse, "", "", "", "", 1,
      new ArrayList<Integer>(), 0, 0, 0, 0, "", false);
    fromIncluded = !((MouseListBox) context.draggable.getParent().getParent())
      .isAvailableBox();

@@ -8,7 +8,7 @@ public class ScheduleItemGWT implements Serializable {
 	private String courseName;
 	private String professor;
 	private String courseDept;
-	private int courseNum;
+	private String courseNum;
 	private int section;
 	private String days;
 	ArrayList<Integer> dayNums;
@@ -19,16 +19,16 @@ public class ScheduleItemGWT implements Serializable {
 	private boolean placed = false;
 	private String room;
 	private boolean isConflicted;
- private CourseGWT course;
- 
+	private CourseGWT course;
+
 	public ScheduleItemGWT() {
 	}
 
-	public ScheduleItemGWT(CourseGWT course, String cName, String prof, String dept,
-			int cNum, int sec, ArrayList<Integer> dNums, int sth, int stm,
-			int eth, int etm, String rm, boolean conflicted) {
-  this.course = course;
-	 courseName = cName;
+	public ScheduleItemGWT(CourseGWT course, String cName, String prof,
+			String dept, String cNum, int sec, ArrayList<Integer> dNums,
+			int sth, int stm, int eth, int etm, String rm, boolean conflicted) {
+		this.course = course;
+		courseName = cName;
 		professor = prof;
 		courseDept = dept;
 		courseNum = cNum;
@@ -43,11 +43,10 @@ public class ScheduleItemGWT implements Serializable {
 		isConflicted = conflicted;
 	}
 
-	public CourseGWT getCourse()
-	{
-	 return course;
+	public CourseGWT getCourse() {
+		return course;
 	}
-	
+
 	private String getDayString(ArrayList<Integer> dayNums) {
 		String dayString = new String();
 		for (int day : dayNums) {
@@ -104,8 +103,9 @@ public class ScheduleItemGWT implements Serializable {
 			endMin = Integer.toString(endTimeMin);
 		}
 
-		return courseName + "<br>" + courseDept + " " + courseNum + "-" + section + "<br>" + room + "<br>" + professor
-				+ "<br>" + days + " " + startHour + ":" + startMin + startAmPm + " - "
+		return courseName + "<br>" + courseDept + " " + courseNum + "-"
+				+ section + "<br>" + room + "<br>" + professor + "<br>" + days
+				+ " " + startHour + ":" + startMin + startAmPm + " - "
 				+ endHour + ":" + endMin + endAmPm;
 	}
 
@@ -177,21 +177,19 @@ public class ScheduleItemGWT implements Serializable {
 		return courseDept;
 	}
 
-	public int getCatalogNum() {
+	public String getCatalogNum() {
 		return courseNum;
 	}
 
 	public int getSection() {
 		return section;
 	}
-	
-	public void setConflicted(boolean conflicted)
-	{
+
+	public void setConflicted(boolean conflicted) {
 		isConflicted = conflicted;
 	}
-	
-	public boolean isConflicted()
-	{
+
+	public boolean isConflicted() {
 		return isConflicted;
 	}
 }

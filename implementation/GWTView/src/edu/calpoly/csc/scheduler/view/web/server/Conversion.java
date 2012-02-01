@@ -197,9 +197,10 @@ public abstract class Conversion {
 		CourseGWT course = toGWT(schdItem.getCourse());
 
 		// TODO: yero make this constructor take courseNum (string) instead of courseNumIntForSI (int)
-		int courseNumIntForSI = Integer.parseInt(courseNum);
+		//int courseNumIntForSI = Integer.parseInt(courseNum);
+		
 		return new ScheduleItemGWT(course, courseName, instructor, courseDept,
-				courseNumIntForSI, section, dayNums, startTimeHour, startTimeMin,
+				courseNum, section, dayNums, startTimeHour, startTimeMin,
 				endTimeHour, endTimeMin, location, isConflicted);
 	}
 
