@@ -18,11 +18,12 @@ import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.client.IViewContents;
 import edu.calpoly.csc.scheduler.view.web.client.ViewFrame;
 import edu.calpoly.csc.scheduler.view.web.client.schedule.ScheduleViewWidget;
+import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 
 public class ScheduleView extends VerticalPanel implements IViewContents {
 	private GreetingServiceAsync service;
 	private String scheduleName;
-	HashMap<String, ScheduleItem> scheduleItems;
+	//HashMap<String, ScheduleItemGWT> scheduleItems;
 	
 	public ScheduleView(GreetingServiceAsync greetingService,
 			String scheduleName) {
