@@ -229,7 +229,7 @@ public class Schedule extends DbData implements Serializable
 	/**
     * Used for debugging. Toggle it to get debugging output
     */
-   private static final boolean DEBUG = !true; // !true == false ; )
+   private static final boolean DEBUG = true; // !true == false ; )
    
    /**
     * Prints a message to STDERR if DEBUG is true
@@ -607,36 +607,88 @@ public class Schedule extends DbData implements Serializable
    public Vector<ScheduleItem> generate (Collection<Course> c_list)
    {
 	  items.clear();
+	  
       initGenData(c_list);
 
       debug("GENERATING");
       debug("COURSES: " + this.cSourceList);
       debug("INSTRUCTORS: " + this.iSourceList);
       debug("LOCATIONS: " + this.lSourceList);
+      
+      //Generate labs from the course list
+      HashMap<Integer, Course> labList = new HashMap<Integer, Course>();
+      for (Course c : this.cSourceList) {
+    	  if(c.getType() == Course.CourseType.LAB) { //Is a lab associated with a lecture
+    		  debug ("Found lab: " + c.getCatalogNum() + " " + c.getName());
+    		  c.setTetheredToLecture(Boolean.TRUE);
+    		  labList.put(c.getLectureID(), c);
+    	  }
+      }
 
       for (Course c : this.cSourceList)
       {
-         debug ("MAKING SI's FOR COURSE " + c);
-         SectionTracker st = getSectionTracker(c);
-         for (int i = 0; i < c.getNumOfSections(); i ++)
-         {
-            debug ("SECTIONS SCHEDULED: " + st.getCurSection()
-               + " / " + c.getNumOfSections());
+           if(c.getType() == Course.CourseType.LEC) {
+                debug ("MAKING SI's FOR COURSE " + c);
+                
+                ScheduleItem lec_si = null;
+                
+                SectionTracker st = getSectionTracker(c);
+                for (int i = 0; i < c.getNumOfSections(); i ++)
+                {
+                     debug ("SECTIONS SCHEDULED: " + st.getCurSection()
+                        + " / " + c.getNumOfSections());
             
-            ScheduleItem lec_si = genLecItem(c);
-            debug ("MADE LEC_SI\n" + lec_si);
-            try
-            {
-               add(lec_si);
-               debug ("ADDED IT");
-            }
-            catch (CouldNotBeScheduledException e)
-            {
-               System.err.println("GENERATION MADE A BAD LEC");
-               System.err.println(lec_si);
-            }
+                     lec_si = genLecItem(c);
+                     debug ("MADE LEC_SI\n" + lec_si);
+                     try
+                     {
+                          add(lec_si);
+                          debug ("ADDED IT");
+                     }
+                     catch (CouldNotBeScheduledException e)
+                     {
+                          System.err.println("GENERATION MADE A BAD LEC");
+                          System.err.println(lec_si);
+                     }
+                }
+                
+                debug ("Done with scheduling LECTURE");
+                debug ("The ID of the LEC is: " + c.getDbid());
+                for(Course labCourse : labList.values()) {
+                	debug ("The ID of the LAB is: " + labCourse.getLectureID());
+                }
+                
+                if(labList.containsKey(c.getDbid())) { //Have a lab or labs that we need to schedule
+                	debug ("Found lab for " + c.toString());
+                	
+                	Course lab = labList.get(c.getDbid());
+                	
+                	debug ("Now scheduling labs for " + c.toString());
+                	
+                	/*int curEnrollment = 0;
+                    int goal = c.getEnrollment();
+                    while (curEnrollment < goal)
+                    {
+*/
+                       ScheduleItem lab_si = genLabItem(lab, lec_si);
+                       try
+                       {                           
+                          add(lab_si);
+                          lec_si.addLab(lab_si);
+                          //curEnrollment += lab.getEnrollment();
+                       }
+                       catch (CouldNotBeScheduledException e)
+                       {
+                          System.err.println("GENERATION MADE A BAD LAB");
+                          System.err.println(lab_si);
+                       }
+                    //}
+                	
+                	
+                }
+           }
          
-            assert(false);
+            //TODO - All of the following involves getting labs working
             /*
              *  The following code has been removed since the 
              *  Lab class is no longer being used. Instead a lectureID
@@ -646,14 +698,11 @@ public class Schedule extends DbData implements Serializable
              *  If the course is a lab, the lectureID will be the id 
              *  of the lecture that the lab is associated with. If it is not
              *  a lab, the lectureID will be -1.
-             *
-            Lab lab = c.getLab();
-            if (lab != null)
+             */
+           
+            /*if (lab != null)
             {
                debug ("HAVE LAB " + lab);
-               /*
-                * We need to schedule labs until we have enough enrollment to
-                * supply the lecture
                 
                int curEnrollment = 0;
                int goal = c.getEnrollment();
@@ -663,9 +712,6 @@ public class Schedule extends DbData implements Serializable
                   ScheduleItem lab_si = genLabItem(lab, lec_si);
                   try
                   {
-                     /*
-                      * If the add fails, we won't consider its enrollment, 
-                      * which is good. So, don't screw w/ the order here
                       
                      add(lab_si);
                      lec_si.addLab(lab_si);
@@ -679,7 +725,6 @@ public class Schedule extends DbData implements Serializable
                }
             }*/
          }
-      }
 
       debug ("GENERATION FINISHED W/: " + this.getItems().size());
       
@@ -742,7 +787,7 @@ public class Schedule extends DbData implements Serializable
     * @see Tba#getTba()
     * @see Staff#getStaff()
     */
-   private ScheduleItem genLabItem (Lab lab, ScheduleItem lec_si)
+   private ScheduleItem genLabItem (Course lab, ScheduleItem lec_si)
    {
       ScheduleItem lab_si = new ScheduleItem();
 
@@ -750,9 +795,9 @@ public class Schedule extends DbData implements Serializable
       lab_si.setInstructor(getLabInstructor(lab, lec_si));
 
       TimeRange tr = this.lab_bounds;
-      if (lab.isTethered())
+      if (lab.getTetheredToLecture())
       {
-         tr = new TimeRange(lec_si.getStart(), lab.getDayLength());
+         tr = new TimeRange(lec_si.getEnd(), lab.getDayLength());
       }
 
       return genBestTime(lab_si, tr);
@@ -938,9 +983,9 @@ public class Schedule extends DbData implements Serializable
     * 
     * @see Staff#getStaff()
     */
-   private Instructor getLabInstructor (Lab lab, ScheduleItem lec_si)
+   private Instructor getLabInstructor (Course lab, ScheduleItem lec_si)
    {
-      Instructor r;
+      /*Instructor r;
 
       if (!lab.shouldUseLectureInstructor())
       {
@@ -958,7 +1003,9 @@ public class Schedule extends DbData implements Serializable
             r = Staff.getStaff();
          }
       }
-      return r;
+      return r;*/
+	   
+	   return lec_si.getInstructor();
    }
 
    /**
