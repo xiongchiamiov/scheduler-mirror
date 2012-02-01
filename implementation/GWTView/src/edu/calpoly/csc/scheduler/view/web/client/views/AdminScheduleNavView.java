@@ -77,7 +77,7 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 					}
 				}));
 		
-		scheduleMenuItem.getCommand().execute();
+		coursesMenuItem.getCommand().execute();
 	}
 
 	@Override
