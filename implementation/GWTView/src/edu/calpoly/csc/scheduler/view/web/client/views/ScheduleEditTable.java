@@ -5,12 +5,13 @@ import java.util.Map;
 
 import com.google.gwt.user.client.ui.FlexTable;
 
+import edu.calpoly.csc.scheduler.view.web.client.schedule.ScheduleEditWidget;
 import edu.calpoly.csc.scheduler.view.web.client.schedule.ScheduleViewWidget;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 
 public class ScheduleEditTable extends FlexTable {
 	
-	private final ScheduleViewWidget mScheduleController;
+	private final ScheduleEditWidget mScheduleController;
 	
 	private static final int NUM_TIME_SLOTS = 30;
 	private static final int NUM_DAYS = 5;
