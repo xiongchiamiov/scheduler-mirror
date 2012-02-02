@@ -65,9 +65,9 @@ public class InstructorGWT implements Serializable, Identified {
 		}
 		tPrefs = newTPrefs;
 			
-		Map<Integer, Integer> newCoursePrefs = new LinkedHashMap<Integer, Integer>();
-		for (Integer course : that.coursePrefs.keySet())
-			newCoursePrefs.put(course, that.coursePrefs.get(course));
+		Map<Integer, Integer> newCoursePrefs = new LinkedHashMap<Integer, Integer>(that.coursePrefs);
+		//for (Integer course : that.coursePrefs.keySet())
+			//newCoursePrefs.put(course, that.coursePrefs.get(course));
 		coursePrefs = newCoursePrefs;
 		
 		verify();

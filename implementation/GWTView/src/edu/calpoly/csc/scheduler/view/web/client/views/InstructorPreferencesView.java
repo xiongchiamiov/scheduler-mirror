@@ -62,7 +62,7 @@ public class InstructorPreferencesView extends VerticalPanel implements IViewCon
 			}
 		}));
 		
-		this.add(new HTML("Time preferences go from 0 to 9. 0 means you cannot teach at that time, 9 means you really want to teach at that time."));
+		this.add(new HTML("Time preferences are between 0 and 3.  0 means you cannot teach at that time, 3 means you really want to teach at that time."));
 		
 		this.add(timePrefs);
 		

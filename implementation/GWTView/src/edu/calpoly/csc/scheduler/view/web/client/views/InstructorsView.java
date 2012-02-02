@@ -94,6 +94,7 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 		table = new OsmTable<InstructorGWT>(
 				new IFactory<InstructorGWT>() {
 					public InstructorGWT create() {
+						System.out.println("Gets to this point to create this mofo");
 						return new InstructorGWT(
 								generateTemporaryInstructorID(), "", "", "", "", "", false, 5, 5, 0, 0,
 								new HashMap<Integer, Map<Integer, TimePreferenceGWT>>(),

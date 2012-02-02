@@ -104,7 +104,7 @@ protected Instructor make(ResultSet rs)
                .deserialize(coursePrefBuf));
 
          byte[] tprefBuf = rs.getBytes(TPREFS);
-         toAdd.settPrefs((HashMap<Day, LinkedHashMap<Time, TimePreference>>) sqldb
+         toAdd.settPrefs((HashMap<Integer, LinkedHashMap<Integer, TimePreference>>) sqldb
                .deserialize(tprefBuf));
 
          byte[] taughtBuf = rs.getBytes(ITEMSTAUGHT);

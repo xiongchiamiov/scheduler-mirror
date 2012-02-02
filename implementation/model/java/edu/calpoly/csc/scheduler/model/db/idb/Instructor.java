@@ -83,8 +83,9 @@ public class Instructor extends DbData implements Comparable<Instructor>, Serial
    /**
     * List of time preferences an instructor has for a course.
     */
-   private HashMap<Day, LinkedHashMap<Time, TimePreference>> tPrefs;
-
+   //private HashMap<Day, LinkedHashMap<Time, TimePreference>> tPrefs;
+   private HashMap<Integer, LinkedHashMap<Integer, TimePreference>> tPrefs;
+   
    private Vector<ScheduleItem> itemsTaught = new Vector<ScheduleItem>();
 
    public Instructor () { }
@@ -154,7 +155,7 @@ public class Instructor extends DbData implements Comparable<Instructor>, Serial
     */
    private void initTPrefs ()
    {
-      this.tPrefs = new HashMap<Day, LinkedHashMap<Time, TimePreference>>();
+      this.tPrefs = new HashMap<Integer, LinkedHashMap<Integer, TimePreference>>();
       for (Day d : Week.fiveDayWeek.getDays())
       {
          fillDayWithTPrefs(d);
@@ -175,7 +176,7 @@ public class Instructor extends DbData implements Comparable<Instructor>, Serial
       /*
        * Make a list of the preferences for a given day
        */
-      LinkedHashMap<Time, TimePreference> tPrefList = new LinkedHashMap<Time, TimePreference>();
+      LinkedHashMap<Integer, TimePreference> tPrefList = new LinkedHashMap<Integer, TimePreference>();
 
       for (int hour = 0; hour < 24; hour++)
       {
@@ -184,19 +185,21 @@ public class Instructor extends DbData implements Comparable<Instructor>, Serial
           * Yes, there's ducpliate data between the time keys and the TPref
           * values. This is intentional, as the generate algorithm will need it.
           */
+         Integer i1 = new Integer(hour * 60);
+         Integer i2 = new Integer(hour * 60 + 30);
          Time t1 = new Time(hour, 0);
          Time t2 = new Time(hour, 30);
          TimePreference tp1 = new TimePreference(t1, desire);
          TimePreference tp2 = new TimePreference(t2, desire);
 
-         tPrefList.put(t1, tp1);
-         tPrefList.put(t2, tp2);
+         tPrefList.put(i1, tp1);
+         tPrefList.put(i2, tp2);
       }
       /*
        * Once created, add the list to the day it applies to in the instructor
        * tPrefs
        */
-      this.tPrefs.put(d, tPrefList);
+      this.tPrefs.put(d.getNum(), tPrefList);
    }
 
    /**
@@ -216,7 +219,7 @@ public class Instructor extends DbData implements Comparable<Instructor>, Serial
       {
          fillDayWithTPrefs(d);
       }
-      this.tPrefs.get(d).put(tp.getTime(), tp);
+      this.tPrefs.get(d.getNum()).put(tp.getTime().getHour() + tp.getTime().getMinute(), tp);
    }
 
    /**
@@ -435,7 +438,7 @@ public class Instructor extends DbData implements Comparable<Instructor>, Serial
    /**
     * @return the tPrefs
     */
-   public HashMap<Day, LinkedHashMap<Time, TimePreference>> gettPrefs()
+   public HashMap<Integer, LinkedHashMap<Integer, TimePreference>> gettPrefs()
    {
       return tPrefs;
    }
@@ -507,7 +510,7 @@ public class Instructor extends DbData implements Comparable<Instructor>, Serial
    /**
     * @param tPrefs the tPrefs to set
     */
-   public void settPrefs(HashMap<Day, LinkedHashMap<Time, TimePreference>> tPrefs)
+   public void settPrefs(HashMap<Integer, LinkedHashMap<Integer, TimePreference>> tPrefs)
    {
       this.tPrefs = tPrefs;
    }
@@ -608,7 +611,7 @@ public class Instructor extends DbData implements Comparable<Instructor>, Serial
     */
    public int getPreference (Day d, Time time)
    {
-	   if (DEBUG) {
+	   /*if (DEBUG) {
 		   System.out.println("Instructor prefs for " + getLastName());
 
 	      for (Day day: this.tPrefs.keySet())
@@ -619,7 +622,7 @@ public class Instructor extends DbData implements Comparable<Instructor>, Serial
 	            System.out.println (d + " IS ALREADY HERE");
 	         }
 	      }
-	   }
+	   }*/
       
       if (!this.tPrefs.containsKey(d))
       {
@@ -707,7 +710,7 @@ public class Instructor extends DbData implements Comparable<Instructor>, Serial
     * 
     * @return the list of time preferences.
     */
-   public HashMap<Day, LinkedHashMap<Time, TimePreference>> getTimePreferences ()
+   public HashMap<Integer, LinkedHashMap<Integer, TimePreference>> getTimePreferences ()
    {
       return tPrefs;
    }
@@ -721,7 +724,7 @@ public class Instructor extends DbData implements Comparable<Instructor>, Serial
     * @return the list of time preferences.
     */
    public void setTimePreferences (
-      HashMap<Day, LinkedHashMap<Time, TimePreference>> tps)
+      HashMap<Integer, LinkedHashMap<Integer, TimePreference>> tps)
    {
       this.tPrefs = tps;
    }
@@ -942,7 +945,7 @@ public class Instructor extends DbData implements Comparable<Instructor>, Serial
       i.setGenerosity(1);
       i.setAvailability(new WeekAvail());
       i.setCoursePreferences(coursePreferences);
-      i.settPrefs(new HashMap<Day, LinkedHashMap<Time, TimePreference>>());
+      i.settPrefs(new HashMap<Integer, LinkedHashMap<Integer, TimePreference>>());
       i.setItemsTaught(itemsTaught);
       i.setScheduleDBId(1);
       return i;

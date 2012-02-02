@@ -70,17 +70,17 @@ public abstract class Conversion {
 
 		Map<Integer, Map<Integer, TimePreferenceGWT>> timePreferences = new TreeMap<Integer, Map<Integer, TimePreferenceGWT>>();
 		try {
-			HashMap<Day, LinkedHashMap<Time, TimePreference>> sourceTimePreferences = instructor
+			HashMap<Integer, LinkedHashMap<Integer, TimePreference>> sourceTimePreferences = instructor
 					.getTimePreferences();
-			for (Day sourceDay : sourceTimePreferences.keySet()) {
-				LinkedHashMap<Time, TimePreference> sourceTimePreferencesForDay = sourceTimePreferences
+			for (Integer sourceDay : sourceTimePreferences.keySet()) {
+				LinkedHashMap<Integer, TimePreference> sourceTimePreferencesForDay = sourceTimePreferences
 						.get(sourceDay);
-				Integer day = Conversion.toGWT(sourceDay);
+				Integer day = sourceDay;//Conversion.toGWT(sourceDay);
 				Map<Integer, TimePreferenceGWT> timePreferencesForDay = new TreeMap<Integer, TimePreferenceGWT>();
-				for (Time sourceTime : sourceTimePreferencesForDay.keySet()) {
+				for (Integer sourceTime : sourceTimePreferencesForDay.keySet()) {
 					TimePreference sourceTimePreferencesForTime = sourceTimePreferencesForDay
 							.get(sourceTime);
-					Integer time = Conversion.toGWT(sourceTime);
+					Integer time = sourceTime;//Conversion.toGWT(sourceTime);
 					TimePreferenceGWT timePreferencesForTime = Conversion
 							.toGWT(sourceTimePreferencesForTime);
 					timePreferencesForDay.put(time, timePreferencesForTime);
@@ -140,18 +140,18 @@ public abstract class Conversion {
 		ins.setCoursePreferences(coursePrefs);
 
 
-		HashMap<Day, LinkedHashMap<Time, TimePreference>> prefs = new HashMap<Day, LinkedHashMap<Time, TimePreference>>();
+		HashMap<Integer, LinkedHashMap<Integer, TimePreference>> prefs = new HashMap<Integer, LinkedHashMap<Integer, TimePreference>>();
 		for (Integer sourceDay : instructor.gettPrefs().keySet()) {
 			Map<Integer, TimePreferenceGWT> sourceDayPrefs = instructor
 					.gettPrefs().get(sourceDay);
 
-			Day day = dayFromGWT(sourceDay);
-			LinkedHashMap<Time, TimePreference> dayPrefs = new LinkedHashMap<Time, TimePreference>();
+			Integer day = sourceDay;//Day day = dayFromGWT(sourceDay);
+			LinkedHashMap<Integer, TimePreference> dayPrefs = new LinkedHashMap<Integer, TimePreference>();
 
 			for (Integer sourceTime : sourceDayPrefs.keySet()) {
 				TimePreferenceGWT sourceTimePrefs = sourceDayPrefs
 						.get(sourceTime);
-				dayPrefs.put(timeFromGWT(sourceTime), fromGWT(sourceTimePrefs));
+				dayPrefs.put(sourceTime, fromGWT(sourceTimePrefs));
 			}
 
 			prefs.put(day, dayPrefs);
