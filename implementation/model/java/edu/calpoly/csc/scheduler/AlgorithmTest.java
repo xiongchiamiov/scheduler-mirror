@@ -87,20 +87,20 @@ public class AlgorithmTest {
 			instructor.addCoursePreference(new CoursePreference(c, 10));
 		}
 		
-		HashMap<Day, LinkedHashMap<Time, TimePreference>> tps = new HashMap<Day, LinkedHashMap<Time, TimePreference>>();
-		LinkedHashMap<Time, TimePreference> times = new LinkedHashMap<Time, TimePreference>();
-		times.put(new Time(10, 0), new TimePreference(new Time(10, 0), 10));
-		times.put(new Time(10, 30), new TimePreference(new Time(10, 30), 10));
-		times.put(new Time(11, 0), new TimePreference(new Time(11, 0), 10));
-		times.put(new Time(11, 30), new TimePreference(new Time(11, 30), 10));
-		times.put(new Time(12, 0), new TimePreference(new Time(12, 0), 10));
-		times.put(new Time(12, 30), new TimePreference(new Time(12, 30), 10));
+		HashMap<Integer, LinkedHashMap<Integer, TimePreference>> tps = new HashMap<Integer, LinkedHashMap<Integer, TimePreference>>();
+		LinkedHashMap<Integer, TimePreference> times = new LinkedHashMap<Integer, TimePreference>();
+		times.put(600, new TimePreference(new Time(10, 0), 10));
+		times.put(630, new TimePreference(new Time(10, 30), 10));
+		times.put(660, new TimePreference(new Time(11, 0), 10));
+		times.put(690, new TimePreference(new Time(11, 30), 10));
+		times.put(720, new TimePreference(new Time(12, 0), 10));
+		times.put(750, new TimePreference(new Time(12, 30), 10));
 		
-		tps.put(Day.MON, times);
-		tps.put(Day.TUE, times);
-		tps.put(Day.WED, times);
-		tps.put(Day.THU, times);
-		tps.put(Day.FRI, times);
+		tps.put(1, times);
+		tps.put(2, times);
+		tps.put(3, times);
+		tps.put(4, times);
+		tps.put(5, times);
 
 		instructor.setTimePreferences(tps);
 		
