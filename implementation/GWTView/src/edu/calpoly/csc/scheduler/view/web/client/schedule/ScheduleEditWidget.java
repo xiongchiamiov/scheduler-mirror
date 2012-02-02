@@ -311,7 +311,7 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 		//boxesAndSchedulePanel.add(dualListBoxCourses);
 		//scheduleGrid.layoutDaysAndTimes();
 		//scheduleGrid.placePanels();
-		//boxesAndSchedulePanel.add(scheduleGrid);
+		boxesAndSchedulePanel.add(scheduleTable);
 		// add some items to the list
 		addCoursesToBoxes();
 		mainPanel.add(boxesAndSchedulePanel);
