@@ -23,7 +23,7 @@ public class ScheduleEditTable extends FlexTable {
 		"9:00pm", "9:30pm" };
 	
 
-	public ScheduleEditTable(ScheduleViewWidget scheduleController, Map<String, ScheduleItemGWT> items) {
+	public ScheduleEditTable(ScheduleEditWidget scheduleController) {
 		mScheduleController = scheduleController;
 	}
 	
