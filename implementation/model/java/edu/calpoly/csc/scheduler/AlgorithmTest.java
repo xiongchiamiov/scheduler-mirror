@@ -89,12 +89,12 @@ public class AlgorithmTest {
 		
 		HashMap<Integer, LinkedHashMap<Integer, TimePreference>> tps = new HashMap<Integer, LinkedHashMap<Integer, TimePreference>>();
 		LinkedHashMap<Integer, TimePreference> times = new LinkedHashMap<Integer, TimePreference>();
-		times.put(600, new TimePreference(new Time(10, 0), 10));
-		times.put(630, new TimePreference(new Time(10, 30), 10));
-		times.put(660, new TimePreference(new Time(11, 0), 10));
-		times.put(690, new TimePreference(new Time(11, 30), 10));
-		times.put(720, new TimePreference(new Time(12, 0), 10));
-		times.put(750, new TimePreference(new Time(12, 30), 10));
+		times.put(1000, new TimePreference(new Time(10, 0), 10));
+		times.put(1030, new TimePreference(new Time(10, 30), 10));
+		times.put(1100, new TimePreference(new Time(11, 0), 10));
+		times.put(1130, new TimePreference(new Time(11, 30), 10));
+		times.put(1200, new TimePreference(new Time(12, 0), 10));
+		times.put(1230, new TimePreference(new Time(12, 30), 10));
 		
 		tps.put(1, times);
 		tps.put(2, times);
