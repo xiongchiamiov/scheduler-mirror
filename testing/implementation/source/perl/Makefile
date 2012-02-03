@@ -26,14 +26,14 @@ BASE_FILES=`find $(CLASS_DIR) -path "*svn*" -prune -o -name "*java" -path "*sche
 # Compiles all base files (including the test classes)
 #
 base:	
-	@javac -classpath $(CLASS_DIR) -d $(EXEC_DIR) $(BASE_FILES) 1> base.out 2>&1
-	@javac -classpath $(CLASS_DIR) -d $(EXEC_DIR) $(TEST_CLASS_DIR)/*.java 1> test.out 2>&1
+	javac -classpath $(CLASS_DIR) -d $(EXEC_DIR) $(BASE_FILES) 1> base.out 2>&1
+	javac -classpath $(CLASS_DIR) -d $(EXEC_DIR) $(TEST_CLASS_DIR)/*.java 1> test.out 2>&1
 
 libs_test:
 	perl buildLibsTest.pl $(TEST_ZERO_MODULE_DIRS)
 
 test:	base 
-	@perl -I $(PLIB) Harness.pm $(CLASS_DIR) $(TEST_CLASS_DIR) $(EXEC_DIR) 2>&1 | \
+	perl -I $(PLIB) Harness.pm $(CLASS_DIR) $(TEST_CLASS_DIR) $(EXEC_DIR) 2>&1 | \
 		tee $(HARNESS_OUTPUT)
 
 background_test:	
