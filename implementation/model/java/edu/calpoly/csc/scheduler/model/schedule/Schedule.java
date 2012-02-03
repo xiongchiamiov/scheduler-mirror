@@ -665,66 +665,20 @@ public class Schedule extends DbData implements Serializable
                 	
                 	debug ("Now scheduling labs for " + c.toString());
                 	
-                	/*int curEnrollment = 0;
-                    int goal = c.getEnrollment();
-                    while (curEnrollment < goal)
+                	ScheduleItem lab_si = genLabItem(lab, lec_si);
+                    try
+                    {                           
+                       add(lab_si);
+                       lec_si.addLab(lab_si);
+                    }
+                    catch (CouldNotBeScheduledException e)
                     {
-*/
-                       ScheduleItem lab_si = genLabItem(lab, lec_si);
-                       try
-                       {                           
-                          add(lab_si);
-                          lec_si.addLab(lab_si);
-                          //curEnrollment += lab.getEnrollment();
-                       }
-                       catch (CouldNotBeScheduledException e)
-                       {
-                          System.err.println("GENERATION MADE A BAD LAB");
-                          System.err.println(lab_si);
-                       }
-                    //}
-                	
-                	
+                       System.err.println("GENERATION MADE A BAD LAB");
+                       System.err.println(lab_si);
+                    }
                 }
            }
-         
-            //TODO - All of the following involves getting labs working
-            /*
-             *  The following code has been removed since the 
-             *  Lab class is no longer being used. Instead a lectureID
-             *  field in the Course class represents whether a course is
-             *  a lecture or a lab.
-             *  
-             *  If the course is a lab, the lectureID will be the id 
-             *  of the lecture that the lab is associated with. If it is not
-             *  a lab, the lectureID will be -1.
-             */
-           
-            /*if (lab != null)
-            {
-               debug ("HAVE LAB " + lab);
-                
-               int curEnrollment = 0;
-               int goal = c.getEnrollment();
-               while (curEnrollment < goal)
-               {
-
-                  ScheduleItem lab_si = genLabItem(lab, lec_si);
-                  try
-                  {
-                      
-                     add(lab_si);
-                     lec_si.addLab(lab_si);
-                     curEnrollment += lab.getEnrollment();
-                  }
-                  catch (CouldNotBeScheduledException e)
-                  {
-                     System.err.println("GENERATION MADE A BAD LAB");
-                     System.err.println(lab_si);
-                  }
-               }
-            }*/
-         }
+      }
 
       debug ("GENERATION FINISHED W/: " + this.getItems().size());
       
