@@ -9,6 +9,7 @@ import java.util.Map;
 import edu.calpoly.csc.scheduler.model.Model;
 import edu.calpoly.csc.scheduler.model.db.Time;
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
+import edu.calpoly.csc.scheduler.model.db.cdb.Course.CourseType;
 import edu.calpoly.csc.scheduler.model.db.idb.CoursePreference;
 import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
 import edu.calpoly.csc.scheduler.model.db.idb.TimePreference;
@@ -30,6 +31,7 @@ public class AlgorithmTest {
 		Schedule sched = model.getSchedule();
 		
 		List<Course> courses = generateCourseList();
+		
 		List<Instructor> instructors = generateInstructorList(courses);
 		
 		sched.setiSourceList(instructors);
@@ -42,6 +44,9 @@ public class AlgorithmTest {
 	public static List<Course> generateCourseList() {
 		List<Course> courses = new ArrayList<Course>();
 		
+		Week weekMWF = new Week(new Day[]{Day.MON, Day.WED, Day.FRI});
+		Week weekTT = new Week(new Day[]{Day.TUE, Day.THU});
+		
 		Course lecture = new Course("Intro to Aerodynamics", "AERO", "101");
 		lecture.setEnrollment(30);
 		lecture.setLectureID(-1);
@@ -51,8 +56,7 @@ public class AlgorithmTest {
 		lecture.setScu(4);
 		lecture.setWtu(4);
 		lecture.setType(Course.CourseType.LEC);
-		Week week = new Week(new Day[]{Day.MON, Day.WED, Day.FRI});
-		lecture.setDays(week);
+		lecture.setDays(weekMWF);
 		courses.add(lecture);
 		
 		Course lab = new Course("Intro to Aerodynamics Lab", "AERO", "101");
@@ -64,9 +68,32 @@ public class AlgorithmTest {
 		lab.setWtu(4);
 		lab.setType(Course.CourseType.LAB);
 		lab.setTetheredToLecture(true);
-		Week week2 = new Week(new Day[]{Day.MON, Day.WED, Day.FRI});
-		lab.setDays(week2);
+		lab.setDays(weekMWF);
 		courses.add(lab);
+		
+		Course lecture2 = new Course("Advanced Aerodynamics", "AERO", "305");
+		lecture2.setEnrollment(30);
+		lecture2.setLectureID(-1);
+		lecture2.setDbid(1001);
+		lecture2.setLength(6);
+		lecture2.setNumOfSections(1);
+		lecture2.setScu(4);
+		lecture2.setWtu(4);
+		lecture2.setType(Course.CourseType.LEC);
+		lecture2.setDays(weekTT);
+		courses.add(lecture2);
+		
+		Course lab2 = new Course("Advanced Aerodynamics Lab", "AERO", "305");
+		lab2.setEnrollment(30);
+		lab2.setLectureID(1001);
+		lab2.setLength(6);
+		lab2.setNumOfSections(1);
+		lab2.setScu(4);
+		lab2.setWtu(4);
+		lab2.setType(Course.CourseType.LAB);
+		lab2.setTetheredToLecture(false);
+		lab2.setDays(weekTT);
+		courses.add(lab2);
 		
 		return courses;
 	}
@@ -97,14 +124,50 @@ public class AlgorithmTest {
 		times.put(1230, new TimePreference(new Time(12, 30), 10));
 		
 		tps.put(1, times);
-		tps.put(2, times);
+		//tps.put(2, times);
 		tps.put(3, times);
-		tps.put(4, times);
+		//tps.put(4, times);
 		tps.put(5, times);
 
 		instructor.setTimePreferences(tps);
 		
+		Instructor instructor2 = new Instructor();
+		instructor2.setFirstName("Evan");
+		instructor2.setLastName("Platypus-Ovadia");
+		instructor2.setCurWtu(0);
+		instructor2.setDisability(false);
+		instructor2.setMaxWtu(50);
+		instructor2.setAvailability(new WeekAvail());
+		instructor2.setUserID("evan");
+		
+		for(Course c : courses) {
+			if(c.getType() == CourseType.LEC) {
+			    if(c.getDbid() == 1001)
+			        instructor2.addCoursePreference(new CoursePreference(c, 10));
+			    else
+				    instructor2.addCoursePreference(new CoursePreference(c, 0));
+			}
+		}
+		
+		HashMap<Integer, LinkedHashMap<Integer, TimePreference>> tps2 = new HashMap<Integer, LinkedHashMap<Integer, TimePreference>>();
+		LinkedHashMap<Integer, TimePreference> times2 = new LinkedHashMap<Integer, TimePreference>();
+		times2.put(1800, new TimePreference(new Time(18, 0), 10));
+		times2.put(1830, new TimePreference(new Time(18, 30), 10));
+		times2.put(1900, new TimePreference(new Time(19, 0), 10));
+		times2.put(1930, new TimePreference(new Time(19, 30), 10));
+		times2.put(2000, new TimePreference(new Time(20, 0), 10));
+		times2.put(2030, new TimePreference(new Time(20, 30), 10));
+		
+		tps2.put(1, times2);
+		tps2.put(2, times2);
+		tps2.put(3, times2);
+		tps2.put(4, times2);
+		tps2.put(5, times2);
+
+		instructor2.setTimePreferences(tps2);
+		
 		instructors.add(instructor);
+		instructors.add(instructor2);
 		
 		return instructors;
 	}
