@@ -1,0 +1,66 @@
+.sz 11
+.ds ~ /users/gfisher/nroff
+. so \*~/stdhdr.me
+.ll 8.5i
+.he ''''
+.(TI "Unit Test Plan for the Generate Method"
+.(S +2
+\fBUnit Test Plan for the Generate Method\fP
+.)S
+.)TI
+.spt
+.TS
+box;
+l | l l l l l l | l l | l
+c | c c c c c c | c c | c
+l | l | l | l | l | l | l | l | l | l.
+\fBCase\fP	\fBInputs:\fP						\fBExpected Outputs:\fP		\fBRemarks\fP
+	\fBIDB\fP	\fBCDB\fP	\fBLDB\fP	\fBTprefs\fP	\fBCPrefs\fP	\fBSched\fP	\fBSched\fP	\fBErrors\fP	
+. sp .2v
+_
+. sp .2v
+1	empty	empty	empty	empty	empty	empty	empty	T{
+.na
+"Nothing to schedule"
+T}	T{
+.na
+degenerate case
+T}
+_
+2	1 instr	1 course	1 loc	empty	empty	empty	T{
+.na
+1 course at 8 AM with given instr and loc
+T}	none	T{
+.na
+size 1 case, no prefs
+T}
+_
+3	T{
+.na
+2 different
+.br
+instrs
+T}	T{
+.na
+2 different courses
+T}	T{
+.na
+2 different locs
+T}	empty	empty	empty	T{
+.na
+2 different courses, both at 8 AM each with different instr and loc
+T}	none	T{
+size 2 case, no prefs
+T}
+_
+
+\&...	\&...	\&...	\&...	\&...	\&...	\&...	\&...	\&...	\&...
+
+.TE
+.sp 2
+This plan will be filled out with an \f[BI]extensive\fP set of test cases that
+vary over ranges of all data fields in all inputs.
+.pe
+
+\"  LocalWords:  IDB CDB LDB Tprefs CPrefs Sched sp instr cours loc prefs locs
+\"  LocalWords:  instrs BI
