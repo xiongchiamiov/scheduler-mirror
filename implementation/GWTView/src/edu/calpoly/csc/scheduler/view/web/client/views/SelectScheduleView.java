@@ -47,6 +47,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 	
 	private final String username;
 	private String newDocName;
+	private ArrayList<String> scheduleNames;
 	private ListBox listBox;
 	
 	private VerticalPanel vdocholder;
@@ -60,6 +61,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 		this.menuBar = menuBar;
 		this.username = username;
 		this.newDocName = "Untitled";
+		this.scheduleNames = new ArrayList<String>();
 
 		MenuBar fileMenu = new MenuBar(true);
 		DOM.setElementAttribute(fileMenu.getElement(), "id", "fileMenu");
@@ -207,25 +209,32 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
                @Override
                public void namedSchedule(String name)
                {
-                  newDocName = name;
-                  final LoadingPopup popup = new LoadingPopup();
-                  popup.show();
-                  
-                  DOM.setElementAttribute(popup.getElement(), "id", "failSchedPopup");
-                  
-                  service.openNewSchedule(newDocName, new AsyncCallback<Integer>() {
-                     @Override
-                     public void onFailure(Throwable caught) {
-                        popup.hide();
-                        Window.alert("Failed to open new schedule in: " + caught.getMessage());
-                     }
+                  if(!scheduleNames.contains(name))
+                  {
+                     newDocName = name;
+                     final LoadingPopup popup = new LoadingPopup();
+                     popup.show();
                      
-                     @Override
-                     public void onSuccess(Integer newSchedID) {
-                        popup.hide();
-                        myFrame.frameViewAndPushAboveMe(new AdminScheduleNavView(service, menuBar, username, newSchedID, newDocName));
-                     }
-                  });
+                     DOM.setElementAttribute(popup.getElement(), "id", "failSchedPopup");
+                     
+                     service.openNewSchedule(newDocName, new AsyncCallback<Integer>() {
+                        @Override
+                        public void onFailure(Throwable caught) {
+                           popup.hide();
+                           Window.alert("Failed to open new schedule in: " + caught.getMessage());
+                        }
+                        
+                        @Override
+                        public void onSuccess(Integer newSchedID) {
+                           popup.hide();
+                           myFrame.frameViewAndPushAboveMe(new AdminScheduleNavView(service, menuBar, username, newSchedID, newDocName));
+                        }
+                     });
+                  }
+                  else
+                  {
+                     //TODO: Show error
+                  }
                }
             });
 		   }
@@ -301,6 +310,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 				for (String scheduleName : availableSchedulesByName.keySet())
 				{
 				   addNewDocument(scheduleName, availableSchedulesByName.get(scheduleName).getScheduleID().toString());
+				   scheduleNames.add(scheduleName);
 				}
 				
 			}
