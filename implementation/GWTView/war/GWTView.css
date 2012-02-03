@@ -433,3 +433,9 @@ background-clip: initial;
 	background: url(imgs/CurrentView.png) repeat-x bottom;
 	border-bottom: 1px solid white;
 }
+.exportChoice {
+}
+.exportChoice:focus {
+background-color: #D3D3D3;
+
+}
