@@ -21,13 +21,18 @@ import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+<<<<<<< .mine
+import com.google.gwt.user.client.ui.HorizontalPanel;
+=======
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
+>>>>>>> .r1783
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -48,7 +53,10 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 	MenuItem settingsMenuItem;
 	
 	private final String username;
+	private String newDocName;
 	private ListBox listBox;
+	
+	private VerticalPanel vdocholder;
 	
 	private ViewFrame myFrame;
 
@@ -58,6 +66,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 		this.service = service;
 		this.menuBar = menuBar;
 		this.username = username;
+		this.newDocName = "Untitled";
 
 		MenuBar fileMenu = new MenuBar(true);
 		DOM.setElementAttribute(fileMenu.getElement(), "id", "fileMenu");
@@ -199,45 +208,80 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 		this.addStyleName("homeView");
 		
 		this.setWidth("100%");
-		this.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		HorizontalPanel toprow = new HorizontalPanel();
+		toprow.setWidth("100%");
+		toprow.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+		toprow.add(new HTMLPanel("<h3>My Scheduling Documents:</h3>"));
 		
+		//Buttons to top right
+		toprow.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
 		Button newSchedButton = new Button("Create New Schedule", new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				final String tempName = "Untitled";
-				final LoadingPopup popup = new LoadingPopup();
-				popup.show();
-				
-				DOM.setElementAttribute(popup.getElement(), "id", "failSchedPopup");
-				
-				service.openNewSchedule(tempName, new AsyncCallback<Integer>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						popup.hide();
-						Window.alert("Failed to open new schedule in: " + caught.getMessage());
-					}
-					
-					@Override
-					public void onSuccess(Integer newSchedID) {
-						popup.hide();
-						myFrame.frameViewAndPushAboveMe(new AdminScheduleNavView(service, menuBar, username, newSchedID, tempName));
-					}
-				});
-			}
+		   @Override
+		   public void onClick(ClickEvent event) {
+		      displayNewSchedPopup("Create", new NameScheduleCallback()
+            {
+               @Override
+               public void namedSchedule(String name)
+               {
+                  newDocName = name;
+                  final LoadingPopup popup = new LoadingPopup();
+                  popup.show();
+                  
+                  DOM.setElementAttribute(popup.getElement(), "id", "failSchedPopup");
+                  
+                  service.openNewSchedule(newDocName, new AsyncCallback<Integer>() {
+                     @Override
+                     public void onFailure(Throwable caught) {
+                        popup.hide();
+                        Window.alert("Failed to open new schedule in: " + caught.getMessage());
+                     }
+                     
+                     @Override
+                     public void onSuccess(Integer newSchedID) {
+                        popup.hide();
+                        myFrame.frameViewAndPushAboveMe(new AdminScheduleNavView(service, menuBar, username, newSchedID, newDocName));
+                     }
+                  });
+               }
+            });
+		   }
 		});
-		
 		DOM.setElementAttribute(newSchedButton.getElement(), "id", "newScheduleButton");
 		
-		this.add(new HTMLPanel("<h3>Open a Schedule</h3>"));
+		Button importButton = new Button("Import", new ClickHandler()
+      {
+         @Override
+         public void onClick(ClickEvent event)
+         {
+         }
+      });
+		DOM.setElementAttribute(importButton.getElement(), "id", "importButton");
+		FlowPanel flow = new FlowPanel();
+		flow.add(newSchedButton);
+		flow.add(importButton);
+		toprow.add(flow);
+		this.add(toprow);
 		
-		listBox = new ListBox();
-		listBox.setVisibleItemCount(5);
+		//Document selector
+		this.setHorizontalAlignment(ALIGN_LEFT);
+		ScrollPanel scroller = new ScrollPanel();
+		this.add(scroller);
+		vdocholder = new VerticalPanel();
+		scroller.add(vdocholder);
 		
-		DOM.setElementAttribute(listBox.getElement(), "id", "listBox");
-		DOM.setElementAttribute(listBox.getElement(), "style", "min-width:188px");
+		//Archive button
+		this.setHorizontalAlignment(ALIGN_LEFT);
+		Button archiveButton = new Button("Archive Selected Documents", new ClickHandler()
+		{
+		   @Override
+		   public void onClick(ClickEvent event)
+		   {
+		   }
+		});
+		DOM.setElementAttribute(importButton.getElement(), "id", "archiveButton");
+		this.add(archiveButton);
 		
-		this.add(listBox);
-
+		
 		Button openButton = new Button("Open", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -253,11 +297,6 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 		
 		DOM.setElementAttribute(openButton.getElement(), "id", "openButton");
 		
-		FlowPanel flow = new FlowPanel();
-        flow.add(newSchedButton);
-		flow.add(openButton);
-		
-		this.add(flow);
 	}
 	
 	@Override
@@ -274,14 +313,42 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 			public void onSuccess(Map<String, UserDataGWT> result) {
 				availableSchedulesByName = result;
 				
-				listBox.clear();
+				vdocholder.clear();
 				for (String scheduleName : availableSchedulesByName.keySet())
-					listBox.addItem(scheduleName, availableSchedulesByName.get(scheduleName).getScheduleID().toString());
+				{
+				   addNewDocument(scheduleName, availableSchedulesByName.get(scheduleName).getScheduleID().toString());
+				}
+				
 			}
 		});
 		
 		menuBar.addItem(fileMenuItem);
 	}
+	
+	private void addNewDocument(final String name, final String scheduleid)
+	{
+	   HorizontalPanel doc = new HorizontalPanel();
+	   doc.setHorizontalAlignment(ALIGN_LEFT);
+	   doc.add(new CheckBox());
+	   FocusPanel docname = new FocusPanel();
+	   docname.add(new HTML(name));
+	   docname.addClickHandler(new ClickHandler()
+      {
+         @Override
+         public void onClick(ClickEvent event)
+         {
+//            openInNewWindow(Window.Location.getHref(), scheduleid);
+            selectSchedule(Integer.parseInt(scheduleid), name);
+         }
+      });
+	   doc.add(docname);
+	   
+	   vdocholder.add(doc);
+	}
+	
+	public static native void openInNewWindow(String url, String scheduleDBID) /*-{
+	   window.open(url, 'target=schedule' + scheduleDBID);
+	}-*/;
 	
 	@Override
 	public void beforePop() {
