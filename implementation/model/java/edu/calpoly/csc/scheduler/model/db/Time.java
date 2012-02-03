@@ -472,4 +472,24 @@ public class Time implements Comparable<Time>, Serializable
 
       return halfHours;
    }
+   
+   public Integer getTimeAsInteger() {
+	   assert(this.hour > -1);
+	   assert(this.hour < 24);
+	   assert(this.minute == 0 || this.minute == 30);
+	   
+	   String hourStr = Integer.toString(this.hour);
+	   
+	   if(hourStr.length() == 1) {
+		   hourStr = "0" + hourStr;
+	   }
+	   
+	   String minStr = Integer.toString(this.minute);
+	   
+	   if(minStr.length() == 1) {
+		   minStr = "0" + minStr;
+	   }
+	   
+	   return Integer.valueOf(hourStr + minStr); 
+   }
 }
