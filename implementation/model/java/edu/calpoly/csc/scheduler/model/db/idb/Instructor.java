@@ -624,17 +624,17 @@ public class Instructor extends DbData implements Comparable<Instructor>, Serial
 	      }
 	   }*/
       
-      if (!this.tPrefs.containsKey(d))
+      if (!this.tPrefs.containsKey(d.getNum()))
       {
    	   if (DEBUG)
          System.err.println ("HAVE TO FILL");
          fillDayWithTPrefs(d);
       }
-      if (this.tPrefs.get(d).get(time) == null)
+      if (this.tPrefs.get(d.getNum()).get(time.getTimeAsInteger()) == null)
       {
          return 0;
       }
-      return this.tPrefs.get(d).get(time).getDesire();
+      return this.tPrefs.get(d.getNum()).get(time.getTimeAsInteger()).getDesire();
    }
 
    /**
