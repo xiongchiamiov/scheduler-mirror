@@ -620,7 +620,6 @@ public class Schedule extends DbData implements Serializable
       for (Course c : this.cSourceList) {
     	  if(c.getType() == Course.CourseType.LAB) { //Is a lab associated with a lecture
     		  debug ("Found lab: " + c.getCatalogNum() + " " + c.getName());
-    		  c.setTetheredToLecture(Boolean.TRUE);
     		  labList.put(c.getLectureID(), c);
     	  }
       }
@@ -749,8 +748,10 @@ public class Schedule extends DbData implements Serializable
       lab_si.setInstructor(getLabInstructor(lab, lec_si));
 
       TimeRange tr = this.lab_bounds;
+      
       if (lab.getTetheredToLecture())
       {
+    	 debug ("Found tethered lab for " + lab.getDept() + " " + lab.getCatalogNum());
          tr = new TimeRange(lec_si.getEnd(), lab.getDayLength());
       }
 
