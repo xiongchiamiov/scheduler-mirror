@@ -67,7 +67,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	// Returns 2, null if its a admin
 	@Override
 	public Pair<Integer, InstructorGWT> openExistingSchedule(int scheduleID) {
+		System.out.println("openexistingschedule service begin");
 		model.openExistingSchedule(scheduleID);
+		System.out.println("openexistingschedule service end");
 		return new Pair<Integer, InstructorGWT>(2, null); // tyero, change this
 	}
 

@@ -1,6 +1,7 @@
 package edu.calpoly.csc.scheduler.view.web.shared;
 
 import java.io.Serializable;
+import java.util.Set;
 
 
 public class CourseGWT implements Serializable, Identified {
@@ -13,7 +14,7 @@ public class CourseGWT implements Serializable, Identified {
 	private String type; //will be an object
 	private Integer maxEnroll;
 	private Integer length;
-	private WeekGWT days;
+	private Set<DayCombinationGWT> dayCombinations;
 	private Integer scheduleID;
 	private Integer id;
 	private Integer lectureID;
@@ -23,7 +24,7 @@ public class CourseGWT implements Serializable, Identified {
 	
 	public CourseGWT(String courseName, String catalogNum, String dept,
 			Integer wtu, Integer scu, Integer numSections, String type,
-			Integer maxEnroll, Integer lectureID, Integer length, WeekGWT days,
+			Integer maxEnroll, Integer lectureID, Integer length, Set<DayCombinationGWT> dayCombinations,
 			Integer scheduleID, Integer id, Boolean tetheredToLecture) {
 		super();
 		this.courseName = courseName;
@@ -36,7 +37,7 @@ public class CourseGWT implements Serializable, Identified {
 		this.maxEnroll = maxEnroll;
 		this.lectureID = lectureID;
 		this.length = length;
-		this.days = days;
+		this.dayCombinations = dayCombinations;
 		this.scheduleID = scheduleID;
 		this.id = id;
 		this.tetheredToLecture = tetheredToLecture;
@@ -47,14 +48,14 @@ public class CourseGWT implements Serializable, Identified {
 	public CourseGWT(CourseGWT that) {
 		this(that.courseName, that.catalogNum, that.dept, that.wtu, that.scu,
 				that.numSections, that.type, that.maxEnroll, that.lectureID, that.length,
-				that.days, that.scheduleID, that.id, that.tetheredToLecture);
+				that.dayCombinations, that.scheduleID, that.id, that.tetheredToLecture);
 	}
 
 	public void verify() {
 		assert(courseName != null);
 		assert(dept != null);
 		assert(type != null);
-		assert(days != null);
+		assert(dayCombinations != null);
 	}
 	
 	public void setScheduleID(Integer schedule)
@@ -67,14 +68,14 @@ public class CourseGWT implements Serializable, Identified {
 		return scheduleID;
 	}
 	
-	public void setDays(WeekGWT days)
+	public void setDays(Set<DayCombinationGWT> days)
 	{
-		this.days = days;
+		this.dayCombinations = days;
 	}
 	
-	public WeekGWT getDays()
+	public Set<DayCombinationGWT> getDays()
 	{
-		return days;
+		return dayCombinations;
 	}
    
 

@@ -1,7 +1,9 @@
 package edu.calpoly.csc.scheduler.view.web.client.views;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -19,11 +21,12 @@ import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator;
 import edu.calpoly.csc.scheduler.view.web.client.table.MemberStringComparator;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingIntColumn;
+import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingMultiselectColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingSelectColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingStringColumn;
 import edu.calpoly.csc.scheduler.view.web.client.views.AssociationsCell.GetCoursesCallback;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.WeekGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.DayCombinationGWT;
 
 public class CoursesView extends VerticalPanel implements IViewContents {
 	/** Course table */
@@ -98,7 +101,7 @@ public class CoursesView extends VerticalPanel implements IViewContents {
 		table = new OsmTable<CourseGWT>(
 				new IFactory<CourseGWT>() {
 					public CourseGWT create() {
-						return new CourseGWT("", "", "", 0, 0, 0, "LEC", 0, -1, 6, new WeekGWT(), 0, generateTemporaryCourseID(), false);
+						return new CourseGWT("", "", "", 0, 0, 0, "LEC", 0, -1, 6, new HashSet<DayCombinationGWT>(), 0, generateTemporaryCourseID(), false);
 					}
 				},
 				new OsmTable.ModifyHandler<CourseGWT>() {
@@ -249,6 +252,36 @@ public class CoursesView extends VerticalPanel implements IViewContents {
 					public void validate(CourseGWT object, Integer newValue) throws InvalidValueException {
 						if (newValue < 1)
 							throw new InvalidValueException(COURSE_LENGTH + " must be greater than 0: " + newValue + " is invalid.");
+					}
+				}));
+		
+		table.addColumn("Day Combinations", null, true, null, new EditingMultiselectColumn<CourseGWT>(
+				new String[] {
+						"M",
+						"Tu",
+						"W",
+						"Th",
+						"F",
+						"MW",
+						"TuTh",
+						"MWF",
+						"TuThF",
+						"MTuThF"
+				},
+				new IStaticGetter<CourseGWT, Set<String>>() {
+					public Set<String> getValueForObject(CourseGWT object) {
+						Set<String> result = new HashSet<String>();
+						for (DayCombinationGWT combo : object.getDays())
+							result.add(combo.toString());
+						return result;
+					}
+				},
+				new IStaticSetter<CourseGWT, Set<String>>() {
+					public void setValueInObject(CourseGWT object, Set<String> newCombos) {
+						Set<DayCombinationGWT> set = new HashSet<DayCombinationGWT>();
+						for (String newCombo : newCombos)
+							set.add(DayCombinationGWT.fromString(newCombo));
+						object.setDays(set);
 					}
 				}));
 		

@@ -42,7 +42,6 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 	private final GreetingServiceAsync service;
 	
 	private final MenuBar menuBar;
-	MenuItem fileMenuItem;
 	MenuItem settingsMenuItem;
 	
 	private final String username;
@@ -194,8 +193,6 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 				
 			}
 		});
-		
-		menuBar.addItem(fileMenuItem);
 	}
 	
 	private void addNewDocument(final String name, final String scheduleid)
@@ -225,7 +222,6 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 	
 	@Override
 	public void beforePop() {
-		menuBar.removeItem(fileMenuItem);
 	}
 	
 	/**
@@ -239,14 +235,19 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 		final LoadingPopup popup = new LoadingPopup();
 		popup.show();
 		
+		System.out.println("SelectScheduleView.selectSchedule(" + scheduleID + ", " + scheduleName + ")");
+		
 		service.openExistingSchedule(scheduleID, new AsyncCallback<Pair<Integer, InstructorGWT>>() {
 			@Override
 			public void onFailure(Throwable caught) {
+				System.out.println("selectSchedule onFailure");
 				popup.hide();
 				Window.alert("Failed to open schedule in: " + caught.getMessage());
 			}
 			@Override
 			public void onSuccess(Pair<Integer, InstructorGWT> permissionAndInstructor) {
+				System.out.println("selectSchedule onSuccess");
+				
 				popup.hide();
 				
 				if (myFrame.canPopViewsAboveMe()) {

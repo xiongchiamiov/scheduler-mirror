@@ -38,11 +38,6 @@ public class AssociationsCell extends SimplePanel implements OsmTable.Cell, OsmT
 
 		readingLabel = new FocusPanel();
 		readingLabel.add(new HTML("(none)"));
-		readingLabel.addFocusHandler(new FocusHandler() {
-			public void onFocus(FocusEvent event) {
-				row.enterEditingMode(AssociationsCell.this);
-			}
-		});
 		
 		if (!courseIsLecture)
 			add(readingLabel);

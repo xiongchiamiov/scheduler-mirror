@@ -2,14 +2,15 @@ package edu.calpoly.csc.scheduler.view.web.server;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.Vector;
 
 import edu.calpoly.csc.scheduler.model.db.Time;
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
-import edu.calpoly.csc.scheduler.model.db.cdb.Lab;
 import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
 import edu.calpoly.csc.scheduler.model.db.idb.TimePreference;
 import edu.calpoly.csc.scheduler.model.db.ldb.Location;
@@ -20,13 +21,13 @@ import edu.calpoly.csc.scheduler.model.schedule.ScheduleItem;
 import edu.calpoly.csc.scheduler.model.schedule.Week;
 import edu.calpoly.csc.scheduler.model.schedule.WeekAvail;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.DayCombinationGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT.ProvidedEquipmentGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.TimePreferenceGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.UserDataGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.WeekGWT;
 
 public abstract class Conversion {
 	public static UserData fromGWT(UserDataGWT gwt) {
@@ -214,7 +215,14 @@ public abstract class Conversion {
 		
 		newCourse.setCourseName(course.getName());
 		newCourse.setDept(course.getDept());
-		newCourse.setDays(Conversion.toGWT(course.getDays()));
+		
+		// TODO: temporary solution, right now the model only supports one day combination,
+		// the view supports many. We need to change the model.
+		Set<Week> courseCombinations = new HashSet<Week>();
+		courseCombinations.add(course.getDays());
+		newCourse.setDays(Conversion.toGWT(courseCombinations));
+		
+		
 		newCourse.setLength(course.getLength());
 		newCourse.setMaxEnroll(course.getEnrollment());
 		newCourse.setNumSections(course.getNumOfSections());
@@ -230,20 +238,31 @@ public abstract class Conversion {
 		return newCourse;
 	}
 
-	private static WeekGWT toGWT(Week source) {
-		WeekGWT result = new WeekGWT();
-		Vector<Integer> days = new Vector<Integer>();
-		for (Day sourceDay : source.getDays())
-			days.add(toGWT(sourceDay));
-		result.setDays(days);
-		return result;
+	private static Set<DayCombinationGWT> toGWT(Set<Week> dayCombinationsSource) {
+		Set<DayCombinationGWT> dayCombinationsResult = new HashSet<DayCombinationGWT>();
+		for (Week dayCombinationSource : dayCombinationsSource) {
+			DayCombinationGWT dayCombinationResult = new DayCombinationGWT();
+			Set<Integer> dayCombinationResultInts = new HashSet<Integer>();
+			for (Day daySource : dayCombinationSource.getDays())
+				dayCombinationResultInts.add(toGWT(daySource));
+			dayCombinationResult.setDays(dayCombinationResultInts);
+			dayCombinationsResult.add(dayCombinationResult);
+			
+		}
+		return dayCombinationsResult;
 	}
 
-	private static Week fromGWT(WeekGWT days) {
-		Week week = new Week();
-		for (Integer day : days.getDays())
-			week.add(dayFromGWT(day));
-		return week;
+	private static Set<Week> fromGWT(Set<DayCombinationGWT> dayCombinationsSource) {
+		Set<Week> dayCombinationsResult = new HashSet<Week>();
+		
+		for (DayCombinationGWT dayCombinationSource : dayCombinationsSource) {
+			Week week = new Week();
+			for (Integer day : dayCombinationSource.getDays())
+				week.add(dayFromGWT(day));
+			dayCombinationsResult.add(week);
+		}
+		
+		return dayCombinationsResult;
 	}
 
 	private static Day dayFromGWT(Integer dayNum) {
@@ -314,7 +333,15 @@ public abstract class Conversion {
 		newCourse.setDept(course.getDept());
 		newCourse.setLength(course.getLength());
 		newCourse.setNumOfSections(course.getNumSections());
-		newCourse.setDays(fromGWT(course.getDays()));
+
+		// TODO: temporary solution, right now the model only supports one day combination,
+		// the view supports many. We need to change the model.
+		Set<Week> courseDayCombinations = fromGWT(course.getDays());
+		Week newCourseWeek = Week.fiveDayWeek;
+		if (!courseDayCombinations.isEmpty())
+			newCourseWeek = courseDayCombinations.iterator().next();
+		newCourse.setDays(newCourseWeek);
+		
 		assert(newCourse.getLength() >= 0);
 	   assert(newCourse.getDays() != null);
 		return newCourse;

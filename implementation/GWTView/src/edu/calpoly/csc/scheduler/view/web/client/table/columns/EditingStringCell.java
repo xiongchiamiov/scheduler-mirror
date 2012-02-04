@@ -27,23 +27,14 @@ class EditingStringCell extends SimplePanel implements OsmTable.Cell, OsmTable.R
 		
 		editing = false;
 		editingBox = new TextBox();
-		editingBox.addKeyUpHandler(new KeyUpHandler() {
-			@Override
-			public void onKeyUp(KeyUpEvent event) {
-				if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-					assert(row != null);
-					row.enterReadingMode();
-				}
-			}
-		});
 		
 		readingLabel = new FocusPanel();
 		readingLabel.add(new HTML("&#160;(blank)"));
-		readingLabel.addFocusHandler(new FocusHandler() {
-			public void onFocus(FocusEvent event) {
-				row.enterEditingMode(EditingStringCell.this);
-			}
-		});
+//		readingLabel.addFocusHandler(new FocusHandler() {
+//			public void onFocus(FocusEvent event) {
+//				row.enterEditingMode(EditingStringCell.this);
+//			}
+//		});
 
 		add(readingLabel);
 	}

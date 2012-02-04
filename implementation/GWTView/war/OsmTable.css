@@ -108,3 +108,12 @@
 .osmtable .icon.enabled {
 	cursor: pointer;
 }
+
+.osmtable .selected {
+	background-color: #FFFF00;
+}
+
+.osmtable .cellWidgetContainer {
+	min-width: 100%;
+	min-height: 100%;
+}

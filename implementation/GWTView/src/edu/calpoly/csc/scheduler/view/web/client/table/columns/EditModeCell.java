@@ -22,19 +22,6 @@ class EditModeCell extends SimplePanel implements OsmTable.Cell, OsmTable.Editin
 		
 		editing = false;
 
-		doneButtonVisibleWhileEditing = new Button("Save", new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				row.enterReadingMode();
-				exitEditingMode();
-			}
-		});
-		
-		editButtonVisibleWhileReading = new Button("Edit", new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				row.enterEditingMode(null);
-			}
-		});
-		
 		add(editButtonVisibleWhileReading);
 		addStyleName("reading");
 	}

@@ -37,11 +37,6 @@ class EditingMultiselectCell extends SimplePanel implements OsmTable.Cell, OsmTa
 		editing = false;
 		readingLabel = new FocusPanel();
 		readingLabel.add(new HTML("&#160;(blank)"));
-		readingLabel.addFocusHandler(new FocusHandler() {
-			public void onFocus(FocusEvent event) {
-				row.enterEditingMode(EditingMultiselectCell.this);
-			}
-		});
 
 		this.options = options;
 		

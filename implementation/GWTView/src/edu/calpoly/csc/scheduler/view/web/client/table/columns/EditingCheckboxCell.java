@@ -27,11 +27,6 @@ class EditingCheckboxCell extends SimplePanel implements OsmTable.Cell, OsmTable
 		
 		readingLabel = new FocusPanel();
 		readingLabel.add(new HTML("&#160;"));
-		readingLabel.addFocusHandler(new FocusHandler() {
-			public void onFocus(FocusEvent event) {
-				row.enterEditingMode(EditingCheckboxCell.this);
-			}
-		});
 
 		addStyleName("writing");
 		
