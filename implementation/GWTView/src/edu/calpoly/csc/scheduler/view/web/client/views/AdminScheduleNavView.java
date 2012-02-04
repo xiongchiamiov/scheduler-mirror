@@ -22,7 +22,7 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 	final String scheduleName;
 	final MenuBar menuBar;
 	
-	MenuItem fileMenu, settingsMenu;
+	MenuBar fileMenu, settingsMenu;
 	MenuItem instructorsMenuItem, locationsMenuItem, coursesMenuItem, scheduleMenuItem;
 
 	public AdminScheduleNavView(GreetingServiceAsync service, MenuBar MenuBar,
@@ -166,8 +166,8 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 	}
 	
 	private void makeSettingsMenu() {
-		MenuBar settingsMenu = new MenuBar(true);
-		DOM.setElementAttribute(fileMenu.getElement(), "id", "settingsMenu");
+		settingsMenu = new MenuBar(true);
+		DOM.setElementAttribute(settingsMenu.getElement(), "id", "settingsMenu");
 
 		MenuItem timesItem = new MenuItem("Times", true, new Command() {
 			public void execute() {
@@ -240,8 +240,8 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 	}
 	
 	private void addMenus() {
-		menuBar.addItem(fileMenu);
-		menuBar.addItem(settingsMenu);
+		menuBar.addItem("File v", fileMenu);
+		menuBar.addItem("Settings v", settingsMenu);
 		menuBar.addItem(coursesMenuItem);
 		menuBar.addItem(locationsMenuItem);
 		menuBar.addItem(instructorsMenuItem);
@@ -249,8 +249,8 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 	}
 	
 	private void removeMenus() {
-		menuBar.removeItem(fileMenu);
-		menuBar.removeItem(settingsMenu);
+		fileMenu.removeFromParent();
+		settingsMenu.removeFromParent();
 		menuBar.removeItem(coursesMenuItem);
 		menuBar.removeItem(locationsMenuItem);
 		menuBar.removeItem(instructorsMenuItem);

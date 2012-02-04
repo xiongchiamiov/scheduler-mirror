@@ -13,6 +13,7 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.rpc.StatusCodeException;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -32,7 +33,6 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.client.IViewContents;
-import edu.calpoly.csc.scheduler.view.web.client.Import;
 import edu.calpoly.csc.scheduler.view.web.client.ViewFrame;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.Pair;
@@ -42,7 +42,6 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 	private final GreetingServiceAsync service;
 	
 	private final MenuBar menuBar;
-	MenuItem settingsMenuItem;
 	
 	private final String username;
 	private String newDocName;
@@ -240,37 +239,49 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 		service.openExistingSchedule(scheduleID, new AsyncCallback<Pair<Integer, InstructorGWT>>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				System.out.println("selectSchedule onFailure");
 				popup.hide();
-				Window.alert("Failed to open schedule in: " + caught.getMessage());
+
+				System.out.println("selectSchedule onFailure");
+				
+				// This is a workaround, see http://code.google.com/p/google-web-toolkit/issues/detail?id=2858
+				if (caught instanceof StatusCodeException && ((StatusCodeException)caught).getStatusCode() == 0) {
+					// Do nothing
+				}
+				else {
+					Window.alert("Failed to open schedule in: " + caught.getMessage());
+				}
 			}
 			@Override
 			public void onSuccess(Pair<Integer, InstructorGWT> permissionAndInstructor) {
-				System.out.println("selectSchedule onSuccess");
-				
 				popup.hide();
 				
-				if (myFrame.canPopViewsAboveMe()) {
-					myFrame.popFramesAboveMe();
-					
-					switch (permissionAndInstructor.getLeft()) {
-					case 0: // todo: enumify
-						myFrame.frameViewAndPushAboveMe(new GuestScheduleNavView(service, menuBar, scheduleName));
-						break;
-					case 1: // todo: enumify
-						myFrame.frameViewAndPushAboveMe(new InstructorScheduleNavView(service, menuBar, scheduleName, permissionAndInstructor.getRight()));
-						break;
-					case 2: // todo: enumify
-						myFrame.frameViewAndPushAboveMe(new AdminScheduleNavView(service, menuBar, username, scheduleID, scheduleName));
-						break;
-					default:
-						assert(false);
-					}
-				}
+				System.out.println("selectSchedule onSuccess");
+
+				openSchedule(scheduleID, scheduleName, permissionAndInstructor.getLeft(), permissionAndInstructor.getRight());
 			}
 		});
 	}
 	
+	protected void openSchedule(Integer scheduleID, String scheduleName, Integer permissionLevel, InstructorGWT instructor) {
+		if (myFrame.canPopViewsAboveMe()) {
+			myFrame.popFramesAboveMe();
+			
+			switch (permissionLevel) {
+			case 0: // todo: enumify
+				myFrame.frameViewAndPushAboveMe(new GuestScheduleNavView(service, menuBar, scheduleName));
+				break;
+			case 1: // todo: enumify
+				myFrame.frameViewAndPushAboveMe(new InstructorScheduleNavView(service, menuBar, scheduleName, instructor));
+				break;
+			case 2: // todo: enumify
+				myFrame.frameViewAndPushAboveMe(new AdminScheduleNavView(service, menuBar, username, scheduleID, scheduleName));
+				break;
+			default:
+				assert(false);
+			}
+		}
+	}
+
 	interface NameScheduleCallback {
 		void namedSchedule(String name);
 	}
@@ -524,14 +535,10 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 	public boolean canPop() { return true; }
 	
 	@Override
-	public void beforeViewPushedAboveMe() {
-		menuBar.addItem(settingsMenuItem);
-	}
+	public void beforeViewPushedAboveMe() { }
 	
 	@Override
-	public void afterViewPoppedFromAboveMe() {
-		menuBar.removeItem(settingsMenuItem);
-	}
+	public void afterViewPoppedFromAboveMe() { }
 	
 	@Override
 	public Widget getContents() { return this; }
