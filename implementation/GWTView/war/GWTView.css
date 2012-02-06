@@ -394,6 +394,7 @@ background-clip: initial;
 	background: #FFE6AF;
 	text-decoration: none;
 	}
+	
 #topBar #SchedName{
 	width:140px;
 	height:100%;
@@ -432,6 +433,25 @@ background-clip: initial;
 .topBarLink.currentView {
 	background: url(imgs/CurrentView.png) repeat-x bottom;
 	border-bottom: 1px solid white;
+}
+
+.floatingScheduleButtonBar {
+	position: fixed; /* Or fixed - depends on what you want */ 
+	right: 0; /* The part that puts the Panel in bottom right of the page/client area */ 
+	bottom: 0; 
+	background: green;
+	padding: 5px 10px 5px 10px;
+	width: 100%;
+}
+
+.floatingScheduleButtonBarItemRight {
+	float: right;
+	margin: 0px 5px 0px 5px;
+}
+
+.floatingScheduleButtonBarItemLeft {
+	float: left;
+	margin: 0px 5px 0px 15px;
 }
 .exportChoice {
 }
