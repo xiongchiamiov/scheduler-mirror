@@ -218,7 +218,7 @@ public abstract class Conversion {
 		newCourse.setDays(Conversion.toGWT(courseCombinations));
 		
 		
-		newCourse.setLength(course.getLength());
+		newCourse.setHalfHoursPerWeek(course.getLength());
 		newCourse.setMaxEnroll(course.getEnrollment());
 		newCourse.setNumSections(course.getNumOfSections());
 		newCourse.setScu(course.getScu());
@@ -326,7 +326,7 @@ public abstract class Conversion {
 		newCourse.setTetheredToLecture(course.getTetheredToLecture());
 		
 		newCourse.setDept(course.getDept());
-		newCourse.setLength(course.getLength());
+		newCourse.setLength(course.getHalfHoursPerWeek());
 		newCourse.setNumOfSections(course.getNumSections());
 
 		// TODO: temporary solution, right now the model only supports one day combination,

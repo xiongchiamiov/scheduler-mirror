@@ -13,7 +13,7 @@ public class CourseGWT implements Serializable, Identified {
 	private Integer wtu, scu, numSections;
 	private String type; //will be an object
 	private Integer maxEnroll;
-	private Integer length;
+	private Integer halfHoursPerWeek;
 	private Set<DayCombinationGWT> dayCombinations;
 	private Integer id;
 	private Integer lectureID;
@@ -23,7 +23,7 @@ public class CourseGWT implements Serializable, Identified {
 	
 	public CourseGWT(String courseName, String catalogNum, String dept,
 			Integer wtu, Integer scu, Integer numSections, String type,
-			Integer maxEnroll, Integer lectureID, Integer length, Set<DayCombinationGWT> dayCombinations,
+			Integer maxEnroll, Integer lectureID, Integer halfHoursPerWeek, Set<DayCombinationGWT> dayCombinations,
 			Integer id, Boolean tetheredToLecture) {
 		super();
 		this.courseName = courseName;
@@ -35,7 +35,7 @@ public class CourseGWT implements Serializable, Identified {
 		this.type = type;
 		this.maxEnroll = maxEnroll;
 		this.lectureID = lectureID;
-		this.length = length;
+		this.halfHoursPerWeek = halfHoursPerWeek;
 		this.dayCombinations = dayCombinations;
 		this.id = id;
 		this.tetheredToLecture = tetheredToLecture;
@@ -45,7 +45,7 @@ public class CourseGWT implements Serializable, Identified {
 
 	public CourseGWT(CourseGWT that) {
 		this(that.courseName, that.catalogNum, that.dept, that.wtu, that.scu,
-				that.numSections, that.type, that.maxEnroll, that.lectureID, that.length,
+				that.numSections, that.type, that.maxEnroll, that.lectureID, that.halfHoursPerWeek,
 				that.dayCombinations, that.id, that.tetheredToLecture);
 	}
 
@@ -67,9 +67,9 @@ public class CourseGWT implements Serializable, Identified {
 	}
    
 
-	public int getLength()
+	public int getHalfHoursPerWeek()
 	{
-	   return length;
+	   return halfHoursPerWeek;
 	}
 
 	public String getCourseName() {
@@ -140,8 +140,8 @@ public class CourseGWT implements Serializable, Identified {
 		return serialVersionUID;
 	}
 
-	public void setLength(int length) {
-		this.length = length;
+	public void setHalfHoursPerWeek(int halfHoursPerWeek) {
+		this.halfHoursPerWeek = halfHoursPerWeek;
 	}
 	
 
@@ -179,7 +179,7 @@ public class CourseGWT implements Serializable, Identified {
 //				this.labDept.equals(that.labDept) &&
 //				this.labId.equals(that.labId) &&
 //				this.labName.equals(that.labName) &&
-//				this.length.equals(that.length) &&
+//				this.halfHoursPerWeek.equals(that.halfHoursPerWeek) &&
 //				this.maxEnroll.equals(that.maxEnroll) &&
 //				this.numSections.equals(that.numSections) &&
 //				this.scu.equals(that.scu) &&

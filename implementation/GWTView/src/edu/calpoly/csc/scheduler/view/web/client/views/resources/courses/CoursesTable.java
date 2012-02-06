@@ -17,6 +17,7 @@ import edu.calpoly.csc.scheduler.view.web.client.table.MemberStringComparator;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.ObjectChangedObserver;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.DeleteColumn.DeleteObserver;
+import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingDecimalColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingIntColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingMultiselectColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingSelectColumn;
@@ -219,14 +220,14 @@ public class CoursesTable extends SimplePanel {
 					}
 				}));
 		
-		table.addColumn(COURSE_LENGTH, "4em", true, null, new EditingIntColumn<CourseGWT>(
-				new IStaticGetter<CourseGWT, Integer>() {
-					public Integer getValueForObject(CourseGWT object) { return object.getLength() / 2; }
-				}, new IStaticSetter<CourseGWT, Integer>() {
-					public void setValueInObject(CourseGWT object, Integer newValue) { object.setLength(newValue * 2); }
+		table.addColumn(COURSE_LENGTH, "4em", true, null, new EditingDecimalColumn<CourseGWT>(
+				new IStaticGetter<CourseGWT, Double>() {
+					public Double getValueForObject(CourseGWT object) { return (double)object.getHalfHoursPerWeek() / 2; }
+				}, new IStaticSetter<CourseGWT, Double>() {
+					public void setValueInObject(CourseGWT object, Double newValue) { object.setHalfHoursPerWeek((int)Math.round(newValue * 2)); }
 				}, 
-				new IStaticValidator<CourseGWT, Integer>() {
-					public void validate(CourseGWT object, Integer newValue) throws InvalidValueException {
+				new IStaticValidator<CourseGWT, Double>() {
+					public void validate(CourseGWT object, Double newValue) throws InvalidValueException {
 						if (newValue < 1)
 							throw new InvalidValueException(COURSE_LENGTH + " must be greater than 0: " + newValue + " is invalid.");
 					}
