@@ -39,32 +39,32 @@ public class ScheduleView extends VerticalPanel implements IViewContents {
 
 		this.add(new HTML("<h2>" + scheduleName + "</h2>"));
 
-		this.add(new Button("Save", new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				final LoadingPopup popup = new LoadingPopup();
-				popup.show();
-				service.saveSchedule(new AsyncCallback<Void>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						popup.hide();
-						Window.alert("There was an error saving the schedule: "
-								+ caught.getMessage());
-					}
-
-					@Override
-					public void onSuccess(Void derp) {
-						popup.hide();
-						Window.alert("Schedule has been saved successfully.");
-					}
-				});
-			}
-		}));
+//		this.add(new Button("Save", new ClickHandler() {
+//			public void onClick(ClickEvent event) {
+//				final LoadingPopup popup = new LoadingPopup();
+//				popup.show();
+//				service.saveSchedule(new AsyncCallback<Void>() {
+//					@Override
+//					public void onFailure(Throwable caught) {
+//						popup.hide();
+//						Window.alert("There was an error saving the schedule: "
+//								+ caught.getMessage());
+//					}
+//
+//					@Override
+//					public void onSuccess(Void derp) {
+//						popup.hide();
+//						Window.alert("Schedule has been saved successfully.");
+//					}
+//				});
+//			}
+//		}));
 
 		ScheduleViewWidget schdView = new ScheduleViewWidget();
 
-		ScheduleEditWidget scheduleEditWidget = new ScheduleEditWidget();
-		//this.add(schdView.getWidget(service));
-		this.add(scheduleEditWidget.getWidget(service));
+		//ScheduleEditWidget scheduleEditWidget = new ScheduleEditWidget();
+		this.add(schdView.getWidget(service));
+		//this.add(scheduleEditWidget.getWidget(service));
 		
 	}
 
