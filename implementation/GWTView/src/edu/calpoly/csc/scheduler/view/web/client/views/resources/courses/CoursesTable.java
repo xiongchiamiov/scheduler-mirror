@@ -27,15 +27,38 @@ import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.DayCombinationGWT;
 
 public class CoursesTable extends SimplePanel {
-	private static final String COURSE_NAME = "Course Name";
-	private static final String COURSE_CATALOG_NUM = "Catalog Number";
-	private static final String COURSE_DEPARTMENT = "Department";
-	private static final String COURSE_WTU = "WTU";
-	private static final String COURSE_LENGTH = "Hours Per Week";
-	private static final String COURSE_SCU = "SCU";
-	private static final String COURSE_NUM_SECTIONS = "# of Sections";
-	private static final String COURSE_TYPE = "Course Type";
-	private static final String COURSE_MAX_ENROLLMENT = "Max Enrollment";
+	private static final String NAME_HEADER = "Course Name";
+	private static final String NAME_WIDTH = null;
+	
+	private static final String CATALOG_NUM_HEADER = "Catalog Number";
+	private static final String CATALOG_NUM_WIDTH = null;
+	
+	private static final String DEPARTMENT_HEADER = "Department";
+	private static final String DEPARTMENT_WIDTH = null;
+	
+	private static final String WTU_HEADER = "WTU";
+	private static final String WTU_WIDTH = "4em";
+	
+	private static final String HOURS_PER_WEEK_HEADER = "Hours Per Week";
+	private static final String HOURS_PER_WEEK_WIDTH = "4em";
+	
+	private static final String SCU_HEADER = "SCU";
+	private static final String SCU_WIDTH = "4em";
+	
+	private static final String NUM_SECTIONS_HEADER = "# of Sections";
+	private static final String NUM_SECTIONS_WIDTH = "4em";
+	
+	private static final String TYPE_HEADER = "Course Type";
+	private static final String TYPE_WIDTH = "4em";
+	
+	private static final String MAX_ENROLLMENT_HEADER = "Max Enrollment";
+	private static final String MAX_ENROLLMENT_WIDTH = "4em";
+	
+	private static final String ASSOCIATIONS_HEADER = "Associations";
+	private static final String ASSOCIATIONS_WIDTH = null;
+	
+	private static final String DAY_COMBINATIONS_HEADER = "Day Combinations";
+	private static final String DAY_COMBINATIONS_WIDTH = null;
 	
 	public interface Strategy {
 		void getAllCourses(AsyncCallback<List<CourseGWT>> callback);
@@ -98,8 +121,8 @@ public class CoursesTable extends SimplePanel {
 	
 	void addFieldColumns() {
 		table.addColumn(
-				COURSE_DEPARTMENT,
-				"6em",
+				DEPARTMENT_HEADER,
+				DEPARTMENT_WIDTH,
 				true,
 				new MemberStringComparator<CourseGWT>(new IStaticGetter<CourseGWT, String>() {
 					public String getValueForObject(CourseGWT object) { return object.getDept(); }
@@ -114,8 +137,8 @@ public class CoursesTable extends SimplePanel {
 						null));
 		
 		table.addColumn(
-				COURSE_CATALOG_NUM,
-				"4em",
+				CATALOG_NUM_HEADER,
+				CATALOG_NUM_WIDTH,
 				true,
 				new MemberStringComparator<CourseGWT>(new IStaticGetter<CourseGWT, String>() {
 					public String getValueForObject(CourseGWT object) { return object.getCatalogNum(); }
@@ -130,13 +153,13 @@ public class CoursesTable extends SimplePanel {
 						new IStaticValidator<CourseGWT, String>() {
 							public void validate(CourseGWT object, String newValue) throws InvalidValueException {
 								if (newValue.trim().equals(""))
-									throw new InvalidValueException(COURSE_CATALOG_NUM + " must be present.");
+									throw new InvalidValueException(CATALOG_NUM_HEADER + " must be present.");
 							}
 						}));
 
 		table.addColumn(
-				COURSE_NAME,
-				"6em",
+				NAME_HEADER,
+				NAME_WIDTH,
 				true,
 				new MemberStringComparator<CourseGWT>(new IStaticGetter<CourseGWT, String>() {
 					public String getValueForObject(CourseGWT object) { return object.getCourseName(); }
@@ -150,7 +173,7 @@ public class CoursesTable extends SimplePanel {
 						},
 						null));
 		
-		table.addColumn(COURSE_WTU, "4em", true, null, new EditingIntColumn<CourseGWT>(
+		table.addColumn(WTU_HEADER, WTU_WIDTH, true, null, new EditingIntColumn<CourseGWT>(
 				new IStaticGetter<CourseGWT, Integer>() {
 					public Integer getValueForObject(CourseGWT object) { return object.getWtu(); }
 				}, new IStaticSetter<CourseGWT, Integer>() {
@@ -159,11 +182,11 @@ public class CoursesTable extends SimplePanel {
 				new IStaticValidator<CourseGWT, Integer>() {
 					public void validate(CourseGWT object, Integer newValue) throws InvalidValueException {
 						if (newValue < 1)
-							throw new InvalidValueException(COURSE_WTU + " must be greater than 0: " + newValue + " is invalid.");
+							throw new InvalidValueException(WTU_HEADER + " must be greater than 0: " + newValue + " is invalid.");
 					}
 				}));
 		
-		table.addColumn(COURSE_SCU, "4em", true, null, new EditingIntColumn<CourseGWT>(
+		table.addColumn(SCU_HEADER, SCU_WIDTH, true, null, new EditingIntColumn<CourseGWT>(
 				new IStaticGetter<CourseGWT, Integer>() {
 					public Integer getValueForObject(CourseGWT object) { return object.getScu(); }
 				}, new IStaticSetter<CourseGWT, Integer>() {
@@ -172,11 +195,11 @@ public class CoursesTable extends SimplePanel {
 				new IStaticValidator<CourseGWT, Integer>() {
 					public void validate(CourseGWT object, Integer newValue) throws InvalidValueException {
 						if (newValue < 1)
-							throw new InvalidValueException(COURSE_SCU + " must be greater than 0: " + newValue + " is invalid.");
+							throw new InvalidValueException(SCU_HEADER + " must be greater than 0: " + newValue + " is invalid.");
 					}
 				}));
 		
-		table.addColumn(COURSE_NUM_SECTIONS, "4em", true, null, new EditingIntColumn<CourseGWT>(
+		table.addColumn(NUM_SECTIONS_HEADER, NUM_SECTIONS_WIDTH, true, null, new EditingIntColumn<CourseGWT>(
 				new IStaticGetter<CourseGWT, Integer>() {
 					public Integer getValueForObject(CourseGWT object) { return object.getNumSections(); }
 				}, new IStaticSetter<CourseGWT, Integer>() {
@@ -185,13 +208,13 @@ public class CoursesTable extends SimplePanel {
 				new IStaticValidator<CourseGWT, Integer>() {
 					public void validate(CourseGWT object, Integer newValue) throws InvalidValueException {
 						if (newValue < 1)
-							throw new InvalidValueException(COURSE_NUM_SECTIONS + " must be greater than 0: " + newValue + " is invalid.");
+							throw new InvalidValueException(NUM_SECTIONS_HEADER + " must be greater than 0: " + newValue + " is invalid.");
 					}
 				}));
 		
 		table.addColumn(
-				COURSE_TYPE,
-				"6em",
+				TYPE_HEADER,
+				TYPE_WIDTH,
 				true,
 				new MemberStringComparator<CourseGWT>(new IStaticGetter<CourseGWT, String>() {
 					public String getValueForObject(CourseGWT object) { return object.getType(); }
@@ -207,7 +230,7 @@ public class CoursesTable extends SimplePanel {
 							}
 						}));
 		
-		table.addColumn(COURSE_MAX_ENROLLMENT, "4em", true, null, new EditingIntColumn<CourseGWT>(
+		table.addColumn(MAX_ENROLLMENT_HEADER, MAX_ENROLLMENT_WIDTH, true, null, new EditingIntColumn<CourseGWT>(
 				new IStaticGetter<CourseGWT, Integer>() {
 					public Integer getValueForObject(CourseGWT object) { return object.getMaxEnroll(); }
 				}, new IStaticSetter<CourseGWT, Integer>() {
@@ -216,11 +239,11 @@ public class CoursesTable extends SimplePanel {
 				new IStaticValidator<CourseGWT, Integer>() {
 					public void validate(CourseGWT object, Integer newValue) throws InvalidValueException {
 						if (newValue < 1)
-							throw new InvalidValueException(COURSE_MAX_ENROLLMENT + " must be greater than 0: " + newValue + " is invalid.");
+							throw new InvalidValueException(MAX_ENROLLMENT_HEADER + " must be greater than 0: " + newValue + " is invalid.");
 					}
 				}));
 		
-		table.addColumn(COURSE_LENGTH, "4em", true, null, new EditingDecimalColumn<CourseGWT>(
+		table.addColumn(HOURS_PER_WEEK_HEADER, HOURS_PER_WEEK_WIDTH, true, null, new EditingDecimalColumn<CourseGWT>(
 				new IStaticGetter<CourseGWT, Double>() {
 					public Double getValueForObject(CourseGWT object) { return (double)object.getHalfHoursPerWeek() / 2; }
 				}, new IStaticSetter<CourseGWT, Double>() {
@@ -229,11 +252,11 @@ public class CoursesTable extends SimplePanel {
 				new IStaticValidator<CourseGWT, Double>() {
 					public void validate(CourseGWT object, Double newValue) throws InvalidValueException {
 						if (newValue < 1)
-							throw new InvalidValueException(COURSE_LENGTH + " must be greater than 0: " + newValue + " is invalid.");
+							throw new InvalidValueException(HOURS_PER_WEEK_HEADER + " must be greater than 0: " + newValue + " is invalid.");
 					}
 				}));
 		
-		table.addColumn("Day Combinations", null, true, null, new EditingMultiselectColumn<CourseGWT>(
+		table.addColumn(DAY_COMBINATIONS_HEADER, DAY_COMBINATIONS_WIDTH, true, null, new EditingMultiselectColumn<CourseGWT>(
 				new String[] {
 						"M", "Tu", "W", "Th", "F",
 						"MW", "MF", "WF", "TuTh",
@@ -258,8 +281,8 @@ public class CoursesTable extends SimplePanel {
 				}));
 		
 		table.addColumn(
-				"Associations",
-				"4em",
+				ASSOCIATIONS_HEADER,
+				ASSOCIATIONS_WIDTH,
 				true,
 				null,
 				new AssociationsColumn(new GetCoursesCallback() {

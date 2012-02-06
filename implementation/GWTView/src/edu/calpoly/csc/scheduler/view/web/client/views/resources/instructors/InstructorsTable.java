@@ -25,12 +25,23 @@ import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingStringColu
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 
 public class InstructorsTable extends SimplePanel {
-	private static final String INSTR_FIRSTNAME = "First Name";
-	private static final String INSTR_LASTNAME = "Last Name";
-	private static final String INSTR_ID = "Username";
-	private static final String INSTR_MAX_WTU = "Max WTU";
-	private static final String INSTR_DISABILITIES = "Disabilities";
-	private static final String INSTR_PREFERENCES = "Preferences";
+	private static final String FIRSTNAME_HEADER = "First Name";
+	private static final String FIRSTNAME_WIDTH = null;
+	
+	private static final String LASTNAME_HEADER = "Last Name";
+	private static final String LASTNAME_WIDTH = null;
+
+	private static final String USERNAME_HEADER = "Username";
+	private static final String USERNAME_WIDTH = null;
+
+	private static final String MAX_WTU_HEADER = "Max WTU";
+	private static final String MAX_WTU_WIDTH = null;
+	
+	private static final String DISABILITIES_HEADER = "Disabilities";
+	private static final String DISABILITIES_WIDTH = "4em";
+	
+	private static final String PREFERENCES_HEADER = "Preferences";
+	private static final String PREFERENCES_WIDTH = null;
 
 	public interface Strategy {
 		void getAllInstructors(AsyncCallback<List<InstructorGWT>> callback);
@@ -94,8 +105,8 @@ public class InstructorsTable extends SimplePanel {
 	
 	void addFieldColumns() {
 		table.addColumn(
-				INSTR_FIRSTNAME,
-				"6em",
+				FIRSTNAME_HEADER,
+				FIRSTNAME_WIDTH,
 				true,
 				new MemberStringComparator<InstructorGWT>(new IStaticGetter<InstructorGWT, String>() {
 					public String getValueForObject(InstructorGWT object) { return object.getFirstName(); }
@@ -110,8 +121,8 @@ public class InstructorsTable extends SimplePanel {
 						null));
 
 		table.addColumn(
-				INSTR_LASTNAME,
-				"6em",
+				LASTNAME_HEADER,
+				LASTNAME_WIDTH,
 				true,
 				new MemberStringComparator<InstructorGWT>(new IStaticGetter<InstructorGWT, String>() {
 					public String getValueForObject(InstructorGWT object) { return object.getLastName(); }
@@ -126,8 +137,8 @@ public class InstructorsTable extends SimplePanel {
 						null));
 		
 		table.addColumn(
-				INSTR_ID,
-				"6em",
+				USERNAME_HEADER,
+				USERNAME_WIDTH,
 				true,
 				new MemberStringComparator<InstructorGWT>(new IStaticGetter<InstructorGWT, String>() {
 					public String getValueForObject(InstructorGWT object) { return object.getUsername(); }
@@ -147,8 +158,8 @@ public class InstructorsTable extends SimplePanel {
 						}));
 
 		table.addColumn(
-				INSTR_MAX_WTU,
-				"4em",
+				MAX_WTU_HEADER,
+				MAX_WTU_WIDTH,
 				true,
 				new MemberIntegerComparator<InstructorGWT>(new IStaticGetter<InstructorGWT, Integer>() {
 					public Integer getValueForObject(InstructorGWT object) { return object.getMaxWtu(); }
@@ -163,13 +174,13 @@ public class InstructorsTable extends SimplePanel {
 						new IStaticValidator<InstructorGWT, Integer>() {
 							public void validate(InstructorGWT object, Integer newWtu) throws InvalidValueException {
 								if (newWtu < 0)
-									throw new InvalidValueException(INSTR_MAX_WTU + " must be positive: " + newWtu + " is invalid.");
+									throw new InvalidValueException(MAX_WTU_HEADER + " must be positive: " + newWtu + " is invalid.");
 							}
 						}));
 		
 		table.addColumn(
-				INSTR_DISABILITIES,
-				"4em",
+				DISABILITIES_HEADER,
+				DISABILITIES_WIDTH,
 				true,
 				new MemberIntegerComparator<InstructorGWT>(new IStaticGetter<InstructorGWT, Integer>() {
 					public Integer getValueForObject(InstructorGWT object) { return object.getDisabilities() ? 1 : 0; }
@@ -183,8 +194,8 @@ public class InstructorsTable extends SimplePanel {
 						}));
 		
 		table.addColumn(
-				INSTR_PREFERENCES,
-				"4em",
+				PREFERENCES_HEADER,
+				PREFERENCES_WIDTH,
 				true,
 				null,
 				new ButtonColumn<InstructorGWT>(

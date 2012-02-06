@@ -26,11 +26,24 @@ import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingStringColu
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
 
 public class LocationsTable extends SimplePanel {
-	private static final String LOC_MAX_OCCUPANCY = "Max Occupancy";
 	private static final String LAPTOP_CONNECTIVITY = "LAPCON";
 	private static final String OVERHEAD = "OVERHEAD";
 	private static final String SMART_ROOM = "SMART";
 	
+	private static final String BUILDING_HEADER = "Building";
+	private static final String BUILDING_WIDTH = null;
+	
+	private static final String ROOM_HEADER = "Room";
+	private static final String ROOM_WIDTH = null;
+	
+	private static final String TYPE_HEADER = "Type";
+	private static final String TYPE_WIDTH = null;
+	
+	private static final String MAX_OCCUPANCY_HEADER = "Max Occupancy";
+	private static final String MAX_OCCUPANCY_WIDTH = "4em";
+	
+	private static final String DISABILITIES_HEADER = "Disabilities";
+	private static final String DISABILITIES_WIDTH = "2em";
 	
 	public interface Strategy {
 		void getAllLocations(AsyncCallback<List<LocationGWT>> callback);
@@ -94,8 +107,8 @@ public class LocationsTable extends SimplePanel {
 	void addFieldColumns() {
 
 		table.addColumn(
-				"Building",
-				null,
+				BUILDING_HEADER,
+				BUILDING_WIDTH,
 				true,
 				new Comparator<LocationGWT>() {
 					public int compare(LocationGWT o1, LocationGWT o2) {
@@ -118,8 +131,8 @@ public class LocationsTable extends SimplePanel {
 						}));
 
 		table.addColumn(
-				"Room",
-				null,
+				ROOM_HEADER,
+				ROOM_WIDTH,
 				true,
 				new Comparator<LocationGWT>() {
 					@Override
@@ -143,8 +156,8 @@ public class LocationsTable extends SimplePanel {
 						}));
 		
 		table.addColumn(
-				"Type",
-				null,
+				TYPE_HEADER,
+				TYPE_WIDTH,
 				true,
 				new Comparator<LocationGWT>() {
 					@Override
@@ -162,8 +175,8 @@ public class LocationsTable extends SimplePanel {
 						}));
 
 		table.addColumn(
-				"Occupancy",
-				null,
+				MAX_OCCUPANCY_HEADER,
+				MAX_OCCUPANCY_WIDTH,
 				true,
 				new Comparator<LocationGWT>() {
 					@Override
@@ -181,13 +194,13 @@ public class LocationsTable extends SimplePanel {
 						new IStaticValidator<LocationGWT, Integer>() {
 							public void validate(LocationGWT object, Integer newMaxOcc) throws InvalidValueException {
 								if (newMaxOcc < 0)
-									throw new InvalidValueException(LOC_MAX_OCCUPANCY + " must be a positive: " + newMaxOcc + " is invalid.");
+									throw new InvalidValueException(MAX_OCCUPANCY_HEADER + " must be a positive: " + newMaxOcc + " is invalid.");
 							}
 						}));
 		
 		table.addColumn(
-				"ADA",
-				null,
+				DISABILITIES_HEADER,
+				DISABILITIES_WIDTH,
 				true,
 				new Comparator<LocationGWT>() {
 					@Override

@@ -253,7 +253,7 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel imple
 		});
 	}
 
-	public void addColumn(String name, String initialWidth, boolean resizable, Comparator<? super ObjectType> comparator, final IColumn<ObjectType> column) {
+	public void addColumn(String name, String minimumWidth, boolean resizable, Comparator<? super ObjectType> comparator, final IColumn<ObjectType> column) {
 		assert(rowsByObjectID.size() == 0);
 		final int newColumnIndex = columnMetadatas.size();
 		
@@ -261,6 +261,8 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel imple
 		hiddenCellThatMaintainsWidthsContents.addStyleName("headerContents");
 		table.setWidget(0, newColumnIndex, hiddenCellThatMaintainsWidthsContents);
 		final Element hiddenCellThatMaintainsWidths = HTMLUtilities.getClosestContainingElementOfType(hiddenCellThatMaintainsWidthsContents.getElement(), "td");
+		if (minimumWidth != null)
+			hiddenCellThatMaintainsWidths.setAttribute("style", "min-width: " + minimumWidth);
 		
 		if (hiddenRowThatMaintainsWidths == null) {
 			hiddenRowThatMaintainsWidths = HTMLUtilities.getClosestContainingElementOfType(hiddenCellThatMaintainsWidthsContents.getElement(), "tr");
@@ -270,7 +272,7 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel imple
 		final HTML headerContents = new HTML(name);
 		headerContents.addStyleName("headerContents");
 		
-		ResizeableWidget resizeableHeader = new ResizeableWidget(this, initialWidth, resizable, headerContents, new ResizeCallback() {
+		ResizeableWidget resizeableHeader = new ResizeableWidget(this, resizable, headerContents, new ResizeCallback() {
 			public void trySettingWidth(int newWidthPixels) {
 				hiddenCellThatMaintainsWidths.setAttribute("style", "width: " + newWidthPixels + "px");
 				if (hiddenCellThatMaintainsWidths.getOffsetWidth() != newWidthPixels) {

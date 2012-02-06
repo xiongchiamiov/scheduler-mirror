@@ -20,7 +20,7 @@ class ResizeableWidget extends FlowPanel {
 	private int dragAnchorX;
 	final ResizeCallback callback;
 
-	public ResizeableWidget(Widget draggableArea, String initialWidth, boolean resizable, Widget contents, final ResizeCallback callback) {
+	public ResizeableWidget(Widget draggableArea, boolean resizable, Widget contents, final ResizeCallback callback) {
 		this.callback = callback;
 		
 		add(contents);
@@ -56,12 +56,6 @@ class ResizeableWidget extends FlowPanel {
 			draggableArea.addDomHandler(new MouseUpHandler() {
 				public void onMouseUp(MouseUpEvent event) { dragging = false; }
 			}, MouseUpEvent.getType());
-		}
-		
-		if (initialWidth != null) {
-			setWidth(initialWidth);
-			int initialWidthPixels = getOffsetWidth();
-			trySettingWidth(initialWidthPixels);
 		}
 	}
 	
