@@ -9,6 +9,7 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.client.IViewContents;
 import edu.calpoly.csc.scheduler.view.web.client.ViewFrame;
+import edu.calpoly.csc.scheduler.view.web.client.views.resources.instructors.InstructorPreferencesView;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 
 public class InstructorScheduleNavView extends SimplePanel implements IViewContents {

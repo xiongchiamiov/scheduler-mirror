@@ -52,8 +52,8 @@ public interface GreetingServiceAsync {
 	void removeCourse(Integer toRemoveID, AsyncCallback<Void> callback);
 	void addInstructor(InstructorGWT toAdd, AsyncCallback<InstructorGWT> callback);
 	void editInstructor(InstructorGWT toEdit, AsyncCallback<Void> callback);
-	void removeInstructor(InstructorGWT toRemove, AsyncCallback<Void> callback);
+	void removeInstructor(Integer realInstructorID, AsyncCallback<Void> callback);
 	void addLocation(LocationGWT toAdd, AsyncCallback<LocationGWT> callback);
 	void editLocation(LocationGWT toEdit, AsyncCallback<Void> callback);
-	void removeLocation(LocationGWT toRemove, AsyncCallback<Void> callback);
+	void removeLocation(Integer toRemoveID, AsyncCallback<Void> callback);
 }

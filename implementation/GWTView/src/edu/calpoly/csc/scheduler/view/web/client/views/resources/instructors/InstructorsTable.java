@@ -1,19 +1,13 @@
-package edu.calpoly.csc.scheduler.view.web.client.views;
+package edu.calpoly.csc.scheduler.view.web.client.views.resources.instructors;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.SimplePanel;
 
-import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
-import edu.calpoly.csc.scheduler.view.web.client.IViewContents;
-import edu.calpoly.csc.scheduler.view.web.client.ViewFrame;
 import edu.calpoly.csc.scheduler.view.web.client.table.IFactory;
 import edu.calpoly.csc.scheduler.view.web.client.table.IStaticGetter;
 import edu.calpoly.csc.scheduler.view.web.client.table.IStaticSetter;
@@ -21,6 +15,7 @@ import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator;
 import edu.calpoly.csc.scheduler.view.web.client.table.MemberIntegerComparator;
 import edu.calpoly.csc.scheduler.view.web.client.table.MemberStringComparator;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
+import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.ObjectChangedObserver;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.ButtonColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.ButtonColumn.ClickCallback;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.DeleteColumn.DeleteObserver;
@@ -28,90 +23,76 @@ import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingCheckboxCo
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingIntColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingStringColumn;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.TimePreferenceGWT;
 
-public class InstructorsView extends VerticalPanel implements IViewContents {
-	/** Instructor table */
-	public static final String INSTR_NAME = "Instructor Name";
+public class InstructorsTable extends SimplePanel {
+	private static final String INSTR_FIRSTNAME = "First Name";
+	private static final String INSTR_LASTNAME = "Last Name";
+	private static final String INSTR_ID = "ID";
+	private static final String INSTR_MAX_WTU = "Max WTU";
+	private static final String INSTR_DISABILITIES = "Disabilities";
+	private static final String INSTR_PREFERENCES = "Preferences";
 
-	public static final String INSTR_FIRSTNAME = "First Name";
-
-	public static final String INSTR_LASTNAME = "Last Name";
-
-	public static final String INSTR_ID = "ID";
-	
-	public static final String INSTR_MAX_WTU = "Max WTU";
-	
-	public static final String INSTR_OFFICE = "Office";
-	
-	public static final String INSTR_BUILDING = "Building";
-
-	public static final String INSTR_ROOMNUMBER = "Room#";
-
-	public static final String INSTR_DISABILITIES = "Disabilities";
-	
-	public static final String INSTR_PREFERENCES = "Preferences";
-
-	// These static variables are a temporary hack to get around the table bug
-	public GreetingServiceAsync service;
-	
-	private final String scheduleName;
-	private OsmTable<InstructorGWT> table;
-	int nextInstructorID = -2;
-	
-	ViewFrame myFrame;
-
-	public InstructorsView(GreetingServiceAsync service, String scheduleName) {
-		assert(service != null);
-		this.service = service;
-		this.scheduleName = scheduleName;
-		this.addStyleName("iViewPadding");
-	}
-
-	@Override
-	public boolean canPop() {
-		assert(table != null);
-		if (table.isSaved())
-			return true;
-		return Window.confirm("You have unsaved data which will be lost. Are you sure you want to navigate away?");
+	public interface Strategy {
+		void getAllInstructors(AsyncCallback<List<InstructorGWT>> callback);
+		InstructorGWT createInstructor();
+		void onInstructorEdited(InstructorGWT Instructor);
+		void onInstructorDeleted(InstructorGWT Instructor);
+		void preferencesButtonClicked(InstructorGWT instructor);
 	}
 	
-	private int generateTemporaryInstructorID() {
-		return nextInstructorID--;
-	}
+	final OsmTable<InstructorGWT> table;
+	final Strategy strategy;
+	final ArrayList<InstructorGWT> tableInstructors = new ArrayList<InstructorGWT>();
 	
-	@Override
-	public void afterPush(ViewFrame frame) {
-		this.myFrame = frame;
-		
-		this.setWidth("100%");
-		this.setHeight("100%");
-
-		this.add(new HTML("<h2>" + scheduleName + " - Instructors</h2>"));
-
-		final LoadingPopup popup = new LoadingPopup();
-		popup.show();
+	public InstructorsTable(Strategy strategy_) {
+		this.strategy = strategy_;
 		
 		table = new OsmTable<InstructorGWT>(
 				new IFactory<InstructorGWT>() {
 					public InstructorGWT create() {
-						System.out.println("Gets to this point to create this mofo");
-						return new InstructorGWT(
-								generateTemporaryInstructorID(), "", "", "", "", "", false, 5, 5, 0, 0,
-								new HashMap<Integer, Map<Integer, TimePreferenceGWT>>(),
-								new HashMap<Integer, Integer>());
+						InstructorGWT newInstructor = strategy.createInstructor();
+						tableInstructors.add(newInstructor);
+						return newInstructor;
 					}
 				});
-
-		table.addDeleteColumn(new DeleteObserver<InstructorGWT>() {
-			public void afterDelete(InstructorGWT object) {
-				service.removeInstructor(object, new AsyncCallback<Void>() {
-					public void onSuccess(Void result) { }
-					public void onFailure(Throwable caught) { }
-				});
+		
+		table.setObjectChangedObserver(new ObjectChangedObserver<InstructorGWT>() {
+			public void objectChanged(final InstructorGWT object) {
+				strategy.onInstructorEdited(object);
 			}
 		});
 
+		table.addDeleteColumn(new DeleteObserver<InstructorGWT>() {
+			@Override
+			public void afterDelete(InstructorGWT object) {
+				tableInstructors.remove(object);
+				strategy.onInstructorDeleted(object);
+			}
+		});
+		
+		addFieldColumns();
+
+		this.add(table);
+	}
+
+	@Override
+	public void onLoad() {
+		strategy.getAllInstructors(new AsyncCallback<List<InstructorGWT>>() {
+			public void onFailure(Throwable caught) {
+				Window.alert("Failed to get Instructors: " + caught.toString());
+			}
+			
+			public void onSuccess(List<InstructorGWT> Instructors){
+				assert(tableInstructors.isEmpty());
+				for (InstructorGWT Instructor : Instructors)
+					tableInstructors.add(new InstructorGWT(Instructor));
+				
+				table.addRows(tableInstructors);
+			}
+		});
+	}
+	
+	void addFieldColumns() {
 		table.addColumn(
 				INSTR_FIRSTNAME,
 				"6em",
@@ -210,34 +191,12 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 						"Preferences",
 						new ClickCallback<InstructorGWT>(){
 							public void buttonClickedForObject(InstructorGWT object, Button button) {
-								if (myFrame.canPopViewsAboveMe()) {
-									myFrame.popFramesAboveMe();
-									myFrame.frameViewAndPushAboveMe(new InstructorPreferencesView(service, scheduleName, object));
-								}	
+								strategy.preferencesButtonClicked(object);
 							}
 						}));
-		
-		
-		this.add(table);
-		
-//		System.out.println("sending request");
-		
-		service.getInstructors(new AsyncCallback<List<InstructorGWT>>() {
-			public void onFailure(Throwable caught) {
-				popup.hide();
-				Window.alert("Failed to get instructors: " + caught.toString());
-			}
-			
-			public void onSuccess(List<InstructorGWT> result){
-//				System.out.println("onsuccess got response");
-				assert(result != null);
-				popup.hide();
-				table.addRows(result);
-			}
-		});
+
 	}
-	
-	
+
 	private boolean canSetUserID(InstructorGWT forObject, String newUserID) {
 		for (InstructorGWT instr : table.getObjects()) {
 			if (instr == forObject)
@@ -248,13 +207,4 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 		return true;
 	}
 
-	@Override
-	public void beforePop() { }
-	@Override
-	public void beforeViewPushedAboveMe() { }
-	@Override
-	public void afterViewPoppedFromAboveMe() { }
-	@Override
-	public Widget getContents() { return this; }
 }
- 

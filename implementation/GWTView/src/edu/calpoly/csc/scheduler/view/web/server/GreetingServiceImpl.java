@@ -15,7 +15,6 @@ import edu.calpoly.csc.scheduler.model.db.cdb.Course;
 import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
 import edu.calpoly.csc.scheduler.model.db.ldb.Location;
 import edu.calpoly.csc.scheduler.model.db.udb.UserData;
-import edu.calpoly.csc.scheduler.model.schedule.CouldNotBeScheduledException;
 import edu.calpoly.csc.scheduler.model.schedule.Day;
 import edu.calpoly.csc.scheduler.model.schedule.Schedule;
 import edu.calpoly.csc.scheduler.model.schedule.ScheduleItem;
@@ -454,10 +453,15 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
-	public void removeInstructor(InstructorGWT toRemove) {
-		Instructor instructor = Conversion.fromGWT(toRemove, getCoursesByID());
-		assert (instructor.getDbid() != -1);
-		model.removeInstructor(instructor);
+	public void removeInstructor(Integer toRemoveID) {
+		for (Instructor instructor : model.getInstructors()) {
+			if (instructor.getDbid().equals(toRemoveID)) {
+				model.removeInstructor(instructor);
+				return;
+			}
+		}
+		
+		assert(false);
 	}
 
 	@Override
@@ -477,9 +481,14 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
-	public void removeLocation(LocationGWT toRemove) {
-		Location location = Conversion.fromGWT(toRemove);
-		assert (location.getDbid() != -1);
-		model.removeLocation(location);
+	public void removeLocation(Integer toRemoveID) {
+		for (Location location : model.getLocations()) {
+			if (location.getDbid().equals(toRemoveID)) {
+				model.removeLocation(location);
+				return;
+			}
+		}
+		
+		assert(false);
 	}
 }

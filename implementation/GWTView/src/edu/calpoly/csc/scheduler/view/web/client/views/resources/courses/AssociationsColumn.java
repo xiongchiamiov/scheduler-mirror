@@ -1,11 +1,11 @@
-package edu.calpoly.csc.scheduler.view.web.client.views;
+package edu.calpoly.csc.scheduler.view.web.client.views.resources.courses;
 
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.Cell;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.EditingCell;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.IRowForColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.ReadingCell;
-import edu.calpoly.csc.scheduler.view.web.client.views.AssociationsCell.GetCoursesCallback;
+import edu.calpoly.csc.scheduler.view.web.client.views.resources.courses.AssociationsCell.GetCoursesCallback;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 
 public class AssociationsColumn implements OsmTable.IEditingColumn<CourseGWT> {

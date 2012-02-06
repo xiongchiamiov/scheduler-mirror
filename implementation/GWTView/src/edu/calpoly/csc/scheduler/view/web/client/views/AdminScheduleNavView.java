@@ -13,6 +13,9 @@ import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.client.IViewContents;
 import edu.calpoly.csc.scheduler.view.web.client.Import;
 import edu.calpoly.csc.scheduler.view.web.client.ViewFrame;
+import edu.calpoly.csc.scheduler.view.web.client.views.resources.courses.CoursesView;
+import edu.calpoly.csc.scheduler.view.web.client.views.resources.instructors.InstructorsView;
+import edu.calpoly.csc.scheduler.view.web.client.views.resources.locations.LocationsView;
 
 public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 	final GreetingServiceAsync service;

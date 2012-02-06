@@ -1,5 +1,6 @@
-package edu.calpoly.csc.scheduler.view.web.client.views;
+package edu.calpoly.csc.scheduler.view.web.client.views.resources.locations;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -8,18 +9,14 @@ import java.util.Set;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.SimplePanel;
 
-import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
-import edu.calpoly.csc.scheduler.view.web.client.IViewContents;
-import edu.calpoly.csc.scheduler.view.web.client.ViewFrame;
 import edu.calpoly.csc.scheduler.view.web.client.table.IFactory;
 import edu.calpoly.csc.scheduler.view.web.client.table.IStaticGetter;
 import edu.calpoly.csc.scheduler.view.web.client.table.IStaticSetter;
 import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
+import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.ObjectChangedObserver;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.DeleteColumn.DeleteObserver;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingCheckboxColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingIntColumn;
@@ -28,83 +25,73 @@ import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingSelectColu
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingStringColumn;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
 
-public class LocationsView extends VerticalPanel implements IViewContents {
-	/** Location table */
-	public static final String LOC_BUILDING = "Building";
-	
-	public static final String LOC_SMARTROOM = "Smartroom";
-	
-	public static final String LOC_LAPTOPCONNECTIVITY = "Laptop Connectivity";
-	
-	public static final String LOC_ADACOMPLIANT = "ADA Compliant";
-	
-	public static final String LOC_OVERHEAD = "Overhead";
-	
-	public static final String LOC_NAME = "Name";
-	
-	public static final String LOC_ROOM = "Room";
-	
-	public static final String LOC_TYPE = "Type";
-	
-	public static final String LOC_MAX_OCCUPANCY = "Max Occupancy";
-	
-	public static final String LOC_EQIPMENT_LIST = "Equipment List";
-		
-	public static final String LOC_ADDITIONAL_DETAILS = "Additional Details";
-	
+public class LocationsTable extends SimplePanel {
+	private static final String LOC_MAX_OCCUPANCY = "Max Occupancy";
 	private static final String LAPTOP_CONNECTIVITY = "LAPCON";
 	private static final String OVERHEAD = "OVERHEAD";
 	private static final String SMART_ROOM = "SMART";
 	
-	private GreetingServiceAsync service;
-	private final String scheduleName;
-	int nextLocationID = -2;
-	private static OsmTable<LocationGWT> table;
-
-	private int generateTemporaryLocationID() {
-		return nextLocationID--;
+	
+	public interface Strategy {
+		void getAllLocations(AsyncCallback<List<LocationGWT>> callback);
+		LocationGWT createLocation();
+		void onLocationEdited(LocationGWT location);
+		void onLocationDeleted(LocationGWT location);
 	}
 	
-	public LocationsView(GreetingServiceAsync service, String scheduleName) {
-		this.service = service;
-		this.scheduleName = scheduleName;
-		this.addStyleName("iViewPadding");
-	}
-
-	@Override
-	public boolean canPop() {
-		assert(table != null);
-		if (table.isSaved())
-			return true;
-		return Window.confirm("You have unsaved data which will be lost. Are you sure you want to navigate away?");
-	}
+	final OsmTable<LocationGWT> table;
+	final Strategy strategy;
+	final ArrayList<LocationGWT> tableLocations = new ArrayList<LocationGWT>();
 	
-	@Override
-	public void afterPush(ViewFrame frame) {
-		this.setWidth("100%");
-		this.setHeight("100%");
-
-		this.add(new HTML("<h2>" + scheduleName + " - Locations</h2>"));
-
-		final LoadingPopup popup = new LoadingPopup();
-		popup.show();
-
+	public LocationsTable(Strategy strategy_) {
+		this.strategy = strategy_;
+		
 		table = new OsmTable<LocationGWT>(
 				new IFactory<LocationGWT>() {
 					public LocationGWT create() {
-						return new LocationGWT(generateTemporaryLocationID(), "", "", "LEC", 20, false, new LocationGWT.ProvidedEquipmentGWT());
+						LocationGWT newLocation = strategy.createLocation();
+						tableLocations.add(newLocation);
+						return newLocation;
 					}
 				});
+		
+		table.setObjectChangedObserver(new ObjectChangedObserver<LocationGWT>() {
+			public void objectChanged(final LocationGWT object) {
+				strategy.onLocationEdited(object);
+			}
+		});
 
 		table.addDeleteColumn(new DeleteObserver<LocationGWT>() {
 			@Override
 			public void afterDelete(LocationGWT object) {
-				service.removeLocation(object, new AsyncCallback<Void>() {
-					public void onSuccess(Void result) { }
-					public void onFailure(Throwable caught) { }
-				});
+				tableLocations.remove(object);
+				strategy.onLocationDeleted(object);
 			}
 		});
+		
+		addFieldColumns();
+
+		this.add(table);
+	}
+
+	@Override
+	public void onLoad() {
+		strategy.getAllLocations(new AsyncCallback<List<LocationGWT>>() {
+			public void onFailure(Throwable caught) {
+				Window.alert("Failed to get locations: " + caught.toString());
+			}
+			
+			public void onSuccess(List<LocationGWT> locations){
+				assert(tableLocations.isEmpty());
+				for (LocationGWT location : locations)
+					tableLocations.add(new LocationGWT(location));
+				
+				table.addRows(tableLocations);
+			}
+		});
+	}
+	
+	void addFieldColumns() {
 
 		table.addColumn(
 				"Building",
@@ -247,22 +234,6 @@ public class LocationsView extends VerticalPanel implements IViewContents {
 								object.getEquipment().isSmartRoom = newValue.contains(SMART_ROOM);
 							}
 						}));
-		
-		this.add(table);
-		
-		service.getLocations(new AsyncCallback<List<LocationGWT>>() {
-			public void onFailure(Throwable caught) {
-				popup.hide();
-				Window.alert("Failed to get courses: " + caught.toString());
-			}
-			
-			public void onSuccess(List<LocationGWT> result){
-				assert(result != null);
-				popup.hide();
-				table.addRows(result);
-			}
-		});
-		
 	}
 	
 	LocationGWT locationExists(String building, String room) {
@@ -272,12 +243,4 @@ public class LocationsView extends VerticalPanel implements IViewContents {
 		return null;
 	}
 
-	@Override
-	public void beforePop() { }
-	@Override
-	public void beforeViewPushedAboveMe() { }
-	@Override
-	public void afterViewPoppedFromAboveMe() { }
-	@Override
-	public Widget getContents() { return this; }
 }

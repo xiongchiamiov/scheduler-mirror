@@ -60,11 +60,11 @@ public interface GreetingService extends RemoteService {
 
 	void editInstructor(InstructorGWT toEdit);
 
-	void removeInstructor(InstructorGWT toRemove);
+	void removeInstructor(Integer realInstructorID);
 
 	LocationGWT addLocation(LocationGWT toAdd);
 
 	void editLocation(LocationGWT toEdit);
 
-	void removeLocation(LocationGWT toRemove);
+	void removeLocation(Integer toRemoveID);
 }

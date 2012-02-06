@@ -1,21 +1,14 @@
-package edu.calpoly.csc.scheduler.view.web.client.views;
+package edu.calpoly.csc.scheduler.view.web.client.views.resources.courses;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.SimplePanel;
 
-import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
-import edu.calpoly.csc.scheduler.view.web.client.IViewContents;
-import edu.calpoly.csc.scheduler.view.web.client.ViewFrame;
 import edu.calpoly.csc.scheduler.view.web.client.table.IFactory;
 import edu.calpoly.csc.scheduler.view.web.client.table.IStaticGetter;
 import edu.calpoly.csc.scheduler.view.web.client.table.IStaticSetter;
@@ -28,203 +21,81 @@ import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingIntColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingMultiselectColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingSelectColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingStringColumn;
-import edu.calpoly.csc.scheduler.view.web.client.views.AssociationsCell.GetCoursesCallback;
+import edu.calpoly.csc.scheduler.view.web.client.views.resources.courses.AssociationsCell.GetCoursesCallback;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.DayCombinationGWT;
 
-public class CoursesView extends VerticalPanel implements IViewContents {
-	/** Course table */
-	public static final String COURSE_NAME = "Course Name";
-
-	public static final String COURSE_ID = "ID";
-
-	public static final String COURSE_CATALOG_NUM = "Catalog Number";
+public class CoursesTable extends SimplePanel {
+	private static final String COURSE_NAME = "Course Name";
+	private static final String COURSE_CATALOG_NUM = "Catalog Number";
+	private static final String COURSE_DEPARTMENT = "Department";
+	private static final String COURSE_WTU = "WTU";
+	private static final String COURSE_LENGTH = "Hours Per Week";
+	private static final String COURSE_SCU = "SCU";
+	private static final String COURSE_NUM_SECTIONS = "# of Sections";
+	private static final String COURSE_TYPE = "Course Type";
+	private static final String COURSE_MAX_ENROLLMENT = "Max Enrollment";
 	
-	public static final String COURSE_DEPARTMENT = "Department";
+	public interface Strategy {
+		void getAllCourses(AsyncCallback<List<CourseGWT>> callback);
+		CourseGWT createCourse();
+		void onCourseEdited(CourseGWT course);
+		void onCourseDeleted(CourseGWT course);
+	}
 	
-	public static final String COURSE_WTU = "WTU";
-
-	public static final String COURSE_LABID = "Lab ID";
-
-	public static final String COURSE_SMARTROOM = "Smartroom";
-
-	public static final String COURSE_LAPTOP = "Laptop";
-
-	public static final String COURSE_OVERHEAD = "Overhead";
-
-	public static final String COURSE_LENGTH = "Hours Per Week";
-	
-	public static final String COURSE_CTPREFIX = "ctPrefix";
-	
-	public static final String COURSE_PREFIX = "Prefix";
-
-	public static final String COURSE_SCU = "SCU";
-	
-	public static final String COURSE_NUM_SECTIONS = "# of Sections";
-	
-	public static final String COURSE_TYPE = "Course Type";
-	
-	public static final String COURSE_MAX_ENROLLMENT = "Max Enrollment";
-	
-	public static final String COURSE_LAB = "Lab";
-	
-	
-//	private CourseCache courseCache;
-	private GreetingServiceAsync service;
-	private String scheduleName;
-	private OsmTable<CourseGWT> table;
+	final OsmTable<CourseGWT> table;
+	final Strategy strategy;
 	final ArrayList<CourseGWT> tableCourses = new ArrayList<CourseGWT>();
-	int nextTableCourseID = -2;
-	int transactionsPending = 0;
-	Map<Integer, Integer> realIDsByTableID = new HashMap<Integer, Integer>();
 	
-	final ArrayList<Integer> deletedTableCourseIDs = new ArrayList<Integer>();
-	final ArrayList<CourseGWT> editedTableCourses = new ArrayList<CourseGWT>();
-	final ArrayList<CourseGWT> addedTableCourses = new ArrayList<CourseGWT>();
-
-	private void onTableCourseAdded(CourseGWT course) {
-		tableCourses.add(course);
-		addedTableCourses.add(course);
-		
-		assert(!editedTableCourses.contains(course));
-		
-		assert(!deletedTableCourseIDs.contains(course));
-
-		sendUpdates();
-	}
-	
-	private void onTableCourseEdited(CourseGWT course) {
-		assert(!deletedTableCourseIDs.contains(course.getID()));
-		
-		if (realIDsByTableID.containsKey(course.getID())) {
-			// exists on remote side
-			if (!editedTableCourses.contains(course))
-				editedTableCourses.add(course);
-		}
-		else {
-			// doesnt exist on remote side
-			// do nothing, its already on the add list.
-			assert(addedTableCourses.contains(course));
-		}
-		
-		sendUpdates();
-	}
-	
-	private void onTableCourseDeleted(CourseGWT course) {
-		tableCourses.remove(course);
-		editedTableCourses.remove(course);
-		
-		if (addedTableCourses.contains(course)) {
-			addedTableCourses.remove(course);
-			return;
-		}
-		
-		assert(!deletedTableCourseIDs.contains(course.getID()));
-		deletedTableCourseIDs.add(course.getID());
-		
-		sendUpdates();
-	}
-	
-	private void sendUpdates() {
-		assert(transactionsPending == 0);
-		transactionsPending = deletedTableCourseIDs.size() + editedTableCourses.size() + addedTableCourses.size();
-		if (transactionsPending == 0)
-			return;
-		
-		for (Integer deletedTableCourseID : deletedTableCourseIDs) {
-			Integer realCourseID = realIDsByTableID.get(deletedTableCourseID);
-			service.removeCourse(realCourseID, new AsyncCallback<Void>() {
-				public void onSuccess(Void result) { updateFinished(); }
-				public void onFailure(Throwable caught) { Window.alert("Update failed: " + caught.getMessage()); }
-			});
-		}
-		
-		for (CourseGWT editedTableCourse : editedTableCourses) {
-			Integer realCourseID = realIDsByTableID.get(editedTableCourse.getID());
-			CourseGWT realCourse = new CourseGWT(editedTableCourse);
-			realCourse.setID(realCourseID);
-			service.editCourse(realCourse, new AsyncCallback<Void>() {
-				public void onSuccess(Void result) { updateFinished(); }
-				public void onFailure(Throwable caught) { Window.alert("Update failed: " + caught.getMessage()); }
-			});
-		}
-		
-		for (CourseGWT addedTableCourse : addedTableCourses) {
-			final int tableCourseID = addedTableCourse.getID();
-			CourseGWT realCourse = new CourseGWT(addedTableCourse);
-			realCourse.setID(-1);
-			service.addCourse(realCourse, new AsyncCallback<CourseGWT>() {
-				public void onSuccess(CourseGWT result) {
-					realIDsByTableID.put(tableCourseID, result.getID());
-					updateFinished();
-				}
-				public void onFailure(Throwable caught) { Window.alert("Update failed: " + caught.getMessage()); }
-			});
-		}
-		
-		deletedTableCourseIDs.clear();
-		editedTableCourses.clear();
-		addedTableCourses.clear();
-	}
-	
-	private void updateFinished() {
-		assert(transactionsPending > 0);
-		transactionsPending--;
-		if (transactionsPending == 0)
-			sendUpdates();
-	}
-	
-	private int generateTableCourseID() {
-		return nextTableCourseID--;
-	}
-	
-	public CoursesView(GreetingServiceAsync service, String scheduleName) {
-		this.service = service;
-		this.scheduleName = scheduleName;
-		this.addStyleName("iViewPadding");
-	}
-
-	@Override
-	public boolean canPop() {
-		return true;
-//		assert(table != null);
-//		if (table.isSaved())
-//			return true;
-//		return Window.confirm("You have unsaved data which will be lost. Are you sure you want to navigate away?");
-	}
-	
-	@Override
-	public void afterPush(ViewFrame frame) {		
-		this.setWidth("100%");
-		this.setHeight("100%");
-
-		this.add(new HTML("<h2>" + scheduleName + " - Courses</h2>"));
-
-		final LoadingPopup popup = new LoadingPopup();
-		popup.show();
+	public CoursesTable(Strategy strategy_) {
+		this.strategy = strategy_;
 		
 		table = new OsmTable<CourseGWT>(
 				new IFactory<CourseGWT>() {
 					public CourseGWT create() {
-						CourseGWT newCourse = new CourseGWT("", "", "", 0, 0, 0, "LEC", 0, -1, 6, new HashSet<DayCombinationGWT>(), 0, generateTableCourseID(), false);
-						onTableCourseAdded(newCourse);
+						CourseGWT newCourse = strategy.createCourse();
+						tableCourses.add(newCourse);
 						return newCourse;
 					}
 				});
 		
 		table.setObjectChangedObserver(new ObjectChangedObserver<CourseGWT>() {
 			public void objectChanged(final CourseGWT object) {
-				onTableCourseEdited(object);
+				strategy.onCourseEdited(object);
 			}
 		});
 
 		table.addDeleteColumn(new DeleteObserver<CourseGWT>() {
 			@Override
 			public void afterDelete(CourseGWT object) {
-				onTableCourseDeleted(object);
+				tableCourses.remove(object);
+				strategy.onCourseDeleted(object);
 			}
 		});
+		
+		addFieldColumns();
 
+		this.add(table);
+	}
+
+	@Override
+	public void onLoad() {
+		strategy.getAllCourses(new AsyncCallback<List<CourseGWT>>() {
+			public void onFailure(Throwable caught) {
+				Window.alert("Failed to get courses: " + caught.toString());
+			}
+			
+			public void onSuccess(List<CourseGWT> courses){
+				assert(tableCourses.isEmpty());
+				for (CourseGWT course : courses)
+					tableCourses.add(new CourseGWT(course));
+				
+				table.addRows(tableCourses);
+			}
+		});
+	}
+	
+	void addFieldColumns() {
 		table.addColumn(
 				COURSE_DEPARTMENT,
 				"6em",
@@ -363,16 +234,10 @@ public class CoursesView extends VerticalPanel implements IViewContents {
 		
 		table.addColumn("Day Combinations", null, true, null, new EditingMultiselectColumn<CourseGWT>(
 				new String[] {
-						"M",
-						"Tu",
-						"W",
-						"Th",
-						"F",
-						"MW",
-						"TuTh",
+						"M", "Tu", "W", "Th", "F",
+						"MW", "MF", "WF", "TuTh",
 						"MWF",
-						"TuThF",
-						"MTuThF"
+						"TuWThF", "MWThF", "MTuThF", "MTuWTh"
 				},
 				new IStaticGetter<CourseGWT, Set<String>>() {
 					public Set<String> getValueForObject(CourseGWT object) {
@@ -401,34 +266,5 @@ public class CoursesView extends VerticalPanel implements IViewContents {
 						return tableCourses;
 					}
 				}));
-
-		this.add(table);
-		
-		service.getCourses(new AsyncCallback<List<CourseGWT>>() {
-			public void onFailure(Throwable caught) {
-				popup.hide();
-				Window.alert("Failed to get courses: " + caught.toString());
-			}
-			
-			public void onSuccess(List<CourseGWT> coursesInCache){
-				assert(coursesInCache != null);
-				popup.hide();
-				
-				assert(tableCourses.isEmpty());
-				for (CourseGWT courseInCache : coursesInCache)
-					tableCourses.add(new CourseGWT(courseInCache));
-				
-				table.addRows(tableCourses);
-			}
-		});
 	}
-	
-	@Override
-	public void beforePop() { }
-	@Override
-	public void beforeViewPushedAboveMe() { }
-	@Override
-	public void afterViewPoppedFromAboveMe() { }
-	@Override
-	public Widget getContents() { return this; }
 }

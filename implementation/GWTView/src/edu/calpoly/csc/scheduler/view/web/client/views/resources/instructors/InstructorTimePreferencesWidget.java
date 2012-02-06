@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.view.web.client.views;
+package edu.calpoly.csc.scheduler.view.web.client.views.resources.instructors;
 
 import java.util.ArrayList;
 import java.util.HashMap;
