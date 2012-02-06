@@ -11,7 +11,7 @@ public class InstructorGWT implements Serializable, Identified {
 	private static final long serialVersionUID = -4982539363690274674L;
 	
 	private int id;
-	private String userID;
+	private String username;
 	private String firstName, lastName;
 	private boolean disabilities;
 	private int maxwtu;
@@ -20,14 +20,14 @@ public class InstructorGWT implements Serializable, Identified {
 
 	Map<Integer, Integer> coursePrefs;
 
-	public InstructorGWT(int id, String userID, String firstName,
+	public InstructorGWT(int id, String username, String firstName,
 			String lastName,
 			boolean disabilities, int maxwtu,
 			Map<Integer, Map<Integer, TimePreferenceGWT>> tPrefs,
 			HashMap<Integer, Integer> hashMap) {
 		super();
 		this.id = id;
-		this.userID = userID;
+		this.username = username;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.disabilities = disabilities;
@@ -41,7 +41,7 @@ public class InstructorGWT implements Serializable, Identified {
 	}
 
 	public InstructorGWT(InstructorGWT that) {
-		this(that.id, that.userID, that.firstName, that.lastName,
+		this(that.id, that.username, that.firstName, that.lastName,
 				that.disabilities,
 				that.maxwtu, null, null);
 		
@@ -76,7 +76,7 @@ public class InstructorGWT implements Serializable, Identified {
 	}
 
 	public void verify() {
-		assert(userID != null);
+		assert(username != null);
 		assert(firstName != null);
 		assert(lastName != null);
 		assert(coursePrefs != null);
@@ -110,12 +110,12 @@ public class InstructorGWT implements Serializable, Identified {
 		this.firstName = name;
 	}
 
-	public String getUserID() {
-		return userID;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setUserID(String userID) {
-		this.userID = userID;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public int getMaxWtu() {

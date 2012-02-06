@@ -42,7 +42,7 @@ public abstract class Conversion {
 	public static InstructorGWT toGWT(Instructor instructor) {
 		InstructorGWT result = new InstructorGWT();
 		result.setID(instructor.getDbid());
-		result.setUserID(instructor.getUserID());
+		result.setUsername(instructor.getUserID());
 		result.setFirstName(instructor.getFirstName());
 		result.setLastName(instructor.getLastName());
 		result.setDisabilities(instructor.getDisability());
@@ -115,7 +115,7 @@ public abstract class Conversion {
 		ins.setDbid(instructor.getID());
 		ins.setFirstName(instructor.getFirstName());
 		ins.setLastName(instructor.getLastName());
-		ins.setUserID(instructor.getUserID());
+		ins.setUserID(instructor.getUsername());
 		ins.setMaxWtu(instructor.getMaxWtu());
 		ins.setCurWtu(-1337);
 		ins.setOffice(null);

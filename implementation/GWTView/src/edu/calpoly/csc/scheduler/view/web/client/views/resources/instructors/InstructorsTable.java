@@ -27,7 +27,7 @@ import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 public class InstructorsTable extends SimplePanel {
 	private static final String INSTR_FIRSTNAME = "First Name";
 	private static final String INSTR_LASTNAME = "Last Name";
-	private static final String INSTR_ID = "ID";
+	private static final String INSTR_ID = "Username";
 	private static final String INSTR_MAX_WTU = "Max WTU";
 	private static final String INSTR_DISABILITIES = "Disabilities";
 	private static final String INSTR_PREFERENCES = "Preferences";
@@ -130,18 +130,18 @@ public class InstructorsTable extends SimplePanel {
 				"6em",
 				true,
 				new MemberStringComparator<InstructorGWT>(new IStaticGetter<InstructorGWT, String>() {
-					public String getValueForObject(InstructorGWT object) { return object.getUserID(); }
+					public String getValueForObject(InstructorGWT object) { return object.getUsername(); }
 				}),
 				new EditingStringColumn<InstructorGWT>(
 						new IStaticGetter<InstructorGWT, String>() {
-							public String getValueForObject(InstructorGWT object) { return object.getUserID(); }
+							public String getValueForObject(InstructorGWT object) { return object.getUsername(); }
 						},
 						new IStaticSetter<InstructorGWT, String>() {
-							public void setValueInObject(InstructorGWT object, String newValue) { object.setUserID(newValue); }
+							public void setValueInObject(InstructorGWT object, String newValue) { object.setUsername(newValue); }
 						}, 
 						new IStaticValidator<InstructorGWT, String>() {
 							public void validate(InstructorGWT object, String newId) throws InvalidValueException {
-								if (!canSetUserID(object, newId))
+								if (!canSetUsername(object, newId))
 									throw new InvalidValueException("There is already a user with ID: " + newId);
 							}
 						}));
@@ -197,11 +197,11 @@ public class InstructorsTable extends SimplePanel {
 
 	}
 
-	private boolean canSetUserID(InstructorGWT forObject, String newUserID) {
+	private boolean canSetUsername(InstructorGWT forObject, String newUsername) {
 		for (InstructorGWT instr : table.getObjects()) {
 			if (instr == forObject)
 				continue;
-			if (instr.getUserID().equals(newUserID))
+			if (instr.getUsername().equals(newUsername))
 				return false;
 		}
 		return true;
