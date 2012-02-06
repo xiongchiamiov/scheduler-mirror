@@ -2,10 +2,10 @@ package edu.calpoly.csc.scheduler.view.web.client.table.columns;
 
 import java.util.LinkedHashMap;
 
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.FocusEvent;
-import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.user.client.ui.FocusPanel;
@@ -33,27 +33,18 @@ class EditingSelectCell extends OsmTable.EditingCell {
 			listBox.addItem(key, value);
 		}
 		listBox.setFocus(true);
-		
 
-//		listBox.addBlurHandler(new BlurHandler() {
-//			public void onBlur(BlurEvent event) {
-//				if (isInEditingMode())
-//					setInEditingMode(false);
+//		listBox.addFocusHandler(new FocusHandler() {
+//			public void onFocus(FocusEvent event) {
 //				event.stopPropagation();
 //			}
 //		});
-		
-		listBox.addFocusHandler(new FocusHandler() {
-			public void onFocus(FocusEvent event) {
-				event.stopPropagation();
-			}
-		});
-		
-		listBox.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				event.stopPropagation();
-			}
-		});
+//		
+//		listBox.addClickHandler(new ClickHandler() {
+//			public void onClick(ClickEvent event) {
+//				event.stopPropagation();
+//			}
+//		});
 
 		this.addKeyPressHandler(new KeyPressHandler() {
 			public void onKeyPress(KeyPressEvent event) {
@@ -64,11 +55,13 @@ class EditingSelectCell extends OsmTable.EditingCell {
 				else {
 					if (!isInEditingMode()) {
 						setInEditingMode(true);
+						listBox.fireEvent(event);
 					}
 				}
 				event.stopPropagation();
 			}
 		});
+		
 	}
 	
 	@Override

@@ -11,6 +11,8 @@ import java.util.Map;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.KeyDownEvent;
@@ -33,7 +35,7 @@ import edu.calpoly.csc.scheduler.view.web.client.table.ResizeableWidget.ResizeCa
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.DeleteColumn;
 import edu.calpoly.csc.scheduler.view.web.shared.Identified;
 
-public class OsmTable<ObjectType extends Identified> extends VerticalPanel implements ClickHandler {
+public class OsmTable<ObjectType extends Identified> extends VerticalPanel implements ClickHandler, DoubleClickHandler {
 	enum ColumnSortMode { NOT_SORTING, ASCENDING, DESCENDING }
 	
 	public interface ObjectChangedObserver<ObjectType extends Identified> {
@@ -76,6 +78,7 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel imple
 		private boolean editing;
 		public boolean isInEditingMode() { return editing; }
 		public void setInEditingMode(boolean editing) {
+			System.out.println("Setting " + getClass().getName() + " editing which was " + this.editing + " to " + editing);
 			if (this.editing == editing)
 				return;
 			
@@ -187,6 +190,7 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel imple
 		add(table);
 
 		table.addClickHandler(this);
+		table.addDoubleClickHandler(this);
 		
 		createNewObjectTabThingAfterTable();
 
@@ -548,6 +552,8 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel imple
 	
 	@Override
 	public void onClick(ClickEvent event) {
+		System.out.println("got click event");
+		
         int cellIndex = table.getCellForEvent(event).getCellIndex();
         int rowIndex = table.getCellForEvent(event).getRowIndex();
         
@@ -555,12 +561,22 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel imple
         	return;
 
         select(cellContainerAt(rowIndex - 1, cellIndex));
+
+        event.stopPropagation();
 	}
 
 	private void select(CellContainer newSelectedCellContainer) {
+		if (newSelectedCellContainer == selectedCellContainer)
+			return;
+		
 		if (selectedCellContainer != null) {
 	    	Element containingTD = HTMLUtilities.getClosestContainingElementOfType(selectedCellContainer.cell.getElement(), "td");
 	        containingTD.removeClassName("selected");
+	        
+	        if (selectedCellContainer.cell instanceof EditingCell) {
+	        	EditingCell editingCell = (EditingCell)selectedCellContainer.cell;
+	        	editingCell.setInEditingMode(false);
+	        }
 		}
 		
 		selectedCellContainer = newSelectedCellContainer;
@@ -570,6 +586,21 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel imple
 	        containingTD.addClassName("selected");
 			selectedCellContainer.cell.setFocus(true);
 		}
+	}
+
+	@Override
+	public void onDoubleClick(DoubleClickEvent event) {
+		System.out.println("got doubleclick event");
+		
+		assert(selectedCellContainer != null);
+		
+        if (selectedCellContainer.cell instanceof EditingCell) {
+        	System.out.println("Setting to editing mode");
+        	EditingCell editingCell = (EditingCell)selectedCellContainer.cell;
+        	editingCell.setInEditingMode(true);
+        }
+        
+        event.stopPropagation();
 	}
 	
 }

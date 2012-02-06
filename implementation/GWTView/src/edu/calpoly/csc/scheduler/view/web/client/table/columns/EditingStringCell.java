@@ -44,7 +44,6 @@ class EditingStringCell extends OsmTable.EditingCell {
 				else {
 					if (!isInEditingMode()) {
 						setInEditingMode(true);
-						editingBox.setText("");
 						editingBox.fireEvent(event);
 					}
 				}
@@ -60,7 +59,8 @@ class EditingStringCell extends OsmTable.EditingCell {
 		add(editingBox);
 		removeStyleName("reading");
 		addStyleName("writing");
-		
+
+		editingBox.selectAll();
 		editingBox.setFocus(true);
 
 //		notifySizeChanged();
