@@ -46,7 +46,7 @@ public class EditingSelectColumn<ObjectType extends Identified> implements OsmTa
 			Window.alert("value " + getter.getValueForObject(row.getObject()) + " not in options");
 		}
 		
-		return new EditingSelectCell(row, options);
+		return new EditingSelectCell(options);
 	}
 
 	@Override

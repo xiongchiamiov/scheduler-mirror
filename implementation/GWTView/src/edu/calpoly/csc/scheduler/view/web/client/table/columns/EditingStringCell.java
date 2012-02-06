@@ -4,22 +4,17 @@ import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.TextBox;
 
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
-import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.IRowForCell;
 
 class EditingStringCell extends OsmTable.EditingCell {
-	IRowForCell row;
 	TextBox editingBox;
 	FocusPanel readingLabel;
 	
-	EditingStringCell(final IRowForCell row) {
-		this.row = row;
-		
+	EditingStringCell() {
 		addStyleName("stringcell");
 		
 		editingBox = new TextBox();
@@ -67,6 +62,8 @@ class EditingStringCell extends OsmTable.EditingCell {
 		addStyleName("writing");
 		
 		editingBox.setFocus(true);
+
+//		notifySizeChanged();
 	}
 
 	@Override
@@ -75,6 +72,8 @@ class EditingStringCell extends OsmTable.EditingCell {
 		add(readingLabel);
 		removeStyleName("writing");
 		addStyleName("reading");
+		
+//		notifySizeChanged();
 	}
 	
 //	@Override

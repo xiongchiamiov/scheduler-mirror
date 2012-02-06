@@ -29,7 +29,7 @@ public class EditingStringColumn<ObjectType extends Identified> implements OsmTa
 	}
 
 	public Cell createCell(final IRowForColumn<ObjectType> row) {
-		return new EditingStringCell(row);
+		return new EditingStringCell();
 	}
 	
 	public void updateFromObject(IRowForColumn<ObjectType> row, ReadingCell rawCell) {

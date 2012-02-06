@@ -17,7 +17,7 @@ public class AssociationsColumn implements OsmTable.IEditingColumn<CourseGWT> {
 	
 	@Override
 	public Cell createCell(IRowForColumn<CourseGWT> row) {
-		return new AssociationsCell(getCourses, row);
+		return new AssociationsCell(getCourses);
 	}
 
 	@Override

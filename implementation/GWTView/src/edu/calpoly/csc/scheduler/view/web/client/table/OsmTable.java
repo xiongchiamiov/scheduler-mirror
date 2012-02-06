@@ -40,19 +40,37 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel imple
 		void objectChanged(ObjectType object);
 	}
 	
-	public static class Cell extends FocusPanel { }
+	public static class Cell extends FocusPanel {
+		public interface DeleteCallback {
+			void deleteRow();
+		}
+	}
 	
-	public static class ReadingCell extends Cell { }
+	public static class ReadingCell extends Cell {
+//		public interface SizeChangedObserver {
+//			void sizeChanged();
+//		}
+//		
+//		private SizeChangedObserver sizeChangedObserver;
+//		void setSizeChangedObserver(SizeChangedObserver sizeChangedObserver) {
+//			assert(this.sizeChangedObserver == null);
+//			this.sizeChangedObserver = sizeChangedObserver;
+//		}
+//		protected void notifySizeChanged() {
+//			if (sizeChangedObserver != null)
+//				sizeChangedObserver.sizeChanged();
+//		}
+	}
 
 	public static abstract class EditingCell extends ReadingCell {
 		public interface ExitedEditingModeHandler {
 			void exitedEditingMode();
 		}
 		
-		private ExitedEditingModeHandler handler;
+		private ExitedEditingModeHandler exitedEditingModeHandler;
 		void setExitedEditingModeHandler(ExitedEditingModeHandler handler) {
-			assert(this.handler == null);
-			this.handler = handler;
+			assert(this.exitedEditingModeHandler == null);
+			this.exitedEditingModeHandler = handler;
 		}
 
 		private boolean editing;
@@ -68,7 +86,7 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel imple
 			else {
 				exitedEditingMode();
 				this.editing = false;
-				handler.exitedEditingMode();
+				exitedEditingModeHandler.exitedEditingMode();
 			}
 		}
 		
@@ -105,13 +123,9 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel imple
 		abstract public void commitToObject(IRowForColumn<ObjectType> row, EditingCell cell);
 	}
 	
-	public interface IRowForCell {
-		void delete();
-//		void objectChanged(ObjectType object);
-	}
-	
-	public interface IRowForColumn<ObjectType extends Identified> extends IRowForCell {
+	public interface IRowForColumn<ObjectType extends Identified> {
 		ObjectType getObject();
+		void delete();
 	}
 
 	protected class Row implements IRowForColumn<ObjectType> {
@@ -177,6 +191,12 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel imple
 		createNewObjectTabThingAfterTable();
 
 		addNewObjectButton();
+		
+		add(new Button("updateheaderwidths", new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				updateHeaderWidths();
+			}
+		}));
 	}
 	
 	public void setObjectChangedObserver(ObjectChangedObserver<ObjectType> obs) {
@@ -371,7 +391,17 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel imple
 					}
 				}
 			});
+
 			
+//			if (cell instanceof ReadingCell) {
+//				final ReadingCell readingCell = (ReadingCell)cell;
+//				readingCell.setSizeChangedObserver(new ReadingCell.SizeChangedObserver() {
+//					public void sizeChanged() {
+//						updateHeaderWidths();
+//					}
+//				});
+//			}
+
 			IColumn<ObjectType> column = columnMetadatas.get(colIndex).column;
 			assert((cell instanceof EditingCell) == (column instanceof IEditingColumn));
 			if (cell instanceof EditingCell) {
@@ -383,6 +413,7 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel imple
 						editingColumn.commitToObject(newRow, editingCell);
 						editingColumn.updateFromObject(newRow, editingCell);
 						objectChangedObserver.objectChanged(object);
+						updateHeaderWidths();
 					}
 				});
 			}
@@ -491,6 +522,7 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel imple
 	}
 	
 	private void updateHeaderWidths() {
+		System.out.println("Updating header widths");
 		for (ColumnMetadata col : columnMetadatas)
 			col.header.updateWidth();
 	}

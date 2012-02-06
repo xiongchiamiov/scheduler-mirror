@@ -23,7 +23,7 @@ public class EditingCheckboxColumn<ObjectType extends Identified> implements Osm
 	}
 
 	public Cell createCell(final IRowForColumn<ObjectType> row) {
-		return new EditingCheckboxCell(row);
+		return new EditingCheckboxCell();
 	}
 	
 	public void updateFromObject(IRowForColumn<ObjectType> row, ReadingCell rawCell) {

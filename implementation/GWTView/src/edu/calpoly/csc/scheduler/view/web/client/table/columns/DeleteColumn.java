@@ -19,13 +19,14 @@ public class DeleteColumn<ObjectType extends Identified> implements OsmTable.ICo
 	
 	public Cell createCell(final IRowForColumn<ObjectType> row) {
 		return new DeleteCell(new DeleteCell.DeleteStrategy() {
-			public void afterDelete() {
+			public void delete() {
+				row.delete();
 				observer.afterDelete(row.getObject());
 			}
 			@Override
 			public boolean confirmHandler() {
 				return Window.confirm("Are you sure you want to delete " + row.getObject().toString() + "?");
 			}
-		}, row);
+		});
 	}
 }

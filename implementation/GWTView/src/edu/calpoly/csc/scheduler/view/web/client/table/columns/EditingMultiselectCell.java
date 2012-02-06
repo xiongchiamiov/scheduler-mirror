@@ -6,21 +6,13 @@ import java.util.LinkedHashSet;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.FocusEvent;
-import com.google.gwt.event.dom.client.FocusHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.ScrollPanel;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
-import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.IRowForCell;
 
 class EditingMultiselectCell extends OsmTable.EditingCell {
 	LinkedHashMap<String, String> options;
@@ -30,7 +22,7 @@ class EditingMultiselectCell extends OsmTable.EditingCell {
 	
 	FocusPanel readingLabel;
 	
-	EditingMultiselectCell(final IRowForCell row, LinkedHashMap<String, String> options) {
+	EditingMultiselectCell(LinkedHashMap<String, String> options) {
 		addStyleName("selectcell");
 		
 		readingLabel = new FocusPanel();

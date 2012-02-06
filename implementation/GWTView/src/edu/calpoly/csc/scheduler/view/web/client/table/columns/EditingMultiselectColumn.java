@@ -40,7 +40,7 @@ public class EditingMultiselectColumn<ObjectType extends Identified> implements 
 	}
 	
 	public Cell createCell(final IRowForColumn<ObjectType> row) {
-		return new EditingMultiselectCell(row, options);
+		return new EditingMultiselectCell(options);
 	}
 
 	@Override

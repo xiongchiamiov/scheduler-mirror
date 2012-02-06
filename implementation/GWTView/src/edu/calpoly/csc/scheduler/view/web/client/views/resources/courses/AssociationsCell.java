@@ -4,16 +4,11 @@ import java.util.ArrayList;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.event.dom.client.FocusEvent;
-import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
-import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.IRowForCell;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 
 public class AssociationsCell extends OsmTable.EditingCell {
@@ -31,7 +26,7 @@ public class AssociationsCell extends OsmTable.EditingCell {
 	ListBox listBox; // null when not editing
 	ArrayList<CourseGWT> courses; // null when not editing.
 	
-	public AssociationsCell(GetCoursesCallback getCourses, final IRowForCell row) {
+	public AssociationsCell(GetCoursesCallback getCourses) {
 		this.getCourses = getCourses;
 
 		readingLabel = new FocusPanel();
