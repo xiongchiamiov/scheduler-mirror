@@ -9,7 +9,6 @@ import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.calpoly.csc.scheduler.view.web.client.CourseCache;
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.client.IViewContents;
 import edu.calpoly.csc.scheduler.view.web.client.Import;
@@ -211,8 +210,7 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 					public void execute() {
 						if (viewFrame.canPopViewsAboveMe()) {
 							viewFrame.popFramesAboveMe();
-							viewFrame.frameViewAndPushAboveMe(new LocationsView(
-									service, scheduleName));
+							viewFrame.frameViewAndPushAboveMe(new LocationsView(service, scheduleName));
 						}
 					}
 				}));
@@ -222,7 +220,7 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 					public void execute() {
 						if (viewFrame.canPopViewsAboveMe()) {
 							viewFrame.popFramesAboveMe();
-							viewFrame.frameViewAndPushAboveMe(new CoursesView(new CourseCache(service), scheduleName));
+							viewFrame.frameViewAndPushAboveMe(new CoursesView(service, scheduleName));
 						}
 					}
 				}));
@@ -232,8 +230,7 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 					public void execute() {
 						if (viewFrame.canPopViewsAboveMe()) {
 							viewFrame.popFramesAboveMe();
-							viewFrame.frameViewAndPushAboveMe(new ScheduleView(
-									service, scheduleName));
+							viewFrame.frameViewAndPushAboveMe(new ScheduleView(service, scheduleName));
 						}
 					}
 				}));

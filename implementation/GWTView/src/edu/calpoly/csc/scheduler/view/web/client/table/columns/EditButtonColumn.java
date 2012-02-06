@@ -7,7 +7,6 @@ import com.google.gwt.user.client.ui.Image;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.Cell;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.IRowForColumn;
-import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.SimpleCell;
 import edu.calpoly.csc.scheduler.view.web.shared.Identified;
 
 public class EditButtonColumn<ObjectType extends Identified> implements OsmTable.IColumn<ObjectType> {
@@ -32,6 +31,8 @@ public class EditButtonColumn<ObjectType extends Identified> implements OsmTable
 			}
 		});
 		
-		return new SimpleCell(button);
+		Cell result = new Cell();
+		result.add(button);
+		return result;
 	}
 }

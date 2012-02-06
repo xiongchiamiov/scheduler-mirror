@@ -16,7 +16,7 @@ import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.IRowForCell;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 
-public class AssociationsCell extends SimplePanel implements OsmTable.Cell, OsmTable.ReadingCell, OsmTable.EditingCell, OsmTable.EditingModeAwareCell {
+public class AssociationsCell extends OsmTable.EditingCell {
 	public interface GetCoursesCallback {
 		ArrayList<CourseGWT> getCourses();
 	}
@@ -25,7 +25,6 @@ public class AssociationsCell extends SimplePanel implements OsmTable.Cell, OsmT
 	CourseGWT selectedCourse;
 	
 	boolean courseIsLecture;
-	boolean editing;
 	
 	FocusPanel readingLabel;
 	
@@ -34,7 +33,6 @@ public class AssociationsCell extends SimplePanel implements OsmTable.Cell, OsmT
 	
 	public AssociationsCell(GetCoursesCallback getCourses, final IRowForCell row) {
 		this.getCourses = getCourses;
-		editing = false;
 
 		readingLabel = new FocusPanel();
 		readingLabel.add(new HTML("(none)"));
@@ -44,12 +42,11 @@ public class AssociationsCell extends SimplePanel implements OsmTable.Cell, OsmT
 	}
 	
 	@Override
-	public void enterEditingMode() {
+	public void enteredEditingMode() {
 		if (!courseIsLecture) {
 			assert(listBox == null);
 			assert(courses == null);
 			
-			editing = true;
 			clear();
 	
 			courses = getCourses.getCourses();
@@ -95,7 +92,7 @@ public class AssociationsCell extends SimplePanel implements OsmTable.Cell, OsmT
 		selectedCourse = newSelectedCourse;
 		
 		if (!courseIsLecture) {
-			if (editing) {
+			if (isInEditingMode()) {
 				if (selectedCourse == null)
 					listBox.setSelectedIndex(0);
 				else
@@ -126,14 +123,10 @@ public class AssociationsCell extends SimplePanel implements OsmTable.Cell, OsmT
 	}
 
 	@Override
-	public void exitEditingMode() {
+	public void exitedEditingMode() {
 		if (!courseIsLecture) {
-			assert(editing);
-			
 			listBox = null;
 			courses = null;
-			
-			editing = false;
 	
 			clear();
 			readingLabel.clear();
@@ -142,14 +135,11 @@ public class AssociationsCell extends SimplePanel implements OsmTable.Cell, OsmT
 		}
 	}
 
-	@Override
-	public void focus() {
-		assert(editing);
-		listBox.setFocus(true);
-	}
-
-	@Override
-	public Widget getCellWidget() { return this; }
+//	@Override
+//	public void focus() {
+//		assert(editing);
+//		listBox.setFocus(true);
+//	}
 
 	public int getSelectedCourseID() {
 		System.out.println("reading selectedCourse id ");
@@ -162,7 +152,7 @@ public class AssociationsCell extends SimplePanel implements OsmTable.Cell, OsmT
 		if (courseIsLecture == courseIsNowLecture)
 			return;
 		
-		if (editing) {
+		if (isInEditingMode()) {
 			assert(false); // implement
 		}
 		else {

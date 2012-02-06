@@ -52,22 +52,6 @@ public class AdminConfigView extends VerticalPanel implements IViewContents {	/*
 			public UserDataGWT create() {
 				return new UserDataGWT();
 			}
-		}, new OsmTable.ModifyHandler<UserDataGWT>() {
-			@Override
-			public void add(UserDataGWT toAdd, AsyncCallback<UserDataGWT> callback) {
-				throw new UnsupportedOperationException();
-			}
-
-			@Override
-			public void edit(UserDataGWT toEdit, AsyncCallback<Void> callback) {
-				throw new UnsupportedOperationException();
-			}
-
-			@Override
-			public void remove(UserDataGWT toRemove,
-					AsyncCallback<Void> callback) {
-				throw new UnsupportedOperationException();
-			}
 		});
 
 		table.addColumn(

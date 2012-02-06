@@ -5,19 +5,16 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.event.dom.client.BlurEvent;
-import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ScrollEvent;
 import com.google.gwt.user.client.Window.ScrollHandler;
@@ -29,44 +26,56 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.client.HTMLUtilities;
+import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.EditingCell.ExitedEditingModeHandler;
 import edu.calpoly.csc.scheduler.view.web.client.table.ResizeableWidget.ResizeCallback;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.DeleteColumn;
-import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditModeColumn;
 import edu.calpoly.csc.scheduler.view.web.shared.Identified;
 
-public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
+public class OsmTable<ObjectType extends Identified> extends VerticalPanel implements ClickHandler {
 	enum ColumnSortMode { NOT_SORTING, ASCENDING, DESCENDING }
 	
-	public interface ModifyHandler<ObjectType> {
-		void add(ObjectType toAdd, AsyncCallback<ObjectType> callback);
-		void edit(ObjectType toEdit, AsyncCallback<Void> callback);
-		void remove(ObjectType toRemove, AsyncCallback<Void> callback);
+	public interface ObjectChangedObserver<ObjectType extends Identified> {
+		void objectChanged(ObjectType object);
 	}
 	
-	public interface Cell {
-		Widget getCellWidget();
-	}
+	public static class Cell extends FocusPanel { }
 	
-	public interface ReadingCell { }
+	public static class ReadingCell extends Cell { }
 
-	public interface EditingModeAwareCell {
-		void enterEditingMode();
-		void exitEditingMode();
-	}
-	
-	public interface EditingCell {
-		void focus();
+	public static abstract class EditingCell extends ReadingCell {
+		public interface ExitedEditingModeHandler {
+			void exitedEditingMode();
+		}
+		
+		private ExitedEditingModeHandler handler;
+		void setExitedEditingModeHandler(ExitedEditingModeHandler handler) {
+			assert(this.handler == null);
+			this.handler = handler;
+		}
+
+		private boolean editing;
+		public boolean isInEditingMode() { return editing; }
+		public void setInEditingMode(boolean editing) {
+			if (this.editing == editing)
+				return;
+			
+			if (editing) {
+				this.editing = true;
+				enteredEditingMode();
+			}
+			else {
+				exitedEditingMode();
+				this.editing = false;
+				handler.exitedEditingMode();
+			}
+		}
+		
+		protected abstract void enteredEditingMode();
+		protected abstract void exitedEditingMode();
 	}
 
-	public static class SimpleCell implements OsmTable.Cell {
-		Widget widget;
-		public SimpleCell(Widget widget) { this.widget = widget; }
-		public Widget getCellWidget() { return widget; }
-	}
-	
 	// Miscellaneous information about the column such as initial width, header, etc.
 	// For OsmTable's use only.
 	private class ColumnMetadata {
@@ -102,20 +111,19 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 	}
 	
 	public interface IRowForColumn<ObjectType extends Identified> extends IRowForCell {
-		Cell getCellForColumn(IColumn<ObjectType> column);
 		ObjectType getObject();
 	}
-	
+
 	protected class Row implements IRowForColumn<ObjectType> {
+		public int index;
 		public ObjectType object;
 		public final Element trElement;
-		public final Cell[] cells;
-		public boolean adding; // Whether or not this row was just added and has not yet been given to the handler
-		public boolean inEditingMode;
-		public Row(ObjectType object, Element trElement, Cell[] cells) {
+		public final ArrayList<CellContainer> cellContainers;
+		public Row(int index, ObjectType object, Element trElement, ArrayList<CellContainer> cellContainers) {
+			this.index = index;
 			this.object = object;
 			this.trElement = trElement;
-			this.cells = cells;
+			this.cellContainers = cellContainers;
 		}
 		
 		@Override
@@ -124,30 +132,32 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 		public void delete() {
 			OsmTable.this.deleteRow(this);
 		}
+	}
 
-		@Override
-		public Cell getCellForColumn(IColumn<ObjectType> column) {
-			for (int i = 0; i < columnMetadatas.size(); i++)
-				if (columnMetadatas.get(i).column == column)
-					return cells[i];
-			assert(false);
-			// TODO Auto-generated method stub
-			return null;
+	private class CellContainer {
+		final Row row;
+		final int colIndex;
+		final Cell cell;
+		public CellContainer(Row row, int colIndex, Cell cell) {
+			this.row = row;
+			this.colIndex = colIndex;
+			this.cell = cell;
 		}
 	}
-	
+
+	protected ObjectChangedObserver<ObjectType> objectChangedObserver;
 	protected final IFactory<ObjectType> factory;
-	protected final ModifyHandler<ObjectType> saveHandler;
 	protected final ArrayList<ColumnMetadata> columnMetadatas = new ArrayList<ColumnMetadata>();
 	protected final Map<Integer, Row> rowsByObjectID = new HashMap<Integer, Row>();
+	protected final List<Row> rowsInDisplayedOrder = new ArrayList<Row>();
 	protected HorizontalPanel headers;
 	protected boolean headerFloating;
 	protected final FlexTable table;
 	protected ColumnMetadata currentSortedColumn;
 	protected Element hiddenRowThatMaintainsWidths;
+	protected CellContainer selectedCellContainer;
 	
-	public OsmTable(IFactory<ObjectType> factory, final ModifyHandler<ObjectType> saveHandler) {
-		this.saveHandler = saveHandler;
+	public OsmTable(IFactory<ObjectType> factory) {
 		this.factory = factory;
 
 		addStyleName("osmtableContainer");
@@ -161,10 +171,17 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 		table.setCellPadding(0);
 		table.setCellSpacing(0);
 		add(table);
+
+		table.addClickHandler(this);
 		
 		createNewObjectTabThingAfterTable();
 
 		addNewObjectButton();
+	}
+	
+	public void setObjectChangedObserver(ObjectChangedObserver<ObjectType> obs) {
+		assert(objectChangedObserver == null);
+		objectChangedObserver = obs;
 	}
 	
 	private void addNewObjectButton() {
@@ -259,84 +276,16 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 		columnMetadatas.add(columnMetadata);
 	}
 	
-	public void addDeleteColumn() {
-		addColumn("", null, false, null, new DeleteColumn<ObjectType>());
+	public void addDeleteColumn(DeleteColumn.DeleteObserver<ObjectType> handler) {
+		addColumn("", null, false, null, new DeleteColumn<ObjectType>(handler));
 	}
 
 	private void deleteRow(final Row row) {
-		row.trElement.addClassName("sending");
-		
-		if (!Window.confirm("Are you sure you want to delete " + row.object.toString() + "?")) {
-			row.trElement.removeClassName("sending");
-			return;
-		}
-		
-		saveHandler.remove(row.object, new AsyncCallback<Void>() {
-			public void onSuccess(Void result) {
-				row.trElement.removeClassName("sending");
-				rowsByObjectID.remove(row.object.getID());
-				row.trElement.removeFromParent();
-				
-//				start here, tell the columns that the roster changed
-			}
-			
-			public void onFailure(Throwable caught) {
-				row.trElement.removeClassName("sending");
-				Window.alert("Failed to delete row: " + caught.getMessage());
-			}
-		});
+		rowsByObjectID.remove(row.object.getID());
+		row.trElement.removeFromParent();
 	}
 	
-	public void addEditSaveColumn() {
-		addColumn("", null, false, null, new EditModeColumn<ObjectType>());
-	}
-	
-	class CellWidgetContainer extends FocusPanel {
-		Cell cell;
-		
-		public CellWidgetContainer(Cell cell) {
-			this.cell = cell;
-			
-			this.add(cell.getCellWidget());
-			
-			this.addStyleName("cellWidgetContainer");
-			
-			this.addFocusHandler(new FocusHandler() {
-				public void onFocus(FocusEvent event) {
-					CellWidgetContainer.this.addStyleName("selected");
-				}
-			});
-			
-			this.addBlurHandler(new BlurHandler() {
-				@Override
-				public void onBlur(BlurEvent event) {
-					CellWidgetContainer.this.removeStyleName("selected");
-				}
-			});
-			
-			if (cell instanceof EditingCell) {
-				final EditingCell editingCell = (EditingCell)cell;
-			
-				this.addKeyPressHandler(new KeyPressHandler() {
-					@Override
-					public void onKeyPress(KeyPressEvent event) {
-						if (event.getCharCode() == 10 || event.getCharCode() == 13)
-							editingCell.focus();
-					}
-				});
-				
-				this.addDoubleClickHandler(new DoubleClickHandler() {
-					
-					@Override
-					public void onDoubleClick(DoubleClickEvent event) {
-						editingCell.focus();
-					}
-				});
-			}
-		}
-	}
-
-	private Row addAndReturnRowWithoutUpdatingHeaderWidths(ObjectType object) {
+	private Row addAndReturnRowWithoutUpdatingHeaderWidths(final ObjectType object) {
 		int newObjectIndex = rowsByObjectID.size();
 		int rowIndex = 1 + newObjectIndex;
 
@@ -344,33 +293,106 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 		table.setWidget(rowIndex, 0, placeholder);
 		Element rowElement = HTMLUtilities.getClosestContainingElementOfType(placeholder.getElement(), "tr");
 
-		Cell[] cells = new Cell[columnMetadatas.size()];
+		ArrayList<CellContainer> cellContainers = new ArrayList<CellContainer>();
+//		CellContainer<ObjectType>[] cellContainers = new CellContainer[columnMetadatas.size()];
 		
-		Row newRow = new Row(object, rowElement, cells);
+		final Row newRow = new Row(newObjectIndex, object, rowElement, cellContainers);
 		rowsByObjectID.put(object.getID(), newRow);
 		
+		rowsInDisplayedOrder.add(newRow);
+		
 		// Create cells for this row
-		for (int colIndex = 0; colIndex < columnMetadatas.size(); colIndex++)
-			cells[colIndex] = columnMetadatas.get(colIndex).column.createCell(newRow);
-		
-		// Put cells into table
-		for (int colIndex = 0; colIndex < columnMetadatas.size(); colIndex++)
-			table.setWidget(rowIndex, colIndex, new CellWidgetContainer(cells[colIndex]));
-		
-		table.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-                int cellIndex = table.getCellForEvent(event).getCellIndex();
-                int rowIndex = table.getCellForEvent(event).getRowIndex();
-                Window.alert(rowIndex + " " + cellIndex);
+		for (int colIndex = 0; colIndex < columnMetadatas.size(); colIndex++) {
+			final Cell cell = columnMetadatas.get(colIndex).column.createCell(newRow);
+			table.setWidget(rowIndex, colIndex, cell);
+			final CellContainer cellContainer = new CellContainer(newRow, colIndex, cell);
+			cellContainers.add(cellContainer);
+			
+			cell.addKeyDownHandler(new KeyDownHandler() {
+				public void onKeyDown(KeyDownEvent event) {
+					switch (event.getNativeKeyCode()) {
+						case 37: { // left arrow
+							CellContainer newSelectedCellContainer = cellContainerAt(cellContainer.row.index, cellContainer.colIndex - 1);
+							if (newSelectedCellContainer != null)
+								select(newSelectedCellContainer);
+						} break;
+						
+						case 38: { // up arrow
+							CellContainer newSelectedCellContainer = cellContainerAt(cellContainer.row.index - 1, cellContainer.colIndex);
+							if (newSelectedCellContainer != null)
+								select(newSelectedCellContainer);
+						} break;
+						
+						case 39: { // right arrow
+							CellContainer newSelectedCellContainer = cellContainerAt(cellContainer.row.index, cellContainer.colIndex + 1);
+							if (newSelectedCellContainer != null)
+								select(newSelectedCellContainer);
+						} break;
+						
+						case 40: { // down arrow
+							CellContainer newSelectedCellContainer = cellContainerAt(cellContainer.row.index + 1, cellContainer.colIndex);
+							if (newSelectedCellContainer != null)
+								select(newSelectedCellContainer);
+						} break;
+						
+						case 9: { // tab
+							if (event.isShiftKeyDown() == false) {
+								CellContainer newSelectedCellContainer = cellContainerAt(cellContainer.row.index, cellContainer.colIndex + 1);
+								if (newSelectedCellContainer == null)
+									newSelectedCellContainer = cellContainerAt(cellContainer.row.index + 1, 0); // first on next line
+								if (newSelectedCellContainer != null)
+									select(newSelectedCellContainer);
+								if (newSelectedCellContainer == null) // if there is no next line, then make one
+									addNewRow();
+							}
+							else {
+								CellContainer newSelectedCellContainer = cellContainerAt(cellContainer.row.index, cellContainer.colIndex - 1);
+								if (newSelectedCellContainer == null)
+									newSelectedCellContainer = cellContainerAt(cellContainer.row.index - 1, columnMetadatas.size() - 1); // last on previous line
+								if (newSelectedCellContainer != null)
+									select(newSelectedCellContainer);
+							}
+						} break;
+						
+						case 13: { // enter
+							if (selectedCellContainer != null && selectedCellContainer.cell instanceof EditingCell) {
+								EditingCell editingCell = (EditingCell)selectedCellContainer.cell;
+								if (!editingCell.isInEditingMode()) {
+									CellContainer newSelectedCellContainer = cellContainerAt(cellContainer.row.index + 1, cellContainer.colIndex);
+									if (newSelectedCellContainer == null) {
+										addNewRow();
+										newSelectedCellContainer = cellContainerAt(cellContainer.row.index + 1, cellContainer.colIndex);
+									}
+									if (newSelectedCellContainer != null)
+										select(newSelectedCellContainer);
+								}
+							}
+						} break;
+					}
+				}
+			});
+			
+			IColumn<ObjectType> column = columnMetadatas.get(colIndex).column;
+			assert((cell instanceof EditingCell) == (column instanceof IEditingColumn));
+			if (cell instanceof EditingCell) {
+				final EditingCell editingCell = (EditingCell)cell;
+				final IEditingColumn<ObjectType> editingColumn = (IEditingColumn<ObjectType>)column;
+				
+				editingCell.setExitedEditingModeHandler(new ExitedEditingModeHandler() {
+					public void exitedEditingMode() {
+						editingColumn.commitToObject(newRow, editingCell);
+						editingColumn.updateFromObject(newRow, editingCell);
+						objectChangedObserver.objectChanged(object);
+					}
+				});
 			}
-		});
+		}
 		
 		// Have all reading cells get updated from the object
 		for (int colIndex = 0; colIndex < columnMetadatas.size(); colIndex++) {
-			Cell rawCell = newRow.cells[colIndex];
+			Cell rawCell = newRow.cellContainers.get(colIndex).cell;
 			IColumn<ObjectType> rawColumn = columnMetadatas.get(colIndex).column;
-			
+
 			assert((rawCell instanceof ReadingCell) == (rawColumn instanceof IReadingColumn));
 			if (rawCell instanceof ReadingCell && rawColumn instanceof IReadingColumn)
 				((IReadingColumn<ObjectType>)rawColumn).updateFromObject(newRow, (ReadingCell)rawCell);
@@ -378,7 +400,15 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 		
 		return newRow;
 	}
-
+	
+	private CellContainer cellContainerAt(int row, int col) {
+		if (row < 0 || row >= rowsByObjectID.size())
+			return null;
+		if (col < 0 || col >= columnMetadatas.size())
+			return null;
+		return rowsInDisplayedOrder.get(row).cellContainers.get(col);
+	}
+	
 	private Row addAndReturnRow(ObjectType object) {
 		Row result = addAndReturnRowWithoutUpdatingHeaderWidths(object);
 		updateHeaderWidths();
@@ -393,126 +423,10 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 	public final void addNewRow() {
 		ObjectType newObject = factory.create();
 		Row newRow = addAndReturnRow(newObject);
-		newRow.adding = true;
 
-//		enterRowEditingMode(newRow, null);
+		select(newRow.cellContainers.get(0));
 	}
-//
-//	protected void enterRowEditingMode(Row row, EditingCell focusedCell) {
-//		assert(!row.inEditingMode);
-//		row.inEditingMode = true;
-//
-//		// Have all reading cells get updated from the object
-//		for (int colIndex = 0; colIndex < columnMetadatas.size(); colIndex++) {
-//			Cell rawCell = row.cells[colIndex];
-//			IColumn<ObjectType> rawColumn = columnMetadatas.get(colIndex).column;
-//			
-//			assert((rawCell instanceof ReadingCell) == (rawColumn instanceof IReadingColumn));
-//			if (rawCell instanceof ReadingCell && rawColumn instanceof IReadingColumn)
-//				((IReadingColumn<ObjectType>)rawColumn).updateFromObject(row, (ReadingCell)rawCell);
-//		}
-//		
-//		// Have all the editing cells enter editing mode
-//		for (int colIndex = 0; colIndex < columnMetadatas.size(); colIndex++) {
-//			Cell rawCell = row.cells[colIndex];
-//			if (rawCell instanceof EditingModeAwareCell)
-//				((EditingModeAwareCell)rawCell).enterEditingMode();
-//		}
-//		
-//		// Focus on a cell.
-//		if (focusedCell != null) {
-//			focusedCell.focus();
-//		}
-//		else { // If they didnt pass one in, find the first cell and focus that.
-//			for (Cell cell : row.cells) {
-//				if (cell instanceof EditingCell) { 
-//					((EditingCell)cell).focus();
-//					break;
-//				}
-//			}
-//		}
-//
-//		updateHeaderWidths();
-//	}
-//
-//	protected void exitRowEditingMode(final Row row) {
-//		assert(row != null);
-//		assert(row.inEditingMode);
-//		row.inEditingMode = false;
-//
-//		// Have all the editing cells commit to their object
-//		for (int colIndex = 0; colIndex < columnMetadatas.size(); colIndex++) {
-//			Cell rawCell = row.cells[colIndex];
-//			IColumn<ObjectType> rawColumn = columnMetadatas.get(colIndex).column;
-//			
-//			assert((rawCell instanceof EditingCell) == (rawColumn instanceof IEditingColumn));
-//			if (rawCell instanceof EditingCell && rawColumn instanceof IEditingColumn)
-//				((IEditingColumn<ObjectType>)rawColumn).commitToObject(row, (EditingCell)rawCell);
-//		}
-//
-//		// Have all editing cells exit editing mode
-//		for (int colIndex = 0; colIndex < columnMetadatas.size(); colIndex++) {
-//			Cell rawCell = row.cells[colIndex];
-//			if (rawCell instanceof EditingModeAwareCell)
-//				((EditingModeAwareCell)rawCell).exitEditingMode();
-//		}
-//		
-//		row.trElement.addClassName("sending");
-//		
-//		final int oldObjectID = row.getObject().getID();
-//
-//		if (row.adding) {
-//			saveHandler.add(row.getObject(), new AsyncCallback<ObjectType>() {
-//				@Override
-//				public void onSuccess(ObjectType newObject) {
-//					row.trElement.removeClassName("sending");
-//					row.adding = false;
-//					
-//					System.out.println("Changing " + oldObjectID + " to " + newObject.getID());
-//
-//					rowsByObjectID.remove(row.object.getID());
-//					row.object = newObject;
-//					rowsByObjectID.put(row.object.getID(), row);
-//				}
-//				
-//				@Override
-//				public void onFailure(Throwable caught) {
-//					row.trElement.removeClassName("sending");
-//					enterRowEditingMode(row, null);
-//					Window.alert("Failed to send updates to server: " + caught.getMessage());
-//				}
-//			});
-//		}
-//		else {
-//			saveHandler.edit(row.getObject(), new AsyncCallback<Void>() {
-//				
-//				@Override
-//				public void onSuccess(Void result) {
-//					row.trElement.removeClassName("sending");
-//				}
-//				
-//				@Override
-//				public void onFailure(Throwable caught) {
-//					row.trElement.removeClassName("sending");
-//					enterRowEditingMode(row, null);
-//					Window.alert("Failed to send updates to server: " + caught.getMessage());
-//				}
-//			});
-//		}
-//
-//		// Have all reading cells get updated from the object
-//		for (int colIndex = 0; colIndex < columnMetadatas.size(); colIndex++) {
-//			Cell rawCell = row.cells[colIndex];
-//			IColumn<ObjectType> rawColumn = columnMetadatas.get(colIndex).column;
-//			
-//			assert((rawCell instanceof ReadingCell) == (rawColumn instanceof IReadingColumn));
-//			if (rawCell instanceof ReadingCell && rawColumn instanceof IReadingColumn)
-//				((IReadingColumn<ObjectType>)rawColumn).updateFromObject(row, (ReadingCell)rawCell);
-//		}
-//		
-//		updateHeaderWidths();
-//	}
-	
+
 	public void clear() {
 		for (int i = 0; i < rowsByObjectID.size(); i++)
 			table.removeRow(1);
@@ -526,7 +440,7 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 			sortByColumn(column, true);
 	}
 	
-	void sortByColumn(ColumnMetadata column, boolean ascending) {
+	void sortByColumn(final ColumnMetadata column, boolean ascending) {
 		assert(column != null);
 		
 //		System.out.println("in sortbycolumn!");
@@ -540,16 +454,17 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 		
 		if (column.comparator != null) {
 //			System.out.println("flerp");
-					
-			ArrayList<ObjectType> sortedList = new ArrayList<ObjectType>();
-			for (Row row : rowsByObjectID.values())
-				sortedList.add(row.object);
-			Collections.sort(sortedList, column.comparator);
 			
-//			System.out.println("kerp");
+			Comparator<Row> comparator = new Comparator<Row>() {
+				public int compare(Row a, Row b) {
+					return column.comparator.compare(a.object, b.object);
+				};
+			};
+			
+			Collections.sort(rowsInDisplayedOrder, comparator);
 					
 			if (!ascending)
-				Collections.reverse(sortedList);
+				Collections.reverse(rowsInDisplayedOrder);
 	
 			for (Row row : this.rowsByObjectID.values())
 				row.trElement.removeFromParent();
@@ -560,9 +475,9 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 			assert(tbodyElement.getNodeName().equalsIgnoreCase("tbody"));
 			assert(tbodyElement.getChildCount() == 1);
 			
-			for (int i = 0; i < sortedList.size(); i++) {
-				ObjectType object = sortedList.get(i);
-				Row row = rowsByObjectID.get(object.getID());
+			for (int i = 0; i < rowsInDisplayedOrder.size(); i++) {
+				Row row = rowsInDisplayedOrder.get(i);
+				row.index = i;
 				tbodyElement.appendChild(row.trElement);
 			}
 		}
@@ -590,9 +505,37 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel {
 	 * @return true if the table has been saved, false if there are unsaved changes in the table
 	 */
 	public boolean isSaved(){
-		for (Row row : rowsByObjectID.values())
-			if (row.inEditingMode)
-				return false;	
+		assert(false);
+//		for (Row row : rowsByObjectID.values())
+//			if (row.inEditingMode)
+//				return false;	
 		return true;
 	}
+	
+	@Override
+	public void onClick(ClickEvent event) {
+        int cellIndex = table.getCellForEvent(event).getCellIndex();
+        int rowIndex = table.getCellForEvent(event).getRowIndex();
+        
+        if (rowIndex == 0) // row 0 is the hidden row
+        	return;
+
+        select(cellContainerAt(rowIndex - 1, cellIndex));
+	}
+
+	private void select(CellContainer newSelectedCellContainer) {
+		if (selectedCellContainer != null) {
+	    	Element containingTD = HTMLUtilities.getClosestContainingElementOfType(selectedCellContainer.cell.getElement(), "td");
+	        containingTD.removeClassName("selected");
+		}
+		
+		selectedCellContainer = newSelectedCellContainer;
+		
+		if (selectedCellContainer != null) {
+	    	Element containingTD = HTMLUtilities.getClosestContainingElementOfType(selectedCellContainer.cell.getElement(), "td");
+	        containingTD.addClassName("selected");
+			selectedCellContainer.cell.setFocus(true);
+		}
+	}
+	
 }

@@ -399,27 +399,37 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 
 	@Override
 	public CourseGWT addCourse(CourseGWT toAdd) {
+		System.out.println("GreetingServiceImpl.addCourse()");
 		toAdd.setID(-1);
 		Course course = Conversion.fromGWT(toAdd);
 		model.saveCourse(course);
 		assert (course.getDbid() != -1);
+		System.out.println("GreetingServiceImpl.addCourse result CourseID " + course.getDbid());
 		return Conversion.toGWT(course);
 	}
 
 	@Override
 	public void editCourse(CourseGWT toEdit) {
-		System.out.println("editCourse incoming gwt course " + toEdit.getCatalogNum() + " lectureid " + toEdit.getLectureID());
+		System.out.println("GreetingServiceImpl.editCourse(CourseID " + toEdit.getID() + ")");
+//		System.out.println("editCourse incoming gwt course " + toEdit.getCatalogNum() + " lectureid " + toEdit.getLectureID());
 		Course course = Conversion.fromGWT(toEdit);
 		assert (course.getDbid() != -1);
-		System.out.println("editCourse saving model course " + course.getCatalogNum() + " lectureid " + course.getLectureID());
+//		System.out.println("editCourse saving model course " + course.getCatalogNum() + " lectureid " + course.getLectureID());
 		model.saveCourse(course);
 	}
 
 	@Override
-	public void removeCourse(CourseGWT toRemove) {
-		Course course = Conversion.fromGWT(toRemove);
-		assert (course.getDbid() != -1);
-		model.removeCourse(course);
+	public void removeCourse(Integer toRemoveID) {
+		System.out.println("GreetingServiceImpl.removeCourse(" + toRemoveID + ")");
+		for (Course course : model.getCourses()) {
+			System.out.println("Checking against course " + course + " id " + course.getDbid());
+			if (course.getDbid().equals(toRemoveID)) {
+				model.removeCourse(course);
+				return;
+			}
+		}
+		
+		assert(false);
 	}
 
 	@Override

@@ -1,8 +1,10 @@
 package edu.calpoly.csc.scheduler.view.web.client.views;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.google.gwt.user.client.Window;
@@ -11,7 +13,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.calpoly.csc.scheduler.view.web.client.CourseCache;
+import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.client.IViewContents;
 import edu.calpoly.csc.scheduler.view.web.client.ViewFrame;
 import edu.calpoly.csc.scheduler.view.web.client.table.IFactory;
@@ -20,6 +22,8 @@ import edu.calpoly.csc.scheduler.view.web.client.table.IStaticSetter;
 import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator;
 import edu.calpoly.csc.scheduler.view.web.client.table.MemberStringComparator;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
+import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.ObjectChangedObserver;
+import edu.calpoly.csc.scheduler.view.web.client.table.columns.DeleteColumn.DeleteObserver;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingIntColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingMultiselectColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingSelectColumn;
@@ -65,29 +69,130 @@ public class CoursesView extends VerticalPanel implements IViewContents {
 	public static final String COURSE_LAB = "Lab";
 	
 	
-	private CourseCache courseCache;
-	private OsmTable<CourseGWT> table;
-	int nextCourseID = -2;
+//	private CourseCache courseCache;
+	private GreetingServiceAsync service;
 	private String scheduleName;
+	private OsmTable<CourseGWT> table;
+	final ArrayList<CourseGWT> tableCourses = new ArrayList<CourseGWT>();
+	int nextTableCourseID = -2;
+	int transactionsPending = 0;
+	Map<Integer, Integer> realIDsByTableID = new HashMap<Integer, Integer>();
+	
+	final ArrayList<Integer> deletedTableCourseIDs = new ArrayList<Integer>();
+	final ArrayList<CourseGWT> editedTableCourses = new ArrayList<CourseGWT>();
+	final ArrayList<CourseGWT> addedTableCourses = new ArrayList<CourseGWT>();
 
-	private int generateTemporaryCourseID() {
-		return nextCourseID--;
+	private void onTableCourseAdded(CourseGWT course) {
+		tableCourses.add(course);
+		addedTableCourses.add(course);
+		
+		assert(!editedTableCourses.contains(course));
+		
+		assert(!deletedTableCourseIDs.contains(course));
+
+		sendUpdates();
 	}
 	
-	public CoursesView(CourseCache courseCache, String scheduleName) {
-		this.courseCache = courseCache;
+	private void onTableCourseEdited(CourseGWT course) {
+		assert(!deletedTableCourseIDs.contains(course.getID()));
+		
+		if (realIDsByTableID.containsKey(course.getID())) {
+			// exists on remote side
+			if (!editedTableCourses.contains(course))
+				editedTableCourses.add(course);
+		}
+		else {
+			// doesnt exist on remote side
+			// do nothing, its already on the add list.
+			assert(addedTableCourses.contains(course));
+		}
+		
+		sendUpdates();
+	}
+	
+	private void onTableCourseDeleted(CourseGWT course) {
+		tableCourses.remove(course);
+		editedTableCourses.remove(course);
+		
+		if (addedTableCourses.contains(course)) {
+			addedTableCourses.remove(course);
+			return;
+		}
+		
+		assert(!deletedTableCourseIDs.contains(course.getID()));
+		deletedTableCourseIDs.add(course.getID());
+		
+		sendUpdates();
+	}
+	
+	private void sendUpdates() {
+		assert(transactionsPending == 0);
+		transactionsPending = deletedTableCourseIDs.size() + editedTableCourses.size() + addedTableCourses.size();
+		if (transactionsPending == 0)
+			return;
+		
+		for (Integer deletedTableCourseID : deletedTableCourseIDs) {
+			Integer realCourseID = realIDsByTableID.get(deletedTableCourseID);
+			service.removeCourse(realCourseID, new AsyncCallback<Void>() {
+				public void onSuccess(Void result) { updateFinished(); }
+				public void onFailure(Throwable caught) { Window.alert("Update failed: " + caught.getMessage()); }
+			});
+		}
+		
+		for (CourseGWT editedTableCourse : editedTableCourses) {
+			Integer realCourseID = realIDsByTableID.get(editedTableCourse.getID());
+			CourseGWT realCourse = new CourseGWT(editedTableCourse);
+			realCourse.setID(realCourseID);
+			service.editCourse(realCourse, new AsyncCallback<Void>() {
+				public void onSuccess(Void result) { updateFinished(); }
+				public void onFailure(Throwable caught) { Window.alert("Update failed: " + caught.getMessage()); }
+			});
+		}
+		
+		for (CourseGWT addedTableCourse : addedTableCourses) {
+			final int tableCourseID = addedTableCourse.getID();
+			CourseGWT realCourse = new CourseGWT(addedTableCourse);
+			realCourse.setID(-1);
+			service.addCourse(realCourse, new AsyncCallback<CourseGWT>() {
+				public void onSuccess(CourseGWT result) {
+					realIDsByTableID.put(tableCourseID, result.getID());
+					updateFinished();
+				}
+				public void onFailure(Throwable caught) { Window.alert("Update failed: " + caught.getMessage()); }
+			});
+		}
+		
+		deletedTableCourseIDs.clear();
+		editedTableCourses.clear();
+		addedTableCourses.clear();
+	}
+	
+	private void updateFinished() {
+		assert(transactionsPending > 0);
+		transactionsPending--;
+		if (transactionsPending == 0)
+			sendUpdates();
+	}
+	
+	private int generateTableCourseID() {
+		return nextTableCourseID--;
+	}
+	
+	public CoursesView(GreetingServiceAsync service, String scheduleName) {
+		this.service = service;
 		this.scheduleName = scheduleName;
 		this.addStyleName("iViewPadding");
 	}
 
 	@Override
 	public boolean canPop() {
-		assert(table != null);
-		if (table.isSaved())
-			return true;
-		return Window.confirm("You have unsaved data which will be lost. Are you sure you want to navigate away?");
+		return true;
+//		assert(table != null);
+//		if (table.isSaved())
+//			return true;
+//		return Window.confirm("You have unsaved data which will be lost. Are you sure you want to navigate away?");
 	}
-		
+	
 	@Override
 	public void afterPush(ViewFrame frame) {		
 		this.setWidth("100%");
@@ -101,23 +206,24 @@ public class CoursesView extends VerticalPanel implements IViewContents {
 		table = new OsmTable<CourseGWT>(
 				new IFactory<CourseGWT>() {
 					public CourseGWT create() {
-						return new CourseGWT("", "", "", 0, 0, 0, "LEC", 0, -1, 6, new HashSet<DayCombinationGWT>(), 0, generateTemporaryCourseID(), false);
-					}
-				},
-				new OsmTable.ModifyHandler<CourseGWT>() {
-					public void add(CourseGWT toAdd, AsyncCallback<CourseGWT> callback) {
-						courseCache.addCourse(toAdd, callback);
-					}
-					public void edit(CourseGWT toEdit, AsyncCallback<Void> callback) {
-						courseCache.editCourse(toEdit, callback);
-					}
-					public void remove(CourseGWT toRemove, AsyncCallback<Void> callback) {
-						courseCache.removeCourse(toRemove, callback);
+						CourseGWT newCourse = new CourseGWT("", "", "", 0, 0, 0, "LEC", 0, -1, 6, new HashSet<DayCombinationGWT>(), 0, generateTableCourseID(), false);
+						onTableCourseAdded(newCourse);
+						return newCourse;
 					}
 				});
+		
+		table.setObjectChangedObserver(new ObjectChangedObserver<CourseGWT>() {
+			public void objectChanged(final CourseGWT object) {
+				onTableCourseEdited(object);
+			}
+		});
 
-		table.addEditSaveColumn();
-		table.addDeleteColumn();
+		table.addDeleteColumn(new DeleteObserver<CourseGWT>() {
+			@Override
+			public void afterDelete(CourseGWT object) {
+				onTableCourseDeleted(object);
+			}
+		});
 
 		table.addColumn(
 				COURSE_DEPARTMENT,
@@ -292,22 +398,27 @@ public class CoursesView extends VerticalPanel implements IViewContents {
 				null,
 				new AssociationsColumn(new GetCoursesCallback() {
 					public ArrayList<CourseGWT> getCourses() {
-						return courseCache.getCourses();
+						return tableCourses;
 					}
 				}));
 
 		this.add(table);
 		
-		courseCache.getCourses(new AsyncCallback<List<CourseGWT>>() {
+		service.getCourses(new AsyncCallback<List<CourseGWT>>() {
 			public void onFailure(Throwable caught) {
 				popup.hide();
 				Window.alert("Failed to get courses: " + caught.toString());
 			}
 			
-			public void onSuccess(List<CourseGWT> result){
-				assert(result != null);
+			public void onSuccess(List<CourseGWT> coursesInCache){
+				assert(coursesInCache != null);
 				popup.hide();
-				table.addRows(result);
+				
+				assert(tableCourses.isEmpty());
+				for (CourseGWT courseInCache : coursesInCache)
+					tableCourses.add(new CourseGWT(courseInCache));
+				
+				table.addRows(tableCourses);
 			}
 		});
 	}

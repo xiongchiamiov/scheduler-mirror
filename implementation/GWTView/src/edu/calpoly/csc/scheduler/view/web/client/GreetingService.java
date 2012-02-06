@@ -54,7 +54,7 @@ public interface GreetingService extends RemoteService {
 
 	void editCourse(CourseGWT toEdit);
 
-	void removeCourse(CourseGWT toRemove);
+	void removeCourse(Integer toRemoveID);
 
 	InstructorGWT addInstructor(InstructorGWT toAdd);
 

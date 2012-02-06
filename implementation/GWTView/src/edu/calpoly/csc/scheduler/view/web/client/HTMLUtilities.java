@@ -25,4 +25,13 @@ public class HTMLUtilities {
 		}
 		return element;
 	}
+
+	public static boolean elementIsAncestorOfElement(Element current, Element ancestor) {
+		while (current != null) {
+			if (current.equals(ancestor))
+				return true;
+			current = current.getParentElement();
+		}
+		return false;
+	}
 }

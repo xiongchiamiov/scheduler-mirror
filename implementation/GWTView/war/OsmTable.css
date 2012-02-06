@@ -1,3 +1,8 @@
+/* gets rid of the yellow border chrome puts on focused things */
+* { 
+    outline: none;
+}
+
 .osmtable {
 	border-spacing: collapse;
 }
@@ -14,21 +19,12 @@
 	padding: 0px;
 }
 
-.osmtable .stringcell.reading div {
-	padding: 1px;
-	white-space: nowrap;
-}
-
-.osmtable .selectcell.reading div {
-	padding-right: 2.5em;
-}
-
 .osmtable > tbody > tr:nth-child(odd),
 .osmtable > tr:nth-child(odd) {
 	background-color: #F8FBFE;
 }
 
-.osmtable tr + tr:hover { background-color: #EEEEEE; }
+/*.osmtable tr + tr:hover { background-color: #EEEEEE; }*/
 
 .osmtable td {
 	overflow: hidden;
@@ -109,11 +105,16 @@
 	cursor: pointer;
 }
 
-.osmtable .selected {
-	background-color: #FFFF00;
+.osmtable td {
+	padding: 2px;
 }
 
-.osmtable .cellWidgetContainer {
-	min-width: 100%;
-	min-height: 100%;
+.osmtable td.selected {
+	background-color: #E0E0E0;
+	border: 2px solid #808080;
+	padding: 0px;
+}
+
+.osmtable .hiddenRow td {
+	padding: 0px;
 }

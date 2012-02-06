@@ -1,21 +1,18 @@
 package edu.calpoly.csc.scheduler.view.web.client.table.columns;
 
-import com.google.gwt.event.dom.client.FocusEvent;
-import com.google.gwt.event.dom.client.FocusHandler;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.IRowForCell;
 
-class EditingStringCell extends SimplePanel implements OsmTable.Cell, OsmTable.ReadingCell, OsmTable.EditingCell, OsmTable.EditingModeAwareCell {
-	boolean editing;
+class EditingStringCell extends OsmTable.EditingCell {
 	IRowForCell row;
 	TextBox editingBox;
 	FocusPanel readingLabel;
@@ -25,8 +22,13 @@ class EditingStringCell extends SimplePanel implements OsmTable.Cell, OsmTable.R
 		
 		addStyleName("stringcell");
 		
-		editing = false;
 		editingBox = new TextBox();
+		editingBox.addBlurHandler(new BlurHandler() {
+			public void onBlur(BlurEvent event) {
+				if (isInEditingMode())
+					setInEditingMode(false);
+			}
+		});
 		
 		readingLabel = new FocusPanel();
 		readingLabel.add(new HTML("&#160;(blank)"));
@@ -37,38 +39,49 @@ class EditingStringCell extends SimplePanel implements OsmTable.Cell, OsmTable.R
 //		});
 
 		add(readingLabel);
+		
+		this.addKeyPressHandler(new KeyPressHandler() {
+			public void onKeyPress(KeyPressEvent event) {
+				if (event.getCharCode() == 13) {
+					if (isInEditingMode())
+						setInEditingMode(false);
+				}
+				else {
+					if (!isInEditingMode()) {
+						setInEditingMode(true);
+						editingBox.setText("");
+						editingBox.fireEvent(event);
+					}
+				}
+			}
+		});
 	}
 	
 	@Override
-	public void enterEditingMode() {
-		assert(!editing);
-		editing = true;
-		assert(editing);
+	public void enteredEditingMode() {
 		int width = readingLabel.getOffsetWidth();
 		clear();
 		editingBox.setWidth(width + "px");
 		add(editingBox);
 		removeStyleName("reading");
 		addStyleName("writing");
+		
+		editingBox.setFocus(true);
 	}
 
 	@Override
-	public void exitEditingMode() {
-		editing = false;
+	public void exitedEditingMode() {
 		clear();
 		add(readingLabel);
 		removeStyleName("writing");
 		addStyleName("reading");
 	}
 	
-	@Override
-	public Widget getCellWidget() { return this; }
-	
-	@Override
-	public void focus() {
-		editingBox.setFocus(true);
-		editingBox.selectAll();
-	}
+//	@Override
+//	public void focus() {
+//		editingBox.setFocus(true);
+//		editingBox.selectAll();
+//	}
 	
 	public String getValue() { return editingBox.getValue(); }
 	public void setValue(String value) {

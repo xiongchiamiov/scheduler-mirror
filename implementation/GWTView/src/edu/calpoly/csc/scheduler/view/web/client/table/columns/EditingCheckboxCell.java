@@ -11,8 +11,7 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.IRowForCell;
 
-class EditingCheckboxCell extends SimplePanel implements OsmTable.Cell, OsmTable.ReadingCell, OsmTable.EditingCell, OsmTable.EditingModeAwareCell {
-	boolean editing;
+class EditingCheckboxCell extends OsmTable.EditingCell {
 	IRowForCell row;
 	CheckBox checkbox;
 	FocusPanel readingLabel;
@@ -22,31 +21,13 @@ class EditingCheckboxCell extends SimplePanel implements OsmTable.Cell, OsmTable
 		
 		addStyleName("stringcell");
 		
-		editing = false;
 		checkbox = new CheckBox();
 		
 		readingLabel = new FocusPanel();
 		readingLabel.add(new HTML("&#160;"));
 
 		addStyleName("writing");
-		
-		exitEditingMode();
-	}
-	
-	@Override
-	public void enterEditingMode() {
-		assert(!editing);
-		editing = true;
-		assert(editing);
-		clear();
-		add(checkbox);
-		removeStyleName("reading");
-		addStyleName("writing");
-	}
 
-	@Override
-	public void exitEditingMode() {
-		editing = false;
 		readingLabel.clear();
 		readingLabel.add(new HTML(checkbox.isChecked() ? "Yes" : "No"));
 		clear();
@@ -56,12 +37,27 @@ class EditingCheckboxCell extends SimplePanel implements OsmTable.Cell, OsmTable
 	}
 	
 	@Override
-	public Widget getCellWidget() { return this; }
-	
-	@Override
-	public void focus() {
-		checkbox.setFocus(true);
+	public void enteredEditingMode() {
+		clear();
+		add(checkbox);
+		removeStyleName("reading");
+		addStyleName("writing");
 	}
+
+	@Override
+	public void exitedEditingMode() {
+		readingLabel.clear();
+		readingLabel.add(new HTML(checkbox.isChecked() ? "Yes" : "No"));
+		clear();
+		add(readingLabel);
+		removeStyleName("writing");
+		addStyleName("reading");
+	}
+	
+//	@Override
+//	public void focus() {
+//		checkbox.setFocus(true);
+//	}
 	
 	public Boolean getValue() {
 		return checkbox.isChecked();

@@ -49,7 +49,7 @@ public interface GreetingServiceAsync {
 	
 	void addCourse(CourseGWT toAdd, AsyncCallback<CourseGWT> callback);
 	void editCourse(CourseGWT toEdit, AsyncCallback<Void> callback);
-	void removeCourse(CourseGWT toRemove, AsyncCallback<Void> callback);
+	void removeCourse(Integer toRemoveID, AsyncCallback<Void> callback);
 	void addInstructor(InstructorGWT toAdd, AsyncCallback<InstructorGWT> callback);
 	void editInstructor(InstructorGWT toEdit, AsyncCallback<Void> callback);
 	void removeInstructor(InstructorGWT toRemove, AsyncCallback<Void> callback);

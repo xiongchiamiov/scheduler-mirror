@@ -20,11 +20,12 @@ import edu.calpoly.csc.scheduler.view.web.client.table.IStaticGetter;
 import edu.calpoly.csc.scheduler.view.web.client.table.IStaticSetter;
 import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
+import edu.calpoly.csc.scheduler.view.web.client.table.columns.DeleteColumn.DeleteObserver;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingCheckboxColumn;
+import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingIntColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingMultiselectColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingSelectColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingStringColumn;
-import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingIntColumn;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
 
 public class LocationsView extends VerticalPanel implements IViewContents {
@@ -93,26 +94,17 @@ public class LocationsView extends VerticalPanel implements IViewContents {
 					public LocationGWT create() {
 						return new LocationGWT(generateTemporaryLocationID(), "", "", "LEC", 20, false, new LocationGWT.ProvidedEquipmentGWT());
 					}
-				},
-				new OsmTable.ModifyHandler<LocationGWT>() {
-					@Override
-					public void add(LocationGWT toAdd, AsyncCallback<LocationGWT> callback) {
-						service.addLocation(toAdd, callback);
-					}
-
-					@Override
-					public void edit(LocationGWT toEdit, AsyncCallback<Void> callback) {
-						service.editLocation(toEdit, callback);
-					}
-
-					@Override
-					public void remove(LocationGWT toRemove, AsyncCallback<Void> callback) {
-						service.removeLocation(toRemove, callback);
-					}
 				});
 
-		table.addEditSaveColumn();
-		table.addDeleteColumn();
+		table.addDeleteColumn(new DeleteObserver<LocationGWT>() {
+			@Override
+			public void afterDelete(LocationGWT object) {
+				service.removeLocation(object, new AsyncCallback<Void>() {
+					public void onSuccess(Void result) { }
+					public void onFailure(Throwable caught) { }
+				});
+			}
+		});
 
 		table.addColumn(
 				"Building",

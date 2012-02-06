@@ -6,7 +6,6 @@ import edu.calpoly.csc.scheduler.view.web.client.table.IStaticGetter;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.Cell;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.IRowForColumn;
-import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.SimpleCell;
 import edu.calpoly.csc.scheduler.view.web.shared.Identified;
 
 public class StringColumn<ObjectType extends Identified> implements OsmTable.IColumn<ObjectType> {
@@ -17,6 +16,8 @@ public class StringColumn<ObjectType extends Identified> implements OsmTable.ICo
 	}
 
 	public Cell createCell(final IRowForColumn<ObjectType> row) {
-		return new SimpleCell(new HTML(getter.getValueForObject(row.getObject())));
+		Cell result = new Cell();
+		result.add(new HTML(getter.getValueForObject(row.getObject())));
+		return result;
 	}
 }

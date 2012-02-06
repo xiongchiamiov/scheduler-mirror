@@ -6,13 +6,10 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
 
-class ReadingStringCell extends SimplePanel implements OsmTable.Cell, OsmTable.ReadingCell {
+class ReadingStringCell extends OsmTable.ReadingCell {
 	ReadingStringCell() {
 		addStyleName("stringcell");
 	}
-	
-	@Override
-	public Widget getCellWidget() { return this; }
 	
 	public void setValue(String value) {
 		clear();

@@ -23,9 +23,10 @@ import edu.calpoly.csc.scheduler.view.web.client.table.MemberStringComparator;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.ButtonColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.ButtonColumn.ClickCallback;
+import edu.calpoly.csc.scheduler.view.web.client.table.columns.DeleteColumn.DeleteObserver;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingCheckboxColumn;
-import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingStringColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingIntColumn;
+import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingStringColumn;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.TimePreferenceGWT;
 
@@ -100,23 +101,16 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 								new HashMap<Integer, Map<Integer, TimePreferenceGWT>>(),
 								new HashMap<Integer, Integer>());
 					}
-				},
-				new OsmTable.ModifyHandler<InstructorGWT>() {
-					@Override
-					public void add(InstructorGWT toAdd, AsyncCallback<InstructorGWT> callback) {
-						service.addInstructor(toAdd, callback);
-					}
-					@Override
-					public void edit(InstructorGWT toEdit, AsyncCallback<Void> callback) {
-						service.editInstructor(toEdit, callback);
-					}
-					public void remove(InstructorGWT toRemove, AsyncCallback<Void> callback) {
-						service.removeInstructor(toRemove, callback);
-					}
 				});
 
-		table.addDeleteColumn();
-		table.addEditSaveColumn();
+		table.addDeleteColumn(new DeleteObserver<InstructorGWT>() {
+			public void afterDelete(InstructorGWT object) {
+				service.removeInstructor(object, new AsyncCallback<Void>() {
+					public void onSuccess(Void result) { }
+					public void onFailure(Throwable caught) { }
+				});
+			}
+		});
 
 		table.addColumn(
 				INSTR_FIRSTNAME,

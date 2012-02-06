@@ -22,8 +22,7 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.IRowForCell;
 
-class EditingMultiselectCell extends SimplePanel implements OsmTable.Cell, OsmTable.ReadingCell, OsmTable.EditingCell, OsmTable.EditingModeAwareCell {
-	boolean editing;
+class EditingMultiselectCell extends OsmTable.EditingCell {
 	LinkedHashMap<String, String> options;
 	
 	ScrollPanel checkboxesContainer;
@@ -34,7 +33,6 @@ class EditingMultiselectCell extends SimplePanel implements OsmTable.Cell, OsmTa
 	EditingMultiselectCell(final IRowForCell row, LinkedHashMap<String, String> options) {
 		addStyleName("selectcell");
 		
-		editing = false;
 		readingLabel = new FocusPanel();
 		readingLabel.add(new HTML("&#160;(blank)"));
 
@@ -57,13 +55,18 @@ class EditingMultiselectCell extends SimplePanel implements OsmTable.Cell, OsmTa
 
 		removeStyleName("reading");
 		addStyleName("writing");
+
+		readingLabel.clear();
 		
-		exitEditingMode();
+		readingLabel.add(new HTML(assembleValuesString()));
+		clear();
+		add(readingLabel);
+		addStyleName("reading");
+		removeStyleName("writing");
 	}
 	
 	@Override
-	public void enterEditingMode() {
-		assert(!editing);
+	public void enteredEditingMode() {
 		clear();
 
 		add(checkboxesContainer);
@@ -85,8 +88,7 @@ class EditingMultiselectCell extends SimplePanel implements OsmTable.Cell, OsmTa
 	}
 	
 	@Override
-	public void exitEditingMode() {
-		editing = false;
+	public void exitedEditingMode() {
 		readingLabel.clear();
 		
 		readingLabel.add(new HTML(assembleValuesString()));
@@ -96,14 +98,11 @@ class EditingMultiselectCell extends SimplePanel implements OsmTable.Cell, OsmTa
 		removeStyleName("writing");
 	}
 	
-	@Override
-	public Widget getCellWidget() { return this; }
-	
-	@Override
-	public void focus() {
-		if (checkboxesByLabel.size() >= 1)
-			checkboxesByLabel.values().iterator().next().setFocus(true);
-	}
+//	@Override
+//	public void focus() {
+//		if (checkboxesByLabel.size() >= 1)
+//			checkboxesByLabel.values().iterator().next().setFocus(true);
+//	}
 
 	public Set<String> getValue() {
 		Set<String> result = new LinkedHashSet<String>();
