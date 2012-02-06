@@ -84,7 +84,7 @@ public class InstructorsView extends VerticalPanel implements IViewContents, Ins
 	@Override
 	public InstructorGWT createInstructor() {
 		InstructorGWT instructor = new InstructorGWT(
-				generateTableInstructorID(), "", "", "", "", "", false, 5, 5, 0, 0,
+				generateTableInstructorID(), "", "", "", false, 5,
 				new HashMap<Integer, Map<Integer, TimePreferenceGWT>>(),
 				new HashMap<Integer, Integer>());
 		

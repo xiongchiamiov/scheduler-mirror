@@ -919,11 +919,7 @@ public class Instructor extends DbData implements Comparable<Instructor>, Serial
    {
       if (coursePreferences   == null)
     	  throw new NullDataException();
-      if (curWtu              == null)
-    	  throw new NullDataException();
 	  if (maxWtu              == null)
-		  throw new NullDataException();
-	  if (office              == null)
 		  throw new NullDataException();
       if (tPrefs              == null)
     	  throw new NullDataException();

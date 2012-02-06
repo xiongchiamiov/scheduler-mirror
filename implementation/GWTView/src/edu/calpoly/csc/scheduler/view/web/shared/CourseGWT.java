@@ -15,7 +15,6 @@ public class CourseGWT implements Serializable, Identified {
 	private Integer maxEnroll;
 	private Integer length;
 	private Set<DayCombinationGWT> dayCombinations;
-	private Integer scheduleID;
 	private Integer id;
 	private Integer lectureID;
 	private Boolean tetheredToLecture;
@@ -25,7 +24,7 @@ public class CourseGWT implements Serializable, Identified {
 	public CourseGWT(String courseName, String catalogNum, String dept,
 			Integer wtu, Integer scu, Integer numSections, String type,
 			Integer maxEnroll, Integer lectureID, Integer length, Set<DayCombinationGWT> dayCombinations,
-			Integer scheduleID, Integer id, Boolean tetheredToLecture) {
+			Integer id, Boolean tetheredToLecture) {
 		super();
 		this.courseName = courseName;
 		this.catalogNum = catalogNum;
@@ -38,7 +37,6 @@ public class CourseGWT implements Serializable, Identified {
 		this.lectureID = lectureID;
 		this.length = length;
 		this.dayCombinations = dayCombinations;
-		this.scheduleID = scheduleID;
 		this.id = id;
 		this.tetheredToLecture = tetheredToLecture;
 	}
@@ -48,7 +46,7 @@ public class CourseGWT implements Serializable, Identified {
 	public CourseGWT(CourseGWT that) {
 		this(that.courseName, that.catalogNum, that.dept, that.wtu, that.scu,
 				that.numSections, that.type, that.maxEnroll, that.lectureID, that.length,
-				that.dayCombinations, that.scheduleID, that.id, that.tetheredToLecture);
+				that.dayCombinations, that.id, that.tetheredToLecture);
 	}
 
 	public void verify() {
@@ -56,16 +54,6 @@ public class CourseGWT implements Serializable, Identified {
 		assert(dept != null);
 		assert(type != null);
 		assert(dayCombinations != null);
-	}
-	
-	public void setScheduleID(Integer schedule)
-	{
-		this.scheduleID = schedule;
-	}
-	
-	public Integer getScheduleID()
-	{
-		return scheduleID;
 	}
 	
 	public void setDays(Set<DayCombinationGWT> days)

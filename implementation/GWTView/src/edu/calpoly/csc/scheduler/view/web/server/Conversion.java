@@ -45,13 +45,8 @@ public abstract class Conversion {
 		result.setUserID(instructor.getUserID());
 		result.setFirstName(instructor.getFirstName());
 		result.setLastName(instructor.getLastName());
-		result.setRoomNumber(instructor.getRoomNumber());
-		result.setBuilding(instructor.getBuilding());
 		result.setDisabilities(instructor.getDisability());
 		result.setMaxWtu(instructor.getMaxWTU());
-		result.setCurWtu(instructor.getCurWtu());
-		result.setFairness(instructor.getFairness());
-		result.setGenerosity(instructor.getGenerosity());
 		
 		HashMap<Integer, Integer> coursePreferences = new LinkedHashMap<Integer, Integer>();
 		try {
@@ -122,12 +117,12 @@ public abstract class Conversion {
 		ins.setLastName(instructor.getLastName());
 		ins.setUserID(instructor.getUserID());
 		ins.setMaxWtu(instructor.getMaxWtu());
-		ins.setCurWtu(instructor.getCurWtu());
-		ins.setOffice(new Location(instructor.getBuilding(), instructor.getRoomNumber()));
-		ins.setFairness(instructor.getFairness());
+		ins.setCurWtu(-1337);
+		ins.setOffice(null);
+		ins.setFairness(-1337);
 		ins.setDisability(instructor.getDisabilities());
 		System.out.println("instructor disabled on fromGWT? " + ins.getDisability());
-		ins.setGenerosity(instructor.getGenerosity());
+		ins.setGenerosity(-1337);
 		ins.setAvailability(new WeekAvail());
 
 		HashMap<Integer, Integer> coursePrefs = new HashMap<Integer, Integer>();

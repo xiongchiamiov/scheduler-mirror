@@ -12,18 +12,17 @@ public class InstructorGWT implements Serializable, Identified {
 	
 	private int id;
 	private String userID;
-	private String firstName, lastName, roomNumber, building;
+	private String firstName, lastName;
 	private boolean disabilities;
-	private int maxwtu, curwtu, fairness, generosity;
+	private int maxwtu;
 
 	Map<Integer, Map<Integer, TimePreferenceGWT>> tPrefs;
 
 	Map<Integer, Integer> coursePrefs;
 
 	public InstructorGWT(int id, String userID, String firstName,
-			String lastName, String roomNumber, String building,
-			boolean disabilities, int maxwtu, int curwtu, int fairness,
-			int generosity,
+			String lastName,
+			boolean disabilities, int maxwtu,
 			Map<Integer, Map<Integer, TimePreferenceGWT>> tPrefs,
 			HashMap<Integer, Integer> hashMap) {
 		super();
@@ -31,13 +30,8 @@ public class InstructorGWT implements Serializable, Identified {
 		this.userID = userID;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.roomNumber = roomNumber;
-		this.building = building;
 		this.disabilities = disabilities;
 		this.maxwtu = maxwtu;
-		this.curwtu = curwtu;
-		this.fairness = fairness;
-		this.generosity = generosity;
 		this.tPrefs = tPrefs;
 		this.coursePrefs = hashMap;
 	}
@@ -48,8 +42,8 @@ public class InstructorGWT implements Serializable, Identified {
 
 	public InstructorGWT(InstructorGWT that) {
 		this(that.id, that.userID, that.firstName, that.lastName,
-				that.roomNumber, that.building, that.disabilities,
-				that.maxwtu, that.curwtu, that.fairness, that.generosity, null, null);
+				that.disabilities,
+				that.maxwtu, null, null);
 		
 		Map<Integer, Map<Integer, TimePreferenceGWT>> newTPrefs = new TreeMap<Integer, Map<Integer,TimePreferenceGWT>>(); 
 		for (Integer day : that.tPrefs.keySet()) {
@@ -85,8 +79,6 @@ public class InstructorGWT implements Serializable, Identified {
 		assert(userID != null);
 		assert(firstName != null);
 		assert(lastName != null);
-		assert(roomNumber != null);
-		assert(building != null);
 		assert(coursePrefs != null);
 	}
 
@@ -98,44 +90,12 @@ public class InstructorGWT implements Serializable, Identified {
 		this.coursePrefs = coursePrefs;
 	}
 	
-	public int getCurWtu(){
-		return curwtu;
-	}
-	
-	public void setCurWtu(int curWtu){
-		this.curwtu = curWtu;
-	}
-	
-	public int getFairness(){
-		return fairness;
-	}
-	
-	public void setFairness(int fair){
-		this.fairness = fair;
-	}
-	
-	public int getGenerosity(){
-		return generosity;
-	}
-	
-	public void setGenerosity(int gen){
-		this.generosity = gen;
-	}
-	
 	public String getFirstName(){
 		return firstName;
 	}
 	
 	public String getLastName(){
 		return lastName;
-	}
-	
-	public String getBuilding(){
-		return building;
-	}
-	
-	public String getRoomNumber(){
-		return roomNumber;
 	}
 	
 	public boolean getDisabilities(){
@@ -172,14 +132,6 @@ public class InstructorGWT implements Serializable, Identified {
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
-	}
-
-	public void setRoomNumber(String roomNumber) {
-		this.roomNumber = roomNumber;
-	}
-
-	public void setBuilding(String building) {
-		this.building = building;
 	}
 
 	public void setDisabilities(boolean disabilities) {
