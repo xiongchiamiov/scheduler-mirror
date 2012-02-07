@@ -1,0 +1,77 @@
+.sz 10
+.ds ~ /users/gfisher/nroff
+. so \*~/stdhdr.me
+.if !\nh \{\
+.    he ''''
+.    fo ''''
+.\}
+.(TI "Minutes of the 405 In-Class Meeting, 1 February 12"
+.(S +2
+\fBMinutes of the 405 In-Class Meeting
+.hbr
+11:20 - 1:40PM Wednesday 1 February 12\fP
+.)S
+.)TI
+.spt
+\fBPresent\fP: \fIEveryone who wasn't absent\fP
+.sp .5v
+\fBAbsent\fP: Jake, Salome
+.spt
+Kaylene once again continued presenting the latest UI ideas from her and Evan.
+She took notes on the storyboard posters as she made the presentation.
+.sp
+.(L 1 .4v
+.le
+The admin side of instructor pref functionality looks like this:
+.(L a .2v
+.le
+List of instructors with status that says whether or not prefs have been
+submitted for the schedule at hand.
+.le
+No individual enable/disable prefs for each instructor; that is, either all
+instructors or no instructors can submit.
+.le
+Two bottom buttons: 
+.)L a
+.le
+Notes on the Instructor UI:
+.(L a .2v
+.le
+Can do two things: enter prefs and view a schedule; zero or more schedules may
+be viewable at any one time.
+.le
+Need to be clear about the following:
+.(L i .2v
+.le
+What does the admin press to publish a schedule?  Publish?  This still needs to
+be answered.
+.le
+Are instructors seeing a copy of the schedule at the time of publishing or the
+schedule itself, the latter of which can still be changing?  Evan suggests
+using 'File Save-As' to make this explicit.  This still needs to be decided.
+.)L i 
+.le
+By vote of 9 yes, 1 no, we agreed to have the following three areas for storing
+schedules:
+.(L i
+.le
+Home
+.le
+Archive
+.le
+Trash
+.)L i
+.pp
+For now, all three of these will be flat "file" lists, with the possibility in
+future to make one or more of them hierarchical "file" stores.  Layoutwise, it
+can look like this:
+.(t
+Home   Settings                                   Archive   Trash
+.)t
+I.e., 'Archive' and 'Trash' are on the far right of the tab bar.
+.le
+All agree that the next round of full-class acceptance testing will happen the
+beginning of week 8, or whenever the new DB design is up and running.
+.)L a
+.)L 1
+.\" LocalWords:  admin pref prefs UI Evan Layoutwise nh fo Salome Kaylene
