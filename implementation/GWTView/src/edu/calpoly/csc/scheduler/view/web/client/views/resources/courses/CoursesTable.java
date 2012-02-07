@@ -17,8 +17,6 @@ import edu.calpoly.csc.scheduler.view.web.client.table.MemberStringComparator;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.ObjectChangedObserver;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.DeleteColumn.DeleteObserver;
-import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingDecimalColumn;
-import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingIntColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingMultiselectColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingSelectColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingStringColumn;
@@ -151,9 +149,12 @@ public class CoursesTable extends SimplePanel {
 							public void setValueInObject(CourseGWT object, String newValue) { object.setCatalogNum(newValue); }
 						}, 
 						new IStaticValidator<CourseGWT, String>() {
-							public void validate(CourseGWT object, String newValue) throws InvalidValueException {
+							@Override
+							public IStaticValidator.ValidateResult validate(
+									CourseGWT object, String newValue) {
 								if (newValue.trim().equals(""))
-									throw new InvalidValueException(CATALOG_NUM_HEADER + " must be present.");
+									return new InputWarning(CATALOG_NUM_HEADER + " must be present.");
+								return new InputValid();
 							}
 						}));
 
@@ -173,42 +174,72 @@ public class CoursesTable extends SimplePanel {
 						},
 						null));
 		
-		table.addColumn(WTU_HEADER, WTU_WIDTH, true, null, new EditingIntColumn<CourseGWT>(
-				new IStaticGetter<CourseGWT, Integer>() {
-					public Integer getValueForObject(CourseGWT object) { return object.getWtu(); }
-				}, new IStaticSetter<CourseGWT, Integer>() {
-					public void setValueInObject(CourseGWT object, Integer newValue) { object.setWtu(newValue); }
+		table.addColumn(WTU_HEADER, WTU_WIDTH, true, null, new EditingStringColumn<CourseGWT>(
+				new IStaticGetter<CourseGWT, String>() {
+					public String getValueForObject(CourseGWT object) { return object.getWtu(); }
+				}, new IStaticSetter<CourseGWT, String>() {
+					public void setValueInObject(CourseGWT object, String newValue) { object.setWtu(newValue); }
 				}, 
-				new IStaticValidator<CourseGWT, Integer>() {
-					public void validate(CourseGWT object, Integer newValue) throws InvalidValueException {
-						if (newValue < 1)
-							throw new InvalidValueException(WTU_HEADER + " must be greater than 0: " + newValue + " is invalid.");
+				new IStaticValidator<CourseGWT, String>() {
+					@Override
+					public IStaticValidator.ValidateResult validate(
+							CourseGWT object, String newValue) {
+						int n;
+						try { n = Integer.parseInt(newValue); }
+						catch (NumberFormatException e) {
+							return new InputWarning(WTU_HEADER + " must be an integer.");
+						}
+						
+						if (n < 0)
+							return new InputWarning(WTU_HEADER + " must not be negative.");
+						
+						return new InputValid();
 					}
 				}));
 		
-		table.addColumn(SCU_HEADER, SCU_WIDTH, true, null, new EditingIntColumn<CourseGWT>(
-				new IStaticGetter<CourseGWT, Integer>() {
-					public Integer getValueForObject(CourseGWT object) { return object.getScu(); }
-				}, new IStaticSetter<CourseGWT, Integer>() {
-					public void setValueInObject(CourseGWT object, Integer newValue) { object.setScu(newValue); }
+		table.addColumn(SCU_HEADER, SCU_WIDTH, true, null, new EditingStringColumn<CourseGWT>(
+				new IStaticGetter<CourseGWT, String>() {
+					public String getValueForObject(CourseGWT object) { return object.getScu(); }
+				}, new IStaticSetter<CourseGWT, String>() {
+					public void setValueInObject(CourseGWT object, String newValue) { object.setScu(newValue); }
 				}, 
-				new IStaticValidator<CourseGWT, Integer>() {
-					public void validate(CourseGWT object, Integer newValue) throws InvalidValueException {
-						if (newValue < 1)
-							throw new InvalidValueException(SCU_HEADER + " must be greater than 0: " + newValue + " is invalid.");
+				new IStaticValidator<CourseGWT, String>() {
+					@Override
+					public IStaticValidator.ValidateResult validate(
+							CourseGWT object, String newValue) {
+						int n;
+						try { n = Integer.parseInt(newValue); }
+						catch (NumberFormatException e) {
+							return new InputWarning(SCU_HEADER + " must be an integer.");
+						}
+						
+						if (n < 0)
+							return new InputWarning(SCU_HEADER + " must not be negative.");
+						
+						return new InputValid();
 					}
 				}));
 		
-		table.addColumn(NUM_SECTIONS_HEADER, NUM_SECTIONS_WIDTH, true, null, new EditingIntColumn<CourseGWT>(
-				new IStaticGetter<CourseGWT, Integer>() {
-					public Integer getValueForObject(CourseGWT object) { return object.getNumSections(); }
-				}, new IStaticSetter<CourseGWT, Integer>() {
-					public void setValueInObject(CourseGWT object, Integer newValue) { object.setNumSections(newValue); }
+		table.addColumn(NUM_SECTIONS_HEADER, NUM_SECTIONS_WIDTH, true, null, new EditingStringColumn<CourseGWT>(
+				new IStaticGetter<CourseGWT, String>() {
+					public String getValueForObject(CourseGWT object) { return object.getRawNumSections(); }
+				}, new IStaticSetter<CourseGWT, String>() {
+					public void setValueInObject(CourseGWT object, String newValue) { object.setNumSections(newValue); }
 				}, 
-				new IStaticValidator<CourseGWT, Integer>() {
-					public void validate(CourseGWT object, Integer newValue) throws InvalidValueException {
-						if (newValue < 1)
-							throw new InvalidValueException(NUM_SECTIONS_HEADER + " must be greater than 0: " + newValue + " is invalid.");
+				new IStaticValidator<CourseGWT, String>() {
+					@Override
+					public IStaticValidator.ValidateResult validate(
+							CourseGWT object, String newValue) {
+						int n;
+						try { n = Integer.parseInt(newValue); }
+						catch (NumberFormatException e) {
+							return new InputWarning(NUM_SECTIONS_HEADER + " must be an integer.");
+						}
+						
+						if (n < 1)
+							return new InputWarning(NUM_SECTIONS_HEADER + " must be at least 1.");
+						
+						return new InputValid();
 					}
 				}));
 		
@@ -230,29 +261,54 @@ public class CoursesTable extends SimplePanel {
 							}
 						}));
 		
-		table.addColumn(MAX_ENROLLMENT_HEADER, MAX_ENROLLMENT_WIDTH, true, null, new EditingIntColumn<CourseGWT>(
-				new IStaticGetter<CourseGWT, Integer>() {
-					public Integer getValueForObject(CourseGWT object) { return object.getMaxEnroll(); }
-				}, new IStaticSetter<CourseGWT, Integer>() {
-					public void setValueInObject(CourseGWT object, Integer newValue) { object.setMaxEnroll(newValue); }
+		table.addColumn(MAX_ENROLLMENT_HEADER, MAX_ENROLLMENT_WIDTH, true, null, new EditingStringColumn<CourseGWT>(
+				new IStaticGetter<CourseGWT, String>() {
+					public String getValueForObject(CourseGWT object) { return object.getMaxEnroll(); }
+				}, new IStaticSetter<CourseGWT, String>() {
+					public void setValueInObject(CourseGWT object, String newValue) { object.setMaxEnroll(newValue); }
 				}, 
-				new IStaticValidator<CourseGWT, Integer>() {
-					public void validate(CourseGWT object, Integer newValue) throws InvalidValueException {
-						if (newValue < 1)
-							throw new InvalidValueException(MAX_ENROLLMENT_HEADER + " must be greater than 0: " + newValue + " is invalid.");
+				new IStaticValidator<CourseGWT, String>() {
+					@Override
+					public IStaticValidator.ValidateResult validate(
+							CourseGWT object, String newValue) {
+						int n;
+						try { n = Integer.parseInt(newValue); }
+						catch (NumberFormatException e) {
+							return new InputWarning(MAX_ENROLLMENT_HEADER + " must be an integer.");
+						}
+						
+						if (n < 1)
+							return new InputWarning(MAX_ENROLLMENT_HEADER + " must be at least 1.");
+						
+						return new InputValid();
 					}
 				}));
 		
-		table.addColumn(HOURS_PER_WEEK_HEADER, HOURS_PER_WEEK_WIDTH, true, null, new EditingDecimalColumn<CourseGWT>(
-				new IStaticGetter<CourseGWT, Double>() {
-					public Double getValueForObject(CourseGWT object) { return (double)object.getHalfHoursPerWeek() / 2; }
-				}, new IStaticSetter<CourseGWT, Double>() {
-					public void setValueInObject(CourseGWT object, Double newValue) { object.setHalfHoursPerWeek((int)Math.round(newValue * 2)); }
+		table.addColumn(HOURS_PER_WEEK_HEADER, HOURS_PER_WEEK_WIDTH, true, null, new EditingStringColumn<CourseGWT>(
+				new IStaticGetter<CourseGWT, String>() {
+					public String getValueForObject(CourseGWT object) { return object.getHalfHoursPerWeek(); }
+				}, new IStaticSetter<CourseGWT, String>() {
+					public void setValueInObject(CourseGWT object, String newValue) { object.setHalfHoursPerWeek(newValue); }
 				}, 
-				new IStaticValidator<CourseGWT, Double>() {
-					public void validate(CourseGWT object, Double newValue) throws InvalidValueException {
-						if (newValue < 1)
-							throw new InvalidValueException(HOURS_PER_WEEK_HEADER + " must be greater than 0: " + newValue + " is invalid.");
+				new IStaticValidator<CourseGWT, String>() {
+					@Override
+					public edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator.ValidateResult validate(
+							CourseGWT object, String newValue) {
+						double d;
+						try { d = Double.parseDouble(newValue); }
+						catch (NumberFormatException e) {
+							return new InputWarning(HOURS_PER_WEEK_HEADER + " must be a decimal number.");
+						}
+						
+						// Must be a multiple of .5
+						if (distanceFromNearestMultiple(d, .5) >= .001) // account for floating point imprecision
+							return new InputWarning(HOURS_PER_WEEK_HEADER + " must be a multiple of .5.");
+						
+						int numHalfHours = (int)Math.round(d * 2);
+						if (numHalfHours < 1)
+							return new InputWarning(HOURS_PER_WEEK_HEADER + " must be at least .5.");
+						
+						return new InputValid();
 					}
 				}));
 		
@@ -290,5 +346,17 @@ public class CoursesTable extends SimplePanel {
 						return tableCourses;
 					}
 				}));
+	}
+	
+	// If we wanted to know how far off 1.4 was from the nearest multiple of .5, we'd use this function
+	private static double distanceFromNearestMultiple(double value, double multipleOf) {
+		// How this function works:
+		//     Math.abs((1.4 / .5 - Math.round(1.4 / .5)) * .5)
+		//     Math.abs((2.8 - Math.round(2.8)) * .5)
+		//     Math.abs((2.8 - 3.0) * .5)
+		//     Math.abs(.2 * .5)
+		//     Math.abs(.1)
+		//     .1
+		return Math.abs((value / multipleOf - Math.round(value / multipleOf)) * multipleOf);
 	}
 }

@@ -81,7 +81,7 @@ public class CoursesView extends VerticalPanel implements IViewContents, Courses
 
 	@Override
 	public CourseGWT createCourse() {
-		CourseGWT course = new CourseGWT("", "", "", 0, 0, 0, "LEC", 0, -1, 6, new HashSet<DayCombinationGWT>(), generateTableCourseID(), false);
+		CourseGWT course = new CourseGWT("", "", "", "", "", "", "LEC", "", -1, "", new HashSet<DayCombinationGWT>(), generateTableCourseID(), false);
 		
 		addedTableCourses.add(course);
 		

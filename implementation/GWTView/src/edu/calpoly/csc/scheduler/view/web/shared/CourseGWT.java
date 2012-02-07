@@ -10,10 +10,10 @@ public class CourseGWT implements Serializable, Identified {
 	private String courseName;
 	private String catalogNum;
 	private String dept;
-	private Integer wtu, scu, numSections;
+	private String wtu, scu, numSections;
 	private String type; //will be an object
-	private Integer maxEnroll;
-	private Integer halfHoursPerWeek;
+	private String maxEnroll;
+	private String halfHoursPerWeek;
 	private Set<DayCombinationGWT> dayCombinations;
 	private Integer id;
 	private Integer lectureID;
@@ -22,8 +22,8 @@ public class CourseGWT implements Serializable, Identified {
 	public CourseGWT() { }
 	
 	public CourseGWT(String courseName, String catalogNum, String dept,
-			Integer wtu, Integer scu, Integer numSections, String type,
-			Integer maxEnroll, Integer lectureID, Integer halfHoursPerWeek, Set<DayCombinationGWT> dayCombinations,
+			String wtu, String scu, String numSections, String type,
+			String maxEnroll, Integer lectureID, String halfHoursPerWeek, Set<DayCombinationGWT> dayCombinations,
 			Integer id, Boolean tetheredToLecture) {
 		super();
 		this.courseName = courseName;
@@ -67,7 +67,7 @@ public class CourseGWT implements Serializable, Identified {
 	}
    
 
-	public int getHalfHoursPerWeek()
+	public String getHalfHoursPerWeek()
 	{
 	   return halfHoursPerWeek;
 	}
@@ -96,27 +96,32 @@ public class CourseGWT implements Serializable, Identified {
 		this.dept = dept;
 	}
 
-	public int getWtu() {
+	public String getWtu() {
 		return wtu;
 	}
 
-	public void setWtu(int wtu) {
+	public void setWtu(String wtu) {
 		this.wtu = wtu;
 	}
 
-	public int getScu() {
+	public String getScu() {
 		return scu;
 	}
 
-	public void setScu(int scu) {
+	public void setScu(String scu) {
 		this.scu = scu;
 	}
 
-	public int getNumSections() {
+	public String getRawNumSections() {
 		return numSections;
 	}
 
-	public void setNumSections(int numSections) {
+	public Integer getNumSections() {
+		try { return Integer.parseInt(numSections); }
+		catch (NumberFormatException e) { return 0; }
+	}
+
+	public void setNumSections(String numSections) {
 		this.numSections = numSections;
 	}
 
@@ -128,11 +133,11 @@ public class CourseGWT implements Serializable, Identified {
 		this.type = type;
 	}
 
-	public int getMaxEnroll() {
+	public String getMaxEnroll() {
 		return maxEnroll;
 	}
 
-	public void setMaxEnroll(int maxEnroll) {
+	public void setMaxEnroll(String maxEnroll) {
 		this.maxEnroll = maxEnroll;
 	}
 
@@ -140,7 +145,7 @@ public class CourseGWT implements Serializable, Identified {
 		return serialVersionUID;
 	}
 
-	public void setHalfHoursPerWeek(int halfHoursPerWeek) {
+	public void setHalfHoursPerWeek(String halfHoursPerWeek) {
 		this.halfHoursPerWeek = halfHoursPerWeek;
 	}
 	

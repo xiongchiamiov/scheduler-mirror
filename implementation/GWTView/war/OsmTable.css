@@ -118,3 +118,7 @@
 .osmtable .hiddenRow td {
 	padding: 0px;
 }
+
+.osmtable td.invalid {
+	background-color: #FFE0E0;
+}

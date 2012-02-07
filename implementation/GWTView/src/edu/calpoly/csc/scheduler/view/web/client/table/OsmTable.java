@@ -20,7 +20,6 @@ import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ScrollEvent;
 import com.google.gwt.user.client.Window.ScrollHandler;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FocusPanel;
@@ -30,6 +29,10 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import edu.calpoly.csc.scheduler.view.web.client.HTMLUtilities;
+import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator.InputInvalid;
+import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator.InputValid;
+import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator.InputWarning;
+import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator.ValidateResult;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.EditingCell.ExitedEditingModeHandler;
 import edu.calpoly.csc.scheduler.view.web.client.table.ResizeableWidget.ResizeCallback;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.DeleteColumn;
@@ -65,6 +68,25 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel imple
 	}
 
 	public static abstract class EditingCell extends ReadingCell {
+		public interface ValueChangedObserver {
+			void valueChanged();
+		}
+		
+		private ValueChangedObserver valueChangedObserver;
+		void setValueChangedObserver(ValueChangedObserver handler) {
+			assert(this.valueChangedObserver == null);
+			this.valueChangedObserver = handler;
+		}
+		protected void notifyValueChanged() {
+			if (valueChangedObserver != null) {
+				System.out.println("calling value changed observer!");
+				valueChangedObserver.valueChanged();
+			}
+		}
+
+		
+		
+		
 		public interface ExitedEditingModeHandler {
 			void exitedEditingMode();
 		}
@@ -123,9 +145,12 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel imple
 	}
 	
 	public interface IEditingColumn<ObjectType extends Identified> extends IReadingColumn<ObjectType> {
-		abstract public void commitToObject(IRowForColumn<ObjectType> row, EditingCell cell);
+		public ValidateResult validate(IRowForColumn<ObjectType> row, EditingCell cell);
+
+		public void commitToObject(IRowForColumn<ObjectType> row, EditingCell cell);
 	}
 	
+	// TODO: change these to callbacks
 	public interface IRowForColumn<ObjectType extends Identified> {
 		ObjectType getObject();
 		void delete();
@@ -416,10 +441,29 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel imple
 				
 				editingCell.setExitedEditingModeHandler(new ExitedEditingModeHandler() {
 					public void exitedEditingMode() {
-						editingColumn.commitToObject(newRow, editingCell);
-						editingColumn.updateFromObject(newRow, editingCell);
-						objectChangedObserver.objectChanged(object);
+						ValidateResult result = editingColumn.validate(newRow, editingCell);
+
+						if (result instanceof InputValid || result instanceof InputWarning) {
+							editingColumn.commitToObject(newRow, editingCell);
+							editingColumn.updateFromObject(newRow, editingCell);
+							objectChangedObserver.objectChanged(object);
+						}
+						else if (result instanceof InputInvalid) {
+							editingColumn.updateFromObject(newRow, editingCell);
+						}
+						else
+							assert(false);
+
 						updateHeaderWidths();
+
+						colorCell(cellContainer, result);
+					}
+				});
+				
+				editingCell.setValueChangedObserver(new EditingCell.ValueChangedObserver() {
+					public void valueChanged() {
+						System.out.println("calling colorcell!");
+						colorCell(cellContainer, null);
 					}
 				});
 			}
@@ -436,6 +480,39 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel imple
 		}
 		
 		return newRow;
+	}
+	
+	private void colorCell(CellContainer container, ValidateResult validationResult) {
+		if (container.cell instanceof EditingCell) {
+			
+			if (validationResult == null) {
+				IColumn<ObjectType> column = columnMetadatas.get(container.colIndex).column;
+				assert(column instanceof IEditingColumn);
+				IEditingColumn<ObjectType> editingColumn = (IEditingColumn<ObjectType>)column;
+				
+				EditingCell editingCell = (EditingCell)container.cell;
+				
+				validationResult = editingColumn.validate(container.row, editingCell);
+			}
+			
+
+			Element td = HTMLUtilities.getClosestContainingElementOfType(container.cell.getElement(), "td");
+			
+			if (validationResult instanceof InputValid) {
+				System.out.println("removing invalid class!");
+				td.removeClassName("invalid");
+			}
+			else if (validationResult instanceof InputWarning) {
+				InputWarning inputWarning = (InputWarning)validationResult;
+				td.setAttribute("title", inputWarning.reason);
+				td.addClassName("invalid");
+			}
+			else if (validationResult instanceof InputInvalid) {
+				
+			}
+			else
+				assert(false);
+		}
 	}
 	
 	private CellContainer cellContainerAt(int row, int col) {

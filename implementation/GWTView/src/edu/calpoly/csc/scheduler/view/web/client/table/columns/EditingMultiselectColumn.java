@@ -5,6 +5,8 @@ import java.util.Set;
 
 import edu.calpoly.csc.scheduler.view.web.client.table.IStaticGetter;
 import edu.calpoly.csc.scheduler.view.web.client.table.IStaticSetter;
+import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator.InputValid;
+import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator.ValidateResult;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.Cell;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.EditingCell;
@@ -55,5 +57,10 @@ public class EditingMultiselectColumn<ObjectType extends Identified> implements 
 		assert(rawCell instanceof EditingMultiselectCell);
 		EditingMultiselectCell cell = (EditingMultiselectCell)rawCell;
 		setter.setValueInObject(row.getObject(), cell.getValue());
+	}
+
+	@Override
+	public ValidateResult validate(IRowForColumn<ObjectType> row, EditingCell cell) {
+		return new InputValid();
 	}
 }

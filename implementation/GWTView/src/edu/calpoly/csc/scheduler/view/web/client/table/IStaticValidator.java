@@ -1,10 +1,17 @@
 package edu.calpoly.csc.scheduler.view.web.client.table;
 
+
 public interface IStaticValidator<ObjectType, ValueType> {
-	class InvalidValueException extends Exception {
-		private static final long serialVersionUID = 1L;
-		public InvalidValueException(String message) { super(message); }
+	public abstract class ValidateResult { }
+	public class InputValid extends ValidateResult { }
+	public class InputWarning extends ValidateResult {
+		String reason;
+		public InputWarning(String reason) { this.reason = reason; }
+	}
+	public class InputInvalid extends ValidateResult {
+		String reason;
+		public InputInvalid(String reason) { this.reason = reason; }
 	}
 	
-	void validate(ObjectType object, ValueType newValue) throws InvalidValueException;
+	ValidateResult validate(ObjectType object, ValueType newValue);
 }

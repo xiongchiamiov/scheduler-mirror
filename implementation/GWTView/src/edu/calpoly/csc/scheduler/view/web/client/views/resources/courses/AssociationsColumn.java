@@ -1,5 +1,7 @@
 package edu.calpoly.csc.scheduler.view.web.client.views.resources.courses;
 
+import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator.InputValid;
+import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator.ValidateResult;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.Cell;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.EditingCell;
@@ -53,5 +55,10 @@ public class AssociationsColumn implements OsmTable.IEditingColumn<CourseGWT> {
 		AssociationsCell cell = (AssociationsCell)rawCell;
 		row.getObject().setLectureID(cell.getSelectedCourseID());
 		System.out.println("Setting lectureID to " + cell.getSelectedCourseID());
+	}
+
+	@Override
+	public ValidateResult validate(IRowForColumn<CourseGWT> row, EditingCell cell) {
+		return new InputValid();
 	}
 }

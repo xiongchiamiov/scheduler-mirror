@@ -2,6 +2,8 @@ package edu.calpoly.csc.scheduler.view.web.client.table.columns;
 
 import edu.calpoly.csc.scheduler.view.web.client.table.IStaticGetter;
 import edu.calpoly.csc.scheduler.view.web.client.table.IStaticSetter;
+import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator.InputValid;
+import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator.ValidateResult;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.Cell;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.EditingCell;
@@ -37,5 +39,10 @@ public class EditingCheckboxColumn<ObjectType extends Identified> implements Osm
 		EditingCheckboxCell cell = (EditingCheckboxCell)rawCell;
 		
 		setter.setValueInObject(row.getObject(), cell.getValue());
+	}
+
+	@Override
+	public ValidateResult validate(IRowForColumn<ObjectType> row, EditingCell cell) {
+		return new InputValid();
 	}
 }

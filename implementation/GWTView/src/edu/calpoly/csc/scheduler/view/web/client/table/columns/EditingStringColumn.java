@@ -1,12 +1,11 @@
 package edu.calpoly.csc.scheduler.view.web.client.table.columns;
 
-import com.google.gwt.user.client.Window;
-
 import edu.calpoly.csc.scheduler.view.web.client.table.IStaticGetter;
 import edu.calpoly.csc.scheduler.view.web.client.table.IStaticSetter;
 import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator;
-import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator.InvalidValueException;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
+import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator.InputValid;
+import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator.ValidateResult;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.Cell;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.EditingCell;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.IRowForColumn;
@@ -41,15 +40,16 @@ public class EditingStringColumn<ObjectType extends Identified> implements OsmTa
 	public void commitToObject(IRowForColumn<ObjectType> row, EditingCell rawCell) {
 		assert(rawCell instanceof EditingStringCell);
 		EditingStringCell cell = (EditingStringCell)rawCell;
+		setter.setValueInObject(row.getObject(), cell.getValue());
+	}
+
+	@Override
+	public ValidateResult validate(IRowForColumn<ObjectType> row, EditingCell rawCell) {
+		assert(rawCell instanceof EditingStringCell);
+		EditingStringCell cell = (EditingStringCell)rawCell;
 		
-		try {
-			if (validator != null)
-				validator.validate(row.getObject(), cell.getValue());
-			setter.setValueInObject(row.getObject(), cell.getValue());
-		}
-		catch (InvalidValueException ex) {
-			Window.alert(ex.getMessage());
-			cell.setValue(getter.getValueForObject(row.getObject()));
-		}
+		if (validator != null)
+			return validator.validate(row.getObject(), cell.getValue());
+		return new InputValid();
 	}
 }

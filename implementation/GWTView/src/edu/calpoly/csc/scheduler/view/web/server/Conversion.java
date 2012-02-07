@@ -218,13 +218,13 @@ public abstract class Conversion {
 		newCourse.setDays(Conversion.toGWT(courseCombinations));
 		
 		
-		newCourse.setHalfHoursPerWeek(course.getLength());
-		newCourse.setMaxEnroll(course.getEnrollment());
-		newCourse.setNumSections(course.getNumOfSections());
-		newCourse.setScu(course.getScu());
+		newCourse.setHalfHoursPerWeek(Integer.toString(course.getLength()));
+		newCourse.setMaxEnroll(Integer.toString(course.getEnrollment()));
+		newCourse.setNumSections(Integer.toString(course.getNumOfSections()));
+		newCourse.setScu(Integer.toString(course.getScu()));
 		System.out.println("recalling model course " + course.getCatalogNum() + " type is " + course.getType() + " lec id is " + course.getLectureID());
 		newCourse.setType(course.getType().toString());
-		newCourse.setWtu(course.getWtu());
+		newCourse.setWtu(Integer.toString(course.getWtu()));
 		newCourse.setLectureID(course.getLectureID());
 		newCourse.setTetheredToLecture(course.getTetheredToLecture());
 		
@@ -306,6 +306,15 @@ public abstract class Conversion {
 		result.isSmartRoom = equipment.isSmartRoom;
 		return result;
 	}
+	
+	private static Integer parseIntOr0(String value) {
+		try {
+			return Integer.parseInt(value);
+		}
+		catch (NumberFormatException e) {
+			return 0;
+		}
+	}
 
 	public static Course fromGWT(CourseGWT course) {
 		Course newCourse = new Course();
@@ -316,17 +325,17 @@ public abstract class Conversion {
 		String catalogNum = course.getCatalogNum();
 		newCourse.setCatalogNum(catalogNum);
 		
-		newCourse.setWtu(course.getWtu());
-		newCourse.setScu(course.getScu());
+		newCourse.setWtu(parseIntOr0(course.getWtu()));
+		newCourse.setScu(parseIntOr0(course.getScu()));
 		newCourse.setType(course.getType());
 		System.out.println("storing model course " + newCourse.getCatalogNum() + " type is " + course.getType());
-		newCourse.setEnrollment(course.getMaxEnroll());
+		newCourse.setEnrollment(parseIntOr0(course.getMaxEnroll()));
 		
 		newCourse.setLectureID(course.getLectureID());
 		newCourse.setTetheredToLecture(course.getTetheredToLecture());
 		
 		newCourse.setDept(course.getDept());
-		newCourse.setLength(course.getHalfHoursPerWeek());
+		newCourse.setLength(parseIntOr0(course.getHalfHoursPerWeek()));
 		newCourse.setNumOfSections(course.getNumSections());
 
 		// TODO: temporary solution, right now the model only supports one day combination,
@@ -338,7 +347,7 @@ public abstract class Conversion {
 		newCourse.setDays(newCourseWeek);
 		
 		assert(newCourse.getLength() >= 0);
-	   assert(newCourse.getDays() != null);
+		assert(newCourse.getDays() != null);
 		return newCourse;
 	}
 

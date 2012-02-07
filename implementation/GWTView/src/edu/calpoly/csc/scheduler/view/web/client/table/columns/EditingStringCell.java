@@ -2,8 +2,12 @@ package edu.calpoly.csc.scheduler.view.web.client.table.columns;
 
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.TextBox;
@@ -22,6 +26,24 @@ class EditingStringCell extends OsmTable.EditingCell {
 			public void onBlur(BlurEvent event) {
 				if (isInEditingMode())
 					setInEditingMode(false);
+			}
+		});
+		editingBox.addChangeHandler(new ChangeHandler() {
+			public void onChange(ChangeEvent event) {
+				System.out.println("editingbox onchange!");
+				notifyValueChanged();
+			}
+		});
+		editingBox.addKeyPressHandler(new KeyPressHandler() {
+			public void onKeyPress(KeyPressEvent event) {
+				System.out.println("editingbox keypress!");
+				notifyValueChanged();
+			}
+		});
+		editingBox.addKeyUpHandler(new KeyUpHandler() {
+			public void onKeyUp(KeyUpEvent event) {
+				System.out.println("editingbox keyup!");
+				notifyValueChanged();
 			}
 		});
 		

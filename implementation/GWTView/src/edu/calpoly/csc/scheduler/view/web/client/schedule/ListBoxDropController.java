@@ -66,13 +66,15 @@ class ListBoxDropController extends AbstractDropController
     //If the list contains the course, increment the number of sections by one.
     if (itemIndex >= 0)
     {
-     course.setNumSections(sectionsIncluded + 1);
+    	assert(false); // reimplement this, don't modify the inputs
+//     course.setNumSections(sectionsIncluded + 1);
      mouseListBox.setWidget(itemIndex, new CourseListItem(course, true));
     }
     //If the list does not contain the course, add one section to the list.
     else
     {
-     course.setNumSections(1);
+    	assert(false); // reimplement this, don't modify the inputs
+//     course.setNumSections(1);
      mouseListBox.add(new CourseListItem(course, true));
     }
    }
@@ -104,13 +106,15 @@ class ListBoxDropController extends AbstractDropController
        //If sections of the course are already in the To Be Scheduled list, increment the number of sections. 
        if (itemIndex >= 0)
        {
-        course.setNumSections(sectionsIncluded + 1);
+       	assert(false); // reimplement this, don't modify the inputs
+//        course.setNumSections(sectionsIncluded + 1);
         mouseListBox.setWidget(itemIndex, new CourseListItem(course, true));
        } 
        //If no sections exist, add a course with one section to the To Be Scheduled list.
        else
        {
-        course.setNumSections(1);
+       	assert(false); // reimplement this, don't modify the inputs
+//        course.setNumSections(1);
         mouseListBox.add(new CourseListItem(course, true));
        }
       }

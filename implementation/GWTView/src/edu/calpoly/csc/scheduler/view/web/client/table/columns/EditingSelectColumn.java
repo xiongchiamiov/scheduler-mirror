@@ -6,7 +6,9 @@ import com.google.gwt.user.client.Window;
 
 import edu.calpoly.csc.scheduler.view.web.client.table.IStaticGetter;
 import edu.calpoly.csc.scheduler.view.web.client.table.IStaticSetter;
-import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator.InvalidValueException;
+import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator.InputInvalid;
+import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator.InputValid;
+import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator.ValidateResult;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.Cell;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.EditingCell;
@@ -61,14 +63,17 @@ public class EditingSelectColumn<ObjectType extends Identified> implements OsmTa
 		assert(rawCell instanceof EditingSelectCell);
 		EditingSelectCell cell = (EditingSelectCell)rawCell;
 		
-		try {
-			if (!options.values().contains(cell.getValue()))
-				throw new InvalidValueException(cell.getValue() + " is not in options!");
-			setter.setValueInObject(row.getObject(), cell.getValue());
-		}
-		catch (InvalidValueException ex) {
-			Window.alert(ex.getMessage());
-			cell.setValue(getter.getValueForObject(row.getObject()));
-		}
+		setter.setValueInObject(row.getObject(), cell.getValue());
+	}
+
+	@Override
+	public ValidateResult validate(IRowForColumn<ObjectType> row, EditingCell rawCell) {
+		assert(rawCell instanceof EditingSelectCell);
+		EditingSelectCell cell = (EditingSelectCell)rawCell;
+		
+		if (!options.values().contains(cell.getValue()))
+			return new InputInvalid(cell.getValue() + " is not in options!");
+		
+		return new InputValid();
 	}
 }

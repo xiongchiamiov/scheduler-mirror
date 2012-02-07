@@ -441,9 +441,10 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 										courseHolder = ((CourseListItem) includedListBox
 												.getWidget(itemIndex))
 												.getCourse();
-										courseHolder
-												.setNumSections(courseHolder
-														.getNumSections() - 1);
+										assert(false); // reimplement this, dont modify the inputs
+//										courseHolder
+//												.setNumSections(courseHolder
+//														.getNumSections() - 1);
 										includedListBox.setWidget(itemIndex,
 												new CourseListItem(
 														courseHolder, true));
