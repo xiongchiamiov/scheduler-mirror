@@ -11,6 +11,7 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.StatusCodeException;
@@ -215,8 +216,9 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
          @Override
          public void onClick(ClickEvent event)
          {
+            Window.open(Window.Location.getHref() + "?scheduleid=" + scheduleid + "&schedulename=" + name + "&userid=" + username, "_new", null);
 //            openInNewWindow(Window.Location.getHref(), scheduleid);
-            selectSchedule(Integer.parseInt(scheduleid), name);
+//            selectSchedule(Integer.parseInt(scheduleid), name);
          }
       });
 	   doc.add(docname);
