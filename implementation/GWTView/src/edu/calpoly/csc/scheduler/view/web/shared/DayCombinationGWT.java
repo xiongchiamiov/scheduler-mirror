@@ -5,7 +5,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.Vector;
 
-import edu.calpoly.csc.scheduler.model.schedule.Day;
+//import edu.calpoly.csc.scheduler.model.schedule.Day;
 
 public class DayCombinationGWT implements Serializable {
    private Set<Integer> days;

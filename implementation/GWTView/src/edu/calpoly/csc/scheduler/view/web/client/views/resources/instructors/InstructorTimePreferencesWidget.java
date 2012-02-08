@@ -6,6 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -19,6 +21,7 @@ import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -29,6 +32,7 @@ import edu.calpoly.csc.scheduler.view.web.shared.TimePreferenceGWT;
 public class InstructorTimePreferencesWidget extends VerticalPanel {
 	class CellWidget extends FocusPanel {
 		int halfHour, day;
+		ListBox lbox;
 		CellWidget(int halfHour, int day) {
 			this.halfHour = halfHour;
 			this.day = day;
@@ -44,6 +48,8 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 	Strategy strategy;
 	
 	FlexTable timePrefsTable;
+	
+	String[] styleNames = {"preferred", "acceptable", "notPreferred", "notQualified"};
 	
 	CellWidget[][] cells;
 	List<CellWidget> selectedCells;
@@ -321,7 +327,21 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 				int desire = this.getPreference(strategy.getInstructor(), halfHour, prefCol);
 				final CellWidget cell = new CellWidget(halfHour, dayNum);
 				cell.addStyleName("desireCell");
-				cell.add(new HTML(Integer.toString(desire)));
+				ListBox list = new ListBox();
+				list.addItem("Not Qualified");
+				list.addItem("Not Preferred");
+				list.addItem("Acceptable");
+				list.addItem("Preferred");
+				list.setSelectedIndex(desire);
+				list.addChangeHandler(new ChangeHandler() {
+					@Override
+					public void onChange(ChangeEvent event) {
+						//setCoursePreference(course, list.getSelectedIndex());
+					}
+				});
+				cell.add(list);
+				cell.addStyleName(styleNames[3-desire]);
+				//cell.add(new HTML(Integer.toString(desire)));
 				/*cell.addClickHandler(new ClickHandler() {
 					@Override
 					public void onClick(ClickEvent event) {

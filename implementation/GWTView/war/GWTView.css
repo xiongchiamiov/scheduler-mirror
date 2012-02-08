@@ -231,6 +231,22 @@ h1 {
 	background-color: #FFFF00;
 }
 
+.preferred {
+	background-color: #00FF00;
+}
+
+.acceptable {
+	background-color: #FFFF00;
+}
+
+.notPreferred {
+	background-color: #FFA500;
+}
+
+.notQualified {
+	background-color: #FF0000;
+}
+
 .timePreferencesTable .desireCell:hover {
 	background-color: #E0E0E0;
 }
