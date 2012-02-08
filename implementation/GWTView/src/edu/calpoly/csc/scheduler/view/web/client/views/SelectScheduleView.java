@@ -60,12 +60,17 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 		this.username = username;
 		this.newDocName = "Untitled";
 		this.scheduleNames = new ArrayList<String>();
-		
+
+		menuBar.clearItems();
 		//Put tabs in menu bar
 		MenuItem homeTab = new MenuItem("Home", true, new Command() {
 			@Override
 			public void execute() {
-				//Do nothing, already in this tab
+			   if(myFrame.canPopViewsAboveMe())
+            {
+               myFrame.popFramesAboveMe();
+               myFrame.frameViewAndPushAboveMe(new SelectScheduleView(service, menuBar, username));
+            }
 			}
 		});
 		
@@ -73,14 +78,18 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 		menuBar.addItem(homeTab);
 	
 		
-		MenuItem archivesTab = new MenuItem("Archives", true, new Command() {
+		MenuItem trashTab = new MenuItem("Trash", true, new Command() {
 			public void execute() {
-				//TODO: Switch to new window and say it isn't implemented
+			   if(myFrame.canPopViewsAboveMe())
+			   {
+			      myFrame.popFramesAboveMe();
+			      myFrame.frameViewAndPushAboveMe(new ScheduleTrashView(service, menuBar, username));
+			   }
 			}
 		});
 		
-		DOM.setElementAttribute(archivesTab.getElement(), "id", "openItem");
-		menuBar.addItem(archivesTab);
+		DOM.setElementAttribute(trashTab.getElement(), "id", "trashtab");
+		menuBar.addItem(trashTab);
 		
 		//Home panel
 		this.addStyleName("homeView");
