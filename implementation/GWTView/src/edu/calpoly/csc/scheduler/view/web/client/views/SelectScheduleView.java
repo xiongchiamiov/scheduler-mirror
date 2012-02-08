@@ -60,7 +60,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 		this.username = username;
 		this.newDocName = "Untitled";
 		this.scheduleNames = new ArrayList<String>();
-
+		
 		//Put tabs in menu bar
 		MenuItem homeTab = new MenuItem("Home", true, new Command() {
 			@Override
@@ -119,7 +119,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
                         @Override
                         public void onSuccess(Integer newSchedID) {
                            popup.hide();
-                    	   myFrame.frameViewAndPushAboveMe(new AdminScheduleNavView(service, menuBar, username, newSchedID, newDocName));
+                           myFrame.frameViewAndPushAboveMe(new AdminScheduleNavView(service, menuBar, username, newSchedID, newDocName));
                         }
                      });
                   }
@@ -200,7 +200,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 	   doc.setHorizontalAlignment(ALIGN_LEFT);
 	   doc.add(new CheckBox());
 	   FocusPanel docname = new FocusPanel();
-	   docname.add(new HTML("<a href=\"\">" + name + "</a>"));
+	   docname.add(new HTML(name));
 	   docname.addClickHandler(new ClickHandler()
       {
          @Override
