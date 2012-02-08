@@ -33,6 +33,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
+import edu.calpoly.csc.scheduler.view.web.client.HTMLUtilities;
 import edu.calpoly.csc.scheduler.view.web.client.IViewContents;
 import edu.calpoly.csc.scheduler.view.web.client.Import;
 import edu.calpoly.csc.scheduler.view.web.client.ViewFrame;
@@ -183,7 +184,12 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
 	   doc.setHorizontalAlignment(ALIGN_LEFT);
 	   doc.add(new CheckBox());
 	   FocusPanel docname = new FocusPanel();
-	   docname.add(new HTML(name));
+	   docname.add(HTMLUtilities.createLink(name, "inAppLink", new ClickHandler()
+	   {
+			@Override
+			public void onClick(ClickEvent event) {
+			}
+		}));
 	   docname.addClickHandler(new ClickHandler()
       {
          @Override
