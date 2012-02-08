@@ -225,15 +225,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
 			public void onFailure(Throwable caught) {
 				popup.hide();
 
-				System.out.println("selectSchedule onFailure");
-				
-				// This is a workaround, see http://code.google.com/p/google-web-toolkit/issues/detail?id=2858
-				if (caught instanceof StatusCodeException && ((StatusCodeException)caught).getStatusCode() == 0) {
-					// Do nothing
-				}
-				else {
-					Window.alert("Failed to open schedule in: " + caught.getMessage());
-				}
+				Window.alert("Failed to open schedule in: " + caught.getMessage());
 			}
 			@Override
 			public void onSuccess(String name) {
