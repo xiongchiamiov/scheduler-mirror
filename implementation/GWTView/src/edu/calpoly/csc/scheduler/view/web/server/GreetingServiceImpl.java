@@ -23,7 +23,6 @@ import edu.calpoly.csc.scheduler.view.web.client.GreetingService;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.Pair;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemList;
 import edu.calpoly.csc.scheduler.view.web.shared.UserDataGWT;
@@ -65,11 +64,10 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	// Returns 1, instructor if its an instructor
 	// Returns 2, null if its a admin
 	@Override
-	public Pair<Integer, InstructorGWT> openExistingSchedule(int scheduleID) {
-		System.out.println("openexistingschedule service begin");
+	public String openExistingSchedule(int scheduleID) {
+		System.out.println("GreetingServiceImpl.openExistingSchedule(" + scheduleID + ")");
 		model.openExistingSchedule(scheduleID);
-		System.out.println("openexistingschedule service end");
-		return new Pair<Integer, InstructorGWT>(2, null); // tyero, change this
+		return model.getSchedule().getName();
 	}
 
 	@Override
@@ -317,13 +315,6 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
-	public int copySchedule(int existingScheduleID, String scheduleName) {
-		int newSchedule = model.copySchedule(existingScheduleID, scheduleName);
-		openExistingSchedule(newSchedule);
-		return newSchedule;
-	}
-
-	@Override
 	public ArrayList<ScheduleItemGWT> removeScheduleItem(ScheduleItemGWT removed, HashMap<String, ScheduleItemGWT> scheduleItems) {
 		String schdItemKey = removed.getDept() + removed.getCatalogNum()
 				+ removed.getSection();
@@ -490,5 +481,14 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		}
 		
 		assert(false);
+	}
+
+	@Override
+	public Integer saveCurrentScheduleAsAndOpen(String scheduleName, boolean allowOverwrite) {
+		// TODO: enforce allowOverwrite
+		
+		int newSchedule = model.copySchedule(model.getScheduleID(), scheduleName);
+		openExistingSchedule(newSchedule);
+		return newSchedule;
 	}
 }

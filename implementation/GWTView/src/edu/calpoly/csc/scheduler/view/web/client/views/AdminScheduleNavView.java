@@ -5,7 +5,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FocusPanel;
@@ -28,17 +27,27 @@ import edu.calpoly.csc.scheduler.view.web.client.views.resources.instructors.Ins
 import edu.calpoly.csc.scheduler.view.web.client.views.resources.locations.LocationsView;
 
 public class AdminScheduleNavView extends SimplePanel implements IViewContents {
+	public interface OtherFilesStrategy {
+		void fileNewPressed();
+		void fileOpenPressed();
+		void fileImportPressed();
+		void fileMergePressed();
+		void fileSaveAsPressed(Integer existingDocumentID);
+	}
+	
 	final GreetingServiceAsync service;
 	final String username;
 	final Integer scheduleID;
 	final String scheduleName;
 	final MenuBar menuBar;
+	final OtherFilesStrategy otherFilesStrategy;
 	
 	MenuBar fileMenu, settingsMenu;
 	MenuItem instructorsMenuItem, locationsMenuItem, coursesMenuItem, scheduleMenuItem;
 
-	public AdminScheduleNavView(GreetingServiceAsync service, MenuBar MenuBar,
+	public AdminScheduleNavView(GreetingServiceAsync service, OtherFilesStrategy otherFilesStrategy, MenuBar MenuBar,
 			String username, Integer scheduleID, String scheduleName) {
+		this.otherFilesStrategy = otherFilesStrategy;
 		this.service = service;
 		this.username = username;
 		this.scheduleID = scheduleID;
@@ -88,29 +97,7 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 		
 		MenuItem newItem = new MenuItem("New", true, new Command() {
 			public void execute() {
-				final String tempName = "Untitled";
-				final LoadingPopup popup = new LoadingPopup();
-				
-				DOM.setElementAttribute(popup.getElement(), "id", "failOpenSched");
-				
-				popup.show();
-				
-				service.openNewSchedule(tempName, new AsyncCallback<Integer>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						popup.hide();
-						Window.alert("Failed to open new schedule in: " + caught.getMessage());
-					}
-					
-					@Override
-					public void onSuccess(Integer newSchedID) {
-						popup.hide();
-						if (viewFrame.canPopViewsAboveMe()) {
-							viewFrame.popFramesAboveMe();
-							viewFrame.frameViewAndPushAboveMe(new AdminScheduleNavView(service, menuBar, username, newSchedID, tempName));
-						}
-					}
-				});
+				otherFilesStrategy.fileNewPressed();
 			}
 		});
 		DOM.setElementAttribute(newItem.getElement(), "id", "newItem");
@@ -118,7 +105,7 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 
 		MenuItem importItem = new MenuItem("Import", true, new Command() {
 			public void execute() {
-				Import.showImport();
+				otherFilesStrategy.fileImportPressed();
 			}
 		});
 
@@ -127,8 +114,7 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 		
 		MenuItem saveAsItem = new MenuItem("Save As...", true, new Command() {
 			public void execute() {
-				Window.alert("implement");
-//				displaySaveAsPopup();
+				otherFilesStrategy.fileSaveAsPressed(scheduleID);
 			}
 		});
 		
@@ -137,25 +123,7 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 		
 		MenuItem exportItem = new MenuItem("Export...", true, new Command() {
 			public void execute() {
-//				Window.alert("implement");
-				
 				displayExportPopup();
-				
-				//TODO add to export popup box
-				/*
-				service.exportCSV(new AsyncCallback<Integer>() {
-					public void onFailure(Throwable caught) {
-						Window.alert("Error exporting to CSV: 1");
-					}
-					public void onSuccess(Integer result) {
-						if(result == null)
-							Window.alert("Error exporting to CSV: 2");
-						else
-							Window.Location.replace("export?"
-								+ "param" + "=" + result);
-					}
-				});
-			    */
 			}
 			
 		});
@@ -165,8 +133,7 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 		
 		MenuItem mergeItem = new MenuItem("Merge", true, new Command() {
 			public void execute() {
-				Window.alert("implement");
-//				displayMergePopup();
+				otherFilesStrategy.fileMergePressed();
 			}
 		});
 		

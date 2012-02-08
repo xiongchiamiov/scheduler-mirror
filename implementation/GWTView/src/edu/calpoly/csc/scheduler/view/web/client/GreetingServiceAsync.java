@@ -23,7 +23,7 @@ public interface GreetingServiceAsync {
 	void openNewSchedule(String newScheduleName, AsyncCallback<Integer> callback) throws IllegalArgumentException;
 	void openExistingSchedule(
 			int scheduleID,
-			AsyncCallback<edu.calpoly.csc.scheduler.view.web.shared.Pair<Integer, InstructorGWT>> asyncCallback);
+			AsyncCallback<String> asyncCallback);
 	void removeSchedule(String schedName, AsyncCallback<Void> callback) throws IllegalArgumentException;
 
 	void getInstructors(AsyncCallback<List<InstructorGWT>> callback) throws IllegalArgumentException;
@@ -41,11 +41,9 @@ public interface GreetingServiceAsync {
 			AsyncCallback<List<ScheduleItemGWT>> scheduleItems);
     void getSchedule(HashMap<String, ScheduleItemGWT> scheduleItems, AsyncCallback<List<ScheduleItemGWT>> asyncCallback);
 	void saveSchedule(AsyncCallback<Void> hollaBack);
-    void copySchedule(int existingScheduleID, String scheduleName,
-			AsyncCallback<Integer> asyncCallback);
 	void exportCSV(AsyncCallback<Integer> asyncCallback);
 	
-	void saveCurrentScheduleAs(String schedName, AsyncCallback<Void> callback);
+//	void saveCurrentScheduleAs(String schedName, AsyncCallback<Void> callback);
 	
 	void addCourse(CourseGWT toAdd, AsyncCallback<CourseGWT> callback);
 	void editCourse(CourseGWT toEdit, AsyncCallback<Void> callback);
@@ -56,4 +54,6 @@ public interface GreetingServiceAsync {
 	void addLocation(LocationGWT toAdd, AsyncCallback<LocationGWT> callback);
 	void editLocation(LocationGWT toEdit, AsyncCallback<Void> callback);
 	void removeLocation(Integer toRemoveID, AsyncCallback<Void> callback);
+	void saveCurrentScheduleAsAndOpen(String scheduleName, boolean allowOverwrite,
+			AsyncCallback<Integer> asyncCallback);
 }

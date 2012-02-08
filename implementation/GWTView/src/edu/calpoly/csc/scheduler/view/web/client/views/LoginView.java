@@ -69,7 +69,7 @@ public class LoginView extends VerticalPanel implements IViewContents {
 		this.add(login);	
 	}
 
-	private void submitLogin(final String username) {
+	protected void submitLogin(final String username) {
 		if ("".equals(username)) {
 			Window.alert("Please enter a username.");
 			return;
@@ -87,7 +87,8 @@ public class LoginView extends VerticalPanel implements IViewContents {
 			@Override
 			public void onSuccess(Void derp) {
 				popup.hide();
-				loggedIn(username);
+				LoginView.this.username = username;
+				pushSelectScheduleView(username);
 			}
 			
 			@Override
@@ -98,11 +99,8 @@ public class LoginView extends VerticalPanel implements IViewContents {
 		});
 	}
 	
-	private void loggedIn(String username) {
-		this.username = username;
-		
+	protected void pushSelectScheduleView(String username) {
 		assert(myFrame.canPopViewsAboveMe());
-		
 		myFrame.popFramesAboveMe();
 		myFrame.frameViewAndPushAboveMe(new SelectScheduleView(service, menuBar, username));
 	}

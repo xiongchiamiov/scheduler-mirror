@@ -27,8 +27,7 @@ public interface GreetingService extends RemoteService {
 	// Managing Schedules
 	Map<String, UserDataGWT> getScheduleNames();
 	Integer openNewSchedule(String newScheduleName);
-	Pair<Integer, InstructorGWT> openExistingSchedule(int scheduleID);
-	int copySchedule(int existingScheduleID, String scheduleName);
+	String openExistingSchedule(int scheduleID);
 	void removeSchedule(String schedName);
 
 	// Instructors
@@ -47,8 +46,6 @@ public interface GreetingService extends RemoteService {
 	List<ScheduleItemGWT> getSchedule(HashMap<String, ScheduleItemGWT> scheduleItems);
 	void saveSchedule();
 	int exportCSV();
-	
-	void saveCurrentScheduleAs(String schedName);
 
 	CourseGWT addCourse(CourseGWT toAdd);
 
@@ -67,4 +64,6 @@ public interface GreetingService extends RemoteService {
 	void editLocation(LocationGWT toEdit);
 
 	void removeLocation(Integer toRemoveID);
+
+	Integer saveCurrentScheduleAsAndOpen(String scheduleName, boolean allowOverwrite);
 }

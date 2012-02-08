@@ -34,13 +34,14 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.client.IViewContents;
+import edu.calpoly.csc.scheduler.view.web.client.Import;
 import edu.calpoly.csc.scheduler.view.web.client.ViewFrame;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.Pair;
 import edu.calpoly.csc.scheduler.view.web.shared.UserDataGWT;
 
-public class SelectScheduleView extends VerticalPanel implements IViewContents {
-	private final GreetingServiceAsync service;
+public class SelectScheduleView extends VerticalPanel implements IViewContents, AdminScheduleNavView.OtherFilesStrategy {
+	protected final GreetingServiceAsync service;
 	
 	private final MenuBar menuBar;
 	
@@ -106,39 +107,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 		Button newSchedButton = new Button("Create New Schedule", new ClickHandler() {
 		   @Override
 		   public void onClick(ClickEvent event) {
-		      displayNewSchedPopup("Create", new NameScheduleCallback()
-            {
-               @Override
-               public void namedSchedule(final String name)
-               {
-                  if(!scheduleNames.contains(name))
-                  {
-                     newDocName = name;
-                     final LoadingPopup popup = new LoadingPopup();
-                     popup.show();
-                     
-                     DOM.setElementAttribute(popup.getElement(), "id", "failSchedPopup");
-                     
-                     service.openNewSchedule(newDocName, new AsyncCallback<Integer>() {
-                        @Override
-                        public void onFailure(Throwable caught) {
-                           popup.hide();
-                           Window.alert("Failed to open new schedule in: " + caught.getMessage());
-                        }
-                        
-                        @Override
-                        public void onSuccess(Integer newSchedID) {
-                           popup.hide();
-                           myFrame.frameViewAndPushAboveMe(new AdminScheduleNavView(service, menuBar, username, newSchedID, newDocName));
-                        }
-                     });
-                  }
-                  else
-                  {
-                     Window.alert("Error: Schedule named " + name + " already exists. Please enter a different name.");
-                  }
-               }
-            });
+			   createNewSchedule();
 		   }
 		});
 		DOM.setElementAttribute(newSchedButton.getElement(), "id", "newScheduleButton");
@@ -200,9 +169,13 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 				   scheduleNames.add(scheduleName);
 				}
 				
+				doneAddingDocuments();
 			}
 		});
 	}
+	
+	// For subclasses
+	protected void doneAddingDocuments() { }
 	
 	private void addNewDocument(final String name, final String scheduleid)
 	{
@@ -226,7 +199,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 	   vdocholder.add(doc);
 	}
 	
-	public static native void openInNewWindow(String url, String scheduleDBID) /*-{
+	private static native void openInNewWindow(String url, String scheduleDBID) /*-{
 	   window.open(url, 'target=schedule' + scheduleDBID);
 	}-*/;
 	
@@ -247,7 +220,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 		
 		System.out.println("SelectScheduleView.selectSchedule(" + scheduleID + ", " + scheduleName + ")");
 		
-		service.openExistingSchedule(scheduleID, new AsyncCallback<Pair<Integer, InstructorGWT>>() {
+		service.openExistingSchedule(scheduleID, new AsyncCallback<String>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				popup.hide();
@@ -263,34 +236,14 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 				}
 			}
 			@Override
-			public void onSuccess(Pair<Integer, InstructorGWT> permissionAndInstructor) {
+			public void onSuccess(String name) {
 				popup.hide();
 				
 				System.out.println("selectSchedule onSuccess");
 
-				openSchedule(scheduleID, scheduleName, permissionAndInstructor.getLeft(), permissionAndInstructor.getRight());
+				openLoadedSchedule(scheduleID, scheduleName);
 			}
 		});
-	}
-	
-	protected void openSchedule(Integer scheduleID, String scheduleName, Integer permissionLevel, InstructorGWT instructor) {
-		if (myFrame.canPopViewsAboveMe()) {
-			myFrame.popFramesAboveMe();
-			
-			switch (permissionLevel) {
-			case 0: // todo: enumify
-				myFrame.frameViewAndPushAboveMe(new GuestScheduleNavView(service, menuBar, scheduleName));
-				break;
-			case 1: // todo: enumify
-				myFrame.frameViewAndPushAboveMe(new InstructorScheduleNavView(service, menuBar, scheduleName, instructor));
-				break;
-			case 2: // todo: enumify
-				myFrame.frameViewAndPushAboveMe(new AdminScheduleNavView(service, menuBar, username, scheduleID, scheduleName));
-				break;
-			default:
-				assert(false);
-			}
-		}
 	}
 
 	interface NameScheduleCallback {
@@ -302,7 +255,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 	 * @param buttonLabel
 	 * @param callback
 	 */
-	public void displayNewSchedPopup(String buttonLabel, final NameScheduleCallback callback) {
+	private void displayNewSchedPopup(String buttonLabel, final NameScheduleCallback callback) {
 		final TextBox tb = new TextBox();
 		final DialogBox db = new DialogBox(false);
 		FlowPanel fp = new FlowPanel();
@@ -344,7 +297,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 	/**
 	 * Displays a popup for selecting and opening a previously saved schedule.
 	 */
-	public void displayOpenPopup() {
+	private void displayOpenPopup() {
 		final DialogBox db = new DialogBox();
 		FlowPanel fp = new FlowPanel();
 		final ListBox listBox = new ListBox();
@@ -397,36 +350,40 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 	/**
 	 * Displays a popup to save the schedule under a different name.
 	 */
-	public void displaySaveAsPopup() {
+	private void displaySaveAsPopup() {
 		final ListBox saveAsListBox = new ListBox();
 		final ArrayList<String> schedNames = new ArrayList<String>();
 		final TextBox tb = new TextBox();
 		final DialogBox db = new DialogBox();
 		FlowPanel fp = new FlowPanel();
+		
 		final Button saveButton = new Button("Save", new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {			
-			    final String scheduleName = tb.getText();
-			    
-			    if(!scheduleName.isEmpty()) {
-			    
-			        if(schedNames.contains(scheduleName)) {
-			    	    boolean result = Window.confirm("The schedule \"" + scheduleName + "\" already exists.  Are you sure you want to replace it?");
-			    	
-			    	    if(result) {
-			    		    //Save the schedule
-			    	    	service.removeSchedule(scheduleName, null);
-			    	    	service.saveCurrentScheduleAs(scheduleName, null);
-			    	    }
-			        }
-			        else {
-			        	service.saveCurrentScheduleAs(scheduleName, null);
-			        }
-			    }
-			    
-				db.hide();
-			}
-		});
+		@Override
+		public void onClick(ClickEvent event) {		
+			db.hide();
+			
+		    final String scheduleName = tb.getText();
+		    if(scheduleName.isEmpty())
+		    	return;
+
+		    boolean allowOverwrite = false;
+	    	if (schedNames.contains(scheduleName)) {
+	    		if (Window.confirm("The schedule \"" + scheduleName + "\" already exists.  Are you sure you want to replace it?"))
+	    			allowOverwrite = true;
+	    		else
+	    			return;
+	    	}
+	    	
+        	service.saveCurrentScheduleAsAndOpen(scheduleName, allowOverwrite, new AsyncCallback<Integer>() {
+				public void onFailure(Throwable caught) {
+					Window.alert("Failed to save schedule: " + caught.getMessage());
+				}
+				public void onSuccess(Integer newScheduleID) {
+					openLoadedSchedule(newScheduleID, scheduleName);
+				}
+			});
+		}
+	});
 		
 		final Button cancelButton = new Button("Cancel", new ClickHandler() {
 			@Override
@@ -477,10 +434,36 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 		db.show();
 	}
 	
-	/**
-	 * Display popup to merge schedules together
-	 */
-	public void displayMergePopup() {
+	@Override
+	public boolean canPop() { return true; }
+	
+	@Override
+	public void beforeViewPushedAboveMe() { }
+	
+	@Override
+	public void afterViewPoppedFromAboveMe() { }
+	
+	@Override
+	public Widget getContents() { return this; }
+
+	@Override
+	public void fileNewPressed() {
+		createNewSchedule();
+	}
+
+	@Override
+	public void fileOpenPressed() {
+		Window.alert("implement");
+	}
+
+	@Override
+	public void fileImportPressed() {
+		Import.showImport();
+	}
+
+	@Override
+	public void fileMergePressed() {
+
 		final ArrayList<CheckBox> checkBoxList = new ArrayList<CheckBox>();
 		final DialogBox db = new DialogBox();
 		final VerticalPanel vp = new VerticalPanel();
@@ -543,14 +526,140 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents {
 	}
 
 	@Override
-	public boolean canPop() { return true; }
+	public void fileSaveAsPressed(Integer existingDocumentID) {
+		final ListBox saveAsListBox = new ListBox();
+		final ArrayList<String> schedNames = new ArrayList<String>();
+		final TextBox tb = new TextBox();
+		final DialogBox db = new DialogBox();
+		FlowPanel fp = new FlowPanel();
+		final Button saveButton = new Button("Save", new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {		
+				db.hide();
+				
+			    final String scheduleName = tb.getText();
+			    if(scheduleName.isEmpty())
+			    	return;
+
+			    boolean allowOverwrite = false;
+		    	if (schedNames.contains(scheduleName)) {
+		    		if (Window.confirm("The schedule \"" + scheduleName + "\" already exists.  Are you sure you want to replace it?"))
+		    			allowOverwrite = true;
+		    		else
+		    			return;
+		    	}
+		    	
+	        	service.saveCurrentScheduleAsAndOpen(scheduleName, allowOverwrite, new AsyncCallback<Integer>() {
+					public void onFailure(Throwable caught) {
+						Window.alert("Failed to save schedule: " + caught.getMessage());
+					}
+					public void onSuccess(Integer newScheduleID) {
+						openLoadedSchedule(newScheduleID, scheduleName);
+					}
+				});
+			}
+		});
+		
+		final Button cancelButton = new Button("Cancel", new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				db.hide();
+			}
+		});
+		
+		tb.addKeyPressHandler(new KeyPressHandler() {
+			@Override
+			public void onKeyPress(KeyPressEvent event) {
+				if (event.getCharCode() == KeyCodes.KEY_ENTER)
+					saveButton.click();
+			}
+		});
+		
+		service.getScheduleNames(new AsyncCallback<Map<String,UserDataGWT>>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert("Failed to open schedule in: " + caught.getMessage());
+			}
+			
+			@Override
+			public void onSuccess(Map<String,UserDataGWT> result) {
+				for(String name : result.keySet()) {
+					saveAsListBox.addItem(name);
+					schedNames.add(name);
+				}
+			}
+		});
+		
+		db.setText("Name Schedule");
+		fp.add(new HTML("<center>Specify a name to save the schedule as...</center>"));
+		saveAsListBox.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				tb.setText(saveAsListBox.getValue(saveAsListBox.getSelectedIndex()));
+			}
+		});
+		saveAsListBox.setVisibleItemCount(5);
+		fp.add(saveAsListBox);
+		fp.add(tb);
+		fp.add(saveButton);
+		fp.add(cancelButton);
+		
+		db.setWidget(fp);
+		db.center();
+		db.show();
+	}
 	
-	@Override
-	public void beforeViewPushedAboveMe() { }
-	
-	@Override
-	public void afterViewPoppedFromAboveMe() { }
-	
-	@Override
-	public Widget getContents() { return this; }
+
+	private void createNewSchedule() {
+
+	      displayNewSchedPopup("Create", new NameScheduleCallback()
+      {
+         @Override
+         public void namedSchedule(final String name)
+         {
+            if(!scheduleNames.contains(name))
+            {
+               newDocName = name;
+               final LoadingPopup popup = new LoadingPopup();
+               popup.show();
+               
+               DOM.setElementAttribute(popup.getElement(), "id", "failSchedPopup");
+               
+               service.openNewSchedule(newDocName, new AsyncCallback<Integer>() {
+                  @Override
+                  public void onFailure(Throwable caught) {
+                     popup.hide();
+                     Window.alert("Failed to open new schedule in: " + caught.getMessage());
+                  }
+                  
+                  @Override
+                  public void onSuccess(Integer newSchedID) {
+                     popup.hide();
+                     openLoadedSchedule(newSchedID, name);
+                  }
+               });
+            }
+            else
+            {
+               Window.alert("Error: Schedule named " + name + " already exists. Please enter a different name.");
+            }
+         }
+      });
+	}
+
+	protected void openLoadedSchedule(Integer scheduleID, String scheduleName) {
+		System.out.println("openloadedschedule?");
+		
+		if (myFrame.canPopViewsAboveMe()) {
+			System.out.println("canpop");
+			
+			myFrame.popFramesAboveMe();
+			System.out.println("popped");
+			
+			myFrame.frameViewAndPushAboveMe(new AdminScheduleNavView(service, this, menuBar, username, scheduleID, scheduleName));
+			System.out.println("pushed");
+			
+		}
+	}
+
 }
