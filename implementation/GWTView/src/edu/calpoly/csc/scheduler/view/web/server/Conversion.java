@@ -270,7 +270,7 @@ public abstract class Conversion {
 
 	public static LocationGWT toGWT(Location location) {
 		return new LocationGWT(location.getDbid(), location.getBuilding(), location.getRoom(),
-				location.getType(), location.getMaxOccupancy(),
+				location.getType(), Integer.toString(location.getMaxOccupancy()),
 				location.getAdaCompliant(),
 				toGWT(location.getProvidedEquipment()));
 	}

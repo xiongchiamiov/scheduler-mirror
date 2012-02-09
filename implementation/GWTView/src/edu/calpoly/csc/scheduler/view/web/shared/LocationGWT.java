@@ -35,13 +35,13 @@ public class LocationGWT implements Serializable, Identified {
 	private String building;
 	private String room;
 	private String type;
-	private int maxOccupancy;
+	private String maxOccupancy;
 	private boolean adacompliant;
 	private ProvidedEquipmentGWT equipment;
 	
 	public LocationGWT() { }
 
-	public LocationGWT(int id, String building, String room, String type, int maxOccupancy, boolean adacompliant, ProvidedEquipmentGWT equipment) {
+	public LocationGWT(int id, String building, String room, String type, String maxOccupancy, boolean adacompliant, ProvidedEquipmentGWT equipment) {
 		super();
 		this.id = id;
 		this.building = building;
@@ -77,8 +77,20 @@ public class LocationGWT implements Serializable, Identified {
 	public void setRoom(String room) { this.room = room; }
 	public String getType() { return type; }
 	public void setType(String type) { this.type = type; }
-	public int getMaxOccupancy() { return maxOccupancy; }
-	public void setMaxOccupancy(int maxOccupancy) { this.maxOccupancy = maxOccupancy; }
+	public String getRawMaxOccupancy() { return maxOccupancy; }
+	public int getMaxOccupancy() {
+		try { return Integer.parseInt(maxOccupancy); }
+		catch (NumberFormatException e) { return 0; }
+	}
+	public void setMaxOccupancy(String maxOccupancy) { this.maxOccupancy = maxOccupancy; }
 	public ProvidedEquipmentGWT getEquipment() { return equipment; }
 	public void setEquipment(ProvidedEquipmentGWT equipment) { this.equipment = equipment; }
+	
+	@Override
+	public int hashCode() { return getID(); }
+	
+	@Override
+	public boolean equals(Object obj) {
+		return ((LocationGWT)obj).getID() == getID();
+	}
 }

@@ -26,9 +26,9 @@ public class LocationsView extends VerticalPanel implements IViewContents, Locat
 	int transactionsPending = 0;
 	Map<Integer, Integer> realIDsByTableID = new HashMap<Integer, Integer>();
 	
-	final ArrayList<Integer> deletedTableLocationIDs = new ArrayList<Integer>();
-	final ArrayList<LocationGWT> editedTableLocations = new ArrayList<LocationGWT>();
-	final ArrayList<LocationGWT> addedTableLocations = new ArrayList<LocationGWT>();
+	ArrayList<Integer> deletedTableLocationIDs = new ArrayList<Integer>();
+	ArrayList<LocationGWT> editedTableLocations = new ArrayList<LocationGWT>();
+	ArrayList<LocationGWT> addedTableLocations = new ArrayList<LocationGWT>();
 	
 	private int generateTableLocationID() {
 		return nextTableLocationID--;
@@ -81,7 +81,7 @@ public class LocationsView extends VerticalPanel implements IViewContents, Locat
 
 	@Override
 	public LocationGWT createLocation() {
-		LocationGWT location = new LocationGWT(generateTableLocationID(), "", "", "LEC", 20, false, new LocationGWT.ProvidedEquipmentGWT());
+		LocationGWT location = new LocationGWT(generateTableLocationID(), "", "", "LEC", "20", false, new LocationGWT.ProvidedEquipmentGWT());
 		
 		addedTableLocations.add(location);
 		
@@ -98,6 +98,7 @@ public class LocationsView extends VerticalPanel implements IViewContents, Locat
 	public void onLocationEdited(LocationGWT location) {
 		assert(!deletedTableLocationIDs.contains(location.getID()));
 		
+		System.out.println("Contains " + location.getID() + "? " + realIDsByTableID.containsKey(location.getID()));
 		if (realIDsByTableID.containsKey(location.getID())) {
 			// exists on remote side
 			if (!editedTableLocations.contains(location))
@@ -106,7 +107,7 @@ public class LocationsView extends VerticalPanel implements IViewContents, Locat
 		else {
 			// doesnt exist on remote side
 			// do nothing, its already on the add list.
-			assert(addedTableLocations.contains(location));
+//			assert(addedTableLocations.contains(location));
 		}
 		
 		sendUpdates();
@@ -128,10 +129,21 @@ public class LocationsView extends VerticalPanel implements IViewContents, Locat
 	}
 
 	private void sendUpdates() {
-		assert(transactionsPending == 0);
+		if (transactionsPending > 0)
+			return;
+		
 		transactionsPending = deletedTableLocationIDs.size() + editedTableLocations.size() + addedTableLocations.size();
 		if (transactionsPending == 0)
 			return;
+
+		final ArrayList<Integer> copyOfDeletedTableLocationIDs = deletedTableLocationIDs;
+		deletedTableLocationIDs = new ArrayList<Integer>();
+		
+		final ArrayList<LocationGWT> copyOfEditedTableLocations = editedTableLocations;
+		editedTableLocations = new ArrayList<LocationGWT>();
+		
+		final ArrayList<LocationGWT> copyOfAddedTableLocations = addedTableLocations;
+		addedTableLocations = new ArrayList<LocationGWT>();
 		
 		for (Integer deletedTableLocationID : deletedTableLocationIDs) {
 			Integer realLocationID = realIDsByTableID.get(deletedTableLocationID);
@@ -157,6 +169,7 @@ public class LocationsView extends VerticalPanel implements IViewContents, Locat
 			realLocation.setID(-1);
 			service.addLocation(realLocation, new AsyncCallback<LocationGWT>() {
 				public void onSuccess(LocationGWT result) {
+					System.out.println("Putting " + tableLocationID + " into realIDsByTableID");
 					realIDsByTableID.put(tableLocationID, result.getID());
 					updateFinished();
 				}
@@ -164,9 +177,9 @@ public class LocationsView extends VerticalPanel implements IViewContents, Locat
 			});
 		}
 		
-		deletedTableLocationIDs.clear();
-		editedTableLocations.clear();
-		addedTableLocations.clear();
+		copyOfDeletedTableLocationIDs.clear();
+		copyOfEditedTableLocations.clear();
+		copyOfAddedTableLocations.clear();
 	}
 	
 	private void updateFinished() {

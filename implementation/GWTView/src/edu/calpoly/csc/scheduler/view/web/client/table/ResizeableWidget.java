@@ -73,7 +73,8 @@ class ResizeableWidget extends FlowPanel {
 
 	public void updateWidth() {
 		setWidth(callback.getWidth() + "px");
-		
-		assert(getOffsetWidth() == callback.getWidth());
+
+		// Mac chrome seems to be off by one
+		assert(Math.abs(getOffsetWidth() - callback.getWidth()) <= 1);
 	}
 }

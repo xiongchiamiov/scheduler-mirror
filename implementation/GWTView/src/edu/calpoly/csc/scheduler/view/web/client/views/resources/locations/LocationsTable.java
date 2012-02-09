@@ -14,21 +14,22 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import edu.calpoly.csc.scheduler.view.web.client.table.IFactory;
 import edu.calpoly.csc.scheduler.view.web.client.table.IStaticGetter;
 import edu.calpoly.csc.scheduler.view.web.client.table.IStaticSetter;
+import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
+import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator.InputValid;
+import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator.InputWarning;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.ObjectChangedObserver;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.DeleteColumn.DeleteObserver;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingCheckboxColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingMultiselectColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingSelectColumn;
+import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingStringColumn;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
 
 public class LocationsTable extends SimplePanel {
 	private static final String LAPTOP_CONNECTIVITY = "LAPCON";
 	private static final String OVERHEAD = "OVERHEAD";
 	private static final String SMART_ROOM = "SMART";
-	
-	private static final String BUILDING_HEADER = "Building";
-	private static final String BUILDING_WIDTH = null;
 	
 	private static final String ROOM_HEADER = "Room";
 	private static final String ROOM_WIDTH = null;
@@ -103,54 +104,32 @@ public class LocationsTable extends SimplePanel {
 	
 	void addFieldColumns() {
 
-//		table.addColumn(
-//				BUILDING_HEADER,
-//				BUILDING_WIDTH,
-//				true,
-//				new Comparator<LocationGWT>() {
-//					public int compare(LocationGWT o1, LocationGWT o2) {
-//						return o1.getBuilding().compareTo(o2.getBuilding());
-//					}
-//				},
-//				new EditingStringColumn<LocationGWT>(
-//						new IStaticGetter<LocationGWT, String>() {
-//							public String getValueForObject(LocationGWT object) { return object.getBuilding(); }
-//						},
-//						new IStaticSetter<LocationGWT, String>() {
-//							public void setValueInObject(LocationGWT object, String newValue) { object.setBuilding(newValue); }
-//						},
-//						new IStaticValidator<LocationGWT, String>() {
-//							public void validate(LocationGWT object, String newBuilding) throws InvalidValueException {
-//								LocationGWT locationAtPlace = locationExists(newBuilding, object.getRoom());
-//								if (locationAtPlace != null && locationAtPlace != object)
-//									throw new InvalidValueException("Location " + newBuilding + "-" + object.getRoom() + " already exists.");
-//							}
-//						}));
-//
-//		table.addColumn(
-//				ROOM_HEADER,
-//				ROOM_WIDTH,
-//				true,
-//				new Comparator<LocationGWT>() {
-//					@Override
-//					public int compare(LocationGWT o1, LocationGWT o2) {
-//						return o1.getRoom().compareToIgnoreCase(o2.getRoom());
-//					}
-//				},
-//				new EditingStringColumn<LocationGWT>(
-//						new IStaticGetter<LocationGWT, String>() {
-//							public String getValueForObject(LocationGWT object) { return object.getRoom(); }
-//						},
-//						new IStaticSetter<LocationGWT, String>() {
-//							public void setValueInObject(LocationGWT object, String newValue) { object.setRoom(newValue); }
-//						},
-//						new IStaticValidator<LocationGWT, String>() {
-//							public void validate(LocationGWT object, String newRoom) throws InvalidValueException {
-//								LocationGWT locationAtPlace = locationExists(object.getBuilding(), newRoom);
-//								if (locationAtPlace != null && locationAtPlace != object)
-//									throw new InvalidValueException("Location " + object.getBuilding() + "-" + newRoom + " already exists.");
-//							}
-//						}));
+		table.addColumn(
+				ROOM_HEADER,
+				ROOM_WIDTH,
+				true,
+				new Comparator<LocationGWT>() {
+					@Override
+					public int compare(LocationGWT o1, LocationGWT o2) {
+						return o1.getRoom().compareToIgnoreCase(o2.getRoom());
+					}
+				},
+				new EditingStringColumn<LocationGWT>(
+						new IStaticGetter<LocationGWT, String>() {
+							public String getValueForObject(LocationGWT object) { return object.getRoom(); }
+						},
+						new IStaticSetter<LocationGWT, String>() {
+							public void setValueInObject(LocationGWT object, String newValue) { object.setRoom(newValue); }
+						},
+						new IStaticValidator<LocationGWT, String>() {
+							@Override
+							public ValidateResult validate(LocationGWT object, String newRoom) {
+								LocationGWT locationAtPlace = locationExists(object.getBuilding(), newRoom);
+								if (locationAtPlace != null && locationAtPlace != object)
+									return new InputInvalid("Location " + object.getBuilding() + "-" + newRoom + " already exists.");
+								return new InputValid();
+							}
+						}));
 		
 		table.addColumn(
 				TYPE_HEADER,
@@ -171,29 +150,38 @@ public class LocationsTable extends SimplePanel {
 							public void setValueInObject(LocationGWT object, String newValue) { object.setType(newValue); }
 						}));
 
-//		table.addColumn(
-//				MAX_OCCUPANCY_HEADER,
-//				MAX_OCCUPANCY_WIDTH,
-//				true,
-//				new Comparator<LocationGWT>() {
-//					@Override
-//					public int compare(LocationGWT o1, LocationGWT o2) {
-//						return o1.getMaxOccupancy() - o2.getMaxOccupancy();
-//					}
-//				},
-//				new EditingIntColumn<LocationGWT>(
-//						new IStaticGetter<LocationGWT, Integer>() {
-//							public Integer getValueForObject(LocationGWT object) { return object.getMaxOccupancy(); }
-//						},
-//						new IStaticSetter<LocationGWT, Integer>() {
-//							public void setValueInObject(LocationGWT object, Integer newValue) { object.setMaxOccupancy(newValue); }
-//						},
-//						new IStaticValidator<LocationGWT, Integer>() {
-//							public void validate(LocationGWT object, Integer newMaxOcc) throws InvalidValueException {
-//								if (newMaxOcc < 0)
-//									throw new InvalidValueException(MAX_OCCUPANCY_HEADER + " must be a positive: " + newMaxOcc + " is invalid.");
-//							}
-//						}));
+		table.addColumn(
+				MAX_OCCUPANCY_HEADER,
+				MAX_OCCUPANCY_WIDTH,
+				true,
+				new Comparator<LocationGWT>() {
+					@Override
+					public int compare(LocationGWT o1, LocationGWT o2) {
+						return o1.getMaxOccupancy() - o2.getMaxOccupancy();
+					}
+				},
+				new EditingStringColumn<LocationGWT>(
+						new IStaticGetter<LocationGWT, String>() {
+							public String getValueForObject(LocationGWT object) { return object.getRawMaxOccupancy(); }
+						},
+						new IStaticSetter<LocationGWT, String>() {
+							public void setValueInObject(LocationGWT object, String newValue) { object.setMaxOccupancy(newValue); }
+						},
+						new IStaticValidator<LocationGWT, String>() {
+							@Override
+							public ValidateResult validate(LocationGWT object, String newMaxOcc) {
+								int n;
+								try { n = Integer.parseInt(newMaxOcc); }
+								catch (NumberFormatException e) {
+									return new InputWarning(MAX_OCCUPANCY_HEADER + " must be an integer.");
+								}
+								
+								if (n < 0)
+									return new InputWarning(MAX_OCCUPANCY_HEADER + " must not be negative.");
+								
+								return new InputValid();
+							}
+						}));
 		
 		table.addColumn(
 				DISABILITIES_HEADER,
