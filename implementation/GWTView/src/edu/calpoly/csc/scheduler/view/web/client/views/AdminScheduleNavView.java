@@ -103,6 +103,36 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 		DOM.setElementAttribute(newItem.getElement(), "id", "newItem");
 		fileMenu.addItem(newItem);
 
+		MenuItem openItem = new MenuItem("Open", true, new Command() {
+			public void execute() {
+				otherFilesStrategy.fileOpenPressed();
+			}
+		});
+		DOM.setElementAttribute(openItem.getElement(), "id", "openItem");
+		fileMenu.addItem(openItem);
+		
+		fileMenu.addSeparator();
+		
+		MenuItem saveItem = new MenuItem("Save", true, new Command() {
+			public void execute() {
+				Window.alert("Not yet implemented");
+			}
+		});
+		
+		DOM.setElementAttribute(saveItem.getElement(), "id", "saveItem");
+		fileMenu.addItem(saveItem);
+		
+		MenuItem saveAsItem = new MenuItem("Save As", true, new Command() {
+			public void execute() {
+				otherFilesStrategy.fileSaveAsPressed(scheduleID);
+			}
+		});
+		
+		DOM.setElementAttribute(saveAsItem.getElement(), "id", "saveAsItem");
+		fileMenu.addItem(saveAsItem);
+		
+		fileMenu.addSeparator();
+		
 		MenuItem importItem = new MenuItem("Import", true, new Command() {
 			public void execute() {
 				otherFilesStrategy.fileImportPressed();
@@ -112,16 +142,7 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 		DOM.setElementAttribute(importItem.getElement(), "id", "importItem");
 		fileMenu.addItem(importItem);
 		
-		MenuItem saveAsItem = new MenuItem("Save As...", true, new Command() {
-			public void execute() {
-				otherFilesStrategy.fileSaveAsPressed(scheduleID);
-			}
-		});
-		
-		DOM.setElementAttribute(saveAsItem.getElement(), "id", "saveAsItem");
-		fileMenu.addItem(saveAsItem);
-		
-		MenuItem exportItem = new MenuItem("Export...", true, new Command() {
+		MenuItem exportItem = new MenuItem("Export", true, new Command() {
 			public void execute() {
 				displayExportPopup();
 			}
@@ -131,13 +152,25 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 		DOM.setElementAttribute(exportItem.getElement(), "id", "exportItem");
 		fileMenu.addItem(exportItem);
 		
+		fileMenu.addSeparator();
+		
+		MenuItem printItem = new MenuItem("Print", true, new Command() {
+			public void execute() {
+				Window.alert("Not yet implemented");
+			}
+		});
+		
+		DOM.setElementAttribute(printItem.getElement(), "id", "printItem");
+		fileMenu.addItem(printItem);
+		
+		
 		MenuItem mergeItem = new MenuItem("Merge", true, new Command() {
 			public void execute() {
 				otherFilesStrategy.fileMergePressed();
 			}
 		});
 		
-		DOM.setElementAttribute(saveAsItem.getElement(), "id", "mergeItem");
+		DOM.setElementAttribute(mergeItem.getElement(), "id", "mergeItem");
 		fileMenu.addItem(mergeItem);
 		
 //		fileMenuItem = new MenuItem("File v", true, fileMenu);
