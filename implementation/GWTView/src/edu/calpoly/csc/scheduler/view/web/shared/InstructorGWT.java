@@ -14,7 +14,7 @@ public class InstructorGWT implements Serializable, Identified {
 	private String username;
 	private String firstName, lastName;
 	private boolean disabilities;
-	private int maxwtu;
+	private String maxwtu;
 
 	Map<Integer, Map<Integer, TimePreferenceGWT>> tPrefs;
 
@@ -22,7 +22,7 @@ public class InstructorGWT implements Serializable, Identified {
 
 	public InstructorGWT(int id, String username, String firstName,
 			String lastName,
-			boolean disabilities, int maxwtu,
+			boolean disabilities, String maxwtu,
 			Map<Integer, Map<Integer, TimePreferenceGWT>> tPrefs,
 			HashMap<Integer, Integer> hashMap) {
 		super();
@@ -119,10 +119,15 @@ public class InstructorGWT implements Serializable, Identified {
 	}
 
 	public int getMaxWtu() {
+		try { return Integer.parseInt(maxwtu); }
+		catch (NumberFormatException e) { return 0; }
+	}
+	
+	public String getRawMaxWtu() {
 		return maxwtu;
 	}
 
-	public void setMaxWtu(int wtu) {
+	public void setMaxWtu(String wtu) {
 		this.maxwtu = wtu;
 	}
 

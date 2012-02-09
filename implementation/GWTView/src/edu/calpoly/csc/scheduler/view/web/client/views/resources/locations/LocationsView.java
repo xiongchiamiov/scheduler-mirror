@@ -16,6 +16,7 @@ import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.client.IViewContents;
 import edu.calpoly.csc.scheduler.view.web.client.ViewFrame;
 import edu.calpoly.csc.scheduler.view.web.client.views.LoadingPopup;
+import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.DayCombinationGWT;
 
@@ -60,7 +61,7 @@ public class LocationsView extends VerticalPanel implements IViewContents, Locat
 	}
 
 	@Override
-	public void getAllLocations(final AsyncCallback<List<LocationGWT>> callback) {
+	public void getInitialLocations(final AsyncCallback<List<LocationGWT>> callback) {
 		final LoadingPopup popup = new LoadingPopup();
 		popup.show();
 
@@ -73,6 +74,9 @@ public class LocationsView extends VerticalPanel implements IViewContents, Locat
 			public void onSuccess(List<LocationGWT> locations){
 				assert(locations != null);
 				popup.hide();
+
+				for (LocationGWT location : locations)
+					realIDsByTableID.put(location.getID(), location.getID());
 				
 				callback.onSuccess(locations);
 			}
@@ -97,18 +101,10 @@ public class LocationsView extends VerticalPanel implements IViewContents, Locat
 	@Override
 	public void onLocationEdited(LocationGWT location) {
 		assert(!deletedTableLocationIDs.contains(location.getID()));
-		
-		System.out.println("Contains " + location.getID() + "? " + realIDsByTableID.containsKey(location.getID()));
-		if (realIDsByTableID.containsKey(location.getID())) {
-			// exists on remote side
+
+		if (!addedTableLocations.contains(location))
 			if (!editedTableLocations.contains(location))
 				editedTableLocations.add(location);
-		}
-		else {
-			// doesnt exist on remote side
-			// do nothing, its already on the add list.
-//			assert(addedTableLocations.contains(location));
-		}
 		
 		sendUpdates();
 	}

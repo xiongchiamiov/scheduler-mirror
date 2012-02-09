@@ -26,9 +26,9 @@ public class InstructorsView extends VerticalPanel implements IViewContents, Ins
 	Map<Integer, Integer> realIDsByTableID = new HashMap<Integer, Integer>();
 	ViewFrame viewFrame;
 	
-	final ArrayList<Integer> deletedTableInstructorIDs = new ArrayList<Integer>();
-	final ArrayList<InstructorGWT> editedTableInstructors = new ArrayList<InstructorGWT>();
-	final ArrayList<InstructorGWT> addedTableInstructors = new ArrayList<InstructorGWT>();
+	ArrayList<Integer> deletedTableInstructorIDs = new ArrayList<Integer>();
+	ArrayList<InstructorGWT> editedTableInstructors = new ArrayList<InstructorGWT>();
+	ArrayList<InstructorGWT> addedTableInstructors = new ArrayList<InstructorGWT>();
 	
 	private int generateTableInstructorID() {
 		return nextTableInstructorID--;
@@ -62,7 +62,7 @@ public class InstructorsView extends VerticalPanel implements IViewContents, Ins
 	}
 
 	@Override
-	public void getAllInstructors(final AsyncCallback<List<InstructorGWT>> callback) {
+	public void getInitialInstructors(final AsyncCallback<List<InstructorGWT>> callback) {
 		final LoadingPopup popup = new LoadingPopup();
 		popup.show();
 
@@ -76,6 +76,9 @@ public class InstructorsView extends VerticalPanel implements IViewContents, Ins
 				assert(instructors != null);
 				popup.hide();
 				
+				for (InstructorGWT instructor : instructors)
+					realIDsByTableID.put(instructor.getID(), instructor.getID());
+				
 				callback.onSuccess(instructors);
 			}
 		});
@@ -84,7 +87,7 @@ public class InstructorsView extends VerticalPanel implements IViewContents, Ins
 	@Override
 	public InstructorGWT createInstructor() {
 		InstructorGWT instructor = new InstructorGWT(
-				generateTableInstructorID(), "", "", "", false, 5,
+				generateTableInstructorID(), "", "", "", false, "",
 				new HashMap<Integer, Map<Integer, TimePreferenceGWT>>(),
 				new HashMap<Integer, Integer>());
 		
@@ -103,17 +106,10 @@ public class InstructorsView extends VerticalPanel implements IViewContents, Ins
 	@Override
 	public void onInstructorEdited(InstructorGWT instructor) {
 		assert(!deletedTableInstructorIDs.contains(instructor.getID()));
-		
-		if (realIDsByTableID.containsKey(instructor.getID())) {
-			// exists on remote side
+
+		if (!addedTableInstructors.contains(instructor))
 			if (!editedTableInstructors.contains(instructor))
 				editedTableInstructors.add(instructor);
-		}
-		else {
-			// doesnt exist on remote side
-			// do nothing, its already on the add list.
-			assert(addedTableInstructors.contains(instructor));
-		}
 		
 		sendUpdates();
 	}
@@ -134,12 +130,23 @@ public class InstructorsView extends VerticalPanel implements IViewContents, Ins
 	}
 
 	private void sendUpdates() {
-		assert(transactionsPending == 0);
+		if (transactionsPending > 0)
+			return;
+		
 		transactionsPending = deletedTableInstructorIDs.size() + editedTableInstructors.size() + addedTableInstructors.size();
 		if (transactionsPending == 0)
 			return;
+
+		final ArrayList<Integer> copyOfDeletedTableInstructorIDs = deletedTableInstructorIDs;
+		deletedTableInstructorIDs = new ArrayList<Integer>();
 		
-		for (Integer deletedTableInstructorID : deletedTableInstructorIDs) {
+		final ArrayList<InstructorGWT> copyOfEditedTableInstructors = editedTableInstructors;
+		editedTableInstructors = new ArrayList<InstructorGWT>();
+		
+		final ArrayList<InstructorGWT> copyOfAddedTableInstructors = addedTableInstructors;
+		addedTableInstructors = new ArrayList<InstructorGWT>();
+		
+		for (Integer deletedTableInstructorID : copyOfDeletedTableInstructorIDs) {
 			Integer realInstructorID = realIDsByTableID.get(deletedTableInstructorID);
 			service.removeInstructor(realInstructorID, new AsyncCallback<Void>() {
 				public void onSuccess(Void result) { updateFinished(); }
@@ -147,7 +154,8 @@ public class InstructorsView extends VerticalPanel implements IViewContents, Ins
 			});
 		}
 		
-		for (InstructorGWT editedTableInstructor : editedTableInstructors) {
+		for (InstructorGWT editedTableInstructor : copyOfEditedTableInstructors) {
+			assert(realIDsByTableID.containsKey(editedTableInstructor.getID()));
 			Integer realInstructorID = realIDsByTableID.get(editedTableInstructor.getID());
 			InstructorGWT realInstructor = new InstructorGWT(editedTableInstructor);
 			realInstructor.setID(realInstructorID);
@@ -157,29 +165,30 @@ public class InstructorsView extends VerticalPanel implements IViewContents, Ins
 			});
 		}
 		
-		for (InstructorGWT addedTableInstructor : addedTableInstructors) {
+		for (InstructorGWT addedTableInstructor : copyOfAddedTableInstructors) {
 			final int tableInstructorID = addedTableInstructor.getID();
 			InstructorGWT realInstructor = new InstructorGWT(addedTableInstructor);
 			realInstructor.setID(-1);
 			service.addInstructor(realInstructor, new AsyncCallback<InstructorGWT>() {
 				public void onSuccess(InstructorGWT result) {
+					System.out.println("service.addInstructor onSuccess, adding to table " + tableInstructorID + "=>" + result.getID());
 					realIDsByTableID.put(tableInstructorID, result.getID());
 					updateFinished();
 				}
 				public void onFailure(Throwable caught) { Window.alert("Update failed: " + caught.getMessage()); }
 			});
 		}
-		
-		deletedTableInstructorIDs.clear();
-		editedTableInstructors.clear();
-		addedTableInstructors.clear();
+
+		copyOfDeletedTableInstructorIDs.clear();
+		copyOfEditedTableInstructors.clear();
+		copyOfAddedTableInstructors.clear();
 	}
 	
 	private void updateFinished() {
 		assert(transactionsPending > 0);
+		System.out.println("Update finished, decrementing transactions from " + transactionsPending + " to " + (transactionsPending - 1));
 		transactionsPending--;
-		if (transactionsPending == 0)
-			sendUpdates();
+		sendUpdates();
 	}
 
 	@Override

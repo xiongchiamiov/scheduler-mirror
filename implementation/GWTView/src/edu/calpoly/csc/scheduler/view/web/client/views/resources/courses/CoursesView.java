@@ -26,9 +26,9 @@ public class CoursesView extends VerticalPanel implements IViewContents, Courses
 	int transactionsPending = 0;
 	Map<Integer, Integer> realIDsByTableID = new HashMap<Integer, Integer>();
 	
-	final ArrayList<Integer> deletedTableCourseIDs = new ArrayList<Integer>();
-	final ArrayList<CourseGWT> editedTableCourses = new ArrayList<CourseGWT>();
-	final ArrayList<CourseGWT> addedTableCourses = new ArrayList<CourseGWT>();
+	ArrayList<Integer> deletedTableCourseIDs = new ArrayList<Integer>();
+	ArrayList<CourseGWT> editedTableCourses = new ArrayList<CourseGWT>();
+	ArrayList<CourseGWT> addedTableCourses = new ArrayList<CourseGWT>();
 	
 	private int generateTableCourseID() {
 		return nextTableCourseID--;
@@ -60,7 +60,7 @@ public class CoursesView extends VerticalPanel implements IViewContents, Courses
 	}
 
 	@Override
-	public void getAllCourses(final AsyncCallback<List<CourseGWT>> callback) {
+	public void getInitialCourses(final AsyncCallback<List<CourseGWT>> callback) {
 		final LoadingPopup popup = new LoadingPopup();
 		popup.show();
 
@@ -73,6 +73,9 @@ public class CoursesView extends VerticalPanel implements IViewContents, Courses
 			public void onSuccess(List<CourseGWT> courses){
 				assert(courses != null);
 				popup.hide();
+
+				for (CourseGWT course : courses)
+					realIDsByTableID.put(course.getID(), course.getID());
 				
 				callback.onSuccess(courses);
 			}
@@ -98,15 +101,12 @@ public class CoursesView extends VerticalPanel implements IViewContents, Courses
 	public void onCourseEdited(CourseGWT course) {
 		assert(!deletedTableCourseIDs.contains(course.getID()));
 		
-		if (realIDsByTableID.containsKey(course.getID())) {
-			// exists on remote side
-			if (!editedTableCourses.contains(course))
+		System.out.println("onCourseEdited " + addedTableCourses.contains(course) + " " + editedTableCourses.contains(course));
+
+		if (!addedTableCourses.contains(course)) {
+			if (!editedTableCourses.contains(course)) {
 				editedTableCourses.add(course);
-		}
-		else {
-			// doesnt exist on remote side
-			// do nothing, its already on the add list.
-			assert(addedTableCourses.contains(course));
+			}
 		}
 		
 		sendUpdates();
@@ -128,12 +128,25 @@ public class CoursesView extends VerticalPanel implements IViewContents, Courses
 	}
 
 	private void sendUpdates() {
-		assert(transactionsPending == 0);
+		if (transactionsPending > 0)
+			return;
+		
 		transactionsPending = deletedTableCourseIDs.size() + editedTableCourses.size() + addedTableCourses.size();
 		if (transactionsPending == 0)
 			return;
 		
-		for (Integer deletedTableCourseID : deletedTableCourseIDs) {
+		System.out.println("Sending updates! " + transactionsPending);
+
+		final ArrayList<Integer> copyOfDeletedTableCourseIDs = deletedTableCourseIDs;
+		deletedTableCourseIDs = new ArrayList<Integer>();
+		
+		final ArrayList<CourseGWT> copyOfEditedTableCourses = editedTableCourses;
+		editedTableCourses = new ArrayList<CourseGWT>();
+		
+		final ArrayList<CourseGWT> copyOfAddedTableCourses = addedTableCourses;
+		addedTableCourses = new ArrayList<CourseGWT>();
+		
+		for (Integer deletedTableCourseID : copyOfDeletedTableCourseIDs) {
 			Integer realCourseID = realIDsByTableID.get(deletedTableCourseID);
 			service.removeCourse(realCourseID, new AsyncCallback<Void>() {
 				public void onSuccess(Void result) { updateFinished(); }
@@ -141,17 +154,21 @@ public class CoursesView extends VerticalPanel implements IViewContents, Courses
 			});
 		}
 		
-		for (CourseGWT editedTableCourse : editedTableCourses) {
+		for (CourseGWT editedTableCourse : copyOfEditedTableCourses) {
 			Integer realCourseID = realIDsByTableID.get(editedTableCourse.getID());
 			CourseGWT realCourse = new CourseGWT(editedTableCourse);
 			realCourse.setID(realCourseID);
+			System.out.println("Calling editCourse!");
 			service.editCourse(realCourse, new AsyncCallback<Void>() {
-				public void onSuccess(Void result) { updateFinished(); }
+				public void onSuccess(Void result) {
+					System.out.println("editCourse onSuccess");
+					updateFinished();
+				}
 				public void onFailure(Throwable caught) { Window.alert("Update failed: " + caught.getMessage()); }
 			});
 		}
 		
-		for (CourseGWT addedTableCourse : addedTableCourses) {
+		for (CourseGWT addedTableCourse : copyOfAddedTableCourses) {
 			final int tableCourseID = addedTableCourse.getID();
 			CourseGWT realCourse = new CourseGWT(addedTableCourse);
 			realCourse.setID(-1);
@@ -163,14 +180,15 @@ public class CoursesView extends VerticalPanel implements IViewContents, Courses
 				public void onFailure(Throwable caught) { Window.alert("Update failed: " + caught.getMessage()); }
 			});
 		}
-		
-		deletedTableCourseIDs.clear();
-		editedTableCourses.clear();
-		addedTableCourses.clear();
+
+		copyOfDeletedTableCourseIDs.clear();
+		copyOfEditedTableCourses.clear();
+		copyOfAddedTableCourses.clear();
 	}
 	
 	private void updateFinished() {
 		assert(transactionsPending > 0);
+		System.out.println("Update finished!");
 		transactionsPending--;
 		if (transactionsPending == 0)
 			sendUpdates();

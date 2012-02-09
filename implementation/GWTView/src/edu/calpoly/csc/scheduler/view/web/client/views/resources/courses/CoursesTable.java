@@ -59,7 +59,7 @@ public class CoursesTable extends SimplePanel {
 	private static final String DAY_COMBINATIONS_WIDTH = null;
 	
 	public interface Strategy {
-		void getAllCourses(AsyncCallback<List<CourseGWT>> callback);
+		void getInitialCourses(AsyncCallback<List<CourseGWT>> callback);
 		CourseGWT createCourse();
 		void onCourseEdited(CourseGWT course);
 		void onCourseDeleted(CourseGWT course);
@@ -102,7 +102,7 @@ public class CoursesTable extends SimplePanel {
 
 	@Override
 	public void onLoad() {
-		strategy.getAllCourses(new AsyncCallback<List<CourseGWT>>() {
+		strategy.getInitialCourses(new AsyncCallback<List<CourseGWT>>() {
 			public void onFailure(Throwable caught) {
 				Window.alert("Failed to get courses: " + caught.toString());
 			}

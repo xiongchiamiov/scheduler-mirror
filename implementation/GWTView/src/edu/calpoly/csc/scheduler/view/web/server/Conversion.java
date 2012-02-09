@@ -46,7 +46,7 @@ public abstract class Conversion {
 		result.setFirstName(instructor.getFirstName());
 		result.setLastName(instructor.getLastName());
 		result.setDisabilities(instructor.getDisability());
-		result.setMaxWtu(instructor.getMaxWTU());
+		result.setMaxWtu(Integer.toString(instructor.getMaxWTU()));
 		
 		HashMap<Integer, Integer> coursePreferences = new LinkedHashMap<Integer, Integer>();
 		try {

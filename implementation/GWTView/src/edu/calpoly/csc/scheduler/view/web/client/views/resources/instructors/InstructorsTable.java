@@ -11,9 +11,12 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import edu.calpoly.csc.scheduler.view.web.client.table.IFactory;
 import edu.calpoly.csc.scheduler.view.web.client.table.IStaticGetter;
 import edu.calpoly.csc.scheduler.view.web.client.table.IStaticSetter;
+import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator;
 import edu.calpoly.csc.scheduler.view.web.client.table.MemberIntegerComparator;
 import edu.calpoly.csc.scheduler.view.web.client.table.MemberStringComparator;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
+import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator.InputValid;
+import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator.InputWarning;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.ObjectChangedObserver;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.ButtonColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.ButtonColumn.ClickCallback;
@@ -42,7 +45,7 @@ public class InstructorsTable extends SimplePanel {
 	private static final String PREFERENCES_WIDTH = null;
 
 	public interface Strategy {
-		void getAllInstructors(AsyncCallback<List<InstructorGWT>> callback);
+		void getInitialInstructors(AsyncCallback<List<InstructorGWT>> callback);
 		InstructorGWT createInstructor();
 		void onInstructorEdited(InstructorGWT Instructor);
 		void onInstructorDeleted(InstructorGWT Instructor);
@@ -86,7 +89,7 @@ public class InstructorsTable extends SimplePanel {
 
 	@Override
 	public void onLoad() {
-		strategy.getAllInstructors(new AsyncCallback<List<InstructorGWT>>() {
+		strategy.getInitialInstructors(new AsyncCallback<List<InstructorGWT>>() {
 			public void onFailure(Throwable caught) {
 				Window.alert("Failed to get Instructors: " + caught.toString());
 			}
@@ -116,7 +119,13 @@ public class InstructorsTable extends SimplePanel {
 						new IStaticSetter<InstructorGWT, String>() {
 							public void setValueInObject(InstructorGWT object, String newValue) { object.setFirstName(newValue); }
 						},
-						null));
+						new IStaticValidator<InstructorGWT, String>() {
+							public ValidateResult validate(InstructorGWT object, String newValue) {
+								if (newValue.equals(""))
+									return new InputWarning(FIRSTNAME_HEADER + " must be present.");
+								return new InputValid();
+							}
+						}));
 
 		table.addColumn(
 				LASTNAME_HEADER,
@@ -132,49 +141,68 @@ public class InstructorsTable extends SimplePanel {
 						new IStaticSetter<InstructorGWT, String>() {
 							public void setValueInObject(InstructorGWT object, String newValue) { object.setLastName(newValue); }
 						},
-						null));
+						new IStaticValidator<InstructorGWT, String>() {
+							public ValidateResult validate(InstructorGWT object, String newValue) {
+								if (newValue.equals(""))
+									return new InputWarning(LASTNAME_HEADER + " must be present.");
+								return new InputValid();
+							}
+						}));
 		
-//		table.addColumn(
-//				USERNAME_HEADER,
-//				USERNAME_WIDTH,
-//				true,
-//				new MemberStringComparator<InstructorGWT>(new IStaticGetter<InstructorGWT, String>() {
-//					public String getValueForObject(InstructorGWT object) { return object.getUsername(); }
-//				}),
-//				new EditingStringColumn<InstructorGWT>(
-//						new IStaticGetter<InstructorGWT, String>() {
-//							public String getValueForObject(InstructorGWT object) { return object.getUsername(); }
-//						},
-//						new IStaticSetter<InstructorGWT, String>() {
-//							public void setValueInObject(InstructorGWT object, String newValue) { object.setUsername(newValue); }
-//						}, 
-//						new IStaticValidator<InstructorGWT, String>() {
-//							public void validate(InstructorGWT object, String newId) throws InvalidValueException {
-//								if (!canSetUsername(object, newId))
-//									throw new InvalidValueException("There is already a user with ID: " + newId);
-//							}
-//						}));
-//
-//		table.addColumn(
-//				MAX_WTU_HEADER,
-//				MAX_WTU_WIDTH,
-//				true,
-//				new MemberIntegerComparator<InstructorGWT>(new IStaticGetter<InstructorGWT, Integer>() {
-//					public Integer getValueForObject(InstructorGWT object) { return object.getMaxWtu(); }
-//				}),
-//				new EditingIntColumn<InstructorGWT>(
-//						new IStaticGetter<InstructorGWT, Integer>() {
-//							public Integer getValueForObject(InstructorGWT object) { return object.getMaxWtu(); }
-//						},
-//						new IStaticSetter<InstructorGWT, Integer>() {
-//							public void setValueInObject(InstructorGWT object, Integer newValue) { object.setMaxWtu(newValue); }
-//						}, 
-//						new IStaticValidator<InstructorGWT, Integer>() {
-//							public void validate(InstructorGWT object, Integer newWtu) throws InvalidValueException {
-//								if (newWtu < 0)
-//									throw new InvalidValueException(MAX_WTU_HEADER + " must be positive: " + newWtu + " is invalid.");
-//							}
-//						}));
+		table.addColumn(
+				USERNAME_HEADER,
+				USERNAME_WIDTH,
+				true,
+				new MemberStringComparator<InstructorGWT>(new IStaticGetter<InstructorGWT, String>() {
+					public String getValueForObject(InstructorGWT object) { return object.getUsername(); }
+				}),
+				new EditingStringColumn<InstructorGWT>(
+						new IStaticGetter<InstructorGWT, String>() {
+							public String getValueForObject(InstructorGWT object) { return object.getUsername(); }
+						},
+						new IStaticSetter<InstructorGWT, String>() {
+							public void setValueInObject(InstructorGWT object, String newValue) { object.setUsername(newValue); }
+						}, 
+						new IStaticValidator<InstructorGWT, String>() {
+							@Override
+							public ValidateResult validate(InstructorGWT object, String newId) {
+								if (newId.equals(""))
+									return new InputWarning(USERNAME_HEADER + " must be present.");
+								if (!canSetUsername(object, newId))
+									return new InputWarning("There is already a user with ID: " + newId);
+								return new InputValid();
+							}
+						}));
+
+		table.addColumn(
+				MAX_WTU_HEADER,
+				MAX_WTU_WIDTH,
+				true,
+				new MemberIntegerComparator<InstructorGWT>(new IStaticGetter<InstructorGWT, Integer>() {
+					public Integer getValueForObject(InstructorGWT object) { return object.getMaxWtu(); }
+				}),
+				new EditingStringColumn<InstructorGWT>(
+						new IStaticGetter<InstructorGWT, String>() {
+							public String getValueForObject(InstructorGWT object) { return object.getRawMaxWtu(); }
+						},
+						new IStaticSetter<InstructorGWT, String>() {
+							public void setValueInObject(InstructorGWT object, String newValue) { object.setMaxWtu(newValue); }
+						}, 
+						new IStaticValidator<InstructorGWT, String>() {
+							@Override
+							public ValidateResult validate(InstructorGWT object, String newMaxOcc) {
+								int n;
+								try { n = Integer.parseInt(newMaxOcc); }
+								catch (NumberFormatException e) {
+									return new InputWarning(MAX_WTU_HEADER + " must be an integer.");
+								}
+								
+								if (n < 1)
+									return new InputWarning(MAX_WTU_HEADER + " must be at least 1.");
+								
+								return new InputValid();
+							}
+						}));
 		
 		table.addColumn(
 				DISABILITIES_HEADER,

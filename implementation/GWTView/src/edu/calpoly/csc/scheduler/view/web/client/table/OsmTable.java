@@ -51,21 +51,7 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel imple
 		}
 	}
 	
-	public static class ReadingCell extends Cell {
-//		public interface SizeChangedObserver {
-//			void sizeChanged();
-//		}
-//		
-//		private SizeChangedObserver sizeChangedObserver;
-//		void setSizeChangedObserver(SizeChangedObserver sizeChangedObserver) {
-//			assert(this.sizeChangedObserver == null);
-//			this.sizeChangedObserver = sizeChangedObserver;
-//		}
-//		protected void notifySizeChanged() {
-//			if (sizeChangedObserver != null)
-//				sizeChangedObserver.sizeChanged();
-//		}
-	}
+	public static class ReadingCell extends Cell { }
 
 	public static abstract class EditingCell extends ReadingCell {
 		public interface ValueChangedObserver {
@@ -471,12 +457,15 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel imple
 		
 		// Have all reading cells get updated from the object
 		for (int colIndex = 0; colIndex < columnMetadatas.size(); colIndex++) {
-			Cell rawCell = newRow.cellContainers.get(colIndex).cell;
+			CellContainer cellContainer = newRow.cellContainers.get(colIndex);
+			Cell rawCell = cellContainer.cell;
 			IColumn<ObjectType> rawColumn = columnMetadatas.get(colIndex).column;
 
 			assert((rawCell instanceof ReadingCell) == (rawColumn instanceof IReadingColumn));
 			if (rawCell instanceof ReadingCell && rawColumn instanceof IReadingColumn)
 				((IReadingColumn<ObjectType>)rawColumn).updateFromObject(newRow, (ReadingCell)rawCell);
+			
+			colorCell(cellContainer, null);
 		}
 		
 		return newRow;

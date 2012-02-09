@@ -44,7 +44,7 @@ public class LocationsTable extends SimplePanel {
 	private static final String DISABILITIES_WIDTH = "2em";
 	
 	public interface Strategy {
-		void getAllLocations(AsyncCallback<List<LocationGWT>> callback);
+		void getInitialLocations(AsyncCallback<List<LocationGWT>> callback);
 		LocationGWT createLocation();
 		void onLocationEdited(LocationGWT location);
 		void onLocationDeleted(LocationGWT location);
@@ -87,7 +87,7 @@ public class LocationsTable extends SimplePanel {
 
 	@Override
 	public void onLoad() {
-		strategy.getAllLocations(new AsyncCallback<List<LocationGWT>>() {
+		strategy.getInitialLocations(new AsyncCallback<List<LocationGWT>>() {
 			public void onFailure(Throwable caught) {
 				Window.alert("Failed to get locations: " + caught.toString());
 			}
