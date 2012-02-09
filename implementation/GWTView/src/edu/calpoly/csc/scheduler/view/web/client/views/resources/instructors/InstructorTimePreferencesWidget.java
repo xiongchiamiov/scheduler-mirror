@@ -32,10 +32,47 @@ import edu.calpoly.csc.scheduler.view.web.shared.TimePreferenceGWT;
 public class InstructorTimePreferencesWidget extends VerticalPanel {
 	class CellWidget extends FocusPanel {
 		int halfHour, day;
-		ListBox lbox;
+		ListBox list = new ListBox();
+		
 		CellWidget(int halfHour, int day) {
 			this.halfHour = halfHour;
 			this.day = day;
+			this.add(list);
+		}
+		
+		public void addItems()
+		{
+			list.addItem("Not Qualified");
+			list.addItem("Not Preferred");
+			list.addItem("Acceptable");
+			list.addItem("Preferred");
+			
+			list.addChangeHandler(new ChangeHandler() {
+				@Override
+				public void onChange(ChangeEvent event) {
+					setCellPreference(list.getSelectedIndex());
+				}
+			});
+		}
+		
+		public void setCellPreference(int desire)
+		{
+			setPreference(this, desire);
+			String lastStyle = getStyleName();
+			//System.out.println("Last style name: "+lastStyle);
+			//System.out.println("New style: "+styleNames[desire-3]);
+			removeStyleName(lastStyle);
+			addStyleName(styleNames[3 - desire]);
+		}
+		
+		public int getIndex()
+		{
+			return list.getSelectedIndex();
+		}
+		
+		public void setIndex(int desire)
+		{
+			list.setSelectedIndex(desire);
 		}
 	}
 	
@@ -123,8 +160,9 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 		assert(getPreference(instructor, cell.halfHour, cell.day) == desire);
 		
 		assert(cell != null);
-		cell.clear();
-		cell.add(new HTML(new Integer(getPreference(instructor, cell.halfHour, cell.day)).toString()));
+		//cell.addStyleName(styleNames[3-desire]);
+		//cell.clear();
+		//cell.add(new HTML(new Integer(getPreference(instructor, cell.halfHour, cell.day)).toString()));
 	}
 
 	int getPreference(InstructorGWT ins, int halfHour, int dayNum) {
@@ -306,7 +344,7 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 			timePrefsTable.setWidget(0, day + 1, new HTML(days.get(day)));
 		}
 		cells = new CellWidget[30][days.size()];
-		System.out.println("cells 2nd dim " + days.size());
+		//System.out.println("cells 2nd dim " + days.size());
 		
 		final int totalHalfHours = 30;
 		final int totalDays = days.size();
@@ -325,21 +363,14 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 				if(days.get(dayNum).equals("Friday")) prefCol = 4;
 
 				int desire = this.getPreference(strategy.getInstructor(), halfHour, prefCol);
+				if(desire > 3) desire = 3;
+				if(desire < 0) desire = 0;
 				final CellWidget cell = new CellWidget(halfHour, dayNum);
 				cell.addStyleName("desireCell");
-				ListBox list = new ListBox();
-				list.addItem("Not Qualified");
-				list.addItem("Not Preferred");
-				list.addItem("Acceptable");
-				list.addItem("Preferred");
-				list.setSelectedIndex(desire);
-				list.addChangeHandler(new ChangeHandler() {
-					@Override
-					public void onChange(ChangeEvent event) {
-						//setCoursePreference(course, list.getSelectedIndex());
-					}
-				});
-				cell.add(list);
+				cell.addItems();
+				cell.setIndex(desire);
+				
+				//cell.add(list);
 				cell.addStyleName(styleNames[3-desire]);
 				//cell.add(new HTML(Integer.toString(desire)));
 				/*cell.addClickHandler(new ClickHandler() {
@@ -349,7 +380,7 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 					}
 				});*/
 				
-				cell.addMouseDownHandler(new MouseDownHandler() {
+				/*cell.addMouseDownHandler(new MouseDownHandler() {
 					@Override
 					public void onMouseDown(MouseDownEvent event) {
 						cellWidgetMouseDown(cell, event);
@@ -363,7 +394,7 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 						lastSelectedCell = cell;
 						focus.setFocus(true);
 					}
-				});
+				});*/
 								
 				timePrefsTable.setWidget(row, col, cell);
 				
