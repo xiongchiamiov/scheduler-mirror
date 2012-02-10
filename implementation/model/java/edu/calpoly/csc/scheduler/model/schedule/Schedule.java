@@ -259,7 +259,7 @@ public class Schedule extends DbData implements Serializable
     */
    private List<Location> lSourceList = new Vector<Location>();
 
-   private HashMap<Course, SectionTracker> sections = new HashMap<Course, SectionTracker>();
+   private HashMap<Integer, SectionTracker> sections = new HashMap<Integer, SectionTracker>();
 
    /**
     * The global start/end times for a given day on the schedule. Default bounds
@@ -542,11 +542,11 @@ public class Schedule extends DbData implements Serializable
     */
    private SectionTracker getSectionTracker (Course c)
    {
-      if (!this.sections.containsKey(c))
+      if (!this.sections.containsKey(c.getDbid()))
       {
-         this.sections.put(c, new SectionTracker(c));
+         this.sections.put(c.getDbid(), new SectionTracker(c));
       }
-      return this.sections.get(c);
+      return this.sections.get(c.getDbid());
    }
 
    /**

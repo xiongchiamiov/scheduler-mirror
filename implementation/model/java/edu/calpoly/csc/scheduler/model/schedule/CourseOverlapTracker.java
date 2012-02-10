@@ -27,14 +27,14 @@ import edu.calpoly.csc.scheduler.model.db.pdb.SchedulePreference;
 public class CourseOverlapTracker implements Serializable
 {
    public static final long serialVersionUID = 42;
-   private HashMap<Course, CourseAvailList> cBookings;
+   private HashMap<Integer, CourseAvailList> cBookings;
 
    /**
     * Dummy constructor: simply initializes empty data.
     */
    public CourseOverlapTracker ()
    {
-      this.cBookings = new HashMap<Course, CourseAvailList>();
+      this.cBookings = new HashMap<Integer, CourseAvailList>();
    }
 
    /**
@@ -46,7 +46,7 @@ public class CourseOverlapTracker implements Serializable
     */
    public CourseOverlapTracker (Vector<SchedulePreference> prefs)
    {
-      this.cBookings = new HashMap<Course, CourseAvailList>();
+      this.cBookings = new HashMap<Integer, CourseAvailList>();
       for (SchedulePreference sp: prefs)
       {
          /*
@@ -75,11 +75,11 @@ public class CourseOverlapTracker implements Serializable
       CourseWeekAvail cwa = new CourseWeekAvail(nco);
       for (Course c: nco.getCourseList())
       {
-         if (!this.cBookings.containsKey(c))
+         if (!this.cBookings.containsKey(c.getDbid()))
          {
-            this.cBookings.put(c, new CourseAvailList());
+            this.cBookings.put(c.getDbid(), new CourseAvailList());
          }
-         this.cBookings.get(c).addWeekAvail(cwa);
+         this.cBookings.get(c.getDbid()).addWeekAvail(cwa);
          /*
           * If it has a lab, incorporate that as well
           */
@@ -113,9 +113,9 @@ public class CourseOverlapTracker implements Serializable
     */
    public boolean book (boolean b, Course c, Time s, Time e, Week days)
    {
-      if (this.cBookings.containsKey(c))
+      if (this.cBookings.containsKey(c.getDbid()))
       {
-         return this.cBookings.get(c).book(b, c, s, e, days);
+         return this.cBookings.get(c.getDbid()).book(b, c, s, e, days);
       }
       return true;
    }
@@ -136,9 +136,9 @@ public class CourseOverlapTracker implements Serializable
     */
    public boolean isFree (Course c, Time s, Time e, Week days)
    {
-      if (this.cBookings.containsKey(c))
+      if (this.cBookings.containsKey(c.getDbid()))
       {
-         return this.cBookings.get(c).isFree(c, s, e, days);
+         return this.cBookings.get(c.getDbid()).isFree(c, s, e, days);
       }
       return true;
    }
