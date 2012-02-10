@@ -37,8 +37,8 @@ public class ScheduleView extends VerticalPanel implements IViewContents {
 		this.setWidth("100%");
 		this.setHeight("100%");
 
-		this.add(new HTML("<h2>" + scheduleName + "</h2>"));
-
+		this.add(new HTML("<h2 style=\"margin-left: 10px;\">" + scheduleName + "</h2>"));
+		 
 //		this.add(new Button("Save", new ClickHandler() {
 //			public void onClick(ClickEvent event) {
 //				final LoadingPopup popup = new LoadingPopup();
@@ -60,11 +60,11 @@ public class ScheduleView extends VerticalPanel implements IViewContents {
 //			}
 //		}));
 
-		ScheduleViewWidget schdView = new ScheduleViewWidget();
+		//ScheduleViewWidget schdView = new ScheduleViewWidget();
 
-		//ScheduleEditWidget scheduleEditWidget = new ScheduleEditWidget();
-		this.add(schdView.getWidget(service));
-		//this.add(scheduleEditWidget.getWidget(service));
+		ScheduleEditWidget scheduleEditWidget = new ScheduleEditWidget();
+		//this.add(schdView.getWidget(service));
+		this.add(scheduleEditWidget.getWidget(service));
 		
 	}
 
