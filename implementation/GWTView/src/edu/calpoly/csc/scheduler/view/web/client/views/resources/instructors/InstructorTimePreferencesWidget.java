@@ -17,6 +17,7 @@ import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FocusPanel;
@@ -42,7 +43,7 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 		
 		public void addItems()
 		{
-			list.addItem("Not Qualified");
+			list.addItem("Not Possible");
 			list.addItem("Not Preferred");
 			list.addItem("Acceptable");
 			list.addItem("Preferred");
@@ -58,6 +59,7 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 		public void setCellPreference(int desire)
 		{
 			setPreference(this, desire);
+			list.setSelectedIndex(desire);
 			String lastStyle = getStyleName();
 			//System.out.println("Last style name: "+lastStyle);
 			//System.out.println("New style: "+styleNames[desire-3]);
@@ -81,6 +83,9 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 		InstructorGWT getInstructor();
 	}
 	
+	ListBox fromList = new ListBox();
+	ListBox toList = new ListBox();
+	ListBox multiSet = new ListBox();
 	GreetingServiceAsync service;
 	Strategy strategy;
 	
@@ -160,7 +165,7 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 		assert(getPreference(instructor, cell.halfHour, cell.day) == desire);
 		
 		assert(cell != null);
-		//cell.addStyleName(styleNames[3-desire]);
+		cell.addStyleName(styleNames[3-desire]);
 		//cell.clear();
 		//cell.add(new HTML(new Integer(getPreference(instructor, cell.halfHour, cell.day)).toString()));
 	}
@@ -177,6 +182,18 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 		else
 			return 0;
 	}
+	
+	public void setMultiplePreferences()
+	{
+		for(int j = fromList.getSelectedIndex(); j < toList.getSelectedIndex() + 1; j++)
+		{
+			if(monday.getValue()) cells[j][0].setCellPreference(multiSet.getSelectedIndex());//setPreference(cells[j][1], multiSet.getSelectedIndex());
+			if(tuesday.getValue()) cells[j][1].setCellPreference(multiSet.getSelectedIndex());//setPreference(cells[j][2], multiSet.getSelectedIndex());
+			if(wednesday.getValue()) cells[j][2].setCellPreference(multiSet.getSelectedIndex());//setPreference(cells[j][3], multiSet.getSelectedIndex());
+			if(thursday.getValue()) cells[j][3].setCellPreference(multiSet.getSelectedIndex());//setPreference(cells[j][4], multiSet.getSelectedIndex());
+			if(friday.getValue()) cells[j][4].setCellPreference(multiSet.getSelectedIndex());//setPreference(cells[j][5], multiSet.getSelectedIndex());
+		}
+	}
 
 	@Override
 	protected void onLoad() {
@@ -192,7 +209,36 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 		add(wednesday);
 		add(thursday);
 		add(friday);
-		monday.addClickHandler(new ClickHandler() {
+		
+		fromList.setName("From: ");
+		toList.setName("To: ");
+		
+		for (int halfHour = 0; halfHour < 30; halfHour++) { // There are 30 half-hours between 7am and 10pm
+			int row = halfHour + 1;
+			int hour = halfHour / 2 + 7; // divide by two to get hours 0-15. Add 7 to get hours 7-22.
+			String string = ((hour + 12 - 1) % 12 + 1) + ":" + (halfHour % 2 == 0 ? "00" : "30") + (hour < 12 ? "am" : "pm");
+			fromList.addItem(string);
+			toList.addItem(string);
+		}
+		
+		multiSet.addItem("Not Possible");
+		multiSet.addItem("Not Preferred");
+		multiSet.addItem("Acceptable");
+		multiSet.addItem("Preferred");
+		
+		add(fromList);
+		add(toList);
+		
+		add(multiSet);
+		
+		this.add(new Button("Set", new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				setMultiplePreferences();
+			}
+		}));
+		
+		/*monday.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				focus.remove(timePrefsTable);
@@ -221,7 +267,7 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 			public void onClick(ClickEvent event) {
 				focus.remove(timePrefsTable);
 				CheckBoxClicked(event);			}
-		});
+		});*/
 		add(focus);
 		focus.addKeyDownHandler(new KeyDownHandler() {
 			@Override
@@ -335,11 +381,11 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 		
 		//String days[] = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" };
 		ArrayList<String> days = new ArrayList<String>();
-		if(monday.getValue()) days.add("Monday");
-		if(tuesday.getValue()) days.add("Tuesday");
-		if(wednesday.getValue()) days.add("Wednesday");
-		if(thursday.getValue()) days.add("Thursday");
-		if(friday.getValue()) days.add("Friday");
+		days.add("Monday");
+		days.add("Tuesday");
+		days.add("Wednesday");
+		days.add("Thursday");
+		days.add("Friday");
 		for (int day = 0; day < days.size(); day++) {
 			timePrefsTable.setWidget(0, day + 1, new HTML(days.get(day)));
 		}
