@@ -138,7 +138,7 @@ public class ScheduleEditTable extends SimplePanel {
 		
 		final StringBuilder builder = new StringBuilder();
 		builder.append("<style type=\"text/css\">"+
-			"#editTableContainer {position:absolute;top:237px;left:200px;right:0px;bottom:0px;overflow:auto;border:1px solid #000000;background-color:#FFFFFF;}"+
+			"#editTableContainer {position:absolute;top:116px;left:200px;right:0px;bottom:33px;overflow:auto;border:1px solid #000000;background-color:#FFFFFF;}"+
 			"#editTable {border-spacing:0px;cellspacing:0px;}"+
 			"#editTable td {padding:4px;border-bottom:1px solid #DDDDDD;}"+
 			"#editTable td.item {background-color:#DFF0CF;text-align:center;border:1px solid #FFFFFF;}"+
@@ -269,12 +269,16 @@ public class ScheduleEditTable extends SimplePanel {
 	/**
 	 * Used to register callback methods for access via handwritten javascript
 	 */
-	public native void defineTableCallbacks() /*-{
+	private native void defineTableCallbacks() /*-{
 		var scheduleTable = this;
 		$wnd.doubleClick = function(row, col) {
 			return scheduleTable.@edu.calpoly.csc.scheduler.view.web.client.views.ScheduleEditTable::doubleClick(II)(row, col);
 		}
     }-*/;
+	
+	public void setLeftOffset(int pixels) {
+		// TODO
+	}
 	
 	private void applyFilters() {
 		// TODO implement filtering
