@@ -451,11 +451,19 @@ background-clip: initial;
 	border-bottom: 1px solid white;
 }
 
+.ScheduleAvailableCoursesList {
+	margin-left: 10px;
+	margin-bottom: 10px;
+	margin-left: 10px;
+	height: 100%;
+}
+
 .floatingScheduleButtonBar {
 	position: fixed; /* Or fixed - depends on what you want */ 
 	right: 0; /* The part that puts the Panel in bottom right of the page/client area */ 
 	bottom: 0; 
-	background: green;
+	/*background: #003300;*/	
+	background: url("imgs/bottom_bar_bg.gif") no-repeat scroll 0 0 #003300;
 	padding: 5px 10px 5px 10px;
 	width: 100%;
 }
