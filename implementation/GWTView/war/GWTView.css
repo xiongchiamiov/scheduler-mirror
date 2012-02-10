@@ -452,10 +452,26 @@ background-clip: initial;
 }
 
 .ScheduleAvailableCoursesList {
-	margin-left: 10px;
-	margin-bottom: 10px;
-	margin-left: 10px;
+	margin: 10px;
 	height: 100%;
+}
+
+.hiddenCoursesList {
+	display: none;
+}
+
+.collapsingButton {
+	position: absolute;
+	top: 300;
+	left: 200;		
+	background: blue;
+	width: 20px;
+	height: 100px;
+}
+
+.collapsingButtonContainingTD {
+	/*position: relative;*/
+	/*width: 20px;*/	
 }
 
 .floatingScheduleButtonBar {

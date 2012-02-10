@@ -37,7 +37,7 @@ public class ScheduleView extends VerticalPanel implements IViewContents {
 		this.setWidth("100%");
 		this.setHeight("100%");
 
-		this.add(new HTML("<h2 style=\"margin-left: 10px;\">" + scheduleName + "</h2>"));
+//		this.add(new HTML("<h2 style=\"margin-left: 10px;\">" + scheduleName + "</h2>"));
 		 
 //		this.add(new Button("Save", new ClickHandler() {
 //			public void onClick(ClickEvent event) {

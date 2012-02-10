@@ -17,10 +17,12 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.ListBox;
@@ -31,6 +33,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
+import edu.calpoly.csc.scheduler.view.web.client.HTMLUtilities;
 import edu.calpoly.csc.scheduler.view.web.client.views.LoadingPopup;
 import edu.calpoly.csc.scheduler.view.web.client.views.ScheduleEditTable;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
@@ -47,7 +50,7 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 	private HashMap<String, ScheduleItemGWT> schedItems;
 	private ArrayList<ScheduleItemGWT> scheduleItems = new ArrayList<ScheduleItemGWT>();
 	private VerticalPanel mainPanel = new VerticalPanel();
-
+	private boolean isCourseListCollapsed;
 	// private ScheduleTable scheduleGrid = new ScheduleTable(this);
 	private ScheduleEditTable scheduleTable = new ScheduleEditTable(this);	
 	private FiltersViewWidget filtersDialog = new FiltersViewWidget();
@@ -242,7 +245,28 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 		FlowPanel bottomButtonFlowPanel = new FlowPanel();		
 		bottomButtonFlowPanel.addStyleName("floatingScheduleButtonBar");
 		
+		final Button collapseScheduleButton = new Button("<");
+		collapseScheduleButton.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {	
+				if (!isCourseListCollapsed) {
+					collapseScheduleButton.setText(">");
+					availableCoursesListBox.addStyleName("hiddenCoursesList");
+					isCourseListCollapsed = true;
+				}
+				else {
+					collapseScheduleButton.setText("<");
+					availableCoursesListBox.removeStyleName("hiddenCoursesList");
+					isCourseListCollapsed = false;
+				}
+		}});
+		
+		collapseScheduleButton.setStyleName("floatingScheduleButtonBarItemLeft");
+		bottomButtonFlowPanel.add(collapseScheduleButton);
+		
 		Button generateScheduleButton = new Button("Generate Schedule", new GenerateScheduleClickHandler());
+		generateScheduleButton.setStyleName("floatingScheduleButtonBarItemLeft");
+		bottomButtonFlowPanel.add(generateScheduleButton);
+		
 		generateScheduleButton.setStyleName("floatingScheduleButtonBarItemLeft");
 		bottomButtonFlowPanel.add(generateScheduleButton);
 		
@@ -330,12 +354,26 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 				
 		availableCoursesListBox = new ListBox();		
 		availableCoursesListBox.setStyleName("ScheduleAvailableCoursesList");
-		addCoursesToListBox();
-				
-		// scheduleGrid.layoutDaysAndTimes();
-		// scheduleGrid.placePanels();
+		
+		addCoursesToListBox();				
 		
 		boxesAndSchedulePanel.add(availableCoursesListBox);
+		
+		
+//		HTML myButton = new HTML("<div class=\"collapsingButton\"></div>");
+//		myButton.addClickHandler(new ClickHandler() {
+//			public void onClick(ClickEvent event) {				
+//				availableCoursesListBox.addStyleName("hiddenCoursesList");
+//				
+//		}});
+		
+//		boxesAndSchedulePanel.add(myButton);
+//		
+//		Element myButtonContainingTD = HTMLUtilities.getClosestContainingElementOfType(myButton.getElement(), "td");
+//		myButtonContainingTD.setClassName("collapsingButtonContainingTD");
+		
+		// scheduleGrid.layoutDaysAndTimes();
+		// scheduleGrid.placePanels();
 		boxesAndSchedulePanel.add(scheduleTable);
 		
 		mainPanel.add(boxesAndSchedulePanel);
