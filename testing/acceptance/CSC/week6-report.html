@@ -1,0 +1,211 @@
+<html>
+<head>
+<title>
+Report on Generating Winter 2012 Schedule for the CSC Department
+</title>
+</head>
+<body bgcolor=white>
+<p align=center>
+<font size=+2>
+<strong>Report on Generating Winter 2012 Schedule for the CSC Department --
+<br>
+Testing of Week 6 Product Pre-Release</strong>
+</font>
+</p>
+<br>
+<br>
+<a name="Open an Existing Schedule, Create a New Schedule">
+<h2>
+1.  Open an Existing Schedule, Create a New Schedule
+</h2>
+</a>
+<p>
+This appears to work for small-sized resource lists.  It needs to be more
+thoroughly tested.
+</p>
+
+<br>
+<a name="Enter Resource Data">
+<h2>
+2.  Enter Resource Data
+</h2>
+</a>
+<p>
+<strong>For all Three Resource Lists:</strong>
+<ol type=1>
+<p> <li>
+<strong><em>Question</em></strong> -- is this the layout for the Week 9 client
+release, in particular the explicit 'Edit' and 'Delete' buttons?  I'm mostly
+fine with it as it is, and think it's better than previous versions with icons,
+and other different layouts.
+<p> <li>
+Why is the extra 'New' button above the list?
+<p> <li>
+Time-of-entry appears to be the default sorting order for stable sorting of
+secondary sort keys, which sometimes produces unusual-looking results.
+<p> <li>
+Sorting does not work consistently, in that it is sometimes unresponsive on
+certain columns.  I cannot consistently reproduce the same problem, but it
+shows up often enough to be considered repeatable.
+</ol>
+</p><p>
+<strong>Instructors:</strong>
+<ol type=1>
+<p> <li>
+How exactly is the 'Disabilities' column being used at this point?  In the
+requirements, it's called 'Details', with an admittedly unclear definition
+there.
+<p> <li>
+I believe there should be a 'Middle Name/Initial' column, in case some
+department needs it.
+</ol>
+</p><p>
+<strong>Courses:</strong>
+<ol type=1>
+<p> <li>
+At present, there no explicit checkbox in the course edit table, meaning there
+is not way to control what appears in the 'Available Courses' list in the
+'Schedule' tab.
+<p> <li>
+The left-to-right order of the 'Courses' and 'Locations' tabs should be
+swapped, since courses are by far more frequently edited than locations.
+<p> <li>
+The course type should be a drop-down, with all 5 types of course listed (LEC,
+LAB, ACT, SEM, IND)
+<p> <li>
+Associations are only one-way, as lab-to-lecture.  We've discussed and I
+thought we agreed that there is also the lecture-to-lab one-to-many
+association.
+<p> <li>
+What has become of the 'Equipment Needed' column that is in Figure
+<a href="http://scheduler.csc.calpoly.edu/releases/alpha/requirements/resource-management.html#Manage%20Courses">
+2.4.2.1
+</a>
+of the requirements?  It needs to be coordinated with the 'Equipment' attribute
+of a location record (see below).
+<p> <li>
+The 'Department', 'Catalog Number', and 'Course Name' headings need to be
+rethought, given the evolution of course resources from purely catalog entries
+to a hybrid of catalog/schedule entries.  For background, see the headings at
+<a href="http://schedules.calpoly.edu/subject_CSC.htm">
+http://schedules.calpoly.edu/subject_CSC.htm
+</a>
+and
+<a href="https://sched.csc.calpoly.edu/">
+https://sched.csc.calpoly.edu/scheduleAction.php
+</a>
+</ol>
+</p><p>
+<strong>Locations:</strong>
+<ol type=1>
+<p> <li>
+The left-to-right order of the 'Courses' and 'Locations' tabs should be
+swapped, since courses are by far more frequently edited than locations.
+<p> <li>
+I believe the values in the 'Equipment' column need to be a user-editable list,
+with pre-installed entries that can be removed, changed, and added to.  This
+will coincide the now missing 'Equipment Needed' attribute for courses.
+<p> <li>
+Algorithmically, the there is a string/list match performed with equipment-
+needed by course and the equipment-supplied by a location.
+</ol>
+</p>
+<br>
+<a name="Generate a Schedule">
+<h2>
+3.  Generate a Schedule
+</h2>
+</a>
+<p>
+This has some significant problems, the most critical aspects being the
+following:
+<ol type=1>
+<p> <li>
+Everything is still piling up at 7AM.
+<p> <li>
+The four arrow keys don't appear to work.
+<p> <li>
+Drag-and-drop does not work consistently or understandably, in that not all
+'Available Courses' can be dragged to 'Courses to Schedule'.
+<p> <li>
+During drag, I can get a course to drop onto the border of the 'Courses to
+Schedule' list.  This results in subsequently unpredictable behavior, including
+the course string appearing in the resource editing tabs.
+<p> <li>
+At one point, it hung indefinitely on 'Loading ...' during dragging from
+'Available' to 'to Schedule' lists.
+<p> <li>
+None of the left/right arrow keys works.
+</ol>
+</p>
+
+<br>
+<a name="Edit the Schedule">
+<h2>
+4.  Edit the Schedule
+</h2>
+</a>
+<p>
+Drag-and-drop does not appear to be working as I'd expect.  In particular, when
+I drag a course to a different time slot, it does not move, and I don't get any
+message explaining why.
+</p><p>
+Given the current state of drag-and-drop for generation and editing, I would
+like to consider a crash implementation of a non-drag-and-drop solution that
+uses the arrow keys for generation, and displays the schedule in a list view
+that allows editing in the way it's done in the resource editing dialogs.  The
+list view would be a version, possibly simplified, of
+<a href="http://scheduler.csc.calpoly.edu/releases/alpha/requirements/ViewRequirements.html#list_view">
+Figure 2.3.1.1
+</a>
+in the requirements.
+</p><p>
+An important feature for normal workflow is some way to clear out an entire
+schedule, and regenerate it.  This could be as simple as a 'Clear Schedule'
+button on the top button row of the
+</p>
+
+<br>
+<a name="Save, Exit, Re-Open Schedule">
+<h2>
+5.  Save, Exit, Re-Open Schedule
+</h2>
+</a>
+<p>
+'Save As' changes the name of a schedule when it should create a new copy.
+</p>
+
+<br>
+<a name="Quality Measures">
+<h2>
+6.  Quality Measures
+</h2>
+</a>
+<p>
+<strong><em>Instructor Prefs:</em></strong> We cannot adequately assess this
+until the databases are stable enough to allow a substantial number of
+resources to be added, and rely on those resources not getting lost.
+</p><p>
+<strong><em>Resource Tables:</em></strong> Current lecture/lab association is
+only one-way, i.e., labs-to-lectures.  Only LEC and LAB are supported; need
+SEM, ACT, and IND.  The "invalid data" quality measure is still not being met,
+in that it still warns with "You have unsaved data ..." when switching tabs.
+</p>
+<strong><em>Generate Schedule:</em></strong> Loading time is improved, but
+still not always less than 5 seconds.  At least in the <tt>dev</tt> version of
+Friday 12 Feb, there still seem to be significant problems with drag and drop.
+On this date, there still was at least one "freezing issue", but hopefully the
+new DB design will fix this problem area.
+<br>
+<a name="Other Issues">
+<h2>
+7.  Other Issues
+</h2>
+</a>
+<p>
+I have significant concerns that something usable by clients will be ready by
+week 9.  At minimum, all of the issues listed above need to be fully resolved.
+</p>
+
+</body>
+</html>
