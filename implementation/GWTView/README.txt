@@ -1,74 +1,91 @@
 Setup Development Environment
 =============================
 
-Get Java EE Eclipse
+1.  Download and install [Eclipse IDE for Java EE Developers][eclipse].
+2.  Make sure you have the GWT plugin for eclipse and GWT developer plugin for
+    your respective browser
+3.  Checkout the project
+4.  In /implementation/GWTView/:
+    1. Copy the file ".project template" and name it to ".project"
+    2. Copy the file ".classpath template" and name it to ".classpath"
+5.  Import the GWTView project into eclipse (import -> General -> existing
+    projects)
+6.  Do a clean and a build. You should get a fuckton of errors about various
+    classes not found. This is normal.
+7.  Right click on the GWTView project, hit properties
+8.  Under java build path screen's source tab, hit Link Source
+9.  For the linked folder location, browse to repo/implementation/model/java
+10. for the folder name, type "modeljava"
+11. hit Finish.
+12. Go to the libraries tab (still in java build path screen)
+13. Hit add external jar. add
+    repo/implementation/model/java/mysql-connector-java-5.0.8-bin.jar.
+14. Hit add external jar. add repo/implementation/GWTView/gwt-dnd-3.1.2.jar.
+15. Hit add external jar. add
+    repo/implementation/GWTView/war/WEB-INF/lib/commons-fileupload-1.2.2.jar
+16. Hit add external jar. add
+    repo/implementation/GWTView/war/WEB-INF/lib/guava-r09.jar
+17. Hit add external jar. add repo/implementation/model/java/javacsv.jar
+18. also add the "dnd" jar by clicking on "Add JARs..." and browsing under
+    GWTView
+19. get out of the properties menu.
+20. Do a clean and a build. there should be no errors. (there may be some
+    warnings) There might be a warning about some server missing.
 
-make sure you have the GWT plugin for eclipse and GWT developer plugin for your respective browser
+[eclipse]: http://www.eclipse.org/downloads/
 
-checkout the project
-In /implementation/GWTView/:
-- copy the file ".project template" and name it to ".project"
-- copy the file ".classpath template" and name it to ".classpath"
-import the GWTView project into eclipse (import -> General -> existing projects)
-do a clean and a build. you should get a fuckton of errors about various classes not found. this is normal.
-right click on the GWTView project, hit properties
-under java build path screen's source tab, hit Link Source
-for the linked folder location, browse to repo/implementation/model/java
-for the folder name, type "modeljava"
-hit Finish.
-Go to the libraries tab (still in java build path screen)
-Hit add external jar. add repo/implementation/model/java/mysql-connector-java-5.0.8-bin.jar.
-Hit add external jar. add repo/implementation/GWTView/gwt-dnd-3.1.2.jar.
-Hit add external jar. add repo/implementation/GWTView/war/WEB-INF/lib/commons-fileupload-1.2.2.jar
-Hit add external jar. add repo/implementation/GWTView/war/WEB-INF/lib/guava-r09.jar
-Hit add external jar. add repo/implementation/model/java/javacsv.jar
+Running
+-------
 
-also add the "dnd" jar by clicking on "Add JARs..." and browsing under GWTView
-get out of the properties menu.
-Do a clean and a build. there should be no errors. (there may be some warnings) There might be a warning about some server missing.
+1. Run As -> Web Application
 
+*Optional* (only if you want to have the ability to compile a faster version,
+the compile takes longer though):
 
-To run,
-Run As -> Web Application
+1. right click on project, Google -> GWT Compile. It should take twenty seconds
+   to a minute, and eventually say Compilation succeeded.
+2. Go to Window -> Show View -> Other.
+3. Choose Server/Servers.
+4. Right click in the servers view, hit New -> Server
+5. Select Apache / Tomcat v7.0 Server, hit next.
+6. Move GWTView from the available list to the configured list.
+
+To rebuild and deploy:
+
+1. Right click on the project, Google -> GWT Compile.
+2. If it asks which entry point to use, select
+   `edu.calpoly.csc.scheduler.view.web.GWTView`
+3. Once its done, right click on the project, Run As -> Run on Server
+4. On the dialog that comes up, hit Finish.
 
 
+If you ever get an error in the application that says
+`java.lang.ClassNotFoundException: com.mysql.jdbc.Driver` or `Error connecting
+to the database.`:
 
-Optional (only if you want to have the ability to compile a faster version, the compile takes longer though):
-	right click on project, Google -> GWT Compile. It should take twenty seconds to a minute, and eventually say Compilation succeeded.
-	Go to Window -> Show View -> Other.
-	Choose Server/Servers.
-	Right click in the servers view, hit New -> Server
-	Select Apache / Tomcat v7.0 Server, hit next.
-	Move GWTView from the available list to the configured list.
+1. Right click on the project, Run As -> Run Configurations
+2. In Apache Tomcat -> Tomcat v7.0 Server at localhost, click on classpath tab.
+3. Click on user entries
+4. Click on add external JARs
+5. navigate to repo/implementation/model/java, and select
+   mysql-connector-java-5.0.8-bin.jar, hit open
 
-	To rebuild and deploy:
-	Right click on the project, Google -> GWT Compile.
-	If it asks which entry point to use, select edu.calpoly.csc.scheduler.view.web.GWTView
-	Once its done, right click on the project, Run As -> Run on Server
-	On the dialog that comes up, hit Finish.
+If you get an error like `javax.servlet.http.HttpServletResponse not found` do
+the following:
 
-
-If you ever get an error in the application that says "java.lang.ClassNotFoundException: com.mysql.jdbc.Driver" or "Error connecting to the database.":
-Right click on the project, Run As -> Run Configurations
-In Apache Tomcat -> Tomcat v7.0 Server at localhost, click on classpath tab.
-Click on user entries
-Click on add external JARs
-navigate to repo/implementation/model/java, and select mysql-connector-java-5.0.8-bin.jar, hit open
-
-If you get an error like "javax.servlet.http.HttpServletResponse not found" do the following
 1. Right click your GWTView project
 2. Go to build path and select Configure Build Path...
 3. Go to the Libraries tab
 4. Click on Add Library...
 5. Select Google Web Toolkit and follow the instructions
 
-
 To enable assertions:
-Right click on GWTView -> Run As -> Run Configurations
-Apache Tomcat -> Tomcat v7.0 Server at localhost
-Arguments tab
-In the VM arguments box, put -ea
-Hit apply
+
+1. Right click on GWTView -> Run As -> Run Configurations
+2. Apache Tomcat -> Tomcat v7.0 Server at localhost
+3. Arguments tab
+4. In the VM arguments box, put -ea
+5. Hit apply
 
 Deploy to Server
 ================
