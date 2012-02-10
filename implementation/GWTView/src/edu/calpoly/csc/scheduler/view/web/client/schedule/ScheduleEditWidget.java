@@ -9,6 +9,7 @@ import java.util.List;
 
 import com.allen_sauer.gwt.dnd.client.PickupDragController;
 import com.allen_sauer.gwt.dnd.client.drop.DropController;
+import com.google.gwt.dev.util.msg.Message;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -247,12 +248,16 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 		
 		Button filterButton = new Button("Publish...", new ClickHandler() {
 			public void onClick(ClickEvent event) {
-
+				Window.alert("Not implemented yet.");
 			}
 		});
-		filterButton.addStyleName("floatingScheduleButtonBarItemRight");
+		filterButton.setStyleName("floatingScheduleButtonBarItemRight");
 		bottomButtonFlowPanel.add(filterButton);
 		
+//		Button csvButton = new CSVButton(greetingService).getButton();
+//		csvButton.addStyleName("floatingScheduleButtonBarItemRight");
+//		bottomButtonFlowPanel.add(csvButton);
+
 		searchBox = new TextBox();
 		searchBox.addKeyPressHandler(new KeyPressHandler() {
 			public void onKeyPress(KeyPressEvent event) {
@@ -323,7 +328,8 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 		boxesAndSchedulePanel.setSpacing(2);
 		boxesAndSchedulePanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 				
-		availableCoursesListBox = new ListBox();				
+		availableCoursesListBox = new ListBox();		
+		availableCoursesListBox.setStyleName("ScheduleAvailableCoursesList");
 		addCoursesToListBox();
 				
 		// scheduleGrid.layoutDaysAndTimes();
