@@ -79,16 +79,22 @@ public class GWTView implements EntryPoint {
 //		{
 
 		ViewFrame newViewFrame = null;
-		if (!Window.Location.getHref().contains("?scheduleid=")) {
-	   		newViewFrame = new ViewFrame(new LoginView(service, usernameContainer, logoutLinkContainer, menuBar));
+		if (Window.Location.getHref().contains("?userid=")) {
+		   String query = Window.Location.getHref();
+		   query = query.substring(query.lastIndexOf('?'));
+		   String automaticLoginUsername = query.split("=")[1];
+		   newViewFrame = new ViewFrame(new LoginViewAutomatic(service, usernameContainer, logoutLinkContainer, menuBar, automaticLoginUsername));
+		}
+		else if (Window.Location.getHref().contains("?scheduleid=")) {
+		   String query = Window.Location.getHref();
+		   query = query.substring(query.lastIndexOf('?'));
+		   String[] params = query.split("&");
+		   String automaticLoginUsername = params[2].split("=")[1];
+		   int automaticOpenDocumentID = Integer.parseInt(params[0].split("=")[1]);
+		   newViewFrame = new ViewFrame(new LoginViewAutomatic(service, usernameContainer, logoutLinkContainer, menuBar, automaticLoginUsername, automaticOpenDocumentID));
 		}
 		else {
-			String query = Window.Location.getHref();
-			query = query.substring(query.lastIndexOf('?'));
-			String[] params = query.split("&");
-			String automaticLoginUsername = params[2].split("=")[1];
-			int automaticOpenDocumentID = Integer.parseInt(params[0].split("=")[1]);
-	   		newViewFrame = new ViewFrame(new LoginViewAutomatic(service, usernameContainer, logoutLinkContainer, menuBar, automaticLoginUsername, automaticOpenDocumentID));
+		   newViewFrame = new ViewFrame(new LoginView(service, usernameContainer, logoutLinkContainer, menuBar));
 		}
 
    		pagePanel.add(newViewFrame);

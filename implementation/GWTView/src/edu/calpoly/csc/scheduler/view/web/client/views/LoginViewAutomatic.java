@@ -17,6 +17,13 @@ public class LoginViewAutomatic extends LoginView {
 		this.automaticOpenDocumentID = automaticOpenDocumentID;
 	}
 	
+	public LoginViewAutomatic(GreetingServiceAsync service, SimplePanel usernameContainer,
+	      SimplePanel logoutLinkContainer, MenuBar menuBar, String automaticLoginUsername) {
+	   super(service, usernameContainer, logoutLinkContainer, menuBar);
+	   this.automaticLoginUsername = automaticLoginUsername;
+	   this.automaticOpenDocumentID = Integer.MIN_VALUE;
+	}
+	
 	@Override
 	public void afterPush(ViewFrame frame) {
 		super.afterPush(frame);
@@ -30,7 +37,14 @@ public class LoginViewAutomatic extends LoginView {
 		
 		assert(myFrame.canPopViewsAboveMe());
 		myFrame.popFramesAboveMe();
-		myFrame.frameViewAndPushAboveMe(new SelectScheduleViewAutomatic(service, menuBar, username, automaticOpenDocumentID));
+		if(automaticOpenDocumentID == Integer.MIN_VALUE)
+		{
+		   myFrame.frameViewAndPushAboveMe(new SelectScheduleView(service, menuBar, username));
+		}
+		else
+		{
+		   myFrame.frameViewAndPushAboveMe(new SelectScheduleViewAutomatic(service, menuBar, username, automaticOpenDocumentID));
+		}
 	}
 	
 }

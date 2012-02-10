@@ -195,7 +195,12 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
          @Override
          public void onClick(ClickEvent event)
          {
-            Window.open(Window.Location.getHref() + "?scheduleid=" + scheduleid + "&schedulename=" + name + "&userid=" + username, "_new", null);
+            String baseHref = Window.Location.getHref();
+            if(Window.Location.getHref().contains("?userid="))
+            {
+               baseHref = Window.Location.getHref().substring(0, Window.Location.getHref().lastIndexOf('?'));
+            }
+            Window.open(baseHref + "?scheduleid=" + scheduleid + "&schedulename=" + name + "&userid=" + username, "_new", null);
 //            openInNewWindow(Window.Location.getHref(), scheduleid);
 //            selectSchedule(Integer.parseInt(scheduleid), name);
          }
@@ -451,7 +456,8 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
 
 	@Override
 	public void fileOpenPressed() {
-		Window.alert("implement");
+	   String baseHref = Window.Location.getHref().substring(0, Window.Location.getHref().lastIndexOf('?'));
+	   Window.open(baseHref + "?userid=" + username, "_new", null);
 	}
 
 	@Override
