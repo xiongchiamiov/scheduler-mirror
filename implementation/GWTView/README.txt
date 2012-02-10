@@ -1,3 +1,6 @@
+Setup Development Environment
+=============================
+
 Get Java EE Eclipse
 
 make sure you have the GWT plugin for eclipse and GWT developer plugin for your respective browser
@@ -66,3 +69,37 @@ Apache Tomcat -> Tomcat v7.0 Server at localhost
 Arguments tab
 In the VM arguments box, put -ea
 Hit apply
+
+Deploy to Server
+================
+
+Dependencies
+------------
+
+You'll need to install fabric; detailed installation instructions are provided
+[on fabfile.org](http://docs.fabfile.org/en/1.3.4/installation.html).
+
+If you have Python and setuptools, you should be able to just do
+
+    $> sudo easy_install fabric
+
+Deploy
+------
+
+Fabric is like make, but better.
+
+To display the list of tasks Fabric knows about, run
+
+    $> fab -l
+
+Since building via ant isn't completely working yet, you'll need to build the
+project using Eclipse (right-click -> Google -> GWT Compile).  Then, run `fab
+deploy` and feed it the names of directories on the server to which you wish to
+deploy.  For instance,
+
+    $> fab deploy:dev,CSC,EE
+
+If you deploy to a new directory, you'll have to configure Nginx to proxy
+through to Tomcat.  Edit `/etc/nginx/sites-enabled/default` and reload Nginx or
+talk to James.
+
