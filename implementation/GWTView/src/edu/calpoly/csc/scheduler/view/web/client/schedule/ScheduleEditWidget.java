@@ -98,6 +98,9 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 						// filters
 						filterScheduleItems(searchBox.getText());
 						loading.hide();
+						
+						scheduleTable.setScheduleItems(new DummySchedule());
+						scheduleTable.drawTable();
 					}
 
 				});
@@ -116,42 +119,42 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 		// return;
 		// }
 		loading.show();
-		// greetingService.generateSchedule(
-		// dualListBoxCourses.getIncludedCourses(), schedItems,
-		// new AsyncCallback<List<ScheduleItemGWT>>() {
-		// public void onFailure(Throwable caught) {
-		// loading.hide();
-		// Window.alert("Failed to get schedule: "
-		// + caught.toString());
-		// }
-		//
-		// public void onSuccess(List<ScheduleItemGWT> result) {
-		// if (result != null) {
-		// // Sort result by start times in ascending order
-		// Collections.sort(result,
-		// new ScheduleItemComparator());
-		//
-		// // Reset column and row spans, remove any items
-		// // already placed
-		// resetSchedule();
-		// scheduleItems = new ArrayList<ScheduleItemGWT>();
-		// for (ScheduleItemGWT item : result) {
-		// scheduleItems.add(item);
-		// }
-		//
-		// // Add the attributes of the retrieved items to the
-		// // filters list
-		// filtersDialog.addItems(scheduleItems);
-		//
-		// // Place schedule items with any previously set
-		// // filters
-		// filterScheduleItems(searchBox.getText());
-		//
-		// dualListBoxCourses.removeAllFromIncluded();
-		// loading.hide();
-		// }
-		// }
-		// });
+//		greetingService.generateSchedule(
+//		 dualListBoxCourses.getIncludedCourses(), schedItems,
+//		 new AsyncCallback<List<ScheduleItemGWT>>() {
+//		 public void onFailure(Throwable caught) {
+//		 loading.hide();
+//		 Window.alert("Failed to get schedule: "
+//		 + caught.toString());
+//		 }
+//		
+//		 public void onSuccess(List<ScheduleItemGWT> result) {
+//		 if (result != null) {
+//		 // Sort result by start times in ascending order
+//		 Collections.sort(result,
+//		 new ScheduleItemComparator());
+//		
+//		 // Reset column and row spans, remove any items
+//		 // already placed
+//		 resetSchedule();
+//		 scheduleItems = new ArrayList<ScheduleItemGWT>();
+//		 for (ScheduleItemGWT item : result) {
+//		 scheduleItems.add(item);
+//		 }
+//		
+//		 // Add the attributes of the retrieved items to the
+//		 // filters list
+//		 filtersDialog.addItems(scheduleItems);
+//		
+//		 // Place schedule items with any previously set
+//		 // filters
+//		 filterScheduleItems(searchBox.getText());
+//		
+//		 dualListBoxCourses.removeAllFromIncluded();
+//		 loading.hide();
+//		 }
+//		 }
+//		 });
 	}
 
 	/**
