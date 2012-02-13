@@ -130,6 +130,9 @@ public class DragAndDropController implements MouseMoveHandler, MouseOutHandler,
 	}
 	
 	private void addMouseHandlers() {
+		// TODO unregister these? or use this class as a singleton?
+		// When a user leaves the calendar view and comes back to it a new DragAndDropController is constructed
+		
 		RootPanel.get().addDomHandler(this, MouseMoveEvent.getType());
 		RootPanel.get().addDomHandler(this, MouseOutEvent.getType());
 		RootPanel.get().addDomHandler(this, MouseUpEvent.getType());

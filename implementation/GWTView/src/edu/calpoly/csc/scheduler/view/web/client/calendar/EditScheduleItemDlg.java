@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -13,7 +12,6 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -128,8 +126,8 @@ public class EditScheduleItemDlg extends DialogBox {
 		dayPanel.add(new HTML("Days:&nbsp;&nbsp;"));
 		
 		final VerticalPanel checkBoxPanel = new VerticalPanel();
-		for (int dayNum = 0; dayNum < CalendarTable.DAYS.length; dayNum++) {
-			final CheckBox checkBox = new CheckBox(CalendarTable.DAYS[dayNum]);
+		for (int dayNum = 0; dayNum < CalendarTableView.DAYS.length; dayNum++) {
+			final CheckBox checkBox = new CheckBox(CalendarTableView.DAYS[dayNum]);
 			mDayCheckBoxes.add(checkBox);
 			checkBoxPanel.add(checkBox);
 		}
@@ -152,9 +150,9 @@ public class EditScheduleItemDlg extends DialogBox {
 		timePanel.add(new HTML("Start Time:&nbsp;&nbsp;"));
 
 		mStartTimeLB.setVisibleItemCount(1);
-		for (int time = 0; time < CalendarTable.START_TIMES.length; time++)
-			mStartTimeLB.addItem(CalendarTable.START_TIMES[time]);
-		mStartTimeLB.setSelectedIndex(CalendarTable.getStartRow(mItem));
+		for (int time = 0; time < CalendarTableView.START_TIMES.length; time++)
+			mStartTimeLB.addItem(CalendarTableView.START_TIMES[time]);
+		mStartTimeLB.setSelectedIndex(CalendarTableView.getStartRow(mItem));
 		mStartTimeLB.setWidth("200px");
 
 		timePanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
@@ -172,9 +170,9 @@ public class EditScheduleItemDlg extends DialogBox {
 		timePanel.add(new HTML("End Time:&nbsp;&nbsp;"));
 
 		mEndTimeLB.setVisibleItemCount(1);
-		for (int time = 0; time < CalendarTable.END_TIMES.length; time++)
-			mEndTimeLB.addItem(CalendarTable.END_TIMES[time]);
-		mEndTimeLB.setSelectedIndex(CalendarTable.getEndRow(mItem));
+		for (int time = 0; time < CalendarTableView.END_TIMES.length; time++)
+			mEndTimeLB.addItem(CalendarTableView.END_TIMES[time]);
+		mEndTimeLB.setSelectedIndex(CalendarTableView.getEndRow(mItem));
 		mEndTimeLB.setWidth("200px");
 
 		timePanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);

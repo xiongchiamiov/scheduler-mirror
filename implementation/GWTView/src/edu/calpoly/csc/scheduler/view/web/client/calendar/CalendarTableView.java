@@ -21,7 +21,7 @@ import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
  * 
  * @author Matt Schirle
  */
-public class CalendarTable extends SimplePanel {
+public class CalendarTableView extends SimplePanel {
 	
 	/**
 	 * Models one row in the table
@@ -133,7 +133,7 @@ public class CalendarTable extends SimplePanel {
 	public static final String DAYS[] = { "Monday", "Tuesday", "Wednesday", 
 		"Thursday", "Friday" };
 	
-	public CalendarTable(ScheduleEditWidget scheduleController) {
+	public CalendarTableView(ScheduleEditWidget scheduleController) {
 		mModel = new CalendarModel();
 		mScheduleController = scheduleController;
 	}
@@ -150,19 +150,20 @@ public class CalendarTable extends SimplePanel {
 		final StringBuilder builder = new StringBuilder();
 		builder.append("<style type=\"text/css\">"+
 			"* {-webkit-user-select:none;-moz-user-select:none;}" +
-			"#editTableContainer {position:absolute;top:116px;left:"+mLeftOffset+"px;right:0px;bottom:33px;overflow:auto;border-left:1px solid black;background-color:#FFFFFF;}"+
-			"#editTable {border-spacing:0px;cellspacing:0px;}"+
-			"#editTable tr {height:20px;}"+
-			"#editTable td {overflow:hidden;padding:4px;border-top:1px solid #d1dfdf;}"+
-			"#editTable td.item {background-color:#DFF0CF;text-align:center;border:1px solid #FFFFFF;cursor:move;}"+
-			"#editTable td.dayHeader {position:relative;background-color:#edf2f2;border-right:1px solid #000000;border-bottom:1px solid #000000;font-weight:bold;text-align:center;z-index:2;}"+
-			"#editTable td.timeHeader {position:relative;background-color:#edf2f2;border-right:1px solid #000000;white-space:nowrap;text-align:right;}" +
-			"#editTable td#topCorner {border-bottom:1px solid #000000;background-color:#edf2f2;}"+
-			"#editTable td.daySpacer {border-left:1px solid #000000;padding:0px;margin:0px;width:0px;}"+
+			"#CalendarTableContainer {position:absolute;top:116px;left:"+mLeftOffset+"px;right:0px;bottom:33px;overflow:auto;background-color:#FFFFFF;}"+
+			"#CalendarTable {border-spacing:0px;cellspacing:0px;border:none;}"+
+			"#CalendarTable tr {height:20px;}"+
+			"#CalendarTable td {overflow:hidden;padding:4px;border-top:1px solid #d1dfdf;}"+
+			"#CalendarTable td.item {background-color:#DFF0CF;text-align:center;border:1px solid #FFFFFF;cursor:move;}"+
+			"#CalendarTable td.dayHeader {position:relative;background-color:#edf2f2;border-right:1px solid #000000;border-bottom:1px solid #000000;font-weight:bold;text-align:center;z-index:2;}"+
+			"#CalendarTable td.timeHeader {position:relative;background-color:#edf2f2;border-right:1px solid #000000;white-space:nowrap;text-align:right;}" +
+			"#CalendarTable td#topCorner {border-bottom:1px solid #000000;background-color:#edf2f2;}"+
+			"#CalendarTable td.daySpacer {border-left:1px solid #000000;padding:0px;margin:0px;width:0px;}"+
 			"#"+DragAndDropController.DRAGGED_ID+" {display:none;position:fixed;margin-left:-30px;margin-top:10px;width:70px;padding:3px;background-color:#DFF0CF;z-index:999;border:1px solid #FFFFFF;cursor:arrow;}"+
+			".ScheduleAvailableCoursesList {position:absolute;top:116px;left:0px;bottom:33px;width:200px;border-right:1px solid #000000;background-color:#FFFFFF;}"+
 			"</style>");
-		builder.append("<div id=\"editTableContainer\" onscroll=\"tableContainerScroll()\">");
-		builder.append("<table id=\"editTable\"><tr id=\"headerRow\"><td id=\"topCorner\" class=\"dayHeader\"></td>");
+		builder.append("<div id=\"CalendarTableContainer\" onscroll=\"tableContainerScroll()\">");
+		builder.append("<table id=\"CalendarTable\"><tr id=\"headerRow\"><td id=\"topCorner\" class=\"dayHeader\"></td>");
 		
 		// Add day headers
 		for (int dayNum = 0; dayNum < DAYS.length; dayNum++) {
@@ -296,7 +297,7 @@ public class CalendarTable extends SimplePanel {
 		final int dayNum = mModel.getDayNum(col);
 		final CalendarDayModel day = mModel.get(dayNum);
 		final ScheduleItemGWT item = day.get(row).get(col - day.getOffset());
-		
+
 		mScheduleController.editItem(item);
 	}
 	
@@ -358,7 +359,7 @@ public class CalendarTable extends SimplePanel {
 	 * Called when the table's container scrolls
 	 */
 	public void containerScroll() {
-		final Element container = DOM.getElementById("editTableContainer");
+		final Element container = DOM.getElementById("CalendarTableContainer");
 		final int top = DOM.getElementPropertyInt(container, "scrollTop");
 		final int left = DOM.getElementPropertyInt(container, "scrollLeft");
 
@@ -382,28 +383,28 @@ public class CalendarTable extends SimplePanel {
 	private native void defineTableCallbacks() /*-{
 		var scheduleTable = this;
 		$wnd.tableDoubleClick = function(row, col) {
-			return scheduleTable.@edu.calpoly.csc.scheduler.view.web.client.calendar.CalendarTable::doubleClick(II)(row, col);
+			return scheduleTable.@edu.calpoly.csc.scheduler.view.web.client.calendar.CalendarTableView::doubleClick(II)(row, col);
 		}
 		$wnd.tableMouseDown = function(row, col) {
-			return scheduleTable.@edu.calpoly.csc.scheduler.view.web.client.calendar.CalendarTable::mouseDown(II)(row, col);
+			return scheduleTable.@edu.calpoly.csc.scheduler.view.web.client.calendar.CalendarTableView::mouseDown(II)(row, col);
 		}
 		$wnd.tableMouseUp = function(row, col) {
-			return scheduleTable.@edu.calpoly.csc.scheduler.view.web.client.calendar.CalendarTable::mouseUp(II)(row, col);
+			return scheduleTable.@edu.calpoly.csc.scheduler.view.web.client.calendar.CalendarTableView::mouseUp(II)(row, col);
 		}
 		$wnd.tableMouseOver = function(row) {
-			return scheduleTable.@edu.calpoly.csc.scheduler.view.web.client.calendar.CalendarTable::mouseOver(I)(row);
+			return scheduleTable.@edu.calpoly.csc.scheduler.view.web.client.calendar.CalendarTableView::mouseOver(I)(row);
 		}
 		$wnd.tableMouseOut = function(row) {
-			return scheduleTable.@edu.calpoly.csc.scheduler.view.web.client.calendar.CalendarTable::mouseOut(I)(row);
+			return scheduleTable.@edu.calpoly.csc.scheduler.view.web.client.calendar.CalendarTableView::mouseOut(I)(row);
 		}
 		$wnd.tableContainerScroll = function() {
-			return scheduleTable.@edu.calpoly.csc.scheduler.view.web.client.calendar.CalendarTable::containerScroll()();
+			return scheduleTable.@edu.calpoly.csc.scheduler.view.web.client.calendar.CalendarTableView::containerScroll()();
 		}
     }-*/;
 	
 	public void setLeftOffset(int pixels) {
-		mLeftOffset = pixels;
-		Element tableContainer = DOM.getElementById("editTableContainer");
+		mLeftOffset = pixels + 1;
+		Element tableContainer = DOM.getElementById("CalendarTableContainer");
 		DOM.setStyleAttribute(tableContainer, "left", mLeftOffset+"px");
 	}
 	
@@ -421,7 +422,7 @@ public class CalendarTable extends SimplePanel {
 	}
 	
 	public List<ScheduleItemGWT> getScheduleItems() {
-		return mScheduleItems;
+		return null;
 	}
 	
 	public void setScheduleItems(List<ScheduleItemGWT> items) {

@@ -54,8 +54,10 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 	private VerticalPanel mainPanel = new VerticalPanel();
 	private boolean isCourseListCollapsed;
 	// private ScheduleTable scheduleGrid = new ScheduleTable(this);
-	private CalendarTable scheduleTable = new CalendarTable(this);	
+	private ScheduleItemListView availableCourses = new ScheduleItemListView(scheduleItems);
+	private CalendarTableView scheduleTable = new CalendarTableView(this);	
 	private FiltersViewWidget filtersDialog = new FiltersViewWidget();
+	
 	
 	private TextBox searchBox;
 	private ListBox availableCoursesListBox;
@@ -266,12 +268,14 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 				if (!isCourseListCollapsed) {
 					collapseScheduleButton.setText(">");
 					availableCoursesListBox.addStyleName("hiddenCoursesList");
+					availableCourses.toggle(true);
 					isCourseListCollapsed = true;
 					scheduleTable.setLeftOffset(0);
 				}
 				else {
 					collapseScheduleButton.setText("<");
 					availableCoursesListBox.removeStyleName("hiddenCoursesList");
+					availableCourses.toggle(false);
 					isCourseListCollapsed = false;
 					scheduleTable.setLeftOffset(200);
 				}
@@ -332,8 +336,6 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 	 */
 	private void addCoursesToListBox() {
 		
-		availableCoursesListBox.setVisibleItemCount(10);
-		
 		greetingService.getCourses(new AsyncCallback<List<CourseGWT>>() {
 			@Override
 			public void onFailure(Throwable caught) {
@@ -346,10 +348,12 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 				if (result != null) {
 					if (result.size() > 10) {
 						availableCoursesListBox.setVisibleItemCount(result.size());
+						availableCourses.drawList();
 					}
 					
 					for (CourseGWT course : result) {
 						availableCoursesListBox.addItem(course.toString());
+						availableCourses.drawList();
 					}
 				}
 			}
@@ -368,9 +372,10 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 		availableCoursesListBox = new ListBox();		
 		availableCoursesListBox.setStyleName("ScheduleAvailableCoursesList");
 		
-		addCoursesToListBox();				
+		addCoursesToListBox();	
 		
-		boxesAndSchedulePanel.add(availableCoursesListBox);
+		boxesAndSchedulePanel.add(availableCourses);
+		availableCourses.drawList();
 		
 		
 //		HTML myButton = new HTML("<div class=\"collapsingButton\"></div>");
