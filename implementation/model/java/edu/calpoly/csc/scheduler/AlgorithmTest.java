@@ -95,6 +95,30 @@ public class AlgorithmTest {
 		lab2.setDays(weekTT);
 		courses.add(lab2);
 		
+		Course multSectionLec = new Course("Spacecraft Design", "AERO", "405");
+		multSectionLec.setEnrollment(30);
+		multSectionLec.setLectureID(-1);
+		multSectionLec.setDbid(1002);
+		multSectionLec.setLength(6);
+		multSectionLec.setNumOfSections(2);
+		multSectionLec.setScu(4);
+		multSectionLec.setWtu(4);
+		multSectionLec.setType(Course.CourseType.LEC);
+		multSectionLec.setDays(weekMWF);
+		courses.add(multSectionLec);
+		
+		Course multSectionLab = new Course("Spacecraft Design", "AERO", "405");
+		multSectionLab.setEnrollment(30);
+		multSectionLab.setLectureID(1002);
+		multSectionLab.setLength(6);
+		multSectionLab.setNumOfSections(2);
+		multSectionLab.setScu(4);
+		multSectionLab.setWtu(4);
+		multSectionLab.setType(Course.CourseType.LAB);
+		multSectionLab.setTetheredToLecture(true);
+		multSectionLab.setDays(weekMWF);
+		courses.add(multSectionLab);
+		
 		/*Course lec3 = new Course("Leadership and Facilitation", "RPTA", "205");
 		lec3.setEnrollment(30);
 		lec3.setLectureID(-1);
@@ -161,6 +185,18 @@ public class AlgorithmTest {
 		times.put(1130, new TimePreference(new Time(11, 30), 10));
 		times.put(1200, new TimePreference(new Time(12, 0), 10));
 		times.put(1230, new TimePreference(new Time(12, 30), 10));
+		times.put(1300, new TimePreference(new Time(13, 0), 10));
+		times.put(1330, new TimePreference(new Time(13, 30), 10));
+		times.put(1400, new TimePreference(new Time(14, 0), 10));
+		times.put(1430, new TimePreference(new Time(14, 30), 10));
+		times.put(1500, new TimePreference(new Time(15, 0), 10));
+		times.put(1530, new TimePreference(new Time(15, 30), 10));
+		times.put(1600, new TimePreference(new Time(16, 0), 10));
+		times.put(1630, new TimePreference(new Time(16, 30), 10));
+		times.put(1700, new TimePreference(new Time(17, 0), 10));
+		times.put(1730, new TimePreference(new Time(17, 30), 10));
+		times.put(1800, new TimePreference(new Time(18, 0), 10));
+		times.put(1830, new TimePreference(new Time(18, 30), 10));
 		
 		tps.put(1, times);
 		//tps.put(2, times);
@@ -198,11 +234,11 @@ public class AlgorithmTest {
 		times2.put(2000, new TimePreference(new Time(20, 0), 10));
 		times2.put(2030, new TimePreference(new Time(20, 30), 10));
 		
-		tps2.put(1, times2);
+		//tps2.put(1, times2);
 		tps2.put(2, times2);
-		tps2.put(3, times2);
+		//tps2.put(3, times2);
 		tps2.put(4, times2);
-		tps2.put(5, times2);
+		//tps2.put(5, times2);
 
 		instructor2.setTimePreferences(tps2);
 		
@@ -213,6 +249,6 @@ public class AlgorithmTest {
 	}
 	
 	public static void printAllScheduledCourseInfo(Schedule sched) {
-
+        System.out.println("Finished creating schedule");
 	}
 }
