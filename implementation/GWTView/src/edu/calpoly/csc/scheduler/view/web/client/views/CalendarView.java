@@ -16,17 +16,17 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.client.IViewContents;
 import edu.calpoly.csc.scheduler.view.web.client.ViewFrame;
-import edu.calpoly.csc.scheduler.view.web.client.schedule.ScheduleEditWidget;
+import edu.calpoly.csc.scheduler.view.web.client.calendar.ScheduleEditWidget;
 import edu.calpoly.csc.scheduler.view.web.client.schedule.ScheduleViewWidget;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 
-public class ScheduleView extends VerticalPanel implements IViewContents {
+public class CalendarView extends VerticalPanel implements IViewContents {
 	private GreetingServiceAsync service;
 	private String scheduleName;
 
 	// HashMap<String, ScheduleItemGWT> scheduleItems;
 
-	public ScheduleView(GreetingServiceAsync greetingService,
+	public CalendarView(GreetingServiceAsync greetingService,
 			String scheduleName) {
 		this.service = greetingService;
 		this.scheduleName = scheduleName;

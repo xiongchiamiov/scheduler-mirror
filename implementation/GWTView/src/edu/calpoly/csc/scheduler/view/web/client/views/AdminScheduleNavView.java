@@ -243,7 +243,7 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 					public void execute() {
 						if (viewFrame.canPopViewsAboveMe()) {
 							viewFrame.popFramesAboveMe();
-							viewFrame.frameViewAndPushAboveMe(new ScheduleView(service, scheduleName));
+							viewFrame.frameViewAndPushAboveMe(new CalendarView(service, scheduleName));
 						}
 					}
 				}));

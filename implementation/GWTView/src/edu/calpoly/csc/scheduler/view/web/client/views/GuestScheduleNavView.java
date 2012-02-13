@@ -29,7 +29,7 @@ public class GuestScheduleNavView extends SimplePanel implements IViewContents {
 			public void execute() {
 				if (frame.canPopViewsAboveMe()) {
 					frame.popFramesAboveMe();
-					frame.frameViewAndPushAboveMe(new ScheduleView(service, scheduleName));
+					frame.frameViewAndPushAboveMe(new CalendarView(service, scheduleName));
 				}
 			}
 		});

@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.view.web.client.schedule;
+package edu.calpoly.csc.scheduler.view.web.client.calendar;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,8 +34,10 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.client.HTMLUtilities;
+import edu.calpoly.csc.scheduler.view.web.client.schedule.DummySchedule;
+import edu.calpoly.csc.scheduler.view.web.client.schedule.FiltersViewWidget;
+import edu.calpoly.csc.scheduler.view.web.client.schedule.ScheduleTable;
 import edu.calpoly.csc.scheduler.view.web.client.views.LoadingPopup;
-import edu.calpoly.csc.scheduler.view.web.client.views.ScheduleEditTable;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemList;
@@ -52,11 +54,11 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 	private VerticalPanel mainPanel = new VerticalPanel();
 	private boolean isCourseListCollapsed;
 	// private ScheduleTable scheduleGrid = new ScheduleTable(this);
-	private ScheduleEditTable scheduleTable = new ScheduleEditTable(this);	
+	private CalendarTable scheduleTable = new CalendarTable(this);	
 	private FiltersViewWidget filtersDialog = new FiltersViewWidget();
 	
 	private TextBox searchBox;
-	private ListBox availableCoursesListBox;	
+	private ListBox availableCoursesListBox;
 
 	/**
 	 * Returns this widget in its entirety.
@@ -255,11 +257,13 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 					collapseScheduleButton.setText(">");
 					availableCoursesListBox.addStyleName("hiddenCoursesList");
 					isCourseListCollapsed = true;
+					scheduleTable.setLeftOffset(0);
 				}
 				else {
 					collapseScheduleButton.setText("<");
 					availableCoursesListBox.removeStyleName("hiddenCoursesList");
 					isCourseListCollapsed = false;
+					scheduleTable.setLeftOffset(200);
 				}
 		}});
 		
@@ -373,6 +377,7 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 		
 		// scheduleGrid.layoutDaysAndTimes();
 		// scheduleGrid.placePanels();
+		scheduleTable.setLeftOffset(200);
 		boxesAndSchedulePanel.add(scheduleTable);
 		
 		mainPanel.add(boxesAndSchedulePanel);
