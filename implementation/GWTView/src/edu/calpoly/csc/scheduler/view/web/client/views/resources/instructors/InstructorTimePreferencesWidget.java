@@ -60,11 +60,20 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 		{
 			setPreference(this, desire);
 			list.setSelectedIndex(desire);
-			String lastStyle = getStyleName();
+			String lastStyle = list.getStyleName();
 			//System.out.println("Last style name: "+lastStyle);
 			//System.out.println("New style: "+styleNames[desire-3]);
-			removeStyleName(lastStyle);
-			addStyleName(styleNames[3 - desire]);
+			list.removeStyleName(lastStyle);
+			list.addStyleName(styleNames[3 - desire]);
+		}
+		
+		public void addListStyle(String style)
+		{
+			String lastStyle = list.getStyleName();
+			
+			list.removeStyleName(lastStyle);
+			
+			list.addStyleName(style);
 		}
 		
 		public int getIndex()
@@ -165,7 +174,7 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 		assert(getPreference(instructor, cell.halfHour, cell.day) == desire);
 		
 		assert(cell != null);
-		cell.addStyleName(styleNames[3-desire]);
+		cell.addListStyle(styleNames[3-desire]);
 		//cell.clear();
 		//cell.add(new HTML(new Integer(getPreference(instructor, cell.halfHour, cell.day)).toString()));
 	}
@@ -274,8 +283,8 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 			public void onKeyDown(KeyDownEvent event) {
 				event.preventDefault();
 				
-				int keyCode = event.getNativeKeyCode();
-				if (keyCode >= '0' && keyCode <= '9')
+				//int keyCode = event.getNativeKeyCode();
+				/*if (keyCode >= '0' && keyCode <= '9')
 					setSelectedCellsContents(keyCode - '0');
 				else if (keyCode == KeyCodes.KEY_ENTER) {
 					if (lastSelectedCell != null && lastSelectedCell.halfHour + 1 < 30) {
@@ -284,8 +293,8 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 						selectCell(cell);
 						lastSelectedCell = cell;
 					}
-				}
-				else if (event.getNativeKeyCode() == KeyCodes.KEY_TAB) {
+				}*/
+				if (event.getNativeKeyCode() == KeyCodes.KEY_TAB) {
 					if (lastSelectedCell != null && lastSelectedCell.day + 1 < 7) {
 						clearSelectedCells();
 						CellWidget cell = cells[lastSelectedCell.halfHour][lastSelectedCell.day + 1];
@@ -389,6 +398,9 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 		for (int day = 0; day < days.size(); day++) {
 			timePrefsTable.setWidget(0, day + 1, new HTML(days.get(day)));
 		}
+		
+		
+		
 		cells = new CellWidget[30][days.size()];
 		//System.out.println("cells 2nd dim " + days.size());
 		
@@ -417,7 +429,7 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 				cell.setIndex(desire);
 				
 				//cell.add(list);
-				cell.addStyleName(styleNames[3-desire]);
+				cell.addListStyle(styleNames[3-desire]);
 				//cell.add(new HTML(Integer.toString(desire)));
 				/*cell.addClickHandler(new ClickHandler() {
 					@Override
@@ -447,6 +459,11 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 				cells[halfHour][dayNum] = cell;
 			}
 		}
+	}
+	
+	void rowOrColumnSelected(int x, int y)
+	{
+		System.out.println("X: "+x+", Y: "+y);
 	}
 	
 	void cellWidgetMouseDown(CellWidget cell, MouseDownEvent event)
