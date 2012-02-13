@@ -1,0 +1,4 @@
+#Sun Feb 12 15:48:28 PST 2012
+eclipse.preferences.version=1
+entryPointModules=edu.calpoly.csc.scheduler.view.web.Chrome|edu.calpoly.csc.scheduler.view.web.GWTView|edu.calpoly.csc.scheduler.view.web.Firefox
+filesCopiedToWebInfLib=gwt-servlet.jar

@@ -1,0 +1,124 @@
+/* gets rid of the yellow border chrome puts on focused things */
+* { 
+    outline: none;
+}
+
+.osmtable {
+	border-spacing: collapse;
+}
+
+.osmtable td {
+	vertical-align: top;
+}
+
+.osmtable .gwt-CheckBox label {
+	white-space: nowrap;
+}
+
+.osmtable .stringcell.writing input {
+	padding: 0px;
+}
+
+.osmtable > tbody > tr:nth-child(odd),
+.osmtable > tr:nth-child(odd) {
+	background-color: #F8FBFE;
+}
+
+/*.osmtable tr + tr:hover { background-color: #EEEEEE; }*/
+
+.osmtable td {
+	overflow: hidden;
+}
+
+.headers {
+	border-bottom: 2px solid #6F7277;
+}
+
+.headers.floating {
+	position: fixed;
+	top: 0;
+	background-color: white;
+	opacity: 0.9;
+}
+
+.headers .resizeable {
+	position: relative;
+	display: block;
+	/*border-right: 2px dotted #6F7277;*/
+}
+
+.headers .resizeable .resizer {
+	position: absolute;
+	top: 0px;
+	bottom: 0px;
+	right: -3px;
+	width: 6px;
+	background: url('imgs/resizer.gif') repeat-y;
+	display: block;
+	cursor: col-resize;
+	z-index: 1;
+}
+
+.headerContents {
+	font-weight: bold;
+	color: #4B4A4A;
+	text-align: left;
+	text-shadow: 1px 1px 0 #DDDDFF;
+	padding: 3px !important;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.osmtableContainer .headers .headerContents {
+	cursor: pointer;
+}
+
+.osmtable .hiddenRow .headerContents {
+	height: 0px;
+}
+
+.osmtable .icon {
+	width: 1.5em;
+	height: 1.5em;
+	background-size: 100% 100%;
+}
+
+.osmtable .icon.delete.enabled {
+	background-image: url('imgs/delete-icon.png') 
+}
+
+.osmtable .icon.delete.disabled {
+	background-image: url('imgs/delete-icon-disabled.png');
+	opacity: .2;
+	filter: alpha(opacity=20);
+}
+
+.osmtable .icon.edit {
+	background-image: url('imgs/edit-icon.png');
+}
+
+.osmtable .icon.accept {
+	background-image: url('imgs/accept-icon.png');
+}
+
+.osmtable .icon.enabled {
+	cursor: pointer;
+}
+
+.osmtable td {
+	padding: 2px;
+}
+
+.osmtable td.selected {
+	background-color: #E0E0E0;
+	border: 2px solid #808080;
+	padding: 0px;
+}
+
+.osmtable .hiddenRow td {
+	padding: 0px;
+}
+
+.osmtable td.invalid {
+	background-color: #FFE0E0;
+}
