@@ -654,14 +654,9 @@ public class Schedule extends DbData implements Serializable
                           System.err.println("GENERATION MADE A BAD LEC");
                           System.err.println(lec_si);
                      }
-                }
+                //}
                 
                 debug ("Done with scheduling LECTURE");
-                debug ("The ID of the LEC is: " + c.getDbid());
-                for(Course labCourse : labList.values()) {
-                	debug ("The ID of the LAB/ACT/DIS is: " + labCourse.getLectureID() + " type: " + 
-                			labCourse.getType());
-                }
                 
                 if(labList.containsKey(c.getDbid())) { //Have a lab or labs that we need to schedule
                 	debug ("Found lab/act/dis for " + c.toString());
@@ -670,17 +665,23 @@ public class Schedule extends DbData implements Serializable
                 	
                 	debug ("Now scheduling labs/act/dis for " + c.toString());
                 	
-                	ScheduleItem lab_si = genLabItem(lab, lec_si);
-                    try
-                    {                           
-                       add(lab_si);
-                       lec_si.addLab(lab_si);
-                    }
-                    catch (CouldNotBeScheduledException e)
-                    {
-                       System.err.println("GENERATION MADE A BAD LAB");
-                       System.err.println(lab_si);
-                    }
+                	/*st = getSectionTracker(lab);
+                    for (int i = 0; i < c.getNumOfSections(); i ++)
+                    {*/
+                	    ScheduleItem lab_si = genLabItem(lab, lec_si);
+                        try
+                        {                           
+                           add(lab_si);
+                           lec_si.addLab(lab_si);
+                        }
+                        catch (CouldNotBeScheduledException e)
+                        {
+                           System.err.println("GENERATION MADE A BAD LAB");
+                           System.err.println(lab_si);
+                        }
+                        debug ("The lab enrollment is: " + Integer.toString(lab_si.getCourse().getEnrollment()));
+                    //}
+                }
                 }
            }
       }
