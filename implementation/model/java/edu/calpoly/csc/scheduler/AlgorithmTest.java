@@ -95,6 +95,45 @@ public class AlgorithmTest {
 		lab2.setDays(weekTT);
 		courses.add(lab2);
 		
+		/*Course lec3 = new Course("Leadership and Facilitation", "RPTA", "205");
+		lec3.setEnrollment(30);
+		lec3.setLectureID(-1);
+		lec3.setDbid(1000);
+		lec3.setLength(6);
+		lec3.setNumOfSections(1);
+		lec3.setScu(4);
+		lec3.setWtu(4);
+		lec3.setType(Course.CourseType.LEC);
+		lec3.setDays(weekTT);
+		courses.add(lec3);
+		
+		Course act1 = new Course("Leadership and Facilitation Act", "RPTA", "205");
+		act1.setEnrollment(30);
+		act1.setLectureID(1000);
+		//act1.setDbid();
+		act1.setLength(6);
+		act1.setNumOfSections(1);
+		act1.setScu(4);
+		act1.setWtu(4);
+		act1.setType(Course.CourseType.ACT);
+		act1.setTetheredToLecture(true);
+		act1.setDays(weekTT);
+		courses.add(act1);
+		
+		Course sem = new Course("Hospitality Seminar", "RPTA", "252");
+		sem.setEnrollment(30);
+		sem.setLectureID(-1);
+		sem.setDbid(1001);
+		sem.setLength(6);
+		sem.setNumOfSections(1);
+		sem.setScu(4);
+		sem.setWtu(4);
+		sem.setType(Course.CourseType.SEM);
+		sem.setTetheredToLecture(false);
+		sem.setDays(weekTT);
+		courses.add(sem);
+		*/
+		
 		return courses;
 	}
 	
@@ -141,8 +180,9 @@ public class AlgorithmTest {
 		instructor2.setUserID("evan");
 		
 		for(Course c : courses) {
-			if(c.getType() == CourseType.LEC) {
-			    if(c.getDbid() == 1001)
+			if(c.getType() == CourseType.LEC || c.getType() == CourseType.SEM) {
+				
+			    if(c.getDbid() == 1000 || c.getDbid() == 1001)
 			        instructor2.addCoursePreference(new CoursePreference(c, 10));
 			    else
 				    instructor2.addCoursePreference(new CoursePreference(c, 0));
