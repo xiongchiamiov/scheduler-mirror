@@ -281,10 +281,6 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 		filterButton.setStyleName("floatingScheduleButtonBarItemRight");
 		bottomButtonFlowPanel.add(filterButton);
 		
-//		Button csvButton = new CSVButton(greetingService).getButton();
-//		csvButton.addStyleName("floatingScheduleButtonBarItemRight");
-//		bottomButtonFlowPanel.add(csvButton);
-
 		searchBox = new TextBox();
 		searchBox.addKeyPressHandler(new KeyPressHandler() {
 			public void onKeyPress(KeyPressEvent event) {
