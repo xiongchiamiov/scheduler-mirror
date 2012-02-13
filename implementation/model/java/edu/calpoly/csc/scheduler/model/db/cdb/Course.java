@@ -25,12 +25,13 @@ public class Course extends DbData implements Serializable
     */
    public enum CourseType
    {
-      LEC, LAB;
+      LEC, LAB, IND, DIS, ACT, SEM;
       
       @Override
       public String toString ()
       {
-         return (this == LEC) ? "LEC" : "LAB";
+    	  return this.name();
+         //return (this == LEC) ? "LEC" : "LAB";
       }
    }
    
@@ -66,9 +67,9 @@ public class Course extends DbData implements Serializable
    private CourseType type = CourseType.LEC;
    /**
     * How long a course is taught in a week. Measured in number of half hours it
-    * is taught in a given week.
+    * is taught in a given week. Default is 6 half-hour units for a common 3 hour lecture.
     */
-   private Integer length = 0;
+   private Integer length = 6;
    /**
     * The days in the week this course is to be taught
     */
@@ -351,6 +352,23 @@ public class Course extends DbData implements Serializable
       {
          this.type = CourseType.LAB;
       }
+      else if(type.equalsIgnoreCase("ACT"))
+      {
+         this.type = CourseType.ACT;
+      }
+      else if(type.equalsIgnoreCase("SEM"))
+      {
+         this.type = CourseType.SEM;
+      }
+      else if(type.equalsIgnoreCase("IND"))
+      {
+         this.type = CourseType.IND;
+      }
+      else if(type.equalsIgnoreCase("DIS"))
+      {
+         this.type = CourseType.DIS;
+      }
+     
    }
 
    /**

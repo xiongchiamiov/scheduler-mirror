@@ -618,15 +618,20 @@ public class Schedule extends DbData implements Serializable
       //Generate labs from the course list
       HashMap<Integer, Course> labList = new HashMap<Integer, Course>();
       for (Course c : this.cSourceList) {
-    	  if(c.getType() == Course.CourseType.LAB) { //Is a lab associated with a lecture
-    		  debug ("Found lab: " + c.getCatalogNum() + " " + c.getName());
+    	//Is a lab (or until a case found otherwise, an ACT or DIS) associated with a lecture
+    	  if(c.getType() == Course.CourseType.LAB || c.getType() == Course.CourseType.ACT ||
+    			  c.getType() == Course.CourseType.DIS) { 
+    		  
+    		  debug ("Found act/dis/lab: " + c.getType() + " " + c.getCatalogNum() + " " + c.getName());
     		  labList.put(c.getLectureID(), c);
     	  }
+    	  // IND/SEM treated as lectures until found otherwise     	  
       }
 
       for (Course c : this.cSourceList)
       {
-           if(c.getType() == Course.CourseType.LEC) {
+           if(c.getType() == Course.CourseType.LEC ||c.getType() == Course.CourseType.IND ||
+        		   c.getType() == Course.CourseType.SEM) {
                 debug ("MAKING SI's FOR COURSE " + c);
                 
                 ScheduleItem lec_si = null;
@@ -654,15 +659,16 @@ public class Schedule extends DbData implements Serializable
                 debug ("Done with scheduling LECTURE");
                 debug ("The ID of the LEC is: " + c.getDbid());
                 for(Course labCourse : labList.values()) {
-                	debug ("The ID of the LAB is: " + labCourse.getLectureID());
+                	debug ("The ID of the LAB/ACT/DIS is: " + labCourse.getLectureID() + " type: " + 
+                			labCourse.getType());
                 }
                 
                 if(labList.containsKey(c.getDbid())) { //Have a lab or labs that we need to schedule
-                	debug ("Found lab for " + c.toString());
+                	debug ("Found lab/act/dis for " + c.toString());
                 	
                 	Course lab = labList.get(c.getDbid());
                 	
-                	debug ("Now scheduling labs for " + c.toString());
+                	debug ("Now scheduling labs/act/dis for " + c.toString());
                 	
                 	ScheduleItem lab_si = genLabItem(lab, lec_si);
                     try
@@ -887,11 +893,12 @@ public class Schedule extends DbData implements Serializable
     * @param sis List of ScheduleItems with their instructor, course, days, and
     *        times fields already set.
     * 
-    * @return A list of locaitons which can be taught on the days for course 'c'
+    * @return A list of locations which can be taught on the days for course 'c'
     *         during at least the TimeRanges passed in.
     */
    private Vector<ScheduleItem> findLocations (Vector<ScheduleItem> sis)
    {
+	  //might have to look into TBA location for IND type courses
       Vector<ScheduleItem> si_list = new Vector<ScheduleItem>();
 
       debug ("HAVE " + sis.size() + " ITEMS FOR LOCATIONS TO TRY");
