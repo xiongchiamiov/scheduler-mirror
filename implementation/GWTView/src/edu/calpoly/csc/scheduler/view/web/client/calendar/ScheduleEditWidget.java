@@ -34,7 +34,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.client.HTMLUtilities;
-import edu.calpoly.csc.scheduler.view.web.client.schedule.DummySchedule;
+import edu.calpoly.csc.scheduler.view.web.client.calendar.DummySchedule;
 import edu.calpoly.csc.scheduler.view.web.client.schedule.FiltersViewWidget;
 import edu.calpoly.csc.scheduler.view.web.client.schedule.ScheduleTable;
 import edu.calpoly.csc.scheduler.view.web.client.views.LoadingPopup;
@@ -101,6 +101,7 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 						filterScheduleItems(searchBox.getText());
 						loading.hide();
 						
+						
 						scheduleTable.setScheduleItems(new DummySchedule());
 						scheduleTable.drawTable();
 					}
@@ -110,6 +111,15 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 		return mainPanel;
 	}
 
+	/**
+	 * Displays a dialog that allows the user to edit a schedule item's instructor, location, and time
+	 */
+	public void editItem(ScheduleItemGWT item) {
+		final EditScheduleItemDlg editDlg = new EditScheduleItemDlg(greetingService, item);
+		editDlg.center();
+		
+	}
+	
 	/**
 	 * Retrieves a schedule items from a generated schedule from the server.
 	 */

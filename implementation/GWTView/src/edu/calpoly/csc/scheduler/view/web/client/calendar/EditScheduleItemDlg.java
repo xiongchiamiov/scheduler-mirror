@@ -32,18 +32,23 @@ public class EditScheduleItemDlg extends DialogBox {
 	private final ListBox mStartTimeLB = new ListBox(false);
 	private final ListBox mEndTimeLB = new ListBox(false);
 	
-	private final CalendarTable mTable;
 	private final GreetingServiceAsync mGreetingService;
 	private final ScheduleItemGWT mItem;
+	private boolean mChangedItem;
 	
-	public EditScheduleItemDlg(CalendarTable table, ScheduleItemGWT item) {//GreetingServiceAsync service, 
+	public EditScheduleItemDlg(GreetingServiceAsync service, ScheduleItemGWT item) {
 		super(false);
 		
-		mTable = table;
-		mGreetingService = null;
+		mGreetingService = service;
 		mItem = item;
 		
 		draw();
+	}
+	
+	public ScheduleItemGWT getItem() {
+		if (!mChangedItem)
+			return null;
+		return mItem;
 	}
 	
 	private void draw() {
@@ -64,10 +69,15 @@ public class EditScheduleItemDlg extends DialogBox {
 	}
 	
 	private void cancel() {
+		mChangedItem = false;
 		hide();
 	}
 	
 	private void ok() {
+		mChangedItem = true;
+		
+		// TODO: update mItem based on user input data
+		
 		hide();
 	}
 	
@@ -144,7 +154,7 @@ public class EditScheduleItemDlg extends DialogBox {
 		mStartTimeLB.setVisibleItemCount(1);
 		for (int time = 0; time < CalendarTable.START_TIMES.length; time++)
 			mStartTimeLB.addItem(CalendarTable.START_TIMES[time]);
-		mStartTimeLB.setSelectedIndex(mTable.getStartRow(mItem));
+		mStartTimeLB.setSelectedIndex(CalendarTable.getStartRow(mItem));
 		mStartTimeLB.setWidth("200px");
 
 		timePanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
@@ -164,7 +174,7 @@ public class EditScheduleItemDlg extends DialogBox {
 		mEndTimeLB.setVisibleItemCount(1);
 		for (int time = 0; time < CalendarTable.END_TIMES.length; time++)
 			mEndTimeLB.addItem(CalendarTable.END_TIMES[time]);
-		mEndTimeLB.setSelectedIndex(mTable.getEndRow(mItem));
+		mEndTimeLB.setSelectedIndex(CalendarTable.getEndRow(mItem));
 		mEndTimeLB.setWidth("200px");
 
 		timePanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);

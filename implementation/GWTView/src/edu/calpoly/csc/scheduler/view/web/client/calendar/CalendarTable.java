@@ -107,8 +107,8 @@ public class CalendarTable extends SimplePanel {
 		private final CalendarDayModel mDays[];
 	}
 	
-	private Map<String, ScheduleItemGWT> mScheduleItems;
-	private Map<String, ScheduleItemGWT> mFilteredScheduleItems;
+	private List<ScheduleItemGWT> mScheduleItems;
+	private List<ScheduleItemGWT> mFilteredScheduleItems;
 	private CalendarModel mModel;
 	private String mInnerHTML;
 	private int mLeftOffset;
@@ -235,7 +235,7 @@ public class CalendarTable extends SimplePanel {
 		
 		CalendarModel model = new CalendarModel();
 		
-		for (ScheduleItemGWT item : mFilteredScheduleItems.values()) {
+		for (ScheduleItemGWT item : mFilteredScheduleItems) {
 			for (Integer dayNum : item.getDayNums()) {
 				CalendarDayModel day = model.get(dayNum);
 				
@@ -297,8 +297,7 @@ public class CalendarTable extends SimplePanel {
 		final CalendarDayModel day = mModel.get(dayNum);
 		final ScheduleItemGWT item = day.get(row).get(col - day.getOffset());
 		
-		final EditScheduleItemDlg editDlg = new EditScheduleItemDlg(this, item);
-		editDlg.center();
+		mScheduleController.editItem(item);
 	}
 	
 	/**
@@ -413,19 +412,19 @@ public class CalendarTable extends SimplePanel {
 		mFilteredScheduleItems = mScheduleItems;
 	}
 	
-	public int getStartRow(ScheduleItemGWT item) {
+	public static int getStartRow(ScheduleItemGWT item) {
 		return item.getStartTimeHour() * 2 + (item.getStartTimeMin() < 30 ? 0 : 1);
 	}
 	
-	public int getEndRow(ScheduleItemGWT item) {
+	public static int getEndRow(ScheduleItemGWT item) {
 		return item.getEndTimeHour() * 2 + (item.getEndTimeMin() < 30 ? 0 : 1) - 1;
 	}
 	
-	public Map<String, ScheduleItemGWT> getScheduleItems() {
-		return null;
+	public List<ScheduleItemGWT> getScheduleItems() {
+		return mScheduleItems;
 	}
 	
-	public void setScheduleItems(Map<String, ScheduleItemGWT> items) {
+	public void setScheduleItems(List<ScheduleItemGWT> items) {
 		mScheduleItems = items;
 		applyFilters();
 	}
