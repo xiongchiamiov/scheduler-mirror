@@ -113,8 +113,7 @@ public class CalendarTableView extends SimplePanel {
 	private String mInnerHTML;
 	private int mLeftOffset;
 	
-	private DragAndDropController mMediator = new DragAndDropController();
-	
+	private final DragAndDropController mDragController;
 	private final ScheduleEditWidget mScheduleController;
 	
 	public static final String END_TIMES[] = { "7:00 AM", "7:30 AM", "8:00 AM", "8:30 AM",
@@ -133,9 +132,12 @@ public class CalendarTableView extends SimplePanel {
 	public static final String DAYS[] = { "Monday", "Tuesday", "Wednesday", 
 		"Thursday", "Friday" };
 	
-	public CalendarTableView(ScheduleEditWidget scheduleController) {
+	public CalendarTableView(ScheduleEditWidget scheduleController, DragAndDropController dragController) {
 		mModel = new CalendarModel();
 		mScheduleController = scheduleController;
+		mDragController = dragController;
+		
+		defineTableCallbacks();
 	}
 	
 	/**
@@ -145,7 +147,6 @@ public class CalendarTableView extends SimplePanel {
 		clear();
 		
 		mModel = buildTableModel();
-		defineTableCallbacks();
 		
 		final StringBuilder builder = new StringBuilder();
 		builder.append("<style type=\"text/css\">"+
@@ -175,9 +176,9 @@ public class CalendarTableView extends SimplePanel {
 		
 		// Fill in table
 		for (int rowNum = 0; rowNum < END_TIMES.length; rowNum++) {
-			builder.append("<tr id=\"y"+rowNum+"\"" +
-				"onmouseover=\"tableMouseOver("+rowNum+")\"" +
-				"onmouseout=\"tableMouseOut("+rowNum+")\"" +
+			builder.append("<tr id=\"y"+rowNum+"\" " +
+				"onmouseover=\"tableMouseOver("+rowNum+")\" " +
+				"onmouseout=\"tableMouseOut("+rowNum+")\" " +
 				"><td class=\"timeHeader\" id=\"h"+rowNum+"\">"+END_TIMES[rowNum]+"</td>");
 			
 			for (int dayNum = 0; dayNum < DAYS.length; dayNum++) {
@@ -190,7 +191,7 @@ public class CalendarTableView extends SimplePanel {
 					
 					if (item == null) {
 						builder.append("<td id=\"x"+tableCol+"y"+tableRow+"\"" +
-								"onmouseup=\"tableMouseUp("+tableRow+","+tableCol+")\"" +
+								"onmouseup=\"tableMouseUp("+tableRow+","+tableCol+")\" " +
 								"></td>");
 					}
 					else if (rowNum == getStartRow(item)) {
@@ -198,11 +199,11 @@ public class CalendarTableView extends SimplePanel {
 						
 						builder.append("<td " +
 								"rowspan="+rowspan+" " +
-								"class=\"item\" id=\"x"+tableCol+"y"+tableRow+"\"" +
-								"ondblclick=\"tableDoubleClick("+tableRow+","+tableCol+")\"" +
-								"onmousedown=\"tableMouseDown("+tableRow+","+tableCol+")\"" +
-								"onmouseup=\"tableMouseUp("+tableRow+","+tableCol+")\"" +
-								"onselectstart=\"return false\"" +
+								"class=\"item\" id=\"x"+tableCol+"y"+tableRow+"\" " +
+								"ondblclick=\"tableDoubleClick("+tableRow+","+tableCol+")\" " +
+								"onmousedown=\"tableMouseDown("+tableRow+","+tableCol+")\" " +
+								"onmouseup=\"tableMouseUp("+tableRow+","+tableCol+")\" " +
+								"onselectstart=\"return false\" " +
 								">"+item.getCourseString()+"</td>");
 					}
 				}
@@ -303,8 +304,10 @@ public class CalendarTableView extends SimplePanel {
 	
 	/**
 	 * Called when the an item on the table gets a mouse down event
+	 * 
+	 * @return false to disable text selection on some browsers
 	 */
-	public boolean mouseDown(int row, int col) {
+	public Boolean mouseDown(int row, int col) {
 		final CalendarDayModel day = mModel.get(mModel.getDayNum(col));
 		final ScheduleItemGWT item = day.get(row).get(col - day.getOffset());
 		
@@ -312,7 +315,7 @@ public class CalendarTableView extends SimplePanel {
 		Element dragDiv = DOM.getElementById(DragAndDropController.DRAGGED_ID);
 		DOM.setInnerText(dragDiv, item.getCourseString());
 		
-		mMediator.onMouseDown(item, row, col);
+		mDragController.onMouseDown(item, row, col);
 		return false;
 	}
 
@@ -320,7 +323,7 @@ public class CalendarTableView extends SimplePanel {
 	 * Called when the any cell on the table gets a mouse up event
 	 */
 	public void mouseUp(int row, int col) {
-		if (mMediator.isDragging()) {
+		if (mDragController.isDragging()) {
 			Element tr = DOM.getElementById("y"+row);
 			DOM.setStyleAttribute(tr, "backgroundColor", "#d1dfdf");
 
@@ -328,14 +331,14 @@ public class CalendarTableView extends SimplePanel {
 			DOM.setStyleAttribute(timeHeader, "backgroundColor", "#d1dfdf");
 		}
 		
-		mMediator.onDrop(row, col);
+		mDragController.onDrop(row, col);
 	}
 	
 	/**
 	 * Called when the any cell on the table gets a mouse up event
 	 */
 	public void mouseOver(int row) {
-		if (mMediator.isDragging()) {
+		if (mDragController.isDragging()) {
 			Element tr = DOM.getElementById("y"+row);
 			DOM.setStyleAttribute(tr, "backgroundColor", "#d1dfdf");
 

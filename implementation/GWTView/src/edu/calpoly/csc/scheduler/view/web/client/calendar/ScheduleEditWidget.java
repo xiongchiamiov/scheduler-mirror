@@ -54,8 +54,9 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 	private VerticalPanel mainPanel = new VerticalPanel();
 	private boolean isCourseListCollapsed;
 	// private ScheduleTable scheduleGrid = new ScheduleTable(this);
-	private ScheduleItemListView availableCourses = new ScheduleItemListView(scheduleItems);
-	private CalendarTableView scheduleTable = new CalendarTableView(this);	
+	private final DragAndDropController dragController = new DragAndDropController();
+	private ScheduleItemListView availableCourses = new ScheduleItemListView(scheduleItems, this, dragController);
+	private CalendarTableView scheduleTable = new CalendarTableView(this, dragController);	
 	private FiltersViewWidget filtersDialog = new FiltersViewWidget();
 	
 	

@@ -23,7 +23,7 @@ public class DragAndDropController implements MouseMoveHandler, MouseOutHandler,
 
 	public static final String DRAGGED_ID = "dragItem";
 	
-	private Element mTableCell;
+	private Element mItemView;
 	private ScheduleItemGWT mDraggingItem;
 	private ScheduleItemGWT mDroppedItem;
 	private boolean isMoving = false;
@@ -34,7 +34,7 @@ public class DragAndDropController implements MouseMoveHandler, MouseOutHandler,
 	}
 	
 	public boolean isHolding() {
-		return mDraggingItem != null && mTableCell != null;
+		return mDraggingItem != null && mItemView != null;
 	}
 	
 	public boolean isDragging() {
@@ -53,8 +53,8 @@ public class DragAndDropController implements MouseMoveHandler, MouseOutHandler,
 			DOM.setStyleAttribute(dragDiv, "top", event.getClientY()+"px");
 			
 			// Hide the contents of the table cell the user dragged
-			DOM.setStyleAttribute(mTableCell, "color", "#FFFFFF");
-			DOM.setStyleAttribute(mTableCell, "backgroundColor", "#FFFFFF");
+			DOM.setStyleAttribute(mItemView, "color", "#FFFFFF");
+			DOM.setStyleAttribute(mItemView, "backgroundColor", "#FFFFFF");
 		}
 	}
 	
@@ -74,19 +74,22 @@ public class DragAndDropController implements MouseMoveHandler, MouseOutHandler,
 	 * Triggered when the user starts dragging an item
 	 * 
 	 * @param item The item
-	 * @param tableRow The row number of this item in the table, 
-	 * 	or -1 if available courses list
+	 * @param row The row number of this item in the table or in the list
 	 * @param tableCol The column number of this item in the table, 
 	 * 	or -1 if available courses list
 	 */
-	public void onMouseDown(ScheduleItemGWT item, int tableRow, int tableCol) {
+	public void onMouseDown(ScheduleItemGWT item, int row, int tableCol) {
 		mDraggingItem = item;
-		mTableCell = DOM.getElementById("x"+tableCol+"y"+tableRow);
 		isMoving = false;
+		
+		if (tableCol < 0)
+			mItemView = DOM.getElementById("list"+row);
+		else
+			mItemView = DOM.getElementById("x"+tableCol+"y"+row);
 	}
 	
 	/**
-	 * Triggered when an item is dropped
+	 * Triggered when an item is dropped (as opposed to every mouse up event)
 	 *  
 	 * @param row The table row the item was dropped on, or -1 if off table
 	 * @param col The table column the item was dropped on, or -1 if off table
@@ -117,11 +120,11 @@ public class DragAndDropController implements MouseMoveHandler, MouseOutHandler,
 			mDroppedItem = mDraggingItem;
 			mDraggingItem = null;
 		}
-		else if (mTableCell != null) {
+		else if (mItemView != null) {
 			// Show contents of hidden table cell
-			DOM.setStyleAttribute(mTableCell, "color", "#000000");
-			DOM.setStyleAttribute(mTableCell, "backgroundColor", "#DFF0CF");
-			mTableCell = null;
+			DOM.setStyleAttribute(mItemView, "color", "#000000");
+			DOM.setStyleAttribute(mItemView, "backgroundColor", "#DFF0CF");
+			mItemView = null;
 		}
 		
 		// Hide the div that follows the cursor while dragging
