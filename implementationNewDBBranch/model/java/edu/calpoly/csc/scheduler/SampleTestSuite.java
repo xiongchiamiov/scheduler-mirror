@@ -22,8 +22,8 @@ public class SampleTestSuite extends TestCase {
 	public static TestSuite suite() {
 		TestSuite suite = new TestSuite("Example testsuite (Junit3)");
 
-		suite.addTest(new ModelTest());
-		suite.addTest(new CSVTest());
+		suite.addTestSuite(ModelTest.class);
+		suite.addTestSuite(CSVTest.class);
 		
 		return suite;
 	}
