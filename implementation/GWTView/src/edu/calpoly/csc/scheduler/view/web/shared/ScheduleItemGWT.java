@@ -4,22 +4,22 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class ScheduleItemGWT implements Serializable {
-	// private static final long serialVersionUID = 5345021880975658731L;
-	private String courseName;
-	private String professor;
-	private String courseDept;
-	private String courseNum;
-	private int section;
-	private String days;
-	ArrayList<Integer> dayNums;
-	private int startTimeHour;
-	private int endTimeHour;
-	private int startTimeMin;
-	private int endTimeMin;
-	private boolean placed = false;
-	private String room;
-	private boolean isConflicted;
-	private CourseGWT course;
+
+	private String mCourseName;
+	private String mProfessor;
+	private String mCourseDept;
+	private String mCourseNum;
+	private int mSection;
+	private String mDays;
+	ArrayList<Integer> mDayNums;
+	private int mStartTimeHour;
+	private int mEndTimeHour;
+	private int mStartTimeMin;
+	private int mEndTimeMin;
+	private boolean mPlaced = false;
+	private String mRoom;
+	private boolean mIsConflicted;
+	private CourseGWT mCourse;
 
 	public ScheduleItemGWT() {
 	}
@@ -27,24 +27,21 @@ public class ScheduleItemGWT implements Serializable {
 	public ScheduleItemGWT(CourseGWT course, String cName, String prof,
 			String dept, String cNum, int sec, ArrayList<Integer> dNums,
 			int sth, int stm, int eth, int etm, String rm, boolean conflicted) {
-		this.course = course;
-		courseName = cName;
-		professor = prof;
-		courseDept = dept;
-		courseNum = cNum;
-		section = sec;
-		dayNums = dNums;
-		days = getDayString(dayNums);
-		startTimeHour = sth;
-		startTimeMin = stm;
-		endTimeHour = eth;
-		endTimeMin = etm;
-		room = rm;
-		isConflicted = conflicted;
-	}
-
-	public CourseGWT getCourse() {
-		return course;
+		
+		mCourse = course;
+		mCourseName = cName;
+		mProfessor = prof;
+		mCourseDept = dept;
+		mCourseNum = cNum;
+		mSection = sec;
+		mDayNums = dNums;
+		mDays = getDayString(mDayNums);
+		mStartTimeHour = sth;
+		mStartTimeMin = stm;
+		mEndTimeHour = eth;
+		mEndTimeMin = etm;
+		mRoom = rm;
+		mIsConflicted = conflicted;
 	}
 
 	private String getDayString(ArrayList<Integer> dayNums) {
@@ -72,124 +69,140 @@ public class ScheduleItemGWT implements Serializable {
 	}
 
 	public String getSchdItemText() {
-		return courseDept + "<br>" + courseNum;
+		return mCourseDept + "<br>" + mCourseNum;
 	}
 
 	public String getHoverText() {
 		String startHour, endHour, startMin, endMin;
 		String startAmPm, endAmPm;
 
-		startAmPm = startTimeHour >= 12 ? "pm" : "am";
-		endAmPm = endTimeHour >= 12 ? "pm" : "am";
+		startAmPm = mStartTimeHour >= 12 ? "pm" : "am";
+		endAmPm = mEndTimeHour >= 12 ? "pm" : "am";
 
-		if (startTimeHour > 12) {
-			startHour = Integer.toString(startTimeHour - 12);
+		if (mStartTimeHour > 12) {
+			startHour = Integer.toString(mStartTimeHour - 12);
 		} else {
-			startHour = Integer.toString(startTimeHour);
+			startHour = Integer.toString(mStartTimeHour);
 		}
-		if (endTimeHour > 12) {
-			endHour = Integer.toString(endTimeHour - 12);
+		if (mEndTimeHour > 12) {
+			endHour = Integer.toString(mEndTimeHour - 12);
 		} else {
-			endHour = Integer.toString(endTimeHour);
+			endHour = Integer.toString(mEndTimeHour);
 		}
-		if (startTimeMin < 10) {
-			startMin = "0" + Integer.toString(startTimeMin);
+		if (mStartTimeMin < 10) {
+			startMin = "0" + Integer.toString(mStartTimeMin);
 		} else {
-			startMin = Integer.toString(startTimeMin);
+			startMin = Integer.toString(mStartTimeMin);
 		}
-		if (endTimeMin < 10) {
-			endMin = "0" + Integer.toString(endTimeMin);
+		if (mEndTimeMin < 10) {
+			endMin = "0" + Integer.toString(mEndTimeMin);
 		} else {
-			endMin = Integer.toString(endTimeMin);
+			endMin = Integer.toString(mEndTimeMin);
 		}
 
-		return courseName + "<br>" + courseDept + " " + courseNum + "-"
-				+ section + "<br>" + room + "<br>" + professor + "<br>" + days
+		return mCourseName + "<br>" + mCourseDept + " " + mCourseNum + "-"
+				+ mSection + "<br>" + mRoom + "<br>" + mProfessor + "<br>" + mDays
 				+ " " + startHour + ":" + startMin + startAmPm + " - "
 				+ endHour + ":" + endMin + endAmPm;
 	}
-
-	public int getStartTimeHour() {
-		return startTimeHour;
+	
+	public CourseGWT getCourse() {
+		return mCourse;
+	}
+	
+	public void setCourse(CourseGWT course) {
+		mCourse = course;
 	}
 
+	public int getStartTimeHour() {
+		return mStartTimeHour;
+	}
+
+	public void setStartTimeHour(int startTimeHour) {
+		mStartTimeHour = startTimeHour;
+	}
+	
 	public int getEndTimeHour() {
-		return endTimeHour;
+		return mEndTimeHour;
 	}
 
 	public int getStartTimeMin() {
-		return startTimeMin;
+		return mStartTimeMin;
 	}
 
 	public int getEndTimeMin() {
-		return endTimeMin;
+		return mEndTimeMin;
 	}
 
 	public ArrayList<Integer> getDayNums() {
-		return dayNums;
+		return mDayNums;
 	}
 
+	public void setDayNums(ArrayList<Integer> dayNums) {
+		mDayNums = dayNums;
+	}
+	
 	public String getProfessor() {
-		return professor;
+		return mProfessor;
 	}
 
+	public void setProfessor(String professor) {
+		mProfessor = professor;
+	}
+	
 	public String getCourseString() {
-		return courseDept + " " + courseNum;
+		return mCourseDept + " " + mCourseNum;
 	}
 
 	public String getRoom() {
-		return room;
+		return mRoom;
 	}
 
 	public boolean isPlaced() {
-		return placed;
+		return mPlaced;
 	}
 
 	public void setPlaced(boolean p) {
-		placed = p;
+		mPlaced = p;
 	}
 
 	public boolean startsAfterHalf() {
-		return startTimeMin >= 30;
+		return mStartTimeMin >= 30;
 	}
 
 	public boolean endsAfterHalf() {
-		return endTimeMin >= 30;
-	}
-
-	public void setStartTimeHour(int hour) {
-		startTimeHour = hour;
+		return mEndTimeMin >= 30;
 	}
 
 	public void setStartTimeMin(int min) {
-		startTimeMin = min;
+		mStartTimeMin = min;
 	}
 
 	public void setEndTimeHour(int hour) {
-		endTimeHour = hour;
+		mEndTimeHour = hour;
 	}
 
 	public void setEndTimeMin(int min) {
-		endTimeMin = min;
+		mEndTimeMin = min;
 	}
 
 	public String getDept() {
-		return courseDept;
+		return mCourseDept;
 	}
 
 	public String getCatalogNum() {
-		return courseNum;
+		return mCourseNum;
 	}
 
 	public int getSection() {
-		return section;
+		return mSection;
 	}
 
 	public void setConflicted(boolean conflicted) {
-		isConflicted = conflicted;
+		mIsConflicted = conflicted;
 	}
 
 	public boolean isConflicted() {
-		return isConflicted;
+		return mIsConflicted;
 	}
 }

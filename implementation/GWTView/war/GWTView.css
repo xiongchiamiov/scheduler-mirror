@@ -493,6 +493,15 @@ background-clip: initial;
 	float: left;
 	margin: 0px 5px 0px 15px;
 }
+
+.editScheduleItemDialog {
+	padding: 10px;
+}
+
+.buttonStyle {
+	
+}
+
 .exportChoice {
 }
 .exportChoice:focus {
