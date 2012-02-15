@@ -21,7 +21,7 @@ package edu.calpoly.csc.scheduler.view.web.shared;
  * @author: Gene Fisher (gfisher@calpoly.edu)
  * @version: 9feb12
  */
-public class PairTest {
+public class PairTest extends GWTTestCase {
 
     /**
      * Stub for testing the constructor.
