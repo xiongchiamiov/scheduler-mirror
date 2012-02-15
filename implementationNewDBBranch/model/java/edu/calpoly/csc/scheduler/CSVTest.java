@@ -5,18 +5,22 @@ import junit.framework.*;
 
 public class CSVTest extends TestCase {
 
+	//testcase variables
 	Model model;
-//	Map<String, UserData> availableSchedules;
+	//Map<String, UserData> availableSchedules;
 	
+	//setup called by TestCase when run
 	public void setUp() {
 		//model = new Model("chem");
 		//availableSchedules = model.getSchedules();
 	}
 	
+	//called by TestCase when run
 	public void tearDown() {
 		
 	}
 	
+	//actual test method, requires 'test' in front of method name
 	public void testCSVContainsSchedule() {
 		//for (String avail : availableSchedules.keySet())
 			//System.out.println(avail);

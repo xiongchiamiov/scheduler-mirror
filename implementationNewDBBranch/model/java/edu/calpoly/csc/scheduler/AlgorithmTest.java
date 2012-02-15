@@ -1,28 +1,64 @@
 package edu.calpoly.csc.scheduler;
 
+import junit.framework.TestCase;
+import junit.framework.Test.*;
 
-public class AlgorithmTest {
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
-//	public static void main(String[] args) {
-//		Model model = new Model("adam");
-//		Map<String, UserData> availableSchedules = model.getSchedules();
+import edu.calpoly.csc.scheduler.model.Model;
+//import edu.calpoly.csc.scheduler.model.db.Time;
+//import edu.calpoly.csc.scheduler.model.db.cdb.Course;
+//import edu.calpoly.csc.scheduler.model.db.cdb.Course.CourseType;
+//import edu.calpoly.csc.scheduler.model.db.idb.CoursePreference;
+//import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
+//import edu.calpoly.csc.scheduler.model.db.idb.TimePreference;
+//import edu.calpoly.csc.scheduler.model.db.udb.UserData;
+//import edu.calpoly.csc.scheduler.model.schedule.Day;
+//import edu.calpoly.csc.scheduler.model.schedule.Schedule;
+//import edu.calpoly.csc.scheduler.model.schedule.Week;
+//import edu.calpoly.csc.scheduler.model.schedule.WeekAvail;
+
+public class AlgorithmTest extends TestCase {
+	
+	Model model;
+//	Map<String, UserData> availableSchedules;
+//	Schedule sched;
+//	List<Course> courses;
+//	List<Instructor> instructors;
+	
+	public AlgorithmTest() {
+		super();
+	}
+	
+	public void setUp() {
+//		model = new Model("adam");
+//		availableSchedules = model.getSchedules();
 //		for (String avail : availableSchedules.keySet())
 //			System.out.println(avail);
-//		assert(availableSchedules.containsKey("Algorithm Test Schedule"));
+//		
+//		assertTrue(availableSchedules.containsKey("Algorithm Test Schedule"));
+//		
 //		model.openExistingSchedule("Algorithm Test Schedule");
-//		Schedule sched = model.getSchedule();
+//		Schedule sched = model.getSchedule();		
+//		courses = generateCourseList();
+//	    instructors = generateInstructorList(courses);
 //		
-//		List<Course> courses = generateCourseList();
-//		
-//		List<Instructor> instructors = generateInstructorList(courses);
-//		
-//		sched.setiSourceList(instructors);
-//		
+//		sched.setiSourceList(instructors);		
+	}
+	
+	public void testGenerateSchedule() {
 //		sched.generate(courses);
-//		
 //		printAllScheduledCourseInfo(sched);
-//	}
-//	
+	}
+	
+	public void tearDown() {
+		//if any artifacts need to be deleted
+	}
+	
 //	public static List<Course> generateCourseList() {
 //		List<Course> courses = new ArrayList<Course>();
 //		
@@ -79,7 +115,7 @@ public class AlgorithmTest {
 //		
 //		return courses;
 //	}
-//	
+	
 //	public static List<Instructor> generateInstructorList(List<Course> courses) {
 //		List<Instructor> instructors = new ArrayList<Instructor>();
 //		
@@ -153,7 +189,7 @@ public class AlgorithmTest {
 //		
 //		return instructors;
 //	}
-//	
+	
 //	public static void printAllScheduledCourseInfo(Schedule sched) {
 //
 //	}

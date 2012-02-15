@@ -9,51 +9,70 @@ import edu.calpoly.csc.scheduler.model.Instructor;
 import edu.calpoly.csc.scheduler.model.Model;
 import edu.calpoly.csc.scheduler.model.db.IDatabase;
 import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
+import junit.framework.*;
 
-public class ModelTest {
+public class ModelTest extends TestCase{
+	final ICreateDatabaseCallback createDatabase = new ICreateDatabaseCallback() {
+		public IDatabase createDatabase() {
+			return new edu.calpoly.csc.scheduler.model.db.simple.Database();
+		}
+	};
+	
+	public void setUp() {
+		
+	}
+	
+	public void tearDown() {
+		
+	}
+	
+	public void test() {
+		
+	}
+	
 	public interface ICreateDatabaseCallback {
 		IDatabase createDatabase();
 	}
 	
-	final ICreateDatabaseCallback createDatabase;
-	ModelTest(ICreateDatabaseCallback createDatabase) {
-		this.createDatabase = createDatabase;
-	}
+//	//final ICreateDatabaseCallback createDatabase;
+//	ModelTest(ICreateDatabaseCallback createDatabase) {
+//		this.createDatabase = createDatabase;
+//	}
 	
 	private Model createBlankModel() {
 		return new Model(createDatabase.createDatabase());
 	}
 	
-	public static void main(String[] args) {
-		new ModelTest(new ICreateDatabaseCallback() {
-			public IDatabase createDatabase() {
-				return new edu.calpoly.csc.scheduler.model.db.simple.Database();
-			}
-		}).runTests();
-	}
+//	public static void main(String[] args) {
+//		new ModelTest(new ICreateDatabaseCallback() {
+//			public IDatabase createDatabase() {
+//				return new edu.calpoly.csc.scheduler.model.db.simple.Database();
+//			}
+//		}).runTests();
+//	}
 	
-	void runTests() {
-		try {
-			testInsertDocument();
-			testInsertDocuments();
-			testInsertAndFindDocument();
-			testUpdateDocument();
-			testDeleteDocument();
-			testFindAllDocuments();
-			
-			testInsertAndFindInstructor();
-			testModifyInstructorValueDoesntAutomaticallyUpdateDatabase();
-			testUpdateInstructor();
-			testDeleteInstructor();
-			testFindAllInstructorsForDocument();
-			testFindAllInstructorsInMultipleDocuments();
-			
-			System.out.println("Success");
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+//	void runTests() {
+//		try {
+//			testInsertDocument();
+//			testInsertDocuments();
+//			testInsertAndFindDocument();
+//			testUpdateDocument();
+//			testDeleteDocument();
+//			testFindAllDocuments();
+//			
+//			testInsertAndFindInstructor();
+//			testModifyInstructorValueDoesntAutomaticallyUpdateDatabase();
+//			testUpdateInstructor();
+//			testDeleteInstructor();
+//			testFindAllInstructorsForDocument();
+//			testFindAllInstructorsInMultipleDocuments();
+//			
+//			System.out.println("Success");
+//		}
+//		catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
 
 	void testInsertDocument() {
 		Model model = new Model(createDatabase.createDatabase());

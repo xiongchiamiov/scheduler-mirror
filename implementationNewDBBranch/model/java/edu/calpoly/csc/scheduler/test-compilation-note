@@ -1,0 +1,4 @@
+Make sure to add junit_3.8.2.x jar to your build path. Eclipse should be able to find it and 
+resolve any errors in the test class. If not, the jar's in /implementationNewDBBranch/test/jars
+and also in /implementation/GWTView/test/test-jars
+
