@@ -1,7 +1,8 @@
 package edu.calpoly.csc.scheduler;
 
 
-import junit.framework.*;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
 public class SampleTestSuite extends TestCase {
 
@@ -22,7 +23,8 @@ public class SampleTestSuite extends TestCase {
 	public static TestSuite suite() {
 		TestSuite suite = new TestSuite("Example testsuite (Junit3)");
 
-		suite.addTestSuite(ModelTest.class);
+		suite.addTestSuite(DocumentsTestSimpleDB.class);
+		suite.addTestSuite(InstructorsTestSimpleDB.class);
 		suite.addTestSuite(CSVTest.class);
 		
 		return suite;

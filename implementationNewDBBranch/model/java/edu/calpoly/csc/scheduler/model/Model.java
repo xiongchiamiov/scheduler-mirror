@@ -11,6 +11,10 @@ import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
 public class Model {
 	final IDatabase database;
 	
+	public Model() {
+		this.database = new edu.calpoly.csc.scheduler.model.db.simple.Database();
+	}
+	
 	public Model(IDatabase database) {
 		this.database = database;
 	}
