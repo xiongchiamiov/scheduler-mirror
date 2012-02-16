@@ -7,6 +7,7 @@ public class DBLocation extends DBObject implements IDBLocation {
 	String room;
 	String type;
 	String maxOccupancy;
+	boolean isSchedulable;
 	
 	public DBLocation(Integer id, int documentID, String room, String type, String maxOccupancy) {
 		super(id);
@@ -31,4 +32,8 @@ public class DBLocation extends DBObject implements IDBLocation {
 	public String getMaxOccupancy() { return maxOccupancy; }
 	@Override
 	public void setMaxOccupancy(String maxOccupancy) { this.maxOccupancy = maxOccupancy; }
+	@Override
+	public boolean isSchedulable() { return isSchedulable; }
+	@Override
+	public void setIsSchedulable(boolean isSchedulable) { this.isSchedulable = isSchedulable; }
 }

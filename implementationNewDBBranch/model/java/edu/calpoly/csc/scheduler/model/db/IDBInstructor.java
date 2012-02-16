@@ -12,4 +12,7 @@ public interface IDBInstructor extends IDBObject {
 	
 	String getMaxWTU();
 	void setMaxWTU(String maxWTU);
+	
+	boolean isSchedulable();
+	void setIsSchedulable(boolean isSchedulable);
 }

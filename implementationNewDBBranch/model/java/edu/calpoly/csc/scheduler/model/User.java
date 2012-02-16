@@ -8,4 +8,10 @@ public class User {
 	User(IDBUser underlyingUser) {
 		this.underlyingUser = underlyingUser;
 	}
+	
+	public String getUsername() { return underlyingUser.getUsername(); }
+	public void setUsername(String username) { underlyingUser.setUsername(username); }
+	
+	public boolean isAdmin() { return underlyingUser.isAdmin(); }
+	public void setAdmin(boolean isAdmin) { underlyingUser.setAdmin(isAdmin); }
 }

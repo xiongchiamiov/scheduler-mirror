@@ -27,4 +27,7 @@ public interface IDBCourse extends IDBObject {
 	
 	String getNumHalfHoursPerWeek();
 	void setNumHalfHoursPerWeek(String numHalfHoursPerWeek);
+
+	boolean isSchedulable();
+	void setIsSchedulable(boolean isSchedulable);
 }

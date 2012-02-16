@@ -1,12 +1,20 @@
 package edu.calpoly.csc.scheduler.model;
 
+import java.util.HashMap;
+
 import edu.calpoly.csc.scheduler.model.db.IDBInstructor;
 
 public class Instructor {
 	IDBInstructor underlyingInstructor;
+	HashMap<Integer, HashMap<Integer, Integer>> timePreferences;
+	HashMap<Integer, Integer> coursePreferences;
 	
-	Instructor(IDBInstructor underlyingInstructor) {
+	Instructor(IDBInstructor underlyingInstructor,
+			HashMap<Integer, HashMap<Integer, Integer>> timePreferences,
+			HashMap<Integer, Integer> coursePreferences) {
 		this.underlyingInstructor = underlyingInstructor;
+		this.timePreferences = timePreferences;
+		this.coursePreferences = coursePreferences;
 	}
 	
 	public int getID() { return underlyingInstructor.getID(); }
@@ -22,4 +30,9 @@ public class Instructor {
 	
 	public String getMaxWTU() { return underlyingInstructor.getMaxWTU(); }
 	public void setMaxWTU(String maxWTU) { underlyingInstructor.setMaxWTU(maxWTU); }
+
+	public HashMap<Integer, HashMap<Integer, Integer>> getTimePreferences() { return timePreferences; }
+	public void setTimePreferences(HashMap<Integer, HashMap<Integer, Integer>> timePreferences) { this.timePreferences = timePreferences; }
+	public HashMap<Integer, Integer> getCoursePreferences() { return coursePreferences; }
+	public void setCoursePreferences(HashMap<Integer, Integer> coursePreferences) { this.coursePreferences = coursePreferences; }
 }

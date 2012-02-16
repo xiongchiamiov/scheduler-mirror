@@ -7,6 +7,7 @@ public class DBInstructor extends DBObject implements IDBInstructor {
 	String firstName, lastName;
 	String username;
 	String maxWTU;
+	boolean isSchedulable;
 	
 	public DBInstructor(Integer id, int documentID, String firstName, String lastName, String username,
 			String maxWTU) {
@@ -38,4 +39,8 @@ public class DBInstructor extends DBObject implements IDBInstructor {
 	public String getMaxWTU() { return maxWTU; }
 	@Override
 	public void setMaxWTU(String maxWTU) { this.maxWTU = maxWTU; }
+	@Override
+	public boolean isSchedulable() { return isSchedulable; }
+	@Override
+	public void setIsSchedulable(boolean isSchedulable) { this.isSchedulable = isSchedulable; }
 }

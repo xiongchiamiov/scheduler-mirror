@@ -13,6 +13,8 @@ public class DBCourse extends DBObject implements IDBCourse {
 	String type;
 	String maxEnrollment;
 	String numHalfHoursPerWeek;
+	boolean isSchedulable;
+	int lectureID;
 
 	public DBCourse(Integer id, int documentID, String name, String catalogNumber, String department,
 			String wtu, String scu, String numSections, String type,
@@ -70,4 +72,8 @@ public class DBCourse extends DBObject implements IDBCourse {
 	public String getNumHalfHoursPerWeek() { return numHalfHoursPerWeek; }
 	@Override
 	public void setNumHalfHoursPerWeek(String numHalfHoursPerWeek) { this.numHalfHoursPerWeek = numHalfHoursPerWeek; }
+	@Override
+	public boolean isSchedulable() { return isSchedulable; }
+	@Override
+	public void setIsSchedulable(boolean isSchedulable) { this.isSchedulable = isSchedulable; }
 }
