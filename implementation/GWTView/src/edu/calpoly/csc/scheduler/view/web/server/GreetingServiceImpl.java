@@ -126,7 +126,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	public ArrayList<ScheduleItemGWT> generateSchedule(List<CourseGWT> courses, HashMap<String, ScheduleItemGWT> scheduleItems) {
 		Course courseWithSections;
 		Schedule schedule = model.getSchedule();
-
+		//Instructor ins;
+		
 		assert (model != null);
 		scheduleItems = new HashMap<String, ScheduleItemGWT>();
 
@@ -135,6 +136,18 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 			courseWithSections = Conversion.fromGWT(course);
 			coursesToGenerate.add(courseWithSections);
 		}
+		
+		/*List<Instructor> insToGenerate = new LinkedList<Instructor>();
+		for (InstructorGWT instructor: getInstructors()) {
+			//ins = Conversion.fromGWT(instructor, getCoursesByID());
+			//insToGenerate.add(ins);
+		}
+		
+		schedule.setiSourceList(insToGenerate); */
+		
+		//TODO convert locations from gwt and set it to schedule's lSourceList as above
+	
+		
 		// TODO: fix this hack.
 		for (Course course : coursesToGenerate) {
 			assert (course.getDays().size() > 0);
