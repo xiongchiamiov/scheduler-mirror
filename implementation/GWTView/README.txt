@@ -26,10 +26,11 @@ Setup Development Environment
 16. Hit add external jar. add
     repo/implementation/GWTView/war/WEB-INF/lib/guava-r09.jar
 17. Hit add external jar. add repo/implementation/model/java/javacsv.jar
-18. also add the "dnd" jar by clicking on "Add JARs..." and browsing under
+18. Hit add external jar. add repo/implementation/GWTView/test/test-jars/junit-3.8.2.jar
+19. also add the "dnd" jar by clicking on "Add JARs..." and browsing under
     GWTView
-19. get out of the properties menu.
-20. Do a clean and a build. there should be no errors. (there may be some
+20. get out of the properties menu.
+21. Do a clean and a build. there should be no errors. (there may be some
     warnings) There might be a warning about some server missing.
 
 [eclipse]: http://www.eclipse.org/downloads/
