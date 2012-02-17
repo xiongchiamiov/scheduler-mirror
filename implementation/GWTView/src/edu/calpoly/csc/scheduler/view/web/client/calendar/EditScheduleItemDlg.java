@@ -105,7 +105,23 @@ public class EditScheduleItemDlg extends DialogBox {
 		
 		hide();
 	}
+	
+	private int getStartHour(int row) {
+		return row / 2;
+	}
 
+	private int getStartMin(int row) {
+		return getEndMin(row)+ 10;
+	}
+
+	private int getEndHour(int row) {
+		return row / 2;
+	}
+
+	private int getEndMin(int row) {
+		return ((row % 2) * 30);
+	}
+	
 	private Widget createTitlePanel() {
 		final HTML titlePanel = new HTML("<center><b>Edit " + mItem.getCourseString() + "</b></center><p>");
 		titlePanel.setHeight("30px");
@@ -248,7 +264,7 @@ public class EditScheduleItemDlg extends DialogBox {
 				}
 			}
 			
-		});		
+		});	
 	}
 
 	private void populateLocations() {
