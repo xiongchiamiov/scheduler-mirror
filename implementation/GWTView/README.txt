@@ -110,12 +110,10 @@ To display the list of tasks Fabric knows about, run
 
     $> fab -l
 
-Since building via ant isn't completely working yet, you'll need to build the
-project using Eclipse (right-click -> Google -> GWT Compile).  Then, run `fab
-deploy` and feed it the names of directories on the server to which you wish to
-deploy.  For instance,
+First, you'll need to build the project; then, run `fab deploy` and feed it the
+names of directories on the server to which you wish to deploy.  For instance,
 
-    $> fab deploy:dev,CSC,EE
+    $> fab build && fab deploy:dev,CSC,EE
 
 If you deploy to a new directory, you'll have to configure Nginx to proxy
 through to Tomcat.  Edit `/etc/nginx/sites-enabled/default` and reload Nginx or

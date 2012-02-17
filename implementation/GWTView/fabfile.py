@@ -8,7 +8,9 @@ def generate_build_xml():
 
 def build():
 	print('Building...')
+	local('ant clean')
 	local('ant build')
+	local('ant gwtc')
 
 def restart_tomcat():
 	print('Restarting tomcat...')
