@@ -12,6 +12,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
@@ -51,6 +52,11 @@ public class InstructorPreferencesView extends VerticalPanel implements IViewCon
 	public void afterPush(ViewFrame frame) {
 		this.setWidth("100%");
 		this.setHeight("100%");
+		FocusPanel fpanel = new FocusPanel();
+		HTML instructorName = new HTML(instructor.getFirstName() + " " + instructor.getLastName());
+		instructorName.setStyleName("bigBold");
+		fpanel.add(instructorName);
+		this.add(fpanel);
 		
 		timePrefs = new InstructorTimePreferencesWidget(service, new InstructorTimePreferencesWidget.Strategy() {
 			public InstructorGWT getSavedInstructor() { return savedInstructor; }

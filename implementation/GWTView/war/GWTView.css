@@ -235,6 +235,11 @@ h1 {
 	text-align: right;
 }
 
+.bigBold {
+	font-size: x-large;
+	font-weight: 700;
+}
+
 .preferred {
 	background-color: #00FF00;
 }
