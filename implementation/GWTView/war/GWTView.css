@@ -231,6 +231,10 @@ h1 {
 	background-color: #FFFF00;
 }
 
+.rightness {
+	text-align: right;
+}
+
 .preferred {
 	background-color: #00FF00;
 }
@@ -249,6 +253,17 @@ h1 {
 
 .timePreferencesTable .desireCell:hover {
 	background-color: #E0E0E0;
+}
+
+.timePrefs {
+	font-weight: 700;
+	text-align: center;
+}
+
+.timeColumns {
+	background-color: #000000;
+	font-weight: 700;
+	text-align: center;
 }
 
 .loadingLabel {

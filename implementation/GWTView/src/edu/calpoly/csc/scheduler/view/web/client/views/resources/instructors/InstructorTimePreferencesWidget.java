@@ -25,6 +25,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
@@ -71,7 +72,7 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 		{
 			String lastStyle = list.getStyleName();
 			
-			list.removeStyleName(lastStyle);
+			if(lastStyle != null) list.removeStyleName(lastStyle);
 			
 			list.addStyleName(style);
 		}
@@ -90,6 +91,7 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 	public interface Strategy {
 		InstructorGWT getSavedInstructor();
 		InstructorGWT getInstructor();
+		void autoSave();
 	}
 	
 	ListBox fromList = new ListBox();
@@ -99,6 +101,7 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 	Strategy strategy;
 	
 	FlexTable timePrefsTable;
+	FlexTable topStuff;
 	
 	String[] styleNames = {"preferred", "acceptable", "notPreferred", "notQualified"};
 	
@@ -112,6 +115,7 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 	CheckBox thursday = new CheckBox("Thursday", true);
 	CheckBox friday = new CheckBox("Friday", true);
 	final FocusPanel focus = new FocusPanel();
+	final FocusPanel focusTwo = new FocusPanel();
 	
 	public InstructorTimePreferencesWidget(GreetingServiceAsync service, Strategy strategy) {
 		this.service = service;
@@ -207,21 +211,28 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 	@Override
 	protected void onLoad() {
 		super.onLoad();
+		topStuff = new FlexTable();
+		topStuff.setHeight("100%");
+		topStuff.setWidth("100%");
 		
 		monday.setValue(true);
 		tuesday.setValue(true);
 		wednesday.setValue(true);
 		thursday.setValue(true);
 		friday.setValue(true);
-		add(monday);
-		add(tuesday);
-		add(wednesday);
-		add(thursday);
-		add(friday);
+		
+		topStuff.setWidget(0, 0, monday);
+		topStuff.setWidget(1, 0, tuesday);
+		topStuff.setWidget(2, 0, wednesday);
+		topStuff.setWidget(3, 0, thursday);
+		topStuff.setWidget(4, 0, friday);
 		
 		fromList.setName("From: ");
 		toList.setName("To: ");
 		
+		fromList.setTitle("From: ");
+		toList.setTitle("To: ");
+				
 		for (int halfHour = 0; halfHour < 30; halfHour++) { // There are 30 half-hours between 7am and 10pm
 			int row = halfHour + 1;
 			int hour = halfHour / 2 + 7; // divide by two to get hours 0-15. Add 7 to get hours 7-22.
@@ -235,48 +246,38 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 		multiSet.addItem("Acceptable");
 		multiSet.addItem("Preferred");
 		
-		add(fromList);
-		add(toList);
+		topStuff.setWidget(0, 1, new HTML("From:"));
+		topStuff.setWidget(1, 1, new HTML("To:"));
 		
-		add(multiSet);
+		topStuff.getWidget(0, 1).setStyleName("rightness");
+		topStuff.getWidget(1, 1).setStyleName("rightness");
 		
-		this.add(new Button("Set", new ClickHandler() {
+		topStuff.setWidget(0, 2, fromList);
+		topStuff.setWidget(1, 2, toList);
+		topStuff.setWidget(2, 2, multiSet);
+		
+		//add(fromList);
+		//add(toList);
+		
+		//add(multiSet);
+		multiSet.addChangeHandler(new ChangeHandler() {
+			@Override
+			public void onChange(ChangeEvent event) {
+				setMultiplePreferences();//setCoursePreference(course, list.getSelectedIndex());
+				strategy.autoSave();
+			}
+		});
+		
+		/*topStuff.setWidget(3, 1, new Button("Change Preferences", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				setMultiplePreferences();
+				strategy.autoSave();
 			}
-		}));
-		
-		/*monday.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				focus.remove(timePrefsTable);
-				CheckBoxClicked(event);			}
-		});
-		tuesday.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				focus.remove(timePrefsTable);
-				CheckBoxClicked(event);			}
-		});
-		wednesday.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				focus.remove(timePrefsTable);
-				CheckBoxClicked(event);			}
-		});
-		thursday.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				focus.remove(timePrefsTable);
-				CheckBoxClicked(event);			}
-		});
-		friday.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				focus.remove(timePrefsTable);
-				CheckBoxClicked(event);			}
-		});*/
+		}));*/
+		focusTwo.add(topStuff);
+		this.setSpacing(10);
+		add(focusTwo);
 		add(focus);
 		focus.addKeyDownHandler(new KeyDownHandler() {
 			@Override
@@ -305,87 +306,25 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 			}
 		});
 		redraw();
-		/*timePrefsTable = new FlexTable();
-		focus.add(timePrefsTable);
-		
-		timePrefsTable.addStyleName("timePreferencesTable");
-		timePrefsTable.setWidth("100%");
-		timePrefsTable.setCellSpacing(0);
-		timePrefsTable.setCellPadding(0);
-		
-		for (int halfHour = 0; halfHour < 30; halfHour++) { // There are 30 half-hours between 7am and 10pm
-			int row = halfHour + 1;
-			int hour = halfHour / 2 + 7; // divide by two to get hours 0-15. Add 7 to get hours 7-22.
-			String string = ((hour + 12 - 1) % 12 + 1) + ":" + (halfHour % 2 == 0 ? "00" : "30") + (hour < 12 ? "am" : "pm");
-			timePrefsTable.setWidget(row, 0, new HTML(string));
-		}
-		
-		String days[] = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" };
-		for (int day = 0; day < 5; day++) {
-			int col = day + 1;
-			timePrefsTable.setWidget(0, col, new HTML(days[day]));
-		}
-
-		cells = new CellWidget[30][5];
-		
-		final int totalHalfHours = 30;
-		final int totalDays = 5;
-		
-		for (int halfHour = 0; halfHour < totalHalfHours; halfHour++) {
-			int row = halfHour + 1;
-			
-			for (int dayNum = 0; dayNum < totalDays; dayNum++) {
-				int col = dayNum + 1;
-
-				int desire = this.getPreference(strategy.getInstructor(), halfHour, dayNum);
-				final CellWidget cell = new CellWidget(halfHour, dayNum);
-				cell.addStyleName("desireCell");
-				cell.add(new HTML(Integer.toString(desire)));
-				/*cell.addClickHandler(new ClickHandler() {
-					@Override
-					public void onClick(ClickEvent event) {
-						cellWidgetClicked(cell, event);
-					}
-				});
-				
-				cell.addMouseDownHandler(new MouseDownHandler() {
-					@Override
-					public void onMouseDown(MouseDownEvent event) {
-						cellWidgetMouseDown(cell, event);
-					}
-				});
-				
-				cell.addMouseUpHandler(new MouseUpHandler() {
-					@Override
-					public void onMouseUp(MouseUpEvent event) {
-						cellWidgetMouseUp(cell, event);
-						lastSelectedCell = cell;
-						focus.setFocus(true);
-					}
-				});
-								
-				timePrefsTable.setWidget(row, col, cell);
-				
-				cells[halfHour][dayNum] = cell;
-			}
-		}*/
 	}
 	
 	public void redraw()
 	{
 		timePrefsTable = new FlexTable();
+		//timePrefsTable.setBorderWidth(10);
+		timePrefsTable.setText(0, 0, "            ");
 		focus.add(timePrefsTable);
-		
 		timePrefsTable.addStyleName("timePreferencesTable");
 		timePrefsTable.setWidth("100%");
 		timePrefsTable.setCellSpacing(0);
 		timePrefsTable.setCellPadding(0);
 		
+		//timePrefsTable.setWidget(0, 0, new HTML("           "));
 		for (int halfHour = 0; halfHour < 30; halfHour++) { // There are 30 half-hours between 7am and 10pm
 			int row = halfHour + 1;
 			int hour = halfHour / 2 + 7; // divide by two to get hours 0-15. Add 7 to get hours 7-22.
 			String string = ((hour + 12 - 1) % 12 + 1) + ":" + (halfHour % 2 == 0 ? "00" : "30") + (hour < 12 ? "am" : "pm");
-			timePrefsTable.setWidget(row, 0, new HTML(string));
+			timePrefsTable.setText(row, 0, "     "+string);// new HTML(new String("   ")+string));
 		}
 		
 		//String days[] = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" };
@@ -396,7 +335,11 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 		days.add("Thursday");
 		days.add("Friday");
 		for (int day = 0; day < days.size(); day++) {
-			timePrefsTable.setWidget(0, day + 1, new HTML(days.get(day)));
+			HTML html = new HTML(days.get(day));
+			html.setStyleName("timePrefs");
+			//Widget widget = new Widget(html);
+			timePrefsTable.setWidget(0, day + 1, html);
+			timePrefsTable.getWidget(0, day + 1).setStyleName("timePrefs");
 		}
 		
 		
