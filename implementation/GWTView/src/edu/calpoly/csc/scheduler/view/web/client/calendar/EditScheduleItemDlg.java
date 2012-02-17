@@ -27,6 +27,8 @@ import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 /**
  * A dialog that allows the user to edit the instructor, location, and time of a
  * schedule item
+ * 
+ * @author Tyler Yero
  */
 public class EditScheduleItemDlg extends DialogBox {
 
@@ -93,7 +95,12 @@ public class EditScheduleItemDlg extends DialogBox {
 		
 		// TODO: update mItem based on user input data		
 		mItem.setProfessor(mInstructorsLB.getItemText(mInstructorsLB.getSelectedIndex()));		
-		mItem.setStartTimeHour(7);
+		
+		mItem.setStartTimeHour(getStartHour(mStartTimeLB.getSelectedIndex()));
+		mItem.setStartTimeMin(getStartMin(mStartTimeLB.getSelectedIndex()));
+		
+		mItem.setEndTimeHour(getEndHour(mEndTimeLB.getSelectedIndex()));
+		mItem.setEndTimeMin(getEndMin(mEndTimeLB.getSelectedIndex()));
 		
 		ArrayList<Integer> newDays = new ArrayList<Integer>();		
 		for (int i = 0; i < mDayCheckBoxes.size(); i++) {
@@ -107,7 +114,7 @@ public class EditScheduleItemDlg extends DialogBox {
 	}
 	
 	private int getStartHour(int row) {
-		return row / 2;
+		return row / 2 + 7;
 	}
 
 	private int getStartMin(int row) {
@@ -115,7 +122,7 @@ public class EditScheduleItemDlg extends DialogBox {
 	}
 
 	private int getEndHour(int row) {
-		return row / 2;
+		return row / 2 + 7;
 	}
 
 	private int getEndMin(int row) {
@@ -202,7 +209,7 @@ public class EditScheduleItemDlg extends DialogBox {
 		final HorizontalPanel dayPanel = new HorizontalPanel();
 		
 		dayPanel.setWidth("150px");
-		dayPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
+		dayPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		dayPanel.add(new Label("Days:"));
 		final VerticalPanel checkBoxPanel = new VerticalPanel();
 		for (int dayNum = 0; dayNum < CalendarTableView.DAYS.length; dayNum++) {
@@ -214,7 +221,7 @@ public class EditScheduleItemDlg extends DialogBox {
 		for (int dayNum : mItem.getDayNums())
 			mDayCheckBoxes.get(dayNum).setValue(true);
 
-		dayPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
+		dayPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		dayPanel.add(checkBoxPanel);
 
 		return dayPanel;
