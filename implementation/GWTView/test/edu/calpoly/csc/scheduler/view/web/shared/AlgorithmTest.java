@@ -30,6 +30,7 @@ public class AlgorithmTest extends TestCase {
 	List<Course> courses;
 	List<Instructor> instructors;
 	
+	
 	public AlgorithmTest() {
 		super();
 	}
@@ -41,16 +42,17 @@ public class AlgorithmTest extends TestCase {
 			System.out.println(avail);
 		
 		assertTrue(availableSchedules.containsKey("Algorithm Test Schedule"));
+	}
+	
+	public void testGenerateSchedule() {
 		
 		model.openExistingSchedule("Algorithm Test Schedule");
 		Schedule sched = model.getSchedule();		
 		courses = generateCourseList();
 	    instructors = generateInstructorList(courses);
 		
-		sched.setiSourceList(instructors);		
-	}
-	
-	public void testGenerateSchedule() {
+		sched.setiSourceList(instructors);	
+		
 		sched.generate(courses);
 		printAllScheduledCourseInfo(sched);
 	}
