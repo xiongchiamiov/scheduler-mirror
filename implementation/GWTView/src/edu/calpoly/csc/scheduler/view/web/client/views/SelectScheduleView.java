@@ -147,7 +147,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
 
       // Trash button
       this.setHorizontalAlignment(ALIGN_CENTER);
-      Button trashButton = new Button("Throw Away Selected Documents", new ClickHandler()
+      Button trashButton = new Button("Delete Selected Documents", new ClickHandler()
       {
          @Override
          public void onClick(ClickEvent event)
@@ -258,21 +258,26 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
             @Override
             public void onClick(ClickEvent event)
             {
-               String baseHref = Window.Location.getHref();
-               if (Window.Location.getHref().contains("?userid="))
-               {
-                  baseHref = Window.Location.getHref().substring(0, Window.Location.getHref().lastIndexOf('?'));
-               }
-               Window.open(baseHref + "?scheduleid=" + scheduleid + "&schedulename=" + name + "&userid=" + username,
-                     "_new", null);
-               // openInNewWindow(Window.Location.getHref(), scheduleid);
-               // selectSchedule(Integer.parseInt(scheduleid), name);
+               openDocInNewTab(name, scheduleid);
             }
          });
          doc.add(docname);
 
          vdocholder.add(doc);
       }
+   }
+   
+   private void openDocInNewTab(String name, Integer scheduleid)
+   {
+	   String baseHref = Window.Location.getHref();
+       if (Window.Location.getHref().contains("?userid="))
+       {
+          baseHref = Window.Location.getHref().substring(0, Window.Location.getHref().lastIndexOf('?'));
+       }
+       Window.open(baseHref + "?scheduleid=" + scheduleid + "&schedulename=" + name + "&userid=" + username,
+             "_new", null);
+       // openInNewWindow(Window.Location.getHref(), scheduleid);
+       // selectSchedule(Integer.parseInt(scheduleid), name);
    }
 
    @Override
@@ -776,7 +781,8 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
                   public void onFailure(Throwable caught)
                   {
                      popup.hide();
-                     Window.alert("Failed to open new schedule in: " + caught.getMessage());
+                     Window.alert("Failed to open new schedule in" +
+                     		": " + caught.getMessage());
                   }
 
                   @Override
@@ -784,6 +790,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
                   {
                      popup.hide();
                      openLoadedSchedule(newSchedID, name);
+//                     openDocInNewTab(name, newSchedID);
                   }
                });
             }
