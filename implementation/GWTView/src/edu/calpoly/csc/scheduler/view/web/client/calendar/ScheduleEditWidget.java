@@ -104,10 +104,14 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 
 						// Place schedule items with any previously set filters
 						filterScheduleItems(mSearchBox.getText());
-						loading.hide();
-
+						
+//						mAvailableCourses.setItems(mScheduleItems);
+//						mAvailableCourses.drawList();
+						
 						mScheduleTable.setScheduleItems(mScheduleItems);
 						mScheduleTable.drawTable();
+						
+						loading.hide();
 					}
 				});
 
@@ -135,6 +139,7 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 
 		List<CourseGWT> includedCourseList = new ArrayList<CourseGWT>();
 		List<ScheduleItemGWT> calendarList = mScheduleTable.getScheduleItems();
+		
 		for (int i = 0; i < calendarList.size(); i++) {
 			includedCourseList.add(calendarList.get(i).getCourse());
 		}
@@ -164,7 +169,9 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 
 							// Place schedule items with any previously set filters
 							filterScheduleItems(mSearchBox.getText());
-							loading.hide();
+
+//							mAvailableCourses.setItems(mScheduleItems);
+//							mAvailableCourses.drawList();
 
 							mScheduleTable.setScheduleItems(mScheduleItems);
 							mScheduleTable.drawTable();
@@ -337,16 +344,17 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 			@Override
 			public void onSuccess(List<CourseGWT> result) {
 				if (result != null) {
-					if (result.size() > 10) {
-						mAvailableCoursesListBox.setVisibleItemCount(result
-								.size());
-						mAvailableCourses.drawList();
-					}
 
+					List<ScheduleItemGWT> availableList = new ArrayList<ScheduleItemGWT>();
 					for (CourseGWT course : result) {
-						mAvailableCoursesListBox.addItem(course.toString());
-						mAvailableCourses.drawList();
+						ScheduleItemGWT newItem = new ScheduleItemGWT();
+						newItem.setCourse(course);
+						
+						availableList.add(newItem);
 					}
+					
+					mAvailableCourses.setItems(availableList);
+					mAvailableCourses.drawList();
 				}
 			}
 		});
@@ -359,11 +367,7 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 
 		HorizontalPanel boxesAndSchedulePanel = new HorizontalPanel();
 		boxesAndSchedulePanel.setSpacing(2);
-		boxesAndSchedulePanel
-				.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-
-		mAvailableCoursesListBox = new ListBox();
-		mAvailableCoursesListBox.setStyleName("ScheduleAvailableCoursesList");
+		boxesAndSchedulePanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 
 		addCoursesToListBox();
 

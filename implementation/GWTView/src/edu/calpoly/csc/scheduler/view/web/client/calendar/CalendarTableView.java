@@ -425,7 +425,7 @@ public class CalendarTableView extends SimplePanel {
 	}
 	
 	public List<ScheduleItemGWT> getScheduleItems() {
-		return null;
+		return mScheduleItems;
 	}
 	
 	public void setScheduleItems(List<ScheduleItemGWT> items) {

@@ -16,9 +16,9 @@ public class ScheduleItemListView extends SimplePanel {
 	
 	private List<ScheduleItemGWT> mModel;
 	
-	public ScheduleItemListView(List<ScheduleItemGWT> items, ScheduleEditWidget scheduleController, 
-			DragAndDropController dragController) {
-		mModel = new DummySchedule();
+	public ScheduleItemListView(List<ScheduleItemGWT> items, ScheduleEditWidget scheduleController, DragAndDropController dragController) {
+		//mModel = new DummySchedule();
+		mModel = items;
 		mScheduleController = scheduleController;
 		mDragController = dragController;
 
