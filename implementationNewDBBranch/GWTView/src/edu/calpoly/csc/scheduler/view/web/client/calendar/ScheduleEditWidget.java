@@ -76,6 +76,9 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 		final LoadingPopup loading = new LoadingPopup();
 		loading.show();
 		
+		Window.alert("implement");
+		assert(false);
+		/*
 		greetingService.getSchedule(schedItems,
 				new AsyncCallback<List<ScheduleItemGWT>>() {
 					@Override
@@ -106,7 +109,7 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 						scheduleTable.drawTable();
 					}
 
-				});
+				});*/
 
 		return mainPanel;
 	}
@@ -334,6 +337,9 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 		
 		availableCoursesListBox.setVisibleItemCount(10);
 		
+		Window.alert("implement");
+		assert(false);
+		/*
 		greetingService.getCourses(new AsyncCallback<List<CourseGWT>>() {
 			@Override
 			public void onFailure(Throwable caught) {
@@ -353,7 +359,7 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 					}
 				}
 			}
-		});
+		});*/
 	}
 
 	/**
@@ -430,6 +436,10 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 		course.setDept(scheduleItem.getDept());
 		course.setCatalogNum(scheduleItem.getCatalogNum());
 
+		Window.alert("implement");
+		assert(false);
+		
+		/*
 		greetingService.rescheduleCourse(scheduleItem, days, startHour, atHalfHour, inSchedule, schedItems, new AsyncCallback<ScheduleItemList>() {
 			@Override
 			public void onFailure(Throwable caught) {
@@ -499,7 +509,7 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 					Window.alert(rescheduled.conflict);
 				}
 			}
-		});
+		});*/
 	}
 
 	public int getSectionsOnSchedule(CourseGWT course) {
@@ -525,6 +535,10 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 		final LoadingPopup loading = new LoadingPopup();
 		loading.show();
 
+		Window.alert("implement");
+		assert(false);
+		
+		/*
 		greetingService.removeScheduleItem(removed, schedItems, new AsyncCallback<List<ScheduleItemGWT>>() {
 			@Override
 			public void onFailure(Throwable caught) {
@@ -545,7 +559,7 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 				filterScheduleItems(searchBox.getText());
 				loading.hide();
 			}
-		});
+		});*/
 	}
 
 	private class ScheduleItemComparator implements Comparator<ScheduleItemGWT> {

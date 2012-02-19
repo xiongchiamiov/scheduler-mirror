@@ -14,4 +14,6 @@ public class User {
 	
 	public boolean isAdmin() { return underlyingUser.isAdmin(); }
 	public void setAdmin(boolean isAdmin) { underlyingUser.setAdmin(isAdmin); }
+
+	public Integer getID() { return underlyingUser.getID(); }
 }

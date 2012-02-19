@@ -15,12 +15,12 @@ import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.client.IViewContents;
 import edu.calpoly.csc.scheduler.view.web.client.ViewFrame;
 import edu.calpoly.csc.scheduler.view.web.client.views.LoadingPopup;
+import edu.calpoly.csc.scheduler.view.web.shared.DocumentGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.TimePreferenceGWT;
 
 public class InstructorsView extends VerticalPanel implements IViewContents, InstructorsTable.Strategy {
 	private GreetingServiceAsync service;
-	private String scheduleName;
+	private DocumentGWT document;
 	int nextTableInstructorID = -2;
 	int transactionsPending = 0;
 	Map<Integer, Integer> realIDsByTableID = new HashMap<Integer, Integer>();
@@ -34,9 +34,9 @@ public class InstructorsView extends VerticalPanel implements IViewContents, Ins
 		return nextTableInstructorID--;
 	}
 	
-	public InstructorsView(GreetingServiceAsync service, String scheduleName) {
+	public InstructorsView(GreetingServiceAsync service, DocumentGWT document) {
 		this.service = service;
-		this.scheduleName = scheduleName;
+		this.document = document;
 		this.addStyleName("iViewPadding");
 	}
 
@@ -56,7 +56,7 @@ public class InstructorsView extends VerticalPanel implements IViewContents, Ins
 		this.setWidth("100%");
 		this.setHeight("100%");
 
-		this.add(new HTML("<h2>" + scheduleName + " - Instructors</h2>"));
+		this.add(new HTML("<h2>" + document.getName() + " - Instructors</h2>"));
 
 		add(new InstructorsTable(this));
 	}
@@ -66,7 +66,7 @@ public class InstructorsView extends VerticalPanel implements IViewContents, Ins
 		final LoadingPopup popup = new LoadingPopup();
 		popup.show();
 
-		service.getInstructors(new AsyncCallback<List<InstructorGWT>>() {
+		service.getInstructorsForDocument(document.getID(), new AsyncCallback<List<InstructorGWT>>() {
 			public void onFailure(Throwable caught) {
 				popup.hide();
 				callback.onFailure(caught);
@@ -87,8 +87,8 @@ public class InstructorsView extends VerticalPanel implements IViewContents, Ins
 	@Override
 	public InstructorGWT createInstructor() {
 		InstructorGWT instructor = new InstructorGWT(
-				generateTableInstructorID(), "", "", "", false, "",
-				new HashMap<Integer, Map<Integer, TimePreferenceGWT>>(),
+				generateTableInstructorID(), "", "", "", "",
+				new HashMap<Integer, HashMap<Integer, Integer>>(),
 				new HashMap<Integer, Integer>());
 		
 		
@@ -169,7 +169,7 @@ public class InstructorsView extends VerticalPanel implements IViewContents, Ins
 			final int tableInstructorID = addedTableInstructor.getID();
 			InstructorGWT realInstructor = new InstructorGWT(addedTableInstructor);
 			realInstructor.setID(-1);
-			service.addInstructor(realInstructor, new AsyncCallback<InstructorGWT>() {
+			service.addInstructorToDocument(document.getID(), realInstructor, new AsyncCallback<InstructorGWT>() {
 				public void onSuccess(InstructorGWT result) {
 					System.out.println("service.addInstructor onSuccess, adding to table " + tableInstructorID + "=>" + result.getID());
 					realIDsByTableID.put(tableInstructorID, result.getID());
@@ -204,7 +204,7 @@ public class InstructorsView extends VerticalPanel implements IViewContents, Ins
 	public void preferencesButtonClicked(InstructorGWT instructor) {
 		if (viewFrame.canPopViewsAboveMe()) {
 			viewFrame.popFramesAboveMe();
-			viewFrame.frameViewAndPushAboveMe(new InstructorPreferencesView(service, scheduleName, instructor));
+			viewFrame.frameViewAndPushAboveMe(new InstructorPreferencesView(service, document.getID(), document.getName(), instructor));
 		}
 	}
 }

@@ -124,9 +124,9 @@ public class LocationsTable extends SimplePanel {
 						new IStaticValidator<LocationGWT, String>() {
 							@Override
 							public ValidateResult validate(LocationGWT object, String newRoom) {
-								LocationGWT locationAtPlace = locationExists(object.getBuilding(), newRoom);
+								LocationGWT locationAtPlace = locationExists(object.getRoom(), newRoom);
 								if (locationAtPlace != null && locationAtPlace != object)
-									return new InputInvalid("Location " + object.getBuilding() + "-" + newRoom + " already exists.");
+									return new InputInvalid("Location " + object.getRoom() + "-" + newRoom + " already exists.");
 								return new InputValid();
 							}
 						}));
@@ -183,24 +183,6 @@ public class LocationsTable extends SimplePanel {
 							}
 						}));
 		
-		table.addColumn(
-				DISABILITIES_HEADER,
-				DISABILITIES_WIDTH,
-				true,
-				new Comparator<LocationGWT>() {
-					@Override
-					public int compare(LocationGWT o1, LocationGWT o2) {
-						return (o1.isADACompliant() ? 1 : 0) - (o2.isADACompliant() ? 1 : 0);
-					}
-				},
-				new EditingCheckboxColumn<LocationGWT>(
-						new IStaticGetter<LocationGWT, Boolean>() {
-							public Boolean getValueForObject(LocationGWT object) { return object.isADACompliant(); }
-						},
-						new IStaticSetter<LocationGWT, Boolean>() {
-							public void setValueInObject(LocationGWT object, Boolean newValue) { object.setADACompliant(newValue); }
-						}));
-		
 		LinkedHashMap<String, String> valuesByLabel = new LinkedHashMap<String, String>();
 		valuesByLabel.put("Laptop Connectivity", LAPTOP_CONNECTIVITY);
 		valuesByLabel.put("Overhead", OVERHEAD);
@@ -215,28 +197,19 @@ public class LocationsTable extends SimplePanel {
 						new IStaticGetter<LocationGWT, Set<String>>() {
 							@Override
 							public Set<String> getValueForObject(LocationGWT object) {
-								Set<String> result = new HashSet<String>();
-								if (object.getEquipment().hasLaptopConnectivity)
-									result.add(LAPTOP_CONNECTIVITY);
-								if (object.getEquipment().hasOverhead)
-									result.add(OVERHEAD);
-								if (object.getEquipment().isSmartRoom)
-									result.add(SMART_ROOM);
-								return result;
+								return object.getEquipment();
 							}
 						},
 						new IStaticSetter<LocationGWT, Set<String>>() {
 							public void setValueInObject(LocationGWT object, Set<String> newValue) {
-								object.getEquipment().hasLaptopConnectivity = newValue.contains(LAPTOP_CONNECTIVITY);
-								object.getEquipment().hasOverhead = newValue.contains(OVERHEAD);
-								object.getEquipment().isSmartRoom = newValue.contains(SMART_ROOM);
+								object.setEquipment(newValue);
 							}
 						}));
 	}
 	
 	LocationGWT locationExists(String building, String room) {
 		for (LocationGWT location : table.getObjects())
-			if (location.getBuilding().equals(building) && location.getRoom().equals(room))
+			if (location.getRoom().equals(room))
 				return location;
 		return null;
 	}

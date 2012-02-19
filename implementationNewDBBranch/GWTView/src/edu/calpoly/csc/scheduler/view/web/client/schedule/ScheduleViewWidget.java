@@ -116,6 +116,10 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 			return;
 		}
 		loading.show();
+		
+		Window.alert("implement");
+		assert(false);
+		/*
 		greetingService.generateSchedule(
 				dualListBoxCourses.getIncludedCourses(), schedItems,
 				new AsyncCallback<List<ScheduleItemGWT>>() {
@@ -151,7 +155,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 							loading.hide();
 						}
 					}
-				});
+				});*/
 	}
 
 	/**
@@ -273,6 +277,9 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 
 	/* Retrieves the course list and adds it to the available courses box */
 	private void addCoursesToBoxes() {
+		Window.alert("implement");
+		assert(false);
+		/*
 		greetingService.getCourses(new AsyncCallback<List<CourseGWT>>() {
 			@Override
 			public void onFailure(Throwable caught) {
@@ -293,7 +300,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 					registerDrops();
 				}
 			}
-		});
+		});*/
 	}
 
 	/* Lays out the available and included courses boxes and the schedule */
@@ -329,6 +336,11 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 		final LoadingPopup loading = new LoadingPopup();
 
 		loading.show();
+		
+		Window.alert("implement");
+		assert(false);
+		
+		/*
 		greetingService.getSchedule(schedItems, new AsyncCallback<List<ScheduleItemGWT>>() {
 			@Override
 			public void onFailure(Throwable caught) {
@@ -354,7 +366,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 				loading.hide();
 			}
 
-		});
+		});*/
 		
 		return mainPanel;
 	}
@@ -398,6 +410,9 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 		//String catalogNumString = Integer.toString(catalogNumInt);
 		course.setCatalogNum(scheduleItem.getCatalogNum());
 
+		Window.alert("implement");
+		assert(false);
+		/*
 		greetingService.rescheduleCourse(scheduleItem, days, startHour,
 				atHalfHour, inSchedule, schedItems, new AsyncCallback<ScheduleItemList>() {
 					@Override
@@ -473,7 +488,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 							Window.alert(rescheduled.conflict);
 						}
 					}
-				});
+				});*/
 	}
 
 	public int getSectionsOnSchedule(CourseGWT course) {
@@ -520,6 +535,10 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 		final LoadingPopup loading = new LoadingPopup();
 		loading.show();
 
+		Window.alert("implement");
+		assert(false);
+		
+		/*
 		greetingService.removeScheduleItem(removed, schedItems,
 				new AsyncCallback<List<ScheduleItemGWT>>() {
 					@Override
@@ -541,6 +560,6 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 						filterScheduleItems(searchBox.getText());
 						loading.hide();
 					}
-				});
+				});*/
 	}
 }

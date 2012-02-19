@@ -20,11 +20,11 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.client.IViewContents;
-import edu.calpoly.csc.scheduler.view.web.client.Import;
 import edu.calpoly.csc.scheduler.view.web.client.ViewFrame;
 import edu.calpoly.csc.scheduler.view.web.client.views.resources.courses.CoursesView;
 import edu.calpoly.csc.scheduler.view.web.client.views.resources.instructors.InstructorsView;
 import edu.calpoly.csc.scheduler.view.web.client.views.resources.locations.LocationsView;
+import edu.calpoly.csc.scheduler.view.web.shared.DocumentGWT;
 
 public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 	public interface OtherFilesStrategy {
@@ -32,13 +32,14 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 		void fileOpenPressed();
 		void fileImportPressed();
 		void fileMergePressed();
-		void fileSaveAsPressed(Integer existingDocumentID);
+		void fileSaveAsPressed(DocumentGWT existingDocument);
+		void fileSavePressed(DocumentGWT document);
+		void fileClosePressed(DocumentGWT document);
 	}
 	
 	final GreetingServiceAsync service;
 	final String username;
-	final Integer scheduleID;
-	final String scheduleName;
+	final DocumentGWT document;
 	final MenuBar menuBar;
 	final OtherFilesStrategy otherFilesStrategy;
 	
@@ -46,12 +47,11 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 	MenuItem instructorsMenuItem, locationsMenuItem, coursesMenuItem, scheduleMenuItem;
 
 	public AdminScheduleNavView(GreetingServiceAsync service, OtherFilesStrategy otherFilesStrategy, MenuBar MenuBar,
-			String username, Integer scheduleID, String scheduleName) {
+			String username, DocumentGWT document) {
 		this.otherFilesStrategy = otherFilesStrategy;
 		this.service = service;
 		this.username = username;
-		this.scheduleID = scheduleID;
-		this.scheduleName = scheduleName;
+		this.document = document;
 		this.menuBar = MenuBar;
 		
 		System.out.println("ASNV constructor");
@@ -112,10 +112,19 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 		fileMenu.addItem(openItem);
 		
 		fileMenu.addSeparator();
+
+		MenuItem closeItem = new MenuItem("Close", true, new Command() {
+			public void execute() {
+				otherFilesStrategy.fileClosePressed(document);
+			}
+		});
 		
+		DOM.setElementAttribute(closeItem.getElement(), "id", "closeItem");
+		fileMenu.addItem(closeItem);
+
 		MenuItem saveItem = new MenuItem("Save", true, new Command() {
 			public void execute() {
-				Window.alert("Not yet implemented");
+				otherFilesStrategy.fileSavePressed(document);
 			}
 		});
 		
@@ -124,7 +133,7 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 		
 		MenuItem saveAsItem = new MenuItem("Save As", true, new Command() {
 			public void execute() {
-				otherFilesStrategy.fileSaveAsPressed(scheduleID);
+				otherFilesStrategy.fileSaveAsPressed(document);
 			}
 		});
 		
@@ -212,8 +221,7 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 					public void execute() {
 						if (viewFrame.canPopViewsAboveMe()) {
 							viewFrame.popFramesAboveMe();
-							viewFrame.frameViewAndPushAboveMe(new InstructorsView(
-									service, scheduleName));
+							viewFrame.frameViewAndPushAboveMe(new InstructorsView(service, document));
 						}
 					}
 				}));
@@ -223,7 +231,7 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 					public void execute() {
 						if (viewFrame.canPopViewsAboveMe()) {
 							viewFrame.popFramesAboveMe();
-							viewFrame.frameViewAndPushAboveMe(new LocationsView(service, scheduleName));
+							viewFrame.frameViewAndPushAboveMe(new LocationsView(service, document));
 						}
 					}
 				}));
@@ -233,7 +241,7 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 					public void execute() {
 						if (viewFrame.canPopViewsAboveMe()) {
 							viewFrame.popFramesAboveMe();
-							viewFrame.frameViewAndPushAboveMe(new CoursesView(service, scheduleName));
+							viewFrame.frameViewAndPushAboveMe(new CoursesView(service, document));
 						}
 					}
 				}));
@@ -243,7 +251,7 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 					public void execute() {
 						if (viewFrame.canPopViewsAboveMe()) {
 							viewFrame.popFramesAboveMe();
-							viewFrame.frameViewAndPushAboveMe(new CalendarView(service, scheduleName));
+							viewFrame.frameViewAndPushAboveMe(new CalendarView(service, document));
 						}
 					}
 				}));
@@ -259,12 +267,12 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 	}
 	
 	private void removeMenus() {
-		fileMenu.removeFromParent();
-		settingsMenu.removeFromParent();
-		menuBar.removeItem(coursesMenuItem);
-		menuBar.removeItem(locationsMenuItem);
-		menuBar.removeItem(instructorsMenuItem);
 		menuBar.removeItem(scheduleMenuItem);
+		menuBar.removeItem(instructorsMenuItem);
+		menuBar.removeItem(locationsMenuItem);
+		menuBar.removeItem(coursesMenuItem);
+		settingsMenu.removeFromParent();
+		fileMenu.removeFromParent();
 	}
 	
 

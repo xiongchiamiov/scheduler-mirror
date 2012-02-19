@@ -18,10 +18,11 @@ import edu.calpoly.csc.scheduler.view.web.client.ViewFrame;
 import edu.calpoly.csc.scheduler.view.web.client.views.LoadingPopup;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.DayCombinationGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.DocumentGWT;
 
 public class CoursesView extends VerticalPanel implements IViewContents, CoursesTable.Strategy {
 	private GreetingServiceAsync service;
-	private String scheduleName;
+	private final DocumentGWT document;
 	int nextTableCourseID = -2;
 	int transactionsPending = 0;
 	Map<Integer, Integer> realIDsByTableID = new HashMap<Integer, Integer>();
@@ -34,9 +35,9 @@ public class CoursesView extends VerticalPanel implements IViewContents, Courses
 		return nextTableCourseID--;
 	}
 	
-	public CoursesView(GreetingServiceAsync service, String scheduleName) {
+	public CoursesView(GreetingServiceAsync service, DocumentGWT document) {
 		this.service = service;
-		this.scheduleName = scheduleName;
+		this.document = document;
 		this.addStyleName("iViewPadding");
 	}
 
@@ -54,7 +55,7 @@ public class CoursesView extends VerticalPanel implements IViewContents, Courses
 		this.setWidth("100%");
 		this.setHeight("100%");
 
-		this.add(new HTML("<h2>" + scheduleName + " - Courses</h2>"));
+		this.add(new HTML("<h2>" + document.getName() + " - Courses</h2>"));
 
 		add(new CoursesTable(this));
 	}
@@ -64,7 +65,7 @@ public class CoursesView extends VerticalPanel implements IViewContents, Courses
 		final LoadingPopup popup = new LoadingPopup();
 		popup.show();
 
-		service.getCourses(new AsyncCallback<List<CourseGWT>>() {
+		service.getCoursesForDocument(document.getID(), new AsyncCallback<List<CourseGWT>>() {
 			public void onFailure(Throwable caught) {
 				popup.hide();
 				callback.onFailure(caught);
@@ -84,7 +85,7 @@ public class CoursesView extends VerticalPanel implements IViewContents, Courses
 
 	@Override
 	public CourseGWT createCourse() {
-		CourseGWT course = new CourseGWT("", "", "", "", "", "", "LEC", "", -1, "", new HashSet<DayCombinationGWT>(), generateTableCourseID(), false);
+		CourseGWT course = new CourseGWT(true, "", "", "", "", "", "", "LEC", "", -1, "", new HashSet<DayCombinationGWT>(), generateTableCourseID(), false, new HashSet<String>());
 		
 		addedTableCourses.add(course);
 		
@@ -172,7 +173,7 @@ public class CoursesView extends VerticalPanel implements IViewContents, Courses
 			final int tableCourseID = addedTableCourse.getID();
 			CourseGWT realCourse = new CourseGWT(addedTableCourse);
 			realCourse.setID(-1);
-			service.addCourse(realCourse, new AsyncCallback<CourseGWT>() {
+			service.addCourseToDocument(document.getID(), realCourse, new AsyncCallback<CourseGWT>() {
 				public void onSuccess(CourseGWT result) {
 					realIDsByTableID.put(tableCourseID, result.getID());
 					updateFinished();

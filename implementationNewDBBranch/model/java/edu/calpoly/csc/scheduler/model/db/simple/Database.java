@@ -8,7 +8,9 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
+import edu.calpoly.csc.scheduler.model.Document;
 import edu.calpoly.csc.scheduler.model.db.IDBCourse;
+import edu.calpoly.csc.scheduler.model.db.IDBCourseAssociation;
 import edu.calpoly.csc.scheduler.model.db.IDBCoursePreference;
 import edu.calpoly.csc.scheduler.model.db.IDBDayPattern;
 import edu.calpoly.csc.scheduler.model.db.IDBDocument;
@@ -41,20 +43,26 @@ public class Database implements IDatabase {
 		
 		// Returns the given object, for convenience
 		T insert(T newObject) {
+			
 			assert(newObject.id == null);
 			
-			int newID = generateUnusedID();
-			newObject.id = newID;
+			newObject.id = generateUnusedID();
 			
 			objectsByID.put(newObject.id, newObject);
+
+			System.out.println("Inserted " + newObject.getClass().getName() + " id " + newObject.id);
 	
 			return newObject;
 		}
 		
-		T findByID(int id) throws NotFoundException {
+		T findByID(Integer id) throws NotFoundException {
+			assert(id != null);
+			System.out.println("Finding " + id);
 			T result = objectsByID.get(id);
-			if (result == null)
+			if (result == null) {
+				System.out.println("Couldn't find id " + id);
 				throw new NotFoundException();
+			}
 			return result;
 		}
 		
@@ -64,12 +72,15 @@ public class Database implements IDatabase {
 		
 		void deleteByID(int id) {
 			assert(objectsByID.containsKey(id));
+			String className = objectsByID.get(id).getClass().getName();
 			objectsByID.remove(id);
+			System.out.println("Removed " + className + " id " + id);
 		}
 	
 		public void update(T object) {
 			assert(objectsByID.containsKey(object.id));
 			objectsByID.put(object.id, object);
+			System.out.println("Updated " + object.getClass().getName() + " id " + object.id);
 		}
 	}
 
@@ -151,7 +162,7 @@ public class Database implements IDatabase {
 
 	@Override
 	public IDBDocument insertDocument(String name) {
-		return new DBDocument(documentTable.insert(new DBDocument(null, name)));
+		return new DBDocument(documentTable.insert(new DBDocument(null, name, null)));
 	}
 
 	@Override
@@ -161,6 +172,15 @@ public class Database implements IDatabase {
 
 	@Override
 	public void deleteDocument(IDBDocument document) {
+		for (IDBSchedule schedule : this.findAllSchedulesForDocument(document))
+			this.deleteSchedule(schedule);
+		for (IDBInstructor instructor : this.findInstructorsForDocument(document))
+			this.deleteInstructor(instructor);
+		for (IDBCourse course : this.findCoursesForDocument(document))
+			this.deleteCourse(course);
+		for (IDBLocation location : this.findLocationsForDocument(document))
+			this.deleteLocation(location);
+		
 		documentTable.deleteByID(document.getID());
 	}
 
@@ -190,6 +210,9 @@ public class Database implements IDatabase {
 
 	@Override
 	public void deleteSchedule(IDBSchedule schedule) {
+		for (IDBScheduleItem item : this.findAllScheduleItemsForSchedule(schedule))
+			this.deleteScheduleItem(item);
+		
 		scheduleTable.deleteByID(schedule.getID());
 	}
 
@@ -249,6 +272,9 @@ public class Database implements IDatabase {
 
 	@Override
 	public void deleteLocation(IDBLocation location) {
+		for (IDBProvidedEquipment equip : this.findProvidedEquipmentByEquipmentForLocation(location).values())
+			this.deleteProvidedEquipment(equip);
+		
 		locationTable.deleteByID(location.getID());
 	}
 
@@ -262,13 +288,24 @@ public class Database implements IDatabase {
 	}
 
 	@Override
+	public IDBDocument findDocumentForCourse(IDBCourse underlyingCourse) {
+		try {
+			return documentTable.findByID(((DBCourse)underlyingCourse).documentID);
+		}
+		catch (NotFoundException e) {
+			throw new AssertionError(e);
+		}
+	}
+
+	@Override
 	public IDBCourse findCourseByID(int id) throws NotFoundException {
 		return new DBCourse(courseTable.findByID(id));
 	}
 
 	@Override
-	public IDBCourse insertCourse(IDBDocument containingDocument, String name, String catalogNumber, String department, String wtu, String scu, String numSections, String type, String maxEnrollment, String numHalfHoursPerWeek) {
-		return new DBCourse(courseTable.insert(new DBCourse(null, containingDocument.getID(), name, catalogNumber, department, wtu, scu, numSections, type, maxEnrollment, numHalfHoursPerWeek)));
+	public IDBCourse insertCourse(IDBDocument containingDocument, String name, String catalogNumber, String department, String wtu, String scu, String numSections, String type, String maxEnrollment, String numHalfHoursPerWeek, boolean isSchedulable) {
+		System.out.println("inserting course into document id " + containingDocument.getID());
+		return new DBCourse(courseTable.insert(new DBCourse(null, containingDocument.getID(), name, catalogNumber, department, wtu, scu, numSections, type, maxEnrollment, numHalfHoursPerWeek, isSchedulable)));
 	}
 
 	@Override
@@ -278,6 +315,11 @@ public class Database implements IDatabase {
 
 	@Override
 	public void deleteCourse(IDBCourse course) {
+		for (IDBUsedEquipment equip : this.findUsedEquipmentByEquipmentForCourse(course).values())
+			this.deleteUsedEquipment(equip);
+		for (IDBOfferedDayPattern pat : this.findOfferedDayPatternsForCourse(course))
+			this.deleteOfferedDayPattern(pat);
+
 		courseTable.deleteByID(course.getID());
 	}
 
@@ -308,6 +350,11 @@ public class Database implements IDatabase {
 
 	@Override
 	public void deleteInstructor(IDBInstructor instructor) {
+		for (IDBTimePreference timePref : this.findTimePreferencesByTimeForInstructor(instructor).values())
+			this.deleteTimePreference(timePref);
+		for (IDBCoursePreference coursePref : this.findCoursePreferencesByCourseForInstructor(instructor).values())
+			this.deleteCoursePreference(coursePref);
+		
 		instructorTable.deleteByID(instructor.getID());
 	}
 
@@ -340,7 +387,7 @@ public class Database implements IDatabase {
 	}
 	
 	@Override
-	public IDBTimePreference findTimePreferenceForInstructorAndDayAndTime(IDBInstructor instructor, IDBTime time) throws NotFoundException {
+	public IDBTimePreference findTimePreferenceForInstructorAndTime(IDBInstructor instructor, IDBTime time) throws NotFoundException {
 		for (DBTimePreference timePref : timePreferenceTable.getAll())
 			if (timePref.instructorID == instructor.getID() && sameTime(time, findTimeByID(timePref.timeID)))
 				return timePref;
@@ -414,7 +461,7 @@ public class Database implements IDatabase {
 	}
 
 	@Override
-	public IDBDocument getWorkingCopyForDocument(IDBDocument rawDocument) throws NotFoundException {
+	public IDBDocument getWorkingCopyForOriginalDocumentOrNull(IDBDocument rawDocument) {
 		assert(!documentIsWorkingCopy(rawDocument));
 		DBDocument document = (DBDocument)rawDocument;
 		
@@ -423,48 +470,71 @@ public class Database implements IDatabase {
 				if (workingCopy.originalID == document.id)
 					return workingCopy;
 		
-		throw new NotFoundException();
+		return null;
 	}
 
 	@Override
-	public IDBDocument getOriginalForDocument(IDBDocument rawDocument) {
+	public IDBDocument getOriginalForWorkingCopyDocument(IDBDocument rawDocument) throws NotFoundException {
+		assert(documentTable != null);
+		assert(rawDocument != null);
 		assert(!documentIsWorkingCopy(rawDocument));
 		DBDocument document = (DBDocument)rawDocument;
 		
-		try {
-			return documentTable.findByID(document.originalID);
-		}
-		catch (NotFoundException e) {
-			assert(false);
-			return null;
-		}
-	}
-
-	@Override
-	public boolean labCourseIsTethered(IDBCourse rawLabCourse) {
-		DBCourse labCourse = (DBCourse)rawLabCourse;
-		return labCourse.lectureID != 0;
-	}
-
-	@Override
-	public IDBCourse getLectureTetheredToLabCourse(IDBCourse rawLabCourse) throws NotFoundException {
-		assert(labCourseIsTethered(rawLabCourse));
-		DBCourse labCourse = (DBCourse)rawLabCourse;
-		return courseTable.findByID(labCourse.lectureID);
-	}
-
-	@Override
-	public Collection<IDBCourse> getLabsTetheredToLectureCourse(IDBCourse rawLectureCourse) {
-		DBCourse lectureCourse = (DBCourse)rawLectureCourse;
-		assert(lectureCourse.lectureID == -1);
+		assert(document.originalID != null);
 		
-		Collection<IDBCourse> result = new LinkedList<IDBCourse>();
+		System.out.println("doc table " + documentTable + " doc " + document);
+		return documentTable.findByID(document.originalID);
+	}
+
+	@Override
+	public void associateLectureAndLab(IDBCourse rawLecture, IDBCourse rawLab) {
+		DBCourse lab = (DBCourse)rawLab;
+		DBCourse lecture = (DBCourse)rawLecture;
+		
+		assert(lab.lectureID == null);
+		lab.lectureID = lecture.id;
+	}
+	
+	@Override
+	public IDBCourseAssociation getAssociationForLabOrNull(IDBCourse rawLabCourse) {
+		DBCourse labCourse = (DBCourse)rawLabCourse;
+		if (labCourse.lectureID == null)
+			return null;
+		return new DBCourseAssociation(labCourse.id, labCourse.lectureID, labCourse.tetheredToLecture);
+	}
+	
+	@Override
+	public IDBCourse getAssociationLab(IDBCourseAssociation rawAssoc) {
+		DBCourseAssociation assoc = (DBCourseAssociation)rawAssoc;
+		try {
+			return findCourseByID(assoc.getLabID());
+		} catch (NotFoundException e) {
+			throw new AssertionError(e);
+		}
+	}
+	
+	@Override
+	public IDBCourse getAssociationLecture(IDBCourseAssociation rawAssoc) {
+		DBCourseAssociation assoc = (DBCourseAssociation)rawAssoc;
+		try {
+			return findCourseByID(assoc.lectureID);
+		} catch (NotFoundException e) {
+			throw new AssertionError(e);
+		}
+	}
+	
+	@Override
+	public Collection<IDBCourseAssociation> getAssociationsForLecture(IDBCourse rawLectureCourse) {
+		DBCourse lectureCourse = (DBCourse)rawLectureCourse;
+		assert(lectureCourse.lectureID == null);
+		
+		Collection<IDBCourseAssociation> result = new LinkedList<IDBCourseAssociation>();
 		for (DBCourse labCourse : this.courseTable.getAll())
-			if (labCourse.lectureID == lectureCourse.id)
-				result.add(labCourse);
+			if (labCourse.lectureID.equals(lectureCourse.id))
+				result.add(new DBCourseAssociation(labCourse.id, lectureCourse.id, labCourse.tetheredToLecture));
 		return result;
 	}
-
+	
 	@Override
 	public IDBLocation getScheduleItemLocation(IDBScheduleItem rawItem) {
 		DBScheduleItem item = (DBScheduleItem)rawItem;
@@ -556,7 +626,7 @@ public class Database implements IDatabase {
 	public void deleteProvidedEquipment(IDBProvidedEquipment providedEquipment) {
 		providedEquipmentTable.deleteByID(providedEquipment.getID());
 		DBProvidedEquipment derp = (DBProvidedEquipment)providedEquipment;
-		derp.id = -1;
+		derp.id = null;
 	}
 
 	@Override
@@ -596,6 +666,30 @@ public class Database implements IDatabase {
 	@Override
 	public void deleteOfferedDayPattern(IDBOfferedDayPattern offered) {
 		offeredDayPatternTable.deleteByID(offered.getID());
-		((DBOfferedDayPattern)offered).id = -1;
+		((DBOfferedDayPattern)offered).id = null;
+	}
+
+	@Override
+	public void associateWorkingCopyWithOriginal(IDBDocument rawWorkingCopy, IDBDocument rawOriginal) {
+		DBDocument workingCopy = (DBDocument)rawWorkingCopy;
+		DBDocument original = (DBDocument)rawOriginal;
+		
+		assert(workingCopy.originalID == null);
+		workingCopy.originalID = original.id;
+		System.out.println("set doc id " + workingCopy.id + " originalID to " + original.id);
+	}
+
+	@Override
+	public void disassociateWorkingCopyWithOriginal(IDBDocument rawWorkingCopy, IDBDocument rawOriginal) {
+		DBDocument workingCopy = (DBDocument)rawWorkingCopy;
+		DBDocument original = (DBDocument)rawOriginal;
+		
+		assert(workingCopy.originalID == original.id);
+		workingCopy.originalID = null;
+	}
+
+	@Override
+	public boolean isOriginalDocument(IDBDocument doc) {
+		return ((DBDocument)doc).originalID == null;
 	}
 }

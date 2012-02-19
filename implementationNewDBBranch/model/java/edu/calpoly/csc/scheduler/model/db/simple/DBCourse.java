@@ -1,9 +1,11 @@
 package edu.calpoly.csc.scheduler.model.db.simple;
 
 import edu.calpoly.csc.scheduler.model.db.IDBCourse;
+import edu.calpoly.csc.scheduler.model.db.IDBCourseAssociation;
 
 public class DBCourse extends DBObject implements IDBCourse {
 	int documentID;
+	boolean isSchedulable;
 	String name;
 	String catalogNumber;
 	String department;
@@ -13,12 +15,12 @@ public class DBCourse extends DBObject implements IDBCourse {
 	String type;
 	String maxEnrollment;
 	String numHalfHoursPerWeek;
-	boolean isSchedulable;
-	int lectureID;
+	Integer lectureID;
+	Boolean tetheredToLecture;
 
 	public DBCourse(Integer id, int documentID, String name, String catalogNumber, String department,
 			String wtu, String scu, String numSections, String type,
-			String maxEnrollment, String numHalfHoursPerWeek) {
+			String maxEnrollment, String numHalfHoursPerWeek, boolean isSchedulable) {
 		super(id);
 		this.documentID = documentID;
 		this.name = name;
@@ -30,10 +32,11 @@ public class DBCourse extends DBObject implements IDBCourse {
 		this.type = type;
 		this.maxEnrollment = maxEnrollment;
 		this.numHalfHoursPerWeek = numHalfHoursPerWeek;
+		this.isSchedulable = isSchedulable;
 	}
 	
 	public DBCourse(DBCourse that) {
-		this(that.id, that.documentID, that.name, that.catalogNumber, that.department, that.wtu, that.scu, that.numSections, that.type, that.maxEnrollment, that.numHalfHoursPerWeek);
+		this(that.id, that.documentID, that.name, that.catalogNumber, that.department, that.wtu, that.scu, that.numSections, that.type, that.maxEnrollment, that.numHalfHoursPerWeek, that.isSchedulable);
 	}
 
 	@Override

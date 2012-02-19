@@ -35,4 +35,7 @@ public class Instructor {
 	public void setTimePreferences(HashMap<Integer, HashMap<Integer, Integer>> timePreferences) { this.timePreferences = timePreferences; }
 	public HashMap<Integer, Integer> getCoursePreferences() { return coursePreferences; }
 	public void setCoursePreferences(HashMap<Integer, Integer> coursePreferences) { this.coursePreferences = coursePreferences; }
+
+	public void setIsSchedulable(boolean schedulable) { underlyingInstructor.setIsSchedulable(schedulable); }
+	public boolean isSchedulable() { return underlyingInstructor.isSchedulable(); }
 }

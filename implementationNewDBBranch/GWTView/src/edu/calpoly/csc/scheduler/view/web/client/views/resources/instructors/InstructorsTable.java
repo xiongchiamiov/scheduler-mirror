@@ -38,8 +38,8 @@ public class InstructorsTable extends SimplePanel {
 	private static final String MAX_WTU_HEADER = "Max WTU";
 	private static final String MAX_WTU_WIDTH = null;
 	
-	private static final String DISABILITIES_HEADER = "Disabilities";
-	private static final String DISABILITIES_WIDTH = "4em";
+	private static final String SCHEDULABLE_HEADER = "Disabilities";
+	private static final String SCHEDULABLE_WIDTH = "4em";
 	
 	private static final String PREFERENCES_HEADER = "Preferences";
 	private static final String PREFERENCES_WIDTH = null;
@@ -197,26 +197,26 @@ public class InstructorsTable extends SimplePanel {
 									return new InputWarning(MAX_WTU_HEADER + " must be an integer.");
 								}
 								
-								if (n < 1)
-									return new InputWarning(MAX_WTU_HEADER + " must be at least 1.");
+								if (n < 0)
+									return new InputWarning(MAX_WTU_HEADER + " must be at least 0.");
 								
 								return new InputValid();
 							}
 						}));
 		
 		table.addColumn(
-				DISABILITIES_HEADER,
-				DISABILITIES_WIDTH,
+				SCHEDULABLE_HEADER,
+				SCHEDULABLE_WIDTH,
 				true,
 				new MemberIntegerComparator<InstructorGWT>(new IStaticGetter<InstructorGWT, Integer>() {
-					public Integer getValueForObject(InstructorGWT object) { return object.getDisabilities() ? 1 : 0; }
+					public Integer getValueForObject(InstructorGWT object) { return object.isSchedulable() ? 1 : 0; }
 				}),
 				new EditingCheckboxColumn<InstructorGWT>(
 						new IStaticGetter<InstructorGWT, Boolean>() {
-							public Boolean getValueForObject(InstructorGWT object) { return object.getDisabilities(); }
+							public Boolean getValueForObject(InstructorGWT object) { return object.isSchedulable(); }
 						},
 						new IStaticSetter<InstructorGWT, Boolean>() {
-							public void setValueInObject(InstructorGWT object, Boolean newValue) { object.setDisabilities(newValue); }
+							public void setValueInObject(InstructorGWT object, Boolean newValue) { object.setIsSchedulable(newValue); }
 						}));
 		
 		table.addColumn(

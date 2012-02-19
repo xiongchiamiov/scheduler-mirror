@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
+import edu.calpoly.csc.scheduler.model.Document;
 import edu.calpoly.csc.scheduler.model.db.simple.DBProvidedEquipment;
 import edu.calpoly.csc.scheduler.model.db.simple.DBUsedEquipment;
 
@@ -23,9 +24,13 @@ public interface IDatabase {
 	IDBDocument insertDocument(String name);
 	void updateDocument(IDBDocument document);
 	void deleteDocument(IDBDocument document);
+	
+	
 	boolean documentIsWorkingCopy(IDBDocument document);
-	IDBDocument getWorkingCopyForDocument(IDBDocument rawDocument) throws NotFoundException;
-	IDBDocument getOriginalForDocument(IDBDocument document);
+	IDBDocument getOriginalForWorkingCopyDocument(IDBDocument rawDocument) throws NotFoundException;
+	IDBDocument getWorkingCopyForOriginalDocumentOrNull(IDBDocument document);
+	void associateWorkingCopyWithOriginal(IDBDocument underlyingDocument, IDBDocument underlyingDocument2);
+	void disassociateWorkingCopyWithOriginal(IDBDocument underlyingDocument, IDBDocument underlyingDocument2);
 
 	Collection<IDBSchedule> findAllSchedulesForDocument(IDBDocument document);
 	IDBSchedule findScheduleByID(int id) throws NotFoundException;
@@ -49,12 +54,17 @@ public interface IDatabase {
 	
 	Collection<IDBCourse> findCoursesForDocument(IDBDocument document);
 	IDBCourse findCourseByID(int id) throws NotFoundException;
-	IDBCourse insertCourse(IDBDocument containingDocument, String name, String catalogNumber, String department, String wtu, String scu, String numSections, String type, String maxEnrollment, String numHalfHoursPerWeek);
+	IDBCourse insertCourse(IDBDocument containingDocument, String name, String catalogNumber, String department, String wtu, String scu, String numSections, String type, String maxEnrollment, String numHalfHoursPerWeek, boolean isSchedulable);
 	void updateCourse(IDBCourse course);
 	void deleteCourse(IDBCourse course);
-	boolean labCourseIsTethered(IDBCourse labCourse);
-	IDBCourse getLectureTetheredToLabCourse(IDBCourse labCourse) throws NotFoundException;
-	Collection<IDBCourse> getLabsTetheredToLectureCourse(IDBCourse lectureCourse);
+	IDBDocument findDocumentForCourse(IDBCourse underlyingCourse);
+
+	// Tethering
+	IDBCourseAssociation getAssociationForLabOrNull(IDBCourse underlying);
+	Collection<IDBCourseAssociation> getAssociationsForLecture(IDBCourse lectureCourse);
+	IDBCourse getAssociationLecture(IDBCourseAssociation association);
+	IDBCourse getAssociationLab(IDBCourseAssociation association);
+	void associateLectureAndLab(IDBCourse lecture, IDBCourse lab);
 
 	Collection<IDBInstructor> findInstructorsForDocument(IDBDocument document);
 	IDBInstructor findInstructorByID(int id) throws NotFoundException;
@@ -64,7 +74,7 @@ public interface IDatabase {
 	
 	Map<IDBTime, IDBTimePreference> findTimePreferencesByTimeForInstructor(IDBInstructor instructor);
 	IDBTimePreference findTimePreferenceByID(int id) throws NotFoundException;
-	IDBTimePreference findTimePreferenceForInstructorAndDayAndTime(IDBInstructor instructor, IDBTime time) throws NotFoundException;
+	IDBTimePreference findTimePreferenceForInstructorAndTime(IDBInstructor instructor, IDBTime time) throws NotFoundException;
 	IDBTimePreference insertTimePreference(IDBInstructor ins, IDBTime time, int preference);
 	void updateTimePreference(IDBTimePreference timePreference);
 	void deleteTimePreference(IDBTimePreference timePreference);
@@ -96,12 +106,13 @@ public interface IDatabase {
 	// Provided Equipment
 	Map<IDBEquipmentType, IDBProvidedEquipment> findProvidedEquipmentByEquipmentForLocation(IDBLocation location);
 	void deleteProvidedEquipment(IDBProvidedEquipment providedEquipment);
-	DBProvidedEquipment insertProvidedEquipment(IDBLocation location, IDBEquipmentType findEquipmentTypeByDescription);
+	DBProvidedEquipment insertProvidedEquipment(IDBLocation location, IDBEquipmentType equipmentType);
 	
 	// Day Patterns
 	IDBDayPattern findDayPatternByDays(Set<Integer> dayPattern) throws NotFoundException;
-	IDBOfferedDayPattern insertOfferedDayPattern(IDBCourse underlying, IDBDayPattern findDayPatternByDays);
+	IDBOfferedDayPattern insertOfferedDayPattern(IDBCourse underlying, IDBDayPattern dayPattern);
 	Collection<IDBOfferedDayPattern> findOfferedDayPatternsForCourse(IDBCourse underlying);
 	IDBDayPattern getDayPatternForOfferedDayPattern(IDBOfferedDayPattern offered);
 	void deleteOfferedDayPattern(IDBOfferedDayPattern offered);
+	boolean isOriginalDocument(IDBDocument doc);
 }

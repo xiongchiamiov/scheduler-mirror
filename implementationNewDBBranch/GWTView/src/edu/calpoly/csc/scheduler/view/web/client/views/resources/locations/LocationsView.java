@@ -16,13 +16,12 @@ import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.client.IViewContents;
 import edu.calpoly.csc.scheduler.view.web.client.ViewFrame;
 import edu.calpoly.csc.scheduler.view.web.client.views.LoadingPopup;
-import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.DocumentGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.DayCombinationGWT;
 
 public class LocationsView extends VerticalPanel implements IViewContents, LocationsTable.Strategy {
 	private GreetingServiceAsync service;
-	private String scheduleName;
+	DocumentGWT document;
 	int nextTableLocationID = -2;
 	int transactionsPending = 0;
 	Map<Integer, Integer> realIDsByTableID = new HashMap<Integer, Integer>();
@@ -35,9 +34,9 @@ public class LocationsView extends VerticalPanel implements IViewContents, Locat
 		return nextTableLocationID--;
 	}
 	
-	public LocationsView(GreetingServiceAsync service, String scheduleName) {
+	public LocationsView(GreetingServiceAsync service, DocumentGWT document) {
 		this.service = service;
-		this.scheduleName = scheduleName;
+		this.document = document;
 		this.addStyleName("iViewPadding");
 	}
 
@@ -55,7 +54,7 @@ public class LocationsView extends VerticalPanel implements IViewContents, Locat
 		this.setWidth("100%");
 		this.setHeight("100%");
 
-		this.add(new HTML("<h2>" + scheduleName + " - Locations</h2>"));
+		this.add(new HTML("<h2>" + document.getName() + " - Locations</h2>"));
 
 		add(new LocationsTable(this));
 	}
@@ -65,7 +64,7 @@ public class LocationsView extends VerticalPanel implements IViewContents, Locat
 		final LoadingPopup popup = new LoadingPopup();
 		popup.show();
 
-		service.getLocations(new AsyncCallback<List<LocationGWT>>() {
+		service.getLocationsForDocument(document.getID(), new AsyncCallback<List<LocationGWT>>() {
 			public void onFailure(Throwable caught) {
 				popup.hide();
 				callback.onFailure(caught);
@@ -85,7 +84,7 @@ public class LocationsView extends VerticalPanel implements IViewContents, Locat
 
 	@Override
 	public LocationGWT createLocation() {
-		LocationGWT location = new LocationGWT(generateTableLocationID(), "", "", "LEC", "20", false, new LocationGWT.ProvidedEquipmentGWT());
+		LocationGWT location = new LocationGWT(generateTableLocationID(), "", "LEC", "20", new HashSet<String>(), true);
 		
 		addedTableLocations.add(location);
 		
@@ -100,6 +99,8 @@ public class LocationsView extends VerticalPanel implements IViewContents, Locat
 	
 	@Override
 	public void onLocationEdited(LocationGWT location) {
+		System.out.println("onLocationEdited: " + location.getID());
+		
 		assert(!deletedTableLocationIDs.contains(location.getID()));
 
 		if (!addedTableLocations.contains(location))
@@ -131,6 +132,8 @@ public class LocationsView extends VerticalPanel implements IViewContents, Locat
 		transactionsPending = deletedTableLocationIDs.size() + editedTableLocations.size() + addedTableLocations.size();
 		if (transactionsPending == 0)
 			return;
+		
+		System.out.println("Sending updates");
 
 		final ArrayList<Integer> copyOfDeletedTableLocationIDs = deletedTableLocationIDs;
 		deletedTableLocationIDs = new ArrayList<Integer>();
@@ -141,7 +144,7 @@ public class LocationsView extends VerticalPanel implements IViewContents, Locat
 		final ArrayList<LocationGWT> copyOfAddedTableLocations = addedTableLocations;
 		addedTableLocations = new ArrayList<LocationGWT>();
 		
-		for (Integer deletedTableLocationID : deletedTableLocationIDs) {
+		for (Integer deletedTableLocationID : copyOfDeletedTableLocationIDs) {
 			Integer realLocationID = realIDsByTableID.get(deletedTableLocationID);
 			service.removeLocation(realLocationID, new AsyncCallback<Void>() {
 				public void onSuccess(Void result) { updateFinished(); }
@@ -149,21 +152,22 @@ public class LocationsView extends VerticalPanel implements IViewContents, Locat
 			});
 		}
 		
-		for (LocationGWT editedTableLocation : editedTableLocations) {
+		for (LocationGWT editedTableLocation : copyOfEditedTableLocations) {
 			Integer realLocationID = realIDsByTableID.get(editedTableLocation.getID());
 			LocationGWT realLocation = new LocationGWT(editedTableLocation);
 			realLocation.setID(realLocationID);
+			System.out.println("sending edit update: " + realLocationID + " room " + realLocation.getRoom());
 			service.editLocation(realLocation, new AsyncCallback<Void>() {
-				public void onSuccess(Void result) { updateFinished(); }
+				public void onSuccess(Void result) { System.out.println("edit finished!"); updateFinished(); }
 				public void onFailure(Throwable caught) { Window.alert("Update failed: " + caught.getMessage()); }
 			});
 		}
 		
-		for (LocationGWT addedTableLocation : addedTableLocations) {
+		for (LocationGWT addedTableLocation : copyOfAddedTableLocations) {
 			final int tableLocationID = addedTableLocation.getID();
 			LocationGWT realLocation = new LocationGWT(addedTableLocation);
 			realLocation.setID(-1);
-			service.addLocation(realLocation, new AsyncCallback<LocationGWT>() {
+			service.addLocationToDocument(document.getID(), realLocation, new AsyncCallback<LocationGWT>() {
 				public void onSuccess(LocationGWT result) {
 					System.out.println("Putting " + tableLocationID + " into realIDsByTableID");
 					realIDsByTableID.put(tableLocationID, result.getID());
@@ -181,8 +185,10 @@ public class LocationsView extends VerticalPanel implements IViewContents, Locat
 	private void updateFinished() {
 		assert(transactionsPending > 0);
 		transactionsPending--;
-		if (transactionsPending == 0)
+		if (transactionsPending == 0) {
+			System.out.println("updates finished!");
 			sendUpdates();
+		}
 	}
 
 	@Override

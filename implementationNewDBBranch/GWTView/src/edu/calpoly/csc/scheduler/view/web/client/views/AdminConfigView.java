@@ -29,12 +29,14 @@ public class AdminConfigView extends VerticalPanel implements IViewContents {	/*
 	
 	private GreetingServiceAsync service;
 	private OsmTable<UserDataGWT> table;
+	final int documentID;
 	int nextLocationID = 1;
 	private String scheduleName;
 
-	public AdminConfigView(GreetingServiceAsync greetingService,
+	public AdminConfigView(GreetingServiceAsync greetingService, int documentID,
 			String scheduleName) {
 		this.service = greetingService;
+		this.documentID = documentID;
 		this.scheduleName = scheduleName;
 	}
 
@@ -104,7 +106,7 @@ public class AdminConfigView extends VerticalPanel implements IViewContents {	/*
 
 		this.add(table);
 
-		service.getCourses(new AsyncCallback<List<CourseGWT>>() {
+		service.getCoursesForDocument(documentID, new AsyncCallback<List<CourseGWT>>() {
 			public void onFailure(Throwable caught) {
 				popup.hide();
 				Window.alert("Failed to get courses: " + caught.toString());

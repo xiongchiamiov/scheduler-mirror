@@ -1,8 +1,9 @@
 package edu.calpoly.csc.scheduler.view.web.client.views;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -11,10 +12,8 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.rpc.StatusCodeException;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -37,9 +36,7 @@ import edu.calpoly.csc.scheduler.view.web.client.HTMLUtilities;
 import edu.calpoly.csc.scheduler.view.web.client.IViewContents;
 import edu.calpoly.csc.scheduler.view.web.client.Import;
 import edu.calpoly.csc.scheduler.view.web.client.ViewFrame;
-import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.Pair;
-import edu.calpoly.csc.scheduler.view.web.shared.UserDataGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.DocumentGWT;
 
 public class SelectScheduleView extends VerticalPanel implements IViewContents, AdminScheduleNavView.OtherFilesStrategy {
 	protected final GreetingServiceAsync service;
@@ -48,25 +45,24 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
 	
 	private final String username;
 	private String newDocName;
-	private ArrayList<String> scheduleNames;
 	private ListBox listBox;
+	MenuItem trashTab, homeTab;
 	
 	private VerticalPanel vdocholder;
 	
 	private ViewFrame myFrame;
 
-	Map<String, UserDataGWT> availableSchedulesByName;
+	Collection<DocumentGWT> availableDocuments;
 	
 	public SelectScheduleView(final GreetingServiceAsync service, final MenuBar menuBar, final String username) {
 		this.service = service;
 		this.menuBar = menuBar;
 		this.username = username;
 		this.newDocName = "Untitled";
-		this.scheduleNames = new ArrayList<String>();
 
 		menuBar.clearItems();
 		//Put tabs in menu bar
-		MenuItem homeTab = new MenuItem("Home", true, new Command() {
+		homeTab = new MenuItem("Home", true, new Command() {
 			@Override
 			public void execute() {
 			   if(myFrame.canPopViewsAboveMe())
@@ -81,7 +77,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
 		menuBar.addItem(homeTab);
 	
 		
-		MenuItem trashTab = new MenuItem("Trash", true, new Command() {
+		trashTab = new MenuItem("Trash", true, new Command() {
 			public void execute() {
 			   if(myFrame.canPopViewsAboveMe())
 			   {
@@ -153,21 +149,20 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
 	public void afterPush(ViewFrame frame) {
 		this.myFrame = frame;
 		
-		service.getScheduleNames(new AsyncCallback<Map<String,UserDataGWT>>() {
+		service.getAllOriginalDocumentsByID(new AsyncCallback<Collection<DocumentGWT>>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				Window.alert("There was an error getting the schedules: " + caught.getMessage());
 			}
 			
 			@Override
-			public void onSuccess(Map<String, UserDataGWT> result) {
-				availableSchedulesByName = result;
+			public void onSuccess(Collection<DocumentGWT> result) {
+				availableDocuments = result;
 				
 				vdocholder.clear();
-				for (String scheduleName : availableSchedulesByName.keySet())
+				for (DocumentGWT doc : availableDocuments)
 				{
-				   addNewDocument(scheduleName, availableSchedulesByName.get(scheduleName).getScheduleID().toString());
-				   scheduleNames.add(scheduleName);
+				   addNewDocument(doc.getName(), doc.getID().toString());
 				}
 				
 				doneAddingDocuments();
@@ -222,31 +217,15 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
 	 * Private method for selecting a previously saved schedule from the database given the schedule ID
 	 * and the schedule name.
 	 * 
-	 * @param scheduleID ID of the schedule to open.
-	 * @param scheduleName Name of the schedule to open.
+	 * @param document Document to open
 	 */
-	private void selectSchedule(final int scheduleID, final String scheduleName) {
+	private void selectSchedule(DocumentGWT document) {
 		final LoadingPopup popup = new LoadingPopup();
 		popup.show();
 		
-		System.out.println("SelectScheduleView.selectSchedule(" + scheduleID + ", " + scheduleName + ")");
+		System.out.println("SelectScheduleView.selectSchedule(" + document.getID() + ", " + document.getName() + ")");
 		
-		service.openExistingSchedule(scheduleID, new AsyncCallback<String>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				popup.hide();
-
-				Window.alert("Failed to open schedule in: " + caught.getMessage());
-			}
-			@Override
-			public void onSuccess(String name) {
-				popup.hide();
-				
-				System.out.println("selectSchedule onSuccess");
-
-				openLoadedSchedule(scheduleID, scheduleName);
-			}
-		});
+		openDocument(document);
 	}
 
 	interface NameScheduleCallback {
@@ -304,21 +283,9 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
 		final DialogBox db = new DialogBox();
 		FlowPanel fp = new FlowPanel();
 		final ListBox listBox = new ListBox();
-		final Map<String,UserDataGWT> schedules = new HashMap<String,UserDataGWT>();
 
-		service.getScheduleNames(new AsyncCallback<Map<String,UserDataGWT>>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				Window.alert("Failed to open schedule in: " + caught.getMessage());
-			}
-			
-			@Override
-			public void onSuccess(Map<String,UserDataGWT> result) {
-				schedules.putAll(result);
-				for(String name : result.keySet())
-					listBox.addItem(name);
-			}
-		});
+		for (DocumentGWT doc : this.availableDocuments)
+			listBox.addItem(doc.getName(), doc.getID().toString());
 		
 		listBox.setVisibleItemCount(5);
 		fp.add(listBox);
@@ -328,11 +295,17 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
 		fp.add(new Button("Open", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				int index = listBox.getSelectedIndex();
-				String scheduleName = listBox.getItemText(index);
-				int scheduleID = schedules.get(scheduleName).getScheduleID();
-				selectSchedule(scheduleID, scheduleName);
 				db.hide();
+				
+				int index = listBox.getSelectedIndex();
+				for (DocumentGWT document : availableDocuments) {
+					if (document.getID().toString().equals(listBox.getValue(index))) {
+						selectSchedule(document);
+						return;
+					}
+				}
+				
+				assert(false);
 			}
 		}));
 		
@@ -361,32 +334,33 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
 		FlowPanel fp = new FlowPanel();
 		
 		final Button saveButton = new Button("Save", new ClickHandler() {
-		@Override
-		public void onClick(ClickEvent event) {		
-			db.hide();
-			
-		    final String scheduleName = tb.getText();
-		    if(scheduleName.isEmpty())
-		    	return;
-
-		    boolean allowOverwrite = false;
-	    	if (schedNames.contains(scheduleName)) {
-	    		if (Window.confirm("The schedule \"" + scheduleName + "\" already exists.  Are you sure you want to replace it?"))
-	    			allowOverwrite = true;
-	    		else
-	    			return;
-	    	}
-	    	
-        	service.saveCurrentScheduleAsAndOpen(scheduleName, allowOverwrite, new AsyncCallback<Integer>() {
-				public void onFailure(Throwable caught) {
-					Window.alert("Failed to save schedule: " + caught.getMessage());
+			@Override
+			public void onClick(ClickEvent event) {		
+				db.hide();
+					
+				final String scheduleName = tb.getText();
+				if(scheduleName.isEmpty())
+					return;
+				
+				boolean allowOverwrite = false;
+				if (schedNames.contains(scheduleName)) {
+					if (Window.confirm("The schedule \"" + scheduleName + "\" already exists.  Are you sure you want to replace it?"))
+					allowOverwrite = true;
+					else
+						return;
 				}
-				public void onSuccess(Integer newScheduleID) {
-					openLoadedSchedule(newScheduleID, scheduleName);
-				}
-			});
-		}
-	});
+				
+				assert(false);
+				//        	service.saveCurrentScheduleAsAndOpen(scheduleName, allowOverwrite, new AsyncCallback<Integer>() {
+				//				public void onFailure(Throwable caught) {
+				//					Window.alert("Failed to save schedule: " + caught.getMessage());
+				//				}
+				//				public void onSuccess(Integer newScheduleID) {
+				//					openLoadedSchedule(newScheduleID, scheduleName);
+				//				}
+				//			});
+			}
+		});
 		
 		final Button cancelButton = new Button("Cancel", new ClickHandler() {
 			@Override
@@ -403,27 +377,16 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
 			}
 		});
 		
-		service.getScheduleNames(new AsyncCallback<Map<String,UserDataGWT>>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				Window.alert("Failed to open schedule in: " + caught.getMessage());
-			}
-			
-			@Override
-			public void onSuccess(Map<String,UserDataGWT> result) {
-				for(String name : result.keySet()) {
-					saveAsListBox.addItem(name);
-					schedNames.add(name);
-				}
-			}
-		});
+		for (DocumentGWT doc : this.availableDocuments)
+			saveAsListBox.addItem(doc.getName(), doc.getID().toString());
+		
 		
 		db.setText("Name Schedule");
 		fp.add(new HTML("<center>Specify a name to save the schedule as...</center>"));
 		saveAsListBox.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				tb.setText(saveAsListBox.getValue(saveAsListBox.getSelectedIndex()));
+				tb.setText(saveAsListBox.getItemText(saveAsListBox.getSelectedIndex()));
 			}
 		});
 		saveAsListBox.setVisibleItemCount(5);
@@ -441,10 +404,16 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
 	public boolean canPop() { return true; }
 	
 	@Override
-	public void beforeViewPushedAboveMe() { }
+	public void beforeViewPushedAboveMe() {
+		menuBar.removeItem(homeTab);
+		menuBar.removeItem(trashTab);
+	}
 	
 	@Override
-	public void afterViewPoppedFromAboveMe() { }
+	public void afterViewPoppedFromAboveMe() {
+		menuBar.addItem(homeTab);
+		menuBar.addItem(trashTab);
+	}
 	
 	@Override
 	public Widget getContents() { return this; }
@@ -487,6 +456,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
 				if(checkCount >= 2) {
 					//TODO - Add merge call here when functionality is implemented
 				    db.hide();
+				    Window.alert("Unimplemented.");
 				}
 				else {
 					Window.alert("Please select 2 or more schedules to merge.");
@@ -501,21 +471,11 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
 			}
 		});
 		
-		service.getScheduleNames(new AsyncCallback<Map<String,UserDataGWT>>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				Window.alert("Failed to open schedule in: " + caught.getMessage());
-			}
-			
-			@Override
-			public void onSuccess(Map<String,UserDataGWT> result) {
-				for(String name : result.keySet()) {
-					CheckBox checkBox = new CheckBox(name);
-					checkBoxList.add(checkBox);
-					checkBoxPanel.add(checkBox);
-				}
-			}
-		});
+		for (DocumentGWT doc : availableDocuments) {
+			CheckBox checkBox = new CheckBox(doc.getName());
+			checkBoxList.add(checkBox);
+			checkBoxPanel.add(checkBox);
+		}
 		
 		fp.add(mergeButton);
 		fp.add(cancelButton);
@@ -530,7 +490,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
 	}
 
 	@Override
-	public void fileSaveAsPressed(Integer existingDocumentID) {
+	public void fileSaveAsPressed(DocumentGWT existingDocument) {
 		final ListBox saveAsListBox = new ListBox();
 		final ArrayList<String> schedNames = new ArrayList<String>();
 		final TextBox tb = new TextBox();
@@ -552,15 +512,15 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
 		    		else
 		    			return;
 		    	}
-		    	
-	        	service.saveCurrentScheduleAsAndOpen(scheduleName, allowOverwrite, new AsyncCallback<Integer>() {
-					public void onFailure(Throwable caught) {
-						Window.alert("Failed to save schedule: " + caught.getMessage());
-					}
-					public void onSuccess(Integer newScheduleID) {
-						openLoadedSchedule(newScheduleID, scheduleName);
-					}
-				});
+		    	assert(false); // implement
+//	        	service.saveCurrentScheduleAsAndOpen(scheduleName, allowOverwrite, new AsyncCallback<Integer>() {
+//					public void onFailure(Throwable caught) {
+//						Window.alert("Failed to save schedule: " + caught.getMessage());
+//					}
+//					public void onSuccess(Integer newScheduleID) {
+//						openLoadedSchedule(newScheduleID, scheduleName);
+//					}
+//				});
 			}
 		});
 		
@@ -579,20 +539,8 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
 			}
 		});
 		
-		service.getScheduleNames(new AsyncCallback<Map<String,UserDataGWT>>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				Window.alert("Failed to open schedule in: " + caught.getMessage());
-			}
-			
-			@Override
-			public void onSuccess(Map<String,UserDataGWT> result) {
-				for(String name : result.keySet()) {
-					saveAsListBox.addItem(name);
-					schedNames.add(name);
-				}
-			}
-		});
+		for (DocumentGWT doc : availableDocuments)
+			saveAsListBox.addItem(doc.getName(), doc.getID().toString());
 		
 		db.setText("Name Schedule");
 		fp.add(new HTML("<center>Specify a name to save the schedule as...</center>"));
@@ -621,7 +569,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
          @Override
          public void namedSchedule(final String name)
          {
-            if(!scheduleNames.contains(name))
+            if(!availableDocuments.contains(name))
             {
                newDocName = name;
                final LoadingPopup popup = new LoadingPopup();
@@ -629,7 +577,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
                
                DOM.setElementAttribute(popup.getElement(), "id", "failSchedPopup");
                
-               service.openNewSchedule(newDocName, new AsyncCallback<Integer>() {
+               service.createDocument(newDocName, new AsyncCallback<DocumentGWT>() {
                   @Override
                   public void onFailure(Throwable caught) {
                      popup.hide();
@@ -637,9 +585,9 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
                   }
                   
                   @Override
-                  public void onSuccess(Integer newSchedID) {
+                  public void onSuccess(DocumentGWT newSched) {
                      popup.hide();
-                     openLoadedSchedule(newSchedID, name);
+                     openDocument(newSched);
                   }
                });
             }
@@ -651,19 +599,82 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
       });
 	}
 
-	protected void openLoadedSchedule(Integer scheduleID, String scheduleName) {
-		System.out.println("openloadedschedule?");
-		
-		if (myFrame.canPopViewsAboveMe()) {
-			System.out.println("canpop");
+	protected void openDocument(DocumentGWT document) {
+		service.createWorkingCopyForOriginalDocument(document.getID(), new AsyncCallback<DocumentGWT>() {
+			@Override
+			public void onSuccess(DocumentGWT workingCopyDocument) {
+				if (myFrame.canPopViewsAboveMe()) {
+					System.out.println("canpop");
+					
+					myFrame.popFramesAboveMe();
+					System.out.println("popped");
+					
+					myFrame.frameViewAndPushAboveMe(new AdminScheduleNavView(service, SelectScheduleView.this, menuBar, username, workingCopyDocument));
+					System.out.println("pushed");
+				}
+			}
 			
-			myFrame.popFramesAboveMe();
-			System.out.println("popped");
-			
-			myFrame.frameViewAndPushAboveMe(new AdminScheduleNavView(service, this, menuBar, username, scheduleID, scheduleName));
-			System.out.println("pushed");
-			
-		}
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert("Failed to open document.");
+			}
+		});
 	}
 
+	@Override
+	public void fileSavePressed(DocumentGWT document) {
+		service.saveWorkingCopyToOriginalDocument(document.getID(), new AsyncCallback<Void>() {
+			@Override
+			public void onSuccess(Void result) {
+				Window.alert("Success");
+			}
+			
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert("Failed to save.");
+			}
+		});
+	}
+
+	@Override
+	public void fileClosePressed(final DocumentGWT document) {
+		if (Window.confirm("Save changes?")) {
+			service.saveWorkingCopyToOriginalDocument(document.getID(), new AsyncCallback<Void>() {
+				@Override
+				public void onSuccess(Void result) {
+					service.deleteWorkingCopyDocument(document.getID(), new AsyncCallback<Void>() {
+						@Override
+						public void onSuccess(Void result) {
+							assert(myFrame.canPopViewsAboveMe());
+							myFrame.popFramesAboveMe();
+						}
+						
+						@Override
+						public void onFailure(Throwable caught) {
+							Window.alert("Failed to delete working copy!");
+							assert(myFrame.canPopViewsAboveMe());
+							myFrame.popFramesAboveMe();
+						}
+					});
+				}
+				
+				@Override
+				public void onFailure(Throwable caught) {
+					Window.alert("Failed to save!");
+				}
+			});
+		}
+		else {
+			service.deleteWorkingCopyDocument(document.getID(), new AsyncCallback<Void>() {
+				@Override
+				public void onFailure(Throwable caught) {
+					Window.alert("Failed to revert");
+				}
+				public void onSuccess(Void result) {
+					assert(myFrame.canPopViewsAboveMe());
+					myFrame.popFramesAboveMe();
+				}
+			});
+		}
+	}
 }

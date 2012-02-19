@@ -28,6 +28,7 @@ import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 public class InstructorPreferencesView extends VerticalPanel implements IViewContents {
 	Panel container;
 	GreetingServiceAsync service;
+	int documentID;
 	InstructorGWT instructor;
 	InstructorGWT savedInstructor;
 	Map<Integer, CourseGWT> coursesByID;
@@ -37,11 +38,12 @@ public class InstructorPreferencesView extends VerticalPanel implements IViewCon
 	InstructorTimePreferencesWidget timePrefs;
 	FlexTable coursePrefs;
 	
-	public InstructorPreferencesView(GreetingServiceAsync service, String scheduleName, InstructorGWT instructor) {
+	public InstructorPreferencesView(GreetingServiceAsync service, int documentID, String scheduleName, InstructorGWT instructor) {
 		this.service = service;
 		
 		instructor.verify();
 		
+		this.documentID = documentID;
 		this.instructor = instructor;
 		this.savedInstructor = new InstructorGWT(instructor);
 	}
@@ -72,7 +74,7 @@ public class InstructorPreferencesView extends VerticalPanel implements IViewCon
 		coursePrefs.setWidget(0, 0, new HTML("Course"));
 		coursePrefs.setWidget(0, 1, new HTML("Preference"));
 		
-		service.getCourses(new AsyncCallback<List<CourseGWT>>() {
+		service.getCoursesForDocument(documentID, new AsyncCallback<List<CourseGWT>>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				Window.alert("Failed to get courses.");
@@ -119,7 +121,7 @@ public class InstructorPreferencesView extends VerticalPanel implements IViewCon
 		final LoadingPopup popup = new LoadingPopup();
 		popup.show();
 		
-		service.saveInstructor(instructor, new AsyncCallback<Void>() {
+		service.editInstructor(instructor, new AsyncCallback<Void>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				popup.hide();

@@ -7,48 +7,74 @@ import edu.calpoly.csc.scheduler.model.db.IDBCourse;
 
 public class Course {
 	IDBCourse underlyingCourse;
-	Collection<String> usedEquipment;
+	Set<String> usedEquipment;
 	Collection<Set<Integer>> dayPatterns;
+	int lectureID;
+	boolean tetheredToLecture;
 	
-	Course(IDBCourse underlyingCourse, Collection<String> neededEquipment, Collection<Set<Integer>> dayPatterns) {
+	Course(IDBCourse underlyingCourse, Set<String> usedEquipment, Collection<Set<Integer>> dayPatterns, int lectureID, boolean tetheredTolecture) {
 		this.underlyingCourse = underlyingCourse;
-		this.usedEquipment = neededEquipment;
+		this.usedEquipment = usedEquipment;
 		this.dayPatterns = dayPatterns;
+		this.lectureID = lectureID;
+		this.tetheredToLecture = tetheredTolecture;
 	}
-	
-	String getName() { return underlyingCourse.getName(); }
-	void setName(String name) { underlyingCourse.setName(name); }
-	
-	String getCalatogNumber() { return underlyingCourse.getCalatogNumber(); }
-	void setCatalogNumber(String catalogNumber) { underlyingCourse.setCatalogNumber(catalogNumber); }
-	
-	String getDepartment() { return underlyingCourse.getDepartment(); }
-	void setDepartment(String department) { underlyingCourse.setDepartment(department); }
-	
-	String getWTU() { return underlyingCourse.getWTU(); }
-	void setWTU(String wtu) { underlyingCourse.setWTU(wtu); }
-	
-	String getSCU() { return underlyingCourse.getSCU(); }
-	void setSCU(String scu) { underlyingCourse.setSCU(scu); }
-	
-	String getNumSections() { return underlyingCourse.getNumSections(); }
-	void setNumSections(String numSections) { underlyingCourse.setNumSections(numSections); }
-	
-	String getType() { return underlyingCourse.getType(); }
-	void setType(String type) { underlyingCourse.setType(type); }
-	
-	String getMaxEnrollment() { return underlyingCourse.getMaxEnrollment(); }
-	void setMaxEnrollment(String maxEnrollment) { underlyingCourse.setMaxEnrollment(maxEnrollment); }
-	
-	String getNumHalfHoursPerWeek() { return underlyingCourse.getNumHalfHoursPerWeek(); }
-	void setNumHalfHoursPerWeek(String numHalfHoursPerWeek) { underlyingCourse.setNumHalfHoursPerWeek(numHalfHoursPerWeek); }
 
-	boolean isSchedulable() { return underlyingCourse.isSchedulable(); }
-	void setIsSchedulable(boolean isSchedulable) { underlyingCourse.setIsSchedulable(isSchedulable); }
-	
+	public Set<String> getUsedEquipment() {
+		return usedEquipment;
+	}
 
-	public Collection<String> getNeededEquipment() { return usedEquipment; }
-	public void setNeededEquipment(Collection<String> neededEquipment) { this.usedEquipment = neededEquipment; }
+	public void setUsedEquipment(Set<String> usedEquipment) {
+		this.usedEquipment = usedEquipment;
+	}
+
+	public int getLectureID() {
+		return lectureID;
+	}
+
+	public void setLectureID(int lectureID) {
+		this.lectureID = lectureID;
+	}
+
+	public boolean isTetheredToLecture() {
+		return tetheredToLecture;
+	}
+
+	public void setTetheredToLecture(boolean tetheredToLecture) {
+		this.tetheredToLecture = tetheredToLecture;
+	}
+
+	public int getID() { return underlyingCourse.getID(); }
+	
+	public String getName() { return underlyingCourse.getName(); }
+	public void setName(String name) { underlyingCourse.setName(name); }
+	
+	public String getCalatogNumber() { return underlyingCourse.getCalatogNumber(); }
+	public void setCatalogNumber(String catalogNumber) { underlyingCourse.setCatalogNumber(catalogNumber); }
+	
+	public String getDepartment() { return underlyingCourse.getDepartment(); }
+	public void setDepartment(String department) { underlyingCourse.setDepartment(department); }
+	
+	public String getWTU() { return underlyingCourse.getWTU(); }
+	public void setWTU(String wtu) { underlyingCourse.setWTU(wtu); }
+	
+	public String getSCU() { return underlyingCourse.getSCU(); }
+	public void setSCU(String scu) { underlyingCourse.setSCU(scu); }
+	
+	public String getNumSections() { return underlyingCourse.getNumSections(); }
+	public void setNumSections(String numSections) { underlyingCourse.setNumSections(numSections); }
+	
+	public String getType() { return underlyingCourse.getType(); }
+	public void setType(String type) { underlyingCourse.setType(type); }
+	
+	public String getMaxEnrollment() { return underlyingCourse.getMaxEnrollment(); }
+	public void setMaxEnrollment(String maxEnrollment) { underlyingCourse.setMaxEnrollment(maxEnrollment); }
+	
+	public String getNumHalfHoursPerWeek() { return underlyingCourse.getNumHalfHoursPerWeek(); }
+	public void setNumHalfHoursPerWeek(String numHalfHoursPerWeek) { underlyingCourse.setNumHalfHoursPerWeek(numHalfHoursPerWeek); }
+
+	public boolean isSchedulable() { return underlyingCourse.isSchedulable(); }
+	public void setIsSchedulable(boolean isSchedulable) { underlyingCourse.setIsSchedulable(isSchedulable); }
 	
 	public Collection<Set<Integer>> getDayPatterns() { return dayPatterns; }
 	public void setDayPatterns(Collection<Set<Integer>> dayPatterns) { this.dayPatterns = dayPatterns; }

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -14,9 +13,7 @@ import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
-import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
-import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -28,7 +25,6 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.TimePreferenceGWT;
 
 public class InstructorTimePreferencesWidget extends VerticalPanel {
 	class CellWidget extends FocusPanel {
@@ -138,7 +134,7 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 		Integer day = cell.day;
 
 		if (instructor.gettPrefs().get(day) == null) {
-			Map<Integer, TimePreferenceGWT> newmap = new HashMap<Integer, TimePreferenceGWT>();
+			HashMap<Integer, Integer> newmap = new HashMap<Integer, Integer>();
 			assert(newmap.get(time) == null);
 			instructor.gettPrefs().put(day, newmap);
 			assert(instructor.gettPrefs().get(day) == newmap);
@@ -147,20 +143,18 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 		assert(instructor.gettPrefs().get(day) != null);
 
 		if (instructor.gettPrefs().get(day).get(time) == null) {
-			TimePreferenceGWT pref = new TimePreferenceGWT();
-			pref.setDesire(desire);
-			pref.setTime(time);
+			Integer pref = new Integer(desire);
 			instructor.gettPrefs().get(day).put(time, pref);
 		}
 		assert(instructor.gettPrefs().get(day).get(time) != null);
 
-		instructor.gettPrefs().get(day).get(time).setDesire(desire);
+		instructor.gettPrefs().get(day).put(time, desire);
 		
 		time = hour * 60 + cell.halfHour % 2 * 30;
 
 		day = cell.day;
 		
-		assert(instructor.gettPrefs().get(day).get(time).getDesire() == desire);
+		assert(instructor.gettPrefs().get(day).get(time) == desire);
 		
 		assert(getPreference(instructor, cell.halfHour, cell.day) == desire);
 		
@@ -178,7 +172,7 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 		Integer day = dayNum;
 		
 		if (ins.gettPrefs().get(day) != null && ins.gettPrefs().get(day).get(time) != null)
-			return ins.gettPrefs().get(day).get(time).getDesire();
+			return ins.gettPrefs().get(day).get(time);
 		else
 			return 0;
 	}

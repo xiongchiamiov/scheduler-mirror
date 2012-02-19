@@ -277,7 +277,7 @@ public class CoursesTable extends SimplePanel {
 							return new InputWarning(MAX_ENROLLMENT_HEADER + " must be an integer.");
 						}
 						
-						if (n < 1)
+						if (n < 0)
 							return new InputWarning(MAX_ENROLLMENT_HEADER + " must be at least 1.");
 						
 						return new InputValid();
@@ -350,7 +350,7 @@ public class CoursesTable extends SimplePanel {
 	
 	// If we wanted to know how far off 1.4 was from the nearest multiple of .5, we'd use this function
 	private static double distanceFromNearestMultiple(double value, double multipleOf) {
-		// How this function works:
+		// Example evaluation:
 		//     Math.abs((1.4 / .5 - Math.round(1.4 / .5)) * .5)
 		//     Math.abs((2.8 - Math.round(2.8)) * .5)
 		//     Math.abs((2.8 - 3.0) * .5)

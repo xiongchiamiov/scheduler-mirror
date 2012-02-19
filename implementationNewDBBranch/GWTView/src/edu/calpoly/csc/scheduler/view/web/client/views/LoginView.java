@@ -83,9 +83,9 @@ public class LoginView extends VerticalPanel implements IViewContents {
 		final LoadingPopup popup = new LoadingPopup();
 		popup.show();
 		
-		service.login(username, new AsyncCallback<Void>() {
+		service.login(username, new AsyncCallback<Integer>() {
 			@Override
-			public void onSuccess(Void derp) {
+			public void onSuccess(Integer userID) {
 				popup.hide();
 				LoginView.this.username = username;
 				pushSelectScheduleView(username);

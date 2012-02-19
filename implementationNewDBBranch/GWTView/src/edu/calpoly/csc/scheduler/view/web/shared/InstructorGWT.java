@@ -13,24 +13,23 @@ public class InstructorGWT implements Serializable, Identified {
 	private int id;
 	private String username;
 	private String firstName, lastName;
-	private boolean disabilities;
 	private String maxwtu;
 
-	Map<Integer, Map<Integer, TimePreferenceGWT>> tPrefs;
+	HashMap<Integer, HashMap<Integer, Integer>> tPrefs;
 
-	Map<Integer, Integer> coursePrefs;
+	HashMap<Integer, Integer> coursePrefs;
+
+	private boolean isSchedulable;
 
 	public InstructorGWT(int id, String username, String firstName,
-			String lastName,
-			boolean disabilities, String maxwtu,
-			Map<Integer, Map<Integer, TimePreferenceGWT>> tPrefs,
+			String lastName, String maxwtu,
+			HashMap<Integer, HashMap<Integer, Integer>> tPrefs,
 			HashMap<Integer, Integer> hashMap) {
 		super();
 		this.id = id;
 		this.username = username;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.disabilities = disabilities;
 		this.maxwtu = maxwtu;
 		this.tPrefs = tPrefs;
 		this.coursePrefs = hashMap;
@@ -42,36 +41,35 @@ public class InstructorGWT implements Serializable, Identified {
 
 	public InstructorGWT(InstructorGWT that) {
 		this(that.id, that.username, that.firstName, that.lastName,
-				that.disabilities,
 				that.maxwtu, null, null);
 		
-		Map<Integer, Map<Integer, TimePreferenceGWT>> newTPrefs = new TreeMap<Integer, Map<Integer,TimePreferenceGWT>>(); 
+		HashMap<Integer, HashMap<Integer, Integer>> newTPrefs = new HashMap<Integer, HashMap<Integer,Integer>>(); 
 		for (Integer day : that.tPrefs.keySet()) {
-			Map<Integer, TimePreferenceGWT> thatDayPrefs = that.tPrefs.get(day);
-			Map<Integer, TimePreferenceGWT> newDayPrefs = new TreeMap<Integer, TimePreferenceGWT>();
+			Map<Integer, Integer> thatDayPrefs = that.tPrefs.get(day);
+			HashMap<Integer, Integer> newDayPrefs = new HashMap<Integer, Integer>();
 			
 			for (Integer time : thatDayPrefs.keySet()) {
-				TimePreferenceGWT sourcePref = thatDayPrefs.get(time);
-				newDayPrefs.put(time, new TimePreferenceGWT(sourcePref));
+				Integer sourcePref = thatDayPrefs.get(time);
+				newDayPrefs.put(time, new Integer(sourcePref));
 			}
 			
 			newTPrefs.put(day, newDayPrefs);
 		}
 		tPrefs = newTPrefs;
 			
-		Map<Integer, Integer> newCoursePrefs = new LinkedHashMap<Integer, Integer>(that.coursePrefs);
-		//for (Integer course : that.coursePrefs.keySet())
-			//newCoursePrefs.put(course, that.coursePrefs.get(course));
+		HashMap<Integer, Integer> newCoursePrefs = new LinkedHashMap<Integer, Integer>(that.coursePrefs);
+		for (Integer course : that.coursePrefs.keySet())
+			newCoursePrefs.put(course, that.coursePrefs.get(course));
 		coursePrefs = newCoursePrefs;
 		
 		verify();
 	}
 
-	public Map<Integer, Map<Integer, TimePreferenceGWT>> gettPrefs() {
+	public HashMap<Integer, HashMap<Integer, Integer>> gettPrefs() {
 		return tPrefs;
 	}
 
-	public void settPrefs(Map<Integer, Map<Integer, TimePreferenceGWT>> tPrefs) {
+	public void settPrefs(HashMap<Integer, HashMap<Integer, Integer>> tPrefs) {
 		this.tPrefs = tPrefs;
 	}
 
@@ -82,11 +80,11 @@ public class InstructorGWT implements Serializable, Identified {
 		assert(coursePrefs != null);
 	}
 
-	public Map<Integer, Integer> getCoursePreferences(){
+	public HashMap<Integer, Integer> getCoursePreferences(){
 		return coursePrefs;
 	}
 	
-	public void setCoursePreferences(Map<Integer, Integer> coursePrefs){
+	public void setCoursePreferences(HashMap<Integer, Integer> coursePrefs){
 		this.coursePrefs = coursePrefs;
 	}
 	
@@ -96,10 +94,6 @@ public class InstructorGWT implements Serializable, Identified {
 	
 	public String getLastName(){
 		return lastName;
-	}
-	
-	public boolean getDisabilities(){
-		return disabilities;
 	}
 	
 	public String getName() {
@@ -139,10 +133,6 @@ public class InstructorGWT implements Serializable, Identified {
 		this.lastName = lastName;
 	}
 
-	public void setDisabilities(boolean disabilities) {
-		this.disabilities = disabilities;
-	}
-	
 	public Integer getID() {
 		return id;
 	}
@@ -172,4 +162,7 @@ public class InstructorGWT implements Serializable, Identified {
 //		// TODO: do we need to compare prefs and items taught?
 //		return true;
 	}
+
+	public boolean isSchedulable() { return this.isSchedulable; }
+	public void setIsSchedulable(boolean isSchedulable) { this.isSchedulable = isSchedulable; }
 }

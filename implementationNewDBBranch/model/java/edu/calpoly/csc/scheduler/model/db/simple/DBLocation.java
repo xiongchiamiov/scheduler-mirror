@@ -11,6 +11,7 @@ public class DBLocation extends DBObject implements IDBLocation {
 	
 	public DBLocation(Integer id, int documentID, String room, String type, String maxOccupancy) {
 		super(id);
+		this.documentID = documentID;
 		this.room = room;
 		this.type = type;
 		this.maxOccupancy = maxOccupancy;

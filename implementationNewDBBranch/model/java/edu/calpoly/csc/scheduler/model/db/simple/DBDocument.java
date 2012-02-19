@@ -5,15 +5,16 @@ import edu.calpoly.csc.scheduler.model.db.IDBDocument;
 public class DBDocument extends DBObject implements IDBDocument {
 	String name;
 	boolean isTrashed;
-	int originalID;
+	Integer originalID; // null if this is an original
 	
-	public DBDocument(Integer id, String name) {
+	public DBDocument(Integer id, String name, Integer originalID) {
 		super(id);
 		this.name = name;
+		this.originalID = originalID;
 	}
 	
 	public DBDocument(DBDocument that) {
-		this(that.id, that.name);
+		this(that.id, that.name, that.originalID);
 	}
 	
 	@Override

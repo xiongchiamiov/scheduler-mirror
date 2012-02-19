@@ -1,12 +1,15 @@
 package edu.calpoly.csc.scheduler.view.web.shared;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Set;
 
 
 public class CourseGWT implements Serializable, Identified {
 	private static final long serialVersionUID = -3337091550673507081L;
 	
+	private Integer id;
+	private boolean isSchedulable;
 	private String courseName;
 	private String catalogNum;
 	private String dept;
@@ -15,17 +18,18 @@ public class CourseGWT implements Serializable, Identified {
 	private String maxEnroll;
 	private String halfHoursPerWeek;
 	private Set<DayCombinationGWT> dayCombinations;
-	private Integer id;
 	private Integer lectureID;
 	private Boolean tetheredToLecture;
+	private Set<String> usedEquipment;
 	
 	public CourseGWT() { }
 	
-	public CourseGWT(String courseName, String catalogNum, String dept,
+	public CourseGWT(boolean isSchedulable, String courseName, String catalogNum, String dept,
 			String wtu, String scu, String numSections, String type,
 			String maxEnroll, Integer lectureID, String halfHoursPerWeek, Set<DayCombinationGWT> dayCombinations,
-			Integer id, Boolean tetheredToLecture) {
+			Integer id, Boolean tetheredToLecture, Set<String> equipment) {
 		super();
+		this.isSchedulable = isSchedulable;
 		this.courseName = courseName;
 		this.catalogNum = catalogNum;
 		this.dept = dept;
@@ -39,14 +43,15 @@ public class CourseGWT implements Serializable, Identified {
 		this.dayCombinations = dayCombinations;
 		this.id = id;
 		this.tetheredToLecture = tetheredToLecture;
+		this.usedEquipment = equipment;
 	}
 
 
 
 	public CourseGWT(CourseGWT that) {
-		this(that.courseName, that.catalogNum, that.dept, that.wtu, that.scu,
+		this(that.isSchedulable, that.courseName, that.catalogNum, that.dept, that.wtu, that.scu,
 				that.numSections, that.type, that.maxEnroll, that.lectureID, that.halfHoursPerWeek,
-				that.dayCombinations, that.id, that.tetheredToLecture);
+				that.dayCombinations, that.id, that.tetheredToLecture, that.usedEquipment);
 	}
 
 	public void verify() {
@@ -190,6 +195,30 @@ public class CourseGWT implements Serializable, Identified {
 //				this.scu.equals(that.scu) &&
 //				this.type.equals(that.type) &&
 //				this.wtu.equals(that.wtu);
+	}
+
+	public boolean isSchedulable() {
+		return isSchedulable;
+	}
+
+	public void setSchedulable(boolean isSchedulable) {
+		this.isSchedulable = isSchedulable;
+	}
+
+	public Set<DayCombinationGWT> getDayCombinations() {
+		return dayCombinations;
+	}
+
+	public void setDayCombinations(Set<DayCombinationGWT> dayCombinations) {
+		this.dayCombinations = dayCombinations;
+	}
+
+	public Set<String> getUsedEquipment() {
+		return usedEquipment;
+	}
+
+	public void setUsedEquipment(Set<String> usedEquipment) {
+		this.usedEquipment = usedEquipment;
 	}
 
 	public int getLectureID() {
