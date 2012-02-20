@@ -13,4 +13,6 @@ public class Schedule {
 	Schedule(IDBSchedule underlyingSchedule) {
 		this.underlyingSchedule = underlyingSchedule;
 	}
+
+	public int getID() { return underlyingSchedule.getID(); }
 }

@@ -60,55 +60,33 @@ public interface GreetingServiceAsync {
 	void removeScheduleItem(int scheduleID, OldScheduleItemGWT oldItemOldGWT,
 			AsyncCallback<Void> asyncCallback);
 	
-	void getSchedule(int scheduleID,
+	
+	/**
+	 * Gets all the schedule items for a given document id.
+	 * @param scheduleID
+	 * @param callback
+	 */
+	void getScheduleItems(
+			int documentID,
 			AsyncCallback<Collection<OldScheduleItemGWT>> callback);
-	void insertScheduleItem(int scheduleID, OldScheduleItemGWT scheduleItem,
+	
+	void insertScheduleItem(
+			int documentID,
+			OldScheduleItemGWT scheduleItem,
 			AsyncCallback<Void> callback);
-	void updateScheduleItem(int scheduleID, OldScheduleItemGWT oldItemOldGWT,
-			OldScheduleItemGWT newItemOldGWT, AsyncCallback<Void> callback);
-	void generateRestOfSchedule(int scheduleID,
+	
+	void updateScheduleItem(
+			int documentID,
+			OldScheduleItemGWT oldItemOldGWT,
+			OldScheduleItemGWT newItemOldGWT,
+			AsyncCallback<Void> callback);
+	
+	void generateRestOfSchedule(
+			int documentID,
 			AsyncCallback<Collection<OldScheduleItemGWT>> callback);
-	void removeScheduleItem(OldScheduleItemGWT removed,
+	
+	void removeScheduleItem(
+			OldScheduleItemGWT removed,
 			HashMap<String, OldScheduleItemGWT> mSchedItems,
 			AsyncCallback<List<OldScheduleItemGWT>> callback);
-	
-//	void login(String username, AsyncCallback<Void> callback);
-//	void getScheduleNames(AsyncCallback<Map<String, UserDataGWT>> callback);
-//	
-//	void openNewSchedule(String newScheduleName, AsyncCallback<Integer> callback) throws IllegalArgumentException;
-//	void openExistingSchedule(
-//			int scheduleID,
-//			AsyncCallback<String> asyncCallback);
-//	void removeSchedule(String schedName, AsyncCallback<Void> callback) throws IllegalArgumentException;
-//
-//	void getInstructors(AsyncCallback<List<InstructorGWT>> callback) throws IllegalArgumentException;
-//	void saveInstructor(InstructorGWT instructor, AsyncCallback<Void> asyncCallback);
-//	
-//	void getLocations(AsyncCallback<List<LocationGWT>> asyncCallback) throws IllegalArgumentException;
-//	
-//	void getCourses(AsyncCallback<List<CourseGWT>> asyncCallback) throws IllegalArgumentException;
-//
-//    void generateSchedule(List<CourseGWT> courses, HashMap<String, ScheduleItemGWT> schedItems, AsyncCallback<List<ScheduleItemGWT>> scheduleItems);
-//	void rescheduleCourse(ScheduleItemGWT scheduleItem,
-//			List<Integer> days, int startHour, boolean atHalfHour,
-//			boolean inSchedule, HashMap<String, ScheduleItemGWT> scheduleItems, AsyncCallback<ScheduleItemList> callback);
-//	void removeScheduleItem(ScheduleItemGWT removed, HashMap<String, ScheduleItemGWT> schedItems,
-//			AsyncCallback<List<ScheduleItemGWT>> scheduleItems);
-//    void getSchedule(HashMap<String, ScheduleItemGWT> scheduleItems, AsyncCallback<List<ScheduleItemGWT>> asyncCallback);
-//	void saveSchedule(AsyncCallback<Void> hollaBack);
-//	void exportCSV(AsyncCallback<Integer> asyncCallback);
-//	
-////	void saveCurrentScheduleAs(String schedName, AsyncCallback<Void> callback);
-//	
-//	void addCourse(CourseGWT toAdd, AsyncCallback<CourseGWT> callback);
-//	void editCourse(CourseGWT toEdit, AsyncCallback<Void> callback);
-//	void removeCourse(Integer toRemoveID, AsyncCallback<Void> callback);
-//	void addInstructor(InstructorGWT toAdd, AsyncCallback<InstructorGWT> callback);
-//	void editInstructor(InstructorGWT toEdit, AsyncCallback<Void> callback);
-//	void removeInstructor(Integer realInstructorID, AsyncCallback<Void> callback);
-//	void addLocation(LocationGWT toAdd, AsyncCallback<LocationGWT> callback);
-//	void editLocation(LocationGWT toEdit, AsyncCallback<Void> callback);
-//	void removeLocation(Integer toRemoveID, AsyncCallback<Void> callback);
-//	void saveCurrentScheduleAsAndOpen(String scheduleName, boolean allowOverwrite,
-//			AsyncCallback<Integer> asyncCallback);
 }
