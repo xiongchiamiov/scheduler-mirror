@@ -2,7 +2,9 @@ package edu.calpoly.csc.scheduler.model.db.cdb;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.Set;
 
 import edu.calpoly.csc.scheduler.model.db.AbstractDatabase;
 import edu.calpoly.csc.scheduler.model.db.DbData;
@@ -65,9 +67,11 @@ public class CourseDB extends AbstractDatabase<Course> {
 
 			byte[] daysBuf = rs.getBytes(DAYS);
 			// toAdd.setDays((Week) sqldb.deserialize(daysBuf));
-			// TODO: Remove these next 2 lines when the above one is uncommented
+			// TODO: Remove these next 4 lines when the above one is uncommented
 			Week temp = new Week(new Day[] { Day.MON, Day.WED, Day.FRI });
-			toAdd.setDays(temp);
+			Set<Week> tmpWeek = new HashSet<Week>();
+			tmpWeek.add(temp);
+			toAdd.setDays(tmpWeek);
 
 			toAdd.setEnrollment(rs.getInt(ENROLLMENT));
 			toAdd.setLectureID(rs.getInt(LECTUREID));

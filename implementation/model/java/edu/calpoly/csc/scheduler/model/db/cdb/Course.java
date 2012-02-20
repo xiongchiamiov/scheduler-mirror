@@ -1,6 +1,10 @@
 package edu.calpoly.csc.scheduler.model.db.cdb;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import edu.calpoly.csc.scheduler.model.db.DbData;
 import edu.calpoly.csc.scheduler.model.db.NullDataException;
@@ -9,7 +13,7 @@ import edu.calpoly.csc.scheduler.model.schedule.Week;
 /**
  * Represents a course to be scheduled in the Scheduler.
  * 
- * @author Eric Liebowitz
+ * @author Eric LiebowitzgetLabInstructor
  * @version Oct 10, 2011
  */
 public class Course extends DbData implements Serializable
@@ -73,7 +77,7 @@ public class Course extends DbData implements Serializable
    /**
     * The days in the week this course is to be taught
     */
-   private Week days;
+   private Set<Week> days;
    /**
     * Maximum number of students that can be enrolled in this course
     */
@@ -395,7 +399,7 @@ public class Course extends DbData implements Serializable
    }
 
    public int getDayLength ()
-   {
+   {  
       return this.length / this.days.size();
    }
    
@@ -404,7 +408,7 @@ public class Course extends DbData implements Serializable
     * 
     * @return the days
     */
-   public Week getDays ()
+   public Set<Week> getDays ()
    {
       return days;
    }
@@ -414,7 +418,7 @@ public class Course extends DbData implements Serializable
     *
     * @param days the days to set
     */
-   public void setDays (Week days)
+   public void setDays (Set<Week> days)
    {
       this.days = days;
    }
@@ -586,7 +590,7 @@ public class Course extends DbData implements Serializable
       c.setNumOfSections(2);
       c.setType("LEC");
       c.setLength(3);
-      c.setDays(new Week());
+      c.setDays(new HashSet<Week>());
       c.setEnrollment(50);
       c.setLectureID(0);;
       c.setScheduleDBId(-1);
