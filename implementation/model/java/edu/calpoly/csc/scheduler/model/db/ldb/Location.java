@@ -63,7 +63,7 @@ public class Location extends DbData implements Serializable
    /**
     * Represents a location's availabilty throughout the week.
     */
-   private WeekAvail         availability = new WeekAvail();
+   //private WeekAvail         availability = new WeekAvail();
 
    /**
     * Default constructor
@@ -84,8 +84,6 @@ public class Location extends DbData implements Serializable
    {
       this.building = Integer.toString(bldg);
       this.room = Integer.toString(room);
-
-      this.availability = new WeekAvail();
    }
 
    /**
@@ -108,8 +106,6 @@ public class Location extends DbData implements Serializable
       this.providedEquipment.hasLaptopConnectivity = l.providedEquipment.hasLaptopConnectivity;
       this.adaCompliant = l.adaCompliant;
       this.type = l.type;
-
-      this.availability = new WeekAvail();
    }
 
    /**
@@ -123,8 +119,6 @@ public class Location extends DbData implements Serializable
       this.building = building;
       this.room = room;
       this.providedEquipment = new ProvidedEquipment();
-
-      this.availability = new WeekAvail();
    }
 
    /**
@@ -146,8 +140,6 @@ public class Location extends DbData implements Serializable
       providedEquipment.hasLaptopConnectivity = laptop;
       adaCompliant = disabilities;
       this.type = type;
-
-      this.availability = new WeekAvail();
    }
 
    /**
@@ -315,19 +307,19 @@ public class Location extends DbData implements Serializable
    /**
     * @return the availability
     */
-   public WeekAvail getAvailability()
+   /*public WeekAvail getAvailability()
    {
       return availability;
-   }
+   }*/
 
    /**
     * @param availability
     *           the availability to set
     */
-   public void setAvailability(WeekAvail availability)
+   /*public void setAvailability(WeekAvail availability)
    {
       this.availability = availability;
-   }
+   }*/
 
    /**
     * This method will tell whether this location is availble during the given
@@ -344,9 +336,9 @@ public class Location extends DbData implements Serializable
     * 
     *         Written by: Eric Liebowitz
     */
-   public boolean isAvailable(Day dayOfWeek, Time s, Time e)
+   public boolean isAvailable(Day dayOfWeek, Time s, Time e, ScheduleDecorator sd)
    {
-      return this.availability.isFree(s, e, dayOfWeek);
+	   return sd.getLAvailability(this).isFree(s, e, dayOfWeek);
    }
 
    /**
@@ -364,9 +356,9 @@ public class Location extends DbData implements Serializable
     * 
     *         Written by: Eric Liebowitz
     */
-   public boolean isAvailable(Week week, Time s, Time e)
+   public boolean isAvailable(Week week, Time s, Time e, ScheduleDecorator sd)
    {
-      return this.availability.isFree(s, e, week);
+	   return sd.getLAvailability(this).isFree(s, e, week);
    }
 
    /**
@@ -380,9 +372,9 @@ public class Location extends DbData implements Serializable
     * 
     * @return True if the TimeRange is free on all days of "week"
     */
-   public boolean isAvailable(Week week, TimeRange tr)
+   public boolean isAvailable(Week week, TimeRange tr, ScheduleDecorator sd)
    {
-      return this.availability.isFree(tr, week);
+	   return sd.getLAvailability(this).isFree(tr, week);
    }
 
    /**
@@ -398,9 +390,9 @@ public class Location extends DbData implements Serializable
     * 
     *           Written by: Eric Liebowitz
     */
-   public boolean book(boolean b, Day dayOfWeek, Time s, Time e)
+   public boolean book(boolean b, Day dayOfWeek, Time s, Time e, ScheduleDecorator sd)
    {
-      return this.availability.book(b, s, e, dayOfWeek);
+	   return sd.getLAvailability(this).book(b, s, e, dayOfWeek);
    }
 
    /**
@@ -417,14 +409,14 @@ public class Location extends DbData implements Serializable
     * 
     *         Written by: Eric Liebowitz
     */
-   public boolean book(boolean b, Week week, Time s, Time e)
+   public boolean book(boolean b, Week week, Time s, Time e, ScheduleDecorator sd)
    {
-      return this.availability.book(b, s, e, week);
+	   return sd.getLAvailability(this).book(b, s, e, week);
    }
 
-   public boolean book(boolean b, Week week, TimeRange tr)
+   public boolean book(boolean b, Week week, TimeRange tr, ScheduleDecorator sd)
    {
-      return this.availability.book(b, week, tr);
+       return sd.getLAvailability(this).book(b, week, tr);
    }
 
    /**
@@ -500,7 +492,6 @@ public class Location extends DbData implements Serializable
       e.isSmartRoom = true;
       l.setProvidedEquipment(e);
       l.setAdaCompliant(true);
-      l.setAvailability(new WeekAvail());
       l.setScheduleDBId(1);
       return l;
    }

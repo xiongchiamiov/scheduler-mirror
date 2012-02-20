@@ -4,6 +4,7 @@ import edu.calpoly.csc.scheduler.model.db.Time;
 import edu.calpoly.csc.scheduler.model.db.TimeRange;
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
 import edu.calpoly.csc.scheduler.model.schedule.Day;
+import edu.calpoly.csc.scheduler.model.schedule.ScheduleDecorator;
 import edu.calpoly.csc.scheduler.model.schedule.Week;
 
 /**
@@ -38,31 +39,31 @@ public class Tba extends Location
    }
    
    @Override
-   public boolean isAvailable(Day dayOfWeek, Time s, Time e)
+   public boolean isAvailable(Day dayOfWeek, Time s, Time e, ScheduleDecorator sd)
    {
       return true;
    }
    
    @Override
-   public boolean isAvailable(Week week, Time s, Time e)
+   public boolean isAvailable(Week week, Time s, Time e, ScheduleDecorator sd)
    {
       return true;
    }
    
    @Override
-   public boolean book (boolean b, Day dayOfWeek, Time s, Time e)
+   public boolean book (boolean b, Day dayOfWeek, Time s, Time e, ScheduleDecorator sd)
    {
       return true;
    }
 
    @Override
-   public boolean book (boolean b, Week week, Time s, Time e)
+   public boolean book (boolean b, Week week, Time s, Time e, ScheduleDecorator sd)
    {
       return true;
    }
 
    @Override
-   public boolean book (boolean b, Week week, TimeRange tr)
+   public boolean book (boolean b, Week week, TimeRange tr, ScheduleDecorator sd)
    {
       return true;
    }

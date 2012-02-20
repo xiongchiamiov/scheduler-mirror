@@ -11,6 +11,7 @@ import edu.calpoly.csc.scheduler.model.db.DbData;
 import edu.calpoly.csc.scheduler.model.db.SQLDB;
 import edu.calpoly.csc.scheduler.model.db.TimeRange;
 import edu.calpoly.csc.scheduler.model.db.cdb.Course;
+import edu.calpoly.csc.scheduler.model.schedule.ScheduleDecorator;
 import edu.calpoly.csc.scheduler.model.schedule.WeekAvail;
 
 public class LocationDB extends AbstractDatabase<Location>
@@ -48,7 +49,7 @@ public class LocationDB extends AbstractDatabase<Location>
       return l;
    }
 
-   public List<Location> findRooms(Course course, Vector<TimeRange> times)
+   public List<Location> findRooms(Course course, Vector<TimeRange> times, ScheduleDecorator sd)
    {
       List<Location> rooms = new Vector<Location>();
 
@@ -60,7 +61,7 @@ public class LocationDB extends AbstractDatabase<Location>
             // Check if each time slot is available
             for (TimeRange slot : times)
             {
-               if (room.isAvailable(course.getDays(), slot.getS(), slot.getE()))
+               if (room.isAvailable(course.getDays().iterator().next(), slot.getS(), slot.getE(), sd))
                {
                   rooms.add(room);
                }
@@ -81,7 +82,6 @@ public class LocationDB extends AbstractDatabase<Location>
       fields.put(PROVIDEDEQUIPMENT,
             sqldb.serialize(data.getProvidedEquipment()));
       fields.put(ADACOMPLIANT, data.getAdaCompliant());
-      fields.put(AVAILABILITY, sqldb.serialize(data.getAvailability()));
       fields.put(DbData.SCHEDULEDBID, scheduleDBId);
       fields.put(DbData.NOTE, data.getNote());
    }
@@ -109,9 +109,6 @@ public class LocationDB extends AbstractDatabase<Location>
 
          boolean adacompliant = rs.getBoolean(ADACOMPLIANT);
          toAdd.setAdaCompliant(adacompliant);
-
-         byte[] availBuf = rs.getBytes(AVAILABILITY);
-         toAdd.setAvailability((WeekAvail) sqldb.deserialize(availBuf));
 
          int scheduleid = rs.getInt(DbData.SCHEDULEDBID);
          toAdd.setScheduleDBId(scheduleid);
