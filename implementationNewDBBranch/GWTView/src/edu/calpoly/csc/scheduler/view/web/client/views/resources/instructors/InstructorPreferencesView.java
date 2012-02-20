@@ -12,6 +12,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
@@ -37,6 +38,7 @@ public class InstructorPreferencesView extends VerticalPanel implements IViewCon
 	
 	InstructorTimePreferencesWidget timePrefs;
 	FlexTable coursePrefs;
+	String[] styleNames = {"preferred", "acceptable", "notPreferred", "notQualified"};
 	
 	public InstructorPreferencesView(GreetingServiceAsync service, int documentID, String scheduleName, InstructorGWT instructor) {
 		this.service = service;
@@ -52,27 +54,37 @@ public class InstructorPreferencesView extends VerticalPanel implements IViewCon
 	public void afterPush(ViewFrame frame) {
 		this.setWidth("100%");
 		this.setHeight("100%");
+		FocusPanel fpanel = new FocusPanel();
+		HTML instructorName = new HTML(instructor.getFirstName() + " " + instructor.getLastName());
+		instructorName.setStyleName("bigBold");
+		fpanel.add(instructorName);
+		this.add(fpanel);
 		
 		timePrefs = new InstructorTimePreferencesWidget(service, new InstructorTimePreferencesWidget.Strategy() {
 			public InstructorGWT getSavedInstructor() { return savedInstructor; }
 			public InstructorGWT getInstructor() { return instructor; }
+			public void autoSave() { save(); }
 		});
-
-		this.add(new Button("Save All Preferences", new ClickHandler() {
+		this.setSpacing(10);
+		/*this.add(new Button("Save All Preferences", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				save();
 			}
-		}));
+		}));*/
 		
-		this.add(new HTML("Time preferences are between 0 and 3.  0 means you cannot teach at that time, 3 means you really want to teach at that time."));
+		//this.add(new HTML("Time preferences are between 0 and 3.  0 means you cannot teach at that time, 3 means you really want to teach at that time."));
 		
 		this.add(timePrefs);
 		
 		coursePrefs = new FlexTable();
 		this.add(coursePrefs);
-		coursePrefs.setWidget(0, 0, new HTML("Course"));
-		coursePrefs.setWidget(0, 1, new HTML("Preference"));
+		HTML htmlCourse = new HTML("Course");
+		htmlCourse.setStyleName("timePrefs");
+		HTML htmlPreference = new HTML("Preference");
+		htmlPreference.setStyleName("timePrefs");
+		coursePrefs.setWidget(0, 0, htmlCourse);
+		coursePrefs.setWidget(0, 1, htmlPreference);
 		
 		service.getCoursesForDocument(documentID, new AsyncCallback<List<CourseGWT>>() {
 			@Override
@@ -105,11 +117,13 @@ public class InstructorPreferencesView extends VerticalPanel implements IViewCon
 			coursePrefs.setWidget(row, 1, list);
 			
 			list.setSelectedIndex(getCoursePreference(instructor, course));
+			list.setStyleName(styleNames[3 - getCoursePreference(instructor, course)]);
 			
 			list.addChangeHandler(new ChangeHandler() {
 				@Override
 				public void onChange(ChangeEvent event) {
 					setCoursePreference(course, list.getSelectedIndex());
+					save();
 				}
 			});
 			
@@ -118,19 +132,19 @@ public class InstructorPreferencesView extends VerticalPanel implements IViewCon
 	}
 	
 	void save() {
-		final LoadingPopup popup = new LoadingPopup();
-		popup.show();
+		//final LoadingPopup popup = new LoadingPopup();
+		//popup.show();
 		
 		service.editInstructor(instructor, new AsyncCallback<Void>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				popup.hide();
+				//popup.hide();
 				Window.alert("Error saving instructor: " + caught.getMessage());
 			}
 
 			@Override
 			public void onSuccess(Void result) {
-				popup.hide();
+				//popup.hide();
 				savedInstructor = instructor;
 				instructor = new InstructorGWT(instructor);
 				redoColors();
@@ -160,10 +174,11 @@ public class InstructorPreferencesView extends VerticalPanel implements IViewCon
 		for (CourseGWT course : coursesByID.values()) {
 			ListBox list = listBoxesByCourseID.get(course.getID());
 			assert(list != null);
-			if (getCoursePreference(instructor, course) != getCoursePreference(savedInstructor, course))
+			list.setStyleName(styleNames[3 - getCoursePreference(instructor, course)]);
+			/*if (getCoursePreference(instructor, course) != getCoursePreference(savedInstructor, course))
 				list.addStyleName("changed");
 			else
-				list.removeStyleName("changed");
+				list.removeStyleName("changed");*/
 		}
 	}
 

@@ -15,7 +15,7 @@ public class InstructorGWT implements Serializable, Identified {
 	private String firstName, lastName;
 	private String maxwtu;
 
-	HashMap<Integer, HashMap<Integer, Integer>> tPrefs;
+	HashMap<DayGWT, HashMap<Integer, Integer>> tPrefs;
 
 	HashMap<Integer, Integer> coursePrefs;
 
@@ -23,7 +23,7 @@ public class InstructorGWT implements Serializable, Identified {
 
 	public InstructorGWT(int id, String username, String firstName,
 			String lastName, String maxwtu,
-			HashMap<Integer, HashMap<Integer, Integer>> tPrefs,
+			HashMap<DayGWT, HashMap<Integer, Integer>> tPrefs,
 			HashMap<Integer, Integer> hashMap) {
 		super();
 		this.id = id;
@@ -43,8 +43,8 @@ public class InstructorGWT implements Serializable, Identified {
 		this(that.id, that.username, that.firstName, that.lastName,
 				that.maxwtu, null, null);
 		
-		HashMap<Integer, HashMap<Integer, Integer>> newTPrefs = new HashMap<Integer, HashMap<Integer,Integer>>(); 
-		for (Integer day : that.tPrefs.keySet()) {
+		HashMap<DayGWT, HashMap<Integer, Integer>> newTPrefs = new HashMap<DayGWT, HashMap<Integer,Integer>>(); 
+		for (DayGWT day : that.tPrefs.keySet()) {
 			Map<Integer, Integer> thatDayPrefs = that.tPrefs.get(day);
 			HashMap<Integer, Integer> newDayPrefs = new HashMap<Integer, Integer>();
 			
@@ -65,11 +65,11 @@ public class InstructorGWT implements Serializable, Identified {
 		verify();
 	}
 
-	public HashMap<Integer, HashMap<Integer, Integer>> gettPrefs() {
+	public HashMap<DayGWT, HashMap<Integer, Integer>> gettPrefs() {
 		return tPrefs;
 	}
 
-	public void settPrefs(HashMap<Integer, HashMap<Integer, Integer>> tPrefs) {
+	public void settPrefs(HashMap<DayGWT, HashMap<Integer, Integer>> tPrefs) {
 		this.tPrefs = tPrefs;
 	}
 

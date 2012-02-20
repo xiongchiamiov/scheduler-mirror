@@ -1,20 +1,32 @@
 package edu.calpoly.csc.scheduler.view.web.client.views;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -25,6 +37,7 @@ import edu.calpoly.csc.scheduler.view.web.client.views.resources.courses.Courses
 import edu.calpoly.csc.scheduler.view.web.client.views.resources.instructors.InstructorsView;
 import edu.calpoly.csc.scheduler.view.web.client.views.resources.locations.LocationsView;
 import edu.calpoly.csc.scheduler.view.web.shared.DocumentGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.UserDataGWT;
 
 public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 	public interface OtherFilesStrategy {
@@ -32,9 +45,6 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 		void fileOpenPressed();
 		void fileImportPressed();
 		void fileMergePressed();
-		void fileSaveAsPressed(DocumentGWT existingDocument);
-		void fileSavePressed(DocumentGWT document);
-		void fileClosePressed(DocumentGWT document);
 	}
 	
 	final GreetingServiceAsync service;
@@ -115,7 +125,7 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 
 		MenuItem closeItem = new MenuItem("Close", true, new Command() {
 			public void execute() {
-				otherFilesStrategy.fileClosePressed(document);
+				afterClosePressed();
 			}
 		});
 		
@@ -124,7 +134,7 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 
 		MenuItem saveItem = new MenuItem("Save", true, new Command() {
 			public void execute() {
-				otherFilesStrategy.fileSavePressed(document);
+				afterSavePressed();
 			}
 		});
 		
@@ -133,7 +143,7 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 		
 		MenuItem saveAsItem = new MenuItem("Save As", true, new Command() {
 			public void execute() {
-				otherFilesStrategy.fileSaveAsPressed(document);
+				afterSaveAsPressed();
 			}
 		});
 		
@@ -186,6 +196,110 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 //		DOM.setElementAttribute(fileMenuItem.getElement(), "id", "FileVIitem");
 	}
 	
+	protected void afterClosePressed() {
+		assert(false);
+	}
+
+	protected void afterSavePressed() {
+		assert(false);
+	}
+
+	protected void afterSaveAsPressed() {
+
+	      final ListBox saveAsListBox = new ListBox();
+	      final ArrayList<String> schedNames = new ArrayList<String>();
+	      final TextBox tb = new TextBox();
+	      final DialogBox db = new DialogBox();
+	      FlowPanel fp = new FlowPanel();
+	      final Button saveButton = new Button("Save", new ClickHandler()
+	      {
+	         @Override
+	         public void onClick(ClickEvent event)
+	         {
+	            db.hide();
+
+	            final String scheduleName = tb.getText();
+	            if (scheduleName.isEmpty()) return;
+
+	            boolean allowOverwrite = false;
+	            if (schedNames.contains(scheduleName))
+	            {
+	               if (Window.confirm("The schedule \"" + scheduleName
+	                     + "\" already exists.  Are you sure you want to replace it?"))
+	                  allowOverwrite = true;
+	               else return;
+	            }
+
+	            service.saveWorkingCopyToNewOriginalDocument(document, scheduleName, allowOverwrite, new AsyncCallback<DocumentGWT>() {
+	            	@Override
+	            	public void onFailure(Throwable caught) {
+	            		// TODO Auto-generated method stub
+	            		
+	            	}
+	            	@Override
+	            	public void onSuccess(DocumentGWT result) {
+	            		Window.alert("todo: notify all views of doc name change");
+	            	}
+	            });
+	         }
+	      });
+
+	      final Button cancelButton = new Button("Cancel", new ClickHandler()
+	      {
+	         @Override
+	         public void onClick(ClickEvent event)
+	         {
+	            db.hide();
+	         }
+	      });
+
+	      tb.addKeyPressHandler(new KeyPressHandler()
+	      {
+	         @Override
+	         public void onKeyPress(KeyPressEvent event)
+	         {
+	            if (event.getCharCode() == KeyCodes.KEY_ENTER) saveButton.click();
+	         }
+	      });
+
+	      service.getAllOriginalDocumentsByID(new AsyncCallback<Collection<DocumentGWT>>() {
+			
+			@Override
+			public void onSuccess(Collection<DocumentGWT> result) {
+	            for (DocumentGWT doc : result)
+	            {
+	               saveAsListBox.addItem(doc.getName());
+	               schedNames.add(doc.getName());
+	            }
+			}
+			
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert("Failed to get existing document names.");
+			}
+		});
+
+	      db.setText("Name Schedule");
+	      fp.add(new HTML("<center>Specify a name to save the schedule as...</center>"));
+	      saveAsListBox.addClickHandler(new ClickHandler()
+	      {
+	         @Override
+	         public void onClick(ClickEvent event)
+	         {
+	            tb.setText(saveAsListBox.getValue(saveAsListBox.getSelectedIndex()));
+	         }
+	      });
+	      saveAsListBox.setVisibleItemCount(5);
+	      fp.add(saveAsListBox);
+	      fp.add(tb);
+	      fp.add(saveButton);
+	      fp.add(cancelButton);
+
+	      db.setWidget(fp);
+	      db.center();
+	      db.show();
+	}
+
 	private void makeSettingsMenu() {
 		settingsMenu = new MenuBar(true);
 		DOM.setElementAttribute(settingsMenu.getElement(), "id", "settingsMenu");

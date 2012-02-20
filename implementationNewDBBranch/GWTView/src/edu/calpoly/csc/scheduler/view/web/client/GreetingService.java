@@ -9,7 +9,6 @@ import java.util.Set;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
-import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.DayCombinationGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.DocumentGWT;
@@ -107,7 +106,7 @@ public interface GreetingService extends RemoteService {
 
 	void deleteWorkingCopyDocument(Integer documentID) throws NotFoundExceptionGWT;
 	
-	Collection<ScheduleItemGWT> getScheduleItemsForSchedule(int scheduleID) throws NotFoundException;
+	Collection<ScheduleItemGWT> getScheduleItemsForSchedule(int scheduleID) throws NotFoundExceptionGWT;
 	
 	Collection<ScheduleItemGWT> generateAndAddScheduleItems(int scheduleID, Set<Integer> courseIDsToSchedule, Set<Integer> availableLocationIDs, Set<Integer> availableInstructorIDs);
 	
@@ -116,4 +115,8 @@ public interface GreetingService extends RemoteService {
 	void updateScheduleItem(ScheduleItemGWT scheduleItem);
 	
 	void removeScheduleItem(int scheduleItemID);
+
+	DocumentGWT saveWorkingCopyToNewOriginalDocument(
+			DocumentGWT existingDocument, String scheduleName,
+			boolean allowOverwrite);
 }

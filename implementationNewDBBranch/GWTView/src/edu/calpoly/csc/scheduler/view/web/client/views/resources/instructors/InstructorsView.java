@@ -15,6 +15,7 @@ import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.client.IViewContents;
 import edu.calpoly.csc.scheduler.view.web.client.ViewFrame;
 import edu.calpoly.csc.scheduler.view.web.client.views.LoadingPopup;
+import edu.calpoly.csc.scheduler.view.web.shared.DayGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.DocumentGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 
@@ -88,7 +89,7 @@ public class InstructorsView extends VerticalPanel implements IViewContents, Ins
 	public InstructorGWT createInstructor() {
 		InstructorGWT instructor = new InstructorGWT(
 				generateTableInstructorID(), "", "", "", "",
-				new HashMap<Integer, HashMap<Integer, Integer>>(),
+				new HashMap<DayGWT, HashMap<Integer, Integer>>(),
 				new HashMap<Integer, Integer>());
 		
 		

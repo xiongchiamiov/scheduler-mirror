@@ -51,6 +51,9 @@ public interface GreetingServiceAsync {
 	void updateScheduleItem(ScheduleItemGWT scheduleItem,
 			AsyncCallback<Void> callback);
 	void removeScheduleItem(int scheduleItemID, AsyncCallback<Void> callback);
+	void saveWorkingCopyToNewOriginalDocument(DocumentGWT existingDocument,
+			String scheduleName, boolean allowOverwrite,
+			AsyncCallback<DocumentGWT> asyncCallback);
 	
 //	void login(String username, AsyncCallback<Void> callback);
 //	void getScheduleNames(AsyncCallback<Map<String, UserDataGWT>> callback);

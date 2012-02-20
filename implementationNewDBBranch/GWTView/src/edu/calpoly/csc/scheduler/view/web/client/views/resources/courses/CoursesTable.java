@@ -1,6 +1,7 @@
 package edu.calpoly.csc.scheduler.view.web.client.views.resources.courses;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -23,6 +24,7 @@ import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingStringColu
 import edu.calpoly.csc.scheduler.view.web.client.views.resources.courses.AssociationsCell.GetCoursesCallback;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.DayCombinationGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.DayGWT;
 
 public class CoursesTable extends SimplePanel {
 	private static final String NAME_HEADER = "Course Name";
@@ -322,17 +324,17 @@ public class CoursesTable extends SimplePanel {
 				new IStaticGetter<CourseGWT, Set<String>>() {
 					public Set<String> getValueForObject(CourseGWT object) {
 						Set<String> result = new HashSet<String>();
-						for (DayCombinationGWT combo : object.getDays())
-							result.add(combo.toString());
+						for (Set<DayGWT> combo : object.getDayPatterns())
+							result.add(DayGWT.dayGWTPatternToString(combo));
 						return result;
 					}
 				},
 				new IStaticSetter<CourseGWT, Set<String>>() {
 					public void setValueInObject(CourseGWT object, Set<String> newCombos) {
-						Set<DayCombinationGWT> set = new HashSet<DayCombinationGWT>();
+						Collection<Set<DayGWT>> set = new HashSet<Set<DayGWT>>();
 						for (String newCombo : newCombos)
-							set.add(DayCombinationGWT.fromString(newCombo));
-						object.setDays(set);
+							set.add(DayGWT.parseDayGWTPattern(newCombo));
+						object.setDayPatterns(set);
 					}
 				}));
 		

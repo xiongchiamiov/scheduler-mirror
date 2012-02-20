@@ -3,8 +3,10 @@ package edu.calpoly.csc.scheduler.view.web.client.views.resources.courses;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -17,7 +19,7 @@ import edu.calpoly.csc.scheduler.view.web.client.IViewContents;
 import edu.calpoly.csc.scheduler.view.web.client.ViewFrame;
 import edu.calpoly.csc.scheduler.view.web.client.views.LoadingPopup;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.DayCombinationGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.DayGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.DocumentGWT;
 
 public class CoursesView extends VerticalPanel implements IViewContents, CoursesTable.Strategy {
@@ -85,7 +87,7 @@ public class CoursesView extends VerticalPanel implements IViewContents, Courses
 
 	@Override
 	public CourseGWT createCourse() {
-		CourseGWT course = new CourseGWT(true, "", "", "", "", "", "", "LEC", "", -1, "", new HashSet<DayCombinationGWT>(), generateTableCourseID(), false, new HashSet<String>());
+		CourseGWT course = new CourseGWT(true, "", "", "", "", "", "", "LEC", "", -1, "", new LinkedList<Set<DayGWT>>(), generateTableCourseID(), false, new HashSet<String>());
 		
 		addedTableCourses.add(course);
 		

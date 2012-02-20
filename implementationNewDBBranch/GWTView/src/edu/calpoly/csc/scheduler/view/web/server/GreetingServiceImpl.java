@@ -1,13 +1,16 @@
 package edu.calpoly.csc.scheduler.view.web.server;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import edu.calpoly.csc.scheduler.model.Course;
+import edu.calpoly.csc.scheduler.model.Day;
 import edu.calpoly.csc.scheduler.model.Document;
 import edu.calpoly.csc.scheduler.model.Instructor;
 import edu.calpoly.csc.scheduler.model.Location;
@@ -40,17 +43,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	public CourseGWT addCourseToDocument(int documentID, CourseGWT course) throws NotFoundExceptionGWT {
 		assert(course.getID() == -1);
 
-		Collection<Set<Integer>> dayPatterns = new LinkedList<Set<Integer>>();
-		for (DayCombinationGWT combo : course.getDays())
-			dayPatterns.add(combo.getDays());
-		
 		int id;
 		try {
-			id = model.insertCourse(
-					model.findDocumentByID(documentID),
-					course.getCourseName(), course.getCatalogNum(), course.getDept(), course.getWtu(), course.getScu(),
-					course.getRawNumSections(), course.getType(), course.getMaxEnroll(), course.getHalfHoursPerWeek(),
-					course.getUsedEquipment(), dayPatterns, course.isSchedulable()).getID();
+			id = Conversion.insertGWTCourseIntoModel(model, model.findDocumentByID(documentID), course).getID();
 		} catch (NotFoundException e) {
 			e.printStackTrace();
 			throw new NotFoundExceptionGWT();
@@ -104,18 +99,20 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	@Override
 	public InstructorGWT addInstructorToDocument(int documentID, InstructorGWT instructor) throws NotFoundExceptionGWT {
 		assert(instructor.getID() == null);
-
+		//Instructor ins;
+		
+		
 		int id;
 		try {
-			id = model.insertInstructor(
-					model.findDocumentByID(documentID),
-					instructor.getFirstName(), instructor.getLastName(), instructor.getUsername(), instructor.getRawMaxWtu(), instructor.gettPrefs(), instructor.getCoursePreferences()).getID();
+			Document document = model.findDocumentByID(documentID);
+			id = Conversion.insertGWTInstructorIntoModel(model, document, instructor).getID();
 		} catch (NotFoundException e) {
 			e.printStackTrace();
 			throw new NotFoundExceptionGWT();
 		}
-		instructor.setID(id);
 		
+		instructor.setID(id);
+	
 		return instructor;
 	}
 
@@ -306,8 +303,14 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	}
 
 	@Override
-	public Collection<ScheduleItemGWT> getScheduleItemsForSchedule(int scheduleID) throws NotFoundException {
-		Schedule schedule = model.findScheduleByID(scheduleID);
+	public Collection<ScheduleItemGWT> getScheduleItemsForSchedule(int scheduleID) throws NotFoundExceptionGWT {
+		try {
+			Schedule schedule = model.findScheduleByID(scheduleID);
+		}
+		catch (NotFoundException e) {
+			e.printStackTrace();
+			throw new NotFoundExceptionGWT();
+		}
 		
 		Collection<ScheduleItemGWT> result = new LinkedList<ScheduleItemGWT>();
 //		for (Schedule.Item item : schedule.getItems())
@@ -335,14 +338,20 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 
 	@Override
 	public void updateScheduleItem(ScheduleItemGWT scheduleItem) {
-		// TODO Auto-generated method stub
-		
+		assert(false);
 	}
 
 	@Override
 	public void removeScheduleItem(int scheduleItemID) {
-		// TODO Auto-generated method stub
-		
+		assert(false);
+	}
+
+	@Override
+	public DocumentGWT saveWorkingCopyToNewOriginalDocument(
+			DocumentGWT existingDocument, String scheduleName,
+			boolean allowOverwrite) {
+		assert(false);
+		return null;
 	}
 
 	

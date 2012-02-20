@@ -17,7 +17,7 @@ public class CourseGWT implements Serializable, Identified {
 	private String type; //will be an object
 	private String maxEnroll;
 	private String halfHoursPerWeek;
-	private Set<DayCombinationGWT> dayCombinations;
+	private Collection<Set<DayGWT>> dayPatterns;
 	private Integer lectureID;
 	private Boolean tetheredToLecture;
 	private Set<String> usedEquipment;
@@ -26,7 +26,7 @@ public class CourseGWT implements Serializable, Identified {
 	
 	public CourseGWT(boolean isSchedulable, String courseName, String catalogNum, String dept,
 			String wtu, String scu, String numSections, String type,
-			String maxEnroll, Integer lectureID, String halfHoursPerWeek, Set<DayCombinationGWT> dayCombinations,
+			String maxEnroll, Integer lectureID, String halfHoursPerWeek, Collection<Set<DayGWT>> dayCombinations,
 			Integer id, Boolean tetheredToLecture, Set<String> equipment) {
 		super();
 		this.isSchedulable = isSchedulable;
@@ -40,7 +40,7 @@ public class CourseGWT implements Serializable, Identified {
 		this.maxEnroll = maxEnroll;
 		this.lectureID = lectureID;
 		this.halfHoursPerWeek = halfHoursPerWeek;
-		this.dayCombinations = dayCombinations;
+		this.dayPatterns = dayCombinations;
 		this.id = id;
 		this.tetheredToLecture = tetheredToLecture;
 		this.usedEquipment = equipment;
@@ -51,24 +51,24 @@ public class CourseGWT implements Serializable, Identified {
 	public CourseGWT(CourseGWT that) {
 		this(that.isSchedulable, that.courseName, that.catalogNum, that.dept, that.wtu, that.scu,
 				that.numSections, that.type, that.maxEnroll, that.lectureID, that.halfHoursPerWeek,
-				that.dayCombinations, that.id, that.tetheredToLecture, that.usedEquipment);
+				that.dayPatterns, that.id, that.tetheredToLecture, that.usedEquipment);
 	}
 
 	public void verify() {
 		assert(courseName != null);
 		assert(dept != null);
 		assert(type != null);
-		assert(dayCombinations != null);
+		assert(dayPatterns != null);
 	}
 	
-	public void setDays(Set<DayCombinationGWT> days)
+	public void setDayPatterns(Collection<Set<DayGWT>> dayPatterns)
 	{
-		this.dayCombinations = days;
+		this.dayPatterns = dayPatterns;
 	}
 	
-	public Set<DayCombinationGWT> getDays()
+	public Collection<Set<DayGWT>> getDayPatterns()
 	{
-		return dayCombinations;
+		return dayPatterns;
 	}
    
 
@@ -205,14 +205,6 @@ public class CourseGWT implements Serializable, Identified {
 		this.isSchedulable = isSchedulable;
 	}
 
-	public Set<DayCombinationGWT> getDayCombinations() {
-		return dayCombinations;
-	}
-
-	public void setDayCombinations(Set<DayCombinationGWT> dayCombinations) {
-		this.dayCombinations = dayCombinations;
-	}
-
 	public Set<String> getUsedEquipment() {
 		return usedEquipment;
 	}
@@ -239,5 +231,19 @@ public class CourseGWT implements Serializable, Identified {
 
 	public void setLectureID(Integer lectureID) {
 		this.lectureID = lectureID;
+	}
+	
+	public boolean isValid() {
+		try {
+			Integer.parseInt(wtu);
+			Integer.parseInt(scu);
+			Integer.parseInt(numSections);
+			Integer.parseInt(maxEnroll);
+			Integer.parseInt(halfHoursPerWeek);
+			return true;
+		}
+		catch (NumberFormatException e) {
+			return false;
+		}
 	}
 }
