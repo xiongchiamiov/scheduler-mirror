@@ -351,7 +351,11 @@ public class Schedule extends DbData implements Serializable
       TimeRange oldBounds = 
          setLecBounds(new TimeRange(s, clone.splitLengthOverDays(days.size())));
       
-      clone.setDays(days);
+      Set<Week> temp = clone.getDays();
+      temp.clear();
+      temp.add(days);
+      clone.setDays(temp);
+      
       generate(new Vector<Course>(Arrays.asList(new Course[]{clone})));
       
       /*
@@ -375,11 +379,11 @@ public class Schedule extends DbData implements Serializable
     *         a time where the location is in use or the instructor is already
     *         teaching. 
     */
-   public ScheduleItem move (ScheduleItem si, Week days, Time s) 
+   public ScheduleItem move (ScheduleItem si, Week days, Time s, ScheduleDecorator sd) 
       throws CouldNotBeScheduledException
    {
       ScheduleItem fresh_si = new ScheduleItem(si);
-      if (this.remove(si))
+      if (this.remove(si, sd))
       {
          Course c = si.getCourse();
          
@@ -388,7 +392,7 @@ public class Schedule extends DbData implements Serializable
          fresh_si.setDays(days);
          fresh_si.setTimeRange(tr);
       
-         this.add(fresh_si);
+         this.add(fresh_si, sd);
          
          /*
           * If the lab for the SI was teathered, we need to move it to just 
@@ -421,7 +425,7 @@ public class Schedule extends DbData implements Serializable
     * @return if the specified item was removed or not. It will not be removed
     *         if it does not exist in our list of items
     */
-   public boolean remove (ScheduleItem si)
+   public boolean remove (ScheduleItem si, ScheduleDecorator sd)
    {
       boolean r = false;
       if (this.items.contains(si))
@@ -435,12 +439,10 @@ public class Schedule extends DbData implements Serializable
          TimeRange tr = si.getTimeRange();
 
          this.items.remove(si);
-         i.book(false, days, tr);
-         l.book(false, days, tr);
+         i.book(false, days, tr, sd);
+         l.book(false, days, tr, sd);
 
-         int wtu = i.getCurWtu();
-         wtu -= si.getWtuTotal();
-         i.setCurWtu(wtu);
+         sd.subtractWTU(i, si.getWtuTotal());
 
          SectionTracker st = getSectionTracker(c);
          st.removeSection(si.getSection());
@@ -452,18 +454,18 @@ public class Schedule extends DbData implements Serializable
          {
             if (c.getTetheredToLecture())
             {
-               remove(si.getLabs());
+               remove(si.getLabs(), sd);
             }
          }
       }
       return r;
    }
    
-   private void remove (List<ScheduleItem> toRemove)
+   private void remove (List<ScheduleItem> toRemove, ScheduleDecorator sd)
    {
       for (ScheduleItem si: toRemove)
       {
-         remove(si);
+         remove(si, sd);
       }
    }
    
@@ -476,16 +478,16 @@ public class Schedule extends DbData implements Serializable
     * 
     * @return true if the item was added. False otherwise.
     */
-   public boolean add (ScheduleItem si) throws CouldNotBeScheduledException
+   public boolean add (ScheduleItem si, ScheduleDecorator sd) throws CouldNotBeScheduledException
    {
       boolean r;
       /*
        * Verification checks the ScheduleItem and its lab component (if
        * applicable) all in one go.
        */
-      if (r = verify(si))
+      if (r = verify(si, sd))
       {
-         book(si);
+         book(si, sd);
       }
 
       return r;
@@ -504,7 +506,7 @@ public class Schedule extends DbData implements Serializable
     * 
     * @see #verify(ScheduleItem)
     */
-   private void book (ScheduleItem si)
+   private void book (ScheduleItem si, ScheduleDecorator sd)
    {
       Course c = si.getCourse();
       Instructor i = si.getInstructor();
@@ -514,12 +516,10 @@ public class Schedule extends DbData implements Serializable
 
       debug ("BOOKING");
       
-      i.book(true, days, tr);
-      l.book(true, days, tr);
+      i.book(true, days, tr, sd);
+      l.book(true, days, tr, sd);
 
-      int wtu = i.getCurWtu();
-      wtu += c.getWtu();
-      i.setCurWtu(wtu);
+      sd.addWTU(i, si.getWtuTotal());
 
       SectionTracker st = getSectionTracker(si.getCourse());
       st.addSection();
@@ -571,7 +571,7 @@ public class Schedule extends DbData implements Serializable
     * 
     * @see Instructor#canTeach(Course)
     */
-   private boolean verify (ScheduleItem si) throws CouldNotBeScheduledException
+   private boolean verify (ScheduleItem si, ScheduleDecorator sd) throws CouldNotBeScheduledException
    {
       Week days = si.getDays();
       Course c = si.getCourse();
@@ -579,11 +579,11 @@ public class Schedule extends DbData implements Serializable
       Instructor i = si.getInstructor();
       Location l = si.getLocation();
 
-      if (!i.isAvailable(days, tr))
+      if (!i.isAvailable(days, tr, sd))
       {
          throw new CouldNotBeScheduledException(ConflictType.I_DBL_BK, si);
       }
-      if (!l.isAvailable(days, tr))
+      if (!l.isAvailable(days, tr, sd))
       {
          throw new CouldNotBeScheduledException(ConflictType.L_DBL_BK, si);
       }
@@ -591,7 +591,7 @@ public class Schedule extends DbData implements Serializable
       {
          throw new CouldNotBeScheduledException(ConflictType.NO_DESIRE, si);
       }
-      if (!i.canTeach(c))
+      if (!i.canTeach(c, sd.getCurWTU(i)))
       {
          throw new CouldNotBeScheduledException(ConflictType.CANNOT_TEACH, si);
       }
@@ -609,6 +609,9 @@ public class Schedule extends DbData implements Serializable
 	  items.clear();
 	  
       initGenData(c_list);
+      
+      ScheduleDecorator sd = new ScheduleDecorator();
+      sd.constructMaps(iSourceList, lSourceList);
 
       debug("GENERATING");
       debug("COURSES: " + this.cSourceList);
@@ -642,11 +645,11 @@ public class Schedule extends DbData implements Serializable
                      debug ("SECTIONS SCHEDULED: " + st.getCurSection()
                         + " / " + c.getNumOfSections());
             
-                     lec_si = genLecItem(c);
+                     lec_si = genLecItem(c, sd);
                      debug ("MADE LEC_SI\n" + lec_si);
                      try
                      {
-                          add(lec_si);
+                          add(lec_si, sd);
                           debug ("ADDED IT");
                      }
                      catch (CouldNotBeScheduledException e)
@@ -668,10 +671,10 @@ public class Schedule extends DbData implements Serializable
                 	/*st = getSectionTracker(lab);
                     for (int i = 0; i < c.getNumOfSections(); i ++)
                     {*/
-                	    ScheduleItem lab_si = genLabItem(lab, lec_si);
+                	    ScheduleItem lab_si = genLabItem(lab, lec_si, sd);
                         try
                         {                           
-                           add(lab_si);
+                           add(lab_si, sd);
                            lec_si.addLab(lab_si);
                         }
                         catch (CouldNotBeScheduledException e)
@@ -719,15 +722,15 @@ public class Schedule extends DbData implements Serializable
     * @see Tba#getTba()
     * @see Staff#getStaff()
     */
-   private ScheduleItem genLecItem (Course lec)
+   private ScheduleItem genLecItem (Course lec, ScheduleDecorator sd)
    {
       Vector<ScheduleItem> si_list = new Vector<ScheduleItem>();
       ScheduleItem lec_si = new ScheduleItem();
 
       lec_si.setCourse(lec);
-      lec_si.setInstructor(findInstructor(lec));
+      lec_si.setInstructor(findInstructor(lec, sd));
 
-      return genBestTime(lec_si, this.lec_bounds);
+      return genBestTime(lec_si, this.lec_bounds, sd);
    }
 
    /**
@@ -747,7 +750,7 @@ public class Schedule extends DbData implements Serializable
     * @see Tba#getTba()
     * @see Staff#getStaff()
     */
-   private ScheduleItem genLabItem (Course lab, ScheduleItem lec_si)
+   private ScheduleItem genLabItem (Course lab, ScheduleItem lec_si, ScheduleDecorator sd)
    {
       ScheduleItem lab_si = new ScheduleItem();
 
@@ -762,7 +765,7 @@ public class Schedule extends DbData implements Serializable
          tr = new TimeRange(lec_si.getEnd(), lab.getDayLength());
       }
 
-      return genBestTime(lab_si, tr);
+      return genBestTime(lab_si, tr, sd);
    }
 
    /**
@@ -790,7 +793,7 @@ public class Schedule extends DbData implements Serializable
     * @see Tba#getTba()
     * @see #findTimes(ScheduleItem, TimeRange)
     */
-   private ScheduleItem genBestTime (ScheduleItem base, TimeRange tr)
+   private ScheduleItem genBestTime (ScheduleItem base, TimeRange tr, ScheduleDecorator sd)
    {
       Vector<ScheduleItem> si_list = new Vector<ScheduleItem>();
 
@@ -799,7 +802,7 @@ public class Schedule extends DbData implements Serializable
        * try other instructors until we find one w/ at least one time he
        * can teach
        */
-      si_list = findTimes(base, tr);
+      si_list = findTimes(base, tr, sd);
       if (si_list.isEmpty())
       {
          ScheduleItem clone = base.clone();
@@ -814,13 +817,13 @@ public class Schedule extends DbData implements Serializable
          haveTried.add(clone.getInstructor());
          do
          {
-            Instructor i = findInstructor(c, haveTried);
+            Instructor i = findInstructor(c, haveTried, sd);
             
             debug ("NO TIMES FOUND FOR " + base.getInstructor());
             debug ("TRYING " + i);
             
             clone.setInstructor(i);
-            si_list = findTimes(clone, tr);
+            si_list = findTimes(clone, tr, sd);
             haveTried.add(i);
             
          } while (si_list.isEmpty());
@@ -828,7 +831,7 @@ public class Schedule extends DbData implements Serializable
       
       debug("GOT " + si_list.size() + " TIMES");
       
-      si_list = findLocations(si_list);
+      si_list = findLocations(si_list, sd);
       debug("GOT " + si_list.size() + " LOCATIONS");
 
       /*
@@ -855,7 +858,7 @@ public class Schedule extends DbData implements Serializable
     *         which the instructor wants to/can teach and on the days the Course
     *         is to be taught on.
     */
-   private Vector<ScheduleItem> findTimes (ScheduleItem si, TimeRange range)
+   private Vector<ScheduleItem> findTimes (ScheduleItem si, TimeRange range, ScheduleDecorator sd)
    {
       debug("FINDING TIMES IN RANGE " + range);
       Vector<ScheduleItem> sis = new Vector<ScheduleItem>();
@@ -865,18 +868,18 @@ public class Schedule extends DbData implements Serializable
       TimeRange tr = new TimeRange(range.getS(), c.getDayLength());
       for (; tr.getE().compareTo(range.getE()) < 1; tr.addHalf())
       {
-         Week days = c.getDays();
+         Set<Week> days = c.getDays();
 
          debug("CONSIDERING TR: " + tr);
-         if (i.isAvailable(days, tr))
+         if (i.isAvailable(days.iterator().next(), tr, sd))
          {
             debug("AVAILABLE");
             double pref;
-            if ((pref = i.getAvgPrefForTimeRange(days, tr)) > 0)
+            if ((pref = i.getAvgPrefForTimeRange(days.iterator().next(), tr)) > 0)
             {
                debug("WANTS: " + pref);
                ScheduleItem toAdd = si.clone();
-               toAdd.setDays(days);
+               toAdd.setDays(days.iterator().next());
                toAdd.setTimeRange(new TimeRange(tr));
 
                sis.add(toAdd);
@@ -897,7 +900,7 @@ public class Schedule extends DbData implements Serializable
     * @return A list of locations which can be taught on the days for course 'c'
     *         during at least the TimeRanges passed in.
     */
-   private Vector<ScheduleItem> findLocations (Vector<ScheduleItem> sis)
+   private Vector<ScheduleItem> findLocations (Vector<ScheduleItem> sis, ScheduleDecorator sd)
    {
 	  //might have to look into TBA location for IND type courses
       Vector<ScheduleItem> si_list = new Vector<ScheduleItem>();
@@ -910,7 +913,7 @@ public class Schedule extends DbData implements Serializable
          for (Location l : this.lSourceList)
          {
             debug ("TRYING LOCATION " + l + " with time " + tr);
-            if (l.isAvailable(days, tr))
+            if (l.isAvailable(days, tr, sd))
             {
                if (l.providesFor(si.getCourse()))
                {
@@ -1012,7 +1015,7 @@ public class Schedule extends DbData implements Serializable
     * @return An intsructor to teach 'c'. This can be STAFF if no instructor
     *         if capable of teaching
     */
-   private Instructor findInstructor (Course c, List<Instructor> doNotPick)
+   private Instructor findInstructor (Course c, List<Instructor> doNotPick, ScheduleDecorator sd)
    {
       Instructor r = Staff.getStaff();
       int curMaxPref = 0;
@@ -1025,7 +1028,7 @@ public class Schedule extends DbData implements Serializable
          if (doNotPick == null || !doNotPick.contains(i))
          {
             debug ("NOT EXCLUDED");
-            if (i.canTeach(c))
+            if (i.canTeach(c, sd.getCurWTU(i)))
             {
                debug ("CAN");
                int pref = i.getPreference(c);
@@ -1058,9 +1061,9 @@ public class Schedule extends DbData implements Serializable
     * 
     * @see Staff#getStaff()
     */
-   private Instructor findInstructor (Course c)
+   private Instructor findInstructor (Course c, ScheduleDecorator sd)
    {
-      return findInstructor(c, null);
+      return findInstructor(c, null, sd);
    }
 
    /***********************
@@ -1076,12 +1079,12 @@ public class Schedule extends DbData implements Serializable
     * 
     * @return true if the item was added to our list. False otherwise. 
     */
-   public boolean addConflictingItem (ScheduleItem si)
+   public boolean addConflictingItem (ScheduleItem si, ScheduleDecorator sd)
    {
       boolean isDirty = false;
       try
       {
-         verify(si);
+         verify(si, sd);
       }
       catch (CouldNotBeScheduledException e)
       {
