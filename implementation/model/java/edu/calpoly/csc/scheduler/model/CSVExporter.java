@@ -288,7 +288,7 @@ public class CSVExporter {
 					Integer.toString(course.getScu()),
 					Integer.toString(course.getNumOfSections()),
 					Integer.toString(course.getLength()),
-					compileWeek(course.getDays()),
+					compileWeek(course.getDays().iterator().next()),
 					Integer.toString(course.getEnrollment()),
 					Integer.toString(course.getLectureID()) //For associations
 					});
