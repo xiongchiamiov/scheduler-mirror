@@ -5,11 +5,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import com.csvreader.CsvReader;
 
@@ -26,6 +28,7 @@ import edu.calpoly.csc.scheduler.model.db.ldb.Location.ProvidedEquipment;
 import edu.calpoly.csc.scheduler.model.schedule.CouldNotBeScheduledException;
 import edu.calpoly.csc.scheduler.model.schedule.Day;
 import edu.calpoly.csc.scheduler.model.schedule.Schedule;
+import edu.calpoly.csc.scheduler.model.schedule.ScheduleDecorator;
 import edu.calpoly.csc.scheduler.model.schedule.ScheduleItem;
 import edu.calpoly.csc.scheduler.model.schedule.Week;
 
@@ -123,16 +126,17 @@ public class CSVImporter {
 
 		for (Pair<Boolean, ScheduleItem> item : scheduleItems) {
 			Boolean onConflictedList = item.first;
+			ScheduleDecorator sd = new ScheduleDecorator();
 			if (!onConflictedList) {
 				try {
-					schedule.add(item.second);
+					schedule.add(item.second, sd);
 				}
 				catch (CouldNotBeScheduledException ex) {
-					schedule.addConflictingItem(item.second);
+					schedule.addConflictingItem(item.second, sd);
 				}
 			}
 			else {
-				schedule.addConflictingItem(item.second);
+				schedule.addConflictingItem(item.second, sd);
 			}
 		}
 		
@@ -268,7 +272,9 @@ public class CSVImporter {
 			course.setScu(Integer.parseInt(cellI.next()));
 			course.setNumOfSections(Integer.parseInt(cellI.next()));
 			course.setLength(Integer.parseInt(cellI.next()));
-			course.setDays(readWeek(cellI.next()));
+			Set<Week> weekSet = new HashSet<Week>();
+			weekSet.add(readWeek(cellI.next()));
+			course.setDays(weekSet);
 			course.setEnrollment(Integer.parseInt(cellI.next()));
 			
 			Integer labIndex = extractIndex("course#", cellI.next());
