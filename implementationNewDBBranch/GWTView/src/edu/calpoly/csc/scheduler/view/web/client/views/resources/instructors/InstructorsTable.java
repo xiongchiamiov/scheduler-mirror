@@ -85,10 +85,8 @@ public class InstructorsTable extends SimplePanel {
 		addFieldColumns();
 
 		this.add(table);
-	}
 
-	@Override
-	public void onLoad() {
+		assert(tableInstructors.isEmpty());
 		strategy.getInitialInstructors(new AsyncCallback<List<InstructorGWT>>() {
 			public void onFailure(Throwable caught) {
 				Window.alert("Failed to get Instructors: " + caught.toString());
@@ -103,7 +101,7 @@ public class InstructorsTable extends SimplePanel {
 			}
 		});
 	}
-	
+
 	void addFieldColumns() {
 		table.addColumn(
 				FIRSTNAME_HEADER,

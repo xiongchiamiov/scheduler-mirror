@@ -13,7 +13,7 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.RootPanel;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
-import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.OldScheduleItemGWT;
 
 /**
  * Takes in various mouse events to determine when items are dragged/dropped. 
@@ -29,8 +29,8 @@ public class DragAndDropController implements MouseMoveHandler, MouseOutHandler,
 	private final ScheduleEditWidget mWidget;
 	
 	private Element mItemView;
-	private ScheduleItemGWT mDraggingItem;
-	private ScheduleItemGWT mDroppedItem;
+	private OldScheduleItemGWT mDraggingItem;
+	private OldScheduleItemGWT mDroppedItem;
 	private boolean isMoving = false;
 	private boolean fromCalendar = false;
 	
@@ -85,7 +85,7 @@ public class DragAndDropController implements MouseMoveHandler, MouseOutHandler,
 	 * @param tableCol The column number of this item in the table, 
 	 * 	or -1 if available courses list
 	 */
-	public void onMouseDown(ScheduleItemGWT item, int row, int tableCol) {
+	public void onMouseDown(OldScheduleItemGWT item, int row, int tableCol) {
 		mDraggingItem = item;
 		isMoving = false;
 		

@@ -2,6 +2,7 @@ package edu.calpoly.csc.scheduler.view.web.server;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -25,7 +26,8 @@ import edu.calpoly.csc.scheduler.view.web.shared.DocumentGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.NotFoundExceptionGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.OldScheduleItemGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemList;
 
 /**
  * The server side implementation of the RPC service.
@@ -98,7 +100,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 
 	@Override
 	public InstructorGWT addInstructorToDocument(int documentID, InstructorGWT instructor) throws NotFoundExceptionGWT {
-		assert(instructor.getID() == null);
+		assert(instructor.getID() == -1);
 		//Instructor ins;
 		
 		
@@ -157,7 +159,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 
 	@Override
 	public LocationGWT addLocationToDocument(int documentID, LocationGWT location) throws NotFoundExceptionGWT {
-		assert(location.getID() == null);
+		assert(location.getID() == -1);
 
 		int id;
 		try {
@@ -303,54 +305,46 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	}
 
 	@Override
-	public Collection<ScheduleItemGWT> getScheduleItemsForSchedule(int scheduleID) throws NotFoundExceptionGWT {
-		try {
-			Schedule schedule = model.findScheduleByID(scheduleID);
-		}
-		catch (NotFoundException e) {
-			e.printStackTrace();
-			throw new NotFoundExceptionGWT();
-		}
-		
-		Collection<ScheduleItemGWT> result = new LinkedList<ScheduleItemGWT>();
-//		for (Schedule.Item item : schedule.getItems())
-//			result.add(Conversion.modelScheduleItemToGWT(item));
-		assert(false);
-		return result;
-	}
-
-	@Override
-	public Collection<ScheduleItemGWT> generateAndAddScheduleItems(
-			int scheduleID, Set<Integer> courseIDsToSchedule,
-			Set<Integer> availableLocationIDs,
-			Set<Integer> availableInstructorIDs) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ScheduleItemGWT addScheduleItem(int scheduleID, int courseID,
-			int locationID, int instructorID, DayCombinationGWT days,
-			int startHalfHour, int endHalfHour, int section) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void updateScheduleItem(ScheduleItemGWT scheduleItem) {
-		assert(false);
-	}
-
-	@Override
-	public void removeScheduleItem(int scheduleItemID) {
-		assert(false);
-	}
-
-	@Override
 	public DocumentGWT saveWorkingCopyToNewOriginalDocument(
 			DocumentGWT existingDocument, String scheduleName,
 			boolean allowOverwrite) {
 		assert(false);
+		return null;
+	}
+
+	@Override
+	@Deprecated
+	public List<OldScheduleItemGWT> generateSchedule(
+			List<CourseGWT> mAllCourses,
+			HashMap<String, OldScheduleItemGWT> mSchedItems) {
+		assert(false);
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<OldScheduleItemGWT> getSchedule(
+			HashMap<String, OldScheduleItemGWT> mSchedItems) {
+		assert(false);
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ScheduleItemList rescheduleCourse(OldScheduleItemGWT scheduleItem,
+			ArrayList<Integer> days, int startHour, boolean atHalfHour,
+			boolean inSchedule, HashMap<String, OldScheduleItemGWT> mSchedItems) {
+		assert(false);
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<OldScheduleItemGWT> removeScheduleItem(
+			OldScheduleItemGWT removed,
+			HashMap<String, OldScheduleItemGWT> mSchedItems) {
+		assert(false);
+		// TODO Auto-generated method stub
 		return null;
 	}
 

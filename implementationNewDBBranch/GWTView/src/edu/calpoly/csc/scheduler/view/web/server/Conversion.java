@@ -2,7 +2,6 @@ package edu.calpoly.csc.scheduler.view.web.server;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -15,14 +14,11 @@ import edu.calpoly.csc.scheduler.model.Instructor;
 import edu.calpoly.csc.scheduler.model.Location;
 import edu.calpoly.csc.scheduler.model.Model;
 import edu.calpoly.csc.scheduler.model.Schedule;
-import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.DayCombinationGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.DayGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.DocumentGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.NotFoundExceptionGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 
 public abstract class Conversion {
@@ -194,9 +190,18 @@ public abstract class Conversion {
 	}
 
 	public static ScheduleItemGWT modelScheduleItemToGWTScheduleItem(Schedule.Item item) {
-		assert(false);
-		return null;
-//		return new ScheduleItemGWT(item.getCourseID(), item.getLocationID(), item.getInstructorID(), item.getSection(), item.getDays(), item.getStartHalfHour(), item.getEndHalfHour());
+		Set<DayGWT> dayPattern = modelDayPatternToGWTDayPattern(item.getDays());
+		
+		return new ScheduleItemGWT(
+				item.getCourseID(),
+				item.getInstructorID(),
+				item.getLocationID(),
+				item.getSection(),
+				dayPattern,
+				item.getStartHalfHour(),
+				item.getEndHalfHour(),
+				item.isPlaced(),
+				item.isConflicted());
 	}
 
 //	public static Instructor fromGWT(InstructorGWT instructor, Map<Integer, Course> coursesByID) {

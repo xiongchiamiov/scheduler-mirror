@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * list of ScheduleItemGWT objects and an error message to be returned from the
  * server with one server call.
  */
-public class ScheduleItemList extends ArrayList<ScheduleItemGWT>
+public class ScheduleItemList extends ArrayList<OldScheduleItemGWT>
 { 
  public String conflict = "";
 }

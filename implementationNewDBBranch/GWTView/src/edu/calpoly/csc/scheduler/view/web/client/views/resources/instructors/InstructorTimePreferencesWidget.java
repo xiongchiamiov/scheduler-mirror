@@ -145,12 +145,13 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 		
 		Integer time = hour * 60 + cell.halfHour % 2 * 30;
 
-		Integer day = cell.day;
+		Integer dayNum = cell.day;
+		DayGWT day = DayGWT.values()[dayNum];
 
 		if (instructor.gettPrefs().get(day) == null) {
 			HashMap<Integer, Integer> newmap = new HashMap<Integer, Integer>();
 			assert(newmap.get(time) == null);
-			instructor.gettPrefs().put(DayGWT.values()[day], newmap);
+			instructor.gettPrefs().put(day, newmap);
 			assert(instructor.gettPrefs().get(day) == newmap);
 			assert(instructor.gettPrefs().get(day).get(time) == null);
 		}
@@ -166,7 +167,8 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 		
 		time = hour * 60 + cell.halfHour % 2 * 30;
 
-		day = cell.day;
+		dayNum = cell.day;
+		day = DayGWT.values()[dayNum];
 		
 		assert(instructor.gettPrefs().get(day).get(time) == desire);
 		
@@ -183,7 +185,7 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 		
 		Integer time = hour * 60 + halfHour % 2 * 30;
 		
-		Integer day = dayNum;
+		DayGWT day = DayGWT.values()[dayNum];
 		
 		if (ins.gettPrefs().get(day) != null && ins.gettPrefs().get(day).get(time) != null)
 			return ins.gettPrefs().get(day).get(time);

@@ -8,16 +8,16 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.SimplePanel;
 
-import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.OldScheduleItemGWT;
 
 public class ScheduleItemListView extends SimplePanel {
 
 	private final ScheduleEditWidget mScheduleController;
 	private final DragAndDropController mDragController;
 	
-	private List<ScheduleItemGWT> mModel;
+	private List<OldScheduleItemGWT> mModel;
 	
-	public ScheduleItemListView(List<ScheduleItemGWT> items, ScheduleEditWidget scheduleController, DragAndDropController dragController) {
+	public ScheduleItemListView(List<OldScheduleItemGWT> items, ScheduleEditWidget scheduleController, DragAndDropController dragController) {
 		//mModel = new DummySchedule();
 		mModel = items;
 		mScheduleController = scheduleController;
@@ -26,9 +26,9 @@ public class ScheduleItemListView extends SimplePanel {
 		defineTableCallbacks();
 	}
 	
-	public List<ScheduleItemGWT> getItems() { return mModel; }
+	public List<OldScheduleItemGWT> getItems() { return mModel; }
 	
-	public void setItems(List<ScheduleItemGWT> items) { mModel = items; }
+	public void setItems(List<OldScheduleItemGWT> items) { mModel = items; }
 	
 	public void toggle(boolean hidden) {
 		Element container = DOM.getElementById("ScheduleListContainer");
@@ -55,7 +55,7 @@ public class ScheduleItemListView extends SimplePanel {
 				"<table id=\"ScheduleList\">");
 		
 		int rowNum = 0;
-		for (ScheduleItemGWT item : mModel) {
+		for (OldScheduleItemGWT item : mModel) {
 			builder.append("<tr " +
 					"onmouseover=\"listMouseOver("+rowNum+")\" " +
 					"onmouseout=\"listMouseOut("+rowNum+")\" " +
@@ -84,7 +84,7 @@ public class ScheduleItemListView extends SimplePanel {
 	 * Called when the user double clicks an item in the table
 	 */
 	public void doubleClick(int row) {
-		ScheduleItemGWT item = mModel.get(row);
+		OldScheduleItemGWT item = mModel.get(row);
 		
 		mScheduleController.editItem(true, item, new ArrayList<Integer>(), CalendarTableView.getStartRow(item));
 	}
@@ -95,7 +95,7 @@ public class ScheduleItemListView extends SimplePanel {
 	 * @return false to disable text selection on some browsers
 	 */
 	public Boolean mouseDown(int row) {
-		final ScheduleItemGWT item = mModel.get(row);
+		final OldScheduleItemGWT item = mModel.get(row);
 		
 		// Set the text of the div that moves with the cursor
 		Element dragDiv = DOM.getElementById(DragAndDropController.DRAGGED_ID);

@@ -2,7 +2,9 @@ package edu.calpoly.csc.scheduler.view.web.client;
 
 
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -15,7 +17,8 @@ import edu.calpoly.csc.scheduler.view.web.shared.DocumentGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.NotFoundExceptionGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.OldScheduleItemGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemList;
 
 /**
  * The client side stub for the RPC service.
@@ -106,17 +109,24 @@ public interface GreetingService extends RemoteService {
 
 	void deleteWorkingCopyDocument(Integer documentID) throws NotFoundExceptionGWT;
 	
-	Collection<ScheduleItemGWT> getScheduleItemsForSchedule(int scheduleID) throws NotFoundExceptionGWT;
-	
-	Collection<ScheduleItemGWT> generateAndAddScheduleItems(int scheduleID, Set<Integer> courseIDsToSchedule, Set<Integer> availableLocationIDs, Set<Integer> availableInstructorIDs);
-	
-	ScheduleItemGWT addScheduleItem(int scheduleID, int courseID, int locationID, int instructorID, DayCombinationGWT days, int startHalfHour, int endHalfHour, int section);
-	
-	void updateScheduleItem(ScheduleItemGWT scheduleItem);
-	
-	void removeScheduleItem(int scheduleItemID);
-
 	DocumentGWT saveWorkingCopyToNewOriginalDocument(
 			DocumentGWT existingDocument, String scheduleName,
 			boolean allowOverwrite);
+
+	@Deprecated
+	List<OldScheduleItemGWT> generateSchedule(List<CourseGWT> mAllCourses,
+			HashMap<String, OldScheduleItemGWT> mSchedItems);
+
+	@Deprecated
+	List<OldScheduleItemGWT> getSchedule(
+			HashMap<String, OldScheduleItemGWT> mSchedItems);
+
+	@Deprecated
+	ScheduleItemList rescheduleCourse(OldScheduleItemGWT scheduleItem,
+			ArrayList<Integer> days, int startHour, boolean atHalfHour,
+			boolean inSchedule, HashMap<String, OldScheduleItemGWT> mSchedItems);
+
+	@Deprecated
+	List<OldScheduleItemGWT> removeScheduleItem(OldScheduleItemGWT removed,
+			HashMap<String, OldScheduleItemGWT> mSchedItems);
 }

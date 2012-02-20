@@ -8,7 +8,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 
-import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.OldScheduleItemGWT;
 
 /**
  * This SimplePanel lies in each cell of the schedule table.
@@ -29,7 +29,7 @@ public class ScheduleCell extends SimplePanel implements
   }
  }
 
- ScheduleItemGWT scheduleItem = null;
+ OldScheduleItemGWT scheduleItem = null;
  int row = -1;
  int col = -1;
  ReschedulePopup rescheduler;
@@ -103,7 +103,7 @@ public class ScheduleCell extends SimplePanel implements
   * @param inScheduled True if an existing schedule item was dragged, false if a course was dragged from a list.
   * @param fromIncluded True if course was dragged from the To Be Scheduled list.
   */
- public void promptForDays(ScheduleItemGWT rescheduled, int row,
+ public void promptForDays(OldScheduleItemGWT rescheduled, int row,
    boolean inScheduled, boolean fromIncluded)
  {
   rescheduling = inScheduled;

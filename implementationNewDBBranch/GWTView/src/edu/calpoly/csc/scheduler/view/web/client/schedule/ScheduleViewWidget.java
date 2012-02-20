@@ -30,7 +30,8 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.client.views.LoadingPopup;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.DocumentGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.OldScheduleItemGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemList;
 
 /**
@@ -42,10 +43,10 @@ import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemList;
  * @author Mike McMahon, Tyler Yero
  */
 public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
-	class ScheduleItemComparator implements Comparator<ScheduleItemGWT> {
+	class ScheduleItemComparator implements Comparator<OldScheduleItemGWT> {
 		
 		@Override
-		public int compare(ScheduleItemGWT o1, ScheduleItemGWT o2) {
+		public int compare(OldScheduleItemGWT o1, OldScheduleItemGWT o2) {
 			if (o1.getStartTimeHour() > o2.getStartTimeHour()) {
 				return 1;
 			} else if (o1.getStartTimeHour() < o2.getStartTimeHour()) {
@@ -62,8 +63,8 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 
 	
 	private GreetingServiceAsync greetingService;
-	HashMap<String, ScheduleItemGWT> schedItems;
-	private ArrayList<ScheduleItemGWT> scheduleItems = new ArrayList<ScheduleItemGWT>();
+	HashMap<String, OldScheduleItemGWT> schedItems;
+	private ArrayList<OldScheduleItemGWT> scheduleItems = new ArrayList<OldScheduleItemGWT>();
 	private VerticalPanel mainPanel = new VerticalPanel();
 	private ScheduleTable scheduleGrid = new ScheduleTable(this);
 	private HorizontalPanel interfacePanel = new HorizontalPanel();
@@ -77,7 +78,45 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 	private MouseListBox includedListBox;
 	private MouseListBox availableListBox;
 	private HorizontalPanel boxesAndSchedulePanel;
+	private final DocumentGWT document;
 
+	public ScheduleViewWidget(GreetingServiceAsync service, DocumentGWT document) {
+		greetingService = service;
+		this.document = document;
+		layoutInterface();
+		layoutBoxesAndSchedule();
+		final LoadingPopup loading = new LoadingPopup();
+
+		loading.show();
+		
+		greetingService.getSchedule(schedItems, new AsyncCallback<List<OldScheduleItemGWT>>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert("Failed to retrieve schedule.");
+				loading.hide();
+			}
+
+			@Override
+			public void onSuccess(List<OldScheduleItemGWT> result) {
+				scheduleItems = new ArrayList<OldScheduleItemGWT>();
+				for (OldScheduleItemGWT item : result) {
+					scheduleItems.add(item);
+				}
+
+				Collections.sort(scheduleItems, new ScheduleItemComparator());
+				// Add the attributes of the retrieved items to the
+				// filters list
+				filtersDialog.addItems(scheduleItems);
+
+				// Place schedule items with any previously set
+				// filters
+				filterScheduleItems(searchBox.getText());
+				loading.hide();
+			}
+
+		});
+	}
+	
 	/**
 	 * Registers all cells in schedule table as drop targets.
 	 */
@@ -117,19 +156,16 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 		}
 		loading.show();
 		
-		Window.alert("implement");
-		assert(false);
-		/*
 		greetingService.generateSchedule(
 				dualListBoxCourses.getIncludedCourses(), schedItems,
-				new AsyncCallback<List<ScheduleItemGWT>>() {
+				new AsyncCallback<List<OldScheduleItemGWT>>() {
 					public void onFailure(Throwable caught) {
 						loading.hide();
 						Window.alert("Failed to get schedule: "
 								+ caught.toString());
 					}
 
-					public void onSuccess(List<ScheduleItemGWT> result) {
+					public void onSuccess(List<OldScheduleItemGWT> result) {
 						if (result != null) {
 							// Sort result by start times in ascending order
 							Collections.sort(result,
@@ -138,8 +174,8 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 							// Reset column and row spans, remove any items
 							// already placed
 							resetSchedule();
-							scheduleItems = new ArrayList<ScheduleItemGWT>();
-							for (ScheduleItemGWT item : result) {
+							scheduleItems = new ArrayList<OldScheduleItemGWT>();
+							for (OldScheduleItemGWT item : result) {
 								scheduleItems.add(item);
 							}
 
@@ -155,14 +191,14 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 							loading.hide();
 						}
 					}
-				});*/
+				});
 	}
 
 	/**
 	 * Sets all schedule items retrieved as not placed on the schedule.
 	 */
 	private void resetIsPlaced() {
-		for (ScheduleItemGWT item : scheduleItems) {
+		for (OldScheduleItemGWT item : scheduleItems) {
 			item.setPlaced(false);
 		}
 	}
@@ -195,7 +231,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 		ArrayList<Integer> filtDays = filtersDialog.getDays();
 		ArrayList<Integer> filtTimes = filtersDialog.getTimes();
 
-		for (ScheduleItemGWT item : scheduleItems) {
+		for (OldScheduleItemGWT item : scheduleItems) {
 			if (filtInstructors.contains(item.getProfessor())
 					&& filtCourses.contains(item.getCourseString())
 					&& filtRooms.contains(item.getRoom())
@@ -208,7 +244,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 		registerDrops();
 	}
 
-	private boolean isInFilteredTimeRange(ScheduleItemGWT item,
+	private boolean isInFilteredTimeRange(OldScheduleItemGWT item,
 			ArrayList<Integer> filtTimes) {
 		int startTimeRow = ScheduleTable.getRowFromTime(
 				item.getStartTimeHour(), item.startsAfterHalf());
@@ -277,10 +313,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 
 	/* Retrieves the course list and adds it to the available courses box */
 	private void addCoursesToBoxes() {
-		Window.alert("implement");
-		assert(false);
-		/*
-		greetingService.getCourses(new AsyncCallback<List<CourseGWT>>() {
+		greetingService.getCoursesForDocument(document.getID(), new AsyncCallback<List<CourseGWT>>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				Window.alert("Failed to retrieve courses");
@@ -300,7 +333,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 					registerDrops();
 				}
 			}
-		});*/
+		});
 	}
 
 	/* Lays out the available and included courses boxes and the schedule */
@@ -329,45 +362,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 	 *            The server-side service which this widget will contact
 	 * @return This widget
 	 */
-	public Widget getWidget(GreetingServiceAsync service) {
-		greetingService = service;
-		layoutInterface();
-		layoutBoxesAndSchedule();
-		final LoadingPopup loading = new LoadingPopup();
-
-		loading.show();
-		
-		Window.alert("implement");
-		assert(false);
-		
-		/*
-		greetingService.getSchedule(schedItems, new AsyncCallback<List<ScheduleItemGWT>>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				Window.alert("Failed to retrieve schedule.");
-				loading.hide();
-			}
-
-			@Override
-			public void onSuccess(List<ScheduleItemGWT> result) {
-				scheduleItems = new ArrayList<ScheduleItemGWT>();
-				for (ScheduleItemGWT item : result) {
-					scheduleItems.add(item);
-				}
-
-				Collections.sort(scheduleItems, new ScheduleItemComparator());
-				// Add the attributes of the retrieved items to the
-				// filters list
-				filtersDialog.addItems(scheduleItems);
-
-				// Place schedule items with any previously set
-				// filters
-				filterScheduleItems(searchBox.getText());
-				loading.hide();
-			}
-
-		});*/
-		
+	public Widget getWidget() {
 		return mainPanel;
 	}
 
@@ -395,7 +390,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 	 * Called when a schedule item is dragged to a new position, or when a
 	 * course from one of the lists is dropped onto the schedule
 	 */
-	public void moveItem(final ScheduleItemGWT scheduleItem,
+	public void moveItem(final OldScheduleItemGWT scheduleItem,
 			ArrayList<Integer> days, int row, final boolean inSchedule,
 			final boolean fromIncluded) {
 		final LoadingPopup loading = new LoadingPopup();
@@ -410,9 +405,6 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 		//String catalogNumString = Integer.toString(catalogNumInt);
 		course.setCatalogNum(scheduleItem.getCatalogNum());
 
-		Window.alert("implement");
-		assert(false);
-		/*
 		greetingService.rescheduleCourse(scheduleItem, days, startHour,
 				atHalfHour, inSchedule, schedItems, new AsyncCallback<ScheduleItemList>() {
 					@Override
@@ -472,8 +464,8 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 							}
 						}
 
-						scheduleItems = new ArrayList<ScheduleItemGWT>();
-						for (ScheduleItemGWT schdItem : rescheduled) {
+						scheduleItems = new ArrayList<OldScheduleItemGWT>();
+						for (OldScheduleItemGWT schdItem : rescheduled) {
 							scheduleItems.add(schdItem);
 						}
 						Collections.sort(scheduleItems,
@@ -488,7 +480,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 							Window.alert(rescheduled.conflict);
 						}
 					}
-				});*/
+				});
 	}
 
 	public int getSectionsOnSchedule(CourseGWT course) {
@@ -497,7 +489,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 		int catalogNumInt = Integer.parseInt(catalogNum);
 		int count = 0;
 
-		for (ScheduleItemGWT item : scheduleItems) {
+		for (OldScheduleItemGWT item : scheduleItems) {
 			// TODO: yero compare item.getCatalogNum() to catalogNum (the
 			// string) instead of catalogNumInt (the int)
 			if (item.getDept() == dept && item.getCatalogNum().equals(catalogNum)) {
@@ -522,7 +514,7 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 	}
 
 	/* Returns all schedule items retrieved from the model's schedule object */
-	public ArrayList<ScheduleItemGWT> getItemsInSchedule() {
+	public ArrayList<OldScheduleItemGWT> getItemsInSchedule() {
 		return scheduleItems;
 	}
 
@@ -531,16 +523,12 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 		return dragController;
 	}
 
-	public void removeItem(ScheduleItemGWT removed) {
+	public void removeItem(OldScheduleItemGWT removed) {
 		final LoadingPopup loading = new LoadingPopup();
 		loading.show();
 
-		Window.alert("implement");
-		assert(false);
-		
-		/*
 		greetingService.removeScheduleItem(removed, schedItems,
-				new AsyncCallback<List<ScheduleItemGWT>>() {
+				new AsyncCallback<List<OldScheduleItemGWT>>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						loading.hide();
@@ -548,9 +536,9 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 					}
 
 					@Override
-					public void onSuccess(List<ScheduleItemGWT> result) {
-						scheduleItems = new ArrayList<ScheduleItemGWT>();
-						for (ScheduleItemGWT schdItem : result) {
+					public void onSuccess(List<OldScheduleItemGWT> result) {
+						scheduleItems = new ArrayList<OldScheduleItemGWT>();
+						for (OldScheduleItemGWT schdItem : result) {
 							scheduleItems.add(schdItem);
 						}
 						Collections.sort(scheduleItems,
@@ -560,6 +548,6 @@ public class ScheduleViewWidget implements CloseHandler<PopupPanel> {
 						filterScheduleItems(searchBox.getText());
 						loading.hide();
 					}
-				});*/
+				});
 	}
 }

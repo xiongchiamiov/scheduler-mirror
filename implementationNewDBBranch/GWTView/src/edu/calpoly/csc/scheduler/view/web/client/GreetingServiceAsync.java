@@ -1,6 +1,8 @@
 package edu.calpoly.csc.scheduler.view.web.client;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -11,7 +13,8 @@ import edu.calpoly.csc.scheduler.view.web.shared.DayCombinationGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.DocumentGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.OldScheduleItemGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemList;
 
 /**
  * The async counterpart of <code>GreetingService</code>.
@@ -37,23 +40,22 @@ public interface GreetingServiceAsync {
 	void getAllOriginalDocumentsByID(
 			AsyncCallback<Collection<DocumentGWT>> callback);
 	void deleteWorkingCopyDocument(Integer documentID, AsyncCallback<Void> asyncCallback);
-	void getScheduleItemsForSchedule(int documentID,
-			AsyncCallback<Collection<ScheduleItemGWT>> callback);
-	void generateAndAddScheduleItems(int scheduleID,
-			Set<Integer> courseIDsToSchedule,
-			Set<Integer> availableLocationIDs,
-			Set<Integer> availableInstructorIDs,
-			AsyncCallback<Collection<ScheduleItemGWT>> callback);
-	void addScheduleItem(int scheduleID, int courseID, int locationID,
-			int instructorID, DayCombinationGWT days, int startHalfHour,
-			int endHalfHour, int section,
-			AsyncCallback<ScheduleItemGWT> callback);
-	void updateScheduleItem(ScheduleItemGWT scheduleItem,
-			AsyncCallback<Void> callback);
-	void removeScheduleItem(int scheduleItemID, AsyncCallback<Void> callback);
 	void saveWorkingCopyToNewOriginalDocument(DocumentGWT existingDocument,
 			String scheduleName, boolean allowOverwrite,
 			AsyncCallback<DocumentGWT> asyncCallback);
+	void getSchedule(HashMap<String, OldScheduleItemGWT> mSchedItems,
+			AsyncCallback<List<OldScheduleItemGWT>> asyncCallback);
+	void generateSchedule(List<CourseGWT> mAllCourses,
+			HashMap<String, OldScheduleItemGWT> mSchedItems,
+			AsyncCallback<List<OldScheduleItemGWT>> asyncCallback);
+	void rescheduleCourse(OldScheduleItemGWT scheduleItem,
+			ArrayList<Integer> days, int startHour, boolean atHalfHour,
+			boolean inSchedule,
+			HashMap<String, OldScheduleItemGWT> mSchedItems,
+			AsyncCallback<ScheduleItemList> asyncCallback);
+	void removeScheduleItem(OldScheduleItemGWT removed,
+			HashMap<String, OldScheduleItemGWT> mSchedItems,
+			AsyncCallback<List<OldScheduleItemGWT>> asyncCallback);
 	
 //	void login(String username, AsyncCallback<Void> callback);
 //	void getScheduleNames(AsyncCallback<Map<String, UserDataGWT>> callback);

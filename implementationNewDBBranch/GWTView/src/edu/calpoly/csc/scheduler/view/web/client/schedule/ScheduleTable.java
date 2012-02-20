@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 
-import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.OldScheduleItemGWT;
 
 /**
  * An extension of a FlexTable for displaying a schedule.
@@ -164,7 +164,7 @@ public class ScheduleTable extends FlexTable {
 	 *            The day to search on.
 	 * @return The most times this item overlaps with other items.
 	 */
-	private int overlaps(ScheduleItemGWT toBePlaced, int day) {
+	private int overlaps(OldScheduleItemGWT toBePlaced, int day) {
 		ArrayList<Integer> occupiedDays;
 		int h;
 		int overlapCount = 0;
@@ -178,7 +178,7 @@ public class ScheduleTable extends FlexTable {
 		// Examine each time this item will occupy
 		for (h = startRow; h <= endRow; h++) {
 			// Examine each item already placed on schedule
-			for (ScheduleItemGWT item : scheduleController.getItemsInSchedule()) {
+			for (OldScheduleItemGWT item : scheduleController.getItemsInSchedule()) {
 				if (item.isPlaced()) {
 					occupiedDays = item.getDayNums();
 					occupiedStartRow = getRowFromTime(item.getStartTimeHour(),
@@ -252,7 +252,7 @@ public class ScheduleTable extends FlexTable {
 	 * @param filteredDays
 	 *            The days on which the item should not show up
 	 */
-	void placeScheduleItem(ScheduleItemGWT placedSchdItem,
+	void placeScheduleItem(OldScheduleItemGWT placedSchdItem,
 			ArrayList<Integer> filteredDays) {
 		ArrayList<Integer> schdItemDays;
 		int j, k, dayCol, rowRangeStart, rowRangeEnd, overlapCount;

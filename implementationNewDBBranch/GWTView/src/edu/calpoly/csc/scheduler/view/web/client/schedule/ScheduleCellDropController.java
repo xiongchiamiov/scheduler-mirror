@@ -7,7 +7,7 @@ import com.allen_sauer.gwt.dnd.client.drop.SimpleDropController;
 import com.google.gwt.user.client.Window;
 
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.OldScheduleItemGWT;
 
 /**
  * Handles drops onto the schedule table.
@@ -34,7 +34,7 @@ public class ScheduleCellDropController extends SimpleDropController
  public void onDrop(DragContext context)
  {
   ScheduleItemHTML droppedItem;
-  ScheduleItemGWT courseHolder;
+  OldScheduleItemGWT courseHolder;
   CourseGWT courseDropped, oneSectionCourse;
   boolean fromIncluded;
 
@@ -64,7 +64,7 @@ public class ScheduleCellDropController extends SimpleDropController
    assert(false); // reimplement this, dont touch the inputs
 //   oneSectionCourse.setNumSections(1);
    //The course is held in a schedule item because of my "make it up as you go" design... sorry.
-   courseHolder = new ScheduleItemGWT(oneSectionCourse, "", "", "", "", 1,
+   courseHolder = new OldScheduleItemGWT(oneSectionCourse, "", "", "", "", 1,
      new ArrayList<Integer>(), 0, 0, 0, 0, "", false);
    fromIncluded = !((MouseListBox) context.draggable.getParent().getParent())
      .isAvailableBox();

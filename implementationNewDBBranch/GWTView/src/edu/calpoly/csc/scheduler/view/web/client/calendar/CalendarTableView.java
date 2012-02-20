@@ -13,7 +13,7 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.SimplePanel;
 
-import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.OldScheduleItemGWT;
 
 /**
  * This class encapsulates both the view and model for the schedule table that allows 
@@ -27,10 +27,10 @@ public class CalendarTableView extends SimplePanel {
 	/**
 	 * Models one row in the table
 	 */
-	private static class CalendarRowModel extends Vector<ScheduleItemGWT> {
+	private static class CalendarRowModel extends Vector<OldScheduleItemGWT> {
 		
 		@Override
-		public ScheduleItemGWT get(int index) {
+		public OldScheduleItemGWT get(int index) {
 			if (index >= size())
 				return null;
 			return super.get(index);
@@ -108,8 +108,8 @@ public class CalendarTableView extends SimplePanel {
 		private final CalendarDayModel mDays[];
 	}
 	
-	private List<ScheduleItemGWT> mScheduleItems;
-	private List<ScheduleItemGWT> mFilteredScheduleItems;
+	private List<OldScheduleItemGWT> mScheduleItems;
+	private List<OldScheduleItemGWT> mFilteredScheduleItems;
 	private CalendarModel mModel;
 	private String mInnerHTML;
 	private int mLeftOffset;
@@ -186,7 +186,7 @@ public class CalendarTableView extends SimplePanel {
 				final CalendarDayModel day = mModel.get(dayNum);
 				
 				for (int colNum = 0; colNum < day.getWidth(); colNum++) {
-					final ScheduleItemGWT item = day.get(rowNum).get(colNum);
+					final OldScheduleItemGWT item = day.get(rowNum).get(colNum);
 					final int tableRow = rowNum;
 					final int tableCol = colNum + day.getOffset();
 					
@@ -238,7 +238,7 @@ public class CalendarTableView extends SimplePanel {
 		
 		CalendarModel model = new CalendarModel();
 		
-		for (ScheduleItemGWT item : mFilteredScheduleItems) {
+		for (OldScheduleItemGWT item : mFilteredScheduleItems) {
 			for (Integer dayNum : item.getDayNums()) {
 				CalendarDayModel day = model.get(dayNum - 1);
 				
@@ -298,7 +298,7 @@ public class CalendarTableView extends SimplePanel {
 	public void doubleClick(int row, int col) {
 		final int dayNum = mModel.getDayNum(col);
 		final CalendarDayModel day = mModel.get(dayNum);
-		final ScheduleItemGWT item = day.get(row).get(col - day.getOffset());
+		final OldScheduleItemGWT item = day.get(row).get(col - day.getOffset());
 
 		mScheduleController.editItem(false, item, new ArrayList<Integer>(dayNum), row);
 	}
@@ -310,7 +310,7 @@ public class CalendarTableView extends SimplePanel {
 	 */
 	public Boolean mouseDown(int row, int col) {
 		final CalendarDayModel day = mModel.get(mModel.getDayNum(col));
-		final ScheduleItemGWT item = day.get(row).get(col - day.getOffset());
+		final OldScheduleItemGWT item = day.get(row).get(col - day.getOffset());
 		
 		// Set the text of the div that moves with the cursor
 		Element dragDiv = DOM.getElementById(DragAndDropController.DRAGGED_ID);
@@ -417,24 +417,24 @@ public class CalendarTableView extends SimplePanel {
 		mFilteredScheduleItems = mScheduleItems;
 	}
 	
-	public static int getStartRow(ScheduleItemGWT item) {
+	public static int getStartRow(OldScheduleItemGWT item) {
 		return item.getStartTimeHour() * 2 + (item.getStartTimeMin() < 30 ? 0 : 1);
 	}
 	
-	public static int getEndRow(ScheduleItemGWT item) {
+	public static int getEndRow(OldScheduleItemGWT item) {
 		return item.getEndTimeHour() * 2 + (item.getEndTimeMin() < 30 ? 0 : 1) - 1;
 	}
 	
-	public List<ScheduleItemGWT> getScheduleItems() {
+	public List<OldScheduleItemGWT> getScheduleItems() {
 		return mScheduleItems;
 	}
 	
-	public void setScheduleItems(List<ScheduleItemGWT> items) {
+	public void setScheduleItems(List<OldScheduleItemGWT> items) {
 		mScheduleItems = items;
 		applyFilters();
 	}
 	
-	public void addScheduleItem(ScheduleItemGWT item) {
+	public void addScheduleItem(OldScheduleItemGWT item) {
 		
 	}
 	

@@ -10,7 +10,7 @@ import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.OldScheduleItemGWT;
 
 /**
  * A DialogBox is displayed when a course is dragged onto the schedule or when
@@ -27,10 +27,10 @@ public class ReschedulePopup extends DialogBox
  private CheckBox wednesdayCB = new CheckBox("Wednesday");
  private CheckBox thursdayCB = new CheckBox("Thursday");
  private CheckBox fridayCB = new CheckBox("Friday");
- private ScheduleItemGWT rescheduled;
+ private OldScheduleItemGWT rescheduled;
  private int row;
 
- ReschedulePopup(ScheduleItemGWT rescheduled, int row)
+ ReschedulePopup(OldScheduleItemGWT rescheduled, int row)
  {
   super(false);
   this.rescheduled = rescheduled;
@@ -108,7 +108,7 @@ public class ReschedulePopup extends DialogBox
   return days;
  }
 
- public ScheduleItemGWT getItem()
+ public OldScheduleItemGWT getItem()
  {
   return rescheduled;
  }

@@ -20,9 +20,10 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.DocumentGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.OldScheduleItemGWT;
 
 /**
  * A dialog that allows the user to edit the instructor, location, and time of a
@@ -44,13 +45,14 @@ public class EditScheduleItemDlg extends DialogBox {
 	private final DragAndDropController mDragController;
 	
 	private final boolean mFromList;
-	private final ScheduleItemGWT mOriginalItem;
+	private final OldScheduleItemGWT mOriginalItem;
 	private List<Integer> mNewDays;
 	private int mNewStartRow;
 	private boolean mChangedItem;
+	private final DocumentGWT document;
 
 	public EditScheduleItemDlg(GreetingServiceAsync service, ScheduleEditWidget widget, DragAndDropController dragController,
-			boolean fromList, ScheduleItemGWT item, List<Integer> newDays, int newStartRow) {
+			boolean fromList, OldScheduleItemGWT item, List<Integer> newDays, int newStartRow, DocumentGWT document) {
 		super(false);
 
 		mGreetingService = service;
@@ -61,6 +63,7 @@ public class EditScheduleItemDlg extends DialogBox {
 		mOriginalItem = item;
 		mNewDays = newDays;
 		mNewStartRow = newStartRow;
+		this.document = document;
 		
 		draw();
 	}
@@ -95,11 +98,11 @@ public class EditScheduleItemDlg extends DialogBox {
 		return mChangedItem;
 	}
 
-	public ScheduleItemGWT getOriginalItem() {
+	public OldScheduleItemGWT getOriginalItem() {
 		return mOriginalItem;
 	}
 	
-	public ScheduleItemGWT getNewItem() {
+	public OldScheduleItemGWT getNewItem() {
 		CourseGWT course = mOriginalItem.getCourse();
 		String courseName = course.getCourseName();
 		
@@ -127,7 +130,7 @@ public class EditScheduleItemDlg extends DialogBox {
 		
 		boolean conflicted = false;
 		
-		return new ScheduleItemGWT(course, courseName, prof, courseDept, courseNum, 
+		return new OldScheduleItemGWT(course, courseName, prof, courseDept, courseNum, 
 				section, dayNums, startHour, startMin, endHour, endMin, room, conflicted);
 	}
 	
@@ -292,48 +295,48 @@ public class EditScheduleItemDlg extends DialogBox {
 	}
 
 	private void populateInstructors() {
-//		mGreetingService.getInstructors(new AsyncCallback<List<InstructorGWT>>() {
-//			@Override
-//			public void onFailure(Throwable caught) {
-//				Window.alert("Failed to retrieve instructors.");
-//			}
-//
-//			@Override
-//			public void onSuccess(List<InstructorGWT> result) {
-//				if (result != null) {
-//					if (result.size() > 10) {
-//						mInstructorsLB.setVisibleItemCount(result.size());						
-//					}
-//					
-//					for (InstructorGWT instructor : result) {
-//						mInstructorsLB.addItem(instructor.getFirstName() + " " + instructor.getLastName());
-//					}
-//				}
-//			}
-//			
-//		});	
+		mGreetingService.getInstructorsForDocument(document.getID(), new AsyncCallback<List<InstructorGWT>>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert("Failed to retrieve instructors.");
+			}
+
+			@Override
+			public void onSuccess(List<InstructorGWT> result) {
+				if (result != null) {
+					if (result.size() > 10) {
+						mInstructorsLB.setVisibleItemCount(result.size());						
+					}
+					
+					for (InstructorGWT instructor : result) {
+						mInstructorsLB.addItem(instructor.getFirstName() + " " + instructor.getLastName());
+					}
+				}
+			}
+			
+		});	
 	}
 
 	private void populateLocations() {
-//		mGreetingService.getLocations(new AsyncCallback<List<LocationGWT>>() {
-//			@Override
-//			public void onFailure(Throwable caught) {
-//				Window.alert("Failed to retrieve instructors.");
-//			}
-//
-//			@Override
-//			public void onSuccess(List<LocationGWT> result) {
-//				if (result != null) {
-//					if (result.size() > 10) {
-//						mLocationsLB.setVisibleItemCount(result.size());						
-//					}
-//					
-//					for (LocationGWT location : result) {
-//						mLocationsLB.addItem(location.getBuilding() + " " + location.getRoom());
-//					}
-//				}
-//			}
-//			
-//		});	
+		mGreetingService.getLocationsForDocument(document.getID(), new AsyncCallback<List<LocationGWT>>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert("Failed to retrieve instructors.");
+			}
+
+			@Override
+			public void onSuccess(List<LocationGWT> result) {
+				if (result != null) {
+					if (result.size() > 10) {
+						mLocationsLB.setVisibleItemCount(result.size());						
+					}
+					
+					for (LocationGWT location : result) {
+						mLocationsLB.addItem(location.getRoom());
+					}
+				}
+			}
+			
+		});	
 	}
 }

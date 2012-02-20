@@ -13,7 +13,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.OldScheduleItemGWT;
 
 /**
  * A DialogBox which displays filters for viewing the schedule. Contains methods
@@ -121,7 +121,7 @@ public class FiltersViewWidget extends DialogBox {
 		filtersPanel.add(roomsPanel);
 	}
 
-	public void addItems(ArrayList<ScheduleItemGWT> items) {
+	public void addItems(ArrayList<OldScheduleItemGWT> items) {
 		String itemInstr;
 		String itemCourse;
 		String itemRoom;
@@ -133,7 +133,7 @@ public class FiltersViewWidget extends DialogBox {
 		rooms = new ArrayList<String>();
 		roomsLB.clear();
 
-		for (ScheduleItemGWT item : items) {
+		for (OldScheduleItemGWT item : items) {
 			itemInstr = item.getProfessor();
 			itemCourse = item.getCourseString();
 			itemRoom = item.getRoom();

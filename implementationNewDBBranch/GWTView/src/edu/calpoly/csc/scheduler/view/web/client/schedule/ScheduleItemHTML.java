@@ -2,7 +2,7 @@ package edu.calpoly.csc.scheduler.view.web.client.schedule;
 
 import com.google.gwt.user.client.ui.HTML;
 
-import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.OldScheduleItemGWT;
 
 /**
  * The HTML which displays a schedule item.
@@ -11,9 +11,9 @@ import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 public class ScheduleItemHTML extends HTML
 {
 
- ScheduleItemGWT scheduleItem;
+ OldScheduleItemGWT scheduleItem;
 
- ScheduleItemHTML(ScheduleItemGWT schdItem)
+ ScheduleItemHTML(OldScheduleItemGWT schdItem)
  {
   super();
   scheduleItem = schdItem;
@@ -21,7 +21,7 @@ public class ScheduleItemHTML extends HTML
   setStyleName("scheduleItemHTML");
  }
 
- public ScheduleItemGWT getScheduleItem()
+ public OldScheduleItemGWT getScheduleItem()
  {
   return scheduleItem;
  }

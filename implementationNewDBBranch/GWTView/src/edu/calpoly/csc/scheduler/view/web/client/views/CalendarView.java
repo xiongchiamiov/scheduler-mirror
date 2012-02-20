@@ -19,7 +19,7 @@ import edu.calpoly.csc.scheduler.view.web.client.ViewFrame;
 import edu.calpoly.csc.scheduler.view.web.client.calendar.ScheduleEditWidget;
 import edu.calpoly.csc.scheduler.view.web.client.schedule.ScheduleViewWidget;
 import edu.calpoly.csc.scheduler.view.web.shared.DocumentGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.OldScheduleItemGWT;
 
 public class CalendarView extends VerticalPanel implements IViewContents {
 	private GreetingServiceAsync service;
@@ -62,9 +62,9 @@ public class CalendarView extends VerticalPanel implements IViewContents {
 
 		//ScheduleViewWidget schdView = new ScheduleViewWidget();
 
-		ScheduleEditWidget scheduleEditWidget = new ScheduleEditWidget();
+		ScheduleEditWidget scheduleEditWidget = new ScheduleEditWidget(service, document);
 		//this.add(schdView.getWidget(service));
-		this.add(scheduleEditWidget.getWidget(service));
+		this.add(scheduleEditWidget.getWidget());
 		
 	}
 
