@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeSet;
 
 import edu.calpoly.csc.scheduler.model.db.IDBCourse;
 import edu.calpoly.csc.scheduler.model.db.IDBCourseAssociation;
@@ -141,7 +142,7 @@ public class Model {
 	
 	// INSTRUCTORS
 
-	public Instructor insertInstructor(Document containingDocument, String firstName, String lastName, String username, String maxWTU, HashMap<Integer, HashMap<Integer, Integer>> timePreferences, HashMap<Integer, Integer> coursePreferences) {
+	public Instructor insertInstructor(Document containingDocument, String firstName, String lastName, String username, String maxWTU, HashMap<Day, HashMap<Integer, Integer>> timePreferences, HashMap<Integer, Integer> coursePreferences) {
 		IDBInstructor underlyingInstructor = database.insertInstructor(containingDocument.underlyingDocument, firstName, lastName, username, maxWTU);
 		putTimePreferencesIntoDB(underlyingInstructor, timePreferences);
 		putCoursePreferencesIntoDB(underlyingInstructor, coursePreferences);
@@ -177,15 +178,15 @@ public class Model {
 		ins.underlyingInstructor = null;
 	}
 	
-	private HashMap<Integer, HashMap<Integer, Integer>> getTimePreferencesFromDB(IDBInstructor instructor) {
-		HashMap<Integer, HashMap<Integer, Integer>> newTimePreferences = new HashMap<Integer, HashMap<Integer, Integer>>();
+	private HashMap<Day, HashMap<Integer, Integer>> getTimePreferencesFromDB(IDBInstructor instructor) {
+		HashMap<Day, HashMap<Integer, Integer>> newTimePreferences = new HashMap<Day, HashMap<Integer, Integer>>();
 		
 		for (Entry<IDBTime, IDBTimePreference> entry : database.findTimePreferencesByTimeForInstructor(instructor).entrySet()) {
 			IDBTime time = entry.getKey();
 			IDBTimePreference pref = entry.getValue();
 			
 			if (!newTimePreferences.containsKey(time.getDay()))
-				newTimePreferences.put(time.getDay(), new HashMap<Integer, Integer>());
+				newTimePreferences.put(Day.values()[time.getDay()], new HashMap<Integer, Integer>());
 			assert(!newTimePreferences.get(time.getDay()).containsKey(time.getHalfHour()));
 			newTimePreferences.get(time.getDay()).put(time.getHalfHour(), pref.getPreference());
 		}
@@ -198,9 +199,9 @@ public class Model {
 			database.deleteTimePreference(timePref);
 	}
 
-	private void putTimePreferencesIntoDB(IDBInstructor instructor, HashMap<Integer, HashMap<Integer, Integer>> timePreferences) {
-		for (Entry<Integer, HashMap<Integer, Integer>> timePreferencesForDay : timePreferences.entrySet()) {
-			int day = timePreferencesForDay.getKey();
+	private void putTimePreferencesIntoDB(IDBInstructor instructor, HashMap<Day, HashMap<Integer, Integer>> timePreferences) {
+		for (Entry<Day, HashMap<Integer, Integer>> timePreferencesForDay : timePreferences.entrySet()) {
+			int day = timePreferencesForDay.getKey().ordinal();
 			for (Entry<Integer, Integer> timePreferenceForTime : timePreferencesForDay.getValue().entrySet()) {
 				int halfHour = timePreferenceForTime.getKey();
 				IDBTime time = database.findTimeByDayAndHalfHour(day, halfHour); 
@@ -242,7 +243,7 @@ public class Model {
 
 	// COURSES
 	
-	public Course insertCourse(Document containingDocument, String name, String catalogNumber, String department, String wtu, String scu, String numSections, String type, String maxEnrollment, String numHalfHoursPerWeek, Set<String> usedEquipmentDescriptions, Collection<Set<Integer>> dayPatterns, boolean isSchedulable) {
+	public Course insertCourse(Document containingDocument, String name, String catalogNumber, String department, String wtu, String scu, String numSections, String type, String maxEnrollment, String numHalfHoursPerWeek, Set<String> usedEquipmentDescriptions, Collection<Set<Day>> dayPatterns, boolean isSchedulable) {
 		IDBCourse underlying = database.insertCourse(containingDocument.underlyingDocument, name, catalogNumber, department, wtu, scu, numSections, type, maxEnrollment, numHalfHoursPerWeek, isSchedulable);
 		putUsedEquipmentIntoDB(underlying, usedEquipmentDescriptions);
 		putOfferedDayPatternsIntoDB(underlying, dayPatterns);
@@ -331,10 +332,25 @@ public class Model {
 		}
 	}
 
-	private Collection<Set<Integer>> getOfferedDayPatternsForCourse(IDBCourse underlying) {
-		Collection<Set<Integer>> result = new LinkedList<Set<Integer>>();
-		for (IDBOfferedDayPattern offered : database.findOfferedDayPatternsForCourse(underlying))
-			result.add(database.getDayPatternForOfferedDayPattern(offered).getDays());
+	private static Set<Day> daysFromIntegers(Set<Integer> integers) {
+		Set<Day> result = new TreeSet<Day>();
+		for (Integer integer : integers)
+			result.add(Day.values()[integer]);
+		return result;
+	}
+	
+	private static Set<Integer> daysToIntegers(Set<Day> days) {
+		Set<Integer> result = new TreeSet<Integer>();
+		for (Day day : days)
+			result.add(day.ordinal());
+		return result;
+	}
+	
+	private Collection<Set<Day>> getOfferedDayPatternsForCourse(IDBCourse underlying) {
+		Collection<Set<Day>> result = new LinkedList<Set<Day>>();
+		for (IDBOfferedDayPattern offered : database.findOfferedDayPatternsForCourse(underlying)) {
+			result.add(daysFromIntegers(database.getDayPatternForOfferedDayPattern(offered).getDays()));
+		}
 		return result;
 	}
 
@@ -343,10 +359,11 @@ public class Model {
 			database.deleteOfferedDayPattern(offered);
 	}
 	
-	private void putOfferedDayPatternsIntoDB(IDBCourse underlying, Collection<Set<Integer>> dayPatterns) {
-		for (Set<Integer> dayPattern : dayPatterns) {
+	private void putOfferedDayPatternsIntoDB(IDBCourse underlying, Collection<Set<Day>> dayPatterns) {
+		for (Set<Day> dayPattern : dayPatterns) {
 			try {
-				database.insertOfferedDayPattern(underlying, database.findDayPatternByDays(dayPattern));
+				Set<Integer> integers = daysToIntegers(dayPattern);
+				database.insertOfferedDayPattern(underlying, database.findDayPatternByDays(integers));
 			} catch (NotFoundException e) {
 				throw new AssertionError(e);
 			}

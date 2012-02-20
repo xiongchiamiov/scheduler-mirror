@@ -1,282 +1,426 @@
-//package edu.calpoly.csc.scheduler.model;
-//
-//import java.io.CharArrayWriter;
-//import java.io.IOException;
-//import java.io.Writer;
-//import java.sql.Time;
-//import java.util.ArrayList;
-//import java.util.HashMap;
-//import java.util.LinkedHashMap;
-//import java.util.Map.Entry;
-//
-//import com.csvreader.CsvWriter;
-//
-//public class CSVExporter {
-//	private ArrayList<String[]> locations = new ArrayList<String[]>();
-//	private ArrayList<String[]> instructors = new ArrayList<String[]>();
-//	private ArrayList<String[][]> instructorsTimePrefs = new ArrayList<String[][]>();
-//	private ArrayList<String[][]> instructorsCoursePrefs = new ArrayList<String[][]>();
-//	private ArrayList<String[]> courses = new ArrayList<String[]>();
-//	private ArrayList<String[]> scheduleItems = new ArrayList<String[]>();
-//	
-//	public CSVExporter() { }
-//	
-//	private String compileLocation(Location location) {
-//		location.verify();
-//		
-//		int index = locations.indexOf(location);
-//		if (index < 0) {
-//			index = locations.size();
-//			locations.add(new String[] {
-//					"location#" + index,
-//					location.getBuilding(),
-//					location.getRoom(),
-//					Integer.toString(location.getMaxOccupancy()),
-//					location.getType(),
-//					Boolean.toString(location.getProvidedEquipment().hasLaptopConnectivity),
-//					Boolean.toString(location.getProvidedEquipment().hasOverhead),
-//					Boolean.toString(location.getProvidedEquipment().isSmartRoom),
-//					Boolean.toString(location.getAdaCompliant())});
-//		}
-//		
-//		return "location#" + index;
-//	}
-//	
-//	private String compileInstructor(Instructor instructor) {
-////		int index = instructors.indexOf(instructor);
-////		if (index < 0) {
-////			index = instructors.size();
-////			instructors.add(new String[] {
-////					"instructor#" + index,
-////					instructor.getFirstName(),
-////					instructor.getLastName(),
-////					instructor.getUserID(),
-////					Integer.toString(instructor.getMaxWTU()),
-////					Integer.toString(instructor.getCurWtu()),
-////					instructor.getOffice().getBuilding(),
-////					instructor.getOffice().getRoom(),
-////					Integer.toString(instructor.getFairness()),
-////					Boolean.toString(instructor.getDisability()),
-////					compileCoursePrefs(instructor.getCoursePreferences()),
-////					compileTimePrefs(instructor.getTimePreferences())
-////			});
-////		}
-////		return "instructor#" + index;
-//		return null;
-//	}
-//
-//	private String compileTimePrefs(HashMap<Day, LinkedHashMap<Time, TimePreference>> timePreferences) {
-//		String[][] strings = new String[1 + Time.ALL_TIMES_IN_DAY.length][1 + Day.ALL_DAYS.length];
-//		
-//		strings[0][0] = "Time";
-//
-//		for (int row = 0; row < Time.ALL_TIMES_IN_DAY.length; row++)
-//			strings[row + 1][0] = Time.ALL_TIMES_IN_DAY[row].toString();
-//
-//		for (int col = 0; col < Day.ALL_DAYS.length; col++)
-//			strings[0][col + 1] = Day.ALL_DAYS[col].toString();
-//
-//		for (int row = 0; row < Time.ALL_TIMES_IN_DAY.length; row++) {
-//			for (int col = 0; col < Day.ALL_DAYS.length; col++) {
-//				if (timePreferences.get(Day.ALL_DAYS[col]) == null || timePreferences.get(Day.ALL_DAYS[col]).get(Time.ALL_TIMES_IN_DAY[row]) == null)
-//					strings[row + 1][col + 1] = Integer.toString(Instructor.DEFAULT_PREF);
-//				else
-//					strings[row + 1][col + 1] = Integer.toString(timePreferences.get(Day.ALL_DAYS[col]).get(Time.ALL_TIMES_IN_DAY[row]).getDesire());
-//			}
-//		}
-//		
-//		int newIndex = instructorsTimePrefs.size();
-//		instructorsTimePrefs.add(strings);
-//		return "timePrefs#" + newIndex;
-//	}
-//
-//	private String compileCoursePrefs(HashMap<Course, Integer> coursePreferences) {
-//		String[][] strings = new String[coursePreferences.size()][2];
-//		int row = 0;
-//		for (Entry<Course, Integer> pref : coursePreferences.entrySet()) {
-//			strings[row][0] = compileCourse(pref.getKey());
-//			strings[row][1] = Integer.toString(pref.getValue());
-//			row++;
-//		}
-//		
-//		int newIndex = instructorsCoursePrefs.size();
-//		instructorsCoursePrefs.add(strings);
-//		return "coursePrefs#" + newIndex;
-//	}
-//
-//	private String compileScheduleItem(boolean conflictingScheduleItem, ScheduleItem item) {
-//		int index = scheduleItems.indexOf(item);
-//		if (index < 0) {
-//			String labsString = "";
-//			for (ScheduleItem lab : item.getLabs()) {
-//				if (!labsString.equals(""))
-//					labsString += " ";
-//				labsString += compileScheduleItem(false, lab);
-//			}
-//			
-//			index = scheduleItems.size();
-//			scheduleItems.add(new String[] {
-//					"item#" + index,
-//					Boolean.toString(conflictingScheduleItem),
-//					compileInstructor(item.getInstructor()),
-//					compileCourse(item.getCourse()),
-//					compileLocation(item.getLocation()),
-//					Integer.toString(item.getSection()),
-//					compileWeek(item.getDays()),
-//					Double.toString(item.getValue()),
-//					compileTimeRange(item.getTimeRange()),
-//					"Locked?",
-//					labsString});
-//		}
-//		
-//		return "item#" + index;
-//	}
-//	
-//	private String compileTime(Time time) {
-//		return time.getHour() + ":" + time.getMinute();
-//	}
-//	
-//	private String compileTimeRange(TimeRange timeRange) {
-//		return compileTime(timeRange.getS()) + " to " + compileTime(timeRange.getE());
-//	}
-//
-//	private String compileWeek(Week week) {
-//		String result = new String();
-//		for (Day day : week.getDays())
-//			result += (result.equals("") ? "" : " ") + day.getName();
-//		return result;
-//	}
-//
-//	private String compileCourse(Course course) {
-//		int index = courses.indexOf(course);
-//		if (index < 0) {
-//		    assert(false);
-//			/*
-//             * The following was commented out because there is no longer
-//             * a "getLab()" method for a Course. Instead the getLectureID
-//             * method should be used. 
-//             * 
-//             * If a course is a lecture, the value
-//             * of the lectureID will be -1. If the course is a lab, the 
-//             * value of the lectureID will be equal to the lecture id.
-//             * 
-//			 * String labIndexString = course.getLab() == null ? "" : "course#" + courses.indexOf(course.getLab());
-//			 */
-//			
-//			index = courses.size();
-//			courses.add(new String[] {
-//					"course#" + index,
-//					course.getType().toString(),
-//					course.getName(),
-//					course.getCatalogNum(),
-//					course.getDept(),
-//					Integer.toString(course.getWtu()),
-//					Integer.toString(course.getScu()),
-//					Integer.toString(course.getNumOfSections()),
-//					Integer.toString(course.getLength()),
-//					compileWeek(course.getDays()),
-//					Integer.toString(course.getEnrollment())});
-//			assert(false);
-//			/*
-//			 * Removed labIndexString since it no longer exists. If something
-//			 * needs to be 
-//			 */
-//					//labIndexString});
-//		}
-//		
-//		return "course#" + index;
-//	}
-//	
-//	public String export(OldModel model) throws IOException {
-//		Schedule schedule = model.getSchedule();
-//		
-//		for (Location location : model.getLocations())
-//			compileLocation(location);
-//		
-//		for (Instructor instructor : model.getInstructors())
-//			compileInstructor(instructor);
-//		
-//		for (Course course : model.getCourses())
-//			compileCourse(course);
-//		
-//		for (ScheduleItem item : schedule.getItems())
-//			compileScheduleItem(false, item);
-//		
-//		for (ScheduleItem item : schedule.getDirtyList())
-//			compileScheduleItem(true, item);
-//		
-//		Writer stringWriter = new CharArrayWriter();
-//		CsvWriter writer = new CsvWriter(stringWriter, ',');
-//
-//		for (String topComment : CSVStructure.TOP_COMMENTS)
-//			writer.writeComment(topComment);
-//		
-//		writer.endRecord();
-//		writer.writeComment(CSVStructure.SCHEDULE_MARKER);
-//		writer.write(schedule.getName());
-//		writer.endRecord();
-//		writer.writeComment(CSVStructure.SCHEDULE_END_MARKER);
-//		
-//
-//		writer.endRecord();
-//		writer.writeComment(CSVStructure.COURSES_MARKER);
-//		for (int i = 0; i < courses.size(); i++) {
-//			writer.writeRecord(courses.get(i));
-//		}
-//		writer.writeComment(CSVStructure.COURSES_END_MARKER);
-//
-//		
-//		writer.endRecord();
-//		writer.writeComment(CSVStructure.LOCATIONS_MARKER);
-//		for (int i = 0; i < locations.size(); i++) {
-//			writer.writeRecord(locations.get(i));
-//		}
-//		writer.writeComment(CSVStructure.LOCATIONS_END_MARKER);
-//
-//		writer.endRecord();
-//		writer.writeComment(CSVStructure.INSTRUCTORS_COURSE_PREFS_MARKER);
-//		for (int i = 0; i < instructorsCoursePrefs.size(); i++) {
-//			writer.write("coursePrefs#" + i);
-//			writer.endRecord();
-//			writer.writeComment(CSVStructure.INSTRUCTOR_COURSE_PREFS_MARKER);
-//			for (String[][] prefs : instructorsCoursePrefs)
-//				for (String[] rec : prefs)
-//					writer.writeRecord(rec);
-//			writer.writeComment(CSVStructure.INSTRUCTOR_COURSE_PREFS_END_MARKER);
-//		}
-//		writer.writeComment(CSVStructure.INSTRUCTORS_COURSE_PREFS_END_MARKER);
-//
-//		writer.endRecord();
-//		writer.writeComment(CSVStructure.ALL_INSTRUCTORS_TIME_PREFS_MARKER);
-//		for (int i = 0; i < instructorsTimePrefs.size(); i++) {
-//			writer.write("timePrefs#" + i);
-//			writer.endRecord();
-//			writer.writeComment(CSVStructure.SINGLE_INSTRUCTOR_TIME_PREFS_MARKER);
-//			String[][] prefs = instructorsTimePrefs.get(i);
-//			for (String[] rec : prefs)
-//				writer.writeRecord(rec);
-//			writer.writeComment(CSVStructure.SINGLE_INSTRUCTOR_TIME_PREFS_END_MARKER);
-//		}
-//		writer.writeComment(CSVStructure.ALL_INSTRUCTORS_TIME_PREFS_END_MARKER);
-//
-//		writer.endRecord();
-//		writer.writeComment(CSVStructure.INSTRUCTORS_MARKER);
-//		for (int i = 0; i < instructors.size(); i++) {
-//			writer.writeRecord(instructors.get(i));
-//		}
-//		writer.writeComment(CSVStructure.INSTRUCTORS_END_MARKER);
-//
-//		writer.endRecord();
-//		writer.writeComment(CSVStructure.SCHEDULE_ITEMS_MARKER);
-//		for (int i = 0; i < scheduleItems.size(); i++)
-//			writer.writeRecord(scheduleItems.get(i));
-//		writer.writeComment(CSVStructure.SCHEDULE_ITEMS_END_MARKER);
-//
-//		writer.flush();
-//		writer.close();
-//		stringWriter.flush();
-//		stringWriter.close();
-//		
-//		return stringWriter.toString();
-//	}
-//}
+
+package edu.calpoly.csc.scheduler.model;
+
+import java.io.CharArrayWriter;
+import java.io.IOException;
+import java.io.Writer;
+import java.sql.Time;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
+import com.csvreader.CsvWriter;
+
+/**
+ * The Class CSVExporter.
+ * Exports a model to a CSV formatted string.
+ * 
+ * Current Status: partially working due to other uninitialized data and inability to test w/ teacher populated schedules.
+ * TODO Once fully working, will likely need to be resynced with CSV importer
+ * @author Evan Ovadia
+ * @author Jordan Hand
+ */
+public class CSVExporter {
+	/** The locations. */
+	private ArrayList<String[]> locations = new ArrayList<String[]>();
+	private Map<Integer, Integer> locationRowIndexByID = new HashMap<Integer, Integer>();
+	
+	/** The instructors. */
+	private ArrayList<String[]> instructors = new ArrayList<String[]>();
+	private Map<Integer, Integer> instructorRowIndexByID = new HashMap<Integer, Integer>();
+	
+	/** The instructors time prefs. */
+	private ArrayList<String[][]> instructorsTimePrefs = new ArrayList<String[][]>();
+	private Map<Integer, Integer> instructorsTimePrefsRowIndexByID = new HashMap<Integer, Integer>();
+	
+	/** The instructors course prefs. */
+	private ArrayList<String[][]> instructorsCoursePrefs = new ArrayList<String[][]>();
+	private Map<Integer, Integer> instructorsCoursePrefsRowIndexByID = new HashMap<Integer, Integer>();
+	
+	/** The courses. */
+	private ArrayList<String[]> courses = new ArrayList<String[]>();
+	private Map<Integer, Integer> courseRowIndexByID = new HashMap<Integer, Integer>();
+	
+	/** The schedule items. */
+	private ArrayList<String[]> scheduleItems = new ArrayList<String[]>();
+	private Map<Integer, Integer> scheduleItemsRowIndexByID = new HashMap<Integer, Integer>();
+	
+	private static String join(Collection<String> strings, String glue) {
+		String result = "";
+		for (String str : strings) {
+			if (!result.equals(""))
+				result += glue;
+			result += str;
+		}
+		return result;
+	}
+	
+	/**
+	 * Instantiates a new cSV exporter.
+	 */
+	public CSVExporter() { }
+	
+	/**
+	 * Compile location.
+	 * Turns location data into a string and adds it to the global locations ArrayList
+	 * @param location A location
+	 * @return A string with the location's index
+	 */
+	private String compileLocation(Location location) {
+	//	 location.verify();  //TODO Re-enable. Location.verify uses deprecated item ADA and room TBA has uninitialized data
+		
+		int index = locations.indexOf(location);
+		if (index < 0) {
+			index = locations.size();
+			locations.add(new String[] {
+					"location#" + index,
+					location.getRoom(),
+					location.getMaxOccupancy(),
+					location.getType(),
+					join(location.getProvidedEquipment(), " & ")
+			}); 
+			//TODO Note: Removed ADA
+		}
+		
+		return "location#" + index;
+	}
+	
+	/**
+	 * Compile instructor.
+	 * Turns instructor data into a string and adds it to the global instructors ArrayList
+	 * @param instructor the instructor
+	 * @return A string with the instructor index
+	 */
+	private String compileInstructor(Instructor instructor) {
+			
+		int index = instructors.indexOf(instructor);
+				if (index < 0) {
+		index = instructors.size();
+		
+		//Separates STAFF due to STAFF having uninitialized variables.
+		//Uninitialized variables are commented out. This can potentially can cause issues for CSVimporter
+		//Fairness is commented out in both due to it currently not being used.
+		if(instructor.getFirstName().equals("STAFF"))
+			instructors.add(new String[] {
+					"instructor#" + index,
+					instructor.getFirstName(),
+					instructor.getLastName(),
+					instructor.getUsername(),
+					instructor.getMaxWTU(),
+
+			//		Integer.toString(instructor.getFairness()),   
+			//TODO  Note: Removed Office/Officeroom
+			//		Boolean.toString(instructor.getDisability()),
+			//		compileCoursePrefs(instructor.getCoursePreferences()),					
+			//		compileTimePrefs(instructor.getTimePreferences())
+			});
+		else
+			instructors.add(new String[] {
+					"instructor#" + index,
+					instructor.getFirstName(),
+					instructor.getLastName(),
+					instructor.getUsername(),
+					instructor.getMaxWTU(),
+			//		Integer.toString(instructor.getFairness()),   
+		    //TODO  Removed Office/Officeroom
+					compileCoursePrefs(instructor.getCoursePreferences()),					
+					compileTimePrefs(instructor.getTimePreferences())
+			});
+
+		}
+		return "instructor#" + index;
+	}
+
+	private static String halfHourToString(int halfHourInDay) {
+		int hour = halfHourInDay / 2;
+		int halfHourInHour = halfHourInDay % 2;
+		boolean am = hour < 12;
+		hour %= 12;
+		return hour + ":" + (halfHourInHour == 0 ? "00" : "30") + (am ? "am" : "pm");
+	}
+	
+	/**
+	 * Compile time prefs.
+	 * Turns Time Preference data into a string and adds it to the global instructorTimePrefs ArrayList
+	 * @param hashMap A hashmap<Day rows, Hashmap<Time Columns, TimePreference>> mapping the days and times with a teacher's preference for that combination.
+	 * @return A string of time prefs. ie Time,SUN,MON,TUE,WED,THU,FRI,SAT
+										00:00,5,5,5,5,5,5,5
+	 */
+	private String compileTimePrefs(HashMap<Day, HashMap<Integer, Integer>> hashMap) {
+		final int startHalfHour = 14;
+		final int endHalfHour = 44;
+		final int numTimesInDay = endHalfHour - startHalfHour;
+		String[][] strings = new String[1 + numTimesInDay][1 + Day.values().length];
+		
+		strings[0][0] = "Time";
+
+		for (int halfHour = startHalfHour; halfHour < endHalfHour; halfHour++)
+			strings[halfHour + 1][0] = halfHourToString(halfHour);
+
+		for (int col = 0; col < Day.values().length; col++)
+			strings[0][col + 1] = Day.values()[col].toString();
+
+		for (int halfHourNum = startHalfHour; halfHourNum < endHalfHour; halfHourNum++) {
+			for (int dayNum = 0; dayNum < Day.values().length; dayNum++) {
+				Day day = Day.values()[dayNum];
+				int row = halfHourNum + 1;
+				int col = dayNum + 1;
+				if (hashMap.get(day) == null || hashMap.get(day).get(halfHourNum) == null)
+					strings[row][col] = Integer.toString(Instructor.DEFAULT_PREF);
+				else
+					strings[row][col] = Integer.toString(hashMap.get(day).get(halfHourNum));
+			}
+		}
+		
+		int newIndex = instructorsTimePrefs.size();
+		instructorsTimePrefs.add(strings);
+		return "timePrefs#" + newIndex;
+	}
+
+	/**
+	 * Compile course prefs.
+	 * Turns course preference data into a string and adds it to the global instructorsCoursePrefs ArrayList
+	 * @param coursePreferences A hashmap of course ID's to preferences
+	 * @return A string representing the course preference index
+	 */
+	private String compileCoursePrefs(HashMap<Integer, Integer> coursePreferences) {
+		String[][] strings = new String[coursePreferences.size()][2];
+		int row = 0;
+		for (Entry<Integer, Integer> pref : coursePreferences.entrySet()) {
+			strings[row][0] = "course#" + courseRowIndexByID.get(pref.getKey());
+			strings[row][1] = Integer.toString(pref.getValue()); //Preference for the course
+			row++;
+		}
+		
+		int newIndex = instructorsCoursePrefs.size();
+		instructorsCoursePrefs.add(strings);
+		
+		return "coursePrefs#" + newIndex;
+	}
+
+	private Schedule.Item findScheduleItemByID(int id, Collection<Schedule.Item> items) {
+		for (Schedule.Item item : items)
+			if (item.getID() == id)
+				return item;
+		assert(false);
+		return null;
+	}
+
+	private Course findCourseByID(int id, Collection<Course> items) {
+		for (Course item : items)
+			if (item.getID() == id)
+				return item;
+		assert(false);
+		return null;
+	}
+	
+	/**
+	 * Compile schedule item.
+	 * Turns Schedule Item data into a string and adds it to the global Schedule.Items ArrayList
+	 * @param conflictingSchedule.Item True is part of a conflicting schedule item, false if not 
+	 * @param item A Schedule.Item
+	 * @return the string of the Schedule.Item Number
+	 */
+	private String compileScheduleItem(Schedule.Item item, Collection<Schedule.Item> others) {
+		int index = scheduleItemsRowIndexByID.get(item.getID());
+		if (index < 0) {
+			String labsString = "";
+			for (Integer labID : item.getLabIDs()) {
+				if (!labsString.equals(""))
+					labsString += " ";
+				labsString += compileScheduleItem(findScheduleItemByID(labID, others), others);
+			}
+			
+			index = scheduleItems.size();
+			scheduleItems.add(new String[] {
+					"item#" + index,
+					"instructor#" + instructorRowIndexByID.get(item.getInstructorID()),
+					"course#" + courseRowIndexByID.get(item.getCourseID()),
+					"location#" + locationRowIndexByID.get(item.getLocationID()),
+					Integer.toString(item.getSection()),
+					Boolean.toString(item.isPlaced()),
+					compileDayPattern(item.getDays()),
+					compileTimeRange(item.getStartHalfHour(), item.getEndHalfHour()),
+					});
+		}
+		
+		return "item#" + index;
+	}
+	
+	private String compileDayPattern(Set<Day> days) {
+		String result = "";
+		for (Day day : days)
+			result += day.abbreviation;
+		return result;
+	}
+	
+	/**
+	 * Compile time range.
+	 * Converts a TimeRange into a string
+	 * @param timeRange the time range
+	 * @return the string of time ranges
+	 */
+	private static String compileTimeRange(int startHalfHourNum, int endHalfHourNum) {
+		return halfHourToString(startHalfHourNum) + " to " + halfHourToString(endHalfHourNum);
+	}
+
+	/**
+	 * Compile course.
+	 * Turns Course data into a string and adds it to the global courses ArrayList
+	 * @param course A course
+	 * @return A string representing the course index
+	 */
+	private String compileCourse(Course course, Collection<Course> others) {
+		int index = courses.indexOf(course);
+		if (index < 0) {
+		    assert(false);
+			/*
+             * The following was commented out because there is no longer
+             * a "getLab()" method for a Course. Instead the getLectureID
+             * method should be used. 
+             * 
+             * If a course is a lecture, the value
+             * of the lectureID will be -1. If the course is a lab, the 
+             * value of the lectureID will be equal to the lecture id.
+             * 
+			 * String labIndexString = course.getLab() == null ? "" : "course#" + courses.indexOf(course.getLab());
+			 */
+		    
+		    String dayPatterns = "";
+		    for (Set<Day> pattern : course.getDayPatterns()) {
+		    	if (!dayPatterns.equals(""))
+		    		dayPatterns += " ";
+		    	dayPatterns += compileDayPattern(pattern);
+		    }
+		    
+			index = courses.size();
+			courses.add(new String[] {
+					"course#" + index,
+					course.getType().toString(),
+					course.getName(),
+					course.getCatalogNumber(),
+					course.getDepartment(),
+					course.getWTU(),
+					course.getSCU(),
+					course.getNumSections(),
+					course.getNumHalfHoursPerWeek(),
+					dayPatterns,
+					course.getMaxEnrollment(),
+					compileCourse(findCourseByID(course.getLectureID(), others), others) // for associations
+					});
+			assert(false);
+			/*
+			 * Removed labIndexString since it no longer exists. If something
+			 * needs to be 
+			 */
+					//labIndexString});
+		}
+		
+		return "course#" + index;
+	}
+	
+	/**
+	 * Export.
+	 * Turns a Model into a CSV String
+	 * @param model A model
+	 * @return The CSV String
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	public String export(Model model, Document document) throws IOException {
+		/* Gather model information into the global string ArrayLists */
+		for (Location location : model.findLocationsForDocument(document))
+			compileLocation(location);
+		
+		Collection<Course> coursesInDocument = model.findCoursesForDocument(document);
+		for (Course course : coursesInDocument)
+		{
+			compileCourse(course, coursesInDocument);
+		}
+			
+		for (Instructor instructor : model.findInstructorsForDocument(document))
+			compileInstructor(instructor);
+		
+		Schedule schedule = model.findAllSchedulesForDocument(document).iterator().next();
+		
+		for (Schedule.Item item : schedule.getItems())
+			compileScheduleItem(item, schedule.getItems());
+		
+		/* Start writing model data to a charArray that'll eventually be turned into a string*/
+		Writer stringWriter = new CharArrayWriter();
+		CsvWriter writer = new CsvWriter(stringWriter, ',');
+
+		for (String topComment : CSVStructure.TOP_COMMENTS)
+			writer.writeComment(topComment);
+		
+		writer.endRecord();
+		writer.writeComment(CSVStructure.SCHEDULE_MARKER);
+		writer.write(document.getName());
+		writer.endRecord();
+		writer.writeComment(CSVStructure.SCHEDULE_END_MARKER);
+		
+
+		writer.endRecord();
+		writer.writeComment(CSVStructure.COURSES_MARKER);
+		for (int i = 0; i < courses.size(); i++) {
+			writer.writeRecord(courses.get(i));
+		}
+		writer.writeComment(CSVStructure.COURSES_END_MARKER);
+
+		
+		writer.endRecord();
+		writer.writeComment(CSVStructure.LOCATIONS_MARKER);
+		for (int i = 0; i < locations.size(); i++) {
+			writer.writeRecord(locations.get(i));
+		}
+		writer.writeComment(CSVStructure.LOCATIONS_END_MARKER);
+
+		writer.endRecord();
+		writer.writeComment(CSVStructure.INSTRUCTORS_COURSE_PREFS_MARKER);
+		for (int i = 0; i < instructorsCoursePrefs.size(); i++) {
+			writer.write("coursePrefs#" + i);
+			writer.endRecord();
+			writer.writeComment(CSVStructure.INSTRUCTOR_COURSE_PREFS_MARKER);
+			for (String[][] prefs : instructorsCoursePrefs)
+				for (String[] rec : prefs)
+					writer.writeRecord(rec);
+			writer.writeComment(CSVStructure.INSTRUCTOR_COURSE_PREFS_END_MARKER);
+		}
+		writer.writeComment(CSVStructure.INSTRUCTORS_COURSE_PREFS_END_MARKER);
+
+		writer.endRecord();
+		writer.writeComment(CSVStructure.ALL_INSTRUCTORS_TIME_PREFS_MARKER);
+		for (int i = 0; i < instructorsTimePrefs.size(); i++) {
+			writer.write("timePrefs#" + i);
+			writer.endRecord();
+			writer.writeComment(CSVStructure.SINGLE_INSTRUCTOR_TIME_PREFS_MARKER);
+			String[][] prefs = instructorsTimePrefs.get(i);
+			for (String[] rec : prefs)
+				writer.writeRecord(rec);
+			writer.writeComment(CSVStructure.SINGLE_INSTRUCTOR_TIME_PREFS_END_MARKER);
+		}
+		writer.writeComment(CSVStructure.ALL_INSTRUCTORS_TIME_PREFS_END_MARKER);
+
+		writer.endRecord();
+		writer.writeComment(CSVStructure.INSTRUCTORS_MARKER);
+		for (int i = 0; i < instructors.size(); i++) {
+			writer.writeRecord(instructors.get(i));
+		}
+		writer.writeComment(CSVStructure.INSTRUCTORS_END_MARKER);
+
+		writer.endRecord();
+		writer.writeComment(CSVStructure.SCHEDULE_ITEMS_MARKER);
+		for (int i = 0; i < scheduleItems.size(); i++)
+			writer.writeRecord(scheduleItems.get(i));
+		writer.writeComment(CSVStructure.SCHEDULE_ITEMS_END_MARKER);
+
+		writer.flush();
+		writer.close();
+		stringWriter.flush();
+		stringWriter.close();
+		
+		return stringWriter.toString();
+	}
+}

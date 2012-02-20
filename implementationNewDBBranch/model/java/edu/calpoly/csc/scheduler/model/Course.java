@@ -8,11 +8,11 @@ import edu.calpoly.csc.scheduler.model.db.IDBCourse;
 public class Course {
 	IDBCourse underlyingCourse;
 	Set<String> usedEquipment;
-	Collection<Set<Integer>> dayPatterns;
+	Collection<Set<Day>> dayPatterns;
 	int lectureID;
 	boolean tetheredToLecture;
 	
-	Course(IDBCourse underlyingCourse, Set<String> usedEquipment, Collection<Set<Integer>> dayPatterns, int lectureID, boolean tetheredTolecture) {
+	Course(IDBCourse underlyingCourse, Set<String> usedEquipment, Collection<Set<Day>> dayPatterns, int lectureID, boolean tetheredTolecture) {
 		this.underlyingCourse = underlyingCourse;
 		this.usedEquipment = usedEquipment;
 		this.dayPatterns = dayPatterns;
@@ -49,7 +49,7 @@ public class Course {
 	public String getName() { return underlyingCourse.getName(); }
 	public void setName(String name) { underlyingCourse.setName(name); }
 	
-	public String getCalatogNumber() { return underlyingCourse.getCalatogNumber(); }
+	public String getCatalogNumber() { return underlyingCourse.getCalatogNumber(); }
 	public void setCatalogNumber(String catalogNumber) { underlyingCourse.setCatalogNumber(catalogNumber); }
 	
 	public String getDepartment() { return underlyingCourse.getDepartment(); }
@@ -76,6 +76,6 @@ public class Course {
 	public boolean isSchedulable() { return underlyingCourse.isSchedulable(); }
 	public void setIsSchedulable(boolean isSchedulable) { underlyingCourse.setIsSchedulable(isSchedulable); }
 	
-	public Collection<Set<Integer>> getDayPatterns() { return dayPatterns; }
-	public void setDayPatterns(Collection<Set<Integer>> dayPatterns) { this.dayPatterns = dayPatterns; }
+	public Collection<Set<Day>> getDayPatterns() { return dayPatterns; }
+	public void setDayPatterns(Collection<Set<Day>> dayPatterns) { this.dayPatterns = dayPatterns; }
 }
