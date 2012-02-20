@@ -422,6 +422,39 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	}
 
 	
+	
+	
+	@Override
+	public void insertScheduleItem(int scheduleID, ScheduleItemGWT scheduleItem) throws NotFoundExceptionGWT {
+		// going to implement this in the next few hours - eo
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public Collection<ScheduleItemGWT> generateRestOfSchedule(int scheduleID) {
+		// going to implement this in the next few hours - eo
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void updateScheduleItem(ScheduleItemGWT itemGWT) throws NotFoundExceptionGWT {
+		// going to implement this in the next few hours - eo
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void newRemoveScheduleItem(ScheduleItemGWT itemGWT) throws NotFoundExceptionGWT {
+		// going to implement this in the next few hours - eo
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public Collection<ScheduleItemGWT> getScheduleItems(int scheduleID) throws NotFoundExceptionGWT {
+		// going to implement this in the next few hours - eo
+		throw new UnsupportedOperationException();
+	}
+
+	
 //	
 //	@Override
 //	public void login(String username) {

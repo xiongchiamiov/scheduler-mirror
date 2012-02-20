@@ -6,19 +6,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
-import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.DayCombinationGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.DocumentGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.NotFoundExceptionGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.OldScheduleItemGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemList;
 
 /**
@@ -130,15 +128,19 @@ public interface GreetingService extends RemoteService {
 	@Deprecated
 	List<OldScheduleItemGWT> removeScheduleItem(OldScheduleItemGWT removed,
 			HashMap<String, OldScheduleItemGWT> mSchedItems);
-	
+
 	public void intermediateInsertScheduleItem(int documentID, OldScheduleItemGWT scheduleItem) throws NotFoundExceptionGWT;
 	public Collection<OldScheduleItemGWT> intermediateGenerateRestOfSchedule(int scheduleID);
-
 	void intermediateUpdateScheduleItem(int documentID, OldScheduleItemGWT oldItemOldGWT,
 			OldScheduleItemGWT newItemOldGWT) throws NotFoundExceptionGWT;
-
 	void intermediateRemoveScheduleItem(int documentID, OldScheduleItemGWT oldItemOldGWT)
 			throws NotFoundExceptionGWT;
-
 	Collection<OldScheduleItemGWT> intermediateGetScheduleItems(int documentID) throws NotFoundExceptionGWT;
+	
+
+	public void insertScheduleItem(int scheduleID, ScheduleItemGWT scheduleItem) throws NotFoundExceptionGWT;
+	public Collection<ScheduleItemGWT> generateRestOfSchedule(int scheduleID);
+	void updateScheduleItem(ScheduleItemGWT itemGWT) throws NotFoundExceptionGWT;
+	void newRemoveScheduleItem(ScheduleItemGWT itemGWT) throws NotFoundExceptionGWT;
+	Collection<ScheduleItemGWT> getScheduleItems(int scheduleID) throws NotFoundExceptionGWT;
 }

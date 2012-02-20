@@ -14,6 +14,7 @@ import edu.calpoly.csc.scheduler.view.web.shared.DocumentGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.OldScheduleItemGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemList;
 
 /**
@@ -58,13 +59,20 @@ public interface GreetingServiceAsync {
 			HashMap<String, OldScheduleItemGWT> mSchedItems,
 			AsyncCallback<ScheduleItemList> asyncCallback);
 	@Deprecated
-	void removeScheduleItem(
-			OldScheduleItemGWT removed,
+	void removeScheduleItem(OldScheduleItemGWT removed,
 			HashMap<String, OldScheduleItemGWT> mSchedItems,
 			AsyncCallback<List<OldScheduleItemGWT>> callback);
 	
+	
+	
 	/**
 	 * Gets all the schedule items for a given document id.
+	 * This function uses the deprecated type OldScheduleItemGWT, which soon
+	 * isn't going to be supported. The new function is getScheduleItems below,
+	 * which returns the new ScheduleItemGWT. This function is here as an
+	 * intermediate, so you can first refactor your code to use the new calls,
+	 * debug it, make it work, then later you can refactor your code to use
+	 * the new ScheduleItemGWT.
 	 * @param documentID
 	 * @param callback
 	 */
@@ -74,6 +82,12 @@ public interface GreetingServiceAsync {
 	
 	/**
 	 * Inserts a schedule item into the document's schedule.
+	 * This function uses the deprecated type OldScheduleItemGWT, which soon
+	 * isn't going to be supported. The new function is insertScheduleItem below,
+	 * which takes the new ScheduleItemGWT. This function is here as an
+	 * intermediate, so you can first refactor your code to use the new calls,
+	 * debug it, make it work, then later you can refactor your code to use
+	 * the new ScheduleItemGWT.
 	 * @param documentID
 	 * @param scheduleItem
 	 * @param callback
@@ -85,6 +99,12 @@ public interface GreetingServiceAsync {
 	
 	/**
 	 * Update's a document's schedule's schedule item.
+	 * This function uses the deprecated type OldScheduleItemGWT, which soon
+	 * isn't going to be supported. The new function is updateScheduleItem below,
+	 * which takes the new ScheduleItemGWT. This function is here as an
+	 * intermediate, so you can first refactor your code to use the new calls,
+	 * debug it, make it work, then later you can refactor your code to use
+	 * the new ScheduleItemGWT.
 	 * @param documentID
 	 * @param oldItemOldGWT The old item. This will be replaced by the new item.
 	 * @param newItemOldGWT The new item
@@ -98,6 +118,12 @@ public interface GreetingServiceAsync {
 	
 	/**
 	 * Generates schedule items for all of the remaining courses.
+	 * This function uses the deprecated type OldScheduleItemGWT, which soon
+	 * isn't going to be supported. The new function is generateRestOfSchedule below,
+	 * which returns the new ScheduleItemGWT. This function is here as an
+	 * intermediate, so you can first refactor your code to use the new calls,
+	 * debug it, make it work, then later you can refactor your code to use
+	 * the new ScheduleItemGWT.
 	 * @param documentID
 	 * @param callback
 	 */
@@ -114,4 +140,19 @@ public interface GreetingServiceAsync {
 	void intermediateRemoveScheduleItem(int documentID,
 			OldScheduleItemGWT oldItemOldGWT,
 			AsyncCallback<Void> asyncCallback);
+	
+	
+	
+	
+	
+	void insertScheduleItem(int scheduleID, ScheduleItemGWT scheduleItem,
+			AsyncCallback<Void> callback);
+	void generateRestOfSchedule(int scheduleID,
+			AsyncCallback<Collection<ScheduleItemGWT>> callback);
+	void updateScheduleItem(ScheduleItemGWT itemGWT,
+			AsyncCallback<Void> callback);
+	void getScheduleItems(int scheduleID,
+			AsyncCallback<Collection<ScheduleItemGWT>> callback);
+	void newRemoveScheduleItem(ScheduleItemGWT itemGWT,
+			AsyncCallback<Void> callback);
 }
