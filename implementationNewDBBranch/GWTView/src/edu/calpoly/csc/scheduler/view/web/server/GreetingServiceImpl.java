@@ -340,7 +340,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	}
 
 	@Override
-	public Collection<OldScheduleItemGWT> getScheduleItems(int documentID) throws NotFoundExceptionGWT {
+	public Collection<OldScheduleItemGWT> intermediateGetScheduleItems(int documentID) throws NotFoundExceptionGWT {
 		Schedule schedule;
 		try {
 			Document document = model.findDocumentByID(documentID);
@@ -364,7 +364,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	}
 
 	@Override
-	public void insertScheduleItem(int documentID, OldScheduleItemGWT itemOldGWT) throws NotFoundExceptionGWT {
+	public void intermediateInsertScheduleItem(int documentID, OldScheduleItemGWT itemOldGWT) throws NotFoundExceptionGWT {
 		try {
 			Schedule schedule;
 			Document document = model.findDocumentByID(documentID);
@@ -379,13 +379,13 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	}
 
 	@Override
-	public void updateScheduleItem(int documentID, OldScheduleItemGWT oldItemOldGWT, OldScheduleItemGWT newItemOldGWT) throws NotFoundExceptionGWT {
+	public void intermediateUpdateScheduleItem(int documentID, OldScheduleItemGWT oldItemOldGWT, OldScheduleItemGWT newItemOldGWT) throws NotFoundExceptionGWT {
 		try {
 			Document document = model.findDocumentByID(documentID);
 			int scheduleID = model.findAllSchedulesForDocument(document).iterator().next().getID();
 			
-			removeScheduleItem(scheduleID, oldItemOldGWT);
-			insertScheduleItem(scheduleID, newItemOldGWT);
+			intermediateRemoveScheduleItem(scheduleID, oldItemOldGWT);
+			intermediateInsertScheduleItem(scheduleID, newItemOldGWT);
 		}
 		catch (NotFoundException e) {
 			e.printStackTrace();
@@ -394,7 +394,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	}
 
 	@Override
-	public void removeScheduleItem(int documentID, OldScheduleItemGWT oldItemOldGWT) throws NotFoundExceptionGWT {
+	public void intermediateRemoveScheduleItem(int documentID, OldScheduleItemGWT oldItemOldGWT) throws NotFoundExceptionGWT {
 		try {
 			Document document = model.findDocumentByID(documentID);
 			Schedule schedule = model.findAllSchedulesForDocument(document).iterator().next();
@@ -416,7 +416,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	}
 
 	@Override
-	public Collection<OldScheduleItemGWT> generateRestOfSchedule(int documentID) {
+	public Collection<OldScheduleItemGWT> intermediateGenerateRestOfSchedule(int documentID) {
 		System.out.println("Implement generation!");
 		return new LinkedList<OldScheduleItemGWT>();
 	}

@@ -131,14 +131,14 @@ public interface GreetingService extends RemoteService {
 	List<OldScheduleItemGWT> removeScheduleItem(OldScheduleItemGWT removed,
 			HashMap<String, OldScheduleItemGWT> mSchedItems);
 	
-	public void insertScheduleItem(int documentID, OldScheduleItemGWT scheduleItem) throws NotFoundExceptionGWT;
-	public Collection<OldScheduleItemGWT> generateRestOfSchedule(int scheduleID);
+	public void intermediateInsertScheduleItem(int documentID, OldScheduleItemGWT scheduleItem) throws NotFoundExceptionGWT;
+	public Collection<OldScheduleItemGWT> intermediateGenerateRestOfSchedule(int scheduleID);
 
-	void updateScheduleItem(int documentID, OldScheduleItemGWT oldItemOldGWT,
+	void intermediateUpdateScheduleItem(int documentID, OldScheduleItemGWT oldItemOldGWT,
 			OldScheduleItemGWT newItemOldGWT) throws NotFoundExceptionGWT;
 
-	void removeScheduleItem(int documentID, OldScheduleItemGWT oldItemOldGWT)
+	void intermediateRemoveScheduleItem(int documentID, OldScheduleItemGWT oldItemOldGWT)
 			throws NotFoundExceptionGWT;
 
-	Collection<OldScheduleItemGWT> getScheduleItems(int documentID) throws NotFoundExceptionGWT;
+	Collection<OldScheduleItemGWT> intermediateGetScheduleItems(int documentID) throws NotFoundExceptionGWT;
 }

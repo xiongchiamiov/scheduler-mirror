@@ -57,36 +57,61 @@ public interface GreetingServiceAsync {
 			boolean inSchedule,
 			HashMap<String, OldScheduleItemGWT> mSchedItems,
 			AsyncCallback<ScheduleItemList> asyncCallback);
-	void removeScheduleItem(int scheduleID, OldScheduleItemGWT oldItemOldGWT,
-			AsyncCallback<Void> asyncCallback);
-	
+	@Deprecated
+	void removeScheduleItem(
+			OldScheduleItemGWT removed,
+			HashMap<String, OldScheduleItemGWT> mSchedItems,
+			AsyncCallback<List<OldScheduleItemGWT>> callback);
 	
 	/**
 	 * Gets all the schedule items for a given document id.
-	 * @param scheduleID
+	 * @param documentID
 	 * @param callback
 	 */
-	void getScheduleItems(
+	void intermediateGetScheduleItems(
 			int documentID,
 			AsyncCallback<Collection<OldScheduleItemGWT>> callback);
 	
-	void insertScheduleItem(
+	/**
+	 * Inserts a schedule item into the document's schedule.
+	 * @param documentID
+	 * @param scheduleItem
+	 * @param callback
+	 */
+	void intermediateInsertScheduleItem(
 			int documentID,
 			OldScheduleItemGWT scheduleItem,
 			AsyncCallback<Void> callback);
 	
-	void updateScheduleItem(
+	/**
+	 * Update's a document's schedule's schedule item.
+	 * @param documentID
+	 * @param oldItemOldGWT The old item. This will be replaced by the new item.
+	 * @param newItemOldGWT The new item
+	 * @param callback
+	 */
+	void intermediateUpdateScheduleItem(
 			int documentID,
 			OldScheduleItemGWT oldItemOldGWT,
 			OldScheduleItemGWT newItemOldGWT,
 			AsyncCallback<Void> callback);
 	
-	void generateRestOfSchedule(
+	/**
+	 * Generates schedule items for all of the remaining courses.
+	 * @param documentID
+	 * @param callback
+	 */
+	void intermediateGenerateRestOfSchedule(
 			int documentID,
 			AsyncCallback<Collection<OldScheduleItemGWT>> callback);
 	
-	void removeScheduleItem(
-			OldScheduleItemGWT removed,
-			HashMap<String, OldScheduleItemGWT> mSchedItems,
-			AsyncCallback<List<OldScheduleItemGWT>> callback);
+	/**
+	 * Removes a schedule items from a document's schedule.
+	 * @param documentID
+	 * @param oldItemOldGWT
+	 * @param asyncCallback
+	 */
+	void intermediateRemoveScheduleItem(int documentID,
+			OldScheduleItemGWT oldItemOldGWT,
+			AsyncCallback<Void> asyncCallback);
 }
