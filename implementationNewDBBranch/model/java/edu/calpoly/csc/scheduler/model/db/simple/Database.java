@@ -8,7 +8,9 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
+import edu.calpoly.csc.scheduler.model.Day;
 import edu.calpoly.csc.scheduler.model.Document;
+import edu.calpoly.csc.scheduler.model.Schedule;
 import edu.calpoly.csc.scheduler.model.db.IDBCourse;
 import edu.calpoly.csc.scheduler.model.db.IDBCourseAssociation;
 import edu.calpoly.csc.scheduler.model.db.IDBCoursePreference;
@@ -232,8 +234,9 @@ public class Database implements IDatabase {
 
 	@Override
 	public IDBScheduleItem insertScheduleItem(IDBSchedule schedule, IDBCourse course,
-			IDBInstructor instructor, IDBLocation location, int section) {
-		return new DBScheduleItem(scheduleItemTable.insert(new DBScheduleItem(null, schedule.getID(), course.getID(), instructor.getID(), location.getID(), section)));
+			IDBInstructor instructor, IDBLocation location, int section, Set<Day> days,
+			int startHalfHour, int endHalfHour, boolean isPlaced, boolean isConflicted) {
+		return new DBScheduleItem(scheduleItemTable.insert(new DBScheduleItem(null, schedule.getID(), course.getID(), instructor.getID(), location.getID(), section, days, startHalfHour, endHalfHour, isPlaced, isConflicted)));
 	}
 
 	@Override
@@ -691,5 +694,10 @@ public class Database implements IDatabase {
 	@Override
 	public boolean isOriginalDocument(IDBDocument doc) {
 		return ((DBDocument)doc).originalID == null;
+	}
+
+	@Override
+	public IDBDocument findDocumentForSchedule(IDBSchedule schedule) throws NotFoundException {
+		return documentTable.findByID(((DBSchedule)schedule).documentID);
 	}
 }

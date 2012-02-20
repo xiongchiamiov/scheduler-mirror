@@ -6,6 +6,7 @@ import java.util.Set;
 public class ScheduleItemGWT implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
+	private int id;
 	private int courseID;
 	private int instructorID;
 	private int locationID;
@@ -16,10 +17,11 @@ public class ScheduleItemGWT implements Serializable {
 	private boolean placed;
 	private boolean conflicted;
 	
-	public ScheduleItemGWT(int courseID, int instructorID, int locationID,
+	public ScheduleItemGWT(int id, int courseID, int instructorID, int locationID,
 			int section, Set<DayGWT> days, int startHalfHour, int endHalfHour,
 			boolean placed, boolean conflicted) {
 		super();
+		this.id = id;
 		this.courseID = courseID;
 		this.instructorID = instructorID;
 		this.locationID = locationID;
@@ -31,6 +33,8 @@ public class ScheduleItemGWT implements Serializable {
 		this.conflicted = conflicted;
 	}
 	
+	public int getID() { return id; }
+	public void setID(int id) { this.id = id; }
 	public int getCourseID() { return courseID; }
 	public void setCourseID(int courseID) { this.courseID = courseID; }
 	public int getInstructorID() { return instructorID; }

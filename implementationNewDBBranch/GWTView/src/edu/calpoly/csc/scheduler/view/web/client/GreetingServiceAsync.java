@@ -43,19 +43,34 @@ public interface GreetingServiceAsync {
 	void saveWorkingCopyToNewOriginalDocument(DocumentGWT existingDocument,
 			String scheduleName, boolean allowOverwrite,
 			AsyncCallback<DocumentGWT> asyncCallback);
+	
+	@Deprecated
 	void getSchedule(HashMap<String, OldScheduleItemGWT> mSchedItems,
 			AsyncCallback<List<OldScheduleItemGWT>> asyncCallback);
+	@Deprecated
 	void generateSchedule(List<CourseGWT> mAllCourses,
 			HashMap<String, OldScheduleItemGWT> mSchedItems,
 			AsyncCallback<List<OldScheduleItemGWT>> asyncCallback);
+	@Deprecated
 	void rescheduleCourse(OldScheduleItemGWT scheduleItem,
 			ArrayList<Integer> days, int startHour, boolean atHalfHour,
 			boolean inSchedule,
 			HashMap<String, OldScheduleItemGWT> mSchedItems,
 			AsyncCallback<ScheduleItemList> asyncCallback);
+	void removeScheduleItem(int scheduleID, OldScheduleItemGWT oldItemOldGWT,
+			AsyncCallback<Void> asyncCallback);
+	
+	void getSchedule(int scheduleID,
+			AsyncCallback<Collection<OldScheduleItemGWT>> callback);
+	void insertScheduleItem(int scheduleID, OldScheduleItemGWT scheduleItem,
+			AsyncCallback<Void> callback);
+	void updateScheduleItem(int scheduleID, OldScheduleItemGWT oldItemOldGWT,
+			OldScheduleItemGWT newItemOldGWT, AsyncCallback<Void> callback);
+	void generateRestOfSchedule(int scheduleID,
+			AsyncCallback<Collection<OldScheduleItemGWT>> callback);
 	void removeScheduleItem(OldScheduleItemGWT removed,
 			HashMap<String, OldScheduleItemGWT> mSchedItems,
-			AsyncCallback<List<OldScheduleItemGWT>> asyncCallback);
+			AsyncCallback<List<OldScheduleItemGWT>> callback);
 	
 //	void login(String username, AsyncCallback<Void> callback);
 //	void getScheduleNames(AsyncCallback<Map<String, UserDataGWT>> callback);

@@ -4,7 +4,9 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
+import edu.calpoly.csc.scheduler.model.Day;
 import edu.calpoly.csc.scheduler.model.Document;
+import edu.calpoly.csc.scheduler.model.Schedule;
 import edu.calpoly.csc.scheduler.model.db.simple.DBProvidedEquipment;
 import edu.calpoly.csc.scheduler.model.db.simple.DBUsedEquipment;
 
@@ -40,8 +42,6 @@ public interface IDatabase {
 	
 	Collection<IDBScheduleItem> findAllScheduleItemsForSchedule(IDBSchedule schedule);
 	IDBScheduleItem findScheduleItemByID(int id) throws NotFoundException;
-	IDBScheduleItem insertScheduleItem(IDBSchedule schedule, IDBCourse course,
-			IDBInstructor instructor, IDBLocation location, int section);
 	void updateScheduleItem(IDBScheduleItem schedule);
 	void deleteScheduleItem(IDBScheduleItem schedule);
 	
@@ -114,5 +114,12 @@ public interface IDatabase {
 	Collection<IDBOfferedDayPattern> findOfferedDayPatternsForCourse(IDBCourse underlying);
 	IDBDayPattern getDayPatternForOfferedDayPattern(IDBOfferedDayPattern offered);
 	void deleteOfferedDayPattern(IDBOfferedDayPattern offered);
+	
+	
 	boolean isOriginalDocument(IDBDocument doc);
+	IDBDocument findDocumentForSchedule(IDBSchedule schedule) throws NotFoundException;
+	IDBScheduleItem insertScheduleItem(IDBSchedule schedule, IDBCourse course,
+			IDBInstructor instructor, IDBLocation location, int section,
+			Set<Day> days, int startHalfHour, int endHalfHour,
+			boolean isPlaced, boolean isConflicted);
 }

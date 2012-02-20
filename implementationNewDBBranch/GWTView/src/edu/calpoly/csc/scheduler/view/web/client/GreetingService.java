@@ -11,6 +11,7 @@ import java.util.Set;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
+import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.DayCombinationGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.DocumentGWT;
@@ -129,4 +130,14 @@ public interface GreetingService extends RemoteService {
 	@Deprecated
 	List<OldScheduleItemGWT> removeScheduleItem(OldScheduleItemGWT removed,
 			HashMap<String, OldScheduleItemGWT> mSchedItems);
+	
+	public Collection<OldScheduleItemGWT> getSchedule(int scheduleID) throws NotFoundExceptionGWT;
+	public void insertScheduleItem(int scheduleID, OldScheduleItemGWT scheduleItem) throws NotFoundExceptionGWT;
+	public Collection<OldScheduleItemGWT> generateRestOfSchedule(int scheduleID);
+
+	void updateScheduleItem(int scheduleID, OldScheduleItemGWT oldItemOldGWT,
+			OldScheduleItemGWT newItemOldGWT) throws NotFoundExceptionGWT;
+
+	void removeScheduleItem(int scheduleID, OldScheduleItemGWT oldItemOldGWT)
+			throws NotFoundExceptionGWT;
 }

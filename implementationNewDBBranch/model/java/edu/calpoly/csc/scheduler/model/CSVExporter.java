@@ -201,8 +201,8 @@ public class CSVExporter {
 		return "coursePrefs#" + newIndex;
 	}
 
-	private Schedule.Item findScheduleItemByID(int id, Collection<Schedule.Item> items) {
-		for (Schedule.Item item : items)
+	private ScheduleItem findScheduleItemByID(int id, Collection<ScheduleItem> items) {
+		for (ScheduleItem item : items)
 			if (item.getID() == id)
 				return item;
 		assert(false);
@@ -224,16 +224,9 @@ public class CSVExporter {
 	 * @param item A Schedule.Item
 	 * @return the string of the Schedule.Item Number
 	 */
-	private String compileScheduleItem(Schedule.Item item, Collection<Schedule.Item> others) {
+	private String compileScheduleItem(ScheduleItem item, Collection<ScheduleItem> others) {
 		int index = scheduleItemsRowIndexByID.get(item.getID());
 		if (index < 0) {
-			String labsString = "";
-			for (Integer labID : item.getLabIDs()) {
-				if (!labsString.equals(""))
-					labsString += " ";
-				labsString += compileScheduleItem(findScheduleItemByID(labID, others), others);
-			}
-			
 			index = scheduleItems.size();
 			scheduleItems.add(new String[] {
 					"item#" + index,
@@ -344,9 +337,10 @@ public class CSVExporter {
 			compileInstructor(instructor);
 		
 		Schedule schedule = model.findAllSchedulesForDocument(document).iterator().next();
+		Collection<ScheduleItem> items = model.findAllScheduleItemsForSchedule(schedule);
 		
-		for (Schedule.Item item : schedule.getItems())
-			compileScheduleItem(item, schedule.getItems());
+		for (ScheduleItem item : items)
+			compileScheduleItem(item, items);
 		
 		/* Start writing model data to a charArray that'll eventually be turned into a string*/
 		Writer stringWriter = new CharArrayWriter();

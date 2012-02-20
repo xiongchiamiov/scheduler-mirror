@@ -1,5 +1,6 @@
 package edu.calpoly.csc.scheduler.view.web.server;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -14,11 +15,14 @@ import edu.calpoly.csc.scheduler.model.Instructor;
 import edu.calpoly.csc.scheduler.model.Location;
 import edu.calpoly.csc.scheduler.model.Model;
 import edu.calpoly.csc.scheduler.model.Schedule;
+import edu.calpoly.csc.scheduler.model.ScheduleItem;
+import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.DayGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.DocumentGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.OldScheduleItemGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 
 public abstract class Conversion {
@@ -32,51 +36,51 @@ public abstract class Conversion {
 //	}
 //	
 
-	private static Day gwtDayToModelDay(DayGWT gwtDay) {
+	private static Day dayFromGWT(DayGWT gwtDay) {
 		return Day.values()[gwtDay.ordinal()];
 	}
 	
-	private static DayGWT modelDayToGWTDay(Day gwtDay) {
+	private static DayGWT dayToGWT(Day gwtDay) {
 		return DayGWT.values()[gwtDay.ordinal()];
 	}
 	
-	private static HashMap<Day, HashMap<Integer, Integer>> gwtTimePrefsToModelTimePrefs(HashMap<DayGWT, HashMap<Integer, Integer>> gwtPrefs) {
+	private static HashMap<Day, HashMap<Integer, Integer>> timePrefsFromGWT(HashMap<DayGWT, HashMap<Integer, Integer>> gwtPrefs) {
 		HashMap<Day, HashMap<Integer, Integer>> modelPrefs = new HashMap<Day, HashMap<Integer, Integer>>();
 		
 		for (Entry<DayGWT, HashMap<Integer, Integer>> gwtPrefsForDay : gwtPrefs.entrySet()) {
-			Day modelDay = gwtDayToModelDay(gwtPrefsForDay.getKey());
+			Day modelDay = dayFromGWT(gwtPrefsForDay.getKey());
 			modelPrefs.put(modelDay, gwtPrefsForDay.getValue());
 		}
 		
 		return modelPrefs;
 	}
 	
-	private static HashMap<DayGWT, HashMap<Integer, Integer>> modelTimePrefsToGWTTimePrefs(HashMap<Day, HashMap<Integer, Integer>> modelPrefs) {
+	private static HashMap<DayGWT, HashMap<Integer, Integer>> timePrefsToGWT(HashMap<Day, HashMap<Integer, Integer>> modelPrefs) {
 		HashMap<DayGWT, HashMap<Integer, Integer>> gwtPrefs = new HashMap<DayGWT, HashMap<Integer, Integer>>();
 		
 		for (Entry<Day, HashMap<Integer, Integer>> gwtPrefsForDay : modelPrefs.entrySet()) {
-			DayGWT gwtDay = modelDayToGWTDay(gwtPrefsForDay.getKey());
+			DayGWT gwtDay = dayToGWT(gwtPrefsForDay.getKey());
 			gwtPrefs.put(gwtDay, gwtPrefsForDay.getValue());
 		}
 		
 		return gwtPrefs;
 	}
 	
-	public static InstructorGWT modelInstructorToGWTInstructor(Instructor instructor) {
+	public static InstructorGWT instructorToGWT(Instructor instructor) {
 		return new InstructorGWT(
 				instructor.getID(),
 				instructor.getUsername(),
 				instructor.getFirstName(),
 				instructor.getLastName(),
 				instructor.getMaxWTU(),
-				modelTimePrefsToGWTTimePrefs(instructor.getTimePreferences()),
+				timePrefsToGWT(instructor.getTimePreferences()),
 				instructor.getCoursePreferences());
 	}
 	
-	public static Course insertGWTCourseIntoModel(Model model, Document document, CourseGWT course) {
+	public static Course insertCourseFromGWT(Model model, Document document, CourseGWT course) {
 		Collection<Set<Day>> modelDayPatterns = new LinkedList<Set<Day>>();
 		for (Set<DayGWT> gwtDayPattern : course.getDayPatterns())
-			modelDayPatterns.add(gwtDayPatternToModelDayPattern(gwtDayPattern));
+			modelDayPatterns.add(dayPatternFromGWT(gwtDayPattern));
 		
 		return model.insertCourse(
 			document,
@@ -95,35 +99,35 @@ public abstract class Conversion {
 
 	}
 	
-	public static Instructor insertGWTInstructorIntoModel(Model model, Document document, InstructorGWT instructor) {
+	public static Instructor insertInstructorFromGWT(Model model, Document document, InstructorGWT instructor) {
 		return model.insertInstructor(
 				document,
 				instructor.getFirstName(),
 				instructor.getLastName(),
 				instructor.getUsername(),
 				instructor.getRawMaxWtu(),
-				gwtTimePrefsToModelTimePrefs(instructor.gettPrefs()),
+				timePrefsFromGWT(instructor.gettPrefs()),
 				instructor.getCoursePreferences());
 	}
 
-	static Set<DayGWT> modelDayPatternToGWTDayPattern(Set<Day> modelDayPattern) {
+	static Set<DayGWT> dayPatternToGWT(Set<Day> modelDayPattern) {
 		Set<DayGWT> gwtDayPattern = new TreeSet<DayGWT>();
 		for (Day modelDay : modelDayPattern)
-			gwtDayPattern.add(modelDayToGWTDay(modelDay));
+			gwtDayPattern.add(dayToGWT(modelDay));
 		return gwtDayPattern;
 	}
 
-	static Set<Day> gwtDayPatternToModelDayPattern(Set<DayGWT> gwtDayPattern) {
+	static Set<Day> dayPatternFromGWT(Set<DayGWT> gwtDayPattern) {
 		Set<Day> modelDayPattern = new TreeSet<Day>();
 		for (DayGWT gwtDay : gwtDayPattern)
-			modelDayPattern.add(gwtDayToModelDay(gwtDay));
+			modelDayPattern.add(dayFromGWT(gwtDay));
 		return modelDayPattern;
 	}
 
-	static CourseGWT modelCourseToGWTCourse(Course course) {
+	static CourseGWT courseToGWT(Course course) {
 		Collection<Set<DayGWT>> dayPatterns = new LinkedList<Set<DayGWT>>();
 		for (Set<Day> combo : course.getDayPatterns())
-			dayPatterns.add(modelDayPatternToGWTDayPattern(combo));
+			dayPatterns.add(dayPatternToGWT(combo));
 		
 		return new CourseGWT(
 				course.isSchedulable(),
@@ -143,7 +147,7 @@ public abstract class Conversion {
 				course.getUsedEquipment());
 	}
 	
-	static void readGWTCourseIntoModelCourse(CourseGWT source, Course result) {
+	static void readCourseFromGWT(CourseGWT source, Course result) {
 		result.setIsSchedulable(source.isSchedulable());
 		result.setName(source.getCourseName());
 		result.setCatalogNumber(source.getCatalogNum());
@@ -157,51 +161,110 @@ public abstract class Conversion {
 
 		Collection<Set<Day>> dayPatterns = new LinkedList<Set<Day>>();
 		for (Set<DayGWT> combo : source.getDayPatterns())
-			dayPatterns.add(gwtDayPatternToModelDayPattern(combo));
+			dayPatterns.add(dayPatternFromGWT(combo));
 		result.setDayPatterns(dayPatterns);
 		
 		result.setUsedEquipment(source.getUsedEquipment());
 	}
 
-	public static void readGWTInstructorIntoModelInstructor(InstructorGWT source, Instructor result) {
+	public static void readInstructorFromGWT(InstructorGWT source, Instructor result) {
 		result.setIsSchedulable(source.isSchedulable());
 		result.setFirstName(source.getFirstName());
 		result.setLastName(source.getLastName());
 		result.setUsername(source.getUsername());
 		result.setCoursePreferences(source.getCoursePreferences());
-		result.setTimePreferences(gwtTimePrefsToModelTimePrefs(source.gettPrefs()));
+		result.setTimePreferences(timePrefsFromGWT(source.gettPrefs()));
 	}
 
-	public static void readGWTLocationIntoModelLocation(LocationGWT source, Location result) {
+	public static void readLocationFromGWT(LocationGWT source, Location result) {
 		result.setIsSchedulable(source.isSchedulable());
 		result.setMaxOccupancy(source.getRawMaxOccupancy());
 		result.setRoom(source.getRoom());
 		result.setType(source.getType());
 	}
 
-	public static LocationGWT modelLocationToGWTLocation(Location location) {
+	public static LocationGWT locationToGWT(Location location) {
 		LocationGWT result = new LocationGWT(location.getID(), location.getRoom(), location.getType(), location.getMaxOccupancy(), location.getProvidedEquipment(), location.isSchedulable());
 		System.out.println("result room: " + result.getRoom() + " from " + location.getRoom());
 		return result;
 	}
 
-	public static DocumentGWT modelDocumentToGWTDocument(Document doc) {
+	public static DocumentGWT documentToGWT(Document doc) {
 		return new DocumentGWT(doc.getID(), doc.getName());
 	}
 
-	public static ScheduleItemGWT modelScheduleItemToGWTScheduleItem(Schedule.Item item) {
-		Set<DayGWT> dayPattern = modelDayPatternToGWTDayPattern(item.getDays());
+	@Deprecated
+	public static OldScheduleItemGWT scheduleItemFromGWTToOldGWT(ScheduleItemGWT source, Course course, Instructor instructor, Location location) {
+		CourseGWT courseGWT = courseToGWT(course);
+		LocationGWT locationGWT = locationToGWT(location);
+		InstructorGWT instructorGWT = instructorToGWT(instructor);
 		
-		return new ScheduleItemGWT(
-				item.getCourseID(),
-				item.getInstructorID(),
-				item.getLocationID(),
-				item.getSection(),
+		ArrayList<Integer> daysInts = new ArrayList<Integer>();
+		for (DayGWT day : source.getDays())
+			daysInts.add(day.ordinal());
+		int startTimeHour = source.getStartHalfHour() / 2;
+		int startTimeMinute = source.getStartHalfHour() % 2 * 30 + 10;
+		int endTimeHour = source.getEndHalfHour() / 2;
+		int endTimeMinute = source.getEndHalfHour() % 2 * 30 + 10;
+		return new OldScheduleItemGWT(courseGWT, courseGWT.getCourseName(), instructorGWT.getUsername(), courseGWT.getDept(), courseGWT.getCatalogNum(), source.getSection(), daysInts, startTimeHour, startTimeMinute, endTimeHour, endTimeMinute, locationGWT.getRoom(), source.isConflicted());
+	}
+
+	public static void readScheduleItemGWTFromOldGWT(ScheduleItemGWT result, OldScheduleItemGWT itemOldGWT, Collection<Instructor> instructors, Collection<Location> locations) {
+		Set<DayGWT> days = new TreeSet<DayGWT>();
+		for (int integer : itemOldGWT.getDayNums())
+			days.add(DayGWT.values()[integer]);
+
+		int startHalfHour = itemOldGWT.getStartTimeHour() * 2 + itemOldGWT.getStartTimeMin() / 30;
+		int endHalfHour = itemOldGWT.getEndTimeHour() * 2 + itemOldGWT.getEndTimeMin() / 30;
+		
+		int courseID = itemOldGWT.getCourse().getID();
+		
+		int instructorID = -1;
+		for (Instructor instructor : instructors)
+			if (instructor.getUsername().equals(itemOldGWT.getProfessor()))
+				instructorID = instructor.getID();
+		assert(instructorID >= 0);
+		
+		int locationID = -1;
+		for (Location location : locations)
+			if (location.getRoom().equals(itemOldGWT.getProfessor()))
+				locationID = location.getID();
+		assert(locationID >= 0);
+		
+		result.setCourseID(courseID);
+		result.setInstructorID(instructorID);
+		result.setLocationID(locationID);
+		result.setSection(itemOldGWT.getSection());
+		result.setDays(days);
+		result.setStartHalfHour(startHalfHour);
+		result.setEndHalfHour(endHalfHour);
+		result.setPlaced(itemOldGWT.isPlaced());
+		result.setConflicted(itemOldGWT.isConflicted());
+	}
+	
+	public static void insertScheduleItemFromOldGWT(OldScheduleItemGWT itemOldGWT, Collection<Instructor> instructors, Collection<Location> locations) {
+		
+	}
+
+	public static ScheduleItem insertScheduleItemFromGWT(Model model, Schedule schedule, ScheduleItemGWT source) throws NotFoundException {
+		Set<Day> dayPattern = dayPatternFromGWT(source.getDays());
+		
+		return model.insertScheduleItem(
+				schedule,
+				model.findCourseByID(source.getCourseID()),
+				model.findInstructorByID(source.getInstructorID()),
+				model.findLocationByID(source.getLocationID()),
+				source.getSection(),
 				dayPattern,
-				item.getStartHalfHour(),
-				item.getEndHalfHour(),
-				item.isPlaced(),
-				item.isConflicted());
+				source.getStartHalfHour(),
+				source.getEndHalfHour(),
+				source.isPlaced(),
+				source.isConflicted());
+	}
+
+	public static ScheduleItemGWT scheduleItemToGWT(ScheduleItem item) {
+		Set<DayGWT> pattern = dayPatternToGWT(item.getDays());
+		return new ScheduleItemGWT(item.getID(), item.getCourseID(), item.getInstructorID(), item.getLocationID(), item.getSection(), pattern, item.getStartHalfHour(), item.getEndHalfHour(), item.isPlaced(), item.isConflicted());
 	}
 
 //	public static Instructor fromGWT(InstructorGWT instructor, Map<Integer, Course> coursesByID) {

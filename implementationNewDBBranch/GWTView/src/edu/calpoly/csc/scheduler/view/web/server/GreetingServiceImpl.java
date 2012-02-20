@@ -5,28 +5,26 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import edu.calpoly.csc.scheduler.model.Course;
-import edu.calpoly.csc.scheduler.model.Day;
 import edu.calpoly.csc.scheduler.model.Document;
 import edu.calpoly.csc.scheduler.model.Instructor;
 import edu.calpoly.csc.scheduler.model.Location;
 import edu.calpoly.csc.scheduler.model.Model;
 import edu.calpoly.csc.scheduler.model.Schedule;
+import edu.calpoly.csc.scheduler.model.ScheduleItem;
 import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
 import edu.calpoly.csc.scheduler.view.web.client.GreetingService;
 import edu.calpoly.csc.scheduler.view.web.client.InvalidLoginException;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.DayCombinationGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.DocumentGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.NotFoundExceptionGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.OldScheduleItemGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemList;
 
 /**
@@ -47,7 +45,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 
 		int id;
 		try {
-			id = Conversion.insertGWTCourseIntoModel(model, model.findDocumentByID(documentID), course).getID();
+			id = Conversion.insertCourseFromGWT(model, model.findDocumentByID(documentID), course).getID();
 		} catch (NotFoundException e) {
 			e.printStackTrace();
 			throw new NotFoundExceptionGWT();
@@ -68,7 +66,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		}
 		assert(result.getID() > 0);
 
-		Conversion.readGWTCourseIntoModelCourse(source, result);
+		Conversion.readCourseFromGWT(source, result);
 		
 		model.updateCourse(result);
 	}
@@ -79,7 +77,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		try {
 			for (Course course : model.findCoursesForDocument(model.findDocumentByID(documentID))) {
 				System.out.println("for doc id " + documentID + " returning course name " + course.getName());
-				result.add(Conversion.modelCourseToGWTCourse(course));
+				result.add(Conversion.courseToGWT(course));
 			}
 		} catch (NotFoundException e) {
 			e.printStackTrace();
@@ -107,7 +105,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		int id;
 		try {
 			Document document = model.findDocumentByID(documentID);
-			id = Conversion.insertGWTInstructorIntoModel(model, document, instructor).getID();
+			id = Conversion.insertInstructorFromGWT(model, document, instructor).getID();
 		} catch (NotFoundException e) {
 			e.printStackTrace();
 			throw new NotFoundExceptionGWT();
@@ -129,7 +127,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		}
 		assert(result.getID() > 0);
 
-		Conversion.readGWTInstructorIntoModelInstructor(source, result);
+		Conversion.readInstructorFromGWT(source, result);
 		
 		model.updateInstructor(result);
 	}
@@ -139,7 +137,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		List<InstructorGWT> result = new LinkedList<InstructorGWT>();
 		try {
 			for (Instructor instructor : model.findInstructorsForDocument(model.findDocumentByID(documentID)))
-				result.add(Conversion.modelInstructorToGWTInstructor(instructor));
+				result.add(Conversion.instructorToGWT(instructor));
 		} catch (NotFoundException e) {
 			e.printStackTrace();
 			throw new NotFoundExceptionGWT();
@@ -188,7 +186,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		}
 		assert(result.getID() > 0);
 
-		Conversion.readGWTLocationIntoModelLocation(source, result);
+		Conversion.readLocationFromGWT(source, result);
 		
 		System.out.println("updating w result!");
 		
@@ -200,7 +198,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		List<LocationGWT> result = new LinkedList<LocationGWT>();
 		try {
 			for (Location location : model.findLocationsForDocument(model.findDocumentByID(documentID)))
-				result.add(Conversion.modelLocationToGWTLocation(location));
+				result.add(Conversion.locationToGWT(location));
 		} catch (NotFoundException e) {
 			e.printStackTrace();
 			throw new NotFoundExceptionGWT();
@@ -233,7 +231,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		Collection<DocumentGWT> result = new LinkedList<DocumentGWT>();
 		for (Document doc : model.findAllDocuments()) {
 			if (model.isOriginalDocument(doc))
-				result.add(Conversion.modelDocumentToGWTDocument(doc));
+				result.add(Conversion.documentToGWT(doc));
 		}
 		return result;
 	}
@@ -241,7 +239,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	@Override
 	public DocumentGWT createDocument(String newDocName) {
 		Document newOriginalDocument = model.insertDocument(newDocName);
-		return Conversion.modelDocumentToGWTDocument(newOriginalDocument);
+		return Conversion.documentToGWT(newOriginalDocument);
 	}
 
 	@Override
@@ -257,7 +255,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			model.associateWorkingCopyWithOriginal(workingCopyDocument, originalDocument);
 			model.updateDocument(workingCopyDocument);
 			model.updateDocument(originalDocument);
-			return Conversion.modelDocumentToGWTDocument(workingCopyDocument);
+			return Conversion.documentToGWT(workingCopyDocument);
 		} catch (NotFoundException e) {
 			e.printStackTrace();
 			throw new NotFoundExceptionGWT();
@@ -317,35 +315,98 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	public List<OldScheduleItemGWT> generateSchedule(
 			List<CourseGWT> mAllCourses,
 			HashMap<String, OldScheduleItemGWT> mSchedItems) {
-		assert(false);
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public List<OldScheduleItemGWT> getSchedule(
 			HashMap<String, OldScheduleItemGWT> mSchedItems) {
-		assert(false);
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public ScheduleItemList rescheduleCourse(OldScheduleItemGWT scheduleItem,
 			ArrayList<Integer> days, int startHour, boolean atHalfHour,
 			boolean inSchedule, HashMap<String, OldScheduleItemGWT> mSchedItems) {
-		assert(false);
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public List<OldScheduleItemGWT> removeScheduleItem(
 			OldScheduleItemGWT removed,
 			HashMap<String, OldScheduleItemGWT> mSchedItems) {
-		assert(false);
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public Collection<OldScheduleItemGWT> getSchedule(int scheduleID) throws NotFoundExceptionGWT {
+		Schedule schedule;
+		try {
+			schedule = model.findScheduleByID(scheduleID);
+			
+			
+		
+			Collection<OldScheduleItemGWT> result = new LinkedList<OldScheduleItemGWT>();
+			for (ScheduleItem item : model.findAllScheduleItemsForSchedule(schedule)) {
+				ScheduleItemGWT itemGWT = Conversion.scheduleItemToGWT(item);
+				OldScheduleItemGWT oldItemGWT = Conversion.scheduleItemFromGWTToOldGWT(
+						itemGWT,
+						model.getScheduleItemCourse(item),
+						model.getScheduleItemInstructor(item),
+						model.getScheduleItemLocation(item));
+				result.add(oldItemGWT);
+			}
+			return result;
+		} catch (NotFoundException e) {
+			e.printStackTrace();
+			throw new NotFoundExceptionGWT();
+		}
+	}
+
+	@Override
+	public void insertScheduleItem(int scheduleID, OldScheduleItemGWT itemOldGWT) throws NotFoundExceptionGWT {
+		try {
+			Schedule schedule = model.findScheduleByID(scheduleID);
+			
+			Conversion.insertScheduleItemFromOldGWT(itemOldGWT, model.findInstructorsForDocument(model.getDocumentForSchedule(schedule)), model.findLocationsForDocument(model.getDocumentForSchedule(schedule)));
+//			ScheduleItem item = Conversion.insertScheduleItemFromGWT(model, schedule, itemGWT);
+		} catch (NotFoundException e) {
+			e.printStackTrace();
+			throw new NotFoundExceptionGWT();
+		}
+	}
+
+	@Override
+	public void updateScheduleItem(int scheduleID, OldScheduleItemGWT oldItemOldGWT, OldScheduleItemGWT newItemOldGWT) throws NotFoundExceptionGWT {
+		removeScheduleItem(scheduleID, oldItemOldGWT);
+		insertScheduleItem(scheduleID, newItemOldGWT);
+	}
+
+	@Override
+	public void removeScheduleItem(int scheduleID, OldScheduleItemGWT oldItemOldGWT) throws NotFoundExceptionGWT {
+		try {
+			Schedule schedule = model.findScheduleByID(scheduleID);
+			
+			for (ScheduleItem item : model.findAllScheduleItemsForSchedule(schedule)) {
+				if (item.getCourseID() == oldItemOldGWT.getCourse().getID() &&
+						model.findInstructorByID(item.getInstructorID()).getUsername().equals(oldItemOldGWT.getProfessor()) &&
+						model.findLocationByID(item.getLocationID()).getRoom().equals(oldItemOldGWT.getRoom()) &&
+						item.getSection() == oldItemOldGWT.getSection()) {
+					model.deleteScheduleItem(item);
+					break;
+				}
+			}
+		}
+		catch (NotFoundException e) {
+			e.printStackTrace();
+			throw new NotFoundExceptionGWT();
+		}
+	}
+
+	@Override
+	public Collection<OldScheduleItemGWT> generateRestOfSchedule(int scheduleID) {
+		System.out.println("Implement generation!");
+		return new LinkedList<OldScheduleItemGWT>();
 	}
 
 	

@@ -79,19 +79,19 @@ public class Model {
 	
 	// SCHEDULES
 	
-	public Schedule insertSchedule(Document containingDocument, Collection<Schedule.Item> items) {
+	public Schedule insertSchedule(Document containingDocument) {
 		IDBSchedule underlyingSchedule = database.insertSchedule(containingDocument.underlyingDocument);
-		putScheduleItemsIntoDB(underlyingSchedule, items);
-		return new Schedule(underlyingSchedule, items);
+//		putScheduleItemsIntoDB(underlyingSchedule, items);
+		return new Schedule(underlyingSchedule);
 	}
 
 	public void updateSchedule(Schedule sched) {
-		putScheduleItemsIntoDB(sched.underlyingSchedule, sched.getItems());
+//		putScheduleItemsIntoDB(sched.underlyingSchedule, sched.getItems());
 		database.updateSchedule(sched.underlyingSchedule);
 	}
 
 	public void deleteSchedule(Schedule sched) {
-		removeScheduleItemsFromDB(sched.underlyingSchedule);
+//		removeScheduleItemsFromDB(sched.underlyingSchedule);
 		database.deleteSchedule(sched.underlyingSchedule);
 		sched.underlyingSchedule = null;
 	}
@@ -99,46 +99,16 @@ public class Model {
 	public Collection<Schedule> findAllSchedulesForDocument(Document containingDocument) {
 		Collection<Schedule> result = new LinkedList<Schedule>();
 		for (IDBSchedule underlyingSchedule : database.findAllSchedulesForDocument(containingDocument.underlyingDocument))
-			result.add(new Schedule(underlyingSchedule, getScheduleItemsFromDB(underlyingSchedule)));
+			result.add(new Schedule(underlyingSchedule));
 		return result;
 	}
-	
-	private Collection<Schedule.Item> getScheduleItemsFromDB(IDBSchedule schedule) {
-		Collection<Schedule.Item> newItems = new LinkedList<Schedule.Item>();
-		
-//		for (IDBScheduleItem item : database.findScheduleItemsBySchedule(schedule))
-//			newItems.add(new Schedule.Item(item.getSection(),
-//					database.getScheduleItemCourse(item).getID(),
-//					database.getScheduleItemLocation(item).getID(),
-//					database.getScheduleItemInstructor(item).getID(),
-//					database.getScheduleItemDayPattern(item),
-//					item.getStartHalfHour(),
-//					item.getEndHalfHour()));
-		assert(false);
-		
-		return newItems;
-	}
 
-	private void removeScheduleItemsFromDB(IDBSchedule schedule) {
-		for (IDBScheduleItem item : database.findScheduleItemsBySchedule(schedule))
-			database.deleteScheduleItem(item);
+	public Collection<ScheduleItem> findAllScheduleItemsForSchedule(Schedule schedule) {
+		Collection<ScheduleItem> result = new LinkedList<ScheduleItem>();
+		for (IDBScheduleItem underlying : database.findAllScheduleItemsForSchedule(schedule.underlyingSchedule))
+			result.add(new ScheduleItem(underlying, database.getScheduleItemCourse(underlying).getID(), database.getScheduleItemLocation(underlying).getID(), database.getScheduleItemInstructor(underlying).getID()));
+		return result;
 	}
-	
-	private void putScheduleItemsIntoDB(IDBSchedule schedule, Collection<Schedule.Item> items) {
-		for (Schedule.Item item : items) {
-			try {
-				IDBCourse course = database.findCourseByID(item.getCourseID());
-				IDBLocation location = database.findLocationByID(item.getCourseID());
-				IDBInstructor instructor = database.findInstructorByID(item.getCourseID());
-				
-				database.insertScheduleItem(schedule, course, instructor, location, item.getSection());
-			} catch (NotFoundException e) {
-				throw new AssertionError(e);
-			}
-		}
-	}
-	
-	
 	
 	// INSTRUCTORS
 
@@ -532,7 +502,17 @@ public class Model {
 				IDBLocation newDocumentLocation = newDocumentLocationsByExistingDocumentLocationIDs.get(existingDocumentLocation.getID());
 				IDBInstructor newDocumentInstructor = newDocumentInstructorsByExistingDocumentInstructorIDs.get(existingDocumentInstructor.getID());
 				
-				database.insertScheduleItem(newDocumentSchedule, newDocumentCourse, newDocumentInstructor, newDocumentLocation, existingDocumentScheduleItem.getSection());
+				database.insertScheduleItem(
+						newDocumentSchedule,
+						newDocumentCourse,
+						newDocumentInstructor,
+						newDocumentLocation,
+						existingDocumentScheduleItem.getSection(),
+						existingDocumentScheduleItem.getDays(),
+						existingDocumentScheduleItem.getStartHalfHour(),
+						existingDocumentScheduleItem.getEndHalfHour(),
+						existingDocumentScheduleItem.isPlaced(),
+						existingDocumentScheduleItem.isConflicted());
 			}
 		}
 		
@@ -553,6 +533,34 @@ public class Model {
 
 	public Schedule findScheduleByID(int scheduleID) throws NotFoundException {
 		IDBSchedule underlying = database.findScheduleByID(scheduleID);
-		return new Schedule(underlying, getScheduleItemsFromDB(underlying));
+		return new Schedule(underlying);
+	}
+
+	public Course getScheduleItemCourse(ScheduleItem item) throws NotFoundException {
+		return this.findCourseByID(item.getCourseID()); 
+	}
+
+	public Location getScheduleItemLocation(ScheduleItem item) throws NotFoundException {
+		return this.findLocationByID(item.getLocationID()); 
+	}
+
+	public Instructor getScheduleItemInstructor(ScheduleItem item) throws NotFoundException {
+		return this.findInstructorByID(item.getInstructorID()); 
+	}
+
+	public Document getDocumentForSchedule(Schedule schedule) throws NotFoundException {
+		return new Document(database.findDocumentForSchedule(schedule.underlyingSchedule));
+	}
+	
+	public ScheduleItem insertScheduleItem(Schedule schedule, Course course,
+			Instructor instructor, Location location, int section,
+			Set<Day> days, int startHalfHour, int endHalfHour,
+			boolean isPlaced, boolean isConflicted) {
+		IDBScheduleItem underlying = database.insertScheduleItem(schedule.underlyingSchedule, course.underlyingCourse, instructor.underlyingInstructor, location.underlyingLocation, section, days, startHalfHour, endHalfHour, isPlaced, isConflicted);
+		return new ScheduleItem(underlying, course.getID(), location.getID(), instructor.getID());
+	}
+
+	public void deleteScheduleItem(ScheduleItem item) {
+		database.deleteScheduleItem(item.underlying);
 	}
 }
