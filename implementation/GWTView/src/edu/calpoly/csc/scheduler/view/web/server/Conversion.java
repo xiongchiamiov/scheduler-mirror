@@ -117,13 +117,9 @@ public abstract class Conversion {
 		ins.setLastName(instructor.getLastName());
 		ins.setUserID(instructor.getUsername());
 		ins.setMaxWtu(instructor.getMaxWtu());
-		ins.setCurWtu(-1337);
 		ins.setOffice(null);
-		ins.setFairness(-1337);
 		ins.setDisability(instructor.getDisabilities());
 		System.out.println("instructor disabled on fromGWT? " + ins.getDisability());
-		ins.setGenerosity(-1337);
-		ins.setAvailability(new WeekAvail());
 
 		HashMap<Integer, Integer> coursePrefs = new HashMap<Integer, Integer>();
 		for (Integer courseID : instructor.getCoursePreferences().keySet()) {
@@ -213,9 +209,9 @@ public abstract class Conversion {
 		
 		// TODO: temporary solution, right now the model only supports one day combination,
 		// the view supports many. We need to change the model.
-		Set<Week> courseCombinations = new HashSet<Week>();
-		courseCombinations.add(course.getDays());
-		newCourse.setDays(Conversion.toGWT(courseCombinations));
+		//Set<Week> courseCombinations = new HashSet<Week>();
+		//courseCombinations.add(course.getDays());
+		newCourse.setDays(Conversion.toGWT(course.getDays()));
 		
 		
 		newCourse.setHalfHoursPerWeek(Integer.toString(course.getLength()));
@@ -288,7 +284,6 @@ public abstract class Conversion {
 		loc.setDbid(location.getID());
 		loc.setRoom(location.getRoom());
 		loc.setAdaCompliant(location.isADACompliant());
-		loc.setAvailability(new WeekAvail());
 		loc.setBuilding(location.getBuilding());
 		loc.setMaxOccupancy(location.getMaxOccupancy());
 		loc.setProvidedEquipment(fromGWT(location.getEquipment()));
@@ -341,10 +336,10 @@ public abstract class Conversion {
 		// TODO: temporary solution, right now the model only supports one day combination,
 		// the view supports many. We need to change the model.
 		Set<Week> courseDayCombinations = fromGWT(course.getDays());
-		Week newCourseWeek = Week.fiveDayWeek;
-		if (!courseDayCombinations.isEmpty())
-			newCourseWeek = courseDayCombinations.iterator().next();
-		newCourse.setDays(newCourseWeek);
+		//Week newCourseWeek = Week.fiveDayWeek;
+		//if (!courseDayCombinations.isEmpty())
+		//	newCourseWeek = courseDayCombinations.iterator().next();
+		newCourse.setDays(courseDayCombinations);
 		
 		assert(newCourse.getLength() >= 0);
 		assert(newCourse.getDays() != null);
