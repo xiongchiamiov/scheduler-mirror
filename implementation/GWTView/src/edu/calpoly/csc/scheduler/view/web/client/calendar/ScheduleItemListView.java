@@ -1,5 +1,6 @@
 package edu.calpoly.csc.scheduler.view.web.client.calendar;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.user.client.DOM;
@@ -85,7 +86,7 @@ public class ScheduleItemListView extends SimplePanel {
 	public void doubleClick(int row) {
 		ScheduleItemGWT item = mModel.get(row);
 		
-		mScheduleController.editItem(item);
+		mScheduleController.editItem(true, item, new ArrayList<Integer>(), CalendarTableView.getStartRow(item));
 	}
 	
 	/**

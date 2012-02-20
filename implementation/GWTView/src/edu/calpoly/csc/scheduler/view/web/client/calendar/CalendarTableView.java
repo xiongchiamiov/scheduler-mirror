@@ -1,5 +1,6 @@
 package edu.calpoly.csc.scheduler.view.web.client.calendar;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -159,7 +160,7 @@ public class CalendarTableView extends SimplePanel {
 			"#CalendarTable td.dayHeader {position:relative;background-color:#edf2f2;border-right:1px solid #000000;border-bottom:1px solid #000000;font-weight:bold;text-align:center;z-index:2;}"+
 			"#CalendarTable td.timeHeader {position:relative;background-color:#edf2f2;border-right:1px solid #000000;white-space:nowrap;text-align:right;}" +
 			"#CalendarTable td#topCorner {border-bottom:1px solid #000000;background-color:#edf2f2;}"+
-			"#CalendarTable td.daySpacer {border-left:1px solid #000000;padding:0px;margin:0px;width:0px;}"+
+			"#CalendarTable td.daySpacer {border-right:1px solid #000000;padding:0px;margin:0px;width:0px;}"+
 			"#"+DragAndDropController.DRAGGED_ID+" {display:none;position:fixed;margin-left:-30px;margin-top:10px;width:70px;padding:3px;background-color:#DFF0CF;z-index:999;border:1px solid #FFFFFF;cursor:arrow;}"+
 			".ScheduleAvailableCoursesList {position:absolute;top:116px;left:0px;bottom:33px;width:200px;border-right:1px solid #000000;background-color:#FFFFFF;}"+
 			"</style>");
@@ -239,7 +240,7 @@ public class CalendarTableView extends SimplePanel {
 		
 		for (ScheduleItemGWT item : mFilteredScheduleItems) {
 			for (Integer dayNum : item.getDayNums()) {
-				CalendarDayModel day = model.get(dayNum);
+				CalendarDayModel day = model.get(dayNum - 1);
 				
 				// Find the leftmost column that is open on all rows that this item needs to occupy
 				int colNdx = 0;
@@ -299,7 +300,7 @@ public class CalendarTableView extends SimplePanel {
 		final CalendarDayModel day = mModel.get(dayNum);
 		final ScheduleItemGWT item = day.get(row).get(col - day.getOffset());
 
-		mScheduleController.editItem(item);
+		mScheduleController.editItem(false, item, new ArrayList<Integer>(dayNum), row);
 	}
 	
 	/**
@@ -325,13 +326,13 @@ public class CalendarTableView extends SimplePanel {
 	public void mouseUp(int row, int col) {
 		if (mDragController.isDragging()) {
 			Element tr = DOM.getElementById("y"+row);
-			DOM.setStyleAttribute(tr, "backgroundColor", "#d1dfdf");
+			DOM.setStyleAttribute(tr, "backgroundColor", "#FFFFFF");
 
 			Element timeHeader = DOM.getElementById("h"+row);
-			DOM.setStyleAttribute(timeHeader, "backgroundColor", "#d1dfdf");
+			DOM.setStyleAttribute(timeHeader, "backgroundColor", "#edf2f2");
 		}
 		
-		mDragController.onDrop(row, col);
+		mDragController.onDrop(row, mModel.getDayNum(col));
 	}
 	
 	/**

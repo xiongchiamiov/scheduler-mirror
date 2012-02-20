@@ -53,17 +53,17 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 
 	private GreetingServiceAsync mGreetingService;
 	private HashMap<String, ScheduleItemGWT> mSchedItems;
-	private ArrayList<ScheduleItemGWT> mScheduleItems = new ArrayList<ScheduleItemGWT>();
+	private ArrayList<ScheduleItemGWT> mCalendarItems= new ArrayList<ScheduleItemGWT>();
+	private List<CourseGWT> mAllCourses = new ArrayList<CourseGWT>();
 	private VerticalPanel mMainPanel = new VerticalPanel();
 	private boolean mIsCourseListCollapsed;
 
-	private final DragAndDropController mDragController = new DragAndDropController();
-	private ScheduleItemListView mAvailableCourses = new ScheduleItemListView(mScheduleItems, this, mDragController);
-	private CalendarTableView mScheduleTable = new CalendarTableView(this, mDragController);
+	private final DragAndDropController mDragController = new DragAndDropController(this);
+	private ScheduleItemListView mAvailableCoursesView = new ScheduleItemListView(mCalendarItems, this, mDragController);
+	private CalendarTableView mCalendarTableView = new CalendarTableView(this, mDragController);
 	private FiltersViewWidget mFiltersDialog = new FiltersViewWidget();
 
 	private TextBox mSearchBox;
-	private ListBox mAvailableCoursesListBox;
 
 	/**
 	 * Returns this widget in its entirety.
@@ -80,7 +80,7 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 
 		final LoadingPopup loading = new LoadingPopup();
 		loading.show();
-
+		
 		mGreetingService.getSchedule(mSchedItems,
 				new AsyncCallback<List<ScheduleItemGWT>>() {
 					@Override
@@ -91,42 +91,41 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 
 					@Override
 					public void onSuccess(List<ScheduleItemGWT> result) {
-						mScheduleItems = new ArrayList<ScheduleItemGWT>();
+						mCalendarItems = new ArrayList<ScheduleItemGWT>();
 
 						for (ScheduleItemGWT item : result) {
-							mScheduleItems.add(item);
+							mCalendarItems.add(item);
 						}
 
-						Collections.sort(mScheduleItems, new ScheduleItemComparator());
+						Collections.sort(mCalendarItems, new ScheduleItemComparator());
 						
 						// Add the attributes of the retrieved items to the filters list
-						mFiltersDialog.addItems(mScheduleItems);
+						mFiltersDialog.addItems(mCalendarItems);
 
 						// Place schedule items with any previously set filters
 						filterScheduleItems(mSearchBox.getText());
 						
-//						mAvailableCourses.setItems(mScheduleItems);
-//						mAvailableCourses.drawList();
+						mCalendarTableView.setScheduleItems(mCalendarItems);
+						mCalendarTableView.drawTable();
 						
-						mScheduleTable.setScheduleItems(mScheduleItems);
-						mScheduleTable.drawTable();
+						populateAvailableCoursesList();
 						
 						loading.hide();
 					}
 				});
-
+		
 		return mMainPanel;
 	}
-
+	
 	/**
 	 * Displays a dialog that allows the user to edit a schedule item's
-	 * instructor, location, and time
+	 * instructor, location, and time. When the user clicks "ok" the
+	 * dialog will call this ScheduleEditWidget's moveItem method
 	 */
-	public void editItem(ScheduleItemGWT item) {
-		final EditScheduleItemDlg editDlg = new EditScheduleItemDlg(
-				mGreetingService, item);
+	public void editItem(boolean fromList, ScheduleItemGWT originalItem, List<Integer> newDays, int newStartRow) {
+		final EditScheduleItemDlg editDlg = new EditScheduleItemDlg(mGreetingService, this, mDragController,
+				fromList, originalItem, newDays, newStartRow);
 		editDlg.center();
-
 	}
 
 	/**
@@ -136,15 +135,8 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 		final LoadingPopup loading = new LoadingPopup();
 
 		loading.show();
-
-		List<CourseGWT> includedCourseList = new ArrayList<CourseGWT>();
-		List<ScheduleItemGWT> calendarList = mScheduleTable.getScheduleItems();
 		
-		for (int i = 0; i < calendarList.size(); i++) {
-			includedCourseList.add(calendarList.get(i).getCourse());
-		}
-
-		mGreetingService.generateSchedule(includedCourseList, mSchedItems,
+		mGreetingService.generateSchedule(mAllCourses, mSchedItems,
 				new AsyncCallback<List<ScheduleItemGWT>>() {
 					public void onFailure(Throwable caught) {
 						loading.hide();
@@ -159,13 +151,13 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 									new ScheduleItemComparator());
 
 							// Reset column and row spans, remove any items already placed
-							mScheduleItems = new ArrayList<ScheduleItemGWT>();
+							mCalendarItems = new ArrayList<ScheduleItemGWT>();
 							for (ScheduleItemGWT item : result) {
-								mScheduleItems.add(item);
+								mCalendarItems.add(item);
 							}
 
 							// Add the attributes of the retrieved items to the filters list
-							mFiltersDialog.addItems(mScheduleItems);
+							mFiltersDialog.addItems(mCalendarItems);
 
 							// Place schedule items with any previously set filters
 							filterScheduleItems(mSearchBox.getText());
@@ -173,22 +165,15 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 //							mAvailableCourses.setItems(mScheduleItems);
 //							mAvailableCourses.drawList();
 
-							mScheduleTable.setScheduleItems(mScheduleItems);
-							mScheduleTable.drawTable();
+							mCalendarTableView.setScheduleItems(mCalendarItems);
+							mCalendarTableView.drawTable();
+							
+							populateAvailableCoursesList();
 
 							loading.hide();
 						}
 					}
 				});
-	}
-
-	/**
-	 * Sets all schedule items retrieved as not placed on the schedule.
-	 */
-	private void resetIsPlaced() {
-		for (ScheduleItemGWT item : mScheduleItems) {
-			item.setPlaced(false);
-		}
 	}
 
 	/**
@@ -201,7 +186,7 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 		ArrayList<Integer> filtDays = mFiltersDialog.getDays();
 		ArrayList<Integer> filtTimes = mFiltersDialog.getTimes();
 
-		for (ScheduleItemGWT item : mScheduleItems) {
+		for (ScheduleItemGWT item : mCalendarItems) {
 			if (filtInstructors.contains(item.getProfessor())
 					&& filtCourses.contains(item.getCourseString())
 					&& filtRooms.contains(item.getRoom())
@@ -261,17 +246,14 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 			public void onClick(ClickEvent event) {
 				if (!mIsCourseListCollapsed) {
 					collapseScheduleButton.setText(">");
-					mAvailableCoursesListBox.addStyleName("hiddenCoursesList");
-					mAvailableCourses.toggle(true);
+					mAvailableCoursesView.toggle(true);
 					mIsCourseListCollapsed = true;
-					mScheduleTable.setLeftOffset(0);
+					mCalendarTableView.setLeftOffset(0);
 				} else {
 					collapseScheduleButton.setText("<");
-					mAvailableCoursesListBox
-							.removeStyleName("hiddenCoursesList");
-					mAvailableCourses.toggle(false);
+					mAvailableCoursesView.toggle(false);
 					mIsCourseListCollapsed = false;
-					mScheduleTable.setLeftOffset(200);
+					mCalendarTableView.setLeftOffset(200);
 				}
 			}
 		});
@@ -333,28 +315,38 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 	/**
 	 * Retrieves the course list and adds it to the available courses box
 	 */
-	private void addCoursesToListBox() {
-
+	private void populateAvailableCoursesList() {
 		mGreetingService.getCourses(new AsyncCallback<List<CourseGWT>>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				Window.alert("Failed to retrieve courses");
 			}
-
+			
 			@Override
 			public void onSuccess(List<CourseGWT> result) {
 				if (result != null) {
-
-					List<ScheduleItemGWT> availableList = new ArrayList<ScheduleItemGWT>();
+					mAllCourses = result;
+					
+					List<ScheduleItemGWT> availableItems = new ArrayList<ScheduleItemGWT>();
+					
+					courseLoop:
 					for (CourseGWT course : result) {
-						ScheduleItemGWT newItem = new ScheduleItemGWT();
-						newItem.setCourse(course);
+						// Don't added courses to available list if they're on the calendar
+						for (ScheduleItemGWT item : mCalendarItems) {
+							if (item.getDept().equals(course.getDept()) && 
+									item.getCatalogNum().equals(course.getCatalogNum())) {
+								continue courseLoop;
+							}
+						}
 						
-						availableList.add(newItem);
+						ScheduleItemGWT newItem = new ScheduleItemGWT(course, course.getCourseName(), 
+								"", course.getDept(), course.getCatalogNum(), -1, new ArrayList<Integer>(), 
+								-1, -1, -1, -1, "", false);
+						availableItems.add(newItem);
 					}
 					
-					mAvailableCourses.setItems(availableList);
-					mAvailableCourses.drawList();
+					mAvailableCoursesView.setItems(availableItems);
+					mAvailableCoursesView.drawList();
 				}
 			}
 		});
@@ -369,13 +361,11 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 		boxesAndSchedulePanel.setSpacing(2);
 		boxesAndSchedulePanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 
-		addCoursesToListBox();
+		boxesAndSchedulePanel.add(mAvailableCoursesView);
+		mAvailableCoursesView.drawList();
 
-		boxesAndSchedulePanel.add(mAvailableCourses);
-		mAvailableCourses.drawList();
-
-		mScheduleTable.setLeftOffset(200);
-		boxesAndSchedulePanel.add(mScheduleTable);
+		mCalendarTableView.setLeftOffset(200);
+		boxesAndSchedulePanel.add(mCalendarTableView);
 
 		mMainPanel.add(boxesAndSchedulePanel);
 	}
@@ -405,10 +395,14 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 	/**
 	 * Called when a schedule item is dragged to a new position, or when a
 	 * course from one of the lists is dropped onto the schedule
+	 * 
+	 * @param scheduleItem The original item that will be moved
+	 * @param days The list of days the item is being moved to
+	 * @param row The row the day is being moved to
+	 * @param inSchedule true iff the course is already in the schedule
 	 */
 	public void moveItem(final ScheduleItemGWT scheduleItem,
-			ArrayList<Integer> days, int row, final boolean inSchedule,
-			final boolean fromIncluded) {
+			ArrayList<Integer> days, int row, final boolean inSchedule) {
 
 		final LoadingPopup loading = new LoadingPopup();
 		loading.show();
@@ -430,47 +424,22 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 
 					@Override
 					public void onSuccess(ScheduleItemList rescheduledCourses) {
-						
-						CourseGWT courseHolder;
-						int sectionsIncluded = 0;
-						int itemIndex = 0;
-
-						// TODO: Matt, if the course was dragged from the course list
-						// the section count needs to be decremented. And the course should be removed
-						// if there was only one section.
-
-						if (!inSchedule) {
-							
-							
-							// If the list box contains sections of this course
-							if (itemIndex >= 0) {
-								// Determine how many it sections it has
-								if (sectionsIncluded > 1) {
-									// Decrement by one if there is more than one section
-								}								
-								else {
-									// Remove the course if there is only one section
-								}
-
-							}
-						}
-
-						mScheduleItems = new ArrayList<ScheduleItemGWT>();
+						mCalendarItems = new ArrayList<ScheduleItemGWT>();
 						
 						for (ScheduleItemGWT schdItem : rescheduledCourses) {
-							mScheduleItems.add(schdItem);
+							mCalendarItems.add(schdItem);
 						}
 						
-						Collections.sort(mScheduleItems, new ScheduleItemComparator());
+						Collections.sort(mCalendarItems, new ScheduleItemComparator());
 
-						mFiltersDialog.addItems(mScheduleItems);
+						mFiltersDialog.addItems(mCalendarItems);
 						
 						// Place schedule items with any previously set filters
 						filterScheduleItems(mSearchBox.getText());
 						loading.hide();
 
-						mScheduleTable.setScheduleItems(mScheduleItems);
-						mScheduleTable.drawTable();
+						mCalendarTableView.setScheduleItems(mCalendarItems);
+						mCalendarTableView.drawTable();
 						
 						loading.hide();
 						
@@ -486,7 +455,7 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 		String catalogNum = course.getCatalogNum();
 		int count = 0;
 
-		for (ScheduleItemGWT item : mScheduleItems) {
+		for (ScheduleItemGWT item : mCalendarItems) {
 			if (item.getDept() == dept
 					&& item.getCatalogNum().equals(catalogNum)) {
 				count++;
@@ -498,7 +467,7 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 
 	/* Returns all schedule items retrieved from the model's schedule object */
 	public ArrayList<ScheduleItemGWT> getItemsInSchedule() {
-		return mScheduleItems;
+		return mCalendarItems;
 	}
 
 	public void removeItem(ScheduleItemGWT removed) {
@@ -515,14 +484,14 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 
 					@Override
 					public void onSuccess(List<ScheduleItemGWT> result) {
-						mScheduleItems = new ArrayList<ScheduleItemGWT>();
+						mCalendarItems = new ArrayList<ScheduleItemGWT>();
 						for (ScheduleItemGWT schdItem : result) {
-							mScheduleItems.add(schdItem);
+							mCalendarItems.add(schdItem);
 						}
-						Collections.sort(mScheduleItems,
+						Collections.sort(mCalendarItems,
 								new ScheduleItemComparator());
 
-						mFiltersDialog.addItems(mScheduleItems);
+						mFiltersDialog.addItems(mCalendarItems);
 						filterScheduleItems(mSearchBox.getText());
 						loading.hide();
 					}

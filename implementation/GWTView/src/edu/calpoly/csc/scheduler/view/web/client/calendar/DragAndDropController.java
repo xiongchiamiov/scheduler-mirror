@@ -1,5 +1,7 @@
 package edu.calpoly.csc.scheduler.view.web.client.calendar;
 
+import java.util.ArrayList;
+
 import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.event.dom.client.MouseMoveHandler;
 import com.google.gwt.event.dom.client.MouseOutEvent;
@@ -10,6 +12,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.RootPanel;
 
+import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 
 /**
@@ -23,13 +26,17 @@ public class DragAndDropController implements MouseMoveHandler, MouseOutHandler,
 
 	public static final String DRAGGED_ID = "dragItem";
 	
+	private final ScheduleEditWidget mWidget;
+	
 	private Element mItemView;
 	private ScheduleItemGWT mDraggingItem;
 	private ScheduleItemGWT mDroppedItem;
 	private boolean isMoving = false;
+	private boolean fromCalendar = false;
 	
-	public DragAndDropController() {
-		System.out.println("Mediator ctor");
+	public DragAndDropController(ScheduleEditWidget widget) {
+		mWidget = widget;
+		
 		addMouseHandlers();
 	}
 	
@@ -82,32 +89,48 @@ public class DragAndDropController implements MouseMoveHandler, MouseOutHandler,
 		mDraggingItem = item;
 		isMoving = false;
 		
-		if (tableCol < 0)
+		if (tableCol < 0) {
 			mItemView = DOM.getElementById("list"+row);
-		else
+			fromCalendar = false;
+		}
+		else {
 			mItemView = DOM.getElementById("x"+tableCol+"y"+row);
+			fromCalendar = true;
+		}
 	}
 	
 	/**
 	 * Triggered when an item is dropped (as opposed to every mouse up event)
 	 *  
 	 * @param row The table row the item was dropped on, or -1 if off table
-	 * @param col The table column the item was dropped on, or -1 if off table
+	 * @param col TheDay the item was dropped on, or -1 if off table
 	 */
-	public void onDrop(int row, int col) {
+	public void onDrop(int row, int dayNum) {
 		// Check if moving to prevent clicks from registering as drops
 		if (isMoving)
 			dropItem(true);
 		else
 			dropItem(false);
-		
+			
 		if (mDroppedItem != null) {
-			if (row < 0 || col < 0)
+			if (row < 0 || dayNum < 0) {
 				System.out.println(mDroppedItem.getCourseString() + " dropped on list");
-			else
-				System.out.println(mDroppedItem.getCourseString() + " dropped at x"+col+"y"+row);
+				
+				if (fromCalendar) {
+					// tell widget to delete item from Calendar
+				}
+			}
+			else {
+				System.out.println(mDroppedItem.getCourseString() + " dropped on "+dayNum+" at "+row);
+				mWidget.editItem(!fromCalendar, mDroppedItem, new ArrayList<Integer>(dayNum), row);
+			}
+			
 			mDroppedItem = null;
 		}
+	}
+	
+	public void cancelDrop() {
+		dropItem(false);
 	}
 	
 	/**

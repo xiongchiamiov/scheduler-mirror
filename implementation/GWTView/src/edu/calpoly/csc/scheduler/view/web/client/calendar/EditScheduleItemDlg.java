@@ -40,30 +40,36 @@ public class EditScheduleItemDlg extends DialogBox {
 	private final ListBox mEndTimeLB = new ListBox(false);
 
 	private final GreetingServiceAsync mGreetingService;
-	private final ScheduleItemGWT mItem;
+	private final ScheduleEditWidget mWidget;
+	private final DragAndDropController mDragController;
+	
+	private final boolean mFromList;
+	private final ScheduleItemGWT mOriginalItem;
+	private List<Integer> mNewDays;
+	private int mNewStartRow;
 	private boolean mChangedItem;
 
-	public EditScheduleItemDlg(GreetingServiceAsync service, ScheduleItemGWT item) {
+	public EditScheduleItemDlg(GreetingServiceAsync service, ScheduleEditWidget widget, DragAndDropController dragController,
+			boolean fromList, ScheduleItemGWT item, List<Integer> newDays, int newStartRow) {
 		super(false);
 
 		mGreetingService = service;
-		mItem = item;
+		mWidget = widget;
+		mDragController = dragController;
 		
+		mFromList = fromList;
+		mOriginalItem = item;
+		mNewDays = newDays;
+		mNewStartRow = newStartRow;
 		
 		draw();
 	}
-
-	public ScheduleItemGWT getItem() {
-		if (!mChangedItem)
-			return null;
-		return mItem;
-	}
-
+	
 	private void draw() {
 		mMainPanel.setWidth("300px");
 		mMainPanel.setSpacing(5);
 		mMainPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-		mMainPanel.setTitle("Edit " + mItem.getCourseString());
+		mMainPanel.setTitle("Edit " + mOriginalItem.getCourseString());
 		mMainPanel.setStylePrimaryName("editScheduleItemDialog");
 		
 		mMainPanel.add(createTitlePanel());
@@ -84,33 +90,65 @@ public class EditScheduleItemDlg extends DialogBox {
 		
 		setWidget(mMainPanel);
 	}
+	
+	public boolean changedItem() { 
+		return mChangedItem;
+	}
 
+	public ScheduleItemGWT getOriginalItem() {
+		return mOriginalItem;
+	}
+	
+	public ScheduleItemGWT getNewItem() {
+		CourseGWT course = mOriginalItem.getCourse();
+		String courseName = course.getCourseName();
+		
+		int insNdx = mInstructorsLB.getSelectedIndex();
+		String prof = insNdx >= 0 ? mInstructorsLB.getItemText(insNdx) : null;
+		
+		String courseDept = course.getDept();
+		String courseNum = mOriginalItem.getCatalogNum();
+		int section = mOriginalItem.getSection();
+		
+		ArrayList<Integer> dayNums = new ArrayList<Integer>();
+		for (int i = 0; i < mDayCheckBoxes.size(); i++) {
+			if (mDayCheckBoxes.get(i).getValue()) {
+				dayNums.add(i + 1);
+			}
+		}
+		
+		int startHour = getStartHour(mStartTimeLB.getSelectedIndex());
+		int startMin = getStartMin(mStartTimeLB.getSelectedIndex());
+		int endHour = getEndHour(mEndTimeLB.getSelectedIndex());
+		int endMin = getEndMin(mEndTimeLB.getSelectedIndex());
+		
+		int locNdx = mLocationsLB.getSelectedIndex();
+		String room = locNdx >= 0 ? mLocationsLB.getItemText(locNdx) : null;
+		
+		boolean conflicted = false;
+		
+		return new ScheduleItemGWT(course, courseName, prof, courseDept, courseNum, 
+				section, dayNums, startHour, startMin, endHour, endMin, room, conflicted);
+	}
+	
 	private void cancel() {
 		mChangedItem = false;
+		mDragController.cancelDrop();
 		hide();
 	}
 
 	private void ok() {
 		mChangedItem = true;
+		hide();
 		
-		// TODO: update mItem based on user input data		
-		mItem.setProfessor(mInstructorsLB.getItemText(mInstructorsLB.getSelectedIndex()));		
-		
-		mItem.setStartTimeHour(getStartHour(mStartTimeLB.getSelectedIndex()));
-		mItem.setStartTimeMin(getStartMin(mStartTimeLB.getSelectedIndex()));
-		
-		mItem.setEndTimeHour(getEndHour(mEndTimeLB.getSelectedIndex()));
-		mItem.setEndTimeMin(getEndMin(mEndTimeLB.getSelectedIndex()));
-		
-		ArrayList<Integer> newDays = new ArrayList<Integer>();		
+		ArrayList<Integer> days = new ArrayList<Integer>();
 		for (int i = 0; i < mDayCheckBoxes.size(); i++) {
 			if (mDayCheckBoxes.get(i).getValue()) {
-				newDays.add(i);
+				days.add(i + 1);
 			}
-		}		
-		mItem.setDayNums(newDays);		
+		}
 		
-		hide();
+		mWidget.moveItem(getNewItem(), days, mStartTimeLB.getSelectedIndex(), !mFromList);
 	}
 	
 	private int getStartHour(int row) {
@@ -130,7 +168,7 @@ public class EditScheduleItemDlg extends DialogBox {
 	}
 	
 	private Widget createTitlePanel() {
-		final HTML titlePanel = new HTML("<center><b>Edit " + mItem.getCourseString() + "</b></center><p>");
+		final HTML titlePanel = new HTML("<center><b>Edit " + mOriginalItem.getCourseString() + "</b></center><p>");
 		titlePanel.setHeight("30px");
 		return titlePanel;
 	}
@@ -177,7 +215,8 @@ public class EditScheduleItemDlg extends DialogBox {
 		for (int time = 0; time < CalendarTableView.START_TIMES.length; time++)
 			mStartTimeLB.addItem(CalendarTableView.START_TIMES[time]);
 		
-		mStartTimeLB.setSelectedIndex(CalendarTableView.getStartRow(mItem));
+		final int maxIndex = mStartTimeLB.getItemCount() - 1;
+		mStartTimeLB.setSelectedIndex(mNewStartRow < maxIndex ? mNewStartRow : maxIndex - 1);
 		mStartTimeLB.setWidth("200px");
 
 		timePanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
@@ -196,7 +235,8 @@ public class EditScheduleItemDlg extends DialogBox {
 		for (int time = 0; time < CalendarTableView.END_TIMES.length; time++)
 			mEndTimeLB.addItem(CalendarTableView.END_TIMES[time]);
 		
-		mEndTimeLB.setSelectedIndex(CalendarTableView.getEndRow(mItem));
+		final int maxIndex = mEndTimeLB.getItemCount() - 1;
+		mEndTimeLB.setSelectedIndex(mNewStartRow < maxIndex ? mNewStartRow + 1 : maxIndex);
 		mEndTimeLB.setWidth("200px");
 
 		timePanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
@@ -218,8 +258,8 @@ public class EditScheduleItemDlg extends DialogBox {
 			checkBoxPanel.add(checkBox);
 		}
 
-		for (int dayNum : mItem.getDayNums())
-			mDayCheckBoxes.get(dayNum).setValue(true);
+		for (int dayNum : mNewDays)
+			mDayCheckBoxes.get(dayNum - 1).setValue(true);
 
 		dayPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		dayPanel.add(checkBoxPanel);

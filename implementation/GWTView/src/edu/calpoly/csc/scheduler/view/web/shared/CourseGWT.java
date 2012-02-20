@@ -211,4 +211,18 @@ public class CourseGWT implements Serializable, Identified {
 	public void setLectureID(Integer lectureID) {
 		this.lectureID = lectureID;
 	}
+	
+	public boolean isValid() {
+		try {
+			Integer.parseInt(wtu);
+			Integer.parseInt(scu);
+			Integer.parseInt(numSections);
+			Integer.parseInt(maxEnroll);
+			Integer.parseInt(halfHoursPerWeek);
+			return true;
+		}
+		catch (NumberFormatException e) {
+			return false;
+		}
+	}
 }
