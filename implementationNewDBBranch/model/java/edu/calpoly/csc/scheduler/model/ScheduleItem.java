@@ -1,0 +1,42 @@
+package edu.calpoly.csc.scheduler.model;
+
+import java.util.Collection;
+import java.util.Set;
+
+import edu.calpoly.csc.scheduler.model.db.IDBSchedule;
+import edu.calpoly.csc.scheduler.model.db.IDBScheduleItem;
+import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
+
+public class ScheduleItem {
+	IDBScheduleItem underlying;
+	private int courseID;
+	private int locationID;
+	private int instructorID;
+	
+	ScheduleItem(IDBScheduleItem underlying, int courseID, int locationID, int instructorID) {
+		this.underlying = underlying;
+		this.courseID = courseID;
+		this.locationID = locationID;
+		this.instructorID = instructorID;
+	}
+
+	public int getID() { return underlying.getID(); }
+	public int getSection() { return underlying.getSection(); }
+	public void setSection(int section) { this.underlying.setSection(section); }
+	public int getCourseID() { return courseID; }
+	public void setCourseID(int courseID) { this.courseID = courseID; }
+	public int getLocationID() { return locationID; }
+	public void setLocationID(int locationID) { this.locationID = locationID; }
+	public int getInstructorID() { return instructorID; }
+	public void setInstructorID(int instructorID) { this.instructorID = instructorID; }
+	public Set<Day> getDays() { return underlying.getDays(); }
+	public void setDays(Set<Day> days) { underlying.setDays(days); }
+	public int getStartHalfHour() { return underlying.getStartHalfHour(); }
+	public void setStartHalfHour(int startHalfHour) { underlying.setStartHalfHour(startHalfHour); }
+	public int getEndHalfHour() { return underlying.getEndHalfHour(); }
+	public void setEndHalfHour(int endHalfHour) { underlying.setEndHalfHour(endHalfHour); }
+	public boolean isPlaced() { return underlying.isPlaced(); }
+	public void setIsPlaced(boolean placed) { underlying.setIsPlaced(placed); }
+	public boolean isConflicted() { return underlying.isConflicted(); }
+	public void setIsConflicted(boolean conflicted) { underlying.setIsConflicted(conflicted); }
+}
