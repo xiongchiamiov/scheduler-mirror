@@ -2,9 +2,11 @@
 //
 //import java.util.ArrayList;
 //import java.util.HashMap;
+//import java.util.HashSet;
 //import java.util.LinkedHashMap;
 //import java.util.List;
 //import java.util.Map;
+//import java.util.Set;
 //
 //import edu.calpoly.csc.scheduler.model.Model;
 //import edu.calpoly.csc.scheduler.model.db.Time;
@@ -55,8 +57,12 @@
 //	public static List<Course> generateCourseList() {
 //		List<Course> courses = new ArrayList<Course>();
 //		
-//		Week weekMWF = new Week(new Day[]{Day.MON, Day.WED, Day.FRI});
-//		Week weekTT = new Week(new Day[]{Day.TUE, Day.THU});
+//		Week MWF = new Week(new Day[]{Day.MON, Day.WED, Day.FRI});
+//		Week TT = new Week(new Day[]{Day.TUE, Day.THU});
+//		Set<Week> weekMWF = new HashSet<Week>();
+//		Set<Week> weekTT = new HashSet<Week>();
+//		weekMWF.add(MWF);
+//		weekTT.add(TT);
 //		
 //		String dept = "AERO";
 //		
@@ -105,10 +111,8 @@
 //			Instructor instructor = new Instructor();
 //		    instructor.setFirstName("IFN" + Integer.toString(i + 1));
 //		    instructor.setLastName("ILN" + Integer.toString(i + 1));
-//		    instructor.setCurWtu(0);
 //		    instructor.setDisability(false);
 //		    instructor.setMaxWtu(50);
-//		    instructor.setAvailability(new WeekAvail());
 //		    instructor.setUserID("IFN" + Integer.toString(i + 1));
 //		
 //		    for(Course c : courses) {

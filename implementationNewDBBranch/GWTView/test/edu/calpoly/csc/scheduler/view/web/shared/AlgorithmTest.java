@@ -5,9 +5,11 @@
 //
 //import java.util.ArrayList;
 //import java.util.HashMap;
+//import java.util.HashSet;
 //import java.util.LinkedHashMap;
 //import java.util.List;
 //import java.util.Map;
+//import java.util.Set;
 //
 //import edu.calpoly.csc.scheduler.model.Model;
 //import edu.calpoly.csc.scheduler.model.db.Time;
@@ -64,8 +66,12 @@
 //	public static List<Course> generateCourseList() {
 //		List<Course> courses = new ArrayList<Course>();
 //		
-//		Week weekMWF = new Week(new Day[]{Day.MON, Day.WED, Day.FRI});
-//		Week weekTT = new Week(new Day[]{Day.TUE, Day.THU});
+//		Week MWF = new Week(new Day[]{Day.MON, Day.WED, Day.FRI});
+//		Week TT = new Week(new Day[]{Day.TUE, Day.THU});
+//		Set<Week> weekMWF = new HashSet<Week>();
+//		Set<Week> weekTT = new HashSet<Week>();
+//		weekMWF.add(MWF);
+//		weekTT.add(TT);
 //		
 //		Course lecture = new Course("Intro to Aerodynamics", "AERO", "101");
 //		lecture.setEnrollment(30);
@@ -124,10 +130,8 @@
 //		Instructor instructor = new Instructor();
 //		instructor.setFirstName("Adam");
 //		instructor.setLastName("Armstrong");
-//		instructor.setCurWtu(0);
 //		instructor.setDisability(false);
 //		instructor.setMaxWtu(50);
-//		instructor.setAvailability(new WeekAvail());
 //		instructor.setUserID("adam");
 //		
 //		for(Course c : courses) {
@@ -154,10 +158,8 @@
 //		Instructor instructor2 = new Instructor();
 //		instructor2.setFirstName("Evan");
 //		instructor2.setLastName("Platypus-Ovadia");
-//		instructor2.setCurWtu(0);
 //		instructor2.setDisability(false);
 //		instructor2.setMaxWtu(50);
-//		instructor2.setAvailability(new WeekAvail());
 //		instructor2.setUserID("evan");
 //		
 //		for(Course c : courses) {
