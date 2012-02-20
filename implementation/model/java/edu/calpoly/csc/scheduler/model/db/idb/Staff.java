@@ -25,7 +25,6 @@ public class Staff extends Instructor
       setFirstName("STAFF");
       setLastName("STAFF");
       setUserID("staff");
-      setCurWtu(-1);
       setMaxWtu(-1);
       setOffice(Tba.getTba());
    }
@@ -36,25 +35,25 @@ public class Staff extends Instructor
    }
    
    @Override
-   public boolean isAvailable (Week w, TimeRange tr)
+   public boolean isAvailable (Week w, TimeRange tr, ScheduleDecorator sd)
    {
       return true;
    }
    
    @Override
-   public boolean canTeach (Course c)
+   public boolean canTeach (Course c, int wtu)
    {
       return true;
    }
    
    @Override
-   public boolean book (boolean b, Week w, TimeRange tr)
+   public boolean book (boolean b, Week w, TimeRange tr, ScheduleDecorator sd)
    {
       return true;
    }
 
    @Override
-   public boolean book (boolean b, Day dayOfWeek, Time starttime, Time endtime)
+   public boolean book (boolean b, Day dayOfWeek, Time starttime, Time endtime, ScheduleDecorator sd)
    {
       return true;
    }

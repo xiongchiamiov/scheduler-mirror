@@ -46,7 +46,7 @@ public class Instructor extends DbData implements Comparable<Instructor>, Serial
    /**
     * Current amount of wtus
     */
-   private Integer curWtu;
+   //private Integer curWtu;
 
    /**
     * Building and office number of instructor.
@@ -56,7 +56,7 @@ public class Instructor extends DbData implements Comparable<Instructor>, Serial
    /**
     * The fairness with which the instructor has been treated
     */
-   private Integer fairness;
+   //private Integer fairness;
 
    /**
     * Whether or not the instructor has a disability.
@@ -67,12 +67,12 @@ public class Instructor extends DbData implements Comparable<Instructor>, Serial
    /**
     * The generosity of the instructors scheduler.
     **/
-   private int generosity;
+   //private int generosity;
 
    /**
     * Records this instructor's current availability.
     */
-   private WeekAvail availability;
+   //private WeekAvail availability;
 
    /**
     * Keeps track of an instructor course preferences.
@@ -110,7 +110,6 @@ public class Instructor extends DbData implements Comparable<Instructor>, Serial
       this.maxWtu = wtu;
       this.office = office;
       this.disability = disabilities;
-      this.availability = new WeekAvail();
       initTPrefs();
    }
    
@@ -256,18 +255,8 @@ public class Instructor extends DbData implements Comparable<Instructor>, Serial
     */
    public int compareTo (Instructor o)
    {
-      if (this.generosity < o.getGenerosity())
-      {
-         return -1;
-      }
-      else if (this.generosity == o.getGenerosity())
-      {
-         return 0;
-      }
-      else
-      {
-         return 1;
-      }
+	  //Make sure this isn't getting called.  Taking generosity out of Instructor broke this.
+      return 1;
    }
 
    /**
@@ -335,10 +324,10 @@ public class Instructor extends DbData implements Comparable<Instructor>, Serial
     * 
     * @return the fairness value of this instructor.
     */
-   public int getFairness ()
+   /*public int getFairness ()
    {
       return fairness;
-   }
+   }*/
 
    /**
     * Returns a string representing this instructor's first name.
@@ -354,10 +343,10 @@ public class Instructor extends DbData implements Comparable<Instructor>, Serial
    /**
     * Returns the generosity of the instructors.
     **/
-   public int getGenerosity ()
+   /*public int getGenerosity ()
    {
       return generosity;
-   }
+   }*/
 
    /**
     * Returns the id of the instructors.
@@ -470,10 +459,10 @@ public class Instructor extends DbData implements Comparable<Instructor>, Serial
    /**
     * @param curWtu the curWtu to set
     */
-   public void setCurWtu(Integer curWtu)
+   /*public void setCurWtu(Integer curWtu)
    {
       this.curWtu = curWtu;
-   }
+   }*/
 
    /**
     * @param office the office to set
@@ -486,10 +475,10 @@ public class Instructor extends DbData implements Comparable<Instructor>, Serial
    /**
     * @param fairness the fairness to set
     */
-   public void setFairness(Integer fairness)
+   /*public void setFairness(Integer fairness)
    {
       this.fairness = fairness;
-   }
+   }*/
 
    /**
     * @param disability the disability to set
@@ -502,10 +491,10 @@ public class Instructor extends DbData implements Comparable<Instructor>, Serial
    /**
     * @param generosity the generosity to set
     */
-   public void setGenerosity(int generosity)
+   /*public void setGenerosity(int generosity)
    {
       this.generosity = generosity;
-   }
+   }*/
 
    /**
     * @param tPrefs the tPrefs to set
@@ -528,30 +517,30 @@ public class Instructor extends DbData implements Comparable<Instructor>, Serial
     * 
     * @return this instructor's current wtu count
     */
-   public int getCurWtu ()
+   /*public int getCurWtu ()
    {
       return this.curWtu;
-   }
+   }*/
 
    /**
     * Sets the curWtu to the given parameter.
     * 
     * @param curWtu the curWtu to set
     */
-   public void setCurWtu (int curWtu)
+   /*public void setCurWtu (int curWtu)
    {
       this.curWtu = curWtu;
-   }
+   }*/
 
    /**
     * Returns this instructor's current wtu count
     * 
     * @return this instructor's current wtu count
     */
-   public int getAvailableWTU ()
+   /*public int getAvailableWTU ()
    {
       return this.getCurWtu();
-   }
+   }*/
 
    /**
     * Returns a string representing the instructor's name in the form first name
@@ -749,9 +738,9 @@ public class Instructor extends DbData implements Comparable<Instructor>, Serial
     * @return True if the instructor is available for the given time range
     *         across the given Week
     */
-   public boolean isAvailable (Week days, TimeRange tr)
+   public boolean isAvailable (Week days, TimeRange tr, ScheduleDecorator sd)
    {
-      return this.availability.isFree(tr.getS(), tr.getE(), days);
+      return sd.getIAvailability(this).isFree(tr.getS(), tr.getE(), days);
    }
 
    /**
@@ -764,9 +753,9 @@ public class Instructor extends DbData implements Comparable<Instructor>, Serial
     * @return True if the instructor was booked. False if he was already booked
     *         for any part of the time specified.
     */
-   public boolean book (boolean b, Week days, TimeRange tr)
+   public boolean book (boolean b, Week days, TimeRange tr, ScheduleDecorator sd)
    {
-      return this.availability.book(b, days, tr);
+       return sd.getIAvailability(this).book(b, days, tr);
    }
 
    /**
@@ -777,26 +766,26 @@ public class Instructor extends DbData implements Comparable<Instructor>, Serial
     * @param starttime the start time to set busy.
     * @param endtime the end time of the busy interval.
     */
-   public boolean book (boolean b, Day dayOfWeek, Time starttime, Time endtime)
+   public boolean book (boolean b, Day dayOfWeek, Time starttime, Time endtime, ScheduleDecorator sd)
    {
-      return this.availability.book(b, starttime, endtime, dayOfWeek);
+       return sd.getIAvailability(this).book(b, starttime, endtime, dayOfWeek);
    }
 
    /**
     * @return the availability
     */
-   public WeekAvail getAvailability ()
+   /*public WeekAvail getAvailability ()
    {
       return availability;
-   }
+   }*/
 
    /**
     * @param availability the availability to set
     */
-   public void setAvailability (WeekAvail availability)
+   /*public void setAvailability (WeekAvail availability)
    {
       this.availability = availability;
-   }
+   }*/
 
    /**
     * Returns a lastname-comma-firstname representation of this instructor's
@@ -818,10 +807,10 @@ public class Instructor extends DbData implements Comparable<Instructor>, Serial
     * @return A list of time ranges that instructor can and wants to teach this
     *         course
     */
-   public boolean canTeach (Course course)
+   public boolean canTeach (Course course, int curWtu)
    {
       // Check if instructor has enough WTUs
-      if ((this.curWtu + course.getWtu()) <= this.maxWtu)
+      if ((curWtu + course.getWtu()) <= this.maxWtu)
       {
          /*
           * TODO: rewrite this when CoursePreference is changed to a hash. Note
@@ -850,7 +839,7 @@ public class Instructor extends DbData implements Comparable<Instructor>, Serial
     * 
     * @deprecated Shouldn't be needed
     */
-   public Vector<TimeRange> getTeachingTimes (Course c)
+   public Vector<TimeRange> getTeachingTimes (Course c, ScheduleDecorator sd)
    {
       Vector<TimeRange> r = new Vector<TimeRange>();
       int length = c.getLength();
@@ -858,9 +847,9 @@ public class Instructor extends DbData implements Comparable<Instructor>, Serial
       for (Time t : Time.ALL_TIMES_IN_DAY)
       {
          TimeRange tr = new TimeRange(t, length);
-         double pref = this.getAvgPrefForTimeRange(c.getDays(), tr.getS(),
+         double pref = this.getAvgPrefForTimeRange(c.getDays().iterator().next(), tr.getS(),
             tr.getE());
-         if (pref > 0 && this.isAvailable(c.getDays(), tr))
+         if (pref > 0 && this.isAvailable(c.getDays().iterator().next(), tr, sd))
          {
             r.add(tr);
          }
@@ -878,16 +867,15 @@ public class Instructor extends DbData implements Comparable<Instructor>, Serial
     * @return True if this item currently isn't held within this instructor. 
     *         False otherwise
     */
-   public boolean addItem (ScheduleItem si)
+   public boolean addItem (ScheduleItem si, int curWtu)
    {
       boolean r = false;
 
       if (!this.itemsTaught.contains(si))
       {
          Course c = si.getCourse();
-         if (canTeach(c))
+         if (canTeach(c, curWtu))
          {
-            this.curWtu += c.getWtu();
             r = true;
          }
       }
@@ -934,12 +922,8 @@ public class Instructor extends DbData implements Comparable<Instructor>, Serial
       i.setLastName("Yo-Hwan");
       i.setUserID("SlayerS_BoxeR");
       i.setMaxWtu(60);
-      i.setCurWtu(0);
       i.setOffice(new Location());
-      i.setFairness(1);
       i.setDisability(false);
-      i.setGenerosity(1);
-      i.setAvailability(new WeekAvail());
       i.setCoursePreferences(coursePreferences);
       i.settPrefs(new HashMap<Integer, LinkedHashMap<Integer, TimePreference>>());
       i.setItemsTaught(itemsTaught);

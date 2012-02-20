@@ -48,12 +48,8 @@ public class InstructorDB extends AbstractDatabase<Instructor>
       fields.put(LASTNAME, data.getLastName());
       fields.put(USERID, data.getUserID());
       fields.put(MAXWTU, data.getMaxWtu());
-      fields.put(CURWTU, data.getCurWtu());
       fields.put(OFFICE, sqldb.serialize(data.getOffice()));
-      fields.put(FAIRNESS, data.getFairness());
       fields.put(DISABILITY, data.getDisability());
-      fields.put(GENEROSITY, data.getGenerosity());
-      fields.put(AVAILABILITY, sqldb.serialize(data.getAvailability()));
       fields.put(COURSEPREFERENCES,
             sqldb.serialize(data.getCoursePreferences()));
       fields.put(TPREFS, sqldb.serialize(data.gettPrefs()));
@@ -81,23 +77,11 @@ protected Instructor make(ResultSet rs)
          int maxwtu = rs.getInt(MAXWTU);
          toAdd.setMaxWtu(maxwtu);
 
-         int curwtu = rs.getInt(CURWTU);
-         toAdd.setCurWtu(curwtu);
-
          byte[] officeBuf = rs.getBytes(OFFICE);
          toAdd.setOffice((Location) sqldb.deserialize(officeBuf));
 
-         int fairness = rs.getInt(FAIRNESS);
-         toAdd.setFairness(fairness);
-
          boolean disability = rs.getBoolean(DISABILITY);
          toAdd.setDisability(disability);
-
-         int generosity = rs.getInt(GENEROSITY);
-         toAdd.setGenerosity(generosity);
-
-         byte[] availBuf = rs.getBytes(AVAILABILITY);
-         toAdd.setAvailability((WeekAvail) sqldb.deserialize(availBuf));
 
          byte[] coursePrefBuf = rs.getBytes(COURSEPREFERENCES);
          toAdd.setCoursePreferences((HashMap<Integer, Integer>) sqldb
