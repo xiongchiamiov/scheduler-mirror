@@ -108,7 +108,8 @@ public class CSVExporter {
 					instructor.getLastName(),
 					instructor.getUserID(),
 					Integer.toString(instructor.getMaxWTU()),
-					Integer.toString(instructor.getCurWtu()),
+					//NOTE: we're removing this
+					//Integer.toString(instructor.getCurWtu()),
 
 			//		Integer.toString(instructor.getFairness()),   
 			//TODO  Note: Removed Office/Officeroom
@@ -123,7 +124,8 @@ public class CSVExporter {
 					instructor.getLastName(),
 					instructor.getUserID(),
 					Integer.toString(instructor.getMaxWTU()),
-					Integer.toString(instructor.getCurWtu()),
+					//NOTE: being removed
+					//Integer.toString(instructor.getCurWtu()),
 			//		Integer.toString(instructor.getFairness()),   
 		    //TODO  Removed Office/Officeroom
 					Boolean.toString(instructor.getDisability()),
