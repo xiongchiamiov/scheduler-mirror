@@ -89,7 +89,7 @@ public class Model {
 	
 	// SCHEDULES
 	
-	public Schedule insertSchedule(Document containingDocument) {
+	public Schedule assembleSchedule(Document containingDocument) {
 		return new Schedule(database.assembleSchedule(containingDocument.underlyingDocument));
 	}
 	
