@@ -91,7 +91,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	Map<Integer, Instructor> getInstructorsByID() {
 		Map<Integer, Instructor> result = new HashMap<Integer, Instructor>();
 		for (Instructor instructor : model.getInstructors()) {
-			System.out.println("Reading instructor, prefs:");
+			System.out.println("Reading instructor, prefs: " + instructor.toString());
 			for (Entry<Integer, Integer> entry : instructor.getCoursePreferences().entrySet())
 				System.out.println("Course id " + entry.getKey() + " pref: " + entry.getValue());
 			result.put(instructor.getDbid(), instructor);
@@ -126,7 +126,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	public ArrayList<ScheduleItemGWT> generateSchedule(List<CourseGWT> courses, HashMap<String, ScheduleItemGWT> scheduleItems) {
 		Course courseWithSections;
 		Schedule schedule = model.getSchedule();
-		//Instructor ins;
+		Instructor ins;
+		Location loc;
 		
 		assert (model != null);
 		scheduleItems = new HashMap<String, ScheduleItemGWT>();
@@ -136,17 +137,6 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 			courseWithSections = Conversion.fromGWT(course);
 			coursesToGenerate.add(courseWithSections);
 		}
-		
-		/*List<Instructor> insToGenerate = new LinkedList<Instructor>();
-		for (InstructorGWT instructor: getInstructors()) {
-			//ins = Conversion.fromGWT(instructor, getCoursesByID());
-			//insToGenerate.add(ins);
-		}
-		
-		schedule.setiSourceList(insToGenerate); */
-		
-		//TODO convert locations from gwt and set it to schedule's lSourceList as above
-	
 		
 		// TODO: fix this hack.
 		for (Course course : coursesToGenerate) {
@@ -159,6 +149,34 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 			}
 		}
 
+//		List<Location> locToGenerate = new LinkedList<Location>();
+//		
+//		for (LocationGWT location: getLocations()) {
+//			//if(instructor == null) 
+//				//System.out.println("Instructor from gwt before conversion is null");
+//
+//			loc = Conversion.fromGWT(location);
+//			//if(loc == null)
+//				//System.out.println("Null instructor ins after gwt conversion");
+//			locToGenerate.add(loc);
+//		}
+//		
+//		schedule.setlSourceList(locToGenerate); 
+//		
+//		List<Instructor> insToGenerate = new LinkedList<Instructor>();
+//		
+//		for (InstructorGWT instructor: getInstructors()) {
+//			if(instructor == null) 
+//				System.out.println("Instructor from gwt before conversion is null");
+//
+//			ins = Conversion.fromGWT(instructor, getCoursesByID());
+//			if(ins == null)
+//				System.out.println("Null instructor ins after gwt conversion");
+//			insToGenerate.add(ins);
+//		}
+//		
+//		schedule.setiSourceList(insToGenerate); 
+		
 		schedule.generate(coursesToGenerate);
 
 		ArrayList<ScheduleItemGWT> gwtItems = new ArrayList<ScheduleItemGWT>();
