@@ -100,21 +100,17 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	@Override
 	public InstructorGWT addInstructorToDocument(int documentID, InstructorGWT instructor) throws NotFoundExceptionGWT {
 		assert(instructor.getID() == -1);
-		//Instructor ins;
 		
-		
-		int id;
 		try {
 			Document document = model.findDocumentByID(documentID);
-			id = Conversion.insertInstructorFromGWT(model, document, instructor).getID();
+			int id = model.insertInstructor(Conversion.instructorFromGWT(model, document, instructor)).getID();
+			instructor.setID(id);
+			return instructor;
 		} catch (NotFoundException e) {
 			e.printStackTrace();
 			throw new NotFoundExceptionGWT();
 		}
 		
-		instructor.setID(id);
-	
-		return instructor;
 	}
 
 	@Override
@@ -160,18 +156,17 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	public LocationGWT addLocationToDocument(int documentID, LocationGWT location) throws NotFoundExceptionGWT {
 		assert(location.getID() == -1);
 
-		int id;
 		try {
-			id = model.insertLocation(
+			int id = model.insertLocation(
+					model.createLocation(
 					model.findDocumentByID(documentID),
-					location.getRoom(), location.getType(), location.getRawMaxOccupancy(), location.getEquipment()).getID();
+					location.getRoom(), location.getType(), location.getRawMaxOccupancy(), location.getEquipment())).getID();
+			location.setID(id);
+			return location;
 		} catch (NotFoundException e) {
 			e.printStackTrace();
 			throw new NotFoundExceptionGWT();
 		}
-		location.setID(id);
-		
-		return location;
 	}
 
 	@Override
@@ -239,7 +234,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 
 	@Override
 	public DocumentGWT createDocument(String newDocName) {
-		Document newOriginalDocument = model.insertDocument(newDocName);
+		Document newOriginalDocument = model.createDocument(newDocName);
+		model.insertDocument(newOriginalDocument);
 		return Conversion.documentToGWT(newOriginalDocument);
 	}
 
@@ -427,7 +423,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	@Override
 	public ScheduleItemGWT insertScheduleItem(int scheduleID, ScheduleItemGWT scheduleItem) throws NotFoundExceptionGWT {
 		try {
-			ScheduleItem newItem = Conversion.insertScheduleItemFromGWT(model, model.findScheduleByID(scheduleID), scheduleItem);
+			ScheduleItem newItem = Conversion.scheduleItemFromGWT(model, model.findScheduleByID(scheduleID), scheduleItem);
+			model.insertScheduleItem(newItem);
 			scheduleItem.setID(newItem.getID());
 			return scheduleItem;
 		} catch (NotFoundException e) {

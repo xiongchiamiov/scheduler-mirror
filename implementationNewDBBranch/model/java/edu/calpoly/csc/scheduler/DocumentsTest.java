@@ -12,20 +12,20 @@ public abstract class DocumentsTest extends ModelTestCase {
 	public void testInsertDocument() {
 		Model model = createBlankModel();
 
-		model.insertDocument("doc1");
+		model.insertDocument(model.createDocument("doc1"));
 	}
 	
 	public void testInsertDocuments() {
 		Model model = createBlankModel();
 		
-		model.insertDocument("doc1");
-		model.insertDocument("doc2");
+		model.insertDocument(model.createDocument("doc1"));
+		model.insertDocument(model.createDocument("doc2"));
 	}
 
 	public void testInsertAndFindDocument() throws NotFoundException {
 		Model model = createBlankModel();
 
-		int documentID = model.insertDocument("doc1").getID();
+		int documentID = model.insertDocument(model.createDocument("doc1")).getID();
 		
 		Document foundDocument = model.findDocumentByID(documentID);
 
@@ -38,7 +38,8 @@ public abstract class DocumentsTest extends ModelTestCase {
 		int documentID;
 		
 		{
-			Document document = model.insertDocument("doc1");
+			Document document = model.createDocument("doc1");
+			model.insertDocument(document);
 			document.setName("doc1renamed");
 			documentID = document.getID();
 			
@@ -57,7 +58,7 @@ public abstract class DocumentsTest extends ModelTestCase {
 		int documentID;
 		
 		{
-			Document document = model.insertDocument("doc1");
+			Document document = model.insertDocument(model.createDocument("doc1"));
 			documentID = document.getID();
 			model.deleteDocument(document);
 		}
@@ -74,8 +75,8 @@ public abstract class DocumentsTest extends ModelTestCase {
 
 		Set<Integer> docIDs = new HashSet<Integer>();
 		
-		docIDs.add(model.insertDocument("doc1").getID());
-		docIDs.add(model.insertDocument("doc2").getID());
+		docIDs.add(model.insertDocument(model.createDocument("doc1")).getID());
+		docIDs.add(model.insertDocument(model.createDocument("doc2")).getID());
 		
 		Collection<Document> docs = model.findAllDocuments();
 		for (Document returnedDoc : docs) {

@@ -9,10 +9,10 @@ public class Course {
 	IDBCourse underlyingCourse;
 	Set<String> usedEquipment;
 	Collection<Set<Day>> dayPatterns;
-	int lectureID;
-	boolean tetheredToLecture;
+	Integer lectureID;
+	Boolean tetheredToLecture;
 	
-	Course(IDBCourse underlyingCourse, Set<String> usedEquipment, Collection<Set<Day>> dayPatterns, int lectureID, boolean tetheredTolecture) {
+	Course(IDBCourse underlyingCourse, Set<String> usedEquipment, Collection<Set<Day>> dayPatterns, Integer lectureID, Boolean tetheredTolecture) {
 		this.underlyingCourse = underlyingCourse;
 		this.usedEquipment = usedEquipment;
 		this.dayPatterns = dayPatterns;

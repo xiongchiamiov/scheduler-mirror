@@ -99,8 +99,8 @@ public abstract class Conversion {
 
 	}
 	
-	public static Instructor insertInstructorFromGWT(Model model, Document document, InstructorGWT instructor) {
-		return model.insertInstructor(
+	public static Instructor instructorFromGWT(Model model, Document document, InstructorGWT instructor) {
+		return model.createInstructor(
 				document,
 				instructor.getFirstName(),
 				instructor.getLastName(),
@@ -269,10 +269,10 @@ public abstract class Conversion {
 				startHalfHour, endHalfHour, itemOldGWT.isPlaced(), itemOldGWT.isConflicted());
 	}
 
-	public static ScheduleItem insertScheduleItemFromGWT(Model model, Schedule schedule, ScheduleItemGWT source) throws NotFoundException {
+	public static ScheduleItem scheduleItemFromGWT(Model model, Schedule schedule, ScheduleItemGWT source) throws NotFoundException {
 		Set<Day> dayPattern = dayPatternFromGWT(source.getDays());
 		
-		return model.insertScheduleItem(
+		return model.createScheduleItem(
 				schedule,
 				model.findCourseByID(source.getCourseID()),
 				model.findInstructorByID(source.getInstructorID()),
