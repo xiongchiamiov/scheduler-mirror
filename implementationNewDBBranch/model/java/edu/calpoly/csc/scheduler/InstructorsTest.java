@@ -120,10 +120,11 @@ public abstract class InstructorsTest extends ModelTestCase {
 	public void testDeleteInstructor() throws Exception {
 		Model model = createBlankModel();
 
+		Document doc;
 		int instructorID;
 		
 		{
-			Document doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
+			doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
 			Instructor ins = model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", new HashMap<Day, HashMap<Integer,Integer>>(), new HashMap<Integer, Integer>()));
 			instructorID = ins.getID();
 			model.deleteInstructor(ins);
@@ -134,6 +135,8 @@ public abstract class InstructorsTest extends ModelTestCase {
 			assert(false); // should have failed
 		}
 		catch (NotFoundException e) { }
+		
+		model.deleteDocument(doc);
 		
 		assert(model.isEmpty());
 	}
