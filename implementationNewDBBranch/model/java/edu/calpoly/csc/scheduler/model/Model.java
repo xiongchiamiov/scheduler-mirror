@@ -613,4 +613,8 @@ public class Model {
 		database.setScheduleItemLocation(item.underlying, database.findLocationByID(item.getLocationID()));
 		database.updateScheduleItem(item.underlying);
 	}
+	
+	public boolean isEmpty() {
+		return database.isEmpty();
+	}
 }

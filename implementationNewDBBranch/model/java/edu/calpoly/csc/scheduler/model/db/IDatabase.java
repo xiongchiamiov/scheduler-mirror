@@ -142,4 +142,7 @@ public interface IDatabase {
 	void deleteOfferedDayPattern(IDBOfferedDayPattern offered);
 	IDBOfferedDayPattern assembleOfferedDayPattern(IDBCourse underlying, IDBDayPattern dayPattern);
 	void insertOfferedDayPattern(IDBOfferedDayPattern pattern);
+	
+	// For testing
+	boolean isEmpty();
 }

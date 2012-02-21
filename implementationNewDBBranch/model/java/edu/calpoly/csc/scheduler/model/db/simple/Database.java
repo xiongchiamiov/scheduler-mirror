@@ -83,6 +83,8 @@ public class Database implements IDatabase {
 			objectsByID.put(object.id, object);
 			System.out.println("Updated " + object.getClass().getName() + " id " + object.id);
 		}
+
+		public boolean isEmpty() { return objectsByID.isEmpty(); }
 	}
 
 	SimpleTable<DBUser> userTable;
@@ -463,17 +465,17 @@ public class Database implements IDatabase {
 
 	@Override
 	public Map<IDBCourse, IDBCoursePreference> findCoursePreferencesByCourseForInstructor(IDBInstructor instructor) {
-		Map<IDBCourse, IDBCoursePreference> result = new HashMap<IDBCourse, IDBCoursePreference>();
-		for (DBCoursePreference coursePref : coursePreferenceTable.getAll()) {
-			if (coursePref.instructorID == instructor.getID()) {
-				try {
+		try {
+			Map<IDBCourse, IDBCoursePreference> result = new HashMap<IDBCourse, IDBCoursePreference>();
+			for (DBCoursePreference coursePref : coursePreferenceTable.getAll()) {
+				if (coursePref.instructorID == instructor.getID()) {
 					result.put(findCourseByID(coursePref.courseID), coursePref);
-				} catch (NotFoundException e) {
-					throw new AssertionError(e);
 				}
 			}
+			return result;
+		} catch (NotFoundException e) {
+			throw new AssertionError(e);
 		}
-		return result;
 	}
 
 	@Override
@@ -794,5 +796,21 @@ public class Database implements IDatabase {
 			String numSections, String type, String maxEnrollment,
 			String numHalfHoursPerWeek, boolean isSchedulable) {
 		return new DBCourse(null, containingDocument.getID(), name, catalogNumber, department, wtu, scu, numSections, type, maxEnrollment, numHalfHoursPerWeek, isSchedulable);
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return userTable.isEmpty()
+				&& documentTable.isEmpty()
+				&& scheduleTable.isEmpty()
+				&& courseTable.isEmpty()
+				&& locationTable.isEmpty()
+				&& instructorTable.isEmpty()
+				&& timePreferenceTable.isEmpty()
+				&& coursePreferenceTable.isEmpty()
+				&& equipmentTypeTable.isEmpty()
+				&& providedEquipmentTable.isEmpty()
+				&& usedEquipmentTable.isEmpty()
+				&& offeredDayPatternTable.isEmpty();
 	}
 }
