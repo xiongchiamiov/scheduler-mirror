@@ -24,7 +24,9 @@ public class Tba extends Location
    
    private Tba ()
    {
-      super (0, 0);
+      super ("TBA", "TBA");
+      setMaxOccupancy(99);
+      setType("Lecture");
    }
    
    public static Tba getTba ()

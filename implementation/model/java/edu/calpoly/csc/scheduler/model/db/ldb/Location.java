@@ -18,7 +18,8 @@ public class Location extends DbData implements Serializable
    
    private static final int      DEFAULT_OCCUPANCY = 30;
    private static final boolean  DEFAULT_ADA       = false;
-
+   private static final String DEFAULT_TYPE = "Lecture";
+   
    /**
     * This class contains the equipment provided at a location.
     */
@@ -43,12 +44,12 @@ public class Location extends DbData implements Serializable
    /**
     * Maximum occupancy of this location.
     */
-   private Integer           maxOccupancy;
+   private Integer           maxOccupancy = DEFAULT_OCCUPANCY;
 
    /**
     * Type of this location.
     */
-   private String            type;
+   private String            type = DEFAULT_TYPE;
 
    /**
     * Provided equipment in this location.
@@ -58,7 +59,7 @@ public class Location extends DbData implements Serializable
    /**
     * Whether this location is compliant to those with disabilities.
     */
-   private Boolean           adaCompliant;
+   private Boolean           adaCompliant = DEFAULT_ADA;
 
    /**
     * Represents a location's availabilty throughout the week.
@@ -469,6 +470,7 @@ public class Location extends DbData implements Serializable
     * @return true if this location has enough seats to support the given
     *         course.
     */
+ //TODO: Support for required equipment and course types
    public boolean providesFor(Course c)
    {
       boolean r = false;
@@ -476,7 +478,7 @@ public class Location extends DbData implements Serializable
       {
          r = true;
       }
-      return false;
+      return r;
    }
 
    public Location getCannedData()
