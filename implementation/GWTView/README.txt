@@ -88,6 +88,16 @@ To enable assertions:
 4. In the VM arguments box, put -ea
 5. Hit apply
 
+Testing 
+-------
+If you get an error about missing jUnit 3 jar, Eclipse knows how to find and add it to your build path. 
+Select the error in the file -> Resolve -> Add jUnit 3 to Build Path
+
+For Selenium Testing 
+Compilation errors with missing jar
+Add [selenium-server-standalone-2.8.0.jar] to the build path. The jar is located in 
+/implementation/test/edu/calpoly/csc/scheduler/view/web/shared/Selenium/jar
+
 Deploy to Server
 ================
 
