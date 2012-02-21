@@ -122,6 +122,7 @@ public interface IDatabase {
 	
 	// Equipment Types
 	IDBEquipmentType findEquipmentTypeByDescription(String equipmentTypeDescription) throws NotFoundException;
+	Collection<IDBEquipmentType> findAllEquipmentTypes();
 	
 	// Used Equipment
 	Map<IDBEquipmentType, IDBUsedEquipment> findUsedEquipmentByEquipmentForCourse(IDBCourse course);

@@ -813,4 +813,12 @@ public class Database implements IDatabase {
 				&& usedEquipmentTable.isEmpty()
 				&& offeredDayPatternTable.isEmpty();
 	}
+
+	@Override
+	public Collection<IDBEquipmentType> findAllEquipmentTypes() {
+		Collection<IDBEquipmentType> result = new LinkedList<IDBEquipmentType>();
+		for (DBEquipmentType derp : equipmentTypeTable.getAll())
+			result.add(derp);
+		return result;
+	}
 }
