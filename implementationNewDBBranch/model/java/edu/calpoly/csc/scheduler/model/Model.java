@@ -60,7 +60,8 @@ public class Model {
 
 	public Document findDocumentByID(int documentID) throws NotFoundException {
 		try {
-			return new Document(database.findDocumentByID(documentID));
+			IDBDocument doc = database.findDocumentByID(documentID);
+			return new Document(doc);
 		}
 		catch (NotFoundException e) {
 			System.out.println("Couldnt find document ID " + documentID);
@@ -79,8 +80,9 @@ public class Model {
 
 	public Collection<Document> findAllDocuments() {
 		Collection<Document> result = new LinkedList<Document>();
-		for (IDBDocument underlying : database.findAllDocuments())
+		for (IDBDocument underlying : database.findAllDocuments()) {
 			result.add(new Document(underlying));
+		}
 		return result;
 	}
 	
@@ -421,7 +423,8 @@ public class Model {
 	}
 
 	public Document findDocumentForCourse(Course course) {
-		return new Document(database.findDocumentForCourse(course.underlyingCourse));
+		IDBDocument underlying = database.findDocumentForCourse(course.underlyingCourse);
+		return new Document(underlying);
 	}
 
 	public User findUserByUsername(String username) throws NotFoundException {
@@ -449,6 +452,8 @@ public class Model {
 		IDBDocument underlying = database.assembleDocument(newName, existingDocument.getStartHalfHour(), existingDocument.getEndHalfHour());
 		database.insertDocument(underlying);
 		Document newDocument = new Document(underlying);
+		
+		
 
 		// Locations
 		Map<Integer, IDBLocation> newDocumentLocationsByExistingDocumentLocationIDs = new HashMap<Integer, IDBLocation>();
@@ -519,6 +524,7 @@ public class Model {
 		for (IDBSchedule existingDocumentSchedule : database.findAllSchedulesForDocument(existingDocument.underlyingDocument)) {
 			IDBSchedule newDocumentSchedule = database.assembleSchedule(newDocument.underlyingDocument);
 			database.insertSchedule(newDocumentSchedule);
+			
 			newDocumentScheduleIDsByExistingDocumentScheduleIDs.put(existingDocumentSchedule.getID(), newDocumentSchedule);
 			
 			// Schedule Items
@@ -554,7 +560,8 @@ public class Model {
 	}
 
 	public Document getOriginalForWorkingCopyDocument(Document workingCopyDocument) throws NotFoundException {
-		return new Document(database.getOriginalForWorkingCopyDocument(workingCopyDocument.underlyingDocument));
+		IDBDocument underlying = database.getOriginalForWorkingCopyDocument(workingCopyDocument.underlyingDocument);
+		return new Document(underlying);
 	}
 
 	public boolean isOriginalDocument(Document doc) {
@@ -579,7 +586,8 @@ public class Model {
 	}
 
 	public Document getDocumentForSchedule(Schedule schedule) throws NotFoundException {
-		return new Document(database.findDocumentForSchedule(schedule.underlyingSchedule));
+		IDBDocument underlying = database.findDocumentForSchedule(schedule.underlyingSchedule);
+		return new Document(underlying);
 	}
 
 	public ScheduleItem assembleScheduleItem(Schedule schedule, Course course,

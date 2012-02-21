@@ -134,6 +134,8 @@ public abstract class InstructorsTest extends ModelTestCase {
 			assert(false); // should have failed
 		}
 		catch (NotFoundException e) { }
+		
+		assert(model.isEmpty());
 	}
 	
 	public void testFindAllInstructorsForDocument() {

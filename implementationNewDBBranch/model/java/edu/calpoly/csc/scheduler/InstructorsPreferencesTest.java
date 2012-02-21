@@ -15,21 +15,6 @@ public abstract class InstructorsPreferencesTest extends ModelTestCase {
 	private static final int START_HALF_HOUR = 14; // 7am
 	private static final int END_HALF_HOUR = 44; // 10pm
 	
-	private static HashMap<Day, HashMap<Integer, Integer>> createSampleTimePreferences(Document document) {
-		HashMap<Day, HashMap<Integer, Integer>> result = new HashMap<Day, HashMap<Integer, Integer>>();
-		
-		for (Day day : Day.values()) {
-			HashMap<Integer, Integer> prefsInDay = new HashMap<Integer, Integer>();
-			for (int halfHour = document.getStartHalfHour(); halfHour < document.getEndHalfHour(); halfHour++) {
-				int newPref = (day.ordinal() + halfHour) % 5;
-				prefsInDay.put(halfHour, newPref);
-			}
-			result.put(day, prefsInDay);
-		}
-		
-		return result;
-	}
-
 	public void testInsertAndFindInstructorWTimePrefs() throws NotFoundException {
 		Model model = createBlankModel();
 		
@@ -38,7 +23,7 @@ public abstract class InstructorsPreferencesTest extends ModelTestCase {
 		{
 			Document doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
 			
-			HashMap<Day, HashMap<Integer, Integer>> timePrefs = createSampleTimePreferences(doc);
+			HashMap<Day, HashMap<Integer, Integer>> timePrefs = ModelTestUtility.createSampleTimePreferences(doc);
 			
 			instructorID = model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", timePrefs, new HashMap<Integer, Integer>())).getID();
 		}
@@ -66,7 +51,7 @@ public abstract class InstructorsPreferencesTest extends ModelTestCase {
 			
 			HashMap<Integer, Integer> coursePrefs = new HashMap<Integer, Integer>();
 			coursePrefs.put(courseID1, 2);
-			coursePrefs.put(courseID1, 3);
+			coursePrefs.put(courseID2, 3);
 			
 			instructorID = model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", new HashMap<Day, HashMap<Integer,Integer>>(), coursePrefs)).getID();
 		}
@@ -76,4 +61,20 @@ public abstract class InstructorsPreferencesTest extends ModelTestCase {
 		assert(found.getCoursePreferences().get(courseID2).equals(3));
 	}
 
+	public void testUtilityInstructorEquals() {
+		Model model = createBlankModel();
+		Document doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
+		
+		Instructor ins1 = ModelTestUtility.insertInstructorWPrefs(model, doc);
+		
+		Instructor ins2 = ModelTestUtility.insertInstructorWPrefs(model, doc);
+		
+		assert(ModelTestUtility.instructorsContentsEqual(ins1, ins2));
+		
+		ins1.getTimePreferences().put(Day.FRIDAY, new HashMap<Integer, Integer>());
+		ins1.getTimePreferences().get(Day.FRIDAY).put(10, 4);
+
+		assert(!ModelTestUtility.instructorsContentsEqual(ins1, ins2));
+	}
+	
 }

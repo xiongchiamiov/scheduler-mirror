@@ -1,7 +1,5 @@
 package edu.calpoly.csc.scheduler.model;
 
-import java.util.Collection;
-
 import edu.calpoly.csc.scheduler.model.db.IDBDocument;
 
 public class Document {
