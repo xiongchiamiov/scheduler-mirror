@@ -700,4 +700,19 @@ public class Database implements IDatabase {
 	public IDBDocument findDocumentForSchedule(IDBSchedule schedule) throws NotFoundException {
 		return documentTable.findByID(((DBSchedule)schedule).documentID);
 	}
+
+	@Override
+	public void setScheduleItemCourse(IDBScheduleItem rawItem, IDBCourse course) {
+		((DBScheduleItem)rawItem).courseID = course.getID();
+	}
+
+	@Override
+	public void setScheduleItemLocation(IDBScheduleItem rawItem, IDBLocation location) {
+		((DBScheduleItem)rawItem).locationID = location.getID();
+	}
+
+	@Override
+	public void setScheduleItemInstructor(IDBScheduleItem rawItem, IDBInstructor instructor) {
+		((DBScheduleItem)rawItem).courseID = instructor.getID();
+	}
 }

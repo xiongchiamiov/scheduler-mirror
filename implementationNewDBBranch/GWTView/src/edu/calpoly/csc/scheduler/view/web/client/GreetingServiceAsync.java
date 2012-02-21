@@ -117,7 +117,7 @@ public interface GreetingServiceAsync {
 			AsyncCallback<Void> callback);
 	
 	/**
-	 * Generates schedule items for all of the remaining courses.
+	 * Generates schedule items for all of the schedulable unscheduled courses.
 	 * This function uses the deprecated type OldScheduleItemGWT, which soon
 	 * isn't going to be supported. The new function is generateRestOfSchedule below,
 	 * which returns the new ScheduleItemGWT. This function is here as an
@@ -144,15 +144,46 @@ public interface GreetingServiceAsync {
 	
 	
 	
-	
+	/**
+	 * Inserts a new schedule item into the schedule with the given ID.
+	 * @param scheduleID
+	 * @param scheduleItem this item's ID must be negative.
+	 * @param callback
+	 * @return The new schedule item. Should contain all the same information
+	 * as scheduleItem but with the ID set.
+	 */
 	void insertScheduleItem(int scheduleID, ScheduleItemGWT scheduleItem,
-			AsyncCallback<Void> callback);
+			AsyncCallback<ScheduleItemGWT> callback);
+	
+	/**
+	 * Generates schedule items for all unscheduled schedulable courses.
+	 * @param scheduleID
+	 * @param callback
+	 */
 	void generateRestOfSchedule(int scheduleID,
 			AsyncCallback<Collection<ScheduleItemGWT>> callback);
+	
+	/**
+	 * Updates the schedule item with the same item ID to the new values.
+	 * @param itemGWT
+	 * @param callback
+	 */
 	void updateScheduleItem(ScheduleItemGWT itemGWT,
 			AsyncCallback<Void> callback);
+	
+	/**
+	 * Gets all schedule items in the schedule with id scheduleID.
+	 * @param scheduleID
+	 * @param callback
+	 */
 	void getScheduleItems(int scheduleID,
 			AsyncCallback<Collection<ScheduleItemGWT>> callback);
+	
+	/**
+	 * Removes the schedule item with the given id.
+	 * @param itemGWT
+	 * @param callback
+	 */
 	void newRemoveScheduleItem(ScheduleItemGWT itemGWT,
 			AsyncCallback<Void> callback);
 }

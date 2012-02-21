@@ -122,4 +122,8 @@ public interface IDatabase {
 			IDBInstructor instructor, IDBLocation location, int section,
 			Set<Day> days, int startHalfHour, int endHalfHour,
 			boolean isPlaced, boolean isConflicted);
+	void setScheduleItemCourse(IDBScheduleItem underlying, IDBCourse findCourseByID);
+	void setScheduleItemLocation(IDBScheduleItem underlying, IDBLocation findLocationByID);
+	void setScheduleItemInstructor(IDBScheduleItem underlying,
+			IDBInstructor findInstructorByID);
 }

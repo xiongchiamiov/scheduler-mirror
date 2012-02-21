@@ -242,8 +242,31 @@ public abstract class Conversion {
 		result.setConflicted(itemOldGWT.isConflicted());
 	}
 	
-	public static void insertScheduleItemFromOldGWT(OldScheduleItemGWT itemOldGWT, Collection<Instructor> instructors, Collection<Location> locations) {
+	public static void insertScheduleItemFromOldGWT(Model model, OldScheduleItemGWT itemOldGWT, Collection<Instructor> instructors, Collection<Location> locations) {
+		Set<DayGWT> days = new TreeSet<DayGWT>();
+		for (int integer : itemOldGWT.getDayNums())
+			days.add(DayGWT.values()[integer]);
+
+		int startHalfHour = itemOldGWT.getStartTimeHour() * 2 + itemOldGWT.getStartTimeMin() / 30;
+		int endHalfHour = itemOldGWT.getEndTimeHour() * 2 + itemOldGWT.getEndTimeMin() / 30;
 		
+		int courseID = itemOldGWT.getCourse().getID();
+		
+		int instructorID = -1;
+		for (Instructor instructor : instructors)
+			if (instructor.getUsername().equals(itemOldGWT.getProfessor()))
+				instructorID = instructor.getID();
+		assert(instructorID >= 0);
+		
+		int locationID = -1;
+		for (Location location : locations)
+			if (location.getRoom().equals(itemOldGWT.getProfessor()))
+				locationID = location.getID();
+		assert(locationID >= 0);
+		
+		ScheduleItemGWT itemGWT = new ScheduleItemGWT(
+				-1, courseID, instructorID, locationID, itemOldGWT.getSection(), days,
+				startHalfHour, endHalfHour, itemOldGWT.isPlaced(), itemOldGWT.isConflicted());
 	}
 
 	public static ScheduleItem insertScheduleItemFromGWT(Model model, Schedule schedule, ScheduleItemGWT source) throws NotFoundException {
@@ -265,6 +288,18 @@ public abstract class Conversion {
 	public static ScheduleItemGWT scheduleItemToGWT(ScheduleItem item) {
 		Set<DayGWT> pattern = dayPatternToGWT(item.getDays());
 		return new ScheduleItemGWT(item.getID(), item.getCourseID(), item.getInstructorID(), item.getLocationID(), item.getSection(), pattern, item.getStartHalfHour(), item.getEndHalfHour(), item.isPlaced(), item.isConflicted());
+	}
+
+	public static void readScheduleItemFromGWT(ScheduleItemGWT itemGWT, ScheduleItem item) {
+		item.setCourseID(itemGWT.getCourseID());
+		item.setDays(Conversion.dayPatternFromGWT(itemGWT.getDays()));
+		item.setEndHalfHour(itemGWT.getEndHalfHour());
+		item.setInstructorID(itemGWT.getInstructorID());
+		item.setIsConflicted(itemGWT.isConflicted());
+		item.setIsPlaced(itemGWT.isPlaced());
+		item.setLocationID(itemGWT.getLocationID());
+		item.setSection(itemGWT.getSection());
+		item.setStartHalfHour(itemGWT.getStartHalfHour());
 	}
 
 //	public static Instructor fromGWT(InstructorGWT instructor, Map<Integer, Course> coursesByID) {

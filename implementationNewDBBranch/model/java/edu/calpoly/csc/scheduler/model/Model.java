@@ -563,4 +563,20 @@ public class Model {
 	public void deleteScheduleItem(ScheduleItem item) {
 		database.deleteScheduleItem(item.underlying);
 	}
+
+	public ScheduleItem findScheduleItemByID(int id) throws NotFoundException {
+		IDBScheduleItem underlying = database.findScheduleItemByID(id);
+		return new ScheduleItem(
+				underlying,
+				database.getScheduleItemCourse(underlying).getID(),
+				database.getScheduleItemLocation(underlying).getID(),
+				database.getScheduleItemInstructor(underlying).getID());
+	}
+
+	public void updateScheduleItem(ScheduleItem item) throws NotFoundException {
+		database.setScheduleItemCourse(item.underlying, database.findCourseByID(item.getCourseID()));
+		database.setScheduleItemInstructor(item.underlying, database.findInstructorByID(item.getInstructorID()));
+		database.setScheduleItemLocation(item.underlying, database.findLocationByID(item.getLocationID()));
+		database.updateScheduleItem(item.underlying);
+	}
 }

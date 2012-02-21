@@ -370,7 +370,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			Document document = model.findDocumentByID(documentID);
 			schedule = model.findAllSchedulesForDocument(document).iterator().next();
 			
-			Conversion.insertScheduleItemFromOldGWT(itemOldGWT, model.findInstructorsForDocument(model.getDocumentForSchedule(schedule)), model.findLocationsForDocument(model.getDocumentForSchedule(schedule)));
+			Conversion.insertScheduleItemFromOldGWT(model, itemOldGWT, model.findInstructorsForDocument(model.getDocumentForSchedule(schedule)), model.findLocationsForDocument(model.getDocumentForSchedule(schedule)));
 //			ScheduleItem item = Conversion.insertScheduleItemFromGWT(model, schedule, itemGWT);
 		} catch (NotFoundException e) {
 			e.printStackTrace();
@@ -425,33 +425,56 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	
 	
 	@Override
-	public void insertScheduleItem(int scheduleID, ScheduleItemGWT scheduleItem) throws NotFoundExceptionGWT {
-		// going to implement this in the next few hours - eo
-		throw new UnsupportedOperationException();
+	public ScheduleItemGWT insertScheduleItem(int scheduleID, ScheduleItemGWT scheduleItem) throws NotFoundExceptionGWT {
+		try {
+			ScheduleItem newItem = Conversion.insertScheduleItemFromGWT(model, model.findScheduleByID(scheduleID), scheduleItem);
+			scheduleItem.setID(newItem.getID());
+			return scheduleItem;
+		} catch (NotFoundException e) {
+			e.printStackTrace();
+			throw new NotFoundExceptionGWT();
+		}
 	}
 
 	@Override
 	public Collection<ScheduleItemGWT> generateRestOfSchedule(int scheduleID) {
-		// going to implement this in the next few hours - eo
+		// need to hook this up to the algorithm once we've moved it over
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void updateScheduleItem(ScheduleItemGWT itemGWT) throws NotFoundExceptionGWT {
-		// going to implement this in the next few hours - eo
-		throw new UnsupportedOperationException();
+		try {
+			ScheduleItem item = model.findScheduleItemByID(itemGWT.getID());
+			Conversion.readScheduleItemFromGWT(itemGWT, item);
+			model.updateScheduleItem(item);
+		} catch (NotFoundException e) {
+			e.printStackTrace();
+			throw new NotFoundExceptionGWT();
+		}
 	}
 
 	@Override
 	public void newRemoveScheduleItem(ScheduleItemGWT itemGWT) throws NotFoundExceptionGWT {
-		// going to implement this in the next few hours - eo
-		throw new UnsupportedOperationException();
+		try {
+			model.deleteScheduleItem(model.findScheduleItemByID(itemGWT.getID()));
+		} catch (NotFoundException e) {
+			e.printStackTrace();
+			throw new NotFoundExceptionGWT();
+		}
 	}
 
 	@Override
 	public Collection<ScheduleItemGWT> getScheduleItems(int scheduleID) throws NotFoundExceptionGWT {
-		// going to implement this in the next few hours - eo
-		throw new UnsupportedOperationException();
+		try {
+			Collection<ScheduleItemGWT> result = new LinkedList<ScheduleItemGWT>();
+			for (ScheduleItem item : model.findAllScheduleItemsForSchedule(model.findScheduleByID(scheduleID)))
+				result.add(Conversion.scheduleItemToGWT(item));
+			return result;
+		} catch (NotFoundException e) {
+			e.printStackTrace();
+			throw new NotFoundExceptionGWT();
+		}
 	}
 
 	
