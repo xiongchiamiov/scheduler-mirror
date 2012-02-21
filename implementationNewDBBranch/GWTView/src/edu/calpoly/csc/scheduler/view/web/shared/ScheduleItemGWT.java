@@ -17,6 +17,8 @@ public class ScheduleItemGWT implements Serializable {
 	private boolean placed;
 	private boolean conflicted;
 	
+	public ScheduleItemGWT() { }
+	
 	public ScheduleItemGWT(int id, int courseID, int instructorID, int locationID,
 			int section, Set<DayGWT> days, int startHalfHour, int endHalfHour,
 			boolean placed, boolean conflicted) {
