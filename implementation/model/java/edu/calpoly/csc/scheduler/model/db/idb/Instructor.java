@@ -62,7 +62,7 @@ public class Instructor extends DbData implements Comparable<Instructor>, Serial
     * Whether or not the instructor has a disability.
     * 
     **/
-   private Boolean disability;
+   private Boolean disability = false;
 
    /**
     * The generosity of the instructors scheduler.
