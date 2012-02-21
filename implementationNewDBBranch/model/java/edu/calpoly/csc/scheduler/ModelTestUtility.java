@@ -43,6 +43,46 @@ public class ModelTestUtility {
 		return model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", new HashMap<Day, HashMap<Integer,Integer>>(), coursePrefs));
 	}
 	
+	public static boolean coursesContentsEqual(Course a, Course b) {
+		if (!a.getCatalogNumber().equals(b.getCatalogNumber()))
+			return false;
+		if (!a.getDayPatterns().equals(b.getDayPatterns()))
+			return false;
+		if (!a.getDepartment().equals(b.getDepartment()))
+			return false;
+		if (a.getLectureID() != b.getLectureID())
+			return false;
+		if (!a.getMaxEnrollment().equals(b.getMaxEnrollment()))
+			return false;
+		if (!a.getName().equals(b.getName()))
+			return false;
+		if (!a.getNumHalfHoursPerWeek().equals(b.getNumHalfHoursPerWeek()))
+			return false;
+		if (!a.getNumSections().equals(b.getNumSections()))
+			return false;
+		if (!a.getSCU().equals(b.getSCU()))
+			return false;
+		if (!a.getType().equals(b.getType()))
+			return false;
+		if (!a.getUsedEquipment().equals(b.getUsedEquipment()))
+			return false;
+		if (!a.getWTU().equals(b.getWTU()))
+			return false;
+		return true;
+	}
+	
+	public static boolean locationsContentsEqual(Location a, Location b) {
+		if (!a.getMaxOccupancy().equals(b.getMaxOccupancy()))
+			return false;
+		if (!a.getProvidedEquipment().equals(b.getProvidedEquipment()))
+			return false;
+		if (!a.getRoom().equals(b.getRoom()))
+			return false;
+		if (!a.getType().equals(b.getType()))
+			return false;
+		return true;
+	}
+	
 	public static boolean instructorsContentsEqual(Instructor a, Instructor b) {
 		if (!a.getFirstName().equals(b.getFirstName()))
 			return false;
