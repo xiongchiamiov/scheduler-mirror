@@ -46,7 +46,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 
 		int id;
 		try {
-			id = Conversion.insertCourseFromGWT(model, model.findDocumentByID(documentID), course).getID();
+			id = model.insertCourse(Conversion.courseFromGWT(model, model.findDocumentByID(documentID), course)).getID();
 		} catch (NotFoundException e) {
 			e.printStackTrace();
 			throw new NotFoundExceptionGWT();
@@ -158,7 +158,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 
 		try {
 			int id = model.insertLocation(
-					model.createLocation(
+					model.assembleLocation(
 					model.findDocumentByID(documentID),
 					location.getRoom(), location.getType(), location.getRawMaxOccupancy(), location.getEquipment())).getID();
 			location.setID(id);
@@ -218,7 +218,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			return model.findUserByUsername(username).getID();
 		}
 		catch (NotFoundException e) {
-			return model.createUser(username).getID();
+			return model.assembleUser(username).getID();
 		}
 	}
 
@@ -234,7 +234,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 
 	@Override
 	public DocumentGWT createDocument(String newDocName) {
-		Document newOriginalDocument = model.createDocument(newDocName);
+		Document newOriginalDocument = model.assembleDocument(newDocName, 14, 44);
 		model.insertDocument(newOriginalDocument);
 		return Conversion.documentToGWT(newOriginalDocument);
 	}
@@ -366,8 +366,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			Document document = model.findDocumentByID(documentID);
 			schedule = model.findAllSchedulesForDocument(document).iterator().next();
 			
-			Conversion.insertScheduleItemFromOldGWT(model, itemOldGWT, model.findInstructorsForDocument(model.getDocumentForSchedule(schedule)), model.findLocationsForDocument(model.getDocumentForSchedule(schedule)));
-//			ScheduleItem item = Conversion.insertScheduleItemFromGWT(model, schedule, itemGWT);
+			model.insertScheduleItem(Conversion.scheduleItemFromGWT(model, schedule, Conversion.scheduleItemGWTFromOldGWT(model, itemOldGWT, model.findInstructorsForDocument(model.getDocumentForSchedule(schedule)), model.findLocationsForDocument(model.getDocumentForSchedule(schedule)))));
 		} catch (NotFoundException e) {
 			e.printStackTrace();
 			throw new NotFoundExceptionGWT();

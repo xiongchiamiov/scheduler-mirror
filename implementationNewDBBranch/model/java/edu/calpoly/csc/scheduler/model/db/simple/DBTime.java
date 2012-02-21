@@ -41,4 +41,9 @@ public class DBTime extends DBObject implements IDBTime {
 	public void setHalfHour(int halfHour) {
 		this.id = idFromDayAndHalfHour(getDay(), halfHour);
 	}
+	
+	@Override
+	public boolean equals(Object obj) { return ((DBTime)obj).id == id; }
+	@Override
+	public int hashCode() { return id; }
 }

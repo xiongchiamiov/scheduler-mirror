@@ -6,4 +6,10 @@ public interface IDBDocument extends IDBObject {
 	
 	public boolean isTrashed();
 	public void setIsTrashed(boolean isTrashed);
+	
+	public int getStartHalfHour();
+	public void setStartHalfHour(int halfHour);
+	
+	public int getEndHalfHour();
+	public void setEndHalfHour(int halfHour);
 }

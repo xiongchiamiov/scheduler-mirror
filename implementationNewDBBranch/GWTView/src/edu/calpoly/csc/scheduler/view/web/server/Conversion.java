@@ -77,30 +77,29 @@ public abstract class Conversion {
 				instructor.getCoursePreferences());
 	}
 	
-	public static Course insertCourseFromGWT(Model model, Document document, CourseGWT course) {
+	public static Course courseFromGWT(Model model, Document document, CourseGWT course) {
 		Collection<Set<Day>> modelDayPatterns = new LinkedList<Set<Day>>();
 		for (Set<DayGWT> gwtDayPattern : course.getDayPatterns())
 			modelDayPatterns.add(dayPatternFromGWT(gwtDayPattern));
 		
-		return model.insertCourse(
-			document,
-			course.getCourseName(),
-			course.getCatalogNum(),
-			course.getDept(),
-			course.getWtu(),
-			course.getScu(),
-			course.getRawNumSections(),
-			course.getType(),
-			course.getMaxEnroll(),
-			course.getHalfHoursPerWeek(),
-			course.getUsedEquipment(),
-			modelDayPatterns,
-			course.isSchedulable());
-
+		return model.assembleCourse(
+						document,
+						course.getCourseName(),
+						course.getCatalogNum(),
+						course.getDept(),
+						course.getWtu(),
+						course.getScu(),
+						course.getRawNumSections(),
+						course.getType(),
+						course.getMaxEnroll(),
+						course.getHalfHoursPerWeek(),
+						course.getUsedEquipment(),
+						modelDayPatterns,
+						course.isSchedulable());
 	}
 	
 	public static Instructor instructorFromGWT(Model model, Document document, InstructorGWT instructor) {
-		return model.createInstructor(
+		return model.assembleInstructor(
 				document,
 				instructor.getFirstName(),
 				instructor.getLastName(),
@@ -242,7 +241,7 @@ public abstract class Conversion {
 		result.setConflicted(itemOldGWT.isConflicted());
 	}
 	
-	public static void insertScheduleItemFromOldGWT(Model model, OldScheduleItemGWT itemOldGWT, Collection<Instructor> instructors, Collection<Location> locations) {
+	public static ScheduleItemGWT scheduleItemGWTFromOldGWT(Model model, OldScheduleItemGWT itemOldGWT, Collection<Instructor> instructors, Collection<Location> locations) {
 		Set<DayGWT> days = new TreeSet<DayGWT>();
 		for (int integer : itemOldGWT.getDayNums())
 			days.add(DayGWT.values()[integer]);
@@ -264,7 +263,7 @@ public abstract class Conversion {
 				locationID = location.getID();
 		assert(locationID >= 0);
 		
-		ScheduleItemGWT itemGWT = new ScheduleItemGWT(
+		return new ScheduleItemGWT(
 				-1, courseID, instructorID, locationID, itemOldGWT.getSection(), days,
 				startHalfHour, endHalfHour, itemOldGWT.isPlaced(), itemOldGWT.isConflicted());
 	}
@@ -272,7 +271,7 @@ public abstract class Conversion {
 	public static ScheduleItem scheduleItemFromGWT(Model model, Schedule schedule, ScheduleItemGWT source) throws NotFoundException {
 		Set<Day> dayPattern = dayPatternFromGWT(source.getDays());
 		
-		return model.createScheduleItem(
+		return model.assembleScheduleItem(
 				schedule,
 				model.findCourseByID(source.getCourseID()),
 				model.findInstructorByID(source.getInstructorID()),

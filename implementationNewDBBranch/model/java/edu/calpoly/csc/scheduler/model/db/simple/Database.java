@@ -137,13 +137,14 @@ public class Database implements IDatabase {
 	}
 
 	@Override
-	public IDBUser createTransientUser(String username, boolean isAdmin) {
+	public IDBUser assembleUser(String username, boolean isAdmin) {
 		return new DBUser(null, username, isAdmin);
 	}
 
 	@Override
 	public void insertUser(IDBUser rawUser) {
 		DBUser user = (DBUser)rawUser;
+		assert(user.id == null);
 		user.id = userTable.insert(new DBUser(user));
 	}
 
@@ -168,13 +169,14 @@ public class Database implements IDatabase {
 	}
 
 	@Override
-	public IDBDocument createTransientDocument(String name) {
-		return new DBDocument(null, name, null);
+	public IDBDocument assembleDocument(String name, int startHalfHour, int endHalfHour) {
+		return new DBDocument(null, name, null, startHalfHour, endHalfHour);
 	}
 
 	@Override
 	public void insertDocument(IDBDocument rawDocument) {
 		DBDocument document = (DBDocument)rawDocument;
+		assert(document.id == null);
 		document.id = documentTable.insert(new DBDocument(document));
 	}
 
@@ -212,13 +214,14 @@ public class Database implements IDatabase {
 	}
 
 	@Override
-	public IDBSchedule createTransientSchedule(IDBDocument containingDocument) {
+	public IDBSchedule assembleSchedule(IDBDocument containingDocument) {
 		return new DBSchedule(null, containingDocument.getID());
 	}
 
 	@Override
 	public void insertSchedule(IDBSchedule rawSchedule) {
 		DBSchedule schedule = (DBSchedule)rawSchedule;
+		assert(schedule.id == null);
 		schedule.id = scheduleTable.insert(new DBSchedule(schedule));
 	}
 
@@ -250,7 +253,7 @@ public class Database implements IDatabase {
 	}
 
 	@Override
-	public IDBScheduleItem createTransientScheduleItem(IDBSchedule schedule, IDBCourse course,
+	public IDBScheduleItem assembleScheduleItem(IDBSchedule schedule, IDBCourse course,
 			IDBInstructor instructor, IDBLocation location, int section, Set<Day> days,
 			int startHalfHour, int endHalfHour, boolean isPlaced, boolean isConflicted) {
 		return new DBScheduleItem(null, schedule.getID(), course.getID(), instructor.getID(), location.getID(), section, days, startHalfHour, endHalfHour, isPlaced, isConflicted);
@@ -259,6 +262,7 @@ public class Database implements IDatabase {
 	@Override
 	public void insertScheduleItem(IDBScheduleItem rawItem) {
 		DBScheduleItem item = (DBScheduleItem)rawItem;
+		assert(item.id == null);
 		item.id = scheduleItemTable.insert(new DBScheduleItem(item));
 	}
 
@@ -287,13 +291,14 @@ public class Database implements IDatabase {
 	}
 
 	@Override
-	public IDBLocation createTransientLocation(IDBDocument containingDocument, String room, String type, String maxOccupancy) {
+	public IDBLocation assembleLocation(IDBDocument containingDocument, String room, String type, String maxOccupancy) {
 		return new DBLocation(null, containingDocument.getID(), room, type, maxOccupancy);
 	}
 
 	@Override
 	public void insertLocation(IDBLocation rawLocation) {
 		DBLocation location = (DBLocation)rawLocation;
+		assert(location.id == null);
 		location.id = locationTable.insert(new DBLocation(new DBLocation(location)));
 	}
 
@@ -337,6 +342,7 @@ public class Database implements IDatabase {
 	@Override
 	public void insertCourse(IDBCourse rawCourse) {
 		DBCourse course = (DBCourse)rawCourse;
+		assert(course.id == null);
 		course.id = courseTable.insert(new DBCourse(new DBCourse(course)));
 	}
 
@@ -370,7 +376,7 @@ public class Database implements IDatabase {
 	}
 
 	@Override
-	public IDBInstructor createTransientInstructor(IDBDocument containingDocument, String firstName, String lastName,
+	public IDBInstructor assembleInstructor(IDBDocument containingDocument, String firstName, String lastName,
 			String username, String maxWTU) {
 		return new DBInstructor(null, containingDocument.getID(), firstName, lastName, username, maxWTU);
 	}
@@ -378,6 +384,7 @@ public class Database implements IDatabase {
 	@Override
 	public void insertInstructor(IDBInstructor rawInstructor) {
 		DBInstructor instructor = (DBInstructor)rawInstructor;
+		assert(instructor.id == null);
 		instructor.id = instructorTable.insert(new DBInstructor(instructor));
 	}
 
@@ -433,13 +440,14 @@ public class Database implements IDatabase {
 	}
 
 	@Override
-	public IDBTimePreference createTransientTimePreference(IDBInstructor instructor, IDBTime time, int preference) {
+	public IDBTimePreference assembleTimePreference(IDBInstructor instructor, IDBTime time, int preference) {
 		return new DBTimePreference(null, instructor.getID(), time.getID(), preference);
 	}
 
 	@Override
 	public void insertTimePreference(IDBTimePreference rawTimePreference) {
 		DBTimePreference timePreference = (DBTimePreference)rawTimePreference;
+		assert(timePreference.id == null);
 		timePreference.id = timePreferenceTable.insert(new DBTimePreference(timePreference));
 	}
 
@@ -483,13 +491,14 @@ public class Database implements IDatabase {
 	}
 
 	@Override
-	public IDBCoursePreference createTransientCoursePreference(IDBInstructor instructor, IDBCourse course, int preference) {
+	public IDBCoursePreference assembleCoursePreference(IDBInstructor instructor, IDBCourse course, int preference) {
 		return new DBCoursePreference(null, instructor.getID(), course.getID(), preference);
 	}
 
 	@Override
 	public void insertCoursePreference(IDBCoursePreference rawCoursePreference) {
 		DBCoursePreference coursePreference = (DBCoursePreference)rawCoursePreference;
+		assert(coursePreference.id == null);
 		coursePreference.id = coursePreferenceTable.insert(new DBCoursePreference(coursePreference));
 	}
 
@@ -650,13 +659,14 @@ public class Database implements IDatabase {
 	}
 
 	@Override
-	public DBUsedEquipment createTransientUsedEquipment(IDBCourse course, IDBEquipmentType equipmentType) {
+	public DBUsedEquipment assembleUsedEquipment(IDBCourse course, IDBEquipmentType equipmentType) {
 		return new DBUsedEquipment(null, course.getID(), equipmentType.getID());
 	}
 	
 	@Override
 	public void insertUsedEquipment(IDBUsedEquipment rawEquip) {
 		DBUsedEquipment equip = (DBUsedEquipment)rawEquip;
+		assert(equip.id == null);
 		equip.id = usedEquipmentTable.insert(new DBUsedEquipment(equip));
 	}
 
@@ -681,13 +691,14 @@ public class Database implements IDatabase {
 	}
 
 	@Override
-	public IDBProvidedEquipment createTransientProvidedEquipment(IDBLocation location, IDBEquipmentType equipmentType) {
+	public IDBProvidedEquipment assembleProvidedEquipment(IDBLocation location, IDBEquipmentType equipmentType) {
 		return new DBProvidedEquipment(null, location.getID(), equipmentType.getID());
 	}
 	
 	@Override
 	public void insertProvidedEquipment(IDBProvidedEquipment rawEquip) {
 		DBProvidedEquipment equip = (DBProvidedEquipment)rawEquip;
+		assert(equip.id == null);
 		equip.id = providedEquipmentTable.insert(new DBProvidedEquipment(equip));
 	}
 
@@ -697,13 +708,14 @@ public class Database implements IDatabase {
 	}
 
 	@Override
-	public IDBOfferedDayPattern createTransientOfferedDayPattern(IDBCourse underlying, IDBDayPattern dayPattern) {
+	public IDBOfferedDayPattern assembleOfferedDayPattern(IDBCourse underlying, IDBDayPattern dayPattern) {
 		return new DBOfferedDayPattern(null, underlying.getID(), dayPattern.getID());
 	}
 	
 	@Override
 	public void insertOfferedDayPattern(IDBOfferedDayPattern rawPattern) {
 		DBOfferedDayPattern pattern = (DBOfferedDayPattern)rawPattern;
+		assert(pattern.id == null);
 		offeredDayPatternTable.insert(new DBOfferedDayPattern(pattern));
 	}
 
@@ -777,7 +789,7 @@ public class Database implements IDatabase {
 	}
 
 	@Override
-	public IDBCourse createTransientCourse(IDBDocument containingDocument, String name,
+	public IDBCourse assembleCourse(IDBDocument containingDocument, String name,
 			String catalogNumber, String department, String wtu, String scu,
 			String numSections, String type, String maxEnrollment,
 			String numHalfHoursPerWeek, boolean isSchedulable) {

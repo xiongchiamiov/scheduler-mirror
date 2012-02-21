@@ -25,6 +25,7 @@ public class SampleTestSuite extends TestCase {
 
 		suite.addTestSuite(DocumentsTestSimpleDB.class);
 		suite.addTestSuite(InstructorsTestSimpleDB.class);
+		suite.addTestSuite(InstructorsPreferencesTestSimpleDB.class);
 		suite.addTestSuite(LocationsTestSimpleDB.class);
 		suite.addTestSuite(CSVTest.class);
 		
