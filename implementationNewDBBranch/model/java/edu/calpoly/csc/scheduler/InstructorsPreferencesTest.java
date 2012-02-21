@@ -29,10 +29,10 @@ public abstract class InstructorsPreferencesTest extends ModelTestCase {
 		}
 		
 		Instructor found = model.findInstructorByID(instructorID);
-		assert(found.getFirstName().equals("Evan"));
-		assert(found.getLastName().equals("Ovadia"));
-		assert(found.getUsername().equals("eovadia"));
-		assert(found.getMaxWTU().equals("20"));
+		assertEquals(found.getFirstName(), "Evan");
+		assertEquals(found.getLastName(), "Ovadia");
+		assertEquals(found.getUsername(), "eovadia");
+		assertEquals(found.getMaxWTU(), "20");
 	}
 
 
@@ -65,16 +65,32 @@ public abstract class InstructorsPreferencesTest extends ModelTestCase {
 		Model model = createBlankModel();
 		Document doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
 		
-		Instructor ins1 = ModelTestUtility.insertInstructorWPrefs(model, doc);
+		int courseID1 = model.insertCourse(model.assembleCourse(doc, "Graphics", "201", "GRC", "10", "20", "2", "LEC", "20", "6", new TreeSet<String>(), new LinkedList<Set<Day>>(), true)).getID();
+		int courseID2 = model.insertCourse(model.assembleCourse(doc, "Graphics: The Return", "202", "GRC", "10", "20", "2", "LEC", "20", "6", new TreeSet<String>(), new LinkedList<Set<Day>>(), true)).getID();
 		
-		Instructor ins2 = ModelTestUtility.insertInstructorWPrefs(model, doc);
+		HashMap<Integer, Integer> coursePrefs1 = new HashMap<Integer, Integer>();
+		coursePrefs1.put(courseID1, 2);
+		coursePrefs1.put(courseID2, 3);
 		
-		assert(ModelTestUtility.instructorsContentsEqual(ins1, ins2));
+		HashMap<Day, HashMap<Integer, Integer>> timePrefs1 = ModelTestUtility.createSampleTimePreferences(doc);
+		
+		Instructor ins1 = model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", timePrefs1, coursePrefs1));
+		
+		HashMap<Integer, Integer> coursePrefs2 = new HashMap<Integer, Integer>();
+		coursePrefs2.put(courseID1, 2);
+		coursePrefs2.put(courseID2, 3);
+		
+		HashMap<Day, HashMap<Integer, Integer>> timePrefs2 = ModelTestUtility.createSampleTimePreferences(doc);
+		
+		Instructor ins2 = model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", timePrefs2, coursePrefs2));
+		
+		
+		assertTrue(ModelTestUtility.instructorsContentsEqual(ins1, ins2));
 		
 		ins1.getTimePreferences().put(Day.FRIDAY, new HashMap<Integer, Integer>());
 		ins1.getTimePreferences().get(Day.FRIDAY).put(10, 4);
 
-		assert(!ModelTestUtility.instructorsContentsEqual(ins1, ins2));
+		assertFalse(ModelTestUtility.instructorsContentsEqual(ins1, ins2));
 	}
 	
 }

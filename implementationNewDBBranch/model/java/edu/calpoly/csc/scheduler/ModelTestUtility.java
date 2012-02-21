@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -53,9 +54,37 @@ public class ModelTestUtility {
 			return false;
 		if (!a.getMaxWTU().equals(b.getMaxWTU()))
 			return false;
+
+//		if (!a.getCoursePreferences().keySet().containsAll(b.getCoursePreferences().keySet()))
+//			return false;
+//		if (!b.getCoursePreferences().keySet().containsAll(a.getCoursePreferences().keySet()))
+//			return false;
+//		for (Entry<Integer, Integer> entry : a.getCoursePreferences().entrySet())
+//			if (!b.getCoursePreferences().get(entry.getKey()).equals(entry.getValue()))
+//				return false;
+//
+//		if (!a.getTimePreferences().keySet().containsAll(b.getTimePreferences().keySet()))
+//			return false;
+//		if (!b.getTimePreferences().keySet().containsAll(a.getTimePreferences().keySet()))
+//			return false;
+//		for (Entry<Day, HashMap<Integer, Integer>> entry : a.getTimePreferences().entrySet()) {
+//			HashMap<Integer, Integer> aPrefsForDay = entry.getValue();
+//			HashMap<Integer, Integer> bPrefsForDay = b.getTimePreferences().get(entry.getKey());
+//
+//			if (!aPrefsForDay.keySet().containsAll(bPrefsForDay.keySet()))
+//				return false;
+//			if (!bPrefsForDay.keySet().containsAll(aPrefsForDay.keySet()))
+//				return false;
+//			for (Entry<Integer, Integer> entry2 : aPrefsForDay.entrySet())
+//				if (!bPrefsForDay.get(entry2.getKey()).equals(entry2.getValue()))
+//					return false;
+//		}
+		
 		if (!a.getCoursePreferences().equals(b.getCoursePreferences()))
 			return false;
-		return a.getTimePreferences().equals(b.getTimePreferences());
+		if (!a.getTimePreferences().equals(b.getTimePreferences()))
+			return false;
+		return true;
 	}
 	
 	public static HashMap<Day, HashMap<Integer, Integer>> createSampleTimePreferences(Document document) {
