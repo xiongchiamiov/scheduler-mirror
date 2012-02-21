@@ -76,6 +76,26 @@ public abstract class InstructorsTest extends ModelTestCase {
 		assert(found.getMaxWTU().equals("20"));
 	}
 
+	public void testInsertAndDeleteInstructorWTimePrefs() throws NotFoundException {
+		Model model = createBlankModel();
+		
+		Document doc;
+		int instructorID;
+		
+		{
+			doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
+			
+			HashMap<Day, HashMap<Integer, Integer>> timePrefs = createSampleTimePreferences(doc);
+			
+			instructorID = model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", timePrefs, new HashMap<Integer, Integer>())).getID();
+		}
+		
+		model.deleteInstructor(model.findInstructorByID(instructorID));
+		model.deleteDocument(doc);
+		
+		assertTrue(model.isEmpty());
+	}
+	
 	public void testModifyInstructorValueDoesntAutomaticallyUpdateDatabase() throws NotFoundException {
 		Model model = createBlankModel();
 		
