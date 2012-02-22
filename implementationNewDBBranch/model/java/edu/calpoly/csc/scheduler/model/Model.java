@@ -39,8 +39,6 @@ public class Model {
 		this.database = database;
 	}
 
-	public String generateUnprovidedUsername() { return database.generateUnusedUsername(); }
-
 	public User assembleUser(String username, boolean b) {
 		return new User(database.assembleUser(username, b));
 	}

@@ -117,18 +117,6 @@ public class Database implements IDatabase {
 		offeredDayPatternTable = new SimpleTable<DBOfferedDayPattern>();
 	}
 	
-	@Override
-	public String generateUnusedUsername() {
-		Set<String> usernames = new HashSet<String>();
-		for (DBUser user : userTable.getAll())
-			usernames.add(user.getUsername());
-		
-		for (int potentialUsernameSuffix = 0; ; potentialUsernameSuffix++) {
-			String potentialUsername = "gen" + potentialUsernameSuffix;
-			if (!usernames.contains(potentialUsername))
-				return potentialUsername;
-		}
-	}
 
 	@Override
 	public IDBUser findUserByUsername(String username) throws NotFoundException {

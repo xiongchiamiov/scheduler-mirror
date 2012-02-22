@@ -15,7 +15,6 @@ public interface IDatabase {
 	
 	// Users
 	IDBUser findUserByUsername(String username) throws NotFoundException;
-	String generateUnusedUsername();
 	IDBUser assembleUser(String username, boolean isAdmin);
 	void insertUser(IDBUser user);
 	void updateUser(IDBUser user);

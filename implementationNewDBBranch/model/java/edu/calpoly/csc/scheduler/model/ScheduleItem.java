@@ -36,6 +36,4 @@ public class ScheduleItem {
 	public void setIsPlaced(boolean placed) { underlying.setIsPlaced(placed); }
 	public boolean isConflicted() { return underlying.isConflicted(); }
 	public void setIsConflicted(boolean conflicted) { underlying.setIsConflicted(conflicted); }
-	public Set<Integer> getLabIDs() { return underlying.getLabIDs(); }
-	public void setLabIDs(Set<Integer> labIDs) { underlying.setLabIDs(labIDs); }
 }
