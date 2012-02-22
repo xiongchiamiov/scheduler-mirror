@@ -68,6 +68,8 @@ public class ModelTestUtility {
 			return false;
 		if (!a.getWTU().equals(b.getWTU()))
 			return false;
+		if (a.isSchedulable() != b.isSchedulable())
+		   return false;
 		return true;
 	}
 	
