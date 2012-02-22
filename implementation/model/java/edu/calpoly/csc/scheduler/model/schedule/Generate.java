@@ -34,8 +34,8 @@ public class Generate {
 	   }
 	}
 
-	public static Vector<ScheduleItem> generate(List<Course> c_list, List<Instructor> i_list, List<Location> l_list) {
-		Vector<ScheduleItem> items = new Vector<ScheduleItem>();
+	public static Vector<ScheduleItem> generate(Vector<ScheduleItem> s_items, List<Course> c_list, List<Instructor> i_list, List<Location> l_list) {
+		Vector<ScheduleItem> items = s_items;
 		HashMap<Integer, SectionTracker> sections = new HashMap<Integer, SectionTracker>();
 		TimeRange bounds = new TimeRange(new Time(7, 0), new Time(22, 0));
 		TimeRange lec_bounds = new TimeRange(bounds);
@@ -124,6 +124,8 @@ public class Generate {
 	      
 	      return items;
 	}
+	
+	//public static add
 	
 	/**
 	    * Gets the SectionTracker associated with course 'c'. If no tracker yet
@@ -596,40 +598,40 @@ public class Generate {
 	    *         a time where the location is in use or the instructor is already
 	    *         teaching. 
 	    */
-//	   public static ScheduleItem move (ScheduleItem si, Week days, Time s, ScheduleDecorator sd) 
-//	      throws CouldNotBeScheduledException
-//	   {
-//	      ScheduleItem fresh_si = new ScheduleItem(si);
-//	      if (this.remove(si, sd))
-//	      {
-//	         Course c = si.getCourse();
-//	         
-//	         TimeRange tr = new TimeRange(s, c.splitLengthOverDays(days.size()));
-//	      
-//	         fresh_si.setDays(days);
-//	         fresh_si.setTimeRange(tr);
-//	      
-//	         add(fresh_si, sd);
-//	         
-//	         /*
-//	          * If the lab for the SI was teathered, we need to move it to just 
-//	          * after the fresh_si
-//	          */
-//	         assert(false);
-//	         /*
-//	          *  
-//	         Lab lab = c.getLab();
-//	         if (lab != null && lab.isTethered())
-//	         {
-//	            Time lab_s = tr.getE();
-//	            for (ScheduleItem lab_si: si.getLabs())
-//	            {
-//	               move(lab_si, days, lab_s);
-//	            }
-//	         }*/
-//	      }
-//	      return fresh_si;
-//	   }
+	   public static ScheduleItem move (Vector<ScheduleItem> s_items, ScheduleItem si, Week days, Time s, ScheduleDecorator sd) 
+	      throws CouldNotBeScheduledException
+	   {
+	      ScheduleItem fresh_si = new ScheduleItem(si);
+	      if (remove(s_items, si, sd))
+	      {
+	         Course c = si.getCourse();
+	         
+	         TimeRange tr = new TimeRange(s, c.splitLengthOverDays(days.size()));
+	      
+	         fresh_si.setDays(days);
+	         fresh_si.setTimeRange(tr);
+	      
+	         add(fresh_si, sd, s_items, null);
+	         
+	         /*
+	          * If the lab for the SI was teathered, we need to move it to just 
+	          * after the fresh_si
+	          */
+	         //assert(false);
+	         /*
+	          *  
+	         Lab lab = c.getLab();
+	         if (lab != null && lab.isTethered())
+	         {
+	            Time lab_s = tr.getE();
+	            for (ScheduleItem lab_si: si.getLabs())
+	            {
+	               move(lab_si, days, lab_s);
+	            }
+	         }*/
+	      }
+	      return fresh_si;
+	   }
 	   
 	   /**
 	    * Removes a given ScheduleItem from the schedule. Updates instructor and
@@ -642,49 +644,54 @@ public class Generate {
 	    * @return if the specified item was removed or not. It will not be removed
 	    *         if it does not exist in our list of items
 	    */
-//	   public boolean remove (ScheduleItem si, ScheduleDecorator sd)
-//	   {
-//	      boolean r = false;
-//	      if (this.items.contains(si))
-//	      {
-//	         r = true;
-//	         
-//	         Course c = si.getCourse();
-//	         Instructor i = si.getInstructor();
-//	         Location l = si.getLocation();
-//	         Week days = si.getDays();
-//	         TimeRange tr = si.getTimeRange();
-//
-//	         this.items.remove(si);
-//	         i.book(false, days, tr, sd);
-//	         l.book(false, days, tr, sd);
-//
-//	         sd.subtractWTU(i, si.getWtuTotal());
-//
-//	         SectionTracker st = getSectionTracker(c);
-//	         st.removeSection(si.getSection());
-//	         
-//	         /*
-//	          * Remove the labs only if they're teathered to the course
-//	          */
-//	         if (si.hasLabs())
-//	         {
-//	            if (c.getTetheredToLecture())
-//	            {
-//	               remove(si.getLabs(), sd);
-//	            }
-//	         }
-//	      }
-//	      return r;
-//	   }
-//	   
-//	   private void remove (List<ScheduleItem> toRemove, ScheduleDecorator sd)
-//	   {
-//	      for (ScheduleItem si: toRemove)
-//	      {
-//	         remove(si, sd);
-//	      }
-//	   }
+	   public static boolean remove (Vector<ScheduleItem> s_items, ScheduleItem si, ScheduleDecorator sd)
+	   {
+		   
+		   Vector<ScheduleItem> items = s_items;
+		   HashMap<Integer, SectionTracker> sections = new HashMap<Integer, SectionTracker>();
+	      
+		   boolean r = false;
+	      if (items.contains(si))
+	      {
+	         r = true;
+	         
+	         Course c = si.getCourse();
+	         Instructor i = si.getInstructor();
+	         Location l = si.getLocation();
+	         Week days = si.getDays();
+	         TimeRange tr = si.getTimeRange();
+
+	         s_items.remove(si);
+	         i.book(false, days, tr, sd);
+	         l.book(false, days, tr, sd);
+
+	         sd.subtractWTU(i, si.getWtuTotal());
+
+	         SectionTracker st = getSectionTracker(c, sections);
+	         st.removeSection(si.getSection());
+	         
+	         /*
+	          * Remove the labs only if they're teathered to the course
+	          */
+	         if (si.hasLabs())
+	         {
+	            if (c.getTetheredToLecture())
+	            {
+	               removeItem(items, si.getLabs(), sd);
+	            }
+	         }
+	      }
+	      return r;
+	   }
+	   
+	   private static void removeItem (Vector<ScheduleItem> s_items,
+			   List<ScheduleItem> toRemove, ScheduleDecorator sd)
+	   {
+	      for (ScheduleItem si: toRemove)
+	      {
+	         remove(s_items, si, sd);
+	      }
+	   }
 	   
 	   /**
 	    * Determines the time range a lab can be taught for. In particular, if the

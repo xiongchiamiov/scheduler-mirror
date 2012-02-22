@@ -280,14 +280,15 @@ public class Schedule extends DbData implements Serializable
     * @param collection List of instructors to use
     * @param collection2 List of locations to use
     */
-   public Schedule (Collection<Instructor> collection, Collection<Location> collection2)
+   public Schedule (Collection<ScheduleItem> s_items, Collection<Instructor> collection, Collection<Location> collection2)
    {
       this.iSourceList = new Vector<Instructor>(collection);
       this.setlSourceList(collection2);
+      items.addAll(s_items);
    }
    
    public void generateSchedule() {
-	   items = Generate.generate(cSourceList, iSourceList, lSourceList);
+	   items = Generate.generate(items, cSourceList, iSourceList, lSourceList);
    }
    
    /***********************
