@@ -101,7 +101,7 @@ public class ScheduleTrashView extends VerticalPanel implements IViewContents
       HorizontalPanel toprow = new HorizontalPanel();
       toprow.setWidth("100%");
       toprow.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-      toprow.add(new HTMLPanel("<h3>Trashed Documents:</h3>"));
+      toprow.add(new HTMLPanel("<h2>Trashed Documents:</h2>"));
       this.add(toprow);
 
       // Document selector
@@ -109,6 +109,7 @@ public class ScheduleTrashView extends VerticalPanel implements IViewContents
       ScrollPanel scroller = new ScrollPanel();
       this.add(scroller);
       vdocholder = new VerticalPanel();
+      vdocholder.setBorderWidth(5);
       scroller.add(vdocholder);
 
       // UnTrash button

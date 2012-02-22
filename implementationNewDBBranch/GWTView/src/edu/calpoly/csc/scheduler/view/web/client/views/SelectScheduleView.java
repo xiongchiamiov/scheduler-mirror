@@ -110,7 +110,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
       HorizontalPanel toprow = new HorizontalPanel();
       toprow.setWidth("100%");
       toprow.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-      toprow.add(new HTMLPanel("<h3>My Scheduling Documents:</h3>"));
+      toprow.add(new HTMLPanel("<h2>My Scheduling Documents:</h2>"));
 
       // Buttons to top right
       toprow.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
@@ -145,6 +145,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
       this.add(scroller);
       vdocholder = new VerticalPanel();
       vdocholder.setWidth("100%");
+      vdocholder.setBorderWidth(5);
       scroller.add(vdocholder);
 
       // Trash button
@@ -157,7 +158,6 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
             for(Integer scheduleid : checkedScheduleIDs)
             {
                //Rename schedule
-
             }
          }
       });
