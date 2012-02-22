@@ -3,36 +3,39 @@ package edu.calpoly.csc.scheduler.model.db.sqlite;
 import java.sql.*;
 
 public class SQLdb {
-	 public static void main(String[] args) throws Exception {
-		    Class.forName("org.sqlite.JDBC");
-		    Connection conn =
-		      DriverManager.getConnection("jdbc:sqlite:database.db");
-		    Statement stat = conn.createStatement();
-		    stat.executeUpdate("drop table if exists people;");
-		    stat.executeUpdate("create table people (name, occupation);");
-		    PreparedStatement prep = conn.prepareStatement(
-		      "insert into people values (?, ?);");
+	
+	Connection conn = null;
+	
+	public static void main(String[] args) throws Exception {
+		SQLdb db = new SQLdb();
+		db.openConnection();
+	}
+	
 
-		    prep.setString(1, "Gandhi");
-		    prep.setString(2, "politics");
-		    prep.addBatch();
-		    prep.setString(1, "Turing");
-		    prep.setString(2, "computers");
-		    prep.addBatch();
-		    prep.setString(1, "Wittgenstein");
-		    prep.setString(2, "smartypants");
-		    prep.addBatch();
-
-		    conn.setAutoCommit(false);
-		    prep.executeBatch();
-		    conn.setAutoCommit(true);
-
-		    ResultSet rs = stat.executeQuery("select * from people;");
-		    while (rs.next()) {
-		      System.out.println("name = " + rs.getString("name"));
-		      System.out.println("job = " + rs.getString("occupation"));
-		    }
-		    rs.close();
-		    conn.close();
-		  }
+	public void openConnection() throws SQLException, Exception
+	{
+		Class.forName("org.sqlite.JDBC");
+		conn =
+			DriverManager.getConnection("jdbc:sqlite:database.db");
+		System.out.println("Connected to database");
+	}
+	
+	public void closeConnection() throws SQLException
+	{
+		if(conn != null)
+		{
+			conn.close();
+			System.out.println("Database connection closed");
+		}
+		else
+		{
+			System.out.println("Connection is null, never opened");
+		}
+	}
+	
+	public Connection getConnection()
+	{
+		return conn;
+	}
+	
 }
