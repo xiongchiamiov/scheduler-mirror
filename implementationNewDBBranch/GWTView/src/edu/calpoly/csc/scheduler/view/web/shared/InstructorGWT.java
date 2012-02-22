@@ -3,11 +3,6 @@ package edu.calpoly.csc.scheduler.view.web.shared;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.TreeMap;
-
-import edu.calpoly.csc.scheduler.model.Day;
-
 
 public class InstructorGWT implements Serializable, Identified {
 	private static final long serialVersionUID = -4982539363690274674L;
@@ -45,8 +40,8 @@ public class InstructorGWT implements Serializable, Identified {
 		this(that.id, that.username, that.firstName, that.lastName,
 				that.maxwtu, null, null);
 		
-		int newTimePrefs[][] = new int[Day.values().length][48];
-		for (Day day : Day.values())
+		int newTimePrefs[][] = new int[DayGWT.values().length][48];
+		for (DayGWT day : DayGWT.values())
 			for (int halfHour = 0; halfHour < 48; halfHour++)
 				newTimePrefs[day.ordinal()][halfHour] = that.tPrefs[day.ordinal()][halfHour];
 		tPrefs = newTimePrefs;
