@@ -28,7 +28,7 @@ public class ModelTestUtility {
 	}
 	
 	public static Instructor createBasicInstructor(Model model, Document document) {
-		return model.assembleInstructor(document, "TestFirst", "TestLast", "testid", "4", new HashMap<Day, HashMap<Integer, Integer>>(), new HashMap<Integer, Integer>(), true);
+		return model.assembleInstructor(document, "TestFirst", "TestLast", "testid", "4", Instructor.createDefaultTimePreferences(), new HashMap<Integer, Integer>(), true);
 	}
 	
 	public static Instructor insertInstructorWPrefs(Model model, Document doc) {
@@ -39,9 +39,9 @@ public class ModelTestUtility {
 		coursePrefs.put(courseID1, 2);
 		coursePrefs.put(courseID2, 3);
 		
-		HashMap<Day, HashMap<Integer, Integer>> timePrefs = createSampleTimePreferences(doc);
+		int[][] timePrefs = createSampleTimePreferences(doc);
 		
-		return model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", new HashMap<Day, HashMap<Integer,Integer>>(), coursePrefs, true));
+		return model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", timePrefs, coursePrefs, true));
 	}
 	
 	public static boolean coursesContentsEqual(Course a, Course b) {
@@ -104,16 +104,14 @@ public class ModelTestUtility {
 		return true;
 	}
 	
-	public static HashMap<Day, HashMap<Integer, Integer>> createSampleTimePreferences(Document document) {
-		HashMap<Day, HashMap<Integer, Integer>> result = new HashMap<Day, HashMap<Integer, Integer>>();
+	public static int[][] createSampleTimePreferences(Document document) {
+		int[][] result = new int[Day.values().length][48];
 		
 		for (Day day : Day.values()) {
-			HashMap<Integer, Integer> prefsInDay = new HashMap<Integer, Integer>();
 			for (int halfHour = document.getStartHalfHour(); halfHour < document.getEndHalfHour(); halfHour++) {
 				int newPref = (day.ordinal() + halfHour) % 5;
-				prefsInDay.put(halfHour, newPref);
+				result[day.ordinal()][halfHour] = newPref;
 			}
-			result.put(day, prefsInDay);
 		}
 		
 		return result;
@@ -126,6 +124,6 @@ public class ModelTestUtility {
 	public static void setPreferenceBlocks(Instructor instructor, int preference, int startHalfHour, int endHalfHour, Day... days) {
 		for (Day day : days)
 			for (int halfHour = startHalfHour; halfHour < endHalfHour; halfHour++)
-				instructor.setTimePreferenceAt(day, halfHour, preference);
+				instructor.setTimePreferences(day, halfHour, preference);
 	}
 }

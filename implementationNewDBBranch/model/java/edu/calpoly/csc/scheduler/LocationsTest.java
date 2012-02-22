@@ -25,9 +25,9 @@ public abstract class LocationsTest extends ModelTestCase {
 		}
 		
 		Location found = model.findLocationByID(locationID);
-		assert(found.getRoom().equals("roomlol"));
-		assert(found.getType().equals("LEC"));
-		assert(found.getMaxOccupancy().equals("30"));
+		assertTrue(found.getRoom().equals("roomlol"));
+		assertTrue(found.getType().equals("LEC"));
+		assertTrue(found.getMaxOccupancy().equals("30"));
 	}
 
 	public void testModifyLocationValueDoesntAutomaticallyUpdateDatabase() throws NotFoundException {
@@ -44,7 +44,7 @@ public abstract class LocationsTest extends ModelTestCase {
 		
 		{
 			Location ins = model.findLocationByID(locationID);
-			assert(ins.getRoom().equals("roomlol"));
+			assertTrue(ins.getRoom().equals("roomlol"));
 		}
 	}
 	
@@ -64,9 +64,9 @@ public abstract class LocationsTest extends ModelTestCase {
 		}
 		
 		Location ins = model.findLocationByID(locationID);
-		assert(ins.getRoom().equals("hark"));
-		assert(ins.getType().equals("derp"));
-		assert(ins.getMaxOccupancy().equals("40"));
+		assertTrue(ins.getRoom().equals("hark"));
+		assertTrue(ins.getType().equals("derp"));
+		assertTrue(ins.getMaxOccupancy().equals("40"));
 	}
 
 	public void testDeleteLocation() throws Exception {
@@ -83,7 +83,7 @@ public abstract class LocationsTest extends ModelTestCase {
 		
 		try {
 			model.findLocationByID(locationID);
-			assert(false); // should have failed
+			assertTrue(false); // should have failed
 		}
 		catch (NotFoundException e) { }
 	}
@@ -99,10 +99,10 @@ public abstract class LocationsTest extends ModelTestCase {
 		
 		Collection<Location> returnedLocations = model.findLocationsForDocument(doc);
 		for (Location returnedDoc : returnedLocations) {
-			assert(locationIDs.contains(returnedDoc.getID()));
+			assertTrue(locationIDs.contains(returnedDoc.getID()));
 			locationIDs.remove(returnedDoc.getID());
 		}
-		assert(locationIDs.isEmpty());
+		assertTrue(locationIDs.isEmpty());
 	}
 
 	public void testFindAllLocationsInMultipleDocuments() {
@@ -117,10 +117,10 @@ public abstract class LocationsTest extends ModelTestCase {
 			
 			Collection<Location> returnedLocations1 = model.findLocationsForDocument(doc1);
 			for (Location returnedDoc : returnedLocations1) {
-				assert(locationIDs1.contains(returnedDoc.getID()));
+				assertTrue(locationIDs1.contains(returnedDoc.getID()));
 				locationIDs1.remove(returnedDoc.getID());
 			}
-			assert(locationIDs1.isEmpty());
+			assertTrue(locationIDs1.isEmpty());
 		}
 		
 		{
@@ -132,10 +132,10 @@ public abstract class LocationsTest extends ModelTestCase {
 			
 			Collection<Location> returnedLocations2 = model.findLocationsForDocument(doc2);
 			for (Location returnedDoc : returnedLocations2) {
-				assert(locationIDs2.contains(returnedDoc.getID()));
+				assertTrue(locationIDs2.contains(returnedDoc.getID()));
 				locationIDs2.remove(returnedDoc.getID());
 			}
-			assert(locationIDs2.isEmpty());
+			assertTrue(locationIDs2.isEmpty());
 		}
 	}
 }

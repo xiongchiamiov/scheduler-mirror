@@ -7,12 +7,24 @@ import edu.calpoly.csc.scheduler.model.db.IDBInstructor;
 public class Instructor implements Identified {
 	public static final int DEFAULT_PREF = 5;
 	
+	public static int[][] createUniformTimePreferences(int value) {
+		int[][] result = new int[Day.values().length][48];
+		for (Day day : Day.values())
+			for (int halfHour = 0; halfHour < 48; halfHour++)
+				result[day.ordinal()][halfHour] = value;
+		return result;
+	}
+	
+	public static int[][] createDefaultTimePreferences() {
+		return createUniformTimePreferences(DEFAULT_PREF);
+	}
+	
 	IDBInstructor underlyingInstructor;
-	HashMap<Day, HashMap<Integer, Integer>> timePreferences;
+	int[][] timePreferences;
 	HashMap<Integer, Integer> coursePreferences;
 	
 	Instructor(IDBInstructor underlyingInstructor,
-			HashMap<Day, HashMap<Integer, Integer>> timePreferences,
+			int[][] timePreferences,
 			HashMap<Integer, Integer> coursePreferences) {
 		this.underlyingInstructor = underlyingInstructor;
 		this.timePreferences = timePreferences;
@@ -33,14 +45,15 @@ public class Instructor implements Identified {
 	public String getMaxWTU() { return underlyingInstructor.getMaxWTU(); }
 	public void setMaxWTU(String maxWTU) { underlyingInstructor.setMaxWTU(maxWTU); }
 
-	public HashMap<Day, HashMap<Integer, Integer>> getTimePreferences() { return timePreferences; }
-	public void setTimePreferences(HashMap<Day, HashMap<Integer, Integer>> timePreferences) { this.timePreferences = timePreferences; }
-	
-	public void setTimePreferenceAt(Day day, int halfHour, int preference) {
-		HashMap<Integer, Integer> prefsForDay = timePreferences.get(day);
-		if (prefsForDay == null)
-			timePreferences.put(day, prefsForDay = new HashMap<Integer,Integer>());
-		prefsForDay.put(halfHour, preference);
+	public int[][] getTimePreferences() { return timePreferences; }
+	public int getTimePreferences(Day day, int halfHour) {
+		return timePreferences[day.ordinal()][halfHour];
+	}
+	public void setTimePreferences(Day day, int halfHour, int preference) {
+		this.timePreferences[day.ordinal()][halfHour] = preference;
+	}
+	public void setTimePreferences(int[][] timePreferences) {
+		this.timePreferences = timePreferences;
 	}
 	
 	public HashMap<Integer, Integer> getCoursePreferences() { return coursePreferences; }

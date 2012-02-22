@@ -149,7 +149,7 @@ public class CSVExporter {
 	 * @return A string of time prefs. ie Time,SUN,MON,TUE,WED,THU,FRI,SAT
 										00:00,5,5,5,5,5,5,5
 	 */
-	private String compileTimePrefs(HashMap<Day, HashMap<Integer, Integer>> hashMap) {
+	private String compileTimePrefs(int[][] hashMap) {
 		final int startHalfHour = 14;
 		final int endHalfHour = 44;
 		final int numTimesInDay = endHalfHour - startHalfHour;
@@ -168,10 +168,7 @@ public class CSVExporter {
 				Day day = Day.values()[dayNum];
 				int row = halfHourNum + 1;
 				int col = dayNum + 1;
-				if (hashMap.get(day) == null || hashMap.get(day).get(halfHourNum) == null)
-					strings[row][col] = Integer.toString(Instructor.DEFAULT_PREF);
-				else
-					strings[row][col] = Integer.toString(hashMap.get(day).get(halfHourNum));
+					strings[row][col] = Integer.toString(hashMap[day.ordinal()][halfHourNum]);
 			}
 		}
 		

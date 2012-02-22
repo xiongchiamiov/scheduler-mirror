@@ -15,26 +15,11 @@ public abstract class InstructorsTest extends ModelTestCase {
 	private static final int START_HALF_HOUR = 14; // 7am
 	private static final int END_HALF_HOUR = 44; // 10pm
 	
-	private static HashMap<Day, HashMap<Integer, Integer>> createSampleTimePreferences(Document document) {
-		HashMap<Day, HashMap<Integer, Integer>> result = new HashMap<Day, HashMap<Integer, Integer>>();
-		
-		for (Day day : Day.values()) {
-			HashMap<Integer, Integer> prefsInDay = new HashMap<Integer, Integer>();
-			for (int halfHour = document.getStartHalfHour(); halfHour < document.getEndHalfHour(); halfHour++) {
-				int newPref = (day.ordinal() + halfHour) % 5;
-				prefsInDay.put(halfHour, newPref);
-			}
-			result.put(day, prefsInDay);
-		}
-		
-		return result;
-	}
-	
 	public void testTransientsNotInserted() {
 		Model model = createBlankModel();
 		
 		Document doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
-		model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", new HashMap<Day, HashMap<Integer,Integer>>(), new HashMap<Integer, Integer>(), true);
+		model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", Instructor.createDefaultTimePreferences(), new HashMap<Integer, Integer>(), true);
 		
 		assertEquals(model.findInstructorsForDocument(doc).size(), 0);
 	}
@@ -46,14 +31,14 @@ public abstract class InstructorsTest extends ModelTestCase {
 		
 		{
 			Document doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
-			instructorID = model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", new HashMap<Day, HashMap<Integer,Integer>>(), new HashMap<Integer, Integer>(), true)).getID();
+			instructorID = model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", Instructor.createDefaultTimePreferences(), new HashMap<Integer, Integer>(), true)).getID();
 		}
 		
 		Instructor found = model.findInstructorByID(instructorID);
-		assert(found.getFirstName().equals("Evan"));
-		assert(found.getLastName().equals("Ovadia"));
-		assert(found.getUsername().equals("eovadia"));
-		assert(found.getMaxWTU().equals("20"));
+		assertTrue(found.getFirstName().equals("Evan"));
+		assertTrue(found.getLastName().equals("Ovadia"));
+		assertTrue(found.getUsername().equals("eovadia"));
+		assertTrue(found.getMaxWTU().equals("20"));
 	}
 
 	public void testInsertAndFindInstructorWTimePrefs() throws NotFoundException {
@@ -64,16 +49,16 @@ public abstract class InstructorsTest extends ModelTestCase {
 		{
 			Document doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
 			
-			HashMap<Day, HashMap<Integer, Integer>> timePrefs = createSampleTimePreferences(doc);
+			int[][] timePrefs = ModelTestUtility.createSampleTimePreferences(doc);
 			
 			instructorID = model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", timePrefs, new HashMap<Integer, Integer>(), true)).getID();
 		}
 		
 		Instructor found = model.findInstructorByID(instructorID);
-		assert(found.getFirstName().equals("Evan"));
-		assert(found.getLastName().equals("Ovadia"));
-		assert(found.getUsername().equals("eovadia"));
-		assert(found.getMaxWTU().equals("20"));
+		assertTrue(found.getFirstName().equals("Evan"));
+		assertTrue(found.getLastName().equals("Ovadia"));
+		assertTrue(found.getUsername().equals("eovadia"));
+		assertTrue(found.getMaxWTU().equals("20"));
 	}
 
 	public void testInsertAndDeleteInstructorWTimePrefs() throws NotFoundException {
@@ -85,7 +70,7 @@ public abstract class InstructorsTest extends ModelTestCase {
 		{
 			doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
 			
-			HashMap<Day, HashMap<Integer, Integer>> timePrefs = createSampleTimePreferences(doc);
+			int[][] timePrefs = ModelTestUtility.createSampleTimePreferences(doc);
 			
 			instructorID = model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", timePrefs, new HashMap<Integer, Integer>(), true)).getID();
 		}
@@ -103,14 +88,14 @@ public abstract class InstructorsTest extends ModelTestCase {
 		
 		{
 			Document doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
-			Instructor ins = model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", new HashMap<Day, HashMap<Integer,Integer>>(), new HashMap<Integer, Integer>(), true));
+			Instructor ins = model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", Instructor.createDefaultTimePreferences(), new HashMap<Integer, Integer>(), true));
 			ins.setFirstName("Verdagon");
 			instructorID = ins.getID();
 		}
 		
 		{
 			Instructor ins = model.findInstructorByID(instructorID);
-			assert(ins.getFirstName().equals("Evan"));
+			assertTrue(ins.getFirstName().equals("Evan"));
 		}
 	}
 	
@@ -121,7 +106,7 @@ public abstract class InstructorsTest extends ModelTestCase {
 		
 		{
 			Document doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
-			Instructor ins = model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", new HashMap<Day, HashMap<Integer,Integer>>(), new HashMap<Integer, Integer>(), true));
+			Instructor ins = model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", Instructor.createDefaultTimePreferences(), new HashMap<Integer, Integer>(), true));
 			ins.setFirstName("Verdagon");
 			ins.setLastName("Kalland");
 			ins.setUsername("vkalland");
@@ -131,10 +116,10 @@ public abstract class InstructorsTest extends ModelTestCase {
 		}
 		
 		Instructor ins = model.findInstructorByID(instructorID);
-		assert(ins.getFirstName().equals("Verdagon"));
-		assert(ins.getLastName().equals("Kalland"));
-		assert(ins.getUsername().equals("vkalland"));
-		assert(ins.getMaxWTU().equals("30"));
+		assertTrue(ins.getFirstName().equals("Verdagon"));
+		assertTrue(ins.getLastName().equals("Kalland"));
+		assertTrue(ins.getUsername().equals("vkalland"));
+		assertTrue(ins.getMaxWTU().equals("30"));
 	}
 
 	public void testDeleteInstructor() throws Exception {
@@ -145,20 +130,20 @@ public abstract class InstructorsTest extends ModelTestCase {
 		
 		{
 			doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
-			Instructor ins = model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", new HashMap<Day, HashMap<Integer,Integer>>(), new HashMap<Integer, Integer>(), true));
+			Instructor ins = model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", Instructor.createDefaultTimePreferences(), new HashMap<Integer, Integer>(), true));
 			instructorID = ins.getID();
 			model.deleteInstructor(ins);
 		}
 		
 		try {
 			model.findInstructorByID(instructorID);
-			assert(false); // should have failed
+			assertTrue(false); // should have failed
 		}
 		catch (NotFoundException e) { }
 		
 		model.deleteDocument(doc);
 		
-		assert(model.isEmpty());
+		assertTrue(model.isEmpty());
 	}
 	
 	public void testFindAllInstructorsForDocument() {
@@ -167,15 +152,15 @@ public abstract class InstructorsTest extends ModelTestCase {
 		Set<Integer> instructorIDs = new HashSet<Integer>();
 		
 		Document doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
-		instructorIDs.add(model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", new HashMap<Day, HashMap<Integer,Integer>>(), new HashMap<Integer, Integer>(), true)).getID());
-		instructorIDs.add(model.insertInstructor(model.assembleInstructor(doc, "Herp", "Derp", "hderp", "10", new HashMap<Day, HashMap<Integer,Integer>>(), new HashMap<Integer, Integer>(), true)).getID());
+		instructorIDs.add(model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", Instructor.createDefaultTimePreferences(), new HashMap<Integer, Integer>(), true)).getID());
+		instructorIDs.add(model.insertInstructor(model.assembleInstructor(doc, "Herp", "Derp", "hderp", "10", Instructor.createDefaultTimePreferences(), new HashMap<Integer, Integer>(), true)).getID());
 		
 		Collection<Instructor> returnedInstructors = model.findInstructorsForDocument(doc);
 		for (Instructor returnedDoc : returnedInstructors) {
-			assert(instructorIDs.contains(returnedDoc.getID()));
+			assertTrue(instructorIDs.contains(returnedDoc.getID()));
 			instructorIDs.remove(returnedDoc.getID());
 		}
-		assert(instructorIDs.isEmpty());
+		assertTrue(instructorIDs.isEmpty());
 	}
 
 	public void testFindAllInstructorsInMultipleDocuments() {
@@ -185,30 +170,30 @@ public abstract class InstructorsTest extends ModelTestCase {
 			Set<Integer> instructorIDs1 = new HashSet<Integer>();
 			
 			Document doc1 = model.insertDocument(model.assembleDocument("doc1", START_HALF_HOUR, END_HALF_HOUR));
-			instructorIDs1.add(model.insertInstructor(model.assembleInstructor(doc1, "Evan", "Ovadia", "eovadia", "20", new HashMap<Day, HashMap<Integer,Integer>>(), new HashMap<Integer, Integer>(), true)).getID());
-			instructorIDs1.add(model.insertInstructor(model.assembleInstructor(doc1, "Herp", "Derp", "hderp", "10", new HashMap<Day, HashMap<Integer,Integer>>(), new HashMap<Integer, Integer>(), true)).getID());
+			instructorIDs1.add(model.insertInstructor(model.assembleInstructor(doc1, "Evan", "Ovadia", "eovadia", "20", Instructor.createDefaultTimePreferences(), new HashMap<Integer, Integer>(), true)).getID());
+			instructorIDs1.add(model.insertInstructor(model.assembleInstructor(doc1, "Herp", "Derp", "hderp", "10", Instructor.createDefaultTimePreferences(), new HashMap<Integer, Integer>(), true)).getID());
 			
 			Collection<Instructor> returnedInstructors1 = model.findInstructorsForDocument(doc1);
 			for (Instructor returnedDoc : returnedInstructors1) {
-				assert(instructorIDs1.contains(returnedDoc.getID()));
+				assertTrue(instructorIDs1.contains(returnedDoc.getID()));
 				instructorIDs1.remove(returnedDoc.getID());
 			}
-			assert(instructorIDs1.isEmpty());
+			assertTrue(instructorIDs1.isEmpty());
 		}
 		
 		{
 			Set<Integer> instructorIDs2 = new HashSet<Integer>();
 			
 			Document doc2 = model.insertDocument(model.assembleDocument("doc2", START_HALF_HOUR, END_HALF_HOUR));
-			instructorIDs2.add(model.insertInstructor(model.assembleInstructor(doc2, "Baby", "Seals", "bseals", "20", new HashMap<Day, HashMap<Integer,Integer>>(), new HashMap<Integer, Integer>(), true)).getID());
-			instructorIDs2.add(model.insertInstructor(model.assembleInstructor(doc2, "Monster", "Otters", "motters", "10", new HashMap<Day, HashMap<Integer,Integer>>(), new HashMap<Integer, Integer>(), true)).getID());
+			instructorIDs2.add(model.insertInstructor(model.assembleInstructor(doc2, "Baby", "Seals", "bseals", "20", Instructor.createDefaultTimePreferences(), new HashMap<Integer, Integer>(), true)).getID());
+			instructorIDs2.add(model.insertInstructor(model.assembleInstructor(doc2, "Monster", "Otters", "motters", "10", Instructor.createDefaultTimePreferences(), new HashMap<Integer, Integer>(), true)).getID());
 			
 			Collection<Instructor> returnedInstructors2 = model.findInstructorsForDocument(doc2);
 			for (Instructor returnedDoc : returnedInstructors2) {
-				assert(instructorIDs2.contains(returnedDoc.getID()));
+				assertTrue(instructorIDs2.contains(returnedDoc.getID()));
 				instructorIDs2.remove(returnedDoc.getID());
 			}
-			assert(instructorIDs2.isEmpty());
+			assertTrue(instructorIDs2.isEmpty());
 		}
 	}
 }

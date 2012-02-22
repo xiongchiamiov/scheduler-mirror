@@ -84,7 +84,7 @@ public abstract class CoursesTest extends ModelTestCase
       
       {
          Course course = model.findCourseByID(courseID);
-         assert(course.getDepartment().equals(ModelTestUtility.createCourse(model, doc).getDepartment()));
+         assertTrue(course.getDepartment().equals(ModelTestUtility.createCourse(model, doc).getDepartment()));
       }
    }
    
@@ -138,7 +138,7 @@ public abstract class CoursesTest extends ModelTestCase
       
       try {
          model.findCourseByID(courseID);
-         assert(false); // should have failed
+         assertTrue(false); // should have failed
       }
       catch (NotFoundException e) { }
       

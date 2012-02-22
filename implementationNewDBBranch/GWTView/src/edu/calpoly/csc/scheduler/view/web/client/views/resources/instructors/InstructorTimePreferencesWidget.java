@@ -148,29 +148,12 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 		Integer dayNum = cell.day;
 		DayGWT day = DayGWT.values()[dayNum];
 
-		if (instructor.gettPrefs().get(day) == null) {
-			HashMap<Integer, Integer> newmap = new HashMap<Integer, Integer>();
-			assert(newmap.get(time) == null);
-			instructor.gettPrefs().put(day, newmap);
-			assert(instructor.gettPrefs().get(day) == newmap);
-			assert(instructor.gettPrefs().get(day).get(time) == null);
-		}
-		assert(instructor.gettPrefs().get(day) != null);
-
-		if (instructor.gettPrefs().get(day).get(time) == null) {
-			Integer pref = new Integer(desire);
-			instructor.gettPrefs().get(day).put(time, pref);
-		}
-		assert(instructor.gettPrefs().get(day).get(time) != null);
-
-		instructor.gettPrefs().get(day).put(time, desire);
+		instructor.gettPrefs()[day.ordinal()][time] = desire;
 		
 		time = hour * 60 + cell.halfHour % 2 * 30;
 
 		dayNum = cell.day;
 		day = DayGWT.values()[dayNum];
-		
-		assert(instructor.gettPrefs().get(day).get(time) == desire);
 		
 		assert(getPreference(instructor, cell.halfHour, cell.day) == desire);
 		
@@ -187,10 +170,7 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 		
 		DayGWT day = DayGWT.values()[dayNum];
 		
-		if (ins.gettPrefs().get(day) != null && ins.gettPrefs().get(day).get(time) != null)
-			return ins.gettPrefs().get(day).get(time);
-		else
-			return 0;
+		return ins.gettPrefs()[day.ordinal()][time];
 	}
 	
 	public void setMultiplePreferences()

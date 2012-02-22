@@ -70,12 +70,9 @@ class CourseDecorator {
 
 class GenerationModelLayer {
 	public static void blockOffInstructorUnacceptableTimes(InstructorDecorator instructor, Document document, HashMap<Integer, ScheduleItem> items) {
-		for (Entry<Day, HashMap<Integer, Integer>> prefsForDayEntry : instructor.instructor.getTimePreferences().entrySet()) {
-			Day day = prefsForDayEntry.getKey();
-			HashMap<Integer, Integer> prefsForDay = prefsForDayEntry.getValue();
-			for (Entry<Integer, Integer> prefForTimeEntry : prefsForDay.entrySet()) {
-				int halfHour = prefForTimeEntry.getKey();
-				int preference = prefForTimeEntry.getValue();
+		for (Day day : Day.values()) {
+			for (int halfHour = 0; halfHour < 48; halfHour++) {
+				int preference = instructor.instructor.getTimePreferences()[day.ordinal()][halfHour];
 				if (preference == 0)
 					instructor.blockedOffTimes.blockedOffTimes[day.ordinal()][halfHour] = true;
 			}
@@ -156,6 +153,8 @@ class GenerationModelLayer {
 	}
 
 	public void insertNewScheduleItem(ScheduleItem item) {
+		System.out.println("Inserting schedule item! Instructor " + item.getInstructorID() + " location " + item.getLocationID() + " course " + item.getCourseID() + " days " + item.getDays() + " from " + item.getStartHalfHour() + " to " + item.getEndHalfHour());
+		
 		if (instructorIsFreeDuring(findInstructorByID(item.getInstructorID()), item.getDays(), item.getStartHalfHour(), item.getEndHalfHour()) &&
 				locationIsFreeDuring(findLocationByID(item.getLocationID()), item.getDays(), item.getStartHalfHour(), item.getEndHalfHour())) {
 			instructors.get(item.getInstructorID()).blockedOffTimes.blockOffTimes(item.getDays(), item.getStartHalfHour(), item.getEndHalfHour());

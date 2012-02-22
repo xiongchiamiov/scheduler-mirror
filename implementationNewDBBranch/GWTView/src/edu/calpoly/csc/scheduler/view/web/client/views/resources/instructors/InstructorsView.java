@@ -89,7 +89,7 @@ public class InstructorsView extends VerticalPanel implements IViewContents, Ins
 	public InstructorGWT createInstructor() {
 		InstructorGWT instructor = new InstructorGWT(
 				generateTableInstructorID(), "", "", "", "",
-				new HashMap<DayGWT, HashMap<Integer, Integer>>(),
+				new int[DayGWT.values().length][48],
 				new HashMap<Integer, Integer>());
 		
 		

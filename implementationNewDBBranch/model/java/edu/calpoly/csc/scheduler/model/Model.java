@@ -120,7 +120,7 @@ public class Model {
 	
 	// INSTRUCTORS
 
-	public Instructor assembleInstructor(Document containingDocument, String firstName, String lastName, String username, String maxWTU, HashMap<Day, HashMap<Integer, Integer>> timePreferences, HashMap<Integer, Integer> coursePreferences, boolean isSchedulable) {
+	public Instructor assembleInstructor(Document containingDocument, String firstName, String lastName, String username, String maxWTU, int[][] timePreferences, HashMap<Integer, Integer> coursePreferences, boolean isSchedulable) {
 		IDBInstructor underlyingInstructor = database.assembleInstructor(containingDocument.underlyingDocument, firstName, lastName, username, maxWTU, isSchedulable);
 		return new Instructor(underlyingInstructor, timePreferences, coursePreferences);
 	}
@@ -157,7 +157,13 @@ public class Model {
 		ins.underlyingInstructor = null;
 	}
 	
-	private HashMap<Day, HashMap<Integer, Integer>> getTimePreferencesFromDB(IDBInstructor instructor) {
+	private int[][] getTimePreferencesFromDB(IDBInstructor instructor) {
+		int[][] result = new int[Day.values().length][48];
+		
+		for (Day day : Day.values())
+			for (int halfHour = 0; halfHour < 48; halfHour++)
+				result[day.ordinal()][halfHour] = Instructor.DEFAULT_PREF;
+		
 		HashMap<Day, HashMap<Integer, Integer>> newTimePreferences = new HashMap<Day, HashMap<Integer, Integer>>();
 		
 		for (Entry<IDBTime, IDBTimePreference> entry : database.findTimePreferencesByTimeForInstructor(instructor).entrySet()) {
@@ -166,13 +172,10 @@ public class Model {
 			Day day = Day.values()[time.getDay()];
 			int halfHour = time.getHalfHour();
 			
-			if (!newTimePreferences.containsKey(day))
-				newTimePreferences.put(day, new HashMap<Integer, Integer>());
-			assert(!newTimePreferences.get(day).containsKey(halfHour));
-			newTimePreferences.get(day).put(halfHour, pref.getPreference());
+			result[day.ordinal()][halfHour] = pref.getPreference();
 		}
 		
-		return newTimePreferences;
+		return result;
 	}
 
 	private void removeTimePreferencesFromDB(IDBInstructor instructor) {
@@ -180,14 +183,12 @@ public class Model {
 			database.deleteTimePreference(timePref);
 	}
 
-	private void putTimePreferencesIntoDB(IDBInstructor instructor, HashMap<Day, HashMap<Integer, Integer>> timePreferences) {
-		for (Entry<Day, HashMap<Integer, Integer>> timePreferencesForDay : timePreferences.entrySet()) {
-			int day = timePreferencesForDay.getKey().ordinal();
-			for (Entry<Integer, Integer> timePreferenceForTime : timePreferencesForDay.getValue().entrySet()) {
-				int halfHour = timePreferenceForTime.getKey();
-				IDBTime time = database.findTimeByDayAndHalfHour(day, halfHour); 
+	private void putTimePreferencesIntoDB(IDBInstructor instructor, int[][] timePreferences) {
+		for (Day day : Day.values()) {
+			for (int halfHour = 0; halfHour < 48; halfHour++) {
+				IDBTime time = database.findTimeByDayAndHalfHour(day.ordinal(), halfHour); 
 				
-				int preference = timePreferenceForTime.getValue();
+				int preference = timePreferences[day.ordinal()][halfHour];
 				database.insertTimePreference(database.assembleTimePreference(instructor, time, preference));
 			}
 		}

@@ -44,17 +44,6 @@ public abstract class Conversion {
 		return DayGWT.values()[gwtDay.ordinal()];
 	}
 	
-	private static HashMap<Day, HashMap<Integer, Integer>> timePrefsFromGWT(HashMap<DayGWT, HashMap<Integer, Integer>> gwtPrefs) {
-		HashMap<Day, HashMap<Integer, Integer>> modelPrefs = new HashMap<Day, HashMap<Integer, Integer>>();
-		
-		for (Entry<DayGWT, HashMap<Integer, Integer>> gwtPrefsForDay : gwtPrefs.entrySet()) {
-			Day modelDay = dayFromGWT(gwtPrefsForDay.getKey());
-			modelPrefs.put(modelDay, gwtPrefsForDay.getValue());
-		}
-		
-		return modelPrefs;
-	}
-	
 	private static HashMap<DayGWT, HashMap<Integer, Integer>> timePrefsToGWT(HashMap<Day, HashMap<Integer, Integer>> modelPrefs) {
 		HashMap<DayGWT, HashMap<Integer, Integer>> gwtPrefs = new HashMap<DayGWT, HashMap<Integer, Integer>>();
 		
@@ -73,7 +62,7 @@ public abstract class Conversion {
 				instructor.getFirstName(),
 				instructor.getLastName(),
 				instructor.getMaxWTU(),
-				timePrefsToGWT(instructor.getTimePreferences()),
+				instructor.getTimePreferences(),
 				instructor.getCoursePreferences());
 	}
 	
@@ -105,7 +94,7 @@ public abstract class Conversion {
 				instructor.getLastName(),
 				instructor.getUsername(),
 				instructor.getRawMaxWtu(),
-				timePrefsFromGWT(instructor.gettPrefs()),
+				instructor.gettPrefs(),
 				instructor.getCoursePreferences(),
 				instructor.isSchedulable());
 	}
@@ -174,7 +163,7 @@ public abstract class Conversion {
 		result.setUsername(source.getUsername());
 		result.setMaxWTU(source.getRawMaxWtu());
 		result.setCoursePreferences(source.getCoursePreferences());
-		result.setTimePreferences(timePrefsFromGWT(source.gettPrefs()));
+		result.setTimePreferences(source.gettPrefs());
 	}
 
 	public static void readLocationFromGWT(LocationGWT source, Location result) {

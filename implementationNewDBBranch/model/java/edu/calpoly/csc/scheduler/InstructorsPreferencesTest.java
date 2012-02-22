@@ -23,7 +23,7 @@ public abstract class InstructorsPreferencesTest extends ModelTestCase {
 		{
 			Document doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
 			
-			HashMap<Day, HashMap<Integer, Integer>> timePrefs = ModelTestUtility.createSampleTimePreferences(doc);
+			int[][] timePrefs = ModelTestUtility.createSampleTimePreferences(doc);
 			
 			instructorID = model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", timePrefs, new HashMap<Integer, Integer>(), true)).getID();
 		}
@@ -53,12 +53,12 @@ public abstract class InstructorsPreferencesTest extends ModelTestCase {
 			coursePrefs.put(courseID1, 2);
 			coursePrefs.put(courseID2, 3);
 			
-			instructorID = model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", new HashMap<Day, HashMap<Integer,Integer>>(), coursePrefs, true)).getID();
+			instructorID = model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", Instructor.createDefaultTimePreferences(), coursePrefs, true)).getID();
 		}
 		
 		Instructor found = model.findInstructorByID(instructorID);
-		assert(found.getCoursePreferences().get(courseID1).equals(2));
-		assert(found.getCoursePreferences().get(courseID2).equals(3));
+		assertTrue(found.getCoursePreferences().get(courseID1).equals(2));
+		assertTrue(found.getCoursePreferences().get(courseID2).equals(3));
 	}
 
 	public void testUtilityInstructorEquals() {
@@ -72,7 +72,7 @@ public abstract class InstructorsPreferencesTest extends ModelTestCase {
 		coursePrefs1.put(courseID1, 2);
 		coursePrefs1.put(courseID2, 3);
 		
-		HashMap<Day, HashMap<Integer, Integer>> timePrefs1 = ModelTestUtility.createSampleTimePreferences(doc);
+		int[][] timePrefs1 = ModelTestUtility.createSampleTimePreferences(doc);
 		
 		Instructor ins1 = model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", timePrefs1, coursePrefs1, true));
 		
@@ -80,15 +80,14 @@ public abstract class InstructorsPreferencesTest extends ModelTestCase {
 		coursePrefs2.put(courseID1, 2);
 		coursePrefs2.put(courseID2, 3);
 		
-		HashMap<Day, HashMap<Integer, Integer>> timePrefs2 = ModelTestUtility.createSampleTimePreferences(doc);
+		int[][] timePrefs2 = ModelTestUtility.createSampleTimePreferences(doc);
 		
 		Instructor ins2 = model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", timePrefs2, coursePrefs2, true));
 		
 		
 		assertTrue(ModelTestUtility.instructorsContentsEqual(ins1, ins2));
 		
-		ins1.getTimePreferences().put(Day.FRIDAY, new HashMap<Integer, Integer>());
-		ins1.getTimePreferences().get(Day.FRIDAY).put(10, 4);
+		ins1.setTimePreferences(Day.FRIDAY, 10, 4);
 
 		assertFalse(ModelTestUtility.instructorsContentsEqual(ins1, ins2));
 	}
