@@ -4,7 +4,7 @@ import java.util.Set;
 
 import edu.calpoly.csc.scheduler.model.db.IDBScheduleItem;
 
-public class ScheduleItem {
+public class ScheduleItem implements Identified {
 	IDBScheduleItem underlying;
 	private int courseID;
 	private int locationID;

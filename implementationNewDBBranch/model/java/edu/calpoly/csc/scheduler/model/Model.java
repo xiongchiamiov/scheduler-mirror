@@ -628,4 +628,8 @@ public class Model {
 		IDBScheduleItem newUnderlying = database.assembleScheduleItemCopy(item.underlying);
 		return new ScheduleItem(newUnderlying, item.getCourseID(), item.getLocationID(), item.getInstructorID());
 	}
+
+	public Schedule getScheduleItemSchedule(ScheduleItem item) throws NotFoundException {
+		return new Schedule(database.getScheduleItemSchedule(item.underlying));
+	}
 }

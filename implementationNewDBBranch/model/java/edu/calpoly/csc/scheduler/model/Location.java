@@ -4,7 +4,7 @@ import java.util.Set;
 
 import edu.calpoly.csc.scheduler.model.db.IDBLocation;
 
-public class Location {
+public class Location implements Identified {
 	IDBLocation underlyingLocation;
 	Set<String> providedEquipment;
 	

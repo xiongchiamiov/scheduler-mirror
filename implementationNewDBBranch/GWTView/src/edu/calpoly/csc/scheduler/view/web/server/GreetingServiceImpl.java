@@ -1,6 +1,5 @@
 package edu.calpoly.csc.scheduler.view.web.server;
 
-import java.io.NotActiveException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -17,8 +16,11 @@ import edu.calpoly.csc.scheduler.model.Model;
 import edu.calpoly.csc.scheduler.model.Schedule;
 import edu.calpoly.csc.scheduler.model.ScheduleItem;
 import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
+import edu.calpoly.csc.scheduler.model.tempalgorithm.GenerationAlgorithm;
+import edu.calpoly.csc.scheduler.model.tempalgorithm.GenerationAlgorithm.CouldNotBeScheduledException;
 import edu.calpoly.csc.scheduler.view.web.client.GreetingService;
 import edu.calpoly.csc.scheduler.view.web.client.InvalidLoginException;
+import edu.calpoly.csc.scheduler.view.web.shared.CouldNotBeScheduledExceptionGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.DocumentGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
@@ -429,22 +431,35 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	@Override
 	public Collection<ScheduleItemGWT> insertScheduleItem(int scheduleID, ScheduleItemGWT scheduleItem) throws NotFoundExceptionGWT {
 		try {
+			Schedule schedule = model.findScheduleByID(scheduleID);
 			ScheduleItem newItem = Conversion.scheduleItemFromGWT(model, model.findScheduleByID(scheduleID), scheduleItem);
-			model.insertScheduleItem(newItem);
-			scheduleItem.setID(newItem.getID());
-			return null; // TODO
+
+			GenerationAlgorithm.insertNewScheduleItem(model, schedule, newItem);
+			
+			return getScheduleItems(scheduleID);
 		} catch (NotFoundException e) {
 			e.printStackTrace();
 			throw new NotFoundExceptionGWT();
 		}
-		
-//		return null; //TODO
 	}
 
 	@Override
-	public Collection<ScheduleItemGWT> generateRestOfSchedule(int scheduleID) {
-		// need to hook this up to the algorithm once we've moved it over
-		throw new UnsupportedOperationException();
+	public Collection<ScheduleItemGWT> generateRestOfSchedule(int scheduleID) throws NotFoundExceptionGWT, CouldNotBeScheduledExceptionGWT {
+		try {
+			Schedule schedule = model.findScheduleByID(scheduleID);
+			
+			GenerationAlgorithm.generateRestOfSchedule(model, schedule);
+			
+			return getScheduleItems(scheduleID);
+		}
+		catch (NotFoundException e) {
+			e.printStackTrace();
+			throw new NotFoundExceptionGWT();
+		}
+		catch (CouldNotBeScheduledException e) {
+			e.printStackTrace();
+			throw new CouldNotBeScheduledExceptionGWT();
+		}
 	}
 
 	@Override
@@ -453,24 +468,26 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			ScheduleItem item = model.findScheduleItemByID(itemGWT.getID());
 			Conversion.readScheduleItemFromGWT(itemGWT, item);
 			model.updateScheduleItem(item);
+			
+			return getScheduleItems(model.getScheduleItemSchedule(item).getID());
 		} catch (NotFoundException e) {
 			e.printStackTrace();
 			throw new NotFoundExceptionGWT();
 		}
-		
-		return null;//TODO
 	}
 
 	@Override
 	public Collection<ScheduleItemGWT> newRemoveScheduleItem(ScheduleItemGWT itemGWT) throws NotFoundExceptionGWT {
 		try {
+			Schedule schedule = model.getScheduleItemSchedule(model.findScheduleItemByID(itemGWT.getID()));
+			
 			model.deleteScheduleItem(model.findScheduleItemByID(itemGWT.getID()));
+
+			return getScheduleItems(schedule.getID());
 		} catch (NotFoundException e) {
 			e.printStackTrace();
 			throw new NotFoundExceptionGWT();
 		}
-		
-		return null;// TODO
 	}
 
 	@Override

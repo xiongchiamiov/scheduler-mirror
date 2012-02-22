@@ -147,4 +147,5 @@ public interface IDatabase {
 	boolean isEmpty();
 	
 	IDBScheduleItem assembleScheduleItemCopy(IDBScheduleItem underlying);
+	IDBSchedule getScheduleItemSchedule(IDBScheduleItem underlying) throws NotFoundException;
 }

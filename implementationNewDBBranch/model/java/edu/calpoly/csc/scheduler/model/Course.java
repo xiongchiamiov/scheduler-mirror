@@ -5,7 +5,7 @@ import java.util.Set;
 
 import edu.calpoly.csc.scheduler.model.db.IDBCourse;
 
-public class Course {
+public class Course implements Identified {
 	IDBCourse underlyingCourse;
 	Set<String> usedEquipment;
 	Collection<Set<Day>> dayPatterns;

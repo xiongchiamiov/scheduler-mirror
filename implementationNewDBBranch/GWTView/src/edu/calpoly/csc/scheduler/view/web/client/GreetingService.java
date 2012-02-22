@@ -10,6 +10,8 @@ import java.util.List;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
+import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
+import edu.calpoly.csc.scheduler.view.web.shared.CouldNotBeScheduledExceptionGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.DocumentGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
@@ -140,7 +142,7 @@ public interface GreetingService extends RemoteService {
 
 	Collection<ScheduleItemGWT> insertScheduleItem(int scheduleID,
 			ScheduleItemGWT scheduleItem) throws NotFoundExceptionGWT;
-	public Collection<ScheduleItemGWT> generateRestOfSchedule(int scheduleID);
+	public Collection<ScheduleItemGWT> generateRestOfSchedule(int scheduleID) throws NotFoundExceptionGWT, CouldNotBeScheduledExceptionGWT;
 	Collection<ScheduleItemGWT> updateScheduleItem(ScheduleItemGWT itemGWT) throws NotFoundExceptionGWT;
 	Collection<ScheduleItemGWT> newRemoveScheduleItem(ScheduleItemGWT itemGWT) throws NotFoundExceptionGWT;
 	Collection<ScheduleItemGWT> getScheduleItems(int scheduleID) throws NotFoundExceptionGWT;

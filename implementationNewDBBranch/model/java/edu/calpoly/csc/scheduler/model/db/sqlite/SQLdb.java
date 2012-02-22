@@ -783,5 +783,13 @@ public class SQLdb implements IDatabase {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+
+	@Override
+	public IDBSchedule getScheduleItemSchedule(IDBScheduleItem underlying)
+			throws NotFoundException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }

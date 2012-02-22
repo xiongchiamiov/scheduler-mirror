@@ -815,4 +815,9 @@ public class Database implements IDatabase {
 		return result;
 	}
 
+	@Override
+	public IDBSchedule getScheduleItemSchedule(IDBScheduleItem underlying) throws NotFoundException {
+		return scheduleTable.findByID(((DBScheduleItem)underlying).scheduleID);
+	}
+
 }

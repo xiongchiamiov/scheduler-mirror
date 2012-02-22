@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import edu.calpoly.csc.scheduler.model.db.IDBInstructor;
 
-public class Instructor {
+public class Instructor implements Identified {
 	public static final int DEFAULT_PREF = 5;
 	
 	IDBInstructor underlyingInstructor;
