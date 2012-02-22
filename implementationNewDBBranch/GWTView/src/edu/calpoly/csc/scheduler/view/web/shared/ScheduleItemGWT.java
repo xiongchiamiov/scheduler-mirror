@@ -8,8 +8,8 @@ public class ScheduleItemGWT implements Serializable {
 	
 	private int id;
 	private int courseID;
-	private int instructorID;
-	private int locationID;
+	private int instructorID; // -1 means Staff
+	private int locationID; // -1 means TBA
 	private int section;
 	private Set<DayGWT> days;
 	private int startHalfHour;

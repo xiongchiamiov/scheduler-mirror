@@ -13,7 +13,8 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.RootPanel;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
-import edu.calpoly.csc.scheduler.view.web.shared.OldScheduleItemGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.DayGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 
 /**
  * Takes in various mouse events to determine when items are dragged/dropped. 
@@ -29,8 +30,8 @@ public class DragAndDropController implements MouseMoveHandler, MouseOutHandler,
 	private final ScheduleEditWidget mWidget;
 	
 	private Element mItemView;
-	private OldScheduleItemGWT mDraggingItem;
-	private OldScheduleItemGWT mDroppedItem;
+	private ScheduleItemGWT mDraggingItem;
+	private ScheduleItemGWT mDroppedItem;
 	private boolean isMoving = false;
 	private boolean fromCalendar = false;
 	
@@ -85,7 +86,7 @@ public class DragAndDropController implements MouseMoveHandler, MouseOutHandler,
 	 * @param tableCol The column number of this item in the table, 
 	 * 	or -1 if available courses list
 	 */
-	public void onMouseDown(OldScheduleItemGWT item, int row, int tableCol) {
+	public void onMouseDown(ScheduleItemGWT item, int row, int tableCol) {
 		mDraggingItem = item;
 		isMoving = false;
 		
@@ -103,9 +104,9 @@ public class DragAndDropController implements MouseMoveHandler, MouseOutHandler,
 	 * Triggered when an item is dropped (as opposed to every mouse up event)
 	 *  
 	 * @param row The table row the item was dropped on, or -1 if off table
-	 * @param col TheDay the item was dropped on, or -1 if off table
+	 * @param col The Day the item was dropped on, or null if off table
 	 */
-	public void onDrop(int row, int dayNum) {
+	public void onDrop(int row, DayGWT day) {
 		// Check if moving to prevent clicks from registering as drops
 		if (isMoving)
 			dropItem(true);
@@ -113,16 +114,18 @@ public class DragAndDropController implements MouseMoveHandler, MouseOutHandler,
 			dropItem(false);
 			
 		if (mDroppedItem != null) {
-			if (row < 0 || dayNum < 0) {
-				System.out.println(mDroppedItem.getCourseString() + " dropped on list");
+			final String courseString = mWidget.getCourseString(mDroppedItem.getCourseID());
+			
+			if (row < 0 || day == null) {
+				System.out.println(courseString + " dropped on list");
 				
 				if (fromCalendar) {
 					// tell widget to delete item from Calendar
 				}
 			}
 			else {
-				System.out.println(mDroppedItem.getCourseString() + " dropped on "+dayNum+" at "+row);
-				mWidget.editItem(!fromCalendar, mDroppedItem, new ArrayList<Integer>(dayNum), row);
+				System.out.println(courseString + " dropped on "+day.ordinal()+" at "+row);
+				mWidget.editItem(!fromCalendar, mDroppedItem, new ArrayList<Integer>(day.ordinal()), row);
 			}
 			
 			mDroppedItem = null;

@@ -189,8 +189,8 @@ public abstract class Conversion {
 		return result;
 	}
 
-	public static DocumentGWT documentToGWT(Document doc) {
-		return new DocumentGWT(doc.getID(), doc.getName());
+	public static DocumentGWT documentToGWT(Document doc, int scheduleID) {
+		return new DocumentGWT(doc.getID(), doc.getName(), scheduleID);
 	}
 
 	@Deprecated

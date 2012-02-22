@@ -1,6 +1,7 @@
 package edu.calpoly.csc.scheduler.view.web.client.calendar;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import com.google.gwt.user.client.DOM;
@@ -8,27 +9,27 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.SimplePanel;
 
-import edu.calpoly.csc.scheduler.view.web.shared.OldScheduleItemGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.DayGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 
-public class ScheduleItemListView extends SimplePanel {
+public class CourseListView extends SimplePanel {
 
 	private final ScheduleEditWidget mScheduleController;
 	private final DragAndDropController mDragController;
 	
-	private List<OldScheduleItemGWT> mModel;
+	private List<CourseGWT> mModel;
 	
-	public ScheduleItemListView(List<OldScheduleItemGWT> items, ScheduleEditWidget scheduleController, DragAndDropController dragController) {
-		//mModel = new DummySchedule();
-		mModel = items;
+	public CourseListView(ScheduleEditWidget scheduleController, DragAndDropController dragController) {
 		mScheduleController = scheduleController;
 		mDragController = dragController;
 
 		defineTableCallbacks();
 	}
 	
-	public List<OldScheduleItemGWT> getItems() { return mModel; }
+	public List<CourseGWT> getItems() { return mModel; }
 	
-	public void setItems(List<OldScheduleItemGWT> items) { mModel = items; }
+	public void setItems(List<CourseGWT> items) { mModel = items; }
 	
 	public void toggle(boolean hidden) {
 		Element container = DOM.getElementById("ScheduleListContainer");
@@ -49,13 +50,15 @@ public class ScheduleItemListView extends SimplePanel {
 				"#ScheduleListHeader {width:100%;height:19px;background-color:#edf2f2;font-weight:bold;border-bottom:1px solid #000000;padding:0px;margin:0px;padding-top:4px;padding-bottom:4px;}"+
 				"#ScheduleList td .ScheduleListItem {background-color:#DFF0CF;margin:1px;text-align:center;padding-top:4px;padding-bottom:4px;height:100%;width:100%;border:none;cursor:move;}"+
 				"</style>");
-		builder.append("<div id=\"ScheduleListContainer\">" +
-				"<div id=\"ScheduleListHeader\">AvailableCourses</div>" +
+		builder.append("<div id=\"ScheduleListContainer\"" +
+				"onmouseup=\"listMouseUp("+-1+")\" " +
+				">");
+		builder.append("<div id=\"ScheduleListHeader\">AvailableCourses</div>" +
 				"<div id=\"ScheduleListTableContainer\">" +
 				"<table id=\"ScheduleList\">");
 		
 		int rowNum = 0;
-		for (OldScheduleItemGWT item : mModel) {
+		for (CourseGWT course : mModel) {
 			builder.append("<tr " +
 					"onmouseover=\"listMouseOver("+rowNum+")\" " +
 					"onmouseout=\"listMouseOut("+rowNum+")\" " +
@@ -65,7 +68,7 @@ public class ScheduleItemListView extends SimplePanel {
 					"onmousedown=\"listMouseDown("+rowNum+")\" " +
 					"onmouseup=\"listMouseUp("+rowNum+")\" " +
 					"onselectstart=\"return false\" "+
-					">"+item.getCourseString()+"</div></td>");
+					">"+mScheduleController.getCourseString(course.getID())+"</div></td>");
 			builder.append("</tr>");
 			rowNum++;
 		}
@@ -84,9 +87,9 @@ public class ScheduleItemListView extends SimplePanel {
 	 * Called when the user double clicks an item in the table
 	 */
 	public void doubleClick(int row) {
-		OldScheduleItemGWT item = mModel.get(row);
+		final CourseGWT course = mModel.get(row);
 		
-		mScheduleController.editItem(true, item, new ArrayList<Integer>(), CalendarTableView.getStartRow(item));
+//		mScheduleController.editItem(true, course, new ArrayList<Integer>(), CalendarTableView.getStartRow(createItem(course)));
 	}
 	
 	/**
@@ -95,21 +98,26 @@ public class ScheduleItemListView extends SimplePanel {
 	 * @return false to disable text selection on some browsers
 	 */
 	public Boolean mouseDown(int row) {
-		final OldScheduleItemGWT item = mModel.get(row);
+		final CourseGWT course = mModel.get(row);
 		
 		// Set the text of the div that moves with the cursor
 		Element dragDiv = DOM.getElementById(DragAndDropController.DRAGGED_ID);
-		DOM.setInnerText(dragDiv, item.getCourseString());
+		DOM.setInnerText(dragDiv, mScheduleController.getCourseString(course.getID()));
 		
-		mDragController.onMouseDown(item, row, -1);
+		mDragController.onMouseDown(createItem(course), row, -1);
 		return false;
+	}
+	
+	private ScheduleItemGWT createItem(CourseGWT course) {
+		return new ScheduleItemGWT(-1, course.getID(), -1, -1, 
+				-1, new HashSet<DayGWT>(), 0, 0, false, false);
 	}
 
 	/**
 	 * Called when the any cell on the table gets a mouse up event
 	 */
 	public void mouseUp(int row) {
-		mDragController.onDrop(row, -1);
+		mDragController.onDrop(row, null);
 	}
 	
 	/**
@@ -136,19 +144,19 @@ public class ScheduleItemListView extends SimplePanel {
 	private native void defineTableCallbacks() /*-{
 		var availableCourses = this;
 		$wnd.listDoubleClick = function(row) {
-			return availableCourses.@edu.calpoly.csc.scheduler.view.web.client.calendar.ScheduleItemListView::doubleClick(I)(row);
+			return availableCourses.@edu.calpoly.csc.scheduler.view.web.client.calendar.CourseListView::doubleClick(I)(row);
 		}
 		$wnd.listMouseDown = function(row) {
-			return availableCourses.@edu.calpoly.csc.scheduler.view.web.client.calendar.ScheduleItemListView::mouseDown(I)(row);
+			return availableCourses.@edu.calpoly.csc.scheduler.view.web.client.calendar.CourseListView::mouseDown(I)(row);
 		}
 		$wnd.listMouseUp = function(row) {
-			return availableCourses.@edu.calpoly.csc.scheduler.view.web.client.calendar.ScheduleItemListView::mouseUp(I)(row);
+			return availableCourses.@edu.calpoly.csc.scheduler.view.web.client.calendar.CourseListView::mouseUp(I)(row);
 		}
 		$wnd.listMouseOver = function(row) {
-			return availableCourses.@edu.calpoly.csc.scheduler.view.web.client.calendar.ScheduleItemListView::mouseOver(I)(row);
+			return availableCourses.@edu.calpoly.csc.scheduler.view.web.client.calendar.CourseListView::mouseOver(I)(row);
 		}
 		$wnd.listMouseOut = function(row) {
-			return availableCourses.@edu.calpoly.csc.scheduler.view.web.client.calendar.ScheduleItemListView::mouseOut(I)(row);
+			return availableCourses.@edu.calpoly.csc.scheduler.view.web.client.calendar.CourseListView::mouseOut(I)(row);
 		}
     }-*/;
 }

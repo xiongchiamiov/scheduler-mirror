@@ -228,8 +228,10 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	public Collection<DocumentGWT> getAllOriginalDocumentsByID() {
 		Collection<DocumentGWT> result = new LinkedList<DocumentGWT>();
 		for (Document doc : model.findAllDocuments()) {
-			if (model.isOriginalDocument(doc))
-				result.add(Conversion.documentToGWT(doc));
+			if (model.isOriginalDocument(doc)) {
+				int scheduleID = model.findAllSchedulesForDocument(doc).iterator().next().getID();
+				result.add(Conversion.documentToGWT(doc, scheduleID));
+			}
 		}
 		return result;
 	}
@@ -238,7 +240,10 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	public DocumentGWT createDocument(String newDocName) {
 		Document newOriginalDocument = model.assembleDocument(newDocName, 14, 44);
 		model.insertDocument(newOriginalDocument);
-		return Conversion.documentToGWT(newOriginalDocument);
+		Schedule schedule = model.assembleSchedule(newOriginalDocument);
+		model.insertSchedule(schedule);
+		int scheduleID = schedule.getID();
+		return Conversion.documentToGWT(newOriginalDocument, scheduleID);
 	}
 
 	@Override
@@ -254,7 +259,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			model.associateWorkingCopyWithOriginal(workingCopyDocument, originalDocument);
 			model.updateDocument(workingCopyDocument);
 			model.updateDocument(originalDocument);
-			return Conversion.documentToGWT(workingCopyDocument);
+			return Conversion.documentToGWT(workingCopyDocument, model.findAllSchedulesForDocument(workingCopyDocument).iterator().next().getID());
 		} catch (NotFoundException e) {
 			e.printStackTrace();
 			throw new NotFoundExceptionGWT();
@@ -422,16 +427,18 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	
 	
 	@Override
-	public ScheduleItemGWT insertScheduleItem(int scheduleID, ScheduleItemGWT scheduleItem) throws NotFoundExceptionGWT {
+	public Collection<ScheduleItemGWT> insertScheduleItem(int scheduleID, ScheduleItemGWT scheduleItem) throws NotFoundExceptionGWT {
 		try {
 			ScheduleItem newItem = Conversion.scheduleItemFromGWT(model, model.findScheduleByID(scheduleID), scheduleItem);
 			model.insertScheduleItem(newItem);
 			scheduleItem.setID(newItem.getID());
-			return scheduleItem;
+			return null; // TODO
 		} catch (NotFoundException e) {
 			e.printStackTrace();
 			throw new NotFoundExceptionGWT();
 		}
+		
+//		return null; //TODO
 	}
 
 	@Override
@@ -441,7 +448,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	}
 
 	@Override
-	public void updateScheduleItem(ScheduleItemGWT itemGWT) throws NotFoundExceptionGWT {
+	public Collection<ScheduleItemGWT> updateScheduleItem(ScheduleItemGWT itemGWT) throws NotFoundExceptionGWT {
 		try {
 			ScheduleItem item = model.findScheduleItemByID(itemGWT.getID());
 			Conversion.readScheduleItemFromGWT(itemGWT, item);
@@ -450,16 +457,20 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			e.printStackTrace();
 			throw new NotFoundExceptionGWT();
 		}
+		
+		return null;//TODO
 	}
 
 	@Override
-	public void newRemoveScheduleItem(ScheduleItemGWT itemGWT) throws NotFoundExceptionGWT {
+	public Collection<ScheduleItemGWT> newRemoveScheduleItem(ScheduleItemGWT itemGWT) throws NotFoundExceptionGWT {
 		try {
 			model.deleteScheduleItem(model.findScheduleItemByID(itemGWT.getID()));
 		} catch (NotFoundException e) {
 			e.printStackTrace();
 			throw new NotFoundExceptionGWT();
 		}
+		
+		return null;// TODO
 	}
 
 	@Override

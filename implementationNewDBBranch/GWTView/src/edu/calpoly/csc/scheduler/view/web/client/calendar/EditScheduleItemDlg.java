@@ -1,7 +1,9 @@
 package edu.calpoly.csc.scheduler.view.web.client.calendar;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -20,10 +22,11 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.DayGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.DocumentGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.OldScheduleItemGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 
 /**
  * A dialog that allows the user to edit the instructor, location, and time of a
@@ -39,20 +42,23 @@ public class EditScheduleItemDlg extends DialogBox {
 	private final List<CheckBox> mDayCheckBoxes = new ArrayList<CheckBox>();
 	private final ListBox mStartTimeLB = new ListBox(false);
 	private final ListBox mEndTimeLB = new ListBox(false);
+	
+	private List<InstructorGWT> mInstructors;
+	private List<LocationGWT> mLocations;
 
 	private final GreetingServiceAsync mGreetingService;
 	private final ScheduleEditWidget mWidget;
 	private final DragAndDropController mDragController;
 	
 	private final boolean mFromList;
-	private final OldScheduleItemGWT mOriginalItem;
+	private final ScheduleItemGWT mOriginalItem;
 	private List<Integer> mNewDays;
 	private int mNewStartRow;
 	private boolean mChangedItem;
-	private final DocumentGWT document;
+	private final DocumentGWT mDocument;
 
 	public EditScheduleItemDlg(GreetingServiceAsync service, ScheduleEditWidget widget, DragAndDropController dragController,
-			boolean fromList, OldScheduleItemGWT item, List<Integer> newDays, int newStartRow, DocumentGWT document) {
+			boolean fromList, ScheduleItemGWT item, List<Integer> newDays, int newStartRow, DocumentGWT document) {
 		super(false);
 
 		mGreetingService = service;
@@ -63,7 +69,7 @@ public class EditScheduleItemDlg extends DialogBox {
 		mOriginalItem = item;
 		mNewDays = newDays;
 		mNewStartRow = newStartRow;
-		this.document = document;
+		mDocument = document;
 		
 		draw();
 	}
@@ -72,7 +78,7 @@ public class EditScheduleItemDlg extends DialogBox {
 		mMainPanel.setWidth("300px");
 		mMainPanel.setSpacing(5);
 		mMainPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-		mMainPanel.setTitle("Edit " + mOriginalItem.getCourseString());
+		mMainPanel.setTitle("Edit " + mWidget.getCourseString(mOriginalItem.getCourseID()));
 		mMainPanel.setStylePrimaryName("editScheduleItemDialog");
 		
 		mMainPanel.add(createTitlePanel());
@@ -98,40 +104,26 @@ public class EditScheduleItemDlg extends DialogBox {
 		return mChangedItem;
 	}
 
-	public OldScheduleItemGWT getOriginalItem() {
+	public ScheduleItemGWT getOriginalItem() {
 		return mOriginalItem;
 	}
 	
-	public OldScheduleItemGWT getNewItem() {
-		CourseGWT course = mOriginalItem.getCourse();
-		String courseName = course.getCourseName();
-		
-		int insNdx = mInstructorsLB.getSelectedIndex();
-		String prof = insNdx >= 0 ? mInstructorsLB.getItemText(insNdx) : null;
-		
-		String courseDept = course.getDept();
-		String courseNum = mOriginalItem.getCatalogNum();
+	public ScheduleItemGWT getNewItem() {
+		int courseID = mOriginalItem.getCourseID();
+		int instructorID = mInstructors.get(mInstructorsLB.getSelectedIndex()).getID(); 
+		int locationID = mLocations.get(mLocationsLB.getSelectedIndex()).getID();
 		int section = mOriginalItem.getSection();
 		
-		ArrayList<Integer> dayNums = new ArrayList<Integer>();
-		for (int i = 0; i < mDayCheckBoxes.size(); i++) {
-			if (mDayCheckBoxes.get(i).getValue()) {
-				dayNums.add(i + 1);
-			}
-		}
+		Set<DayGWT> days = new HashSet<DayGWT>();
+		for (int i = 0; i < mDayCheckBoxes.size(); i++)
+			if (mDayCheckBoxes.get(i).getValue())
+				days.add(DayGWT.values()[i]);
 		
-		int startHour = getStartHour(mStartTimeLB.getSelectedIndex());
-		int startMin = getStartMin(mStartTimeLB.getSelectedIndex());
-		int endHour = getEndHour(mEndTimeLB.getSelectedIndex());
-		int endMin = getEndMin(mEndTimeLB.getSelectedIndex());
+		int startHalfHour = getStartHalfHour(mStartTimeLB.getSelectedIndex());
+		int endHalfHour = getEndHalfHour(mEndTimeLB.getSelectedIndex());
 		
-		int locNdx = mLocationsLB.getSelectedIndex();
-		String room = locNdx >= 0 ? mLocationsLB.getItemText(locNdx) : null;
-		
-		boolean conflicted = false;
-		
-		return new OldScheduleItemGWT(course, courseName, prof, courseDept, courseNum, 
-				section, dayNums, startHour, startMin, endHour, endMin, room, conflicted);
+		return new ScheduleItemGWT(mOriginalItem.getID(), courseID, instructorID, locationID, 
+				section, days, startHalfHour, endHalfHour, false, false);
 	}
 	
 	private void cancel() {
@@ -151,27 +143,19 @@ public class EditScheduleItemDlg extends DialogBox {
 			}
 		}
 		
-		mWidget.moveItem(getNewItem(), days, mStartTimeLB.getSelectedIndex(), !mFromList);
+		mWidget.updateItem(getNewItem(), !mFromList);
 	}
 	
-	private int getStartHour(int row) {
-		return row / 2 + 7;
+	private int getStartHalfHour(int row) {
+		return row + 14;
 	}
-
-	private int getStartMin(int row) {
-		return getEndMin(row)+ 10;
-	}
-
-	private int getEndHour(int row) {
-		return row / 2 + 7;
-	}
-
-	private int getEndMin(int row) {
-		return ((row % 2) * 30);
+	
+	private int getEndHalfHour(int row) {
+		return row + 14;
 	}
 	
 	private Widget createTitlePanel() {
-		final HTML titlePanel = new HTML("<center><b>Edit " + mOriginalItem.getCourseString() + "</b></center><p>");
+		final HTML titlePanel = new HTML("<center><b>Edit " + mWidget.getCourseString(mOriginalItem.getCourseID()) + "</b></center><p>");
 		titlePanel.setHeight("30px");
 		return titlePanel;
 	}
@@ -295,7 +279,7 @@ public class EditScheduleItemDlg extends DialogBox {
 	}
 
 	private void populateInstructors() {
-		mGreetingService.getInstructorsForDocument(document.getID(), new AsyncCallback<List<InstructorGWT>>() {
+		mGreetingService.getInstructorsForDocument(mDocument.getID(), new AsyncCallback<List<InstructorGWT>>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				Window.alert("Failed to retrieve instructors.");
@@ -303,6 +287,8 @@ public class EditScheduleItemDlg extends DialogBox {
 
 			@Override
 			public void onSuccess(List<InstructorGWT> result) {
+				mInstructors = result;
+				
 				if (result != null) {
 					if (result.size() > 10) {
 						mInstructorsLB.setVisibleItemCount(result.size());						
@@ -318,7 +304,7 @@ public class EditScheduleItemDlg extends DialogBox {
 	}
 
 	private void populateLocations() {
-		mGreetingService.getLocationsForDocument(document.getID(), new AsyncCallback<List<LocationGWT>>() {
+		mGreetingService.getLocationsForDocument(mDocument.getID(), new AsyncCallback<List<LocationGWT>>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				Window.alert("Failed to retrieve instructors.");
@@ -326,6 +312,8 @@ public class EditScheduleItemDlg extends DialogBox {
 
 			@Override
 			public void onSuccess(List<LocationGWT> result) {
+				mLocations = result;
+				
 				if (result != null) {
 					if (result.size() > 10) {
 						mLocationsLB.setVisibleItemCount(result.size());						

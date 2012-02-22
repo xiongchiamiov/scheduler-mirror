@@ -145,7 +145,8 @@ public interface GreetingServiceAsync {
 	
 	
 	/**
-	 * Inserts a new schedule item into the schedule with the given ID.
+	 * Inserts a new schedule item into the schedule with the given ID. The 
+	 * schedule item should have an id of -1.
 	 * @param scheduleID
 	 * @param scheduleItem this item's ID must be negative.
 	 * @param callback
@@ -153,7 +154,7 @@ public interface GreetingServiceAsync {
 	 * as scheduleItem but with the ID set.
 	 */
 	void insertScheduleItem(int scheduleID, ScheduleItemGWT scheduleItem,
-			AsyncCallback<ScheduleItemGWT> callback);
+			AsyncCallback<Collection<ScheduleItemGWT>> callback);
 	
 	/**
 	 * Generates schedule items for all unscheduled schedulable courses.
@@ -169,7 +170,7 @@ public interface GreetingServiceAsync {
 	 * @param callback
 	 */
 	void updateScheduleItem(ScheduleItemGWT itemGWT,
-			AsyncCallback<Void> callback);
+			AsyncCallback<Collection<ScheduleItemGWT>> callback);
 	
 	/**
 	 * Gets all schedule items in the schedule with id scheduleID.
@@ -185,5 +186,5 @@ public interface GreetingServiceAsync {
 	 * @param callback
 	 */
 	void newRemoveScheduleItem(ScheduleItemGWT itemGWT,
-			AsyncCallback<Void> callback);
+			AsyncCallback<Collection<ScheduleItemGWT>> callback);
 }
