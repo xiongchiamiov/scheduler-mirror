@@ -9,7 +9,7 @@ public class DBLocation extends DBObject implements IDBLocation {
 	String maxOccupancy;
 	boolean isSchedulable;
 	
-	public DBLocation(Integer id, int documentID, String room, String type, String maxOccupancy) {
+	public DBLocation(Integer id, int documentID, String room, String type, String maxOccupancy, boolean isSchedulable) {
 		super(id);
 		this.documentID = documentID;
 		this.room = room;
@@ -18,7 +18,7 @@ public class DBLocation extends DBObject implements IDBLocation {
 	}
 	
 	public DBLocation(DBLocation that) {
-		this(that.id, that.documentID, that.room, that.type, that.maxOccupancy);
+		this(that.id, that.documentID, that.room, that.type, that.maxOccupancy, that.isSchedulable);
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package edu.calpoly.csc.scheduler;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -23,11 +24,11 @@ public class ModelTestUtility {
 	}
 	
 	public static Location createLocation(Model model, Document document) {
-		return model.assembleLocation(document, "123", "LEC", "60", new HashSet<String>());
+		return model.assembleLocation(document, "123", "LEC", "60", new HashSet<String>(), true);
 	}
 	
 	public static Instructor createBasicInstructor(Model model, Document document) {
-		return model.assembleInstructor(document, "TestFirst", "TestLast", "testid", "4", new HashMap<Day, HashMap<Integer, Integer>>(), new HashMap<Integer, Integer>());
+		return model.assembleInstructor(document, "TestFirst", "TestLast", "testid", "4", new HashMap<Day, HashMap<Integer, Integer>>(), new HashMap<Integer, Integer>(), true);
 	}
 	
 	public static Instructor insertInstructorWPrefs(Model model, Document doc) {
@@ -40,7 +41,7 @@ public class ModelTestUtility {
 		
 		HashMap<Day, HashMap<Integer, Integer>> timePrefs = createSampleTimePreferences(doc);
 		
-		return model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", new HashMap<Day, HashMap<Integer,Integer>>(), coursePrefs));
+		return model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", new HashMap<Day, HashMap<Integer,Integer>>(), coursePrefs, true));
 	}
 	
 	public static boolean coursesContentsEqual(Course a, Course b) {
@@ -96,32 +97,6 @@ public class ModelTestUtility {
 			return false;
 		if (!a.getMaxWTU().equals(b.getMaxWTU()))
 			return false;
-
-//		if (!a.getCoursePreferences().keySet().containsAll(b.getCoursePreferences().keySet()))
-//			return false;
-//		if (!b.getCoursePreferences().keySet().containsAll(a.getCoursePreferences().keySet()))
-//			return false;
-//		for (Entry<Integer, Integer> entry : a.getCoursePreferences().entrySet())
-//			if (!b.getCoursePreferences().get(entry.getKey()).equals(entry.getValue()))
-//				return false;
-//
-//		if (!a.getTimePreferences().keySet().containsAll(b.getTimePreferences().keySet()))
-//			return false;
-//		if (!b.getTimePreferences().keySet().containsAll(a.getTimePreferences().keySet()))
-//			return false;
-//		for (Entry<Day, HashMap<Integer, Integer>> entry : a.getTimePreferences().entrySet()) {
-//			HashMap<Integer, Integer> aPrefsForDay = entry.getValue();
-//			HashMap<Integer, Integer> bPrefsForDay = b.getTimePreferences().get(entry.getKey());
-//
-//			if (!aPrefsForDay.keySet().containsAll(bPrefsForDay.keySet()))
-//				return false;
-//			if (!bPrefsForDay.keySet().containsAll(aPrefsForDay.keySet()))
-//				return false;
-//			for (Entry<Integer, Integer> entry2 : aPrefsForDay.entrySet())
-//				if (!bPrefsForDay.get(entry2.getKey()).equals(entry2.getValue()))
-//					return false;
-//		}
-		
 		if (!a.getCoursePreferences().equals(b.getCoursePreferences()))
 			return false;
 		if (!a.getTimePreferences().equals(b.getTimePreferences()))
@@ -142,5 +117,15 @@ public class ModelTestUtility {
 		}
 		
 		return result;
+	}
+	
+	public static void addDayPattern(Course course, Day... days) {
+		course.getDayPatterns().add(new TreeSet(Arrays.asList(days)));
+	}
+	
+	public static void setPreferenceBlocks(Instructor instructor, int preference, int startHalfHour, int endHalfHour, Day... days) {
+		for (Day day : days)
+			for (int halfHour = startHalfHour; halfHour < endHalfHour; halfHour++)
+				instructor.setTimePreferenceAt(day, halfHour, preference);
 	}
 }

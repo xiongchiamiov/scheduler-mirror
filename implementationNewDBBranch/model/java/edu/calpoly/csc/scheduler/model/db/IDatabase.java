@@ -66,7 +66,7 @@ public interface IDatabase {
 	Collection<IDBLocation> findLocationsForDocument(IDBDocument document);
 	IDBLocation findLocationByID(int id) throws NotFoundException;
 	IDBLocation assembleLocation(IDBDocument containingDocument, String room,
-			String type, String maxOccupancy);
+			String type, String maxOccupancy, boolean isSchedulable);
 	void insertLocation(IDBLocation location);
 	void updateLocation(IDBLocation location);
 	void deleteLocation(IDBLocation location);
@@ -93,7 +93,7 @@ public interface IDatabase {
 	// Instructors
 	Collection<IDBInstructor> findInstructorsForDocument(IDBDocument document);
 	IDBInstructor findInstructorByID(int id) throws NotFoundException;
-	IDBInstructor assembleInstructor(IDBDocument containingDocument, String firstName, String lastName, String username, String maxWTU);
+	IDBInstructor assembleInstructor(IDBDocument containingDocument, String firstName, String lastName, String username, String maxWTU, boolean isSchedulable);
 	void insertInstructor(IDBInstructor instructor);
 	void updateInstructor(IDBInstructor instructor);
 	void deleteInstructor(IDBInstructor instructor);

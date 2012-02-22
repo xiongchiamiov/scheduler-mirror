@@ -35,6 +35,14 @@ public class Instructor implements Identified {
 
 	public HashMap<Day, HashMap<Integer, Integer>> getTimePreferences() { return timePreferences; }
 	public void setTimePreferences(HashMap<Day, HashMap<Integer, Integer>> timePreferences) { this.timePreferences = timePreferences; }
+	
+	public void setTimePreferenceAt(Day day, int halfHour, int preference) {
+		HashMap<Integer, Integer> prefsForDay = timePreferences.get(day);
+		if (prefsForDay == null)
+			timePreferences.put(day, prefsForDay = new HashMap<Integer,Integer>());
+		prefsForDay.put(halfHour, preference);
+	}
+	
 	public HashMap<Integer, Integer> getCoursePreferences() { return coursePreferences; }
 	public void setCoursePreferences(HashMap<Integer, Integer> coursePreferences) { this.coursePreferences = coursePreferences; }
 

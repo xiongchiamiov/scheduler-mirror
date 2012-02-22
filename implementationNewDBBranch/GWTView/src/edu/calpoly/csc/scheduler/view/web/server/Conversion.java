@@ -106,7 +106,8 @@ public abstract class Conversion {
 				instructor.getUsername(),
 				instructor.getRawMaxWtu(),
 				timePrefsFromGWT(instructor.gettPrefs()),
-				instructor.getCoursePreferences());
+				instructor.getCoursePreferences(),
+				instructor.isSchedulable());
 	}
 
 	static Set<DayGWT> dayPatternToGWT(Set<Day> modelDayPattern) {

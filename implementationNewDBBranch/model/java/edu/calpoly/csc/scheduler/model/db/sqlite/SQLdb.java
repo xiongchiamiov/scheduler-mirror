@@ -377,7 +377,7 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public IDBLocation assembleLocation(IDBDocument containingDocument,
-			String room, String type, String maxOccupancy) {
+			String room, String type, String maxOccupancy, boolean isSchedulable) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -509,7 +509,7 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public IDBInstructor assembleInstructor(IDBDocument containingDocument,
-			String firstName, String lastName, String username, String maxWTU) {
+			String firstName, String lastName, String username, String maxWTU, boolean isSchedulable) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -10,17 +10,18 @@ public class DBInstructor extends DBObject implements IDBInstructor {
 	boolean isSchedulable;
 	
 	public DBInstructor(Integer id, int documentID, String firstName, String lastName, String username,
-			String maxWTU) {
+			String maxWTU, boolean isSchedulable) {
 		super(id);
 		this.documentID = documentID;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.username = username;
 		this.maxWTU = maxWTU;
+		this.isSchedulable = isSchedulable;
 	}
 	
 	public DBInstructor(DBInstructor that) {
-		this(that.id, that.documentID, that.firstName, that.lastName, that.username, that.maxWTU);
+		this(that.id, that.documentID, that.firstName, that.lastName, that.username, that.maxWTU, that.isSchedulable);
 	}
 
 	@Override

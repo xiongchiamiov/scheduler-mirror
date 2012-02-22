@@ -25,7 +25,7 @@ public abstract class InstructorsPreferencesTest extends ModelTestCase {
 			
 			HashMap<Day, HashMap<Integer, Integer>> timePrefs = ModelTestUtility.createSampleTimePreferences(doc);
 			
-			instructorID = model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", timePrefs, new HashMap<Integer, Integer>())).getID();
+			instructorID = model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", timePrefs, new HashMap<Integer, Integer>(), true)).getID();
 		}
 		
 		Instructor found = model.findInstructorByID(instructorID);
@@ -53,7 +53,7 @@ public abstract class InstructorsPreferencesTest extends ModelTestCase {
 			coursePrefs.put(courseID1, 2);
 			coursePrefs.put(courseID2, 3);
 			
-			instructorID = model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", new HashMap<Day, HashMap<Integer,Integer>>(), coursePrefs)).getID();
+			instructorID = model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", new HashMap<Day, HashMap<Integer,Integer>>(), coursePrefs, true)).getID();
 		}
 		
 		Instructor found = model.findInstructorByID(instructorID);
@@ -74,7 +74,7 @@ public abstract class InstructorsPreferencesTest extends ModelTestCase {
 		
 		HashMap<Day, HashMap<Integer, Integer>> timePrefs1 = ModelTestUtility.createSampleTimePreferences(doc);
 		
-		Instructor ins1 = model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", timePrefs1, coursePrefs1));
+		Instructor ins1 = model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", timePrefs1, coursePrefs1, true));
 		
 		HashMap<Integer, Integer> coursePrefs2 = new HashMap<Integer, Integer>();
 		coursePrefs2.put(courseID1, 2);
@@ -82,7 +82,7 @@ public abstract class InstructorsPreferencesTest extends ModelTestCase {
 		
 		HashMap<Day, HashMap<Integer, Integer>> timePrefs2 = ModelTestUtility.createSampleTimePreferences(doc);
 		
-		Instructor ins2 = model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", timePrefs2, coursePrefs2));
+		Instructor ins2 = model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", timePrefs2, coursePrefs2, true));
 		
 		
 		assertTrue(ModelTestUtility.instructorsContentsEqual(ins1, ins2));

@@ -164,7 +164,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			int id = model.insertLocation(
 					model.assembleLocation(
 					model.findDocumentByID(documentID),
-					location.getRoom(), location.getType(), location.getRawMaxOccupancy(), location.getEquipment())).getID();
+					location.getRoom(), location.getType(), location.getRawMaxOccupancy(), location.getEquipment(), true)).getID();
 			location.setID(id);
 			return location;
 		} catch (NotFoundException e) {

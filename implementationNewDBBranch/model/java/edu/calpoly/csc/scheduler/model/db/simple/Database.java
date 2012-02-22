@@ -286,8 +286,8 @@ public class Database implements IDatabase {
 	}
 
 	@Override
-	public IDBLocation assembleLocation(IDBDocument containingDocument, String room, String type, String maxOccupancy) {
-		return new DBLocation(null, containingDocument.getID(), room, type, maxOccupancy);
+	public IDBLocation assembleLocation(IDBDocument containingDocument, String room, String type, String maxOccupancy, boolean isSchedulable) {
+		return new DBLocation(null, containingDocument.getID(), room, type, maxOccupancy, isSchedulable);
 	}
 
 	@Override
@@ -372,8 +372,8 @@ public class Database implements IDatabase {
 
 	@Override
 	public IDBInstructor assembleInstructor(IDBDocument containingDocument, String firstName, String lastName,
-			String username, String maxWTU) {
-		return new DBInstructor(null, containingDocument.getID(), firstName, lastName, username, maxWTU);
+			String username, String maxWTU, boolean isSchedulable) {
+		return new DBInstructor(null, containingDocument.getID(), firstName, lastName, username, maxWTU, isSchedulable);
 	}
 
 	@Override

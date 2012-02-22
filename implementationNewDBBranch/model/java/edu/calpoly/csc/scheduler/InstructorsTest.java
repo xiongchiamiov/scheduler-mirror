@@ -34,7 +34,7 @@ public abstract class InstructorsTest extends ModelTestCase {
 		Model model = createBlankModel();
 		
 		Document doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
-		model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", new HashMap<Day, HashMap<Integer,Integer>>(), new HashMap<Integer, Integer>());
+		model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", new HashMap<Day, HashMap<Integer,Integer>>(), new HashMap<Integer, Integer>(), true);
 		
 		assertEquals(model.findInstructorsForDocument(doc).size(), 0);
 	}
@@ -46,7 +46,7 @@ public abstract class InstructorsTest extends ModelTestCase {
 		
 		{
 			Document doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
-			instructorID = model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", new HashMap<Day, HashMap<Integer,Integer>>(), new HashMap<Integer, Integer>())).getID();
+			instructorID = model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", new HashMap<Day, HashMap<Integer,Integer>>(), new HashMap<Integer, Integer>(), true)).getID();
 		}
 		
 		Instructor found = model.findInstructorByID(instructorID);
@@ -66,7 +66,7 @@ public abstract class InstructorsTest extends ModelTestCase {
 			
 			HashMap<Day, HashMap<Integer, Integer>> timePrefs = createSampleTimePreferences(doc);
 			
-			instructorID = model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", timePrefs, new HashMap<Integer, Integer>())).getID();
+			instructorID = model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", timePrefs, new HashMap<Integer, Integer>(), true)).getID();
 		}
 		
 		Instructor found = model.findInstructorByID(instructorID);
@@ -87,7 +87,7 @@ public abstract class InstructorsTest extends ModelTestCase {
 			
 			HashMap<Day, HashMap<Integer, Integer>> timePrefs = createSampleTimePreferences(doc);
 			
-			instructorID = model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", timePrefs, new HashMap<Integer, Integer>())).getID();
+			instructorID = model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", timePrefs, new HashMap<Integer, Integer>(), true)).getID();
 		}
 		
 		model.deleteInstructor(model.findInstructorByID(instructorID));
@@ -103,7 +103,7 @@ public abstract class InstructorsTest extends ModelTestCase {
 		
 		{
 			Document doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
-			Instructor ins = model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", new HashMap<Day, HashMap<Integer,Integer>>(), new HashMap<Integer, Integer>()));
+			Instructor ins = model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", new HashMap<Day, HashMap<Integer,Integer>>(), new HashMap<Integer, Integer>(), true));
 			ins.setFirstName("Verdagon");
 			instructorID = ins.getID();
 		}
@@ -121,7 +121,7 @@ public abstract class InstructorsTest extends ModelTestCase {
 		
 		{
 			Document doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
-			Instructor ins = model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", new HashMap<Day, HashMap<Integer,Integer>>(), new HashMap<Integer, Integer>()));
+			Instructor ins = model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", new HashMap<Day, HashMap<Integer,Integer>>(), new HashMap<Integer, Integer>(), true));
 			ins.setFirstName("Verdagon");
 			ins.setLastName("Kalland");
 			ins.setUsername("vkalland");
@@ -145,7 +145,7 @@ public abstract class InstructorsTest extends ModelTestCase {
 		
 		{
 			doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
-			Instructor ins = model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", new HashMap<Day, HashMap<Integer,Integer>>(), new HashMap<Integer, Integer>()));
+			Instructor ins = model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", new HashMap<Day, HashMap<Integer,Integer>>(), new HashMap<Integer, Integer>(), true));
 			instructorID = ins.getID();
 			model.deleteInstructor(ins);
 		}
@@ -167,8 +167,8 @@ public abstract class InstructorsTest extends ModelTestCase {
 		Set<Integer> instructorIDs = new HashSet<Integer>();
 		
 		Document doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
-		instructorIDs.add(model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", new HashMap<Day, HashMap<Integer,Integer>>(), new HashMap<Integer, Integer>())).getID());
-		instructorIDs.add(model.insertInstructor(model.assembleInstructor(doc, "Herp", "Derp", "hderp", "10", new HashMap<Day, HashMap<Integer,Integer>>(), new HashMap<Integer, Integer>())).getID());
+		instructorIDs.add(model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", new HashMap<Day, HashMap<Integer,Integer>>(), new HashMap<Integer, Integer>(), true)).getID());
+		instructorIDs.add(model.insertInstructor(model.assembleInstructor(doc, "Herp", "Derp", "hderp", "10", new HashMap<Day, HashMap<Integer,Integer>>(), new HashMap<Integer, Integer>(), true)).getID());
 		
 		Collection<Instructor> returnedInstructors = model.findInstructorsForDocument(doc);
 		for (Instructor returnedDoc : returnedInstructors) {
@@ -185,8 +185,8 @@ public abstract class InstructorsTest extends ModelTestCase {
 			Set<Integer> instructorIDs1 = new HashSet<Integer>();
 			
 			Document doc1 = model.insertDocument(model.assembleDocument("doc1", START_HALF_HOUR, END_HALF_HOUR));
-			instructorIDs1.add(model.insertInstructor(model.assembleInstructor(doc1, "Evan", "Ovadia", "eovadia", "20", new HashMap<Day, HashMap<Integer,Integer>>(), new HashMap<Integer, Integer>())).getID());
-			instructorIDs1.add(model.insertInstructor(model.assembleInstructor(doc1, "Herp", "Derp", "hderp", "10", new HashMap<Day, HashMap<Integer,Integer>>(), new HashMap<Integer, Integer>())).getID());
+			instructorIDs1.add(model.insertInstructor(model.assembleInstructor(doc1, "Evan", "Ovadia", "eovadia", "20", new HashMap<Day, HashMap<Integer,Integer>>(), new HashMap<Integer, Integer>(), true)).getID());
+			instructorIDs1.add(model.insertInstructor(model.assembleInstructor(doc1, "Herp", "Derp", "hderp", "10", new HashMap<Day, HashMap<Integer,Integer>>(), new HashMap<Integer, Integer>(), true)).getID());
 			
 			Collection<Instructor> returnedInstructors1 = model.findInstructorsForDocument(doc1);
 			for (Instructor returnedDoc : returnedInstructors1) {
@@ -200,8 +200,8 @@ public abstract class InstructorsTest extends ModelTestCase {
 			Set<Integer> instructorIDs2 = new HashSet<Integer>();
 			
 			Document doc2 = model.insertDocument(model.assembleDocument("doc2", START_HALF_HOUR, END_HALF_HOUR));
-			instructorIDs2.add(model.insertInstructor(model.assembleInstructor(doc2, "Baby", "Seals", "bseals", "20", new HashMap<Day, HashMap<Integer,Integer>>(), new HashMap<Integer, Integer>())).getID());
-			instructorIDs2.add(model.insertInstructor(model.assembleInstructor(doc2, "Monster", "Otters", "motters", "10", new HashMap<Day, HashMap<Integer,Integer>>(), new HashMap<Integer, Integer>())).getID());
+			instructorIDs2.add(model.insertInstructor(model.assembleInstructor(doc2, "Baby", "Seals", "bseals", "20", new HashMap<Day, HashMap<Integer,Integer>>(), new HashMap<Integer, Integer>(), true)).getID());
+			instructorIDs2.add(model.insertInstructor(model.assembleInstructor(doc2, "Monster", "Otters", "motters", "10", new HashMap<Day, HashMap<Integer,Integer>>(), new HashMap<Integer, Integer>(), true)).getID());
 			
 			Collection<Instructor> returnedInstructors2 = model.findInstructorsForDocument(doc2);
 			for (Instructor returnedDoc : returnedInstructors2) {

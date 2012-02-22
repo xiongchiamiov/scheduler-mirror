@@ -120,8 +120,8 @@ public class Model {
 	
 	// INSTRUCTORS
 
-	public Instructor assembleInstructor(Document containingDocument, String firstName, String lastName, String username, String maxWTU, HashMap<Day, HashMap<Integer, Integer>> timePreferences, HashMap<Integer, Integer> coursePreferences) {
-		IDBInstructor underlyingInstructor = database.assembleInstructor(containingDocument.underlyingDocument, firstName, lastName, username, maxWTU);
+	public Instructor assembleInstructor(Document containingDocument, String firstName, String lastName, String username, String maxWTU, HashMap<Day, HashMap<Integer, Integer>> timePreferences, HashMap<Integer, Integer> coursePreferences, boolean isSchedulable) {
+		IDBInstructor underlyingInstructor = database.assembleInstructor(containingDocument.underlyingDocument, firstName, lastName, username, maxWTU, isSchedulable);
 		return new Instructor(underlyingInstructor, timePreferences, coursePreferences);
 	}
 
@@ -364,8 +364,8 @@ public class Model {
 
 	// LOCATIONS
 	
-	public Location assembleLocation(Document containingDocument, String room, String type, String maxOccupancy, Set<String> providedEquipmentDescriptions) {
-		return new Location(database.assembleLocation(containingDocument.underlyingDocument, room, type, maxOccupancy), providedEquipmentDescriptions);
+	public Location assembleLocation(Document containingDocument, String room, String type, String maxOccupancy, Set<String> providedEquipmentDescriptions, boolean isSchedulable) {
+		return new Location(database.assembleLocation(containingDocument.underlyingDocument, room, type, maxOccupancy, isSchedulable), providedEquipmentDescriptions);
 	}
 	
 	public Location insertLocation(Location location) {
@@ -456,7 +456,7 @@ public class Model {
 		// Locations
 		Map<Integer, IDBLocation> newDocumentLocationsByExistingDocumentLocationIDs = new HashMap<Integer, IDBLocation>();
 		for (IDBLocation existingDocumentLocation : database.findLocationsForDocument(existingDocument.underlyingDocument)) {
-			IDBLocation newDocumentLocation = database.assembleLocation(newDocument.underlyingDocument, existingDocumentLocation.getRoom(), existingDocumentLocation.getType(), existingDocumentLocation.getMaxOccupancy());
+			IDBLocation newDocumentLocation = database.assembleLocation(newDocument.underlyingDocument, existingDocumentLocation.getRoom(), existingDocumentLocation.getType(), existingDocumentLocation.getMaxOccupancy(), existingDocumentLocation.isSchedulable());
 			database.insertLocation(newDocumentLocation);
 			newDocumentLocationsByExistingDocumentLocationIDs.put(existingDocumentLocation.getID(), newDocumentLocation);
 
@@ -497,7 +497,7 @@ public class Model {
 		// Instructors
 		Map<Integer, IDBInstructor> newDocumentInstructorsByExistingDocumentInstructorIDs = new HashMap<Integer, IDBInstructor>();
 		for (IDBInstructor existingDocumentInstructor : database.findInstructorsForDocument(existingDocument.underlyingDocument)) {
-			IDBInstructor newDocumentInstructor = database.assembleInstructor(newDocument.underlyingDocument, existingDocumentInstructor.getFirstName(), existingDocumentInstructor.getLastName(), existingDocumentInstructor.getUsername(), existingDocumentInstructor.getMaxWTU());
+			IDBInstructor newDocumentInstructor = database.assembleInstructor(newDocument.underlyingDocument, existingDocumentInstructor.getFirstName(), existingDocumentInstructor.getLastName(), existingDocumentInstructor.getUsername(), existingDocumentInstructor.getMaxWTU(), existingDocumentInstructor.isSchedulable());
 			database.insertInstructor(newDocumentInstructor);
 			newDocumentInstructorsByExistingDocumentInstructorIDs.put(existingDocumentInstructor.getID(), newDocumentInstructor);
 			
