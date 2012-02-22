@@ -171,6 +171,7 @@ public abstract class Conversion {
 		result.setFirstName(source.getFirstName());
 		result.setLastName(source.getLastName());
 		result.setUsername(source.getUsername());
+		result.setMaxWTU(source.getRawMaxWtu());
 		result.setCoursePreferences(source.getCoursePreferences());
 		result.setTimePreferences(timePrefsFromGWT(source.gettPrefs()));
 	}

@@ -133,8 +133,10 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	public List<InstructorGWT> getInstructorsForDocument(int documentID) throws NotFoundExceptionGWT {
 		List<InstructorGWT> result = new LinkedList<InstructorGWT>();
 		try {
-			for (Instructor instructor : model.findInstructorsForDocument(model.findDocumentByID(documentID)))
+			for (Instructor instructor : model.findInstructorsForDocument(model.findDocumentByID(documentID))) {
+				System.out.println("got from model, wtu: " + instructor.getMaxWTU());
 				result.add(Conversion.instructorToGWT(instructor));
+			}
 		} catch (NotFoundException e) {
 			e.printStackTrace();
 			throw new NotFoundExceptionGWT();
