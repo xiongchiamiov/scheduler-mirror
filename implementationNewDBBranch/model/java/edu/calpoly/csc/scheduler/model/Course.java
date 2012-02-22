@@ -62,15 +62,20 @@ public class Course {
 	public void setSCU(String scu) { underlyingCourse.setSCU(scu); }
 	
 	public String getNumSections() { return underlyingCourse.getNumSections(); }
+	public int getNumSectionsInt() { return Integer.parseInt(getNumSections()); }
 	public void setNumSections(String numSections) { underlyingCourse.setNumSections(numSections); }
 	
 	public String getType() { return underlyingCourse.getType(); }
 	public void setType(String type) { underlyingCourse.setType(type); }
 	
+	public enum CourseType { LEC, LAB, SEM, DIS, ACT, IND };
+	public CourseType getTypeEnum() { return CourseType.valueOf(getType()); }
+	
 	public String getMaxEnrollment() { return underlyingCourse.getMaxEnrollment(); }
 	public void setMaxEnrollment(String maxEnrollment) { underlyingCourse.setMaxEnrollment(maxEnrollment); }
 	
 	public String getNumHalfHoursPerWeek() { return underlyingCourse.getNumHalfHoursPerWeek(); }
+	public int getNumHalfHoursPerWeekInt() { return Integer.parseInt(getNumHalfHoursPerWeek()); }
 	public void setNumHalfHoursPerWeek(String numHalfHoursPerWeek) { underlyingCourse.setNumHalfHoursPerWeek(numHalfHoursPerWeek); }
 
 	public boolean isSchedulable() { return underlyingCourse.isSchedulable(); }

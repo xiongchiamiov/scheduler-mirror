@@ -260,6 +260,11 @@ public class Database implements IDatabase {
 			int startHalfHour, int endHalfHour, boolean isPlaced, boolean isConflicted) {
 		return new DBScheduleItem(null, schedule.getID(), course.getID(), instructor.getID(), location.getID(), section, days, startHalfHour, endHalfHour, isPlaced, isConflicted);
 	}
+
+	@Override
+	public IDBScheduleItem assembleScheduleItemCopy(IDBScheduleItem underlying) {
+		return (IDBScheduleItem) ((DBScheduleItem)underlying).clone();
+	}
 	
 	@Override
 	public void insertScheduleItem(IDBScheduleItem rawItem) {
@@ -821,4 +826,5 @@ public class Database implements IDatabase {
 			result.add(derp);
 		return result;
 	}
+
 }

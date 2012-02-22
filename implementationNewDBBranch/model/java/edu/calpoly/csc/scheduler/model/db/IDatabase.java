@@ -146,4 +146,6 @@ public interface IDatabase {
 	
 	// For testing
 	boolean isEmpty();
+	
+	IDBScheduleItem assembleScheduleItemCopy(IDBScheduleItem underlying);
 }

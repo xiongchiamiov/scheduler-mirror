@@ -625,4 +625,9 @@ public class Model {
 	public boolean isEmpty() {
 		return database.isEmpty();
 	}
+
+	public ScheduleItem assembleScheduleItemCopy(ScheduleItem item) {
+		IDBScheduleItem newUnderlying = database.assembleScheduleItemCopy(item.underlying);
+		return new ScheduleItem(newUnderlying, item.getCourseID(), item.getLocationID(), item.getInstructorID());
+	}
 }

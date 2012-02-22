@@ -70,4 +70,13 @@ public class DBScheduleItem extends DBObject implements IDBScheduleItem {
 		this.isConflicted = isConflicted;
 	}
 	
+	public Object clone() {
+		try {
+			return super.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+			assert(false);
+			return null;
+		}
+	}
 }
