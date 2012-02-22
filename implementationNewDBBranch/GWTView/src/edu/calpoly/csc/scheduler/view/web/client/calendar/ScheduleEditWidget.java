@@ -2,8 +2,6 @@ package edu.calpoly.csc.scheduler.view.web.client.calendar;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,12 +27,10 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.client.schedule.FiltersViewWidget;
-import edu.calpoly.csc.scheduler.view.web.client.schedule.ScheduleTable;
 import edu.calpoly.csc.scheduler.view.web.client.views.LoadingPopup;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.DocumentGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemList;
 
 /**
  * This widget contains the calendar and list of available classes. It also contains the bottom button bar
@@ -46,7 +42,7 @@ import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemList;
 public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 
 	private final DocumentGWT mDocument;
-	private Map<Integer, CourseGWT> mCourses; 
+	private Map<Integer, CourseGWT> mCourses = new HashMap<Integer, CourseGWT>(); 
 	
 	private GreetingServiceAsync mGreetingService;
 	private HashMap<String, ScheduleItemGWT> mSchedItems;
@@ -374,7 +370,8 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 							}
 						}
 						
-						availableItems.add(course);
+						if (course.isValid())
+							availableItems.add(course);
 					}
 					
 					mAvailableCoursesView.setItems(availableItems);
@@ -409,30 +406,14 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 		// TODO
 //		filterScheduleItems(mSearchBox.getText());
 	}
-
-	/**
-	 * Converts a row to an hour
-	 */
-	private int getHourFromRow(int row) {
-		return (row / 2) + 6 + (row % 2);
-	}
-
-	/**
-	 * Returns true if a row is at a half hour (i.e. 7:30), false if a row is on
-	 * the hour (i.e. 7:00)
-	 */
-	private boolean rowIsAtHalfHour(int row) {
-		return row % 2 == 0;
-	}
-
+	
 	/**
 	 * Called when a schedule item is dragged to a new position, or when a
 	 * course from one of the lists is dropped onto the schedule
 	 * 
 	 * @param item The new item that will replace the old item with the same id
-	 * @param inSchedule true iff the course is already in the schedule
 	 */
-	public void updateItem(final ScheduleItemGWT item, final boolean inSchedule) {
+	public void updateItem(final ScheduleItemGWT item) {
 		final LoadingPopup loading = new LoadingPopup();
 		loading.show();
 		
@@ -463,6 +444,8 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 						mCalendarTableView.setScheduleItems(mCalendarItems);
 						mCalendarTableView.drawTable();
 						
+						populateAvailableCoursesList();
+						
 						loading.hide();
 						
 //						if (rescheduledCourses.conflict.length() > 0) {
@@ -472,6 +455,53 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 				});
 	}
 
+	/**
+	 * Called when a course from the available courses list is dropped onto the schedule
+	 * 
+	 * @param item The new item that will be added to the schedule
+	 */
+	public void insertItem(final ScheduleItemGWT item) {
+		final LoadingPopup loading = new LoadingPopup();
+		loading.show();
+		
+		mGreetingService.insertScheduleItem(mDocument.getScheduleID(), item,
+				new AsyncCallback<Collection<ScheduleItemGWT>>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						loading.hide();
+						Window.alert("Failed to retrieve rescheduled item");
+					}
+
+					@Override
+					public void onSuccess(Collection<ScheduleItemGWT> result) {
+						mCalendarItems = new ArrayList<ScheduleItemGWT>();
+						
+						for (ScheduleItemGWT schdItem : result) {
+							mCalendarItems.add(schdItem);
+						}
+						
+//						Collections.sort(mCalendarItems, new ScheduleItemComparator());
+//
+//						mFiltersDialog.addItems(mCalendarItems);
+//						
+//						// Place schedule items with any previously set filters
+//						filterScheduleItems(mSearchBox.getText());
+//						loading.hide();
+
+						mCalendarTableView.setScheduleItems(mCalendarItems);
+						mCalendarTableView.drawTable();
+						
+						populateAvailableCoursesList();
+						
+						loading.hide();
+						
+//						if (rescheduledCourses.conflict.length() > 0) {
+//							Window.alert(rescheduledCourses.conflict);
+//						}
+					}
+				});
+	}
+	
 //	public int getSectionsOnSchedule(CourseGWT course) {
 //		String dept = course.getDept();
 //		String catalogNum = course.getCatalogNum();
@@ -492,6 +522,11 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 		return mCalendarItems;
 	}
 
+	/**
+	 * Called when a course from the calendar is dropped onto available courses list
+	 * 
+	 * @param item The new item that will be removed from the schedule
+	 */
 	public void removeItem(ScheduleItemGWT removed) {
 		final LoadingPopup loading = new LoadingPopup();
 		loading.show();
@@ -515,6 +550,13 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 //
 //						mFiltersDialog.addItems(mCalendarItems);
 //						filterScheduleItems(mSearchBox.getText());
+						
+
+						mCalendarTableView.setScheduleItems(mCalendarItems);
+						mCalendarTableView.drawTable();
+						
+						populateAvailableCoursesList();
+						
 						loading.hide();
 					}
 				});

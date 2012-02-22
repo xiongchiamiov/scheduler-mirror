@@ -1,6 +1,7 @@
 package edu.calpoly.csc.scheduler.view.web.client.calendar;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.event.dom.client.MouseMoveHandler;
@@ -119,13 +120,15 @@ public class DragAndDropController implements MouseMoveHandler, MouseOutHandler,
 			if (row < 0 || day == null) {
 				System.out.println(courseString + " dropped on list");
 				
-				if (fromCalendar) {
-					// tell widget to delete item from Calendar
-				}
+				if (fromCalendar) 
+					mWidget.removeItem(mDroppedItem);
 			}
 			else {
 				System.out.println(courseString + " dropped on "+day.ordinal()+" at "+row);
-				mWidget.editItem(!fromCalendar, mDroppedItem, new ArrayList<Integer>(day.ordinal()), row);
+				
+				List<Integer> days = new ArrayList<Integer>();
+				days.add(day.ordinal());
+				mWidget.editItem(!fromCalendar, mDroppedItem, days, row);
 			}
 			
 			mDroppedItem = null;

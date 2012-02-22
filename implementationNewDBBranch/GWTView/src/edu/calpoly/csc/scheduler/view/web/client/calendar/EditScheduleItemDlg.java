@@ -110,8 +110,15 @@ public class EditScheduleItemDlg extends DialogBox {
 	
 	public ScheduleItemGWT getNewItem() {
 		int courseID = mOriginalItem.getCourseID();
-		int instructorID = mInstructors.get(mInstructorsLB.getSelectedIndex()).getID(); 
-		int locationID = mLocations.get(mLocationsLB.getSelectedIndex()).getID();
+		
+		int instructorID = -1;
+		if (mInstructorsLB.getSelectedIndex() >= 0)
+			instructorID = mInstructors.get(mInstructorsLB.getSelectedIndex()).getID();
+		
+		int locationID = -1;
+		if (mLocationsLB.getSelectedIndex() >= 0)
+			locationID = mLocations.get(mLocationsLB.getSelectedIndex()).getID(); 
+		
 		int section = mOriginalItem.getSection();
 		
 		Set<DayGWT> days = new HashSet<DayGWT>();
@@ -143,7 +150,10 @@ public class EditScheduleItemDlg extends DialogBox {
 			}
 		}
 		
-		mWidget.updateItem(getNewItem(), !mFromList);
+		if (mFromList)
+			mWidget.insertItem(getNewItem());
+		else
+			mWidget.updateItem(getNewItem());
 	}
 	
 	private int getStartHalfHour(int row) {
@@ -239,14 +249,14 @@ public class EditScheduleItemDlg extends DialogBox {
 		dayPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		dayPanel.add(new Label("Days:"));
 		final VerticalPanel checkBoxPanel = new VerticalPanel();
-		for (int dayNum = 0; dayNum < CalendarTableView.DAYS.length; dayNum++) {
-			final CheckBox checkBox = new CheckBox(CalendarTableView.DAYS[dayNum]);
+		for (DayGWT day : DayGWT.values()) {
+			final CheckBox checkBox = new CheckBox(day.name);
 			mDayCheckBoxes.add(checkBox);
 			checkBoxPanel.add(checkBox);
 		}
 
 		for (int dayNum : mNewDays)
-			mDayCheckBoxes.get(dayNum - 1).setValue(true);
+			mDayCheckBoxes.get(dayNum).setValue(true);
 
 		dayPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		dayPanel.add(checkBoxPanel);
@@ -299,7 +309,6 @@ public class EditScheduleItemDlg extends DialogBox {
 					}
 				}
 			}
-			
 		});	
 	}
 

@@ -103,6 +103,8 @@ public class CalendarTableView extends SimplePanel {
 						colNum < dayModel.getOffset() + dayModel.getWidth())
 					return day;
 			}
+			
+			System.out.println("Day model not found!");
 			return null;
 		}
 		
@@ -375,8 +377,8 @@ public class CalendarTableView extends SimplePanel {
 		final Element corner = DOM.getElementById("topCorner");
 		DOM.setStyleAttribute(corner, "top", top+"px");
 		
-		for (int dayNum = 0; dayNum < DAYS.length; dayNum++) {
-			final Element header = DOM.getElementById("h"+DAYS[dayNum]);
+		for (DayGWT day : DayGWT.values()) {
+			final Element header = DOM.getElementById("h"+day.name);
 			DOM.setStyleAttribute(header, "top", top+"px");
 		}
 		

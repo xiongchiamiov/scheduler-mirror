@@ -24,6 +24,8 @@ public class CourseListView extends SimplePanel {
 		mScheduleController = scheduleController;
 		mDragController = dragController;
 
+		mModel = new ArrayList<CourseGWT>();
+		
 		defineTableCallbacks();
 	}
 	
