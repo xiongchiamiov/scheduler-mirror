@@ -83,4 +83,8 @@ public class Course implements Identified {
 	
 	public Collection<Set<Day>> getDayPatterns() { return dayPatterns; }
 	public void setDayPatterns(Collection<Set<Day>> dayPatterns) { this.dayPatterns = dayPatterns; }
+
+	public int getWTUInt() { return Integer.parseInt(getWTU()); }
+
+	public int getMaxEnrollmentInt() { return Integer.parseInt(getMaxEnrollment()); }
 }

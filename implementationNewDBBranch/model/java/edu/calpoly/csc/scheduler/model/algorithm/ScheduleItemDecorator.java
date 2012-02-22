@@ -79,4 +79,16 @@ public class ScheduleItemDecorator
    }
 
 	public int getValue() { return value; }
+
+	public Integer getWtuTotal() {
+		assert(false);
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public boolean hasLabs() {
+		assert(false);
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

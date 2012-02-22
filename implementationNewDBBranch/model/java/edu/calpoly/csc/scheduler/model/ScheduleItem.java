@@ -1,6 +1,7 @@
 package edu.calpoly.csc.scheduler.model;
 
 import java.util.Set;
+import java.util.Vector;
 
 import edu.calpoly.csc.scheduler.model.db.IDBScheduleItem;
 
@@ -36,4 +37,6 @@ public class ScheduleItem implements Identified {
 	public void setIsPlaced(boolean placed) { underlying.setIsPlaced(placed); }
 	public boolean isConflicted() { return underlying.isConflicted(); }
 	public void setIsConflicted(boolean conflicted) { underlying.setIsConflicted(conflicted); }
+
+	public Set<Integer> getLabIDs() { assert(false); return null; }
 }

@@ -61,4 +61,6 @@ public class Instructor implements Identified {
 
 	public void setIsSchedulable(boolean schedulable) { underlyingInstructor.setIsSchedulable(schedulable); }
 	public boolean isSchedulable() { return underlyingInstructor.isSchedulable(); }
+
+	public int getMaxWTUInt() { return Integer.parseInt(getMaxWTU()); }
 }

@@ -28,4 +28,6 @@ public class Location implements Identified {
 	public int getID() { return underlyingLocation.getID(); }
 
 	public Set<String> getProvidedEquipment() { return providedEquipment; }
+
+	public int getMaxOccupancyInt() { return Integer.parseInt(getMaxOccupancy()); }
 }
