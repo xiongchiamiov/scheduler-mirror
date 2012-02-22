@@ -70,7 +70,7 @@ public class CourseListView extends SimplePanel {
 					"onmousedown=\"listMouseDown("+rowNum+")\" " +
 					"onmouseup=\"listMouseUp("+rowNum+")\" " +
 					"onselectstart=\"return false\" "+
-					">"+mScheduleController.getCourseString(course.getID())+"</div></td>");
+					">"+mScheduleController.getCourseString(course.getID())+" ("+course.getNumSections()+")</div></td>");
 			builder.append("</tr>");
 			rowNum++;
 		}
@@ -90,8 +90,7 @@ public class CourseListView extends SimplePanel {
 	 */
 	public void doubleClick(int row) {
 		final CourseGWT course = mModel.get(row);
-		
-//		mScheduleController.editItem(true, course, new ArrayList<Integer>(), CalendarTableView.getStartRow(createItem(course)));
+		mScheduleController.editItem(course);
 	}
 	
 	/**

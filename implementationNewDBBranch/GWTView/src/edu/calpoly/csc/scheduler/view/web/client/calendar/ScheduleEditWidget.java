@@ -3,8 +3,10 @@ package edu.calpoly.csc.scheduler.view.web.client.calendar;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -29,6 +31,7 @@ import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.client.schedule.FiltersViewWidget;
 import edu.calpoly.csc.scheduler.view.web.client.views.LoadingPopup;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.DayGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.DocumentGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 
@@ -45,9 +48,7 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 	private Map<Integer, CourseGWT> mCourses = new HashMap<Integer, CourseGWT>(); 
 	
 	private GreetingServiceAsync mGreetingService;
-	private HashMap<String, ScheduleItemGWT> mSchedItems;
 	private ArrayList<ScheduleItemGWT> mCalendarItems= new ArrayList<ScheduleItemGWT>();
-	private List<CourseGWT> mAllCourses = new ArrayList<CourseGWT>();
 	private VerticalPanel mMainPanel = new VerticalPanel();
 	private boolean mIsCourseListCollapsed;
 
@@ -133,6 +134,12 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 	public Widget getWidget() {
 
 		return mMainPanel;
+	}
+	
+	public void editItem(CourseGWT course) {
+		Set<DayGWT> days = new HashSet<DayGWT>();
+		ScheduleItemGWT item = new ScheduleItemGWT(-1, course.getID(), -1, -1, -1, days, 0, 0, false, false);
+		editItem(true, item, new ArrayList<Integer>(), 0);
 	}
 	
 	/**
@@ -357,22 +364,20 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 			@Override
 			public void onSuccess(List<CourseGWT> result) {
 				if (result != null) {
-					mAllCourses = result;
+					mCourses.clear();
+					for (CourseGWT course : result)
+						mCourses.put(course.getID(), course);
 					
 					List<CourseGWT> availableItems = new ArrayList<CourseGWT>();
 					
-					courseLoop:
-					for (CourseGWT course : result) {
-						// Don't added courses to available list if they're on the calendar
-						for (ScheduleItemGWT item : mCalendarItems) {
-							if (item.getCourseID() == course.getID()) {
-								continue courseLoop;
-							}
-						}
-						
-						if (course.isValid())
-							availableItems.add(course);
+					for (ScheduleItemGWT item : mCalendarItems) {
+						CourseGWT course = mCourses.get(item.getCourseID());
+						course.setNumSections("" + (course.getNumSections() - 1));
 					}
+					
+					for (CourseGWT course : mCourses.values())
+						if (course.isValid() && course.getNumSections() > 0)
+							availableItems.add(course);
 					
 					mAvailableCoursesView.setItems(availableItems);
 					mAvailableCoursesView.drawList();

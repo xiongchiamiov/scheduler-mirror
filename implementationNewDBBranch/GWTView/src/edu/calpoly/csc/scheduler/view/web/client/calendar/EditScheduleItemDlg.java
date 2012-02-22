@@ -111,13 +111,13 @@ public class EditScheduleItemDlg extends DialogBox {
 	public ScheduleItemGWT getNewItem() {
 		int courseID = mOriginalItem.getCourseID();
 		
-		int instructorID = -1;
-		if (mInstructorsLB.getSelectedIndex() >= 0)
-			instructorID = mInstructors.get(mInstructorsLB.getSelectedIndex()).getID();
+		int instructorID = -1; // Staff
+		if (mInstructorsLB.getSelectedIndex() > 0)
+			instructorID = mInstructors.get(mInstructorsLB.getSelectedIndex() - 1).getID();
 		
-		int locationID = -1;
-		if (mLocationsLB.getSelectedIndex() >= 0)
-			locationID = mLocations.get(mLocationsLB.getSelectedIndex()).getID(); 
+		int locationID = -1; // TBA
+		if (mLocationsLB.getSelectedIndex() > 0)
+			locationID = mLocations.get(mLocationsLB.getSelectedIndex() - 1).getID();
 		
 		int section = mOriginalItem.getSection();
 		
@@ -161,7 +161,7 @@ public class EditScheduleItemDlg extends DialogBox {
 	}
 	
 	private int getEndHalfHour(int row) {
-		return row + 14;
+		return row + 13;
 	}
 	
 	private Widget createTitlePanel() {
@@ -299,11 +299,8 @@ public class EditScheduleItemDlg extends DialogBox {
 			public void onSuccess(List<InstructorGWT> result) {
 				mInstructors = result;
 				
+				mInstructorsLB.addItem("Staff");
 				if (result != null) {
-					if (result.size() > 10) {
-						mInstructorsLB.setVisibleItemCount(result.size());						
-					}
-					
 					for (InstructorGWT instructor : result) {
 						mInstructorsLB.addItem(instructor.getFirstName() + " " + instructor.getLastName());
 					}
@@ -322,12 +319,9 @@ public class EditScheduleItemDlg extends DialogBox {
 			@Override
 			public void onSuccess(List<LocationGWT> result) {
 				mLocations = result;
-				
+
+				mLocationsLB.addItem("TBA");
 				if (result != null) {
-					if (result.size() > 10) {
-						mLocationsLB.setVisibleItemCount(result.size());						
-					}
-					
 					for (LocationGWT location : result) {
 						mLocationsLB.addItem(location.getRoom());
 					}
