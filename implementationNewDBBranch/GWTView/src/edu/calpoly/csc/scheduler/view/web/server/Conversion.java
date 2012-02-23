@@ -66,13 +66,12 @@ public abstract class Conversion {
 				instructor.getCoursePreferences());
 	}
 	
-	public static Course courseFromGWT(Model model, Document document, CourseGWT course) {
+	public static Course courseFromGWT(Model model, CourseGWT course) {
 		Collection<Set<Day>> modelDayPatterns = new LinkedList<Set<Day>>();
 		for (Set<DayGWT> gwtDayPattern : course.getDayPatterns())
 			modelDayPatterns.add(dayPatternFromGWT(gwtDayPattern));
 		
 		return model.assembleCourse(
-						document,
 						course.getCourseName(),
 						course.getCatalogNum(),
 						course.getDept(),
@@ -87,9 +86,8 @@ public abstract class Conversion {
 						course.isSchedulable());
 	}
 	
-	public static Instructor instructorFromGWT(Model model, Document document, InstructorGWT instructor) {
+	public static Instructor instructorFromGWT(Model model, InstructorGWT instructor) {
 		return model.assembleInstructor(
-				document,
 				instructor.getFirstName(),
 				instructor.getLastName(),
 				instructor.getUsername(),
@@ -263,10 +261,6 @@ public abstract class Conversion {
 		Set<Day> dayPattern = dayPatternFromGWT(source.getDays());
 		
 		return model.assembleScheduleItem(
-				schedule,
-				model.findCourseByID(source.getCourseID()),
-				model.findInstructorByID(source.getInstructorID()),
-				model.findLocationByID(source.getLocationID()),
 				source.getSection(),
 				dayPattern,
 				source.getStartHalfHour(),

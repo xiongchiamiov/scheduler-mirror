@@ -87,12 +87,12 @@ public class Model {
 	
 	// SCHEDULES
 	
-	public Schedule assembleSchedule(Document containingDocument) {
-		return new Schedule(database.assembleSchedule(containingDocument.underlyingDocument));
+	public Schedule assembleSchedule() {
+		return new Schedule(database.assembleSchedule());
 	}
 	
-	public void insertSchedule(Schedule schedule) {
-		database.insertSchedule(schedule.underlyingSchedule);
+	public void insertSchedule(Document containingDocument, Schedule schedule) {
+		database.insertSchedule(containingDocument.underlyingDocument, schedule.underlyingSchedule);
 	}
 
 	public void updateSchedule(Schedule sched) {
@@ -120,13 +120,13 @@ public class Model {
 	
 	// INSTRUCTORS
 
-	public Instructor assembleInstructor(Document containingDocument, String firstName, String lastName, String username, String maxWTU, int[][] timePreferences, HashMap<Integer, Integer> coursePreferences, boolean isSchedulable) {
-		IDBInstructor underlyingInstructor = database.assembleInstructor(containingDocument.underlyingDocument, firstName, lastName, username, maxWTU, isSchedulable);
+	public Instructor assembleInstructor(String firstName, String lastName, String username, String maxWTU, int[][] timePreferences, HashMap<Integer, Integer> coursePreferences, boolean isSchedulable) {
+		IDBInstructor underlyingInstructor = database.assembleInstructor(firstName, lastName, username, maxWTU, isSchedulable);
 		return new Instructor(underlyingInstructor, timePreferences, coursePreferences);
 	}
 
-	public Instructor insertInstructor(Instructor instructor) {
-		database.insertInstructor(instructor.underlyingInstructor);
+	public Instructor insertInstructor(Document containingDocument, Instructor instructor) {
+		database.insertInstructor(containingDocument.underlyingDocument, instructor.underlyingInstructor);
 		putTimePreferencesIntoDB(instructor.underlyingInstructor, instructor.timePreferences);
 		putCoursePreferencesIntoDB(instructor.underlyingInstructor, instructor.coursePreferences);
 		return instructor;
@@ -189,7 +189,7 @@ public class Model {
 				IDBTime time = database.findTimeByDayAndHalfHour(day.ordinal(), halfHour); 
 				
 				int preference = timePreferences[day.ordinal()][halfHour];
-				database.insertTimePreference(database.assembleTimePreference(instructor, time, preference));
+				database.insertTimePreference(instructor, time, database.assembleTimePreference(preference));
 			}
 		}
 	}
@@ -214,7 +214,7 @@ public class Model {
 			int preference = coursePreference.getValue();
 			
 			try {
-				database.insertCoursePreference(database.assembleCoursePreference(instructor, database.findCourseByID(courseID), preference));
+				database.insertCoursePreference(instructor, database.findCourseByID(courseID), database.assembleCoursePreference(preference));
 			} catch (NotFoundException e) {
 				throw new AssertionError(e);
 			}
@@ -225,12 +225,12 @@ public class Model {
 
 	// COURSES
 	
-	public Course assembleCourse(Document containingDocument, String name, String catalogNumber, String department, String wtu, String scu, String numSections, String type, String maxEnrollment, String numHalfHoursPerWeek, Set<String> usedEquipmentDescriptions, Collection<Set<Day>> dayPatterns, boolean isSchedulable) {
-		return new Course(database.assembleCourse(containingDocument.underlyingDocument, name, catalogNumber, department, wtu, scu, numSections, type, maxEnrollment, numHalfHoursPerWeek, isSchedulable), usedEquipmentDescriptions, dayPatterns, -1, false);
+	public Course assembleCourse(String name, String catalogNumber, String department, String wtu, String scu, String numSections, String type, String maxEnrollment, String numHalfHoursPerWeek, Set<String> usedEquipmentDescriptions, Collection<Set<Day>> dayPatterns, boolean isSchedulable) {
+		return new Course(database.assembleCourse(name, catalogNumber, department, wtu, scu, numSections, type, maxEnrollment, numHalfHoursPerWeek, isSchedulable), usedEquipmentDescriptions, dayPatterns, -1, false);
 	}
 	
-	public Course insertCourse(Course course) {
-		database.insertCourse(course.underlyingCourse);
+	public Course insertCourse(Document containingDocument, Course course) {
+		database.insertCourse(containingDocument.underlyingDocument, course.underlyingCourse);
 		putUsedEquipmentIntoDB(course.underlyingCourse, course.getUsedEquipment());
 		putOfferedDayPatternsIntoDB(course.underlyingCourse, course.getDayPatterns());
 		return course;
@@ -311,7 +311,7 @@ public class Model {
 	private void putUsedEquipmentIntoDB(IDBCourse course, Collection<String> usedEquipmentDescriptions) {
 		for (String usedEquipmentDescription : usedEquipmentDescriptions) {
 			try {
-				database.insertUsedEquipment(database.assembleUsedEquipment(course, database.findEquipmentTypeByDescription(usedEquipmentDescription)));
+				database.insertUsedEquipment(course, database.findEquipmentTypeByDescription(usedEquipmentDescription), database.assembleUsedEquipment());
 			} catch (NotFoundException e) {
 				throw new AssertionError(e);
 			}
@@ -349,7 +349,7 @@ public class Model {
 		for (Set<Day> dayPattern : dayPatterns) {
 			try {
 				Set<Integer> integers = daysToIntegers(dayPattern);
-				database.insertOfferedDayPattern(database.assembleOfferedDayPattern(underlying, database.findDayPatternByDays(integers)));
+				database.insertOfferedDayPattern(underlying, database.findDayPatternByDays(integers), database.assembleOfferedDayPattern());
 			} catch (NotFoundException e) {
 				throw new AssertionError(e);
 			}
@@ -365,12 +365,12 @@ public class Model {
 
 	// LOCATIONS
 	
-	public Location assembleLocation(Document containingDocument, String room, String type, String maxOccupancy, Set<String> providedEquipmentDescriptions, boolean isSchedulable) {
-		return new Location(database.assembleLocation(containingDocument.underlyingDocument, room, type, maxOccupancy, isSchedulable), providedEquipmentDescriptions);
+	public Location assembleLocation(String room, String type, String maxOccupancy, Set<String> providedEquipmentDescriptions, boolean isSchedulable) {
+		return new Location(database.assembleLocation(room, type, maxOccupancy, isSchedulable), providedEquipmentDescriptions);
 	}
 	
-	public Location insertLocation(Location location) {
-		database.insertLocation(location.underlyingLocation);
+	public Location insertLocation(Document containingDocument, Location location) {
+		database.insertLocation(containingDocument.underlyingDocument, location.underlyingLocation);
 		putProvidedEquipmentIntoDB(location.underlyingLocation, location.providedEquipment);
 		return location;
 	}
@@ -414,7 +414,7 @@ public class Model {
 	private void putProvidedEquipmentIntoDB(IDBLocation location, Collection<String> providedEquipmentDescriptions) {
 		for (String providedEquipmentDescription : providedEquipmentDescriptions) {
 			try {
-				database.insertProvidedEquipment(database.assembleProvidedEquipment(location, database.findEquipmentTypeByDescription(providedEquipmentDescription)));
+				database.insertProvidedEquipment(location, database.findEquipmentTypeByDescription(providedEquipmentDescription), database.assembleProvidedEquipment());
 			} catch (NotFoundException e) {
 				throw new AssertionError(e);
 			}
@@ -457,29 +457,29 @@ public class Model {
 		// Locations
 		Map<Integer, IDBLocation> newDocumentLocationsByExistingDocumentLocationIDs = new HashMap<Integer, IDBLocation>();
 		for (IDBLocation existingDocumentLocation : database.findLocationsForDocument(existingDocument.underlyingDocument)) {
-			IDBLocation newDocumentLocation = database.assembleLocation(newDocument.underlyingDocument, existingDocumentLocation.getRoom(), existingDocumentLocation.getType(), existingDocumentLocation.getMaxOccupancy(), existingDocumentLocation.isSchedulable());
-			database.insertLocation(newDocumentLocation);
+			IDBLocation newDocumentLocation = database.assembleLocation(existingDocumentLocation.getRoom(), existingDocumentLocation.getType(), existingDocumentLocation.getMaxOccupancy(), existingDocumentLocation.isSchedulable());
+			database.insertLocation(newDocument.underlyingDocument, newDocumentLocation);
 			newDocumentLocationsByExistingDocumentLocationIDs.put(existingDocumentLocation.getID(), newDocumentLocation);
 
 			for (IDBEquipmentType providedEquipment : database.findProvidedEquipmentByEquipmentForLocation(existingDocumentLocation).keySet()) {
-				database.insertProvidedEquipment(database.assembleProvidedEquipment(newDocumentLocation, providedEquipment));
+				database.insertProvidedEquipment(newDocumentLocation, providedEquipment, database.assembleProvidedEquipment());
 			}
 		}
 
 		// Courses
 		Map<Integer, IDBCourse> newDocumentCoursesByExistingDocumentCourseIDs = new HashMap<Integer, IDBCourse>();
 		for (IDBCourse existingDocumentCourse : database.findCoursesForDocument(existingDocument.underlyingDocument)) {
-			IDBCourse newDocumentCourse = database.assembleCourse(newDocument.underlyingDocument, existingDocumentCourse.getName(), existingDocumentCourse.getCalatogNumber(), existingDocumentCourse.getDepartment(), existingDocumentCourse.getWTU(), existingDocumentCourse.getSCU(), existingDocumentCourse.getNumSections(), existingDocumentCourse.getType(), existingDocumentCourse.getMaxEnrollment(), existingDocumentCourse.getNumHalfHoursPerWeek(), existingDocumentCourse.isSchedulable());
-			database.insertCourse(newDocumentCourse);
+			IDBCourse newDocumentCourse = database.assembleCourse(existingDocumentCourse.getName(), existingDocumentCourse.getCalatogNumber(), existingDocumentCourse.getDepartment(), existingDocumentCourse.getWTU(), existingDocumentCourse.getSCU(), existingDocumentCourse.getNumSections(), existingDocumentCourse.getType(), existingDocumentCourse.getMaxEnrollment(), existingDocumentCourse.getNumHalfHoursPerWeek(), existingDocumentCourse.isSchedulable());
+			database.insertCourse(newDocument.underlyingDocument, newDocumentCourse);
 			newDocumentCoursesByExistingDocumentCourseIDs.put(existingDocumentCourse.getID(), newDocumentCourse);
 			
 			for (IDBOfferedDayPattern existingOfferedDayPattern : database.findOfferedDayPatternsForCourse(existingDocumentCourse)) {
 				IDBDayPattern dayPattern = database.getDayPatternForOfferedDayPattern(existingOfferedDayPattern);
-				database.insertOfferedDayPattern(database.assembleOfferedDayPattern(newDocumentCourse, dayPattern));
+				database.insertOfferedDayPattern(newDocumentCourse, dayPattern, database.assembleOfferedDayPattern());
 			}
 
 			for (IDBEquipmentType usedEquipment : database.findUsedEquipmentByEquipmentForCourse(existingDocumentCourse).keySet()) {
-				database.insertUsedEquipment(database.assembleUsedEquipment(newDocumentCourse, usedEquipment));
+				database.insertUsedEquipment(newDocumentCourse, usedEquipment, database.assembleUsedEquipment());
 			}
 		}
 		
@@ -498,31 +498,31 @@ public class Model {
 		// Instructors
 		Map<Integer, IDBInstructor> newDocumentInstructorsByExistingDocumentInstructorIDs = new HashMap<Integer, IDBInstructor>();
 		for (IDBInstructor existingDocumentInstructor : database.findInstructorsForDocument(existingDocument.underlyingDocument)) {
-			IDBInstructor newDocumentInstructor = database.assembleInstructor(newDocument.underlyingDocument, existingDocumentInstructor.getFirstName(), existingDocumentInstructor.getLastName(), existingDocumentInstructor.getUsername(), existingDocumentInstructor.getMaxWTU(), existingDocumentInstructor.isSchedulable());
-			database.insertInstructor(newDocumentInstructor);
+			IDBInstructor newDocumentInstructor = database.assembleInstructor(existingDocumentInstructor.getFirstName(), existingDocumentInstructor.getLastName(), existingDocumentInstructor.getUsername(), existingDocumentInstructor.getMaxWTU(), existingDocumentInstructor.isSchedulable());
+			database.insertInstructor(newDocument.underlyingDocument, newDocumentInstructor);
 			newDocumentInstructorsByExistingDocumentInstructorIDs.put(existingDocumentInstructor.getID(), newDocumentInstructor);
 			
 			for (Entry<IDBCourse, IDBCoursePreference> existingDocumentEntry : database.findCoursePreferencesByCourseForInstructor(existingDocumentInstructor).entrySet()) {
 				IDBCourse existingDocumentCoursePreferenceCourse = existingDocumentEntry.getKey();
 				IDBCoursePreference existingDocumentCoursePreference = existingDocumentEntry.getValue();
 				IDBCourse newDocumentCourse = newDocumentCoursesByExistingDocumentCourseIDs.get(existingDocumentCoursePreferenceCourse.getID());
-				IDBCoursePreference newDocumentCoursePreference = database.assembleCoursePreference(newDocumentInstructor, newDocumentCourse, existingDocumentCoursePreference.getPreference());
-				database.insertCoursePreference(newDocumentCoursePreference);
+				IDBCoursePreference newDocumentCoursePreference = database.assembleCoursePreference(existingDocumentCoursePreference.getPreference());
+				database.insertCoursePreference(newDocumentInstructor, newDocumentCourse, newDocumentCoursePreference);
 			}
 			
 			for (Entry<IDBTime, IDBTimePreference> existingDocumentEntry : database.findTimePreferencesByTimeForInstructor(existingDocumentInstructor).entrySet()) {
 				IDBTime time = existingDocumentEntry.getKey();
 				IDBTimePreference existingDocumentTimePreference = existingDocumentEntry.getValue();
-				IDBTimePreference newDocumentTimePreference = database.assembleTimePreference(newDocumentInstructor, time, existingDocumentTimePreference.getPreference());
-				database.insertTimePreference(newDocumentTimePreference);
+				IDBTimePreference newDocumentTimePreference = database.assembleTimePreference(existingDocumentTimePreference.getPreference());
+				database.insertTimePreference(newDocumentInstructor, time, newDocumentTimePreference);
 			}
 		}
 		
 		// Schedules
 		Map<Integer, IDBSchedule> newDocumentScheduleIDsByExistingDocumentScheduleIDs = new HashMap<Integer, IDBSchedule>();
 		for (IDBSchedule existingDocumentSchedule : database.findAllSchedulesForDocument(existingDocument.underlyingDocument)) {
-			IDBSchedule newDocumentSchedule = database.assembleSchedule(newDocument.underlyingDocument);
-			database.insertSchedule(newDocumentSchedule);
+			IDBSchedule newDocumentSchedule = database.assembleSchedule();
+			database.insertSchedule(newDocument.underlyingDocument, newDocumentSchedule);
 			
 			newDocumentScheduleIDsByExistingDocumentScheduleIDs.put(existingDocumentSchedule.getID(), newDocumentSchedule);
 			
@@ -537,11 +537,11 @@ public class Model {
 				IDBInstructor newDocumentInstructor = newDocumentInstructorsByExistingDocumentInstructorIDs.get(existingDocumentInstructor.getID());
 				
 				database.insertScheduleItem(
+						newDocumentSchedule,
+						newDocumentCourse,
+						newDocumentInstructor,
+						newDocumentLocation,
 						database.assembleScheduleItem(
-								newDocumentSchedule,
-								newDocumentCourse,
-								newDocumentInstructor,
-								newDocumentLocation,
 								existingDocumentScheduleItem.getSection(),
 								existingDocumentScheduleItem.getDays(),
 								existingDocumentScheduleItem.getStartHalfHour(),
@@ -589,16 +589,19 @@ public class Model {
 		return new Document(underlying);
 	}
 
-	public ScheduleItem assembleScheduleItem(Schedule schedule, Course course,
-			Instructor instructor, Location location, int section,
+	public ScheduleItem assembleScheduleItem(int section,
 			Set<Day> days, int startHalfHour, int endHalfHour,
 			boolean isPlaced, boolean isConflicted) {
-		IDBScheduleItem underlying = database.assembleScheduleItem(schedule.underlyingSchedule, course.underlyingCourse, instructor.underlyingInstructor, location.underlyingLocation, section, days, startHalfHour, endHalfHour, isPlaced, isConflicted);
-		return new ScheduleItem(underlying, course.getID(), location.getID(), instructor.getID());
+		IDBScheduleItem underlying = database.assembleScheduleItem(section, days, startHalfHour, endHalfHour, isPlaced, isConflicted);
+		return new ScheduleItem(underlying, null, null, null);
 	}
 
-	public void insertScheduleItem(ScheduleItem item) {
-		database.insertScheduleItem(item.underlying);
+	public void insertScheduleItem(Schedule schedule, Course course,
+			Instructor instructor, Location location, ScheduleItem item) {
+		database.insertScheduleItem(schedule.underlyingSchedule, course.underlyingCourse, instructor.underlyingInstructor, location.underlyingLocation, item.underlying);
+		item.setCourseID(course.getID());
+		item.setLocationID(location.getID());
+		item.setInstructorID(instructor.getID());
 	}
 
 	public void deleteScheduleItem(ScheduleItem item) {
@@ -632,5 +635,9 @@ public class Model {
 
 	public Schedule getScheduleItemSchedule(ScheduleItem item) throws NotFoundException {
 		return new Schedule(database.getScheduleItemSchedule(item.underlying));
+	}
+
+	public boolean isInserted(ScheduleItem scheduleItem) {
+		return database.isInserted(scheduleItem.underlying);
 	}
 }

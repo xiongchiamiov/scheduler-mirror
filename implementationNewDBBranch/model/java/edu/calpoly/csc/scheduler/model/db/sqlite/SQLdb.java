@@ -234,14 +234,14 @@ public class SQLdb implements IDatabase {
 
 
 	@Override
-	public IDBSchedule assembleSchedule(IDBDocument containingDocument) {
+	public IDBSchedule assembleSchedule() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
-	public void insertSchedule(IDBSchedule schedule) {
+	public void insertSchedule(IDBDocument containingDocument, IDBSchedule schedule) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -286,9 +286,7 @@ public class SQLdb implements IDatabase {
 
 
 	@Override
-	public IDBScheduleItem assembleScheduleItem(IDBSchedule schedule,
-			IDBCourse course, IDBInstructor instructor, IDBLocation location,
-			int section, Set<Day> days, int startHalfHour, int endHalfHour,
+	public IDBScheduleItem assembleScheduleItem(int section, Set<Day> days, int startHalfHour, int endHalfHour,
 			boolean isPlaced, boolean isConflicted) {
 		// TODO Auto-generated method stub
 		return null;
@@ -296,7 +294,9 @@ public class SQLdb implements IDatabase {
 
 
 	@Override
-	public void insertScheduleItem(IDBScheduleItem item) {
+	public void insertScheduleItem(IDBSchedule schedule,
+			IDBCourse course, IDBInstructor instructor, IDBLocation location,
+			IDBScheduleItem item) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -376,7 +376,7 @@ public class SQLdb implements IDatabase {
 
 
 	@Override
-	public IDBLocation assembleLocation(IDBDocument containingDocument,
+	public IDBLocation assembleLocation(
 			String room, String type, String maxOccupancy, boolean isSchedulable) {
 		// TODO Auto-generated method stub
 		return null;
@@ -384,7 +384,7 @@ public class SQLdb implements IDatabase {
 
 
 	@Override
-	public void insertLocation(IDBLocation location) {
+	public void insertLocation(IDBDocument containingDocument, IDBLocation location) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -419,7 +419,7 @@ public class SQLdb implements IDatabase {
 
 
 	@Override
-	public IDBCourse assembleCourse(IDBDocument underlyingDocument,
+	public IDBCourse assembleCourse(
 			String name, String catalogNumber, String department, String wtu,
 			String scu, String numSections, String type, String maxEnrollment,
 			String numHalfHoursPerWeek, boolean isSchedulable) {
@@ -429,7 +429,7 @@ public class SQLdb implements IDatabase {
 
 
 	@Override
-	public void insertCourse(IDBCourse course) {
+	public void insertCourse(IDBDocument underlyingDocument, IDBCourse course) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -508,7 +508,7 @@ public class SQLdb implements IDatabase {
 
 
 	@Override
-	public IDBInstructor assembleInstructor(IDBDocument containingDocument,
+	public IDBInstructor assembleInstructor(
 			String firstName, String lastName, String username, String maxWTU, boolean isSchedulable) {
 		// TODO Auto-generated method stub
 		return null;
@@ -516,7 +516,7 @@ public class SQLdb implements IDatabase {
 
 
 	@Override
-	public void insertInstructor(IDBInstructor instructor) {
+	public void insertInstructor(IDBDocument containingDocument, IDBInstructor instructor) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -561,15 +561,15 @@ public class SQLdb implements IDatabase {
 
 
 	@Override
-	public IDBTimePreference assembleTimePreference(IDBInstructor ins,
-			IDBTime time, int preference) {
+	public IDBTimePreference assembleTimePreference(int preference) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
-	public void insertTimePreference(IDBTimePreference timePreference) {
+	public void insertTimePreference(IDBInstructor ins,
+			IDBTime time, IDBTimePreference timePreference) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -616,14 +616,14 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public IDBCoursePreference assembleCoursePreference(
-			IDBInstructor instructor, IDBCourse course, int preference) {
+			int preference) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
-	public void insertCoursePreference(IDBCoursePreference coursePreference) {
+	public void insertCoursePreference(IDBInstructor instructor, IDBCourse course, IDBCoursePreference coursePreference) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -681,15 +681,15 @@ public class SQLdb implements IDatabase {
 
 
 	@Override
-	public DBUsedEquipment assembleUsedEquipment(IDBCourse course,
-			IDBEquipmentType equipmentType) {
+	public DBUsedEquipment assembleUsedEquipment() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
-	public void insertUsedEquipment(IDBUsedEquipment equip) {
+	public void insertUsedEquipment(IDBCourse course,
+			IDBEquipmentType equipmentType, IDBUsedEquipment equip) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -711,15 +711,15 @@ public class SQLdb implements IDatabase {
 
 
 	@Override
-	public IDBProvidedEquipment assembleProvidedEquipment(IDBLocation location,
-			IDBEquipmentType equipmentType) {
+	public IDBProvidedEquipment assembleProvidedEquipment() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
-	public void insertProvidedEquipment(IDBProvidedEquipment equip) {
+	public void insertProvidedEquipment(IDBLocation location,
+			IDBEquipmentType equipmentType, IDBProvidedEquipment equip) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -757,15 +757,15 @@ public class SQLdb implements IDatabase {
 
 
 	@Override
-	public IDBOfferedDayPattern assembleOfferedDayPattern(IDBCourse underlying,
-			IDBDayPattern dayPattern) {
+	public IDBOfferedDayPattern assembleOfferedDayPattern(
+			) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
-	public void insertOfferedDayPattern(IDBOfferedDayPattern pattern) {
+	public void insertOfferedDayPattern(IDBCourse underlying, IDBDayPattern dayPattern, IDBOfferedDayPattern pattern) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -790,6 +790,13 @@ public class SQLdb implements IDatabase {
 			throws NotFoundException {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+
+	@Override
+	public boolean isInserted(IDBScheduleItem underlying) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 	
 }

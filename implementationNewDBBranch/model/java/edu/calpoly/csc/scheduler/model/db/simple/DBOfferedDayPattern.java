@@ -3,10 +3,10 @@ package edu.calpoly.csc.scheduler.model.db.simple;
 import edu.calpoly.csc.scheduler.model.db.IDBOfferedDayPattern;
 
 public class DBOfferedDayPattern extends DBObject implements IDBOfferedDayPattern {
-	int courseID;
-	int dayPatternID;
+	Integer courseID;
+	Integer dayPatternID;
 	
-	public DBOfferedDayPattern(Integer id, int courseID, int dayPatternID) {
+	public DBOfferedDayPattern(Integer id, Integer courseID, Integer dayPatternID) {
 		super(id);
 		this.courseID = courseID;
 		this.dayPatternID = dayPatternID;

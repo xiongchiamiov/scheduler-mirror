@@ -17,23 +17,23 @@ import edu.calpoly.csc.scheduler.model.Location;
 import edu.calpoly.csc.scheduler.model.Model;
 
 public class ModelTestUtility {
-	public static Course createCourse(Model model, Document document) {
-		return model.assembleCourse(document, "Test", "101", "CSC", "4", "4", "1",
+	public static Course createCourse(Model model) {
+		return model.assembleCourse("Test", "101", "CSC", "4", "4", "1",
 				"LEC", "60", "6", new HashSet<String>(),
 				new ArrayList<Set<Day>>(), true);
 	}
 	
-	public static Location createLocation(Model model, Document document) {
-		return model.assembleLocation(document, "123", "LEC", "60", new HashSet<String>(), true);
+	public static Location createLocation(Model model) {
+		return model.assembleLocation("123", "LEC", "60", new HashSet<String>(), true);
 	}
 	
-	public static Instructor createBasicInstructor(Model model, Document document) {
-		return model.assembleInstructor(document, "TestFirst", "TestLast", "testid", "4", Instructor.createDefaultTimePreferences(), new HashMap<Integer, Integer>(), true);
+	public static Instructor createBasicInstructor(Model model) {
+		return model.assembleInstructor("TestFirst", "TestLast", "testid", "4", Instructor.createDefaultTimePreferences(), new HashMap<Integer, Integer>(), true);
 	}
 	
 	public static Instructor insertInstructorWPrefs(Model model, Document doc) {
-		int courseID1 = model.insertCourse(model.assembleCourse(doc, "Graphics", "201", "GRC", "10", "20", "2", "LEC", "20", "6", new TreeSet<String>(), new LinkedList<Set<Day>>(), true)).getID();
-		int courseID2 = model.insertCourse(model.assembleCourse(doc, "Graphics: The Return", "202", "GRC", "10", "20", "2", "LEC", "20", "6", new TreeSet<String>(), new LinkedList<Set<Day>>(), true)).getID();
+		int courseID1 = model.insertCourse(doc, model.assembleCourse("Graphics", "201", "GRC", "10", "20", "2", "LEC", "20", "6", new TreeSet<String>(), new LinkedList<Set<Day>>(), true)).getID();
+		int courseID2 = model.insertCourse(doc, model.assembleCourse("Graphics: The Return", "202", "GRC", "10", "20", "2", "LEC", "20", "6", new TreeSet<String>(), new LinkedList<Set<Day>>(), true)).getID();
 		
 		HashMap<Integer, Integer> coursePrefs = new HashMap<Integer, Integer>();
 		coursePrefs.put(courseID1, 2);
@@ -41,7 +41,7 @@ public class ModelTestUtility {
 		
 		int[][] timePrefs = createSampleTimePreferences(doc);
 		
-		return model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", timePrefs, coursePrefs, true));
+		return model.insertInstructor(doc, model.assembleInstructor("Evan", "Ovadia", "eovadia", "20", timePrefs, coursePrefs, true));
 	}
 	
 	public static boolean coursesContentsEqual(Course a, Course b) {
@@ -99,8 +99,14 @@ public class ModelTestUtility {
 			return false;
 		if (!a.getCoursePreferences().equals(b.getCoursePreferences()))
 			return false;
-		if (!a.getTimePreferences().equals(b.getTimePreferences()))
-			return false;
+		
+		for (Day day : Day.values()) {
+			for (int halfHour = 0; halfHour < 48; halfHour++) {
+				if (a.getTimePreferences(day, halfHour) != b.getTimePreferences(day, halfHour))
+					return false;
+			}
+		}
+		
 		return true;
 	}
 	

@@ -4,7 +4,7 @@ import edu.calpoly.csc.scheduler.model.db.IDBCourse;
 import edu.calpoly.csc.scheduler.model.db.IDBCourseAssociation;
 
 public class DBCourse extends DBObject implements IDBCourse {
-	int documentID;
+	Integer documentID;
 	boolean isSchedulable;
 	String name;
 	String catalogNumber;
@@ -18,7 +18,7 @@ public class DBCourse extends DBObject implements IDBCourse {
 	Integer lectureID;
 	Boolean tetheredToLecture;
 
-	public DBCourse(Integer id, int documentID, String name, String catalogNumber, String department,
+	public DBCourse(Integer id, Integer documentID, String name, String catalogNumber, String department,
 			String wtu, String scu, String numSections, String type,
 			String maxEnrollment, String numHalfHoursPerWeek, boolean isSchedulable) {
 		super(id);

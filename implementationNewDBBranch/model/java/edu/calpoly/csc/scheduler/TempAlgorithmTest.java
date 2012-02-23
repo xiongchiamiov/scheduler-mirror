@@ -26,18 +26,18 @@ public abstract class TempAlgorithmTest extends ModelTestCase {
 		
 		Document doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
 		
-		model.insertLocation(model.assembleLocation(doc, "roomlol", "LEC", "30", new HashSet<String>(), true));
+		model.insertLocation(doc, model.assembleLocation("roomlol", "LEC", "30", new HashSet<String>(), true));
 		
-		Course course = model.assembleCourse(doc, "Test", "101", "CSC", "4", "4", "1", "LEC", "60", "6", new HashSet<String>(), new ArrayList<Set<Day>>(), true);
+		Course course = model.assembleCourse("Test", "101", "CSC", "4", "4", "1", "LEC", "60", "6", new HashSet<String>(), new ArrayList<Set<Day>>(), true);
 		ModelTestUtility.addDayPattern(course, Day.MONDAY, Day.WEDNESDAY, Day.FRIDAY);
-		model.insertCourse(course);
+		model.insertCourse(doc, course);
 		
-		Instructor instructor = model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", Instructor.createDefaultTimePreferences(), new HashMap<Integer, Integer>(), true));
+		Instructor instructor = model.insertInstructor(doc, model.assembleInstructor("Evan", "Ovadia", "eovadia", "20", Instructor.createDefaultTimePreferences(), new HashMap<Integer, Integer>(), true));
 		ModelTestUtility.setPreferenceBlocks(instructor, 0, 0, 48, Day.values());
 		ModelTestUtility.setPreferenceBlocks(instructor, 3, 20, 30, Day.values());
 		
-		Schedule schedule = model.assembleSchedule(doc);
-		model.insertSchedule(schedule);
+		Schedule schedule = model.assembleSchedule();
+		model.insertSchedule(doc, schedule);
 		
 		Collection<ScheduleItem> result = GenerationAlgorithm.generateRestOfSchedule(model, schedule);
 		assertEquals(result.size(), 1);
@@ -51,18 +51,18 @@ public abstract class TempAlgorithmTest extends ModelTestCase {
 		
 		Document doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
 		
-		model.insertLocation(model.assembleLocation(doc, "roomlol", "LEC", "30", new HashSet<String>(), true));
+		model.insertLocation(doc, model.assembleLocation("roomlol", "LEC", "30", new HashSet<String>(), true));
 		
-		Course course = model.assembleCourse(doc, "Test", "101", "CSC", "4", "4", "2", "LEC", "60", "6", new HashSet<String>(), new ArrayList<Set<Day>>(), true);
+		Course course = model.assembleCourse("Test", "101", "CSC", "4", "4", "2", "LEC", "60", "6", new HashSet<String>(), new ArrayList<Set<Day>>(), true);
 		ModelTestUtility.addDayPattern(course, Day.MONDAY, Day.WEDNESDAY, Day.FRIDAY);
-		model.insertCourse(course);
+		model.insertCourse(doc, course);
 		
-		Instructor instructor = model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", Instructor.createDefaultTimePreferences(), new HashMap<Integer, Integer>(), true));
+		Instructor instructor = model.insertInstructor(doc, model.assembleInstructor("Evan", "Ovadia", "eovadia", "20", Instructor.createDefaultTimePreferences(), new HashMap<Integer, Integer>(), true));
 		ModelTestUtility.setPreferenceBlocks(instructor, 0, 0, 48, Day.values());
 		ModelTestUtility.setPreferenceBlocks(instructor, 3, 20, 30, Day.values());
 		
-		Schedule schedule = model.assembleSchedule(doc);
-		model.insertSchedule(schedule);
+		Schedule schedule = model.assembleSchedule();
+		model.insertSchedule(doc, schedule);
 		
 		Collection<ScheduleItem> result = GenerationAlgorithm.generateRestOfSchedule(model, schedule);
 		assertEquals(result.size(), 2);
@@ -76,19 +76,19 @@ public abstract class TempAlgorithmTest extends ModelTestCase {
 		
 		Document doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
 		
-		model.insertLocation(model.assembleLocation(doc, "roomlol", "LEC", "30", new HashSet<String>(), true));
+		model.insertLocation(doc, model.assembleLocation("roomlol", "LEC", "30", new HashSet<String>(), true));
 		
-		Course course = model.assembleCourse(doc, "Test", "101", "CSC", "4", "4", "6", "LEC", "60", "6", new HashSet<String>(), new ArrayList<Set<Day>>(), true);
+		Course course = model.assembleCourse("Test", "101", "CSC", "4", "4", "6", "LEC", "60", "6", new HashSet<String>(), new ArrayList<Set<Day>>(), true);
 		ModelTestUtility.addDayPattern(course, Day.MONDAY, Day.WEDNESDAY, Day.FRIDAY);
-		model.insertCourse(course);
+		model.insertCourse(doc, course);
 		
-		Instructor instructor = model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", Instructor.createDefaultTimePreferences(), new HashMap<Integer, Integer>(), true);
+		Instructor instructor = model.assembleInstructor("Evan", "Ovadia", "eovadia", "20", Instructor.createDefaultTimePreferences(), new HashMap<Integer, Integer>(), true);
 		ModelTestUtility.setPreferenceBlocks(instructor, 0, 0, 48, Day.values());
 		ModelTestUtility.setPreferenceBlocks(instructor, 3, 20, 30, Day.values());
-		model.insertInstructor(instructor);
+		model.insertInstructor(doc, instructor);
 		
-		Schedule schedule = model.assembleSchedule(doc);
-		model.insertSchedule(schedule);
+		Schedule schedule = model.assembleSchedule();
+		model.insertSchedule(doc, schedule);
 		
 		try {
 			GenerationAlgorithm.generateRestOfSchedule(model, schedule);

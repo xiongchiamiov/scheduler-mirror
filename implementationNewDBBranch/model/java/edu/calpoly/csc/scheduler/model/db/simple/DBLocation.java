@@ -3,13 +3,13 @@ package edu.calpoly.csc.scheduler.model.db.simple;
 import edu.calpoly.csc.scheduler.model.db.IDBLocation;
 
 public class DBLocation extends DBObject implements IDBLocation {
-	int documentID;
+	Integer documentID;
 	String room;
 	String type;
 	String maxOccupancy;
 	boolean isSchedulable;
 	
-	public DBLocation(Integer id, int documentID, String room, String type, String maxOccupancy, boolean isSchedulable) {
+	public DBLocation(Integer id, Integer documentID, String room, String type, String maxOccupancy, boolean isSchedulable) {
 		super(id);
 		this.documentID = documentID;
 		this.room = room;

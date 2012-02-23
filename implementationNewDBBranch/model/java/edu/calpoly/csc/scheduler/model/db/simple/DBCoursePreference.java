@@ -3,11 +3,11 @@ package edu.calpoly.csc.scheduler.model.db.simple;
 import edu.calpoly.csc.scheduler.model.db.IDBCoursePreference;
 
 public class DBCoursePreference extends DBObject implements IDBCoursePreference {
-	int instructorID;
-	int courseID;
-	int preference;
+	Integer instructorID;
+	Integer courseID;
+	Integer preference;
 	
-	public DBCoursePreference(Integer id, int instructorID, int courseID, int preference) {
+	public DBCoursePreference(Integer id, Integer instructorID, Integer courseID, int preference) {
 		super(id);
 		this.instructorID = instructorID;
 		this.courseID = courseID;

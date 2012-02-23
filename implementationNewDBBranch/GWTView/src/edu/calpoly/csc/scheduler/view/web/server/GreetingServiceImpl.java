@@ -48,7 +48,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 
 		int id;
 		try {
-			id = model.insertCourse(Conversion.courseFromGWT(model, model.findDocumentByID(documentID), course)).getID();
+			id = model.insertCourse(model.findDocumentByID(documentID), Conversion.courseFromGWT(model, course)).getID();
 		} catch (NotFoundException e) {
 			e.printStackTrace();
 			throw new NotFoundExceptionGWT();
@@ -105,7 +105,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		
 		try {
 			Document document = model.findDocumentByID(documentID);
-			int id = model.insertInstructor(Conversion.instructorFromGWT(model, document, instructor)).getID();
+			int id = model.insertInstructor(document, Conversion.instructorFromGWT(model, instructor)).getID();
 			instructor.setID(id);
 			return instructor;
 		} catch (NotFoundException e) {
@@ -162,8 +162,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 
 		try {
 			int id = model.insertLocation(
-					model.assembleLocation(
 					model.findDocumentByID(documentID),
+					model.assembleLocation(
 					location.getRoom(), location.getType(), location.getRawMaxOccupancy(), location.getEquipment(), true)).getID();
 			location.setID(id);
 			return location;
@@ -242,8 +242,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	public DocumentGWT createDocument(String newDocName) {
 		Document newOriginalDocument = model.assembleDocument(newDocName, 14, 44);
 		model.insertDocument(newOriginalDocument);
-		Schedule schedule = model.assembleSchedule(newOriginalDocument);
-		model.insertSchedule(schedule);
+		Schedule schedule = model.assembleSchedule();
+		model.insertSchedule(newOriginalDocument, schedule);
 		int scheduleID = schedule.getID();
 		return Conversion.documentToGWT(newOriginalDocument, scheduleID);
 	}
@@ -346,83 +346,27 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 
 	@Override
 	public Collection<OldScheduleItemGWT> intermediateGetScheduleItems(int documentID) throws NotFoundExceptionGWT {
-		Schedule schedule;
-		try {
-			Document document = model.findDocumentByID(documentID);
-			schedule = model.findAllSchedulesForDocument(document).iterator().next();
-		
-			Collection<OldScheduleItemGWT> result = new LinkedList<OldScheduleItemGWT>();
-			for (ScheduleItem item : model.findAllScheduleItemsForSchedule(schedule)) {
-				ScheduleItemGWT itemGWT = Conversion.scheduleItemToGWT(item);
-				OldScheduleItemGWT oldItemGWT = Conversion.scheduleItemFromGWTToOldGWT(
-						itemGWT,
-						model.getScheduleItemCourse(item),
-						model.getScheduleItemInstructor(item),
-						model.getScheduleItemLocation(item));
-				result.add(oldItemGWT);
-			}
-			return result;
-		} catch (NotFoundException e) {
-			e.printStackTrace();
-			throw new NotFoundExceptionGWT();
-		}
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void intermediateInsertScheduleItem(int documentID, OldScheduleItemGWT itemOldGWT) throws NotFoundExceptionGWT {
-		try {
-			Schedule schedule;
-			Document document = model.findDocumentByID(documentID);
-			schedule = model.findAllSchedulesForDocument(document).iterator().next();
-			
-			model.insertScheduleItem(Conversion.scheduleItemFromGWT(model, schedule, Conversion.scheduleItemGWTFromOldGWT(model, itemOldGWT, model.findInstructorsForDocument(model.getDocumentForSchedule(schedule)), model.findLocationsForDocument(model.getDocumentForSchedule(schedule)))));
-		} catch (NotFoundException e) {
-			e.printStackTrace();
-			throw new NotFoundExceptionGWT();
-		}
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void intermediateUpdateScheduleItem(int documentID, OldScheduleItemGWT oldItemOldGWT, OldScheduleItemGWT newItemOldGWT) throws NotFoundExceptionGWT {
-		try {
-			Document document = model.findDocumentByID(documentID);
-			int scheduleID = model.findAllSchedulesForDocument(document).iterator().next().getID();
-			
-			intermediateRemoveScheduleItem(scheduleID, oldItemOldGWT);
-			intermediateInsertScheduleItem(scheduleID, newItemOldGWT);
-		}
-		catch (NotFoundException e) {
-			e.printStackTrace();
-			throw new NotFoundExceptionGWT();
-		}
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void intermediateRemoveScheduleItem(int documentID, OldScheduleItemGWT oldItemOldGWT) throws NotFoundExceptionGWT {
-		try {
-			Document document = model.findDocumentByID(documentID);
-			Schedule schedule = model.findAllSchedulesForDocument(document).iterator().next();
-			
-			for (ScheduleItem item : model.findAllScheduleItemsForSchedule(schedule)) {
-				if (item.getCourseID() == oldItemOldGWT.getCourse().getID() &&
-						model.findInstructorByID(item.getInstructorID()).getUsername().equals(oldItemOldGWT.getProfessor()) &&
-						model.findLocationByID(item.getLocationID()).getRoom().equals(oldItemOldGWT.getRoom()) &&
-						item.getSection() == oldItemOldGWT.getSection()) {
-					model.deleteScheduleItem(item);
-					break;
-				}
-			}
-		}
-		catch (NotFoundException e) {
-			e.printStackTrace();
-			throw new NotFoundExceptionGWT();
-		}
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public Collection<OldScheduleItemGWT> intermediateGenerateRestOfSchedule(int documentID) {
-		System.out.println("Implement generation!");
-		return new LinkedList<OldScheduleItemGWT>();
+		throw new UnsupportedOperationException();
 	}
 
 	
@@ -434,7 +378,11 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			Schedule schedule = model.findScheduleByID(scheduleID);
 			ScheduleItem newItem = Conversion.scheduleItemFromGWT(model, model.findScheduleByID(scheduleID), scheduleItem);
 
-			GenerationAlgorithm.insertNewScheduleItem(model, schedule, newItem);
+			Course course = model.findCourseByID(scheduleItem.getCourseID());
+			Instructor instructor = model.findInstructorByID(scheduleItem.getInstructorID());
+			Location location = model.findLocationByID(scheduleItem.getLocationID());
+			
+			GenerationAlgorithm.insertNewScheduleItem(model, schedule, course, instructor, location, newItem);
 			
 			return getScheduleItems(scheduleID);
 		} catch (NotFoundException e) {

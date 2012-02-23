@@ -23,7 +23,7 @@ public abstract class CoursesTest extends ModelTestCase
       Model model = createBlankModel();
 
       Document document = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
-      model.assembleCourse(document, "Test", "101", "CSC", "4", "4", "1", "LEC", "60", "6", new HashSet<String>(),
+      model.assembleCourse("Test", "101", "CSC", "4", "4", "1", "LEC", "60", "6", new HashSet<String>(),
             new ArrayList<Set<Day>>(), true);
 
       assertEquals(model.findInstructorsForDocument(document).size(), 0);
@@ -35,7 +35,7 @@ public abstract class CoursesTest extends ModelTestCase
       int courseID;
       {
          Document doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
-         courseID = model.insertCourse(model.assembleCourse(doc, "Test", "101", "CSC", "4", "4", "1",
+         courseID = model.insertCourse(doc, model.assembleCourse("Test", "101", "CSC", "4", "4", "1",
                "LEC", "60", "6", new HashSet<String>(),
                new ArrayList<Set<Day>>(), true)).getID();
       }
@@ -61,7 +61,7 @@ public abstract class CoursesTest extends ModelTestCase
       
       {
          doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
-         courseID = model.insertCourse(ModelTestUtility.createCourse(model, doc)).getID();
+         courseID = model.insertCourse(doc, ModelTestUtility.createCourse(model)).getID();
       }
       
       model.deleteCourse(model.findCourseByID(courseID));
@@ -77,14 +77,14 @@ public abstract class CoursesTest extends ModelTestCase
       
       Document doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
       {
-         Course course = model.insertCourse(ModelTestUtility.createCourse(model, doc));
+         Course course = model.insertCourse(doc, ModelTestUtility.createCourse(model));
          course.setDepartment("NotCSC");
          courseID = course.getID();
       }
       
       {
          Course course = model.findCourseByID(courseID);
-         assertTrue(course.getDepartment().equals(ModelTestUtility.createCourse(model, doc).getDepartment()));
+         assertTrue(course.getDepartment().equals(ModelTestUtility.createCourse(model).getDepartment()));
       }
    }
    
@@ -95,7 +95,7 @@ public abstract class CoursesTest extends ModelTestCase
       
       {
          Document doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
-         Course course = model.insertCourse(ModelTestUtility.createCourse(model, doc));
+         Course course = model.insertCourse(doc, ModelTestUtility.createCourse(model));
          course.setCatalogNumber("999");
          course.setDepartment("NotCSC");
          course.setIsSchedulable(false);
@@ -131,7 +131,7 @@ public abstract class CoursesTest extends ModelTestCase
       
       {
          doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
-         Course course = model.insertCourse(ModelTestUtility.createCourse(model, doc));
+         Course course = model.insertCourse(doc, ModelTestUtility.createCourse(model));
          courseID = course.getID();
          model.deleteCourse(course);
       }
@@ -153,10 +153,10 @@ public abstract class CoursesTest extends ModelTestCase
       Set<Integer> courseIDs = new HashSet<Integer>();
       
       Document doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
-      courseIDs.add(model.insertCourse(model.assembleCourse(doc, "Test", "101", "CSC", "4", "4", "1",
+      courseIDs.add(model.insertCourse(doc, model.assembleCourse("Test", "101", "CSC", "4", "4", "1",
             "LEC", "60", "6", new HashSet<String>(),
             new ArrayList<Set<Day>>(), true)).getID());
-      courseIDs.add(model.insertCourse(model.assembleCourse(doc, "Test1", "1011", "CSC1", "8", "8", "2",
+      courseIDs.add(model.insertCourse(doc, model.assembleCourse("Test1", "1011", "CSC1", "8", "8", "2",
             "LAB", "10", "4", new HashSet<String>(),
             new ArrayList<Set<Day>>(), true)).getID());
       
@@ -175,10 +175,10 @@ public abstract class CoursesTest extends ModelTestCase
          Set<Integer> courseIDs1 = new HashSet<Integer>();
          
          Document doc1 = model.insertDocument(model.assembleDocument("doc1", START_HALF_HOUR, END_HALF_HOUR));
-         courseIDs1.add(model.insertCourse(model.assembleCourse(doc1, "Test", "101", "CSC", "4", "4", "1",
+         courseIDs1.add(model.insertCourse(doc1, model.assembleCourse("Test", "101", "CSC", "4", "4", "1",
                "LEC", "60", "6", new HashSet<String>(),
                new ArrayList<Set<Day>>(), true)).getID());
-         courseIDs1.add(model.insertCourse(model.assembleCourse(doc1, "Test1", "1011", "CSC1", "8", "8", "2",
+         courseIDs1.add(model.insertCourse(doc1, model.assembleCourse("Test1", "1011", "CSC1", "8", "8", "2",
                "LAB", "10", "4", new HashSet<String>(),
                new ArrayList<Set<Day>>(), true)).getID());
          
@@ -194,10 +194,10 @@ public abstract class CoursesTest extends ModelTestCase
          Set<Integer> courseIDs2 = new HashSet<Integer>();
          
          Document doc2 = model.insertDocument(model.assembleDocument("doc2", START_HALF_HOUR, END_HALF_HOUR));
-         courseIDs2.add(model.insertCourse(model.assembleCourse(doc2, "2Test", "2101", "2CSC", "24", "24", "21",
+         courseIDs2.add(model.insertCourse(doc2, model.assembleCourse("2Test", "2101", "2CSC", "24", "24", "21",
                "LEC", "260", "26", new HashSet<String>(),
                new ArrayList<Set<Day>>(), true)).getID());
-         courseIDs2.add(model.insertCourse(model.assembleCourse(doc2, "2Test1", "21011", "2CSC1", "28", "28", "22",
+         courseIDs2.add(model.insertCourse(doc2, model.assembleCourse("2Test1", "21011", "2CSC1", "28", "28", "22",
                "LAB", "210", "24", new HashSet<String>(),
                new ArrayList<Set<Day>>(), true)).getID());
          

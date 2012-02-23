@@ -21,7 +21,7 @@ public abstract class LocationsTest extends ModelTestCase {
 		
 		{
 			Document doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
-			locationID = model.insertLocation(model.assembleLocation(doc, "roomlol", "LEC", "30", new HashSet<String>(), true)).getID();
+			locationID = model.insertLocation(doc, model.assembleLocation("roomlol", "LEC", "30", new HashSet<String>(), true)).getID();
 		}
 		
 		Location found = model.findLocationByID(locationID);
@@ -37,7 +37,7 @@ public abstract class LocationsTest extends ModelTestCase {
 		
 		{
 			Document doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
-			Location ins = model.insertLocation(model.assembleLocation(doc, "roomlol", "LEC", "30", new HashSet<String>(), true));
+			Location ins = model.insertLocation(doc, model.assembleLocation("roomlol", "LEC", "30", new HashSet<String>(), true));
 			ins.setRoom("derpalisk");
 			locationID = ins.getID();
 		}
@@ -55,7 +55,7 @@ public abstract class LocationsTest extends ModelTestCase {
 		
 		{
 			Document doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
-			Location ins = model.insertLocation(model.assembleLocation(doc, "roomlol", "LEC", "30", new HashSet<String>(), true));
+			Location ins = model.insertLocation(doc, model.assembleLocation("roomlol", "LEC", "30", new HashSet<String>(), true));
 			ins.setRoom("hark");
 			ins.setType("derp");
 			ins.setMaxOccupancy("40");
@@ -76,7 +76,7 @@ public abstract class LocationsTest extends ModelTestCase {
 		
 		{
 			Document doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
-			Location ins = model.insertLocation(model.assembleLocation(doc, "roomlol", "LEC", "30", new HashSet<String>(), true));
+			Location ins = model.insertLocation(doc, model.assembleLocation("roomlol", "LEC", "30", new HashSet<String>(), true));
 			locationID = ins.getID();
 			model.deleteLocation(ins);
 		}
@@ -94,8 +94,8 @@ public abstract class LocationsTest extends ModelTestCase {
 		Set<Integer> locationIDs = new HashSet<Integer>();
 		
 		Document doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
-		locationIDs.add(model.insertLocation(model.assembleLocation(doc, "roomlol", "LEC", "30", new HashSet<String>(), true)).getID());
-		locationIDs.add(model.insertLocation(model.assembleLocation(doc, "room2lol", "LEC", "20", new HashSet<String>(), true)).getID());
+		locationIDs.add(model.insertLocation(doc, model.assembleLocation("roomlol", "LEC", "30", new HashSet<String>(), true)).getID());
+		locationIDs.add(model.insertLocation(doc, model.assembleLocation("room2lol", "LEC", "20", new HashSet<String>(), true)).getID());
 		
 		Collection<Location> returnedLocations = model.findLocationsForDocument(doc);
 		for (Location returnedDoc : returnedLocations) {
@@ -112,8 +112,8 @@ public abstract class LocationsTest extends ModelTestCase {
 			Set<Integer> locationIDs1 = new HashSet<Integer>();
 			
 			Document doc1 = model.insertDocument(model.assembleDocument("doc1", START_HALF_HOUR, END_HALF_HOUR));
-			locationIDs1.add(model.insertLocation(model.assembleLocation(doc1, "roomlol", "LEC", "30", new HashSet<String>(), true)).getID());
-			locationIDs1.add(model.insertLocation(model.assembleLocation(doc1, "room2lol", "LEC", "20", new HashSet<String>(), true)).getID());
+			locationIDs1.add(model.insertLocation(doc1, model.assembleLocation("roomlol", "LEC", "30", new HashSet<String>(), true)).getID());
+			locationIDs1.add(model.insertLocation(doc1, model.assembleLocation("room2lol", "LEC", "20", new HashSet<String>(), true)).getID());
 			
 			Collection<Location> returnedLocations1 = model.findLocationsForDocument(doc1);
 			for (Location returnedDoc : returnedLocations1) {
@@ -127,8 +127,8 @@ public abstract class LocationsTest extends ModelTestCase {
 			Set<Integer> locationIDs2 = new HashSet<Integer>();
 			
 			Document doc2 = model.insertDocument(model.assembleDocument("doc2", START_HALF_HOUR, END_HALF_HOUR));
-			locationIDs2.add(model.insertLocation(model.assembleLocation(doc2, "room3lol", "LEC", "35", new HashSet<String>(), true)).getID());
-			locationIDs2.add(model.insertLocation(model.assembleLocation(doc2, "room4lol", "LEC", "30", new HashSet<String>(), true)).getID());
+			locationIDs2.add(model.insertLocation(doc2, model.assembleLocation("room3lol", "LEC", "35", new HashSet<String>(), true)).getID());
+			locationIDs2.add(model.insertLocation(doc2, model.assembleLocation("room4lol", "LEC", "30", new HashSet<String>(), true)).getID());
 			
 			Collection<Location> returnedLocations2 = model.findLocationsForDocument(doc2);
 			for (Location returnedDoc : returnedLocations2) {

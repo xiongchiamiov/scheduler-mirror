@@ -40,8 +40,8 @@ public interface IDatabase {
 	// Schedules
 	Collection<IDBSchedule> findAllSchedulesForDocument(IDBDocument document);
 	IDBSchedule findScheduleByID(int id) throws NotFoundException;
-	IDBSchedule assembleSchedule(IDBDocument containingDocument);
-	void insertSchedule(IDBSchedule schedule);
+	IDBSchedule assembleSchedule();
+	void insertSchedule(IDBDocument containingDocument, IDBSchedule schedule);
 	void updateSchedule(IDBSchedule schedule);
 	void deleteSchedule(IDBSchedule schedule);
 	
@@ -49,10 +49,10 @@ public interface IDatabase {
 	Collection<IDBScheduleItem> findScheduleItemsBySchedule(IDBSchedule schedule);
 	Collection<IDBScheduleItem> findAllScheduleItemsForSchedule(IDBSchedule schedule);
 	IDBScheduleItem findScheduleItemByID(int id) throws NotFoundException;
-	IDBScheduleItem assembleScheduleItem(IDBSchedule schedule, IDBCourse course,
-			IDBInstructor instructor, IDBLocation location, int section, Set<Day> days,
+	IDBScheduleItem assembleScheduleItem(int section, Set<Day> days,
 			int startHalfHour, int endHalfHour, boolean isPlaced, boolean isConflicted);
-	void insertScheduleItem(IDBScheduleItem item);
+	void insertScheduleItem(IDBSchedule schedule, IDBCourse course,
+			IDBInstructor instructor, IDBLocation location, IDBScheduleItem item);
 	void updateScheduleItem(IDBScheduleItem schedule);
 	void deleteScheduleItem(IDBScheduleItem schedule);
 	IDBLocation getScheduleItemLocation(IDBScheduleItem item);
@@ -65,20 +65,20 @@ public interface IDatabase {
 	// Locations
 	Collection<IDBLocation> findLocationsForDocument(IDBDocument document);
 	IDBLocation findLocationByID(int id) throws NotFoundException;
-	IDBLocation assembleLocation(IDBDocument containingDocument, String room,
+	IDBLocation assembleLocation(String room,
 			String type, String maxOccupancy, boolean isSchedulable);
-	void insertLocation(IDBLocation location);
+	void insertLocation(IDBDocument containingDocument, IDBLocation location);
 	void updateLocation(IDBLocation location);
 	void deleteLocation(IDBLocation location);
 	
 	// Courses
 	Collection<IDBCourse> findCoursesForDocument(IDBDocument document);
 	IDBCourse findCourseByID(int id) throws NotFoundException;
-	IDBCourse assembleCourse(IDBDocument underlyingDocument, String name,
+	IDBCourse assembleCourse(String name,
 			String catalogNumber, String department, String wtu, String scu,
 			String numSections, String type, String maxEnrollment,
 			String numHalfHoursPerWeek, boolean isSchedulable);
-	void insertCourse(IDBCourse course);
+	void insertCourse(IDBDocument underlyingDocument, IDBCourse course);
 	void updateCourse(IDBCourse course);
 	void deleteCourse(IDBCourse course);
 	IDBDocument findDocumentForCourse(IDBCourse underlyingCourse);
@@ -93,8 +93,8 @@ public interface IDatabase {
 	// Instructors
 	Collection<IDBInstructor> findInstructorsForDocument(IDBDocument document);
 	IDBInstructor findInstructorByID(int id) throws NotFoundException;
-	IDBInstructor assembleInstructor(IDBDocument containingDocument, String firstName, String lastName, String username, String maxWTU, boolean isSchedulable);
-	void insertInstructor(IDBInstructor instructor);
+	IDBInstructor assembleInstructor(String firstName, String lastName, String username, String maxWTU, boolean isSchedulable);
+	void insertInstructor(IDBDocument containingDocument, IDBInstructor instructor);
 	void updateInstructor(IDBInstructor instructor);
 	void deleteInstructor(IDBInstructor instructor);
 	
@@ -102,8 +102,8 @@ public interface IDatabase {
 	Map<IDBTime, IDBTimePreference> findTimePreferencesByTimeForInstructor(IDBInstructor instructor);
 	IDBTimePreference findTimePreferenceByID(int id) throws NotFoundException;
 	IDBTimePreference findTimePreferenceForInstructorAndTime(IDBInstructor instructor, IDBTime time) throws NotFoundException;
-	IDBTimePreference assembleTimePreference(IDBInstructor ins, IDBTime time, int preference);
-	void insertTimePreference(IDBTimePreference timePreference);
+	IDBTimePreference assembleTimePreference(int preference);
+	void insertTimePreference(IDBInstructor ins, IDBTime time, IDBTimePreference timePreference);
 	void updateTimePreference(IDBTimePreference timePreference);
 	void deleteTimePreference(IDBTimePreference timePreference);
 
@@ -111,8 +111,8 @@ public interface IDatabase {
 	Map<IDBCourse, IDBCoursePreference> findCoursePreferencesByCourseForInstructor(IDBInstructor instructor);
 	IDBCoursePreference findCoursePreferenceByID(int id) throws NotFoundException;
 	IDBCoursePreference findCoursePreferenceForInstructorIDAndCourse(IDBInstructor instructor, IDBCourse course) throws NotFoundException;
-	IDBCoursePreference assembleCoursePreference(IDBInstructor instructor, IDBCourse course, int preference);
-	void insertCoursePreference(IDBCoursePreference coursePreference);
+	IDBCoursePreference assembleCoursePreference(int preference);
+	void insertCoursePreference(IDBInstructor instructor, IDBCourse course, IDBCoursePreference coursePreference);
 	void updateCoursePreference(IDBCoursePreference coursePreference);
 	void deleteCoursePreference(IDBCoursePreference coursePreference);
 	
@@ -126,26 +126,27 @@ public interface IDatabase {
 	// Used Equipment
 	Map<IDBEquipmentType, IDBUsedEquipment> findUsedEquipmentByEquipmentForCourse(IDBCourse course);
 	void deleteUsedEquipment(IDBUsedEquipment usedEquipment);
-	DBUsedEquipment assembleUsedEquipment(IDBCourse course, IDBEquipmentType equipmentType);
-	void insertUsedEquipment(IDBUsedEquipment equip);
+	DBUsedEquipment assembleUsedEquipment();
+	void insertUsedEquipment(IDBCourse course, IDBEquipmentType equipmentType, IDBUsedEquipment equip);
 	
 	// Provided Equipment
 	Map<IDBEquipmentType, IDBProvidedEquipment> findProvidedEquipmentByEquipmentForLocation(IDBLocation location);
 	void deleteProvidedEquipment(IDBProvidedEquipment providedEquipment);
-	IDBProvidedEquipment assembleProvidedEquipment(IDBLocation location, IDBEquipmentType equipmentType);
-	void insertProvidedEquipment(IDBProvidedEquipment equip);
+	IDBProvidedEquipment assembleProvidedEquipment();
+	void insertProvidedEquipment(IDBLocation location, IDBEquipmentType equipmentType, IDBProvidedEquipment equip);
 	
 	// Day Patterns
 	IDBDayPattern findDayPatternByDays(Set<Integer> dayPattern) throws NotFoundException;
 	Collection<IDBOfferedDayPattern> findOfferedDayPatternsForCourse(IDBCourse underlying);
 	IDBDayPattern getDayPatternForOfferedDayPattern(IDBOfferedDayPattern offered);
 	void deleteOfferedDayPattern(IDBOfferedDayPattern offered);
-	IDBOfferedDayPattern assembleOfferedDayPattern(IDBCourse underlying, IDBDayPattern dayPattern);
-	void insertOfferedDayPattern(IDBOfferedDayPattern pattern);
+	IDBOfferedDayPattern assembleOfferedDayPattern();
+	void insertOfferedDayPattern(IDBCourse underlying, IDBDayPattern dayPattern, IDBOfferedDayPattern pattern);
 	
 	// For testing
 	boolean isEmpty();
 	
 	IDBScheduleItem assembleScheduleItemCopy(IDBScheduleItem underlying);
 	IDBSchedule getScheduleItemSchedule(IDBScheduleItem underlying) throws NotFoundException;
+	boolean isInserted(IDBScheduleItem underlying);
 }

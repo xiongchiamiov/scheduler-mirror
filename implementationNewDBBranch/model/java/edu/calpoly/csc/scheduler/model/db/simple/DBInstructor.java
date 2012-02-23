@@ -3,13 +3,13 @@ package edu.calpoly.csc.scheduler.model.db.simple;
 import edu.calpoly.csc.scheduler.model.db.IDBInstructor;
 
 public class DBInstructor extends DBObject implements IDBInstructor {
-	int documentID;
+	Integer documentID;
 	String firstName, lastName;
 	String username;
 	String maxWTU;
 	boolean isSchedulable;
 	
-	public DBInstructor(Integer id, int documentID, String firstName, String lastName, String username,
+	public DBInstructor(Integer id, Integer documentID, String firstName, String lastName, String username,
 			String maxWTU, boolean isSchedulable) {
 		super(id);
 		this.documentID = documentID;

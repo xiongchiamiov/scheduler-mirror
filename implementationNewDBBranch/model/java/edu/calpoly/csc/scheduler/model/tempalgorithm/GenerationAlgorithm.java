@@ -15,6 +15,7 @@ import edu.calpoly.csc.scheduler.model.Location;
 import edu.calpoly.csc.scheduler.model.Model;
 import edu.calpoly.csc.scheduler.model.Schedule;
 import edu.calpoly.csc.scheduler.model.ScheduleItem;
+import edu.calpoly.csc.scheduler.model.algorithm.ScheduleItemDecorator;
 import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
 
 class BlockedOffTimes {
@@ -152,20 +153,25 @@ class GenerationDataLayer {
 		
 	}
 
-	public void insertNewScheduleItem(ScheduleItem item) {
-		System.out.println("Inserting schedule item! Instructor " + item.getInstructorID() + " location " + item.getLocationID() + " course " + item.getCourseID() + " days " + item.getDays() + " from " + item.getStartHalfHour() + " to " + item.getEndHalfHour());
+	public void insertNewScheduleItem(Course innerCourse,
+			Instructor innerInstructor, Location innerLocation, ScheduleItem item) {
+//		System.out.println("Inserting schedule item! Instructor " + item.getInstructorID() + " location " + item.getLocationID() + " course " + item.getCourseID() + " days " + item.getDays() + " from " + item.getStartHalfHour() + " to " + item.getEndHalfHour());
+
+		CourseDecorator course = courses.get(innerCourse.getID());
+		InstructorDecorator instructor = instructors.get(innerInstructor.getID());
+		LocationDecorator location = locations.get(innerLocation.getID());
 		
-		if (instructorIsFreeDuring(findInstructorByID(item.getInstructorID()), item.getDays(), item.getStartHalfHour(), item.getEndHalfHour()) &&
-				locationIsFreeDuring(findLocationByID(item.getLocationID()), item.getDays(), item.getStartHalfHour(), item.getEndHalfHour())) {
-			instructors.get(item.getInstructorID()).blockedOffTimes.blockOffTimes(item.getDays(), item.getStartHalfHour(), item.getEndHalfHour());
-			locations.get(item.getLocationID()).blockedOffTimes.blockOffTimes(item.getDays(), item.getStartHalfHour(), item.getEndHalfHour());
+		if (instructorIsFreeDuring(instructor, item.getDays(), item.getStartHalfHour(), item.getEndHalfHour()) &&
+				locationIsFreeDuring(location, item.getDays(), item.getStartHalfHour(), item.getEndHalfHour())) {
+			instructor.blockedOffTimes.blockOffTimes(item.getDays(), item.getStartHalfHour(), item.getEndHalfHour());
+			location.blockedOffTimes.blockOffTimes(item.getDays(), item.getStartHalfHour(), item.getEndHalfHour());
 			item.setIsConflicted(false);
 		}
 		else {
 			item.setIsConflicted(true);
 		}
 		
-		model.insertScheduleItem(item);
+		model.insertScheduleItem(schedule, innerCourse, innerInstructor, innerLocation, item);
 	}
 	
 
@@ -215,11 +221,10 @@ class GenerationDataLayer {
 		return true;
 	}
 
-	public ScheduleItem assembleScheduleItem(Course course,
-			Instructor instructor, Location location, int newSectionNumber,
+	public ScheduleItem assembleScheduleItem(int newSectionNumber,
 			Set<Day> dayPattern, int startHalfHour, int endHalfHour, boolean b,
 			boolean c) {
-		return model.assembleScheduleItem(schedule, course, instructor, location, newSectionNumber, dayPattern, startHalfHour, endHalfHour, b, c);
+		return model.assembleScheduleItem(newSectionNumber, dayPattern, startHalfHour, endHalfHour, b, c);
 	}
 
 	public Collection<CourseDecorator> getCourses() { return courses.values(); }
@@ -259,7 +264,6 @@ public class GenerationAlgorithm {
 			ScheduleItem item = generateScheduleItemForCourse(layer, course, sectionNumber);
 			if (item == null)
 				throw new CouldNotBeScheduledException();
-			layer.insertNewScheduleItem(item);
 			result.add(item);
 		}
 		return result;
@@ -308,13 +312,15 @@ public class GenerationAlgorithm {
 			System.out.println("No location free at that time.");
 			return null;
 		}
-		
-		return layer.assembleScheduleItem(course.course, instructorFreeAtThatTime.instructor, locationFreeAtThatTime.location, newSectionNumber, dayPattern, startHalfHour, endHalfHour, false, false);
+
+		ScheduleItem item = layer.assembleScheduleItem(newSectionNumber, dayPattern, startHalfHour, endHalfHour, false, false);
+		layer.insertNewScheduleItem(course.course, instructorFreeAtThatTime.instructor, locationFreeAtThatTime.location, item);
+		return item;
 	}
 
-	public static void insertNewScheduleItem(Model model, Schedule schedule, ScheduleItem item) throws NotFoundException {
+	public static void insertNewScheduleItem(Model model, Schedule schedule, Course course, Instructor instructor, Location location, ScheduleItem item) throws NotFoundException {
 		GenerationDataLayer dataLayer = new GenerationDataLayer(model, schedule);
 		
-		dataLayer.insertNewScheduleItem(item);
+		dataLayer.insertNewScheduleItem(course, instructor, location, item);
 	}
 }

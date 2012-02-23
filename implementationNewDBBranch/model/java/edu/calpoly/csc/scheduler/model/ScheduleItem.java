@@ -7,11 +7,11 @@ import edu.calpoly.csc.scheduler.model.db.IDBScheduleItem;
 
 public class ScheduleItem implements Identified {
 	IDBScheduleItem underlying;
-	private int courseID;
-	private int locationID;
-	private int instructorID;
+	private Integer courseID;
+	private Integer locationID;
+	private Integer instructorID;
 	
-	ScheduleItem(IDBScheduleItem underlying, int courseID, int locationID, int instructorID) {
+	ScheduleItem(IDBScheduleItem underlying, Integer courseID, Integer locationID, Integer instructorID) {
 		this.underlying = underlying;
 		this.courseID = courseID;
 		this.locationID = locationID;

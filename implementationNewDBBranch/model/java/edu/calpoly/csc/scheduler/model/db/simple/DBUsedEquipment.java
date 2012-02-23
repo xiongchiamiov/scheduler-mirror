@@ -3,10 +3,10 @@ package edu.calpoly.csc.scheduler.model.db.simple;
 import edu.calpoly.csc.scheduler.model.db.IDBUsedEquipment;
 
 public class DBUsedEquipment extends DBObject implements IDBUsedEquipment {
-	int courseID;
-	int equipmentTypeID;
+	Integer courseID;
+	Integer equipmentTypeID;
 	
-	public DBUsedEquipment(Integer id, int courseID, int equipmentTypeID) {
+	public DBUsedEquipment(Integer id, Integer courseID, Integer equipmentTypeID) {
 		super(id);
 		this.courseID = courseID;
 		this.equipmentTypeID = equipmentTypeID;

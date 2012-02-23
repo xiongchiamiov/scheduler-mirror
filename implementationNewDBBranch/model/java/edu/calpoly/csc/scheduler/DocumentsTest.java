@@ -95,7 +95,7 @@ public abstract class DocumentsTest extends ModelTestCase {
 		}
 		try {
 			model.findDocumentByID(documentID);
-			assert (false); // should have failed
+			fail();
 		} catch (NotFoundException e) {
 		}
 	}
@@ -114,12 +114,12 @@ public abstract class DocumentsTest extends ModelTestCase {
 		Document predocument = model.insertDocument(model.assembleDocument("doc1",
 				START_HALF_HOUR, END_HALF_HOUR));
 		int documentID = predocument.getID();
-		Course precourse = ModelTestUtility.createCourse(model, predocument);
-		Location prelocation = ModelTestUtility.createLocation(model, predocument);
-		Instructor preinstructor = ModelTestUtility.createBasicInstructor(model, predocument);
-		model.insertCourse(precourse);
-		model.insertLocation(prelocation);
-		model.insertInstructor(preinstructor);
+		Course precourse = ModelTestUtility.createCourse(model);
+		Location prelocation = ModelTestUtility.createLocation(model);
+		Instructor preinstructor = ModelTestUtility.createBasicInstructor(model);
+		model.insertCourse(predocument, precourse);
+		model.insertLocation(predocument, prelocation);
+		model.insertInstructor(predocument, preinstructor);
 		try {
 			Document postdocument = model.findDocumentByID(documentID);
 			Course postcourse = ((Collection<Course>) model.findCoursesForDocument(postdocument)).iterator().next();
@@ -135,11 +135,10 @@ public abstract class DocumentsTest extends ModelTestCase {
 	private Document insertFullDocumentIntoModel(Model model) {
 		Document document = model.insertDocument(model.assembleDocument("doc1",
 				START_HALF_HOUR, END_HALF_HOUR));
-		model.insertCourse(ModelTestUtility.createCourse(model, document));
-		model.insertInstructor(ModelTestUtility.createBasicInstructor(model,
-				document));
-		model.insertLocation(ModelTestUtility.createLocation(model, document));
-		model.insertSchedule(model.assembleSchedule(document));
+		model.insertCourse(document, ModelTestUtility.createCourse(model));
+		model.insertInstructor(document, ModelTestUtility.createBasicInstructor(model));
+		model.insertLocation(document, ModelTestUtility.createLocation(model));
+		model.insertSchedule(document, model.assembleSchedule());
 		return document;
 	}
 

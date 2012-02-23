@@ -166,9 +166,11 @@ public class Generate {
 	    */
 	   private static ScheduleItemDecorator genLecItem (Model model, Schedule schedule, Course lec, ScheduleDecorator sd, TimeRange lec_bounds, List<Instructor> i_list, List<Location> l_list) throws NotFoundException
 	   {
-	      ScheduleItem lec_si = model.assembleScheduleItem(schedule, lec, findInstructor(lec, sd, i_list), null, 0, null, 0, 0, false, false);
+		   assert(false);
+//	      ScheduleItem lec_si = model.assembleScheduleItem(schedule, lec, findInstructor(lec, sd, i_list), null, 0, null, 0, 0, false, false);
 
-	      return genBestTime(model, schedule, lec_si, lec_bounds, sd, i_list, l_list);
+//	      return genBestTime(model, schedule, lec_si, lec_bounds, sd, i_list, l_list);
+		   return null;
 	   }
 	   
 	   /**
@@ -216,17 +218,20 @@ public class Generate {
 	    */
 	   private static ScheduleItemDecorator genLabItem (Model model, Schedule schedule, Course lab, ScheduleItemDecorator lec_si, ScheduleDecorator sd, TimeRange lab_bounds, List<Instructor> i_list, List<Location> l_list) throws NotFoundException
 	   {
-	      ScheduleItem lab_si = model.assembleScheduleItem(schedule, lab, getLabInstructor(model, lab, lec_si), null, 0, null, 0, 0, false, false);
-	      
-	      TimeRange tr = lab_bounds;
-	      
-	      if (lab.isTetheredToLecture())
-	      {
-//	    	 debug ("Found tethered lab for " + lab.getDept() + " " + lab.getCatalogNumber());
-	         tr = new TimeRange(lec_si.item.getEndHalfHour(), lab.getNumHalfHoursPerWeekInt() / lab_si.getDays().size());
-	      }
-
-	      return genBestTime(model, schedule, lab_si, tr, sd, i_list, l_list);
+//	      ScheduleItem lab_si = model.assembleScheduleItem(schedule, lab, getLabInstructor(model, lab, lec_si), null, 0, null, 0, 0, false, false);
+//	      
+//	      TimeRange tr = lab_bounds;
+//	      
+//	      if (lab.isTetheredToLecture())
+//	      {
+////	    	 debug ("Found tethered lab for " + lab.getDept() + " " + lab.getCatalogNumber());
+//	         tr = new TimeRange(lec_si.item.getEndHalfHour(), lab.getNumHalfHoursPerWeekInt() / lab_si.getDays().size());
+//	      }
+//
+//	      return genBestTime(model, schedule, lab_si, tr, sd, i_list, l_list);
+		   
+		   assert(false);
+		   return null;
 	   }
 	   
 	   /**

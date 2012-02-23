@@ -6,8 +6,8 @@ import edu.calpoly.csc.scheduler.model.Day;
 import edu.calpoly.csc.scheduler.model.db.IDBScheduleItem;
 
 public class DBScheduleItem extends DBObject implements IDBScheduleItem {
-	int scheduleID;
-	int instructorID, courseID, locationID;
+	Integer scheduleID;
+	Integer instructorID, courseID, locationID;
 	int section;
 	Set<Day> days;
 	int startHalfHour;
@@ -15,8 +15,8 @@ public class DBScheduleItem extends DBObject implements IDBScheduleItem {
 	boolean isPlaced;
 	boolean isConflicted;
 	
-	public DBScheduleItem(Integer id, int scheduleID, int instructorID,
-			int courseID, int locationID, int section, Set<Day> days,
+	public DBScheduleItem(Integer id, Integer scheduleID, Integer instructorID,
+			Integer courseID, Integer locationID, int section, Set<Day> days,
 			int startHalfHour, int endHalfHour, boolean isPlaced,
 			boolean isConflicted) {
 		super(id);
