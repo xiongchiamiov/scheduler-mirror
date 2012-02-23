@@ -1,14 +1,8 @@
 package edu.calpoly.csc.scheduler.model.algorithm;
 
-import java.io.PrintStream;
-import java.sql.Time;
-import java.util.List;
-
-import edu.calpoly.csc.scheduler.model.Course;
-import edu.calpoly.csc.scheduler.model.Instructor;
-import edu.calpoly.csc.scheduler.model.Location;
 import edu.calpoly.csc.scheduler.model.Model;
 import edu.calpoly.csc.scheduler.model.ScheduleItem;
+import edu.calpoly.csc.scheduler.model.db.DatabaseException;
 import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
 
 /**
@@ -53,7 +47,7 @@ public class ScheduleItemDecorator
     * @param si ScheduleItem we'll get all our fields from
  * @throws NotFoundException 
     */
-   protected ScheduleItemDecorator (Model model, ScheduleItemDecorator si) throws NotFoundException
+   protected ScheduleItemDecorator (Model model, ScheduleItemDecorator si) throws DatabaseException
    {
 	   this.item = si.item.createTransientCopy();
    }

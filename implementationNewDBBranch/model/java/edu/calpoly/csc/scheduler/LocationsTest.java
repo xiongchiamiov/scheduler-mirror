@@ -1,20 +1,20 @@
 package edu.calpoly.csc.scheduler;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
 import edu.calpoly.csc.scheduler.model.Document;
 import edu.calpoly.csc.scheduler.model.Location;
 import edu.calpoly.csc.scheduler.model.Model;
+import edu.calpoly.csc.scheduler.model.db.DatabaseException;
 import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
 
 public abstract class LocationsTest extends ModelTestCase {
 	private static final int START_HALF_HOUR = 14; // 7am
 	private static final int END_HALF_HOUR = 44; // 10pm
 
-	public void testInsertAndFindLocation() throws NotFoundException {
+	public void testInsertAndFindLocation() throws DatabaseException {
 		Model model = createBlankModel();
 		
 		int locationID;
@@ -30,7 +30,7 @@ public abstract class LocationsTest extends ModelTestCase {
 		assertTrue(found.getMaxOccupancy().equals("30"));
 	}
 
-	public void testInsertAndFindLocationSameInstance() throws NotFoundException {
+	public void testInsertAndFindLocationSameInstance() throws DatabaseException {
 		Model model = createBlankModel();
 		
 		Document doc = model.createTransientDocument("doc", START_HALF_HOUR, END_HALF_HOUR).insert();
@@ -40,7 +40,7 @@ public abstract class LocationsTest extends ModelTestCase {
 		assert(insertedLocation == found);
 	}
 	
-	public void testUpdateLocation() throws NotFoundException {
+	public void testUpdateLocation() throws DatabaseException {
 		Model model = createBlankModel();
 
 		int locationID;
@@ -80,7 +80,7 @@ public abstract class LocationsTest extends ModelTestCase {
 		catch (NotFoundException e) { }
 	}
 	
-	public void testFindAllLocationsForDocument() throws NotFoundException {
+	public void testFindAllLocationsForDocument() throws DatabaseException {
 		Model model = createBlankModel();
 
 		Set<Integer> locationIDs = new HashSet<Integer>();
@@ -97,7 +97,7 @@ public abstract class LocationsTest extends ModelTestCase {
 		assertTrue(locationIDs.isEmpty());
 	}
 
-	public void testFindAllLocationsInMultipleDocuments() throws NotFoundException {
+	public void testFindAllLocationsInMultipleDocuments() throws DatabaseException {
 		Model model = createBlankModel();
 
 		{

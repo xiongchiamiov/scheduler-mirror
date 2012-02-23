@@ -1,8 +1,7 @@
 package edu.calpoly.csc.scheduler.model;
 
+import edu.calpoly.csc.scheduler.model.db.DatabaseException;
 import edu.calpoly.csc.scheduler.model.db.IDBUser;
-import edu.calpoly.csc.scheduler.model.db.IDatabase;
-import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
 
 public class User implements Identified {
 	private final Model model;
@@ -16,16 +15,16 @@ public class User implements Identified {
 
 	// PERSISTENCE FUNCTIONS
 
-	public User insert() throws NotFoundException {
+	public User insert() throws DatabaseException {
 		model.userCache.insert(this);
 		return this;
 	}
 
-	public void update() {
+	public void update() throws DatabaseException {
 		model.userCache.update(underlyingUser);
 	}
 	
-	public void delete() {
+	public void delete() throws DatabaseException {
 		model.userCache.delete(this);
 	}
 

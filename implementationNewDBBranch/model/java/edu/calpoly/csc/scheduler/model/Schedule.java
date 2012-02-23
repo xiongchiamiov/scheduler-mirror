@@ -1,7 +1,7 @@
 package edu.calpoly.csc.scheduler.model;
 
+import edu.calpoly.csc.scheduler.model.db.DatabaseException;
 import edu.calpoly.csc.scheduler.model.db.IDBSchedule;
-import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
 
 public class Schedule implements Identified {
 	private final Model model;
@@ -40,7 +40,7 @@ public class Schedule implements Identified {
 
 	// Document
 	
-	public Document getDocument() throws NotFoundException {
+	public Document getDocument() throws DatabaseException {
 		if (!documentLoaded) {
 			assert(document == null);
 			document = model.findDocumentByID(model.database.findDocumentForSchedule(underlyingSchedule).getID());

@@ -6,9 +6,9 @@ import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeSet;
 
+import edu.calpoly.csc.scheduler.model.db.DatabaseException;
 import edu.calpoly.csc.scheduler.model.db.IDBCourse;
 import edu.calpoly.csc.scheduler.model.db.IDBCourseAssociation;
-import edu.calpoly.csc.scheduler.model.db.IDBDocument;
 import edu.calpoly.csc.scheduler.model.db.IDBEquipmentType;
 import edu.calpoly.csc.scheduler.model.db.IDBOfferedDayPattern;
 import edu.calpoly.csc.scheduler.model.db.IDBUsedEquipment;
@@ -41,7 +41,7 @@ public class Course implements Identified {
 
 	// PERSISTENCE FUNCTIONS
 
-	public Course insert() throws NotFoundException {
+	public Course insert() throws DatabaseException {
 		assert(document != null);
 		model.courseCache.insert(this);
 		putOfferedDayPatternsIntoDB();
@@ -49,7 +49,7 @@ public class Course implements Identified {
 		return this;
 	}
 
-	public void update() {
+	public void update() throws DatabaseException {
 		model.courseCache.update(underlyingCourse);
 		removeOfferedDayPatternsFromDB();
 		removeUsedEquipmentFromDB();
@@ -57,7 +57,7 @@ public class Course implements Identified {
 		putOfferedDayPatternsIntoDB();
 	}
 	
-	public void delete() {
+	public void delete() throws DatabaseException {
 		removeOfferedDayPatternsFromDB();
 		removeUsedEquipmentFromDB();
 		model.courseCache.delete(this);
@@ -198,7 +198,7 @@ public class Course implements Identified {
 	
 	// Lecture / Tethered
 	
-	private void loadLectureAndTethered() throws NotFoundException {
+	private void loadLectureAndTethered() throws DatabaseException {
 		if (lectureLoaded)
 			return;
 		
@@ -216,22 +216,22 @@ public class Course implements Identified {
 		lectureLoaded = true;
 	}
 
-	public Course getLecture() throws NotFoundException {
+	public Course getLecture() throws DatabaseException {
 		loadLectureAndTethered();
 		return lecture;
 	}
 
-	public void setLecture(Course newLecture) throws NotFoundException {
+	public void setLecture(Course newLecture) throws DatabaseException {
 		loadLectureAndTethered();
 		this.lecture = newLecture;
 	}
 
-	public Boolean isTetheredToLecture() throws NotFoundException {
+	public Boolean isTetheredToLecture() throws DatabaseException {
 		loadLectureAndTethered();
 		return cachedTetheredToLecture;
 	}
 
-	public void setTetheredToLecture(Boolean tetheredToLecture) throws NotFoundException {
+	public void setTetheredToLecture(Boolean tetheredToLecture) throws DatabaseException {
 		loadLectureAndTethered();
 		this.cachedTetheredToLecture = tetheredToLecture;
 	}
@@ -240,7 +240,7 @@ public class Course implements Identified {
 	
 	// Document
 
-	public Document getDocument() throws NotFoundException {
+	public Document getDocument() throws DatabaseException {
 		if (!documentLoaded) {
 			assert(document == null);
 			document = model.findDocumentByID(model.database.findDocumentForCourse(underlyingCourse).getID());

@@ -3,12 +3,12 @@ package edu.calpoly.csc.scheduler.model;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import edu.calpoly.csc.scheduler.model.db.DatabaseException;
 import edu.calpoly.csc.scheduler.model.db.IDBCourse;
 import edu.calpoly.csc.scheduler.model.db.IDBCoursePreference;
 import edu.calpoly.csc.scheduler.model.db.IDBInstructor;
 import edu.calpoly.csc.scheduler.model.db.IDBTime;
 import edu.calpoly.csc.scheduler.model.db.IDBTimePreference;
-import edu.calpoly.csc.scheduler.model.db.IDatabase;
 import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
 
 public class Instructor implements Identified {
@@ -35,7 +35,7 @@ public class Instructor implements Identified {
 
 	// PERSISTENCE FUNCTIONS
 
-	public Instructor insert() throws NotFoundException {
+	public Instructor insert() throws DatabaseException {
 		assert(document != null);
 		model.instructorCache.insert(this);
 		putTimePreferencesIntoDB();
@@ -43,7 +43,7 @@ public class Instructor implements Identified {
 		return this;
 	}
 
-	public void update() {
+	public void update() throws DatabaseException {
 		removeTimePreferencesFromDB();
 		removeCoursePreferencesFromDB();
 		model.instructorCache.update(underlyingInstructor);
@@ -51,7 +51,7 @@ public class Instructor implements Identified {
 		putCoursePreferencesIntoDB();
 	}
 
-	public void delete() {
+	public void delete() throws DatabaseException {
 		removeTimePreferencesFromDB();
 		removeCoursePreferencesFromDB();
 		model.instructorCache.delete(this);
@@ -185,7 +185,7 @@ public class Instructor implements Identified {
 	
 	// Document
 	
-	public Document getDocument() throws NotFoundException {
+	public Document getDocument() throws DatabaseException {
 		if (!documentLoaded) {
 			assert(document == null);
 			document = model.findDocumentByID(model.database.findDocumentForInstructor(underlyingInstructor).getID());

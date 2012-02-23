@@ -7,6 +7,7 @@ import java.util.Set;
 import edu.calpoly.csc.scheduler.model.Course;
 import edu.calpoly.csc.scheduler.model.Document;
 import edu.calpoly.csc.scheduler.model.Model;
+import edu.calpoly.csc.scheduler.model.db.DatabaseException;
 import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
 
 public abstract class CoursesTest extends ModelTestCase
@@ -14,7 +15,7 @@ public abstract class CoursesTest extends ModelTestCase
    private static final int START_HALF_HOUR = 14; // 7am
    private static final int END_HALF_HOUR   = 44; // 10pm
 
-   public void testTransientsNotInserted() throws NotFoundException
+   public void testTransientsNotInserted() throws DatabaseException
    {
       Model model = createBlankModel();
 
@@ -24,7 +25,7 @@ public abstract class CoursesTest extends ModelTestCase
       assertEquals(model.findInstructorsForDocument(document).size(), 0);
    }
    
-   public void testInsertAndFindCourse() throws NotFoundException {
+   public void testInsertAndFindCourse() throws DatabaseException {
       Model model = createBlankModel();
       
       int courseID;
@@ -47,7 +48,7 @@ public abstract class CoursesTest extends ModelTestCase
       assertTrue(found.isSchedulable());
    }
    
-   public void testInsertAndDeleteCourse() throws NotFoundException {
+   public void testInsertAndDeleteCourse() throws DatabaseException {
       Model model = createBlankModel();
       
       Document doc;
@@ -64,7 +65,7 @@ public abstract class CoursesTest extends ModelTestCase
       assertTrue(model.isEmpty());
    }
    
-   public void testModifyCourseValueDoesntAutomaticallyUpdateDatabase() throws NotFoundException {
+   public void testModifyCourseValueDoesntAutomaticallyUpdateDatabase() throws DatabaseException {
       Model model = createBlankModel();
       
       int courseID;
@@ -82,7 +83,7 @@ public abstract class CoursesTest extends ModelTestCase
       }
    }
    
-   public void testUpdateCourse() throws NotFoundException {
+   public void testUpdateCourse() throws DatabaseException {
       Model model = createBlankModel();
 
       int courseID;
@@ -141,7 +142,7 @@ public abstract class CoursesTest extends ModelTestCase
       assertTrue(model.isEmpty());
    }
    
-   public void testFindAllCoursesForDocument() throws NotFoundException {
+   public void testFindAllCoursesForDocument() throws DatabaseException {
       Model model = createBlankModel();
 
       Set<Integer> courseIDs = new HashSet<Integer>();
@@ -160,7 +161,7 @@ public abstract class CoursesTest extends ModelTestCase
       assertTrue(courseIDs.isEmpty());
    }
    
-   public void testFindAllCoursesInMultipleDocuments() throws NotFoundException {
+   public void testFindAllCoursesInMultipleDocuments() throws DatabaseException {
       Model model = createBlankModel();
 
       {

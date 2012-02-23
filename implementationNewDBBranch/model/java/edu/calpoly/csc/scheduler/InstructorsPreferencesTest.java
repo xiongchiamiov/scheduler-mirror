@@ -1,21 +1,19 @@
 package edu.calpoly.csc.scheduler;
 
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Set;
-import java.util.TreeSet;
 
 import edu.calpoly.csc.scheduler.model.Day;
 import edu.calpoly.csc.scheduler.model.Document;
 import edu.calpoly.csc.scheduler.model.Instructor;
 import edu.calpoly.csc.scheduler.model.Model;
+import edu.calpoly.csc.scheduler.model.db.DatabaseException;
 import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
 
 public abstract class InstructorsPreferencesTest extends ModelTestCase {
 	private static final int START_HALF_HOUR = 14; // 7am
 	private static final int END_HALF_HOUR = 44; // 10pm
 	
-	public void testInsertAndFindInstructorWTimePrefs() throws NotFoundException {
+	public void testInsertAndFindInstructorWTimePrefs() throws DatabaseException {
 		Model model = createBlankModel();
 		
 		int instructorID;
@@ -39,7 +37,7 @@ public abstract class InstructorsPreferencesTest extends ModelTestCase {
 	}
 
 
-	public void testInsertAndFindInstructorWCoursePrefs() throws NotFoundException {
+	public void testInsertAndFindInstructorWCoursePrefs() throws DatabaseException {
 		Model model = createBlankModel();
 		
 		int instructorID;
@@ -68,7 +66,7 @@ public abstract class InstructorsPreferencesTest extends ModelTestCase {
 		assertTrue(found.getCoursePreferences().get(courseID2).equals(3));
 	}
 
-	public void testUtilityInstructorEquals() throws NotFoundException {
+	public void testUtilityInstructorEquals() throws DatabaseException {
 		Model model = createBlankModel();
 		Document doc = model.createTransientDocument("doc", START_HALF_HOUR, END_HALF_HOUR).insert();
 		

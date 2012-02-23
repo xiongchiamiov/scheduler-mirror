@@ -11,16 +11,21 @@ import edu.calpoly.csc.scheduler.model.Day;
 import edu.calpoly.csc.scheduler.model.db.simple.DBUsedEquipment;
 
 public interface IDatabase {
-	public class NotFoundException extends Exception {
+	public class NotFoundException extends DatabaseException {
 		private static final long serialVersionUID = 1L;
+		public NotFoundException(Throwable thr) {
+			super(thr);
+		}
+		public NotFoundException() {
+		}
 	}
 	
 	// Users
-	IDBUser findUserByUsername(String username) throws NotFoundException;
+	IDBUser findUserByUsername(String username) throws NotFoundException, DatabaseException;
 	IDBUser assembleUser(String username, boolean isAdmin);
-	void insertUser(IDBUser user);
-	void updateUser(IDBUser user);
-	void deleteUser(IDBUser user);
+	void insertUser(IDBUser user) throws DatabaseException;
+	void updateUser(IDBUser user) throws DatabaseException;
+	void deleteUser(IDBUser user) throws DatabaseException;
 	
 	// Documents
 	Collection<IDBDocument> findAllDocuments();

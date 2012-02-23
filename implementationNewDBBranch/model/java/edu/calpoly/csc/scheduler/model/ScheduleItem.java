@@ -2,6 +2,7 @@ package edu.calpoly.csc.scheduler.model;
 
 import java.util.Set;
 
+import edu.calpoly.csc.scheduler.model.db.DatabaseException;
 import edu.calpoly.csc.scheduler.model.db.IDBScheduleItem;
 import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
 
@@ -31,7 +32,7 @@ public class ScheduleItem implements Identified {
 	
 	// PERSISTENCE FUNCTIONS
 
-	public void insert() throws NotFoundException {
+	public void insert() throws DatabaseException {
 		assert(scheduleLoaded);
 		assert(courseLoaded);
 		assert(locationLoaded);
@@ -40,18 +41,18 @@ public class ScheduleItem implements Identified {
 		model.itemCache.insert(this);
 	}
 
-	public void delete() {
+	public void delete() throws DatabaseException {
 		model.itemCache.delete(this);
 	}
 
-	public void update() throws NotFoundException {
+	public void update() throws DatabaseException {
 		model.database.setScheduleItemCourse(underlying, course.underlyingCourse);
 		model.database.setScheduleItemInstructor(underlying, instructor.underlyingInstructor);
 		model.database.setScheduleItemLocation(underlying, location.underlyingLocation);
 		model.itemCache.update(underlying);
 	}
 	
-	public ScheduleItem createTransientCopy() throws NotFoundException {
+	public ScheduleItem createTransientCopy() throws DatabaseException {
 		ScheduleItem result = new ScheduleItem(model, model.database.assembleScheduleItemCopy(underlying));
 		result.setSchedule(getSchedule());
 		result.setInstructor(getInstructor());
@@ -90,7 +91,7 @@ public class ScheduleItem implements Identified {
 
 	// Schedule
 
-	public Schedule getSchedule() throws NotFoundException {
+	public Schedule getSchedule() throws DatabaseException {
 		if (!scheduleLoaded) {
 			assert(schedule == null);
 			schedule = model.findScheduleByID(model.database.getScheduleItemSchedule(underlying).getID());
@@ -107,7 +108,7 @@ public class ScheduleItem implements Identified {
 
 	// Course
 
-	public Course getCourse() throws NotFoundException {
+	public Course getCourse() throws DatabaseException {
 		if (!courseLoaded) {
 			if (course == null)
 				throw new NotFoundException();
@@ -127,7 +128,7 @@ public class ScheduleItem implements Identified {
 
 	// Course
 
-	public Location getLocation() throws NotFoundException {
+	public Location getLocation() throws DatabaseException {
 		if (!locationLoaded) {
 			if (location == null)
 				throw new NotFoundException();
@@ -147,7 +148,7 @@ public class ScheduleItem implements Identified {
 
 	// Instructor
 
-	public Instructor getInstructor() throws NotFoundException {
+	public Instructor getInstructor() throws DatabaseException {
 		if (!instructorLoaded) {
 			if (instructor == null)
 				throw new NotFoundException();

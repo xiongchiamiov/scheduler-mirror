@@ -1,21 +1,20 @@
 package edu.calpoly.csc.scheduler;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import edu.calpoly.csc.scheduler.model.Day;
 import edu.calpoly.csc.scheduler.model.Document;
 import edu.calpoly.csc.scheduler.model.Instructor;
 import edu.calpoly.csc.scheduler.model.Model;
+import edu.calpoly.csc.scheduler.model.db.DatabaseException;
 import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
 
 public abstract class InstructorsTest extends ModelTestCase {
 	private static final int START_HALF_HOUR = 14; // 7am
 	private static final int END_HALF_HOUR = 44; // 10pm
 	
-	public void testTransientsNotInserted() throws NotFoundException {
+	public void testTransientsNotInserted() throws DatabaseException {
 		Model model = createBlankModel();
 		
 		Document doc = model.createTransientDocument("doc", START_HALF_HOUR, END_HALF_HOUR).insert();
@@ -24,7 +23,7 @@ public abstract class InstructorsTest extends ModelTestCase {
 		assertEquals(model.findInstructorsForDocument(doc).size(), 0);
 	}
 
-	public void testInsertAndFindBasicInstructor() throws NotFoundException {
+	public void testInsertAndFindBasicInstructor() throws DatabaseException {
 		Model model = createBlankModel();
 		
 		int instructorID;
@@ -43,7 +42,7 @@ public abstract class InstructorsTest extends ModelTestCase {
 		assertTrue(found.getMaxWTU().equals("20"));
 	}
 
-	public void testInsertAndFindInstructorWTimePrefs() throws NotFoundException {
+	public void testInsertAndFindInstructorWTimePrefs() throws DatabaseException {
 		Model model = createBlankModel();
 		
 		int instructorID;
@@ -66,7 +65,7 @@ public abstract class InstructorsTest extends ModelTestCase {
 		assertTrue(found.getMaxWTU().equals("20"));
 	}
 
-	public void testInsertAndDeleteInstructorWTimePrefs() throws NotFoundException {
+	public void testInsertAndDeleteInstructorWTimePrefs() throws DatabaseException {
 		Model model = createBlankModel();
 		
 		Document doc;
@@ -87,7 +86,7 @@ public abstract class InstructorsTest extends ModelTestCase {
 		assertTrue(model.isEmpty());
 	}
 	
-	public void testUpdateInstructor() throws NotFoundException {
+	public void testUpdateInstructor() throws DatabaseException {
 		Model model = createBlankModel();
 
 		int instructorID;
@@ -138,7 +137,7 @@ public abstract class InstructorsTest extends ModelTestCase {
 		assertTrue(model.isEmpty());
 	}
 	
-	public void testFindAllInstructorsForDocument() throws NotFoundException {
+	public void testFindAllInstructorsForDocument() throws DatabaseException {
 		Model model = createBlankModel();
 
 		Set<Integer> instructorIDs = new HashSet<Integer>();
@@ -163,7 +162,7 @@ public abstract class InstructorsTest extends ModelTestCase {
 		assertTrue(instructorIDs.isEmpty());
 	}
 
-	public void testFindAllInstructorsInMultipleDocuments() throws NotFoundException {
+	public void testFindAllInstructorsInMultipleDocuments() throws DatabaseException {
 		Model model = createBlankModel();
 
 		{

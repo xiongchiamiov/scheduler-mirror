@@ -10,6 +10,7 @@ import edu.calpoly.csc.scheduler.model.Document;
 import edu.calpoly.csc.scheduler.model.Instructor;
 import edu.calpoly.csc.scheduler.model.Location;
 import edu.calpoly.csc.scheduler.model.Model;
+import edu.calpoly.csc.scheduler.model.db.DatabaseException;
 import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
 
 public class ModelTestUtility {
@@ -27,7 +28,7 @@ public class ModelTestUtility {
 				.setTimePreferences( Instructor.createDefaultTimePreferences());
 	}
 	
-	public static Instructor insertInstructorWPrefs(Model model, Document doc) throws NotFoundException {
+	public static Instructor insertInstructorWPrefs(Model model, Document doc) throws DatabaseException {
 		int courseID1 = model.createTransientCourse("Graphics", "201", "GRC", "10", "20", "2", "LEC", "20", "6", true).setDocument(doc).insert().getID();
 		int courseID2 = model.createTransientCourse("Graphics: The Return", "202", "GRC", "10", "20", "2", "LEC", "20", "6", true).setDocument(doc).insert().getID();
 		
@@ -43,7 +44,7 @@ public class ModelTestUtility {
 				.setDocument(doc).insert();
 	}
 	
-	public static boolean coursesContentsEqual(Course a, Course b) throws NotFoundException {
+	public static boolean coursesContentsEqual(Course a, Course b) throws DatabaseException {
 		if (!a.getCatalogNumber().equals(b.getCatalogNumber()))
 			return false;
 		if (!a.getDayPatterns().equals(b.getDayPatterns()))

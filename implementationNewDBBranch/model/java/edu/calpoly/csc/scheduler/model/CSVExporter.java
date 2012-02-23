@@ -14,6 +14,7 @@ import java.util.Set;
 
 import com.csvreader.CsvWriter;
 
+import edu.calpoly.csc.scheduler.model.db.DatabaseException;
 import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
 
 /**
@@ -224,7 +225,7 @@ public class CSVExporter {
 	 * @return the string of the Schedule.Item Number
 	 * @throws NotFoundException 
 	 */
-	private String compileScheduleItem(ScheduleItem item, Collection<ScheduleItem> others) throws NotFoundException {
+	private String compileScheduleItem(ScheduleItem item, Collection<ScheduleItem> others) throws DatabaseException {
 		int index = scheduleItemsRowIndexByID.get(item.getID());
 		if (index < 0) {
 			index = scheduleItems.size();
@@ -265,9 +266,9 @@ public class CSVExporter {
 	 * Turns Course data into a string and adds it to the global courses ArrayList
 	 * @param course A course
 	 * @return A string representing the course index
-	 * @throws NotFoundException 
+	 * @throws DatabaseException 
 	 */
-	private String compileCourse(Course course, Collection<Course> others) throws NotFoundException {
+	private String compileCourse(Course course, Collection<Course> others) throws DatabaseException {
 		int index = courses.indexOf(course);
 		if (index < 0) {
 		    assert(false);
@@ -324,7 +325,7 @@ public class CSVExporter {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 * @throws NotFoundException 
 	 */
-	public String export(Model model, Document document) throws IOException, NotFoundException {
+	public String export(Model model, Document document) throws IOException, DatabaseException {
 		/* Gather model information into the global string ArrayLists */
 		for (Location location : model.findLocationsForDocument(document))
 			compileLocation(location);

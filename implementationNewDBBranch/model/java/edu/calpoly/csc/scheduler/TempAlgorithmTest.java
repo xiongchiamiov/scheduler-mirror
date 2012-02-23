@@ -1,10 +1,7 @@
 package edu.calpoly.csc.scheduler;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
 
 import edu.calpoly.csc.scheduler.model.Course;
 import edu.calpoly.csc.scheduler.model.Day;
@@ -13,6 +10,7 @@ import edu.calpoly.csc.scheduler.model.Instructor;
 import edu.calpoly.csc.scheduler.model.Model;
 import edu.calpoly.csc.scheduler.model.Schedule;
 import edu.calpoly.csc.scheduler.model.ScheduleItem;
+import edu.calpoly.csc.scheduler.model.db.DatabaseException;
 import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
 import edu.calpoly.csc.scheduler.model.tempalgorithm.GenerationAlgorithm;
 import edu.calpoly.csc.scheduler.model.tempalgorithm.GenerationAlgorithm.CouldNotBeScheduledException;
@@ -21,7 +19,7 @@ public abstract class TempAlgorithmTest extends ModelTestCase {
 	private static final int START_HALF_HOUR = 14; // 7am
 	private static final int END_HALF_HOUR = 44; // 10pm
 
-	public void testGenerate() throws NotFoundException, CouldNotBeScheduledException {
+	public void testGenerate() throws DatabaseException, CouldNotBeScheduledException {
 		Model model = createBlankModel();
 		
 		Document doc = model.createTransientDocument("doc", START_HALF_HOUR, END_HALF_HOUR).insert();
@@ -47,7 +45,7 @@ public abstract class TempAlgorithmTest extends ModelTestCase {
 		checkScheduleHasNoUnacceptableItems(model, schedule);
 	}
 
-	public void testGenerateMultiple() throws NotFoundException, CouldNotBeScheduledException {
+	public void testGenerateMultiple() throws DatabaseException, CouldNotBeScheduledException {
 		Model model = createBlankModel();
 		
 		Document doc = model.createTransientDocument("doc", START_HALF_HOUR, END_HALF_HOUR).insert();
@@ -73,7 +71,7 @@ public abstract class TempAlgorithmTest extends ModelTestCase {
 		checkScheduleHasNoUnacceptableItems(model, schedule);
 	}
 
-	public void testRunOutOfInstructors() throws NotFoundException, CouldNotBeScheduledException {
+	public void testRunOutOfInstructors() throws DatabaseException, CouldNotBeScheduledException {
 		Model model = createBlankModel();
 		
 		Document doc = model.createTransientDocument("doc", START_HALF_HOUR, END_HALF_HOUR).insert();
@@ -100,7 +98,7 @@ public abstract class TempAlgorithmTest extends ModelTestCase {
 		catch (CouldNotBeScheduledException e) { }
 	}
 	
-	private void checkScheduleConflicts(Model model, Schedule schedule) throws NotFoundException {
+	private void checkScheduleConflicts(Model model, Schedule schedule) throws DatabaseException {
 		HashMap<Integer, boolean[][]> blockedOffTimesByInstructorID = new HashMap<Integer, boolean[][]>();
 		HashMap<Integer, boolean[][]> blockedOffTimesByLocationID = new HashMap<Integer, boolean[][]>();
 		
@@ -122,7 +120,7 @@ public abstract class TempAlgorithmTest extends ModelTestCase {
 		}
 	}
 	
-	private void checkScheduleHasNoUnacceptableItems(Model model, Schedule schedule) throws NotFoundException {
+	private void checkScheduleHasNoUnacceptableItems(Model model, Schedule schedule) throws DatabaseException {
 		for (ScheduleItem item : model.findAllScheduleItemsForSchedule(schedule)) {
 			if (item.isConflicted())
 				continue;

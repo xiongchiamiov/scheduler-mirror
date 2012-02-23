@@ -3,10 +3,7 @@ package edu.calpoly.csc.scheduler.model.tempalgorithm;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Map.Entry;
 import java.util.Set;
-
-import sun.tools.tree.NewInstanceExpression;
 
 import edu.calpoly.csc.scheduler.model.Course;
 import edu.calpoly.csc.scheduler.model.Day;
@@ -17,7 +14,7 @@ import edu.calpoly.csc.scheduler.model.Location;
 import edu.calpoly.csc.scheduler.model.Model;
 import edu.calpoly.csc.scheduler.model.Schedule;
 import edu.calpoly.csc.scheduler.model.ScheduleItem;
-import edu.calpoly.csc.scheduler.model.algorithm.ScheduleItemDecorator;
+import edu.calpoly.csc.scheduler.model.db.DatabaseException;
 import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
 
 class BlockedOffTimes {
@@ -97,7 +94,7 @@ class GenerationDataLayer {
 	private final HashMap<Integer, LocationDecorator> locations;
 	private final HashMap<Integer, CourseDecorator> courses;
 	
-	public GenerationDataLayer(Model model, Schedule schedule) throws NotFoundException {
+	public GenerationDataLayer(Model model, Schedule schedule) throws DatabaseException {
 		this.model = model;
 		this.schedule = schedule;
 		this.document = schedule.getDocument();
@@ -155,7 +152,7 @@ class GenerationDataLayer {
 		
 	}
 
-	public void insertNewScheduleItem(ScheduleItem item) throws NotFoundException {
+	public void insertNewScheduleItem(ScheduleItem item) throws DatabaseException {
 //		System.out.println("Inserting schedule item! Instructor " + item.getInstructor().getID() + " location " + item.getLocation().getID() + " course " + item.getCourse().getID() + " days " + item.getDays() + " from " + item.getStartHalfHour() + " to " + item.getEndHalfHour());
 
 		CourseDecorator course = courses.get(item.getCourse().getID());
@@ -248,7 +245,7 @@ public class GenerationAlgorithm {
 	public static class CouldNotBeScheduledException extends Exception { }
 	
 	public static Collection<ScheduleItem> generateRestOfSchedule(Model model, Schedule schedule)
-			throws CouldNotBeScheduledException, NotFoundException {
+			throws CouldNotBeScheduledException, DatabaseException {
 
 		GenerationDataLayer dataLayer = new GenerationDataLayer(model, schedule);
 		
@@ -260,7 +257,7 @@ public class GenerationAlgorithm {
 		return result;
 	}
 	
-	private static Collection<ScheduleItem> generateAndInsertScheduleItemsForCourse(GenerationDataLayer layer, CourseDecorator course) throws CouldNotBeScheduledException, NotFoundException {
+	private static Collection<ScheduleItem> generateAndInsertScheduleItemsForCourse(GenerationDataLayer layer, CourseDecorator course) throws CouldNotBeScheduledException, DatabaseException {
 		Collection<ScheduleItem> result = new LinkedList<ScheduleItem>();
 		for (int sectionNumber = course.numSectionsScheduled; sectionNumber < course.course.getNumSectionsInt(); sectionNumber++) {
 			ScheduleItem item = generateScheduleItemForCourse(layer, course, sectionNumber);
@@ -323,7 +320,7 @@ public class GenerationAlgorithm {
 		return item;
 	}
 
-	public static void insertNewScheduleItem(Model model, Schedule schedule, ScheduleItem item) throws NotFoundException, CouldNotBeScheduledException {
+	public static void insertNewScheduleItem(Model model, Schedule schedule, ScheduleItem item) throws DatabaseException, CouldNotBeScheduledException {
 		GenerationDataLayer layer = new GenerationDataLayer(model, schedule);
 		
 		assert(item.courseIsSet());

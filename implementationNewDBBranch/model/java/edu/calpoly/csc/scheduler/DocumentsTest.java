@@ -9,19 +9,20 @@ import edu.calpoly.csc.scheduler.model.Document;
 import edu.calpoly.csc.scheduler.model.Instructor;
 import edu.calpoly.csc.scheduler.model.Location;
 import edu.calpoly.csc.scheduler.model.Model;
+import edu.calpoly.csc.scheduler.model.db.DatabaseException;
 import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
 
 public abstract class DocumentsTest extends ModelTestCase {
 	private static final int START_HALF_HOUR = 14; // 7am
 	private static final int END_HALF_HOUR = 44; // 10pm
 
-	public void testInsertDocument() throws NotFoundException {
+	public void testInsertDocument() throws DatabaseException {
 		Model model = createBlankModel();
 
 		model.createTransientDocument("doc1", 14, 44).insert();
 	}
 
-	public void testInsertDocuments() throws NotFoundException {
+	public void testInsertDocuments() throws DatabaseException {
 		Model model = createBlankModel();
 
 		model.createTransientDocument("doc1", START_HALF_HOUR,
@@ -30,7 +31,7 @@ public abstract class DocumentsTest extends ModelTestCase {
 				END_HALF_HOUR).insert();
 	}
 
-	public void testInsertAndFindDocument() throws NotFoundException {
+	public void testInsertAndFindDocument() throws DatabaseException {
 		Model model = createBlankModel();
 
 		int documentID = 
@@ -95,7 +96,7 @@ public abstract class DocumentsTest extends ModelTestCase {
 		}
 	}
 
-	public void testDatabaseIsEmptyAfterDelete() throws NotFoundException {
+	public void testDatabaseIsEmptyAfterDelete() throws DatabaseException {
 		Model model = createBlankModel();
 		assert (model.isEmpty());
 		Document document = insertFullDocumentIntoModel(model);
@@ -103,7 +104,7 @@ public abstract class DocumentsTest extends ModelTestCase {
 		assertTrue(model.isEmpty());
 	}
 	
-	public void testScheduleConsistancy() throws NotFoundException
+	public void testScheduleConsistancy() throws DatabaseException
 	{
 		Model model = createBlankModel();
 		Document predocument = model.createTransientDocument("doc1",
@@ -126,7 +127,7 @@ public abstract class DocumentsTest extends ModelTestCase {
 		}
 	}
 
-	private Document insertFullDocumentIntoModel(Model model) throws NotFoundException {
+	private Document insertFullDocumentIntoModel(Model model) throws DatabaseException {
 		Document document = model.createTransientDocument("doc1",
 				START_HALF_HOUR, END_HALF_HOUR).insert();;
 		ModelTestUtility.createCourse(model).setDocument(document).insert();
@@ -136,7 +137,7 @@ public abstract class DocumentsTest extends ModelTestCase {
 		return document;
 	}
 
-	public void testFindAllDocuments() throws NotFoundException {
+	public void testFindAllDocuments() throws DatabaseException {
 		Model model = createBlankModel();
 
 		Set<Integer> docIDs = new HashSet<Integer>();

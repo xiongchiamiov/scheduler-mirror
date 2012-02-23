@@ -13,6 +13,7 @@ import edu.calpoly.csc.scheduler.model.Model;
 import edu.calpoly.csc.scheduler.model.Schedule;
 import edu.calpoly.csc.scheduler.model.ScheduleItem;
 import edu.calpoly.csc.scheduler.model.algorithm.CouldNotBeScheduledException.ConflictType;
+import edu.calpoly.csc.scheduler.model.db.DatabaseException;
 import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
 
 public class Generate {
@@ -35,7 +36,7 @@ public class Generate {
 	   }
 	}
 
-	public static Vector<ScheduleItem> generate(Model model, Schedule schedule, Vector<ScheduleItemDecorator> s_items, List<Course> c_list, List<Instructor> i_list, List<Location> l_list) throws NotFoundException {
+	public static Vector<ScheduleItem> generate(Model model, Schedule schedule, Vector<ScheduleItemDecorator> s_items, List<Course> c_list, List<Instructor> i_list, List<Location> l_list) throws DatabaseException {
 		Vector<ScheduleItemDecorator> items = s_items;
 		HashMap<Integer, SectionTracker> sections = new HashMap<Integer, SectionTracker>();
 		TimeRange bounds = new TimeRange(14, 44);
@@ -183,7 +184,7 @@ public class Generate {
 	    * @return true if the item was added. False otherwise.
 	 * @throws NotFoundException 
 	    */
-	   private static boolean add (Model model, ScheduleDecorator sd, ScheduleItemDecorator si, Vector<ScheduleItemDecorator> items, HashMap<Integer, SectionTracker> sections) throws CouldNotBeScheduledException, NotFoundException
+	   private static boolean add (Model model, ScheduleDecorator sd, ScheduleItemDecorator si, Vector<ScheduleItemDecorator> items, HashMap<Integer, SectionTracker> sections) throws CouldNotBeScheduledException, DatabaseException
 	   {
 	      boolean r;
 	      /*
@@ -404,7 +405,7 @@ public class Generate {
 	    * @see Tba#getTba()
 	    * @see #findTimes(ScheduleItem, TimeRange)
 	    */
-	   private static ScheduleItemDecorator genBestTime (Model model, Schedule schedule, ScheduleItem base, TimeRange tr, ScheduleDecorator sd, List<Instructor> i_list, List<Location> l_list) throws NotFoundException
+	   private static ScheduleItemDecorator genBestTime (Model model, Schedule schedule, ScheduleItem base, TimeRange tr, ScheduleDecorator sd, List<Instructor> i_list, List<Location> l_list) throws DatabaseException
 	   {
 	      Vector<ScheduleItemDecorator> si_list = new Vector<ScheduleItemDecorator>();
 
@@ -477,7 +478,7 @@ public class Generate {
 	    * 
 	    * @see Instructor#canTeach(Course)
 	    */
-	   private static boolean verify (Model model, ScheduleDecorator schedule, ScheduleItemDecorator si, ScheduleDecorator sd) throws CouldNotBeScheduledException, NotFoundException
+	   private static boolean verify (Model model, ScheduleDecorator schedule, ScheduleItemDecorator si, ScheduleDecorator sd) throws CouldNotBeScheduledException, DatabaseException
 	   {
 	      Week days = new Week(si.item.getDays());
 	      Course c = model.findCourseByID(si.item.getCourse().getID());
@@ -641,7 +642,7 @@ public class Generate {
 	    * 
 	    * @see #verify(ScheduleItem)
 	    */
-	   private static void book (Model model, ScheduleItemDecorator si, ScheduleDecorator sd, Vector<ScheduleItemDecorator> items, HashMap<Integer, SectionTracker> sections) throws NotFoundException
+	   private static void book (Model model, ScheduleItemDecorator si, ScheduleDecorator sd, Vector<ScheduleItemDecorator> items, HashMap<Integer, SectionTracker> sections) throws DatabaseException
 	   {
 	      Instructor i = model.findInstructorByID(si.item.getInstructor().getID());
 	      Location l = model.findLocationByID(si.item.getLocation().getID());
@@ -683,7 +684,7 @@ public class Generate {
 	    * 
 	    * @see Staff#getStaff()
 	    */
-	   private static Instructor getLabInstructor (Model model, Course lab, ScheduleItemDecorator lec_si) throws NotFoundException
+	   private static Instructor getLabInstructor (Model model, Course lab, ScheduleItemDecorator lec_si) throws DatabaseException
 	   {
 	      /*Instructor r;
 
@@ -724,7 +725,7 @@ public class Generate {
 	    *         is to be taught on.
 	 * @throws NotFoundException 
 	    */
-	   private static Vector<ScheduleItemDecorator> findTimes (Model model, Schedule schedule, ScheduleItem si, TimeRange range, ScheduleDecorator sd) throws NotFoundException
+	   private static Vector<ScheduleItemDecorator> findTimes (Model model, Schedule schedule, ScheduleItem si, TimeRange range, ScheduleDecorator sd) throws DatabaseException
 	   {
 	      debug("FINDING TIMES IN RANGE " + range);
 	      Vector<ScheduleItemDecorator> sis = new Vector<ScheduleItemDecorator>();
@@ -775,7 +776,7 @@ public class Generate {
 	    *         during at least the TimeRanges passed in.
 	 * @throws NotFoundException 
 	    */
-	   private static Vector<ScheduleItemDecorator> findLocations (Model model, Schedule schedule, Vector<ScheduleItemDecorator> sis, ScheduleDecorator sd, List<Location> l_list) throws NotFoundException
+	   private static Vector<ScheduleItemDecorator> findLocations (Model model, Schedule schedule, Vector<ScheduleItemDecorator> sis, ScheduleDecorator sd, List<Location> l_list) throws DatabaseException
 	   {
 		  //might have to look into TBA location for IND type courses
 	      Vector<ScheduleItemDecorator> si_list = new Vector<ScheduleItemDecorator>();
@@ -846,7 +847,7 @@ public class Generate {
 	 * @throws NotFoundException 
 	    */
 	   public static ScheduleItemDecorator move (Model model, ScheduleDecorator sd, Vector<ScheduleItemDecorator> s_items, ScheduleItemDecorator si, Week days, int s) 
-	      throws CouldNotBeScheduledException, NotFoundException
+	      throws CouldNotBeScheduledException, DatabaseException
 	   {
 	      ScheduleItemDecorator fresh_si = new ScheduleItemDecorator(si.item.createTransientCopy());
 	      if (remove(model, sd, s_items, si, sd))
@@ -899,7 +900,7 @@ public class Generate {
 	    *         if it does not exist in our list of items
 	 * @throws NotFoundException 
 	    */
-	   public static boolean remove (Model model, ScheduleDecorator schedule, Vector<ScheduleItemDecorator> s_items, ScheduleItemDecorator si, ScheduleDecorator sd) throws NotFoundException
+	   public static boolean remove (Model model, ScheduleDecorator schedule, Vector<ScheduleItemDecorator> s_items, ScheduleItemDecorator si, ScheduleDecorator sd) throws DatabaseException
 	   {
 		   
 		   Vector<ScheduleItemDecorator> items = s_items;
@@ -998,7 +999,7 @@ public class Generate {
 	   }
 
 	   private static void removeItem (Model model, ScheduleDecorator schedule, Vector<ScheduleItemDecorator> s_items,
-			   List<ScheduleItemDecorator> toRemove, ScheduleDecorator sd) throws NotFoundException
+			   List<ScheduleItemDecorator> toRemove, ScheduleDecorator sd) throws DatabaseException
 	   {
 	      for (ScheduleItemDecorator si: toRemove)
 	      {

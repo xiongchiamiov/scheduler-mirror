@@ -5,14 +5,15 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
 import edu.calpoly.csc.scheduler.model.Day;
+import edu.calpoly.csc.scheduler.model.db.DatabaseException;
 import edu.calpoly.csc.scheduler.model.db.IDBCourse;
 import edu.calpoly.csc.scheduler.model.db.IDBCourseAssociation;
 import edu.calpoly.csc.scheduler.model.db.IDBCoursePreference;
@@ -71,57 +72,81 @@ public class SQLdb implements IDatabase {
 
 
 	@Override
-	public IDBUser findUserByUsername(String username) throws NotFoundException {
-		// TODO Auto-generated method stub
+	public IDBUser findUserByUsername(String username) throws DatabaseException {
 		IDBUser user = null;
-		Statement stmt = null;
-	    String query = "select * from user";
+		PreparedStatement stmnt = null;
+		
 		try {
-			stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery(query);
-		    while (rs.next()) {
-		    	String coffeeName =
-		                rs.getString("COF_NAME");
-	            int supplierID = rs.getInt("SUP_ID");
-	            float price = rs.getFloat("PRICE");
-	            int sales = rs.getInt("SALES");
-	            int total = rs.getInt("TOTAL");
-	            System.out.println(
-	                coffeeName + "\t" + supplierID +
-	                "\t" + price + "\t" + sales +
-	                "\t" + total);
-		    }
-	    } catch (SQLException e ) {
-	       
-	    } 
-		return null;
+			stmnt = conn.prepareStatement("select * from userdata where userid = ?");
+			stmnt.setString(1, username);
+			
+			ResultSet rs = stmnt.executeQuery();
+			if (rs.next())
+				user = new SQLUser(rs.getInt("id"), rs.getString("username"), rs.getBoolean("isAdmin"));
+			else
+				throw new NotFoundException();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DatabaseException(e);
+		}
+		return user;
 	}
 
 	@Override
 	public IDBUser assembleUser(String username, boolean isAdmin) {
-		// TODO Auto-generated method stub
-		return null;
+		return new SQLUser(null, username, isAdmin);
 	}
 
 
 	@Override
-	public void insertUser(IDBUser user) {
-		// TODO Auto-generated method stub
+	public void insertUser(IDBUser user) throws DatabaseException {
+		PreparedStatement stmnt = null;
 		
+		try {
+			stmnt = conn.prepareStatement("insert into userdata (username, isAdmin) values (?, ?)");
+			stmnt.setString(1, user.getUsername());
+			stmnt.setBoolean(2, user.isAdmin());
+			
+			stmnt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DatabaseException(e);
+		}
 	}
 
 
 	@Override
-	public void updateUser(IDBUser user) {
-		// TODO Auto-generated method stub
+	public void updateUser(IDBUser user) throws DatabaseException {
+		PreparedStatement stmnt = null;
 		
+		try {
+			stmnt = conn.prepareStatement("update userdata set username = ?, isAdmin = ?," +
+					" where id = ?");
+			stmnt.setString(1, user.getUsername());
+			stmnt.setBoolean(2, user.isAdmin());
+			stmnt.setInt(3, user.getID());
+			
+			stmnt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DatabaseException(e);
+		}
 	}
 
 
 	@Override
-	public void deleteUser(IDBUser user) {
-		// TODO Auto-generated method stub
+	public void deleteUser(IDBUser user) throws DatabaseException {
+		PreparedStatement stmnt = null;
 		
+		try {
+			stmnt = conn.prepareStatement("delete from userdata where id = ?");
+			stmnt.setInt(1, user.getID());
+			
+			stmnt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DatabaseException(e);
+		}
 	}
 
 

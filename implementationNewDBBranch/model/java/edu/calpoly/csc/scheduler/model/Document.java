@@ -2,8 +2,8 @@ package edu.calpoly.csc.scheduler.model;
 
 import java.util.Collection;
 
+import edu.calpoly.csc.scheduler.model.db.DatabaseException;
 import edu.calpoly.csc.scheduler.model.db.IDBDocument;
-import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
 
 public class Document implements Identified {
 	private final Model model;
@@ -19,16 +19,16 @@ public class Document implements Identified {
 
 	// PERSISTENCE FUNCTIONS
 
-	public Document insert() throws NotFoundException {
+	public Document insert() throws DatabaseException {
 		model.documentCache.insert(this);
 		return this;
 	}
 
-	public void update() {
+	public void update() throws DatabaseException {
 		model.documentCache.update(underlyingDocument);
 	}
 	
-	public void delete() {
+	public void delete() throws DatabaseException {
 		for (Schedule schedule : getSchedules())
 			schedule.delete();
 		for (Location location : getLocations())

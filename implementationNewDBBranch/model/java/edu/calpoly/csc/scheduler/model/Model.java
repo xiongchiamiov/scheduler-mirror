@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import edu.calpoly.csc.scheduler.model.db.DatabaseException;
 import edu.calpoly.csc.scheduler.model.db.IDBCourse;
 import edu.calpoly.csc.scheduler.model.db.IDBCourseAssociation;
 import edu.calpoly.csc.scheduler.model.db.IDBCoursePreference;
@@ -46,7 +47,7 @@ public class Model {
 			return result;
 		}
 
-		public DecoratedT findByID(int id) throws NotFoundException {
+		public DecoratedT findByID(int id) throws DatabaseException {
 			DecoratedT result = cache.get(id);
 			if (result == null)
 				result = decorateAndPutInCache(loadFromDatabase(id));
@@ -55,23 +56,23 @@ public class Model {
 		
 		protected abstract DecoratedT decorate(UnderlyingT underlying);
 		
-		protected abstract UnderlyingT loadFromDatabase(int id) throws NotFoundException;
+		protected abstract UnderlyingT loadFromDatabase(int id) throws NotFoundException, DatabaseException;
 		
-		void insert(DecoratedT obj) throws NotFoundException {
+		void insert(DecoratedT obj) throws DatabaseException {
 			insertIntoDatabase(obj);
 			cache.put(obj.getID(), obj);
 		}
 		
-		protected abstract void insertIntoDatabase(DecoratedT obj) throws NotFoundException;
+		protected abstract void insertIntoDatabase(DecoratedT obj) throws DatabaseException;
 
-		public void delete(DecoratedT obj) {
+		public void delete(DecoratedT obj) throws DatabaseException {
 			cache.remove(obj.getID());
 			removeFromDatabase(obj);
 		}
 		
-		protected abstract void removeFromDatabase(DecoratedT obj);
+		protected abstract void removeFromDatabase(DecoratedT obj) throws DatabaseException;
 
-		public boolean isInserted(DecoratedT obj) {
+		public boolean isInserted(DecoratedT obj) throws DatabaseException {
 			try {
 				findByID(obj.getID());
 				return true;
@@ -79,11 +80,11 @@ public class Model {
 			catch (NotFoundException e) { return false; }
 		}
 
-		public void update(UnderlyingT underlying) {
+		public void update(UnderlyingT underlying) throws DatabaseException {
 			updateInDatabase(underlying);
 		}
 		
-		protected abstract void updateInDatabase(UnderlyingT obj);
+		protected abstract void updateInDatabase(UnderlyingT obj) throws DatabaseException;
 	}
 	
 	
@@ -106,21 +107,21 @@ public class Model {
 		protected User decorate(IDBUser underlying) {
 			return new User(Model.this, underlying);
 		}
-		protected IDBUser loadFromDatabase(int id) throws NotFoundException {
+		protected IDBUser loadFromDatabase(int id) throws DatabaseException {
 			throw new UnsupportedOperationException();
 		}
-		protected void insertIntoDatabase(User obj) throws NotFoundException {
+		protected void insertIntoDatabase(User obj) throws DatabaseException {
 			database.insertUser(obj.underlyingUser);
 		}
-		protected void removeFromDatabase(User obj) {
+		protected void removeFromDatabase(User obj) throws DatabaseException {
 			database.deleteUser(obj.underlyingUser);
 		}
-		protected void updateInDatabase(IDBUser obj) {
+		protected void updateInDatabase(IDBUser obj) throws DatabaseException {
 			database.updateUser(obj);
 		}
 	};
 
-	public User findUserByUsername(String username) throws NotFoundException {
+	public User findUserByUsername(String username) throws NotFoundException, DatabaseException {
 		IDBUser underlyingUser = database.findUserByUsername(username);
 		return userCache.putIfNotPresentThenGetDecorated(underlyingUser);
 	}
@@ -155,7 +156,7 @@ public class Model {
 		return new Document(this, database.assembleDocument(name, startHalfHour, endHalfHour));
 	}
 	
-	public Document findDocumentByID(int documentID) throws NotFoundException {
+	public Document findDocumentByID(int documentID) throws DatabaseException {
 		return documentCache.findByID(documentID);
 	}
 
@@ -306,10 +307,10 @@ public class Model {
 		protected Schedule decorate(IDBSchedule underlying) {
 			return new Schedule(Model.this, underlying);
 		}
-		protected IDBSchedule loadFromDatabase(int id) throws NotFoundException {
+		protected IDBSchedule loadFromDatabase(int id) throws DatabaseException {
 			return database.findScheduleByID(id);
 		}
-		protected void insertIntoDatabase(Schedule obj) throws NotFoundException {
+		protected void insertIntoDatabase(Schedule obj) throws DatabaseException {
 			database.insertSchedule(obj.getDocument().underlyingDocument, obj.underlyingSchedule);
 		}
 		protected void removeFromDatabase(Schedule obj) {
@@ -328,7 +329,7 @@ public class Model {
 		return result;
 	}
 
-	public Schedule findScheduleByID(int scheduleID) throws NotFoundException {
+	public Schedule findScheduleByID(int scheduleID) throws DatabaseException {
 		return scheduleCache.findByID(scheduleID);
 	}
 	
@@ -345,10 +346,10 @@ public class Model {
 		protected Instructor decorate(IDBInstructor underlying) {
 			return new Instructor(Model.this, underlying);
 		}
-		protected IDBInstructor loadFromDatabase(int id) throws NotFoundException {
+		protected IDBInstructor loadFromDatabase(int id) throws DatabaseException {
 			return database.findInstructorByID(id);
 		}
-		protected void insertIntoDatabase(Instructor obj) throws NotFoundException {
+		protected void insertIntoDatabase(Instructor obj) throws DatabaseException {
 			database.insertInstructor(obj.getDocument().underlyingDocument, obj.underlyingInstructor);
 		}
 		protected void removeFromDatabase(Instructor obj) {
@@ -366,7 +367,7 @@ public class Model {
 		return result;
 	}
 
-	public Instructor findInstructorByID(int instructorID) throws NotFoundException {
+	public Instructor findInstructorByID(int instructorID) throws DatabaseException {
 		return instructorCache.findByID(instructorID);
 	}
 	
@@ -384,10 +385,10 @@ public class Model {
 		protected Course decorate(IDBCourse underlying) {
 			return new Course(Model.this, underlying);
 		}
-		protected IDBCourse loadFromDatabase(int id) throws NotFoundException {
+		protected IDBCourse loadFromDatabase(int id) throws DatabaseException {
 			return database.findCourseByID(id);
 		}
-		protected void insertIntoDatabase(Course obj) throws NotFoundException {
+		protected void insertIntoDatabase(Course obj) throws DatabaseException {
 			database.insertCourse(obj.getDocument().underlyingDocument, obj.underlyingCourse);
 		}
 		protected void removeFromDatabase(Course obj) {
@@ -409,7 +410,7 @@ public class Model {
 		return result;
 	}
 
-	public Course findCourseByID(int courseID) throws NotFoundException {
+	public Course findCourseByID(int courseID) throws DatabaseException {
 		return courseCache.findByID(courseID);
 	}
 	
@@ -422,10 +423,10 @@ public class Model {
 		protected Location decorate(IDBLocation underlying) {
 			return new Location(Model.this, underlying);
 		}
-		protected IDBLocation loadFromDatabase(int id) throws NotFoundException {
+		protected IDBLocation loadFromDatabase(int id) throws DatabaseException {
 			return database.findLocationByID(id);
 		}
-		protected void insertIntoDatabase(Location obj) throws NotFoundException {
+		protected void insertIntoDatabase(Location obj) throws DatabaseException {
 			database.insertLocation(obj.getDocument().underlyingDocument, obj.underlyingLocation);
 		}
 		protected void removeFromDatabase(Location obj) {
@@ -449,7 +450,7 @@ public class Model {
 		return result;
 	}
 
-	public Location findLocationByID(int locationID) throws NotFoundException {
+	public Location findLocationByID(int locationID) throws DatabaseException {
 		return locationCache.findByID(locationID);
 	}
 	
@@ -461,10 +462,10 @@ public class Model {
 		protected ScheduleItem decorate(IDBScheduleItem underlying) {
 			return new ScheduleItem(Model.this, underlying);
 		}
-		protected IDBScheduleItem loadFromDatabase(int id) throws NotFoundException {
+		protected IDBScheduleItem loadFromDatabase(int id) throws DatabaseException {
 			return database.findScheduleItemByID(id);
 		}
-		protected void insertIntoDatabase(ScheduleItem obj) throws NotFoundException {
+		protected void insertIntoDatabase(ScheduleItem obj) throws DatabaseException {
 			database.insertScheduleItem(obj.getSchedule().underlyingSchedule, obj.getCourse().underlyingCourse, obj.getInstructor().underlyingInstructor, obj.getLocation().underlyingLocation, obj.underlying);
 		}
 		protected void removeFromDatabase(ScheduleItem obj) {
@@ -490,11 +491,11 @@ public class Model {
 		return new ScheduleItem(this, underlying);
 	}
 
-	public ScheduleItem findScheduleItemByID(int id) throws NotFoundException {
+	public ScheduleItem findScheduleItemByID(int id) throws DatabaseException {
 		return itemCache.findByID(id);
 	}
 
-	public boolean isInserted(ScheduleItem scheduleItem) {
+	public boolean isInserted(ScheduleItem scheduleItem) throws DatabaseException {
 		return itemCache.isInserted(scheduleItem);
 	}
 
