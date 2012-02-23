@@ -315,10 +315,6 @@ public class GenerationAlgorithm {
 	public static void insertNewScheduleItem(Model model, Schedule schedule, ScheduleItem item) throws NotFoundException {
 		GenerationDataLayer dataLayer = new GenerationDataLayer(model, schedule);
 		
-		insertNewScheduleItem(dataLayer, item);
-	}
-
-	private static void insertNewScheduleItem(GenerationDataLayer dataLayer, ScheduleItem item) {
 		dataLayer.insertNewScheduleItem(item);
 	}
 }
