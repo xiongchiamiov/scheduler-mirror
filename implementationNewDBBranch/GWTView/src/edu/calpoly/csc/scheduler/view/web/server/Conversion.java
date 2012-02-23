@@ -16,6 +16,7 @@ import edu.calpoly.csc.scheduler.model.Location;
 import edu.calpoly.csc.scheduler.model.Model;
 import edu.calpoly.csc.scheduler.model.Schedule;
 import edu.calpoly.csc.scheduler.model.ScheduleItem;
+import edu.calpoly.csc.scheduler.model.db.DatabaseException;
 import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.DayGWT;
@@ -113,7 +114,7 @@ public abstract class Conversion {
 		return modelDayPattern;
 	}
 
-	static CourseGWT courseToGWT(Course course) throws NotFoundException {
+	static CourseGWT courseToGWT(Course course) throws DatabaseException {
 		Collection<Set<DayGWT>> dayPatterns = new LinkedList<Set<DayGWT>>();
 		for (Set<Day> combo : course.getDayPatterns())
 			dayPatterns.add(dayPatternToGWT(combo));
@@ -184,7 +185,7 @@ public abstract class Conversion {
 	}
 
 	@Deprecated
-	public static OldScheduleItemGWT scheduleItemFromGWTToOldGWT(ScheduleItemGWT source, Course course, Instructor instructor, Location location) throws NotFoundException {
+	public static OldScheduleItemGWT scheduleItemFromGWTToOldGWT(ScheduleItemGWT source, Course course, Instructor instructor, Location location) throws DatabaseException {
 		CourseGWT courseGWT = courseToGWT(course);
 		LocationGWT locationGWT = locationToGWT(location);
 		InstructorGWT instructorGWT = instructorToGWT(instructor);
@@ -259,7 +260,7 @@ public abstract class Conversion {
 				startHalfHour, endHalfHour, itemOldGWT.isPlaced(), itemOldGWT.isConflicted());
 	}
 
-	public static ScheduleItem scheduleItemFromGWT(Model model, Schedule schedule, ScheduleItemGWT source) throws NotFoundException {
+	public static ScheduleItem scheduleItemFromGWT(Model model, Schedule schedule, ScheduleItemGWT source) throws DatabaseException {
 		Set<Day> dayPattern = dayPatternFromGWT(source.getDays());
 		
 		ScheduleItem result = model.createTransientScheduleItem(
@@ -278,12 +279,12 @@ public abstract class Conversion {
 		return result;
 	}
 
-	public static ScheduleItemGWT scheduleItemToGWT(ScheduleItem item) throws NotFoundException {
+	public static ScheduleItemGWT scheduleItemToGWT(ScheduleItem item) throws DatabaseException {
 		Set<DayGWT> pattern = dayPatternToGWT(item.getDays());
 		return new ScheduleItemGWT(item.getID(), item.getCourse().getID(), item.getInstructor().getID(), item.getLocation().getID(), item.getSection(), pattern, item.getStartHalfHour(), item.getEndHalfHour(), item.isPlaced(), item.isConflicted());
 	}
 
-	public static void readScheduleItemFromGWT(Model model, ScheduleItemGWT itemGWT, ScheduleItem item) throws NotFoundException {
+	public static void readScheduleItemFromGWT(Model model, ScheduleItemGWT itemGWT, ScheduleItem item) throws DatabaseException {
 		item.setCourse(model.findCourseByID(itemGWT.getCourseID()));
 		item.setDays(Conversion.dayPatternFromGWT(itemGWT.getDays()));
 		item.setEndHalfHour(itemGWT.getEndHalfHour());
@@ -295,7 +296,7 @@ public abstract class Conversion {
 		item.setStartHalfHour(itemGWT.getStartHalfHour());
 	}
 
-	public static Document readDocumentFromGWT(Model model, DocumentGWT documentGWT) throws NotFoundException {
+	public static Document readDocumentFromGWT(Model model, DocumentGWT documentGWT) throws DatabaseException {
 		Document document = model.findDocumentByID(documentGWT.getID());
 
 		document.setName(documentGWT.getName());

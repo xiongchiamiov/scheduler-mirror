@@ -20,6 +20,7 @@ import edu.calpoly.csc.scheduler.model.Location;
 import edu.calpoly.csc.scheduler.model.Model;
 import edu.calpoly.csc.scheduler.model.Schedule;
 import edu.calpoly.csc.scheduler.model.ScheduleItem;
+import edu.calpoly.csc.scheduler.model.db.DatabaseException;
 import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
 import edu.calpoly.csc.scheduler.model.tempalgorithm.GenerationAlgorithm;
 import edu.calpoly.csc.scheduler.model.tempalgorithm.GenerationAlgorithm.CouldNotBeScheduledException;
@@ -72,6 +73,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		} catch (NotFoundException e) {
 			e.printStackTrace();
 			throw new NotFoundExceptionGWT();
+		} catch (DatabaseException e) {
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -83,12 +86,18 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		} catch (NotFoundException e) {
 			e.printStackTrace();
 			throw new NotFoundExceptionGWT();
+		} catch (DatabaseException e) {
+			throw new RuntimeException(e);
 		}
 		assert(result.getID() > 0);
 
 		Conversion.readCourseFromGWT(source, result);
 		
-		result.update();
+		try {
+			result.update();
+		} catch (DatabaseException e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
 	@Override
@@ -102,6 +111,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		} catch (NotFoundException e) {
 			e.printStackTrace();
 			throw new NotFoundExceptionGWT();
+		} catch (DatabaseException e) {
+			throw new RuntimeException(e);
 		}
 		return result;
 	}
@@ -113,6 +124,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		} catch (NotFoundException e) {
 			e.printStackTrace();
 			throw new NotFoundExceptionGWT();
+		} catch (DatabaseException e) {
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -128,8 +141,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		} catch (NotFoundException e) {
 			e.printStackTrace();
 			throw new NotFoundExceptionGWT();
+		} catch (DatabaseException e) {
+			throw new RuntimeException(e);
 		}
-		
 	}
 
 	@Override
@@ -140,12 +154,18 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		} catch (NotFoundException e) {
 			e.printStackTrace();
 			throw new NotFoundExceptionGWT();
+		} catch (DatabaseException e) {
+			throw new RuntimeException(e);
 		}
 		assert(result.getID() > 0);
 
 		Conversion.readInstructorFromGWT(source, result);
 		
-		result.update();
+		try {
+			result.update();
+		} catch (DatabaseException e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
 	@Override
@@ -159,6 +179,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		} catch (NotFoundException e) {
 			e.printStackTrace();
 			throw new NotFoundExceptionGWT();
+		} catch (DatabaseException e) {
+			throw new RuntimeException(e);
 		}
 		return result;
 	}
@@ -170,6 +192,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		} catch (NotFoundException e) {
 			e.printStackTrace();
 			throw new NotFoundExceptionGWT();
+		} catch (DatabaseException e) {
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -187,6 +211,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		} catch (NotFoundException e) {
 			e.printStackTrace();
 			throw new NotFoundExceptionGWT();
+		} catch (DatabaseException e) {
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -200,6 +226,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		} catch (NotFoundException e) {
 			e.printStackTrace();
 			throw new NotFoundExceptionGWT();
+		} catch (DatabaseException e) {
+			throw new RuntimeException(e);
 		}
 		assert(result.getID() > 0);
 
@@ -219,6 +247,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		} catch (NotFoundException e) {
 			e.printStackTrace();
 			throw new NotFoundExceptionGWT();
+		} catch (DatabaseException e) {
+			throw new RuntimeException(e);
 		}
 		return result;
 	}
@@ -230,6 +260,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		} catch (NotFoundException e) {
 			e.printStackTrace();
 			throw new NotFoundExceptionGWT();
+		} catch (DatabaseException e) {
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -242,7 +274,17 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			try {
 				return model.createTransientUser(username, true).insert().getID();
 			} catch (NotFoundException e1) {
-				throw new RuntimeException(e);
+				throw new RuntimeException(e1);
+			} catch (DatabaseException e2) {
+				throw new RuntimeException(e2);
+			}
+		} catch (DatabaseException e) {
+			try {
+				return model.createTransientUser(username, true).insert().getID();
+			} catch (NotFoundException e1) {
+				throw new RuntimeException(e1);
+			} catch (DatabaseException e2) {
+				throw new RuntimeException(e2);
 			}
 		}
 	}
@@ -272,7 +314,10 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		}
 		catch (NotFoundException e) {
 			throw new RuntimeException(e);
+		} catch (DatabaseException e) {
+			throw new RuntimeException(e);
 		}
+		
 	}
 
 	@Override
@@ -292,6 +337,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		} catch (NotFoundException e) {
 			e.printStackTrace();
 			throw new NotFoundExceptionGWT();
+		} catch (DatabaseException e) {
+			throw new RuntimeException(e);
 		}
 	}
 	
@@ -342,6 +389,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		catch (NotFoundException e) {
 			e.printStackTrace();
 			throw new NotFoundExceptionGWT();
+		} catch (DatabaseException e) {
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -440,6 +489,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		catch (CouldNotBeScheduledException e) {
 			e.printStackTrace();
 			throw new CouldNotBeScheduledExceptionGWT();
+		} catch (DatabaseException e) {
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -454,6 +505,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		} catch (NotFoundException e) {
 			e.printStackTrace();
 			throw new NotFoundExceptionGWT();
+		} catch (DatabaseException e) {
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -468,6 +521,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		} catch (NotFoundException e) {
 			e.printStackTrace();
 			throw new NotFoundExceptionGWT();
+		} catch (DatabaseException e) {
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -481,6 +536,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		} catch (NotFoundException e) {
 			e.printStackTrace();
 			throw new NotFoundExceptionGWT();
+		} catch (DatabaseException e) {
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -490,6 +547,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			Document document = Conversion.readDocumentFromGWT(model, documentGWT);
 			document.update();
 		} catch (NotFoundException e) {
+			throw new RuntimeException(e);
+		} catch (DatabaseException e) {
 			throw new RuntimeException(e);
 		}
 	}
