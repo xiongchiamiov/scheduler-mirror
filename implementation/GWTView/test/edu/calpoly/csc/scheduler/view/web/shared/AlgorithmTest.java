@@ -55,7 +55,7 @@ public class AlgorithmTest extends TestCase {
 		
 		sched.setiSourceList(instructors);	
 		
-		sched.generate(courses);
+		//sched.generate(courses);
 		printAllScheduledCourseInfo(sched);
 	}
 	
