@@ -2,30 +2,31 @@ package edu.calpoly.csc.scheduler.model;
 
 import edu.calpoly.csc.scheduler.model.db.IDBUser;
 import edu.calpoly.csc.scheduler.model.db.IDatabase;
+import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
 
 public class User implements Identified {
-	private final IDatabase database;
+	private final Model model;
 	
 	final IDBUser underlyingUser;
 	
-	User(IDatabase database, IDBUser underlyingUser) {
-		this.database = database;
+	User(Model model, IDBUser underlyingUser) {
+		this.model = model;
 		this.underlyingUser = underlyingUser;
 	}
 
 	// PERSISTENCE FUNCTIONS
 
-	public User insert() {
-		database.insertUser(underlyingUser);
+	public User insert() throws NotFoundException {
+		model.userCache.insert(this);
 		return this;
 	}
 
 	public void update() {
-		database.updateUser(underlyingUser);
+		model.userCache.update(underlyingUser);
 	}
 	
 	public void delete() {
-		database.deleteUser(underlyingUser);
+		model.userCache.delete(this);
 	}
 
 

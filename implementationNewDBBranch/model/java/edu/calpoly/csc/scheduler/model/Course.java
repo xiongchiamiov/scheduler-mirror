@@ -41,16 +41,16 @@ public class Course implements Identified {
 
 	// PERSISTENCE FUNCTIONS
 
-	public Course insert() {
+	public Course insert() throws NotFoundException {
 		assert(document != null);
-		model.database.insertCourse(document.underlyingDocument, underlyingCourse);
+		model.courseCache.insert(this);
 		putOfferedDayPatternsIntoDB();
 		putUsedEquipmentIntoDB();
 		return this;
 	}
 
 	public void update() {
-		model.database.updateCourse(underlyingCourse);
+		model.courseCache.update(underlyingCourse);
 		removeOfferedDayPatternsFromDB();
 		removeUsedEquipmentFromDB();
 		putUsedEquipmentIntoDB();
@@ -60,7 +60,7 @@ public class Course implements Identified {
 	public void delete() {
 		removeOfferedDayPatternsFromDB();
 		removeUsedEquipmentFromDB();
-		model.database.deleteCourse(underlyingCourse);
+		model.courseCache.delete(this);
 	}
 
 

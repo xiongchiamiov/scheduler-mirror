@@ -3,6 +3,7 @@ package edu.calpoly.csc.scheduler.model;
 import java.util.Collection;
 
 import edu.calpoly.csc.scheduler.model.db.IDBDocument;
+import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
 
 public class Document implements Identified {
 	private final Model model;
@@ -18,13 +19,13 @@ public class Document implements Identified {
 
 	// PERSISTENCE FUNCTIONS
 
-	public Document insert() {
-		model.database.insertDocument(underlyingDocument);
+	public Document insert() throws NotFoundException {
+		model.documentCache.insert(this);
 		return this;
 	}
 
 	public void update() {
-		model.database.updateDocument(underlyingDocument);
+		model.documentCache.update(underlyingDocument);
 	}
 	
 	public void delete() {
@@ -37,7 +38,7 @@ public class Document implements Identified {
 		for (Course course : getCourses())
 			course.delete();
 		
-		model.database.deleteDocument(underlyingDocument);
+		model.documentCache.delete(this);
 	}
 
 	

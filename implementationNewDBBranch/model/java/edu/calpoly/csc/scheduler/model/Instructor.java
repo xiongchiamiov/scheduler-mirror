@@ -35,24 +35,26 @@ public class Instructor implements Identified {
 
 	// PERSISTENCE FUNCTIONS
 
-	public Instructor insert() {
+	public Instructor insert() throws NotFoundException {
 		assert(document != null);
-		model.database.insertInstructor(document.underlyingDocument, underlyingInstructor);
+		model.instructorCache.insert(this);
 		putTimePreferencesIntoDB();
 		putCoursePreferencesIntoDB();
 		return this;
 	}
 
 	public void update() {
+		removeTimePreferencesFromDB();
+		removeCoursePreferencesFromDB();
+		model.instructorCache.update(underlyingInstructor);
 		putTimePreferencesIntoDB();
 		putCoursePreferencesIntoDB();
-		model.database.updateInstructor(underlyingInstructor);
 	}
 
 	public void delete() {
 		removeTimePreferencesFromDB();
 		removeCoursePreferencesFromDB();
-		model.database.deleteInstructor(underlyingInstructor);
+		model.instructorCache.delete(this);
 	}
 	
 	

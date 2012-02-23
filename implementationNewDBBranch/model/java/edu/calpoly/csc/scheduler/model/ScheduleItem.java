@@ -31,29 +31,24 @@ public class ScheduleItem implements Identified {
 	
 	// PERSISTENCE FUNCTIONS
 
-	public void insert() {
+	public void insert() throws NotFoundException {
 		assert(scheduleLoaded);
 		assert(courseLoaded);
 		assert(locationLoaded);
 		assert(instructorLoaded);
 		
-		model.database.insertScheduleItem(
-				schedule.underlyingSchedule,
-				course.underlyingCourse,
-				instructor.underlyingInstructor,
-				location.underlyingLocation,
-				underlying);
+		model.itemCache.insert(this);
 	}
 
 	public void delete() {
-		model.database.deleteScheduleItem(underlying);
+		model.itemCache.delete(this);
 	}
 
 	public void update() throws NotFoundException {
 		model.database.setScheduleItemCourse(underlying, course.underlyingCourse);
 		model.database.setScheduleItemInstructor(underlying, instructor.underlyingInstructor);
 		model.database.setScheduleItemLocation(underlying, location.underlyingLocation);
-		model.database.updateScheduleItem(underlying);
+		model.itemCache.update(underlying);
 	}
 	
 	public ScheduleItem createTransientCopy() throws NotFoundException {

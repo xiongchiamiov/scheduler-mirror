@@ -154,7 +154,7 @@ class GenerationDataLayer {
 	}
 
 	public void insertNewScheduleItem(Course innerCourse,
-			Instructor innerInstructor, Location innerLocation, ScheduleItem item) {
+			Instructor innerInstructor, Location innerLocation, ScheduleItem item) throws NotFoundException {
 //		System.out.println("Inserting schedule item! Instructor " + item.getInstructor().getID() + " location " + item.getLocation().getID() + " course " + item.getCourse().getID() + " days " + item.getDays() + " from " + item.getStartHalfHour() + " to " + item.getEndHalfHour());
 
 		CourseDecorator course = courses.get(innerCourse.getID());
@@ -262,7 +262,7 @@ public class GenerationAlgorithm {
 		return result;
 	}
 	
-	private static Collection<ScheduleItem> generateAndInsertScheduleItemsForCourse(GenerationDataLayer layer, CourseDecorator course) throws CouldNotBeScheduledException {
+	private static Collection<ScheduleItem> generateAndInsertScheduleItemsForCourse(GenerationDataLayer layer, CourseDecorator course) throws CouldNotBeScheduledException, NotFoundException {
 		Collection<ScheduleItem> result = new LinkedList<ScheduleItem>();
 		for (int sectionNumber = course.numSectionsScheduled; sectionNumber < course.course.getNumSectionsInt(); sectionNumber++) {
 			ScheduleItem item = generateScheduleItemForCourse(layer, course, sectionNumber);
@@ -274,7 +274,7 @@ public class GenerationAlgorithm {
 	}
 	
 	private static ScheduleItem generateScheduleItemForCourse(
-			GenerationDataLayer layer, CourseDecorator course, int newSectionNumber) {
+			GenerationDataLayer layer, CourseDecorator course, int newSectionNumber) throws NotFoundException {
 		System.out.println("Generating course " + course.toString() + " section " + newSectionNumber);
 		for (Set<Day> possibleDayPattern : course.course.getDayPatterns()) {
 			ScheduleItem newScheduleItem = generateScheduleItemForCourseWithDayPattern(layer, course, newSectionNumber, possibleDayPattern);
@@ -286,7 +286,7 @@ public class GenerationAlgorithm {
 
 	private static ScheduleItem generateScheduleItemForCourseWithDayPattern(
 			GenerationDataLayer layer, CourseDecorator course,
-			int newSectionNumber, Set<Day> dayPattern) {
+			int newSectionNumber, Set<Day> dayPattern) throws NotFoundException {
 		System.out.println("Trying generating course " + course.toString() + " section " + newSectionNumber + " on days " + dayPattern);
 		int numHalfHoursPerDay = course.course.getNumHalfHoursPerWeekInt() / dayPattern.size();
 		for (int startHalfHour = layer.getDocumentStartHalfHour(); startHalfHour + numHalfHoursPerDay < layer.getDocumentEndHalfHour(); startHalfHour++) {
@@ -299,7 +299,7 @@ public class GenerationAlgorithm {
 
 	private static ScheduleItem generateScheduleItemForCourseWithDayPatternStartingAtTime(
 			GenerationDataLayer layer, CourseDecorator course, int newSectionNumber,
-			Set<Day> dayPattern, int startHalfHour) {
+			Set<Day> dayPattern, int startHalfHour) throws NotFoundException {
 		int numHalfHoursPerDay = course.course.getNumHalfHoursPerWeekInt() / dayPattern.size();
 		int endHalfHour = startHalfHour + numHalfHoursPerDay;
 

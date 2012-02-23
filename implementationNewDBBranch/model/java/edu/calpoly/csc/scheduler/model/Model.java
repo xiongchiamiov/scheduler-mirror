@@ -49,23 +49,23 @@ public class Model {
 			return result;
 		}
 		
-		abstract DecoratedT decorate(UnderlyingT underlying);
+		protected abstract DecoratedT decorate(UnderlyingT underlying);
 		
-		abstract UnderlyingT loadFromDatabase(int id) throws NotFoundException;
+		protected abstract UnderlyingT loadFromDatabase(int id) throws NotFoundException;
 		
 		void insert(DecoratedT obj) throws NotFoundException {
 			insertIntoDatabase(obj);
 			cache.put(obj.getID(), obj);
 		}
 		
-		abstract void insertIntoDatabase(DecoratedT obj) throws NotFoundException;
+		protected abstract void insertIntoDatabase(DecoratedT obj) throws NotFoundException;
 
 		public void delete(DecoratedT obj) {
 			cache.remove(obj.getID());
 			removeFromDatabase(obj);
 		}
 		
-		abstract void removeFromDatabase(DecoratedT obj);
+		protected abstract void removeFromDatabase(DecoratedT obj);
 
 		public boolean isInserted(DecoratedT obj) {
 			try {
@@ -74,6 +74,12 @@ public class Model {
 			}
 			catch (NotFoundException e) { return false; }
 		}
+
+		public void update(UnderlyingT underlying) {
+			updateInDatabase(underlying);
+		}
+		
+		protected abstract void updateInDatabase(UnderlyingT obj);
 	}
 	
 	
@@ -93,17 +99,20 @@ public class Model {
 	// USERS
 	
 	Cache<User, IDBUser> userCache = new Cache<User, IDBUser>() {
-		User decorate(IDBUser underlying) {
-			return new User(database, underlying);
+		protected User decorate(IDBUser underlying) {
+			return new User(Model.this, underlying);
 		}
-		IDBUser loadFromDatabase(int id) throws NotFoundException {
+		protected IDBUser loadFromDatabase(int id) throws NotFoundException {
 			throw new UnsupportedOperationException();
 		}
-		void insertIntoDatabase(User obj) throws NotFoundException {
+		protected void insertIntoDatabase(User obj) throws NotFoundException {
 			database.insertUser(obj.underlyingUser);
 		}
-		void removeFromDatabase(User obj) {
+		protected void removeFromDatabase(User obj) {
 			database.deleteUser(obj.underlyingUser);
+		}
+		protected void updateInDatabase(IDBUser obj) {
+			database.updateUser(obj);
 		}
 	};
 
@@ -113,7 +122,7 @@ public class Model {
 	}
 
 	public User createTransientUser(String username, boolean b) {
-		return new User(database, database.assembleUser(username, b));
+		return new User(Model.this, database.assembleUser(username, b));
 	}
 	
 	
@@ -121,17 +130,20 @@ public class Model {
 	// DOCUMENTS
 
 	Cache<Document, IDBDocument> documentCache = new Cache<Document, IDBDocument>() {
-		Document decorate(IDBDocument underlying) {
+		protected Document decorate(IDBDocument underlying) {
 			return new Document(Model.this, underlying);
 		}
-		IDBDocument loadFromDatabase(int id) throws NotFoundException {
+		protected IDBDocument loadFromDatabase(int id) throws NotFoundException {
 			return database.findDocumentByID(id);
 		}
-		void insertIntoDatabase(Document obj) throws NotFoundException {
+		protected void insertIntoDatabase(Document obj) throws NotFoundException {
 			database.insertDocument(obj.underlyingDocument);
 		}
-		void removeFromDatabase(Document obj) {
+		protected void removeFromDatabase(Document obj) {
 			database.deleteDocument(obj.underlyingDocument);
+		}
+		protected void updateInDatabase(IDBDocument obj) {
+			database.updateDocument(obj);
 		}
 	};
 
@@ -287,17 +299,21 @@ public class Model {
 	// SCHEDULES
 
 	Cache<Schedule, IDBSchedule> scheduleCache = new Cache<Schedule, IDBSchedule>() {
-		Schedule decorate(IDBSchedule underlying) {
+		protected Schedule decorate(IDBSchedule underlying) {
 			return new Schedule(Model.this, underlying);
 		}
-		IDBSchedule loadFromDatabase(int id) throws NotFoundException {
+		protected IDBSchedule loadFromDatabase(int id) throws NotFoundException {
 			return database.findScheduleByID(id);
 		}
-		void insertIntoDatabase(Schedule obj) throws NotFoundException {
+		protected void insertIntoDatabase(Schedule obj) throws NotFoundException {
 			database.insertSchedule(obj.getDocument().underlyingDocument, obj.underlyingSchedule);
 		}
-		void removeFromDatabase(Schedule obj) {
+		protected void removeFromDatabase(Schedule obj) {
 			database.deleteSchedule(obj.underlyingSchedule);
+		}
+		@Override
+		protected void updateInDatabase(IDBSchedule obj) {
+			database.updateSchedule(obj);
 		}
 	};
 	
@@ -322,17 +338,20 @@ public class Model {
 	// INSTRUCTORS
 
 	Cache<Instructor, IDBInstructor> instructorCache = new Cache<Instructor, IDBInstructor>() {
-		Instructor decorate(IDBInstructor underlying) {
+		protected Instructor decorate(IDBInstructor underlying) {
 			return new Instructor(Model.this, underlying);
 		}
-		IDBInstructor loadFromDatabase(int id) throws NotFoundException {
+		protected IDBInstructor loadFromDatabase(int id) throws NotFoundException {
 			return database.findInstructorByID(id);
 		}
-		void insertIntoDatabase(Instructor obj) throws NotFoundException {
+		protected void insertIntoDatabase(Instructor obj) throws NotFoundException {
 			database.insertInstructor(obj.getDocument().underlyingDocument, obj.underlyingInstructor);
 		}
-		void removeFromDatabase(Instructor obj) {
+		protected void removeFromDatabase(Instructor obj) {
 			database.deleteInstructor(obj.underlyingInstructor);
+		}
+		protected void updateInDatabase(IDBInstructor obj) {
+			database.updateInstructor(obj);
 		}
 	};
 	
@@ -358,17 +377,20 @@ public class Model {
 	// COURSES
 
 	Cache<Course, IDBCourse> courseCache = new Cache<Course, IDBCourse>() {
-		Course decorate(IDBCourse underlying) {
+		protected Course decorate(IDBCourse underlying) {
 			return new Course(Model.this, underlying);
 		}
-		IDBCourse loadFromDatabase(int id) throws NotFoundException {
+		protected IDBCourse loadFromDatabase(int id) throws NotFoundException {
 			return database.findCourseByID(id);
 		}
-		void insertIntoDatabase(Course obj) throws NotFoundException {
+		protected void insertIntoDatabase(Course obj) throws NotFoundException {
 			database.insertCourse(obj.getDocument().underlyingDocument, obj.underlyingCourse);
 		}
-		void removeFromDatabase(Course obj) {
+		protected void removeFromDatabase(Course obj) {
 			database.deleteCourse(obj.underlyingCourse);
+		}
+		protected void updateInDatabase(IDBCourse obj) {
+			database.updateCourse(obj);
 		}
 	};
 	
@@ -393,17 +415,20 @@ public class Model {
 	// LOCATIONS
 	
 	Cache<Location, IDBLocation> locationCache = new Cache<Location, IDBLocation>() {
-		Location decorate(IDBLocation underlying) {
+		protected Location decorate(IDBLocation underlying) {
 			return new Location(Model.this, underlying);
 		}
-		IDBLocation loadFromDatabase(int id) throws NotFoundException {
+		protected IDBLocation loadFromDatabase(int id) throws NotFoundException {
 			return database.findLocationByID(id);
 		}
-		void insertIntoDatabase(Location obj) throws NotFoundException {
+		protected void insertIntoDatabase(Location obj) throws NotFoundException {
 			database.insertLocation(obj.getDocument().underlyingDocument, obj.underlyingLocation);
 		}
-		void removeFromDatabase(Location obj) {
+		protected void removeFromDatabase(Location obj) {
 			database.deleteLocation(obj.underlyingLocation);
+		}
+		protected void updateInDatabase(IDBLocation obj) {
+			database.updateLocation(obj);
 		}
 	};
 	
@@ -429,17 +454,21 @@ public class Model {
 	// SCHEDULE ITEMS
 
 	Cache<ScheduleItem, IDBScheduleItem> itemCache = new Cache<ScheduleItem, IDBScheduleItem>() {
-		ScheduleItem decorate(IDBScheduleItem underlying) {
+		protected ScheduleItem decorate(IDBScheduleItem underlying) {
 			return new ScheduleItem(Model.this, underlying);
 		}
-		IDBScheduleItem loadFromDatabase(int id) throws NotFoundException {
+		protected IDBScheduleItem loadFromDatabase(int id) throws NotFoundException {
 			return database.findScheduleItemByID(id);
 		}
-		void insertIntoDatabase(ScheduleItem obj) throws NotFoundException {
+		protected void insertIntoDatabase(ScheduleItem obj) throws NotFoundException {
 			database.insertScheduleItem(obj.getSchedule().underlyingSchedule, obj.getCourse().underlyingCourse, obj.getInstructor().underlyingInstructor, obj.getLocation().underlyingLocation, obj.underlying);
 		}
-		void removeFromDatabase(ScheduleItem obj) {
+		protected void removeFromDatabase(ScheduleItem obj) {
 			database.deleteScheduleItem(obj.underlying);
+		}
+		@Override
+		protected void updateInDatabase(IDBScheduleItem obj) {
+			database.updateScheduleItem(obj);
 		}
 	};
 	
