@@ -68,7 +68,7 @@ class CourseDecorator {
 	}
 }
 
-class GenerationModelLayer {
+class GenerationDataLayer {
 	public static void blockOffInstructorUnacceptableTimes(InstructorDecorator instructor, Document document, HashMap<Integer, ScheduleItem> items) {
 		for (Day day : Day.values()) {
 			for (int halfHour = 0; halfHour < 48; halfHour++) {
@@ -94,7 +94,7 @@ class GenerationModelLayer {
 	private final HashMap<Integer, LocationDecorator> locations;
 	private final HashMap<Integer, CourseDecorator> courses;
 	
-	public GenerationModelLayer(Model model, Schedule schedule) throws NotFoundException {
+	public GenerationDataLayer(Model model, Schedule schedule) throws NotFoundException {
 		this.model = model;
 		this.schedule = schedule;
 		this.document = model.getDocumentForSchedule(schedule);
@@ -183,6 +183,7 @@ class GenerationModelLayer {
 			InstructorDecorator instructor, Set<Day> dayPattern,
 			int startHalfHour, int endHalfHour) {
 		System.out.println("Checking if instructor " + instructor.instructor.getUsername() + " is free " + dayPattern + " from " + startHalfHour + " to " + endHalfHour);
+		
 		for (Day day : dayPattern) {
 			for (int halfHour = startHalfHour; halfHour < endHalfHour; halfHour++) {
 				if (instructor.blockedOffTimes.blockedOffTimes[day.ordinal()][halfHour])
@@ -242,17 +243,17 @@ public class GenerationAlgorithm {
 	public static Collection<ScheduleItem> generateRestOfSchedule(Model model, Schedule schedule)
 			throws CouldNotBeScheduledException, NotFoundException {
 
-		GenerationModelLayer modelLayer = new GenerationModelLayer(model, schedule);
+		GenerationDataLayer dataLayer = new GenerationDataLayer(model, schedule);
 		
 		// LAUNCH ZE ALGORIZM
 		Collection<ScheduleItem> result = new LinkedList<ScheduleItem>();
-		for (CourseDecorator courseToSchedule : modelLayer.getCourses()) {
-			result.addAll(generateAndInsertScheduleItemsForCourse(modelLayer, courseToSchedule));
+		for (CourseDecorator courseToSchedule : dataLayer.getCourses()) {
+			result.addAll(generateAndInsertScheduleItemsForCourse(dataLayer, courseToSchedule));
 		}
 		return result;
 	}
 	
-	private static Collection<ScheduleItem> generateAndInsertScheduleItemsForCourse(GenerationModelLayer layer, CourseDecorator course) throws CouldNotBeScheduledException {
+	private static Collection<ScheduleItem> generateAndInsertScheduleItemsForCourse(GenerationDataLayer layer, CourseDecorator course) throws CouldNotBeScheduledException {
 		Collection<ScheduleItem> result = new LinkedList<ScheduleItem>();
 		for (int sectionNumber = course.numSectionsScheduled; sectionNumber < course.course.getNumSectionsInt(); sectionNumber++) {
 			ScheduleItem item = generateScheduleItemForCourse(layer, course, sectionNumber);
@@ -265,7 +266,7 @@ public class GenerationAlgorithm {
 	}
 	
 	private static ScheduleItem generateScheduleItemForCourse(
-			GenerationModelLayer layer, CourseDecorator course, int newSectionNumber) {
+			GenerationDataLayer layer, CourseDecorator course, int newSectionNumber) {
 		System.out.println("Generating course " + course.toString() + " section " + newSectionNumber);
 		for (Set<Day> possibleDayPattern : course.course.getDayPatterns()) {
 			ScheduleItem newScheduleItem = generateScheduleItemForCourseWithDayPattern(layer, course, newSectionNumber, possibleDayPattern);
@@ -276,7 +277,7 @@ public class GenerationAlgorithm {
 	}
 
 	private static ScheduleItem generateScheduleItemForCourseWithDayPattern(
-			GenerationModelLayer layer, CourseDecorator course,
+			GenerationDataLayer layer, CourseDecorator course,
 			int newSectionNumber, Set<Day> dayPattern) {
 		System.out.println("Trying generating course " + course.toString() + " section " + newSectionNumber + " on days " + dayPattern);
 		int numHalfHoursPerDay = course.course.getNumHalfHoursPerWeekInt() / dayPattern.size();
@@ -289,7 +290,7 @@ public class GenerationAlgorithm {
 	}
 
 	private static ScheduleItem generateScheduleItemForCourseWithDayPatternStartingAtTime(
-			GenerationModelLayer layer, CourseDecorator course, int newSectionNumber,
+			GenerationDataLayer layer, CourseDecorator course, int newSectionNumber,
 			Set<Day> dayPattern, int startHalfHour) {
 		int numHalfHoursPerDay = course.course.getNumHalfHoursPerWeekInt() / dayPattern.size();
 		int endHalfHour = startHalfHour + numHalfHoursPerDay;
@@ -312,12 +313,12 @@ public class GenerationAlgorithm {
 	}
 
 	public static void insertNewScheduleItem(Model model, Schedule schedule, ScheduleItem item) throws NotFoundException {
-		GenerationModelLayer modelLayer = new GenerationModelLayer(model, schedule);
+		GenerationDataLayer dataLayer = new GenerationDataLayer(model, schedule);
 		
-		insertNewScheduleItem(modelLayer, item);
+		insertNewScheduleItem(dataLayer, item);
 	}
 
-	private static void insertNewScheduleItem(GenerationModelLayer modelLayer, ScheduleItem item) {
-		modelLayer.insertNewScheduleItem(item);
+	private static void insertNewScheduleItem(GenerationDataLayer dataLayer, ScheduleItem item) {
+		dataLayer.insertNewScheduleItem(item);
 	}
 }

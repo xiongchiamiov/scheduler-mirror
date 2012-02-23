@@ -82,27 +82,10 @@ public abstract class TempAlgorithmTest extends ModelTestCase {
 		ModelTestUtility.addDayPattern(course, Day.MONDAY, Day.WEDNESDAY, Day.FRIDAY);
 		model.insertCourse(course);
 		
-		Instructor instructor = model.insertInstructor(model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", Instructor.createDefaultTimePreferences(), new HashMap<Integer, Integer>(), true));
+		Instructor instructor = model.assembleInstructor(doc, "Evan", "Ovadia", "eovadia", "20", Instructor.createDefaultTimePreferences(), new HashMap<Integer, Integer>(), true);
 		ModelTestUtility.setPreferenceBlocks(instructor, 0, 0, 48, Day.values());
-
-		for (int halfHour = 0; halfHour < 48; halfHour++) {
-			System.out.print(halfHour + ":");
-			for (Day day : Day.values()) {
-				System.out.print(" " + instructor.getTimePreferences(day, halfHour));
-			}
-			System.out.println();
-		}
-		
-		
 		ModelTestUtility.setPreferenceBlocks(instructor, 3, 20, 30, Day.values());
-		
-		for (int halfHour = 0; halfHour < 48; halfHour++) {
-			System.out.print(halfHour + ":");
-			for (Day day : Day.values()) {
-				System.out.print(" " + instructor.getTimePreferences(day, halfHour));
-			}
-			System.out.println();
-		}
+		model.insertInstructor(instructor);
 		
 		Schedule schedule = model.assembleSchedule(doc);
 		model.insertSchedule(schedule);
