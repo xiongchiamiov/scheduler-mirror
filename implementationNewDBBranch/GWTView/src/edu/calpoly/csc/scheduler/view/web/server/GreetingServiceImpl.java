@@ -235,7 +235,11 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		
 		System.out.println("updating w result!");
 		
-		result.update();
+		try {
+			result.update();
+		} catch (DatabaseException e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
 	@Override
@@ -290,13 +294,17 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	}
 
 	@Override
-	public Collection<DocumentGWT> getAllOriginalDocumentsByID() {
+	public Collection<DocumentGWT> getAllOriginalDocumentsByID()  {
 		Collection<DocumentGWT> result = new LinkedList<DocumentGWT>();
-		for (Document doc : model.findAllDocuments()) {
-			if (model.isOriginalDocument(doc)) {
-				int scheduleID = model.findSchedulesForDocument(doc).iterator().next().getID();
-				result.add(Conversion.documentToGWT(doc, scheduleID));
+		try {
+			for (Document doc : model.findAllDocuments()) {
+				if (model.isOriginalDocument(doc)) {
+					int scheduleID = model.findSchedulesForDocument(doc).iterator().next().getID();
+					result.add(Conversion.documentToGWT(doc, scheduleID));
+				}
 			}
+		} catch (DatabaseException e) {
+			throw new RuntimeException(e);
 		}
 		return result;
 	}

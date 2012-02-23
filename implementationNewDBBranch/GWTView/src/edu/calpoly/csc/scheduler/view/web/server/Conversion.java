@@ -56,7 +56,7 @@ public abstract class Conversion {
 		return gwtPrefs;
 	}
 	
-	public static InstructorGWT instructorToGWT(Instructor instructor) {
+	public static InstructorGWT instructorToGWT(Instructor instructor) throws DatabaseException {
 		return new InstructorGWT(
 				instructor.getID(),
 				instructor.getUsername(),
@@ -67,7 +67,7 @@ public abstract class Conversion {
 				instructor.getCoursePreferences());
 	}
 	
-	public static Course courseFromGWT(Model model, CourseGWT course) {
+	public static Course courseFromGWT(Model model, CourseGWT course) throws DatabaseException {
 		Collection<Set<Day>> modelDayPatterns = new LinkedList<Set<Day>>();
 		for (Set<DayGWT> gwtDayPattern : course.getDayPatterns())
 			modelDayPatterns.add(dayPatternFromGWT(gwtDayPattern));
@@ -88,7 +88,7 @@ public abstract class Conversion {
 		return result;
 	}
 	
-	public static Instructor instructorFromGWT(Model model, InstructorGWT instructor) {
+	public static Instructor instructorFromGWT(Model model, InstructorGWT instructor) throws DatabaseException {
 		Instructor result = model.createTransientInstructor(
 				instructor.getFirstName(),
 				instructor.getLastName(),
@@ -174,7 +174,7 @@ public abstract class Conversion {
 		result.setType(source.getType());
 	}
 
-	public static LocationGWT locationToGWT(Location location) {
+	public static LocationGWT locationToGWT(Location location) throws DatabaseException {
 		LocationGWT result = new LocationGWT(location.getID(), location.getRoom(), location.getType(), location.getMaxOccupancy(), location.getProvidedEquipment(), location.isSchedulable());
 		System.out.println("result room: " + result.getRoom() + " from " + location.getRoom());
 		return result;
