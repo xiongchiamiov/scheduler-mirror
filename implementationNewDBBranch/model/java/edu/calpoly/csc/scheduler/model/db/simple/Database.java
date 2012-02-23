@@ -1,16 +1,17 @@
 package edu.calpoly.csc.scheduler.model.db.simple;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
 import edu.calpoly.csc.scheduler.model.Day;
-import edu.calpoly.csc.scheduler.model.Document;
-import edu.calpoly.csc.scheduler.model.Schedule;
 import edu.calpoly.csc.scheduler.model.db.IDBCourse;
 import edu.calpoly.csc.scheduler.model.db.IDBCourseAssociation;
 import edu.calpoly.csc.scheduler.model.db.IDBCoursePreference;
@@ -31,7 +32,7 @@ import edu.calpoly.csc.scheduler.model.db.IDBUser;
 import edu.calpoly.csc.scheduler.model.db.IDatabase;
 
 public class Database implements IDatabase {
-	class SimpleTable<T extends DBObject> {
+	class SimpleTable<T extends DBObject> implements Serializable {
 		Map<Integer, T> objectsByID;
 		
 		public SimpleTable() {
@@ -849,4 +850,43 @@ public class Database implements IDatabase {
 		return documentTable.findByID(((DBLocation)underlyingInstructor).documentID);
 	}
 
+	@Override
+	public void writeState(ObjectOutputStream oos) throws IOException {
+		oos.writeObject(userTable);
+		oos.writeObject(documentTable);
+		oos.writeObject(scheduleTable);
+		oos.writeObject(scheduleItemTable);
+		oos.writeObject(courseTable);
+		oos.writeObject(locationTable);
+		oos.writeObject(instructorTable);
+		oos.writeObject(timePreferenceTable);
+		oos.writeObject(coursePreferenceTable);
+		oos.writeObject(equipmentTypeTable);
+		oos.writeObject(providedEquipmentTable);
+		oos.writeObject(usedEquipmentTable);
+		oos.writeObject(offeredDayPatternTable);
+	}
+
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void readState(ObjectInputStream ois) throws IOException {
+		try {
+			userTable = (SimpleTable<DBUser>)ois.readObject();
+			documentTable = (SimpleTable<DBDocument>)ois.readObject();
+			scheduleTable = (SimpleTable<DBSchedule>)ois.readObject();
+			scheduleItemTable = (SimpleTable<DBScheduleItem>)ois.readObject();
+			courseTable = (SimpleTable<DBCourse>)ois.readObject();
+			locationTable = (SimpleTable<DBLocation>)ois.readObject();
+			instructorTable = (SimpleTable<DBInstructor>)ois.readObject();
+			timePreferenceTable = (SimpleTable<DBTimePreference>)ois.readObject();
+			coursePreferenceTable = (SimpleTable<DBCoursePreference>)ois.readObject();
+			equipmentTypeTable = (SimpleTable<DBEquipmentType>)ois.readObject();
+			providedEquipmentTable = (SimpleTable<DBProvidedEquipment>)ois.readObject();
+			usedEquipmentTable = (SimpleTable<DBUsedEquipment>)ois.readObject();
+			offeredDayPatternTable = (SimpleTable<DBOfferedDayPattern>)ois.readObject();
+		} catch (ClassNotFoundException e) {
+			throw new IOException(e);
+		}
+	}
 }

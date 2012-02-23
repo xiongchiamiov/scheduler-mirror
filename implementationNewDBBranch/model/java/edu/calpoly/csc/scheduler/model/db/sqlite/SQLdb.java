@@ -1,5 +1,8 @@
 package edu.calpoly.csc.scheduler.model.db.sqlite;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -814,6 +817,18 @@ public class SQLdb implements IDatabase {
 			IDBInstructor underlyingInstructor) throws NotFoundException {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+
+	@Override
+	public void writeState(ObjectOutputStream oos) throws IOException {
+		throw new UnsupportedOperationException();
+	}
+
+
+	@Override
+	public void readState(ObjectInputStream ois) throws IOException {
+		throw new UnsupportedOperationException();
 	}
 	
 }

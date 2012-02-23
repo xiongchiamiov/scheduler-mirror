@@ -1,5 +1,8 @@
 package edu.calpoly.csc.scheduler.model.db;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
@@ -150,4 +153,7 @@ public interface IDatabase {
 	boolean isInserted(IDBScheduleItem underlying);
 	IDBObject findDocumentForLocation(IDBLocation underlyingLocation) throws NotFoundException;
 	IDBObject findDocumentForInstructor(IDBInstructor underlyingInstructor) throws NotFoundException;
+
+	void writeState(ObjectOutputStream oos) throws IOException;
+	void readState(ObjectInputStream ois) throws IOException;
 }

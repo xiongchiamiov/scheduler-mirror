@@ -109,7 +109,8 @@ public class ScheduleItem implements Identified {
 
 	public Course getCourse() throws NotFoundException {
 		if (!courseLoaded) {
-			assert(course == null);
+			if (course == null)
+				throw new NotFoundException();
 			course = model.findCourseByID(model.database.getScheduleItemCourse(underlying).getID());
 			courseLoaded = true;
 		}
@@ -121,12 +122,15 @@ public class ScheduleItem implements Identified {
 		courseLoaded = true;
 	}
 	
+	public boolean courseIsSet() { return courseLoaded; }
+	
 
 	// Course
 
 	public Location getLocation() throws NotFoundException {
 		if (!locationLoaded) {
-			assert(location == null);
+			if (location == null)
+				throw new NotFoundException();
 			location = model.findLocationByID(model.database.getScheduleItemLocation(underlying).getID());
 			locationLoaded = true;
 		}
@@ -137,13 +141,16 @@ public class ScheduleItem implements Identified {
 		location = newLocation;
 		locationLoaded = true;
 	}
+
+	public boolean locationIsSet() { return locationLoaded; }
 	
 
 	// Instructor
 
 	public Instructor getInstructor() throws NotFoundException {
 		if (!instructorLoaded) {
-			assert(instructor == null);
+			if (instructor == null)
+				throw new NotFoundException();
 			instructor = model.findInstructorByID(model.database.getScheduleItemInstructor(underlying).getID());
 			instructorLoaded = true;
 		}
@@ -154,5 +161,7 @@ public class ScheduleItem implements Identified {
 		instructor = newInstructor;
 		instructorLoaded = true;
 	}
+
+	public boolean instructorIsSet() { return instructorLoaded; }
 	
 }

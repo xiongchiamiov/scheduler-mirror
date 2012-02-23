@@ -6,6 +6,8 @@ import java.util.LinkedList;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import sun.tools.tree.NewInstanceExpression;
+
 import edu.calpoly.csc.scheduler.model.Course;
 import edu.calpoly.csc.scheduler.model.Day;
 import edu.calpoly.csc.scheduler.model.Document;
@@ -153,13 +155,12 @@ class GenerationDataLayer {
 		
 	}
 
-	public void insertNewScheduleItem(Course innerCourse,
-			Instructor innerInstructor, Location innerLocation, ScheduleItem item) throws NotFoundException {
+	public void insertNewScheduleItem(ScheduleItem item) throws NotFoundException {
 //		System.out.println("Inserting schedule item! Instructor " + item.getInstructor().getID() + " location " + item.getLocation().getID() + " course " + item.getCourse().getID() + " days " + item.getDays() + " from " + item.getStartHalfHour() + " to " + item.getEndHalfHour());
 
-		CourseDecorator course = courses.get(innerCourse.getID());
-		InstructorDecorator instructor = instructors.get(innerInstructor.getID());
-		LocationDecorator location = locations.get(innerLocation.getID());
+		CourseDecorator course = courses.get(item.getCourse().getID());
+		InstructorDecorator instructor = instructors.get(item.getInstructor().getID());
+		LocationDecorator location = locations.get(item.getLocation().getID());
 		
 		if (instructorIsFreeDuring(instructor, item.getDays(), item.getStartHalfHour(), item.getEndHalfHour()) &&
 				locationIsFreeDuring(location, item.getDays(), item.getStartHalfHour(), item.getEndHalfHour())) {
@@ -172,9 +173,6 @@ class GenerationDataLayer {
 		}
 		
 		item.setSchedule(schedule);
-		item.setCourse(innerCourse);
-		item.setInstructor(innerInstructor);
-		item.setLocation(innerLocation);
 		item.insert();
 	}
 	
@@ -226,9 +224,9 @@ class GenerationDataLayer {
 	}
 
 	public ScheduleItem assembleScheduleItem(int newSectionNumber,
-			Set<Day> dayPattern, int startHalfHour, int endHalfHour, boolean b,
-			boolean c) {
-		return model.createTransientScheduleItem(newSectionNumber, dayPattern, startHalfHour, endHalfHour, b, c);
+			Set<Day> dayPattern, int startHalfHour, int endHalfHour, boolean isPlaced,
+			boolean isConflicted) {
+		return model.createTransientScheduleItem(newSectionNumber, dayPattern, startHalfHour, endHalfHour, isPlaced, isConflicted);
 	}
 
 	public Collection<CourseDecorator> getCourses() { return courses.values(); }
@@ -268,6 +266,7 @@ public class GenerationAlgorithm {
 			ScheduleItem item = generateScheduleItemForCourse(layer, course, sectionNumber);
 			if (item == null)
 				throw new CouldNotBeScheduledException();
+			layer.insertNewScheduleItem(item);
 			result.add(item);
 		}
 		return result;
@@ -318,13 +317,36 @@ public class GenerationAlgorithm {
 		}
 
 		ScheduleItem item = layer.assembleScheduleItem(newSectionNumber, dayPattern, startHalfHour, endHalfHour, false, false);
-		layer.insertNewScheduleItem(course.course, instructorFreeAtThatTime.instructor, locationFreeAtThatTime.location, item);
+		item.setCourse(course.course);
+		item.setInstructor(instructorFreeAtThatTime.instructor);
+		item.setLocation(locationFreeAtThatTime.location);
 		return item;
 	}
 
-	public static void insertNewScheduleItem(Model model, Schedule schedule, Course course, Instructor instructor, Location location, ScheduleItem item) throws NotFoundException {
-		GenerationDataLayer dataLayer = new GenerationDataLayer(model, schedule);
+	public static void insertNewScheduleItem(Model model, Schedule schedule, ScheduleItem item) throws NotFoundException, CouldNotBeScheduledException {
+		GenerationDataLayer layer = new GenerationDataLayer(model, schedule);
 		
-		dataLayer.insertNewScheduleItem(course, instructor, location, item);
+		assert(item.courseIsSet());
+		
+		assert(item.getDays().size() > 0); // will implement this soon
+
+		assert(item.getStartHalfHour() > 0); // will implement this soon
+		assert(item.getEndHalfHour() > 0); // will implement this soon
+
+		if (!item.instructorIsSet()) {
+			InstructorDecorator newInstructor = layer.findInstructorFreeDuring(item.getDays(), item.getStartHalfHour(), item.getEndHalfHour());
+			if (newInstructor == null)
+				throw new CouldNotBeScheduledException();
+			item.setInstructor(newInstructor.instructor);
+		}
+
+		if (!item.locationIsSet()) {
+			LocationDecorator newLocation = layer.findLocationFreeDuring(item.getDays(), item.getStartHalfHour(), item.getEndHalfHour());
+			if (newLocation == null)
+				throw new CouldNotBeScheduledException();
+			item.setLocation(newLocation.location);
+		}
+		
+		layer.insertNewScheduleItem(item);
 	}
 }
