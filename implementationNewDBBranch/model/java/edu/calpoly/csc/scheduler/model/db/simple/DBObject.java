@@ -1,8 +1,10 @@
 package edu.calpoly.csc.scheduler.model.db.simple;
 
+import java.io.Serializable;
+
 import edu.calpoly.csc.scheduler.model.db.IDBObject;
 
-abstract class DBObject implements IDBObject {
+abstract class DBObject implements IDBObject, Serializable {
 	Integer id;
 	
 	@Override

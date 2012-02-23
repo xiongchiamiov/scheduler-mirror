@@ -32,7 +32,7 @@ import edu.calpoly.csc.scheduler.model.db.IDBUser;
 import edu.calpoly.csc.scheduler.model.db.IDatabase;
 
 public class Database implements IDatabase {
-	class SimpleTable<T extends DBObject> implements Serializable {
+	static class SimpleTable<T extends DBObject> implements Serializable {
 		Map<Integer, T> objectsByID;
 		
 		public SimpleTable() {
