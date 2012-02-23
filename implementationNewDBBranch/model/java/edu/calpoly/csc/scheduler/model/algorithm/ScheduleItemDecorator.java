@@ -9,6 +9,7 @@ import edu.calpoly.csc.scheduler.model.Instructor;
 import edu.calpoly.csc.scheduler.model.Location;
 import edu.calpoly.csc.scheduler.model.Model;
 import edu.calpoly.csc.scheduler.model.ScheduleItem;
+import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
 
 /**
  * Represents a single, scheduled item in the overall schedule. Contains 
@@ -50,10 +51,11 @@ public class ScheduleItemDecorator
     * ScheduleItem
     * 
     * @param si ScheduleItem we'll get all our fields from
+ * @throws NotFoundException 
     */
-   protected ScheduleItemDecorator (Model model, ScheduleItemDecorator si)
+   protected ScheduleItemDecorator (Model model, ScheduleItemDecorator si) throws NotFoundException
    {
-	   this.item = model.assembleScheduleItemCopy(si.item);
+	   this.item = si.item.createTransientCopy();
    }
 
    /**

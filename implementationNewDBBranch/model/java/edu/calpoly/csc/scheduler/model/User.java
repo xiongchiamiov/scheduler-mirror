@@ -1,14 +1,36 @@
 package edu.calpoly.csc.scheduler.model;
 
 import edu.calpoly.csc.scheduler.model.db.IDBUser;
+import edu.calpoly.csc.scheduler.model.db.IDatabase;
 
 public class User {
+	private final IDatabase database;
+	
 	final IDBUser underlyingUser;
 	
-	User(IDBUser underlyingUser) {
+	User(IDatabase database, IDBUser underlyingUser) {
+		this.database = database;
 		this.underlyingUser = underlyingUser;
 	}
+
+	// PERSISTENCE FUNCTIONS
+
+	public User insert() {
+		database.insertUser(underlyingUser);
+		return this;
+	}
+
+	public void update() {
+		database.updateUser(underlyingUser);
+	}
 	
+	public void delete() {
+		database.deleteUser(underlyingUser);
+	}
+
+
+	// ENTITY ATTRIBUTES
+
 	public String getUsername() { return underlyingUser.getUsername(); }
 	public void setUsername(String username) { underlyingUser.setUsername(username); }
 	

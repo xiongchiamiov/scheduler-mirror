@@ -149,4 +149,6 @@ public interface IDatabase {
 	IDBScheduleItem assembleScheduleItemCopy(IDBScheduleItem underlying);
 	IDBSchedule getScheduleItemSchedule(IDBScheduleItem underlying) throws NotFoundException;
 	boolean isInserted(IDBScheduleItem underlying);
+	IDBObject findDocumentForLocation(IDBLocation underlyingLocation) throws NotFoundException;
+	IDBObject findDocumentForInstructor(IDBInstructor underlyingInstructor) throws NotFoundException;
 }

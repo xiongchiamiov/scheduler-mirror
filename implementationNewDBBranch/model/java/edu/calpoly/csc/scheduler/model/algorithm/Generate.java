@@ -58,7 +58,7 @@ public class Generate {
 	    			  c.getTypeEnum() == Course.CourseType.DIS) { 
 	    		  
 	    		  debug ("Found act/dis/lab: " + c.getTypeEnum() + " " + c.getCatalogNumber() + " " + c.getName());
-	    		  labList.put(c.getLectureID(), c);
+	    		  labList.put(c.getLecture().getID(), c);
 	    	  }
 	    	  // IND/SEM treated as lectures until found otherwise     	  
 	      }
@@ -107,7 +107,7 @@ public class Generate {
 	                        try
 	                        {
 	                           add(model, sd, lab_si, items, sections);
-	                           lec_si.item.getLabIDs().add(lab_si.item.getCourseID());
+	                           lec_si.item.getLabIDs().add(lab_si.item.getCourse().getID());
 	                        }
 	                        catch (CouldNotBeScheduledException e)
 	                        {
@@ -416,8 +416,8 @@ public class Generate {
 	      si_list = findTimes(model, schedule, base, tr, sd);
 	      if (si_list.isEmpty())
 	      {
-	         ScheduleItem clone = model.assembleScheduleItemCopy(base);
-	         Course c = model.findCourseByID(base.getCourseID());
+	         ScheduleItem clone = base.createTransientCopy();
+	         Course c = model.findCourseByID(base.getCourse().getID());
 	         
 	         /*
 	          * Keep track of instructors we've tried so we don't use them again. 
@@ -425,7 +425,7 @@ public class Generate {
 	          * eager to please.
 	          */
 	         Vector<Integer> haveTriedInstructorIDs = new Vector<Integer>();
-	         haveTriedInstructorIDs.add(clone.getInstructorID());
+	         haveTriedInstructorIDs.add(clone.getInstructor().getID());
 	         do
 	         {
 	            Instructor i = findInstructor(c, haveTriedInstructorIDs, sd, i_list);
@@ -433,7 +433,7 @@ public class Generate {
 //	            debug ("NO TIMES FOUND FOR " + base.getInstructor());
 //	            debug ("TRYING " + i);
 	            
-	            clone.setInstructorID(i.getID());
+	            clone.setInstructor(i);
 	            si_list = findTimes(model, schedule, clone, tr, sd);
 	            haveTriedInstructorIDs.add(i.getID());
 	            
@@ -480,10 +480,10 @@ public class Generate {
 	   private static boolean verify (Model model, ScheduleDecorator schedule, ScheduleItemDecorator si, ScheduleDecorator sd) throws CouldNotBeScheduledException, NotFoundException
 	   {
 	      Week days = new Week(si.item.getDays());
-	      Course c = model.findCourseByID(si.item.getCourseID());
+	      Course c = model.findCourseByID(si.item.getCourse().getID());
 	      TimeRange tr = new TimeRange(si.item.getStartHalfHour(), si.item.getEndHalfHour());
-	      Instructor i = model.findInstructorByID(si.item.getInstructorID());
-	      Location l = model.findLocationByID(si.item.getLocationID());
+	      Instructor i = model.findInstructorByID(si.item.getInstructor().getID());
+	      Location l = model.findLocationByID(si.item.getLocation().getID());
 
 	      if (!isAvailable(i, days, tr, sd))
 	      {
@@ -643,8 +643,8 @@ public class Generate {
 	    */
 	   private static void book (Model model, ScheduleItemDecorator si, ScheduleDecorator sd, Vector<ScheduleItemDecorator> items, HashMap<Integer, SectionTracker> sections) throws NotFoundException
 	   {
-	      Instructor i = model.findInstructorByID(si.item.getInstructorID());
-	      Location l = model.findLocationByID(si.item.getLocationID());
+	      Instructor i = model.findInstructorByID(si.item.getInstructor().getID());
+	      Location l = model.findLocationByID(si.item.getLocation().getID());
 	      Week days = new Week(si.item.getDays());
 	      TimeRange tr = new TimeRange(si.item.getStartHalfHour(), si.item.getEndHalfHour());
 
@@ -655,7 +655,7 @@ public class Generate {
 
 	      sd.addWTU(i, si.getWtuTotal());
 
-	      SectionTracker st = getSectionTracker(model.findCourseByID(si.item.getCourseID()), sections);
+	      SectionTracker st = getSectionTracker(model.findCourseByID(si.item.getCourse().getID()), sections);
 	      st.addSection();
 	      si.item.setSection(st.getCurSection());
 	      
@@ -705,7 +705,7 @@ public class Generate {
 	      }
 	      return r;*/
 		   
-		   return model.findInstructorByID(lec_si.item.getInstructorID());
+		   return model.findInstructorByID(lec_si.item.getInstructor().getID());
 	   }
 	   
 	   /**
@@ -728,8 +728,8 @@ public class Generate {
 	   {
 	      debug("FINDING TIMES IN RANGE " + range);
 	      Vector<ScheduleItemDecorator> sis = new Vector<ScheduleItemDecorator>();
-	      Course c = model.findCourseByID(si.getCourseID());
-	      Instructor i = model.findInstructorByID(si.getInstructorID());
+	      Course c = model.findCourseByID(si.getCourse().getID());
+	      Instructor i = model.findInstructorByID(si.getInstructor().getID());
 	      
 	      TimeRange tr = new TimeRange(range.getS(), getDayLength(c));
 	      for (; tr.getE() < range.getE(); tr.addHalf())
@@ -746,7 +746,7 @@ public class Generate {
 	            if ((pref = getAvgPrefForTimeRange(i, days.iterator().next(), tr.getS(), tr.getE())) > 0)
 	            {
 	               debug("WANTS: " + pref);
-	               ScheduleItem toAdd = model.assembleScheduleItemCopy(si);
+	               ScheduleItem toAdd = si.createTransientCopy();
 	               toAdd.setDays(days.iterator().next().getDays());
 	               toAdd.setStartHalfHour(tr.getS());
 	               toAdd.setEndHalfHour(tr.getE());
@@ -790,14 +790,14 @@ public class Generate {
 	            debug ("TRYING LOCATION " + l + " with time " + tr);
 	            if (isAvailable(l, days, tr, sd))
 	            {
-	               if (providesFor(l, model.findCourseByID(si.item.getCourseID())))
+	               if (providesFor(l, model.findCourseByID(si.item.getCourse().getID())))
 	               {
 	                  /*
 	                   * I clone so we don't keep changing the same object...that'd
 	                   * be pretty bad.
 	                   */
-	                  ScheduleItem base = model.assembleScheduleItemCopy(si.item);
-	                  base.setLocationID(l.getID());
+	                  ScheduleItem base = si.item.createTransientCopy();
+	                  base.setLocation(l);
 
 	                  si_list.add(new ScheduleItemDecorator(base));
 	               }
@@ -848,10 +848,10 @@ public class Generate {
 	   public static ScheduleItemDecorator move (Model model, ScheduleDecorator sd, Vector<ScheduleItemDecorator> s_items, ScheduleItemDecorator si, Week days, int s) 
 	      throws CouldNotBeScheduledException, NotFoundException
 	   {
-	      ScheduleItemDecorator fresh_si = new ScheduleItemDecorator(model.assembleScheduleItemCopy(si.item));
+	      ScheduleItemDecorator fresh_si = new ScheduleItemDecorator(si.item.createTransientCopy());
 	      if (remove(model, sd, s_items, si, sd))
 	      {
-	         Course c = model.findCourseByID(si.item.getCourseID());
+	         Course c = model.findCourseByID(si.item.getCourse().getID());
 	         
 	         TimeRange tr = new TimeRange(s, splitLengthOverDays(c, days.size()));
 	      
@@ -910,9 +910,9 @@ public class Generate {
 	      {
 	         r = true;
 	         
-	         Course c = model.findCourseByID(si.item.getCourseID());
-	         Instructor i = model.findInstructorByID(si.item.getInstructorID());
-	         Location l = model.findLocationByID(si.item.getLocationID());
+	         Course c = model.findCourseByID(si.item.getCourse().getID());
+	         Instructor i = model.findInstructorByID(si.item.getInstructor().getID());
+	         Location l = model.findLocationByID(si.item.getLocation().getID());
 	         Week days = new Week(si.item.getDays());
 	         TimeRange tr = new TimeRange(si.item.getStartHalfHour(), si.item.getEndHalfHour());
 

@@ -77,10 +77,10 @@ public class CouldNotBeScheduledException extends Exception
       String r = "";
       
       r += "Could Not be Scheduled: " + this.type + "\n\n";
-      r += "Instructor: " + this.si.item.getInstructorID() + "\n";
+//      r += "Instructor: " + this.si.item.getInstructor().getID() + "\n";
       r += "Time:       " + ((float)this.si.item.getStartHalfHour()) / 2 + " to " + ((float)this.si.item.getEndHalfHour()) / 2 +  "\n";
       r += "Days:       " + this.si.item.getDays() + "\n";
-      r += "Location:   " + this.si.item.getLocationID() + "\n";
+//      r += "Location:   " + this.si.item.getLocation().getID() + "\n";
       
       return r;
    }

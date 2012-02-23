@@ -98,7 +98,7 @@ class GenerationDataLayer {
 	public GenerationDataLayer(Model model, Schedule schedule) throws NotFoundException {
 		this.model = model;
 		this.schedule = schedule;
-		this.document = model.getDocumentForSchedule(schedule);
+		this.document = schedule.getDocument();
 
 		Collection<ScheduleItem> existingItemsList = model.findAllScheduleItemsForSchedule(schedule);
 		Collection<Course> coursesToScheduleList = model.findCoursesForDocument(document);
@@ -145,9 +145,9 @@ class GenerationDataLayer {
 		}
 		
 		for (ScheduleItem item : existingItemsList) {
-			if (!courses.containsKey(item.getCourseID()))
+			if (!courses.containsKey(item.getCourse().getID()))
 				continue;
-			CourseDecorator course = courses.get(item.getCourseID());
+			CourseDecorator course = courses.get(item.getCourse().getID());
 			course.numSectionsScheduled++;
 		}
 		
@@ -155,7 +155,7 @@ class GenerationDataLayer {
 
 	public void insertNewScheduleItem(Course innerCourse,
 			Instructor innerInstructor, Location innerLocation, ScheduleItem item) {
-//		System.out.println("Inserting schedule item! Instructor " + item.getInstructorID() + " location " + item.getLocationID() + " course " + item.getCourseID() + " days " + item.getDays() + " from " + item.getStartHalfHour() + " to " + item.getEndHalfHour());
+//		System.out.println("Inserting schedule item! Instructor " + item.getInstructor().getID() + " location " + item.getLocation().getID() + " course " + item.getCourse().getID() + " days " + item.getDays() + " from " + item.getStartHalfHour() + " to " + item.getEndHalfHour());
 
 		CourseDecorator course = courses.get(innerCourse.getID());
 		InstructorDecorator instructor = instructors.get(innerInstructor.getID());
@@ -171,7 +171,11 @@ class GenerationDataLayer {
 			item.setIsConflicted(true);
 		}
 		
-		model.insertScheduleItem(schedule, innerCourse, innerInstructor, innerLocation, item);
+		item.setSchedule(schedule);
+		item.setCourse(innerCourse);
+		item.setInstructor(innerInstructor);
+		item.setLocation(innerLocation);
+		item.insert();
 	}
 	
 

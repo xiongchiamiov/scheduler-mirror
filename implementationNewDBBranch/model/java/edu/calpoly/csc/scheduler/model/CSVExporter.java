@@ -14,6 +14,8 @@ import java.util.Set;
 
 import com.csvreader.CsvWriter;
 
+import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
+
 /**
  * The Class CSVExporter.
  * Exports a model to a CSV formatted string.
@@ -220,16 +222,17 @@ public class CSVExporter {
 	 * @param conflictingSchedule.Item True is part of a conflicting schedule item, false if not 
 	 * @param item A Schedule.Item
 	 * @return the string of the Schedule.Item Number
+	 * @throws NotFoundException 
 	 */
-	private String compileScheduleItem(ScheduleItem item, Collection<ScheduleItem> others) {
+	private String compileScheduleItem(ScheduleItem item, Collection<ScheduleItem> others) throws NotFoundException {
 		int index = scheduleItemsRowIndexByID.get(item.getID());
 		if (index < 0) {
 			index = scheduleItems.size();
 			scheduleItems.add(new String[] {
 					"item#" + index,
-					"instructor#" + instructorRowIndexByID.get(item.getInstructorID()),
-					"course#" + courseRowIndexByID.get(item.getCourseID()),
-					"location#" + locationRowIndexByID.get(item.getLocationID()),
+					"instructor#" + instructorRowIndexByID.get(item.getInstructor().getID()),
+					"course#" + courseRowIndexByID.get(item.getCourse().getID()),
+					"location#" + locationRowIndexByID.get(item.getLocation().getID()),
 					Integer.toString(item.getSection()),
 					Boolean.toString(item.isPlaced()),
 					compileDayPattern(item.getDays()),
@@ -262,8 +265,9 @@ public class CSVExporter {
 	 * Turns Course data into a string and adds it to the global courses ArrayList
 	 * @param course A course
 	 * @return A string representing the course index
+	 * @throws NotFoundException 
 	 */
-	private String compileCourse(Course course, Collection<Course> others) {
+	private String compileCourse(Course course, Collection<Course> others) throws NotFoundException {
 		int index = courses.indexOf(course);
 		if (index < 0) {
 		    assert(false);
@@ -299,7 +303,7 @@ public class CSVExporter {
 					course.getNumHalfHoursPerWeek(),
 					dayPatterns,
 					course.getMaxEnrollment(),
-					compileCourse(findCourseByID(course.getLectureID(), others), others) // for associations
+					compileCourse(findCourseByID(course.getLecture().getID(), others), others) // for associations
 					});
 			assert(false);
 			/*
@@ -318,8 +322,9 @@ public class CSVExporter {
 	 * @param model A model
 	 * @return The CSV String
 	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws NotFoundException 
 	 */
-	public String export(Model model, Document document) throws IOException {
+	public String export(Model model, Document document) throws IOException, NotFoundException {
 		/* Gather model information into the global string ArrayLists */
 		for (Location location : model.findLocationsForDocument(document))
 			compileLocation(location);

@@ -19,6 +19,7 @@ import edu.calpoly.csc.scheduler.model.db.IDBDocument;
 import edu.calpoly.csc.scheduler.model.db.IDBEquipmentType;
 import edu.calpoly.csc.scheduler.model.db.IDBInstructor;
 import edu.calpoly.csc.scheduler.model.db.IDBLocation;
+import edu.calpoly.csc.scheduler.model.db.IDBObject;
 import edu.calpoly.csc.scheduler.model.db.IDBOfferedDayPattern;
 import edu.calpoly.csc.scheduler.model.db.IDBProvidedEquipment;
 import edu.calpoly.csc.scheduler.model.db.IDBSchedule;
@@ -844,6 +845,18 @@ public class Database implements IDatabase {
 		assert(false);
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+
+	@Override
+	public IDBObject findDocumentForLocation(IDBLocation underlyingLocation) throws NotFoundException {
+		return documentTable.findByID(((DBLocation)underlyingLocation).documentID);
+	}
+
+
+	@Override
+	public IDBObject findDocumentForInstructor(IDBInstructor underlyingInstructor) throws NotFoundException {
+		return documentTable.findByID(((DBLocation)underlyingInstructor).documentID);
 	}
 
 }
