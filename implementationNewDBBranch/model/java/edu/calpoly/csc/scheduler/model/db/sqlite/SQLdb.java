@@ -157,29 +157,76 @@ public class SQLdb implements IDatabase {
 		PreparedStatement stmnt = null;
 		
 		try {
-			stmnt = conn.prepareStatement("select * from document");
+			stmnt = conn.prepareStatement("select * from document inner join workingcopy using (id)");
 			
 			ResultSet rs = stmnt.executeQuery();
+			while (rs.next()) {
+				docs.add(new SQLDocument(rs.getInt("id"), rs.getString("name"), rs.getInt("originalDocID"),
+						rs.getInt("startHalfHour"), rs.getInt("endHalfHour")));
+			}
+			if (docs.size() == 0)
+			{
+				throw new NotFoundException();
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new DatabaseException(e);
 		}
 		
-		return null;
+		return docs;
 	}
 
 
 	@Override
 	public IDBDocument findDocumentByID(int id) throws DatabaseException {
-		// TODO Auto-generated method stub
-		return null;
+		SQLDocument doc = null;
+		PreparedStatement stmnt = null;
+		
+		try {
+			stmnt = conn.prepareStatement("select * from document inner join workingcopy using (id)" +
+					" where id = ?");
+			stmnt.setInt(1, id);
+			
+			ResultSet rs = stmnt.executeQuery();
+			if (rs.next()) {
+				doc = new SQLDocument(rs.getInt("id"), rs.getString("name"), rs.getInt("originalDocID"),
+						rs.getInt("startHalfHour"), rs.getInt("endHalfHour"));
+			}
+			else {
+				throw new NotFoundException();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DatabaseException(e);
+		}
+		
+		return doc;
 	}
 
 
 	@Override
 	public void insertDocument(IDBDocument document) throws DatabaseException {
-		// TODO Auto-generated method stub
+		PreparedStatement stmnt = null;
+		SQLDocument doc = (SQLDocument) document;
 		
+		try {
+			stmnt = conn.prepareStatement("insert into document (name, isTrash, startHalfHour, endHalfHour) values (?, ?, ?, ?)");
+			stmnt.setString(1, doc.getName());
+			stmnt.setBoolean(2, doc.isTrashed());
+			stmnt.setInt(3, doc.getStartHalfHour());
+			stmnt.setInt(4, doc.getEndHalfHour());
+			
+			stmnt.executeUpdate();
+			
+			if (doc.getOriginalId() != null) {
+				stmnt = conn.prepareStatement("insert into workingcopy (id, originalDocID) values (?, ?)");
+				stmnt.setInt(1, doc.getID());
+				stmnt.setInt(2, doc.getOriginalId());
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DatabaseException(e);
+		}
 	}
 
 
