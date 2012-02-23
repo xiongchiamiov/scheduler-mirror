@@ -1,15 +1,11 @@
 package edu.calpoly.csc.scheduler;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
 import edu.calpoly.csc.scheduler.model.Course;
-import edu.calpoly.csc.scheduler.model.Day;
 import edu.calpoly.csc.scheduler.model.Document;
-import edu.calpoly.csc.scheduler.model.Instructor;
 import edu.calpoly.csc.scheduler.model.Model;
 import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
 
@@ -18,13 +14,12 @@ public abstract class CoursesTest extends ModelTestCase
    private static final int START_HALF_HOUR = 14; // 7am
    private static final int END_HALF_HOUR   = 44; // 10pm
 
-   public void testTransientsNotInserted()
+   public void testTransientsNotInserted() throws NotFoundException
    {
       Model model = createBlankModel();
 
-      Document document = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
-      model.assembleCourse("Test", "101", "CSC", "4", "4", "1", "LEC", "60", "6", new HashSet<String>(),
-            new ArrayList<Set<Day>>(), true);
+      Document document = model.createTransientDocument("doc", START_HALF_HOUR, END_HALF_HOUR).insert();
+      model.createTransientCourse("Test", "101", "CSC", "4", "4", "1", "LEC", "60", "6", true);
 
       assertEquals(model.findInstructorsForDocument(document).size(), 0);
    }
@@ -34,10 +29,9 @@ public abstract class CoursesTest extends ModelTestCase
       
       int courseID;
       {
-         Document doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
-         courseID = model.insertCourse(doc, model.assembleCourse("Test", "101", "CSC", "4", "4", "1",
-               "LEC", "60", "6", new HashSet<String>(),
-               new ArrayList<Set<Day>>(), true)).getID();
+         Document doc = model.createTransientDocument("doc", START_HALF_HOUR, END_HALF_HOUR).insert();
+         courseID = model.createTransientCourse("Test", "101", "CSC", "4", "4", "1",
+               "LEC", "60", "6", true).setDocument(doc).insert().getID();
       }
       
       Course found = model.findCourseByID(courseID);
@@ -60,12 +54,12 @@ public abstract class CoursesTest extends ModelTestCase
       int courseID;
       
       {
-         doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
-         courseID = model.insertCourse(doc, ModelTestUtility.createCourse(model)).getID();
+         doc = model.createTransientDocument("doc", START_HALF_HOUR, END_HALF_HOUR).insert();
+         courseID = ModelTestUtility.createCourse(model).setDocument(doc).insert().getID();
       }
       
-      model.deleteCourse(model.findCourseByID(courseID));
-      model.deleteDocument(doc);
+      model.findCourseByID(courseID).delete();
+      doc.delete();
       
       assertTrue(model.isEmpty());
    }
@@ -75,9 +69,9 @@ public abstract class CoursesTest extends ModelTestCase
       
       int courseID;
       
-      Document doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
+      Document doc = model.createTransientDocument("doc", START_HALF_HOUR, END_HALF_HOUR).insert();
       {
-         Course course = model.insertCourse(doc, ModelTestUtility.createCourse(model));
+         Course course = ModelTestUtility.createCourse(model).setDocument(doc).insert();
          course.setDepartment("NotCSC");
          courseID = course.getID();
       }
@@ -94,8 +88,8 @@ public abstract class CoursesTest extends ModelTestCase
       int courseID;
       
       {
-         Document doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
-         Course course = model.insertCourse(doc, ModelTestUtility.createCourse(model));
+         Document doc = model.createTransientDocument("doc", START_HALF_HOUR, END_HALF_HOUR).insert();
+         Course course = ModelTestUtility.createCourse(model).setDocument(doc).insert();
          course.setCatalogNumber("999");
          course.setDepartment("NotCSC");
          course.setIsSchedulable(false);
@@ -107,7 +101,7 @@ public abstract class CoursesTest extends ModelTestCase
          course.setType("LAB");
          course.setWTU("8");
          courseID = course.getID();
-         model.updateCourse(course);
+         course.update();
       }
       
       Course course = model.findCourseByID(courseID);
@@ -130,10 +124,10 @@ public abstract class CoursesTest extends ModelTestCase
       int courseID;
       
       {
-         doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
-         Course course = model.insertCourse(doc, ModelTestUtility.createCourse(model));
+         doc = model.createTransientDocument("doc", START_HALF_HOUR, END_HALF_HOUR).insert();
+         Course course = ModelTestUtility.createCourse(model).setDocument(doc).insert();
          courseID = course.getID();
-         model.deleteCourse(course);
+         course.delete();
       }
       
       try {
@@ -142,23 +136,21 @@ public abstract class CoursesTest extends ModelTestCase
       }
       catch (NotFoundException e) { }
       
-      model.deleteDocument(doc);
+      doc.delete();
       
       assertTrue(model.isEmpty());
    }
    
-   public void testFindAllCoursesForDocument() {
+   public void testFindAllCoursesForDocument() throws NotFoundException {
       Model model = createBlankModel();
 
       Set<Integer> courseIDs = new HashSet<Integer>();
       
-      Document doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
-      courseIDs.add(model.insertCourse(doc, model.assembleCourse("Test", "101", "CSC", "4", "4", "1",
-            "LEC", "60", "6", new HashSet<String>(),
-            new ArrayList<Set<Day>>(), true)).getID());
-      courseIDs.add(model.insertCourse(doc, model.assembleCourse("Test1", "1011", "CSC1", "8", "8", "2",
-            "LAB", "10", "4", new HashSet<String>(),
-            new ArrayList<Set<Day>>(), true)).getID());
+      Document doc = model.createTransientDocument("doc", START_HALF_HOUR, END_HALF_HOUR).insert();
+      courseIDs.add(model.createTransientCourse("Test", "101", "CSC", "4", "4", "1",
+            "LEC", "60", "6", true).setDocument(doc).insert().getID());
+      courseIDs.add(model.createTransientCourse("Test1", "1011", "CSC1", "8", "8", "2",
+            "LAB", "10", "4", true).setDocument(doc).insert().getID());
       
       Collection<Course> returnedCourses = model.findCoursesForDocument(doc);
       for (Course returnedDoc : returnedCourses) {
@@ -168,19 +160,17 @@ public abstract class CoursesTest extends ModelTestCase
       assertTrue(courseIDs.isEmpty());
    }
    
-   public void testFindAllCoursesInMultipleDocuments() {
+   public void testFindAllCoursesInMultipleDocuments() throws NotFoundException {
       Model model = createBlankModel();
 
       {
          Set<Integer> courseIDs1 = new HashSet<Integer>();
          
-         Document doc1 = model.insertDocument(model.assembleDocument("doc1", START_HALF_HOUR, END_HALF_HOUR));
-         courseIDs1.add(model.insertCourse(doc1, model.assembleCourse("Test", "101", "CSC", "4", "4", "1",
-               "LEC", "60", "6", new HashSet<String>(),
-               new ArrayList<Set<Day>>(), true)).getID());
-         courseIDs1.add(model.insertCourse(doc1, model.assembleCourse("Test1", "1011", "CSC1", "8", "8", "2",
-               "LAB", "10", "4", new HashSet<String>(),
-               new ArrayList<Set<Day>>(), true)).getID());
+         Document doc1 = model.createTransientDocument("doc1", START_HALF_HOUR, END_HALF_HOUR).insert();
+         courseIDs1.add(model.createTransientCourse("Test", "101", "CSC", "4", "4", "1",
+               "LEC", "60", "6", true).setDocument(doc1).insert().getID());
+         courseIDs1.add(model.createTransientCourse("Test1", "1011", "CSC1", "8", "8", "2",
+               "LAB", "10", "4", true).setDocument(doc1).insert().getID());
          
          Collection<Course> returnedCourses = model.findCoursesForDocument(doc1);
          for (Course returnedDoc : returnedCourses) {
@@ -193,13 +183,11 @@ public abstract class CoursesTest extends ModelTestCase
       {
          Set<Integer> courseIDs2 = new HashSet<Integer>();
          
-         Document doc2 = model.insertDocument(model.assembleDocument("doc2", START_HALF_HOUR, END_HALF_HOUR));
-         courseIDs2.add(model.insertCourse(doc2, model.assembleCourse("2Test", "2101", "2CSC", "24", "24", "21",
-               "LEC", "260", "26", new HashSet<String>(),
-               new ArrayList<Set<Day>>(), true)).getID());
-         courseIDs2.add(model.insertCourse(doc2, model.assembleCourse("2Test1", "21011", "2CSC1", "28", "28", "22",
-               "LAB", "210", "24", new HashSet<String>(),
-               new ArrayList<Set<Day>>(), true)).getID());
+         Document doc2 = model.createTransientDocument("doc2", START_HALF_HOUR, END_HALF_HOUR).insert();
+         courseIDs2.add(model.createTransientCourse("2Test", "2101", "2CSC", "24", "24", "21",
+               "LEC", "260", "26", true).setDocument(doc2).insert().getID());
+         courseIDs2.add(model.createTransientCourse("2Test1", "21011", "2CSC1", "28", "28", "22",
+               "LAB", "210", "24", true).setDocument(doc2).insert().getID());
          
          Collection<Course> returnedCourses = model.findCoursesForDocument(doc2);
          for (Course returnedDoc : returnedCourses) {

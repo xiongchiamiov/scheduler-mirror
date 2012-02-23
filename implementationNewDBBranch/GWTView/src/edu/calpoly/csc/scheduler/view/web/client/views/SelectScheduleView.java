@@ -658,7 +658,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
 
                DOM.setElementAttribute(popup.getElement(), "id", "failSchedPopup");
 
-               service.createDocument(newDocName, new AsyncCallback<DocumentGWT>() {
+               service.createDocumentAndGetWorkingCopy(newDocName, new AsyncCallback<DocumentGWT>() {
 				
 				@Override
 				public void onSuccess(DocumentGWT result) {

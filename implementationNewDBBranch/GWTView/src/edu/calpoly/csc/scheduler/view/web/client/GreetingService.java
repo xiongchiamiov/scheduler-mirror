@@ -100,7 +100,9 @@ public interface GreetingService extends RemoteService {
 
 	Integer login(String username) throws InvalidLoginException;
 
-	DocumentGWT createDocument(String newDocName);
+	DocumentGWT createDocumentAndGetWorkingCopy(String newDocName) throws NotFoundExceptionGWT;
+	
+	void updateDocument(DocumentGWT document) throws NotFoundExceptionGWT;
 
 	Collection<DocumentGWT> getAllOriginalDocumentsByID();
 

@@ -1,6 +1,5 @@
 package edu.calpoly.csc.scheduler;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,26 +15,26 @@ public abstract class DocumentsTest extends ModelTestCase {
 	private static final int START_HALF_HOUR = 14; // 7am
 	private static final int END_HALF_HOUR = 44; // 10pm
 
-	public void testInsertDocument() {
+	public void testInsertDocument() throws NotFoundException {
 		Model model = createBlankModel();
 
-		model.insertDocument(model.assembleDocument("doc1", 14, 44));
+		model.createTransientDocument("doc1", 14, 44).insert();
 	}
 
-	public void testInsertDocuments() {
+	public void testInsertDocuments() throws NotFoundException {
 		Model model = createBlankModel();
 
-		model.insertDocument(model.assembleDocument("doc1", START_HALF_HOUR,
-				END_HALF_HOUR));
-		model.insertDocument(model.assembleDocument("doc2", START_HALF_HOUR,
-				END_HALF_HOUR));
+		model.createTransientDocument("doc1", START_HALF_HOUR,
+				END_HALF_HOUR).insert();
+		model.createTransientDocument("doc2", START_HALF_HOUR,
+				END_HALF_HOUR).insert();
 	}
 
 	public void testInsertAndFindDocument() throws NotFoundException {
 		Model model = createBlankModel();
 
-		int documentID = model.insertDocument(
-				model.assembleDocument("doc1", START_HALF_HOUR, END_HALF_HOUR))
+		int documentID = 
+				model.createTransientDocument("doc1", START_HALF_HOUR, END_HALF_HOUR).insert()
 				.getID();
 
 		Document foundDocument = model.findDocumentByID(documentID);
@@ -49,17 +48,13 @@ public abstract class DocumentsTest extends ModelTestCase {
 		int documentID;
 
 		{
-			Document document = model.assembleDocument("doc1", START_HALF_HOUR,
+			Document document = model.createTransientDocument("doc1", START_HALF_HOUR,
 					END_HALF_HOUR);
-			model.insertDocument(document);
+			document.insert();
 			document.setName("doc1renamed");
 			documentID = document.getID();
 
-			// make sure that it doesnt change in the db until we call
-			// updateDocument
-			assert (model.findDocumentByID(documentID).getName().equals("doc1"));
-
-			model.updateDocument(document);
+			document.update();
 		}
 
 		assert (model.findDocumentByID(documentID).getName()
@@ -72,15 +67,15 @@ public abstract class DocumentsTest extends ModelTestCase {
 		int documentID;
 
 		{
-			Document document = model.insertDocument(model.assembleDocument(
-					"doc1", START_HALF_HOUR, END_HALF_HOUR));
+			Document document = model.createTransientDocument(
+					"doc1", START_HALF_HOUR, END_HALF_HOUR).insert();
 			documentID = document.getID();
-			model.deleteDocument(document);
+			document.delete();
 		}
 
 		try {
 			model.findDocumentByID(documentID);
-			assert (false); // should have failed
+			fail();
 		} catch (NotFoundException e) {
 		}
 	}
@@ -91,7 +86,7 @@ public abstract class DocumentsTest extends ModelTestCase {
 		{
 			Document document = insertFullDocumentIntoModel(model);
 			documentID = document.getID();
-			model.deleteDocument(document);
+			document.delete();
 		}
 		try {
 			model.findDocumentByID(documentID);
@@ -100,26 +95,25 @@ public abstract class DocumentsTest extends ModelTestCase {
 		}
 	}
 
-	public void testDatabaseIsEmptyAfterDelete() {
+	public void testDatabaseIsEmptyAfterDelete() throws NotFoundException {
 		Model model = createBlankModel();
 		assert (model.isEmpty());
 		Document document = insertFullDocumentIntoModel(model);
-		model.deleteDocument(document);
+		document.delete();
 		assertTrue(model.isEmpty());
 	}
 	
-	public void testScheduleConsistancy()
+	public void testScheduleConsistancy() throws NotFoundException
 	{
 		Model model = createBlankModel();
-		Document predocument = model.insertDocument(model.assembleDocument("doc1",
-				START_HALF_HOUR, END_HALF_HOUR));
+		Document predocument = model.createTransientDocument("doc1",
+				START_HALF_HOUR, END_HALF_HOUR).insert();
 		int documentID = predocument.getID();
-		Course precourse = ModelTestUtility.createCourse(model);
-		Location prelocation = ModelTestUtility.createLocation(model);
-		Instructor preinstructor = ModelTestUtility.createBasicInstructor(model);
-		model.insertCourse(predocument, precourse);
-		model.insertLocation(predocument, prelocation);
-		model.insertInstructor(predocument, preinstructor);
+		
+		Course precourse = ModelTestUtility.createCourse(model).setDocument(predocument).insert();
+		Location prelocation = ModelTestUtility.createLocation(model).setDocument(predocument).insert();
+		Instructor preinstructor = ModelTestUtility.createBasicInstructor(model).setDocument(predocument).insert();
+		
 		try {
 			Document postdocument = model.findDocumentByID(documentID);
 			Course postcourse = ((Collection<Course>) model.findCoursesForDocument(postdocument)).iterator().next();
@@ -132,27 +126,26 @@ public abstract class DocumentsTest extends ModelTestCase {
 		}
 	}
 
-	private Document insertFullDocumentIntoModel(Model model) {
-		Document document = model.insertDocument(model.assembleDocument("doc1",
-				START_HALF_HOUR, END_HALF_HOUR));
-		model.insertCourse(document, ModelTestUtility.createCourse(model));
-		model.insertInstructor(document, ModelTestUtility.createBasicInstructor(model));
-		model.insertLocation(document, ModelTestUtility.createLocation(model));
-		model.insertSchedule(document, model.assembleSchedule());
+	private Document insertFullDocumentIntoModel(Model model) throws NotFoundException {
+		Document document = model.createTransientDocument("doc1",
+				START_HALF_HOUR, END_HALF_HOUR).insert();;
+		ModelTestUtility.createCourse(model).setDocument(document).insert();
+		ModelTestUtility.createBasicInstructor(model).setDocument(document).insert();
+		ModelTestUtility.createLocation(model).setDocument(document).insert();
+		model.createTransientSchedule().setDocument(document).insert();
 		return document;
 	}
 
-	public void testFindAllDocuments() {
+	public void testFindAllDocuments() throws NotFoundException {
 		Model model = createBlankModel();
 
 		Set<Integer> docIDs = new HashSet<Integer>();
 
-		docIDs.add(model.insertDocument(
-				model.assembleDocument("doc1", START_HALF_HOUR, END_HALF_HOUR))
+		docIDs.add(model.createTransientDocument("doc1", START_HALF_HOUR, END_HALF_HOUR).insert()
 				.getID());
-		docIDs.add(model.insertDocument(
-				model.assembleDocument("doc2", START_HALF_HOUR, END_HALF_HOUR))
-				.getID());
+		docIDs.add(
+				model.createTransientDocument("doc2", START_HALF_HOUR, END_HALF_HOUR)
+				.insert().getID());
 
 		Collection<Document> docs = model.findAllDocuments();
 		for (Document returnedDoc : docs) {

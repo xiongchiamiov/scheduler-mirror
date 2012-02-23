@@ -71,7 +71,7 @@ public abstract class Conversion {
 		for (Set<DayGWT> gwtDayPattern : course.getDayPatterns())
 			modelDayPatterns.add(dayPatternFromGWT(gwtDayPattern));
 		
-		return model.assembleCourse(
+		Course result = model.createTransientCourse(
 						course.getCourseName(),
 						course.getCatalogNum(),
 						course.getDept(),
@@ -81,20 +81,22 @@ public abstract class Conversion {
 						course.getType(),
 						course.getMaxEnroll(),
 						course.getHalfHoursPerWeek(),
-						course.getUsedEquipment(),
-						modelDayPatterns,
 						course.isSchedulable());
+		result.setDayPatterns(modelDayPatterns);
+		result.setUsedEquipment(course.getUsedEquipment());
+		return result;
 	}
 	
 	public static Instructor instructorFromGWT(Model model, InstructorGWT instructor) {
-		return model.assembleInstructor(
+		Instructor result = model.createTransientInstructor(
 				instructor.getFirstName(),
 				instructor.getLastName(),
 				instructor.getUsername(),
 				instructor.getRawMaxWtu(),
-				instructor.gettPrefs(),
-				instructor.getCoursePreferences(),
 				instructor.isSchedulable());
+		result.setTimePreferences(instructor.gettPrefs());
+		result.setCoursePreferences(instructor.getCoursePreferences());
+		return result;
 	}
 
 	static Set<DayGWT> dayPatternToGWT(Set<Day> modelDayPattern) {
@@ -111,7 +113,7 @@ public abstract class Conversion {
 		return modelDayPattern;
 	}
 
-	static CourseGWT courseToGWT(Course course) {
+	static CourseGWT courseToGWT(Course course) throws NotFoundException {
 		Collection<Set<DayGWT>> dayPatterns = new LinkedList<Set<DayGWT>>();
 		for (Set<Day> combo : course.getDayPatterns())
 			dayPatterns.add(dayPatternToGWT(combo));
@@ -126,7 +128,7 @@ public abstract class Conversion {
 				course.getNumSections(),
 				course.getType(),
 				course.getMaxEnrollment(),
-				course.getLectureID(),
+				course.getLecture().getID(),
 				course.getNumHalfHoursPerWeek(),
 				dayPatterns,
 				course.getID(),
@@ -182,7 +184,7 @@ public abstract class Conversion {
 	}
 
 	@Deprecated
-	public static OldScheduleItemGWT scheduleItemFromGWTToOldGWT(ScheduleItemGWT source, Course course, Instructor instructor, Location location) {
+	public static OldScheduleItemGWT scheduleItemFromGWTToOldGWT(ScheduleItemGWT source, Course course, Instructor instructor, Location location) throws NotFoundException {
 		CourseGWT courseGWT = courseToGWT(course);
 		LocationGWT locationGWT = locationToGWT(location);
 		InstructorGWT instructorGWT = instructorToGWT(instructor);
@@ -260,30 +262,45 @@ public abstract class Conversion {
 	public static ScheduleItem scheduleItemFromGWT(Model model, Schedule schedule, ScheduleItemGWT source) throws NotFoundException {
 		Set<Day> dayPattern = dayPatternFromGWT(source.getDays());
 		
-		return model.assembleScheduleItem(
+		ScheduleItem result = model.createTransientScheduleItem(
 				source.getSection(),
 				dayPattern,
 				source.getStartHalfHour(),
 				source.getEndHalfHour(),
 				source.isPlaced(),
 				source.isConflicted());
+		if (source.getCourseID() >= 0)
+			result.setCourse(model.findCourseByID(source.getCourseID()));
+		if (source.getInstructorID() >= 0)
+			result.setInstructor(model.findInstructorByID(source.getInstructorID()));
+		if (source.getLocationID() >= 0)
+			result.setLocation(model.findLocationByID(source.getLocationID()));
+		return result;
 	}
 
-	public static ScheduleItemGWT scheduleItemToGWT(ScheduleItem item) {
+	public static ScheduleItemGWT scheduleItemToGWT(ScheduleItem item) throws NotFoundException {
 		Set<DayGWT> pattern = dayPatternToGWT(item.getDays());
-		return new ScheduleItemGWT(item.getID(), item.getCourseID(), item.getInstructorID(), item.getLocationID(), item.getSection(), pattern, item.getStartHalfHour(), item.getEndHalfHour(), item.isPlaced(), item.isConflicted());
+		return new ScheduleItemGWT(item.getID(), item.getCourse().getID(), item.getInstructor().getID(), item.getLocation().getID(), item.getSection(), pattern, item.getStartHalfHour(), item.getEndHalfHour(), item.isPlaced(), item.isConflicted());
 	}
 
-	public static void readScheduleItemFromGWT(ScheduleItemGWT itemGWT, ScheduleItem item) {
-		item.setCourseID(itemGWT.getCourseID());
+	public static void readScheduleItemFromGWT(Model model, ScheduleItemGWT itemGWT, ScheduleItem item) throws NotFoundException {
+		item.setCourse(model.findCourseByID(itemGWT.getCourseID()));
 		item.setDays(Conversion.dayPatternFromGWT(itemGWT.getDays()));
 		item.setEndHalfHour(itemGWT.getEndHalfHour());
-		item.setInstructorID(itemGWT.getInstructorID());
+		item.setInstructor(model.findInstructorByID(itemGWT.getInstructorID()));
 		item.setIsConflicted(itemGWT.isConflicted());
 		item.setIsPlaced(itemGWT.isPlaced());
-		item.setLocationID(itemGWT.getLocationID());
+		item.setLocation(model.findLocationByID(itemGWT.getLocationID()));
 		item.setSection(itemGWT.getSection());
 		item.setStartHalfHour(itemGWT.getStartHalfHour());
+	}
+
+	public static Document readDocumentFromGWT(Model model, DocumentGWT documentGWT) throws NotFoundException {
+		Document document = model.findDocumentByID(documentGWT.getID());
+
+		document.setName(documentGWT.getName());
+		
+		return document;
 	}
 
 //	public static Instructor fromGWT(InstructorGWT instructor, Map<Integer, Course> coursesByID) {

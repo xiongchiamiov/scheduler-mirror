@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
+
 public class InstructorGWT implements Serializable, Identified {
 	private static final long serialVersionUID = -4982539363690274674L;
 	

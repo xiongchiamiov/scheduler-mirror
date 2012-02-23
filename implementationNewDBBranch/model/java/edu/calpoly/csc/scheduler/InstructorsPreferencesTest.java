@@ -21,11 +21,14 @@ public abstract class InstructorsPreferencesTest extends ModelTestCase {
 		int instructorID;
 		
 		{
-			Document doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
+			Document doc = model.createTransientDocument("doc", START_HALF_HOUR, END_HALF_HOUR).insert();
 			
 			int[][] timePrefs = ModelTestUtility.createSampleTimePreferences(doc);
 			
-			instructorID = model.insertInstructor(doc, model.assembleInstructor("Evan", "Ovadia", "eovadia", "20", timePrefs, new HashMap<Integer, Integer>(), true)).getID();
+			instructorID = model.createTransientInstructor("Evan", "Ovadia", "eovadia", "20", true)
+					.setTimePreferences(timePrefs)
+					.setDocument(doc).insert()
+					.getID();
 		}
 		
 		Instructor found = model.findInstructorByID(instructorID);
@@ -44,16 +47,20 @@ public abstract class InstructorsPreferencesTest extends ModelTestCase {
 		int courseID2;
 		
 		{
-			Document doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
+			Document doc = model.createTransientDocument("doc", START_HALF_HOUR, END_HALF_HOUR).insert();
 
-			courseID1 = model.insertCourse(doc, model.assembleCourse("Graphics", "201", "GRC", "10", "20", "2", "LEC", "20", "6", new TreeSet<String>(), new LinkedList<Set<Day>>(), true)).getID();
-			courseID2 = model.insertCourse(doc, model.assembleCourse("Graphics: The Return", "202", "GRC", "10", "20", "2", "LEC", "20", "6", new TreeSet<String>(), new LinkedList<Set<Day>>(), true)).getID();
+			courseID1 = model.createTransientCourse("Graphics", "201", "GRC", "10", "20", "2", "LEC", "20", "6", true).setDocument(doc).insert().getID();
+			courseID2 = model.createTransientCourse("Graphics: The Return", "202", "GRC", "10", "20", "2", "LEC", "20", "6", true).setDocument(doc).insert().getID();
 			
 			HashMap<Integer, Integer> coursePrefs = new HashMap<Integer, Integer>();
 			coursePrefs.put(courseID1, 2);
 			coursePrefs.put(courseID2, 3);
 			
-			instructorID = model.insertInstructor(doc, model.assembleInstructor("Evan", "Ovadia", "eovadia", "20", Instructor.createDefaultTimePreferences(), coursePrefs, true)).getID();
+			instructorID = model.createTransientInstructor("Evan", "Ovadia", "eovadia", "20", true)
+					.setTimePreferences(Instructor.createDefaultTimePreferences())
+					.setCoursePreferences(coursePrefs)
+					.setDocument(doc).insert()
+					.getID();
 		}
 		
 		Instructor found = model.findInstructorByID(instructorID);
@@ -61,12 +68,12 @@ public abstract class InstructorsPreferencesTest extends ModelTestCase {
 		assertTrue(found.getCoursePreferences().get(courseID2).equals(3));
 	}
 
-	public void testUtilityInstructorEquals() {
+	public void testUtilityInstructorEquals() throws NotFoundException {
 		Model model = createBlankModel();
-		Document doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
+		Document doc = model.createTransientDocument("doc", START_HALF_HOUR, END_HALF_HOUR).insert();
 		
-		int courseID1 = model.insertCourse(doc, model.assembleCourse("Graphics", "201", "GRC", "10", "20", "2", "LEC", "20", "6", new TreeSet<String>(), new LinkedList<Set<Day>>(), true)).getID();
-		int courseID2 = model.insertCourse(doc, model.assembleCourse("Graphics: The Return", "202", "GRC", "10", "20", "2", "LEC", "20", "6", new TreeSet<String>(), new LinkedList<Set<Day>>(), true)).getID();
+		int courseID1 = model.createTransientCourse("Graphics", "201", "GRC", "10", "20", "2", "LEC", "20", "6", true).setDocument(doc).insert().getID();
+		int courseID2 = model.createTransientCourse("Graphics: The Return", "202", "GRC", "10", "20", "2", "LEC", "20", "6", true).setDocument(doc).insert().getID();
 		
 		HashMap<Integer, Integer> coursePrefs1 = new HashMap<Integer, Integer>();
 		coursePrefs1.put(courseID1, 2);
@@ -74,15 +81,21 @@ public abstract class InstructorsPreferencesTest extends ModelTestCase {
 		
 		int[][] timePrefs1 = ModelTestUtility.createSampleTimePreferences(doc);
 		
-		Instructor ins1 = model.insertInstructor(doc, model.assembleInstructor("Evan", "Ovadia", "eovadia", "20", timePrefs1, coursePrefs1, true));
+		Instructor ins1 = model.createTransientInstructor("Evan", "Ovadia", "eovadia", "20", true)
+				.setTimePreferences(timePrefs1)
+				.setCoursePreferences(coursePrefs1)
+				.setDocument(doc).insert();
 		
 		HashMap<Integer, Integer> coursePrefs2 = new HashMap<Integer, Integer>();
 		coursePrefs2.put(courseID1, 2);
 		coursePrefs2.put(courseID2, 3);
 		
 		int[][] timePrefs2 = ModelTestUtility.createSampleTimePreferences(doc);
-		
-		Instructor ins2 = model.insertInstructor(doc, model.assembleInstructor("Evan", "Ovadia", "eovadia", "20", timePrefs2, coursePrefs2, true));
+
+		Instructor ins2 = model.createTransientInstructor("Evan", "Ovadia", "eovadia", "20", true)
+				.setTimePreferences(timePrefs2)
+				.setCoursePreferences(coursePrefs2)
+				.setDocument(doc).insert();
 		
 		
 		assertTrue(ModelTestUtility.instructorsContentsEqual(ins1, ins2));

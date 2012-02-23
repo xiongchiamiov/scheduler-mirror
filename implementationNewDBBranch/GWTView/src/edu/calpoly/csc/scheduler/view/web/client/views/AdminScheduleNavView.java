@@ -201,7 +201,17 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 	}
 
 	protected void afterSavePressed() {
-		assert(false);
+		service.saveWorkingCopyToOriginalDocument(document.getID(), new AsyncCallback<Void>() {
+			@Override
+			public void onSuccess(Void result) {
+				Window.alert("Successfully saved!");
+			}
+			
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert("Failed to save! " + caught.getMessage());
+			}
+		});
 	}
 
 	protected void afterSaveAsPressed() {

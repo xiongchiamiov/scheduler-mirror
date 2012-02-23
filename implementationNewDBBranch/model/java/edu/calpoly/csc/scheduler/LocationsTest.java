@@ -13,15 +13,15 @@ import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
 public abstract class LocationsTest extends ModelTestCase {
 	private static final int START_HALF_HOUR = 14; // 7am
 	private static final int END_HALF_HOUR = 44; // 10pm
-	
+
 	public void testInsertAndFindLocation() throws NotFoundException {
 		Model model = createBlankModel();
 		
 		int locationID;
 		
 		{
-			Document doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
-			locationID = model.insertLocation(doc, model.assembleLocation("roomlol", "LEC", "30", new HashSet<String>(), true)).getID();
+			Document doc = model.createTransientDocument("doc", START_HALF_HOUR, END_HALF_HOUR).insert();
+			locationID = model.createTransientLocation("roomlol", "LEC", "30", true).setDocument(doc).insert().getID();
 		}
 		
 		Location found = model.findLocationByID(locationID);
@@ -30,22 +30,14 @@ public abstract class LocationsTest extends ModelTestCase {
 		assertTrue(found.getMaxOccupancy().equals("30"));
 	}
 
-	public void testModifyLocationValueDoesntAutomaticallyUpdateDatabase() throws NotFoundException {
+	public void testInsertAndFindLocationSameInstance() throws NotFoundException {
 		Model model = createBlankModel();
 		
-		int locationID;
+		Document doc = model.createTransientDocument("doc", START_HALF_HOUR, END_HALF_HOUR).insert();
+		Location insertedLocation = model.createTransientLocation("roomlol", "LEC", "30", true).setDocument(doc).insert();
 		
-		{
-			Document doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
-			Location ins = model.insertLocation(doc, model.assembleLocation("roomlol", "LEC", "30", new HashSet<String>(), true));
-			ins.setRoom("derpalisk");
-			locationID = ins.getID();
-		}
-		
-		{
-			Location ins = model.findLocationByID(locationID);
-			assertTrue(ins.getRoom().equals("roomlol"));
-		}
+		Location found = model.findLocationByID(insertedLocation.getID());
+		assert(insertedLocation == found);
 	}
 	
 	public void testUpdateLocation() throws NotFoundException {
@@ -54,13 +46,13 @@ public abstract class LocationsTest extends ModelTestCase {
 		int locationID;
 		
 		{
-			Document doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
-			Location ins = model.insertLocation(doc, model.assembleLocation("roomlol", "LEC", "30", new HashSet<String>(), true));
+			Document doc = model.createTransientDocument("doc", START_HALF_HOUR, END_HALF_HOUR).insert();
+			Location ins = model.createTransientLocation("roomlol", "LEC", "30", true).setDocument(doc).insert();
 			ins.setRoom("hark");
 			ins.setType("derp");
 			ins.setMaxOccupancy("40");
 			locationID = ins.getID();
-			model.updateLocation(ins);
+			ins.update();
 		}
 		
 		Location ins = model.findLocationByID(locationID);
@@ -75,10 +67,10 @@ public abstract class LocationsTest extends ModelTestCase {
 		int locationID;
 		
 		{
-			Document doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
-			Location ins = model.insertLocation(doc, model.assembleLocation("roomlol", "LEC", "30", new HashSet<String>(), true));
+			Document doc = model.createTransientDocument("doc", START_HALF_HOUR, END_HALF_HOUR).insert();
+			Location ins = model.createTransientLocation("roomlol", "LEC", "30", true).setDocument(doc).insert();
 			locationID = ins.getID();
-			model.deleteLocation(ins);
+			ins.delete();
 		}
 		
 		try {
@@ -88,14 +80,14 @@ public abstract class LocationsTest extends ModelTestCase {
 		catch (NotFoundException e) { }
 	}
 	
-	public void testFindAllLocationsForDocument() {
+	public void testFindAllLocationsForDocument() throws NotFoundException {
 		Model model = createBlankModel();
 
 		Set<Integer> locationIDs = new HashSet<Integer>();
 		
-		Document doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
-		locationIDs.add(model.insertLocation(doc, model.assembleLocation("roomlol", "LEC", "30", new HashSet<String>(), true)).getID());
-		locationIDs.add(model.insertLocation(doc, model.assembleLocation("room2lol", "LEC", "20", new HashSet<String>(), true)).getID());
+		Document doc = model.createTransientDocument("doc", START_HALF_HOUR, END_HALF_HOUR).insert();
+		locationIDs.add(model.createTransientLocation("roomlol", "LEC", "30", true).setDocument(doc).insert().getID());
+		locationIDs.add(model.createTransientLocation("room2lol", "LEC", "20", true).setDocument(doc).insert().getID());
 		
 		Collection<Location> returnedLocations = model.findLocationsForDocument(doc);
 		for (Location returnedDoc : returnedLocations) {
@@ -105,15 +97,15 @@ public abstract class LocationsTest extends ModelTestCase {
 		assertTrue(locationIDs.isEmpty());
 	}
 
-	public void testFindAllLocationsInMultipleDocuments() {
+	public void testFindAllLocationsInMultipleDocuments() throws NotFoundException {
 		Model model = createBlankModel();
 
 		{
 			Set<Integer> locationIDs1 = new HashSet<Integer>();
 			
-			Document doc1 = model.insertDocument(model.assembleDocument("doc1", START_HALF_HOUR, END_HALF_HOUR));
-			locationIDs1.add(model.insertLocation(doc1, model.assembleLocation("roomlol", "LEC", "30", new HashSet<String>(), true)).getID());
-			locationIDs1.add(model.insertLocation(doc1, model.assembleLocation("room2lol", "LEC", "20", new HashSet<String>(), true)).getID());
+			Document doc1 = model.createTransientDocument("doc1", START_HALF_HOUR, END_HALF_HOUR).insert();
+			locationIDs1.add(model.createTransientLocation("roomlol", "LEC", "30", true).setDocument(doc1).insert().getID());
+			locationIDs1.add(model.createTransientLocation("room2lol", "LEC", "20", true).setDocument(doc1).insert().getID());
 			
 			Collection<Location> returnedLocations1 = model.findLocationsForDocument(doc1);
 			for (Location returnedDoc : returnedLocations1) {
@@ -126,9 +118,9 @@ public abstract class LocationsTest extends ModelTestCase {
 		{
 			Set<Integer> locationIDs2 = new HashSet<Integer>();
 			
-			Document doc2 = model.insertDocument(model.assembleDocument("doc2", START_HALF_HOUR, END_HALF_HOUR));
-			locationIDs2.add(model.insertLocation(doc2, model.assembleLocation("room3lol", "LEC", "35", new HashSet<String>(), true)).getID());
-			locationIDs2.add(model.insertLocation(doc2, model.assembleLocation("room4lol", "LEC", "30", new HashSet<String>(), true)).getID());
+			Document doc2 = model.createTransientDocument("doc2", START_HALF_HOUR, END_HALF_HOUR).insert();
+			locationIDs2.add(model.createTransientLocation("room3lol", "LEC", "35", true).setDocument(doc2).insert().getID());
+			locationIDs2.add(model.createTransientLocation("room4lol", "LEC", "30", true).setDocument(doc2).insert().getID());
 			
 			Collection<Location> returnedLocations2 = model.findLocationsForDocument(doc2);
 			for (Location returnedDoc : returnedLocations2) {

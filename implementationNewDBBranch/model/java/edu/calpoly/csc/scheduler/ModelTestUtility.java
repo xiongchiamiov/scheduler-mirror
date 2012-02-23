@@ -1,12 +1,7 @@
 package edu.calpoly.csc.scheduler;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Map.Entry;
-import java.util.Set;
 import java.util.TreeSet;
 
 import edu.calpoly.csc.scheduler.model.Course;
@@ -15,25 +10,26 @@ import edu.calpoly.csc.scheduler.model.Document;
 import edu.calpoly.csc.scheduler.model.Instructor;
 import edu.calpoly.csc.scheduler.model.Location;
 import edu.calpoly.csc.scheduler.model.Model;
+import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
 
 public class ModelTestUtility {
 	public static Course createCourse(Model model) {
-		return model.assembleCourse("Test", "101", "CSC", "4", "4", "1",
-				"LEC", "60", "6", new HashSet<String>(),
-				new ArrayList<Set<Day>>(), true);
+		return model.createTransientCourse("Test", "101", "CSC", "4", "4", "1",
+				"LEC", "60", "6",  true);
 	}
 	
 	public static Location createLocation(Model model) {
-		return model.assembleLocation("123", "LEC", "60", new HashSet<String>(), true);
+		return model.createTransientLocation("123", "LEC", "60", true);
 	}
 	
 	public static Instructor createBasicInstructor(Model model) {
-		return model.assembleInstructor("TestFirst", "TestLast", "testid", "4", Instructor.createDefaultTimePreferences(), new HashMap<Integer, Integer>(), true);
+		return model.createTransientInstructor("TestFirst", "TestLast", "testid", "4", true)
+				.setTimePreferences( Instructor.createDefaultTimePreferences());
 	}
 	
-	public static Instructor insertInstructorWPrefs(Model model, Document doc) {
-		int courseID1 = model.insertCourse(doc, model.assembleCourse("Graphics", "201", "GRC", "10", "20", "2", "LEC", "20", "6", new TreeSet<String>(), new LinkedList<Set<Day>>(), true)).getID();
-		int courseID2 = model.insertCourse(doc, model.assembleCourse("Graphics: The Return", "202", "GRC", "10", "20", "2", "LEC", "20", "6", new TreeSet<String>(), new LinkedList<Set<Day>>(), true)).getID();
+	public static Instructor insertInstructorWPrefs(Model model, Document doc) throws NotFoundException {
+		int courseID1 = model.createTransientCourse("Graphics", "201", "GRC", "10", "20", "2", "LEC", "20", "6", true).setDocument(doc).insert().getID();
+		int courseID2 = model.createTransientCourse("Graphics: The Return", "202", "GRC", "10", "20", "2", "LEC", "20", "6", true).setDocument(doc).insert().getID();
 		
 		HashMap<Integer, Integer> coursePrefs = new HashMap<Integer, Integer>();
 		coursePrefs.put(courseID1, 2);
@@ -41,17 +37,20 @@ public class ModelTestUtility {
 		
 		int[][] timePrefs = createSampleTimePreferences(doc);
 		
-		return model.insertInstructor(doc, model.assembleInstructor("Evan", "Ovadia", "eovadia", "20", timePrefs, coursePrefs, true));
+		return model.createTransientInstructor("Evan", "Ovadia", "eovadia", "20", true)
+				.setTimePreferences(timePrefs)
+				.setCoursePreferences(coursePrefs)
+				.setDocument(doc).insert();
 	}
 	
-	public static boolean coursesContentsEqual(Course a, Course b) {
+	public static boolean coursesContentsEqual(Course a, Course b) throws NotFoundException {
 		if (!a.getCatalogNumber().equals(b.getCatalogNumber()))
 			return false;
 		if (!a.getDayPatterns().equals(b.getDayPatterns()))
 			return false;
 		if (!a.getDepartment().equals(b.getDepartment()))
 			return false;
-		if (a.getLectureID() != b.getLectureID())
+		if (a.getLecture() != b.getLecture())
 			return false;
 		if (!a.getMaxEnrollment().equals(b.getMaxEnrollment()))
 			return false;

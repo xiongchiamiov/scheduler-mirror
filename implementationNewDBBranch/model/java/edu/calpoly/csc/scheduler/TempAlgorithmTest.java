@@ -24,20 +24,21 @@ public abstract class TempAlgorithmTest extends ModelTestCase {
 	public void testGenerate() throws NotFoundException, CouldNotBeScheduledException {
 		Model model = createBlankModel();
 		
-		Document doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
+		Document doc = model.createTransientDocument("doc", START_HALF_HOUR, END_HALF_HOUR).insert();
 		
-		model.insertLocation(doc, model.assembleLocation("roomlol", "LEC", "30", new HashSet<String>(), true));
+		model.createTransientLocation("roomlol", "LEC", "30", true).setDocument(doc).insert();
 		
-		Course course = model.assembleCourse("Test", "101", "CSC", "4", "4", "1", "LEC", "60", "6", new HashSet<String>(), new ArrayList<Set<Day>>(), true);
+		Course course = model.createTransientCourse("Test", "101", "CSC", "4", "4", "1", "LEC", "60", "6", true);
 		ModelTestUtility.addDayPattern(course, Day.MONDAY, Day.WEDNESDAY, Day.FRIDAY);
-		model.insertCourse(doc, course);
+		course.setDocument(doc).insert();
 		
-		Instructor instructor = model.insertInstructor(doc, model.assembleInstructor("Evan", "Ovadia", "eovadia", "20", Instructor.createDefaultTimePreferences(), new HashMap<Integer, Integer>(), true));
+		Instructor instructor = model.createTransientInstructor("Evan", "Ovadia", "eovadia", "20", true)
+				.setTimePreferences(Instructor.createDefaultTimePreferences())
+				.setDocument(doc).insert();
 		ModelTestUtility.setPreferenceBlocks(instructor, 0, 0, 48, Day.values());
 		ModelTestUtility.setPreferenceBlocks(instructor, 3, 20, 30, Day.values());
 		
-		Schedule schedule = model.assembleSchedule();
-		model.insertSchedule(doc, schedule);
+		Schedule schedule = model.createTransientSchedule().setDocument(doc).insert();
 		
 		Collection<ScheduleItem> result = GenerationAlgorithm.generateRestOfSchedule(model, schedule);
 		assertEquals(result.size(), 1);
@@ -49,20 +50,21 @@ public abstract class TempAlgorithmTest extends ModelTestCase {
 	public void testGenerateMultiple() throws NotFoundException, CouldNotBeScheduledException {
 		Model model = createBlankModel();
 		
-		Document doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
+		Document doc = model.createTransientDocument("doc", START_HALF_HOUR, END_HALF_HOUR).insert();
 		
-		model.insertLocation(doc, model.assembleLocation("roomlol", "LEC", "30", new HashSet<String>(), true));
+		model.createTransientLocation("roomlol", "LEC", "30", true).setDocument(doc).insert();
 		
-		Course course = model.assembleCourse("Test", "101", "CSC", "4", "4", "2", "LEC", "60", "6", new HashSet<String>(), new ArrayList<Set<Day>>(), true);
+		Course course = model.createTransientCourse("Test", "101", "CSC", "4", "4", "2", "LEC", "60", "6", true);
 		ModelTestUtility.addDayPattern(course, Day.MONDAY, Day.WEDNESDAY, Day.FRIDAY);
-		model.insertCourse(doc, course);
-		
-		Instructor instructor = model.insertInstructor(doc, model.assembleInstructor("Evan", "Ovadia", "eovadia", "20", Instructor.createDefaultTimePreferences(), new HashMap<Integer, Integer>(), true));
+		course.setDocument(doc).insert();
+
+		Instructor instructor = model.createTransientInstructor("Evan", "Ovadia", "eovadia", "20", true)
+				.setTimePreferences(Instructor.createDefaultTimePreferences())
+				.setDocument(doc).insert();
 		ModelTestUtility.setPreferenceBlocks(instructor, 0, 0, 48, Day.values());
 		ModelTestUtility.setPreferenceBlocks(instructor, 3, 20, 30, Day.values());
 		
-		Schedule schedule = model.assembleSchedule();
-		model.insertSchedule(doc, schedule);
+		Schedule schedule = model.createTransientSchedule().setDocument(doc).insert();
 		
 		Collection<ScheduleItem> result = GenerationAlgorithm.generateRestOfSchedule(model, schedule);
 		assertEquals(result.size(), 2);
@@ -74,21 +76,22 @@ public abstract class TempAlgorithmTest extends ModelTestCase {
 	public void testRunOutOfInstructors() throws NotFoundException, CouldNotBeScheduledException {
 		Model model = createBlankModel();
 		
-		Document doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
+		Document doc = model.createTransientDocument("doc", START_HALF_HOUR, END_HALF_HOUR).insert();
 		
-		model.insertLocation(doc, model.assembleLocation("roomlol", "LEC", "30", new HashSet<String>(), true));
+		model.createTransientLocation("roomlol", "LEC", "30", true).setDocument(doc).insert();
 		
-		Course course = model.assembleCourse("Test", "101", "CSC", "4", "4", "6", "LEC", "60", "6", new HashSet<String>(), new ArrayList<Set<Day>>(), true);
+		Course course = model.createTransientCourse("Test", "101", "CSC", "4", "4", "6", "LEC", "60", "6", true);
 		ModelTestUtility.addDayPattern(course, Day.MONDAY, Day.WEDNESDAY, Day.FRIDAY);
-		model.insertCourse(doc, course);
-		
-		Instructor instructor = model.assembleInstructor("Evan", "Ovadia", "eovadia", "20", Instructor.createDefaultTimePreferences(), new HashMap<Integer, Integer>(), true);
+		course.setDocument(doc).insert();
+
+		Instructor instructor = model.createTransientInstructor("Evan", "Ovadia", "eovadia", "20", true)
+				.setTimePreferences(Instructor.createDefaultTimePreferences())
+				.setDocument(doc).insert();
 		ModelTestUtility.setPreferenceBlocks(instructor, 0, 0, 48, Day.values());
 		ModelTestUtility.setPreferenceBlocks(instructor, 3, 20, 30, Day.values());
-		model.insertInstructor(doc, instructor);
+		instructor.update();
 		
-		Schedule schedule = model.assembleSchedule();
-		model.insertSchedule(doc, schedule);
+		Schedule schedule = model.createTransientSchedule().setDocument(doc).insert();
 		
 		try {
 			GenerationAlgorithm.generateRestOfSchedule(model, schedule);
@@ -104,16 +107,16 @@ public abstract class TempAlgorithmTest extends ModelTestCase {
 		for (ScheduleItem item : model.findAllScheduleItemsForSchedule(schedule)) {
 			if (item.isConflicted())
 				continue;
-			if (blockedOffTimesByInstructorID.get(item.getInstructorID()) == null)
-				blockedOffTimesByInstructorID.put(item.getInstructorID(), new boolean[Day.values().length][48]);
-			if (blockedOffTimesByLocationID.get(item.getLocationID()) == null)
-				blockedOffTimesByLocationID.put(item.getLocationID(), new boolean[Day.values().length][48]);
+			if (blockedOffTimesByInstructorID.get(item.getInstructor().getID()) == null)
+				blockedOffTimesByInstructorID.put(item.getInstructor().getID(), new boolean[Day.values().length][48]);
+			if (blockedOffTimesByLocationID.get(item.getLocation().getID()) == null)
+				blockedOffTimesByLocationID.put(item.getLocation().getID(), new boolean[Day.values().length][48]);
 			for (Day day : item.getDays()) {
 				for (int halfHour = item.getStartHalfHour(); halfHour < item.getEndHalfHour(); halfHour++) {
-					assertTrue(blockedOffTimesByInstructorID.get(item.getInstructorID())[day.ordinal()][halfHour] == false);
-					blockedOffTimesByInstructorID.get(item.getInstructorID())[day.ordinal()][halfHour] = true;
-					assertTrue(blockedOffTimesByLocationID.get(item.getLocationID())[day.ordinal()][halfHour] == false);
-					blockedOffTimesByLocationID.get(item.getLocationID())[day.ordinal()][halfHour] = true;
+					assertTrue(blockedOffTimesByInstructorID.get(item.getInstructor().getID())[day.ordinal()][halfHour] == false);
+					blockedOffTimesByInstructorID.get(item.getInstructor().getID())[day.ordinal()][halfHour] = true;
+					assertTrue(blockedOffTimesByLocationID.get(item.getLocation().getID())[day.ordinal()][halfHour] == false);
+					blockedOffTimesByLocationID.get(item.getLocation().getID())[day.ordinal()][halfHour] = true;
 				}
 			}
 		}
@@ -125,7 +128,7 @@ public abstract class TempAlgorithmTest extends ModelTestCase {
 				continue;
 			for (Day day : item.getDays()) {
 				for (int halfHour = item.getStartHalfHour(); halfHour < item.getEndHalfHour(); halfHour++) {
-					int[][] timePrefs = model.findInstructorByID(item.getInstructorID()).getTimePreferences();
+					int[][] timePrefs = model.findInstructorByID(item.getInstructor().getID()).getTimePreferences();
 					assertTrue(timePrefs[day.ordinal()][halfHour] > 0);
 				}
 			}

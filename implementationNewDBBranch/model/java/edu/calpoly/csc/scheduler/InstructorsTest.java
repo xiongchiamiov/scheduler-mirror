@@ -15,11 +15,11 @@ public abstract class InstructorsTest extends ModelTestCase {
 	private static final int START_HALF_HOUR = 14; // 7am
 	private static final int END_HALF_HOUR = 44; // 10pm
 	
-	public void testTransientsNotInserted() {
+	public void testTransientsNotInserted() throws NotFoundException {
 		Model model = createBlankModel();
 		
-		Document doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
-		model.assembleInstructor("Evan", "Ovadia", "eovadia", "20", Instructor.createDefaultTimePreferences(), new HashMap<Integer, Integer>(), true);
+		Document doc = model.createTransientDocument("doc", START_HALF_HOUR, END_HALF_HOUR).insert();
+		model.createTransientInstructor("Evan", "Ovadia", "eovadia", "20", true);
 		
 		assertEquals(model.findInstructorsForDocument(doc).size(), 0);
 	}
@@ -30,8 +30,10 @@ public abstract class InstructorsTest extends ModelTestCase {
 		int instructorID;
 		
 		{
-			Document doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
-			instructorID = model.insertInstructor(doc, model.assembleInstructor("Evan", "Ovadia", "eovadia", "20", Instructor.createDefaultTimePreferences(), new HashMap<Integer, Integer>(), true)).getID();
+			Document doc = model.createTransientDocument("doc", START_HALF_HOUR, END_HALF_HOUR).insert();
+			instructorID = model.createTransientInstructor("Evan", "Ovadia", "eovadia", "20", true)
+					.setDocument(doc).insert()
+					.getID();
 		}
 		
 		Instructor found = model.findInstructorByID(instructorID);
@@ -47,11 +49,14 @@ public abstract class InstructorsTest extends ModelTestCase {
 		int instructorID;
 		
 		{
-			Document doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
+			Document doc = model.createTransientDocument("doc", START_HALF_HOUR, END_HALF_HOUR).insert();
 			
 			int[][] timePrefs = ModelTestUtility.createSampleTimePreferences(doc);
 			
-			instructorID = model.insertInstructor(doc, model.assembleInstructor("Evan", "Ovadia", "eovadia", "20", timePrefs, new HashMap<Integer, Integer>(), true)).getID();
+			instructorID = model.createTransientInstructor("Evan", "Ovadia", "eovadia", "20", true).
+					setTimePreferences(timePrefs)
+					.setDocument(doc).insert()
+					.getID();
 		}
 		
 		Instructor found = model.findInstructorByID(instructorID);
@@ -68,35 +73,18 @@ public abstract class InstructorsTest extends ModelTestCase {
 		int instructorID;
 		
 		{
-			doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
+			doc = model.createTransientDocument("doc", START_HALF_HOUR, END_HALF_HOUR).insert();
 			
-			int[][] timePrefs = ModelTestUtility.createSampleTimePreferences(doc);
-			
-			instructorID = model.insertInstructor(doc, model.assembleInstructor("Evan", "Ovadia", "eovadia", "20", timePrefs, new HashMap<Integer, Integer>(), true)).getID();
+			instructorID = model.createTransientInstructor("Evan", "Ovadia", "eovadia", "20", true)
+					.setTimePreferences(ModelTestUtility.createSampleTimePreferences(doc))
+					.setDocument(doc).insert()
+					.getID();
 		}
 		
-		model.deleteInstructor(model.findInstructorByID(instructorID));
-		model.deleteDocument(doc);
+		model.findInstructorByID(instructorID).delete();
+		doc.delete();
 		
 		assertTrue(model.isEmpty());
-	}
-	
-	public void testModifyInstructorValueDoesntAutomaticallyUpdateDatabase() throws NotFoundException {
-		Model model = createBlankModel();
-		
-		int instructorID;
-		
-		{
-			Document doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
-			Instructor ins = model.insertInstructor(doc, model.assembleInstructor("Evan", "Ovadia", "eovadia", "20", Instructor.createDefaultTimePreferences(), new HashMap<Integer, Integer>(), true));
-			ins.setFirstName("Verdagon");
-			instructorID = ins.getID();
-		}
-		
-		{
-			Instructor ins = model.findInstructorByID(instructorID);
-			assertTrue(ins.getFirstName().equals("Evan"));
-		}
 	}
 	
 	public void testUpdateInstructor() throws NotFoundException {
@@ -105,14 +93,16 @@ public abstract class InstructorsTest extends ModelTestCase {
 		int instructorID;
 		
 		{
-			Document doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
-			Instructor ins = model.insertInstructor(doc, model.assembleInstructor("Evan", "Ovadia", "eovadia", "20", Instructor.createDefaultTimePreferences(), new HashMap<Integer, Integer>(), true));
+			Document doc = model.createTransientDocument("doc", START_HALF_HOUR, END_HALF_HOUR).insert();
+			Instructor ins = model.createTransientInstructor("Evan", "Ovadia", "eovadia", "20", true)
+					.setTimePreferences(Instructor.createDefaultTimePreferences())
+					.setDocument(doc).insert();
 			ins.setFirstName("Verdagon");
 			ins.setLastName("Kalland");
 			ins.setUsername("vkalland");
 			ins.setMaxWTU("30");
 			instructorID = ins.getID();
-			model.updateInstructor(ins);
+			ins.update();
 		}
 		
 		Instructor ins = model.findInstructorByID(instructorID);
@@ -129,10 +119,12 @@ public abstract class InstructorsTest extends ModelTestCase {
 		int instructorID;
 		
 		{
-			doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
-			Instructor ins = model.insertInstructor(doc, model.assembleInstructor("Evan", "Ovadia", "eovadia", "20", Instructor.createDefaultTimePreferences(), new HashMap<Integer, Integer>(), true));
+			doc = model.createTransientDocument("doc", START_HALF_HOUR, END_HALF_HOUR).insert();
+			Instructor ins = model.createTransientInstructor("Evan", "Ovadia", "eovadia", "20", true)
+					.setTimePreferences(Instructor.createDefaultTimePreferences())
+					.setDocument(doc).insert();
 			instructorID = ins.getID();
-			model.deleteInstructor(ins);
+			ins.delete();
 		}
 		
 		try {
@@ -141,19 +133,27 @@ public abstract class InstructorsTest extends ModelTestCase {
 		}
 		catch (NotFoundException e) { }
 		
-		model.deleteDocument(doc);
+		doc.delete();
 		
 		assertTrue(model.isEmpty());
 	}
 	
-	public void testFindAllInstructorsForDocument() {
+	public void testFindAllInstructorsForDocument() throws NotFoundException {
 		Model model = createBlankModel();
 
 		Set<Integer> instructorIDs = new HashSet<Integer>();
 		
-		Document doc = model.insertDocument(model.assembleDocument("doc", START_HALF_HOUR, END_HALF_HOUR));
-		instructorIDs.add(model.insertInstructor(doc, model.assembleInstructor("Evan", "Ovadia", "eovadia", "20", Instructor.createDefaultTimePreferences(), new HashMap<Integer, Integer>(), true)).getID());
-		instructorIDs.add(model.insertInstructor(doc, model.assembleInstructor("Herp", "Derp", "hderp", "10", Instructor.createDefaultTimePreferences(), new HashMap<Integer, Integer>(), true)).getID());
+		Document doc = model.createTransientDocument("doc", START_HALF_HOUR, END_HALF_HOUR).insert();
+		instructorIDs.add(
+				model.createTransientInstructor("Evan", "Ovadia", "eovadia", "20", true)
+				.setTimePreferences(Instructor.createDefaultTimePreferences())
+				.setDocument(doc).insert()
+				.getID());
+		instructorIDs.add(
+				model.createTransientInstructor("Herp", "Derp", "hderp", "10", true)
+				.setTimePreferences(Instructor.createDefaultTimePreferences())
+				.setDocument(doc).insert()
+				.getID());
 		
 		Collection<Instructor> returnedInstructors = model.findInstructorsForDocument(doc);
 		for (Instructor returnedDoc : returnedInstructors) {
@@ -163,15 +163,23 @@ public abstract class InstructorsTest extends ModelTestCase {
 		assertTrue(instructorIDs.isEmpty());
 	}
 
-	public void testFindAllInstructorsInMultipleDocuments() {
+	public void testFindAllInstructorsInMultipleDocuments() throws NotFoundException {
 		Model model = createBlankModel();
 
 		{
 			Set<Integer> instructorIDs1 = new HashSet<Integer>();
 			
-			Document doc1 = model.insertDocument(model.assembleDocument("doc1", START_HALF_HOUR, END_HALF_HOUR));
-			instructorIDs1.add(model.insertInstructor(doc1, model.assembleInstructor("Evan", "Ovadia", "eovadia", "20", Instructor.createDefaultTimePreferences(), new HashMap<Integer, Integer>(), true)).getID());
-			instructorIDs1.add(model.insertInstructor(doc1, model.assembleInstructor("Herp", "Derp", "hderp", "10", Instructor.createDefaultTimePreferences(), new HashMap<Integer, Integer>(), true)).getID());
+			Document doc1 = model.createTransientDocument("doc1", START_HALF_HOUR, END_HALF_HOUR).insert();
+			instructorIDs1.add(
+					model.createTransientInstructor("Evan", "Ovadia", "eovadia", "20", true)
+					.setTimePreferences(Instructor.createDefaultTimePreferences())
+					.setDocument(doc1).insert()
+					.getID());
+			instructorIDs1.add(
+					model.createTransientInstructor("Herp", "Derp", "hderp", "10", true)
+					.setTimePreferences(Instructor.createDefaultTimePreferences())
+					.setDocument(doc1).insert()
+					.getID());
 			
 			Collection<Instructor> returnedInstructors1 = model.findInstructorsForDocument(doc1);
 			for (Instructor returnedDoc : returnedInstructors1) {
@@ -184,9 +192,17 @@ public abstract class InstructorsTest extends ModelTestCase {
 		{
 			Set<Integer> instructorIDs2 = new HashSet<Integer>();
 			
-			Document doc2 = model.insertDocument(model.assembleDocument("doc2", START_HALF_HOUR, END_HALF_HOUR));
-			instructorIDs2.add(model.insertInstructor(doc2, model.assembleInstructor("Baby", "Seals", "bseals", "20", Instructor.createDefaultTimePreferences(), new HashMap<Integer, Integer>(), true)).getID());
-			instructorIDs2.add(model.insertInstructor(doc2, model.assembleInstructor("Monster", "Otters", "motters", "10", Instructor.createDefaultTimePreferences(), new HashMap<Integer, Integer>(), true)).getID());
+			Document doc2 = model.createTransientDocument("doc2", START_HALF_HOUR, END_HALF_HOUR).insert();
+			instructorIDs2.add(
+					model.createTransientInstructor("Baby", "Seals", "bseals", "20", true)
+					.setTimePreferences(Instructor.createDefaultTimePreferences())
+					.setDocument(doc2).insert()
+					.getID());
+			instructorIDs2.add(
+					model.createTransientInstructor("Monster", "Otters", "motters", "10", true)
+					.setTimePreferences(Instructor.createDefaultTimePreferences())
+					.setDocument(doc2).insert()
+					.getID());
 			
 			Collection<Instructor> returnedInstructors2 = model.findInstructorsForDocument(doc2);
 			for (Instructor returnedDoc : returnedInstructors2) {
