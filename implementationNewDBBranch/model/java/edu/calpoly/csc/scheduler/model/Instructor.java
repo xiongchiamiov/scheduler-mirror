@@ -87,7 +87,7 @@ public class Instructor implements Identified {
 	
 	// Time Preferences
 
-	public int[][] getTimePreferences() {
+	public int[][] getTimePreferences() throws DatabaseException {
 		if (!timePreferencesLoaded) {
 			timePreferences = new int[Day.values().length][48];
 			
@@ -115,12 +115,12 @@ public class Instructor implements Identified {
 		return this;
 	}
 
-	private void removeTimePreferencesFromDB() {
+	private void removeTimePreferencesFromDB() throws DatabaseException {
 		for (IDBTimePreference timePref : model.database.findTimePreferencesByTimeForInstructor(underlyingInstructor).values())
 			model.database.deleteTimePreference(timePref);
 	}
 
-	private void putTimePreferencesIntoDB() {
+	private void putTimePreferencesIntoDB() throws DatabaseException {
 		if (!timePreferencesLoaded)
 			return;
 		
@@ -134,17 +134,17 @@ public class Instructor implements Identified {
 		}
 	}
 	
-	public int getTimePreferences(Day day, int halfHour) {
+	public int getTimePreferences(Day day, int halfHour) throws DatabaseException {
 		return getTimePreferences()[day.ordinal()][halfHour];
 	}
-	public void setTimePreferences(Day day, int halfHour, int preference) {
+	public void setTimePreferences(Day day, int halfHour, int preference) throws DatabaseException {
 		this.getTimePreferences()[day.ordinal()][halfHour] = preference;
 	}
 	
 	
 	// Course Preferences
 	
-	public HashMap<Integer, Integer> getCoursePreferences() {
+	public HashMap<Integer, Integer> getCoursePreferences() throws DatabaseException {
 		if (!coursePreferencesLoaded) {
 			coursePreferences = new HashMap<Integer, Integer>();
 			for (Entry<IDBCourse, IDBCoursePreference> entry : model.database.findCoursePreferencesByCourseForInstructor(underlyingInstructor).entrySet())
@@ -161,12 +161,12 @@ public class Instructor implements Identified {
 	}
 
 
-	private void removeCoursePreferencesFromDB() {
+	private void removeCoursePreferencesFromDB() throws DatabaseException {
 		for (IDBCoursePreference coursePref : model.database.findCoursePreferencesByCourseForInstructor(underlyingInstructor).values())
 			model.database.deleteCoursePreference(coursePref);
 	}
 	
-	private void putCoursePreferencesIntoDB() {
+	private void putCoursePreferencesIntoDB() throws DatabaseException {
 		if (!coursePreferencesLoaded)
 			return;
 		

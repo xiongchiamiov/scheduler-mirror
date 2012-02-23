@@ -72,7 +72,7 @@ public class CSVExporter {
 	 * @param location A location
 	 * @return A string with the location's index
 	 */
-	private String compileLocation(Location location) {
+	private String compileLocation(Location location) throws DatabaseException {
 	//	 location.verify();  //TODO Re-enable. Location.verify uses deprecated item ADA and room TBA has uninitialized data
 		
 		int index = locations.indexOf(location);
@@ -97,7 +97,7 @@ public class CSVExporter {
 	 * @param instructor the instructor
 	 * @return A string with the instructor index
 	 */
-	private String compileInstructor(Instructor instructor) {
+	private String compileInstructor(Instructor instructor) throws DatabaseException {
 			
 		int index = instructors.indexOf(instructor);
 				if (index < 0) {

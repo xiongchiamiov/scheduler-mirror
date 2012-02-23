@@ -8,6 +8,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
@@ -151,21 +152,32 @@ public class SQLdb implements IDatabase {
 
 
 	@Override
-	public Collection<IDBDocument> findAllDocuments() {
+	public Collection<IDBDocument> findAllDocuments() throws DatabaseException {
+		ArrayList<IDBDocument> docs = new ArrayList<IDBDocument>();
+		PreparedStatement stmnt = null;
+		
+		try {
+			stmnt = conn.prepareStatement("select * from document");
+			
+			ResultSet rs = stmnt.executeQuery();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DatabaseException(e);
+		}
+		
+		return null;
+	}
+
+
+	@Override
+	public IDBDocument findDocumentByID(int id) throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
-	public IDBDocument findDocumentByID(int id) throws NotFoundException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public void insertDocument(IDBDocument document) {
+	public void insertDocument(IDBDocument document) throws DatabaseException {
 		// TODO Auto-generated method stub
 		
 	}
@@ -173,21 +185,21 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public IDBDocument assembleDocument(String name, int startHalfHour,
-			int endHalfHour) {
+			int endHalfHour) throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
-	public void updateDocument(IDBDocument document) {
+	public void updateDocument(IDBDocument document) throws DatabaseException {
 		// TODO Auto-generated method stub
 		
 	}
 
 
 	@Override
-	public void deleteDocument(IDBDocument document) {
+	public void deleteDocument(IDBDocument document) throws DatabaseException {
 		// TODO Auto-generated method stub
 		
 	}
@@ -195,21 +207,22 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public IDBDocument findDocumentForSchedule(IDBSchedule schedule)
-			throws NotFoundException {
+			throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
-	public boolean isOriginalDocument(IDBDocument doc) {
+	public boolean isOriginalDocument(IDBDocument doc) throws DatabaseException {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 
 	@Override
-	public boolean documentIsWorkingCopy(IDBDocument document) {
+	public boolean documentIsWorkingCopy(IDBDocument document)
+			throws DatabaseException {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -217,7 +230,7 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public IDBDocument getOriginalForWorkingCopyDocument(IDBDocument rawDocument)
-			throws NotFoundException {
+			throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -225,7 +238,7 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public IDBDocument getWorkingCopyForOriginalDocumentOrNull(
-			IDBDocument document) {
+			IDBDocument document) throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -233,7 +246,8 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public void associateWorkingCopyWithOriginal(
-			IDBDocument underlyingDocument, IDBDocument underlyingDocument2) {
+			IDBDocument underlyingDocument, IDBDocument underlyingDocument2)
+			throws DatabaseException {
 		// TODO Auto-generated method stub
 		
 	}
@@ -241,7 +255,8 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public void disassociateWorkingCopyWithOriginal(
-			IDBDocument underlyingDocument, IDBDocument underlyingDocument2) {
+			IDBDocument underlyingDocument, IDBDocument underlyingDocument2)
+			throws DatabaseException {
 		// TODO Auto-generated method stub
 		
 	}
@@ -249,42 +264,43 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public Collection<IDBSchedule> findAllSchedulesForDocument(
-			IDBDocument document) {
+			IDBDocument document) throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
-	public IDBSchedule findScheduleByID(int id) throws NotFoundException {
+	public IDBSchedule findScheduleByID(int id) throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
-	public IDBSchedule assembleSchedule() {
+	public IDBSchedule assembleSchedule() throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
-	public void insertSchedule(IDBDocument containingDocument, IDBSchedule schedule) {
+	public void insertSchedule(IDBDocument containingDocument,
+			IDBSchedule schedule) throws DatabaseException {
 		// TODO Auto-generated method stub
 		
 	}
 
 
 	@Override
-	public void updateSchedule(IDBSchedule schedule) {
+	public void updateSchedule(IDBSchedule schedule) throws DatabaseException {
 		// TODO Auto-generated method stub
 		
 	}
 
 
 	@Override
-	public void deleteSchedule(IDBSchedule schedule) {
+	public void deleteSchedule(IDBSchedule schedule) throws DatabaseException {
 		// TODO Auto-generated method stub
 		
 	}
@@ -292,7 +308,7 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public Collection<IDBScheduleItem> findScheduleItemsBySchedule(
-			IDBSchedule schedule) {
+			IDBSchedule schedule) throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -300,7 +316,7 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public Collection<IDBScheduleItem> findAllScheduleItemsForSchedule(
-			IDBSchedule schedule) {
+			IDBSchedule schedule) throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -308,59 +324,65 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public IDBScheduleItem findScheduleItemByID(int id)
-			throws NotFoundException {
+			throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
-	public IDBScheduleItem assembleScheduleItem(int section, Set<Day> days, int startHalfHour, int endHalfHour,
-			boolean isPlaced, boolean isConflicted) {
+	public IDBScheduleItem assembleScheduleItem(int section, Set<Day> days,
+			int startHalfHour, int endHalfHour, boolean isPlaced,
+			boolean isConflicted) throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
-	public void insertScheduleItem(IDBSchedule schedule,
-			IDBCourse course, IDBInstructor instructor, IDBLocation location,
-			IDBScheduleItem item) {
+	public void insertScheduleItem(IDBSchedule schedule, IDBCourse course,
+			IDBInstructor instructor, IDBLocation location, IDBScheduleItem item)
+			throws DatabaseException {
 		// TODO Auto-generated method stub
 		
 	}
 
 
 	@Override
-	public void updateScheduleItem(IDBScheduleItem schedule) {
+	public void updateScheduleItem(IDBScheduleItem schedule)
+			throws DatabaseException {
 		// TODO Auto-generated method stub
 		
 	}
 
 
 	@Override
-	public void deleteScheduleItem(IDBScheduleItem schedule) {
+	public void deleteScheduleItem(IDBScheduleItem schedule)
+			throws DatabaseException {
 		// TODO Auto-generated method stub
 		
 	}
 
 
 	@Override
-	public IDBLocation getScheduleItemLocation(IDBScheduleItem item) {
+	public IDBLocation getScheduleItemLocation(IDBScheduleItem item)
+			throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
-	public IDBCourse getScheduleItemCourse(IDBScheduleItem item) {
+	public IDBCourse getScheduleItemCourse(IDBScheduleItem item)
+			throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
-	public IDBInstructor getScheduleItemInstructor(IDBScheduleItem item) {
+	public IDBInstructor getScheduleItemInstructor(IDBScheduleItem item)
+			throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -368,7 +390,7 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public void setScheduleItemCourse(IDBScheduleItem underlying,
-			IDBCourse findCourseByID) {
+			IDBCourse findCourseByID) throws DatabaseException {
 		// TODO Auto-generated method stub
 		
 	}
@@ -376,7 +398,7 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public void setScheduleItemLocation(IDBScheduleItem underlying,
-			IDBLocation findLocationByID) {
+			IDBLocation findLocationByID) throws DatabaseException {
 		// TODO Auto-generated method stub
 		
 	}
@@ -384,109 +406,116 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public void setScheduleItemInstructor(IDBScheduleItem underlying,
-			IDBInstructor findInstructorByID) {
+			IDBInstructor findInstructorByID) throws DatabaseException {
 		// TODO Auto-generated method stub
 		
 	}
 
 
 	@Override
-	public Collection<IDBLocation> findLocationsForDocument(IDBDocument document) {
+	public Collection<IDBLocation> findLocationsForDocument(IDBDocument document)
+			throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
-	public IDBLocation findLocationByID(int id) throws NotFoundException {
+	public IDBLocation findLocationByID(int id) throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
-	public IDBLocation assembleLocation(
-			String room, String type, String maxOccupancy, boolean isSchedulable) {
+	public IDBLocation assembleLocation(String room, String type,
+			String maxOccupancy, boolean isSchedulable)
+			throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
-	public void insertLocation(IDBDocument containingDocument, IDBLocation location) {
+	public void insertLocation(IDBDocument containingDocument,
+			IDBLocation location) throws DatabaseException {
 		// TODO Auto-generated method stub
 		
 	}
 
 
 	@Override
-	public void updateLocation(IDBLocation location) {
+	public void updateLocation(IDBLocation location) throws DatabaseException {
 		// TODO Auto-generated method stub
 		
 	}
 
 
 	@Override
-	public void deleteLocation(IDBLocation location) {
+	public void deleteLocation(IDBLocation location) throws DatabaseException {
 		// TODO Auto-generated method stub
 		
 	}
 
 
 	@Override
-	public Collection<IDBCourse> findCoursesForDocument(IDBDocument document) {
+	public Collection<IDBCourse> findCoursesForDocument(IDBDocument document)
+			throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
-	public IDBCourse findCourseByID(int id) throws NotFoundException {
+	public IDBCourse findCourseByID(int id) throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
-	public IDBCourse assembleCourse(
-			String name, String catalogNumber, String department, String wtu,
-			String scu, String numSections, String type, String maxEnrollment,
-			String numHalfHoursPerWeek, boolean isSchedulable) {
+	public IDBCourse assembleCourse(String name, String catalogNumber,
+			String department, String wtu, String scu, String numSections,
+			String type, String maxEnrollment, String numHalfHoursPerWeek,
+			boolean isSchedulable) throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
-	public void insertCourse(IDBDocument underlyingDocument, IDBCourse course) {
+	public void insertCourse(IDBDocument underlyingDocument, IDBCourse course)
+			throws DatabaseException {
 		// TODO Auto-generated method stub
 		
 	}
 
 
 	@Override
-	public void updateCourse(IDBCourse course) {
+	public void updateCourse(IDBCourse course) throws DatabaseException {
 		// TODO Auto-generated method stub
 		
 	}
 
 
 	@Override
-	public void deleteCourse(IDBCourse course) {
+	public void deleteCourse(IDBCourse course) throws DatabaseException {
 		// TODO Auto-generated method stub
 		
 	}
 
 
 	@Override
-	public IDBDocument findDocumentForCourse(IDBCourse underlyingCourse) {
+	public IDBDocument findDocumentForCourse(IDBCourse underlyingCourse)
+			throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
-	public IDBCourseAssociation getAssociationForLabOrNull(IDBCourse underlying) {
+	public IDBCourseAssociation getAssociationForLabOrNull(IDBCourse underlying)
+			throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -494,28 +523,31 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public Collection<IDBCourseAssociation> getAssociationsForLecture(
-			IDBCourse lectureCourse) {
+			IDBCourse lectureCourse) throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
-	public IDBCourse getAssociationLecture(IDBCourseAssociation association) {
+	public IDBCourse getAssociationLecture(IDBCourseAssociation association)
+			throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
-	public IDBCourse getAssociationLab(IDBCourseAssociation association) {
+	public IDBCourse getAssociationLab(IDBCourseAssociation association)
+			throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
-	public void associateLectureAndLab(IDBCourse lecture, IDBCourse lab) {
+	public void associateLectureAndLab(IDBCourse lecture, IDBCourse lab)
+			throws DatabaseException {
 		// TODO Auto-generated method stub
 		
 	}
@@ -523,43 +555,47 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public Collection<IDBInstructor> findInstructorsForDocument(
-			IDBDocument document) {
+			IDBDocument document) throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
-	public IDBInstructor findInstructorByID(int id) throws NotFoundException {
+	public IDBInstructor findInstructorByID(int id) throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
-	public IDBInstructor assembleInstructor(
-			String firstName, String lastName, String username, String maxWTU, boolean isSchedulable) {
+	public IDBInstructor assembleInstructor(String firstName, String lastName,
+			String username, String maxWTU, boolean isSchedulable)
+			throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
-	public void insertInstructor(IDBDocument containingDocument, IDBInstructor instructor) {
+	public void insertInstructor(IDBDocument containingDocument,
+			IDBInstructor instructor) throws DatabaseException {
 		// TODO Auto-generated method stub
 		
 	}
 
 
 	@Override
-	public void updateInstructor(IDBInstructor instructor) {
+	public void updateInstructor(IDBInstructor instructor)
+			throws DatabaseException {
 		// TODO Auto-generated method stub
 		
 	}
 
 
 	@Override
-	public void deleteInstructor(IDBInstructor instructor) {
+	public void deleteInstructor(IDBInstructor instructor)
+			throws DatabaseException {
 		// TODO Auto-generated method stub
 		
 	}
@@ -567,7 +603,7 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public Map<IDBTime, IDBTimePreference> findTimePreferencesByTimeForInstructor(
-			IDBInstructor instructor) {
+			IDBInstructor instructor) throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -575,7 +611,7 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public IDBTimePreference findTimePreferenceByID(int id)
-			throws NotFoundException {
+			throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -583,36 +619,39 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public IDBTimePreference findTimePreferenceForInstructorAndTime(
-			IDBInstructor instructor, IDBTime time) throws NotFoundException {
+			IDBInstructor instructor, IDBTime time) throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
-	public IDBTimePreference assembleTimePreference(int preference) {
+	public IDBTimePreference assembleTimePreference(int preference)
+			throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
-	public void insertTimePreference(IDBInstructor ins,
-			IDBTime time, IDBTimePreference timePreference) {
+	public void insertTimePreference(IDBInstructor ins, IDBTime time,
+			IDBTimePreference timePreference) throws DatabaseException {
 		// TODO Auto-generated method stub
 		
 	}
 
 
 	@Override
-	public void updateTimePreference(IDBTimePreference timePreference) {
+	public void updateTimePreference(IDBTimePreference timePreference)
+			throws DatabaseException {
 		// TODO Auto-generated method stub
 		
 	}
 
 
 	@Override
-	public void deleteTimePreference(IDBTimePreference timePreference) {
+	public void deleteTimePreference(IDBTimePreference timePreference)
+			throws DatabaseException {
 		// TODO Auto-generated method stub
 		
 	}
@@ -620,7 +659,7 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public Map<IDBCourse, IDBCoursePreference> findCoursePreferencesByCourseForInstructor(
-			IDBInstructor instructor) {
+			IDBInstructor instructor) throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -628,7 +667,7 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public IDBCoursePreference findCoursePreferenceByID(int id)
-			throws NotFoundException {
+			throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -637,43 +676,48 @@ public class SQLdb implements IDatabase {
 	@Override
 	public IDBCoursePreference findCoursePreferenceForInstructorIDAndCourse(
 			IDBInstructor instructor, IDBCourse course)
-			throws NotFoundException {
+			throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
-	public IDBCoursePreference assembleCoursePreference(
-			int preference) {
+	public IDBCoursePreference assembleCoursePreference(int preference)
+			throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
-	public void insertCoursePreference(IDBInstructor instructor, IDBCourse course, IDBCoursePreference coursePreference) {
+	public void insertCoursePreference(IDBInstructor instructor,
+			IDBCourse course, IDBCoursePreference coursePreference)
+			throws DatabaseException {
 		// TODO Auto-generated method stub
 		
 	}
 
 
 	@Override
-	public void updateCoursePreference(IDBCoursePreference coursePreference) {
+	public void updateCoursePreference(IDBCoursePreference coursePreference)
+			throws DatabaseException {
 		// TODO Auto-generated method stub
 		
 	}
 
 
 	@Override
-	public void deleteCoursePreference(IDBCoursePreference coursePreference) {
+	public void deleteCoursePreference(IDBCoursePreference coursePreference)
+			throws DatabaseException {
 		// TODO Auto-generated method stub
 		
 	}
 
 
 	@Override
-	public IDBTime findTimeByDayAndHalfHour(int day, int halfHour) {
+	public IDBTime findTimeByDayAndHalfHour(int day, int halfHour)
+			throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -681,14 +725,15 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public IDBEquipmentType findEquipmentTypeByDescription(
-			String equipmentTypeDescription) throws NotFoundException {
+			String equipmentTypeDescription) throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
-	public Collection<IDBEquipmentType> findAllEquipmentTypes() {
+	public Collection<IDBEquipmentType> findAllEquipmentTypes()
+			throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -696,21 +741,22 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public Map<IDBEquipmentType, IDBUsedEquipment> findUsedEquipmentByEquipmentForCourse(
-			IDBCourse course) {
+			IDBCourse course) throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
-	public void deleteUsedEquipment(IDBUsedEquipment usedEquipment) {
+	public void deleteUsedEquipment(IDBUsedEquipment usedEquipment)
+			throws DatabaseException {
 		// TODO Auto-generated method stub
 		
 	}
 
 
 	@Override
-	public DBUsedEquipment assembleUsedEquipment() {
+	public DBUsedEquipment assembleUsedEquipment() throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -718,7 +764,8 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public void insertUsedEquipment(IDBCourse course,
-			IDBEquipmentType equipmentType, IDBUsedEquipment equip) {
+			IDBEquipmentType equipmentType, IDBUsedEquipment equip)
+			throws DatabaseException {
 		// TODO Auto-generated method stub
 		
 	}
@@ -726,21 +773,23 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public Map<IDBEquipmentType, IDBProvidedEquipment> findProvidedEquipmentByEquipmentForLocation(
-			IDBLocation location) {
+			IDBLocation location) throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
-	public void deleteProvidedEquipment(IDBProvidedEquipment providedEquipment) {
+	public void deleteProvidedEquipment(IDBProvidedEquipment providedEquipment)
+			throws DatabaseException {
 		// TODO Auto-generated method stub
 		
 	}
 
 
 	@Override
-	public IDBProvidedEquipment assembleProvidedEquipment() {
+	public IDBProvidedEquipment assembleProvidedEquipment()
+			throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -748,7 +797,8 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public void insertProvidedEquipment(IDBLocation location,
-			IDBEquipmentType equipmentType, IDBProvidedEquipment equip) {
+			IDBEquipmentType equipmentType, IDBProvidedEquipment equip)
+			throws DatabaseException {
 		// TODO Auto-generated method stub
 		
 	}
@@ -756,7 +806,7 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public IDBDayPattern findDayPatternByDays(Set<Integer> dayPattern)
-			throws NotFoundException {
+			throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -764,7 +814,7 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public Collection<IDBOfferedDayPattern> findOfferedDayPatternsForCourse(
-			IDBCourse underlying) {
+			IDBCourse underlying) throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -772,29 +822,32 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public IDBDayPattern getDayPatternForOfferedDayPattern(
-			IDBOfferedDayPattern offered) {
+			IDBOfferedDayPattern offered) throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
-	public void deleteOfferedDayPattern(IDBOfferedDayPattern offered) {
+	public void deleteOfferedDayPattern(IDBOfferedDayPattern offered)
+			throws DatabaseException {
 		// TODO Auto-generated method stub
 		
 	}
 
 
 	@Override
-	public IDBOfferedDayPattern assembleOfferedDayPattern(
-			) {
+	public IDBOfferedDayPattern assembleOfferedDayPattern()
+			throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
-	public void insertOfferedDayPattern(IDBCourse underlying, IDBDayPattern dayPattern, IDBOfferedDayPattern pattern) {
+	public void insertOfferedDayPattern(IDBCourse underlying,
+			IDBDayPattern dayPattern, IDBOfferedDayPattern pattern)
+			throws DatabaseException {
 		// TODO Auto-generated method stub
 		
 	}
@@ -808,7 +861,8 @@ public class SQLdb implements IDatabase {
 
 
 	@Override
-	public IDBScheduleItem assembleScheduleItemCopy(IDBScheduleItem underlying) {
+	public IDBScheduleItem assembleScheduleItemCopy(IDBScheduleItem underlying)
+			throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -816,14 +870,15 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public IDBSchedule getScheduleItemSchedule(IDBScheduleItem underlying)
-			throws NotFoundException {
+			throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
-	public boolean isInserted(IDBScheduleItem underlying) {
+	public boolean isInserted(IDBScheduleItem underlying)
+			throws DatabaseException {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -831,7 +886,7 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public IDBObject findDocumentForLocation(IDBLocation underlyingLocation)
-			throws NotFoundException {
+			throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -839,7 +894,7 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public IDBObject findDocumentForInstructor(
-			IDBInstructor underlyingInstructor) throws NotFoundException {
+			IDBInstructor underlyingInstructor) throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -847,13 +902,15 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public void writeState(ObjectOutputStream oos) throws IOException {
-		throw new UnsupportedOperationException();
+		// TODO Auto-generated method stub
+		
 	}
 
 
 	@Override
 	public void readState(ObjectInputStream ois) throws IOException {
-		throw new UnsupportedOperationException();
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

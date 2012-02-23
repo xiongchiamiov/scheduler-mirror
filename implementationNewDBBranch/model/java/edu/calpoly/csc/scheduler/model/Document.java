@@ -61,19 +61,19 @@ public class Document implements Identified {
 	
 	// ENTITY RELATIONS
 
-	public Collection<Schedule> getSchedules() {
+	public Collection<Schedule> getSchedules() throws DatabaseException{
 		return model.findSchedulesForDocument(this);
 	}
 
-	public Collection<Instructor> getInstructors() {
+	public Collection<Instructor> getInstructors() throws DatabaseException{
 		return model.findInstructorsForDocument(this);
 	}
 
-	public Collection<Course> getCourses() {
+	public Collection<Course> getCourses() throws DatabaseException {
 		return model.findCoursesForDocument(this);
 	}
 	
-	public Collection<Location> getLocations() {
+	public Collection<Location> getLocations() throws DatabaseException {
 		return model.findLocationsForDocument(this);
 	}
 }

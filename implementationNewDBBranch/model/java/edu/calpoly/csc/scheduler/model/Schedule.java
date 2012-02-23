@@ -21,17 +21,17 @@ public class Schedule implements Identified {
 
 	// PERSISTENCE FUNCTIONS
 
-	public Schedule insert() {
+	public Schedule insert() throws DatabaseException{
 		assert(document != null);
 		model.database.insertSchedule(document.underlyingDocument, underlyingSchedule);
 		return this;
 	}
 
-	public void update() {
+	public void update() throws DatabaseException {
 		model.database.updateSchedule(underlyingSchedule);
 	}
 	
-	public void delete() {
+	public void delete() throws DatabaseException {
 		model.database.deleteSchedule(underlyingSchedule);
 	}
 

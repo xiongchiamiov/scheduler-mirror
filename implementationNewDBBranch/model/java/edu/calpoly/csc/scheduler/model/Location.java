@@ -33,7 +33,7 @@ public class Location implements Identified {
 		return this;
 	}
 
-	public void update() {
+	public void update() throws DatabaseException {
 		removeProvidedEquipmentFromDB(underlyingLocation);
 		model.database.updateLocation(underlyingLocation);
 		putProvidedEquipmentIntoDB();
@@ -67,7 +67,7 @@ public class Location implements Identified {
 	
 	// Provided Equipment
 
-	private void putProvidedEquipmentIntoDB() {
+	private void putProvidedEquipmentIntoDB() throws DatabaseException {
 		if (!providedEquipmentLoaded)
 			return;
 		try {
@@ -79,7 +79,7 @@ public class Location implements Identified {
 		}
 	}
 	
-	public Set<String> getProvidedEquipment() {
+	public Set<String> getProvidedEquipment() throws DatabaseException {
 		if (!providedEquipmentLoaded) {
 			providedEquipmentDescriptions = new HashSet<String>();
 			for (IDBEquipmentType derp : model.database.findProvidedEquipmentByEquipmentForLocation(underlyingLocation).keySet())
@@ -89,7 +89,7 @@ public class Location implements Identified {
 		return providedEquipmentDescriptions;
 	}
 
-	private void removeProvidedEquipmentFromDB(IDBLocation location) {
+	private void removeProvidedEquipmentFromDB(IDBLocation location) throws DatabaseException {
 		for (IDBProvidedEquipment providedEquipment : model.database.findProvidedEquipmentByEquipmentForLocation(location).values())
 			model.database.deleteProvidedEquipment(providedEquipment);
 	}

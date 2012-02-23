@@ -111,7 +111,7 @@ public class Course implements Identified {
 	
 	// Day Patterns
 
-	public Collection<Set<Day>> getDayPatterns() {
+	public Collection<Set<Day>> getDayPatterns() throws DatabaseException {
 		if (!offeredDayPatternsLoaded) {
 			offeredDayPatterns = new LinkedList<Set<Day>>();
 			for (IDBOfferedDayPattern offered : model.database.findOfferedDayPatternsForCourse(underlyingCourse))
@@ -126,7 +126,7 @@ public class Course implements Identified {
 		this.offeredDayPatterns = dayPatterns;
 	}
 
-	private void removeOfferedDayPatternsFromDB() {
+	private void removeOfferedDayPatternsFromDB() throws DatabaseException {
 		for (IDBOfferedDayPattern offered : model.database.findOfferedDayPatternsForCourse(underlyingCourse))
 			model.database.deleteOfferedDayPattern(offered);
 	}
@@ -145,7 +145,7 @@ public class Course implements Identified {
 		return result;
 	}
 	
-	private void putOfferedDayPatternsIntoDB() {
+	private void putOfferedDayPatternsIntoDB() throws DatabaseException {
 		if (!offeredDayPatternsLoaded)
 			return;
 		try {
@@ -162,7 +162,7 @@ public class Course implements Identified {
 	
 	// Used Equipment
 
-	private void putUsedEquipmentIntoDB() {
+	private void putUsedEquipmentIntoDB() throws DatabaseException {
 		if (!usedEquipmentLoaded)
 			return;
 		try {
@@ -174,12 +174,12 @@ public class Course implements Identified {
 		}
 	}
 	
-	private void removeUsedEquipmentFromDB() {
+	private void removeUsedEquipmentFromDB() throws DatabaseException {
 		for (IDBUsedEquipment usedEquipment : model.database.findUsedEquipmentByEquipmentForCourse(underlyingCourse).values())
 			model.database.deleteUsedEquipment(usedEquipment);
 	}
 
-	public Set<String> getUsedEquipment() {
+	public Set<String> getUsedEquipment() throws DatabaseException {
 		if (!usedEquipmentLoaded) {
 			usedEquipmentDescriptions = new HashSet<String>();
 			for (IDBEquipmentType equipment : model.database.findUsedEquipmentByEquipmentForCourse(underlyingCourse).keySet())

@@ -69,7 +69,7 @@ class CourseDecorator {
 }
 
 class GenerationDataLayer {
-	public static void blockOffInstructorUnacceptableTimes(InstructorDecorator instructor, Document document, HashMap<Integer, ScheduleItem> items) {
+	public static void blockOffInstructorUnacceptableTimes(InstructorDecorator instructor, Document document, HashMap<Integer, ScheduleItem> items) throws DatabaseException {
 		for (Day day : Day.values()) {
 			for (int halfHour = 0; halfHour < 48; halfHour++) {
 				int preference = instructor.instructor.getTimePreferences()[day.ordinal()][halfHour];
@@ -222,7 +222,7 @@ class GenerationDataLayer {
 
 	public ScheduleItem assembleScheduleItem(int newSectionNumber,
 			Set<Day> dayPattern, int startHalfHour, int endHalfHour, boolean isPlaced,
-			boolean isConflicted) {
+			boolean isConflicted) throws DatabaseException {
 		return model.createTransientScheduleItem(newSectionNumber, dayPattern, startHalfHour, endHalfHour, isPlaced, isConflicted);
 	}
 
@@ -270,7 +270,7 @@ public class GenerationAlgorithm {
 	}
 	
 	private static ScheduleItem generateScheduleItemForCourse(
-			GenerationDataLayer layer, CourseDecorator course, int newSectionNumber) throws NotFoundException {
+			GenerationDataLayer layer, CourseDecorator course, int newSectionNumber) throws DatabaseException {
 		System.out.println("Generating course " + course.toString() + " section " + newSectionNumber);
 		for (Set<Day> possibleDayPattern : course.course.getDayPatterns()) {
 			ScheduleItem newScheduleItem = generateScheduleItemForCourseWithDayPattern(layer, course, newSectionNumber, possibleDayPattern);
@@ -282,7 +282,7 @@ public class GenerationAlgorithm {
 
 	private static ScheduleItem generateScheduleItemForCourseWithDayPattern(
 			GenerationDataLayer layer, CourseDecorator course,
-			int newSectionNumber, Set<Day> dayPattern) throws NotFoundException {
+			int newSectionNumber, Set<Day> dayPattern) throws DatabaseException {
 		System.out.println("Trying generating course " + course.toString() + " section " + newSectionNumber + " on days " + dayPattern);
 		int numHalfHoursPerDay = course.course.getNumHalfHoursPerWeekInt() / dayPattern.size();
 		for (int startHalfHour = layer.getDocumentStartHalfHour(); startHalfHour + numHalfHoursPerDay < layer.getDocumentEndHalfHour(); startHalfHour++) {
@@ -295,7 +295,7 @@ public class GenerationAlgorithm {
 
 	private static ScheduleItem generateScheduleItemForCourseWithDayPatternStartingAtTime(
 			GenerationDataLayer layer, CourseDecorator course, int newSectionNumber,
-			Set<Day> dayPattern, int startHalfHour) throws NotFoundException {
+			Set<Day> dayPattern, int startHalfHour) throws DatabaseException {
 		int numHalfHoursPerDay = course.course.getNumHalfHoursPerWeekInt() / dayPattern.size();
 		int endHalfHour = startHalfHour + numHalfHoursPerDay;
 

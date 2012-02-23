@@ -14,16 +14,16 @@ import edu.calpoly.csc.scheduler.model.db.DatabaseException;
 import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
 
 public class ModelTestUtility {
-	public static Course createCourse(Model model) {
+	public static Course createCourse(Model model) throws DatabaseException {
 		return model.createTransientCourse("Test", "101", "CSC", "4", "4", "1",
 				"LEC", "60", "6",  true);
 	}
 	
-	public static Location createLocation(Model model) {
+	public static Location createLocation(Model model) throws DatabaseException {
 		return model.createTransientLocation("123", "LEC", "60", true);
 	}
 	
-	public static Instructor createBasicInstructor(Model model) {
+	public static Instructor createBasicInstructor(Model model) throws DatabaseException {
 		return model.createTransientInstructor("TestFirst", "TestLast", "testid", "4", true)
 				.setTimePreferences( Instructor.createDefaultTimePreferences());
 	}
@@ -74,7 +74,7 @@ public class ModelTestUtility {
 		return true;
 	}
 	
-	public static boolean locationsContentsEqual(Location a, Location b) {
+	public static boolean locationsContentsEqual(Location a, Location b) throws DatabaseException {
 		if (!a.getMaxOccupancy().equals(b.getMaxOccupancy()))
 			return false;
 		if (!a.getProvidedEquipment().equals(b.getProvidedEquipment()))
@@ -86,7 +86,7 @@ public class ModelTestUtility {
 		return true;
 	}
 	
-	public static boolean instructorsContentsEqual(Instructor a, Instructor b) {
+	public static boolean instructorsContentsEqual(Instructor a, Instructor b) throws DatabaseException {
 		if (!a.getFirstName().equals(b.getFirstName()))
 			return false;
 		if (!a.getLastName().equals(b.getLastName()))
@@ -123,11 +123,11 @@ public class ModelTestUtility {
 		return result;
 	}
 	
-	public static void addDayPattern(Course course, Day... days) {
+	public static void addDayPattern(Course course, Day... days) throws DatabaseException {
 		course.getDayPatterns().add(new TreeSet(Arrays.asList(days)));
 	}
 	
-	public static void setPreferenceBlocks(Instructor instructor, int preference, int startHalfHour, int endHalfHour, Day... days) {
+	public static void setPreferenceBlocks(Instructor instructor, int preference, int startHalfHour, int endHalfHour, Day... days) throws DatabaseException {
 		for (Day day : days)
 			for (int halfHour = startHalfHour; halfHour < endHalfHour; halfHour++)
 				instructor.setTimePreferences(day, halfHour, preference);

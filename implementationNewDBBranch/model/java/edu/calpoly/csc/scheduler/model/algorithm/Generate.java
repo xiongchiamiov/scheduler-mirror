@@ -245,7 +245,7 @@ public class Generate {
 	    * 
 	    * @see Staff#getStaff()
 	    */
-	   private static Instructor findInstructor (Course c, ScheduleDecorator sd, List<Instructor> i_list)
+	   private static Instructor findInstructor (Course c, ScheduleDecorator sd, List<Instructor> i_list) throws DatabaseException
 	   {
 	      return findInstructor(c, null, sd, i_list);
 	   }
@@ -262,7 +262,7 @@ public class Generate {
 	    * @return An intsructor to teach 'c'. This can be STAFF if no instructor
 	    *         if capable of teaching
 	    */
-	   private static Instructor findInstructor (Course c, List<Integer> doNotPickInstructorIDs, ScheduleDecorator sd, List<Instructor> i_list)
+	   private static Instructor findInstructor (Course c, List<Integer> doNotPickInstructorIDs, ScheduleDecorator sd, List<Instructor> i_list) throws DatabaseException
 	   {
 	      Instructor r = getStaff();
 	      int curMaxPref = 0;
@@ -304,7 +304,7 @@ public class Generate {
 	    * @param course the course for which to get the preference.
 	    * @return the course preference for the given course.
 	    */
-	   public static int getPreference (Instructor instructor, Course course)
+	   public static int getPreference (Instructor instructor, Course course) throws DatabaseException
 	   {
 	      int desire = Instructor.DEFAULT_PREF;
 
@@ -326,7 +326,7 @@ public class Generate {
 	    * @return A list of time ranges that instructor can and wants to teach this
 	    *         course
 	    */
-	   public static boolean canTeach (Instructor instructor, Course course, int curWtu)
+	   public static boolean canTeach (Instructor instructor, Course course, int curWtu) throws DatabaseException
 	   {
 	      // Check if instructor has enough WTUs
 	      if ((curWtu + course.getWTUInt()) <= instructor.getMaxWTUInt())
@@ -360,7 +360,7 @@ public class Generate {
 	    * 
 	    *         Written by: Eric Liebowitz
 	    */
-	   public static int getPreference (Instructor i, Day d, int time)
+	   public static int getPreference (Instructor i, Day d, int time) throws DatabaseException
 	   {
 		   /*if (DEBUG) {
 			   System.out.println("Instructor prefs for " + getLastName());
@@ -517,7 +517,7 @@ public class Generate {
 	    * 
 	    * @return the average desire for the given time span
 	    */
-	   public static double getAvgPrefForTimeRange (Instructor ins, Week w, int s, int e)
+	   public static double getAvgPrefForTimeRange (Instructor ins, Week w, int s, int e) throws DatabaseException
 	   {
 	      double total = 0;
 	      int length = e - s;
@@ -760,7 +760,7 @@ public class Generate {
 	      return sis;
 	   }
 	   
-	   private static int getDayLength(Course c) {
+	   private static int getDayLength(Course c) throws DatabaseException {
 		   assert(false); // totally just made this up. we dont have the concept of day length anymore...
 		return c.getNumHalfHoursPerWeekInt() / c.getDayPatterns().iterator().next().size();
 	}
