@@ -178,14 +178,10 @@ public class Database implements IDatabase {
 
 	@Override
 	public void deleteDocument(IDBDocument document) {
-		for (IDBSchedule schedule : this.findAllSchedulesForDocument(document))
-			this.deleteSchedule(schedule);
-		for (IDBInstructor instructor : this.findInstructorsForDocument(document))
-			this.deleteInstructor(instructor);
-		for (IDBCourse course : this.findCoursesForDocument(document))
-			this.deleteCourse(course);
-		for (IDBLocation location : this.findLocationsForDocument(document))
-			this.deleteLocation(location);
+		assert(findAllSchedulesForDocument(document).isEmpty());
+		assert(findCoursesForDocument(document).isEmpty());
+		assert(findInstructorsForDocument(document).isEmpty());
+		assert(findLocationsForDocument(document).isEmpty());
 		
 		documentTable.deleteByID(document.getID());
 	}
@@ -224,8 +220,7 @@ public class Database implements IDatabase {
 
 	@Override
 	public void deleteSchedule(IDBSchedule schedule) {
-		for (IDBScheduleItem item : this.findAllScheduleItemsForSchedule(schedule))
-			this.deleteScheduleItem(item);
+		assert(findAllScheduleItemsForSchedule(schedule).isEmpty());
 		
 		scheduleTable.deleteByID(schedule.getID());
 	}
@@ -311,8 +306,7 @@ public class Database implements IDatabase {
 
 	@Override
 	public void deleteLocation(IDBLocation location) {
-		for (IDBProvidedEquipment equip : this.findProvidedEquipmentByEquipmentForLocation(location).values())
-			this.deleteProvidedEquipment(equip);
+		assert(findProvidedEquipmentByEquipmentForLocation(location).isEmpty());
 		
 		locationTable.deleteByID(location.getID());
 	}
@@ -364,10 +358,8 @@ public class Database implements IDatabase {
 
 	@Override
 	public void deleteCourse(IDBCourse course) {
-		for (IDBUsedEquipment equip : this.findUsedEquipmentByEquipmentForCourse(course).values())
-			this.deleteUsedEquipment(equip);
-		for (IDBOfferedDayPattern pat : this.findOfferedDayPatternsForCourse(course))
-			this.deleteOfferedDayPattern(pat);
+		assert(findUsedEquipmentByEquipmentForCourse(course).isEmpty());
+		assert(findOfferedDayPatternsForCourse(course).isEmpty());
 
 		courseTable.deleteByID(course.getID());
 	}
@@ -407,10 +399,8 @@ public class Database implements IDatabase {
 
 	@Override
 	public void deleteInstructor(IDBInstructor instructor) {
-		for (IDBTimePreference timePref : this.findTimePreferencesByTimeForInstructor(instructor).values())
-			this.deleteTimePreference(timePref);
-		for (IDBCoursePreference coursePref : this.findCoursePreferencesByCourseForInstructor(instructor).values())
-			this.deleteCoursePreference(coursePref);
+		assert(findTimePreferencesByTimeForInstructor(instructor).isEmpty());
+		assert(findCoursePreferencesByCourseForInstructor(instructor).isEmpty());
 		
 		instructorTable.deleteByID(instructor.getID());
 	}

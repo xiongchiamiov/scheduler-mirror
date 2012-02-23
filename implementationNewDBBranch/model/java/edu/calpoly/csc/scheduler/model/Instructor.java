@@ -35,8 +35,9 @@ public class Instructor implements Identified {
 
 	// PERSISTENCE FUNCTIONS
 
-	public Instructor insert(Document containingDocument) {
-		model.database.insertInstructor(containingDocument.underlyingDocument, underlyingInstructor);
+	public Instructor insert() {
+		assert(document != null);
+		model.database.insertInstructor(document.underlyingDocument, underlyingInstructor);
 		putTimePreferencesIntoDB();
 		putCoursePreferencesIntoDB();
 		return this;
@@ -191,9 +192,10 @@ public class Instructor implements Identified {
 		return document;
 	}
 
-	public void setDocument(Document newDocument) {
+	public Instructor setDocument(Document newDocument) {
 		document = newDocument;
 		documentLoaded = true;
+		return this;
 	}
 	
 	

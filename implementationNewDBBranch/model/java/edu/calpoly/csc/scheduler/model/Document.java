@@ -1,15 +1,16 @@
 package edu.calpoly.csc.scheduler.model;
 
-import edu.calpoly.csc.scheduler.model.db.IDBDocument;
-import edu.calpoly.csc.scheduler.model.db.IDatabase;
+import java.util.Collection;
 
-public class Document {
-	private final IDatabase database;
+import edu.calpoly.csc.scheduler.model.db.IDBDocument;
+
+public class Document implements Identified {
+	private final Model model;
 	
 	IDBDocument underlyingDocument;
 	
-	Document(IDatabase database, IDBDocument underlyingDocument) {
-		this.database = database;
+	Document(Model model, IDBDocument underlyingDocument) {
+		this.model = model;
 		assert(underlyingDocument != null);
 		this.underlyingDocument = underlyingDocument;
 	}
@@ -18,16 +19,25 @@ public class Document {
 	// PERSISTENCE FUNCTIONS
 
 	public Document insert() {
-		database.insertDocument(underlyingDocument);
+		model.database.insertDocument(underlyingDocument);
 		return this;
 	}
 
 	public void update() {
-		database.updateDocument(underlyingDocument);
+		model.database.updateDocument(underlyingDocument);
 	}
 	
 	public void delete() {
-		database.deleteDocument(underlyingDocument);
+		for (Schedule schedule : getSchedules())
+			schedule.delete();
+		for (Location location : getLocations())
+			location.delete();
+		for (Instructor instructor : getInstructors())
+			instructor.delete();
+		for (Course course : getCourses())
+			course.delete();
+		
+		model.database.deleteDocument(underlyingDocument);
 	}
 
 	
@@ -46,4 +56,23 @@ public class Document {
 	public void setEndHalfHour(int endHalfHour) { underlyingDocument.setEndHalfHour(endHalfHour); }
 	
 	
+	
+	
+	// ENTITY RELATIONS
+
+	public Collection<Schedule> getSchedules() {
+		return model.findSchedulesForDocument(this);
+	}
+
+	public Collection<Instructor> getInstructors() {
+		return model.findInstructorsForDocument(this);
+	}
+
+	public Collection<Course> getCourses() {
+		return model.findCoursesForDocument(this);
+	}
+	
+	public Collection<Location> getLocations() {
+		return model.findLocationsForDocument(this);
+	}
 }

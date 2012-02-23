@@ -6,7 +6,6 @@ import java.util.Set;
 import edu.calpoly.csc.scheduler.model.db.IDBEquipmentType;
 import edu.calpoly.csc.scheduler.model.db.IDBLocation;
 import edu.calpoly.csc.scheduler.model.db.IDBProvidedEquipment;
-import edu.calpoly.csc.scheduler.model.db.IDatabase;
 import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
 
 public class Location implements Identified {
@@ -27,8 +26,8 @@ public class Location implements Identified {
 
 	// PERSISTENCE FUNCTIONS
 
-	public Location insert(Document containingDocument) {
-		model.database.insertLocation(containingDocument.underlyingDocument, underlyingLocation);
+	public Location insert() throws NotFoundException {
+		model.locationCache.insert(this);
 		putProvidedEquipmentIntoDB();
 		return this;
 	}
@@ -41,7 +40,7 @@ public class Location implements Identified {
 	
 	public void delete() {
 		removeProvidedEquipmentFromDB(underlyingLocation);
-		model.database.deleteLocation(underlyingLocation);
+		model.locationCache.delete(this);
 	}
 
 
@@ -111,9 +110,10 @@ public class Location implements Identified {
 		return document;
 	}
 
-	public void setDocument(Document newDocument) {
+	public Location setDocument(Document newDocument) {
 		document = newDocument;
 		documentLoaded = true;
+		return this;
 	}
 	
 }

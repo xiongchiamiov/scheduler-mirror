@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.Set;
 
 import edu.calpoly.csc.scheduler.model.Day;
-import edu.calpoly.csc.scheduler.model.db.simple.DBProvidedEquipment;
 import edu.calpoly.csc.scheduler.model.db.simple.DBUsedEquipment;
 
 public interface IDatabase {

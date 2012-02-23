@@ -1,10 +1,9 @@
 package edu.calpoly.csc.scheduler.model;
 
 import edu.calpoly.csc.scheduler.model.db.IDBSchedule;
-import edu.calpoly.csc.scheduler.model.db.IDatabase;
 import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
 
-public class Schedule {
+public class Schedule implements Identified {
 	private final Model model;
 	
 	IDBSchedule underlyingSchedule;
@@ -22,7 +21,8 @@ public class Schedule {
 
 	// PERSISTENCE FUNCTIONS
 
-	public Schedule insert(Document document) {
+	public Schedule insert() {
+		assert(document != null);
 		model.database.insertSchedule(document.underlyingDocument, underlyingSchedule);
 		return this;
 	}
@@ -49,9 +49,10 @@ public class Schedule {
 		return document;
 	}
 
-	public void setDocument(Document newDocument) {
+	public Schedule setDocument(Document newDocument) {
 		document = newDocument;
 		documentLoaded = true;
+		return this;
 	}
 	
 }

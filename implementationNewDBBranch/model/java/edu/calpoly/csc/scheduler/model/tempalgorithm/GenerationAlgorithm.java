@@ -228,7 +228,7 @@ class GenerationDataLayer {
 	public ScheduleItem assembleScheduleItem(int newSectionNumber,
 			Set<Day> dayPattern, int startHalfHour, int endHalfHour, boolean b,
 			boolean c) {
-		return model.assembleScheduleItem(newSectionNumber, dayPattern, startHalfHour, endHalfHour, b, c);
+		return model.createTransientScheduleItem(newSectionNumber, dayPattern, startHalfHour, endHalfHour, b, c);
 	}
 
 	public Collection<CourseDecorator> getCourses() { return courses.values(); }

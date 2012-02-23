@@ -338,7 +338,7 @@ public class CSVExporter {
 		for (Instructor instructor : model.findInstructorsForDocument(document))
 			compileInstructor(instructor);
 		
-		Schedule schedule = model.findAllSchedulesForDocument(document).iterator().next();
+		Schedule schedule = document.getSchedules().iterator().next();
 		Collection<ScheduleItem> items = model.findAllScheduleItemsForSchedule(schedule);
 		
 		for (ScheduleItem item : items)

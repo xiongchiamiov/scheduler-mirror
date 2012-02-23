@@ -3,7 +3,7 @@ package edu.calpoly.csc.scheduler.model;
 import edu.calpoly.csc.scheduler.model.db.IDBUser;
 import edu.calpoly.csc.scheduler.model.db.IDatabase;
 
-public class User {
+public class User implements Identified {
 	private final IDatabase database;
 	
 	final IDBUser underlyingUser;
@@ -37,5 +37,5 @@ public class User {
 	public boolean isAdmin() { return underlyingUser.isAdmin(); }
 	public void setAdmin(boolean isAdmin) { underlyingUser.setAdmin(isAdmin); }
 
-	public Integer getID() { return underlyingUser.getID(); }
+	public int getID() { return underlyingUser.getID(); }
 }

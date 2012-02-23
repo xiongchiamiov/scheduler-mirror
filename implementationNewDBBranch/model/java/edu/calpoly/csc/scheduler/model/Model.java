@@ -15,15 +15,68 @@ import edu.calpoly.csc.scheduler.model.db.IDBDocument;
 import edu.calpoly.csc.scheduler.model.db.IDBEquipmentType;
 import edu.calpoly.csc.scheduler.model.db.IDBInstructor;
 import edu.calpoly.csc.scheduler.model.db.IDBLocation;
+import edu.calpoly.csc.scheduler.model.db.IDBObject;
 import edu.calpoly.csc.scheduler.model.db.IDBOfferedDayPattern;
 import edu.calpoly.csc.scheduler.model.db.IDBSchedule;
 import edu.calpoly.csc.scheduler.model.db.IDBScheduleItem;
 import edu.calpoly.csc.scheduler.model.db.IDBTime;
 import edu.calpoly.csc.scheduler.model.db.IDBTimePreference;
+import edu.calpoly.csc.scheduler.model.db.IDBUser;
 import edu.calpoly.csc.scheduler.model.db.IDatabase;
 import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
 
 public class Model {
+	abstract static class Cache<DecoratedT extends Identified, UnderlyingT extends IDBObject> {
+		HashMap<Integer, DecoratedT> cache = new HashMap<Integer, DecoratedT>();
+
+		public DecoratedT decorateAndPutInCache(UnderlyingT underlying) {
+			DecoratedT result = decorate(underlying);
+			cache.put(underlying.getID(), result);
+			return result;
+		}
+		
+		public DecoratedT putIfNotPresentThenGetDecorated(UnderlyingT underlying) {
+			DecoratedT result = cache.get(underlying.getID());
+			if (result == null)
+				result = decorateAndPutInCache(underlying);
+			return result;
+		}
+
+		public DecoratedT findByID(int id) throws NotFoundException {
+			DecoratedT result = cache.get(id);
+			if (result == null)
+				result = decorateAndPutInCache(loadFromDatabase(id));
+			return result;
+		}
+		
+		abstract DecoratedT decorate(UnderlyingT underlying);
+		
+		abstract UnderlyingT loadFromDatabase(int id) throws NotFoundException;
+		
+		void insert(DecoratedT obj) throws NotFoundException {
+			insertIntoDatabase(obj);
+			cache.put(obj.getID(), obj);
+		}
+		
+		abstract void insertIntoDatabase(DecoratedT obj) throws NotFoundException;
+
+		public void delete(DecoratedT obj) {
+			cache.remove(obj.getID());
+			removeFromDatabase(obj);
+		}
+		
+		abstract void removeFromDatabase(DecoratedT obj);
+
+		public boolean isInserted(DecoratedT obj) {
+			try {
+				findByID(obj.getID());
+				return true;
+			}
+			catch (NotFoundException e) { return false; }
+		}
+	}
+	
+	
 	final IDatabase database;
 	
 	public Model() {
@@ -34,10 +87,29 @@ public class Model {
 		this.database = database;
 	}
 
+	
+	
+	
 	// USERS
+	
+	Cache<User, IDBUser> userCache = new Cache<User, IDBUser>() {
+		User decorate(IDBUser underlying) {
+			return new User(database, underlying);
+		}
+		IDBUser loadFromDatabase(int id) throws NotFoundException {
+			throw new UnsupportedOperationException();
+		}
+		void insertIntoDatabase(User obj) throws NotFoundException {
+			database.insertUser(obj.underlyingUser);
+		}
+		void removeFromDatabase(User obj) {
+			database.deleteUser(obj.underlyingUser);
+		}
+	};
 
 	public User findUserByUsername(String username) throws NotFoundException {
-		return new User(database, database.findUserByUsername(username));
+		IDBUser underlyingUser = database.findUserByUsername(username);
+		return userCache.putIfNotPresentThenGetDecorated(underlyingUser);
 	}
 
 	public User createTransientUser(String username, boolean b) {
@@ -45,28 +117,36 @@ public class Model {
 	}
 	
 	
-	// DOCUMENTS
 	
+	// DOCUMENTS
+
+	Cache<Document, IDBDocument> documentCache = new Cache<Document, IDBDocument>() {
+		Document decorate(IDBDocument underlying) {
+			return new Document(Model.this, underlying);
+		}
+		IDBDocument loadFromDatabase(int id) throws NotFoundException {
+			return database.findDocumentByID(id);
+		}
+		void insertIntoDatabase(Document obj) throws NotFoundException {
+			database.insertDocument(obj.underlyingDocument);
+		}
+		void removeFromDatabase(Document obj) {
+			database.deleteDocument(obj.underlyingDocument);
+		}
+	};
+
 	public Document createTransientDocument(String name, int startHalfHour, int endHalfHour) {
-		return new Document(database, database.assembleDocument(name, startHalfHour, endHalfHour));
+		return new Document(this, database.assembleDocument(name, startHalfHour, endHalfHour));
 	}
 	
 	public Document findDocumentByID(int documentID) throws NotFoundException {
-		try {
-			IDBDocument doc = database.findDocumentByID(documentID);
-			return new Document(database, doc);
-		}
-		catch (NotFoundException e) {
-			System.out.println("Couldnt find document ID " + documentID);
-			throw e;
-		}
+		return documentCache.findByID(documentID);
 	}
 
 	public Collection<Document> findAllDocuments() {
 		Collection<Document> result = new LinkedList<Document>();
-		for (IDBDocument underlying : database.findAllDocuments()) {
-			result.add(new Document(database, underlying));
-		}
+		for (IDBDocument underlying : database.findAllDocuments())
+			result.add(documentCache.putIfNotPresentThenGetDecorated(underlying));
 		return result;
 	}
 
@@ -78,13 +158,13 @@ public class Model {
 		IDBDocument underlying = database.getWorkingCopyForOriginalDocumentOrNull(originalDocument.underlyingDocument);
 		if (underlying == null)
 			return null;
-		return new Document(database, underlying);
+		return new Document(this, underlying);
 	}
 	
 	public Document copyDocument(Document existingDocument, String newName) {
 		IDBDocument underlying = database.assembleDocument(newName, existingDocument.getStartHalfHour(), existingDocument.getEndHalfHour());
 		database.insertDocument(underlying);
-		Document newDocument = new Document(database, underlying);
+		Document newDocument = new Document(this, underlying);
 		
 		
 
@@ -194,7 +274,7 @@ public class Model {
 
 	public Document getOriginalForWorkingCopyDocument(Document workingCopyDocument) throws NotFoundException {
 		IDBDocument underlying = database.getOriginalForWorkingCopyDocument(workingCopyDocument.underlyingDocument);
-		return new Document(database, underlying);
+		return new Document(this, underlying);
 	}
 
 	public boolean isOriginalDocument(Document doc) {
@@ -202,47 +282,95 @@ public class Model {
 	}
 
 	
-	// SCHEDULES
 	
-	public Schedule createTransientSchedule() {
-		return new Schedule(this, database.assembleSchedule());
-	}
-		
-	public Collection<Schedule> findAllSchedulesForDocument(Document containingDocument) {
+	
+	// SCHEDULES
+
+	Cache<Schedule, IDBSchedule> scheduleCache = new Cache<Schedule, IDBSchedule>() {
+		Schedule decorate(IDBSchedule underlying) {
+			return new Schedule(Model.this, underlying);
+		}
+		IDBSchedule loadFromDatabase(int id) throws NotFoundException {
+			return database.findScheduleByID(id);
+		}
+		void insertIntoDatabase(Schedule obj) throws NotFoundException {
+			database.insertSchedule(obj.getDocument().underlyingDocument, obj.underlyingSchedule);
+		}
+		void removeFromDatabase(Schedule obj) {
+			database.deleteSchedule(obj.underlyingSchedule);
+		}
+	};
+	
+	public Collection<Schedule> findSchedulesForDocument(Document doc) {
 		Collection<Schedule> result = new LinkedList<Schedule>();
-		for (IDBSchedule underlyingSchedule : database.findAllSchedulesForDocument(containingDocument.underlyingDocument))
-			result.add(new Schedule(this, underlyingSchedule));
+		for (IDBSchedule underlying : database.findAllSchedulesForDocument(doc.underlyingDocument))
+			result.add(scheduleCache.putIfNotPresentThenGetDecorated(underlying));
 		return result;
 	}
 
 	public Schedule findScheduleByID(int scheduleID) throws NotFoundException {
-		IDBSchedule underlying = database.findScheduleByID(scheduleID);
-		return new Schedule(this, underlying);
+		return scheduleCache.findByID(scheduleID);
 	}
-
+	
+	public Schedule createTransientSchedule() {
+		return new Schedule(this, database.assembleSchedule());
+	}
+	
+	
+	
 	
 	// INSTRUCTORS
 
+	Cache<Instructor, IDBInstructor> instructorCache = new Cache<Instructor, IDBInstructor>() {
+		Instructor decorate(IDBInstructor underlying) {
+			return new Instructor(Model.this, underlying);
+		}
+		IDBInstructor loadFromDatabase(int id) throws NotFoundException {
+			return database.findInstructorByID(id);
+		}
+		void insertIntoDatabase(Instructor obj) throws NotFoundException {
+			database.insertInstructor(obj.getDocument().underlyingDocument, obj.underlyingInstructor);
+		}
+		void removeFromDatabase(Instructor obj) {
+			database.deleteInstructor(obj.underlyingInstructor);
+		}
+	};
+	
+	public Collection<Instructor> findInstructorsForDocument(Document doc) {
+		Collection<Instructor> result = new LinkedList<Instructor>();
+		for (IDBInstructor underlying : database.findInstructorsForDocument(doc.underlyingDocument))
+			result.add(instructorCache.putIfNotPresentThenGetDecorated(underlying));
+		return result;
+	}
+
+	public Instructor findInstructorByID(int instructorID) throws NotFoundException {
+		return instructorCache.findByID(instructorID);
+	}
+	
 	public Instructor createTransientInstructor(String firstName, String lastName, String username, String maxWTU, boolean isSchedulable) {
 		IDBInstructor underlyingInstructor = database.assembleInstructor(firstName, lastName, username, maxWTU, isSchedulable);
 		return new Instructor(this, underlyingInstructor);
 	}
 
-	public Collection<Instructor> findInstructorsForDocument(Document doc) {
-		Collection<Instructor> result = new LinkedList<Instructor>();
-		for (IDBInstructor underlying : database.findInstructorsForDocument(doc.underlyingDocument))
-			result.add(new Instructor(this, underlying));
-		return result;
-	}
-
-	public Instructor findInstructorByID(int instructorID) throws NotFoundException {
-		IDBInstructor underlying = database.findInstructorByID(instructorID);
-		return new Instructor(this, underlying);
-	}
 
 	
 
 	// COURSES
+
+	Cache<Course, IDBCourse> courseCache = new Cache<Course, IDBCourse>() {
+		Course decorate(IDBCourse underlying) {
+			return new Course(Model.this, underlying);
+		}
+		IDBCourse loadFromDatabase(int id) throws NotFoundException {
+			return database.findCourseByID(id);
+		}
+		void insertIntoDatabase(Course obj) throws NotFoundException {
+			database.insertCourse(obj.getDocument().underlyingDocument, obj.underlyingCourse);
+		}
+		void removeFromDatabase(Course obj) {
+			database.deleteCourse(obj.underlyingCourse);
+		}
+	};
 	
 	public Course createTransientCourse(String name, String catalogNumber, String department, String wtu, String scu, String numSections, String type, String maxEnrollment, String numHalfHoursPerWeek, boolean isSchedulable) {
 		return new Course(this, database.assembleCourse(name, catalogNumber, department, wtu, scu, numSections, type, maxEnrollment, numHalfHoursPerWeek, isSchedulable));
@@ -250,20 +378,36 @@ public class Model {
 	
 	public Collection<Course> findCoursesForDocument(Document doc) {
 		Collection<Course> result = new LinkedList<Course>();
-		for (IDBCourse underlying : database.findCoursesForDocument(doc.underlyingDocument)) {
-			result.add(new Course(this, underlying));
-		}
+		for (IDBCourse underlying : database.findCoursesForDocument(doc.underlyingDocument))
+			result.add(courseCache.putIfNotPresentThenGetDecorated(underlying));
 		return result;
 	}
 
 	public Course findCourseByID(int courseID) throws NotFoundException {
-		IDBCourse underlying = database.findCourseByID(courseID);
-
-		return new Course(this, underlying);
+		return courseCache.findByID(courseID);
 	}
+	
+	
 	
 
 	// LOCATIONS
+	
+	Cache<Location, IDBLocation> locationCache = new Cache<Location, IDBLocation>() {
+		Location decorate(IDBLocation underlying) {
+			return new Location(Model.this, underlying);
+		}
+		IDBLocation loadFromDatabase(int id) throws NotFoundException {
+			return database.findLocationByID(id);
+		}
+		void insertIntoDatabase(Location obj) throws NotFoundException {
+			database.insertLocation(obj.getDocument().underlyingDocument, obj.underlyingLocation);
+		}
+		void removeFromDatabase(Location obj) {
+			database.deleteLocation(obj.underlyingLocation);
+		}
+	};
+	
+	
 	
 	public Location createTransientLocation(String room, String type, String maxOccupancy, boolean isSchedulable) {
 		return new Location(this, database.assembleLocation(room, type, maxOccupancy, isSchedulable));
@@ -271,30 +415,42 @@ public class Model {
 
 	public Collection<Location> findLocationsForDocument(Document doc) {
 		Collection<Location> result = new LinkedList<Location>();
-		for (IDBLocation underlying : database.findLocationsForDocument(doc.underlyingDocument)) {
-			System.out.println("find result underlying room: " + underlying.getRoom() + " id " + underlying.getID());
-			result.add(new Location(this, underlying));
-		}
+		for (IDBLocation underlying : database.findLocationsForDocument(doc.underlyingDocument))
+			result.add(locationCache.putIfNotPresentThenGetDecorated(underlying));
 		return result;
 	}
 
 	public Location findLocationByID(int locationID) throws NotFoundException {
-		IDBLocation underlying = database.findLocationByID(locationID);
-		return new Location(this, underlying);
+		return locationCache.findByID(locationID);
 	}
 	
 	
 
 	// SCHEDULE ITEMS
 
+	Cache<ScheduleItem, IDBScheduleItem> itemCache = new Cache<ScheduleItem, IDBScheduleItem>() {
+		ScheduleItem decorate(IDBScheduleItem underlying) {
+			return new ScheduleItem(Model.this, underlying);
+		}
+		IDBScheduleItem loadFromDatabase(int id) throws NotFoundException {
+			return database.findScheduleItemByID(id);
+		}
+		void insertIntoDatabase(ScheduleItem obj) throws NotFoundException {
+			database.insertScheduleItem(obj.getSchedule().underlyingSchedule, obj.getCourse().underlyingCourse, obj.getInstructor().underlyingInstructor, obj.getLocation().underlyingLocation, obj.underlying);
+		}
+		void removeFromDatabase(ScheduleItem obj) {
+			database.deleteScheduleItem(obj.underlying);
+		}
+	};
+	
 	public Collection<ScheduleItem> findAllScheduleItemsForSchedule(Schedule schedule) {
 		Collection<ScheduleItem> result = new LinkedList<ScheduleItem>();
 		for (IDBScheduleItem underlying : database.findAllScheduleItemsForSchedule(schedule.underlyingSchedule))
-			result.add(new ScheduleItem(this, underlying));
+			result.add(itemCache.putIfNotPresentThenGetDecorated(underlying));
 		return result;
 	}
 
-	public ScheduleItem assembleScheduleItem(int section,
+	public ScheduleItem createTransientScheduleItem(int section,
 			Set<Day> days, int startHalfHour, int endHalfHour,
 			boolean isPlaced, boolean isConflicted) {
 		IDBScheduleItem underlying = database.assembleScheduleItem(section, days, startHalfHour, endHalfHour, isPlaced, isConflicted);
@@ -302,12 +458,11 @@ public class Model {
 	}
 
 	public ScheduleItem findScheduleItemByID(int id) throws NotFoundException {
-		IDBScheduleItem underlying = database.findScheduleItemByID(id);
-		return new ScheduleItem(this, underlying);
+		return itemCache.findByID(id);
 	}
 
 	public boolean isInserted(ScheduleItem scheduleItem) {
-		return database.isInserted(scheduleItem.underlying);
+		return itemCache.isInserted(scheduleItem);
 	}
 
 	

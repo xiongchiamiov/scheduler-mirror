@@ -41,8 +41,9 @@ public class Course implements Identified {
 
 	// PERSISTENCE FUNCTIONS
 
-	public Course insert(Document containingDocument) {
-		model.database.insertCourse(containingDocument.underlyingDocument, underlyingCourse);
+	public Course insert() {
+		assert(document != null);
+		model.database.insertCourse(document.underlyingDocument, underlyingCourse);
 		putOfferedDayPatternsIntoDB();
 		putUsedEquipmentIntoDB();
 		return this;
@@ -248,9 +249,10 @@ public class Course implements Identified {
 		return document;
 	}
 
-	public void setDocument(Document newDocument) {
+	public Course setDocument(Document newDocument) {
 		document = newDocument;
 		documentLoaded = true;
+		return this;
 	}
 
 }
