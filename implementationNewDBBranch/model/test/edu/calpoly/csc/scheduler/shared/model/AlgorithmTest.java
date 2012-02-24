@@ -1,3 +1,4 @@
+package model;
 //package edu.calpoly.csc.scheduler;
 //
 //import java.util.ArrayList;

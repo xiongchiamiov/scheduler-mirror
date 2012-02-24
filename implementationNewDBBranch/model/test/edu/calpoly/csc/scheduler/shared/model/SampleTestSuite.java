@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler;
+package model;
 
 
 import junit.framework.TestCase;
