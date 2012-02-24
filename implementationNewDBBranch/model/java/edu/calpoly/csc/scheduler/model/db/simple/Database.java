@@ -163,7 +163,7 @@ public class Database implements IDatabase {
 
 	@Override
 	public IDBDocument assembleDocument(String name, int startHalfHour, int endHalfHour) {
-		return new DBDocument(null, name, null, startHalfHour, endHalfHour, null, null);
+		return new DBDocument(null, name, null, startHalfHour, endHalfHour, null, null, false);
 	}
 
 	@Override
