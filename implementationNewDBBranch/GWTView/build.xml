@@ -23,10 +23,11 @@
         <pathelement location="test-classes"/>
         <path refid="GWT SDK [GWT - 2.4.0].libraryclasspath"/>
         <pathelement location="gwt-dnd-3.1.2.jar"/>
+        <pathelement location="test-classes/edu/calpoly/csc/scheduler/view/web/shared/Selenium/jar/selenium-server-standalone-2.8.0.jar"/>
         <pathelement location="war/WEB-INF/lib/commons-fileupload-1.2.2.jar"/>
         <pathelement location="war/WEB-INF/lib/guava-r09.jar"/>
         <pathelement location="../model/java/javacsv.jar"/>
-        <pathelement location="/Applications/eclipse/plugins/org.junit_4.8.2.v4_8_2_v20110321-1705/junit.jar"/>
+        <pathelement location="test-classes/test-jars/junit-3.8.2.jar"/>
     </path>
     <target name="init">
         <mkdir dir="war/WEB-INF/classes"/>
