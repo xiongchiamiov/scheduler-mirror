@@ -53,13 +53,19 @@ public abstract class DocumentsTest extends ModelTestCase {
 					END_HALF_HOUR);
 			document.insert();
 			document.setName("doc1renamed");
+			document.setStartHalfHour(10);
+			document.setEndHalfHour(20);
+			document.setIsTrashed(true);
 			documentID = document.getID();
 
 			document.update();
 		}
 
-		assert (model.findDocumentByID(documentID).getName()
-				.equals("doc1renamed"));
+		Document document = model.findDocumentByID(documentID);
+		assert(document.getName().equals("doc1renamed"));
+		assert(document.getStartHalfHour() == 10);
+		assert(document.getEndHalfHour() == 20);
+		assert(document.isTrashed() == true);
 	}
 
 	public void testDeleteDocument() throws Exception {
@@ -155,7 +161,7 @@ public abstract class DocumentsTest extends ModelTestCase {
 		}
 		assert (docIDs.isEmpty());
 	}
-	
+
 	public void testDocumentTBALocation() throws DatabaseException {
 		Model model = createBlankModel();
 		
@@ -163,6 +169,9 @@ public abstract class DocumentsTest extends ModelTestCase {
 		
 		{
 			Document doc = model.createTransientDocument("doc", 14, 44).insert();
+			
+			assert(doc.getTBALocation() == null);
+			
 			Location tbaLocation = model.createTransientLocation("room", "LEC", "20", true).setDocument(doc).insert();
 			doc.setTBALocation(tbaLocation);
 			doc.update();
@@ -174,4 +183,27 @@ public abstract class DocumentsTest extends ModelTestCase {
 		
 		assert(model.findDocumentByID(documentID).getTBALocation() != null);
 	}
+
+	public void testDocumentStaffInstructor() throws DatabaseException {
+		Model model = createBlankModel();
+		
+		int documentID;
+		
+		{
+			Document doc = model.createTransientDocument("doc", 14, 44).insert();
+			
+			assert(doc.getStaffInstructor() == null);
+			
+			Instructor staffInstructor = model.createTransientInstructor("e", "o", "eo", "20", true).setDocument(doc).insert();
+			doc.setStaffInstructor(staffInstructor);
+			doc.update();
+			staffInstructor.update();
+			documentID = doc.getID();
+		}
+		
+		model.clearCache();
+		
+		assert(model.findDocumentByID(documentID).getStaffInstructor() != null);
+	}
+
 }
