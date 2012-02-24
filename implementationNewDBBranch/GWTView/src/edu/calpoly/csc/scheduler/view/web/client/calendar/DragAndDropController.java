@@ -64,6 +64,8 @@ public class DragAndDropController implements MouseMoveHandler, MouseOutHandler,
 			// Hide the contents of the table cell the user dragged
 			DOM.setStyleAttribute(mItemView, "color", "#FFFFFF");
 			DOM.setStyleAttribute(mItemView, "backgroundColor", "#FFFFFF");
+			
+			// TODO Hide contents of ever occurrence of the dragged item on the table
 		}
 	}
 	
@@ -122,6 +124,8 @@ public class DragAndDropController implements MouseMoveHandler, MouseOutHandler,
 				
 				if (fromCalendar) 
 					mWidget.removeItem(mDroppedItem);
+				else
+					cancelDrop();
 			}
 			else {
 				System.out.println(courseString + " dropped on "+day.ordinal()+" at "+row);
