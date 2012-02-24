@@ -71,7 +71,7 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 		layoutListBoxAndCalendar();
 		
 		final Integer documentID = document.getID();
-
+		
 		// Initialize collection of courses
 		mGreetingService.getCoursesForDocument(documentID, new AsyncCallback<List<CourseGWT>>() {
 			@Override
@@ -121,7 +121,6 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 						loading.hide();
 					}
 				});
-		
 	}
 
 	/**
@@ -390,7 +389,6 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 	 * Lays out the available course listbox and the schedule
 	 */
 	private void layoutListBoxAndCalendar() {
-
 		HorizontalPanel boxesAndSchedulePanel = new HorizontalPanel();
 		boxesAndSchedulePanel.setSpacing(2);
 		boxesAndSchedulePanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);

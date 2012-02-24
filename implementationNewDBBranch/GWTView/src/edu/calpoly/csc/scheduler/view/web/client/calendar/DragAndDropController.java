@@ -11,9 +11,9 @@ import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 
-import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.shared.DayGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 
@@ -66,6 +66,7 @@ public class DragAndDropController implements MouseMoveHandler, MouseOutHandler,
 			DOM.setStyleAttribute(mItemView, "backgroundColor", "#FFFFFF");
 			
 			// TODO Hide contents of ever occurrence of the dragged item on the table
+			// TODO if this is a list item with multiple sections remaining, just decrement section count and don't hide
 		}
 	}
 	

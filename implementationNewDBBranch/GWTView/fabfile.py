@@ -1,6 +1,6 @@
 from fabric.api import env, local, put, run
 
-env.hosts = ['scheduler.csc.calpoly.edu']
+env.hosts = ['matt.schirle@scheduler.csc.calpoly.edu']
 
 def generate_build_xml():
 	print('Generating build.xml...')

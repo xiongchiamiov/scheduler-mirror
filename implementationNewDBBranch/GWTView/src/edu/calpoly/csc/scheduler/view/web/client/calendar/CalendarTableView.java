@@ -1,16 +1,12 @@
 package edu.calpoly.csc.scheduler.view.web.client.calendar;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Vector;
 
-import com.gargoylesoftware.htmlunit.javascript.host.Window;
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Node;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.SimplePanel;
 
@@ -416,7 +412,9 @@ public class CalendarTableView extends SimplePanel {
 	public void setLeftOffset(int pixels) {
 		mLeftOffset = pixels + 1;
 		Element tableContainer = DOM.getElementById("CalendarTableContainer");
-		DOM.setStyleAttribute(tableContainer, "left", mLeftOffset+"px");
+		
+		if (tableContainer != null)
+			DOM.setStyleAttribute(tableContainer, "left", mLeftOffset+"px");
 	}
 	
 	private void applyFilters() {
