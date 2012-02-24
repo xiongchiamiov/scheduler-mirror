@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- WARNING: Eclipse auto-generated file.
-              Any modifications will be overwritten.
-              To include a user specific buildfile here, simply create one in the same
-              directory with the processing instruction <?eclipse.ant.import?>
-              as the first entry and export the buildfile again. -->
 <project basedir="." default="build" name="GWTView">
     <property environment="env"/>
     <property name="modeljava.link" value="../model/java"/>
@@ -12,10 +7,10 @@
     <property name="target" value="1.6"/>
     <property name="source" value="1.6"/>
     <path id="GWT SDK [GWT - 2.4.0].libraryclasspath">
-        <pathelement location="${ECLIPSE_HOME}/plugins/com.google.gwt.eclipse.sdkbundle_2.4.0.v201201120043-rel-r37/gwt-2.4.0/gwt-user.jar"/>
-        <pathelement location="${ECLIPSE_HOME}/plugins/com.google.gwt.eclipse.sdkbundle_2.4.0.v201201120043-rel-r37/gwt-2.4.0/gwt-dev.jar"/>
-        <pathelement location="${ECLIPSE_HOME}/plugins/com.google.gwt.eclipse.sdkbundle_2.4.0.v201201120043-rel-r37/gwt-2.4.0/validation-api-1.0.0.GA-sources.jar"/>
-        <pathelement location="${ECLIPSE_HOME}/plugins/com.google.gwt.eclipse.sdkbundle_2.4.0.v201201120043-rel-r37/gwt-2.4.0/validation-api-1.0.0.GA.jar"/>
+        <pathelement location="gwt-jars/gwt-user.jar"/>
+        <pathelement location="gwt-jars/gwt-dev.jar"/>
+        <pathelement location="gwt-jars/validation-api-1.0.0.GA-sources.jar"/>
+        <pathelement location="gwt-jars/validation-api-1.0.0.GA.jar"/>
     </path>
     <path id="GWTView.classpath">
         <pathelement location="war/WEB-INF/classes"/>
@@ -88,7 +83,7 @@
     
 
   <property name="gwt.args" value="" />
-  <property name="gwt.sdk" location="/Applications/eclipse/plugins/com.google.gwt.eclipse.sdkbundle_2.4.0.v201201120043-rel-r37/gwt-2.4.0" />
+  <property name="gwt.sdk" location="gwt-jars" />
 
   <path id="project.class.path">
     <pathelement location="src"/>
@@ -104,8 +99,8 @@
         <pathelement location="war/WEB-INF/classes"/>
         <pathelement location="src"/>
         <path refid="project.class.path"/>
-        <pathelement location="/Applications/eclipse/plugins/com.google.gwt.eclipse.sdkbundle_2.4.0.v201201120043-rel-r37/gwt-2.4.0/validation-api-1.0.0.GA.jar" />
-        <pathelement location="/Applications/eclipse/plugins/com.google.gwt.eclipse.sdkbundle_2.4.0.v201201120043-rel-r37/gwt-2.4.0/validation-api-1.0.0.GA-sources.jar" />
+        <pathelement location="gwt-jars/validation-api-1.0.0.GA.jar" />
+        <pathelement location="gwt-jars/validation-api-1.0.0.GA-sources.jar" />
         <pathelement location="gwt-dnd-3.1.2.jar"/>
       </classpath>
       <!-- add jvmarg -Xss16M or similar if you see a StackOverflowError -->
