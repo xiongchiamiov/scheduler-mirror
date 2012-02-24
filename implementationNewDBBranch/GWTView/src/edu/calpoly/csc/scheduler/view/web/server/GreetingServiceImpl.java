@@ -294,7 +294,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	}
 
 	@Override
-	public Collection<DocumentGWT> getAllOriginalDocumentsByID() throws NotFoundException {
+	public Collection<DocumentGWT> getAllOriginalDocumentsByID() throws NotFoundExceptionGWT {
 		Collection<DocumentGWT> result = new LinkedList<DocumentGWT>();
 		try {
 			for (Document doc : model.findAllDocuments()) {
@@ -317,8 +317,16 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			
 			model.createTransientSchedule().setDocument(newOriginalDocument).insert();
 
-			newOriginalDocument.setStaffInstructor(model.createTransientInstructor("", "TBA", "TBA", "0", true).insert());
-			newOriginalDocument.setTBALocation(model.createTransientLocation("TBA", "LEC", "0", true).insert());
+			newOriginalDocument.setStaffInstructor(
+					model.createTransientInstructor("", "TBA", "TBA", "0", true)
+						.setDocument(newOriginalDocument)
+						.insert());
+			newOriginalDocument.setTBALocation(
+					model.createTransientLocation("TBA", "LEC", "0", true)
+						.setDocument(newOriginalDocument)
+						.insert());
+			
+			newOriginalDocument.update();
 			
 			return createWorkingCopyForOriginalDocument(newOriginalDocument.getID());
 		}
@@ -339,9 +347,10 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			Document workingCopyDocument = model.getWorkingCopyForOriginalDocumentOrNull(originalDocument);
 			assert(workingCopyDocument == null);
 			
-			workingCopyDocument = model.copyDocument(originalDocument, originalDocument.getName());
+			workingCopyDocument = model.findDocumentByID(model.copyDocument(originalDocument, originalDocument.getName()));
 			model.associateWorkingCopyWithOriginal(workingCopyDocument, originalDocument);
 			workingCopyDocument.update();
+			
 			originalDocument.update();
 			return Conversion.documentToGWT(workingCopyDocument, model.findSchedulesForDocument(workingCopyDocument).iterator().next().getID());
 		} catch (NotFoundException e) {
@@ -364,7 +373,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			
 			originalDocument.delete();
 			
-			originalDocument = model.copyDocument(workingCopyDocument, originalDocumentName);
+			originalDocument = model.findDocumentByID(model.copyDocument(workingCopyDocument, originalDocumentName));
 			model.associateWorkingCopyWithOriginal(workingCopyDocument, originalDocument);
 			workingCopyDocument.update();
 			originalDocument.update();

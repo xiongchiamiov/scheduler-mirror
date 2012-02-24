@@ -129,7 +129,7 @@ public abstract class Conversion {
 				course.getNumSections(),
 				course.getType(),
 				course.getMaxEnrollment(),
-				course.getLecture().getID(),
+				course.getLecture() == null ? -1 : course.getLecture().getID(),
 				course.getNumHalfHoursPerWeek(),
 				dayPatterns,
 				course.getID(),

@@ -4,7 +4,8 @@ import java.util.Collection;
 
 import edu.calpoly.csc.scheduler.model.db.DatabaseException;
 import edu.calpoly.csc.scheduler.model.db.IDBDocument;
-import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
+import edu.calpoly.csc.scheduler.model.db.IDBInstructor;
+import edu.calpoly.csc.scheduler.model.db.IDBLocation;
 
 public class Document extends Identified {
 	private final Model model;
@@ -96,10 +97,11 @@ public class Document extends Identified {
 
 	public Location getTBALocation() throws DatabaseException {
 		if (!tbaLocationLoaded) {
-			if (tbaLocation == null)
-				throw new NotFoundException();
-			
-			tbaLocation = model.findLocationByID(model.database.getDocumentTBALocation(underlyingDocument).getID());
+			IDBLocation underlyingLocation = model.database.getDocumentTBALocationOrNull(underlyingDocument);
+			if (underlyingLocation == null)
+				tbaLocation = null;
+			else
+				tbaLocation = model.findLocationByID(underlyingLocation.getID());
 			tbaLocationLoaded = true;
 		}
 		return tbaLocation;
@@ -117,9 +119,12 @@ public class Document extends Identified {
 
 	public Instructor getStaffInstructor() throws DatabaseException {
 		if (!staffInstructorLoaded) {
-			if (staffInstructor == null)
-				throw new NotFoundException();
-			staffInstructor = model.findInstructorByID(model.database.getDocumentStaffInstructor(underlyingDocument).getID());
+			IDBInstructor underlyingInstructor = model.database.getDocumentStaffInstructorOrNull(underlyingDocument);
+			if (underlyingInstructor == null)
+				staffInstructor = null;
+			else
+				staffInstructor = model.findInstructorByID(underlyingInstructor.getID());
+			
 			staffInstructorLoaded = true;
 		}
 		return staffInstructor;

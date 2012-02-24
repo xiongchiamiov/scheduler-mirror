@@ -155,4 +155,23 @@ public abstract class DocumentsTest extends ModelTestCase {
 		}
 		assert (docIDs.isEmpty());
 	}
+	
+	public void testDocumentTBALocation() throws DatabaseException {
+		Model model = createBlankModel();
+		
+		int documentID;
+		
+		{
+			Document doc = model.createTransientDocument("doc", 14, 44).insert();
+			Location tbaLocation = model.createTransientLocation("room", "LEC", "20", true).setDocument(doc).insert();
+			doc.setTBALocation(tbaLocation);
+			doc.update();
+			tbaLocation.update();
+			documentID = doc.getID();
+		}
+		
+		model.clearCache();
+		
+		assert(model.findDocumentByID(documentID).getTBALocation() != null);
+	}
 }

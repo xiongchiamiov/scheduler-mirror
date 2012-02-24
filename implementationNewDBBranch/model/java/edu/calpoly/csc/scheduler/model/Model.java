@@ -183,10 +183,10 @@ public class Model {
 		return new Document(this, underlying);
 	}
 	
-	public Document copyDocument(Document existingDocument, String newName) throws DatabaseException {
-		IDBDocument underlying = database.assembleDocument(newName, existingDocument.getStartHalfHour(), existingDocument.getEndHalfHour());
-		database.insertDocument(underlying);
-		Document newDocument = new Document(this, underlying);
+	public int copyDocument(Document existingDocument, String newName) throws DatabaseException {
+		IDBDocument newUnderlyingDocument = database.assembleDocument(newName, existingDocument.getStartHalfHour(), existingDocument.getEndHalfHour());
+		database.insertDocument(newUnderlyingDocument);
+//		Document newDocument = new Document(this, underlying);
 		
 		
 
@@ -194,7 +194,7 @@ public class Model {
 		Map<Integer, IDBLocation> newDocumentLocationsByExistingDocumentLocationIDs = new HashMap<Integer, IDBLocation>();
 		for (IDBLocation existingDocumentLocation : database.findLocationsForDocument(existingDocument.underlyingDocument)) {
 			IDBLocation newDocumentLocation = database.assembleLocation(existingDocumentLocation.getRoom(), existingDocumentLocation.getType(), existingDocumentLocation.getMaxOccupancy(), existingDocumentLocation.isSchedulable());
-			database.insertLocation(newDocument.underlyingDocument, newDocumentLocation);
+			database.insertLocation(newUnderlyingDocument, newDocumentLocation);
 			newDocumentLocationsByExistingDocumentLocationIDs.put(existingDocumentLocation.getID(), newDocumentLocation);
 
 			for (IDBEquipmentType providedEquipment : database.findProvidedEquipmentByEquipmentForLocation(existingDocumentLocation).keySet()) {
@@ -206,7 +206,7 @@ public class Model {
 		Map<Integer, IDBCourse> newDocumentCoursesByExistingDocumentCourseIDs = new HashMap<Integer, IDBCourse>();
 		for (IDBCourse existingDocumentCourse : database.findCoursesForDocument(existingDocument.underlyingDocument)) {
 			IDBCourse newDocumentCourse = database.assembleCourse(existingDocumentCourse.getName(), existingDocumentCourse.getCalatogNumber(), existingDocumentCourse.getDepartment(), existingDocumentCourse.getWTU(), existingDocumentCourse.getSCU(), existingDocumentCourse.getNumSections(), existingDocumentCourse.getType(), existingDocumentCourse.getMaxEnrollment(), existingDocumentCourse.getNumHalfHoursPerWeek(), existingDocumentCourse.isSchedulable());
-			database.insertCourse(newDocument.underlyingDocument, newDocumentCourse);
+			database.insertCourse(newUnderlyingDocument, newDocumentCourse);
 			newDocumentCoursesByExistingDocumentCourseIDs.put(existingDocumentCourse.getID(), newDocumentCourse);
 			
 			for (IDBOfferedDayPattern existingOfferedDayPattern : database.findOfferedDayPatternsForCourse(existingDocumentCourse)) {
@@ -235,7 +235,7 @@ public class Model {
 		Map<Integer, IDBInstructor> newDocumentInstructorsByExistingDocumentInstructorIDs = new HashMap<Integer, IDBInstructor>();
 		for (IDBInstructor existingDocumentInstructor : database.findInstructorsForDocument(existingDocument.underlyingDocument)) {
 			IDBInstructor newDocumentInstructor = database.assembleInstructor(existingDocumentInstructor.getFirstName(), existingDocumentInstructor.getLastName(), existingDocumentInstructor.getUsername(), existingDocumentInstructor.getMaxWTU(), existingDocumentInstructor.isSchedulable());
-			database.insertInstructor(newDocument.underlyingDocument, newDocumentInstructor);
+			database.insertInstructor(newUnderlyingDocument, newDocumentInstructor);
 			newDocumentInstructorsByExistingDocumentInstructorIDs.put(existingDocumentInstructor.getID(), newDocumentInstructor);
 			
 			for (Entry<IDBCourse, IDBCoursePreference> existingDocumentEntry : database.findCoursePreferencesByCourseForInstructor(existingDocumentInstructor).entrySet()) {
@@ -258,7 +258,7 @@ public class Model {
 		Map<Integer, IDBSchedule> newDocumentScheduleIDsByExistingDocumentScheduleIDs = new HashMap<Integer, IDBSchedule>();
 		for (IDBSchedule existingDocumentSchedule : database.findAllSchedulesForDocument(existingDocument.underlyingDocument)) {
 			IDBSchedule newDocumentSchedule = database.assembleSchedule();
-			database.insertSchedule(newDocument.underlyingDocument, newDocumentSchedule);
+			database.insertSchedule(newUnderlyingDocument, newDocumentSchedule);
 			
 			newDocumentScheduleIDsByExistingDocumentScheduleIDs.put(existingDocumentSchedule.getID(), newDocumentSchedule);
 			
@@ -287,11 +287,11 @@ public class Model {
 			}
 		}
 
-		database.setDocumentStaffInstructor(newDocument.underlyingDocument, newDocumentInstructorsByExistingDocumentInstructorIDs.get(existingDocument.getStaffInstructor().getID()));
-		database.setDocumentTBALocation(newDocument.underlyingDocument, newDocumentLocationsByExistingDocumentLocationIDs.get(existingDocument.getTBALocation().getID()));
-		database.updateDocument(newDocument.underlyingDocument);
+		database.setDocumentStaffInstructor(newUnderlyingDocument, newDocumentInstructorsByExistingDocumentInstructorIDs.get(existingDocument.getStaffInstructor().getID()));
+		database.setDocumentTBALocation(newUnderlyingDocument, newDocumentLocationsByExistingDocumentLocationIDs.get(existingDocument.getTBALocation().getID()));
+		database.updateDocument(newUnderlyingDocument);
 		
-		return newDocument;
+		return newUnderlyingDocument.getID();
 	}
 
 	public void associateWorkingCopyWithOriginal(Document workingCopyDocument, Document newOriginal) throws DatabaseException {
@@ -300,7 +300,7 @@ public class Model {
 
 	public Document getOriginalForWorkingCopyDocument(Document workingCopyDocument) throws DatabaseException {
 		IDBDocument underlying = database.getOriginalForWorkingCopyDocument(workingCopyDocument.underlyingDocument);
-		return new Document(this, underlying);
+		return documentCache.decorateAndPutIfNotPresent(underlying);
 	}
 
 	public boolean isOriginalDocument(Document doc) throws DatabaseException {

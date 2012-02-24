@@ -109,7 +109,6 @@ public interface IDatabase {
 	// Time Preferences
 	Map<IDBTime, IDBTimePreference> findTimePreferencesByTimeForInstructor(IDBInstructor instructor) throws DatabaseException;
 	IDBTimePreference findTimePreferenceByID(int id) throws DatabaseException;
-	IDBTimePreference findTimePreferenceForInstructorAndTime(IDBInstructor instructor, IDBTime time) throws DatabaseException;
 	IDBTimePreference assembleTimePreference(int preference) throws DatabaseException;
 	void insertTimePreference(IDBInstructor ins, IDBTime time, IDBTimePreference timePreference) throws DatabaseException;
 	void updateTimePreference(IDBTimePreference timePreference) throws DatabaseException;
@@ -118,7 +117,6 @@ public interface IDatabase {
 	// Course Preferences
 	Map<IDBCourse, IDBCoursePreference> findCoursePreferencesByCourseForInstructor(IDBInstructor instructor) throws DatabaseException;
 	IDBCoursePreference findCoursePreferenceByID(int id) throws DatabaseException;
-	IDBCoursePreference findCoursePreferenceForInstructorIDAndCourse(IDBInstructor instructor, IDBCourse course) throws DatabaseException;
 	IDBCoursePreference assembleCoursePreference(int preference) throws DatabaseException;
 	void insertCoursePreference(IDBInstructor instructor, IDBCourse course, IDBCoursePreference coursePreference) throws DatabaseException;
 	void updateCoursePreference(IDBCoursePreference coursePreference) throws DatabaseException;
@@ -163,8 +161,8 @@ public interface IDatabase {
 	void writeState(ObjectOutputStream oos) throws IOException;
 	void readState(ObjectInputStream ois) throws IOException;
 	
-	IDBInstructor getDocumentStaffInstructor(IDBDocument underlyingDocument) throws NotFoundException;
-	IDBLocation getDocumentTBALocation(IDBDocument underlyingDocument) throws NotFoundException;
+	IDBInstructor getDocumentStaffInstructorOrNull(IDBDocument underlyingDocument) throws NotFoundException;
+	IDBLocation getDocumentTBALocationOrNull(IDBDocument underlyingDocument) throws NotFoundException;
 	void setDocumentStaffInstructor(IDBDocument underlyingDocument, IDBInstructor underlyingInstructor);
 	void setDocumentTBALocation(IDBDocument underlyingDocument, IDBLocation underlyingLocation);
 }

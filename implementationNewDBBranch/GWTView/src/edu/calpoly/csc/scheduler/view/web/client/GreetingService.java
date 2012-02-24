@@ -104,7 +104,7 @@ public interface GreetingService extends RemoteService {
 	
 	void updateDocument(DocumentGWT document) throws NotFoundExceptionGWT;
 
-	Collection<DocumentGWT> getAllOriginalDocumentsByID() throws NotFoundException;
+	Collection<DocumentGWT> getAllOriginalDocumentsByID() throws NotFoundExceptionGWT;
 
 	void saveWorkingCopyToOriginalDocument(Integer id) throws NotFoundExceptionGWT;
 

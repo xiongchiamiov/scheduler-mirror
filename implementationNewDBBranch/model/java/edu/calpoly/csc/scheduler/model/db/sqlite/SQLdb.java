@@ -665,14 +665,6 @@ public class SQLdb implements IDatabase {
 
 
 	@Override
-	public IDBTimePreference findTimePreferenceForInstructorAndTime(
-			IDBInstructor instructor, IDBTime time) throws DatabaseException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
 	public IDBTimePreference assembleTimePreference(int preference)
 			throws DatabaseException {
 		// TODO Auto-generated method stub
@@ -714,15 +706,6 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public IDBCoursePreference findCoursePreferenceByID(int id)
-			throws DatabaseException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public IDBCoursePreference findCoursePreferenceForInstructorIDAndCourse(
-			IDBInstructor instructor, IDBCourse course)
 			throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
@@ -962,7 +945,7 @@ public class SQLdb implements IDatabase {
 
 
 	@Override
-	public IDBInstructor getDocumentStaffInstructor(
+	public IDBInstructor getDocumentStaffInstructorOrNull(
 			IDBDocument underlyingDocument) throws NotFoundException {
 		// TODO Auto-generated method stub
 		return null;
@@ -970,7 +953,7 @@ public class SQLdb implements IDatabase {
 
 
 	@Override
-	public IDBLocation getDocumentTBALocation(IDBDocument underlyingDocument)
+	public IDBLocation getDocumentTBALocationOrNull(IDBDocument underlyingDocument)
 			throws NotFoundException {
 		// TODO Auto-generated method stub
 		return null;

@@ -437,14 +437,14 @@ public class Database implements IDatabase {
 	public IDBTime findTimeByID(int id) {
 		return new DBTime(id);
 	}
-	
-	@Override
-	public IDBTimePreference findTimePreferenceForInstructorAndTime(IDBInstructor instructor, IDBTime time) throws NotFoundException {
-		for (DBTimePreference timePref : timePreferenceTable.getAll())
-			if (timePref.instructorID == instructor.getID() && sameTime(time, findTimeByID(timePref.timeID)))
-				return timePref;
-		throw new NotFoundException();
-	}
+//	
+//	@Override
+//	public IDBTimePreference findTimePreferenceForInstructorAndTime(IDBInstructor instructor, IDBTime time) throws NotFoundException {
+//		for (DBTimePreference timePref : timePreferenceTable.getAll())
+//			if (timePref.instructorID == instructor.getID() && sameTime(time, findTimeByID(timePref.timeID)))
+//				return timePref;
+//		throw new NotFoundException();
+//	}
 
 	@Override
 	public IDBTimePreference assembleTimePreference(int preference) {
@@ -489,15 +489,15 @@ public class Database implements IDatabase {
 	public IDBCoursePreference findCoursePreferenceByID(int id) throws NotFoundException {
 		return new DBCoursePreference(coursePreferenceTable.findByID(id));
 	}
-
-	@Override
-	public IDBCoursePreference findCoursePreferenceForInstructorIDAndCourse(
-			IDBInstructor instructor, IDBCourse course) throws NotFoundException {
-		for (DBCoursePreference coursePref : coursePreferenceTable.getAll())
-			if (coursePref.instructorID == instructor.getID() && coursePref.courseID == course.getID())
-				return coursePref;
-		throw new NotFoundException();
-	}
+//
+//	@Override
+//	public IDBCoursePreference findCoursePreferenceForInstructorIDAndCourse(
+//			IDBInstructor instructor, IDBCourse course) throws NotFoundException {
+//		for (DBCoursePreference coursePref : coursePreferenceTable.getAll())
+//			if (coursePref.instructorID == instructor.getID() && coursePref.courseID == course.getID())
+//				return coursePref;
+//		throw new NotFoundException();
+//	}
 
 	@Override
 	public IDBCoursePreference assembleCoursePreference(int preference) {
@@ -901,14 +901,20 @@ public class Database implements IDatabase {
 
 
 	@Override
-	public IDBInstructor getDocumentStaffInstructor(IDBDocument underlyingDocument) throws NotFoundException {
-		return instructorTable.findByID(((DBDocument)underlyingDocument).staffInstructorID);
+	public IDBInstructor getDocumentStaffInstructorOrNull(IDBDocument underlyingDocument) throws NotFoundException {
+		Integer id = ((DBDocument)underlyingDocument).staffInstructorID;
+		if (id == null)
+			return null;
+		return instructorTable.findByID(id);
 	}
 
 
 	@Override
-	public IDBLocation getDocumentTBALocation(IDBDocument underlyingDocument) throws NotFoundException {
-		return locationTable.findByID(((DBDocument)underlyingDocument).tbaLocationID);
+	public IDBLocation getDocumentTBALocationOrNull(IDBDocument underlyingDocument) throws NotFoundException {
+		Integer id = ((DBDocument)underlyingDocument).tbaLocationID;
+		if (id == null)
+			return null;
+		return locationTable.findByID(id);
 	}
 
 
