@@ -213,4 +213,36 @@ public abstract class DocumentsTest extends ModelTestCase {
 		
 		model.copyDocument(document, document.getName());
 	}
+	
+	public void testWorkingCopy() throws DatabaseException {
+		Model model = createBlankModel();
+
+		int doc1id;
+		int doc2id;
+		
+		{
+			Document doc1 = model.createTransientDocument("doc1", 10, 30).insert();
+			Document doc2 = model.createTransientDocument("doc2", 10, 30).insert();
+			doc2.setOriginal(doc1);
+			doc2.update();
+			doc1.update();
+			doc1id = doc1.getID();
+			doc2id = doc2.getID();
+
+			model.clearCache();
+		}
+
+
+		{
+			Document doc1 = model.findDocumentByID(doc1id);
+			assert(doc1 != null);
+			assert(doc1.getWorkingCopy() != null);
+			assert(doc1.getWorkingCopy().getName().equals("doc2"));
+
+			model.clearCache();
+		}
+
+		
+		model.findDocumentByID(doc2id).getOriginal().getName().equals("doc1");
+	}
 }

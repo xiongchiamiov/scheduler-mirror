@@ -44,8 +44,7 @@ public class Document extends Identified {
 			model.database.setDocumentStaffInstructor(underlyingDocument, staffInstructor.underlyingInstructor);
 		if (tbaLocationIsSet())
 			model.database.setDocumentTBALocation(underlyingDocument, tbaLocation.underlyingLocation);
-		if (originalLoaded)
-			model.database.disassociateWorkingCopyWithOriginal(underlyingDocument, model.database.getOriginalForWorkingCopyDocument(underlyingDocument));
+		disassociateWorkingCopy();
 		if (originalLoaded && original != null)
 			model.database.associateWorkingCopyWithOriginal(underlyingDocument, original.underlyingDocument);
 		model.documentCache.update(this);
@@ -61,9 +60,14 @@ public class Document extends Identified {
 		for (Course course : getCourses())
 			course.delete();
 
-		if (originalLoaded)
-			model.database.disassociateWorkingCopyWithOriginal(underlyingDocument, model.database.getOriginalForWorkingCopyDocument(underlyingDocument));
+		disassociateWorkingCopy();
 		model.documentCache.delete(this);
+	}
+	
+	private void disassociateWorkingCopy() throws DatabaseException {
+		IDBDocument oldOriginal = model.database.getOriginalForWorkingCopyDocumentOrNull(underlyingDocument);
+		if (oldOriginal != null)
+			model.database.disassociateWorkingCopyWithOriginal(underlyingDocument, oldOriginal);
 	}
 
 	
@@ -155,7 +159,7 @@ public class Document extends Identified {
 
 	public Document getOriginal() throws DatabaseException {
 		if (!originalLoaded) {
-			IDBDocument originalUnderlying = model.database.getOriginalForWorkingCopyDocument(underlyingDocument);
+			IDBDocument originalUnderlying = model.database.getOriginalForWorkingCopyDocumentOrNull(underlyingDocument);
 			if (originalUnderlying == null)
 				original = null;
 			else

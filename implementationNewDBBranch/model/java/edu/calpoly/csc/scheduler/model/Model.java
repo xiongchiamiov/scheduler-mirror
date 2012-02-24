@@ -288,16 +288,17 @@ public class Model {
 		return newUnderlyingDocument.getID();
 	}
 
-	public void associateWorkingCopyWithOriginal(Document workingCopyDocument, Document newOriginal) throws DatabaseException {
+	void associateWorkingCopyWithOriginal(Document workingCopyDocument, Document newOriginal) throws DatabaseException {
 		database.associateWorkingCopyWithOriginal(workingCopyDocument.underlyingDocument, newOriginal.underlyingDocument);
 	}
 
-	public Document getOriginalForWorkingCopyDocument(Document workingCopyDocument) throws DatabaseException {
-		IDBDocument underlying = database.getOriginalForWorkingCopyDocument(workingCopyDocument.underlyingDocument);
+	Document getOriginalForWorkingCopyDocument(Document workingCopyDocument) throws DatabaseException {
+		IDBDocument underlying = database.getOriginalForWorkingCopyDocumentOrNull(workingCopyDocument.underlyingDocument);
+		assert(underlying != null);
 		return documentCache.decorateAndPutIfNotPresent(underlying);
 	}
 
-	public boolean isOriginalDocument(Document doc) throws DatabaseException {
+	boolean isOriginalDocument(Document doc) throws DatabaseException {
 		return database.isOriginalDocument(doc.underlyingDocument);
 	}
 

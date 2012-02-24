@@ -297,7 +297,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		Collection<DocumentGWT> result = new LinkedList<DocumentGWT>();
 		try {
 			for (Document doc : model.findAllDocuments()) {
-				if (model.isOriginalDocument(doc)) {
+				if (doc.getOriginal() == null) {
+					System.out.println("found original doc " + doc.isTrashed());
 					int scheduleID = model.findSchedulesForDocument(doc).iterator().next().getID();
 					result.add(Conversion.documentToGWT(doc, scheduleID));
 				}
@@ -347,7 +348,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			assert(workingCopyDocument == null);
 			
 			workingCopyDocument = model.findDocumentByID(model.copyDocument(originalDocument, originalDocument.getName()));
-			model.associateWorkingCopyWithOriginal(workingCopyDocument, originalDocument);
+			workingCopyDocument.setOriginal(originalDocument);
 			workingCopyDocument.update();
 			
 			originalDocument.update();
@@ -365,15 +366,16 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		try {
 			Document workingCopyDocument = model.findDocumentByID(workingCopyDocumentID);
 		
-			Document originalDocument = model.getOriginalForWorkingCopyDocument(workingCopyDocument);
+			Document originalDocument = workingCopyDocument.getOriginal();
 			workingCopyDocument.setOriginal(null);
+			workingCopyDocument.update();
 			
 			String originalDocumentName = originalDocument.getName();
 			
 			originalDocument.delete();
 			
 			originalDocument = model.findDocumentByID(model.copyDocument(workingCopyDocument, originalDocumentName));
-			model.associateWorkingCopyWithOriginal(workingCopyDocument, originalDocument);
+			workingCopyDocument.setOriginal(originalDocument);
 			workingCopyDocument.update();
 			originalDocument.update();
 			
@@ -562,7 +564,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	@Override
 	public void updateDocument(DocumentGWT documentGWT) throws NotFoundExceptionGWT {
 		try {
+			System.out.println("got gwt doc " + documentGWT.isTrashed());
 			Document document = Conversion.readDocumentFromGWT(model, documentGWT);
+			System.out.println("updating model doc " + document.isTrashed());
 			document.update();
 		} catch (NotFoundException e) {
 			throw new RuntimeException(e);

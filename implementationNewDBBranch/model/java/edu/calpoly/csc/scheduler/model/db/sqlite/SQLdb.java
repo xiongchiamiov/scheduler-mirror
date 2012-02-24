@@ -276,7 +276,7 @@ public class SQLdb implements IDatabase {
 
 
 	@Override
-	public IDBDocument getOriginalForWorkingCopyDocument(IDBDocument rawDocument)
+	public IDBDocument getOriginalForWorkingCopyDocumentOrNull(IDBDocument rawDocument)
 			throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;

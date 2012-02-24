@@ -39,7 +39,7 @@ public interface IDatabase {
 	// Working Copy
 	boolean isOriginalDocument(IDBDocument doc) throws DatabaseException;
 	boolean documentIsWorkingCopy(IDBDocument document) throws DatabaseException;
-	IDBDocument getOriginalForWorkingCopyDocument(IDBDocument rawDocument) throws DatabaseException;
+	IDBDocument getOriginalForWorkingCopyDocumentOrNull(IDBDocument rawDocument) throws DatabaseException;
 	IDBDocument getWorkingCopyForOriginalDocumentOrNull(IDBDocument document) throws DatabaseException;
 	void associateWorkingCopyWithOriginal(IDBDocument underlyingDocument, IDBDocument underlyingDocument2) throws DatabaseException;
 	void disassociateWorkingCopyWithOriginal(IDBDocument underlyingDocument, IDBDocument underlyingDocument2) throws DatabaseException;

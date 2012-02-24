@@ -523,7 +523,7 @@ public class Database implements IDatabase {
 	@Override
 	public boolean documentIsWorkingCopy(IDBDocument rawDocument) {
 		DBDocument document = (DBDocument)rawDocument;
-		return document.originalID == document.id;
+		return document.originalID != null;
 	}
 
 	@Override
@@ -533,20 +533,20 @@ public class Database implements IDatabase {
 		
 		for (DBDocument workingCopy : this.documentTable.getAll())
 			if (documentIsWorkingCopy(workingCopy))
-				if (workingCopy.originalID == document.id)
+				if (workingCopy.originalID.equals(document.id))
 					return workingCopy;
 		
 		return null;
 	}
 
 	@Override
-	public IDBDocument getOriginalForWorkingCopyDocument(IDBDocument rawDocument) throws NotFoundException {
+	public IDBDocument getOriginalForWorkingCopyDocumentOrNull(IDBDocument rawDocument) throws NotFoundException {
 		assert(documentTable != null);
 		assert(rawDocument != null);
-		assert(!documentIsWorkingCopy(rawDocument));
 		DBDocument document = (DBDocument)rawDocument;
 		
-		assert(document.originalID != null);
+		if (document.originalID == null)
+			return null;
 		
 		System.out.println("doc table " + documentTable + " doc " + document);
 		return documentTable.findByID(document.originalID);
