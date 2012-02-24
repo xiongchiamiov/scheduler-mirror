@@ -139,7 +139,7 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 	public void editItem(CourseGWT course) {
 		Set<DayGWT> days = new HashSet<DayGWT>();
 		ScheduleItemGWT item = new ScheduleItemGWT(-1, course.getID(), -1, -1, -1, days, 0, 0, false, false);
-		editItem(true, item, new ArrayList<Integer>(), 0);
+		editItem(true, item, null, -1);
 	}
 	
 	/**

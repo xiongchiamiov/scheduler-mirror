@@ -307,7 +307,7 @@ public class CalendarTableView extends SimplePanel {
 		final CalendarDayModel day = mModel.get(col);
 		final ScheduleItemGWT item = day.get(row).get(col - day.getOffset());
 
-		mScheduleController.editItem(false, item, new ArrayList<Integer>(0), row);
+		mScheduleController.editItem(false, item, null, -1);
 	}
 	
 	/**

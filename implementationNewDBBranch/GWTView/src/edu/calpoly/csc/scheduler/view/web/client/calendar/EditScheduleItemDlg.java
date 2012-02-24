@@ -58,6 +58,11 @@ public class EditScheduleItemDlg extends DialogBox {
 	private final DocumentGWT mDocument;
 
 	public EditScheduleItemDlg(GreetingServiceAsync service, ScheduleEditWidget widget, DragAndDropController dragController,
+			boolean fromList, ScheduleItemGWT item, DocumentGWT document) {
+		this(service, widget, dragController, fromList, item, null, -1, document);
+	}
+	
+	public EditScheduleItemDlg(GreetingServiceAsync service, ScheduleEditWidget widget, DragAndDropController dragController,
 			boolean fromList, ScheduleItemGWT item, List<Integer> newDays, int newStartRow, DocumentGWT document) {
 		super(false);
 
@@ -212,8 +217,13 @@ public class EditScheduleItemDlg extends DialogBox {
 		for (int time = 0; time < CalendarTableView.START_TIMES.length; time++)
 			mStartTimeLB.addItem(CalendarTableView.START_TIMES[time]);
 		
-		final int maxIndex = mStartTimeLB.getItemCount() - 1;
-		mStartTimeLB.setSelectedIndex(mNewStartRow < maxIndex ? mNewStartRow : maxIndex - 1);
+		if (mNewStartRow >= 0) {
+			final int maxIndex = mStartTimeLB.getItemCount() - 1;
+			mStartTimeLB.setSelectedIndex(mNewStartRow < maxIndex ? mNewStartRow : maxIndex - 1);
+		}
+		else
+			mStartTimeLB.setSelectedIndex(CalendarTableView.getStartRow(mOriginalItem));
+		
 		mStartTimeLB.setWidth("200px");
 
 		timePanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
@@ -232,8 +242,13 @@ public class EditScheduleItemDlg extends DialogBox {
 		for (int time = 0; time < CalendarTableView.END_TIMES.length; time++)
 			mEndTimeLB.addItem(CalendarTableView.END_TIMES[time]);
 		
-		final int maxIndex = mEndTimeLB.getItemCount() - 1;
-		mEndTimeLB.setSelectedIndex(mNewStartRow < maxIndex ? mNewStartRow + 1 : maxIndex);
+		if (mNewStartRow >= 0) {
+			final int maxIndex = mEndTimeLB.getItemCount() - 1;
+			mEndTimeLB.setSelectedIndex(mNewStartRow < maxIndex ? mNewStartRow + 1 : maxIndex);
+		}
+		else 
+			mEndTimeLB.setSelectedIndex(CalendarTableView.getEndRow(mOriginalItem) + 1);
+		
 		mEndTimeLB.setWidth("200px");
 
 		timePanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
@@ -245,20 +260,31 @@ public class EditScheduleItemDlg extends DialogBox {
 	private Widget createDayPanel() {
 		final HorizontalPanel dayPanel = new HorizontalPanel();
 		
-		dayPanel.setWidth("150px");
-		dayPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+		dayPanel.setWidth("300px");
+		dayPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
 		dayPanel.add(new Label("Days:"));
+		
 		final VerticalPanel checkBoxPanel = new VerticalPanel();
+		checkBoxPanel.setWidth("200px");
 		for (DayGWT day : DayGWT.values()) {
 			final CheckBox checkBox = new CheckBox(day.name);
 			mDayCheckBoxes.add(checkBox);
 			checkBoxPanel.add(checkBox);
 		}
 
-		for (int dayNum : mNewDays)
-			mDayCheckBoxes.get(dayNum).setValue(true);
+		if (mNewDays != null) {
+			System.out.println("mNewDays != null");
+			for (int dayNum : mNewDays)
+				mDayCheckBoxes.get(dayNum).setValue(true);
+		}
+		else {
+			for (DayGWT day : mOriginalItem.getDays()) {
+				System.out.println("checking day " + day.ordinal());
+				mDayCheckBoxes.get(day.ordinal()).setValue(true);
+			}
+		}
 
-		dayPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+		dayPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
 		dayPanel.add(checkBoxPanel);
 
 		return dayPanel;
@@ -299,10 +325,13 @@ public class EditScheduleItemDlg extends DialogBox {
 			public void onSuccess(List<InstructorGWT> result) {
 				mInstructors = result;
 				
-				mInstructorsLB.addItem("Staff");
+				mInstructorsLB.addItem("Don't care");
 				if (result != null) {
 					for (InstructorGWT instructor : result) {
 						mInstructorsLB.addItem(instructor.getFirstName() + " " + instructor.getLastName());
+
+						if (mOriginalItem.getLocationID() == instructor.getID())
+							mInstructorsLB.setSelectedIndex(mInstructorsLB.getItemCount() - 1);
 					}
 				}
 			}
@@ -320,10 +349,13 @@ public class EditScheduleItemDlg extends DialogBox {
 			public void onSuccess(List<LocationGWT> result) {
 				mLocations = result;
 
-				mLocationsLB.addItem("TBA");
+				mLocationsLB.addItem("Don't care");
 				if (result != null) {
 					for (LocationGWT location : result) {
 						mLocationsLB.addItem(location.getRoom());
+						
+						if (mOriginalItem.getLocationID() == location.getID())
+							mLocationsLB.setSelectedIndex(mLocationsLB.getItemCount() - 1);
 					}
 				}
 			}
