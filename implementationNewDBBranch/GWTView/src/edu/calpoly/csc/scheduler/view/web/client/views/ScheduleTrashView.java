@@ -2,6 +2,7 @@ package edu.calpoly.csc.scheduler.view.web.client.views;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -34,21 +35,23 @@ import edu.calpoly.csc.scheduler.view.web.shared.UserDataGWT;
 
 public class ScheduleTrashView extends VerticalPanel implements IViewContents
 {
-   protected final GreetingServiceAsync service;
-   public static final String           TRASH_PREFIX = "~trashed~";
+   protected final GreetingServiceAsync      service;
+   public static final String                TRASH_PREFIX = "~trashed~";
 
-   private final MenuBar                menuBar;
+   private final MenuBar                     menuBar;
 
-   private final String                 username;
-   private ArrayList<String>            scheduleNames;
-   private OtherFilesStrategy           filesStrategy;
+   private final String                      username;
+   private ArrayList<String>                 scheduleNames;
+   private OtherFilesStrategy                filesStrategy;
 
-   private VerticalPanel                vdocholder;
+   private VerticalPanel                     vdocholder;
 
-   private ViewFrame                    myFrame;
+   private ViewFrame                         myFrame;
 
-   Collection<DocumentGWT>             availableSchedulesByName;
-   private ArrayList<Integer>           checkedScheduleIDs;
+   Collection<DocumentGWT>                   availableDocuments;
+   private ArrayList<DocumentGWT>            checkedDocuments;
+   private HashMap<Integer, HorizontalPanel> documentPanels;
+   private boolean                           colorNextRow = false;
 
    public ScheduleTrashView(final GreetingServiceAsync service, final MenuBar menuBar, final String username,
          final OtherFilesStrategy filesStrategy)
@@ -59,7 +62,8 @@ public class ScheduleTrashView extends VerticalPanel implements IViewContents
       this.username = username;
       this.scheduleNames = new ArrayList<String>();
       this.addStyleName("iViewPadding");
-      this.checkedScheduleIDs = new ArrayList<Integer>();
+      this.checkedDocuments = new ArrayList<DocumentGWT>();
+      this.documentPanels = new HashMap<Integer, HorizontalPanel>();
 
       menuBar.clearItems();
       // Put tabs in menu bar
@@ -109,7 +113,7 @@ public class ScheduleTrashView extends VerticalPanel implements IViewContents
       ScrollPanel scroller = new ScrollPanel();
       this.add(scroller);
       vdocholder = new VerticalPanel();
-      vdocholder.setBorderWidth(5);
+      vdocholder.setBorderWidth(1);
       scroller.add(vdocholder);
 
       // UnTrash button
@@ -119,9 +123,23 @@ public class ScheduleTrashView extends VerticalPanel implements IViewContents
          @Override
          public void onClick(ClickEvent event)
          {
-            for (Integer scheduleid : checkedScheduleIDs)
+            for (DocumentGWT doc : checkedDocuments)
             {
-               // Rename schedule
+               // Set not trashed
+               doc.setTrashed(false);
+               service.updateDocument(doc, new AsyncCallback<Void>()
+               {
+                  @Override
+                  public void onFailure(Throwable caught)
+                  {
+                  }
+
+                  @Override
+                  public void onSuccess(Void result)
+                  {
+                  }
+               });
+               vdocholder.remove(documentPanels.get(doc.getID()));
             }
          }
       });
@@ -145,13 +163,16 @@ public class ScheduleTrashView extends VerticalPanel implements IViewContents
          @Override
          public void onSuccess(Collection<DocumentGWT> result)
          {
-            availableSchedulesByName = result;
+            availableDocuments = result;
 
             vdocholder.clear();
-            for (DocumentGWT doc : availableSchedulesByName)
+            for (DocumentGWT doc : availableDocuments)
             {
-               addNewDocument(doc.getName(), doc.getID());
-               scheduleNames.add(doc.getName());
+               if (doc.isTrashed())
+               {
+                  addNewDocument(doc);
+                  scheduleNames.add(doc.getName());
+               }
             }
 
             doneAddingDocuments();
@@ -164,61 +185,63 @@ public class ScheduleTrashView extends VerticalPanel implements IViewContents
    {
    }
 
-   private void addNewDocument(final String name, final Integer scheduleid)
+   private void addNewDocument(final DocumentGWT document)
    {
-      if (name.startsWith(TRASH_PREFIX))
+      HorizontalPanel doc = new HorizontalPanel();
+      if (colorNextRow)
       {
-         String fixedName = name.substring(TRASH_PREFIX.length());
-         HorizontalPanel doc = new HorizontalPanel();
-         doc.setHorizontalAlignment(ALIGN_LEFT);
-         final CheckBox cb = new CheckBox();
-         cb.addValueChangeHandler(new ValueChangeHandler<Boolean>()
-         {
-            @Override
-            public void onValueChange(ValueChangeEvent<Boolean> event)
-            {
-               if (cb.getValue())
-               {
-                  // Enabled
-                  checkedScheduleIDs.add(scheduleid);
-               }
-               else
-               {
-                  // Disabled
-                  if (checkedScheduleIDs.contains(scheduleid))
-                  {
-                     checkedScheduleIDs.remove(scheduleid);
-                  }
-               }
-            }
-         });
-         doc.add(cb);
-         FocusPanel docname = new FocusPanel();
-         docname.add(HTMLUtilities.createLink(fixedName, "inAppLink", new ClickHandler()
-         {
-            @Override
-            public void onClick(ClickEvent event)
-            {
-            }
-         }));
-         docname.addClickHandler(new ClickHandler()
-         {
-            @Override
-            public void onClick(ClickEvent event)
-            {
-               String baseHref = Window.Location.getHref();
-               if (Window.Location.getHref().contains("?userid="))
-               {
-                  baseHref = Window.Location.getHref().substring(0, Window.Location.getHref().lastIndexOf('?'));
-               }
-               Window.open(baseHref + "?scheduleid=" + scheduleid + "&schedulename=" + name + "&userid=" + username,
-                     "_new", null);
-            }
-         });
-         doc.add(docname);
-
-         vdocholder.add(doc);
+         doc.setStyleName("quarterViewMenu");
+         colorNextRow = false;
       }
+      else
+      {
+         colorNextRow = true;
+      }
+      doc.setWidth("100%");
+      doc.setHorizontalAlignment(ALIGN_LEFT);
+      final CheckBox cb = new CheckBox();
+      cb.addValueChangeHandler(new ValueChangeHandler<Boolean>()
+      {
+         @Override
+         public void onValueChange(ValueChangeEvent<Boolean> event)
+         {
+            if (cb.getValue())
+            {
+               // Enabled
+               checkedDocuments.add(document);
+            }
+            else
+            {
+               // Disabled
+               if (checkedDocuments.contains(document))
+               {
+                  checkedDocuments.remove(document);
+               }
+            }
+         }
+      });
+      FocusPanel docname = new FocusPanel();
+      docname.add(HTMLUtilities.createLink(document.getName(), "inAppLink", new ClickHandler()
+      {
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            String baseHref = Window.Location.getHref();
+            if (Window.Location.getHref().contains("?userid="))
+            {
+               baseHref = Window.Location.getHref().substring(0, Window.Location.getHref().lastIndexOf('?'));
+            }
+            Window.open(baseHref + "?scheduleid=" + document.getScheduleID() + "&schedulename=" + document.getName()
+                  + "&userid=" + username, "_new", null);
+         }
+      }));
+      HorizontalPanel flow = new HorizontalPanel();
+      flow.add(cb);
+      flow.add(docname);
+      doc.add(flow);
+      vdocholder.add(doc);
+      documentPanels.put(document.getID(), doc);
+      vdocholder.add(doc);
    }
 
    @Override
@@ -255,8 +278,7 @@ public class ScheduleTrashView extends VerticalPanel implements IViewContents
       if (myFrame.canPopViewsAboveMe())
       {
          myFrame.popFramesAboveMe();
-         myFrame.frameViewAndPushAboveMe(new AdminScheduleNavView(service, filesStrategy, menuBar, username,
-               doc));
+         myFrame.frameViewAndPushAboveMe(new AdminScheduleNavView(service, filesStrategy, menuBar, username, doc));
 
       }
    }

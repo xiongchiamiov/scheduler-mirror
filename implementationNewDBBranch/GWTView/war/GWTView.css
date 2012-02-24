@@ -17,6 +17,11 @@ body {
 	padding-right: 4em;
 }
 
+.buttonPadding{
+	padding-bottom: 1em;
+	padding-top: 1em;
+}
+
 .configureSaveCancelButtonPanel {
 	margin-top: 4em;
 	float: right;
