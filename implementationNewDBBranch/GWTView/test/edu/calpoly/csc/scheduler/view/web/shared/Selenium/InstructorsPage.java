@@ -20,7 +20,7 @@ public class InstructorsPage {
 	/** newbutton */
 	private WebElement newButton;
 	
-	//A web browser driver, firefox support only for now
+	// A web browser driver, firefox support only for now
 	/**
 	 * Instantiates a new instructors.
 	 *
