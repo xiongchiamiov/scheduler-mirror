@@ -3,7 +3,7 @@ package edu.calpoly.csc.scheduler.model;
 import edu.calpoly.csc.scheduler.model.db.DatabaseException;
 import edu.calpoly.csc.scheduler.model.db.IDBSchedule;
 
-public class Schedule implements Identified {
+public class Schedule extends Identified {
 	private final Model model;
 	
 	IDBSchedule underlyingSchedule;
@@ -14,9 +14,12 @@ public class Schedule implements Identified {
 	Schedule(Model model, IDBSchedule underlyingSchedule) {
 		this.model = model;
 		this.underlyingSchedule = underlyingSchedule;
+		
+		if (!underlyingSchedule.isTransient())
+			assert(!model.scheduleCache.inCache(underlyingSchedule)); // make sure its not in the cache yet (how could it be, we're not even done with the constructor)
 	}
 
-	public int getID() { return underlyingSchedule.getID(); }
+	public Integer getID() { return underlyingSchedule.getID(); }
 	
 
 	// PERSISTENCE FUNCTIONS

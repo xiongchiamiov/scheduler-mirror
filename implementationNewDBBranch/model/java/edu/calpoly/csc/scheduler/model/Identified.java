@@ -1,5 +1,7 @@
 package edu.calpoly.csc.scheduler.model;
 
-public interface Identified {
-	public int getID();
+public abstract class Identified {
+	public abstract Integer getID();
+
+	public boolean isTransient() { return getID() == null; }
 }

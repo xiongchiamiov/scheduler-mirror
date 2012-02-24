@@ -8,17 +8,21 @@ public class DBDocument extends DBObject implements IDBDocument {
 	Integer originalID; // null if this is an original
 	int startHalfHour;
 	int endHalfHour;
+	Integer staffInstructorID; // null if there is none
+	Integer tbaLocationID; // null if there is none
 	
-	public DBDocument(Integer id, String name, Integer originalID, int startHalfHour, int endHalfHour) {
+	public DBDocument(Integer id, String name, Integer originalID, int startHalfHour, int endHalfHour, Integer staffInstructorID, Integer tbaLocationID) {
 		super(id);
 		this.name = name;
 		this.originalID = originalID;
 		this.startHalfHour = startHalfHour;
 		this.endHalfHour = endHalfHour;
+		this.staffInstructorID = staffInstructorID;
+		this.tbaLocationID = tbaLocationID;
 	}
 	
 	public DBDocument(DBDocument that) {
-		this(that.id, that.name, that.originalID, that.startHalfHour, that.endHalfHour);
+		this(that.id, that.name, that.originalID, that.startHalfHour, that.endHalfHour, that.staffInstructorID, that.tbaLocationID);
 	}
 	
 	@Override

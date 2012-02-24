@@ -34,23 +34,23 @@ public class Model {
 	abstract static class Cache<DecoratedT extends Identified, UnderlyingT extends IDBObject> {
 		HashMap<Integer, DecoratedT> cache = new HashMap<Integer, DecoratedT>();
 
-		public DecoratedT decorateAndPutInCache(UnderlyingT underlying) {
+		private DecoratedT decorateAndPut(UnderlyingT underlying) {
 			DecoratedT result = decorate(underlying);
 			cache.put(underlying.getID(), result);
 			return result;
 		}
 		
-		public DecoratedT putIfNotPresentThenGetDecorated(UnderlyingT underlying) {
+		public DecoratedT decorateAndPutIfNotPresent(UnderlyingT underlying) {
 			DecoratedT result = cache.get(underlying.getID());
 			if (result == null)
-				result = decorateAndPutInCache(underlying);
+				result = decorateAndPut(underlying);
 			return result;
 		}
 
 		public DecoratedT findByID(int id) throws DatabaseException {
 			DecoratedT result = cache.get(id);
 			if (result == null)
-				result = decorateAndPutInCache(loadFromDatabase(id));
+				result = decorateAndPut(loadFromDatabase(id));
 			return result;
 		}
 		
@@ -80,11 +80,16 @@ public class Model {
 			catch (NotFoundException e) { return false; }
 		}
 
-		public void update(UnderlyingT underlying) throws DatabaseException {
-			updateInDatabase(underlying);
+		public void update(DecoratedT obj) throws DatabaseException {
+			assert(!obj.isTransient());
+			assert(cache.containsKey(obj.getID()));
+			assert(cache.get(obj.getID()) == obj);
+			updateInDatabase(obj);
 		}
 		
-		protected abstract void updateInDatabase(UnderlyingT obj) throws DatabaseException;
+		protected abstract void updateInDatabase(DecoratedT obj) throws DatabaseException;
+
+		boolean inCache(UnderlyingT obj) { return cache.containsKey(obj.getID()); }
 	}
 	
 	
@@ -116,14 +121,14 @@ public class Model {
 		protected void removeFromDatabase(User obj) throws DatabaseException {
 			database.deleteUser(obj.underlyingUser);
 		}
-		protected void updateInDatabase(IDBUser obj) throws DatabaseException {
-			database.updateUser(obj);
+		protected void updateInDatabase(User obj) throws DatabaseException {
+			database.updateUser(obj.underlyingUser);
 		}
 	};
 
 	public User findUserByUsername(String username) throws NotFoundException, DatabaseException {
 		IDBUser underlyingUser = database.findUserByUsername(username);
-		return userCache.putIfNotPresentThenGetDecorated(underlyingUser);
+		return userCache.decorateAndPutIfNotPresent(underlyingUser);
 	}
 
 	public User createTransientUser(String username, boolean b) {
@@ -147,8 +152,8 @@ public class Model {
 		protected void removeFromDatabase(Document obj) throws DatabaseException {
 			database.deleteDocument(obj.underlyingDocument);
 		}
-		protected void updateInDatabase(IDBDocument obj) throws DatabaseException {
-			database.updateDocument(obj);
+		protected void updateInDatabase(Document obj) throws DatabaseException {
+			database.updateDocument(obj.underlyingDocument);
 		}
 	};
 
@@ -163,7 +168,7 @@ public class Model {
 	public Collection<Document> findAllDocuments() throws DatabaseException {
 		Collection<Document> result = new LinkedList<Document>();
 		for (IDBDocument underlying : database.findAllDocuments())
-			result.add(documentCache.putIfNotPresentThenGetDecorated(underlying));
+			result.add(documentCache.decorateAndPutIfNotPresent(underlying));
 		return result;
 	}
 
@@ -281,6 +286,10 @@ public class Model {
 								existingDocumentScheduleItem.isConflicted()));
 			}
 		}
+
+		database.setDocumentStaffInstructor(newDocument.underlyingDocument, newDocumentInstructorsByExistingDocumentInstructorIDs.get(existingDocument.getStaffInstructor().getID()));
+		database.setDocumentTBALocation(newDocument.underlyingDocument, newDocumentLocationsByExistingDocumentLocationIDs.get(existingDocument.getTBALocation().getID()));
+		database.updateDocument(newDocument.underlyingDocument);
 		
 		return newDocument;
 	}
@@ -317,15 +326,15 @@ public class Model {
 			database.deleteSchedule(obj.underlyingSchedule);
 		}
 		@Override
-		protected void updateInDatabase(IDBSchedule obj) throws DatabaseException {
-			database.updateSchedule(obj);
+		protected void updateInDatabase(Schedule obj) throws DatabaseException {
+			database.updateSchedule(obj.underlyingSchedule);
 		}
 	};
 	
 	public Collection<Schedule> findSchedulesForDocument(Document doc) throws DatabaseException {
 		Collection<Schedule> result = new LinkedList<Schedule>();
 		for (IDBSchedule underlying : database.findAllSchedulesForDocument(doc.underlyingDocument))
-			result.add(scheduleCache.putIfNotPresentThenGetDecorated(underlying));
+			result.add(scheduleCache.decorateAndPutIfNotPresent(underlying));
 		return result;
 	}
 
@@ -355,15 +364,15 @@ public class Model {
 		protected void removeFromDatabase(Instructor obj) throws DatabaseException {
 			database.deleteInstructor(obj.underlyingInstructor);
 		}
-		protected void updateInDatabase(IDBInstructor obj) throws DatabaseException {
-			database.updateInstructor(obj);
+		protected void updateInDatabase(Instructor obj) throws DatabaseException {
+			database.updateInstructor(obj.underlyingInstructor);
 		}
 	};
 	
 	public Collection<Instructor> findInstructorsForDocument(Document doc) throws DatabaseException {
 		Collection<Instructor> result = new LinkedList<Instructor>();
 		for (IDBInstructor underlying : database.findInstructorsForDocument(doc.underlyingDocument))
-			result.add(instructorCache.putIfNotPresentThenGetDecorated(underlying));
+			result.add(instructorCache.decorateAndPutIfNotPresent(underlying));
 		return result;
 	}
 
@@ -394,8 +403,8 @@ public class Model {
 		protected void removeFromDatabase(Course obj) throws DatabaseException{
 			database.deleteCourse(obj.underlyingCourse);
 		}
-		protected void updateInDatabase(IDBCourse obj) throws DatabaseException {
-			database.updateCourse(obj);
+		protected void updateInDatabase(Course obj) throws DatabaseException {
+			database.updateCourse(obj.underlyingCourse);
 		}
 	};
 	
@@ -406,7 +415,7 @@ public class Model {
 	public Collection<Course> findCoursesForDocument(Document doc) throws DatabaseException {
 		Collection<Course> result = new LinkedList<Course>();
 		for (IDBCourse underlying : database.findCoursesForDocument(doc.underlyingDocument))
-			result.add(courseCache.putIfNotPresentThenGetDecorated(underlying));
+			result.add(courseCache.decorateAndPutIfNotPresent(underlying));
 		return result;
 	}
 
@@ -432,8 +441,8 @@ public class Model {
 		protected void removeFromDatabase(Location obj) throws DatabaseException {
 			database.deleteLocation(obj.underlyingLocation);
 		}
-		protected void updateInDatabase(IDBLocation obj) throws DatabaseException {
-			database.updateLocation(obj);
+		protected void updateInDatabase(Location obj) throws DatabaseException {
+			database.updateLocation(obj.underlyingLocation);
 		}
 	};
 	
@@ -446,7 +455,7 @@ public class Model {
 	public Collection<Location> findLocationsForDocument(Document doc) throws DatabaseException {
 		Collection<Location> result = new LinkedList<Location>();
 		for (IDBLocation underlying : database.findLocationsForDocument(doc.underlyingDocument))
-			result.add(locationCache.putIfNotPresentThenGetDecorated(underlying));
+			result.add(locationCache.decorateAndPutIfNotPresent(underlying));
 		return result;
 	}
 
@@ -471,16 +480,15 @@ public class Model {
 		protected void removeFromDatabase(ScheduleItem obj) throws DatabaseException {
 			database.deleteScheduleItem(obj.underlying);
 		}
-		@Override
-		protected void updateInDatabase(IDBScheduleItem obj) throws DatabaseException {
-			database.updateScheduleItem(obj);
+		protected void updateInDatabase(ScheduleItem obj) throws DatabaseException {
+			database.updateScheduleItem(obj.underlying);
 		}
 	};
 	
 	public Collection<ScheduleItem> findAllScheduleItemsForSchedule(Schedule schedule) throws DatabaseException {
 		Collection<ScheduleItem> result = new LinkedList<ScheduleItem>();
 		for (IDBScheduleItem underlying : database.findAllScheduleItemsForSchedule(schedule.underlyingSchedule))
-			result.add(itemCache.putIfNotPresentThenGetDecorated(underlying));
+			result.add(itemCache.decorateAndPutIfNotPresent(underlying));
 		return result;
 	}
 
@@ -514,5 +522,17 @@ public class Model {
 
 	public void readState(ObjectInputStream ois) throws IOException {
 		database.readState(ois);
+	}
+
+	// For testing purposes only.
+	// BE CAREFUL WITH THIS METHOD! MAKE SURE THERE ARE NO MODEL OBJECTS INSTANTIATED ANYWHERE!
+	public void clearCache() {
+		documentCache.cache.clear();
+		userCache.cache.clear();
+		itemCache.cache.clear();
+		locationCache.cache.clear();
+		instructorCache.cache.clear();
+		courseCache.cache.clear();
+		scheduleCache.cache.clear();
 	}
 }

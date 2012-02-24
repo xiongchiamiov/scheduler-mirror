@@ -9,7 +9,7 @@ import edu.calpoly.csc.scheduler.model.db.IDBLocation;
 import edu.calpoly.csc.scheduler.model.db.IDBProvidedEquipment;
 import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
 
-public class Location implements Identified {
+public class Location extends Identified {
 	private final Model model;
 	
 	IDBLocation underlyingLocation;
@@ -23,6 +23,9 @@ public class Location implements Identified {
 	Location(Model model, final IDBLocation underlyingLocation) {
 		this.model = model;
 		this.underlyingLocation = underlyingLocation;
+
+		if (!underlyingLocation.isTransient())
+			assert(!model.locationCache.inCache(underlyingLocation)); // make sure its not in the cache yet (how could it be, we're not even done with the constructor)
 	}
 
 	// PERSISTENCE FUNCTIONS
@@ -47,7 +50,7 @@ public class Location implements Identified {
 
 	// ENTITY ATTRIBUTES
 
-	public int getID() { return underlyingLocation.getID(); }
+	public Integer getID() { return underlyingLocation.getID(); }
 
 	public boolean isSchedulable() { return underlyingLocation.isSchedulable(); }
 	public void setIsSchedulable(boolean isSchedulable) { underlyingLocation.setIsSchedulable(isSchedulable); }

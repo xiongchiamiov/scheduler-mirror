@@ -96,6 +96,7 @@ public interface IDatabase {
 	IDBCourse getAssociationLecture(IDBCourseAssociation association) throws DatabaseException;
 	IDBCourse getAssociationLab(IDBCourseAssociation association) throws DatabaseException;
 	void associateLectureAndLab(IDBCourse lecture, IDBCourse lab) throws DatabaseException;
+	void disassociateLectureAndLab(IDBCourse lecture, IDBCourse lab);
 
 	// Instructors
 	Collection<IDBInstructor> findInstructorsForDocument(IDBDocument document) throws DatabaseException;
@@ -161,4 +162,9 @@ public interface IDatabase {
 
 	void writeState(ObjectOutputStream oos) throws IOException;
 	void readState(ObjectInputStream ois) throws IOException;
+	
+	IDBInstructor getDocumentStaffInstructor(IDBDocument underlyingDocument) throws NotFoundException;
+	IDBLocation getDocumentTBALocation(IDBDocument underlyingDocument) throws NotFoundException;
+	void setDocumentStaffInstructor(IDBDocument underlyingDocument, IDBInstructor underlyingInstructor);
+	void setDocumentTBALocation(IDBDocument underlyingDocument, IDBLocation underlyingLocation);
 }

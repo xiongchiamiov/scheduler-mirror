@@ -30,7 +30,7 @@ public class DBTime extends DBObject implements IDBTime {
 		this(that.getDay(), that.getHalfHour());
 	}
 	
-	public int getID() { return id; }
+	public Integer getID() { return id; }
 
 	public int getDay() { return idFromCode(id); }
 	public void setDay(int day) {

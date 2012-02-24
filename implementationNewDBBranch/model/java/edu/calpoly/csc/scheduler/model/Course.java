@@ -14,7 +14,7 @@ import edu.calpoly.csc.scheduler.model.db.IDBOfferedDayPattern;
 import edu.calpoly.csc.scheduler.model.db.IDBUsedEquipment;
 import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
 
-public class Course implements Identified {
+public class Course extends Identified {
 	private final Model model;
 	
 	IDBCourse underlyingCourse;
@@ -25,7 +25,7 @@ public class Course implements Identified {
 	private boolean offeredDayPatternsLoaded;
 	private Collection<Set<Day>> offeredDayPatterns;
 	
-	private boolean lectureLoaded;
+	public boolean lectureLoaded; // public for now, for testing
 	private Course lecture;
 	private Boolean cachedTetheredToLecture;
 	
@@ -33,31 +33,40 @@ public class Course implements Identified {
 	private Document document;
 	
 	
-	Course(Model model, IDBCourse underlyingCourse) {
+	Course(Model model, IDBCourse underlyingCourse) {		
 		this.model = model;
 		this.underlyingCourse = underlyingCourse;
+
+		if (!underlyingCourse.isTransient())
+			assert(!model.courseCache.inCache(underlyingCourse)); // make sure its not in the cache yet (how could it be, we're not even done with the constructor)
 	}
 	
 
 	// PERSISTENCE FUNCTIONS
 
 	public Course insert() throws DatabaseException {
+		assert(isTransient());
 		assert(document != null);
 		model.courseCache.insert(this);
 		putOfferedDayPatternsIntoDB();
 		putUsedEquipmentIntoDB();
+		putAssociationIntoDB();
 		return this;
 	}
 
 	public void update() throws DatabaseException {
-		model.courseCache.update(underlyingCourse);
+		assert(!isTransient());
+		removeAssociationFromDB();
 		removeOfferedDayPatternsFromDB();
 		removeUsedEquipmentFromDB();
 		putUsedEquipmentIntoDB();
 		putOfferedDayPatternsIntoDB();
+		putAssociationIntoDB();
+		model.courseCache.update(this);
 	}
 	
 	public void delete() throws DatabaseException {
+		removeAssociationFromDB();
 		removeOfferedDayPatternsFromDB();
 		removeUsedEquipmentFromDB();
 		model.courseCache.delete(this);
@@ -66,7 +75,7 @@ public class Course implements Identified {
 
 	// ENTITY ATTRIBUTES
 	
-	public int getID() { return underlyingCourse.getID(); }
+	public Integer getID() { return underlyingCourse.getID(); }
 
 	public boolean isSchedulable() { return underlyingCourse.isSchedulable(); }
 	public void setIsSchedulable(boolean isSchedulable) { underlyingCourse.setIsSchedulable(isSchedulable); }
@@ -197,15 +206,31 @@ public class Course implements Identified {
 	
 	
 	// Lecture / Tethered
+
+	private void putAssociationIntoDB() throws DatabaseException {
+		if (!lectureLoaded)
+			return;
+		model.database.associateLectureAndLab(lecture.underlyingCourse, underlyingCourse);
+	}
 	
+	private void removeAssociationFromDB() {
+		if (!lectureLoaded)
+			return;
+		model.database.disassociateLectureAndLab(lecture.underlyingCourse, underlyingCourse);
+	}
+
 	private void loadLectureAndTethered() throws DatabaseException {
 		if (lectureLoaded)
 			return;
 		
 		assert(lecture == null);
 		assert(cachedTetheredToLecture == null);
+		
+		System.out.println("is lab? " + underlyingCourse.getType().equals("LAB"));
+		
 		if (underlyingCourse.getType().equals("LAB")) {
 			IDBCourseAssociation assoc = model.database.getAssociationForLabOrNull(underlyingCourse);
+			System.out.println("assoc? " + assoc);
 			if (assoc != null) {
 				assert(model.database.getAssociationLab(assoc).getID() == underlyingCourse.getID());
 				lecture = model.findCourseByID(model.database.getAssociationLecture(assoc).getID());

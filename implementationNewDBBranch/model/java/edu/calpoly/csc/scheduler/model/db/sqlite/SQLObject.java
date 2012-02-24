@@ -6,9 +6,12 @@ public class SQLObject implements IDBObject {
 	Integer id;
 	
 	@Override
-	public int getID() { return id; }
+	public Integer getID() { return id; }
 	
 	public SQLObject(int id) {
 		this.id = id;
 	}
+
+	@Override
+	public boolean isTransient() { return id == null; }
 }

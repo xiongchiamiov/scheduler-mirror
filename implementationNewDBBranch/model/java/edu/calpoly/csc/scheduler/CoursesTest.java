@@ -65,22 +65,35 @@ public abstract class CoursesTest extends ModelTestCase
       assertTrue(model.isEmpty());
    }
    
-   public void testModifyCourseValueDoesntAutomaticallyUpdateDatabase() throws DatabaseException {
-      Model model = createBlankModel();
-      
-      int courseID;
-      
-      Document doc = model.createTransientDocument("doc", START_HALF_HOUR, END_HALF_HOUR).insert();
-      {
-         Course course = ModelTestUtility.createCourse(model).setDocument(doc).insert();
-         course.setDepartment("NotCSC");
-         courseID = course.getID();
-      }
-      
-      {
-         Course course = model.findCourseByID(courseID);
-         assertTrue(course.getDepartment().equals(ModelTestUtility.createCourse(model).getDepartment()));
-      }
+   public void testAssociation() throws DatabaseException {
+	   Model model = createBlankModel();
+	   
+	   int lectureID;
+	   int labID;
+	   
+	   {
+		   Document doc = model.createTransientDocument("doc", START_HALF_HOUR, END_HALF_HOUR).insert();
+		   Course lecture = model.createTransientCourse("intro c", "101lec", "csc", "4", "4", "1", "LEC", "30", "6", true).setDocument(doc).insert();
+		   Course lab = model.createTransientCourse("intro c", "101lab", "csc", "4", "4", "1", "LAB", "30", "6", true).setDocument(doc).insert();
+		   lab.setLecture(lecture);
+		   lab.update();
+		   
+		   lectureID = lecture.getID();
+		   labID = lab.getID();
+	   }
+	   
+	   model.clearCache();
+	   
+	   System.out.println("finding lecture");
+	   Course lecture = model.findCourseByID(lectureID);
+	   
+	   System.out.println("finding lab");
+	   Course lab = model.findCourseByID(labID);
+	   assert(!lab.lectureLoaded);
+	   System.out.println("getting its lecture");
+	   lab.getLecture();
+	   
+	   assert(lab.getLecture() == lecture);
    }
    
    public void testUpdateCourse() throws DatabaseException {

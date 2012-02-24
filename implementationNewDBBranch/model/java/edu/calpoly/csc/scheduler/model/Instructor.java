@@ -11,7 +11,7 @@ import edu.calpoly.csc.scheduler.model.db.IDBTime;
 import edu.calpoly.csc.scheduler.model.db.IDBTimePreference;
 import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
 
-public class Instructor implements Identified {
+public class Instructor extends Identified {
 	public static final int DEFAULT_PREF = 5;
 	
 	private final Model model;
@@ -30,6 +30,9 @@ public class Instructor implements Identified {
 	Instructor(Model model, IDBInstructor underlyingInstructor) {
 		this.model = model;
 		this.underlyingInstructor = underlyingInstructor;
+
+		if (!underlyingInstructor.isTransient())
+			assert(!model.instructorCache.inCache(underlyingInstructor)); // make sure its not in the cache yet (how could it be, we're not even done with the constructor)
 	}
 	
 
@@ -46,7 +49,7 @@ public class Instructor implements Identified {
 	public void update() throws DatabaseException {
 		removeTimePreferencesFromDB();
 		removeCoursePreferencesFromDB();
-		model.instructorCache.update(underlyingInstructor);
+		model.instructorCache.update(this);
 		putTimePreferencesIntoDB();
 		putCoursePreferencesIntoDB();
 	}
@@ -60,7 +63,7 @@ public class Instructor implements Identified {
 	
 	// ENTITY ATTRIBUTES
 	
-	public int getID() { return underlyingInstructor.getID(); }
+	public Integer getID() { return underlyingInstructor.getID(); }
 
 	public String getFirstName() { return underlyingInstructor.getFirstName(); }
 	public void setFirstName(String string) { underlyingInstructor.setFirstName(string); }

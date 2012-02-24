@@ -294,7 +294,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	}
 
 	@Override
-	public Collection<DocumentGWT> getAllOriginalDocumentsByID()  {
+	public Collection<DocumentGWT> getAllOriginalDocumentsByID() throws NotFoundException {
 		Collection<DocumentGWT> result = new LinkedList<DocumentGWT>();
 		try {
 			for (Document doc : model.findAllDocuments()) {
@@ -314,9 +314,11 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		try {
 			Document newOriginalDocument = model.createTransientDocument(newDocName, 14, 44);
 			newOriginalDocument.insert();
-			Schedule schedule = model.createTransientSchedule();
-			schedule.setDocument(newOriginalDocument).insert();
-			int scheduleID = schedule.getID();
+			
+			model.createTransientSchedule().setDocument(newOriginalDocument).insert();
+
+			newOriginalDocument.setStaffInstructor(model.createTransientInstructor("", "TBA", "TBA", "0", true).insert());
+			newOriginalDocument.setTBALocation(model.createTransientLocation("TBA", "LEC", "0", true).insert());
 			
 			return createWorkingCopyForOriginalDocument(newOriginalDocument.getID());
 		}

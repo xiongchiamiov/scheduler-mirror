@@ -6,7 +6,7 @@ import edu.calpoly.csc.scheduler.model.db.DatabaseException;
 import edu.calpoly.csc.scheduler.model.db.IDBScheduleItem;
 import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
 
-public class ScheduleItem implements Identified {
+public class ScheduleItem extends Identified {
 	private final Model model;
 	
 	IDBScheduleItem underlying;
@@ -27,6 +27,9 @@ public class ScheduleItem implements Identified {
 	ScheduleItem(Model model, IDBScheduleItem underlying) {
 		this.model = model;
 		this.underlying = underlying;
+
+		if (!underlying.isTransient())
+			assert(!model.itemCache.inCache(underlying)); // make sure its not in the cache yet (how could it be, we're not even done with the constructor)
 	}
 
 	
@@ -49,7 +52,7 @@ public class ScheduleItem implements Identified {
 		model.database.setScheduleItemCourse(underlying, course.underlyingCourse);
 		model.database.setScheduleItemInstructor(underlying, instructor.underlyingInstructor);
 		model.database.setScheduleItemLocation(underlying, location.underlyingLocation);
-		model.itemCache.update(underlying);
+		model.itemCache.update(this);
 	}
 	
 	public ScheduleItem createTransientCopy() throws DatabaseException {
@@ -65,7 +68,7 @@ public class ScheduleItem implements Identified {
 
 	// ENTITY ATTRIBUTES
 	
-	public int getID() { return underlying.getID(); }
+	public Integer getID() { return underlying.getID(); }
 	public int getSection() { return underlying.getSection(); }
 	public void setSection(int section) { this.underlying.setSection(section); }
 	public Set<Day> getDays() { return underlying.getDays(); }
@@ -126,7 +129,7 @@ public class ScheduleItem implements Identified {
 	public boolean courseIsSet() { return courseLoaded; }
 	
 
-	// Course
+	// Location
 
 	public Location getLocation() throws DatabaseException {
 		if (!locationLoaded) {

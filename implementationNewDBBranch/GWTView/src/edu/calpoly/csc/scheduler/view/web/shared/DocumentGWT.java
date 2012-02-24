@@ -8,17 +8,21 @@ public class DocumentGWT implements Serializable {
 	int id;
 	String name;
 	int scheduleID;
+	int staffInstructorID;
+	int tbaLocationID;
 	
 	public DocumentGWT() { }
 	
-	public DocumentGWT(int id, String name, int scheduleID) {
+	public DocumentGWT(int id, String name, int scheduleID, int staffInstructorID, int tbaLocationID) {
 		this.id = id;
 		this.name = name;
 		this.scheduleID = scheduleID;
+		this.staffInstructorID = staffInstructorID;
+		this.tbaLocationID = tbaLocationID;
 	}
 	
 	public DocumentGWT(DocumentGWT that) {
-		this(that.id, that.name, that.scheduleID);
+		this(that.id, that.name, that.scheduleID, that.staffInstructorID, that.tbaLocationID);
 	}
 
 	public Integer getID() { return id; }
@@ -27,4 +31,8 @@ public class DocumentGWT implements Serializable {
 	public void setName(String name) { this.name = name; }
 	public int getScheduleID() { return scheduleID; }
 	public void setScheduleID(int scheduleID) { this.scheduleID = scheduleID; }
+	public int getStaffInstructorID() { return staffInstructorID; }
+	public void setStaffInstructorID(int staffInstructorID) { this.staffInstructorID = staffInstructorID; }
+	public int getTBALocationID() { return tbaLocationID; }
+	public void setTBALocationID(int tbaLocationID) { this.tbaLocationID = tbaLocationID; }
 }

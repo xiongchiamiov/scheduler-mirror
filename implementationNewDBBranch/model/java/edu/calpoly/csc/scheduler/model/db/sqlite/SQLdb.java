@@ -959,5 +959,44 @@ public class SQLdb implements IDatabase {
 		// TODO Auto-generated method stub
 		
 	}
+
+
+	@Override
+	public IDBInstructor getDocumentStaffInstructor(
+			IDBDocument underlyingDocument) throws NotFoundException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public IDBLocation getDocumentTBALocation(IDBDocument underlyingDocument)
+			throws NotFoundException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public void setDocumentStaffInstructor(IDBDocument underlyingDocument,
+			IDBInstructor underlyingInstructor) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void setDocumentTBALocation(IDBDocument underlyingDocument,
+			IDBLocation underlyingLocation) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void disassociateLectureAndLab(IDBCourse lecture, IDBCourse lab) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

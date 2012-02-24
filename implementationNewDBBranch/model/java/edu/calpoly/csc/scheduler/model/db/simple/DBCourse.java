@@ -16,11 +16,11 @@ public class DBCourse extends DBObject implements IDBCourse {
 	String maxEnrollment;
 	String numHalfHoursPerWeek;
 	Integer lectureID;
-	Boolean tetheredToLecture;
+	boolean tetheredToLecture;
 
 	public DBCourse(Integer id, Integer documentID, String name, String catalogNumber, String department,
 			String wtu, String scu, String numSections, String type,
-			String maxEnrollment, String numHalfHoursPerWeek, boolean isSchedulable) {
+			String maxEnrollment, String numHalfHoursPerWeek, boolean isSchedulable, Integer lectureID, boolean tetheredToLecture) {
 		super(id);
 		this.documentID = documentID;
 		this.name = name;
@@ -33,10 +33,12 @@ public class DBCourse extends DBObject implements IDBCourse {
 		this.maxEnrollment = maxEnrollment;
 		this.numHalfHoursPerWeek = numHalfHoursPerWeek;
 		this.isSchedulable = isSchedulable;
+		this.lectureID = lectureID;
+		this.tetheredToLecture = tetheredToLecture;
 	}
 	
 	public DBCourse(DBCourse that) {
-		this(that.id, that.documentID, that.name, that.catalogNumber, that.department, that.wtu, that.scu, that.numSections, that.type, that.maxEnrollment, that.numHalfHoursPerWeek, that.isSchedulable);
+		this(that.id, that.documentID, that.name, that.catalogNumber, that.department, that.wtu, that.scu, that.numSections, that.type, that.maxEnrollment, that.numHalfHoursPerWeek, that.isSchedulable, that.lectureID, that.tetheredToLecture);
 	}
 
 	@Override

@@ -87,6 +87,10 @@ public class Database implements IDatabase {
 		}
 
 		public boolean isEmpty() { return objectsByID.isEmpty(); }
+
+		public boolean contains(IDBCourse rawLecture) {
+			return objectsByID.containsKey(rawLecture.getID());
+		}
 	}
 
 	SimpleTable<DBUser> userTable;
@@ -162,7 +166,7 @@ public class Database implements IDatabase {
 
 	@Override
 	public IDBDocument assembleDocument(String name, int startHalfHour, int endHalfHour) {
-		return new DBDocument(null, name, null, startHalfHour, endHalfHour);
+		return new DBDocument(null, name, null, startHalfHour, endHalfHour, null, null);
 	}
 
 	@Override
@@ -341,7 +345,7 @@ public class Database implements IDatabase {
 			String catalogNumber, String department, String wtu, String scu,
 			String numSections, String type, String maxEnrollment,
 			String numHalfHoursPerWeek, boolean isSchedulable) {
-		return new DBCourse(null, null, name, catalogNumber, department, wtu, scu, numSections, type, maxEnrollment, numHalfHoursPerWeek, isSchedulable);
+		return new DBCourse(null, null, name, catalogNumber, department, wtu, scu, numSections, type, maxEnrollment, numHalfHoursPerWeek, isSchedulable, null, false);
 	}
 
 	@Override
@@ -349,7 +353,7 @@ public class Database implements IDatabase {
 		DBCourse course = (DBCourse)rawCourse;
 		assert(course.id == null);
 		course.documentID = containingDocument.getID();
-		course.id = courseTable.insert(new DBCourse(new DBCourse(course)));
+		course.id = courseTable.insert(new DBCourse(course));
 	}
 
 	@Override
@@ -553,16 +557,21 @@ public class Database implements IDatabase {
 
 	@Override
 	public void associateLectureAndLab(IDBCourse rawLecture, IDBCourse rawLab) {
+		assert(courseTable.contains(rawLecture));
+		assert(courseTable.contains(rawLab));
+		
 		DBCourse lab = (DBCourse)rawLab;
 		DBCourse lecture = (DBCourse)rawLecture;
 		
 		assert(lab.lectureID == null);
 		lab.lectureID = lecture.id;
+		System.out.println("setting association for lab " + rawLab + " to: " + lab.lectureID);
 	}
 	
 	@Override
 	public IDBCourseAssociation getAssociationForLabOrNull(IDBCourse rawLabCourse) {
 		DBCourse labCourse = (DBCourse)rawLabCourse;
+		System.out.println("getting association for lab " + labCourse + ": " + labCourse.lectureID);
 		if (labCourse.lectureID == null)
 			return null;
 		return new DBCourseAssociation(labCourse.id, labCourse.lectureID, labCourse.tetheredToLecture);
@@ -888,5 +897,36 @@ public class Database implements IDatabase {
 		} catch (ClassNotFoundException e) {
 			throw new IOException(e);
 		}
+	}
+
+
+	@Override
+	public IDBInstructor getDocumentStaffInstructor(IDBDocument underlyingDocument) throws NotFoundException {
+		return instructorTable.findByID(((DBDocument)underlyingDocument).staffInstructorID);
+	}
+
+
+	@Override
+	public IDBLocation getDocumentTBALocation(IDBDocument underlyingDocument) throws NotFoundException {
+		return locationTable.findByID(((DBDocument)underlyingDocument).tbaLocationID);
+	}
+
+
+	@Override
+	public void setDocumentStaffInstructor(IDBDocument underlyingDocument, IDBInstructor underlyingInstructor) {
+		((DBDocument)underlyingDocument).staffInstructorID = underlyingInstructor.getID();
+	}
+
+
+	@Override
+	public void setDocumentTBALocation(IDBDocument underlyingDocument, IDBLocation underlyingLocation) {
+		((DBDocument)underlyingDocument).tbaLocationID = underlyingLocation.getID();
+	}
+
+
+	@Override
+	public void disassociateLectureAndLab(IDBCourse lecture, IDBCourse lab) {
+		((DBCourse)lab).lectureID = null;
+		((DBCourse)lab).tetheredToLecture = false;
 	}
 }
