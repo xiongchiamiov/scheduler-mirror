@@ -55,7 +55,8 @@ public class InstructorPreferencesView extends VerticalPanel implements IViewCon
 		this.setWidth("100%");
 		this.setHeight("100%");
 		FocusPanel fpanel = new FocusPanel();
-		HTML instructorName = new HTML(instructor.getFirstName() + " " + instructor.getLastName());
+		HTML instructorName = new HTML("Time Preferences");
+		fpanel.setStyleName("bigBold");
 		instructorName.setStyleName("bigBold");
 		fpanel.add(instructorName);
 		this.add(fpanel);
@@ -76,9 +77,17 @@ public class InstructorPreferencesView extends VerticalPanel implements IViewCon
 		//this.add(new HTML("Time preferences are between 0 and 3.  0 means you cannot teach at that time, 3 means you really want to teach at that time."));
 		
 		this.add(timePrefs);
-		
+		this.setStyleName("centerness");
+		//FocusPanel otherFocus = new FocusPanel();
 		coursePrefs = new FlexTable();
+		coursePrefs.setStyleName("centerness");
+		
+		HTML cprefs = new HTML("Course Preferences");
+		cprefs.addStyleName("bigBold");
+		this.add(cprefs);
+		
 		this.add(coursePrefs);
+
 		HTML htmlCourse = new HTML("Course");
 		htmlCourse.setStyleName("timePrefs");
 		HTML htmlPreference = new HTML("Preference");

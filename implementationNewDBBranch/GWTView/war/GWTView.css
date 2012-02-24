@@ -236,8 +236,14 @@ h1 {
 	text-align: right;
 }
 
+.centerness {
+	margin-left:auto;
+	margin-right:auto;
+}
+
 .bigBold {
 	font-size: x-large;
+	text-align: center;
 	font-weight: 700;
 }
 

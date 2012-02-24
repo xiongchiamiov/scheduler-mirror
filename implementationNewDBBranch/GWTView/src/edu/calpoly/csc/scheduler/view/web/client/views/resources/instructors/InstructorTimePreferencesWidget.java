@@ -19,6 +19,7 @@ import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -135,7 +136,7 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 	void setSelectedCellsContents(int value) {
 		for (CellWidget cell : selectedCells)
 			setPreference(cell, value);
-		redoColors();
+		//redoColors();
 	}
 
 	void setPreference(CellWidget cell, int desire) {
@@ -148,7 +149,8 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 		Integer dayNum = cell.day;
 		DayGWT day = DayGWT.values()[dayNum];
 
-		instructor.gettPrefs()[day.ordinal()][time] = desire;
+		instructor.gettPrefs()[day.ordinal()][cell.halfHour] = desire;
+		instructor.gettPrefs()[day.ordinal()][cell.halfHour + 1] = desire;
 		
 		time = hour * 60 + cell.halfHour % 2 * 30;
 
@@ -169,8 +171,8 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 		Integer time = hour * 60 + halfHour % 2 * 30;
 		
 		DayGWT day = DayGWT.values()[dayNum];
-		
-		return ins.gettPrefs()[day.ordinal()][time];
+		System.out.println("Shit: " + day.ordinal() + ", " + time);
+		return ins.gettPrefs()[day.ordinal()][halfHour];
 	}
 	
 	public void setMultiplePreferences()
@@ -210,7 +212,7 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 		fromList.setTitle("From: ");
 		toList.setTitle("To: ");
 				
-		for (int halfHour = 0; halfHour < 30; halfHour++) { // There are 30 half-hours between 7am and 10pm
+		for (int halfHour = 0; halfHour < 30; halfHour+=2) { // There are 30 half-hours between 7am and 10pm
 			int row = halfHour + 1;
 			int hour = halfHour / 2 + 7; // divide by two to get hours 0-15. Add 7 to get hours 7-22.
 			String string = ((hour + 12 - 1) % 12 + 1) + ":" + (halfHour % 2 == 0 ? "00" : "30") + (hour < 12 ? "am" : "pm");
@@ -252,8 +254,16 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 				strategy.autoSave();
 			}
 		}));*/
+		//this.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		//this.setLayoutData(ALIGN_CENTER);
+		//topStuff.
+		topStuff.setBorderWidth(5);
+		topStuff.setStyleName("centerness");
+		focus.setStyleName("centerness");
+		focusTwo.setStyleName("centerness");
 		focusTwo.add(topStuff);
 		this.setSpacing(10);
+		this.setStyleName("centerness");
 		add(focusTwo);
 		add(focus);
 		focus.addKeyDownHandler(new KeyDownHandler() {
@@ -289,7 +299,7 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 	{
 		timePrefsTable = new FlexTable();
 		//timePrefsTable.setBorderWidth(10);
-		timePrefsTable.setText(0, 0, "            ");
+		//timePrefsTable.setText(0, 0, "            ");
 		focus.add(timePrefsTable);
 		timePrefsTable.addStyleName("timePreferencesTable");
 		timePrefsTable.setWidth("100%");
@@ -297,9 +307,9 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 		timePrefsTable.setCellPadding(0);
 		
 		//timePrefsTable.setWidget(0, 0, new HTML("           "));
-		for (int halfHour = 0; halfHour < 30; halfHour++) {
+		for (int halfHour = 0; halfHour < 30; halfHour+=2) {
 			// There are 30 half-hours between 7am and 10pm
-			int row = halfHour + 1;
+			int row = halfHour/2 + 1;
 			int hour = halfHour / 2 + 7; // divide by two to get hours 0-15. Add 7 to get hours 7-22.
 			String string = ((hour + 12 - 1) % 12 + 1) + ":" + (halfHour % 2 == 0 ? "00" : "30") + (hour < 12 ? "am" : "pm");
 			timePrefsTable.setText(row, 0, string);// new HTML(new String("   ")+string));
@@ -322,14 +332,14 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 		
 		
 		
-		cells = new CellWidget[30][days.size()];
+		cells = new CellWidget[15][days.size()];
 		//System.out.println("cells 2nd dim " + days.size());
 		
 		final int totalHalfHours = 30;
 		final int totalDays = days.size();
-		
-		for (int halfHour = 0; halfHour < totalHalfHours; halfHour++) {
-			int row = halfHour + 1;
+		int row = 0;
+		for (int halfHour = 0; halfHour < totalHalfHours; halfHour+=2) {
+			row++;
 			
 			for (int dayNum = 0; dayNum < totalDays; dayNum++) {
 				int col = dayNum + 1;
@@ -377,7 +387,7 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 								
 				timePrefsTable.setWidget(row, col, cell);
 				
-				cells[halfHour][dayNum] = cell;
+				cells[halfHour/2][dayNum] = cell;
 			}
 		}
 	}
@@ -500,7 +510,7 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 			Integer time = hour * 60 + halfHour % 2 * 30;
 			
 			for (int dayNum = 0; dayNum < 5; dayNum++) {
-				CellWidget cell = cells[halfHour][dayNum];
+				CellWidget cell = cells[halfHour/2][dayNum];
 				if (getPreference(strategy.getInstructor(), halfHour, dayNum) != getPreference(strategy.getSavedInstructor(), halfHour, dayNum))
 					cell.addStyleName("changed");
 				else
