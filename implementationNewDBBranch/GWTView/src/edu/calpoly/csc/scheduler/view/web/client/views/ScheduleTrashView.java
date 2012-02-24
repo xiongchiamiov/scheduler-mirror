@@ -114,6 +114,7 @@ public class ScheduleTrashView extends VerticalPanel implements IViewContents
       this.add(scroller);
       vdocholder = new VerticalPanel();
       vdocholder.setBorderWidth(1);
+      vdocholder.setWidth("100%");
       scroller.add(vdocholder);
 
       // UnTrash button
