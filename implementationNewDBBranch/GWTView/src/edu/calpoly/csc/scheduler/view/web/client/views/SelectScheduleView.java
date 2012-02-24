@@ -154,7 +154,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
       this.add(scroller);
       vdocholder = new VerticalPanel();
       vdocholder.setWidth("100%");
-      vdocholder.setBorderWidth(1);
+      vdocholder.setStyleName("docTable");
       scroller.add(vdocholder);
 
       // Trash button
@@ -249,7 +249,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
       HorizontalPanel doc = new HorizontalPanel();
       if(colorNextRow)
       {
-         doc.setStyleName("quarterViewMenu");
+         doc.setStyleName("alternatingRowColor");
          colorNextRow = false;
       }
       else
@@ -280,7 +280,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
          }
       });
       FocusPanel docname = new FocusPanel();
-      docname.add(HTMLUtilities.createLink(document.getName(), "inAppLink", new ClickHandler()
+      docname.add(HTMLUtilities.createLink(document.getName(), "docLink", new ClickHandler()
       {
          @Override
          public void onClick(ClickEvent event)
@@ -289,6 +289,9 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
          }
       }));
       HorizontalPanel flow = new HorizontalPanel();
+      flow.setVerticalAlignment(ALIGN_MIDDLE);
+      cb.setStyleName("docPadding");
+      docname.setStyleName("docPadding");
       flow.add(cb);
       flow.add(docname);
       doc.add(flow);

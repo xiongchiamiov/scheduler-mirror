@@ -113,8 +113,8 @@ public class ScheduleTrashView extends VerticalPanel implements IViewContents
       ScrollPanel scroller = new ScrollPanel();
       this.add(scroller);
       vdocholder = new VerticalPanel();
-      vdocholder.setBorderWidth(1);
       vdocholder.setWidth("100%");
+      vdocholder.setStyleName("docTable");
       scroller.add(vdocholder);
 
       // UnTrash button
@@ -222,7 +222,7 @@ public class ScheduleTrashView extends VerticalPanel implements IViewContents
          }
       });
       FocusPanel docname = new FocusPanel();
-      docname.add(HTMLUtilities.createLink(document.getName(), "inAppLink", new ClickHandler()
+      docname.add(HTMLUtilities.createLink(document.getName(), "docLink", new ClickHandler()
       {
          @Override
          public void onClick(ClickEvent event)
@@ -237,6 +237,9 @@ public class ScheduleTrashView extends VerticalPanel implements IViewContents
          }
       }));
       HorizontalPanel flow = new HorizontalPanel();
+      flow.setVerticalAlignment(ALIGN_MIDDLE);
+      cb.setStyleName("docPadding");
+      docname.setStyleName("docPadding");
       flow.add(cb);
       flow.add(docname);
       doc.add(flow);
