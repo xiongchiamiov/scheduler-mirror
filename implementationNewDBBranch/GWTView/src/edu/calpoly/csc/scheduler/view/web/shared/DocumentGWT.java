@@ -22,6 +22,7 @@ public class DocumentGWT implements Serializable {
 		this.scheduleID = scheduleID;
 		this.staffInstructorID = staffInstructorID;
 		this.tbaLocationID = tbaLocationID;
+		this.isTrashed = isTrashed;
 	}
 	
 	public DocumentGWT(DocumentGWT that) {

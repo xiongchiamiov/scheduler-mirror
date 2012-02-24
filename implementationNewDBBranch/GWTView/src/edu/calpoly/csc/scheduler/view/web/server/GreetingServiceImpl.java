@@ -300,7 +300,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 				if (doc.getOriginal() == null) {
 					System.out.println("found original doc " + doc.isTrashed());
 					int scheduleID = model.findSchedulesForDocument(doc).iterator().next().getID();
-					result.add(Conversion.documentToGWT(doc, scheduleID));
+					DocumentGWT gwt = Conversion.documentToGWT(doc, scheduleID);
+					System.out.println("sending to client doc with istrashed " + gwt.isTrashed());
+					result.add(gwt);
 				}
 			}
 		} catch (DatabaseException e) {
