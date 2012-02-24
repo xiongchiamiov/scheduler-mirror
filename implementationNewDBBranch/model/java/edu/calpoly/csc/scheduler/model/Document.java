@@ -6,6 +6,7 @@ import edu.calpoly.csc.scheduler.model.db.DatabaseException;
 import edu.calpoly.csc.scheduler.model.db.IDBDocument;
 import edu.calpoly.csc.scheduler.model.db.IDBInstructor;
 import edu.calpoly.csc.scheduler.model.db.IDBLocation;
+import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
 
 public class Document extends Identified {
 	private final Model model;
@@ -15,6 +16,9 @@ public class Document extends Identified {
 	
 	private boolean staffInstructorLoaded;
 	private Instructor staffInstructor;
+	
+	private boolean originalLoaded;
+	private Document original;
 	
 	IDBDocument underlyingDocument;
 	
@@ -40,6 +44,10 @@ public class Document extends Identified {
 			model.database.setDocumentStaffInstructor(underlyingDocument, staffInstructor.underlyingInstructor);
 		if (tbaLocationIsSet())
 			model.database.setDocumentTBALocation(underlyingDocument, tbaLocation.underlyingLocation);
+		if (originalLoaded)
+			model.database.disassociateWorkingCopyWithOriginal(underlyingDocument, model.database.getOriginalForWorkingCopyDocument(underlyingDocument));
+		if (originalLoaded && original != null)
+			model.database.associateWorkingCopyWithOriginal(underlyingDocument, original.underlyingDocument);
 		model.documentCache.update(this);
 	}
 	
@@ -52,7 +60,9 @@ public class Document extends Identified {
 			instructor.delete();
 		for (Course course : getCourses())
 			course.delete();
-		
+
+		if (originalLoaded)
+			model.database.disassociateWorkingCopyWithOriginal(underlyingDocument, model.database.getOriginalForWorkingCopyDocument(underlyingDocument));
 		model.documentCache.delete(this);
 	}
 
@@ -95,7 +105,7 @@ public class Document extends Identified {
 	}
 	
 
-	// Location
+	// TBA Location
 
 	public Location getTBALocation() throws DatabaseException {
 		if (!tbaLocationLoaded) {
@@ -117,7 +127,7 @@ public class Document extends Identified {
 	public boolean tbaLocationIsSet() { return tbaLocationLoaded; }
 	
 
-	// Instructor
+	// Staff Instructor
 
 	public Instructor getStaffInstructor() throws DatabaseException {
 		if (!staffInstructorLoaded) {
@@ -139,4 +149,31 @@ public class Document extends Identified {
 
 	public boolean staffInstructorIsSet() { return staffInstructorLoaded; }
 	
+	
+	// Working Copy
+	
+
+	public Document getOriginal() throws DatabaseException {
+		if (!originalLoaded) {
+			IDBDocument originalUnderlying = model.database.getOriginalForWorkingCopyDocument(underlyingDocument);
+			if (originalUnderlying == null)
+				original = null;
+			else
+				original = model.findDocumentByID(originalUnderlying.getID());
+			originalLoaded = true;
+		}
+		return original;
+	}
+
+	public void setOriginal(Document newDocument) {
+		original = newDocument;
+		originalLoaded = true;
+	}
+	
+	public Document getWorkingCopy() throws DatabaseException {
+		IDBDocument workingCopy = model.database.getWorkingCopyForOriginalDocumentOrNull(underlyingDocument);
+		if (workingCopy == null)
+			return null;
+		return model.documentCache.decorateAndPutIfNotPresent(workingCopy);
+	}
 }

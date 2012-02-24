@@ -206,4 +206,11 @@ public abstract class DocumentsTest extends ModelTestCase {
 		assert(model.findDocumentByID(documentID).getStaffInstructor() != null);
 	}
 
+	public void testCopyDocument() throws DatabaseException {
+		Model model = createBlankModel();
+		
+		Document document = insertFullDocumentIntoModel(model);
+		
+		model.copyDocument(document, document.getName());
+	}
 }

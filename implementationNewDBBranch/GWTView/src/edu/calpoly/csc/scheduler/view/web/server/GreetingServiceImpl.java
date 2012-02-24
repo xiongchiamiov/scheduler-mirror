@@ -343,7 +343,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		try {
 			originalDocument = model.findDocumentByID(originalDocumentID);
 		
-			Document workingCopyDocument = model.getWorkingCopyForOriginalDocumentOrNull(originalDocument);
+			Document workingCopyDocument = originalDocument.getWorkingCopy();
 			assert(workingCopyDocument == null);
 			
 			workingCopyDocument = model.findDocumentByID(model.copyDocument(originalDocument, originalDocument.getName()));
@@ -366,7 +366,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			Document workingCopyDocument = model.findDocumentByID(workingCopyDocumentID);
 		
 			Document originalDocument = model.getOriginalForWorkingCopyDocument(workingCopyDocument);
-			model.disassociateWorkingCopyFromOriginal(workingCopyDocument, originalDocument);
+			workingCopyDocument.setOriginal(null);
 			
 			String originalDocumentName = originalDocument.getName();
 			
@@ -399,8 +399,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		try {
 			Document workingCopyDocument = model.findDocumentByID(workingCopyDocumentID);
 			
-			Document originalDocument = model.getOriginalForWorkingCopyDocument(workingCopyDocument);
-			model.disassociateWorkingCopyFromOriginal(workingCopyDocument, originalDocument);
+//			Document originalDocument = model.getOriginalForWorkingCopyDocument(workingCopyDocument);
+			workingCopyDocument.setOriginal(null);
 			
 			workingCopyDocument.delete();
 		}

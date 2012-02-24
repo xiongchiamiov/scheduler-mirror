@@ -113,8 +113,6 @@ public class ScheduleItem extends Identified {
 
 	public Course getCourse() throws DatabaseException {
 		if (!courseLoaded) {
-			if (course == null)
-				throw new NotFoundException();
 			course = model.findCourseByID(model.database.getScheduleItemCourse(underlying).getID());
 			courseLoaded = true;
 		}
@@ -133,8 +131,6 @@ public class ScheduleItem extends Identified {
 
 	public Location getLocation() throws DatabaseException {
 		if (!locationLoaded) {
-			if (location == null)
-				throw new NotFoundException();
 			location = model.findLocationByID(model.database.getScheduleItemLocation(underlying).getID());
 			locationLoaded = true;
 		}
@@ -153,8 +149,6 @@ public class ScheduleItem extends Identified {
 
 	public Instructor getInstructor() throws DatabaseException {
 		if (!instructorLoaded) {
-			if (instructor == null)
-				throw new NotFoundException();
 			instructor = model.findInstructorByID(model.database.getScheduleItemInstructor(underlying).getID());
 			instructorLoaded = true;
 		}

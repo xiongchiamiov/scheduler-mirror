@@ -72,14 +72,6 @@ public class Model {
 		
 		protected abstract void removeFromDatabase(DecoratedT obj) throws DatabaseException;
 
-		public boolean isInserted(DecoratedT obj) throws DatabaseException {
-			try {
-				findByID(obj.getID());
-				return true;
-			}
-			catch (NotFoundException e) { return false; }
-		}
-
 		public void update(DecoratedT obj) throws DatabaseException {
 			assert(!obj.isTransient());
 			assert(cache.containsKey(obj.getID()));
@@ -172,11 +164,11 @@ public class Model {
 		return result;
 	}
 
-	public void disassociateWorkingCopyFromOriginal(Document workingCopyDocument, Document original) throws DatabaseException{
+	void disassociateWorkingCopyFromOriginal(Document workingCopyDocument, Document original) throws DatabaseException{
 		database.disassociateWorkingCopyWithOriginal(workingCopyDocument.underlyingDocument, original.underlyingDocument);
 	}
 
-	public Document getWorkingCopyForOriginalDocumentOrNull(Document originalDocument) throws DatabaseException {
+	Document getWorkingCopyForOriginalDocumentOrNull(Document originalDocument) throws DatabaseException {
 		IDBDocument underlying = database.getWorkingCopyForOriginalDocumentOrNull(originalDocument.underlyingDocument);
 		if (underlying == null)
 			return null;
@@ -287,8 +279,10 @@ public class Model {
 			}
 		}
 
-		database.setDocumentStaffInstructor(newUnderlyingDocument, newDocumentInstructorsByExistingDocumentInstructorIDs.get(existingDocument.getStaffInstructor().getID()));
-		database.setDocumentTBALocation(newUnderlyingDocument, newDocumentLocationsByExistingDocumentLocationIDs.get(existingDocument.getTBALocation().getID()));
+		if (existingDocument.getStaffInstructor() != null)
+			database.setDocumentStaffInstructor(newUnderlyingDocument, newDocumentInstructorsByExistingDocumentInstructorIDs.get(existingDocument.getStaffInstructor().getID()));
+		if (existingDocument.getTBALocation() != null)
+			database.setDocumentTBALocation(newUnderlyingDocument, newDocumentLocationsByExistingDocumentLocationIDs.get(existingDocument.getTBALocation().getID()));
 		database.updateDocument(newUnderlyingDocument);
 		
 		return newUnderlyingDocument.getID();
@@ -503,9 +497,6 @@ public class Model {
 		return itemCache.findByID(id);
 	}
 
-	public boolean isInserted(ScheduleItem scheduleItem) throws DatabaseException {
-		return itemCache.isInserted(scheduleItem);
-	}
 
 	
 

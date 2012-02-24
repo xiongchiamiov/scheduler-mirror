@@ -306,6 +306,9 @@ public abstract class Conversion {
 		Document document = model.findDocumentByID(documentGWT.getID());
 
 		document.setName(documentGWT.getName());
+		document.setEndHalfHour(documentGWT.getEndHalfHour());
+		document.setStartHalfHour(documentGWT.getStartHalfHour());
+		document.setIsTrashed(documentGWT.isTrashed());
 		
 		return document;
 	}

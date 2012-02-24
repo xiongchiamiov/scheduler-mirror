@@ -11,6 +11,8 @@ public class DocumentGWT implements Serializable {
 	int staffInstructorID;
 	int tbaLocationID;
 	boolean isTrashed;
+	int startHalfHour;
+	int endHalfHour;
 	
 	public DocumentGWT() { }
 	
@@ -38,4 +40,8 @@ public class DocumentGWT implements Serializable {
 	public void setTBALocationID(int tbaLocationID) { this.tbaLocationID = tbaLocationID; }
 	public boolean isTrashed() { return isTrashed; }
 	public void setTrashed(boolean isTrashed) { this.isTrashed = isTrashed; }
+	public int getStartHalfHour() { return startHalfHour; }
+	public void setStartHalfHour(int startHalfHour) { this.startHalfHour = startHalfHour; }
+	public int getEndHalfHour() { return endHalfHour; }
+	public void setEndHalfHour(int endHalfHour) { this.endHalfHour = endHalfHour; }
 }
