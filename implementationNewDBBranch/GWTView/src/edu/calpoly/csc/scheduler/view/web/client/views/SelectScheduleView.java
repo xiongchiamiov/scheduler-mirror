@@ -687,14 +687,8 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
    {
       if (myFrame.canPopViewsAboveMe())
       {
-         System.out.println("canpop");
-
          myFrame.popFramesAboveMe();
-         System.out.println("popped");
-
          myFrame.frameViewAndPushAboveMe(new AdminScheduleNavView(service, this, menuBar, username, doc));
-         System.out.println("pushed");
-
       }
    }
 

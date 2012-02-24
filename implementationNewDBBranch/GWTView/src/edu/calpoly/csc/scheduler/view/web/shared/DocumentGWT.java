@@ -10,10 +10,11 @@ public class DocumentGWT implements Serializable {
 	int scheduleID;
 	int staffInstructorID;
 	int tbaLocationID;
+	boolean isTrashed;
 	
 	public DocumentGWT() { }
 	
-	public DocumentGWT(int id, String name, int scheduleID, int staffInstructorID, int tbaLocationID) {
+	public DocumentGWT(int id, String name, int scheduleID, int staffInstructorID, int tbaLocationID, boolean isTrashed) {
 		this.id = id;
 		this.name = name;
 		this.scheduleID = scheduleID;
@@ -22,7 +23,7 @@ public class DocumentGWT implements Serializable {
 	}
 	
 	public DocumentGWT(DocumentGWT that) {
-		this(that.id, that.name, that.scheduleID, that.staffInstructorID, that.tbaLocationID);
+		this(that.id, that.name, that.scheduleID, that.staffInstructorID, that.tbaLocationID, that.isTrashed);
 	}
 
 	public Integer getID() { return id; }
@@ -35,4 +36,6 @@ public class DocumentGWT implements Serializable {
 	public void setStaffInstructorID(int staffInstructorID) { this.staffInstructorID = staffInstructorID; }
 	public int getTBALocationID() { return tbaLocationID; }
 	public void setTBALocationID(int tbaLocationID) { this.tbaLocationID = tbaLocationID; }
+	public boolean isTrashed() { return isTrashed; }
+	public void setTrashed(boolean isTrashed) { this.isTrashed = isTrashed; }
 }

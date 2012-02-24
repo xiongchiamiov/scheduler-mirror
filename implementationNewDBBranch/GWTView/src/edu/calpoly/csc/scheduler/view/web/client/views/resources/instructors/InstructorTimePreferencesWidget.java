@@ -171,7 +171,6 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 		Integer time = hour * 60 + halfHour % 2 * 30;
 		
 		DayGWT day = DayGWT.values()[dayNum];
-		System.out.println("Shit: " + day.ordinal() + ", " + time);
 		return ins.gettPrefs()[day.ordinal()][halfHour];
 	}
 	

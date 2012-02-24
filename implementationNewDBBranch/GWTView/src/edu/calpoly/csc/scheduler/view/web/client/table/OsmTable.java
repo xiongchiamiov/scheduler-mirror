@@ -488,7 +488,6 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel imple
 			Element td = HTMLUtilities.getClosestContainingElementOfType(container.cell.getElement(), "td");
 			
 			if (validationResult instanceof InputValid) {
-				System.out.println("removing invalid class!");
 				td.removeClassName("invalid");
 			}
 			else if (validationResult instanceof InputWarning) {
@@ -594,7 +593,6 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel imple
 	}
 	
 	private void updateHeaderWidths() {
-		System.out.println("Updating header widths");
 		for (ColumnMetadata col : columnMetadatas)
 			col.header.updateWidth();
 	}

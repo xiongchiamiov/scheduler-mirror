@@ -63,8 +63,6 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 		this.username = username;
 		this.document = document;
 		this.menuBar = MenuBar;
-		
-		System.out.println("ASNV constructor");
 	}
 
 	@Override
@@ -72,8 +70,6 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 
 	@Override
 	public void afterPush(final ViewFrame viewFrame) {
-		System.out.println("ASNV afterpush begin");
-		
 		makeFileMenu(viewFrame);
 		makeSettingsMenu();
 		makeResourcesAndScheduleViewsMenuItems(viewFrame);
@@ -81,8 +77,6 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 		addMenus();
 		
 		coursesMenuItem.getCommand().execute();
-
-		System.out.println("ASNV afterpush end");
 	}
 
 	@Override

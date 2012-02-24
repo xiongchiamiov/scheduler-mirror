@@ -60,7 +60,6 @@ public class Database implements IDatabase {
 		
 		T findByID(Integer id) throws NotFoundException {
 			assert(id != null);
-			System.out.println("Finding " + id);
 			T result = objectsByID.get(id);
 			if (result == null) {
 				System.out.println("Couldn't find id " + id);
@@ -77,13 +76,11 @@ public class Database implements IDatabase {
 			assert(objectsByID.containsKey(id));
 			String className = objectsByID.get(id).getClass().getName();
 			objectsByID.remove(id);
-			System.out.println("Removed " + className + " id " + id);
 		}
 	
 		public void update(T object) {
 			assert(objectsByID.containsKey(object.id));
 			objectsByID.put(object.id, object);
-			System.out.println("Updated " + object.getClass().getName() + " id " + object.id);
 		}
 
 		public boolean isEmpty() { return objectsByID.isEmpty(); }

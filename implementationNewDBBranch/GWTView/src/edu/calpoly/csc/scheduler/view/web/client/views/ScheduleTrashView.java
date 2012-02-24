@@ -254,14 +254,9 @@ public class ScheduleTrashView extends VerticalPanel implements IViewContents
 
       if (myFrame.canPopViewsAboveMe())
       {
-         System.out.println("canpop");
-
          myFrame.popFramesAboveMe();
-         System.out.println("popped");
-
          myFrame.frameViewAndPushAboveMe(new AdminScheduleNavView(service, filesStrategy, menuBar, username,
                doc));
-         System.out.println("pushed");
 
       }
    }

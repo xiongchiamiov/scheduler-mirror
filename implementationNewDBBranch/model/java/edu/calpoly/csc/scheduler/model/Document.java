@@ -71,6 +71,8 @@ public class Document extends Identified {
 	public int getEndHalfHour() { return underlyingDocument.getEndHalfHour(); }
 	public void setEndHalfHour(int endHalfHour) { underlyingDocument.setEndHalfHour(endHalfHour); }
 	
+	public boolean isTrashed() { return underlyingDocument.isTrashed(); }
+	public void setIsTrashed(boolean isTrashed) { underlyingDocument.setIsTrashed(isTrashed); }
 	
 	
 	

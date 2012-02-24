@@ -181,7 +181,13 @@ public abstract class Conversion {
 	}
 
 	public static DocumentGWT documentToGWT(Document doc, int scheduleID) throws DatabaseException {
-		return new DocumentGWT(doc.getID(), doc.getName(), scheduleID, doc.getStaffInstructor().getID(), doc.getTBALocation().getID());
+		return new DocumentGWT(
+				doc.getID(),
+				doc.getName(),
+				scheduleID,
+				doc.getStaffInstructor().getID(),
+				doc.getTBALocation().getID(),
+				doc.isTrashed());
 	}
 
 	@Deprecated

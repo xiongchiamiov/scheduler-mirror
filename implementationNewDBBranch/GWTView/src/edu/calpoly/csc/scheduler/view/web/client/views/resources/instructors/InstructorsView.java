@@ -80,6 +80,13 @@ public class InstructorsView extends VerticalPanel implements IViewContents, Ins
 				for (InstructorGWT instructor : instructors)
 					realIDsByTableID.put(instructor.getID(), instructor.getID());
 				
+				for (InstructorGWT instructor : instructors) {
+					if (document.getStaffInstructorID() == instructor.getID()) {
+						instructors.remove(instructor);
+						break;
+					}
+				}
+				
 				callback.onSuccess(instructors);
 			}
 		});

@@ -95,7 +95,6 @@ public class InstructorsTable extends SimplePanel {
 			public void onSuccess(List<InstructorGWT> Instructors){
 				assert(tableInstructors.isEmpty());
 				for (InstructorGWT instructor : Instructors) {
-					System.out.println("got instructor w wtu " + instructor.getRawMaxWtu());
 					tableInstructors.add(new InstructorGWT(instructor));
 				}
 				

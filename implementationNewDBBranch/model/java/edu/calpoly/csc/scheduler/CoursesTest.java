@@ -84,13 +84,10 @@ public abstract class CoursesTest extends ModelTestCase
 	   
 	   model.clearCache();
 	   
-	   System.out.println("finding lecture");
 	   Course lecture = model.findCourseByID(lectureID);
 	   
-	   System.out.println("finding lab");
 	   Course lab = model.findCourseByID(labID);
 	   assert(!lab.lectureLoaded);
-	   System.out.println("getting its lecture");
 	   lab.getLecture();
 	   
 	   assert(lab.getLecture() == lecture);

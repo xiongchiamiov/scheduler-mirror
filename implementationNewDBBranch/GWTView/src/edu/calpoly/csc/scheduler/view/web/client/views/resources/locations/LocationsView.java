@@ -17,6 +17,7 @@ import edu.calpoly.csc.scheduler.view.web.client.IViewContents;
 import edu.calpoly.csc.scheduler.view.web.client.ViewFrame;
 import edu.calpoly.csc.scheduler.view.web.client.views.LoadingPopup;
 import edu.calpoly.csc.scheduler.view.web.shared.DocumentGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
 
 public class LocationsView extends VerticalPanel implements IViewContents, LocationsTable.Strategy {
@@ -76,6 +77,13 @@ public class LocationsView extends VerticalPanel implements IViewContents, Locat
 
 				for (LocationGWT location : locations)
 					realIDsByTableID.put(location.getID(), location.getID());
+
+				for (LocationGWT location : locations) {
+					if (document.getTBALocationID() == location.getID()) {
+						locations.remove(location);
+						break;
+					}
+				}
 				
 				callback.onSuccess(locations);
 			}
