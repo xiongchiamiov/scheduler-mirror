@@ -3,6 +3,8 @@ package edu.calpoly.csc.scheduler.model.db.sqlite;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -10,6 +12,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -37,7 +41,20 @@ import edu.calpoly.csc.scheduler.model.db.simple.DBUsedEquipment;
 
 public class SQLdb implements IDatabase {
 	
-	Connection conn = null;
+	static Connection conn = null;
+	Table<SQLDocument> documentTable = new Table<SQLDocument>(SQLDocument.class, "document",
+			new Table.Column[] {
+					new Table.Column("id", Integer.class),
+					new Table.Column("name", String.class),
+					new Table.Column("isTrash", Boolean.class),
+					new Table.Column("startHalfHour", Integer.class),
+					new Table.Column("endHalfHour", Integer.class)
+			});
+	Table<SQLDocument> workingCopyTable = new Table<SQLDocument>(SQLDocument.class, "workingcopy",
+			new Table.Column[] {
+					new Table.Column("id", Integer.class),
+					new Table.Column("originalDocID", Integer.class)
+			});
 	
 	public static void main(String[] args) throws Exception {
 		SQLdb db = new SQLdb();
@@ -71,6 +88,111 @@ public class SQLdb implements IDatabase {
 		return conn;
 	}
 
+	static class Table<T extends IDBObject> {
+		public enum ColumnType {
+			VARCHAR,
+			INTEGER,
+			TEXT,
+			BOOLEAN;
+		}
+		
+		static class Column {
+			String name;
+ 			Class classs;
+ 			Column(String name, Class classs) {
+ 				this.name = name;
+ 				this.classs = classs;
+ 			}
+		}
+		
+		String name;
+		Column[] columns;
+		Class classs;
+		
+		public Table(Class classs, String name, Column[] columns) {
+			  this.classs = classs;
+			  this.name = name;
+			  this.columns = columns;
+		}
+		
+		public ResultSet customQuery(String queryString) throws DatabaseException {
+			try {
+				return conn.prepareCall(queryString).executeQuery();
+			} catch (SQLException e) {
+				throw new DatabaseException(e);
+			}
+		}
+		
+		public List<T> select(Map<String, Object> wheres) throws DatabaseException {
+			  String query = ""; 
+			  assert(false); // implement
+			  return parseResultSet(customQuery(query));
+		}
+		
+		public void insert(Object[] values) throws DatabaseException {
+			assert(values.length == columns.length);
+  
+			String queryString = "INSERT INTO " + name + " (";
+  
+			for (Column column : columns)
+				queryString += column.name + ", ";
+  
+			queryString += ") VALUES (";
+  
+			for (int columnI = 0; columnI < columns.length; columnI++) {
+				queryString += values[columnI].toString() + ", ";
+			}
+  
+			customQuery(queryString);
+		}
+ 
+		private Object getFromResultWithType(ResultSet resultSet, int columnIndex, Class classs) throws SQLException {
+			if (classs == Integer.class)
+				return resultSet.getInt(columnIndex);
+			else if (classs == String.class) {
+				return resultSet.getString(columnIndex);
+			}
+			
+			assert(false); // implement the rest when needed
+			return null;
+		}
+		
+		private List<T> parseResultSet(ResultSet resultSet) throws DatabaseException {
+			try {
+				List<T> list = new LinkedList<T>();
+				
+				while (resultSet.next()) {
+					Class[] constructorParameters = new Class[columns.length];
+					Object[] constructorArguments = new Object[columns.length];
+					for (int i = 0; i < columns.length; i++) {
+						constructorParameters[i] = columns[i].classs;
+						constructorArguments[i] = getFromResultWithType(resultSet, i, columns[i].classs);
+					}
+					
+					Constructor derp = classs.getConstructor(constructorParameters);
+					T object = (T)derp.newInstance(constructorArguments);
+					list.add(object);
+				}
+				
+				return list;
+			}
+			catch (SQLException e) {
+				throw new DatabaseException(e);
+			} catch (IllegalArgumentException e) {
+				throw new DatabaseException(e);
+			} catch (InstantiationException e) {
+				throw new DatabaseException(e);
+			} catch (IllegalAccessException e) {
+				throw new DatabaseException(e);
+			} catch (InvocationTargetException e) {
+				throw new DatabaseException(e);
+			} catch (SecurityException e) {
+				throw new DatabaseException(e);
+			} catch (NoSuchMethodException e) {
+				throw new DatabaseException(e);
+			}
+		}
+	}
 
 	@Override
 	public IDBUser findUserByUsername(String username) throws DatabaseException {
@@ -209,6 +331,11 @@ public class SQLdb implements IDatabase {
 		PreparedStatement stmnt = null;
 		SQLDocument doc = (SQLDocument) document;
 		
+		documentTable.insert(new Object[]{ doc.getName(), doc.isTrashed(), doc.getStartHalfHour(), doc.getEndHalfHour() });
+		
+		if (doc.getOriginalID() != null)
+			workingCopyTable.insert(new Object[]{ doc.getID(), doc.getOriginalID() });
+		
 		try {
 			stmnt = conn.prepareStatement("insert into document (name, isTrash, startHalfHour, endHalfHour) values (?, ?, ?, ?)");
 			stmnt.setString(1, doc.getName());
@@ -218,10 +345,10 @@ public class SQLdb implements IDatabase {
 			
 			stmnt.executeUpdate();
 			
-			if (doc.getOriginalId() != null) {
+			if (doc.getOriginalID() != null) {
 				stmnt = conn.prepareStatement("insert into workingcopy (id, originalDocID) values (?, ?)");
 				stmnt.setInt(1, doc.getID());
-				stmnt.setInt(2, doc.getOriginalId());
+				stmnt.setInt(2, doc.getOriginalID());
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -233,15 +360,31 @@ public class SQLdb implements IDatabase {
 	@Override
 	public IDBDocument assembleDocument(String name, int startHalfHour,
 			int endHalfHour) throws DatabaseException {
-		// TODO Auto-generated method stub
-		return null;
+		return new SQLDocument(null, name, null, startHalfHour, endHalfHour);
 	}
 
 
 	@Override
 	public void updateDocument(IDBDocument document) throws DatabaseException {
-		// TODO Auto-generated method stub
+		PreparedStatement stmnt = null;
+		SQLDocument doc = (SQLDocument) document;
 		
+		try {
+			stmnt = conn.prepareStatement("update document set name = ?, isTrash = ?," +
+					" where id = ?");
+			stmnt.setInt(3, document.getID());
+			
+			stmnt.executeUpdate();
+			
+			if (doc.getOriginalID() != null) {
+				stmnt = conn.prepareStatement("update workingcopy set originalDocID (?, ?)");
+				stmnt.setInt(1, doc.getID());
+				stmnt.setInt(2, doc.getOriginalID());
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DatabaseException(e);
+		}
 	}
 
 

@@ -38,5 +38,5 @@ public class SQLDocument extends SQLObject implements IDBDocument {
 	@Override
 	public void setEndHalfHour(int halfHour) { endHalfHour = halfHour; }
 	
-	public Integer getOriginalId() { return originalID; }
+	public Integer getOriginalID() { return originalID; }
 }
