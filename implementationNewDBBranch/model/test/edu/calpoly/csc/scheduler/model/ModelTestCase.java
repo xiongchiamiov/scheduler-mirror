@@ -1,4 +1,4 @@
-package model;
+package edu.calpoly.csc.scheduler.model;
 
 import junit.framework.TestCase;
 import edu.calpoly.csc.scheduler.model.Model;
@@ -9,5 +9,5 @@ public abstract class ModelTestCase extends TestCase{
 		return new Model(createDatabase());
 	}
 	
-	abstract IDatabase createDatabase();
+	public abstract IDatabase createDatabase();
 }

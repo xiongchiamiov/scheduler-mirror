@@ -187,7 +187,9 @@ public abstract class Conversion {
 				scheduleID,
 				doc.getStaffInstructor().getID(),
 				doc.getTBALocation().getID(),
-				doc.isTrashed());
+				doc.isTrashed(),
+				doc.getStartHalfHour(),
+				doc.getEndHalfHour());
 	}
 
 	@Deprecated

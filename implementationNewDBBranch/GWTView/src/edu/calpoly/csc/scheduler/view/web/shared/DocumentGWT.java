@@ -16,17 +16,19 @@ public class DocumentGWT implements Serializable {
 	
 	public DocumentGWT() { }
 	
-	public DocumentGWT(int id, String name, int scheduleID, int staffInstructorID, int tbaLocationID, boolean isTrashed) {
+	public DocumentGWT(int id, String name, int scheduleID, int staffInstructorID, int tbaLocationID, boolean isTrashed, int startHalfHour, int endHalfHour) {
 		this.id = id;
 		this.name = name;
 		this.scheduleID = scheduleID;
 		this.staffInstructorID = staffInstructorID;
 		this.tbaLocationID = tbaLocationID;
 		this.isTrashed = isTrashed;
+		this.startHalfHour = startHalfHour;
+		this.endHalfHour = endHalfHour;
 	}
 	
 	public DocumentGWT(DocumentGWT that) {
-		this(that.id, that.name, that.scheduleID, that.staffInstructorID, that.tbaLocationID, that.isTrashed);
+		this(that.id, that.name, that.scheduleID, that.staffInstructorID, that.tbaLocationID, that.isTrashed, that.startHalfHour, that.endHalfHour);
 	}
 
 	public Integer getID() { return id; }

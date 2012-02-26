@@ -1,4 +1,4 @@
-package model;
+package edu.calpoly.csc.scheduler.model.tempalgorithm;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -8,11 +8,11 @@ import edu.calpoly.csc.scheduler.model.Day;
 import edu.calpoly.csc.scheduler.model.Document;
 import edu.calpoly.csc.scheduler.model.Instructor;
 import edu.calpoly.csc.scheduler.model.Model;
+import edu.calpoly.csc.scheduler.model.ModelTestCase;
+import edu.calpoly.csc.scheduler.model.ModelTestUtility;
 import edu.calpoly.csc.scheduler.model.Schedule;
 import edu.calpoly.csc.scheduler.model.ScheduleItem;
 import edu.calpoly.csc.scheduler.model.db.DatabaseException;
-import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
-import edu.calpoly.csc.scheduler.model.tempalgorithm.GenerationAlgorithm;
 import edu.calpoly.csc.scheduler.model.tempalgorithm.GenerationAlgorithm.CouldNotBeScheduledException;
 
 public abstract class TempAlgorithmTest extends ModelTestCase {

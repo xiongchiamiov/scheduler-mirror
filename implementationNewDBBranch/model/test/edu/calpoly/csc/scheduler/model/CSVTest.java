@@ -1,4 +1,4 @@
-package model;
+package edu.calpoly.csc.scheduler.model;
 
 import edu.calpoly.csc.scheduler.model.Model;
 import junit.framework.*;
