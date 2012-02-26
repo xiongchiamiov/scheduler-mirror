@@ -327,11 +327,8 @@ public class CalendarTableView extends SimplePanel {
 	 */
 	public void mouseUp(int row, int col) {
 		if (mDragController.isDragging()) {
-			Element tr = DOM.getElementById("y"+row);
-			DOM.setStyleAttribute(tr, "backgroundColor", "#FFFFFF");
-
-			Element timeHeader = DOM.getElementById("h"+row);
-			DOM.setStyleAttribute(timeHeader, "backgroundColor", "#edf2f2");
+			DOMUtility.setStyleAttribute("y"+row, "backgroundColor", "#FFFFFF");
+			DOMUtility.setStyleAttribute("h"+row, "backgroundColor", "#edf2f2");
 		}
 		
 		mDragController.onDrop(row, mModel.getDay(col));
@@ -342,11 +339,8 @@ public class CalendarTableView extends SimplePanel {
 	 */
 	public void mouseOver(int row) {
 		if (mDragController.isDragging()) {
-			Element tr = DOM.getElementById("y"+row);
-			DOM.setStyleAttribute(tr, "backgroundColor", "#d1dfdf");
-
-			Element timeHeader = DOM.getElementById("h"+row);
-			DOM.setStyleAttribute(timeHeader, "backgroundColor", "#d1dfdf");
+			DOMUtility.setStyleAttribute("y"+row, "backgroundColor", "#d1dfdf");
+			DOMUtility.setStyleAttribute("h"+row, "backgroundColor", "#d1dfdf");
 		}
 	}
 	
@@ -354,11 +348,8 @@ public class CalendarTableView extends SimplePanel {
 	 * Called when the any cell on the table gets a mouse up event
 	 */
 	public void mouseOut(int row) {
-		Element cell = DOM.getElementById("y"+row);
-		DOM.setStyleAttribute(cell, "backgroundColor", "#FFFFFF");
-
-		Element timeHeader = DOM.getElementById("h"+row);
-		DOM.setStyleAttribute(timeHeader, "backgroundColor", "#edf2f2");
+		DOMUtility.setStyleAttribute("y"+row, "backgroundColor", "#FFFFFF");
+		DOMUtility.setStyleAttribute("h"+row, "backgroundColor", "#edf2f2");
 	}
 	
 	/**
@@ -368,19 +359,14 @@ public class CalendarTableView extends SimplePanel {
 		final Element container = DOM.getElementById("CalendarTableContainer");
 		final int top = DOM.getElementPropertyInt(container, "scrollTop");
 		final int left = DOM.getElementPropertyInt(container, "scrollLeft");
-
-		final Element corner = DOM.getElementById("topCorner");
-		DOM.setStyleAttribute(corner, "top", top+"px");
 		
-		for (DayGWT day : DayGWT.values()) {
-			final Element header = DOM.getElementById("h"+day.name);
-			DOM.setStyleAttribute(header, "top", top+"px");
-		}
+		DOMUtility.setStyleAttribute("topCorner", "top", top+"px");
 		
-		for (int time = 0; time < END_TIMES.length; time++) {
-			final Element header = DOM.getElementById("h"+time);
-			DOM.setStyleAttribute(header, "left", left+"px");
-		}
+		for (DayGWT day : DayGWT.values())
+			DOMUtility.setStyleAttribute("h"+day.name, "top", top+"px");
+		
+		for (int time = 0; time < END_TIMES.length; time++)
+			DOMUtility.setStyleAttribute("h"+time, "left", left+"px");
 	}
 	
 	/**
@@ -410,10 +396,7 @@ public class CalendarTableView extends SimplePanel {
 	
 	public void setLeftOffset(int pixels) {
 		mLeftOffset = pixels + 1;
-		Element tableContainer = DOM.getElementById("CalendarTableContainer");
-		
-		if (tableContainer != null)
-			DOM.setStyleAttribute(tableContainer, "left", mLeftOffset+"px");
+		DOMUtility.setStyleAttribute("CalendarTableContainer", "left", mLeftOffset+"px");
 	}
 	
 	private void applyFilters() {

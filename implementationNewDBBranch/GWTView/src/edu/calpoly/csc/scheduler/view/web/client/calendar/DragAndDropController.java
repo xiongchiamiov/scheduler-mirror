@@ -55,14 +55,13 @@ public class DragAndDropController implements MouseMoveHandler, MouseOutHandler,
 			isMoving = true;
 			
 			// Make the DRAGGED_ID div follow the cursor
-			Element dragDiv = DOM.getElementById(DRAGGED_ID);
-			DOM.setStyleAttribute(dragDiv, "display", "block");
-			DOM.setStyleAttribute(dragDiv, "left", event.getClientX()+"px");
-			DOM.setStyleAttribute(dragDiv, "top", event.getClientY()+"px");
+			DOMUtility.setStyleAttribute(DRAGGED_ID, "display", "block");
+			DOMUtility.setStyleAttribute(DRAGGED_ID, "left", event.getClientX()+"px");
+			DOMUtility.setStyleAttribute(DRAGGED_ID, "top", event.getClientY()+"px");
 			
 			// Hide the contents of the table cell the user dragged
-			DOM.setStyleAttribute(mItemView, "color", "#FFFFFF");
-			DOM.setStyleAttribute(mItemView, "backgroundColor", "#FFFFFF");
+			DOMUtility.setStyleAttribute(mItemView.getId(), "color", "#FFFFFF");
+			DOMUtility.setStyleAttribute(mItemView.getId(), "backgroundColor", "#FFFFFF");
 			
 			// TODO Hide contents of ever occurrence of the dragged item on the table
 			// TODO if this is a list item with multiple sections remaining, just decrement section count and don't hide
@@ -161,8 +160,7 @@ public class DragAndDropController implements MouseMoveHandler, MouseOutHandler,
 		}
 		
 		// Hide the div that follows the cursor while dragging
-		Element dragDiv = DOM.getElementById(DRAGGED_ID);
-		DOM.setStyleAttribute(dragDiv, "display", "none");
+		DOMUtility.setStyleAttribute(DRAGGED_ID, "display", "none");
 	}
 	
 	private void addMouseHandlers() {

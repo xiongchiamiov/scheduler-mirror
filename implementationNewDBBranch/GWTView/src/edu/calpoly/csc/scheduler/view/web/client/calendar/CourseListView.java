@@ -34,11 +34,10 @@ public class CourseListView extends SimplePanel {
 	public void setItems(List<CourseGWT> items) { mModel = items; }
 	
 	public void toggle(boolean hidden) {
-		Element container = DOM.getElementById("ScheduleListContainer");
 		if (hidden)
-			DOM.setStyleAttribute(container, "display", "none");
+			DOMUtility.setStyleAttribute("ScheduleListContainer", "display", "none");
 		else
-			DOM.setStyleAttribute(container, "display", "block");
+			DOMUtility.setStyleAttribute("ScheduleListContainer", "display", "block");
 	}
 	
 	public void drawList() {
@@ -125,18 +124,15 @@ public class CourseListView extends SimplePanel {
 	 * Called when the any cell on the table gets a mouse up event
 	 */
 	public void mouseOver(int row) {
-		if (mDragController.isDragging()) {
-			Element tr = DOM.getElementById("list"+row);
-			DOM.setStyleAttribute(tr, "backgroundColor", "#d1dfdf");
-		}
+		if (mDragController.isDragging())
+			DOMUtility.setStyleAttribute("list"+row, "backgroundColor", "#d1dfdf");
 	}
 	
 	/**
 	 * Called when the any cell on the table gets a mouse up event
 	 */
 	public void mouseOut(int row) {
-		Element cell = DOM.getElementById("list"+row);
-		DOM.setStyleAttribute(cell, "backgroundColor", "#DFF0CF");
+		DOMUtility.setStyleAttribute("list"+row, "backgroundColor", "#DFF0CF");
 	}
 	
 	/**
