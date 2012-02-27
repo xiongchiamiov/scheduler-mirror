@@ -383,7 +383,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			
 			
 			
-			System.out.println("Saving state!");
+			String filepath = getServletContext().getRealPath("DatabaseState.javaser");
+			System.out.println("Saving state to "+filepath+"!");
 			FileOutputStream fos = new FileOutputStream("DatabaseState.javaser");
 			ObjectOutputStream oos = new ObjectOutputStream(fos);
 			
