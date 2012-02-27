@@ -60,7 +60,16 @@ public class SQLdb implements IDatabase {
 		SQLdb db = new SQLdb();
 		db.openConnection();
 	}
-	
+
+	public SQLdb() {
+		try {
+			openConnection();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	public void openConnection() throws SQLException, Exception
 	{
@@ -115,9 +124,9 @@ public class SQLdb implements IDatabase {
 			  this.columns = columns;
 		}
 		
-		public ResultSet customQuery(String queryString) throws DatabaseException {
+		public ResultSet customQuery(PreparedStatement stmnt) throws DatabaseException {
 			try {
-				return conn.prepareCall(queryString).executeQuery();
+				return stmnt.executeQuery();
 			} catch (SQLException e) {
 				throw new DatabaseException(e);
 			}
@@ -125,25 +134,50 @@ public class SQLdb implements IDatabase {
 		
 		public List<T> select(Map<String, Object> wheres) throws DatabaseException {
 			  String query = ""; 
+			  PreparedStatement stmnt = null;
 			  assert(false); // implement
-			  return parseResultSet(customQuery(query));
+			  return parseResultSet(customQuery(stmnt));
 		}
 		
+		//insert into userdata (username, isAdmin) values (?, ?)
 		public void insert(Object[] values) throws DatabaseException {
-			assert(values.length == columns.length);
+			// columns.length - 1 because an insert will not use
+			// auto-incremented field "id"
+			assert(values.length == columns.length-1);
+			PreparedStatement stmnt = null;
   
 			String queryString = "INSERT INTO " + name + " (";
   
 			for (Column column : columns)
-				queryString += column.name + ", ";
+				if (!column.name.equals("id"))
+					queryString += column.name + ",";
   
+			queryString = queryString.substring(0, queryString.length() - 1);
 			queryString += ") VALUES (";
   
 			for (int columnI = 0; columnI < columns.length; columnI++) {
-				queryString += values[columnI].toString() + ", ";
+				queryString += "?,";
 			}
-  
-			customQuery(queryString);
+			
+			queryString = queryString.substring(0, queryString.length() - 1);
+			queryString += ")";
+			System.out.println(queryString);
+			try {
+				System.out.println(conn);
+				stmnt = conn.prepareStatement(queryString);
+				for (int columnI = 0; columnI < columns.length; columnI++) {
+					if (columns[columnI].classs == Integer.class)
+						stmnt.setInt(columnI+1, (Integer) values[columnI]);
+					else if (columns[columnI].classs == String.class)
+						stmnt.setString(columnI+1, (String) values[columnI]);
+					else if (columns[columnI].classs == Boolean.class)
+						stmnt.setBoolean(columnI+1, (Boolean) values[columnI]);
+				}
+			}
+			catch (SQLException e) {
+				throw new DatabaseException(e);
+			}
+			customQuery(stmnt);
 		}
  
 		private Object getFromResultWithType(ResultSet resultSet, int columnIndex, Class classs) throws SQLException {
@@ -152,8 +186,10 @@ public class SQLdb implements IDatabase {
 			else if (classs == String.class) {
 				return resultSet.getString(columnIndex);
 			}
+			else if (classs == Boolean.class) {
+				return resultSet.getBoolean(columnIndex);
+			}
 			
-			assert(false); // implement the rest when needed
 			return null;
 		}
 		

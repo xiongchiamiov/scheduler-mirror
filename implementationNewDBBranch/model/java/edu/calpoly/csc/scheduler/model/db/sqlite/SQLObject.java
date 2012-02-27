@@ -8,7 +8,7 @@ public class SQLObject implements IDBObject {
 	@Override
 	public Integer getID() { return id; }
 	
-	public SQLObject(int id) {
+	public SQLObject(Integer id) {
 		this.id = id;
 	}
 
