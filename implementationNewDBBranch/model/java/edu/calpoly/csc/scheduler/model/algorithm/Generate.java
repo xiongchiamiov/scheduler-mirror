@@ -1,5 +1,7 @@
 package edu.calpoly.csc.scheduler.model.algorithm;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -21,7 +23,7 @@ public class Generate {
 	/**
 	 * Used for debugging. Toggle it to get debugging output
 	 */
-	 private static final boolean DEBUG = !true; // !true == false ; )
+	 private static final boolean DEBUG = true; // !true == false ; )
 	   
 	/**
 	 * Prints a message to STDERR if DEBUG is true
@@ -36,14 +38,20 @@ public class Generate {
 	   }
 	}
 
-	public static Vector<ScheduleItem> generate(Model model, Schedule schedule, Vector<ScheduleItemDecorator> s_items, List<Course> c_list, List<Instructor> i_list, List<Location> l_list) throws DatabaseException {
-		Vector<ScheduleItemDecorator> items = s_items;
+	public static Vector<ScheduleItem> generate(Model model, Schedule schedule, 
+			Collection<ScheduleItemDecorator> s_items, Collection<Course> c_list, Collection<Instructor> i_list,
+			Collection<Location> l_list) throws DatabaseException {
+		
+		Vector<ScheduleItemDecorator> items = new Vector<ScheduleItemDecorator>(); //changed
+		items.addAll(s_items); // changed;
+		
 		HashMap<Integer, SectionTracker> sections = new HashMap<Integer, SectionTracker>();
 		TimeRange bounds = new TimeRange(14, 44);
 		TimeRange lec_bounds = new TimeRange(bounds);
 		TimeRange lab_bounds = new TimeRange(bounds);
-	      
+	    
 	    ScheduleDecorator sd = new ScheduleDecorator();
+	    
 	    sd.constructMaps(i_list, l_list);
 
 	    debug("GENERATING");
@@ -165,7 +173,9 @@ public class Generate {
 	    * @see Tba#getTba()
 	    * @see Staff#getStaff()
 	    */
-	   private static ScheduleItemDecorator genLecItem (Model model, Schedule schedule, Course lec, ScheduleDecorator sd, TimeRange lec_bounds, List<Instructor> i_list, List<Location> l_list) throws NotFoundException
+	   private static ScheduleItemDecorator genLecItem (Model model, Schedule schedule, Course lec, 
+			   ScheduleDecorator sd, TimeRange lec_bounds, Collection<Instructor> i_list, Collection<Location> l_list)
+					   throws NotFoundException
 	   {
 		   assert(false);
 //	      ScheduleItem lec_si = model.assembleScheduleItem(schedule, lec, findInstructor(lec, sd, i_list), null, 0, null, 0, 0, false, false);
@@ -184,7 +194,9 @@ public class Generate {
 	    * @return true if the item was added. False otherwise.
 	 * @throws NotFoundException 
 	    */
-	   private static boolean add (Model model, ScheduleDecorator sd, ScheduleItemDecorator si, Vector<ScheduleItemDecorator> items, HashMap<Integer, SectionTracker> sections) throws CouldNotBeScheduledException, DatabaseException
+	   private static boolean add (Model model, ScheduleDecorator sd, ScheduleItemDecorator si, 
+			   Vector<ScheduleItemDecorator> items, HashMap<Integer, SectionTracker> sections) 
+					   throws CouldNotBeScheduledException, DatabaseException
 	   {
 	      boolean r;
 	      /*
@@ -217,7 +229,9 @@ public class Generate {
 	    * @see Tba#getTba()
 	    * @see Staff#getStaff()
 	    */
-	   private static ScheduleItemDecorator genLabItem (Model model, Schedule schedule, Course lab, ScheduleItemDecorator lec_si, ScheduleDecorator sd, TimeRange lab_bounds, List<Instructor> i_list, List<Location> l_list) throws NotFoundException
+	   private static ScheduleItemDecorator genLabItem (Model model, Schedule schedule, Course lab, 
+			   ScheduleItemDecorator lec_si, ScheduleDecorator sd, TimeRange lab_bounds, Collection<Instructor> i_list, 
+			   Collection<Location> l_list) throws NotFoundException
 	   {
 //	      ScheduleItem lab_si = model.assembleScheduleItem(schedule, lab, getLabInstructor(model, lab, lec_si), null, 0, null, 0, 0, false, false);
 //	      

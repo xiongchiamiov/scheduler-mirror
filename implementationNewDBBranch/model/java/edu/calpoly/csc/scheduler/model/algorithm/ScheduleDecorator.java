@@ -1,5 +1,7 @@
 package edu.calpoly.csc.scheduler.model.algorithm;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -33,7 +35,10 @@ public class ScheduleDecorator {
 		lAvailability = new HashMap<Location, WeekAvail>();
 	}
 	
-	public void constructMaps(List<Instructor> instructors, List<Location> locations) {
+	public void constructMaps(Collection<Instructor> i_list, Collection<Location> l_list) {
+		List<Instructor> instructors = new ArrayList<Instructor>(i_list);
+		List<Location> locations = new ArrayList<Location>(l_list);
+		
 		for(Instructor i : instructors) {
 			WTUs.put(i, Integer.valueOf(0));
 			iAvailability.put(i, new WeekAvail());
