@@ -12,6 +12,7 @@ Instructions for Week 9 Acceptance Testing
 </p>
 <br>
 <br>
+<br>
 A blank copy of the week 9 acceptance test report has already been put into
 each department subdirectory.  It is a very simple HTML file.  You can edit the
 file directly in a plain text editor, or use some form of word processor and
@@ -21,7 +22,7 @@ sections listed in the template.
 The objective of this acceptance testing process is to re-create the Winter
 2012 schedule that was published for your department.  The title for each
 section of the report describes the actions to be performed for that section.
-This is exacly the same accepatance test procedure we did earlier in the
+This is exactly the same acceptance test procedure we did earlier in the
 quarter.
 </p><p>
 For each section of the report, if the actions can be performed 100%
@@ -34,16 +35,26 @@ already been posted.
 The following are further specific instructions for each section of the report:
 <ol type=1>
 <p> <li>
-Create a new schedule for Winter 2012.  Save an empty version of that schedule
-and re-open it.  Use this newly-created schedule for the rest of the testing.
+<strong>Create a new schedule for Winter 2012</strong>.  Save an empty version
+of that schedule and re-open it.  Use this newly-created schedule for the rest
+of the testing.
 <p>
 <p> <li>
-Enter all of the necessary data for the Winter 2012 schedule.  This includes
-all instructors, courses, and rooms.
+<strong>Enter all of the necessary resource data</strong> for the Winter 2012
+schedule.  This includes all instructors, courses, rooms, and preferences.
+<br>
+<br>
+If you want to force the generation of a correct schedule, you can try to enter
+specific instructor preferences to ensure that each instructor gets exactly the
+classes that are scheduled for that instructor in the Winter 2012 schedule.  It
+would be better to enter preferences more broadly, such that Winter 2012
+scheduled items are within the preference ranges, but preferences don't dictate
+a particular schedule.
 <p>
 <p> <li>
-Generate a schedule.  In addition to any problem reports, describe the quality
-of the schedule that was automatically generated, in particular:
+<strong>Generate the schedule</strong>.  In addition to any reported problem,
+describe the quality of the schedule that was automatically generated, in
+particular:
 <ol type=a>
 <p> <li>
 Did it contain all classes?
@@ -57,34 +68,31 @@ Were there any scheduling conflicts?
 If the exact Winter 2012 was generated directly, say "Winter 2012 schedule
 successfully generated, with no edits."  If there were one or more problems,
 include links to the Jira issues that were posted for the problems.
+<p>
+<p> <li>
+<strong>Edit the generated schedule</strong> to get as close as possible to the
+published Winter 2012 schedule.  Describe how close you were able to get to the
+actual Winter 2012 schedule for the department, using the Scheduler program
+editing functionality.  Again, our objective here is to use the Scheduler
+program to create precisely the schedule that is published by the department
+for Winter 2012.
 <br>
 <br>
-If you want to force the generation of a correct schedule, you can try to enter
-specific instructor preferences to ensure that one instructor gets exactly the
-classes that are scheduled for that instructor in the Winter 2012.  It would be
-better to enter preferences more broadly, where the actual Winter 2012 times as
-courses are within the preference range of the instructor who got them.
+After the preceding edits are done, perform some additional edits to test the
+schedule editing functionality.  In particular, move courses around in the
+schedule to test the incremental constraint and preference validation.
 <p>
 <p> <li>
-Edit the generated schedule to get to be as close to Winter 2012 as possible.
-Then perform some additional edits to test the schedule editing functionality.
-Describe how close you were able to get to the actual Winter 2012 schedule for
-the department, using the Scheduler program editing functionality.  Again, our
-objective here is to use the Scheduler program to create precisely the schedule
-that is published by the department for Winter 2012.
+<strong>Save the schedule</strong>, exit the program, restart, and re-open the
+saved schedule schedule.  Save a copy of the schedule on a different file,
+exit, restart, and re-open both files.
 <p>
 <p> <li>
-Save the schedule, exit the program, restart, and re-open the saved schedule
-schedule.  Save a copy of the schedule on different file, exit, restart, and
-re-open.
-<p>
-<p> <li>
-Under the heading "<strong>Quality Measures</strong>", describe any quality
-measures that were not achieved during the preceding testing.  The quality
-measures are those listed under the revised Week 5 features list the project
-file:
+<strong>Describe any quality measures</strong> that were not achieved during
+the preceding testing.  The quality measures are those listed under the revised
+Week 5 features list in the project file:
 <a href="http://scheduler.csc.calpoly.edu/releases/alpha/requirements/matrix.html">
-requirements/matrix.html
+<tt>requirements/matrix.html</tt>.
 </a>
 <br>
 <br>
@@ -92,13 +100,11 @@ If all quality measures are achieved satisfactorily, say "All quality measures
 met."  If not all quality measures were covered during the preceding testing,
 then indicate this.  For example, if you did not need to use course suffixing
 for your department, say "Use of course suffixing not required for X
-department."  Include links to any Jira issues that were posted for the
-problems.
+department."
 <p> <li>
-Under the heading "<strong>Other Issues</strong>", describe any other problems
-or issues that were not covered in any of the previous testing steps, including
-UI look-and-feel and overall usability.  Include links to any Jira issues that
-were posted for the problems.
+<strong>Describe any other problems or issues</strong> that were not covered in
+the preceding testing steps, including overall UI look-and-feel and usability.
+Include links to any new Jira issues that you post.
 </ol>
 </body>
 </html>
