@@ -166,4 +166,28 @@ public class ScheduleItem extends Identified {
 
 	public boolean instructorIsSet() { return instructorLoaded; }
 	
+	/**
+	    * Displays all this object's fields in a visually easy-to-read form.
+	    */
+	   public String toString ()
+	   {
+	      String r = "";
+		try {
+			r = (this.getCourse() + " - Section: " + this.getSection() + " - " +
+			          this.getCourse().getType() + "\n" +
+			          "Instructor:\t" + this.getInstructor() + "\n" +
+			          "In:\t\t" + this.getLocation() + "\n" +
+			          "On:\t\t" + this.getDays() + "\n" +
+			          "Starts:\t\t" + this.getStartHalfHour() + "\n" +
+			          "Ends:\t\t" + this.getEndHalfHour() + "\n");
+		} catch (DatabaseException e) {
+			e.printStackTrace();
+		}
+		//TODO Add Labs into printing
+	      /*if (!this.getLabIDs().isEmpty())
+	      {
+	         r += this.getLabIDs().toString();
+	      }*/
+	      return r;
+	   }
 }
