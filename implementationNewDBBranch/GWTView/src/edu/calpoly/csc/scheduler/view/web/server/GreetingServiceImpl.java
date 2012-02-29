@@ -45,20 +45,26 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	private Model model;	
 
 	public GreetingServiceImpl() {
+		this(true);
+	}
+	
+	public GreetingServiceImpl(boolean readState) {
 		model = new Model();
 
-		try {
-			FileInputStream fos = new FileInputStream("DatabaseState.javaser");
-			ObjectInputStream ois = new ObjectInputStream(fos);
-			
-			model.readState(ois);
-			
-			ois.close();
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-			System.out.println("Failed to restore model! Starting fresh!");
-			model = new Model();
+		if (readState) {
+			try {
+				FileInputStream fos = new FileInputStream("DatabaseState.javaser");
+				ObjectInputStream ois = new ObjectInputStream(fos);
+				
+				model.readState(ois);
+				
+				ois.close();
+			}
+			catch (IOException e) {
+				e.printStackTrace();
+				System.out.println("Failed to restore model! Starting fresh!");
+				model = new Model();
+			}
 		}
 	}
 

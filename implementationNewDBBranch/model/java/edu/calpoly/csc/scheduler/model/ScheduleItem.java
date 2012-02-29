@@ -1,10 +1,10 @@
 package edu.calpoly.csc.scheduler.model;
 
+import java.util.Collection;
 import java.util.Set;
 
 import edu.calpoly.csc.scheduler.model.db.DatabaseException;
 import edu.calpoly.csc.scheduler.model.db.IDBScheduleItem;
-import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
 
 public class ScheduleItem extends Identified {
 	private final Model model;
@@ -22,6 +22,9 @@ public class ScheduleItem extends Identified {
 	
 	private boolean instructorLoaded;
 	private Instructor instructor;
+
+	private boolean lectureLoaded;
+	private ScheduleItem lecture;
 
 	
 	ScheduleItem(Model model, IDBScheduleItem underlying) {
@@ -52,6 +55,15 @@ public class ScheduleItem extends Identified {
 		model.database.setScheduleItemCourse(underlying, course.underlyingCourse);
 		model.database.setScheduleItemInstructor(underlying, instructor.underlyingInstructor);
 		model.database.setScheduleItemLocation(underlying, location.underlyingLocation);
+
+		IDBScheduleItem oldLecture = model.database.getScheduleItemLectureOrNull(underlying);
+		if ((oldLecture == null) != (lecture == null)) {
+			if (lecture == null)
+				model.database.disassociateScheduleItemLab(model.database.getScheduleItemLectureOrNull(underlying), underlying);
+			else
+				model.database.associateScheduleItemLab(lecture.underlying, underlying);
+		}
+		
 		model.itemCache.update(this);
 	}
 	
@@ -65,6 +77,8 @@ public class ScheduleItem extends Identified {
 			result.setLocation(getLocation());
 		if (courseLoaded)
 			result.setCourse(getCourse());
+		if (lectureLoaded)
+			result.setLecture(getLecture());
 		return result;
 	}
 	
@@ -93,7 +107,23 @@ public class ScheduleItem extends Identified {
 	
 	// Labs
 	
-	public Set<Integer> getLabIDs() { assert(false); return null; }
+	public Collection<ScheduleItem> getLabs() {
+		return model.getLabScheduleItemsForScheduleItem(this);
+	}
+	
+	public ScheduleItem getLecture() throws DatabaseException {
+		if (!lectureLoaded) {
+			assert(lecture == null);
+			lecture = model.getScheduleItemLecture(this);
+			lectureLoaded = true;
+		}
+		return lecture;
+	}
+	
+	public void setLecture(ScheduleItem newLecture) {
+		lectureLoaded = true;
+		lecture = newLecture;
+	}
 
 
 	// Schedule

@@ -527,4 +527,16 @@ public class Model {
 		courseCache.cache.clear();
 		scheduleCache.cache.clear();
 	}
+
+	public Collection<ScheduleItem> getLabScheduleItemsForScheduleItem(ScheduleItem item) {
+		Collection<ScheduleItem> result = new LinkedList<ScheduleItem>();
+		for (IDBScheduleItem lab : database.findAllLabScheduleItemsForScheduleItem(item.underlying))
+			result.add(itemCache.decorateAndPutIfNotPresent(lab));
+		return result;
+	}
+
+	public ScheduleItem getScheduleItemLecture(ScheduleItem scheduleItem) throws DatabaseException {
+		IDBScheduleItem lecture = database.getScheduleItemLectureOrNull(scheduleItem.underlying);
+		return itemCache.decorateAndPutIfNotPresent(lecture);
+	}
 }

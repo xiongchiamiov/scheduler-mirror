@@ -117,7 +117,7 @@ public class Generate {
 	                        try
 	                        {
 	                           add(model, sd, lab_si, items, sections);
-	                           lec_si.getItem().getLabIDs().add(lab_si.getItem().getCourse().getID());
+	                           lec_si.getItem().getLabs().add(lab_si.getItem());
 	                        }
 	                        catch (CouldNotBeScheduledException e)
 	                        {
@@ -955,7 +955,7 @@ public class Generate {
 	         /*
 	          * Remove the labs only if they're teathered to the course
 	          */
-	         if (!si.getItem().getLabIDs().isEmpty())
+	         if (!si.getItem().getLabs().isEmpty())
 	         {
 	            if (c.isTetheredToLecture())
 	            {

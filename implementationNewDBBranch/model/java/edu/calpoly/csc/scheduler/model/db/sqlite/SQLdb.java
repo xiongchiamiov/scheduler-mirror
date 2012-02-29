@@ -1160,5 +1160,33 @@ public class SQLdb implements IDatabase {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public Collection<IDBScheduleItem> findAllLabScheduleItemsForScheduleItem(
+			IDBScheduleItem underlying) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void associateScheduleItemLab(IDBScheduleItem lecture,
+			IDBScheduleItem lab) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void disassociateScheduleItemLab(IDBScheduleItem lecture,
+			IDBScheduleItem lab) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public IDBScheduleItem getScheduleItemLectureOrNull(IDBScheduleItem underlying)
+			throws DatabaseException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }

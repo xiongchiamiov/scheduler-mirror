@@ -14,11 +14,12 @@ public class DBScheduleItem extends DBObject implements IDBScheduleItem {
 	int endHalfHour;
 	boolean isPlaced;
 	boolean isConflicted;
+	Integer lectureScheduleItemID;
 	
 	public DBScheduleItem(Integer id, Integer scheduleID, Integer instructorID,
 			Integer courseID, Integer locationID, int section, Set<Day> days,
 			int startHalfHour, int endHalfHour, boolean isPlaced,
-			boolean isConflicted) {
+			boolean isConflicted, Integer lectureScheduleItemID) {
 		super(id);
 		this.scheduleID = scheduleID;
 		this.instructorID = instructorID;
@@ -30,9 +31,10 @@ public class DBScheduleItem extends DBObject implements IDBScheduleItem {
 		this.endHalfHour = endHalfHour;
 		this.isPlaced = isPlaced;
 		this.isConflicted = isConflicted;
+		this.lectureScheduleItemID = lectureScheduleItemID;
 	}
 	public DBScheduleItem(DBScheduleItem that) {
-		this(that.id, that.scheduleID, that.instructorID, that.courseID, that.locationID, that.section, that.days, that.startHalfHour, that.endHalfHour, that.isPlaced, that.isConflicted);
+		this(that.id, that.scheduleID, that.instructorID, that.courseID, that.locationID, that.section, that.days, that.startHalfHour, that.endHalfHour, that.isPlaced, that.isConflicted, that.lectureScheduleItemID);
 	}
 	
 	@Override

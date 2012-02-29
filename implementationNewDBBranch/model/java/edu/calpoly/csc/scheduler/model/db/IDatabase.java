@@ -35,6 +35,11 @@ public interface IDatabase {
 	void updateDocument(IDBDocument document) throws DatabaseException;
 	void deleteDocument(IDBDocument document) throws DatabaseException;
 	IDBDocument findDocumentForSchedule(IDBSchedule schedule) throws DatabaseException;
+
+	IDBInstructor getDocumentStaffInstructorOrNull(IDBDocument underlyingDocument) throws NotFoundException;
+	IDBLocation getDocumentTBALocationOrNull(IDBDocument underlyingDocument) throws NotFoundException;
+	void setDocumentStaffInstructor(IDBDocument underlyingDocument, IDBInstructor underlyingInstructor);
+	void setDocumentTBALocation(IDBDocument underlyingDocument, IDBLocation underlyingLocation);
 	
 	// Working Copy
 	boolean isOriginalDocument(IDBDocument doc) throws DatabaseException;
@@ -68,6 +73,9 @@ public interface IDatabase {
 	void setScheduleItemCourse(IDBScheduleItem underlying, IDBCourse findCourseByID) throws DatabaseException;
 	void setScheduleItemLocation(IDBScheduleItem underlying, IDBLocation findLocationByID) throws DatabaseException;
 	void setScheduleItemInstructor(IDBScheduleItem underlying, IDBInstructor findInstructorByID) throws DatabaseException;
+	Collection<IDBScheduleItem> findAllLabScheduleItemsForScheduleItem(IDBScheduleItem underlying);
+	void associateScheduleItemLab(IDBScheduleItem lecture, IDBScheduleItem lab);
+	void disassociateScheduleItemLab(IDBScheduleItem lecture, IDBScheduleItem lab);
 	
 	// Locations
 	Collection<IDBLocation> findLocationsForDocument(IDBDocument document) throws DatabaseException;
@@ -160,9 +168,5 @@ public interface IDatabase {
 
 	void writeState(ObjectOutputStream oos) throws IOException;
 	void readState(ObjectInputStream ois) throws IOException;
-	
-	IDBInstructor getDocumentStaffInstructorOrNull(IDBDocument underlyingDocument) throws NotFoundException;
-	IDBLocation getDocumentTBALocationOrNull(IDBDocument underlyingDocument) throws NotFoundException;
-	void setDocumentStaffInstructor(IDBDocument underlyingDocument, IDBInstructor underlyingInstructor);
-	void setDocumentTBALocation(IDBDocument underlyingDocument, IDBLocation underlyingLocation);
+	IDBScheduleItem getScheduleItemLectureOrNull(IDBScheduleItem underlying) throws DatabaseException;
 }

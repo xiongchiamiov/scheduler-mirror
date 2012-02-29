@@ -244,7 +244,7 @@ public class Database implements IDatabase {
 	@Override
 	public IDBScheduleItem assembleScheduleItem(int section, Set<Day> days,
 			int startHalfHour, int endHalfHour, boolean isPlaced, boolean isConflicted) {
-		return new DBScheduleItem(null, null, null, null, null, section, days, startHalfHour, endHalfHour, isPlaced, isConflicted);
+		return new DBScheduleItem(null, null, null, null, null, section, days, startHalfHour, endHalfHour, isPlaced, isConflicted, null);
 	}
 
 	@Override
@@ -931,5 +931,44 @@ public class Database implements IDatabase {
 	public void disassociateLectureAndLab(IDBCourse lecture, IDBCourse lab) {
 		((DBCourse)lab).lectureID = null;
 		((DBCourse)lab).tetheredToLecture = false;
+	}
+
+
+	@Override
+	public Collection<IDBScheduleItem> findAllLabScheduleItemsForScheduleItem(IDBScheduleItem underlying) {
+		Collection<IDBScheduleItem> result = new LinkedList<IDBScheduleItem>();
+		for (DBScheduleItem item : this.scheduleItemTable.getAll())
+			if (item.lectureScheduleItemID != null && item.lectureScheduleItemID.equals(underlying.getID()))
+				result.add(item);
+		return result;
+	}
+
+
+	@Override
+	public void associateScheduleItemLab(IDBScheduleItem lecture, IDBScheduleItem ilab) {
+		DBScheduleItem lab = (DBScheduleItem)ilab;
+		
+		assert(lab.lectureScheduleItemID == null);
+		lab.lectureScheduleItemID = lecture.getID();
+	}
+
+
+	@Override
+	public void disassociateScheduleItemLab(IDBScheduleItem lecture, IDBScheduleItem ilab) {
+		DBScheduleItem lab = (DBScheduleItem)ilab;
+		
+		assert(lab.lectureScheduleItemID != null);
+		lab.lectureScheduleItemID = null;
+	}
+
+
+	@Override
+	public IDBScheduleItem getScheduleItemLectureOrNull(IDBScheduleItem ilab) throws NotFoundException {
+		DBScheduleItem lab = (DBScheduleItem)ilab;
+		
+		if (lab.lectureScheduleItemID == null)
+			return null;
+		else
+			return scheduleItemTable.findByID(lab.lectureScheduleItemID);
 	}
 }
