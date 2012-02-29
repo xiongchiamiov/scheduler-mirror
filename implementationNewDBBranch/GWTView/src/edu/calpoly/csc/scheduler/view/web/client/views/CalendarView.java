@@ -17,7 +17,6 @@ import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.client.IViewContents;
 import edu.calpoly.csc.scheduler.view.web.client.ViewFrame;
 import edu.calpoly.csc.scheduler.view.web.client.calendar.ScheduleEditWidget;
-import edu.calpoly.csc.scheduler.view.web.client.schedule.ScheduleViewWidget;
 import edu.calpoly.csc.scheduler.view.web.shared.DocumentGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.OldScheduleItemGWT;
 
