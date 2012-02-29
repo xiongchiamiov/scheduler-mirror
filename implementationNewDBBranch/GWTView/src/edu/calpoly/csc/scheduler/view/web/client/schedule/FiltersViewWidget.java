@@ -67,10 +67,6 @@ public class FiltersViewWidget extends DialogBox {
 		timesLB.setVisibleItemCount(5);
 		timesPanel.add(timesLB);
 		filtersPanel.add(timesPanel);
-
-		for (i = 0; i < ScheduleTable.times.length; i++) {
-			timesLB.addItem(ScheduleTable.times[i]);
-		}
 	}
 
 	private void layoutDays() {
