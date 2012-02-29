@@ -175,7 +175,7 @@ public class Generate {
 	    */
 	   private static ScheduleItemDecorator genLecItem (Model model, Schedule schedule, Course lec, 
 			   ScheduleDecorator sd, TimeRange lec_bounds, Collection<Instructor> i_list, Collection<Location> l_list)
-					   throws NotFoundException
+					   throws DatabaseException
 	   {
 	      ScheduleItem lec_si = model.createTransientScheduleItem(0, lec.getDayPatterns().iterator().next(), lec_bounds.getS(), lec_bounds.getE(), false, false);
 	      lec_si.setCourse(lec);
@@ -232,7 +232,7 @@ public class Generate {
 	    */
 	   private static ScheduleItemDecorator genLabItem (Model model, Schedule schedule, Course lab, 
 			   ScheduleItemDecorator lec_si, ScheduleDecorator sd, TimeRange lab_bounds, Collection<Instructor> i_list, 
-			   Collection<Location> l_list) throws NotFoundException
+			   Collection<Location> l_list) throws DatabaseException
 	   {
 		  ScheduleItem lab_si = model.createTransientScheduleItem(0, lab.getDayPatterns().iterator().next(), lab_bounds.getS(), lab_bounds.getE(), false, false);
 	      
@@ -257,7 +257,7 @@ public class Generate {
 	    * 
 	    * @see Staff#getStaff()
 	    */
-	   private static Instructor findInstructor (Course c, ScheduleDecorator sd, List<Instructor> i_list) throws DatabaseException
+	   private static Instructor findInstructor (Course c, ScheduleDecorator sd, Collection<Instructor> i_list) throws DatabaseException
 	   {
 	      return findInstructor(c, null, sd, i_list);
 	   }
@@ -277,7 +277,7 @@ public class Generate {
 	    * @return An intsructor to teach 'c'. This can be STAFF if no instructor
 	    *         if capable of teaching
 	    */
-	   private static Instructor findInstructor (Course c, List<Integer> doNotPickInstructorIDs, ScheduleDecorator sd, List<Instructor> i_list) throws DatabaseException
+	   private static Instructor findInstructor (Course c, List<Integer> doNotPickInstructorIDs, ScheduleDecorator sd, Collection<Instructor> i_list) throws DatabaseException
 	   {
 	      Instructor r = getStaff(c.getDocument());
 	      if(doNotPickInstructorIDs != null) {
@@ -421,7 +421,7 @@ public class Generate {
 	    * @see Tba#getTba()
 	    * @see #findTimes(ScheduleItem, TimeRange)
 	    */
-	   private static ScheduleItemDecorator genBestTime (Model model, Schedule schedule, ScheduleItem base, TimeRange tr, ScheduleDecorator sd, List<Instructor> i_list, List<Location> l_list) throws DatabaseException
+	   private static ScheduleItemDecorator genBestTime (Model model, Schedule schedule, ScheduleItem base, TimeRange tr, ScheduleDecorator sd, Collection<Instructor> i_list, Collection<Location> l_list) throws DatabaseException
 	   {
 	      Vector<ScheduleItemDecorator> si_list = new Vector<ScheduleItemDecorator>();
 
@@ -799,7 +799,7 @@ public class Generate {
 	    *         during at least the TimeRanges passed in.
 	 * @throws NotFoundException 
 	    */
-	   private static Vector<ScheduleItemDecorator> findLocations (Model model, Schedule schedule, Vector<ScheduleItemDecorator> sis, ScheduleDecorator sd, List<Location> l_list) throws DatabaseException
+	   private static Vector<ScheduleItemDecorator> findLocations (Model model, Schedule schedule, Vector<ScheduleItemDecorator> sis, ScheduleDecorator sd, Collection<Location> l_list) throws DatabaseException
 	   {
 		  //might have to look into TBA location for IND type courses
 	      Vector<ScheduleItemDecorator> si_list = new Vector<ScheduleItemDecorator>();
