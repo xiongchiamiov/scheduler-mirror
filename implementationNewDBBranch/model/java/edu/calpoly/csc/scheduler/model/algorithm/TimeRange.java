@@ -24,8 +24,13 @@ public class TimeRange {
 		this.end = end;
 	}
 	public void addHalf() {
-		assert(false); // not sure what goes here
+		if (this.getE() > 44)
+			return;
+		this.setS(this.getS() + 1);
+		this.setE(this.getE() + 1);
 	}
 	
-	
+	public String toString() {
+		return this.getS() + " to " + this.getE();
+	}
 }

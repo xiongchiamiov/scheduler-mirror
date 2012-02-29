@@ -9,6 +9,7 @@ import java.util.Vector;
 
 import edu.calpoly.csc.scheduler.model.Course;
 import edu.calpoly.csc.scheduler.model.Day;
+import edu.calpoly.csc.scheduler.model.Document;
 import edu.calpoly.csc.scheduler.model.Instructor;
 import edu.calpoly.csc.scheduler.model.Location;
 import edu.calpoly.csc.scheduler.model.Model;
@@ -168,20 +169,21 @@ public class Generate {
 	    * @param lec Course to schedule
 	    * 
 	    * @return A ScheduleItem which is safe to add to the schedule
-	 * @throws NotFoundException 
-	    * 
-	    * @see Tba#getTba()
+	 * @throws DatabaseException 
+	 * @see Tba#getTba()
 	    * @see Staff#getStaff()
 	    */
 	   private static ScheduleItemDecorator genLecItem (Model model, Schedule schedule, Course lec, 
 			   ScheduleDecorator sd, TimeRange lec_bounds, Collection<Instructor> i_list, Collection<Location> l_list)
 					   throws NotFoundException
 	   {
-		   assert(false);
-//	      ScheduleItem lec_si = model.assembleScheduleItem(schedule, lec, findInstructor(lec, sd, i_list), null, 0, null, 0, 0, false, false);
+	      ScheduleItem lec_si = model.createTransientScheduleItem(0, lec.getDayPatterns().iterator().next(), lec_bounds.getS(), lec_bounds.getE(), false, false);
+	      lec_si.setCourse(lec);
+	      //TODO?  May need to add list for do not schedule here
+	      
+	      lec_si.setInstructor(findInstructor(lec, sd, i_list));
 
-//	      return genBestTime(model, schedule, lec_si, lec_bounds, sd, i_list, l_list);
-		   return null;
+	      return genBestTime(model, schedule, lec_si, lec_bounds, sd, i_list, l_list);
 	   }
 	   
 	   /**
@@ -224,29 +226,25 @@ public class Generate {
 	    *        scheduling might need
 	    * 
 	    * @return A ScheduleItem for 'lab' which is safe to add to the schedule
-	 * @throws NotFoundException 
-	    * 
-	    * @see Tba#getTba()
+	 * @throws DatabaseException 
+	 * @see Tba#getTba()
 	    * @see Staff#getStaff()
 	    */
 	   private static ScheduleItemDecorator genLabItem (Model model, Schedule schedule, Course lab, 
 			   ScheduleItemDecorator lec_si, ScheduleDecorator sd, TimeRange lab_bounds, Collection<Instructor> i_list, 
 			   Collection<Location> l_list) throws NotFoundException
 	   {
-//	      ScheduleItem lab_si = model.assembleScheduleItem(schedule, lab, getLabInstructor(model, lab, lec_si), null, 0, null, 0, 0, false, false);
-//	      
-//	      TimeRange tr = lab_bounds;
-//	      
-//	      if (lab.isTetheredToLecture())
-//	      {
-////	    	 debug ("Found tethered lab for " + lab.getDept() + " " + lab.getCatalogNumber());
-//	         tr = new TimeRange(lec_si.item.getEndHalfHour(), lab.getNumHalfHoursPerWeekInt() / lab_si.getDays().size());
-//	      }
-//
-//	      return genBestTime(model, schedule, lab_si, tr, sd, i_list, l_list);
-		   
-		   assert(false);
-		   return null;
+		  ScheduleItem lab_si = model.createTransientScheduleItem(0, lab.getDayPatterns().iterator().next(), lab_bounds.getS(), lab_bounds.getE(), false, false);
+	      
+	      TimeRange tr = lab_bounds;
+	      
+	      if (lab.isTetheredToLecture())
+	      {
+	    	 debug ("Found tethered lab");
+	         tr = new TimeRange(lec_si.item.getEndHalfHour(), lab.getNumHalfHoursPerWeekInt() / lab_si.getDays().size());
+	      }
+
+	      return genBestTime(model, schedule, lab_si, tr, sd, i_list, l_list);
 	   }
 	   
 	   /**
@@ -264,7 +262,10 @@ public class Generate {
 	      return findInstructor(c, null, sd, i_list);
 	   }
 	   
-	   static Instructor getStaff() { return null; }
+	   static Instructor getStaff(Document doc) throws DatabaseException {
+		   assert(doc.getStaffInstructor() != null);
+		   return doc.getStaffInstructor(); 
+	   }
 	   
 	   /**
 	    * Finds an instructor for the given course, excluding any instructors 
@@ -278,35 +279,36 @@ public class Generate {
 	    */
 	   private static Instructor findInstructor (Course c, List<Integer> doNotPickInstructorIDs, ScheduleDecorator sd, List<Instructor> i_list) throws DatabaseException
 	   {
-	      Instructor r = getStaff();
+	      Instructor r = getStaff(c.getDocument());
+	      if(doNotPickInstructorIDs != null) {
+	    	  Integer toRemove = r.getID();
+	    	  doNotPickInstructorIDs.remove(toRemove);
+	      }
 	      int curMaxPref = 0;
 	      
 	      debug ("FINDING INSTRUCTOR FOR " + c);
-	      debug ("EXLUDING: " + doNotPickInstructorIDs);
+	      debug ("EXCLUDING: " + doNotPickInstructorIDs);
 	      for (Instructor i : i_list)
 	      {
-	         debug ("CONSIDERING " + i);
-	         if (doNotPickInstructorIDs == null || !doNotPickInstructorIDs.contains(i.getID()))
-	         {
-	            debug ("NOT EXCLUDED");
-	            if (canTeach(i, c, sd.getCurWTU(i)))
-	            {
-	               debug ("CAN");
-	               int pref = getPreference(i, c);
-	               debug ("DESIRE: " + pref);
-	               if (pref > curMaxPref)
-	               {
-	                  debug ("WANTS MORE: " + pref + " > " + curMaxPref);
-	                  r = i;
-	                  curMaxPref = pref;
-	               }
-	            }
-	         }
-	      }
-	      
-	      if (r.equals(getStaff()))
-	      {
-	         debug ("NOBODY FOUND. GOING WITH STAFF");
+	    	  if(i != r) {
+	    		  debug ("CONSIDERING " + i);
+	    		  if (doNotPickInstructorIDs == null || !doNotPickInstructorIDs.contains(i.getID()))
+	    		  {
+	    			  debug ("NOT EXCLUDED");
+	    			  if (canTeach(i, c, sd.getCurWTU(i)))
+	    			  {
+	    				  debug ("CAN");
+	    				  int pref = getPreference(i, c);
+	    				  debug ("DESIRE: " + pref);
+	    				  if (pref > curMaxPref)
+	    				  {
+	    					  debug ("WANTS MORE: " + pref + " > " + curMaxPref);
+	    					  r = i;
+	    					  curMaxPref = pref;
+	    				  }
+	    			  }
+	    		  }
+	    	  }
 	      }
 	      
 	      return r;
@@ -580,10 +582,15 @@ public class Generate {
 	    * 
 	    * @return True if the instructor is available for the given time range
 	    *         across the given Week
+	 * @throws DatabaseException 
+	 * @throws EndBeforeStartException 
 	    */
-	   public static boolean isAvailable (Instructor i, Week days, TimeRange tr, ScheduleDecorator sd)
+	   public static boolean isAvailable (Instructor i, Week days, TimeRange tr, ScheduleDecorator sd) throws EndBeforeStartException, DatabaseException
 	   {
-	      return sd.getIAvailability(i).isFree(tr.getS(), tr.getE(), days);
+		   if(i.getDocument().getStaffInstructor() == i)
+			   return true;
+		   
+	       return sd.getIAvailability(i).isFree(tr.getS(), tr.getE(), days);
 	   }
 
 	   /**
@@ -602,7 +609,7 @@ public class Generate {
 	    *         Written by: Eric Liebowitz
 	    */
 	   public static boolean isAvailable(Location location, Day dayOfWeek, int s, int e, ScheduleDecorator sd)
-	   {
+	   {		   
 		   return sd.getLAvailability(location).isFree(s, e, dayOfWeek);
 	   }
 
@@ -636,9 +643,13 @@ public class Generate {
 	    *           TimeRange to check
 	    * 
 	    * @return True if the TimeRange is free on all days of "week"
+	 * @throws DatabaseException 
 	    */
-	   public static boolean isAvailable(Location location, Week week, TimeRange tr, ScheduleDecorator sd)
+	   public static boolean isAvailable(Location location, Week week, TimeRange tr, ScheduleDecorator sd) throws DatabaseException
 	   {
+		   if(location.getDocument().getTBALocation() == location)
+			   return true;
+		   
 		   return sd.getLAvailability(location).isFree(tr, week);
 	   }
 
@@ -744,25 +755,24 @@ public class Generate {
 	      debug("FINDING TIMES IN RANGE " + range);
 	      Vector<ScheduleItemDecorator> sis = new Vector<ScheduleItemDecorator>();
 	      Course c = model.findCourseByID(si.getCourse().getID());
+	      assert(si.getInstructor() != null);
 	      Instructor i = model.findInstructorByID(si.getInstructor().getID());
 	      
-	      TimeRange tr = new TimeRange(range.getS(), getDayLength(c));
+	      TimeRange tr = new TimeRange(range.getS(), range.getS() + getDayLength(c));
 	      for (; tr.getE() < range.getE(); tr.addHalf())
 	      {
-	         Set<Week> days = null;// c.getDays();
-	         assert(false); // there are many combinations, what do we do here?
-	         
+	         Set<Day> days = c.getDayPatterns().iterator().next();	         
 
-	         debug("CONSIDERING TR: " + tr);
-	         if (isAvailable(i, days.iterator().next(), tr, sd))
+	         debug("CONSIDERING Time Range: " + tr);
+	         if (isAvailable(i, new Week(days), tr, sd))
 	         {
 	            debug("AVAILABLE");
 	            double pref;
-	            if ((pref = getAvgPrefForTimeRange(i, days.iterator().next(), tr.getS(), tr.getE())) > 0)
+	            if ((pref = getAvgPrefForTimeRange(i, new Week(days), tr.getS(), tr.getE())) > 0)
 	            {
 	               debug("WANTS: " + pref);
 	               ScheduleItem toAdd = si.createTransientCopy();
-	               toAdd.setDays(days.iterator().next().getDays());
+	               toAdd.setDays(days);
 	               toAdd.setStartHalfHour(tr.getS());
 	               toAdd.setEndHalfHour(tr.getE());
 
@@ -775,9 +785,8 @@ public class Generate {
 	   }
 	   
 	   private static int getDayLength(Course c) throws DatabaseException {
-		   assert(false); // totally just made this up. we dont have the concept of day length anymore...
-		return c.getNumHalfHoursPerWeekInt() / c.getDayPatterns().iterator().next().size();
-	}
+		  return c.getNumHalfHoursPerWeekInt() / c.getDayPatterns().iterator().next().size();
+	   }
 
 	/**
 	    * Finds all locations which are compatible with the given Course and are
