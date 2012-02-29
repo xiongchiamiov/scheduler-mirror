@@ -279,5 +279,9 @@ public class Course extends Identified {
 		documentLoaded = true;
 		return this;
 	}
+	
+	public String toString() {
+		return this.getDepartment() + " " + this.getCatalogNumber() + " - " + this.getName();
+	}
 
 }

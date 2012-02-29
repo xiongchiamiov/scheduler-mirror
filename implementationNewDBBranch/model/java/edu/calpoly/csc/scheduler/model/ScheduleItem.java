@@ -57,10 +57,14 @@ public class ScheduleItem extends Identified {
 	
 	public ScheduleItem createTransientCopy() throws DatabaseException {
 		ScheduleItem result = new ScheduleItem(model, model.database.assembleScheduleItemCopy(underlying));
-		result.setSchedule(getSchedule());
-		result.setInstructor(getInstructor());
-		result.setLocation(getLocation());
-		result.setCourse(getCourse());
+		if (scheduleLoaded)
+			result.setSchedule(getSchedule());
+		if (instructorLoaded)
+			result.setInstructor(getInstructor());
+		if (locationLoaded)
+			result.setLocation(getLocation());
+		if (courseLoaded)
+			result.setCourse(getCourse());
 		return result;
 	}
 	

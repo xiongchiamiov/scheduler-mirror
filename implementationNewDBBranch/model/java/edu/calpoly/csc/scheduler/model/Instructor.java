@@ -218,6 +218,8 @@ public class Instructor extends Identified {
 	public static int[][] createDefaultTimePreferences() {
 		return createUniformTimePreferences(DEFAULT_PREF);
 	}
-
-
+	
+	public String toString() {
+		return this.getFirstName() + " " + this.getLastName();
+	}
 }

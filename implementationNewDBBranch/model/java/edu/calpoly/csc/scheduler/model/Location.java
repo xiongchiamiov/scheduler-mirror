@@ -120,4 +120,8 @@ public class Location extends Identified {
 		return this;
 	}
 	
+	public String toString() {
+		return this.getRoom();
+	}
+	
 }
