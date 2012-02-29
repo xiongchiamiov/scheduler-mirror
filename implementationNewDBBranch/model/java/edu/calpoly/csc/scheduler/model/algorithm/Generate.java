@@ -117,7 +117,7 @@ public class Generate {
 	                        try
 	                        {
 	                           add(model, sd, lab_si, items, sections);
-	                           lec_si.item.getLabIDs().add(lab_si.item.getCourse().getID());
+	                           lec_si.getItem().getLabIDs().add(lab_si.getItem().getCourse().getID());
 	                        }
 	                        catch (CouldNotBeScheduledException e)
 	                        {
@@ -135,7 +135,7 @@ public class Generate {
 	      
 	      Vector<ScheduleItem> result = new Vector<ScheduleItem>();
 	      for (ScheduleItemDecorator derp : items)
-	    	  result.add(derp.item);
+	    	  result.add(derp.getItem());
 	      return result;
 	}
 	
@@ -241,7 +241,7 @@ public class Generate {
 	      if (lab.isTetheredToLecture())
 	      {
 	    	 debug ("Found tethered lab");
-	         tr = new TimeRange(lec_si.item.getEndHalfHour(), lab.getNumHalfHoursPerWeekInt() / lab_si.getDays().size());
+	         tr = new TimeRange(lec_si.getItem().getEndHalfHour(), lab.getNumHalfHoursPerWeekInt() / lab_si.getDays().size());
 	      }
 
 	      return genBestTime(model, schedule, lab_si, tr, sd, i_list, l_list);
@@ -344,6 +344,9 @@ public class Generate {
 	    */
 	   public static boolean canTeach (Instructor instructor, Course course, int curWtu) throws DatabaseException
 	   {
+		  if(instructor.getDocument().getStaffInstructor() == instructor)
+			  return true;
+		   
 	      // Check if instructor has enough WTUs
 	      if ((curWtu + course.getWTUInt()) <= instructor.getMaxWTUInt())
 	      {
@@ -496,11 +499,11 @@ public class Generate {
 	    */
 	   private static boolean verify (Model model, ScheduleDecorator schedule, ScheduleItemDecorator si, ScheduleDecorator sd) throws CouldNotBeScheduledException, DatabaseException
 	   {
-	      Week days = new Week(si.item.getDays());
-	      Course c = model.findCourseByID(si.item.getCourse().getID());
-	      TimeRange tr = new TimeRange(si.item.getStartHalfHour(), si.item.getEndHalfHour());
-	      Instructor i = model.findInstructorByID(si.item.getInstructor().getID());
-	      Location l = model.findLocationByID(si.item.getLocation().getID());
+	      Week days = new Week(si.getItem().getDays());
+	      Course c = model.findCourseByID(si.getItem().getCourse().getID());
+	      TimeRange tr = new TimeRange(si.getItem().getStartHalfHour(), si.getItem().getEndHalfHour());
+	      Instructor i = model.findInstructorByID(si.getItem().getInstructor().getID());
+	      Location l = model.findLocationByID(si.getItem().getLocation().getID());
 
 	      if (!isAvailable(i, days, tr, sd))
 	      {
@@ -669,21 +672,21 @@ public class Generate {
 	    */
 	   private static void book (Model model, ScheduleItemDecorator si, ScheduleDecorator sd, Vector<ScheduleItemDecorator> items, HashMap<Integer, SectionTracker> sections) throws DatabaseException
 	   {
-	      Instructor i = model.findInstructorByID(si.item.getInstructor().getID());
-	      Location l = model.findLocationByID(si.item.getLocation().getID());
-	      Week days = new Week(si.item.getDays());
-	      TimeRange tr = new TimeRange(si.item.getStartHalfHour(), si.item.getEndHalfHour());
+	      Instructor i = model.findInstructorByID(si.getItem().getInstructor().getID());
+	      Location l = model.findLocationByID(si.getItem().getLocation().getID());
+	      Week days = new Week(si.getItem().getDays());
+	      TimeRange tr = new TimeRange(si.getItem().getStartHalfHour(), si.getItem().getEndHalfHour());
 
 	      debug ("BOOKING");
 	      
 	      book(i, true, days, tr, sd);
 	      book(i, true, days, tr, sd);
 
-	      sd.addWTU(i, si.getWtuTotal());
+	      sd.addWTU(i, si.getItem().getCourse().getWTUInt());
 
-	      SectionTracker st = getSectionTracker(model.findCourseByID(si.item.getCourse().getID()), sections);
+	      SectionTracker st = getSectionTracker(model.findCourseByID(si.getItem().getCourse().getID()), sections);
 	      st.addSection();
-	      si.item.setSection(st.getCurSection());
+	      si.getItem().setSection(st.getCurSection());
 	      
 	      items.add(si);
 	      
@@ -731,7 +734,7 @@ public class Generate {
 	      }
 	      return r;*/
 		   
-		   return model.findInstructorByID(lec_si.item.getInstructor().getID());
+		   return model.findInstructorByID(lec_si.getItem().getInstructor().getID());
 	   }
 	   
 	   /**
@@ -807,20 +810,20 @@ public class Generate {
 	      debug ("HAVE " + sis.size() + " ITEMS FOR LOCATIONS TO TRY");
 	      for (ScheduleItemDecorator si : sis)
 	      {
-	         Week days = new Week(si.item.getDays());
-	         TimeRange tr = new TimeRange(si.item.getStartHalfHour(), si.item.getEndHalfHour());
+	         Week days = new Week(si.getItem().getDays());
+	         TimeRange tr = new TimeRange(si.getItem().getStartHalfHour(), si.getItem().getEndHalfHour());
 	         for (Location l : l_list)
 	         {
 	            debug ("TRYING LOCATION " + l + " with time " + tr);
 	            if (isAvailable(l, days, tr, sd))
 	            {
-	               if (providesFor(l, model.findCourseByID(si.item.getCourse().getID())))
+	               if (providesFor(l, model.findCourseByID(si.getItem().getCourse().getID())))
 	               {
 	                  /*
 	                   * I clone so we don't keep changing the same object...that'd
 	                   * be pretty bad.
 	                   */
-	                  ScheduleItem base = si.item.createTransientCopy();
+	                  ScheduleItem base = si.getItem().createTransientCopy();
 	                  base.setLocation(l);
 
 	                  si_list.add(new ScheduleItemDecorator(base));
@@ -872,16 +875,16 @@ public class Generate {
 	   public static ScheduleItemDecorator move (Model model, ScheduleDecorator sd, Vector<ScheduleItemDecorator> s_items, ScheduleItemDecorator si, Week days, int s) 
 	      throws CouldNotBeScheduledException, DatabaseException
 	   {
-	      ScheduleItemDecorator fresh_si = new ScheduleItemDecorator(si.item.createTransientCopy());
+	      ScheduleItemDecorator fresh_si = new ScheduleItemDecorator(si.getItem().createTransientCopy());
 	      if (remove(model, sd, s_items, si, sd))
 	      {
-	         Course c = model.findCourseByID(si.item.getCourse().getID());
+	         Course c = model.findCourseByID(si.getItem().getCourse().getID());
 	         
 	         TimeRange tr = new TimeRange(s, splitLengthOverDays(c, days.size()));
 	      
-	         fresh_si.item.setDays(days.getDays());
-	         fresh_si.item.setStartHalfHour(tr.getS());
-	         fresh_si.item.setEndHalfHour(tr.getE());
+	         fresh_si.setDays(days.getDays());
+	         fresh_si.setStartHalfHour(tr.getS());
+	         fresh_si.setEndHalfHour(tr.getE());
 	      
 	         add(model, sd, fresh_si, s_items, null);
 	         
@@ -934,25 +937,25 @@ public class Generate {
 	      {
 	         r = true;
 	         
-	         Course c = model.findCourseByID(si.item.getCourse().getID());
-	         Instructor i = model.findInstructorByID(si.item.getInstructor().getID());
-	         Location l = model.findLocationByID(si.item.getLocation().getID());
-	         Week days = new Week(si.item.getDays());
-	         TimeRange tr = new TimeRange(si.item.getStartHalfHour(), si.item.getEndHalfHour());
+	         Course c = model.findCourseByID(si.getItem().getCourse().getID());
+	         Instructor i = model.findInstructorByID(si.getItem().getInstructor().getID());
+	         Location l = model.findLocationByID(si.getItem().getLocation().getID());
+	         Week days = new Week(si.getItem().getDays());
+	         TimeRange tr = new TimeRange(si.getItem().getStartHalfHour(), si.getItem().getEndHalfHour());
 
 	         s_items.remove(si);
 	         book(i, false, days, tr, sd);
 	         book(l, false, days, tr, sd);
 
-	         sd.subtractWTU(i, si.getWtuTotal());
+	         sd.subtractWTU(i, si.getItem().getCourse().getWTUInt());
 
 	         SectionTracker st = getSectionTracker(c, sections);
-	         st.removeSection(si.item.getSection());
+	         st.removeSection(si.getItem().getSection());
 	         
 	         /*
 	          * Remove the labs only if they're teathered to the course
 	          */
-	         if (si.hasLabs())
+	         if (!si.getItem().getLabIDs().isEmpty())
 	         {
 	            if (c.isTetheredToLecture())
 	            {
