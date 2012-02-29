@@ -249,7 +249,7 @@ public class Database implements IDatabase {
 
 	@Override
 	public IDBScheduleItem assembleScheduleItemCopy(IDBScheduleItem underlying) {
-		return (IDBScheduleItem) ((DBScheduleItem)underlying).clone();
+		return new DBScheduleItem((DBScheduleItem)underlying);
 	}
 	
 	@Override
