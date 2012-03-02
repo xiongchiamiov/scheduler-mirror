@@ -234,14 +234,14 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 	               else return;
 	            }
 
-	            service.saveWorkingCopyToNewOriginalDocument(document, scheduleName, allowOverwrite, new AsyncCallback<DocumentGWT>() {
+	            service.moveWorkingCopyToNewOriginalDocument(document.getID(), scheduleName, allowOverwrite, new AsyncCallback<Void>() {
 	            	@Override
 	            	public void onFailure(Throwable caught) {
 	            		// TODO Auto-generated method stub
 	            		
 	            	}
 	            	@Override
-	            	public void onSuccess(DocumentGWT result) {
+	            	public void onSuccess(Void v) {
 	            		Window.alert("todo: notify all views of doc name change");
 	            	}
 	            });

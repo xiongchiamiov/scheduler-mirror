@@ -41,9 +41,6 @@ public interface GreetingServiceAsync {
 	void getAllOriginalDocumentsByID(
 			AsyncCallback<Collection<DocumentGWT>> callback);
 	void deleteWorkingCopyDocument(Integer documentID, AsyncCallback<Void> asyncCallback);
-	void saveWorkingCopyToNewOriginalDocument(DocumentGWT existingDocument,
-			String scheduleName, boolean allowOverwrite,
-			AsyncCallback<DocumentGWT> asyncCallback);
 	
 	@Deprecated
 	void getSchedule(HashMap<String, OldScheduleItemGWT> mSchedItems,
@@ -188,4 +185,7 @@ public interface GreetingServiceAsync {
 	void newRemoveScheduleItem(ScheduleItemGWT itemGWT,
 			AsyncCallback<Collection<ScheduleItemGWT>> callback);
 	void updateDocument(DocumentGWT document, AsyncCallback<Void> callback);
+	void moveWorkingCopyToNewOriginalDocument(Integer workingCopyID,
+			String scheduleName, boolean allowOverwrite,
+			AsyncCallback<Void> callback);
 }

@@ -10,13 +10,12 @@ import java.util.List;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
-import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
+import edu.calpoly.csc.scheduler.model.db.DatabaseException;
 import edu.calpoly.csc.scheduler.view.web.shared.CouldNotBeScheduledExceptionGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.DocumentGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.NotFoundExceptionGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.OldScheduleItemGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemList;
@@ -71,49 +70,47 @@ public interface GreetingService extends RemoteService {
 //
 //	Integer saveCurrentScheduleAsAndOpen(String scheduleName, boolean allowOverwrite);
 
-	CourseGWT addCourseToDocument(int documentID, CourseGWT realCourse) throws NotFoundExceptionGWT;
+	CourseGWT addCourseToDocument(int documentID, CourseGWT realCourse);
 
-	void editCourse(CourseGWT realCourse) throws NotFoundExceptionGWT;
+	void editCourse(CourseGWT realCourse);
 
-	List<CourseGWT> getCoursesForDocument(int documentID) throws NotFoundExceptionGWT;
+	List<CourseGWT> getCoursesForDocument(int documentID);
 
-	void removeCourse(Integer realCourseID) throws NotFoundExceptionGWT;
+	void removeCourse(Integer realCourseID);
 
-	List<InstructorGWT> getInstructorsForDocument(int documentID) throws NotFoundExceptionGWT;
+	List<InstructorGWT> getInstructorsForDocument(int documentID);
 
-	void removeInstructor(Integer realInstructorID) throws NotFoundExceptionGWT;
+	void removeInstructor(Integer realInstructorID);
 
-	void editInstructor(InstructorGWT realInstructor) throws NotFoundExceptionGWT;
+	void editInstructor(InstructorGWT realInstructor);
 
 	InstructorGWT addInstructorToDocument(int documentID,
-			InstructorGWT realInstructor) throws NotFoundExceptionGWT;
+			InstructorGWT realInstructor);
 
-	LocationGWT addLocationToDocument(int documentID, LocationGWT location)
-			throws NotFoundExceptionGWT;
+	LocationGWT addLocationToDocument(int documentID, LocationGWT location);
 
-	void editLocation(LocationGWT source) throws NotFoundExceptionGWT;
+	void editLocation(LocationGWT source);
 
-	List<LocationGWT> getLocationsForDocument(int documentID)
-			throws NotFoundExceptionGWT;
+	List<LocationGWT> getLocationsForDocument(int documentID);
 
-	void removeLocation(Integer locationID) throws NotFoundExceptionGWT;
+	void removeLocation(Integer locationID);
 
 	Integer login(String username) throws InvalidLoginException;
 
-	DocumentGWT createDocumentAndGetWorkingCopy(String newDocName) throws NotFoundExceptionGWT;
+	DocumentGWT createDocumentAndGetWorkingCopy(String newDocName);
 	
-	void updateDocument(DocumentGWT document) throws NotFoundExceptionGWT;
+	void updateDocument(DocumentGWT document);
 
-	Collection<DocumentGWT> getAllOriginalDocumentsByID() throws NotFoundExceptionGWT;
+	Collection<DocumentGWT> getAllOriginalDocumentsByID();
 
-	void saveWorkingCopyToOriginalDocument(Integer id) throws NotFoundExceptionGWT;
+	void saveWorkingCopyToOriginalDocument(Integer id);
 
-	DocumentGWT createWorkingCopyForOriginalDocument(Integer originalDocumentID) throws NotFoundExceptionGWT;
+	DocumentGWT createWorkingCopyForOriginalDocument(Integer originalDocumentID);
 
-	void deleteWorkingCopyDocument(Integer documentID) throws NotFoundExceptionGWT;
+	void deleteWorkingCopyDocument(Integer documentID);
 	
-	DocumentGWT saveWorkingCopyToNewOriginalDocument(
-			DocumentGWT existingDocument, String scheduleName,
+	void moveWorkingCopyToNewOriginalDocument(
+			Integer workingCopyID, String scheduleName,
 			boolean allowOverwrite);
 
 	@Deprecated
@@ -133,19 +130,18 @@ public interface GreetingService extends RemoteService {
 	List<OldScheduleItemGWT> removeScheduleItem(OldScheduleItemGWT removed,
 			HashMap<String, OldScheduleItemGWT> mSchedItems);
 
-	public void intermediateInsertScheduleItem(int documentID, OldScheduleItemGWT scheduleItem) throws NotFoundExceptionGWT;
+	public void intermediateInsertScheduleItem(int documentID, OldScheduleItemGWT scheduleItem);
 	public Collection<OldScheduleItemGWT> intermediateGenerateRestOfSchedule(int scheduleID);
 	void intermediateUpdateScheduleItem(int documentID, OldScheduleItemGWT oldItemOldGWT,
-			OldScheduleItemGWT newItemOldGWT) throws NotFoundExceptionGWT;
-	void intermediateRemoveScheduleItem(int documentID, OldScheduleItemGWT oldItemOldGWT)
-			throws NotFoundExceptionGWT;
-	Collection<OldScheduleItemGWT> intermediateGetScheduleItems(int documentID) throws NotFoundExceptionGWT;
+			OldScheduleItemGWT newItemOldGWT);
+	void intermediateRemoveScheduleItem(int documentID, OldScheduleItemGWT oldItemOldGWT);
+	Collection<OldScheduleItemGWT> intermediateGetScheduleItems(int documentID);
 	
 
 	Collection<ScheduleItemGWT> insertScheduleItem(int scheduleID,
-			ScheduleItemGWT scheduleItem) throws NotFoundExceptionGWT;
-	public Collection<ScheduleItemGWT> generateRestOfSchedule(int scheduleID) throws NotFoundExceptionGWT, CouldNotBeScheduledExceptionGWT;
-	Collection<ScheduleItemGWT> updateScheduleItem(ScheduleItemGWT itemGWT) throws NotFoundExceptionGWT;
-	Collection<ScheduleItemGWT> newRemoveScheduleItem(ScheduleItemGWT itemGWT) throws NotFoundExceptionGWT;
-	Collection<ScheduleItemGWT> getScheduleItems(int scheduleID) throws NotFoundExceptionGWT;
+			ScheduleItemGWT scheduleItem);
+	public Collection<ScheduleItemGWT> generateRestOfSchedule(int scheduleID) throws CouldNotBeScheduledExceptionGWT;
+	Collection<ScheduleItemGWT> updateScheduleItem(ScheduleItemGWT itemGWT);
+	Collection<ScheduleItemGWT> newRemoveScheduleItem(ScheduleItemGWT itemGWT);
+	Collection<ScheduleItemGWT> getScheduleItems(int scheduleID);
 }

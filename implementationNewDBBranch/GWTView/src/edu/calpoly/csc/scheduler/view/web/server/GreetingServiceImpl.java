@@ -31,7 +31,6 @@ import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.DocumentGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.NotFoundExceptionGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.OldScheduleItemGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemList;
@@ -42,16 +41,18 @@ import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemList;
 @SuppressWarnings("serial")
 public class GreetingServiceImpl extends RemoteServiceServlet implements GreetingService {
 
+	private boolean loadAndSaveFromFileSystem;
 	private Model model;	
 
 	public GreetingServiceImpl() {
 		this(true);
 	}
 	
-	public GreetingServiceImpl(boolean readState) {
+	public GreetingServiceImpl(boolean loadAndSaveFromFileSystem) {
+		this.loadAndSaveFromFileSystem = loadAndSaveFromFileSystem;
 		model = new Model();
 
-		if (readState) {
+		if (loadAndSaveFromFileSystem) {
 			try {
 				FileInputStream fos = new FileInputStream("DatabaseState.javaser");
 				ObjectInputStream ois = new ObjectInputStream(fos);
@@ -69,29 +70,23 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	}
 
 	@Override
-	public CourseGWT addCourseToDocument(int documentID, CourseGWT course) throws NotFoundExceptionGWT {
+	public CourseGWT addCourseToDocument(int documentID, CourseGWT course) {
 		assert(course.getID() == -1);
 
 		try {
 			int id = Conversion.courseFromGWT(model, course).setDocument(model.findDocumentByID(documentID)).insert().getID();
 			course.setID(id);
 			return course;
-		} catch (NotFoundException e) {
-			e.printStackTrace();
-			throw new NotFoundExceptionGWT();
 		} catch (DatabaseException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
 	@Override
-	public void editCourse(CourseGWT source) throws NotFoundExceptionGWT {
+	public void editCourse(CourseGWT source) {
 		Course result;
 		try {
 			result = model.findCourseByID(source.getID());
-		} catch (NotFoundException e) {
-			e.printStackTrace();
-			throw new NotFoundExceptionGWT();
 		} catch (DatabaseException e) {
 			throw new RuntimeException(e);
 		}
@@ -107,16 +102,13 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	}
 	
 	@Override
-	public List<CourseGWT> getCoursesForDocument(int documentID) throws NotFoundExceptionGWT {
+	public List<CourseGWT> getCoursesForDocument(int documentID) {
 		List<CourseGWT> result = new LinkedList<CourseGWT>();
 		try {
 			for (Course course : model.findCoursesForDocument(model.findDocumentByID(documentID))) {
 				System.out.println("for doc id " + documentID + " returning course name " + course.getName());
 				result.add(Conversion.courseToGWT(course));
 			}
-		} catch (NotFoundException e) {
-			e.printStackTrace();
-			throw new NotFoundExceptionGWT();
 		} catch (DatabaseException e) {
 			throw new RuntimeException(e);
 		}
@@ -124,19 +116,16 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	}
 
 	@Override
-	public void removeCourse(Integer courseID) throws NotFoundExceptionGWT {
+	public void removeCourse(Integer courseID) {
 		try {
 			model.findCourseByID(courseID).delete();
-		} catch (NotFoundException e) {
-			e.printStackTrace();
-			throw new NotFoundExceptionGWT();
 		} catch (DatabaseException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
 	@Override
-	public InstructorGWT addInstructorToDocument(int documentID, InstructorGWT instructor) throws NotFoundExceptionGWT {
+	public InstructorGWT addInstructorToDocument(int documentID, InstructorGWT instructor) {
 		assert(instructor.getID() == -1);
 		
 		try {
@@ -144,22 +133,16 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			int id = Conversion.instructorFromGWT(model, instructor).setDocument(document).insert().getID();
 			instructor.setID(id);
 			return instructor;
-		} catch (NotFoundException e) {
-			e.printStackTrace();
-			throw new NotFoundExceptionGWT();
 		} catch (DatabaseException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
 	@Override
-	public void editInstructor(InstructorGWT source) throws NotFoundExceptionGWT {
+	public void editInstructor(InstructorGWT source) {
 		Instructor result;
 		try {
 			result = model.findInstructorByID(source.getID());
-		} catch (NotFoundException e) {
-			e.printStackTrace();
-			throw new NotFoundExceptionGWT();
 		} catch (DatabaseException e) {
 			throw new RuntimeException(e);
 		}
@@ -175,15 +158,12 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	}
 	
 	@Override
-	public List<InstructorGWT> getInstructorsForDocument(int documentID) throws NotFoundExceptionGWT {
+	public List<InstructorGWT> getInstructorsForDocument(int documentID) {
 		List<InstructorGWT> result = new LinkedList<InstructorGWT>();
 		try {
 			for (Instructor instructor : model.findInstructorsForDocument(model.findDocumentByID(documentID))) {
 				result.add(Conversion.instructorToGWT(instructor));
 			}
-		} catch (NotFoundException e) {
-			e.printStackTrace();
-			throw new NotFoundExceptionGWT();
 		} catch (DatabaseException e) {
 			throw new RuntimeException(e);
 		}
@@ -191,19 +171,16 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	}
 
 	@Override
-	public void removeInstructor(Integer instructorID) throws NotFoundExceptionGWT {
+	public void removeInstructor(Integer instructorID) {
 		try {
 			model.findInstructorByID(instructorID).delete();
-		} catch (NotFoundException e) {
-			e.printStackTrace();
-			throw new NotFoundExceptionGWT();
 		} catch (DatabaseException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
 	@Override
-	public LocationGWT addLocationToDocument(int documentID, LocationGWT location) throws NotFoundExceptionGWT {
+	public LocationGWT addLocationToDocument(int documentID, LocationGWT location) {
 		assert(location.getID() == -1);
 
 		try {
@@ -213,24 +190,18 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			int id = modelLocation.setDocument(model.findDocumentByID(documentID)).insert().getID();
 			location.setID(id);
 			return location;
-		} catch (NotFoundException e) {
-			e.printStackTrace();
-			throw new NotFoundExceptionGWT();
 		} catch (DatabaseException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
 	@Override
-	public void editLocation(LocationGWT source) throws NotFoundExceptionGWT {
+	public void editLocation(LocationGWT source) {
 		System.out.println("editLocation in impl called!");
 		
 		Location result;
 		try {
 			result = model.findLocationByID(source.getID());
-		} catch (NotFoundException e) {
-			e.printStackTrace();
-			throw new NotFoundExceptionGWT();
 		} catch (DatabaseException e) {
 			throw new RuntimeException(e);
 		}
@@ -248,14 +219,11 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	}
 	
 	@Override
-	public List<LocationGWT> getLocationsForDocument(int documentID) throws NotFoundExceptionGWT {
+	public List<LocationGWT> getLocationsForDocument(int documentID) {
 		List<LocationGWT> result = new LinkedList<LocationGWT>();
 		try {
 			for (Location location : model.findLocationsForDocument(model.findDocumentByID(documentID)))
 				result.add(Conversion.locationToGWT(location));
-		} catch (NotFoundException e) {
-			e.printStackTrace();
-			throw new NotFoundExceptionGWT();
 		} catch (DatabaseException e) {
 			throw new RuntimeException(e);
 		}
@@ -263,12 +231,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	}
 
 	@Override
-	public void removeLocation(Integer locationID) throws NotFoundExceptionGWT {
+	public void removeLocation(Integer locationID) {
 		try {
 			model.findLocationByID(locationID).delete();
-		} catch (NotFoundException e) {
-			e.printStackTrace();
-			throw new NotFoundExceptionGWT();
 		} catch (DatabaseException e) {
 			throw new RuntimeException(e);
 		}
@@ -279,27 +244,18 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		try {
 			return model.findUserByUsername(username).getID();
 		}
-		catch (NotFoundException e) {
+		catch (DatabaseException e) {
 			try {
 				return model.createTransientUser(username, true).insert().getID();
-			} catch (NotFoundException e1) {
-				throw new RuntimeException(e1);
-			} catch (DatabaseException e2) {
-				throw new RuntimeException(e2);
 			}
-		} catch (DatabaseException e) {
-			try {
-				return model.createTransientUser(username, true).insert().getID();
-			} catch (NotFoundException e1) {
-				throw new RuntimeException(e1);
-			} catch (DatabaseException e2) {
+			catch (DatabaseException e2) {
 				throw new RuntimeException(e2);
 			}
 		}
 	}
 
 	@Override
-	public Collection<DocumentGWT> getAllOriginalDocumentsByID() throws NotFoundExceptionGWT {
+	public Collection<DocumentGWT> getAllOriginalDocumentsByID() {
 		Collection<DocumentGWT> result = new LinkedList<DocumentGWT>();
 		try {
 			for (Document doc : model.findAllDocuments()) {
@@ -318,7 +274,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	}
 
 	@Override
-	public DocumentGWT createDocumentAndGetWorkingCopy(String newDocName) throws NotFoundExceptionGWT {
+	public DocumentGWT createDocumentAndGetWorkingCopy(String newDocName) {
 		try {
 			Document newOriginalDocument = model.createTransientDocument(newDocName, 14, 44);
 			newOriginalDocument.insert();
@@ -347,7 +303,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	}
 
 	@Override
-	public DocumentGWT createWorkingCopyForOriginalDocument(Integer originalDocumentID) throws NotFoundExceptionGWT {
+	public DocumentGWT createWorkingCopyForOriginalDocument(Integer originalDocumentID) {
 		Document originalDocument;
 		try {
 			originalDocument = model.findDocumentByID(originalDocumentID);
@@ -355,22 +311,19 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			Document workingCopyDocument = originalDocument.getWorkingCopy();
 			assert(workingCopyDocument == null);
 			
-			workingCopyDocument = model.findDocumentByID(model.copyDocument(originalDocument, originalDocument.getName()));
+			workingCopyDocument = model.copyDocument(originalDocument, originalDocument.getName());
 			workingCopyDocument.setOriginal(originalDocument);
 			workingCopyDocument.update();
 			
 			originalDocument.update();
 			return Conversion.documentToGWT(workingCopyDocument, model.findSchedulesForDocument(workingCopyDocument).iterator().next().getID());
-		} catch (NotFoundException e) {
-			e.printStackTrace();
-			throw new NotFoundExceptionGWT();
 		} catch (DatabaseException e) {
 			throw new RuntimeException(e);
 		}
 	}
 	
 	@Override
-	public void saveWorkingCopyToOriginalDocument(Integer workingCopyDocumentID) throws NotFoundExceptionGWT {
+	public void saveWorkingCopyToOriginalDocument(Integer workingCopyDocumentID) {
 		try {
 			Document workingCopyDocument = model.findDocumentByID(workingCopyDocumentID);
 		
@@ -382,21 +335,23 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			
 			originalDocument.delete();
 			
-			originalDocument = model.findDocumentByID(model.copyDocument(workingCopyDocument, originalDocumentName));
+			originalDocument = model.copyDocument(workingCopyDocument, originalDocumentName);
+			originalDocument.setOriginal(null);
 			workingCopyDocument.setOriginal(originalDocument);
-			workingCopyDocument.update();
 			originalDocument.update();
+			workingCopyDocument.update();
 			
 			
-			
-			String filepath = getServletContext().getRealPath("DatabaseState.javaser");
-			System.out.println("Saving state to "+filepath+"!");
-			FileOutputStream fos = new FileOutputStream("DatabaseState.javaser");
-			ObjectOutputStream oos = new ObjectOutputStream(fos);
-			
-			model.writeState(oos);
-			
-			oos.close();
+			if (this.loadAndSaveFromFileSystem) {
+				String filepath = getServletContext().getRealPath("DatabaseState.javaser");
+				System.out.println("Saving state to "+filepath+"!");
+				FileOutputStream fos = new FileOutputStream("DatabaseState.javaser");
+				ObjectOutputStream oos = new ObjectOutputStream(fos);
+				
+				model.writeState(oos);
+				
+				oos.close();
+			}
 		}
 		catch (Exception e) {
 			System.out.println("Couldnt save state!");
@@ -406,7 +361,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	}
 
 	@Override
-	public void deleteWorkingCopyDocument(Integer workingCopyDocumentID) throws NotFoundExceptionGWT {
+	public void deleteWorkingCopyDocument(Integer workingCopyDocumentID) {
 		try {
 			Document workingCopyDocument = model.findDocumentByID(workingCopyDocumentID);
 			
@@ -415,20 +370,30 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			
 			workingCopyDocument.delete();
 		}
-		catch (NotFoundException e) {
-			e.printStackTrace();
-			throw new NotFoundExceptionGWT();
-		} catch (DatabaseException e) {
+		catch (DatabaseException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
 	@Override
-	public DocumentGWT saveWorkingCopyToNewOriginalDocument(
-			DocumentGWT existingDocument, String scheduleName,
+	public void moveWorkingCopyToNewOriginalDocument(
+			Integer workingCopyDocumentID, String scheduleName,
 			boolean allowOverwrite) {
-		assert(false);
-		return null;
+
+		try {
+			Document workingCopyDocument = model.findDocumentByID(workingCopyDocumentID);
+			
+			Document newOriginal = model.copyDocument(workingCopyDocument, scheduleName);
+			newOriginal.setOriginal(null);
+			workingCopyDocument.setOriginal(newOriginal);
+
+			newOriginal.update();
+			workingCopyDocument.update();
+		}
+		catch (DatabaseException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Override
@@ -460,22 +425,22 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	}
 
 	@Override
-	public Collection<OldScheduleItemGWT> intermediateGetScheduleItems(int documentID) throws NotFoundExceptionGWT {
+	public Collection<OldScheduleItemGWT> intermediateGetScheduleItems(int documentID) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void intermediateInsertScheduleItem(int documentID, OldScheduleItemGWT itemOldGWT) throws NotFoundExceptionGWT {
+	public void intermediateInsertScheduleItem(int documentID, OldScheduleItemGWT itemOldGWT) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void intermediateUpdateScheduleItem(int documentID, OldScheduleItemGWT oldItemOldGWT, OldScheduleItemGWT newItemOldGWT) throws NotFoundExceptionGWT {
+	public void intermediateUpdateScheduleItem(int documentID, OldScheduleItemGWT oldItemOldGWT, OldScheduleItemGWT newItemOldGWT) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void intermediateRemoveScheduleItem(int documentID, OldScheduleItemGWT oldItemOldGWT) throws NotFoundExceptionGWT {
+	public void intermediateRemoveScheduleItem(int documentID, OldScheduleItemGWT oldItemOldGWT) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -488,7 +453,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	
 	
 	@Override
-	public Collection<ScheduleItemGWT> insertScheduleItem(int scheduleID, ScheduleItemGWT scheduleItem) throws NotFoundExceptionGWT {
+	public Collection<ScheduleItemGWT> insertScheduleItem(int scheduleID, ScheduleItemGWT scheduleItem) {
 		try {
 			Schedule schedule = model.findScheduleByID(scheduleID);
 			ScheduleItem newItem = Conversion.scheduleItemFromGWT(model, model.findScheduleByID(scheduleID), scheduleItem);
@@ -503,17 +468,13 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	}
 
 	@Override
-	public Collection<ScheduleItemGWT> generateRestOfSchedule(int scheduleID) throws NotFoundExceptionGWT, CouldNotBeScheduledExceptionGWT {
+	public Collection<ScheduleItemGWT> generateRestOfSchedule(int scheduleID) throws CouldNotBeScheduledExceptionGWT {
 		try {
 			Schedule schedule = model.findScheduleByID(scheduleID);
 			
 			GenerationAlgorithm.generateRestOfSchedule(model, schedule);
 			
 			return getScheduleItems(scheduleID);
-		}
-		catch (NotFoundException e) {
-			e.printStackTrace();
-			throw new NotFoundExceptionGWT();
 		}
 		catch (CouldNotBeScheduledException e) {
 			e.printStackTrace();
@@ -524,54 +485,45 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	}
 
 	@Override
-	public Collection<ScheduleItemGWT> updateScheduleItem(ScheduleItemGWT itemGWT) throws NotFoundExceptionGWT {
+	public Collection<ScheduleItemGWT> updateScheduleItem(ScheduleItemGWT itemGWT) {
 		try {
 			ScheduleItem item = model.findScheduleItemByID(itemGWT.getID());
 			Conversion.readScheduleItemFromGWT(model, itemGWT, item);
 			item.update();
 			
 			return getScheduleItems(item.getSchedule().getID());
-		} catch (NotFoundException e) {
-			e.printStackTrace();
-			throw new NotFoundExceptionGWT();
 		} catch (DatabaseException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
 	@Override
-	public Collection<ScheduleItemGWT> newRemoveScheduleItem(ScheduleItemGWT itemGWT) throws NotFoundExceptionGWT {
+	public Collection<ScheduleItemGWT> newRemoveScheduleItem(ScheduleItemGWT itemGWT) {
 		try {
 			Schedule schedule = model.findScheduleItemByID(itemGWT.getID()).getSchedule();
 			
 			model.findScheduleItemByID(itemGWT.getID()).delete();
 
 			return getScheduleItems(schedule.getID());
-		} catch (NotFoundException e) {
-			e.printStackTrace();
-			throw new NotFoundExceptionGWT();
 		} catch (DatabaseException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
 	@Override
-	public Collection<ScheduleItemGWT> getScheduleItems(int scheduleID) throws NotFoundExceptionGWT {
+	public Collection<ScheduleItemGWT> getScheduleItems(int scheduleID) {
 		try {
 			Collection<ScheduleItemGWT> result = new LinkedList<ScheduleItemGWT>();
 			for (ScheduleItem item : model.findAllScheduleItemsForSchedule(model.findScheduleByID(scheduleID)))
 				result.add(Conversion.scheduleItemToGWT(item));
 			return result;
-		} catch (NotFoundException e) {
-			e.printStackTrace();
-			throw new NotFoundExceptionGWT();
 		} catch (DatabaseException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
 	@Override
-	public void updateDocument(DocumentGWT documentGWT) throws NotFoundExceptionGWT {
+	public void updateDocument(DocumentGWT documentGWT) {
 		try {
 			System.out.println("got gwt doc " + documentGWT.isTrashed());
 			Document document = Conversion.readDocumentFromGWT(model, documentGWT);

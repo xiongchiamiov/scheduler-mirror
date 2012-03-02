@@ -175,7 +175,7 @@ public class Model {
 		return new Document(this, underlying);
 	}
 	
-	public int copyDocument(Document existingDocument, String newName) throws DatabaseException {
+	public Document copyDocument(Document existingDocument, String newName) throws DatabaseException {
 		IDBDocument newUnderlyingDocument = database.assembleDocument(newName, existingDocument.getStartHalfHour(), existingDocument.getEndHalfHour());
 		database.insertDocument(newUnderlyingDocument);
 //		Document newDocument = new Document(this, underlying);
@@ -285,7 +285,7 @@ public class Model {
 			database.setDocumentTBALocation(newUnderlyingDocument, newDocumentLocationsByExistingDocumentLocationIDs.get(existingDocument.getTBALocation().getID()));
 		database.updateDocument(newUnderlyingDocument);
 		
-		return newUnderlyingDocument.getID();
+		return this.findDocumentByID(newUnderlyingDocument.getID());
 	}
 
 	void associateWorkingCopyWithOriginal(Document workingCopyDocument, Document newOriginal) throws DatabaseException {
