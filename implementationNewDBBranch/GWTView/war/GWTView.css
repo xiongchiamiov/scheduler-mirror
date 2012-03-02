@@ -255,9 +255,21 @@ h1 {
 	text-align: right;
 }
 
+.alignRight {
+	position:absolute;
+	right:0px;
+}
+
 .centerness {
 	margin-left: auto;
 	margin-right: auto;
+}
+
+.otherCenterness {
+	margin-left:auto;
+	margin-right:auto;
+	border-width: 1px;
+	border-style: solid;
 }
 
 .bigBold {

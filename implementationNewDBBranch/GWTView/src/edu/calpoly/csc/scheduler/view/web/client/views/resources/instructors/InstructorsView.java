@@ -7,7 +7,12 @@ import java.util.Map;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -211,8 +216,43 @@ public class InstructorsView extends VerticalPanel implements IViewContents, Ins
 	@Override
 	public void preferencesButtonClicked(InstructorGWT instructor) {
 		if (viewFrame.canPopViewsAboveMe()) {
-			viewFrame.popFramesAboveMe();
-			viewFrame.frameViewAndPushAboveMe(new InstructorPreferencesView(service, document.getID(), document.getName(), instructor));
+			//viewFrame.popFramesAboveMe();
+			InstructorPreferencesView iipv = new InstructorPreferencesView(service, document.getID(), document.getName(), instructor);
+			final SimplePanel ipv = new SimplePanel();
+			ipv.setWidth("100%");
+			ipv.setHeight("100%");
+			//ipv.add(new Button("OK"));
+			//ipv.setVisible(true);
+			//popup.
+			//popup.add(ipv);
+			//popup.setSize("100%", "100%");
+			//popup.show();
+			//viewFrame.add(ipv);
+			//ipv.setHeight("500px");
+			//ipv.setWidth("500px");
+			final DialogBox poopyhead = new DialogBox();
+			iipv.afterPush();
+			//iipv.setVisible(true);
+			//ipv.add(new Button("OK"));
+			//ipv.add(iipv);
+			poopyhead.add(iipv);
+			ClickListener listener = new ClickListener()
+		    {
+		        public void onClick(Widget sender)
+		        {
+		            poopyhead.hide();
+		        }
+		    };
+		    Button button = new Button("Close", listener);
+		    iipv.add(button);
+		    button.setStyleName("centerness");
+			poopyhead.show();
+			//ipv.setWidget(iipv);
+			ipv.setVisible(true);
+			this.add(ipv);
+			//ipv.center();
+			//ipv.show();
+			//viewFrame.frameViewAndPushAboveMe(new InstructorPreferencesView(service, document.getID(), document.getName(), instructor));
 		}
 	}
 }

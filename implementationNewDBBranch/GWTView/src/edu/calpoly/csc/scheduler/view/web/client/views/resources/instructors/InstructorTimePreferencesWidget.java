@@ -16,6 +16,7 @@ import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
@@ -51,6 +52,7 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 				@Override
 				public void onChange(ChangeEvent event) {
 					setCellPreference(list.getSelectedIndex());
+					strategy.autoSave();
 				}
 			});
 		}
@@ -200,10 +202,10 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 		friday.setValue(true);
 		
 		topStuff.setWidget(0, 0, monday);
-		topStuff.setWidget(1, 0, tuesday);
-		topStuff.setWidget(2, 0, wednesday);
-		topStuff.setWidget(3, 0, thursday);
-		topStuff.setWidget(4, 0, friday);
+		topStuff.setWidget(0, 1, tuesday);
+		topStuff.setWidget(0, 2, wednesday);
+		topStuff.setWidget(0, 3, thursday);
+		topStuff.setWidget(0, 4, friday);
 		
 		fromList.setName("From: ");
 		toList.setName("To: ");
@@ -224,15 +226,22 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 		multiSet.addItem("Acceptable");
 		multiSet.addItem("Preferred");
 		
-		topStuff.setWidget(0, 1, new HTML("From:"));
-		topStuff.setWidget(1, 1, new HTML("To:"));
+		topStuff.setWidget(1, 0, new HTML("From:"));
+		topStuff.setWidget(1, 2, new HTML("To:"));
 		
-		topStuff.getWidget(0, 1).setStyleName("rightness");
-		topStuff.getWidget(1, 1).setStyleName("rightness");
+		topStuff.getWidget(1, 0).setStyleName("rightness");
+		topStuff.getWidget(1, 2).setStyleName("rightness");
 		
-		topStuff.setWidget(0, 2, fromList);
-		topStuff.setWidget(1, 2, toList);
-		topStuff.setWidget(2, 2, multiSet);
+		topStuff.setWidget(1, 1, fromList);
+		topStuff.setWidget(1, 3, toList);
+		topStuff.setWidget(0, 5, multiSet);
+		
+		topStuff.setWidget(1, 4, new HTML(" "));
+		topStuff.getWidget(1, 0).setWidth("100px");
+		topStuff.getWidget(1, 1).setWidth("100px");
+		topStuff.getWidget(1, 2).setWidth("100px");
+		topStuff.getWidget(1, 3).setWidth("100px");
+		topStuff.getWidget(1, 4).setWidth("100px");
 		
 		//add(fromList);
 		//add(toList);
@@ -256,10 +265,10 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 		//this.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		//this.setLayoutData(ALIGN_CENTER);
 		//topStuff.
-		topStuff.setBorderWidth(5);
-		topStuff.setStyleName("centerness");
+		//topStuff.setBorderWidth(5);
+		//topStuff.setStyleName("centerness");
 		focus.setStyleName("centerness");
-		focusTwo.setStyleName("centerness");
+		focusTwo.setStyleName("otherCenterness");
 		focusTwo.add(topStuff);
 		this.setSpacing(10);
 		this.setStyleName("centerness");

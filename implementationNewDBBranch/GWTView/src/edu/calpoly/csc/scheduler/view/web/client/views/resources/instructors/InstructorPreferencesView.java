@@ -11,6 +11,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
@@ -26,7 +27,7 @@ import edu.calpoly.csc.scheduler.view.web.client.views.LoadingPopup;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 
-public class InstructorPreferencesView extends VerticalPanel implements IViewContents {
+public class InstructorPreferencesView extends VerticalPanel {//implements IViewContents {
 	Panel container;
 	GreetingServiceAsync service;
 	int documentID;
@@ -35,7 +36,6 @@ public class InstructorPreferencesView extends VerticalPanel implements IViewCon
 	Map<Integer, CourseGWT> coursesByID;
 	
 	Map<Integer, ListBox> listBoxesByCourseID = new HashMap<Integer, ListBox>();
-	
 	InstructorTimePreferencesWidget timePrefs;
 	FlexTable coursePrefs;
 	String[] styleNames = {"preferred", "acceptable", "notPreferred", "notQualified"};
@@ -50,12 +50,12 @@ public class InstructorPreferencesView extends VerticalPanel implements IViewCon
 		this.savedInstructor = new InstructorGWT(instructor);
 	}
 
-	@Override
-	public void afterPush(ViewFrame frame) {
+	//@Override
+	public void afterPush() {
 		this.setWidth("100%");
 		this.setHeight("100%");
 		FocusPanel fpanel = new FocusPanel();
-		HTML instructorName = new HTML("Time Preferences");
+		HTML instructorName = new HTML("Instructor Time Preferences");
 		fpanel.setStyleName("bigBold");
 		instructorName.setStyleName("bigBold");
 		fpanel.add(instructorName);
@@ -82,7 +82,7 @@ public class InstructorPreferencesView extends VerticalPanel implements IViewCon
 		coursePrefs = new FlexTable();
 		coursePrefs.setStyleName("centerness");
 		
-		HTML cprefs = new HTML("Course Preferences");
+		HTML cprefs = new HTML("Instructor Course Preferences");
 		cprefs.addStyleName("bigBold");
 		this.add(cprefs);
 		
@@ -116,7 +116,7 @@ public class InstructorPreferencesView extends VerticalPanel implements IViewCon
 		int row = 1;
 		for (final CourseGWT course : coursesByID.values()) {
 			coursePrefs.setWidget(row, 0, new HTML(course.getCourseName()));
-			
+			System.out.println("Stupid course name: "+course.getCourseName());
 			final ListBox list = new ListBox();
 			listBoxesByCourseID.put(course.getID(), list);
 			list.addItem("Not Qualified");
@@ -178,7 +178,7 @@ public class InstructorPreferencesView extends VerticalPanel implements IViewCon
 	}
 	
 	void redoColors() {
-		timePrefs.redoColors();
+		//timePrefs.redoColors();
 		
 		for (CourseGWT course : coursesByID.values()) {
 			ListBox list = listBoxesByCourseID.get(course.getID());
@@ -191,14 +191,14 @@ public class InstructorPreferencesView extends VerticalPanel implements IViewCon
 		}
 	}
 
-	@Override
+	//@Override
 	public boolean canPop() { return true; }
-	@Override
+	//@Override
 	public void beforePop() { }
-	@Override
+	//@Override
 	public void beforeViewPushedAboveMe() { }
-	@Override
+	//@Override
 	public void afterViewPoppedFromAboveMe() { }
-	@Override
+	//@Override
 	public Widget getContents() { return this; }
 }
