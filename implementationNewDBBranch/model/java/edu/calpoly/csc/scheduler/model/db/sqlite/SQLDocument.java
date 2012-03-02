@@ -1,9 +1,10 @@
 package edu.calpoly.csc.scheduler.model.db.sqlite;
 
 import edu.calpoly.csc.scheduler.model.db.IDBDocument;
+import edu.calpoly.csc.scheduler.model.db.IDBSchedule;
 import edu.calpoly.csc.scheduler.model.db.simple.DBDocument;
 
-public class SQLDocument extends SQLObject implements IDBDocument {
+public class SQLDocument extends SQLObject implements IDBDocument, IDBSchedule {
 	String name;
 	boolean isTrashed;
 	int startHalfHour;

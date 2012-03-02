@@ -56,12 +56,31 @@ public class SQLdb implements IDatabase {
 					new Table.Column("id", Integer.class),
 					new Table.Column("originalDocID", Integer.class)
 			});
-	Table<SQLDocument> userdataTable = new Table<SQLDocument>(SQLDocument.class, "workingcopy",
+	Table<SQLUser> userdataTable = new Table<SQLUser>(SQLUser.class, "userdata",
 			new Table.Column[] {
 					new Table.Column("id", Integer.class),
 					new Table.Column("username", String.class),
 					new Table.Column("isAdmin", Boolean.class)
 			});
+	Table<SQLLocation> locationTable = new Table<SQLLocation>(SQLLocation.class, "location",
+			new Table.Column[] {
+					new Table.Column("id", Integer.class),
+					new Table.Column("docID", Integer.class),
+					new Table.Column("maxOccupancy", Integer.class),
+					new Table.Column("type", String.class),
+					new Table.Column("room", String.class),
+					new Table.Column("schedulable", Boolean.class)	
+			});
+	Table<SQLInstructor> instructorTable = new Table<SQLInstructor>(SQLInstructor.class, "instructor",
+			new Table.Column[] {
+					new Table.Column("id", Integer.class),
+					new Table.Column("docID", Integer.class),
+					new Table.Column("firstName", String.class),
+					new Table.Column("lastName", String.class),
+					new Table.Column("username", String.class),
+					new Table.Column("maxWTU", Integer.class),
+					new Table.Column("schedulable", Boolean.class)
+	});
 	
 	public static void main(String[] args) throws Exception {
 		SQLdb db = new SQLdb();
@@ -177,10 +196,31 @@ public class SQLdb implements IDatabase {
 		}
 		
 		public List<T> select(Map<String, Object> wheres) throws DatabaseException {
-			  String queryString = ""; 
-			  PreparedStatement stmnt = null;
-			  assert(false); // implement
-			  return parseResultSet(null);
+			PreparedStatement stmnt = null;  
+			String queryString = "SELECT * FROM " + name + " WHERE "; 
+			
+			for (String col : wheres.keySet())
+				queryString += col + " = ?,";
+			
+			queryString = queryString.substring(0, queryString.length() - 1);
+			ResultSet rs = null;
+			
+			try {
+				stmnt = conn.prepareStatement(queryString);
+				
+				int count = 0;
+				for (String col : wheres.keySet()) {
+					Object val = wheres.get(col);
+					setStatement(stmnt, val.getClass(), count+1, val);
+					count++;
+				}
+				
+				rs = stmnt.executeQuery();
+			} catch (SQLException e) {
+				throw new DatabaseException(e);
+			}
+			
+			return parseResultSet(rs);
 		}
 		
 		public Integer insert(Object[] values) throws DatabaseException {
@@ -430,9 +470,9 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public IDBDocument findDocumentForSchedule(IDBSchedule schedule)
-			throws DatabaseException {
-		// TODO Auto-generated method stub
-		return null;
+			throws DatabaseException {		
+		SQLDocument ret = (SQLDocument) schedule;	
+		return ret;
 	}
 
 
@@ -488,8 +528,10 @@ public class SQLdb implements IDatabase {
 	@Override
 	public Collection<IDBSchedule> findAllSchedulesForDocument(
 			IDBDocument document) throws DatabaseException {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<IDBSchedule> ret = new ArrayList<IDBSchedule>();
+		ret.add((IDBSchedule)document);
+		
+		return ret;
 	}
 
 
@@ -638,8 +680,16 @@ public class SQLdb implements IDatabase {
 	@Override
 	public Collection<IDBLocation> findLocationsForDocument(IDBDocument document)
 			throws DatabaseException {
-		// TODO Auto-generated method stub
-		return null;
+		Collection<IDBLocation> result = new LinkedList<IDBLocation>();
+		SQLDocument doc = (SQLDocument) document;
+		HashMap<String, Object> wheres = new HashMap<String, Object>();
+		
+		wheres.put("docID", doc.getID());
+		
+		for(SQLLocation loc : locationTable.select(wheres))
+			result.add(loc);
+		
+		return result;
 	}
 
 
