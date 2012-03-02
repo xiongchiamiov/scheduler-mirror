@@ -174,12 +174,13 @@ class GenerationDataLayer {
 	}
 	
 
-	InstructorDecorator findInstructorFreeDuring(
-			Set<Day> dayPattern, int startHalfHour, int endHalfHour) {
+	InstructorDecorator findNonStaffInstructorFreeDuring(
+			Set<Day> dayPattern, int startHalfHour, int endHalfHour) throws DatabaseException {
 		
 		for (InstructorDecorator instructor : instructors.values())
-			if (instructorIsFreeDuring(instructor, dayPattern, startHalfHour, endHalfHour))
-				return instructor;
+			if (instructor.instructor != document.getStaffInstructor())
+				if (instructorIsFreeDuring(instructor, dayPattern, startHalfHour, endHalfHour))
+					return instructor;
 		
 		return null;
 	}
@@ -198,12 +199,13 @@ class GenerationDataLayer {
 		return true;
 	}
 
-	LocationDecorator findLocationFreeDuring(
-			Set<Day> dayPattern, int startHalfHour, int endHalfHour) {
+	LocationDecorator findNonTBALocationFreeDuring(
+			Set<Day> dayPattern, int startHalfHour, int endHalfHour) throws DatabaseException {
 		
 		for (LocationDecorator location : locations.values())
-			if (locationIsFreeDuring(location, dayPattern, startHalfHour, endHalfHour))
-				return location;
+			if (location.location != document.getTBALocation())
+				if (locationIsFreeDuring(location, dayPattern, startHalfHour, endHalfHour))
+					return location;
 		
 		return null;
 	}
@@ -238,6 +240,14 @@ class GenerationDataLayer {
 
 	public LocationDecorator findLocationByID(int locationID) {
 		return locations.get(locationID);
+	}
+
+	public InstructorDecorator getStaffInstructor() throws DatabaseException {
+		return instructors.get(document.getStaffInstructor().getID());
+	}
+	
+	public LocationDecorator getTBALocation() throws DatabaseException {
+		return locations.get(document.getTBALocation().getID());
 	}
 }
 
@@ -301,17 +311,13 @@ public class GenerationAlgorithm {
 
 		System.out.println("Trying generating course " + course.toString() + " section " + newSectionNumber + " on days " + dayPattern + " from " + startHalfHour + " to " + endHalfHour);
 
-		InstructorDecorator instructorFreeAtThatTime = layer.findInstructorFreeDuring(dayPattern, startHalfHour, endHalfHour);
-		if (instructorFreeAtThatTime == null) {
-			System.out.println("No instructor free at that time.");
-			return null;
-		}
+		InstructorDecorator instructorFreeAtThatTime = layer.findNonStaffInstructorFreeDuring(dayPattern, startHalfHour, endHalfHour);
+		if (instructorFreeAtThatTime == null)
+			instructorFreeAtThatTime = layer.getStaffInstructor();
 
-		LocationDecorator locationFreeAtThatTime = layer.findLocationFreeDuring(dayPattern, startHalfHour, endHalfHour);
-		if (locationFreeAtThatTime == null) {
-			System.out.println("No location free at that time.");
-			return null;
-		}
+		LocationDecorator locationFreeAtThatTime = layer.findNonTBALocationFreeDuring(dayPattern, startHalfHour, endHalfHour);
+		if (locationFreeAtThatTime == null)
+			locationFreeAtThatTime = layer.getTBALocation();
 
 		ScheduleItem item = layer.assembleScheduleItem(newSectionNumber, dayPattern, startHalfHour, endHalfHour, false, false);
 		item.setCourse(course.course);
@@ -331,14 +337,14 @@ public class GenerationAlgorithm {
 		assert(item.getEndHalfHour() > 0); // will implement this soon
 
 		if (!item.instructorIsSet()) {
-			InstructorDecorator newInstructor = layer.findInstructorFreeDuring(item.getDays(), item.getStartHalfHour(), item.getEndHalfHour());
+			InstructorDecorator newInstructor = layer.findNonStaffInstructorFreeDuring(item.getDays(), item.getStartHalfHour(), item.getEndHalfHour());
 			if (newInstructor == null)
 				throw new CouldNotBeScheduledException();
 			item.setInstructor(newInstructor.instructor);
 		}
 
 		if (!item.locationIsSet()) {
-			LocationDecorator newLocation = layer.findLocationFreeDuring(item.getDays(), item.getStartHalfHour(), item.getEndHalfHour());
+			LocationDecorator newLocation = layer.findNonTBALocationFreeDuring(item.getDays(), item.getStartHalfHour(), item.getEndHalfHour());
 			if (newLocation == null)
 				throw new CouldNotBeScheduledException();
 			item.setLocation(newLocation.location);

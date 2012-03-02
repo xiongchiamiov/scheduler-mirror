@@ -210,13 +210,15 @@ public class Course extends Identified {
 	private void putAssociationIntoDB() throws DatabaseException {
 		if (!lectureLoaded)
 			return;
-		model.database.associateLectureAndLab(lecture.underlyingCourse, underlyingCourse);
+		if (lecture != null)
+			model.database.associateLectureAndLab(lecture.underlyingCourse, underlyingCourse);
 	}
 	
 	private void removeAssociationFromDB() {
 		if (!lectureLoaded)
 			return;
-		model.database.disassociateLectureAndLab(lecture.underlyingCourse, underlyingCourse);
+		if (lecture != null)
+			model.database.disassociateLectureAndLab(lecture.underlyingCourse, underlyingCourse);
 	}
 
 	private void loadLectureAndTethered() throws DatabaseException {
