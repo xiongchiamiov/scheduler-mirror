@@ -728,8 +728,19 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
    {
       if (myFrame.canPopViewsAboveMe())
       {
-         myFrame.popFramesAboveMe();
-         myFrame.frameViewAndPushAboveMe(new AdminScheduleNavView(service, this, menuBar, username, doc));
+    	  service.createWorkingCopyForOriginalDocument(doc.getID(), new AsyncCallback<DocumentGWT>() {
+			
+			@Override
+			public void onSuccess(DocumentGWT result) {
+		         myFrame.popFramesAboveMe();
+		         myFrame.frameViewAndPushAboveMe(new AdminScheduleNavView(service, SelectScheduleView.this, menuBar, username, result));
+			}
+			
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert("Failed to open document: " + caught.getMessage());
+			}
+		});
       }
    }
 

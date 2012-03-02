@@ -242,7 +242,7 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 	            	}
 	            	@Override
 	            	public void onSuccess(Void v) {
-	            		Window.alert("todo: notify all views of doc name change");
+	            		Window.alert("Successfully saved.");
 	            	}
 	            });
 	         }

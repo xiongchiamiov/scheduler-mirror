@@ -25,6 +25,7 @@ public class AssociationsCell extends OsmTable.EditingCell {
 	
 	ListBox listBox; // null when not editing
 	ArrayList<CourseGWT> courses; // null when not editing.
+	ArrayList<CourseGWT> lectures; // null when not editing.
 	
 	public AssociationsCell(GetCoursesCallback getCourses) {
 		this.getCourses = getCourses;
@@ -41,13 +42,21 @@ public class AssociationsCell extends OsmTable.EditingCell {
 		if (!courseIsLecture) {
 			assert(listBox == null);
 			assert(courses == null);
+			assert(lectures == null);
 			
 			clear();
 	
 			courses = getCourses.getCourses();
+			
+			lectures = new ArrayList<CourseGWT>();
+			for (CourseGWT course : getCourses.getCourses())
+				if (course.getType().equals("LEC"))
+					lectures.add(course);
+			
+			
 			listBox = new ListBox();
 			listBox.addItem("(none)", "0");
-			for (CourseGWT course : courses) {
+			for (CourseGWT course : lectures) {
 				listBox.addItem(courseString(course), course.getID().toString());
 			}
 			
@@ -122,6 +131,7 @@ public class AssociationsCell extends OsmTable.EditingCell {
 		if (!courseIsLecture) {
 			listBox = null;
 			courses = null;
+			lectures = null;
 	
 			clear();
 			readingLabel.clear();
