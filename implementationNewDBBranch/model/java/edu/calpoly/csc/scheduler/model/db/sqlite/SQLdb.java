@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -50,10 +51,16 @@ public class SQLdb implements IDatabase {
 					new Table.Column("startHalfHour", Integer.class),
 					new Table.Column("endHalfHour", Integer.class)
 			});
-	Table<SQLDocument> workingCopyTable = new Table<SQLDocument>(SQLDocument.class, "workingcopy",
+	Table<SQLDocument> workingcopyTable = new Table<SQLDocument>(SQLDocument.class, "workingcopy",
 			new Table.Column[] {
 					new Table.Column("id", Integer.class),
 					new Table.Column("originalDocID", Integer.class)
+			});
+	Table<SQLDocument> userdataTable = new Table<SQLDocument>(SQLDocument.class, "workingcopy",
+			new Table.Column[] {
+					new Table.Column("id", Integer.class),
+					new Table.Column("username", String.class),
+					new Table.Column("isAdmin", Boolean.class)
 			});
 	
 	public static void main(String[] args) throws Exception {
@@ -124,25 +131,59 @@ public class SQLdb implements IDatabase {
 			  this.columns = columns;
 		}
 		
-		public ResultSet customQuery(PreparedStatement stmnt) throws DatabaseException {
+		public void delete(Integer id) throws DatabaseException {
+			PreparedStatement stmnt = null;
+			String queryString = "DELETE FROM " + name + " WHERE ID = ?";
+			
 			try {
-				return stmnt.executeQuery();
+				stmnt = conn.prepareStatement(queryString);
+				stmnt.setInt(1, id);
+				stmnt.executeUpdate();
 			} catch (SQLException e) {
 				throw new DatabaseException(e);
 			}
 		}
 		
-		public List<T> select(Map<String, Object> wheres) throws DatabaseException {
-			  String query = ""; 
-			  PreparedStatement stmnt = null;
-			  assert(false); // implement
-			  return parseResultSet(customQuery(stmnt));
+		public void update(Object[] values, Integer id) throws DatabaseException {
+			assert(values.length == columns.length);
+			
+			PreparedStatement stmnt = null;
+			String queryString = "UPDATE " + name + " SET ";
+			
+			for (Column column : columns)
+				if (!column.name.equals("id"))
+					queryString += column.name + " = ?,";
+			queryString = queryString = queryString.substring(0, queryString.length() - 1);
+			queryString += " WHERE ID = ?";
+			
+			
+			try {
+				stmnt = conn.prepareStatement(queryString);
+				
+				int count = 0;
+				for (Object val : values) {
+					setStatement(stmnt, val.getClass(), count+1, val);
+					count++;
+					//System.out.print(count + " " + val + " ");
+				}
+				
+				stmnt.setInt(count, id);
+				//System.out.println();
+				stmnt.executeUpdate();
+			} catch (SQLException e) {
+				throw new DatabaseException(e);
+			}
+			
 		}
 		
-		//insert into userdata (username, isAdmin) values (?, ?)
-		public void insert(Object[] values) throws DatabaseException {
-			// columns.length - 1 because an insert will not use
-			// auto-incremented field "id"
+		public List<T> select(Map<String, Object> wheres) throws DatabaseException {
+			  String queryString = ""; 
+			  PreparedStatement stmnt = null;
+			  assert(false); // implement
+			  return parseResultSet(null);
+		}
+		
+		public Integer insert(Object[] values) throws DatabaseException {
 			assert(values.length == columns.length-1);
 			PreparedStatement stmnt = null;
   
@@ -156,28 +197,39 @@ public class SQLdb implements IDatabase {
 			queryString += ") VALUES (";
   
 			for (int columnI = 0; columnI < columns.length; columnI++) {
-				queryString += "?,";
+				if (!columns[columnI].name.equals("id"))
+					queryString += "?,";
 			}
 			
 			queryString = queryString.substring(0, queryString.length() - 1);
 			queryString += ")";
-			System.out.println(queryString);
+
 			try {
-				System.out.println(conn);
 				stmnt = conn.prepareStatement(queryString);
-				for (int columnI = 0; columnI < columns.length; columnI++) {
-					if (columns[columnI].classs == Integer.class)
-						stmnt.setInt(columnI+1, (Integer) values[columnI]);
-					else if (columns[columnI].classs == String.class)
-						stmnt.setString(columnI+1, (String) values[columnI]);
-					else if (columns[columnI].classs == Boolean.class)
-						stmnt.setBoolean(columnI+1, (Boolean) values[columnI]);
+				
+				for (int columnI = 1; columnI < columns.length; columnI++) {
+					setStatement(stmnt, columns[columnI].classs, columnI, values[columnI-1]);
 				}
+				stmnt.executeUpdate();
+				
+				stmnt = conn.prepareStatement("select last_insert_rowid()");
+				ResultSet id = stmnt.executeQuery();
+				return id.getInt("last_insert_rowid()");
 			}
 			catch (SQLException e) {
 				throw new DatabaseException(e);
 			}
-			customQuery(stmnt);
+		}
+		
+		private void setStatement(PreparedStatement stmnt, Class objClass, int idx, Object val)
+				throws SQLException 
+		{
+			if (objClass == Integer.class)
+				stmnt.setInt(idx, (Integer) val);
+			else if (objClass == String.class) 
+				stmnt.setString(idx, (String) val);
+			else if (objClass == Boolean.class)
+				stmnt.setBoolean(idx, (Boolean) val);
 		}
  
 		private Object getFromResultWithType(ResultSet resultSet, int columnIndex, Class classs) throws SQLException {
@@ -212,19 +264,7 @@ public class SQLdb implements IDatabase {
 				
 				return list;
 			}
-			catch (SQLException e) {
-				throw new DatabaseException(e);
-			} catch (IllegalArgumentException e) {
-				throw new DatabaseException(e);
-			} catch (InstantiationException e) {
-				throw new DatabaseException(e);
-			} catch (IllegalAccessException e) {
-				throw new DatabaseException(e);
-			} catch (InvocationTargetException e) {
-				throw new DatabaseException(e);
-			} catch (SecurityException e) {
-				throw new DatabaseException(e);
-			} catch (NoSuchMethodException e) {
+			catch (Exception e) {
 				throw new DatabaseException(e);
 			}
 		}
@@ -260,17 +300,9 @@ public class SQLdb implements IDatabase {
 	@Override
 	public void insertUser(IDBUser user) throws DatabaseException {
 		PreparedStatement stmnt = null;
+		SQLUser sqluser = (SQLUser) user;
 		
-		try {
-			stmnt = conn.prepareStatement("insert into userdata (username, isAdmin) values (?, ?)");
-			stmnt.setString(1, user.getUsername());
-			stmnt.setBoolean(2, user.isAdmin());
-			
-			stmnt.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			throw new DatabaseException(e);
-		}
+		sqluser.id = userdataTable.insert(new Object[]{ user.getUsername(), user.isAdmin()});
 	}
 
 
@@ -314,12 +346,13 @@ public class SQLdb implements IDatabase {
 		ArrayList<IDBDocument> docs = new ArrayList<IDBDocument>();
 		PreparedStatement stmnt = null;
 		
+		
 		try {
 			stmnt = conn.prepareStatement("select * from document inner join workingcopy using (id)");
 			
 			ResultSet rs = stmnt.executeQuery();
 			while (rs.next()) {
-				docs.add(new SQLDocument(rs.getInt("id"), rs.getString("name"), rs.getInt("originalDocID"),
+				docs.add(new SQLDocument(rs.getInt("id"), rs.getString("name"),
 						rs.getInt("startHalfHour"), rs.getInt("endHalfHour")));
 			}
 			if (docs.size() == 0)
@@ -347,7 +380,7 @@ public class SQLdb implements IDatabase {
 			
 			ResultSet rs = stmnt.executeQuery();
 			if (rs.next()) {
-				doc = new SQLDocument(rs.getInt("id"), rs.getString("name"), rs.getInt("originalDocID"),
+				doc = new SQLDocument(rs.getInt("id"), rs.getString("name"),
 						rs.getInt("startHalfHour"), rs.getInt("endHalfHour"));
 			}
 			else {
@@ -367,67 +400,31 @@ public class SQLdb implements IDatabase {
 		PreparedStatement stmnt = null;
 		SQLDocument doc = (SQLDocument) document;
 		
-		documentTable.insert(new Object[]{ doc.getName(), doc.isTrashed(), doc.getStartHalfHour(), doc.getEndHalfHour() });
-		
-		if (doc.getOriginalID() != null)
-			workingCopyTable.insert(new Object[]{ doc.getID(), doc.getOriginalID() });
-		
-		try {
-			stmnt = conn.prepareStatement("insert into document (name, isTrash, startHalfHour, endHalfHour) values (?, ?, ?, ?)");
-			stmnt.setString(1, doc.getName());
-			stmnt.setBoolean(2, doc.isTrashed());
-			stmnt.setInt(3, doc.getStartHalfHour());
-			stmnt.setInt(4, doc.getEndHalfHour());
-			
-			stmnt.executeUpdate();
-			
-			if (doc.getOriginalID() != null) {
-				stmnt = conn.prepareStatement("insert into workingcopy (id, originalDocID) values (?, ?)");
-				stmnt.setInt(1, doc.getID());
-				stmnt.setInt(2, doc.getOriginalID());
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-			throw new DatabaseException(e);
-		}
+		doc.id = documentTable.insert(new Object[]{ doc.getName(), doc.isTrashed(), doc.getStartHalfHour(), doc.getEndHalfHour() });
 	}
 
 
 	@Override
 	public IDBDocument assembleDocument(String name, int startHalfHour,
 			int endHalfHour) throws DatabaseException {
-		return new SQLDocument(null, name, null, startHalfHour, endHalfHour);
+		return new SQLDocument(null, name, startHalfHour, endHalfHour);
 	}
 
 
 	@Override
 	public void updateDocument(IDBDocument document) throws DatabaseException {
-		PreparedStatement stmnt = null;
 		SQLDocument doc = (SQLDocument) document;
 		
-		try {
-			stmnt = conn.prepareStatement("update document set name = ?, isTrash = ?," +
-					" where id = ?");
-			stmnt.setInt(3, document.getID());
-			
-			stmnt.executeUpdate();
-			
-			if (doc.getOriginalID() != null) {
-				stmnt = conn.prepareStatement("update workingcopy set originalDocID (?, ?)");
-				stmnt.setInt(1, doc.getID());
-				stmnt.setInt(2, doc.getOriginalID());
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-			throw new DatabaseException(e);
-		}
+		documentTable.update(new Object[] {doc.getName(), doc.isTrashed(), doc.getStartHalfHour(), doc.getEndHalfHour()}, 
+						     doc.getID());
 	}
 
 
 	@Override
 	public void deleteDocument(IDBDocument document) throws DatabaseException {
-		// TODO Auto-generated method stub
+		SQLDocument doc = (SQLDocument) document;
 		
+		documentTable.delete(doc.getID());
 	}
 
 

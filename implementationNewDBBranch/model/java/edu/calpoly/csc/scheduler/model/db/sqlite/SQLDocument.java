@@ -6,14 +6,12 @@ import edu.calpoly.csc.scheduler.model.db.simple.DBDocument;
 public class SQLDocument extends SQLObject implements IDBDocument {
 	String name;
 	boolean isTrashed;
-	Integer originalID; 
 	int startHalfHour;
 	int endHalfHour;
 	
-	public SQLDocument(Integer id, String name, Integer originalID, int startHalfHour, int endHalfHour) {
+	public SQLDocument(Integer id, String name, int startHalfHour, int endHalfHour) {
 		super(id);
 		this.name = name;
-		this.originalID = originalID;
 		this.startHalfHour = startHalfHour;
 		this.endHalfHour = endHalfHour;
 	}
@@ -38,5 +36,4 @@ public class SQLDocument extends SQLObject implements IDBDocument {
 	@Override
 	public void setEndHalfHour(int halfHour) { endHalfHour = halfHour; }
 	
-	public Integer getOriginalID() { return originalID; }
 }
