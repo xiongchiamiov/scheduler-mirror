@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -218,9 +219,9 @@ public class InstructorsView extends VerticalPanel implements IViewContents, Ins
 		if (viewFrame.canPopViewsAboveMe()) {
 			//viewFrame.popFramesAboveMe();
 			InstructorPreferencesView iipv = new InstructorPreferencesView(service, document.getID(), document.getName(), instructor);
-			final SimplePanel ipv = new SimplePanel();
-			ipv.setWidth("100%");
-			ipv.setHeight("100%");
+			//final SimplePanel ipv = new SimplePanel();
+			//ipv.setWidth("100%");
+			//ipv.setHeight("100%");
 			//ipv.add(new Button("OK"));
 			//ipv.setVisible(true);
 			//popup.
@@ -232,10 +233,17 @@ public class InstructorsView extends VerticalPanel implements IViewContents, Ins
 			//ipv.setWidth("500px");
 			final DialogBox poopyhead = new DialogBox();
 			iipv.afterPush();
+			final ScrollPanel weewee = new ScrollPanel();
+			weewee.setWidget(iipv);
+			weewee.setSize("700px", "600px");
+			poopyhead.add(weewee);
+			//poopyhead.setTitle(instructor.getFirstName() + " " + instructor.getLastName() + "'s Preferences");
 			//iipv.setVisible(true);
 			//ipv.add(new Button("OK"));
 			//ipv.add(iipv);
-			poopyhead.add(iipv);
+			//poopyhead.add(iipv);
+			poopyhead.setPopupPosition(600, 0);
+			//poopyhead.add
 			ClickListener listener = new ClickListener()
 		    {
 		        public void onClick(Widget sender)
@@ -248,8 +256,8 @@ public class InstructorsView extends VerticalPanel implements IViewContents, Ins
 		    button.setStyleName("centerness");
 			poopyhead.show();
 			//ipv.setWidget(iipv);
-			ipv.setVisible(true);
-			this.add(ipv);
+			//ipv.setVisible(true);
+			//this.add(ipv);
 			//ipv.center();
 			//ipv.show();
 			//viewFrame.frameViewAndPushAboveMe(new InstructorPreferencesView(service, document.getID(), document.getName(), instructor));

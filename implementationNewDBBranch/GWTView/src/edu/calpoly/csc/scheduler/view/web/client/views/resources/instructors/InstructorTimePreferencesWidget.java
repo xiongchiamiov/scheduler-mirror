@@ -267,7 +267,7 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 		//topStuff.
 		//topStuff.setBorderWidth(5);
 		//topStuff.setStyleName("centerness");
-		focus.setStyleName("centerness");
+		focus.setStyleName("otherCenterness");
 		focusTwo.setStyleName("otherCenterness");
 		focusTwo.add(topStuff);
 		this.setSpacing(10);

@@ -66,7 +66,7 @@ public class InstructorPreferencesView extends VerticalPanel {//implements IView
 			public InstructorGWT getInstructor() { return instructor; }
 			public void autoSave() { save(); }
 		});
-		this.setSpacing(10);
+		this.setSpacing(20);
 		/*this.add(new Button("Save All Preferences", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -80,7 +80,7 @@ public class InstructorPreferencesView extends VerticalPanel {//implements IView
 		this.setStyleName("centerness");
 		//FocusPanel otherFocus = new FocusPanel();
 		coursePrefs = new FlexTable();
-		coursePrefs.setStyleName("centerness");
+		coursePrefs.setStyleName("otherCenterness");
 		
 		HTML cprefs = new HTML("Instructor Course Preferences");
 		cprefs.addStyleName("bigBold");
