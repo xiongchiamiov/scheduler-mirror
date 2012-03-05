@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Random;
 import java.util.Set;
@@ -132,12 +133,23 @@ public class CSVTest {
 		// ...
 	}
 	
-	public static void main(String[] args){
+	public static void main(String[] args) throws DatabaseException{
 		Model model = new Model();
+		model.createTransientDocument("TestDoc", 14, 44).insert();
+		Collection<Document> docs =  model.findAllDocuments();
+	    Document doc = model.findAllDocuments().iterator().next();
 		
 		CSVExporter export = new CSVExporter();
 		try {
-			System.out.println(export.exportTest(model, model.createTransientDocument("Test", 14, 44).insert()));
+			generateCourses(10, model, doc);
+			generateInstructors(10, model, doc);
+			generateLocations(10, model, doc);
+			generateSchedule(model, doc);
+			generateScheduleItems(10, model, doc);
+			
+			
+			System.out.println(export.export(model, doc));
+			//System.out.println(export.exportTest(model, model.createTransientDocument("Test", 14, 44).insert()));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -158,126 +170,142 @@ public class CSVTest {
 
 	}
 
-	private void generateInstructors(int numberOfInstructors, Model model,
-			Document doc) {
-		
-		final int hoursInDay = 48;
-		final int prefChoices = 4;
-
-		Instructor base = ModelTestUtility.createBasicInstructor(model, doc);
-
-		HashMap<Integer, Integer> coursePrefs = new HashMap<Integer, Integer>();
-		HashMap<Day, HashMap<Integer, Integer>> timePrefs = new HashMap<Day, HashMap<Integer, Integer>>();
-		Day[] days = Day.values();
-
-		for (Day day : Day.values())
-			timePrefs.put(day, new HashMap<Integer, Integer>());
+	*/
+	public static void generateInstructors(int numberOfInstructors, Model model,
+			Document doc) throws DatabaseException {
 
 		for (int index = 0; index <= numberOfInstructors; index++) {
 
-			coursePrefs.put(index, index % 4);
-			timePrefs.get(days[index % 7]).put(index % hoursInDay, index % prefChoices);
-
-			Instructor instructor = model.assembleInstructor(doc, Integer
-					.toString(numberOfInstructors), Integer
-					.toString(numberOfInstructors), Integer
-					.toString(numberOfInstructors), Integer
-					.toString(numberOfInstructors), 
-					new HashMap<Day, HashMap<Integer, Integer>>(timePrefs),
-					new HashMap<Integer, Integer>(coursePrefs));
-
-			model.insertInstructor(instructor);
-		}
-	}
-
-	private void generateCourses(int numberOfCourses, Model model, Document doc) {
-		Course base = ModelTestUtility.createCourse(model, doc);
-		final int days = 7;
-		Random rand = new Random(numberOfCourses);
-		Day[] days = Day.values();
-		for (int index = 0; index <= numberOfCourses; index++) {
-			
-			ArrayList<Set<Day>> dayPattern = new ArrayList<Set<Day>>();
-			HashSet<String> dayPattern = new HashSet<String>();
-			int daysOffered = index %7;
-				//TODO Make more day patterns  RANDOM
-			for(int offered = 0; offered < daysOffered; offered++)
-				dayPattern.add(days[rand.nextInt(7)].toString());
-		
-			Course course = model.assembleCourse(doc, Integer.toString(index),
-					Integer.toString(index), Integer.toString(index),
-					Integer.toString(index),Integer.toString(index), Integer.toString(index),
-					Integer.toString(index), Integer.toString(index),
-					Integer.toString(index), base.getUsedEquipment(),
-					dayPatterns, (index % 2) == 0);
-			model.insertCourse(course);
+			model.createTransientInstructor("Fname" + Integer.toString(index),
+					"LName" + Integer.toString(index),
+					"Uname" + Integer.toString(index), Integer.toString(index),
+					true).setDocument(doc).insert();
 		}
 
-	}
+		Collection<Course> courseList;
+		Collection<Instructor> insList;
 
-	private void generateLocations(int numberOfLocations, Model model,
-			Document doc) {
-		Location base = ModelTestUtility.createLocation(model, doc);
+		courseList = doc.getCourses();
+		insList = doc.getInstructors();
 
-		for (int index = 0; index <= numberOfLocations; index++) {
-			Location location = model.assembleLocation(doc, base.getRoom(),
-					base.getType(), base.getMaxOccupancy(),
-					base.getProvidedEquipment());
+		for (Instructor ins : insList) {
 
-			model.insertLocation(location);
-		}
-	}
+			HashMap<Integer, Integer> coursePrefs = new HashMap<Integer, Integer>();
+			HashMap<Day, HashMap<Integer, Integer>> timePrefs = new HashMap<Day, HashMap<Integer, Integer>>();
 
-	private void generateScheduleItems(int numberOfItems, Model model,
-			Document doc, Schedule schedule) {
-		Random rand = new Random(numberOfItems);
+			for (Day day : Day.values())
+				timePrefs.put(day, new HashMap<Integer, Integer>());
 
-		ArrayList<Course> courses = (ArrayList<Course>) model
-				.findCoursesForDocument(doc);
-		ArrayList<Location> locations = (ArrayList<Location>) model
-				.findLocationsForDocument(doc);
-		ArrayList<Instructor> instructors = (ArrayList<Instructor>) model
-				.findInstructorsForDocument(doc);
-
-		for (int index = 0; index <= numberOfItems; index++) {
-			int startHalfHour = rand.nextInt(46);
-			int endHalfHour = rand.nextInt(48);
-			while (endHalfHour <= startHalfHour) {
-				endHalfHour = rand.nextInt(48);
+			int[][] tprefs = new int[7][48]; // Column is days, row is half
+												// hours
+			for (int j = 0; j < 7; j++) {
+				for (int k = 0; k < 48; k++) {
+					tprefs[j][k] = 3;
+				}
 			}
 
-			Boolean isPlaced = (index % 2) == 0 ? true : false;
-			Boolean isConflicted = (index % 3) == 0 ? true : false;
+			int i = 0;
+			for (Course course : courseList)
+				coursePrefs.put(course.getID(), ++i % 4);
 
-			ScheduleItem item = model.assembleScheduleItem(schedule,
-					courses.get(index), instructors.get(index),
-					locations.get(index), index, new HashSet<Day>(),
-					startHalfHour, endHalfHour, isPlaced, isConflicted);
-
-			model.insertScheduleItem(item);
+			ins.setCoursePreferences(coursePrefs);
+			ins.setTimePreferences(tprefs);
 		}
+
 	}
 
-	private Model generateData(int numOfItems) {
+	public static void generateCourses(int numberOfCourses, Model model, Document doc)
+			throws DatabaseException {
 
-		Model model = this.createBlankModel();
-		Document doc = model.assembleDocument(Integer.toString(numOfItems), 14,
-				44);
-		Schedule sched = model.assembleSchedule(doc);
+		for (int index = 0; index < numberOfCourses; index++) {
 
-		generateInstructors(numOfItems, model, doc);
-		generateCourses(numOfItems, model, doc);
-		generateLocations(numOfItems, model, doc);
+			model.createTransientCourse("Name" + Integer.toString(index),
+					"Catalog" + Integer.toString(index),
+					"dept" + Integer.toString(index),
+					"WTU" + Integer.toString(index),
+					"SCU" + Integer.toString(index),
+					"Numsec" + Integer.toString(index),
+					"Type" + Integer.toString(index),
+					"maxenrollment" + Integer.toString(index),
+					"numHalfHours" + Integer.toString(index), true)
+					.setDocument(doc).insert();
 
-		generateScheduleItems(numOfItems, model, doc, sched);
+		}
 
-		return model;
+		Collection<Course> courseList;
+
+		courseList = doc.getCourses();
+		for (Course course : courseList) {
+			Set<String> usedEquipment = new HashSet<String>();
+			usedEquipment.add("TestEquipment");
+			ArrayList<Set<Day>> dayPatterns = new ArrayList<Set<Day>>();
+			// dayPatterns.get(0).add(Day.FRIDAY); TODO
+
+			course.setUsedEquipment(usedEquipment);
+			course.setDayPatterns(dayPatterns);
+			course.setTetheredToLecture(false);
+			course.setLecture(null);
+		}
+
 	}
 
-	@Override
-	IDatabase createDatabase() {
-		// TODO Auto-generated method stub
-		return null;
+	public static void generateLocations(int numberOfLocations, Model model,
+			Document doc) throws DatabaseException {
+
+		Set<String> equipment = new HashSet<String>();
+		equipment.add("Projector");
+
+		for (int index = 0; index <= numberOfLocations; index++) {
+
+			model.createTransientLocation(Integer.toString(index),
+					Integer.toString(index), Integer.toString(index), true)
+					.setDocument(doc).insert();
+		}
+
+		Collection<Location> locationList;
+		locationList = doc.getLocations();
+
+		for (Location location : locationList) {
+			location.setProvidedEquipment(equipment);
+		}
+
 	}
-*/
+
+	public static void generateSchedule(Model model, Document doc) throws DatabaseException {
+		
+			model.createTransientSchedule().setDocument(doc).insert();
+	
+	}
+
+	public static void generateScheduleItems(int num, Model model, Document doc)
+			throws DatabaseException {
+		Schedule schedule = doc.getSchedules().iterator().next();
+
+		Set<Day> dayPatterns = new HashSet<Day>();
+		dayPatterns.add(Day.FRIDAY);
+
+		Collection<Course> courses;
+
+		courses = doc.getCourses();
+		Collection<Instructor> instructors = doc.getInstructors();
+		Collection<Location> locations = doc.getLocations();
+		Iterator<Course> courseIter = courses.iterator();
+		Iterator<Instructor> instructorIter = instructors.iterator();
+		Iterator<Location> locationIter = locations.iterator();
+
+		for (int index = 0; index < num; index++) {
+
+			ScheduleItem item = model.createTransientScheduleItem(index, dayPatterns, 14, 29, true,
+					false);
+			item.setInstructor(instructorIter.next());
+			item.setCourse(courseIter.next());
+			item.setLocation(locationIter.next());
+			item.setSchedule(schedule);
+			
+			item.setSchedule(schedule);
+			item.insert();
+		}
+		
+		
+	}
 }
