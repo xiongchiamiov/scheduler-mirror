@@ -418,13 +418,17 @@ public class CSVExporter {
 
 		writer.endRecord();
 		writer.writeComment(CSVStructure.INSTRUCTORS_COURSE_PREFS_MARKER);
+		
 		for (int i = 0; i < instructorsCoursePrefs.size(); i++) {
 			writer.write("coursePrefs#" + i);
 			writer.endRecord();
 			writer.writeComment(CSVStructure.INSTRUCTOR_COURSE_PREFS_MARKER);
-			for (String[][] prefs : instructorsCoursePrefs)
+			
+		//	for (String[][] prefs : instructorsCoursePrefs)
+				String[][] prefs = instructorsCoursePrefs.get(i);
 				for (String[] rec : prefs)
 					writer.writeRecord(rec);
+			
 			writer.writeComment(CSVStructure.INSTRUCTOR_COURSE_PREFS_END_MARKER);
 		}
 		writer.writeComment(CSVStructure.INSTRUCTORS_COURSE_PREFS_END_MARKER);

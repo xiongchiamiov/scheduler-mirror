@@ -188,9 +188,11 @@ public class CSVTest {
 		courseList = doc.getCourses();
 		insList = doc.getInstructors();
 
+		
+
+		
 		for (Instructor ins : insList) {
 
-			HashMap<Integer, Integer> coursePrefs = new HashMap<Integer, Integer>();
 			HashMap<Day, HashMap<Integer, Integer>> timePrefs = new HashMap<Day, HashMap<Integer, Integer>>();
 
 			for (Day day : Day.values())
@@ -204,10 +206,12 @@ public class CSVTest {
 				}
 			}
 
+			HashMap<Integer, Integer> coursePrefs = new HashMap<Integer, Integer>();
+
 			int i = 0;
 			for (Course course : courseList)
 				coursePrefs.put(course.getID(), ++i % 4);
-
+			
 			ins.setCoursePreferences(coursePrefs);
 			ins.setTimePreferences(tprefs);
 		}
