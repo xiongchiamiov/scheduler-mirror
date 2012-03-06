@@ -7,10 +7,10 @@ import edu.calpoly.csc.scheduler.model.db.simple.DBDocument;
 public class SQLDocument extends SQLObject implements IDBDocument, IDBSchedule {
 	String name;
 	boolean isTrashed;
-	int startHalfHour;
-	int endHalfHour;
+	Integer startHalfHour;
+	Integer endHalfHour;
 	
-	public SQLDocument(Integer id, String name, int startHalfHour, int endHalfHour) {
+	public SQLDocument(Integer id, String name, Integer startHalfHour, Integer endHalfHour) {
 		super(id);
 		this.name = name;
 		this.startHalfHour = startHalfHour;

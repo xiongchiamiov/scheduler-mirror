@@ -6,8 +6,8 @@ import edu.calpoly.csc.scheduler.model.db.IDatabase;
 
 public abstract class ModelTestCase extends TestCase{
 	protected Model createBlankModel() {
-		return new Model(createDatabase());
+		return new Model(createBlankDatabase());
 	}
 	
-	public abstract IDatabase createDatabase();
+	public abstract IDatabase createBlankDatabase();
 }

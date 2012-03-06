@@ -81,6 +81,21 @@ public class SQLdb implements IDatabase {
 					new Table.Column("maxWTU", Integer.class),
 					new Table.Column("schedulable", Boolean.class)
 	});
+	Table<SQLCourse> courseTable = new Table<SQLCourse>(SQLCourse.class, "course",
+			new Table.Column[] {
+					new Table.Column("id", Integer.class),
+					new Table.Column("docID", Integer.class),
+					new Table.Column("enrollment", Integer.class),
+					new Table.Column("wtu", Integer.class),
+					new Table.Column("scu", Integer.class),
+					new Table.Column("type", String.class),
+					new Table.Column("numSections", Integer.class),
+					new Table.Column("dept", String.class),
+					new Table.Column("catalogNum", String.class),
+					new Table.Column("name", String.class),
+					new Table.Column("schedulable", Boolean.class),
+					new Table.Column("numHalfHours", Integer.class)
+	});
 	
 	public static void main(String[] args) throws Exception {
 		SQLdb db = new SQLdb();
@@ -544,8 +559,7 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public IDBSchedule assembleSchedule() throws DatabaseException {
-		// TODO Auto-generated method stub
-		return null;
+		return new SQLDocument(null, null, null, null);
 	}
 
 
@@ -704,8 +718,8 @@ public class SQLdb implements IDatabase {
 	public IDBLocation assembleLocation(String room, String type,
 			String maxOccupancy, boolean isSchedulable)
 			throws DatabaseException {
-		// TODO Auto-generated method stub
-		return null;
+		return new SQLLocation(null, null, Integer.valueOf(maxOccupancy), type, 
+				room, isSchedulable);
 	}
 
 
@@ -734,8 +748,16 @@ public class SQLdb implements IDatabase {
 	@Override
 	public Collection<IDBCourse> findCoursesForDocument(IDBDocument document)
 			throws DatabaseException {
-		// TODO Auto-generated method stub
-		return null;
+		Collection<IDBCourse> result = new LinkedList<IDBCourse>();
+		SQLDocument doc = (SQLDocument) document;
+		HashMap<String, Object> wheres = new HashMap<String, Object>();
+		
+		wheres.put("docID", doc.getID());
+		
+		for(SQLCourse course : courseTable.select(wheres))
+			result.add(course);
+		
+		return result;
 	}
 
 
@@ -751,8 +773,10 @@ public class SQLdb implements IDatabase {
 			String department, String wtu, String scu, String numSections,
 			String type, String maxEnrollment, String numHalfHoursPerWeek,
 			boolean isSchedulable) throws DatabaseException {
-		// TODO Auto-generated method stub
-		return null;
+		return new SQLCourse(null, null, Integer.valueOf(maxEnrollment), 
+				Integer.valueOf(wtu), Integer.valueOf(scu), 
+				Integer.valueOf(numSections), Integer.valueOf(numHalfHoursPerWeek), 
+				type, department, name, catalogNumber, isSchedulable);
 	}
 
 
@@ -829,8 +853,16 @@ public class SQLdb implements IDatabase {
 	@Override
 	public Collection<IDBInstructor> findInstructorsForDocument(
 			IDBDocument document) throws DatabaseException {
-		// TODO Auto-generated method stub
-		return null;
+		Collection<IDBInstructor> result = new LinkedList<IDBInstructor>();
+		SQLDocument doc = (SQLDocument) document;
+		HashMap<String, Object> wheres = new HashMap<String, Object>();
+		
+		wheres.put("docID", doc.getID());
+		
+		for(SQLInstructor ins : instructorTable.select(wheres))
+			result.add(ins);
+		
+		return result;
 	}
 
 
@@ -845,8 +877,8 @@ public class SQLdb implements IDatabase {
 	public IDBInstructor assembleInstructor(String firstName, String lastName,
 			String username, String maxWTU, boolean isSchedulable)
 			throws DatabaseException {
-		// TODO Auto-generated method stub
-		return null;
+		return new SQLInstructor(null, null, Integer.valueOf(maxWTU), firstName, lastName,
+				username, isSchedulable);
 	}
 
 
