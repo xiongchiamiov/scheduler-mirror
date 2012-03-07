@@ -41,19 +41,19 @@ public class CalendarListView extends SimplePanel {
 	 */
 	private native void defineTableCallbacks() /*-{
 		var scheduleTable = this;
-		$wnd.tableDoubleClick = function(row, col) {
+		$wnd.calendarListDoubleClick = function(row, col) {
 			return scheduleTable.@edu.calpoly.csc.scheduler.view.web.client.calendar.CalendarListView::doubleClick(II)(row, col);
 		}
-		$wnd.tableMouseDown = function(row, col) {
+		$wnd.calendarListMouseDown = function(row, col) {
 			return scheduleTable.@edu.calpoly.csc.scheduler.view.web.client.calendar.CalendarListView::mouseDown(II)(row, col);
 		}
-		$wnd.tableMouseUp = function(row, col) {
+		$wnd.calendarListMouseUp = function(row, col) {
 			return scheduleTable.@edu.calpoly.csc.scheduler.view.web.client.calendar.CalendarListView::mouseUp(II)(row, col);
 		}
-		$wnd.tableMouseOver = function(row) {
+		$wnd.calendarListMouseOver = function(row) {
 			return scheduleTable.@edu.calpoly.csc.scheduler.view.web.client.calendar.CalendarListView::mouseOver(I)(row);
 		}
-		$wnd.tableMouseOut = function(row) {
+		$wnd.calendarListMouseOut = function(row) {
 			return scheduleTable.@edu.calpoly.csc.scheduler.view.web.client.calendar.CalendarListView::mouseOut(I)(row);
 		}
 		

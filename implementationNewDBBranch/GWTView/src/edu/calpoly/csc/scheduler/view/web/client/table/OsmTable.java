@@ -8,9 +8,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
@@ -212,7 +215,41 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel imple
 				updateHeaderWidths();
 			}
 		}));
+		
+		
+		
+		
+		
+		
+		final FlexTable target = table;
+//		add(new Button("fire tab event1", new ClickHandler() {
+//			public void onClick(ClickEvent event) {
+//				System.out.println("Firing native tab key down event");
+//				NativeEvent tabEvent = Document.get().createKeyDownEvent(false, false, false, false, 9);
+//				DomEvent.fireNativeEvent(tabEvent, target);
+//			}
+//		}));
+		
+		add(new Button("fire tab event?", new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				runMacro();
+			}
+		}));
 	}
+	
+	/**
+	 * Used to register callback methods for access via handwritten javascript
+	 */
+	private native void runMacro() /*-{
+		var fiveVar = 5;
+    }-*/;
+	
+	
+	
+	
+	
+	
+	
 	
 	public void setObjectChangedObserver(ObjectChangedObserver<ObjectType> obs) {
 		assert(objectChangedObserver == null);
