@@ -136,6 +136,7 @@ public interface IDatabase {
 	// Equipment Types
 	IDBEquipmentType findEquipmentTypeByDescription(String equipmentTypeDescription) throws DatabaseException;
 	Collection<IDBEquipmentType> findAllEquipmentTypes() throws DatabaseException;
+	void insertEquipmentType(String string);
 	
 	// Used Equipment
 	Map<IDBEquipmentType, IDBUsedEquipment> findUsedEquipmentByEquipmentForCourse(IDBCourse course) throws DatabaseException;
@@ -169,4 +170,5 @@ public interface IDatabase {
 	void writeState(ObjectOutputStream oos) throws IOException;
 	void readState(ObjectInputStream ois) throws IOException;
 	IDBScheduleItem getScheduleItemLectureOrNull(IDBScheduleItem underlying) throws DatabaseException;
+	
 }

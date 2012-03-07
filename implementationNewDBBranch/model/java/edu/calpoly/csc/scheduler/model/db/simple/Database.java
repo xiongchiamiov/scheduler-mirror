@@ -971,4 +971,10 @@ public class Database implements IDatabase {
 		else
 			return scheduleItemTable.findByID(lab.lectureScheduleItemID);
 	}
+
+
+	@Override
+	public void insertEquipmentType(String string) {
+		equipmentTypeTable.insert(new DBEquipmentType(null, string));
+	}
 }

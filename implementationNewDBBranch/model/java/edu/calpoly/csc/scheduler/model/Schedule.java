@@ -53,6 +53,7 @@ public class Schedule extends Identified {
 	}
 
 	public Schedule setDocument(Document newDocument) {
+		assert(!newDocument.isTransient()); // You need to insert something before you can reference it
 		document = newDocument;
 		documentLoaded = true;
 		return this;

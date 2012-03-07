@@ -124,6 +124,7 @@ public class Document extends Identified {
 	}
 
 	public void setTBALocation(Location newLocation) {
+		assert(!newLocation.isTransient()); // You need to insert something before you can reference it
 		tbaLocation = newLocation;
 		tbaLocationLoaded = true;
 	}
@@ -147,6 +148,7 @@ public class Document extends Identified {
 	}
 
 	public void setStaffInstructor(Instructor newInstructor) {
+		assert(!newInstructor.isTransient()); // You need to insert something before you can reference it
 		staffInstructor = newInstructor;
 		staffInstructorLoaded = true;
 	}
@@ -170,6 +172,7 @@ public class Document extends Identified {
 	}
 
 	public void setOriginal(Document newDocument) {
+		assert(!newDocument.isTransient()); // You need to insert something before you can reference it
 		original = newDocument;
 		originalLoaded = true;
 	}

@@ -132,6 +132,7 @@ public class Course extends Identified {
 	}
 	
 	public void setDayPatterns(Collection<Set<Day>> dayPatterns) {
+		this.offeredDayPatternsLoaded = true;
 		this.offeredDayPatterns = dayPatterns;
 	}
 
@@ -200,6 +201,7 @@ public class Course extends Identified {
 	}
 
 	public void setUsedEquipment(Set<String> usedEquipmentDescriptions) {
+		this.usedEquipmentLoaded = true;
 		this.usedEquipmentDescriptions = usedEquipmentDescriptions;
 	}
 	
@@ -249,6 +251,7 @@ public class Course extends Identified {
 	}
 
 	public void setLecture(Course newLecture) throws DatabaseException {
+		assert(newLecture == null || !newLecture.isTransient()); // You need to insert something before you can reference it
 		loadLectureAndTethered();
 		this.lecture = newLecture;
 	}
@@ -277,6 +280,7 @@ public class Course extends Identified {
 	}
 
 	public Course setDocument(Document newDocument) {
+		assert(!newDocument.isTransient()); // You need to insert something before you can reference it
 		document = newDocument;
 		documentLoaded = true;
 		return this;

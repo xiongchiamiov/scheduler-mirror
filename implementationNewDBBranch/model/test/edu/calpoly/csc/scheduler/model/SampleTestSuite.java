@@ -30,6 +30,7 @@ public class SampleTestSuite extends TestCase {
 		suite.addTestSuite(LocationsTestSimpleDB.class);
 		suite.addTestSuite(CoursesTestSimpleDB.class);
 		suite.addTestSuite(TempAlgorithmTestSimpleDB.class);
+		suite.addTestSuite(ScheduleItemsTestSimpleDB.class);
 		suite.addTestSuite(CSVTest.class);
 		
 		return suite;

@@ -99,6 +99,9 @@ class GenerationDataLayer {
 		this.schedule = schedule;
 		this.document = schedule.getDocument();
 
+		assert(schedule.getDocument().getStaffInstructor() != null);
+		assert(schedule.getDocument().getTBALocation() != null);
+		
 		Collection<ScheduleItem> existingItemsList = model.findAllScheduleItemsForSchedule(schedule);
 		Collection<Course> coursesToScheduleList = model.findCoursesForDocument(document);
 		Collection<Instructor> sourceInstructorsList = model.findInstructorsForDocument(document);

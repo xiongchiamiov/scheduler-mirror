@@ -1267,5 +1267,11 @@ public class SQLdb implements IDatabase {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public void insertEquipmentType(String string) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

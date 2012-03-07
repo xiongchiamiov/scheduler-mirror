@@ -539,4 +539,8 @@ public class Model {
 		IDBScheduleItem lecture = database.getScheduleItemLectureOrNull(scheduleItem.underlying);
 		return itemCache.decorateAndPutIfNotPresent(lecture);
 	}
+
+	public void insertEquipmentType(String string) {
+		database.insertEquipmentType(string);
+	}
 }

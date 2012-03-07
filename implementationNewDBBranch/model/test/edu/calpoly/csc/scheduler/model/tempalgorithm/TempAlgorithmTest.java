@@ -7,6 +7,7 @@ import edu.calpoly.csc.scheduler.model.Course;
 import edu.calpoly.csc.scheduler.model.Day;
 import edu.calpoly.csc.scheduler.model.Document;
 import edu.calpoly.csc.scheduler.model.Instructor;
+import edu.calpoly.csc.scheduler.model.Location;
 import edu.calpoly.csc.scheduler.model.Model;
 import edu.calpoly.csc.scheduler.model.ModelTestCase;
 import edu.calpoly.csc.scheduler.model.ModelTestUtility;
@@ -24,7 +25,8 @@ public abstract class TempAlgorithmTest extends ModelTestCase {
 		
 		Document doc = model.createTransientDocument("doc", START_HALF_HOUR, END_HALF_HOUR).insert();
 		
-		model.createTransientLocation("roomlol", "LEC", "30", true).setDocument(doc).insert();
+		Location tbaLocation = model.createTransientLocation("roomlol", "LEC", "30", true).setDocument(doc).insert();
+		doc.setTBALocation(tbaLocation);
 		
 		Course course = model.createTransientCourse("Test", "101", "CSC", "4", "4", "1", "LEC", "60", "6", true);
 		ModelTestUtility.addDayPattern(course, Day.MONDAY, Day.WEDNESDAY, Day.FRIDAY);
@@ -32,9 +34,13 @@ public abstract class TempAlgorithmTest extends ModelTestCase {
 		
 		Instructor instructor = model.createTransientInstructor("Evan", "Ovadia", "eovadia", "20", true)
 				.setTimePreferences(Instructor.createDefaultTimePreferences())
-				.setDocument(doc).insert();
+				.setDocument(doc)
+				.insert();
 		ModelTestUtility.setPreferenceBlocks(instructor, 0, 0, 48, Day.values());
 		ModelTestUtility.setPreferenceBlocks(instructor, 3, 20, 30, Day.values());
+		doc.setStaffInstructor(instructor);
+		
+		doc.update();
 		
 		Schedule schedule = model.createTransientSchedule().setDocument(doc).insert();
 		
@@ -49,8 +55,9 @@ public abstract class TempAlgorithmTest extends ModelTestCase {
 		Model model = createBlankModel();
 		
 		Document doc = model.createTransientDocument("doc", START_HALF_HOUR, END_HALF_HOUR).insert();
-		
-		model.createTransientLocation("roomlol", "LEC", "30", true).setDocument(doc).insert();
+
+		Location tbaLocation = model.createTransientLocation("roomlol", "LEC", "30", true).setDocument(doc).insert();
+		doc.setTBALocation(tbaLocation);
 		
 		Course course = model.createTransientCourse("Test", "101", "CSC", "4", "4", "2", "LEC", "60", "6", true);
 		ModelTestUtility.addDayPattern(course, Day.MONDAY, Day.WEDNESDAY, Day.FRIDAY);
@@ -61,6 +68,7 @@ public abstract class TempAlgorithmTest extends ModelTestCase {
 				.setDocument(doc).insert();
 		ModelTestUtility.setPreferenceBlocks(instructor, 0, 0, 48, Day.values());
 		ModelTestUtility.setPreferenceBlocks(instructor, 3, 20, 30, Day.values());
+		doc.setStaffInstructor(instructor);
 		
 		Schedule schedule = model.createTransientSchedule().setDocument(doc).insert();
 		
@@ -75,8 +83,9 @@ public abstract class TempAlgorithmTest extends ModelTestCase {
 		Model model = createBlankModel();
 		
 		Document doc = model.createTransientDocument("doc", START_HALF_HOUR, END_HALF_HOUR).insert();
-		
-		model.createTransientLocation("roomlol", "LEC", "30", true).setDocument(doc).insert();
+
+		Location tbaLocation = model.createTransientLocation("roomlol", "LEC", "30", true).setDocument(doc).insert();
+		doc.setTBALocation(tbaLocation);
 		
 		Course course = model.createTransientCourse("Test", "101", "CSC", "4", "4", "6", "LEC", "60", "6", true);
 		ModelTestUtility.addDayPattern(course, Day.MONDAY, Day.WEDNESDAY, Day.FRIDAY);
@@ -88,14 +97,16 @@ public abstract class TempAlgorithmTest extends ModelTestCase {
 		ModelTestUtility.setPreferenceBlocks(instructor, 0, 0, 48, Day.values());
 		ModelTestUtility.setPreferenceBlocks(instructor, 3, 20, 30, Day.values());
 		instructor.update();
+		doc.setStaffInstructor(instructor);
 		
 		Schedule schedule = model.createTransientSchedule().setDocument(doc).insert();
 		
 		try {
 			GenerationAlgorithm.generateRestOfSchedule(model, schedule);
-			assertTrue(false);
 		}
-		catch (CouldNotBeScheduledException e) { }
+		catch (CouldNotBeScheduledException e) {
+			fail();
+		}
 	}
 	
 	private void checkScheduleConflicts(Model model, Schedule schedule) throws DatabaseException {

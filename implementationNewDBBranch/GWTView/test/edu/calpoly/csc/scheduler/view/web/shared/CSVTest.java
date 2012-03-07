@@ -139,6 +139,8 @@ public class CSVTest extends TestCase {
 		model.createTransientDocument("TestDayPrefs", 14, 44).insert();
 		Collection<Document> docs = model.findAllDocuments();
 		Document doc = model.findAllDocuments().iterator().next();
+		
+		model.insertEquipmentType("TestEquipment");
 
 		//Initial course creation
 		model.createTransientCourse("Name" + Integer.toString(0),
@@ -179,12 +181,15 @@ public class CSVTest extends TestCase {
 					"WTU" + Integer.toString(0), "SCU" + Integer.toString(0),
 					"Numsec" + Integer.toString(0), "Type" + Integer.toString(0),
 					"maxenrollment" + Integer.toString(0),
-					"numHalfHours" + Integer.toString(0), true));
+					"numHalfHours" + Integer.toString(0), true).setDocument(doc).insert());
 			
 			assertEquals("Name0", course.getName());
+			
+			course.update();
 
 			/* Currently fails due to getUsedEquipment and dayDayPatterns not being saved when set */
-			assertEquals("TestEquipment", course.getUsedEquipment());
+			assertEquals(course.getUsedEquipment().size(), 1);
+			assertEquals("TestEquipment", course.getUsedEquipment().iterator().next());
 			assertEquals(dayPatternsList, course.getDayPatterns());
 		}
 

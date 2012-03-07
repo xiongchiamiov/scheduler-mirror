@@ -121,6 +121,7 @@ public class ScheduleItem extends Identified {
 	}
 	
 	public void setLecture(ScheduleItem newLecture) {
+		assert(newLecture == null || !newLecture.isTransient()); // You need to insert something before you can reference it
 		lectureLoaded = true;
 		lecture = newLecture;
 	}
@@ -138,6 +139,7 @@ public class ScheduleItem extends Identified {
 	}
 
 	public void setSchedule(Schedule newSchedule) {
+		assert(!newSchedule.isTransient()); // You need to insert something before you can reference it
 		schedule = newSchedule;
 		scheduleLoaded = true;
 	}
@@ -154,6 +156,7 @@ public class ScheduleItem extends Identified {
 	}
 
 	public void setCourse(Course newCourse) {
+		assert(!newCourse.isTransient()); // You need to insert something before you can reference it
 		course = newCourse;
 		courseLoaded = true;
 	}
@@ -172,6 +175,7 @@ public class ScheduleItem extends Identified {
 	}
 
 	public void setLocation(Location newLocation) {
+		assert(!newLocation.isTransient()); // You need to insert something before you can reference it
 		location = newLocation;
 		locationLoaded = true;
 	}
@@ -190,6 +194,7 @@ public class ScheduleItem extends Identified {
 	}
 
 	public void setInstructor(Instructor newInstructor) {
+		assert(!newInstructor.isTransient()); // You need to insert something before you can reference it
 		instructor = newInstructor;
 		instructorLoaded = true;
 	}
