@@ -89,6 +89,82 @@ To enable assertions:
 4. In the VM arguments box, put -ea
 5. Hit apply
 
+Testing 
+===============
+
+Setup
+--------------------------
+If you get an error about missing jUnit 3 jar, Eclipse knows how to find and add it to your build path. 
+Select the error in the file -> Resolve -> Add jUnit 3 to Build Path
+
+For Selenium Testing 
+Compilation errors with missing jar
+Add [selenium-server-standalone-2.8.0.jar] to the build path. The jar is located in 
+/implementation/test/edu/calpoly/csc/scheduler/view/web/shared/Selenium/jar
+
+Selenium Testing Strategy
+--------------------------
+For those who are interested/working on selenium testing, here's some info that might be helpful for how it's setup
+with our project.
+
+There are several levels to modify for a successful test. Interact-able elements must have a tag in the GWTView code. 
+Testing is broken into two groups: emulating the user by writing testcases that follow the flow of logging in, creating 
+a schedule, adding data, and generating it. That requires the other level of testing to be complete: verifying that 
+elements were initialized on the page. You can do additional testing at this level, also, such as verifying the 
+element's text if it has any, handling errors on erroneous input and any popups/error messages/alerts that may show 
+up, etc. Generally, use asserts and check for any expected output. But by the time the user-based testcase is 
+written and run, all of that basic verification needs to be complete.
+
+First level to be modified is View code. The best way to access elements on a page (such as buttons, fields etc) is to 
+associate a tag to the element in the view code, and then access that tag when creating a selenium webelement 
+(the interactable item representation). For example, to log in:Ê
+
+in LoginView.java, GWTView
+
+DOM.setElementAttribute(login.getElement(), "id", "login");
+this.add(login);
+
+The second level is basic component testing. Functionality has been grouped into 'pages', ie LoginandSelectSchedule, 
+Courses, Instructors, etc. Each page takes in a driver element (firefox driver) and uses that driver to 
+access page elements. To test your page, you can create a main or something, pass in a driver to instantiate the page 
+(skipping use of SchedulerBot if you want, but feel free to use it), and call the methods you create. (Although you 
+need to create an instance of login and select a schedule and toolbar to actually be able to navigate to whatever page 
+you're working on, but those should mostly work. Let me know if they don't).
+
+Methods that accomplish something (such as, Login with a given username) should be protected, and called through the 
+SchedulerBot class which will have an instance of the page.
+
+Here's an example of how Login works after all of the basic instantiation process, in the LoginPage. As you can see, 
+the basic level of testing is evident by making sure the button can be instantiated, has relevant text, etc. If it can't 
+be found, note it in the error message so that it is apparent where exactly the error is occurring. Login's given a 
+firefoxDriver (fbot), and has WebElements called loginBtn and unamefield (the username input field)
+
+protected String CASLogin(String loginID) {
+		String errorMsg = "";
+		try {
+			loginBtn = fbot.findElement(By.id("login")); 
+			assertEquals("Login", loginBtn.getText());
+			unameField = fbot.findElement(By.id("uname"));				
+			unameField.sendKeys(loginID);
+			loginBtn.click();
+		} catch (org.openqa.selenium.NotFoundException ex){
+			errorMsg += "Selenium Page Elements [intial login] not located, check ID's";}				
+		try {
+			Alert popup = fbot.switchTo().alert();
+			errorMsg += popup.getText();
+			popup.accept();		
+			} catch (NoAlertPresentException ex) {
+			System.out.println("Valid credentials");
+			 errorMsg += "success";}
+		return errorMsg;
+	}
+
+The third modification level is driven through SchedulerBot. SchedulerBot acts as the bot with meaningful methods that 
+represent user sequence actions, such as logging in, creating a course, creating an Instructor, etc. It'll be used by 
+the testcases for creating a full department schedule. Those test cases extend DefaultSelTestCase, which takes 
+care of the initialization. Just pass in a URL that you want to be the target AUT (application under test). It can even 
+be localhost if you want. It provides the bot whose methods you can call in your test case. 
+
 Deploy to Server
 ================
 
