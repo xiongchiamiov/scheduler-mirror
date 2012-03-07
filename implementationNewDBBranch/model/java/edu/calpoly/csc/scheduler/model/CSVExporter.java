@@ -89,8 +89,8 @@ public class CSVExporter {
 					location.getRoom(), location.getMaxOccupancy(),
 					location.getType(),
 					join(location.getProvidedEquipment(), " & ") });
-			 locationRowIndexByID.put(location.getID(), index);
-			//locationRowIndexByID.put(location.hashCode(), index);
+			// locationRowIndexByID.put(location.getID(), index);
+			locationRowIndexByID.put(location.hashCode(), index);
 
 			// TODO Note: Removed ADA
 		}
@@ -118,14 +118,26 @@ public class CSVExporter {
 			// can cause issues for CSVimporter
 			// Fairness is commented out in both due to it currently not being
 			// used.
+			if (instructor.getFirstName().equals("STAFF"))
+				instructors.add(new String[] { "instructor#" + index,
+						instructor.getFirstName(), instructor.getLastName(),
+						instructor.getUsername(), instructor.getMaxWTU(),
 
-			instructors.add(new String[] { "instructor#" + index,
-					instructor.getFirstName(), instructor.getLastName(),
-					instructor.getUsername(), instructor.getMaxWTU(),
-					compileCoursePrefs(instructor.getCoursePreferences()),
-					compileTimePrefs(instructor.getTimePreferences()) });
-			instructorRowIndexByID.put(instructor.getID(), index);
-			// instructorRowIndexByID.put(instructor.hashCode(), index);
+				// Integer.toString(instructor.getFairness()),
+				// TODO Note: Removed Office/Officeroom
+				// Boolean.toString(instructor.getDisability()),
+				// compileCoursePrefs(instructor.getCoursePreferences()),
+				// compileTimePrefs(instructor.getTimePreferences())
+						});
+			else
+				instructors.add(new String[] { "instructor#" + index,
+						instructor.getFirstName(), instructor.getLastName(),
+						instructor.getUsername(), instructor.getMaxWTU(),
+
+						compileCoursePrefs(instructor.getCoursePreferences()),
+						compileTimePrefs(instructor.getTimePreferences()) });
+			// instructorRowIndexByID.put(instructor.getID(), index);
+			instructorRowIndexByID.put(instructor.hashCode(), index);
 
 		}
 		return "instructor#" + index;
@@ -252,14 +264,19 @@ public class CSVExporter {
 			scheduleItems.add(new String[] {
 					"item#" + index,
 					"instructor#"
-					 +
-					 instructorRowIndexByID.get(item.getInstructor().getID()),
-					
+					// +
+					// instructorRowIndexByID.get(item.getInstructor().getID()),
+							+ instructorRowIndexByID.get(item.getInstructor()
+									.hashCode()),
 					"course#"
-					 + courseRowIndexByID.get(item.getCourse().getID()),			
+					// + courseRowIndexByID.get(item.getCourse().getID()),
+							+ courseRowIndexByID.get(item.getCourse()
+									.hashCode()),
 
 					"location#"
-					 + locationRowIndexByID.get(item.getLocation().getID()),
+					// + locationRowIndexByID.get(item.getLocation().getID()),
+							+ locationRowIndexByID.get(item.getLocation()
+									.hashCode()),
 
 					Integer.toString(item.getSection()),
 					Boolean.toString(item.isPlaced()),
@@ -344,8 +361,8 @@ public class CSVExporter {
 					course.getWTU(), course.getSCU(), course.getNumSections(),
 					course.getNumHalfHoursPerWeek(), dayPatterns,
 					course.getMaxEnrollment(), association });
-			courseRowIndexByID.put(course.getID(), index);
-			//courseRowIndexByID.put(course.hashCode(), index);
+			// courseRowIndexByID.put(course.getID(), index);
+			courseRowIndexByID.put(course.hashCode(), index);
 
 			assert (false);
 
@@ -467,5 +484,449 @@ public class CSVExporter {
 		return stringWriter.toString();
 	}
 
+	// //TESTING
+
+	public String exportTest(Model model, Document document)
+			throws IOException, DatabaseException {
+		/* Gather model information into the global string ArrayLists */
+
+		Collection<Location> locationsInDocument = generateLocations(10, model);
+		for (Location location : locationsInDocument)
+			compileLocation(location);
+
+		Collection<Course> coursesInDocument = generateCourses(10, model);
+		for (Course course : coursesInDocument) {
+			compileCourse(course, coursesInDocument);
+		}
+
+		Collection<Instructor> instructorsInDocument = generateInstructors(10,
+				model, (ArrayList<Course>) coursesInDocument);
+
+		for (Instructor instructor : instructorsInDocument)
+			compileInstructor(instructor);
+
+		// Schedule schedule = document.getSchedules().iterator().next();
+		// Collection<ScheduleItem> items =
+		// model.findAllScheduleItemsForSchedule(schedule);
+		Collection<ScheduleItem> items = generateScheduleItems(10, model,
+				(ArrayList<Instructor>) instructorsInDocument,
+				(ArrayList<Course>) coursesInDocument,
+				(ArrayList<Location>) locationsInDocument);
+
+		for (ScheduleItem item : items)
+			compileScheduleItem(item, items);
+
+		/*
+		 * Start writing model data to a charArray that'll eventually be turned
+		 * into a string
+		 */
+		Writer stringWriter = new CharArrayWriter();
+		CsvWriter writer = new CsvWriter(stringWriter, ',');
+
+		for (String topComment : CSVStructure.TOP_COMMENTS)
+			writer.writeComment(topComment);
+
+		writer.endRecord();
+		writer.writeComment(CSVStructure.SCHEDULE_MARKER);
+		writer.write(document.getName());
+		writer.endRecord();
+		writer.writeComment(CSVStructure.SCHEDULE_END_MARKER);
+
+		writer.endRecord();
+		writer.writeComment(CSVStructure.COURSES_MARKER);
+		for (int i = 0; i < courses.size(); i++) {
+			writer.writeRecord(courses.get(i));
+		}
+		writer.writeComment(CSVStructure.COURSES_END_MARKER);
+
+		writer.endRecord();
+		writer.writeComment(CSVStructure.LOCATIONS_MARKER);
+		for (int i = 0; i < locations.size(); i++) {
+			writer.writeRecord(locations.get(i));
+		}
+		writer.writeComment(CSVStructure.LOCATIONS_END_MARKER);
+
+		writer.endRecord();
+		writer.writeComment(CSVStructure.INSTRUCTORS_COURSE_PREFS_MARKER);
+		for (int i = 0; i < instructorsCoursePrefs.size(); i++) {
+			writer.write("coursePrefs#" + i);
+			writer.endRecord();
+			writer.writeComment(CSVStructure.INSTRUCTOR_COURSE_PREFS_MARKER);
+			for (String[][] prefs : instructorsCoursePrefs)
+				for (String[] rec : prefs)
+					writer.writeRecord(rec);
+			writer.writeComment(CSVStructure.INSTRUCTOR_COURSE_PREFS_END_MARKER);
+		}
+		writer.writeComment(CSVStructure.INSTRUCTORS_COURSE_PREFS_END_MARKER);
+
+		writer.endRecord();
+		writer.writeComment(CSVStructure.ALL_INSTRUCTORS_TIME_PREFS_MARKER);
+		for (int i = 0; i < instructorsTimePrefs.size(); i++) {
+			writer.write("timePrefs#" + i);
+			writer.endRecord();
+			writer.writeComment(CSVStructure.SINGLE_INSTRUCTOR_TIME_PREFS_MARKER);
+			String[][] prefs = instructorsTimePrefs.get(i);
+			for (String[] rec : prefs)
+				writer.writeRecord(rec);
+			writer.writeComment(CSVStructure.SINGLE_INSTRUCTOR_TIME_PREFS_END_MARKER);
+		}
+		writer.writeComment(CSVStructure.ALL_INSTRUCTORS_TIME_PREFS_END_MARKER);
+
+		writer.endRecord();
+		writer.writeComment(CSVStructure.INSTRUCTORS_MARKER);
+		for (int i = 0; i < instructors.size(); i++) {
+			writer.writeRecord(instructors.get(i));
+		}
+		writer.writeComment(CSVStructure.INSTRUCTORS_END_MARKER);
+
+		writer.endRecord();
+		writer.writeComment(CSVStructure.SCHEDULE_ITEMS_MARKER);
+		for (int i = 0; i < scheduleItems.size(); i++)
+			writer.writeRecord(scheduleItems.get(i));
+		writer.writeComment(CSVStructure.SCHEDULE_ITEMS_END_MARKER);
+
+		writer.flush();
+		writer.close();
+		stringWriter.flush();
+		stringWriter.close();
+
+		return stringWriter.toString();
+	}
+
+	private static ArrayList<Instructor> generateInstructors(
+			int numberOfInstructors, Model model, ArrayList<Course> courseList) {
+		numberOfInstructors = 10;
+
+		ArrayList<Instructor> tempList = new ArrayList<Instructor>();
+
+		for (int index = 0; index <= numberOfInstructors; index++) {
+			Instructor instructor = null;
+
+			try {
+				HashMap<Integer, Integer> coursePrefs = new HashMap<Integer, Integer>();
+				HashMap<Day, HashMap<Integer, Integer>> timePrefs = new HashMap<Day, HashMap<Integer, Integer>>();
+
+				for (Day day : Day.values())
+					timePrefs.put(day, new HashMap<Integer, Integer>());
+
+				// model.createTransientInstructor(firstName, lastName,
+				// username, maxWTU, isSchedulable)
+				instructor = model.createTransientInstructor(
+						"Fname" + Integer.toString(index),
+						"LName" + Integer.toString(index),
+						"Uname" + Integer.toString(index),
+						Integer.toString(index), true);
+				int[][] tprefs = new int[7][48]; // Column is days, row is half
+													// hours
+				for (int j = 0; j < 7; j++) {
+					for (int k = 0; k < 48; k++) {
+						tprefs[j][k] = 3;
+					}
+				}
+
+				for (int i = 0; i < numberOfInstructors; i++)
+					coursePrefs
+							.put(courseList.get(index).hashCode(), index % 4);
+
+				instructor.setCoursePreferences(coursePrefs);
+				instructor.setTimePreferences(tprefs);
+
+				tempList.add(instructor);
+
+			} catch (DatabaseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+
+		return tempList;
+	}
+
+	private void generateInstructors2(int numberOfInstructors, Model model,
+			Document doc) {
+
+		for (int index = 0; index <= numberOfInstructors; index++) {
+
+			try {
+				model.createTransientInstructor(
+						"Fname" + Integer.toString(index),
+						"LName" + Integer.toString(index),
+						"Uname" + Integer.toString(index),
+						Integer.toString(index), true).setDocument(doc)
+						.insert();
+			} catch (DatabaseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+
+		Collection<Course> courseList;
+		Collection<Instructor> insList;
+		try {
+			courseList = doc.getCourses();
+			insList = doc.getInstructors();
+
+			for (Instructor ins : insList) {
+
+				HashMap<Integer, Integer> coursePrefs = new HashMap<Integer, Integer>();
+				HashMap<Day, HashMap<Integer, Integer>> timePrefs = new HashMap<Day, HashMap<Integer, Integer>>();
+
+				for (Day day : Day.values())
+					timePrefs.put(day, new HashMap<Integer, Integer>());
+
+				int[][] tprefs = new int[7][48]; // Column is days, row is half
+													// hours
+				for (int j = 0; j < 7; j++) {
+					for (int k = 0; k < 48; k++) {
+						tprefs[j][k] = 3;
+					}
+				}
+
+				int i = 0;
+				for (Course course : courseList)
+					coursePrefs.put(course.getID(), ++i % 4);
+
+				ins.setCoursePreferences(coursePrefs);
+				ins.setTimePreferences(tprefs);
+			}
+		} catch (DatabaseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	private ArrayList<Course> generateCourses(int numberOfCourses, Model model) {
+
+		ArrayList<Course> tempList = new ArrayList<Course>();
+
+		for (int index = 0; index <= numberOfCourses; index++) {
+
+			Set<String> usedEquipment = new HashSet<String>();
+			usedEquipment.add("TestEquipment");
+			ArrayList<Set<Day>> dayPatterns = new ArrayList<Set<Day>>();
+			// dayPatterns.get(0).add(Day.FRIDAY); TODO
+			Course course = null;
+
+			try {
+				// model.createTransientCourse(name, catalogNumber, department,
+				// wtu, scu, numSections, type, maxEnrollment,
+				// numHalfHoursPerWeek, isSchedulable)
+				course = model.createTransientCourse(
+						"Name" + Integer.toString(index),
+						"Catalog" + Integer.toString(index),
+						"dept" + Integer.toString(index),
+						"WTU" + Integer.toString(index),
+						"SCU" + Integer.toString(index),
+						"Numsec" + Integer.toString(index),
+						"Type" + Integer.toString(index), "maxenrollment"
+								+ Integer.toString(index), "numHalfHours"
+								+ Integer.toString(index), true);
+				course.setUsedEquipment(usedEquipment);
+				course.setDayPatterns(dayPatterns);
+				course.setTetheredToLecture(false);
+				course.setLecture(null);
+
+			} catch (DatabaseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			tempList.add(course);
+		}
+
+		return tempList;
+	}
+
+	private void generateCourses2(int numberOfCourses, Model model, Document doc) {
+
+		for (int index = 0; index < numberOfCourses; index++) {
+			try {
+				model.createTransientCourse("Name" + Integer.toString(index),
+						"Catalog" + Integer.toString(index),
+						"dept" + Integer.toString(index),
+						"WTU" + Integer.toString(index),
+						"SCU" + Integer.toString(index),
+						"Numsec" + Integer.toString(index),
+						"Type" + Integer.toString(index),
+						"maxenrollment" + Integer.toString(index),
+						"numHalfHours" + Integer.toString(index), true)
+						.setDocument(doc).insert();
+			} catch (DatabaseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		Collection<Course> courseList;
+		try {
+			courseList = doc.getCourses();
+			for (Course course : courseList) {
+				Set<String> usedEquipment = new HashSet<String>();
+				usedEquipment.add("TestEquipment");
+				ArrayList<Set<Day>> dayPatterns = new ArrayList<Set<Day>>();
+				// dayPatterns.get(0).add(Day.FRIDAY); TODO
+
+				course.setUsedEquipment(usedEquipment);
+				course.setDayPatterns(dayPatterns);
+				course.setTetheredToLecture(false);
+				course.setLecture(null);
+			}
+		} catch (DatabaseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	private ArrayList<Location> generateLocations(int numberOfLocations,
+			Model model) {
+
+		ArrayList<Location> tempList = new ArrayList<Location>();
+
+		Set<String> equipment = new HashSet<String>();
+		equipment.add("Projector");
+
+		for (int index = 0; index <= numberOfLocations; index++) {
+			Integer.toString(index);
+			Location location = null;
+			try {
+				// model.createTransientLocation(room, type, maxOccupancy,
+				// isSchedulable)
+				location = model.createTransientLocation(
+						Integer.toString(index), Integer.toString(index),
+						Integer.toString(index), true);
+				location.setProvidedEquipment(equipment);
+			} catch (DatabaseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			tempList.add(location);
+		}
+
+		return tempList;
+	}
+
+	private void generateLocations2(int numberOfLocations,
+			Model model, Document doc) {
+
+		
+
+		Set<String> equipment = new HashSet<String>();
+		equipment.add("Projector");
+
+		for (int index = 0; index <= numberOfLocations; index++) {
+			try {
+				model.createTransientLocation(
+						Integer.toString(index), Integer.toString(index),
+						Integer.toString(index), true).setDocument(doc).insert();
+			} catch (DatabaseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		
+			Collection<Location> locationList;
+			try {
+				locationList = doc.getLocations();
+				for(Location location : locationList)
+				{
+					location.setProvidedEquipment(equipment);
+					
+				}
+			} catch (DatabaseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 	
+			
+		
+
+	}
+	
+	private ArrayList<ScheduleItem> generateScheduleItems(int num, Model model,
+			ArrayList<Instructor> instructorList, ArrayList<Course> courseList,
+			ArrayList<Location> locationList) {
+		ArrayList<ScheduleItem> tempList = new ArrayList<ScheduleItem>();
+
+		/*
+		 * 
+		 * ArrayList<Instructor> instructorList = generateInstructors(num,
+		 * model); ArrayList<Course> courseList = generateCourses(num, model);
+		 * ArrayList<Location> locationList = generateLocations(num, model);
+		 */
+		Set<Day> dayPatterns = new HashSet<Day>();
+		dayPatterns.add(Day.FRIDAY);
+
+		for (int index = 0; index < num; index++) {
+			// model.createTransientScheduleItem(section, days, startHalfHour,
+			// endHalfHour, isPlaced, isConflicted)
+			try {
+				ScheduleItem si = model.createTransientScheduleItem(index,
+						dayPatterns, 14, 29, true, false);
+				si.setInstructor(instructorList.get(index));
+				si.setCourse(courseList.get(index));
+				si.setLocation(locationList.get(index));
+				tempList.add(si);
+			} catch (DatabaseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+
+		return tempList;
+	}
+	
+	private void generateScheduleItems2(int num, Model model, Document doc) {
+		ArrayList<ScheduleItem> tempList = new ArrayList<ScheduleItem>();
+
+		/*
+		 * 
+		 * ArrayList<Instructor> instructorList = generateInstructors(num,
+		 * model); ArrayList<Course> courseList = generateCourses(num, model);
+		 * ArrayList<Location> locationList = generateLocations(num, model);
+		 */
+		Set<Day> dayPatterns = new HashSet<Day>();
+		dayPatterns.add(Day.FRIDAY);
+
+		
+		Collection<Course> courses;
+		try {
+			courses = doc.getCourses();
+			Collection<Instructor> instructors =doc.getInstructors(); 
+			Collection<Location> locations = doc.getLocations();
+			Iterator<Course>  courseIter = courses.iterator();
+			Iterator<Instructor> instructorIter = instructors.iterator();
+			Iterator<Location> locationIter = locations.iterator();
+			
+			for (int index = 0; index < num; index++) {
+				// model.createTransientScheduleItem(section, days, startHalfHour,
+				// endHalfHour, isPlaced, isConflicted)
+				try {
+					ScheduleItem si = model.createTransientScheduleItem(index,
+							dayPatterns, 14, 29, true, false);
+					si.setInstructor(instructorIter.next());
+					si.setCourse(courseIter.next());
+					si.setLocation(locationIter.next());
+				
+				} catch (DatabaseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+
+		
+
+		} catch (DatabaseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
 }

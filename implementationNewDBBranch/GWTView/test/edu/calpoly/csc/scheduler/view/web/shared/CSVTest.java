@@ -11,6 +11,8 @@ import java.util.Random;
 import java.util.Set;
 import java.util.Vector;
 
+import junit.framework.TestCase;
+
 import edu.calpoly.csc.scheduler.model.CSVExporter;
 import edu.calpoly.csc.scheduler.model.Course;
 import edu.calpoly.csc.scheduler.model.Day;
@@ -23,7 +25,6 @@ import edu.calpoly.csc.scheduler.model.ScheduleItem;
 import edu.calpoly.csc.scheduler.model.db.DatabaseException;
 import edu.calpoly.csc.scheduler.model.db.IDatabase;
 import edu.calpoly.csc.scheduler.*;
-
 
 /****
  * 
@@ -54,8 +55,8 @@ import edu.calpoly.csc.scheduler.*;
  * @version: 17feb12
  */
 
-//public class CSVTest extends ModelTestCase {
-public class CSVTest {
+// public class CSVTest extends ModelTestCase {
+public class CSVTest extends TestCase {
 
 	/**
 	 * Method testExport is the unit testing method that calls
@@ -92,29 +93,27 @@ public class CSVTest {
 	 */
 	public void testExport() {
 
-	//
-        // Foreach test case, do the following:
-    	for(int i = 0; i <= 1000; i++)
-    		testExportCase(i, "a");
-        //    Set up the input data by calling a method to construct and
-        //    populate a schedule with the desired number of items.
+		//
+		// Foreach test case, do the following:
+		// Set up the input data by calling a method to construct and
+		// populate a schedule with the desired number of items.
 
-        //    Wrap that schedule in a Model object, since CSVExporter.export
-        //    needs a model for its input.
+		// Wrap that schedule in a Model object, since CSVExporter.export
+		// needs a model for its input.
 
-        //    Call CSVExporter.export with the input for this test case.
+		// Call CSVExporter.export with the input for this test case.
 
-        //    Capture the string-valued output and write it to an output file.
+		// Capture the string-valued output and write it to an output file.
 
-        //    Compare the actual output value from the method with the expected
-        //    output, which is stored in a pre-defined expected output file.
+		// Compare the actual output value from the method with the expected
+		// output, which is stored in a pre-defined expected output file.
 
-        // It's common JUnit practice to implement each test case in a separate
-        // method, but this is not required.  You could have one parameterized,
-        // helper method, like that sketched out in the testExportCase() method
-        // below.
-        //
-     }
+		// It's common JUnit practice to implement each test case in a separate
+		// method, but this is not required. You could have one parameterized,
+		// helper method, like that sketched out in the testExportCase() method
+		// below.
+		//
+	}
 
 	/**
 	 * Call CSVExporter.export with a schedule containing the given
@@ -132,47 +131,89 @@ public class CSVTest {
 
 		// ...
 	}
-	
-	public static void main(String[] args) throws DatabaseException{
+
+	public void testDayPrefs() throws DatabaseException {
+
+		// Setup
+		Model model = new Model();
+		model.createTransientDocument("TestDayPrefs", 14, 44).insert();
+		Collection<Document> docs = model.findAllDocuments();
+		Document doc = model.findAllDocuments().iterator().next();
+
+		//Initial course creation
+		model.createTransientCourse("Name" + Integer.toString(0),
+				"Catalog" + Integer.toString(0), "dept" + Integer.toString(0),
+				"WTU" + Integer.toString(0), "SCU" + Integer.toString(0),
+				"Numsec" + Integer.toString(0), "Type" + Integer.toString(0),
+				"maxenrollment" + Integer.toString(0),
+				"numHalfHours" + Integer.toString(0), true).setDocument(doc)
+				.insert();
+
+		Collection<Course> courseList;
+
+		courseList = doc.getCourses();
+		for (Course course : courseList) {
+			
+			//Add additional data
+			Set<String> usedEquipment = new HashSet<String>();
+			usedEquipment.add("TestEquipment");
+
+			Set<Day> dayPatternsA = new HashSet<Day>();
+			Set<Day> dayPatternsB = new HashSet<Day>();
+
+			dayPatternsA.add(Day.FRIDAY);
+			dayPatternsA.add(Day.WEDNESDAY);
+
+			dayPatternsB.add(Day.THURSDAY);
+			dayPatternsB.add(Day.SUNDAY);
+
+			Collection<Set<Day>> dayPatternsList = new ArrayList<Set<Day>>();
+			dayPatternsList.add(dayPatternsA);
+			dayPatternsList.add(dayPatternsB);
+
+			course.setUsedEquipment(usedEquipment);
+			course.setDayPatterns(dayPatternsList);
+			course.setTetheredToLecture(true);
+			course.setLecture(model.createTransientCourse("Name" + Integer.toString(4),
+					"Catalog" + Integer.toString(0), "dept" + Integer.toString(0),
+					"WTU" + Integer.toString(0), "SCU" + Integer.toString(0),
+					"Numsec" + Integer.toString(0), "Type" + Integer.toString(0),
+					"maxenrollment" + Integer.toString(0),
+					"numHalfHours" + Integer.toString(0), true));
+			
+			assertEquals("Name0", course.getName());
+
+			/* Currently fails due to getUsedEquipment and dayDayPatterns not being saved when set */
+			assertEquals("TestEquipment", course.getUsedEquipment());
+			assertEquals(dayPatternsList, course.getDayPatterns());
+		}
+
+	}
+
+	public static void main(String[] args) throws DatabaseException, IOException {
 		Model model = new Model();
 		model.createTransientDocument("TestDoc", 14, 44).insert();
-		Collection<Document> docs =  model.findAllDocuments();
-	    Document doc = model.findAllDocuments().iterator().next();
-		
+		Collection<Document> docs = model.findAllDocuments();
+		Document doc = model.findAllDocuments().iterator().next();
+
 		CSVExporter export = new CSVExporter();
-		try {
+	
 			generateCourses(10, model, doc);
 			generateInstructors(10, model, doc);
 			generateLocations(10, model, doc);
 			generateSchedule(model, doc);
 			generateScheduleItems(10, model, doc);
-			
-			
+
 			System.out.println(export.export(model, doc));
-			//System.out.println(export.exportTest(model, model.createTransientDocument("Test", 14, 44).insert()));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (DatabaseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-/*
-	// setup called by TestCase when run
-	public void setUp() {
-		// model = new Model("chem");
-		// availableSchedules = model.getSchedules();
+			// System.out.println(export.exportTest(model,
+			// model.createTransientDocument("Test", 14, 44).insert()));
+	
+		
 	}
 
-	// called by TestCase when run
-	public void tearDown() {
 
-	}
-
-	*/
-	public static void generateInstructors(int numberOfInstructors, Model model,
-			Document doc) throws DatabaseException {
+	private static void generateInstructors(int numberOfInstructors,
+			Model model, Document doc) throws DatabaseException {
 
 		for (int index = 0; index <= numberOfInstructors; index++) {
 
@@ -218,8 +259,8 @@ public class CSVTest {
 
 	}
 
-	public static void generateCourses(int numberOfCourses, Model model, Document doc)
-			throws DatabaseException {
+	private static void generateCourses(int numberOfCourses, Model model,
+			Document doc) throws DatabaseException {
 
 		for (int index = 0; index < numberOfCourses; index++) {
 
@@ -242,18 +283,30 @@ public class CSVTest {
 		for (Course course : courseList) {
 			Set<String> usedEquipment = new HashSet<String>();
 			usedEquipment.add("TestEquipment");
-			ArrayList<Set<Day>> dayPatterns = new ArrayList<Set<Day>>();
-			// dayPatterns.get(0).add(Day.FRIDAY); TODO
+
+			Set<Day> dayPatternsA = new HashSet<Day>();
+			Set<Day> dayPatternsB = new HashSet<Day>();
+
+			dayPatternsA.add(Day.FRIDAY);
+			dayPatternsA.add(Day.WEDNESDAY);
+
+			dayPatternsB.add(Day.FRIDAY);
+			dayPatternsB.add(Day.SUNDAY);
+
+			Collection<Set<Day>> dayPatternsList = new ArrayList<Set<Day>>();
+			dayPatternsList.add(dayPatternsA);
+			dayPatternsList.add(dayPatternsB);
 
 			course.setUsedEquipment(usedEquipment);
-			course.setDayPatterns(dayPatterns);
+			course.setDayPatterns(dayPatternsList);
 			course.setTetheredToLecture(false);
 			course.setLecture(null);
+
 		}
 
 	}
 
-	public static void generateLocations(int numberOfLocations, Model model,
+	private static void generateLocations(int numberOfLocations, Model model,
 			Document doc) throws DatabaseException {
 
 		Set<String> equipment = new HashSet<String>();
@@ -275,13 +328,14 @@ public class CSVTest {
 
 	}
 
-	public static void generateSchedule(Model model, Document doc) throws DatabaseException {
-		
-			model.createTransientSchedule().setDocument(doc).insert();
-	
+	private static void generateSchedule(Model model, Document doc)
+			throws DatabaseException {
+
+		model.createTransientSchedule().setDocument(doc).insert();
+
 	}
 
-	public static void generateScheduleItems(int num, Model model, Document doc)
+	private static void generateScheduleItems(int num, Model model, Document doc)
 			throws DatabaseException {
 		Schedule schedule = doc.getSchedules().iterator().next();
 
@@ -299,17 +353,16 @@ public class CSVTest {
 
 		for (int index = 0; index < num; index++) {
 
-			ScheduleItem item = model.createTransientScheduleItem(index, dayPatterns, 14, 29, true,
-					false);
+			ScheduleItem item = model.createTransientScheduleItem(index,
+					dayPatterns, 14, 29, true, false);
 			item.setInstructor(instructorIter.next());
 			item.setCourse(courseIter.next());
 			item.setLocation(locationIter.next());
 			item.setSchedule(schedule);
-			
+
 			item.setSchedule(schedule);
 			item.insert();
 		}
-		
-		
+
 	}
 }
