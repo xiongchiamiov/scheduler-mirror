@@ -36,7 +36,7 @@ public class AlgorithmTest {
 		doc.setStaffInstructor(model.createTransientInstructor("STAFF", "STAFF", "STAFF", "1000000", true)
 				.setDocument(doc).insert());
 		
-		doc.setTBALocation(model.createTransientLocation("14 - 256", "Lecture", "1000000", true)
+		doc.setTBALocation(model.createTransientLocation("TBA", "Lecture", "1000000", true)
 				.setDocument(doc).insert());
 		
 		Schedule schedule = model.createTransientSchedule().setDocument(doc).insert();
