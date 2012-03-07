@@ -15,7 +15,7 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.calpoly.csc.scheduler.view.web.shared.DayGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 
-public class ListTableView extends SimplePanel {
+public class CalendarListView extends SimplePanel {
 	
 	private List<ScheduleItemGWT> mScheduleItems;
 	private List<ScheduleItemGWT> mFilteredScheduleItems;
@@ -24,7 +24,7 @@ public class ListTableView extends SimplePanel {
 	//private CalendarModel mModel;
 	private int mLeftOffset;
 	
-	public ListTableView(ScheduleEditWidget scheduleController) {
+	public CalendarListView(ScheduleEditWidget scheduleController) {
 		//mModel = new CalendarModel();
 		mScheduleController = scheduleController;
 		
@@ -42,19 +42,19 @@ public class ListTableView extends SimplePanel {
 	private native void defineTableCallbacks() /*-{
 		var scheduleTable = this;
 		$wnd.tableDoubleClick = function(row, col) {
-			return scheduleTable.@edu.calpoly.csc.scheduler.view.web.client.calendar.ListTableView::doubleClick(II)(row, col);
+			return scheduleTable.@edu.calpoly.csc.scheduler.view.web.client.calendar.CalendarListView::doubleClick(II)(row, col);
 		}
 		$wnd.tableMouseDown = function(row, col) {
-			return scheduleTable.@edu.calpoly.csc.scheduler.view.web.client.calendar.ListTableView::mouseDown(II)(row, col);
+			return scheduleTable.@edu.calpoly.csc.scheduler.view.web.client.calendar.CalendarListView::mouseDown(II)(row, col);
 		}
 		$wnd.tableMouseUp = function(row, col) {
-			return scheduleTable.@edu.calpoly.csc.scheduler.view.web.client.calendar.ListTableView::mouseUp(II)(row, col);
+			return scheduleTable.@edu.calpoly.csc.scheduler.view.web.client.calendar.CalendarListView::mouseUp(II)(row, col);
 		}
 		$wnd.tableMouseOver = function(row) {
-			return scheduleTable.@edu.calpoly.csc.scheduler.view.web.client.calendar.ListTableView::mouseOver(I)(row);
+			return scheduleTable.@edu.calpoly.csc.scheduler.view.web.client.calendar.CalendarListView::mouseOver(I)(row);
 		}
 		$wnd.tableMouseOut = function(row) {
-			return scheduleTable.@edu.calpoly.csc.scheduler.view.web.client.calendar.ListTableView::mouseOut(I)(row);
+			return scheduleTable.@edu.calpoly.csc.scheduler.view.web.client.calendar.CalendarListView::mouseOut(I)(row);
 		}
 		
     }-*/;

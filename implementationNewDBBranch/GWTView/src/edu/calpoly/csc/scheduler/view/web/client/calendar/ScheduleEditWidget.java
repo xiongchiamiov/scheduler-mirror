@@ -58,7 +58,7 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 	private final DragAndDropController mDragController = new DragAndDropController(this);
 	private CourseListView mAvailableCoursesView = new CourseListView(this, mDragController);
 	private CalendarTableView mCalendarTableView = new CalendarTableView(this, mDragController);
-	private ListTableView mListTableView = new ListTableView(this);
+	private CalendarListView mListTableView = new CalendarListView(this);
 
 	private FiltersViewWidget mFiltersDialog = new FiltersViewWidget();
 

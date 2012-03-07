@@ -74,9 +74,9 @@ public class CalendarTableView extends SimplePanel {
 		private int mOffset;
 	}
 	
-	private static class CalendarModel {
+	private static class CalendarTableModel {
 		
-		public CalendarModel() {
+		public CalendarTableModel() {
 			mDays = new CalendarDayModel[7];
 			for (DayGWT day : DayGWT.values())
 				mDays[day.ordinal()] = new CalendarDayModel();
@@ -112,7 +112,7 @@ public class CalendarTableView extends SimplePanel {
 	
 	private List<ScheduleItemGWT> mScheduleItems;
 	private List<ScheduleItemGWT> mFilteredScheduleItems;
-	private CalendarModel mModel;
+	private CalendarTableModel mModel;
 	private String mInnerHTML;
 	private int mLeftOffset;
 	
@@ -136,7 +136,7 @@ public class CalendarTableView extends SimplePanel {
 		"Thursday", "Friday" };
 	
 	public CalendarTableView(ScheduleEditWidget scheduleController, DragAndDropController dragController) {
-		mModel = new CalendarModel();
+		mModel = new CalendarTableModel();
 		mScheduleController = scheduleController;
 		mDragController = dragController;
 		
@@ -234,11 +234,11 @@ public class CalendarTableView extends SimplePanel {
 	/**
 	 * Lays out a table model from the list of filtered scheduled items
 	 */
-	private CalendarModel buildTableModel() {
+	private CalendarTableModel buildTableModel() {
 		// TODO link schedule item between its' days in model so you can 
 		// highlight them item on all of it's days when it's selected on the UI
 		
-		CalendarModel model = new CalendarModel();
+		CalendarTableModel model = new CalendarTableModel();
 		
 		for (ScheduleItemGWT item : mFilteredScheduleItems) {
 			for (DayGWT day : item.getDays()) {
