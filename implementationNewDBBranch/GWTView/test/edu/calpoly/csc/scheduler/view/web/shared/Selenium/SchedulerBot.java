@@ -39,7 +39,7 @@ public class SchedulerBot {
 	/** The instructor preferences functionality */
 	private InstructorsPage instructors;	
 	/** The calendar's functionality */
-//	private CalendarPage calendar;
+	private CalendarPage calendar;
 	/** The basic toolbar functionality */
 	private Toolbar toolbar;
 	private static final String SUCCESS = "success";
@@ -95,7 +95,7 @@ public class SchedulerBot {
 		this.instructors = new InstructorsPage(fBot);
 		this.locations = new LocationsPage(fBot);
 		this.courses= new CoursesPage(fBot);
-//		this.calendar = new CalendarPage(fBot);
+		this.calendar = new CalendarPage(fBot);
 	}
 	
 	/**
