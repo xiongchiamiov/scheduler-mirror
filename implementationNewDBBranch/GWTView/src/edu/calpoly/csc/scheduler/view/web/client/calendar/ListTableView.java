@@ -11,7 +11,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.calpoly.csc.scheduler.view.web.client.calendar.CalendarModel;
+
 import edu.calpoly.csc.scheduler.view.web.shared.DayGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 
@@ -21,11 +21,11 @@ public class ListTableView extends SimplePanel {
 	private List<ScheduleItemGWT> mFilteredScheduleItems;
 	private final ScheduleEditWidget mScheduleController;
 	private String mInnerHTML;
-	private CalendarModel mModel;
+	//private CalendarModel mModel;
 	private int mLeftOffset;
 	
 	public ListTableView(ScheduleEditWidget scheduleController) {
-		mModel = new CalendarModel();
+		//mModel = new CalendarModel();
 		mScheduleController = scheduleController;
 		
 		defineTableCallbacks();
@@ -71,7 +71,7 @@ public class ListTableView extends SimplePanel {
 	
 	public void drawList() {
 		clear();		
-		mModel = buildTableModel();
+		//mModel = buildTableModel();
 		
 		final StringBuilder builder = new StringBuilder();
 		builder.append("<style type=\"text/css\">"+
@@ -187,75 +187,75 @@ public class ListTableView extends SimplePanel {
 	/**
 	 * Lays out a table model from the list of filtered scheduled items
 	 */
-	private CalendarModel buildTableModel() {
-		// TODO link schedule item between its' days in model so you can 
-		// highlight them item on all of it's days when it's selected on the UI
-		
-		CalendarModel model = new CalendarModel();
-		
-		for (ScheduleItemGWT item : mFilteredScheduleItems) {
-			for (DayGWT day : item.getDays()) {
-				CalendarDayModel dayModel = model.get(day);
-				
-				// Find the leftmost column that is open on all rows that this item needs to occupy
-//				int colNdx = 0;
-//				for (; colNdx < dayModel.getWidth(); colNdx++) {
-//					boolean occupied = false;
-//					
-//					for (int rowNdx = getStartRow(item); rowNdx <= getEndRow(item); rowNdx++) {
-//						CalendarRowModel row = dayModel.get(rowNdx);
-//						
-//						if (row.get(colNdx) != null) {
-//							occupied = true;
-//							break;
-//						}
-//					}
-//					
-//					if (!occupied)
-//						break;
-//				}
+//	private CalendarModel buildTableModel() {
+//		// TODO link schedule item between its' days in model so you can 
+//		// highlight them item on all of it's days when it's selected on the UI
+//		
+//		CalendarModel model = new CalendarModel();
+//		
+//		for (ScheduleItemGWT item : mFilteredScheduleItems) {
+//			for (DayGWT day : item.getDays()) {
+//				CalendarDayModel dayModel = model.get(day);
 //				
-//				// Check it we need to increase the width of this day
-//				if (colNdx >= dayModel.getWidth()) {
-//					dayModel.setWidth(colNdx + 1);
-//				}
-//				
-//				int startRow = getStartRow(item);
-//				int endRow = getEndRow(item);
-//				if (startRow > endRow)
-//					throw new RuntimeException("lol ur dum");
-//				
-//				// Add the item to the column we picked on all of the item's rows
-//				for (int rowNdx = startRow; rowNdx <= endRow; rowNdx++) {
-//					CalendarRowModel row = dayModel.get(rowNdx);
-//					
-//					if (colNdx >= row.size()) {
-//						row.setSize(colNdx + 1);
-//					}
-//					row.set(colNdx, item);
-//				}
-			}
-		}
+//				// Find the leftmost column that is open on all rows that this item needs to occupy
+////				int colNdx = 0;
+////				for (; colNdx < dayModel.getWidth(); colNdx++) {
+////					boolean occupied = false;
+////					
+////					for (int rowNdx = getStartRow(item); rowNdx <= getEndRow(item); rowNdx++) {
+////						CalendarRowModel row = dayModel.get(rowNdx);
+////						
+////						if (row.get(colNdx) != null) {
+////							occupied = true;
+////							break;
+////						}
+////					}
+////					
+////					if (!occupied)
+////						break;
+////				}
+////				
+////				// Check it we need to increase the width of this day
+////				if (colNdx >= dayModel.getWidth()) {
+////					dayModel.setWidth(colNdx + 1);
+////				}
+////				
+////				int startRow = getStartRow(item);
+////				int endRow = getEndRow(item);
+////				if (startRow > endRow)
+////					throw new RuntimeException("lol ur dum");
+////				
+////				// Add the item to the column we picked on all of the item's rows
+////				for (int rowNdx = startRow; rowNdx <= endRow; rowNdx++) {
+////					CalendarRowModel row = dayModel.get(rowNdx);
+////					
+////					if (colNdx >= row.size()) {
+////						row.setSize(colNdx + 1);
+////					}
+////					row.set(colNdx, item);
+////				}
+//			}
+//		}
 		
-		// Calculate all of the day offsets (the column each day starts on)
-		for (DayGWT day : Arrays.asList(DayGWT.values()).subList(1, DayGWT.values().length - 1)) {
-			DayGWT prevDay = DayGWT.values()[day.ordinal() - 1];
-			int prevOffset = model.get(prevDay).getOffset();
-			int prevWidth = model.get(prevDay).getWidth();
-			model.get(day).setOffset(prevOffset + prevWidth);
-		}
+//		// Calculate all of the day offsets (the column each day starts on)
+//		for (DayGWT day : Arrays.asList(DayGWT.values()).subList(1, DayGWT.values().length - 1)) {
+//			DayGWT prevDay = DayGWT.values()[day.ordinal() - 1];
+//			int prevOffset = model.get(prevDay).getOffset();
+//			int prevWidth = model.get(prevDay).getWidth();
+//			model.get(day).setOffset(prevOffset + prevWidth);
+//		}
 		
-		return model;
-	}
+//		return model;
+//	}
 	
 	/**
 	 * Called when the user double clicks an item in the table
 	 */
 	public void doubleClick(int row, int col) {
-		final CalendarDayModel day = mModel.get(col);
-		final ScheduleItemGWT item = day.get(row).get(col - day.getOffset());
+		//final CalendarDayModel day = mModel.get(col);
+		//final ScheduleItemGWT item = day.get(row).get(col - day.getOffset());
 
-		mScheduleController.editItem(false, item, null, -1);
+		//mScheduleController.editItem(false, item, null, -1);
 	}
 	
 	/**
