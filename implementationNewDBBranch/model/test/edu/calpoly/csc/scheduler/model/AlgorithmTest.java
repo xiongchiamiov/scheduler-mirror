@@ -45,7 +45,11 @@ public class AlgorithmTest {
 		
 		List<Instructor> instructors = generateInstructorList(model, doc, courses);
 		
+		instructors.add(doc.getStaffInstructor());
+		
 		List<Location> locations = generateLocationList(model, doc);
+		
+		locations.add(doc.getTBALocation());
 		
 		Vector<ScheduleItemDecorator> sids = new Vector<ScheduleItemDecorator>();
 		
