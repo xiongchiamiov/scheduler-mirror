@@ -7,17 +7,11 @@ public class InstructorDecorator {
 	private Instructor instructor;
 	private Integer WTU;
 	private WeekAvail availability;
-	private Integer generosity;
-	private Integer fairness;
-	
-
 	
 	public InstructorDecorator(Instructor ins) {
 		this.instructor =  ins;
 		this.WTU = Integer.valueOf(0);
 		this.availability = new WeekAvail();
-		this.generosity = Integer.valueOf(0);
-		this.fairness = Integer.valueOf(0);
 	}
 	
 	public void subtractWTU(Integer wtu) {

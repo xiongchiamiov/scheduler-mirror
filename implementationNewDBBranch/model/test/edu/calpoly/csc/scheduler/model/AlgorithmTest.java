@@ -53,11 +53,22 @@ public class AlgorithmTest {
 		
 		Vector<ScheduleItemDecorator> sids = new Vector<ScheduleItemDecorator>();
 		
+//		System.err.println("Starting schedule generation...");
+//		
+//		long start = System.currentTimeMillis();
+//		
+//	    Generate.generate(model, schedule, sids, courses, instructors, locations);
+//	    
+//	    long end = System.currentTimeMillis();
+//	    
+//	    System.err.println("Schedule generation complete in: " + ((end - start) / 1000) + " seconds");
+//		
+		// The call to generate() using Instructor/Location Decorators. Preferable to use.
 		System.err.println("Starting schedule generation...");
 		
 		long start = System.currentTimeMillis();
 		
-	    Generate.generate(model, schedule, sids, courses, instructors, locations);
+	    Generate.generate(instructors, locations, model, schedule, sids, courses);
 	    
 	    long end = System.currentTimeMillis();
 	    
