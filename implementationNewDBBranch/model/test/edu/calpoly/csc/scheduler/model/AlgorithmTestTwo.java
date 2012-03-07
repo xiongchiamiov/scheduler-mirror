@@ -40,7 +40,7 @@ public abstract class AlgorithmTestTwo extends ModelTestCase {
 		ModelTestUtility.setPreferenceBlocks(instructor, 3, 20, 30, Day.values());
 		
 		Schedule schedule = model.createTransientSchedule().setDocument(doc).insert();
-		Collection<ScheduleItemDecorator> c = new Vector<ScheduleItemDecorator>();
+		Collection<ScheduleItem> c = new Vector<ScheduleItem>();
 		
 		Collection<ScheduleItem> result = Generate.generate(model, schedule,
 				c, model.findCoursesForDocument(doc),
@@ -71,7 +71,7 @@ public abstract class AlgorithmTestTwo extends ModelTestCase {
 		
 		Schedule schedule = model.createTransientSchedule().setDocument(doc).insert();
 		
-		Collection<ScheduleItemDecorator> c = new Vector<ScheduleItemDecorator>();
+		Collection<ScheduleItem> c = new Vector<ScheduleItem>();
 		Collection<ScheduleItem> result = Generate.generate(model, schedule,
 				c, model.findCoursesForDocument(doc),
 				model.findInstructorsForDocument(doc), model.findLocationsForDocument(doc));//GenerationAlgorithm.generateRestOfSchedule(model, schedule);
@@ -101,7 +101,7 @@ public abstract class AlgorithmTestTwo extends ModelTestCase {
 		instructor.update();
 		
 		Schedule schedule = model.createTransientSchedule().setDocument(doc).insert();
-		Collection<ScheduleItemDecorator> c = new Vector<ScheduleItemDecorator>();
+		Collection<ScheduleItem> c = new Vector<ScheduleItem>();
 		
 //		try {
 			Collection<ScheduleItem> result = Generate.generate(model, schedule,

@@ -1,5 +1,7 @@
 package edu.calpoly.csc.scheduler.model;
 
+import java.util.Collection;
+
 import edu.calpoly.csc.scheduler.model.db.DatabaseException;
 import edu.calpoly.csc.scheduler.model.db.IDBSchedule;
 
@@ -39,6 +41,13 @@ public class Schedule extends Identified {
 	}
 
 
+	
+	// Schedule Items
+	
+	public Collection<ScheduleItem> getItems() throws DatabaseException {
+		return model.findAllScheduleItemsForSchedule(this);
+	}
+	
 	
 
 	// Document

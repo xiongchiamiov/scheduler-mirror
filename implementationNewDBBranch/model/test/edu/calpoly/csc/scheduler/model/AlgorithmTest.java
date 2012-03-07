@@ -51,7 +51,7 @@ public class AlgorithmTest {
 		
 		locations.add(doc.getTBALocation());
 		
-		Vector<ScheduleItemDecorator> sids = new Vector<ScheduleItemDecorator>();
+		Vector<ScheduleItem> sids = new Vector<ScheduleItem>();
 		
 //		System.err.println("Starting schedule generation...");
 //		

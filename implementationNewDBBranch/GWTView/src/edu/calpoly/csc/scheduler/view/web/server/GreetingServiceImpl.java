@@ -20,10 +20,10 @@ import edu.calpoly.csc.scheduler.model.Location;
 import edu.calpoly.csc.scheduler.model.Model;
 import edu.calpoly.csc.scheduler.model.Schedule;
 import edu.calpoly.csc.scheduler.model.ScheduleItem;
+import edu.calpoly.csc.scheduler.model.algorithm.CouldNotBeScheduledException;
+import edu.calpoly.csc.scheduler.model.algorithm.Generate;
 import edu.calpoly.csc.scheduler.model.db.DatabaseException;
 import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
-import edu.calpoly.csc.scheduler.model.tempalgorithm.GenerationAlgorithm;
-import edu.calpoly.csc.scheduler.model.tempalgorithm.GenerationAlgorithm.CouldNotBeScheduledException;
 import edu.calpoly.csc.scheduler.view.web.client.GreetingService;
 import edu.calpoly.csc.scheduler.view.web.client.InvalidLoginException;
 import edu.calpoly.csc.scheduler.view.web.shared.CouldNotBeScheduledExceptionGWT;
@@ -458,9 +458,26 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		try {
 			Schedule schedule = model.findScheduleByID(scheduleID);
 			assert(schedule.getDocument().getOriginal() != null);
-			ScheduleItem newItem = Conversion.scheduleItemFromGWT(model, model.findScheduleByID(scheduleID), scheduleItem);
-
-			GenerationAlgorithm.insertNewScheduleItem(model, schedule, newItem);
+			
+			assert(scheduleItem.getCourseID() >= 0);
+			// temporary, please hand in the staffinstructor id and tbalocation id
+			if (scheduleItem.getLocationID() < 0)
+				scheduleItem.setLocationID(schedule.getDocument().getTBALocation().getID());
+			if (scheduleItem.getInstructorID() < 0)
+				scheduleItem.setInstructorID(schedule.getDocument().getStaffInstructor().getID());
+			
+			ScheduleItem newItem = Conversion.scheduleItemFromGWT(model, scheduleItem);
+			newItem.setSchedule(schedule);
+			newItem.setLocation(model.findLocationByID(scheduleItem.getLocationID()));
+			newItem.setCourse(model.findCourseByID(scheduleItem.getCourseID()));
+			newItem.setInstructor(model.findInstructorByID(scheduleItem.getInstructorID()));
+			newItem.insert();
+			
+//			Generate.generate(model, schedule, s_items, c_list, i_list, l_list)
+//			
+//			GenerationAlgorithm.insertNewScheduleItem(model, schedule, newItem);
+//			
+//			Generate.generate(model, schedule, s_items, c_list, i_list, l_list)
 			
 			return getScheduleItems(scheduleID);
 			
@@ -475,14 +492,11 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			Schedule schedule = model.findScheduleByID(scheduleID);
 			assert(schedule.getDocument().getOriginal() != null);
 			
-			GenerationAlgorithm.generateRestOfSchedule(model, schedule);
+			Generate.generate(model, schedule, schedule.getItems(), schedule.getDocument().getCourses(), schedule.getDocument().getInstructors(), schedule.getDocument().getLocations());
 			
 			return getScheduleItems(scheduleID);
 		}
-		catch (CouldNotBeScheduledException e) {
-			e.printStackTrace();
-			throw new CouldNotBeScheduledExceptionGWT();
-		} catch (DatabaseException e) {
+		catch (DatabaseException e) {
 			throw new RuntimeException(e);
 		}
 	}

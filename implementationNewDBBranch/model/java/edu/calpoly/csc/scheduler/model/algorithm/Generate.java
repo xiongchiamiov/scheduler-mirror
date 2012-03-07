@@ -39,11 +39,12 @@ public class Generate {
 	}
 
 	public static Vector<ScheduleItem> generate(Model model, Schedule schedule, 
-			Collection<ScheduleItemDecorator> s_items, Collection<Course> c_list, Collection<Instructor> i_list,
+			Collection<ScheduleItem> s_items, Collection<Course> c_list, Collection<Instructor> i_list,
 			Collection<Location> l_list) throws DatabaseException {
 		
 		Vector<ScheduleItemDecorator> items = new Vector<ScheduleItemDecorator>(); //changed
-		items.addAll(s_items); // changed;
+		for (ScheduleItem si : s_items)
+			items.add(new ScheduleItemDecorator(si));
 		
 		HashMap<Integer, SectionTracker> sections = new HashMap<Integer, SectionTracker>();
 		TimeRange bounds = new TimeRange(14, 44);
@@ -142,10 +143,12 @@ public class Generate {
 	//decorators, but but that can be done later
 	public static Vector<ScheduleItem> generate(Collection<Instructor> i_coll,
 			Collection<Location> l_coll, Model model, Schedule schedule, 
-			Collection<ScheduleItemDecorator> s_items, Collection<Course> c_list) throws DatabaseException {
+			Collection<ScheduleItem> s_items, Collection<Course> c_list) throws DatabaseException {
 		
-		Vector<ScheduleItemDecorator> items = new Vector<ScheduleItemDecorator>(); 
-		items.addAll(s_items);
+		Vector<ScheduleItemDecorator> items = new Vector<ScheduleItemDecorator>();
+		for (ScheduleItem si : s_items)
+			items.add(new ScheduleItemDecorator(si));
+//		items.addAll(s_items);
 		
 		HashMap<Integer, SectionTracker> sections = new HashMap<Integer, SectionTracker>();
 		TimeRange bounds = new TimeRange(14, 44);

@@ -268,7 +268,7 @@ public abstract class Conversion {
 				startHalfHour, endHalfHour, itemOldGWT.isPlaced(), itemOldGWT.isConflicted());
 	}
 
-	public static ScheduleItem scheduleItemFromGWT(Model model, Schedule schedule, ScheduleItemGWT source) throws DatabaseException {
+	public static ScheduleItem scheduleItemFromGWT(Model model, ScheduleItemGWT source) throws DatabaseException {
 		Set<Day> dayPattern = dayPatternFromGWT(source.getDays());
 		
 		ScheduleItem result = model.createTransientScheduleItem(

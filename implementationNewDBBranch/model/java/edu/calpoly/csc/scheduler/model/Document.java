@@ -172,7 +172,7 @@ public class Document extends Identified {
 	}
 
 	public void setOriginal(Document newDocument) {
-		assert(!newDocument.isTransient()); // You need to insert something before you can reference it
+		assert(newDocument == null || !newDocument.isTransient()); // You need to insert something before you can reference it
 		original = newDocument;
 		originalLoaded = true;
 	}

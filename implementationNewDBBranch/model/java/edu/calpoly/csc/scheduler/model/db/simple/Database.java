@@ -853,7 +853,7 @@ public class Database implements IDatabase {
 
 	@Override
 	public IDBObject findDocumentForInstructor(IDBInstructor underlyingInstructor) throws NotFoundException {
-		return documentTable.findByID(((DBLocation)underlyingInstructor).documentID);
+		return documentTable.findByID(((DBInstructor)underlyingInstructor).documentID);
 	}
 
 	@Override
