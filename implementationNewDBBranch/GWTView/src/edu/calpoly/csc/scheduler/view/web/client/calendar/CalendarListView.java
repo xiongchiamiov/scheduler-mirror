@@ -53,7 +53,9 @@ public class CalendarListView extends SimplePanel {
 		$wnd.calendarListMouseOut = function(row) {
 			return scheduleTable.@edu.calpoly.csc.scheduler.view.web.client.calendar.CalendarListView::mouseOut(I)(row);
 		}
-
+		$wnd.calendarListKeyDown = function(row, keycode) {
+			return scheduleTable.@edu.calpoly.csc.scheduler.view.web.client.calendar.CalendarListView::keyDown(II)(row, keycode);
+		}
 	}-*/;
 
 	public void setScheduleItems(List<ScheduleItemGWT> items) {
@@ -113,12 +115,14 @@ public class CalendarListView extends SimplePanel {
 			builder.append("<tr>");
 
 			builder.append("<td " +
-								"class=\"item\" id=\"x"+tableCol+"y"+tableRow+"\" " +
-								"ondblclick=\"calendarListDoubleClick("+tableRow+","+tableCol+")\" " +
-								"onmousedown=\"calendarListMouseDown("+tableRow+","+tableCol+")\" " +
-								"onmouseup=\"calendarListMouseUp("+tableRow+","+tableCol+")\" " +
-								"onselectstart=\"return false\" " +
-								">" + mScheduleController.getCourseString(item.getCourseID())	+ "</td>");
+					"class=\"item\" id=\"x"+tableCol+"y"+tableRow+"\" " +
+					"ondblclick=\"calendarListDoubleClick("+tableRow+","+tableCol+")\" " +
+					"onmousedown=\"calendarListMouseDown("+tableRow+","+tableCol+")\" " +
+					"onmouseup=\"calendarListMouseUp("+tableRow+","+tableCol+")\" " +
+					"tabindex=\"0\" " +
+					"onkeydown=\"calendarListKeyDown("+tableRow+",event.which)\" " +
+					"onselectstart=\"return false\" " +								
+					">" + mScheduleController.getCourseString(item.getCourseID())	+ "</td>");
 			tableCol++;
 			
 			builder.append("<td " +
@@ -126,6 +130,8 @@ public class CalendarListView extends SimplePanel {
 					"ondblclick=\"calendarListDoubleClick("+tableRow+","+tableCol+")\" " +
 					"onmousedown=\"calendarListMouseDown("+tableRow+","+tableCol+")\" " +
 					"onmouseup=\"calendarListMouseUp("+tableRow+","+tableCol+")\" " +
+					"tabindex=\"0\" " +
+					"onkeydown=\"calendarListKeyDown("+tableRow+",event.which)\" " +
 					"onselectstart=\"return false\" " +
 					">" + item.getSection() + "</td>");
 			tableCol++;
@@ -135,6 +141,8 @@ public class CalendarListView extends SimplePanel {
 					"ondblclick=\"calendarListDoubleClick("+tableRow+","+tableCol+")\" " +
 					"onmousedown=\"calendarListMouseDown("+tableRow+","+tableCol+")\" " +
 					"onmouseup=\"calendarListMouseUp("+tableRow+","+tableCol+")\" " +
+					"tabindex=\"0\" " +
+					"onkeydown=\"calendarListKeyDown("+tableRow+",event.which)\" " +
 					"onselectstart=\"return false\" " +
 					">" + "Course Type Here" + "</td>");
 			tableCol++;
@@ -144,6 +152,8 @@ public class CalendarListView extends SimplePanel {
 					"ondblclick=\"calendarListDoubleClick("+tableRow+","+tableCol+")\" " +
 					"onmousedown=\"calendarListMouseDown("+tableRow+","+tableCol+")\" " +
 					"onmouseup=\"calendarListMouseUp("+tableRow+","+tableCol+")\" " +
+					"tabindex=\"0\" " +
+					"onkeydown=\"calendarListKeyDown("+tableRow+",event.which)\" " +
 					"onselectstart=\"return false\" " +
 					">" + "Course SCU" + "</td>");
 			tableCol++;
@@ -153,6 +163,8 @@ public class CalendarListView extends SimplePanel {
 					"ondblclick=\"calendarListDoubleClick("+tableRow+","+tableCol+")\" " +
 					"onmousedown=\"calendarListMouseDown("+tableRow+","+tableCol+")\" " +
 					"onmouseup=\"calendarListMouseUp("+tableRow+","+tableCol+")\" " +
+					"tabindex=\"0\" " +
+					"onkeydown=\"calendarListKeyDown("+tableRow+",event.which)\" " +
 					"onselectstart=\"return false\" " +
 					">" + "Course WTU" + "</td>");
 			tableCol++;
@@ -162,6 +174,8 @@ public class CalendarListView extends SimplePanel {
 					"ondblclick=\"calendarListDoubleClick("+tableRow+","+tableCol+")\" " +
 					"onmousedown=\"calendarListMouseDown("+tableRow+","+tableCol+")\" " +
 					"onmouseup=\"calendarListMouseUp("+tableRow+","+tableCol+")\" " +
+					"tabindex=\"0\" " +
+					"onkeydown=\"calendarListKeyDown("+tableRow+",event.which)\" " +
 					"onselectstart=\"return false\" " +
 					">" + "Course Instructor" + "</td>");
 			tableCol++;
@@ -171,6 +185,8 @@ public class CalendarListView extends SimplePanel {
 					"ondblclick=\"calendarListDoubleClick("+tableRow+","+tableCol+")\" " +
 					"onmousedown=\"calendarListMouseDown("+tableRow+","+tableCol+")\" " +
 					"onmouseup=\"calendarListMouseUp("+tableRow+","+tableCol+")\" " +
+					"tabindex=\"0\" " +
+					"onkeydown=\"calendarListKeyDown("+tableRow+",event.which)\" " +
 					"onselectstart=\"return false\" " +
 					">" + item.getLocationID() + "</td>");
 			tableCol++;
@@ -180,6 +196,8 @@ public class CalendarListView extends SimplePanel {
 					"ondblclick=\"calendarListDoubleClick("+tableRow+","+tableCol+")\" " +
 					"onmousedown=\"calendarListMouseDown("+tableRow+","+tableCol+")\" " +
 					"onmouseup=\"calendarListMouseUp("+tableRow+","+tableCol+")\" " +
+					"tabindex=\"0\" " +
+					"onkeydown=\"calendarListKeyDown("+tableRow+",event.which)\" " +
 					"onselectstart=\"return false\" " +
 					">" + GetDaysString(item.getDays()) + "</td>");
 			tableCol++;
@@ -189,6 +207,8 @@ public class CalendarListView extends SimplePanel {
 					"ondblclick=\"calendarListDoubleClick("+tableRow+","+tableCol+")\" " +
 					"onmousedown=\"calendarListMouseDown("+tableRow+","+tableCol+")\" " +
 					"onmouseup=\"calendarListMouseUp("+tableRow+","+tableCol+")\" " +
+					"tabindex=\"0\" " +
+					"onkeydown=\"calendarListKeyDown("+tableRow+",event.which)\" " +
 					"onselectstart=\"return false\" " +
 					">" + "Start Time" + "</td>");
 			tableCol++;
@@ -198,6 +218,8 @@ public class CalendarListView extends SimplePanel {
 					"ondblclick=\"calendarListDoubleClick("+tableRow+","+tableCol+")\" " +
 					"onmousedown=\"calendarListMouseDown("+tableRow+","+tableCol+")\" " +
 					"onmouseup=\"calendarListMouseUp("+tableRow+","+tableCol+")\" " +
+					"tabindex=\"0\" " +
+					"onkeydown=\"calendarListKeyDown("+tableRow+",event.which)\" " +
 					"onselectstart=\"return false\" " +
 					">" + "End Time" + "</td>");
 			tableCol++;
@@ -207,6 +229,8 @@ public class CalendarListView extends SimplePanel {
 					"ondblclick=\"calendarListDoubleClick("+tableRow+","+tableCol+")\" " +
 					"onmousedown=\"calendarListMouseDown("+tableRow+","+tableCol+")\" " +
 					"onmouseup=\"calendarListMouseUp("+tableRow+","+tableCol+")\" " +
+					"tabindex=\"0\" " +
+					"onkeydown=\"calendarListKeyDown("+tableRow+",event.which)\" " +
 					"onselectstart=\"return false\" " +
 					">" + "Capacity" + "</td>");
 			tableCol++;			
@@ -279,6 +303,28 @@ public class CalendarListView extends SimplePanel {
 		highlightRow(row);
 		
 		return false;
+	}
+	
+	/**
+	 * Called when the an item on the table gets a mouse down event
+	 * 
+	 * @return false to disable text selection on some browsers
+	 */
+	public void keyDown(int row, int keycode) {
+		// final CalendarDayModel day = mModel.get(col);
+		// final ScheduleItemGWT item = day.get(row).get(col - day.getOffset());
+		//
+		// // Set the text of the div that moves with the cursor
+		// Element dragDiv =
+		// DOM.getElementById(DragAndDropController.DRAGGED_ID);
+		// DOM.setInnerText(dragDiv,
+		// mScheduleController.getCourseString(item.getCourseID()));
+		//
+		// mDragController.onMouseDown(item, row, col);
+		if (keycode == 46) {
+			mScheduleItems.remove(row);
+			this.drawList();
+		}
 	}
 	
 	private void highlightRow(int row) {		
