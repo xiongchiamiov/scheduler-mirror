@@ -285,12 +285,15 @@ public class CalendarListView extends SimplePanel {
 		if (row != mLastRowSelected) {
 			for (int i = 0; i < 11; i++) {
 				Element selectedCell = DOM.getElementById("x"+ i + "y" + row);
-				selectedCell.addClassName("selectedItem");		
-				
-				
+				if (selectedCell != null) {
+					selectedCell.addClassName("selectedItem");
+				}
+								
 				//un-highlight old row
 				Element oldCell = DOM.getElementById("x"+ i + "y" + mLastRowSelected);
-				oldCell.removeClassName("selectedItem");
+				if (oldCell != null) {
+					oldCell.removeClassName("selectedItem");
+				}
 			}
 			
 			mLastRowSelected = row;
