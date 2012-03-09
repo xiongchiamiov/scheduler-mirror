@@ -78,6 +78,7 @@ public class CalendarListView extends SimplePanel {
 				+ "#ListTable tr {height:20px;}"
 				+ "#ListTable td {overflow:hidden;padding:4px;border-top:1px solid #d1dfdf;}"
 				+ "#ListTable td.item {text-align:center;border:1px solid black;}"
+				+ "#ListTable td.selectedItem {text-align:center; background-color:#DFF0CF; border:1px solid black;}"
 				+ "#ListTable td.columnHeader {position:relative;background-color:#edf2f2;border-right:1px solid #000000;border-bottom:1px solid #000000;font-weight:bold;text-align:center;z-index:2;}"
 				+ "#ListTable td.timeHeader {position:relative;background-color:#edf2f2;border-right:1px solid #000000;white-space:nowrap;text-align:right;}"
 				+ "#ListTable td#topCorner {border-bottom:1px solid #000000;background-color:#edf2f2;}"
@@ -276,8 +277,12 @@ public class CalendarListView extends SimplePanel {
 		// mScheduleController.getCourseString(item.getCourseID()));
 		//
 		// mDragController.onMouseDown(item, row, col);
-		Element selectedCell = DOM.getElementById("x"+col+"y"+row);
+		for (int i = 0; i < 8; i++) {
+			Element selectedCell = DOM.getElementById("x"+ i + "y" + row);
+			selectedCell.addClassName("selectedItem");		
+		}
 		
+		System.out.println(row + col);
 		return false;
 	}
 
