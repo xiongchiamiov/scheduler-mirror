@@ -493,7 +493,7 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel imple
 			else if (validationResult instanceof InputWarning) {
 				InputWarning inputWarning = (InputWarning)validationResult;
 				td.setAttribute("title", inputWarning.reason);
-				td.addClassName("invalid");
+//				td.addClassName("invalid");
 			}
 			else if (validationResult instanceof InputInvalid) {
 				

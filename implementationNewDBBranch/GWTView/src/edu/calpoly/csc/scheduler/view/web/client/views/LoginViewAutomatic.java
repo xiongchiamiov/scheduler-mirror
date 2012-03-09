@@ -9,22 +9,27 @@ import edu.calpoly.csc.scheduler.view.web.client.ViewFrame;
 public class LoginViewAutomatic extends LoginView {
 	final String automaticLoginUsername;
 	final int automaticOpenDocumentID;
+	final SimplePanel scheduleNameContainer;
 	
 	public LoginViewAutomatic(GreetingServiceAsync service, SimplePanel usernameContainer,
-			SimplePanel logoutLinkContainer, MenuBar menuBar, String automaticLoginUsername, int automaticOpenDocumentID) {
-		super(service, usernameContainer, logoutLinkContainer, menuBar);
+			SimplePanel logoutLinkContainer, SimplePanel scheduleNameContainer, MenuBar menuBar, String automaticLoginUsername, int automaticOpenDocumentID) {
+		super(service, usernameContainer, logoutLinkContainer, scheduleNameContainer, menuBar);
 		this.automaticLoginUsername = automaticLoginUsername;
 		this.automaticOpenDocumentID = automaticOpenDocumentID;
+		this.scheduleNameContainer = scheduleNameContainer;
 	}
 	
 	public LoginViewAutomatic(GreetingServiceAsync service, SimplePanel usernameContainer,
-	      SimplePanel logoutLinkContainer, MenuBar menuBar, String automaticLoginUsername) {
-	   super(service, usernameContainer, logoutLinkContainer, menuBar);
+         SimplePanel logoutLinkContainer, SimplePanel scheduleNameContainer, MenuBar menuBar,
+         String automaticLoginUsername)
+   {
+	   super(service, usernameContainer, logoutLinkContainer, scheduleNameContainer, menuBar);
 	   this.automaticLoginUsername = automaticLoginUsername;
 	   this.automaticOpenDocumentID = Integer.MIN_VALUE;
-	}
-	
-	@Override
+	   this.scheduleNameContainer = scheduleNameContainer;
+   }
+
+   @Override
 	public void afterPush(ViewFrame frame) {
 		super.afterPush(frame);
 		
@@ -39,11 +44,11 @@ public class LoginViewAutomatic extends LoginView {
 		myFrame.popFramesAboveMe();
 		if(automaticOpenDocumentID == Integer.MIN_VALUE)
 		{
-		   myFrame.frameViewAndPushAboveMe(new SelectScheduleView(service, menuBar, username));
+		   myFrame.frameViewAndPushAboveMe(new SelectScheduleView(service, scheduleNameContainer, menuBar, username));
 		}
 		else
 		{
-		   myFrame.frameViewAndPushAboveMe(new SelectScheduleViewAutomatic(service, menuBar, username, automaticOpenDocumentID));
+		   myFrame.frameViewAndPushAboveMe(new SelectScheduleViewAutomatic(service, scheduleNameContainer, menuBar, username, automaticOpenDocumentID));
 		}
 	}
 	

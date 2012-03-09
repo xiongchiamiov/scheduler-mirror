@@ -376,11 +376,12 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 	}
 	
 	private void addMenus() {
+	   menuBar.clearItems();
 		menuBar.addItem("File v", fileMenu);
 		menuBar.addItem("Settings v", settingsMenu);
 		menuBar.addItem(coursesMenuItem);
-		menuBar.addItem(locationsMenuItem);
 		menuBar.addItem(instructorsMenuItem);
+		menuBar.addItem(locationsMenuItem);
 		menuBar.addItem(scheduleMenuItem);
 	}
 	

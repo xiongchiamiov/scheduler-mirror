@@ -30,11 +30,12 @@ public class LoginView extends VerticalPanel implements IViewContents {
 	
 	String username;
 	ViewFrame myFrame;
-	final SimplePanel usernameContainer, logoutLinkContainer;
+	final SimplePanel usernameContainer, logoutLinkContainer, scheduleNameContainer;
 
-	public LoginView(GreetingServiceAsync service, SimplePanel usernameContainer, SimplePanel logoutLinkContainer, MenuBar menuBar) {
+	public LoginView(GreetingServiceAsync service, SimplePanel usernameContainer, SimplePanel logoutLinkContainer, SimplePanel scheduleNameContainer, MenuBar menuBar) {
 		this.usernameContainer = usernameContainer;
 		this.logoutLinkContainer = logoutLinkContainer;
+		this.scheduleNameContainer = scheduleNameContainer;
 		
 		this.service = service;
 		this.menuBar = menuBar;
@@ -69,7 +70,7 @@ public class LoginView extends VerticalPanel implements IViewContents {
 		this.add(login);	
 	}
 
-	protected void submitLogin(final String username) {
+   protected void submitLogin(final String username) {
 		if ("".equals(username)) {
 			Window.alert("Please enter a username.");
 			return;
@@ -102,7 +103,7 @@ public class LoginView extends VerticalPanel implements IViewContents {
 	protected void pushSelectScheduleView(String username) {
 		assert(myFrame.canPopViewsAboveMe());
 		myFrame.popFramesAboveMe();
-		myFrame.frameViewAndPushAboveMe(new SelectScheduleView(service, menuBar, username));
+		myFrame.frameViewAndPushAboveMe(new SelectScheduleView(service, scheduleNameContainer, menuBar, username));
 	}
 	
 	@Override

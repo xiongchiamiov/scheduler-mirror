@@ -98,7 +98,6 @@ public class CoursesTable extends SimplePanel {
 		});
 		
 		addFieldColumns();
-
 		this.add(table);
 	}
 
@@ -176,6 +175,28 @@ public class CoursesTable extends SimplePanel {
 						},
 						null));
 		
+		table.addColumn(NUM_SECTIONS_HEADER, NUM_SECTIONS_WIDTH, true, null, new EditingStringColumn<CourseGWT>(
+		      new IStaticGetter<CourseGWT, String>() {
+		         public String getValueForObject(CourseGWT object) { return object.getRawNumSections(); }
+		      }, new IStaticSetter<CourseGWT, String>() {
+		         public void setValueInObject(CourseGWT object, String newValue) { object.setNumSections(newValue); }
+		      }, 
+		      new IStaticValidator<CourseGWT, String>() {
+		         @Override
+		         public IStaticValidator.ValidateResult validate(
+		               CourseGWT object, String newValue) {
+		            int n;
+		            try { n = Integer.parseInt(newValue); }
+		            catch (NumberFormatException e) {
+		               return new InputWarning(NUM_SECTIONS_HEADER + " must be an integer.");
+		            }
+		            
+		            if (n < 1)
+		               return new InputWarning(NUM_SECTIONS_HEADER + " must be at least 1.");
+		            
+		            return new InputValid();
+		         }
+		      }));
 		table.addColumn(WTU_HEADER, WTU_WIDTH, true, null, new EditingStringColumn<CourseGWT>(
 				new IStaticGetter<CourseGWT, String>() {
 					public String getValueForObject(CourseGWT object) { return object.getWtu(); }
@@ -222,46 +243,59 @@ public class CoursesTable extends SimplePanel {
 					}
 				}));
 		
-		table.addColumn(NUM_SECTIONS_HEADER, NUM_SECTIONS_WIDTH, true, null, new EditingStringColumn<CourseGWT>(
-				new IStaticGetter<CourseGWT, String>() {
-					public String getValueForObject(CourseGWT object) { return object.getRawNumSections(); }
-				}, new IStaticSetter<CourseGWT, String>() {
-					public void setValueInObject(CourseGWT object, String newValue) { object.setNumSections(newValue); }
-				}, 
-				new IStaticValidator<CourseGWT, String>() {
-					@Override
-					public IStaticValidator.ValidateResult validate(
-							CourseGWT object, String newValue) {
-						int n;
-						try { n = Integer.parseInt(newValue); }
-						catch (NumberFormatException e) {
-							return new InputWarning(NUM_SECTIONS_HEADER + " must be an integer.");
-						}
-						
-						if (n < 1)
-							return new InputWarning(NUM_SECTIONS_HEADER + " must be at least 1.");
-						
-						return new InputValid();
-					}
-				}));
+	    table.addColumn(DAY_COMBINATIONS_HEADER, DAY_COMBINATIONS_WIDTH, true, null, new EditingMultiselectColumn<CourseGWT>(
+	            new String[] {
+	                  "M", "Tu", "W", "Th", "F",
+	                  "MW", "MF", "WF", "TuTh",
+	                  "MWF",
+	                  "TuWThF", "MWThF", "MTuThF", "MTuWTh"
+	            },
+	            new IStaticGetter<CourseGWT, Set<String>>() {
+	               public Set<String> getValueForObject(CourseGWT object) {
+	                  Set<String> result = new HashSet<String>();
+	                  for (Set<DayGWT> combo : object.getDayPatterns())
+	                     result.add(DayGWT.dayGWTPatternToString(combo));
+	                  return result;
+	               }
+	            },
+	            new IStaticSetter<CourseGWT, Set<String>>() {
+	               public void setValueInObject(CourseGWT object, Set<String> newCombos) {
+	                  Collection<Set<DayGWT>> set = new HashSet<Set<DayGWT>>();
+	                  for (String newCombo : newCombos)
+	                     set.add(DayGWT.parseDayGWTPattern(newCombo));
+	                  object.setDayPatterns(set);
+	               }
+	            }));
 		
-		table.addColumn(
-				TYPE_HEADER,
-				TYPE_WIDTH,
-				true,
-				new MemberStringComparator<CourseGWT>(new IStaticGetter<CourseGWT, String>() {
-					public String getValueForObject(CourseGWT object) { return object.getType(); }
-				}),
-				new EditingSelectColumn<CourseGWT>(
-						new String[] { "LEC", "LAB" },
-						new IStaticGetter<CourseGWT, String>() {
-							public String getValueForObject(CourseGWT object) { return object.getType(); }
-						},
-						new IStaticSetter<CourseGWT, String>() {
-							public void setValueInObject(CourseGWT object, String newValue) {
-								object.setType(newValue);
-							}
-						}));
+	    
+	      table.addColumn(HOURS_PER_WEEK_HEADER, HOURS_PER_WEEK_WIDTH, true, null, new EditingStringColumn<CourseGWT>(
+	            new IStaticGetter<CourseGWT, String>() {
+	               public String getValueForObject(CourseGWT object) { return object.getHalfHoursPerWeek(); }
+	            }, new IStaticSetter<CourseGWT, String>() {
+	               public void setValueInObject(CourseGWT object, String newValue) { object.setHalfHoursPerWeek(newValue); }
+	            }, 
+	            new IStaticValidator<CourseGWT, String>() {
+	               @Override
+	               public edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator.ValidateResult validate(
+	                     CourseGWT object, String newValue) {
+	                  double d;
+	                  try { d = Double.parseDouble(newValue); }
+	                  catch (NumberFormatException e) {
+	                     return new InputWarning(HOURS_PER_WEEK_HEADER + " must be a decimal number.");
+	                  }
+	                  
+	                  // Must be a multiple of .5
+	                  if (distanceFromNearestMultiple(d, .5) >= .001) // account for floating point imprecision
+	                     return new InputWarning(HOURS_PER_WEEK_HEADER + " must be a multiple of .5.");
+	                  
+	                  int numHalfHours = (int)Math.round(d * 2);
+	                  if (numHalfHours < 1)
+	                     return new InputWarning(HOURS_PER_WEEK_HEADER + " must be at least .5.");
+	                  
+	                  return new InputValid();
+	               }
+	            }));
+
 		
 		table.addColumn(MAX_ENROLLMENT_HEADER, MAX_ENROLLMENT_WIDTH, true, null, new EditingStringColumn<CourseGWT>(
 				new IStaticGetter<CourseGWT, String>() {
@@ -285,58 +319,26 @@ public class CoursesTable extends SimplePanel {
 						return new InputValid();
 					}
 				}));
-		
-		table.addColumn(HOURS_PER_WEEK_HEADER, HOURS_PER_WEEK_WIDTH, true, null, new EditingStringColumn<CourseGWT>(
-				new IStaticGetter<CourseGWT, String>() {
-					public String getValueForObject(CourseGWT object) { return object.getHalfHoursPerWeek(); }
-				}, new IStaticSetter<CourseGWT, String>() {
-					public void setValueInObject(CourseGWT object, String newValue) { object.setHalfHoursPerWeek(newValue); }
-				}, 
-				new IStaticValidator<CourseGWT, String>() {
-					@Override
-					public edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator.ValidateResult validate(
-							CourseGWT object, String newValue) {
-						double d;
-						try { d = Double.parseDouble(newValue); }
-						catch (NumberFormatException e) {
-							return new InputWarning(HOURS_PER_WEEK_HEADER + " must be a decimal number.");
-						}
-						
-						// Must be a multiple of .5
-						if (distanceFromNearestMultiple(d, .5) >= .001) // account for floating point imprecision
-							return new InputWarning(HOURS_PER_WEEK_HEADER + " must be a multiple of .5.");
-						
-						int numHalfHours = (int)Math.round(d * 2);
-						if (numHalfHours < 1)
-							return new InputWarning(HOURS_PER_WEEK_HEADER + " must be at least .5.");
-						
-						return new InputValid();
-					}
-				}));
-		
-		table.addColumn(DAY_COMBINATIONS_HEADER, DAY_COMBINATIONS_WIDTH, true, null, new EditingMultiselectColumn<CourseGWT>(
-				new String[] {
-						"M", "Tu", "W", "Th", "F",
-						"MW", "MF", "WF", "TuTh",
-						"MWF",
-						"TuWThF", "MWThF", "MTuThF", "MTuWTh"
-				},
-				new IStaticGetter<CourseGWT, Set<String>>() {
-					public Set<String> getValueForObject(CourseGWT object) {
-						Set<String> result = new HashSet<String>();
-						for (Set<DayGWT> combo : object.getDayPatterns())
-							result.add(DayGWT.dayGWTPatternToString(combo));
-						return result;
-					}
-				},
-				new IStaticSetter<CourseGWT, Set<String>>() {
-					public void setValueInObject(CourseGWT object, Set<String> newCombos) {
-						Collection<Set<DayGWT>> set = new HashSet<Set<DayGWT>>();
-						for (String newCombo : newCombos)
-							set.add(DayGWT.parseDayGWTPattern(newCombo));
-						object.setDayPatterns(set);
-					}
-				}));
+
+	     
+      table.addColumn(
+            TYPE_HEADER,
+            TYPE_WIDTH,
+            true,
+            new MemberStringComparator<CourseGWT>(new IStaticGetter<CourseGWT, String>() {
+               public String getValueForObject(CourseGWT object) { return object.getType(); }
+            }),
+            new EditingSelectColumn<CourseGWT>(
+                  new String[] { "LEC", "LAB" },
+                  new IStaticGetter<CourseGWT, String>() {
+                     public String getValueForObject(CourseGWT object) { return object.getType(); }
+                  },
+                  new IStaticSetter<CourseGWT, String>() {
+                     public void setValueInObject(CourseGWT object, String newValue) {
+                        object.setType(newValue);
+                     }
+                  }));
+
 		
 		table.addColumn(
 				ASSOCIATIONS_HEADER,

@@ -1,6 +1,6 @@
 /* gets rid of the yellow border chrome puts on focused things */
-* { 
-    outline: none;
+* {
+	outline: none;
 }
 
 .osmtable {
@@ -19,13 +19,11 @@
 	padding: 0px;
 }
 
-.osmtable > tbody > tr:nth-child(odd),
-.osmtable > tr:nth-child(odd) {
-	background-color: #F8FBFE;
+.osmtable>tbody>tr:nth-child(odd),.osmtable>tr:nth-child(odd) {
+	background-color: #F7F7F7;
 }
 
 /*.osmtable tr + tr:hover { background-color: #EEEEEE; }*/
-
 .osmtable td {
 	overflow: hidden;
 }
@@ -44,6 +42,8 @@
 .headers .resizeable {
 	position: relative;
 	display: block;
+	padding-left: 5px;
+	padding-right: 5px;
 	/*border-right: 2px dotted #6F7277;*/
 }
 
@@ -52,8 +52,9 @@
 	top: 0px;
 	bottom: 0px;
 	right: -3px;
-	width: 6px;
-	background: url('imgs/resizer.gif') repeat-y;
+	width: 2px;
+	/*background: url('imgs/resizer.gif') repeat-y;*/
+	background: #6F7277;
 	display: block;
 	cursor: col-resize;
 	z-index: 1;
@@ -84,13 +85,13 @@
 }
 
 .osmtable .icon.delete.enabled {
-	background-image: url('imgs/delete-icon.png') 
+	background-image: url('imgs/delete-icon.png')
 }
 
 .osmtable .icon.delete.disabled {
 	background-image: url('imgs/delete-icon-disabled.png');
 	opacity: .2;
-	filter: alpha(opacity=20);
+	filter: alpha(opacity = 20);
 }
 
 .osmtable .icon.edit {

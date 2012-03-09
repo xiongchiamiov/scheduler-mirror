@@ -22,6 +22,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -53,7 +54,7 @@ public class ScheduleTrashView extends VerticalPanel implements IViewContents
    private HashMap<Integer, HorizontalPanel> documentPanels;
    private boolean                           colorNextRow = false;
 
-   public ScheduleTrashView(final GreetingServiceAsync service, final MenuBar menuBar, final String username,
+   public ScheduleTrashView(final GreetingServiceAsync service, final SimplePanel scheduleNameContainer, final MenuBar menuBar, final String username,
          final OtherFilesStrategy filesStrategy)
    {
       this.filesStrategy = filesStrategy;
@@ -75,7 +76,7 @@ public class ScheduleTrashView extends VerticalPanel implements IViewContents
             if (myFrame.canPopViewsAboveMe())
             {
                myFrame.popFramesAboveMe();
-               myFrame.frameViewAndPushAboveMe(new SelectScheduleView(service, menuBar, username));
+               myFrame.frameViewAndPushAboveMe(new SelectScheduleView(service, scheduleNameContainer, menuBar, username));
             }
          }
       });
@@ -90,7 +91,7 @@ public class ScheduleTrashView extends VerticalPanel implements IViewContents
             if (myFrame.canPopViewsAboveMe())
             {
                myFrame.popFramesAboveMe();
-               myFrame.frameViewAndPushAboveMe(new ScheduleTrashView(service, menuBar, username, filesStrategy));
+               myFrame.frameViewAndPushAboveMe(new ScheduleTrashView(service, scheduleNameContainer, menuBar, username, filesStrategy));
             }
          }
       });

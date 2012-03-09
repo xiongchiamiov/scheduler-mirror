@@ -104,6 +104,28 @@ public class InstructorsTable extends SimplePanel {
 	}
 
 	void addFieldColumns() {
+	   
+	   table.addColumn(
+            LASTNAME_HEADER,
+            LASTNAME_WIDTH,
+            true,
+            new MemberStringComparator<InstructorGWT>(new IStaticGetter<InstructorGWT, String>() {
+               public String getValueForObject(InstructorGWT object) { return object.getLastName(); }
+            }),
+            new EditingStringColumn<InstructorGWT>(
+                  new IStaticGetter<InstructorGWT, String>() {
+                     public String getValueForObject(InstructorGWT object) { return object.getLastName(); }
+                  },
+                  new IStaticSetter<InstructorGWT, String>() {
+                     public void setValueInObject(InstructorGWT object, String newValue) { object.setLastName(newValue); }
+                  },
+                  new IStaticValidator<InstructorGWT, String>() {
+                     public ValidateResult validate(InstructorGWT object, String newValue) {
+                        if (newValue.equals(""))
+                           return new InputWarning(LASTNAME_HEADER + " must be present.");
+                        return new InputValid();
+                     }
+                  }));
 		table.addColumn(
 				FIRSTNAME_HEADER,
 				FIRSTNAME_WIDTH,
@@ -126,27 +148,7 @@ public class InstructorsTable extends SimplePanel {
 							}
 						}));
 
-		table.addColumn(
-				LASTNAME_HEADER,
-				LASTNAME_WIDTH,
-				true,
-				new MemberStringComparator<InstructorGWT>(new IStaticGetter<InstructorGWT, String>() {
-					public String getValueForObject(InstructorGWT object) { return object.getLastName(); }
-				}),
-				new EditingStringColumn<InstructorGWT>(
-						new IStaticGetter<InstructorGWT, String>() {
-							public String getValueForObject(InstructorGWT object) { return object.getLastName(); }
-						},
-						new IStaticSetter<InstructorGWT, String>() {
-							public void setValueInObject(InstructorGWT object, String newValue) { object.setLastName(newValue); }
-						},
-						new IStaticValidator<InstructorGWT, String>() {
-							public ValidateResult validate(InstructorGWT object, String newValue) {
-								if (newValue.equals(""))
-									return new InputWarning(LASTNAME_HEADER + " must be present.");
-								return new InputValid();
-							}
-						}));
+	
 		
 		table.addColumn(
 				USERNAME_HEADER,

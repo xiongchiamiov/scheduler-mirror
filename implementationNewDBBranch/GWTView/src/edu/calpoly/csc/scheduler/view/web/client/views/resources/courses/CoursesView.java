@@ -57,9 +57,11 @@ public class CoursesView extends VerticalPanel implements IViewContents, Courses
 		this.setWidth("100%");
 		this.setHeight("100%");
 
-		this.add(new HTML("<h2>" + document.getName() + " - Courses</h2>"));
+		this.add(new HTML("<h2>Courses</h2>"));
 
-		add(new CoursesTable(this));
+		CoursesTable table = new CoursesTable(this);
+		
+		add(table);
 	}
 
 	@Override

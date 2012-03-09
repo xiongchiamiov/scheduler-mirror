@@ -50,8 +50,12 @@ body {
 
 .usernameAndLogout {
 	float: right;
-	color: #FFFFFF;
+	color: #000000;
 	margin: .5em;
+}
+
+.scheduleName {
+	padding-left: 10px;
 }
 
 .quarterViewMenu {
@@ -362,8 +366,8 @@ h1 {
 /*==============================|  Global Top Bar |==============================*/
 .topBar {
 	width: 100%;
-	height: 82px;
-	background: url('imgs/header_bg.gif') no-repeat #003300;
+	height: 10px;
+	background: #FFFFFF;
 	background-attachment: initial;
 	background-origin: initial;
 	background-clip: initial;
@@ -371,7 +375,7 @@ h1 {
 
 #topBar #loginStatus {
 	float: right;
-	height: 60px;
+	height: 10px;
 }
 
 #goldBar {

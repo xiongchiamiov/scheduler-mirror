@@ -31,13 +31,13 @@ public class LocationsTable extends SimplePanel {
 	private static final String OVERHEAD = "OVERHEAD";
 	private static final String SMART_ROOM = "SMART";
 	
-	private static final String ROOM_HEADER = "Room";
+	private static final String ROOM_HEADER = "Location";
 	private static final String ROOM_WIDTH = null;
 	
 	private static final String TYPE_HEADER = "Type";
 	private static final String TYPE_WIDTH = null;
 	
-	private static final String MAX_OCCUPANCY_HEADER = "Max Occupancy";
+	private static final String MAX_OCCUPANCY_HEADER = "Max Capacity";
 	private static final String MAX_OCCUPANCY_WIDTH = "4em";
 	
 	private static final String DISABILITIES_HEADER = "Disabilities";

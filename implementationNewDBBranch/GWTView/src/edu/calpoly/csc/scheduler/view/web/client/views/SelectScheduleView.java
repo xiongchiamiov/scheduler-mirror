@@ -29,6 +29,7 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -59,8 +60,10 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
    private ArrayList<DocumentGWT>            checkedDocuments;
    private HashMap<Integer, HorizontalPanel> documentPanels;
    private boolean                           colorNextRow = false;
-
-   public SelectScheduleView(final GreetingServiceAsync service, final MenuBar menuBar, final String username)
+   final SimplePanel scheduleNameContainer;
+   String currentDocName;
+   
+   public SelectScheduleView(final GreetingServiceAsync service, final SimplePanel scheduleNameContainer, final MenuBar menuBar, final String username)
    {
       this.service = service;
       this.menuBar = menuBar;
@@ -70,6 +73,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
       this.addStyleName("iViewPadding");
       this.checkedDocuments = new ArrayList<DocumentGWT>();
       this.documentPanels = new HashMap<Integer, HorizontalPanel>();
+      this.scheduleNameContainer = scheduleNameContainer;
 
       menuBar.clearItems();
       // Put tabs in menu bar
@@ -81,7 +85,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
             if (myFrame.canPopViewsAboveMe())
             {
                myFrame.popFramesAboveMe();
-               myFrame.frameViewAndPushAboveMe(new SelectScheduleView(service, menuBar, username));
+               myFrame.frameViewAndPushAboveMe(new SelectScheduleView(service, scheduleNameContainer, menuBar, username));
             }
          }
       });
@@ -97,7 +101,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
             if (myFrame.canPopViewsAboveMe())
             {
                myFrame.popFramesAboveMe();
-               myFrame.frameViewAndPushAboveMe(new ScheduleTrashView(service, menuBar, username, filesStrategy));
+               myFrame.frameViewAndPushAboveMe(new ScheduleTrashView(service, scheduleNameContainer, menuBar, username, filesStrategy));
             }
          }
       });
@@ -288,6 +292,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
             openDocInNewTab(document.getName(), document.getScheduleID());
          }
       }));
+      DOM.setElementAttribute(docname.getElement(), "id", "open" + document.getName());
       HorizontalPanel flow = new HorizontalPanel();
       flow.setVerticalAlignment(ALIGN_MIDDLE);
       cb.setStyleName("docPadding");
@@ -301,6 +306,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
 
    private void openDocInNewTab(String name, Integer scheduleid)
    {
+      this.currentDocName = name;
       String baseHref = Window.Location.getHref();
       if (Window.Location.getHref().contains("?userid="))
       {
@@ -578,6 +584,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
    @Override
    public void afterViewPoppedFromAboveMe()
    {
+      this.scheduleNameContainer.clear();
    }
 
    @Override
@@ -692,6 +699,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
             if (!scheduleNames.contains(name))
             {
                newDocName = name;
+               currentDocName = name;
                final LoadingPopup popup = new LoadingPopup();
                popup.show();
 
