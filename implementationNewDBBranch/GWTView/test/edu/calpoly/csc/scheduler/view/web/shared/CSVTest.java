@@ -1,6 +1,14 @@
 package edu.calpoly.csc.scheduler.view.web.shared;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -113,6 +121,18 @@ public class CSVTest extends TestCase {
 		// helper method, like that sketched out in the testExportCase() method
 		// below.
 		//
+
+		for (int items = 0; items < 100; items++) {
+			try {
+				testExportCase(items, "ExportTest" + items);
+			} catch (DatabaseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/**
@@ -124,12 +144,63 @@ public class CSVTest extends TestCase {
 	 * Capture the string result of the export method and write it to a file.
 	 * Compare the actual output file with the expected output in the given
 	 * expectedOutputFile.
+	 * 
+	 * @throws DatabaseException
+	 * @throws IOException
 	 */
-	private void testExportCase(int numberOfItems, String expectedOutputFile) {
-		// CSV Used model, which calls get on Locations, Courses, Instructors,
-		// Schedule Item, DirtyScheduleItem
+	private void testExportCase(int numberOfItems, String expectedOutputFile)
+			throws DatabaseException, IOException {
+/*
+		try {
+			Model model = new Model();
+			model.createTransientDocument("Doc" + numberOfItems, 14, 44)
+					.insert();
+			Document doc = model.findAllDocuments().iterator().next();
 
-		// ...
+			CSVExporter export = new CSVExporter();
+
+			generateCourses(numberOfItems, model, doc);
+			generateInstructors(numberOfItems, model, doc);
+			generateLocations(numberOfItems, model, doc);
+			generateSchedule(model, doc);
+			generateScheduleItems(numberOfItems, model, doc);
+
+			File file = new File(
+					"test/edu/calpoly/csc/scheduler/view/web/shared/CSVExporterOutput/exportTestCase"
+							+ numberOfItems);
+
+			Writer output = new BufferedWriter(new FileWriter(file));
+			try {
+				output.write(export.export(model, doc));
+			} finally {
+				output.close();
+			}
+
+			String out = null;
+			String path = file.getAbsolutePath();
+			Process p = Runtime
+					.getRuntime()
+					.exec("diff "
+							+ "test/edu/calpoly/csc/scheduler/view/web/shared/CSVExporterOutput/exportTestCase"
+							+ numberOfItems
+							+ " "
+							+ "test/edu/calpoly/csc/scheduler/view/web/shared/CSVExporterOracle/exportCase"
+							+ numberOfItems);
+
+			BufferedReader stdInput = new BufferedReader(new InputStreamReader(
+					p.getInputStream()));
+
+			out = stdInput.readLine();
+			assertEquals(null, out);
+
+		} catch (DatabaseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+*/
 	}
 
 	public void testDayPrefs() throws DatabaseException {
@@ -139,10 +210,10 @@ public class CSVTest extends TestCase {
 		model.createTransientDocument("TestDayPrefs", 14, 44).insert();
 		Collection<Document> docs = model.findAllDocuments();
 		Document doc = model.findAllDocuments().iterator().next();
-		
+
 		model.insertEquipmentType("TestEquipment");
 
-		//Initial course creation
+		// Initial course creation
 		model.createTransientCourse("Name" + Integer.toString(0),
 				"Catalog" + Integer.toString(0), "dept" + Integer.toString(0),
 				"WTU" + Integer.toString(0), "SCU" + Integer.toString(0),
@@ -155,8 +226,8 @@ public class CSVTest extends TestCase {
 
 		courseList = doc.getCourses();
 		for (Course course : courseList) {
-			
-			//Add additional data
+
+			// Add additional data
 			Set<String> usedEquipment = new HashSet<String>();
 			usedEquipment.add("TestEquipment");
 
@@ -176,69 +247,94 @@ public class CSVTest extends TestCase {
 			course.setUsedEquipment(usedEquipment);
 			course.setDayPatterns(dayPatternsList);
 			course.setTetheredToLecture(true);
-			course.setLecture(model.createTransientCourse("Name" + Integer.toString(4),
-					"Catalog" + Integer.toString(0), "dept" + Integer.toString(0),
-					"WTU" + Integer.toString(0), "SCU" + Integer.toString(0),
-					"Numsec" + Integer.toString(0), "Type" + Integer.toString(0),
-					"maxenrollment" + Integer.toString(0),
-					"numHalfHours" + Integer.toString(0), true).setDocument(doc).insert());
-			
+			course.setLecture(model
+					.createTransientCourse("Name" + Integer.toString(4),
+							"Catalog" + Integer.toString(0),
+							"dept" + Integer.toString(0),
+							"WTU" + Integer.toString(0),
+							"SCU" + Integer.toString(0),
+							"Numsec" + Integer.toString(0),
+							"Type" + Integer.toString(0),
+							"maxenrollment" + Integer.toString(0),
+							"numHalfHours" + Integer.toString(0), true)
+					.setDocument(doc).insert());
+
 			assertEquals("Name0", course.getName());
-			
+
 			course.update();
 
-			/* Currently fails due to getUsedEquipment and dayDayPatterns not being saved when set */
 			assertEquals(course.getUsedEquipment().size(), 1);
-			assertEquals("TestEquipment", course.getUsedEquipment().iterator().next());
+			assertEquals("TestEquipment", course.getUsedEquipment().iterator()
+					.next());
 			assertEquals(dayPatternsList, course.getDayPatterns());
 		}
 
 	}
 
-	public static void main(String[] args) throws DatabaseException, IOException {
-		Model model = new Model();
-		model.createTransientDocument("TestDoc", 14, 44).insert();
-		Collection<Document> docs = model.findAllDocuments();
-		Document doc = model.findAllDocuments().iterator().next();
+	public static void main(String[] args) throws DatabaseException,
+			IOException {
+		/*
+		 * Model model = new Model(); model.createTransientDocument("TestDoc",
+		 * 14, 44).insert(); Collection<Document> docs =
+		 * model.findAllDocuments(); Document doc =
+		 * model.findAllDocuments().iterator().next();
+		 * 
+		 * CSVExporter export = new CSVExporter();
+		 * 
+		 * generateCourses(10, model, doc); generateInstructors(10, model, doc);
+		 * generateLocations(10, model, doc); generateSchedule(model, doc);
+		 * generateScheduleItems(10, model, doc);
+		 * 
+		 * System.out.println(export.export(model, doc)); //
+		 * System.out.println(export.exportTest(model, //
+		 * model.createTransientDocument("Test", 14, 44).insert()));
+		 */
 
-		CSVExporter export = new CSVExporter();
-	
-			generateCourses(10, model, doc);
-			generateInstructors(10, model, doc);
-			generateLocations(10, model, doc);
-			generateSchedule(model, doc);
-			generateScheduleItems(10, model, doc);
-
-			System.out.println(export.export(model, doc));
-			// System.out.println(export.exportTest(model,
-			// model.createTransientDocument("Test", 14, 44).insert()));
-	
-		
+		// generateTestData();
 	}
 
-
+	/**
+	 * @param numberOfInstructors
+	 * @param model
+	 * @param doc
+	 * @throws DatabaseException
+	 */
+	/**
+	 * @param numberOfInstructors
+	 * @param model
+	 * @param doc
+	 * @throws DatabaseException
+	 */
 	private static void generateInstructors(int numberOfInstructors,
 			Model model, Document doc) throws DatabaseException {
 
-		for (int index = 0; index <= numberOfInstructors; index++) {
-
-			model.createTransientInstructor("Fname" + Integer.toString(index),
-					"LName" + Integer.toString(index),
-					"Uname" + Integer.toString(index), Integer.toString(index),
-					true).setDocument(doc).insert();
-		}
-
 		Collection<Course> courseList;
-		Collection<Instructor> insList;
-
 		courseList = doc.getCourses();
-		insList = doc.getInstructors();
 
-		
+		for (int index = 0; index <= numberOfInstructors; index++) {
+			// Pseudo-random number generators
+			Random nameGen = new Random(index);
+			Random timePrefGen = new Random(numberOfInstructors);
 
-		
-		for (Instructor ins : insList) {
+			// Generate names
+			String firstName = "";
+			String lastName = "";
 
+			for (int nameChar = 0; nameChar < index; nameChar++) {
+				firstName += String.valueOf((char) ('a' + nameGen.nextInt(26)));
+				lastName += String.valueOf((char) ('a' + nameGen.nextInt(26)));
+			}
+
+			String userName = lastName + firstName;
+
+			String maxWTU = Integer.toString(index * 10);
+			Boolean isSchedulable = index % 2 == 0 ? true : false;
+
+			// Create instructor
+			Instructor ins = model.createTransientInstructor(firstName,
+					lastName, userName, maxWTU, isSchedulable);
+
+			// Generate Time preferences
 			HashMap<Day, HashMap<Integer, Integer>> timePrefs = new HashMap<Day, HashMap<Integer, Integer>>();
 
 			for (Day day : Day.values())
@@ -248,18 +344,22 @@ public class CSVTest extends TestCase {
 												// hours
 			for (int j = 0; j < 7; j++) {
 				for (int k = 0; k < 48; k++) {
-					tprefs[j][k] = 3;
+					tprefs[j][k] = timePrefGen.nextInt(4);
 				}
 			}
+			ins.setTimePreferences(tprefs);
 
+			// Generate Course Preferences
 			HashMap<Integer, Integer> coursePrefs = new HashMap<Integer, Integer>();
-
 			int i = 0;
 			for (Course course : courseList)
 				coursePrefs.put(course.getID(), ++i % 4);
-			
+
 			ins.setCoursePreferences(coursePrefs);
-			ins.setTimePreferences(tprefs);
+
+			// Insert instructor into document
+			ins.setDocument(doc).insert();
+
 		}
 
 	}
@@ -268,42 +368,64 @@ public class CSVTest extends TestCase {
 			Document doc) throws DatabaseException {
 
 		for (int index = 0; index < numberOfCourses; index++) {
+			Random nameGen = new Random(index);
+			Random equipGen = new Random(index);
 
-			model.createTransientCourse("Name" + Integer.toString(index),
-					"Catalog" + Integer.toString(index),
-					"dept" + Integer.toString(index),
-					"WTU" + Integer.toString(index),
-					"SCU" + Integer.toString(index),
-					"Numsec" + Integer.toString(index),
-					"Type" + Integer.toString(index),
-					"maxenrollment" + Integer.toString(index),
-					"numHalfHours" + Integer.toString(index), true)
+			String name = "";
+			String catalog = "";
+			String dept = "";
+			String wtu = Integer.toString(index * 15);
+			String scu = Integer.toString(index * 15);
+			String numSec = Integer.toString(index);
+			int types = Course.CourseType.values().length;
+			String type = Course.CourseType.values()[nameGen.nextInt(types - 1)]
+					.toString();
+			String maxEnrollment = Integer.toString(index * 15);
+			String numHalfHours = Integer.toString(index * 15);
+			Boolean isScheduleable = index % 2 == 0 ? true : false;
+
+			for (int nameChar = 0; nameChar < index; nameChar++) {
+				name += String.valueOf((char) ('a' + nameGen.nextInt(26)));
+				catalog += String.valueOf((char) ('a' + nameGen.nextInt(26)));
+				dept += String.valueOf((char) ('a' + nameGen.nextInt(26)));
+			}
+
+			// Generate initial data
+
+			model.createTransientCourse(name, catalog, dept, wtu, scu, numSec,
+					type, maxEnrollment, numHalfHours, isScheduleable)
 					.setDocument(doc).insert();
 
-		}
-
-		Collection<Course> courseList;
-
-		courseList = doc.getCourses();
-		for (Course course : courseList) {
+			Course course = model.findCoursesForDocument(doc).iterator().next();
+			// Generate Used equipment
 			Set<String> usedEquipment = new HashSet<String>();
-			usedEquipment.add("TestEquipment");
+			int bound = index == 0 ? 0 : equipGen.nextInt(index);
 
+			for (int i = 0; i < bound; i++) {
+				String equip = "";
+				for (int nameChar = 0; nameChar < index; nameChar++)
+					equip += String
+							.valueOf((char) ('a' + equipGen.nextInt(26)));
+				usedEquipment.add(equip);
+			}
+			course.setUsedEquipment(usedEquipment);
+
+			// Generate Day patterns TODO
 			Set<Day> dayPatternsA = new HashSet<Day>();
 			Set<Day> dayPatternsB = new HashSet<Day>();
 
 			dayPatternsA.add(Day.FRIDAY);
 			dayPatternsA.add(Day.WEDNESDAY);
-
+			
 			dayPatternsB.add(Day.FRIDAY);
 			dayPatternsB.add(Day.SUNDAY);
 
 			Collection<Set<Day>> dayPatternsList = new ArrayList<Set<Day>>();
 			dayPatternsList.add(dayPatternsA);
 			dayPatternsList.add(dayPatternsB);
-
-			course.setUsedEquipment(usedEquipment);
 			course.setDayPatterns(dayPatternsList);
+
+			// Set tethered to lecture TODO
 			course.setTetheredToLecture(false);
 			course.setLecture(null);
 
@@ -314,21 +436,32 @@ public class CSVTest extends TestCase {
 	private static void generateLocations(int numberOfLocations, Model model,
 			Document doc) throws DatabaseException {
 
-		Set<String> equipment = new HashSet<String>();
-		equipment.add("Projector");
+		for (int index = 0; index < numberOfLocations; index++) {
+			Random equipGen = new Random(index);
+			// TODO Increase randomness for type
 
-		for (int index = 0; index <= numberOfLocations; index++) {
+			String room = Integer.toString(index * 15);
+			String type = Integer.toString(index * 15);
+			String maxOccupancy = Integer.toString(index * 15);
+			Boolean isScheduleable = index % 2 == 0 ? true : false;
+			model.createTransientLocation(room, type, maxOccupancy,
+					isScheduleable).setDocument(doc).insert();
 
-			model.createTransientLocation(Integer.toString(index),
-					Integer.toString(index), Integer.toString(index), true)
-					.setDocument(doc).insert();
-		}
+			Location loc = model.findLocationsForDocument(doc).iterator()
+					.next();
 
-		Collection<Location> locationList;
-		locationList = doc.getLocations();
+			Set<String> equipment = new HashSet<String>();
+			int bound = index == 0 ? 0 : equipGen.nextInt(index);
 
-		for (Location location : locationList) {
-			location.setProvidedEquipment(equipment);
+			for (int i = 0; i < bound; i++) {
+				String equip = "";
+				for (int nameChar = 0; nameChar < index; nameChar++)
+					equip += String
+							.valueOf((char) ('a' + equipGen.nextInt(26)));
+				equipment.add(equip);
+			}
+
+			loc.setProvidedEquipment(equipment);
 		}
 
 	}
@@ -343,7 +476,7 @@ public class CSVTest extends TestCase {
 	private static void generateScheduleItems(int num, Model model, Document doc)
 			throws DatabaseException {
 		Schedule schedule = doc.getSchedules().iterator().next();
-
+		// TODO Randomize
 		Set<Day> dayPatterns = new HashSet<Day>();
 		dayPatterns.add(Day.FRIDAY);
 
@@ -369,5 +502,42 @@ public class CSVTest extends TestCase {
 			item.insert();
 		}
 
+	}
+
+	private static void generateTestData() {
+		for (int items = 0; items < 100; items++) {
+			try {
+				Model model = new Model();
+				model.createTransientDocument("Doc" + items, 14, 44).insert();
+				Collection<Document> docs = model.findAllDocuments();
+				Document doc = model.findAllDocuments().iterator().next();
+
+				CSVExporter export = new CSVExporter();
+
+				generateCourses(items, model, doc);
+				generateInstructors(items, model, doc);
+				generateLocations(items, model, doc);
+				generateSchedule(model, doc);
+				generateScheduleItems(items, model, doc);
+
+				File file = new File(
+						"test/edu/calpoly/csc/scheduler/view/web/shared/CSVExporterOracle/exportCase"
+								+ items);
+
+				Writer output = new BufferedWriter(new FileWriter(file));
+				try {
+					output.write(export.export(model, doc));
+				} finally {
+					output.close();
+				}
+
+			} catch (DatabaseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 }
