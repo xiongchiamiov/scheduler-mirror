@@ -55,14 +55,16 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 
 		if (loadAndSaveFromFileSystem) {
 			try {
-				FileInputStream fos = new FileInputStream("DatabaseState.javaser");
+				String filepath = getServletContext().getRealPath("DatabaseState.javaser");
+				System.out.println("Loading state from "+filepath+"!");
+				FileInputStream fos = new FileInputStream(filepath);
 				ObjectInputStream ois = new ObjectInputStream(fos);
 				
 				model.readState(ois);
 				
 				ois.close();
 			}
-			catch (IOException e) {
+			catch (Exception e) {
 				e.printStackTrace();
 				System.out.println("Failed to restore model! Starting fresh!");
 				model = new Model();
@@ -353,7 +355,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			if (this.loadAndSaveFromFileSystem) {
 				String filepath = getServletContext().getRealPath("DatabaseState.javaser");
 				System.out.println("Saving state to "+filepath+"!");
-				FileOutputStream fos = new FileOutputStream("DatabaseState.javaser");
+				FileOutputStream fos = new FileOutputStream(filepath);
 				ObjectOutputStream oos = new ObjectOutputStream(fos);
 				
 				model.writeState(oos);
