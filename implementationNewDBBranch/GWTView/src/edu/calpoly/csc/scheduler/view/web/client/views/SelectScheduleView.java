@@ -292,7 +292,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
             openDocInNewTab(document.getName(), document.getScheduleID());
          }
       }));
-      DOM.setElementAttribute(docname.getElement(), "id", "open" + document.getName());
+      DOM.setElementAttribute(docname.getElement(), "id", "openDocument" + document.getName());
       HorizontalPanel flow = new HorizontalPanel();
       flow.setVerticalAlignment(ALIGN_MIDDLE);
       cb.setStyleName("docPadding");
