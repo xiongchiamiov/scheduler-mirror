@@ -13,6 +13,10 @@ Instructions for Finals Week Acceptance Testing
 <br>
 <br>
 <br>
+<h3>
+General Information
+</h3>
+<p>
 A blank copy of the finals week acceptance test report has already been put
 into each department subdirectory.  It is a very simple HTML file.  You can
 edit the file directly in a plain text editor, or use some form of word
@@ -31,7 +35,12 @@ problems, describe them clearly.  A "problem" is a bug, sub-standard
 performance, or any aspect of program behavior that is not 100% satisfactory.
 Post a Jira issue for any problems, if an issue for that problem has not
 already been posted.
-</p><p>
+</p>
+
+<h3>
+Details for Each Section of the Report
+</h3>
+<p>
 The following are further specific instructions for each section of the report:
 <ol type=1>
 <p> <li>
@@ -106,5 +115,119 @@ department."
 the preceding testing steps, including overall UI look-and-feel and usability.
 Include links to any new Jira issues that you post.
 </ol>
+</p>
+
+<h3>
+Details for Entering Resource Data
+</h3>
+<p>
+To enter the resource data for your department, use the Winter 12 schedule
+published at
+<a href="http://schedules.calpoly.edu">
+schedules.csc.calpoly.edu
+</a>
+The following tables indicate how to convert the data in the <tt>schedules</tt>
+table to the scheduler program resource pages.
+</p><p>
+<strong><em>Courses:</em></strong>
+<table align=center border=1 cellpadding=4>
+  <tr>
+    <td valign=top><strong>Scheduler Program</strong>
+    <td valign=top><strong>schedules.calpoly.edu</strong>
+  <tr>
+    <td valign=top>Department
+    <td valign=top>1st part of Course
+  <tr>
+    <td valign=top>Catalog Number
+    <td valign=top>2nd part of Course
+  <tr>
+    <td valign=top>Course Name
+    <td valign=top>
+go to your departments page at
+<a href="http://catalog.calpoly.edu/2011cat/course_descr2011.html">
+catalog.calpoly.edu/2011cat/course_descr2011.html</a>
+  <tr>
+    <td valign=top># of Sections
+    <td valign=top>max value of Sect for any given course
+  <tr>
+    <td valign=top>WTU
+    <td valign=top>4 if no lab with course, 5 if lab with course
+  <tr>
+    <td valign=top>SCU
+    <td valign=top>number of units in the catalog for the course
+  <tr>
+    <td valign=top>Day Combinations
+    <td valign=top>Days
+  <tr>
+    <td valign=top>Hours Per Week
+    <td valign=top>Compute from values in Days, Start, and End
+  <tr>
+    <td valign=top>Max Enrollment
+    <td valign=top>ECap
+  <tr>
+    <td valign=top>Course Type
+    <td valign=top>Type
+  <tr>
+    <td valign=top>Assoc
+    <td valign=top><em>doesn't work so don't enter anything here</em>
+</table>
+</p><p>
+<strong><em>Instructors:</em></strong>
+<br>
+<br>
+<table align=center border=1 cellpadding=4>
+  <tr>
+    <td valign=top><strong>Scheduler Program</strong>
+    <td valign=top><strong>schedules.calpoly.edu</strong>
+  <tr>
+    <td valign=top>Last Name
+    <td valign=top>last part of Instructor
+  <tr>
+    <td valign=top>First Name
+    <td valign=top>first part of Instructor
+  <tr>
+    <td valign=top>User Name
+    <td valign=top>
+Goto the Directory Information channel on portal and copy/paste the
+instructor's name into the search box
+  <tr>
+    <td valign=top>Max WTU
+    <td valign=top>12 unconditionally
+  <tr>
+    <td valign=top>Disabilities
+    <td valign=top>say yes for exactly one department instructor
+  <tr>
+    <td valign=top>Preferences
+    <td valign=top>
+For courses prefs, put the ones they actually teach in Winter 12
+as 'Preferred'; put an even spread of 'Acceptable', 'Not Preferred',
+and 'Not Possible' the rest of the courses.
+<br>
+<br>
+For times prefs, put two hours around the times that actually got assigned
+as 'Preferred'; put an even spread of 'Acceptable', 'Not Preferred', and 'Not
+Possible' the rest of the times.
+</table>
+</p><p>
+<strong><em>Rooms:</em></strong>
+<br>
+<br>
+<table align=center border=1 cellpadding=4>
+  <tr>
+    <td valign=top><strong>Scheduler Program</strong>
+    <td valign=top><strong>schedules.calpoly.edu</strong>
+  <tr>
+    <td valign=top>Location
+    <td valign=top>Location
+  <tr>
+    <td valign=top>Type
+    <td valign=top>Type
+  <tr>
+    <td valign=top>Max Capacity
+    <td valign=top>LCap
+  <tr>
+    <td valign=top>Equipment
+    <td valign=top>Be creative
+</table>
 </body>
 </html>
