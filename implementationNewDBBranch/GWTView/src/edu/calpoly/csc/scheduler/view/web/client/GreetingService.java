@@ -97,11 +97,11 @@ public interface GreetingService extends RemoteService {
 
 	Integer login(String username) throws InvalidLoginException;
 
-	DocumentGWT createDocumentAndGetWorkingCopy(String newDocName);
+	DocumentGWT createOriginalDocument(String newDocName);
 	
 	void updateDocument(DocumentGWT document);
 
-	Collection<DocumentGWT> getAllOriginalDocumentsByID();
+	Collection<DocumentGWT> getAllDocuments();
 
 	void saveWorkingCopyToOriginalDocument(Integer id);
 
@@ -144,4 +144,6 @@ public interface GreetingService extends RemoteService {
 	Collection<ScheduleItemGWT> updateScheduleItem(ScheduleItemGWT itemGWT);
 	Collection<ScheduleItemGWT> newRemoveScheduleItem(ScheduleItemGWT itemGWT);
 	Collection<ScheduleItemGWT> getScheduleItems(int scheduleID);
+
+	DocumentGWT findDocumentByID(int automaticOpenDocumentID);
 }

@@ -37,6 +37,9 @@ public class Schedule extends Identified {
 	}
 	
 	public void delete() throws DatabaseException {
+		for (ScheduleItem item : getItems())
+			item.delete();
+		
 		model.database.deleteSchedule(underlyingSchedule);
 	}
 

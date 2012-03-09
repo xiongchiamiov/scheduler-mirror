@@ -98,18 +98,18 @@ public class GWTView implements EntryPoint
          newViewFrame = new ViewFrame(new LoginViewAutomatic(service, usernameContainer, logoutLinkContainer,
                scheduleNameContainer, menuBar, automaticLoginUsername));
       }
-      else if (Window.Location.getHref().contains("?scheduleid="))
+      else if (Window.Location.getHref().contains("?originaldocumentid="))
       {
          String query = Window.Location.getHref();
          query = query.substring(query.lastIndexOf('?'));
          String[] params = query.split("&");
          String automaticLoginUsername = params[2].split("=")[1];
-         String scheduleName = params[1].split("=")[1];
-         HTML schedname = new HTML("<h2>" + scheduleName + "<h2>");
-         scheduleNameContainer.add(schedname);
-         int automaticOpenDocumentID = Integer.parseInt(params[0].split("=")[1]);
+         String documentName = params[1].split("=")[1];
+         HTML documentNameHTML = new HTML("<h2>" + documentName + "<h2>");
+         scheduleNameContainer.add(documentNameHTML);
+         int automaticOpenOriginalDocumentID = Integer.parseInt(params[0].split("=")[1]);
          newViewFrame = new ViewFrame(new LoginViewAutomatic(service, usernameContainer, logoutLinkContainer,
-               scheduleNameContainer, menuBar, automaticLoginUsername, automaticOpenDocumentID));
+               scheduleNameContainer, menuBar, automaticLoginUsername, automaticOpenOriginalDocumentID));
       }
       else
       {

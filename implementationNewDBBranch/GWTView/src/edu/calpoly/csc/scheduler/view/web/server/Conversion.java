@@ -189,7 +189,8 @@ public abstract class Conversion {
 				doc.getTBALocation().getID(),
 				doc.isTrashed(),
 				doc.getStartHalfHour(),
-				doc.getEndHalfHour());
+				doc.getEndHalfHour(),
+				doc.isWorkingCopy() ? doc.getOriginal().getID() : null);
 	}
 
 	@Deprecated

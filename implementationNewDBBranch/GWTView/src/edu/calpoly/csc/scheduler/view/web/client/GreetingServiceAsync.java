@@ -35,11 +35,9 @@ public interface GreetingServiceAsync {
 	void getLocationsForDocument(int documentID, AsyncCallback<List<LocationGWT>> callback);
 	void removeLocation(Integer locationID, AsyncCallback<Void> callback);
 	void login(String username, AsyncCallback<Integer> asyncCallback);
-	void createDocumentAndGetWorkingCopy(String newDocName, AsyncCallback<DocumentGWT> asyncCallback);
+	void createOriginalDocument(String newDocName, AsyncCallback<DocumentGWT> asyncCallback);
 	void saveWorkingCopyToOriginalDocument(Integer id, AsyncCallback<Void> asyncCallback);
 	void createWorkingCopyForOriginalDocument(Integer originalDocumentID, AsyncCallback<DocumentGWT> callback);
-	void getAllOriginalDocumentsByID(
-			AsyncCallback<Collection<DocumentGWT>> callback);
 	void deleteWorkingCopyDocument(Integer documentID, AsyncCallback<Void> asyncCallback);
 	
 	@Deprecated
@@ -188,4 +186,6 @@ public interface GreetingServiceAsync {
 	void moveWorkingCopyToNewOriginalDocument(Integer workingCopyID,
 			String scheduleName, boolean allowOverwrite,
 			AsyncCallback<Void> callback);
+	void findDocumentByID(int automaticOpenDocumentID, AsyncCallback<DocumentGWT> callback);
+	void getAllDocuments(AsyncCallback<Collection<DocumentGWT>> callback);
 }

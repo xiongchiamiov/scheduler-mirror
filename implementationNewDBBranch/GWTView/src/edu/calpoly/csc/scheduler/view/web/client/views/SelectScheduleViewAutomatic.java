@@ -8,23 +8,20 @@ import edu.calpoly.csc.scheduler.view.web.shared.DocumentGWT;
 
 public class SelectScheduleViewAutomatic extends SelectScheduleView
 {
-   final int automaticOpenDocumentID;
+   final int automaticOpenOriginalDocumentID;
 
    public SelectScheduleViewAutomatic(GreetingServiceAsync service, SimplePanel scheduleNameContainer, MenuBar menuBar, String username,
          int automaticOpenDocumentID)
    {
       super(service, scheduleNameContainer, menuBar, username);
-      this.automaticOpenDocumentID = automaticOpenDocumentID;
+      this.automaticOpenOriginalDocumentID = automaticOpenDocumentID;
    }
 
    @Override
    protected void doneAddingDocuments() {
-	   for (DocumentGWT document : availableDocuments) {
-		   if (document.getID().equals(automaticOpenDocumentID)) {
-			   openDocument(document);
-			   return;
-		   }
-	   }
-	   assert(false);
+	   System.out.println("done adding documents, there are " + allAvailableOriginalDocumentsByID.size() + ", opening " + automaticOpenOriginalDocumentID);
+	   DocumentGWT docToOpen = allAvailableOriginalDocumentsByID.get(automaticOpenOriginalDocumentID);
+	   assert(docToOpen != null);
+	   openOriginalDocument(docToOpen);
    }
 }

@@ -56,7 +56,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
 
    private ViewFrame                         myFrame;
 
-   Collection<DocumentGWT>                   availableDocuments;
+   HashMap<Integer, DocumentGWT>                   allAvailableOriginalDocumentsByID;
    private ArrayList<DocumentGWT>            checkedDocuments;
    private HashMap<Integer, HorizontalPanel> documentPanels;
    private boolean                           colorNextRow = false;
@@ -215,7 +215,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
    {
       this.myFrame = frame;
 
-      service.getAllOriginalDocumentsByID(new AsyncCallback<Collection<DocumentGWT>>()
+      service.getAllDocuments(new AsyncCallback<Collection<DocumentGWT>>()
       {
          @Override
          public void onFailure(Throwable caught)
@@ -226,12 +226,17 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
          @Override
          public void onSuccess(Collection<DocumentGWT> result)
          {
-            availableDocuments = result;
+        	 allAvailableOriginalDocumentsByID = new HashMap<Integer, DocumentGWT>();
 
             vdocholder.clear();
-            for (DocumentGWT doc : availableDocuments)
+            for (DocumentGWT doc : result)
             {
-               if (!doc.isTrashed())
+            	assert(doc.getID() != null);
+            	
+            	if (!doc.isWorkingCopy())
+            		allAvailableOriginalDocumentsByID.put(doc.getID(), doc);
+            	
+               if (!doc.isTrashed() && !doc.isWorkingCopy())
                {
                   addNewDocument(doc);
                   scheduleNames.add(doc.getName());
@@ -289,7 +294,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
          @Override
          public void onClick(ClickEvent event)
          {
-            openDocInNewTab(document.getName(), document.getScheduleID());
+            openDocInNewTab(document.getName(), document.getID());
          }
       }));
       DOM.setElementAttribute(docname.getElement(), "id", "openDocument" + document.getName());
@@ -304,7 +309,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
       documentPanels.put(document.getID(), doc);
    }
 
-   private void openDocInNewTab(String name, Integer scheduleid)
+   protected void openDocInNewTab(String name, Integer documentid)
    {
       this.currentDocName = name;
       String baseHref = Window.Location.getHref();
@@ -312,7 +317,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
       {
          baseHref = Window.Location.getHref().substring(0, Window.Location.getHref().lastIndexOf('?'));
       }
-      Window.open(baseHref + "?scheduleid=" + scheduleid + "&schedulename=" + name + "&userid=" + username, "_new",
+      Window.open(baseHref + "?originaldocumentid=" + documentid + "&schedulename=" + name + "&userid=" + username, "_new",
             null);
       // openInNewWindow(Window.Location.getHref(), scheduleid);
       // selectSchedule(Integer.parseInt(scheduleid), name);
@@ -321,26 +326,6 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
    @Override
    public void beforePop()
    {
-   }
-
-   /**
-    * Private method for selecting a previously saved schedule from the database
-    * given the schedule ID and the schedule name.
-    * 
-    * @param scheduleID
-    *           ID of the schedule to open.
-    * @param scheduleName
-    *           Name of the schedule to open.
-    */
-   private void selectSchedule(DocumentGWT document)
-   {
-      final LoadingPopup popup = new LoadingPopup();
-      popup.show();
-
-      // System.out.println("SelectScheduleView.selectSchedule(" + scheduleID +
-      // ", " + scheduleName + ")");
-
-      openDocument(document);
    }
 
    interface NameScheduleCallback
@@ -398,177 +383,6 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
       db.setWidget(fp);
       db.center();
    }
-
-   /**
-    * Displays a popup for selecting and opening a previously saved schedule.
-    */
-   private void displayOpenPopup()
-   {
-      final DialogBox db = new DialogBox();
-      FlowPanel fp = new FlowPanel();
-      final ListBox listBox = new ListBox();
-      final Collection<DocumentGWT> schedules = new LinkedList<DocumentGWT>();
-
-      service.getAllOriginalDocumentsByID(new AsyncCallback<Collection<DocumentGWT>>()
-      {
-
-         @Override
-         public void onSuccess(Collection<DocumentGWT> result)
-         {
-            schedules.addAll(result);
-            for (DocumentGWT doc : result)
-               listBox.addItem(doc.getName(), doc.getID().toString());
-         }
-
-         @Override
-         public void onFailure(Throwable caught)
-         {
-            Window.alert("Failed to open schedule in: " + caught.getMessage());
-
-         }
-      });
-
-      listBox.setVisibleItemCount(5);
-      fp.add(listBox);
-
-      fp.add(new HTML("<br />"));
-
-      fp.add(new Button("Open", new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            int index = listBox.getSelectedIndex();
-
-            DocumentGWT document = null;
-            for (DocumentGWT doc : availableDocuments)
-               if (doc.getID().toString().equals(listBox.getValue(index))) document = doc;
-            assert (document != null);
-            selectSchedule(document);
-            db.hide();
-         }
-      }));
-
-      fp.add(new Button("Cancel", new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            db.hide();
-         }
-      }));
-
-      db.add(fp);
-
-      db.setText("Open a Schedule");
-      db.center();
-      db.show();
-   }
-
-   // /**
-   // * Displays a popup to save the schedule under a different name.
-   // */
-   // private void displaySaveAsPopup()
-   // {
-   // final ListBox saveAsListBox = new ListBox();
-   // final ArrayList<String> schedNames = new ArrayList<String>();
-   // final TextBox tb = new TextBox();
-   // final DialogBox db = new DialogBox();
-   // FlowPanel fp = new FlowPanel();
-   //
-   // final Button saveButton = new Button("Save", new ClickHandler()
-   // {
-   // @Override
-   // public void onClick(ClickEvent event)
-   // {
-   // db.hide();
-   //
-   // final String scheduleName = tb.getText();
-   // if (scheduleName.isEmpty()) return;
-   //
-   // boolean allowOverwrite = false;
-   // if (schedNames.contains(scheduleName))
-   // {
-   // if (Window.confirm("The schedule \"" + scheduleName
-   // + "\" already exists.  Are you sure you want to replace it?"))
-   // allowOverwrite = true;
-   // else return;
-   // }
-   //
-   // service.saveWorkingCopyToNewOriginalDocument(document.getID(),
-   // scheduleName, new AsyncCallback<Integer>()
-   // {
-   // public void onFailure(Throwable caught)
-   // {
-   // Window.alert("Failed to save schedule: " + caught.getMessage());
-   // }
-   //
-   // public void onSuccess(Integer newScheduleID)
-   // {
-   // openLoadedSchedule(newScheduleID, scheduleName);
-   // }
-   // });
-   // }
-   // });
-   //
-   // final Button cancelButton = new Button("Cancel", new ClickHandler()
-   // {
-   // @Override
-   // public void onClick(ClickEvent event)
-   // {
-   // db.hide();
-   // }
-   // });
-   //
-   // tb.addKeyPressHandler(new KeyPressHandler()
-   // {
-   // @Override
-   // public void onKeyPress(KeyPressEvent event)
-   // {
-   // if (event.getCharCode() == KeyCodes.KEY_ENTER) saveButton.click();
-   // }
-   // });
-   //
-   // service.getScheduleNames(new AsyncCallback<Map<String, UserDataGWT>>()
-   // {
-   // @Override
-   // public void onFailure(Throwable caught)
-   // {
-   // Window.alert("Failed to open schedule in: " + caught.getMessage());
-   // }
-   //
-   // @Override
-   // public void onSuccess(Map<String, UserDataGWT> result)
-   // {
-   // for (String name : result.keySet())
-   // {
-   // saveAsListBox.addItem(name);
-   // schedNames.add(name);
-   // }
-   // }
-   // });
-   //
-   // db.setText("Name Schedule");
-   // fp.add(new
-   // HTML("<center>Specify a name to save the schedule as...</center>"));
-   // saveAsListBox.addClickHandler(new ClickHandler()
-   // {
-   // @Override
-   // public void onClick(ClickEvent event)
-   // {
-   // tb.setText(saveAsListBox.getValue(saveAsListBox.getSelectedIndex()));
-   // }
-   // });
-   // saveAsListBox.setVisibleItemCount(5);
-   // fp.add(saveAsListBox);
-   // fp.add(tb);
-   // fp.add(saveButton);
-   // fp.add(cancelButton);
-   //
-   // db.setWidget(fp);
-   // db.center();
-   // db.show();
-   // }
 
    @Override
    public boolean canPop()
@@ -655,7 +469,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
          }
       });
 
-      service.getAllOriginalDocumentsByID(new AsyncCallback<Collection<DocumentGWT>>()
+      service.getAllDocuments(new AsyncCallback<Collection<DocumentGWT>>()
       {
 
          @Override
@@ -705,7 +519,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
 
                DOM.setElementAttribute(popup.getElement(), "id", "failSchedPopup");
 
-               service.createDocumentAndGetWorkingCopy(newDocName, new AsyncCallback<DocumentGWT>()
+               service.createOriginalDocument(newDocName, new AsyncCallback<DocumentGWT>()
                {
 
                   @Override
@@ -733,8 +547,10 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
       });
    }
 
-   protected void openDocument(DocumentGWT doc)
+   protected void openOriginalDocument(DocumentGWT doc)
    {
+	   assert(allAvailableOriginalDocumentsByID.values().contains(doc));
+	   
       if (myFrame.canPopViewsAboveMe())
       {
     	  service.createWorkingCopyForOriginalDocument(doc.getID(), new AsyncCallback<DocumentGWT>() {
@@ -752,5 +568,4 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
 		});
       }
    }
-
 }

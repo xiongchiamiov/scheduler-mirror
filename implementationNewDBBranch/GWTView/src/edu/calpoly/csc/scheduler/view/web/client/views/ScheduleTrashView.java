@@ -154,7 +154,7 @@ public class ScheduleTrashView extends VerticalPanel implements IViewContents
    {
       this.myFrame = frame;
 
-      service.getAllOriginalDocumentsByID(new AsyncCallback<Collection<DocumentGWT>>()
+      service.getAllDocuments(new AsyncCallback<Collection<DocumentGWT>>()
       {
          @Override
          public void onFailure(Throwable caught)

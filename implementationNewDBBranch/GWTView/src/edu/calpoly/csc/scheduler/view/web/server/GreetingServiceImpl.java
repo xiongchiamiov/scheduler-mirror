@@ -1,6 +1,8 @@
 package edu.calpoly.csc.scheduler.view.web.server;
 
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -21,10 +23,8 @@ import edu.calpoly.csc.scheduler.model.Location;
 import edu.calpoly.csc.scheduler.model.Model;
 import edu.calpoly.csc.scheduler.model.Schedule;
 import edu.calpoly.csc.scheduler.model.ScheduleItem;
-import edu.calpoly.csc.scheduler.model.algorithm.CouldNotBeScheduledException;
 import edu.calpoly.csc.scheduler.model.algorithm.Generate;
 import edu.calpoly.csc.scheduler.model.db.DatabaseException;
-import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
 import edu.calpoly.csc.scheduler.view.web.client.GreetingService;
 import edu.calpoly.csc.scheduler.view.web.client.InvalidLoginException;
 import edu.calpoly.csc.scheduler.view.web.shared.CouldNotBeScheduledExceptionGWT;
@@ -49,14 +49,24 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		this(true);
 	}
 	
+	private String getDatabaseStateFilepath() {
+		String filepath = "DatabaseState.javaser";
+		try {
+			return getServletContext().getRealPath(filepath);
+		}
+		catch (Exception e) {
+			return filepath;
+		}
+	}
+	
 	public GreetingServiceImpl(boolean loadAndSaveFromFileSystem) {
 		this.loadAndSaveFromFileSystem = loadAndSaveFromFileSystem;
 		model = new Model();
 
 		if (loadAndSaveFromFileSystem) {
+			String filepath = getDatabaseStateFilepath();
+			
 			try {
-				String filepath = getServletContext().getRealPath("DatabaseState.javaser");
-				System.out.println("Loading state from "+filepath+"!");
 				FileInputStream fos = new FileInputStream(filepath);
 				ObjectInputStream ois = new ObjectInputStream(fos);
 				
@@ -64,10 +74,13 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 				
 				ois.close();
 			}
-			catch (Exception e) {
-				e.printStackTrace();
-				System.out.println("Failed to restore model! Starting fresh!");
+			catch (FileNotFoundException e) {
+				System.out.println("Database state file (" + filepath + ") doesn't exist, starting with a fresh model!");
 				model = new Model();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				throw new RuntimeException(e);
 			}
 		}
 	}
@@ -256,17 +269,15 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	}
 
 	@Override
-	public Collection<DocumentGWT> getAllOriginalDocumentsByID() {
+	public Collection<DocumentGWT> getAllDocuments() {
 		try {
 			Collection<DocumentGWT> result = new LinkedList<DocumentGWT>();
 			for (Document doc : model.findAllDocuments()) {
-				if (doc.getOriginal() == null) {
-					System.out.println("found original doc " + doc.isTrashed());
-					int scheduleID = model.findSchedulesForDocument(doc).iterator().next().getID();
-					DocumentGWT gwt = Conversion.documentToGWT(doc, scheduleID);
-					System.out.println("sending to client doc with istrashed " + gwt.isTrashed());
-					result.add(gwt);
-				}
+				System.out.println("found original doc " + doc.isTrashed());
+				int scheduleID = model.findSchedulesForDocument(doc).iterator().next().getID();
+				DocumentGWT gwt = Conversion.documentToGWT(doc, scheduleID);
+				System.out.println("sending to client doc with istrashed " + gwt.isTrashed());
+				result.add(gwt);
 			}
 			return result;
 		} catch (DatabaseException e) {
@@ -275,12 +286,12 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	}
 
 	@Override
-	public DocumentGWT createDocumentAndGetWorkingCopy(String newDocName) {
+	public DocumentGWT createOriginalDocument(String newDocName) {
 		try {
 			Document newOriginalDocument = model.createTransientDocument(newDocName, 14, 44);
 			newOriginalDocument.insert();
 			
-			model.createTransientSchedule().setDocument(newOriginalDocument).insert();
+			int scheduleID = model.createTransientSchedule().setDocument(newOriginalDocument).insert().getID();
 
 			// TODO: have wtu and loc's max occ be 0
 			
@@ -295,7 +306,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			
 			newOriginalDocument.update();
 			
-			return createWorkingCopyForOriginalDocument(newOriginalDocument.getID());
+			return Conversion.documentToGWT(newOriginalDocument, scheduleID);
 		}
 		catch (DatabaseException e) {
 			throw new RuntimeException(e);
@@ -353,7 +364,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			
 			
 			if (this.loadAndSaveFromFileSystem) {
-				String filepath = getServletContext().getRealPath("DatabaseState.javaser");
+
+				String filepath = getDatabaseStateFilepath();
 				System.out.println("Saving state to "+filepath+"!");
 				FileOutputStream fos = new FileOutputStream(filepath);
 				ObjectOutputStream oos = new ObjectOutputStream(fos);
@@ -570,6 +582,18 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			Document document = Conversion.readDocumentFromGWT(model, documentGWT);
 			System.out.println("updating model doc " + document.isTrashed());
 			document.update();
+		} 
+		catch (DatabaseException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@Override
+	public DocumentGWT findDocumentByID(int automaticOpenDocumentID) {
+		try {
+			Document doc = model.findDocumentByID(automaticOpenDocumentID);
+			Schedule schedule = doc.getSchedules().iterator().next();
+			return Conversion.documentToGWT(doc, schedule.getID());
 		} 
 		catch (DatabaseException e) {
 			throw new RuntimeException(e);

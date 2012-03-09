@@ -160,6 +160,7 @@ public class Document extends Identified {
 	
 
 	public Document getOriginal() throws DatabaseException {
+		assert(isWorkingCopy());
 		if (!originalLoaded) {
 			IDBDocument originalUnderlying = model.database.getOriginalForWorkingCopyDocumentOrNull(underlyingDocument);
 			if (originalUnderlying == null)
@@ -177,7 +178,12 @@ public class Document extends Identified {
 		originalLoaded = true;
 	}
 	
+	public boolean isWorkingCopy() throws DatabaseException {
+		return !model.database.isOriginalDocument(underlyingDocument);
+	}
+	
 	public Document getWorkingCopy() throws DatabaseException {
+		assert(!isWorkingCopy());
 		IDBDocument workingCopy = model.database.getWorkingCopyForOriginalDocumentOrNull(underlyingDocument);
 		if (workingCopy == null)
 			return null;
