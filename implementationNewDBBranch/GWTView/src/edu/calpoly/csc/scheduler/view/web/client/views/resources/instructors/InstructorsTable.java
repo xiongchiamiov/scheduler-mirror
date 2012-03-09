@@ -24,22 +24,22 @@ import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingStringColu
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
 
 public class InstructorsTable extends SimplePanel {
-	private static final String FIRSTNAME_HEADER = "First Name";
+	private static final String FIRSTNAME_HEADER = "\u00A0\u00A0First Name\u00A0\u00A0";
 	private static final String FIRSTNAME_WIDTH = null;
 	
-	private static final String LASTNAME_HEADER = "Last Name";
+	private static final String LASTNAME_HEADER = "\u00A0\u00A0Last Name\u00A0\u00A0";
 	private static final String LASTNAME_WIDTH = null;
 
-	private static final String USERNAME_HEADER = "Username";
+	private static final String USERNAME_HEADER = "\u00A0\u00A0Username\u00A0\u00A0";
 	private static final String USERNAME_WIDTH = null;
 
-	private static final String MAX_WTU_HEADER = "Max WTU";
+	private static final String MAX_WTU_HEADER = "\u00A0\u00A0Max WTU\u00A0\u00A0";
 	private static final String MAX_WTU_WIDTH = null;
 	
-	private static final String SCHEDULABLE_HEADER = "Disabilities";
+	private static final String SCHEDULABLE_HEADER = "\u00A0\u00A0Disabilities\u00A0\u00A0";
 	private static final String SCHEDULABLE_WIDTH = "4em";
 	
-	private static final String PREFERENCES_HEADER = "Preferences";
+	private static final String PREFERENCES_HEADER = "\u00A0\u00A0Preferences\u00A0\u00A0";
 	private static final String PREFERENCES_WIDTH = null;
 
 	public interface Strategy {

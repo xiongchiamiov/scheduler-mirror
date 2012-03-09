@@ -27,16 +27,16 @@ public class LocationsTable extends SimplePanel {
 	private static final String OVERHEAD = "OVERHEAD";
 	private static final String SMART_ROOM = "SMART";
 	
-	private static final String ROOM_HEADER = "Location";
+	private static final String ROOM_HEADER = "\u00A0\u00A0Location\u00A0\u00A0";
 	private static final String ROOM_WIDTH = null;
 	
-	private static final String TYPE_HEADER = "Type";
+	private static final String TYPE_HEADER = "\u00A0\u00A0Type\u00A0\u00A0";
 	private static final String TYPE_WIDTH = null;
 	
-	private static final String MAX_OCCUPANCY_HEADER = "Max Capacity";
+	private static final String MAX_OCCUPANCY_HEADER = "\u00A0\u00A0Max Capacity\u00A0\u00A0";
 	private static final String MAX_OCCUPANCY_WIDTH = "4em";
 	
-	private static final String DISABILITIES_HEADER = "Disabilities";
+	private static final String DISABILITIES_HEADER = "\u00A0\u00A0Disabilities\u00A0\u00A0";
 	private static final String DISABILITIES_WIDTH = "2em";
 	
 	public interface Strategy {

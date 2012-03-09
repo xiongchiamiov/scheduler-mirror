@@ -26,37 +26,37 @@ import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.DayGWT;
 
 public class CoursesTable extends SimplePanel {
-	private static final String NAME_HEADER = "Course Name";
+	private static final String NAME_HEADER = "\u00A0\u00A0Course Name\u00A0\u00A0";
 	private static final String NAME_WIDTH = null;
 	
-	private static final String CATALOG_NUM_HEADER = "Catalog Number";
+	private static final String CATALOG_NUM_HEADER = "\u00A0\u00A0Catalog Number\u00A0\u00A0";
 	private static final String CATALOG_NUM_WIDTH = null;
 	
-	private static final String DEPARTMENT_HEADER = "Department";
+	private static final String DEPARTMENT_HEADER = "\u00A0\u00A0Department\u00A0\u00A0";
 	private static final String DEPARTMENT_WIDTH = null;
 	
-	private static final String WTU_HEADER = "WTU";
+	private static final String WTU_HEADER = "\u00A0\u00A0WTU\u00A0\u00A0";
 	private static final String WTU_WIDTH = "4em";
 	
-	private static final String HOURS_PER_WEEK_HEADER = "Hours Per Week";
+	private static final String HOURS_PER_WEEK_HEADER = "\u00A0\u00A0Hours Per Week\u00A0\u00A0";
 	private static final String HOURS_PER_WEEK_WIDTH = "4em";
 	
-	private static final String SCU_HEADER = "SCU";
+	private static final String SCU_HEADER = "\u00A0\u00A0SCU\u00A0\u00A0";
 	private static final String SCU_WIDTH = "4em";
 	
-	private static final String NUM_SECTIONS_HEADER = "# of Sections";
+	private static final String NUM_SECTIONS_HEADER = "\u00A0\u00A0# of Sections\u00A0\u00A0";
 	private static final String NUM_SECTIONS_WIDTH = "4em";
 	
-	private static final String TYPE_HEADER = "Course Type";
+	private static final String TYPE_HEADER = "\u00A0\u00A0Course Type\u00A0\u00A0";
 	private static final String TYPE_WIDTH = "4em";
 	
-	private static final String MAX_ENROLLMENT_HEADER = "Max Enrollment";
+	private static final String MAX_ENROLLMENT_HEADER = "\u00A0\u00A0Max Enrollment\u00A0\u00A0";
 	private static final String MAX_ENROLLMENT_WIDTH = "4em";
 	
-	private static final String ASSOCIATIONS_HEADER = "Associations";
+	private static final String ASSOCIATIONS_HEADER = "\u00A0\u00A0Associations\u00A0\u00A0";
 	private static final String ASSOCIATIONS_WIDTH = null;
 	
-	private static final String DAY_COMBINATIONS_HEADER = "Day Combinations";
+	private static final String DAY_COMBINATIONS_HEADER = "\u00A0\u00A0Day Combinations\u00A0\u00A0";
 	private static final String DAY_COMBINATIONS_WIDTH = null;
 	
 	public interface Strategy {
