@@ -20,7 +20,8 @@ public class CalendarListView extends SimplePanel {
 	private final ScheduleEditWidget mScheduleController;
 	private String mInnerHTML;
 	private int mLeftOffset;
-
+	private int mLastRowSelected = -1;
+		
 	public CalendarListView(ScheduleEditWidget scheduleController) {
 		mScheduleController = scheduleController;
 
@@ -229,7 +230,7 @@ public class CalendarListView extends SimplePanel {
 			String current = it.next().toString();
 			if (current != null && current.compareTo("") != 0) {
 				if (current.compareTo("THURSDAY") == 0) {
-					returnString += "TH";
+					returnString += "TR";
 				}
 				else if (current.compareTo("SUNDAY") == 0) {
 					returnString += "SU";
@@ -253,11 +254,9 @@ public class CalendarListView extends SimplePanel {
 	 * Called when the user double clicks an item in the table
 	 */
 	public void doubleClick(int row, int col) {
-		// final CalendarDayModel day = mModel.get(col);
-		// final ScheduleItemGWT item = day.get(row).get(col - day.getOffset());
+		highlightRow(row);
 		final ScheduleItemGWT item = mScheduleItems.get(row);
-		
-		System.out.println("Row " + row + " double clicked on the list.");
+
 		mScheduleController.editItem(false, item, null, -1);
 	}
 
@@ -277,13 +276,25 @@ public class CalendarListView extends SimplePanel {
 		// mScheduleController.getCourseString(item.getCourseID()));
 		//
 		// mDragController.onMouseDown(item, row, col);
-		for (int i = 0; i < 8; i++) {
-			Element selectedCell = DOM.getElementById("x"+ i + "y" + row);
-			selectedCell.addClassName("selectedItem");		
-		}
+		highlightRow(row);
 		
-		System.out.println(row + col);
 		return false;
+	}
+	
+	private void highlightRow(int row) {		
+		if (row != mLastRowSelected) {
+			for (int i = 0; i < 11; i++) {
+				Element selectedCell = DOM.getElementById("x"+ i + "y" + row);
+				selectedCell.addClassName("selectedItem");		
+				
+				
+				//un-highlight old row
+				Element oldCell = DOM.getElementById("x"+ i + "y" + mLastRowSelected);
+				oldCell.removeClassName("selectedItem");
+			}
+			
+			mLastRowSelected = row;
+		}
 	}
 
 	/**
