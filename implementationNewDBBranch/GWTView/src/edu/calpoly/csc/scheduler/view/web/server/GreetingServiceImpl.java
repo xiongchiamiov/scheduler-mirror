@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Vector;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
@@ -279,12 +280,14 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			
 			model.createTransientSchedule().setDocument(newOriginalDocument).insert();
 
+			// TODO: have wtu and loc's max occ be 0
+			
 			newOriginalDocument.setStaffInstructor(
-					model.createTransientInstructor("", "TBA", "TBA", "0", true)
+					model.createTransientInstructor("", "TBA", "TBA", "10000", true)
 						.setDocument(newOriginalDocument)
 						.insert());
 			newOriginalDocument.setTBALocation(
-					model.createTransientLocation("TBA", "LEC", "0", true)
+					model.createTransientLocation("TBA", "LEC", "10000", true)
 						.setDocument(newOriginalDocument)
 						.insert());
 			
@@ -302,7 +305,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	public DocumentGWT createWorkingCopyForOriginalDocument(Integer originalDocumentID) {
 		try {
 			Document originalDocument = model.findDocumentByID(originalDocumentID);
-		
+			
 			Document workingCopyDocument = originalDocument.getWorkingCopy();
 			
 			if (workingCopyDocument != null) {
@@ -312,6 +315,10 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			}
 			
 			workingCopyDocument = model.copyDocument(originalDocument, originalDocument.getName());
+			
+			assert(workingCopyDocument.getTBALocation() != null);
+			assert(workingCopyDocument.getStaffInstructor() != null);
+			
 			workingCopyDocument.setOriginal(originalDocument);
 			workingCopyDocument.update();
 			
@@ -490,9 +497,20 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	public Collection<ScheduleItemGWT> generateRestOfSchedule(int scheduleID) throws CouldNotBeScheduledExceptionGWT {
 		try {
 			Schedule schedule = model.findScheduleByID(scheduleID);
-			assert(schedule.getDocument().getOriginal() != null);
 			
-			Generate.generate(model, schedule, schedule.getItems(), schedule.getDocument().getCourses(), schedule.getDocument().getInstructors(), schedule.getDocument().getLocations());
+			Document document = schedule.getDocument();
+			
+			assert(document.getStaffInstructor() != null);
+			assert(document.getTBALocation() != null);
+			
+			assert(document.getOriginal() != null);
+			
+			Vector<ScheduleItem> generated = Generate.generate(model, schedule, schedule.getItems(), schedule.getDocument().getCourses(), schedule.getDocument().getInstructors(), schedule.getDocument().getLocations());
+			for (ScheduleItem item : generated) {
+//				assert(item.getSchedule() == null);
+				item.setSchedule(schedule);
+				item.insert();
+			}
 			
 			return getScheduleItems(scheduleID);
 		}

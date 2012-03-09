@@ -36,8 +36,8 @@ public class LocationsTable extends SimplePanel {
 	private static final String MAX_OCCUPANCY_HEADER = "\u00A0\u00A0Max Capacity\u00A0\u00A0";
 	private static final String MAX_OCCUPANCY_WIDTH = "4em";
 	
-	private static final String DISABILITIES_HEADER = "\u00A0\u00A0Disabilities\u00A0\u00A0";
-	private static final String DISABILITIES_WIDTH = "2em";
+	private static final String EQUIPMENT_HEADER = "\u00A0\u00A0Equipment\u00A0\u00A0";
+	private static final String EQUIPMENT_WIDTH = null;
 	
 	public interface Strategy {
 		void getInitialLocations(AsyncCallback<List<LocationGWT>> callback);
@@ -184,8 +184,8 @@ public class LocationsTable extends SimplePanel {
 		valuesByLabel.put("Overhead", OVERHEAD);
 		valuesByLabel.put("Smart Room", SMART_ROOM);
 		table.addColumn(
-				"Equipment",
-				null,
+				EQUIPMENT_HEADER,
+				EQUIPMENT_WIDTH,
 				true,
 				null,
 				new EditingMultiselectColumn<LocationGWT>(

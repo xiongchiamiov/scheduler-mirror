@@ -712,8 +712,9 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
                   public void onSuccess(DocumentGWT result)
                   {
                      popup.hide();
-                     openDocument(result);
-                     // openDocInNewTab(name, newSchedID);
+//                     openDocument(result);
+                     assert(newDocName.equals(result.getName()));
+                      openDocInNewTab(result.getName(), result.getID());
                   }
 
                   @Override
