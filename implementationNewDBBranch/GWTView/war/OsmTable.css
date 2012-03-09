@@ -127,9 +127,7 @@
 .osmtable tr.selected {
 	background-color: #E0E0E0 !important;
 }
-<<<<<<< .mine
-=======
 
 .osmtable td.invalid {
 	background-color: #FFE0E0;
-}>>>>>>> .r2091
+}
