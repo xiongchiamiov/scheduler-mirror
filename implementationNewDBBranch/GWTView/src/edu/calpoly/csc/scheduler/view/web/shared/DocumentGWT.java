@@ -13,11 +13,10 @@ public class DocumentGWT implements Serializable {
 	boolean isTrashed;
 	int startHalfHour;
 	int endHalfHour;
-	Integer originalID;
 	
 	public DocumentGWT() { }
 	
-	public DocumentGWT(int id, String name, int scheduleID, int staffInstructorID, int tbaLocationID, boolean isTrashed, int startHalfHour, int endHalfHour, Integer originalID) {
+	public DocumentGWT(int id, String name, int scheduleID, int staffInstructorID, int tbaLocationID, boolean isTrashed, int startHalfHour, int endHalfHour) {
 		this.id = id;
 		this.name = name;
 		this.scheduleID = scheduleID;
@@ -26,11 +25,10 @@ public class DocumentGWT implements Serializable {
 		this.isTrashed = isTrashed;
 		this.startHalfHour = startHalfHour;
 		this.endHalfHour = endHalfHour;
-		this.originalID = originalID;
 	}
 	
 	public DocumentGWT(DocumentGWT that) {
-		this(that.id, that.name, that.scheduleID, that.staffInstructorID, that.tbaLocationID, that.isTrashed, that.startHalfHour, that.endHalfHour, that.originalID);
+		this(that.id, that.name, that.scheduleID, that.staffInstructorID, that.tbaLocationID, that.isTrashed, that.startHalfHour, that.endHalfHour);
 	}
 
 	public Integer getID() { return id; }
@@ -49,6 +47,4 @@ public class DocumentGWT implements Serializable {
 	public void setStartHalfHour(int startHalfHour) { this.startHalfHour = startHalfHour; }
 	public int getEndHalfHour() { return endHalfHour; }
 	public void setEndHalfHour(int endHalfHour) { this.endHalfHour = endHalfHour; }
-
-	public boolean isWorkingCopy() { return this.originalID != null; }
 }

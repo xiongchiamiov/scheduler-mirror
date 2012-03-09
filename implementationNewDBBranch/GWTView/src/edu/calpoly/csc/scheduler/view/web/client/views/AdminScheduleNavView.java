@@ -266,7 +266,7 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 	         }
 	      });
 
-	      service.getAllDocuments(new AsyncCallback<Collection<DocumentGWT>>() {
+	      service.getAllOriginalDocuments(new AsyncCallback<Collection<DocumentGWT>>() {
 			
 			@Override
 			public void onSuccess(Collection<DocumentGWT> result) {

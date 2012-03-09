@@ -101,7 +101,7 @@ public interface GreetingService extends RemoteService {
 	
 	void updateDocument(DocumentGWT document);
 
-	Collection<DocumentGWT> getAllDocuments();
+	Collection<DocumentGWT> getAllOriginalDocuments();
 
 	void saveWorkingCopyToOriginalDocument(Integer id);
 

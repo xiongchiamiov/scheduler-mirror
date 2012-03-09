@@ -187,5 +187,5 @@ public interface GreetingServiceAsync {
 			String scheduleName, boolean allowOverwrite,
 			AsyncCallback<Void> callback);
 	void findDocumentByID(int automaticOpenDocumentID, AsyncCallback<DocumentGWT> callback);
-	void getAllDocuments(AsyncCallback<Collection<DocumentGWT>> callback);
+	void getAllOriginalDocuments(AsyncCallback<Collection<DocumentGWT>> callback);
 }

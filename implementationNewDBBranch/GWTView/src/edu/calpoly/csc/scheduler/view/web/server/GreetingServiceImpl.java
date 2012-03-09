@@ -269,10 +269,12 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	}
 
 	@Override
-	public Collection<DocumentGWT> getAllDocuments() {
+	public Collection<DocumentGWT> getAllOriginalDocuments() {
 		try {
 			Collection<DocumentGWT> result = new LinkedList<DocumentGWT>();
 			for (Document doc : model.findAllDocuments()) {
+				if (doc.isWorkingCopy())
+					continue;
 				System.out.println("found original doc " + doc.isTrashed());
 				int scheduleID = model.findSchedulesForDocument(doc).iterator().next().getID();
 				DocumentGWT gwt = Conversion.documentToGWT(doc, scheduleID);

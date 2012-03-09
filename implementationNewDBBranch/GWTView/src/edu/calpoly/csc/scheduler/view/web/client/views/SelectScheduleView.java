@@ -46,15 +46,15 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
 {
    protected final GreetingServiceAsync      service;
 
-   private final MenuBar                     menuBar;
+   protected final MenuBar                     menuBar;
 
-   private final String                      username;
+   protected final String                      username;
    private String                            newDocName;
    private ArrayList<String>                 scheduleNames;
 
    private VerticalPanel                     vdocholder;
 
-   private ViewFrame                         myFrame;
+   protected ViewFrame                         myFrame;
 
    HashMap<Integer, DocumentGWT>                   allAvailableOriginalDocumentsByID;
    private ArrayList<DocumentGWT>            checkedDocuments;
@@ -215,7 +215,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
    {
       this.myFrame = frame;
 
-      service.getAllDocuments(new AsyncCallback<Collection<DocumentGWT>>()
+      service.getAllOriginalDocuments(new AsyncCallback<Collection<DocumentGWT>>()
       {
          @Override
          public void onFailure(Throwable caught)
@@ -233,10 +233,9 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
             {
             	assert(doc.getID() != null);
             	
-            	if (!doc.isWorkingCopy())
             		allAvailableOriginalDocumentsByID.put(doc.getID(), doc);
             	
-               if (!doc.isTrashed() && !doc.isWorkingCopy())
+               if (!doc.isTrashed())
                {
                   addNewDocument(doc);
                   scheduleNames.add(doc.getName());
@@ -469,7 +468,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
          }
       });
 
-      service.getAllDocuments(new AsyncCallback<Collection<DocumentGWT>>()
+      service.getAllOriginalDocuments(new AsyncCallback<Collection<DocumentGWT>>()
       {
 
          @Override
@@ -545,27 +544,5 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
             }
          }
       });
-   }
-
-   protected void openOriginalDocument(DocumentGWT doc)
-   {
-	   assert(allAvailableOriginalDocumentsByID.values().contains(doc));
-	   
-      if (myFrame.canPopViewsAboveMe())
-      {
-    	  service.createWorkingCopyForOriginalDocument(doc.getID(), new AsyncCallback<DocumentGWT>() {
-			
-			@Override
-			public void onSuccess(DocumentGWT result) {
-		         myFrame.popFramesAboveMe();
-		         myFrame.frameViewAndPushAboveMe(new AdminScheduleNavView(service, SelectScheduleView.this, menuBar, username, result));
-			}
-			
-			@Override
-			public void onFailure(Throwable caught) {
-				Window.alert("Failed to open document: " + caught.getMessage());
-			}
-		});
-      }
    }
 }

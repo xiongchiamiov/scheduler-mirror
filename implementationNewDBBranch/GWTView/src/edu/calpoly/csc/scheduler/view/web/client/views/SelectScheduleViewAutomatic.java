@@ -1,5 +1,7 @@
 package edu.calpoly.csc.scheduler.view.web.client.views;
 
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.SimplePanel;
 
@@ -20,8 +22,27 @@ public class SelectScheduleViewAutomatic extends SelectScheduleView
    @Override
    protected void doneAddingDocuments() {
 	   System.out.println("done adding documents, there are " + allAvailableOriginalDocumentsByID.size() + ", opening " + automaticOpenOriginalDocumentID);
-	   DocumentGWT docToOpen = allAvailableOriginalDocumentsByID.get(automaticOpenOriginalDocumentID);
-	   assert(docToOpen != null);
-	   openOriginalDocument(docToOpen);
+	   DocumentGWT doc = allAvailableOriginalDocumentsByID.get(automaticOpenOriginalDocumentID);
+	   assert(doc != null);
+	   
+
+	   assert(allAvailableOriginalDocumentsByID.values().contains(doc));
+	   
+      if (myFrame.canPopViewsAboveMe())
+      {
+    	  service.createWorkingCopyForOriginalDocument(doc.getID(), new AsyncCallback<DocumentGWT>() {
+			
+			@Override
+			public void onSuccess(DocumentGWT result) {
+		         myFrame.popFramesAboveMe();
+		         myFrame.frameViewAndPushAboveMe(new AdminScheduleNavView(service, SelectScheduleViewAutomatic.this, menuBar, username, result));
+			}
+			
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert("Failed to open document: " + caught.getMessage());
+			}
+		});
+      }
    }
 }
