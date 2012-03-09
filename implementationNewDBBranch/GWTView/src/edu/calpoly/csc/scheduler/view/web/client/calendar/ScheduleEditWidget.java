@@ -167,9 +167,7 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 	 */
 	public void editItem(boolean fromList, ScheduleItemGWT originalItem,
 			List<Integer> newDays, int newStartRow) {
-		final EditScheduleItemDlg editDlg = new EditScheduleItemDlg(
-				mGreetingService, this, mDragController, fromList,
-				originalItem, newDays, newStartRow, mDocument);
+		final EditScheduleItemDlg editDlg = new EditScheduleItemDlg(mGreetingService, this, mDragController, fromList, originalItem, newDays, newStartRow, mDocument);
 		editDlg.center();
 	}
 

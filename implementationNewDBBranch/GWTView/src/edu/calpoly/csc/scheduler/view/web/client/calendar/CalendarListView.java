@@ -2,11 +2,15 @@ package edu.calpoly.csc.scheduler.view.web.client.calendar;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import edu.calpoly.csc.scheduler.view.web.shared.DayGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
 
 public class CalendarListView extends SimplePanel {
@@ -73,8 +77,8 @@ public class CalendarListView extends SimplePanel {
 				+ "#ListTable {border-spacing:0px;cellspacing:0px;border:none;}"
 				+ "#ListTable tr {height:20px;}"
 				+ "#ListTable td {overflow:hidden;padding:4px;border-top:1px solid #d1dfdf;}"
-				+ "#ListTable td.item {background-color:#DFF0CF;text-align:center;border:1px solid #FFFFFF;cursor:move;}"
-				+ "#ListTable td.dayHeader {position:relative;background-color:#edf2f2;border-right:1px solid #000000;border-bottom:1px solid #000000;font-weight:bold;text-align:center;z-index:2;}"
+				+ "#ListTable td.item {text-align:center;border:1px solid black;}"
+				+ "#ListTable td.columnHeader {position:relative;background-color:#edf2f2;border-right:1px solid #000000;border-bottom:1px solid #000000;font-weight:bold;text-align:center;z-index:2;}"
 				+ "#ListTable td.timeHeader {position:relative;background-color:#edf2f2;border-right:1px solid #000000;white-space:nowrap;text-align:right;}"
 				+ "#ListTable td#topCorner {border-bottom:1px solid #000000;background-color:#edf2f2;}"
 				+ "#ListTable td.daySpacer {border-right:1px solid #000000;padding:0px;margin:0px;width:0px;}"
@@ -84,42 +88,129 @@ public class CalendarListView extends SimplePanel {
 		builder.append("<table id=\"ListTable\"><tr id=\"headerRow\">");
 
 		// Add column headers
-		// builder.append("<td class=\"dayHeader\" id='h'>Department</td>");
-		builder.append("<td class=\"dayHeader\" id='h'>Course Number</td>");
-		builder.append("<td class=\"dayHeader\" id='h'>Section Number</td>");
-		builder.append("<td class=\"dayHeader\" id='h'>Type</td>");
+		// builder.append("<td class=\"columnHeader\" id='h'>Department</td>");
+		builder.append("<td class=\"columnHeader\" id='h'>Course Number</td>");
+		builder.append("<td class=\"columnHeader\" id='h'>Section Number</td>");
+		builder.append("<td class=\"columnHeader\" id='h'>Type</td>");
 
-		builder.append("<td class=\"dayHeader\" id='h'>SCU</td>");
-		builder.append("<td class=\"dayHeader\" id='h'>WTU</td>");
-		builder.append("<td class=\"dayHeader\" id='h'>Instructor</td>");
-		builder.append("<td class=\"dayHeader\" id='h'>Building</td>");
+		builder.append("<td class=\"columnHeader\" id='h'>SCU</td>");
+		builder.append("<td class=\"columnHeader\" id='h'>WTU</td>");
+		builder.append("<td class=\"columnHeader\" id='h'>Instructor</td>");
+		builder.append("<td class=\"columnHeader\" id='h'>Building</td>");
 
-		builder.append("<td class=\"dayHeader\" id='h'>Days</td>");
-		builder.append("<td class=\"dayHeader\" id='h'>Start Time</td>");
-		builder.append("<td class=\"dayHeader\" id='h'>End Time</td>");
-		builder.append("<td class=\"dayHeader\" id='h'>Capacity</td>");
+		builder.append("<td class=\"columnHeader\" id='h'>Days</td>");
+		builder.append("<td class=\"columnHeader\" id='h'>Start Time</td>");
+		builder.append("<td class=\"columnHeader\" id='h'>End Time</td>");
+		builder.append("<td class=\"columnHeader\" id='h'>Capacity</td>");
 
 		builder.append("</tr>");
 
+		int tableRow = 0;
 		for (ScheduleItemGWT item : mScheduleItems) {
+			int tableCol = 0;
 			builder.append("<tr>");
 
-			builder.append("<td>"
-					+ mScheduleController.getCourseString(item.getCourseID())
-					+ "/<td>");
-			builder.append("<td>" + item.getSection() + "</td>");
-			builder.append("<td>" + "Course Type Here" + "</td>");
-			builder.append("<td>" + "Course SCU" + "</td>");
-			builder.append("<td>" + "Course WTU" + "</td>");
-			builder.append("<td>" + "Course Instructor" + "</td>");
-			builder.append("<td>" + item.getLocationID() + "</td>");
-
-			builder.append("<td>" + item.getDays().toString() + "</td>");
-			builder.append("<td>" + "Start Time" + "</td>");
-			builder.append("<td>" + "End Time" + "</td>");
-			builder.append("<td>" + "Capacity" + "</td>");
+			builder.append("<td " +
+								"class=\"item\" id=\"x"+tableCol+"y"+tableRow+"\" " +
+								"ondblclick=\"calendarListDoubleClick("+tableRow+","+tableCol+")\" " +
+								"onmousedown=\"calendarListMouseDown("+tableRow+","+tableCol+")\" " +
+								"onmouseup=\"calendarListMouseUp("+tableRow+","+tableCol+")\" " +
+								"onselectstart=\"return false\" " +
+								">" + mScheduleController.getCourseString(item.getCourseID())	+ "</td>");
+			tableCol++;
+			
+			builder.append("<td " +
+					"class=\"item\" id=\"x"+tableCol+"y"+tableRow+"\" " +
+					"ondblclick=\"calendarListDoubleClick("+tableRow+","+tableCol+")\" " +
+					"onmousedown=\"calendarListMouseDown("+tableRow+","+tableCol+")\" " +
+					"onmouseup=\"calendarListMouseUp("+tableRow+","+tableCol+")\" " +
+					"onselectstart=\"return false\" " +
+					">" + item.getSection() + "</td>");
+			tableCol++;
+			
+			builder.append("<td " +
+					"class=\"item\" id=\"x"+tableCol+"y"+tableRow+"\" " +
+					"ondblclick=\"calendarListDoubleClick("+tableRow+","+tableCol+")\" " +
+					"onmousedown=\"calendarListMouseDown("+tableRow+","+tableCol+")\" " +
+					"onmouseup=\"calendarListMouseUp("+tableRow+","+tableCol+")\" " +
+					"onselectstart=\"return false\" " +
+					">" + "Course Type Here" + "</td>");
+			tableCol++;
+			
+			builder.append("<td " +
+					"class=\"item\" id=\"x"+tableCol+"y"+tableRow+"\" " +
+					"ondblclick=\"calendarListDoubleClick("+tableRow+","+tableCol+")\" " +
+					"onmousedown=\"calendarListMouseDown("+tableRow+","+tableCol+")\" " +
+					"onmouseup=\"calendarListMouseUp("+tableRow+","+tableCol+")\" " +
+					"onselectstart=\"return false\" " +
+					">" + "Course SCU" + "</td>");
+			tableCol++;
+			
+			builder.append("<td " +
+					"class=\"item\" id=\"x"+tableCol+"y"+tableRow+"\" " +
+					"ondblclick=\"calendarListDoubleClick("+tableRow+","+tableCol+")\" " +
+					"onmousedown=\"calendarListMouseDown("+tableRow+","+tableCol+")\" " +
+					"onmouseup=\"calendarListMouseUp("+tableRow+","+tableCol+")\" " +
+					"onselectstart=\"return false\" " +
+					">" + "Course WTU" + "</td>");
+			tableCol++;
+			
+			builder.append("<td " +
+					"class=\"item\" id=\"x"+tableCol+"y"+tableRow+"\" " +
+					"ondblclick=\"calendarListDoubleClick("+tableRow+","+tableCol+")\" " +
+					"onmousedown=\"calendarListMouseDown("+tableRow+","+tableCol+")\" " +
+					"onmouseup=\"calendarListMouseUp("+tableRow+","+tableCol+")\" " +
+					"onselectstart=\"return false\" " +
+					">" + "Course Instructor" + "</td>");
+			tableCol++;
+			
+			builder.append("<td " +
+					"class=\"item\" id=\"x"+tableCol+"y"+tableRow+"\" " +
+					"ondblclick=\"calendarListDoubleClick("+tableRow+","+tableCol+")\" " +
+					"onmousedown=\"calendarListMouseDown("+tableRow+","+tableCol+")\" " +
+					"onmouseup=\"calendarListMouseUp("+tableRow+","+tableCol+")\" " +
+					"onselectstart=\"return false\" " +
+					">" + item.getLocationID() + "</td>");
+			tableCol++;
+			
+			builder.append("<td " +
+					"class=\"item\" id=\"x"+tableCol+"y"+tableRow+"\" " +
+					"ondblclick=\"calendarListDoubleClick("+tableRow+","+tableCol+")\" " +
+					"onmousedown=\"calendarListMouseDown("+tableRow+","+tableCol+")\" " +
+					"onmouseup=\"calendarListMouseUp("+tableRow+","+tableCol+")\" " +
+					"onselectstart=\"return false\" " +
+					">" + GetDaysString(item.getDays()) + "</td>");
+			tableCol++;
+			
+			builder.append("<td " +
+					"class=\"item\" id=\"x"+tableCol+"y"+tableRow+"\" " +
+					"ondblclick=\"calendarListDoubleClick("+tableRow+","+tableCol+")\" " +
+					"onmousedown=\"calendarListMouseDown("+tableRow+","+tableCol+")\" " +
+					"onmouseup=\"calendarListMouseUp("+tableRow+","+tableCol+")\" " +
+					"onselectstart=\"return false\" " +
+					">" + "Start Time" + "</td>");
+			tableCol++;
+			
+			builder.append("<td " +
+					"class=\"item\" id=\"x"+tableCol+"y"+tableRow+"\" " +
+					"ondblclick=\"calendarListDoubleClick("+tableRow+","+tableCol+")\" " +
+					"onmousedown=\"calendarListMouseDown("+tableRow+","+tableCol+")\" " +
+					"onmouseup=\"calendarListMouseUp("+tableRow+","+tableCol+")\" " +
+					"onselectstart=\"return false\" " +
+					">" + "End Time" + "</td>");
+			tableCol++;
+			
+			builder.append("<td " +
+					"class=\"item\" id=\"x"+tableCol+"y"+tableRow+"\" " +
+					"ondblclick=\"calendarListDoubleClick("+tableRow+","+tableCol+")\" " +
+					"onmousedown=\"calendarListMouseDown("+tableRow+","+tableCol+")\" " +
+					"onmouseup=\"calendarListMouseUp("+tableRow+","+tableCol+")\" " +
+					"onselectstart=\"return false\" " +
+					">" + "Capacity" + "</td>");
+			tableCol++;			
 
 			builder.append("</tr>");
+			tableRow++;
 		}
 
 		builder.append("</table>");
@@ -127,6 +218,29 @@ public class CalendarListView extends SimplePanel {
 
 		mInnerHTML = builder.toString();
 		setHTML(mInnerHTML);
+	}
+
+	private String GetDaysString(Set<DayGWT> days) {
+		String returnString = new String();
+		Iterator<DayGWT> it = days.iterator();
+		
+		while (it.hasNext()) {
+			String current = it.next().toString();
+			if (current != null && current.compareTo("") != 0) {
+				if (current.compareTo("THURSDAY") == 0) {
+					returnString += "TH";
+				}
+				else if (current.compareTo("SUNDAY") == 0) {
+					returnString += "SU";
+				}
+				else {
+					returnString += current.charAt(0) + "";
+				}
+			}
+			 
+		}
+		
+		return returnString;
 	}
 
 	private void setHTML(String html) {
@@ -140,8 +254,10 @@ public class CalendarListView extends SimplePanel {
 	public void doubleClick(int row, int col) {
 		// final CalendarDayModel day = mModel.get(col);
 		// final ScheduleItemGWT item = day.get(row).get(col - day.getOffset());
-
-		// mScheduleController.editItem(false, item, null, -1);
+		final ScheduleItemGWT item = mScheduleItems.get(row);
+		
+		System.out.println("Row " + row + " double clicked on the list.");
+		mScheduleController.editItem(false, item, null, -1);
 	}
 
 	/**
@@ -160,6 +276,8 @@ public class CalendarListView extends SimplePanel {
 		// mScheduleController.getCourseString(item.getCourseID()));
 		//
 		// mDragController.onMouseDown(item, row, col);
+		Element selectedCell = DOM.getElementById("x"+col+"y"+row);
+		
 		return false;
 	}
 
