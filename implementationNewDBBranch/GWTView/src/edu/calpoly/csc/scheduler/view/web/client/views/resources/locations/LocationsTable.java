@@ -2,7 +2,6 @@ package edu.calpoly.csc.scheduler.view.web.client.views.resources.locations;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
@@ -16,11 +15,8 @@ import edu.calpoly.csc.scheduler.view.web.client.table.IStaticGetter;
 import edu.calpoly.csc.scheduler.view.web.client.table.IStaticSetter;
 import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
-import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator.InputValid;
-import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator.InputWarning;
+import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.DeleteObserver;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.ObjectChangedObserver;
-import edu.calpoly.csc.scheduler.view.web.client.table.columns.DeleteColumn.DeleteObserver;
-import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingCheckboxColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingMultiselectColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingSelectColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingStringColumn;
@@ -72,7 +68,7 @@ public class LocationsTable extends SimplePanel {
 			}
 		});
 
-		table.addDeleteColumn(new DeleteObserver<LocationGWT>() {
+		table.addSelectionColumn(new DeleteObserver<LocationGWT>() {
 			@Override
 			public void afterDelete(LocationGWT object) {
 				tableLocations.remove(object);

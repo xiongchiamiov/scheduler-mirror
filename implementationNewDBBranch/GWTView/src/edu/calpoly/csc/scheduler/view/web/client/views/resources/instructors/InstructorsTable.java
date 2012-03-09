@@ -15,12 +15,10 @@ import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator;
 import edu.calpoly.csc.scheduler.view.web.client.table.MemberIntegerComparator;
 import edu.calpoly.csc.scheduler.view.web.client.table.MemberStringComparator;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
-import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator.InputValid;
-import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator.InputWarning;
+import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.DeleteObserver;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.ObjectChangedObserver;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.ButtonColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.ButtonColumn.ClickCallback;
-import edu.calpoly.csc.scheduler.view.web.client.table.columns.DeleteColumn.DeleteObserver;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingCheckboxColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingStringColumn;
 import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
@@ -73,15 +71,15 @@ public class InstructorsTable extends SimplePanel {
 				strategy.onInstructorEdited(object);
 			}
 		});
-
-		table.addDeleteColumn(new DeleteObserver<InstructorGWT>() {
+		
+		table.addSelectionColumn(new DeleteObserver<InstructorGWT>() {
 			@Override
 			public void afterDelete(InstructorGWT object) {
 				tableInstructors.remove(object);
 				strategy.onInstructorDeleted(object);
 			}
 		});
-		
+
 		addFieldColumns();
 
 		this.add(table);

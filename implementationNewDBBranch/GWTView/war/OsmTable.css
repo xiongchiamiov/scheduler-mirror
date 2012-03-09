@@ -110,12 +110,6 @@
 	padding: 2px;
 }
 
-.osmtable td.selected {
-	background-color: #E0E0E0;
-	border: 2px solid #808080;
-	padding: 0px;
-}
-
 .osmtable .hiddenRow td {
 	padding: 0px;
 }
@@ -123,3 +117,19 @@
 .osmtable td.invalid {
 	background-color: #FFE0E0;
 }
+
+.osmtable td.selected {
+	background-color: #E0E0E0;
+	border: 2px solid #808080;
+	padding: 0px;
+}
+
+.osmtable tr.selected {
+	background-color: #E0E0E0 !important;
+}
+<<<<<<< .mine
+=======
+
+.osmtable td.invalid {
+	background-color: #FFE0E0;
+}>>>>>>> .r2091

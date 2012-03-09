@@ -16,14 +16,13 @@ import edu.calpoly.csc.scheduler.view.web.client.table.IStaticSetter;
 import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator;
 import edu.calpoly.csc.scheduler.view.web.client.table.MemberStringComparator;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
+import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.DeleteObserver;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.ObjectChangedObserver;
-import edu.calpoly.csc.scheduler.view.web.client.table.columns.DeleteColumn.DeleteObserver;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingMultiselectColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingSelectColumn;
 import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingStringColumn;
 import edu.calpoly.csc.scheduler.view.web.client.views.resources.courses.AssociationsCell.GetCoursesCallback;
 import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.DayCombinationGWT;
 import edu.calpoly.csc.scheduler.view.web.shared.DayGWT;
 
 public class CoursesTable extends SimplePanel {
@@ -89,7 +88,7 @@ public class CoursesTable extends SimplePanel {
 			}
 		});
 
-		table.addDeleteColumn(new DeleteObserver<CourseGWT>() {
+		table.addSelectionColumn(new DeleteObserver<CourseGWT>() {
 			@Override
 			public void afterDelete(CourseGWT object) {
 				tableCourses.remove(object);

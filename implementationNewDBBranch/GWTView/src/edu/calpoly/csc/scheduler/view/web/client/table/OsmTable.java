@@ -5,8 +5,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -25,6 +27,7 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -35,7 +38,6 @@ import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator.InputWar
 import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator.ValidateResult;
 import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.EditingCell.ExitedEditingModeHandler;
 import edu.calpoly.csc.scheduler.view.web.client.table.ResizeableWidget.ResizeCallback;
-import edu.calpoly.csc.scheduler.view.web.client.table.columns.DeleteColumn;
 import edu.calpoly.csc.scheduler.view.web.shared.Identified;
 
 public class OsmTable<ObjectType extends Identified> extends VerticalPanel implements ClickHandler, DoubleClickHandler {
@@ -45,11 +47,11 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel imple
 		void objectChanged(ObjectType object);
 	}
 	
-	public static class Cell extends FocusPanel {
-		public interface DeleteCallback {
-			void deleteRow();
-		}
+	public interface DeleteObserver<ObjectType extends Identified> {
+		void afterDelete(ObjectType object);
 	}
+	
+	public static class Cell extends FocusPanel { }
 	
 	public static class ReadingCell extends Cell { }
 
@@ -141,13 +143,17 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel imple
 		ObjectType getObject();
 		void delete();
 	}
+	
+	private interface ISelectable<ObjectType extends Identified> { }
 
-	protected class Row implements IRowForColumn<ObjectType> {
+	protected static class Row<ObjectType extends Identified> implements ISelectable<ObjectType>, IRowForColumn<ObjectType> {
+		final OsmTable<ObjectType> table;
 		public int index;
 		public ObjectType object;
 		public final Element trElement;
-		public final ArrayList<CellContainer> cellContainers;
-		public Row(int index, ObjectType object, Element trElement, ArrayList<CellContainer> cellContainers) {
+		public final ArrayList<CellContainer<ObjectType>> cellContainers;
+		public Row(OsmTable<ObjectType> table, int index, ObjectType object, Element trElement, ArrayList<CellContainer<ObjectType>> cellContainers) {
+			this.table = table;
 			this.index = index;
 			this.object = object;
 			this.trElement = trElement;
@@ -158,15 +164,15 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel imple
 		public ObjectType getObject() { return object; }
 		
 		public void delete() {
-			OsmTable.this.deleteRow(this);
+			table.deleteRow(this);
 		}
 	}
 
-	private class CellContainer {
-		final Row row;
+	private static class CellContainer<ObjectType extends Identified> implements ISelectable<ObjectType> {
+		final Row<ObjectType> row;
 		final int colIndex;
 		final Cell cell;
-		public CellContainer(Row row, int colIndex, Cell cell) {
+		public CellContainer(Row<ObjectType> row, int colIndex, Cell cell) {
 			this.row = row;
 			this.colIndex = colIndex;
 			this.cell = cell;
@@ -176,14 +182,15 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel imple
 	protected ObjectChangedObserver<ObjectType> objectChangedObserver;
 	protected final IFactory<ObjectType> factory;
 	protected final ArrayList<ColumnMetadata> columnMetadatas = new ArrayList<ColumnMetadata>();
-	protected final Map<Integer, Row> rowsByObjectID = new HashMap<Integer, Row>();
-	protected final List<Row> rowsInDisplayedOrder = new ArrayList<Row>();
+	protected final Map<Integer, Row<ObjectType>> rowsByObjectID = new HashMap<Integer, Row<ObjectType>>();
+	protected final List<Row<ObjectType>> rowsInDisplayedOrder = new ArrayList<Row<ObjectType>>();
 	protected HorizontalPanel headers;
 	protected boolean headerFloating;
 	protected final FlexTable table;
 	protected ColumnMetadata currentSortedColumn;
 	protected Element hiddenRowThatMaintainsWidths;
-	protected CellContainer selectedCellContainer;
+	
+	protected Set<ISelectable<ObjectType>> selecteds;
 	
 	public OsmTable(IFactory<ObjectType> factory) {
 		this.factory = factory;
@@ -212,6 +219,8 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel imple
 				updateHeaderWidths();
 			}
 		}));
+		
+		selecteds = new HashSet<ISelectable<ObjectType>>();
 	}
 	
 	public void setObjectChangedObserver(ObjectChangedObserver<ObjectType> obs) {
@@ -313,16 +322,34 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel imple
 		columnMetadatas.add(columnMetadata);
 	}
 	
-	public void addDeleteColumn(DeleteColumn.DeleteObserver<ObjectType> handler) {
-		addColumn("", null, false, null, new DeleteColumn<ObjectType>(handler));
+	private static class SelectionCell extends Cell {
+		public SelectionCell() {
+			this.add(new Label("\u00A0\u22EE\u00A0"));
+		}
+	}
+	
+	private static class SelectionColumn<ObjectType extends Identified> implements IColumn<ObjectType> {
+		DeleteObserver<ObjectType> obs;
+		public SelectionColumn(DeleteObserver<ObjectType> obs) {
+			this.obs = obs;
+		}
+		
+		@Override
+		public Cell createCell(IRowForColumn<ObjectType> row) {
+			return new SelectionCell();
+		}
+	}
+	
+	public void addSelectionColumn(DeleteObserver<ObjectType> obs) {
+		addColumn("", null, false, null, new SelectionColumn<ObjectType>(obs));
 	}
 
-	private void deleteRow(final Row row) {
+	private void deleteRow(final Row<ObjectType> row) {
 		rowsByObjectID.remove(row.object.getID());
 		row.trElement.removeFromParent();
 	}
 	
-	private Row addAndReturnRowWithoutUpdatingHeaderWidths(final ObjectType object) {
+	private Row<ObjectType> addAndReturnRowWithoutUpdatingHeaderWidths(final ObjectType object) {
 		int newObjectIndex = rowsByObjectID.size();
 		int rowIndex = 1 + newObjectIndex;
 
@@ -330,79 +357,97 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel imple
 		table.setWidget(rowIndex, 0, placeholder);
 		Element rowElement = HTMLUtilities.getClosestContainingElementOfType(placeholder.getElement(), "tr");
 
-		ArrayList<CellContainer> cellContainers = new ArrayList<CellContainer>();
+		ArrayList<CellContainer<ObjectType>> cellContainers = new ArrayList<CellContainer<ObjectType>>();
 //		CellContainer<ObjectType>[] cellContainers = new CellContainer[columnMetadatas.size()];
 		
-		final Row newRow = new Row(newObjectIndex, object, rowElement, cellContainers);
+		final Row<ObjectType> newRow = new Row<ObjectType>(this, newObjectIndex, object, rowElement, cellContainers);
 		rowsByObjectID.put(object.getID(), newRow);
 		
 		rowsInDisplayedOrder.add(newRow);
 		
 		// Create cells for this row
 		for (int colIndex = 0; colIndex < columnMetadatas.size(); colIndex++) {
-			final Cell cell = columnMetadatas.get(colIndex).column.createCell(newRow);
+			final IColumn<ObjectType> column = columnMetadatas.get(colIndex).column;
+			final Cell cell = column.createCell(newRow);
 			table.setWidget(rowIndex, colIndex, cell);
-			final CellContainer cellContainer = new CellContainer(newRow, colIndex, cell);
+			final CellContainer<ObjectType> cellContainer = new CellContainer<ObjectType>(newRow, colIndex, cell);
 			cellContainers.add(cellContainer);
 			
 			cell.addKeyDownHandler(new KeyDownHandler() {
 				public void onKeyDown(KeyDownEvent event) {
+					boolean deselectAllOthers = !event.isShiftKeyDown();
+					
 					switch (event.getNativeKeyCode()) {
 						case 37: { // left arrow
-							CellContainer newSelectedCellContainer = cellContainerAt(cellContainer.row.index, cellContainer.colIndex - 1);
+							CellContainer<ObjectType> newSelectedCellContainer = cellContainerAt(cellContainer.row.index, cellContainer.colIndex - 1);
 							if (newSelectedCellContainer != null)
-								select(newSelectedCellContainer);
+								select(newSelectedCellContainer, deselectAllOthers);
 						} break;
 						
 						case 38: { // up arrow
-							CellContainer newSelectedCellContainer = cellContainerAt(cellContainer.row.index - 1, cellContainer.colIndex);
+							CellContainer<ObjectType> newSelectedCellContainer = cellContainerAt(cellContainer.row.index - 1, cellContainer.colIndex);
 							if (newSelectedCellContainer != null)
-								select(newSelectedCellContainer);
+								select(newSelectedCellContainer, deselectAllOthers);
 						} break;
 						
 						case 39: { // right arrow
-							CellContainer newSelectedCellContainer = cellContainerAt(cellContainer.row.index, cellContainer.colIndex + 1);
+							CellContainer<ObjectType> newSelectedCellContainer = cellContainerAt(cellContainer.row.index, cellContainer.colIndex + 1);
 							if (newSelectedCellContainer != null)
-								select(newSelectedCellContainer);
+								select(newSelectedCellContainer, deselectAllOthers);
 						} break;
 						
 						case 40: { // down arrow
-							CellContainer newSelectedCellContainer = cellContainerAt(cellContainer.row.index + 1, cellContainer.colIndex);
+							CellContainer<ObjectType> newSelectedCellContainer = cellContainerAt(cellContainer.row.index + 1, cellContainer.colIndex);
 							if (newSelectedCellContainer != null)
-								select(newSelectedCellContainer);
+								select(newSelectedCellContainer, deselectAllOthers);
 						} break;
 						
 						case 9: { // tab
 							if (event.isShiftKeyDown() == false) {
-								CellContainer newSelectedCellContainer = cellContainerAt(cellContainer.row.index, cellContainer.colIndex + 1);
+								CellContainer<ObjectType> newSelectedCellContainer = cellContainerAt(cellContainer.row.index, cellContainer.colIndex + 1);
 								if (newSelectedCellContainer == null)
 									newSelectedCellContainer = cellContainerAt(cellContainer.row.index + 1, 0); // first on next line
 								if (newSelectedCellContainer != null)
-									select(newSelectedCellContainer);
+									select(newSelectedCellContainer, true);
 								if (newSelectedCellContainer == null) // if there is no next line, then make one
 									addNewRow();
 							}
 							else {
-								CellContainer newSelectedCellContainer = cellContainerAt(cellContainer.row.index, cellContainer.colIndex - 1);
+								CellContainer<ObjectType> newSelectedCellContainer = cellContainerAt(cellContainer.row.index, cellContainer.colIndex - 1);
 								if (newSelectedCellContainer == null)
 									newSelectedCellContainer = cellContainerAt(cellContainer.row.index - 1, columnMetadatas.size() - 1); // last on previous line
 								if (newSelectedCellContainer != null)
-									select(newSelectedCellContainer);
+									select(newSelectedCellContainer, true);
 							}
 						} break;
 						
 						case 13: { // enter
-							if (selectedCellContainer != null && selectedCellContainer.cell instanceof EditingCell) {
-								EditingCell editingCell = (EditingCell)selectedCellContainer.cell;
-								if (!editingCell.isInEditingMode()) {
-									CellContainer newSelectedCellContainer = cellContainerAt(cellContainer.row.index + 1, cellContainer.colIndex);
-									if (newSelectedCellContainer == null) {
-										addNewRow();
-										newSelectedCellContainer = cellContainerAt(cellContainer.row.index + 1, cellContainer.colIndex);
+							if (selecteds.size() == 1) {
+								ISelectable<ObjectType> selected = selecteds.iterator().next();
+								if (selected != null && selected instanceof CellContainer) {
+									CellContainer<ObjectType> selectedCellContainer = (CellContainer<ObjectType>)selected;
+									if (selectedCellContainer.cell instanceof EditingCell) {
+										EditingCell editingCell = (EditingCell)selectedCellContainer.cell;
+										if (!editingCell.isInEditingMode()) {
+											CellContainer<ObjectType> newSelectedCellContainer = cellContainerAt(cellContainer.row.index + 1, cellContainer.colIndex);
+											if (newSelectedCellContainer == null) {
+												addNewRow();
+												newSelectedCellContainer = cellContainerAt(cellContainer.row.index + 1, cellContainer.colIndex);
+											}
+											if (newSelectedCellContainer != null)
+												select(newSelectedCellContainer, deselectAllOthers);
+										}
 									}
-									if (newSelectedCellContainer != null)
-										select(newSelectedCellContainer);
 								}
+							}
+						} break;
+						
+						case 8:
+						case 46: {
+							if (cell instanceof SelectionCell) {
+								assert(column instanceof SelectionColumn);
+								deleteRow(newRow);
+								((SelectionColumn<ObjectType>)column).obs.afterDelete(newRow.object);
 							}
 						} break;
 					}
@@ -419,7 +464,6 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel imple
 //				});
 //			}
 
-			IColumn<ObjectType> column = columnMetadatas.get(colIndex).column;
 			assert((cell instanceof EditingCell) == (column instanceof IEditingColumn));
 			if (cell instanceof EditingCell) {
 				final EditingCell editingCell = (EditingCell)cell;
@@ -457,7 +501,7 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel imple
 		
 		// Have all reading cells get updated from the object
 		for (int colIndex = 0; colIndex < columnMetadatas.size(); colIndex++) {
-			CellContainer cellContainer = newRow.cellContainers.get(colIndex);
+			CellContainer<ObjectType> cellContainer = newRow.cellContainers.get(colIndex);
 			Cell rawCell = cellContainer.cell;
 			IColumn<ObjectType> rawColumn = columnMetadatas.get(colIndex).column;
 
@@ -471,7 +515,7 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel imple
 		return newRow;
 	}
 	
-	private void colorCell(CellContainer container, ValidateResult validationResult) {
+	private void colorCell(CellContainer<ObjectType> container, ValidateResult validationResult) {
 		if (container.cell instanceof EditingCell) {
 			
 			if (validationResult == null) {
@@ -503,7 +547,7 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel imple
 		}
 	}
 	
-	private CellContainer cellContainerAt(int row, int col) {
+	private CellContainer<ObjectType> cellContainerAt(int row, int col) {
 		if (row < 0 || row >= rowsByObjectID.size())
 			return null;
 		if (col < 0 || col >= columnMetadatas.size())
@@ -511,8 +555,8 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel imple
 		return rowsInDisplayedOrder.get(row).cellContainers.get(col);
 	}
 	
-	private Row addAndReturnRow(ObjectType object) {
-		Row result = addAndReturnRowWithoutUpdatingHeaderWidths(object);
+	private Row<ObjectType> addAndReturnRow(ObjectType object) {
+		Row<ObjectType> result = addAndReturnRowWithoutUpdatingHeaderWidths(object);
 		updateHeaderWidths();
 		return result;
 	}
@@ -524,9 +568,15 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel imple
 
 	public final void addNewRow() {
 		ObjectType newObject = factory.create();
-		Row newRow = addAndReturnRow(newObject);
+		Row<ObjectType> newRow = addAndReturnRow(newObject);
 
-		select(newRow.cellContainers.get(0));
+		
+		for (CellContainer<ObjectType> cellContainer : newRow.cellContainers) {
+			if (!(cellContainer.cell instanceof SelectionCell)) {
+				select(cellContainer, true);
+				break;
+			}
+		}
 	}
 
 	public void clear() {
@@ -557,8 +607,8 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel imple
 		if (column.comparator != null) {
 //			System.out.println("flerp");
 			
-			Comparator<Row> comparator = new Comparator<Row>() {
-				public int compare(Row a, Row b) {
+			Comparator<Row<ObjectType>> comparator = new Comparator<Row<ObjectType>>() {
+				public int compare(Row<ObjectType> a, Row<ObjectType> b) {
 					return column.comparator.compare(a.object, b.object);
 				};
 			};
@@ -568,7 +618,7 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel imple
 			if (!ascending)
 				Collections.reverse(rowsInDisplayedOrder);
 	
-			for (Row row : this.rowsByObjectID.values())
+			for (Row<ObjectType> row : this.rowsByObjectID.values())
 				row.trElement.removeFromParent();
 	
 			Element tableElement = table.getElement();
@@ -578,7 +628,7 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel imple
 			assert(tbodyElement.getChildCount() == 1);
 			
 			for (int i = 0; i < rowsInDisplayedOrder.size(); i++) {
-				Row row = rowsInDisplayedOrder.get(i);
+				Row<ObjectType> row = rowsInDisplayedOrder.get(i);
 				row.index = i;
 				tbodyElement.appendChild(row.trElement);
 			}
@@ -587,7 +637,7 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel imple
 
 	public Collection<ObjectType> getObjects() {
 		ArrayList<ObjectType> result = new ArrayList<ObjectType>();
-		for (Row row : rowsByObjectID.values())
+		for (Row<ObjectType> row : rowsByObjectID.values())
 			result.add(row.object);
 		return result;
 	}
@@ -624,16 +674,22 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel imple
         if (rowIndex == 0) // row 0 is the hidden row
         	return;
 
-        select(cellContainerAt(rowIndex - 1, cellIndex));
+        boolean deselectAllOthers = !event.isShiftKeyDown();
+        
+        CellContainer<ObjectType> cellContainer = cellContainerAt(rowIndex - 1, cellIndex);
+        if (cellContainer.cell instanceof SelectionCell)
+        	select(cellContainer.row, deselectAllOthers);
+        else
+        	select(cellContainer, deselectAllOthers);
 
         event.stopPropagation();
 	}
 
-	private void select(CellContainer newSelectedCellContainer) {
-		if (newSelectedCellContainer == selectedCellContainer)
-			return;
-		
-		if (selectedCellContainer != null) {
+	private void deselect(ISelectable<ObjectType> selected) {
+		assert(selecteds.contains(selected));
+		if (selected instanceof CellContainer) {
+			System.out.println("lerp");
+			CellContainer<ObjectType> selectedCellContainer = (CellContainer<ObjectType>)selected;
 	    	Element containingTD = HTMLUtilities.getClosestContainingElementOfType(selectedCellContainer.cell.getElement(), "td");
 	        containingTD.removeClassName("selected");
 	        
@@ -642,27 +698,60 @@ public class OsmTable<ObjectType extends Identified> extends VerticalPanel imple
 	        	editingCell.setInEditingMode(false);
 	        }
 		}
+		else if (selected instanceof Row) {
+			System.out.println("kerp");
+			Row<ObjectType> selectedRow = (Row<ObjectType>)selected;
+			selectedRow.trElement.removeClassName("selected");
+		}
+		selecteds.remove(selected);
+	}
+	
+	private void select(ISelectable<ObjectType> selected, boolean deselectAllOthers) {
+		System.out.println("derp");
 		
-		selectedCellContainer = newSelectedCellContainer;
+		if (deselectAllOthers)
+			while (!selecteds.isEmpty())
+				deselect(selecteds.iterator().next());
+		System.out.println("herp");
+		if (selecteds.contains(selected))
+			return;
+		System.out.println("zerp");
 		
-		if (selectedCellContainer != null) {
+		
+
+		if (selected instanceof CellContainer) {
+			CellContainer<ObjectType> selectedCellContainer = (CellContainer<ObjectType>)selected;
 	    	Element containingTD = HTMLUtilities.getClosestContainingElementOfType(selectedCellContainer.cell.getElement(), "td");
 	        containingTD.addClassName("selected");
 			selectedCellContainer.cell.setFocus(true);
 		}
+		else if (selected instanceof Row) {
+			Row<ObjectType> selectedRow = (Row<ObjectType>)selected;
+			selectedRow.trElement.addClassName("selected");
+		}
+		
+		
+		System.out.println("serp");
+		selecteds.add(selected);
 	}
 
 	@Override
 	public void onDoubleClick(DoubleClickEvent event) {
 		System.out.println("got doubleclick event");
 		
-		assert(selectedCellContainer != null);
-		
-        if (selectedCellContainer.cell instanceof EditingCell) {
-        	System.out.println("Setting to editing mode");
-        	EditingCell editingCell = (EditingCell)selectedCellContainer.cell;
-        	editingCell.setInEditingMode(true);
-        }
+		if (selecteds.size() == 1) {
+			ISelectable<ObjectType> selected = selecteds.iterator().next();
+			assert(selected != null);
+			
+			if (selected instanceof CellContainer) {
+				CellContainer<ObjectType> selectedCellContainer = (CellContainer<ObjectType>)selected;
+		        if (selectedCellContainer.cell instanceof EditingCell) {
+		        	System.out.println("Setting to editing mode");
+		        	EditingCell editingCell = (EditingCell)selectedCellContainer.cell;
+		        	editingCell.setInEditingMode(true);
+		        }
+			}
+		}
         
         event.stopPropagation();
 	}

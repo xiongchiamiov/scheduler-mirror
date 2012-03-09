@@ -1,13 +1,9 @@
 package edu.calpoly.csc.scheduler.model;
 
-import junit.framework.TestCase;
-import edu.calpoly.csc.scheduler.model.Model;
-import edu.calpoly.csc.scheduler.model.db.IDatabase;
+import edu.calpoly.csc.scheduler.model.db.DatabaseTestCase;
 
-public abstract class ModelTestCase extends TestCase{
+public abstract class ModelTestCase extends DatabaseTestCase {
 	protected Model createBlankModel() {
 		return new Model(createBlankDatabase());
 	}
-	
-	public abstract IDatabase createBlankDatabase();
 }

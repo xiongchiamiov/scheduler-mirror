@@ -24,6 +24,7 @@ public class ButtonColumn<ObjectType extends Identified> implements OsmTable.ICo
 	
 	public Cell createCell(final IRowForColumn<ObjectType> row) {
 		final Button button = new Button(buttonLabel);
+		button.setStyleName("buttonStyle");
 		button.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
