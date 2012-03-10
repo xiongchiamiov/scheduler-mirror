@@ -21,7 +21,9 @@ public class CalendarListView extends SimplePanel {
 	private String mInnerHTML;
 	private int mLeftOffset;
 	private int mLastRowSelected = -1;
-		
+	private static final int KEYCODE_DELETE = 46;
+	private static final int COLUMN_COUNT = 11;
+
 	public CalendarListView(ScheduleEditWidget scheduleController) {
 		mScheduleController = scheduleController;
 
@@ -30,11 +32,12 @@ public class CalendarListView extends SimplePanel {
 
 	public void setLeftOffset(int pixels) {
 		mLeftOffset = pixels + 1;
-		DOMUtility.setStyleAttribute("ListTableContainer", "left", mLeftOffset + "px");
+		DOMUtility.setStyleAttribute("ListTableContainer", "left", mLeftOffset
+				+ "px");
 	}
 
 	/**
-	 * Used to register callback methods for access via handwritten javascript
+	 * Used to register callback methods for access via handwritten JavaScript
 	 */
 	private native void defineTableCallbacks() /*-{
 		var scheduleTable = this;
@@ -71,7 +74,7 @@ public class CalendarListView extends SimplePanel {
 	public void drawList() {
 		clear();
 
-		final StringBuilder builder = new StringBuilder();		
+		final StringBuilder builder = new StringBuilder();
 		builder.append("<style type=\"text/css\">"
 				+ "* {-webkit-user-select:none;-moz-user-select:none;}"
 				+ "#ListTableContainer {position:absolute;top:116px;left:"
@@ -87,7 +90,7 @@ public class CalendarListView extends SimplePanel {
 				+ "#ListTable td#topCorner {border-bottom:1px solid #000000;background-color:#edf2f2;}"
 				+ "#ListTable td.daySpacer {border-right:1px solid #000000;padding:0px;margin:0px;width:0px;}"
 				+ "</style>");
-		
+
 		builder.append("<div id=\"ListTableContainer\" onscroll=\"tableContainerScroll()\">");
 		builder.append("<table id=\"ListTable\"><tr id=\"headerRow\">");
 
@@ -110,130 +113,143 @@ public class CalendarListView extends SimplePanel {
 		builder.append("</tr>");
 
 		int tableRow = 0;
-		for (ScheduleItemGWT item : mScheduleItems) {
+		for (ScheduleItemGWT item : mFilteredScheduleItems) {
 			int tableCol = 0;
 			builder.append("<tr>");
 
-			builder.append("<td " +
-					"class=\"item\" id=\"x"+tableCol+"y"+tableRow+"\" " +
-					"ondblclick=\"calendarListDoubleClick("+tableRow+","+tableCol+")\" " +
-					"onmousedown=\"calendarListMouseDown("+tableRow+","+tableCol+")\" " +
-					"onmouseup=\"calendarListMouseUp("+tableRow+","+tableCol+")\" " +
-					"tabindex=\"0\" " +
-					"onkeydown=\"calendarListKeyDown("+tableRow+",event.which)\" " +
-					"onselectstart=\"return false\" " +								
-					">" + mScheduleController.getCourseString(item.getCourseID())	+ "</td>");
+			builder.append("<td " + "class=\"item\" id=\"x" + tableCol + "y"
+					+ tableRow + "\" "
+					+ "ondblclick=\"calendarListDoubleClick(" + tableRow + ","
+					+ tableCol + ")\" "
+					+ "onmousedown=\"calendarListMouseDown(" + tableRow + ","
+					+ tableCol + ")\" " + "onmouseup=\"calendarListMouseUp("
+					+ tableRow + "," + tableCol + ")\" " + "tabindex=\"0\" "
+					+ "onkeydown=\"calendarListKeyDown(" + tableRow
+					+ ",event.which)\" " + "onselectstart=\"return false\" "
+					+ ">"
+					+ mScheduleController.getCourseString(item.getCourseID())
+					+ "</td>");
 			tableCol++;
-			
-			builder.append("<td " +
-					"class=\"item\" id=\"x"+tableCol+"y"+tableRow+"\" " +
-					"ondblclick=\"calendarListDoubleClick("+tableRow+","+tableCol+")\" " +
-					"onmousedown=\"calendarListMouseDown("+tableRow+","+tableCol+")\" " +
-					"onmouseup=\"calendarListMouseUp("+tableRow+","+tableCol+")\" " +
-					"tabindex=\"0\" " +
-					"onkeydown=\"calendarListKeyDown("+tableRow+",event.which)\" " +
-					"onselectstart=\"return false\" " +
-					">" + item.getSection() + "</td>");
+
+			builder.append("<td " + "class=\"item\" id=\"x" + tableCol + "y"
+					+ tableRow + "\" "
+					+ "ondblclick=\"calendarListDoubleClick(" + tableRow + ","
+					+ tableCol + ")\" "
+					+ "onmousedown=\"calendarListMouseDown(" + tableRow + ","
+					+ tableCol + ")\" " + "onmouseup=\"calendarListMouseUp("
+					+ tableRow + "," + tableCol + ")\" " + "tabindex=\"0\" "
+					+ "onkeydown=\"calendarListKeyDown(" + tableRow
+					+ ",event.which)\" " + "onselectstart=\"return false\" "
+					+ ">" + item.getSection() + "</td>");
 			tableCol++;
-			
-			builder.append("<td " +
-					"class=\"item\" id=\"x"+tableCol+"y"+tableRow+"\" " +
-					"ondblclick=\"calendarListDoubleClick("+tableRow+","+tableCol+")\" " +
-					"onmousedown=\"calendarListMouseDown("+tableRow+","+tableCol+")\" " +
-					"onmouseup=\"calendarListMouseUp("+tableRow+","+tableCol+")\" " +
-					"tabindex=\"0\" " +
-					"onkeydown=\"calendarListKeyDown("+tableRow+",event.which)\" " +
-					"onselectstart=\"return false\" " +
-					">" + "Course Type Here" + "</td>");
+
+			builder.append("<td " + "class=\"item\" id=\"x" + tableCol + "y"
+					+ tableRow + "\" "
+					+ "ondblclick=\"calendarListDoubleClick(" + tableRow + ","
+					+ tableCol + ")\" "
+					+ "onmousedown=\"calendarListMouseDown(" + tableRow + ","
+					+ tableCol + ")\" " + "onmouseup=\"calendarListMouseUp("
+					+ tableRow + "," + tableCol + ")\" " + "tabindex=\"0\" "
+					+ "onkeydown=\"calendarListKeyDown(" + tableRow
+					+ ",event.which)\" " + "onselectstart=\"return false\" "
+					+ ">" + "Course Type Here" + "</td>");
 			tableCol++;
-			
-			builder.append("<td " +
-					"class=\"item\" id=\"x"+tableCol+"y"+tableRow+"\" " +
-					"ondblclick=\"calendarListDoubleClick("+tableRow+","+tableCol+")\" " +
-					"onmousedown=\"calendarListMouseDown("+tableRow+","+tableCol+")\" " +
-					"onmouseup=\"calendarListMouseUp("+tableRow+","+tableCol+")\" " +
-					"tabindex=\"0\" " +
-					"onkeydown=\"calendarListKeyDown("+tableRow+",event.which)\" " +
-					"onselectstart=\"return false\" " +
-					">" + "Course SCU" + "</td>");
+
+			builder.append("<td " + "class=\"item\" id=\"x" + tableCol + "y"
+					+ tableRow + "\" "
+					+ "ondblclick=\"calendarListDoubleClick(" + tableRow + ","
+					+ tableCol + ")\" "
+					+ "onmousedown=\"calendarListMouseDown(" + tableRow + ","
+					+ tableCol + ")\" " + "onmouseup=\"calendarListMouseUp("
+					+ tableRow + "," + tableCol + ")\" " + "tabindex=\"0\" "
+					+ "onkeydown=\"calendarListKeyDown(" + tableRow
+					+ ",event.which)\" " + "onselectstart=\"return false\" "
+					+ ">" + "Course SCU" + "</td>");
 			tableCol++;
-			
-			builder.append("<td " +
-					"class=\"item\" id=\"x"+tableCol+"y"+tableRow+"\" " +
-					"ondblclick=\"calendarListDoubleClick("+tableRow+","+tableCol+")\" " +
-					"onmousedown=\"calendarListMouseDown("+tableRow+","+tableCol+")\" " +
-					"onmouseup=\"calendarListMouseUp("+tableRow+","+tableCol+")\" " +
-					"tabindex=\"0\" " +
-					"onkeydown=\"calendarListKeyDown("+tableRow+",event.which)\" " +
-					"onselectstart=\"return false\" " +
-					">" + "Course WTU" + "</td>");
+
+			builder.append("<td " + "class=\"item\" id=\"x" + tableCol + "y"
+					+ tableRow + "\" "
+					+ "ondblclick=\"calendarListDoubleClick(" + tableRow + ","
+					+ tableCol + ")\" "
+					+ "onmousedown=\"calendarListMouseDown(" + tableRow + ","
+					+ tableCol + ")\" " + "onmouseup=\"calendarListMouseUp("
+					+ tableRow + "," + tableCol + ")\" " + "tabindex=\"0\" "
+					+ "onkeydown=\"calendarListKeyDown(" + tableRow
+					+ ",event.which)\" " + "onselectstart=\"return false\" "
+					+ ">" + "Course WTU" + "</td>");
 			tableCol++;
-			
-			builder.append("<td " +
-					"class=\"item\" id=\"x"+tableCol+"y"+tableRow+"\" " +
-					"ondblclick=\"calendarListDoubleClick("+tableRow+","+tableCol+")\" " +
-					"onmousedown=\"calendarListMouseDown("+tableRow+","+tableCol+")\" " +
-					"onmouseup=\"calendarListMouseUp("+tableRow+","+tableCol+")\" " +
-					"tabindex=\"0\" " +
-					"onkeydown=\"calendarListKeyDown("+tableRow+",event.which)\" " +
-					"onselectstart=\"return false\" " +
-					">" + "Course Instructor" + "</td>");
+
+			builder.append("<td " + "class=\"item\" id=\"x" + tableCol + "y"
+					+ tableRow + "\" "
+					+ "ondblclick=\"calendarListDoubleClick(" + tableRow + ","
+					+ tableCol + ")\" "
+					+ "onmousedown=\"calendarListMouseDown(" + tableRow + ","
+					+ tableCol + ")\" " + "onmouseup=\"calendarListMouseUp("
+					+ tableRow + "," + tableCol + ")\" " + "tabindex=\"0\" "
+					+ "onkeydown=\"calendarListKeyDown(" + tableRow
+					+ ",event.which)\" " + "onselectstart=\"return false\" "
+					+ ">" + "Course Instructor" + "</td>");
 			tableCol++;
-			
-			builder.append("<td " +
-					"class=\"item\" id=\"x"+tableCol+"y"+tableRow+"\" " +
-					"ondblclick=\"calendarListDoubleClick("+tableRow+","+tableCol+")\" " +
-					"onmousedown=\"calendarListMouseDown("+tableRow+","+tableCol+")\" " +
-					"onmouseup=\"calendarListMouseUp("+tableRow+","+tableCol+")\" " +
-					"tabindex=\"0\" " +
-					"onkeydown=\"calendarListKeyDown("+tableRow+",event.which)\" " +
-					"onselectstart=\"return false\" " +
-					">" + item.getLocationID() + "</td>");
+
+			builder.append("<td " + "class=\"item\" id=\"x" + tableCol + "y"
+					+ tableRow + "\" "
+					+ "ondblclick=\"calendarListDoubleClick(" + tableRow + ","
+					+ tableCol + ")\" "
+					+ "onmousedown=\"calendarListMouseDown(" + tableRow + ","
+					+ tableCol + ")\" " + "onmouseup=\"calendarListMouseUp("
+					+ tableRow + "," + tableCol + ")\" " + "tabindex=\"0\" "
+					+ "onkeydown=\"calendarListKeyDown(" + tableRow
+					+ ",event.which)\" " + "onselectstart=\"return false\" "
+					+ ">" + item.getLocationID() + "</td>");
 			tableCol++;
-			
-			builder.append("<td " +
-					"class=\"item\" id=\"x"+tableCol+"y"+tableRow+"\" " +
-					"ondblclick=\"calendarListDoubleClick("+tableRow+","+tableCol+")\" " +
-					"onmousedown=\"calendarListMouseDown("+tableRow+","+tableCol+")\" " +
-					"onmouseup=\"calendarListMouseUp("+tableRow+","+tableCol+")\" " +
-					"tabindex=\"0\" " +
-					"onkeydown=\"calendarListKeyDown("+tableRow+",event.which)\" " +
-					"onselectstart=\"return false\" " +
-					">" + GetDaysString(item.getDays()) + "</td>");
+
+			builder.append("<td " + "class=\"item\" id=\"x" + tableCol + "y"
+					+ tableRow + "\" "
+					+ "ondblclick=\"calendarListDoubleClick(" + tableRow + ","
+					+ tableCol + ")\" "
+					+ "onmousedown=\"calendarListMouseDown(" + tableRow + ","
+					+ tableCol + ")\" " + "onmouseup=\"calendarListMouseUp("
+					+ tableRow + "," + tableCol + ")\" " + "tabindex=\"0\" "
+					+ "onkeydown=\"calendarListKeyDown(" + tableRow
+					+ ",event.which)\" " + "onselectstart=\"return false\" "
+					+ ">" + GetDaysString(item.getDays()) + "</td>");
 			tableCol++;
-			
-			builder.append("<td " +
-					"class=\"item\" id=\"x"+tableCol+"y"+tableRow+"\" " +
-					"ondblclick=\"calendarListDoubleClick("+tableRow+","+tableCol+")\" " +
-					"onmousedown=\"calendarListMouseDown("+tableRow+","+tableCol+")\" " +
-					"onmouseup=\"calendarListMouseUp("+tableRow+","+tableCol+")\" " +
-					"tabindex=\"0\" " +
-					"onkeydown=\"calendarListKeyDown("+tableRow+",event.which)\" " +
-					"onselectstart=\"return false\" " +
-					">" + "Start Time" + "</td>");
+
+			builder.append("<td " + "class=\"item\" id=\"x" + tableCol + "y"
+					+ tableRow + "\" "
+					+ "ondblclick=\"calendarListDoubleClick(" + tableRow + ","
+					+ tableCol + ")\" "
+					+ "onmousedown=\"calendarListMouseDown(" + tableRow + ","
+					+ tableCol + ")\" " + "onmouseup=\"calendarListMouseUp("
+					+ tableRow + "," + tableCol + ")\" " + "tabindex=\"0\" "
+					+ "onkeydown=\"calendarListKeyDown(" + tableRow
+					+ ",event.which)\" " + "onselectstart=\"return false\" "
+					+ ">" + "Start Time" + "</td>");
 			tableCol++;
-			
-			builder.append("<td " +
-					"class=\"item\" id=\"x"+tableCol+"y"+tableRow+"\" " +
-					"ondblclick=\"calendarListDoubleClick("+tableRow+","+tableCol+")\" " +
-					"onmousedown=\"calendarListMouseDown("+tableRow+","+tableCol+")\" " +
-					"onmouseup=\"calendarListMouseUp("+tableRow+","+tableCol+")\" " +
-					"tabindex=\"0\" " +
-					"onkeydown=\"calendarListKeyDown("+tableRow+",event.which)\" " +
-					"onselectstart=\"return false\" " +
-					">" + "End Time" + "</td>");
+
+			builder.append("<td " + "class=\"item\" id=\"x" + tableCol + "y"
+					+ tableRow + "\" "
+					+ "ondblclick=\"calendarListDoubleClick(" + tableRow + ","
+					+ tableCol + ")\" "
+					+ "onmousedown=\"calendarListMouseDown(" + tableRow + ","
+					+ tableCol + ")\" " + "onmouseup=\"calendarListMouseUp("
+					+ tableRow + "," + tableCol + ")\" " + "tabindex=\"0\" "
+					+ "onkeydown=\"calendarListKeyDown(" + tableRow
+					+ ",event.which)\" " + "onselectstart=\"return false\" "
+					+ ">" + "End Time" + "</td>");
 			tableCol++;
-			
-			builder.append("<td " +
-					"class=\"item\" id=\"x"+tableCol+"y"+tableRow+"\" " +
-					"ondblclick=\"calendarListDoubleClick("+tableRow+","+tableCol+")\" " +
-					"onmousedown=\"calendarListMouseDown("+tableRow+","+tableCol+")\" " +
-					"onmouseup=\"calendarListMouseUp("+tableRow+","+tableCol+")\" " +
-					"tabindex=\"0\" " +
-					"onkeydown=\"calendarListKeyDown("+tableRow+",event.which)\" " +
-					"onselectstart=\"return false\" " +
-					">" + "Capacity" + "</td>");
-			tableCol++;			
+
+			builder.append("<td " + "class=\"item\" id=\"x" + tableCol + "y"
+					+ tableRow + "\" "
+					+ "ondblclick=\"calendarListDoubleClick(" + tableRow + ","
+					+ tableCol + ")\" "
+					+ "onmousedown=\"calendarListMouseDown(" + tableRow + ","
+					+ tableCol + ")\" " + "onmouseup=\"calendarListMouseUp("
+					+ tableRow + "," + tableCol + ")\" " + "tabindex=\"0\" "
+					+ "onkeydown=\"calendarListKeyDown(" + tableRow
+					+ ",event.which)\" " + "onselectstart=\"return false\" "
+					+ ">" + "Capacity" + "</td>");
+			tableCol++;
 
 			builder.append("</tr>");
 			tableRow++;
@@ -249,23 +265,21 @@ public class CalendarListView extends SimplePanel {
 	private String GetDaysString(Set<DayGWT> days) {
 		String returnString = new String();
 		Iterator<DayGWT> it = days.iterator();
-		
+
 		while (it.hasNext()) {
 			String current = it.next().toString();
 			if (current != null && current.compareTo("") != 0) {
 				if (current.compareTo("THURSDAY") == 0) {
 					returnString += "TR";
-				}
-				else if (current.compareTo("SUNDAY") == 0) {
+				} else if (current.compareTo("SUNDAY") == 0) {
 					returnString += "SU";
-				}
-				else {
+				} else {
 					returnString += current.charAt(0) + "";
 				}
 			}
-			 
+
 		}
-		
+
 		return returnString;
 	}
 
@@ -279,7 +293,7 @@ public class CalendarListView extends SimplePanel {
 	 */
 	public void doubleClick(int row, int col) {
 		highlightRow(row);
-		final ScheduleItemGWT item = mScheduleItems.get(row);
+		final ScheduleItemGWT item = mFilteredScheduleItems.get(row);
 
 		mScheduleController.editItem(false, item, null, -1);
 	}
@@ -290,58 +304,41 @@ public class CalendarListView extends SimplePanel {
 	 * @return false to disable text selection on some browsers
 	 */
 	public Boolean mouseDown(int row, int col) {
-		// final CalendarDayModel day = mModel.get(col);
-		// final ScheduleItemGWT item = day.get(row).get(col - day.getOffset());
-		//
-		// // Set the text of the div that moves with the cursor
-		// Element dragDiv =
-		// DOM.getElementById(DragAndDropController.DRAGGED_ID);
-		// DOM.setInnerText(dragDiv,
-		// mScheduleController.getCourseString(item.getCourseID()));
-		//
-		// mDragController.onMouseDown(item, row, col);
 		highlightRow(row);
-		
+
 		return false;
 	}
-	
+
 	/**
-	 * Called when the an item on the table gets a mouse down event
+	 * Called when a key is pressed down on an element
 	 * 
-	 * @return false to disable text selection on some browsers
 	 */
 	public void keyDown(int row, int keycode) {
-		// final CalendarDayModel day = mModel.get(col);
-		// final ScheduleItemGWT item = day.get(row).get(col - day.getOffset());
-		//
-		// // Set the text of the div that moves with the cursor
-		// Element dragDiv =
-		// DOM.getElementById(DragAndDropController.DRAGGED_ID);
-		// DOM.setInnerText(dragDiv,
-		// mScheduleController.getCourseString(item.getCourseID()));
-		//
-		// mDragController.onMouseDown(item, row, col);
-		if (keycode == 46) {
+		if (keycode == KEYCODE_DELETE) {
+			mScheduleController.removeItem(mScheduleItems.get(row));
 			mScheduleItems.remove(row);
-			this.drawList();
+			applyFilters();
+			mLastRowSelected = -1;
+//			this.drawList();
 		}
 	}
-	
-	private void highlightRow(int row) {		
+
+	private void highlightRow(int row) {
 		if (row != mLastRowSelected) {
-			for (int i = 0; i < 11; i++) {
-				Element selectedCell = DOM.getElementById("x"+ i + "y" + row);
+			for (int i = 0; i < COLUMN_COUNT; i++) {
+				Element selectedCell = DOM.getElementById("x" + i + "y" + row);
 				if (selectedCell != null) {
 					selectedCell.addClassName("selectedItem");
 				}
-								
-				//un-highlight old row
-				Element oldCell = DOM.getElementById("x"+ i + "y" + mLastRowSelected);
+
+				// un-highlight old row
+				Element oldCell = DOM.getElementById("x" + i + "y"
+						+ mLastRowSelected);
 				if (oldCell != null) {
 					oldCell.removeClassName("selectedItem");
 				}
 			}
-			
+
 			mLastRowSelected = row;
 		}
 	}
