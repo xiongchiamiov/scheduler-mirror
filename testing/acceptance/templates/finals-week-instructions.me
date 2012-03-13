@@ -15,11 +15,17 @@
 .sp 2v
 .uh "General Information" 2
 .pp
-A blank copy of the finals week acceptance test report has already been put into
-each department subdirectory.  It is a very simple HTML file.  You can edit the
-file directly in a plain text editor, or use some form of word processor and
-save it as an HTML file.  In either case, the file should have the seven
-sections listed in the template.
+A blank copy of the finals week acceptance test report has been put into each
+department subdirectory.  These subdirectories are \fCtesting/acceptance/X\fP,
+where \fCX\fP is the two to four character abbreviation for the departments.
+To perform your acceptance testing: svn update your working project directory,
+fill in the file \fCfinals-week-report.html\fP, and commit the file when you're
+done.
+.pep
+The report template is a very simple HTML file.  You can edit the file directly
+in a plain text editor, or use some form of word processor and save it as an
+HTML file.  In either case, make sure you fill in all seven sections of the
+report.
 .pep
 The objective of this acceptance testing process is to re-create the Winter
 2012 schedule that was published for your department.  The title for each
@@ -189,4 +195,4 @@ Type	Type
 Max Capacity	LCap
 Equipment	Be creative
 .TE
-.\" LocalWords:  nh fo BI UI Jira
+.\" LocalWords:  nh fo BI UI Jira svn html sp WTU SCU ECap Assoc prefs LCap
