@@ -213,8 +213,8 @@ public class EditScheduleItemDlg extends DialogBox {
 		timePanel.add(new Label("Start Time:"));
 		
 		mStartTimeLB.setVisibleItemCount(1);		
-		for (int time = 0; time < CalendarTableView.START_TIMES.length; time++)
-			mStartTimeLB.addItem(CalendarTableView.START_TIMES[time]);
+		for (int time = 0; time < ScheduleEditWidget.START_TIMES.length; time++)
+			mStartTimeLB.addItem(ScheduleEditWidget.START_TIMES[time]);
 		
 		if (mNewStartRow >= 0) {
 			final int maxIndex = mStartTimeLB.getItemCount() - 1;
@@ -238,8 +238,8 @@ public class EditScheduleItemDlg extends DialogBox {
 		timePanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
 		timePanel.add(new Label("End Time:"));
 		mEndTimeLB.setVisibleItemCount(1);
-		for (int time = 0; time < CalendarTableView.END_TIMES.length; time++)
-			mEndTimeLB.addItem(CalendarTableView.END_TIMES[time]);
+		for (int time = 0; time < ScheduleEditWidget.END_TIMES.length; time++)
+			mEndTimeLB.addItem(ScheduleEditWidget.END_TIMES[time]);
 		
 		if (mNewStartRow >= 0) {
 			final int maxIndex = mEndTimeLB.getItemCount() - 1;

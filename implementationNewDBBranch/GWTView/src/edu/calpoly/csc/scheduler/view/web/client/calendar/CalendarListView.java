@@ -224,7 +224,7 @@ public class CalendarListView extends SimplePanel {
 					+ tableRow + "," + tableCol + ")\" " + "tabindex=\"0\" "
 					+ "onkeydown=\"calendarListKeyDown(" + tableRow
 					+ ",event.which)\" " + "onselectstart=\"return false\" "
-					+ ">" + item.getStartHalfHour() + "</td>");
+					+ ">" + ScheduleEditWidget.START_TIMES[item.getStartHalfHour()] + "</td>");
 			tableCol++;
 
 			builder.append("<td " + "class=\"item\" id=\"x" + tableCol + "y"
@@ -236,7 +236,7 @@ public class CalendarListView extends SimplePanel {
 					+ tableRow + "," + tableCol + ")\" " + "tabindex=\"0\" "
 					+ "onkeydown=\"calendarListKeyDown(" + tableRow
 					+ ",event.which)\" " + "onselectstart=\"return false\" "
-					+ ">" + item.getEndHalfHour() + "</td>");
+					+ ">" + ScheduleEditWidget.END_TIMES[item.getEndHalfHour()] + "</td>");
 			tableCol++;
 
 			builder.append("<td " + "class=\"item\" id=\"x" + tableCol + "y"
