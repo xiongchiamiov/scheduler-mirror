@@ -33,10 +33,7 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
 import edu.calpoly.csc.scheduler.view.web.client.schedule.FiltersViewWidget;
 import edu.calpoly.csc.scheduler.view.web.client.views.LoadingPopup;
-import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.DayGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.DocumentGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
+import edu.calpoly.csc.scheduler.view.web.shared.*;
 
 /**
  * This widget contains the calendar and list of available classes. It also
@@ -49,6 +46,8 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 
 	private final DocumentGWT mDocument;
 	private Map<Integer, CourseGWT> mCourses = new HashMap<Integer, CourseGWT>();
+	private Map<Integer, InstructorGWT> mInstructors = new HashMap<Integer, InstructorGWT>();
+	private Map<Integer, LocationGWT> mLocations = new HashMap<Integer, LocationGWT>();
 
 	private GreetingServiceAsync mGreetingService;
 	private ArrayList<ScheduleItemGWT> mCalendarItems = new ArrayList<ScheduleItemGWT>();
@@ -102,6 +101,42 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 					}
 				});
 
+		// Initialize collection of locations
+		mGreetingService.getLocationsForDocument(documentID,
+				new AsyncCallback<List<LocationGWT>>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						Window.alert("Failed to retrieve locations.");
+						loading.hide();
+						return;
+					}
+
+					@Override
+					public void onSuccess(List<LocationGWT> result) {
+						mLocations.clear();
+						for (LocationGWT Location : result)
+							mLocations.put(Location.getID(), Location);
+					}
+				});
+		
+		// Initialize collection of instructors
+		mGreetingService.getInstructorsForDocument(documentID,
+				new AsyncCallback<List<InstructorGWT>>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						Window.alert("Failed to retrieve instructors.");
+						loading.hide();
+						return;
+					}
+
+					@Override
+					public void onSuccess(List<InstructorGWT> result) {
+						mInstructors.clear();
+						for (InstructorGWT instructor : result)
+							mInstructors.put(instructor.getID(), instructor);
+					}
+				});
+		
 		mGreetingService.getScheduleItems(mDocument.getScheduleID(),
 				new AsyncCallback<Collection<ScheduleItemGWT>>() {
 					@Override
@@ -181,6 +216,14 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 	public String getCourseString(Integer courseID) {
 		CourseGWT course = mCourses.get(courseID);
 		return course.getDept() + " " + course.getCatalogNum();
+	}
+	
+	public InstructorGWT getInstructor(Integer instructorID) {
+		return mInstructors.get(instructorID);
+	}
+	
+	public LocationGWT getLocation(Integer locationID) {
+		return mLocations.get(locationID);
 	}
 
 	public CourseGWT getCourse(Integer courseID) {

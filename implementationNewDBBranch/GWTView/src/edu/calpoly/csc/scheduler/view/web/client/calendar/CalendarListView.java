@@ -116,7 +116,7 @@ public class CalendarListView extends SimplePanel {
 		for (ScheduleItemGWT item : mFilteredScheduleItems) {
 			int tableCol = 0;
 			builder.append("<tr>");
-
+			
 			builder.append("<td " + "class=\"item\" id=\"x" + tableCol + "y"
 					+ tableRow + "\" "
 					+ "ondblclick=\"calendarListDoubleClick(" + tableRow + ","
@@ -152,7 +152,7 @@ public class CalendarListView extends SimplePanel {
 					+ tableRow + "," + tableCol + ")\" " + "tabindex=\"0\" "
 					+ "onkeydown=\"calendarListKeyDown(" + tableRow
 					+ ",event.which)\" " + "onselectstart=\"return false\" "
-					+ ">" + "Course Type Here" + "</td>");
+					+ ">" + mScheduleController.getCourse(item.getCourseID()).getType() + "</td>");
 			tableCol++;
 
 			builder.append("<td " + "class=\"item\" id=\"x" + tableCol + "y"
@@ -164,7 +164,7 @@ public class CalendarListView extends SimplePanel {
 					+ tableRow + "," + tableCol + ")\" " + "tabindex=\"0\" "
 					+ "onkeydown=\"calendarListKeyDown(" + tableRow
 					+ ",event.which)\" " + "onselectstart=\"return false\" "
-					+ ">" + "Course SCU" + "</td>");
+					+ ">" + mScheduleController.getCourse(item.getCourseID()).getScu() + "</td>");
 			tableCol++;
 
 			builder.append("<td " + "class=\"item\" id=\"x" + tableCol + "y"
@@ -176,7 +176,7 @@ public class CalendarListView extends SimplePanel {
 					+ tableRow + "," + tableCol + ")\" " + "tabindex=\"0\" "
 					+ "onkeydown=\"calendarListKeyDown(" + tableRow
 					+ ",event.which)\" " + "onselectstart=\"return false\" "
-					+ ">" + "Course WTU" + "</td>");
+					+ ">" + mScheduleController.getCourse(item.getCourseID()).getWtu() + "</td>");
 			tableCol++;
 
 			builder.append("<td " + "class=\"item\" id=\"x" + tableCol + "y"
@@ -188,7 +188,7 @@ public class CalendarListView extends SimplePanel {
 					+ tableRow + "," + tableCol + ")\" " + "tabindex=\"0\" "
 					+ "onkeydown=\"calendarListKeyDown(" + tableRow
 					+ ",event.which)\" " + "onselectstart=\"return false\" "
-					+ ">" + "Course Instructor" + "</td>");
+					+ ">" + mScheduleController.getInstructor(item.getInstructorID()).getLastName() + "</td>");
 			tableCol++;
 
 			builder.append("<td " + "class=\"item\" id=\"x" + tableCol + "y"
@@ -200,7 +200,7 @@ public class CalendarListView extends SimplePanel {
 					+ tableRow + "," + tableCol + ")\" " + "tabindex=\"0\" "
 					+ "onkeydown=\"calendarListKeyDown(" + tableRow
 					+ ",event.which)\" " + "onselectstart=\"return false\" "
-					+ ">" + item.getLocationID() + "</td>");
+					+ ">" + mScheduleController.getLocation(item.getLocationID()).getRoom() + "</td>");
 			tableCol++;
 
 			builder.append("<td " + "class=\"item\" id=\"x" + tableCol + "y"
@@ -224,7 +224,7 @@ public class CalendarListView extends SimplePanel {
 					+ tableRow + "," + tableCol + ")\" " + "tabindex=\"0\" "
 					+ "onkeydown=\"calendarListKeyDown(" + tableRow
 					+ ",event.which)\" " + "onselectstart=\"return false\" "
-					+ ">" + "Start Time" + "</td>");
+					+ ">" + item.getStartHalfHour() + "</td>");
 			tableCol++;
 
 			builder.append("<td " + "class=\"item\" id=\"x" + tableCol + "y"
@@ -236,7 +236,7 @@ public class CalendarListView extends SimplePanel {
 					+ tableRow + "," + tableCol + ")\" " + "tabindex=\"0\" "
 					+ "onkeydown=\"calendarListKeyDown(" + tableRow
 					+ ",event.which)\" " + "onselectstart=\"return false\" "
-					+ ">" + "End Time" + "</td>");
+					+ ">" + item.getEndHalfHour() + "</td>");
 			tableCol++;
 
 			builder.append("<td " + "class=\"item\" id=\"x" + tableCol + "y"
@@ -248,7 +248,7 @@ public class CalendarListView extends SimplePanel {
 					+ tableRow + "," + tableCol + ")\" " + "tabindex=\"0\" "
 					+ "onkeydown=\"calendarListKeyDown(" + tableRow
 					+ ",event.which)\" " + "onselectstart=\"return false\" "
-					+ ">" + "Capacity" + "</td>");
+					+ ">" + mScheduleController.getCourse(item.getCourseID()).getMaxEnroll() + "</td>");
 			tableCol++;
 
 			builder.append("</tr>");
@@ -340,7 +340,7 @@ public class CalendarListView extends SimplePanel {
 			}
 
 			mLastRowSelected = row;
-		}
+		}		
 	}
 
 	/**
