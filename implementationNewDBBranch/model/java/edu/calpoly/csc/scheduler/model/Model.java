@@ -1,14 +1,15 @@
 package edu.calpoly.csc.scheduler.model;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Properties;
 import java.util.Set;
 
 import edu.calpoly.csc.scheduler.model.db.DatabaseException;
@@ -83,8 +84,7 @@ public class Model {
 
 		boolean inCache(UnderlyingT obj) { return cache.containsKey(obj.getID()); }
 	}
-	
-	
+
 	final IDatabase database;
 	
 	public Model() {

@@ -8,11 +8,13 @@ public abstract class View extends SimplePanel {
 	
 	protected abstract Widget getViewWidget();
 	
-	protected boolean canPop() { return true; }
-	protected void afterPush() { }
-	protected void beforePop() { }
-	protected void beforeViewPushedAboveMe() { }
-	protected void afterViewPoppedFromAboveMe() { }
+	protected boolean canPop() {
+		return true;
+	}
+	protected void afterPush() {}
+	protected void beforePop() {}
+	protected void beforeViewPushedAboveMe() {}
+	protected void afterViewPoppedFromAboveMe() {}
 	
 	protected final boolean canPopViewsAboveMe() {
 		if (viewAboveMe != null) {
@@ -26,7 +28,7 @@ public abstract class View extends SimplePanel {
 	}
 	
 	protected final void popViewsAboveMe() {
-		assert(canPopViewsAboveMe());
+		assert (canPopViewsAboveMe());
 		if (viewAboveMe != null) {
 			viewAboveMe.popViewsAboveMe();
 			viewAboveMe.beforePop();
@@ -37,14 +39,14 @@ public abstract class View extends SimplePanel {
 	}
 	
 	protected final void pushViewAboveMe(View newView) {
-		assert(viewAboveMe == null);
+		assert (viewAboveMe == null);
 		
 		beforeViewPushedAboveMe();
 		
 		viewAboveMe = newView;
 		
 		Widget viewWidget = newView.getViewWidget();
-		assert(viewWidget != null && viewWidget != this);
+		assert (viewWidget != null && viewWidget != this);
 		add(viewWidget);
 		
 		viewAboveMe.afterPush();

@@ -11,11 +11,21 @@ public final class ViewFrame extends SimplePanel {
 		add(contents.getContents());
 	}
 	
-	protected boolean canPop() { return contents.canPop(); }
-	protected void afterPush() { contents.afterPush(this); }
-	protected void beforePop() { contents.beforePop(); }
-	protected void beforeViewPushedAboveMe() { contents.beforeViewPushedAboveMe(); }
-	protected void afterViewPoppedFromAboveMe() { contents.afterViewPoppedFromAboveMe(); }
+	protected boolean canPop() {
+		return contents.canPop();
+	}
+	protected void afterPush() {
+		contents.afterPush(this);
+	}
+	protected void beforePop() {
+		contents.beforePop();
+	}
+	protected void beforeViewPushedAboveMe() {
+		contents.beforeViewPushedAboveMe();
+	}
+	protected void afterViewPoppedFromAboveMe() {
+		contents.afterViewPoppedFromAboveMe();
+	}
 	
 	public final boolean canPopViewsAboveMe() {
 		if (viewAboveMe != null) {
@@ -29,7 +39,7 @@ public final class ViewFrame extends SimplePanel {
 	}
 	
 	public final void popFramesAboveMe() {
-		assert(canPopViewsAboveMe());
+		assert (canPopViewsAboveMe());
 		if (viewAboveMe != null) {
 			viewAboveMe.popFramesAboveMe();
 			viewAboveMe.beforePop();
@@ -43,7 +53,7 @@ public final class ViewFrame extends SimplePanel {
 	public final void frameViewAndPushAboveMe(IViewContents newViewContents) {
 		ViewFrame newView = new ViewFrame(newViewContents);
 		
-		assert(viewAboveMe == null);
+		assert (viewAboveMe == null);
 		
 		beforeViewPushedAboveMe();
 		clear();
