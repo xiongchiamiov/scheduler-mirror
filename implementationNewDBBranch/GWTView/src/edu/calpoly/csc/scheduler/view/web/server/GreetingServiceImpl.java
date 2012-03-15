@@ -47,7 +47,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		Properties properties = new Properties();
 		InputStream in = GreetingServiceImpl.class.getResourceAsStream("scheduler.properties");
 		if (in == null)
-			throw new IOException("Couldnt load scheduler.properties");
+			throw new IOException("Couldnt load scheduler.properties (make sure its in GreetingServiceImpl's directory)");
 		properties.load(in);
 		in.close();
 		return properties;
@@ -61,19 +61,48 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	}
 	
 	private String getDatabaseStateFilepath() {
+		String filepath;
+		boolean applyServletPath;
+		
 		try {
 			Properties properties = readPropertiesFile();
 			assert(properties != null);
-			String filepath = properties.getProperty("databasefilepath");
-			assert(filepath != null);
-			return filepath;
+			
+			filepath = properties.getProperty("databasefilepath");
+			if (filepath == null)
+				throw new Exception("filepath not set!");
+			
+			String useServletContextRealPathStr = properties.getProperty("useServletContextRealPath");
+			if (useServletContextRealPathStr == null) {
+				applyServletPath = false;
+			}
+			else {
+				applyServletPath =
+						useServletContextRealPathStr.equalsIgnoreCase("true") ||
+						useServletContextRealPathStr.equalsIgnoreCase("yes") ||
+						useServletContextRealPathStr.equalsIgnoreCase("1");
+			}
 		}
-		catch (IOException e) {
-			String fallback = "/var/lib/tomcat6/database/DatabaseState.javaser";
+		catch (Exception e) {
+			filepath = "DatabaseState.javaser";
+			applyServletPath = true;
+			
 			e.printStackTrace();
-			System.err.println("Couldnt figure out database file path, assuming " + fallback);
-			return fallback;
+			System.err.println("Couldnt load properties, continuing with defaults (filepath=\"" + filepath + "\" applyServletPath=" + applyServletPath + ")");
 		}
+		
+		
+		if (applyServletPath) {
+			try {
+				filepath = getServletContext().getRealPath(filepath);
+			}
+			catch (Exception e) {
+				System.err.println("Requested servlet context real path, but getServletContext().getRealPath() threw an exception. Continuing with filepath " + filepath);
+			}
+		}
+		
+		assert(filepath != null);
+		return filepath;
 	}
 	
 	public GreetingServiceImpl(boolean loadAndSaveFromFileSystem) {
