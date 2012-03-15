@@ -43,18 +43,14 @@ import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemList;
 @SuppressWarnings("serial")
 public class GreetingServiceImpl extends RemoteServiceServlet implements GreetingService {
 
-	Properties readPropertiesFile() {
-		try {
-			Properties properties = new Properties();
-			InputStream in = GreetingServiceImpl.class.getResourceAsStream("scheduler.properties");
-			assert(in != null);
-			properties.load(in);
-			in.close();
-			return properties;
-		}
-		catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+	Properties readPropertiesFile() throws IOException {
+		Properties properties = new Properties();
+		InputStream in = GreetingServiceImpl.class.getResourceAsStream("scheduler.properties");
+		if (in == null)
+			throw new IOException("Couldnt load scheduler.properties");
+		properties.load(in);
+		in.close();
+		return properties;
 	}
 	
 	private boolean loadAndSaveFromFileSystem;
@@ -65,11 +61,19 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	}
 	
 	private String getDatabaseStateFilepath() {
-		Properties properties = readPropertiesFile();
-		assert(properties != null);
-		String filepath = properties.getProperty("databasefilepath");
-		assert(filepath != null);
-		return filepath;
+		try {
+			Properties properties = readPropertiesFile();
+			assert(properties != null);
+			String filepath = properties.getProperty("databasefilepath");
+			assert(filepath != null);
+			return filepath;
+		}
+		catch (IOException e) {
+			String fallback = "/var/lib/tomcat6/database/DatabaseState.javaser";
+			e.printStackTrace();
+			System.err.println("Couldnt figure out database file path, assuming " + fallback);
+			return fallback;
+		}
 	}
 	
 	public GreetingServiceImpl(boolean loadAndSaveFromFileSystem) {
