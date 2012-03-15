@@ -97,6 +97,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 				filepath = getServletContext().getRealPath(filepath);
 			}
 			catch (Exception e) {
+				e.printStackTrace();
 				System.err.println("Requested servlet context real path, but getServletContext().getRealPath() threw an exception. Continuing with filepath " + filepath);
 			}
 		}
