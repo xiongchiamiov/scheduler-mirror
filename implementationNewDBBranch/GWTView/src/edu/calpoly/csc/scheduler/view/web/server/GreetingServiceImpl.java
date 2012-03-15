@@ -43,14 +43,14 @@ import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemList;
 @SuppressWarnings("serial")
 public class GreetingServiceImpl extends RemoteServiceServlet implements GreetingService {
 
-	static Properties properties = new Properties();
-	
-	static {
+	Properties readPropertiesFile() {
 		try {
+			Properties properties = new Properties();
 			InputStream in = GreetingServiceImpl.class.getResourceAsStream("scheduler.properties");
 			assert(in != null);
 			properties.load(in);
 			in.close();
+			return properties;
 		}
 		catch (IOException e) {
 			throw new RuntimeException(e);
@@ -65,6 +65,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	}
 	
 	private String getDatabaseStateFilepath() {
+		Properties properties = readPropertiesFile();
 		assert(properties != null);
 		String filepath = properties.getProperty("databasefilepath");
 		assert(filepath != null);
