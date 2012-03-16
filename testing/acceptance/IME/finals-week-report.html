@@ -18,7 +18,7 @@ Finals Week Acceptance Test Report for the IME Department
 </h2>
 </a>
 <p>
-
+This works.
 </p>
 
 <br>
@@ -28,7 +28,24 @@ Finals Week Acceptance Test Report for the IME Department
 </h2>
 </a>
 <p>
-
+<em>
+<ol type=a>
+<p> <li>
+Changing the course type does not work well
+<p> <li>
+It is weird that the associations tab is blank when no labs exist.
+<p> <li>
+The disabilities "checkbox" is unintuitive and bizarre
+<p> <li>
+Bug: Error saving instructor: 500 The call failed on the server; see server log for details when you try to change an instructors' time preferences
+<p> <li>
+When you navigate between tabs, courses should be verified as acceptable data before you navigate to a new tab
+<p> <li>
+Invalid courses should not be acceptable options for "Course Preferences"
+<p> <li>
+The equipment "popup" set of checkboxes isn't "pretty" we need to come up with a better solution
+</ol>
+</em>
 </p>
 
 <br>
@@ -38,7 +55,17 @@ Finals Week Acceptance Test Report for the IME Department
 </h2>
 </a>
 <p>
+<em>
+<ol type=a>
+<p> <li>
+Bug: Failed to get schedule: com.google.gwt.user.client.rpc.StatusCodeException: 500 The call failed on the server; see server log for details, when I pressed "Generate Schedule" with 2 available courses in the list
+<p> <li>
+"AvailableCourses" should be "Available Courses"
+<p> <li>
+When an "Available Course" is dragged onto the schedule, it only scheduled a single 50 minute block even though the hours per week field is specified as "4"
 
+</ol>
+</em>
 </p>
 
 <br>
@@ -48,7 +75,18 @@ Finals Week Acceptance Test Report for the IME Department
 </h2>
 </a>
 <p>
-
+<em>
+<ol type=a>
+<p> <li>
+When you drag a scheduled course from one time location to another, it does not "save" the Instructor data as it drags and drops, this information should be retained
+<p> <li>
+"AvailableCourses" should be "Available Courses"
+<p> <li>
+When an "Available Course" is dragged onto the schedule, it only scheduled a single 50 minute block even though the hours per week field is specified as "4"
+<p> <li>
+Even though a schedule course says TBA for instructor after having previously been assigned an instructor, the list view suggests that the previously assigned instructor is still the instructor
+</ol>
+</em>
 </p>
 
 <br>
@@ -58,7 +96,16 @@ Finals Week Acceptance Test Report for the IME Department
 </h2>
 </a>
 <p>
+<em>
+<ol type=a>
+<p> <li>
+When I re-opened the "Schedule" page after saving and exiting, the "Loading.." button is present and does not go away.
+<p> <li>
+All data seems to be present
 
+</ol>
+</em>
+</p>
 </p>
 
 <br>
@@ -68,9 +115,23 @@ Finals Week Acceptance Test Report for the IME Department
 </h2>
 </a>
 <p>
-
+<em>
+<ol type=a>
+<p> <li>
+No visual indication of which "navigation tab" you are located in
+<p> <li>
+The file name at the top should be editable 
+<p> <li>
+The file and settings menu's arrows need to be refined to look better
+<p> <li>
+The file and settings menus should not exist on the login page, this occurs when you are logged in and then press "log out"
+<p> <li>
+The file and settings menus should not be available on the home page
+<p> <li>
+File...Open should open a completely new window/tab, not navigate directly away from the web interface
+</ol>
+</em>
 </p>
-
 <br>
 <a name="Other Issues">
 <h2>
