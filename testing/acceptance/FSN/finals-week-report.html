@@ -1,84 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
+
 <html>
 <head>
-<title>
-Finals Week Acceptance Test Report for the FSN Department
-</title>
+	<meta name="generator" content=
+	"HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 15.3.6), see www.w3.org">
+
+	<title>Finals Week Acceptance Test Report for the FSN
+	Department</title>
+	<style type="text/css">
+		img {
+			display: block;
+			margin-left: auto;
+			margin-right: auto;
+		}
+	</style>
 </head>
-<body bgcolor=white>
-<p align=center>
-<font size=+2>
-<strong>Finals Week Acceptance Test Report for the FSN Department</strong>
-</font>
-</p>
-<br>
-<br>
-<a name="Create, Save, and Re-Open a New Schedule">
-<h2>
-1.  Create, Save, and Re-Open a New Schedule
-</h2>
-</a>
-<p>
 
-</p>
+<body bgcolor="white">
+	<p align="center"><font size="+2"><strong>Finals Week Acceptance
+	Test Report for the FSN Department</strong></font></p><br>
+	<br>
 
-<br>
-<a name="Enter Resource Data">
-<h2>
-2.  Enter Resource Data
-</h2>
-</a>
-<p>
+	<h2><a name="Create, Save, and Re-Open a New Schedule">1. Create,
+	Save, and Re-Open a New Schedule</a></h2><br>
+	<p>
+		Everything worked as expected.  However, the title of the document
+		improperly escapes spaces with the url encoding <code>%20</code>:
+		<img src="finals-week-report/01.png" />
+	</p>
 
-</p>
+	<h2><a name="Enter Resource Data">2. Enter Resource
+	Data</a></h2><br>
+	<ul>
+		<li>Pressing tab to switch field scrolled the page to the top.</li>
+		<li>Saving sometimes took a few seconds; during that time, there was no
+		visual feedback that the save had not yet completed, so I was surprised
+		when I got the alertbox telling me the schedule had been saved.</li>
+		<li>Lectures and labs are the same course number - how do I
+		differentiate them?  Should I list them separately, or together?  If I
+		list them separately, counting the number of sections is a little
+		annoying, since the section numbers increment through both lectures and
+		labs.</li>
+		<li>Why do I have to enter the department every time?</li>
+		<li>I couldn't change the type of FSN 204 to Lab - when I tried to, it
+		went back to Lecture.  Reloading the page fixed this.</li>
+		<li>Dropdowns inside psuedo-Excel cells don't really work.</li>
+		<li>If I have to do labs and lectures separately, why can't I duplicate
+		a row?  Most of the information is the same.</li>
+		<li>I can't edit text inside a cell - replace or gtfo.</li>
+		<li>I don't know what "updateheaderwidths" is supposed to do, but it
+		ain't doing it.</li>
+		<li><strike>I'd like for there to be a keyboard method for creating a
+		new row.</strike></li>
+		<li>Rows look like they're draggable.  They aren't.</li>
+		<li>The header stays still while scrolling the page horizontally.</li>
+	</ul>
 
-<br>
-<a name="Generate a Schedule">
-<h2>
-3.  Generate a Schedule
-</h2>
-</a>
-<p>
+	<h2><a name="Generate a Schedule">3. Generate a
+	Schedule</a></h2><br>
+	<ul>
+		<li>There's nothing listed under "AvailableCourses".</li>
+		<li>Also, "AvailableCourses"?  Spaces, plox.</li>
+		<li>Pressing the "Generate Schedule" button throws an error; the logs
+		tell me this:
+		<code><pre>com.google.gwt.user.server.rpc.UnexpectedException: Service
+		method 'public abstract java.util.Collection
+		edu.calpoly.csc.scheduler.view.web.client.GreetingService.generateRestOfSchedule(int)
+		throws
+		edu.calpoly.csc.scheduler.view.web.shared.CouldNotBeScheduledExceptionGWT'
+		threw an unexpected exception: java.lang.NullPointerException
+		        at
+				com.google.gwt.user.server.rpc.RPC.encodeResponseForFailure(RPC.java:385)
+		</pre></code></li>
+	</ul>
 
-</p>
+	<h2><a name="Edit the Schedule">4. Edit the Schedule</a></h2><br>
+	<p>
+		Can't if it doesn't list any available courses.
+	</p>
 
-<br>
-<a name="Edit the Schedule">
-<h2>
-4.  Edit the Schedule
-</h2>
-</a>
-<p>
+	<h2><a name="Save, Exit, Re-Open Schedule">5. Save, Exit, Re-Open
+	Schedule</a></h2><br>
+	<ul>
+		<li>Course items rearranged themselves once.</li>
+		<li>Logging out and logging back in: first click on the schedule name
+		just opened the list of schedules again in a new window.  The second
+		click gave me an error: "Failed to open document: 0" or something, but
+		then loaded the document after a few seconds.</li>
+	</ul>
 
-</p>
+	<h2><a name="Quality Measures">6. Quality Measures</a></h2><br>
 
-<br>
-<a name="Save, Exit, Re-Open Schedule">
-<h2>
-5.  Save, Exit, Re-Open Schedule
-</h2>
-</a>
-<p>
-
-</p>
-
-<br>
-<a name="Quality Measures">
-<h2>
-6.  Quality Measures
-</h2>
-</a>
-<p>
-
-</p>
-
-<br>
-<a name="Other Issues">
-<h2>
-7.  Other Issues
-</h2>
-</a>
-<p>
-
-</p>
+	<h2><a name="Other Issues">7. Other Issues</a></h2>
 </body>
 </html>
+
