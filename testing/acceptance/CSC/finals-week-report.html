@@ -18,7 +18,125 @@ Finals Week Acceptance Test Report for the CSC Department
 </h2>
 </a>
 <p>
-
+<ol type=1>
+<strong>On the Login Page:</strong>
+<ol type=a>
+<p> <li>
+With the top-most banner gone, which I like, we need a message identifying the
+program, above or in place of the 'Login' label .  I suggest changing the label
+'Logon' to 'Login to the Scheduling Program'
+<p> <li>
+Need 10 to 20 pixels of padding between the text edit box and 'Login' button.
+<p> <li>
+Need some roll-over help on all of the widgets saying "If you need a login ID,
+please contact your department scheduler."  We need to think about how this
+relates to CAS authentication.  Specifically, once someone authenticates
+through CAS, we then need to further filter to check that they are allowed
+access to the scheduler program.  Again, this needs further thought.
+<p> <li>
+Need to have the 'Return' (aka, 'Enter') key be a keyboard shortcut for
+pressing the 'Login' button.
+</ol>
+<p>
+<strong>On the 'My Scheduling Documents' page:</strong>
+<ol type=a>
+<p> <li>
+At present, there are two check box lines with empty document names.  This is
+may be an artifact of recent fixes, or an
+<p> <li>
+The relationship between the separate windows and the browser back button is
+confusing. My interaction went like this:
+<ol type=i>
+<p> <li>
+Entered name schedule name "Winter 2012".
+<p> <li>
+Got new window with name "Winter%202012".
+<p> <li>
+Went back initial window and hit browser Refresh button, in hopes that the new
+schedule document would show up in the list.
+<p> <li>
+Instead, pressing the browser Refresh took me to the Login page.
+<p> <li>
+I logged in again, and saw to copies of "Winter 2012" in the document list.
+Not sure what just happened.
+<p> <li>
+So I delete both document and try to re-create with name "Winter 2012" and I
+get "Error: Schedule named Winter 2012 already exists ...".  This is TOTALLY
+ANNOYING.
+<p> <li>
+So I create "Winter 2012, Again"
+</ol>
+<p> <li>
+The point of the preceding scenario was to try to get rid of the "%20"
+characters in the schedule names, which I see at this point is just a bug that
+needs to be fixed.
+<p> <li>
+There also appear to be extra characters in the name that stayed there when I
+pressed the 'Delete' button while entering the schedule name originally.
+<p> <li>
+Also, I think 'Trash' should be to the far right, not right next to 'Home'.
+The point is that 'Trash' should have some visual separation from the non-
+trash.
+<p> <li>
+If the 'My Scheduling Documents' window is going to stay up, it needs to auto-
+refresh the list of schedule documents when new ones are created, not just
+saved.  To distinguish in the list between saved and unsaved documents, there
+can be some form of standard marker indicating that a document has unsaved
+changes.
+<p> <li>
+With further interaction, I see that it refreshes when I press 'Home'; I'd
+still like auto-refresh-on-create, and an 'unsaved changes' icon for each
+document with unsaved changes.
+</ol>
+<p>
+<strong>In 'Trash' page:</strong>
+<ol type=a>
+<p> <li>
+There needs to be an 'Empty Trash' button at the bottom.
+<p> <li>
+I suspect that the reason that I can't reuse the name "Winter 2012" is that
+it's in the trash; this should not be the case.  What's particularly confusing
+in the current state is that there are two separate documents in the trash both
+named "Winter 2012", and I cannot name a non-trash document "Winter 2012".
+<p> <li>
+I'm still not sure that this page is sufficiently intuitive or useful.  I might
+prefer an iTunes style idea for trash, where when the user deletes a schedule
+document, the program asked whether or not the document file should be deleted?
+<p> <li>
+This allows the normal file system to manage the trash.  It does of course
+require that files actually be created for schedule documents, which I would
+not mind at all.
+<p> <li>
+Need spacing between list and 'Restore ...' button at the bottom of the page.
+</ol>
+<p>
+<strong>Pressing Logout Button:</strong>
+<ol type=a>
+<p> <li>
+It's confusing to me to have two separate pages both logged out.
+<p> <li>
+In my opinion, this is one case of many where a web-based application is
+inferior to a desktop application.
+</ol>
+<p>
+<strong>Pressing a schedule document link:</strong>
+<ol type=a>
+<p> <li>
+It's a bit confusing having the check box next to the name, in that it's not
+initially clear if I need to check it to work on the document..le
+<p> <li>
+I supposed this confusion will go away after some use.
+</ol>
+<p>
+<p>
+<strong>Miscellaneous:</strong>
+<ol type=a>
+<p> <li>
+After I close the 'Home' window, I don't' see a way to get back.
+<p> <li>
+The 'Settings' menu should be on the far right.
+</ol>
+</ol>
 </p>
 
 <br>
@@ -28,7 +146,155 @@ Finals Week Acceptance Test Report for the CSC Department
 </h2>
 </a>
 <p>
-
+<ol type=1>
+<strong>General:</strong>
+<ol type=a>
+<p> <li>
+As on other pages, there needs to be spacing around buttons.
+<p> <li>
+I think the top 'New' button should be removed, since the one at the bottom is
+sufficient.
+<p> <li>
+The 'updateheadersidths' button needs to be removed.
+<p> <li>
+At present, I don't see any way to delete entries from any of the resource
+pages.
+<ol type=i>
+<p> <li>
+We've discussed an number of alternatives to make this happen, the most recent
+of which was allowing one or more rows selectable, with a 'Delete' button on
+the bottom of the page.
+<p> <li>
+This is a critical issue that needs to be fixed before client deployment.
+</ol>
+<p> <li>
+I find the 'Successfully Saved' pop-up increasingly annoying after a while,
+particularly when it pops up after several seconds and I'm in the middle of
+typing.
+<p> <li>
+Also, I inadvertently typed 'Command-S' to save and got the Browser's save
+dialog; I think this may confuse some users.
+<p>
+<p> <li>
+In Firefox:
+<ol type=i>
+<p> <li>
+When single clicking, edit typing bar does not appear consistently in edit
+boxes.  Need to double click to get typing bar in the correct place.
+<p> <li>
+When typing tab, edit typing bar goes one past where it should be.
+</ol>
+<p> <li>
+Copy and paste of rows would be very handy.
+</ol>
+<p>
+<strong>Courses:</strong>
+<ol type=a>
+<p> <li>
+MAJOR ERROR 1:
+<ol type=i>
+<p> <li>
+After entering six rows, but before saving, I selected the small vertical line
+with 3 vertical dots on the left of a row and then hit the 'Delete' key; the
+intent was to try to delete an empty row.
+<p> <li>
+The program logged me out and put me back at the 'Login' page.
+<p> <li>
+All unsaved data were lost.
+</ol>
+MAJOR ERROR 2:
+<ol type=a>
+<p> <li>
+While entering about the tenth course, I pressed the delete key in the normal
+way within a data entry box and I got this error:
+<blockquote><pre>
+There was an error getting the schedules: 500 The call failed on the server;
+see server log for details.
+</pre></blockquote>
+<p> <li>
+The entire document appears to be lost.
+</ol>
+<p> <li>
+Evidently there is no uniqueness criterion for courses.
+<ol type=i>
+<p> <li>
+I entered separate rows, with the same values for all data fields and it saved
+OK.
+<p> <li>
+This should not be possible.
+<p> <li>
+That is, I suggest that the uniqueness criterion should be that no to courses
+can have exactly the same values for all data fields.
+</ol>
+<p> <li>
+'Department' heading should be 'Prefix'.
+<p> <li>
+'Catalog Number' heading should be 'Number'.
+<p> <li>
+In Firefox, the drop-down in the 'Course Type' is difficult to work with, in
+particular 'click-release' does not work to select the down arrow, but instead
+requires 'click-and-hold'.
+<p> <li>
+In Firefox, I could not get the drop-down under 'Associations' to select
+anything other that '(none)'.  [UPDATE: it worked after more than one course
+was entered; I think the initial error is reproducible.]
+<p> <li>
+<strong><em>WTU and SCU Conceptual Issues:</em></strong>
+<ol type=i>
+<p> <li>
+I believe the WTU value should have a defaults entered as follows: 4 for a
+3-hour lecture, 5 for a 4-hour lecture, 1 for a 3-hour lab.
+<p> <li>
+There needs to be some way to account for variable WTU values; it may be that
+we just enter multiple rows of the same course, but I'd prefer to be able to
+input a WTU range in one row, as in "1-4".
+<p> <li>
+I don't think we need the SCU column for scheduling purposes; I suggest we
+remove it.
+</ol>
+</ol>
+<p>
+<strong>Instructors:</strong>
+<ol type=a>
+<p> <li>
+MAJOR ERROR:
+<ol type=i>
+While entering the third name, I pressed 'Delete' and I moved from the "Winter
+2012, V3" schedule to another schedule.
+<p> <li>
+Without a way to go back to the dismissed Home page, I had to log in again and
+select "Winter 2013, V3" again.  [Subsequent update -- I now see that
+'File->New'
+<p> <li>
+All entered instructor data were lost!
+<p> <li>
+I'm reticent to waste further time entering real data until the system is more
+usable and reliable; I'll proceed anyway.
+</ol>
+<p> <li>
+I think we need a clear way to include a middle initial
+<ol type=i>
+<p> <li>
+Compare how names are listed in
+<a href="http://schedules.calpoly.edu/all_person_52-CENG.htm">
+http://schedules.calpoly.edu/all_person_52-CENG.htm
+</a>
+and
+<a href="http://schedules.calpoly.edu/subject_CSC.htm">
+http://schedules.calpoly.edu/subject_CSC.htm
+</a>
+<p> <li>
+I suggest a column 'Name' with sub-columns 'Last', 'First', 'Middle'
+</ol>
+</ol>
+<p>
+<p> <li>
+<strong>Rooms:</strong>
+<ol type=a>
+<p> <li>
+<strong><em>Did not get this far.</em></strong>
+</ol>
+</ol>
 </p>
 
 <br>
@@ -38,7 +304,7 @@ Finals Week Acceptance Test Report for the CSC Department
 </h2>
 </a>
 <p>
-
+<strong><em>Did not get this far.</em></strong>
 </p>
 
 <br>
@@ -48,7 +314,7 @@ Finals Week Acceptance Test Report for the CSC Department
 </h2>
 </a>
 <p>
-
+<strong><em>Did not get this far.</em></strong>
 </p>
 
 <br>
@@ -58,7 +324,7 @@ Finals Week Acceptance Test Report for the CSC Department
 </h2>
 </a>
 <p>
-
+Worked initially, but then all data were lost.
 </p>
 
 <br>
@@ -68,7 +334,39 @@ Finals Week Acceptance Test Report for the CSC Department
 </h2>
 </a>
 <p>
-
+<ul>
+<li>
+<em>Instructor prefs need to be integrated into algorithm:</em>
+<strong><em>COULD NOT DETERMINE.</em></strong>
+<li>
+<em>Instructor prefs saved when user navigates away from instructor page:</em>
+<strong><em>COULD NOT DETERMINE.</em></strong>
+<li>
+<em>Resource tables lecture/lab associations and more course types:</em>
+<strong><em>DOES NOT WORK.</em></strong>
+<li>
+<em>Resource tables course suffixing:</em> <strong><em>WORKS, BUT MAY BE
+MOOT</em></strong>
+<li>
+<em>Resource tables course invalid data remains on page:</em> <strong><em>GIVEN
+MAJOR DATA LOSS PROBLEMS THAT AT LEAST I EXPERIENCED IN FIREFOX, THIS DOES NOT
+WORK.</em></strong>
+<li>
+<em>Resource tables / generate course time TBA:</em> <strong><em>DOES NOT
+WORK,</em></strong> based on previous assessments.
+<li>
+<em>Generate short loading time:</em> <strong><em>COULD NOT
+DETERMINE.</em></strong>
+<li>
+<em>Generate drag and drop works consistently well:</em> <strong><em>COULD NOT
+DETERMINE.</em></strong>
+<li>
+<em>Generate no "unresponsive script" messages from browser:</em>
+<strong><em>COULD NOT DETERMINE.</em></strong>
+<li>
+<em>Generate no freezing due to database size:</em> <strong><em>DID NO SEE
+"FREEZING", BUT NOT ENOUGH TESTING TO ENSURE IT DOES NOT HAPPEN.</em></strong>
+</ul>
 </p>
 
 <br>
@@ -78,7 +376,10 @@ Finals Week Acceptance Test Report for the CSC Department
 </h2>
 </a>
 <p>
-
+<font size=+2>
+<strong><em>I think the current version is complete disaster and we need to
+assess what direction we want to take next quarter.</em></strong>
+</font>
 </p>
 </body>
 </html>
