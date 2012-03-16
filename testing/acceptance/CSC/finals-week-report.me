@@ -1,0 +1,367 @@
+.sz 10
+.ds ~ /users/gfisher/nroff
+. so \*~/stdhdr.me
+.if !\nh \{\
+.    he '''Page %'
+.    fo ''''
+.\}
+.(TI "Finals Week Acceptance Test Report for the CSC Department"
+.(S +2
+\fBFinals Week Acceptance Test Report for the CSC Department\fP
+.)S
+.)TI
+.br
+.br
+.br
+.sh 1 "Create, Save, and Re-Open a New Schedule"
+.pp
+.(L 1 .8v
+... .le
+\fBOn the Login Page:\fP
+.(L a .3v
+.le
+With the top-most banner gone, which I like, we need a message identifying the
+program, above or in place of the 'Login' label .  I suggest changing the
+label 'Logon' to 'Login to the Scheduling Program'
+.le
+Need 10 to 20 pixels of padding between the text edit box and 'Login' button.
+.le
+Need some roll-over help on all of the widgets saying "If you need a login ID,
+please contact your department scheduler."  We need to think about how this
+relates to CAS authentication.  Specifically, once someone authenticates
+through CAS, we then need to further filter to check that they are allowed
+access to the scheduler program.  Again, this needs further thought.
+.le
+Need to have the 'Return' (aka, 'Enter') key be a keyboard shortcut for
+pressing the 'Login' button.
+.)L a
+.hc p
+... .le
+\fBOn the 'My Scheduling Documents' page:\fP
+.(L a .3v
+.le
+At present, there are two check box lines with empty document names.  This is
+may be an artifact of recent fixes, or an 
+.le
+The relationship between the separate windows and the browser back button is
+confusing. My interaction went like this:
+.(L i
+.le
+Entered name schedule name "Winter 2012".
+.le
+Got new window with name "Winter%202012".
+.le
+Went back initial window and hit browser Refresh button, in hopes that the new
+schedule document would show up in the list.
+.le
+Instead, pressing the browser Refresh took me to the Login page.
+.le
+I logged in again, and saw to copies of "Winter 2012" in the document list.
+Not sure what just happened.
+.le
+So I delete both document and try to re-create with name "Winter 2012" and I
+get "Error: Schedule named Winter 2012 already exists ...".  This is TOTALLY
+ANNOYING.
+.le
+So I create "Winter 2012, Again"
+.)L i
+.le
+The point of the preceding scenario was to try to get rid of the "%20"
+characters in the schedule names, which I see at this point is just a bug that
+needs to be fixed.
+.le
+There also appear to be extra characters in the name that stayed there 
+when I pressed the 'Delete' button while entering the schedule name originally.
+.le
+Also, I think 'Trash' should be to the far right, not right next to 'Home'.
+The point is that 'Trash' should have some visual separation from the
+non-trash.
+.le
+If the 'My Scheduling Documents' window is going to stay up, it needs to
+auto-refresh the list of schedule documents when new ones are created, not just
+saved.  To distinguish in the list between saved and unsaved documents, there
+can be some form of standard marker indicating that a document has unsaved
+changes.
+.le
+With further interaction, I see that it refreshes when I press 'Home'; I'd
+still like auto-refresh-on-create, and an 'unsaved changes' icon for each
+document with unsaved changes.
+.)L a
+.hc p
+... .le
+\fBIn 'Trash' page:\fP
+.(L a .3v
+.le
+There needs to be an 'Empty Trash' button at the bottom.
+.le
+I suspect that the reason that I can't reuse the name "Winter 2012" is that
+it's in the trash; this should not be the case.  What's particularly confusing
+in the current state is that there are two separate documents in the trash both
+named "Winter 2012", and I cannot name a non-trash document "Winter 2012".
+.le
+I'm still not sure that this page is sufficiently intuitive or useful.  I might
+prefer an iTunes style idea for trash, where when the user deletes a schedule
+document, the program asked whether or not the document file should be deleted?
+.le
+This allows the normal file system to manage the trash.  It does of course
+require that files actually be created for schedule documents, which I would
+not mind at all.
+.le
+Need spacing between list and 'Restore ...' button at the bottom of the page.
+.)L a
+.hc p
+... .le
+\fBPressing Logout Button:\fP
+.(L a .3v
+.le
+It's confusing to me to have two separate pages both logged out.
+.le
+In my opinion, this is one case of many where a web-based application is
+inferior to a desktop application.
+.)L a
+.hc p
+... .le
+\fBPressing a schedule document link:\fP
+.(L a .3v
+.le
+It's a bit confusing having the check box next to the name, in that it's not
+initially clear if I need to check it to work on the document..le
+.le
+I supposed this confusion will go away after some use.
+.)L a
+.hc p
+... .le
+.hc p
+... .le
+\fBMiscellaneous:\fP
+.(L a
+.le
+After I close the 'Home' window, I don't' see a way to get back.
+.le
+The 'Settings' menu should be on the far right.
+.)L a
+.)L 1
+.pe
+
+.br
+.sh 1 "Enter Resource Data"
+.pp
+.(L 1 .8v
+... .LE
+\fBGeneral:\fP
+.(L a .2v
+.le
+As on other pages, there needs to be spacing around buttons.
+.le
+I think the top 'New' button should be removed, since the one at the bottom is
+sufficient.
+.le
+The 'updateheadersidths' button needs to be removed.
+.le
+At present, I don't see any way to delete entries from any of the resource
+pages.
+.(L i
+.le
+We've discussed an number of alternatives to make this happen, the most
+recent of which was allowing one or more rows selectable, with a 'Delete'
+button on the bottom of the page.
+.le
+This is a critical issue that needs to be fixed before client deployment.
+.)L i
+.le
+I find the 'Successfully Saved' pop-up increasingly annoying after a while,
+particularly when it pops up after several seconds and I'm in the middle of
+typing.
+.le
+Also, I inadvertently typed 'Command-S' to save and got the Browser's save
+dialog; I think this may confuse some users.
+.hc p
+.le
+In Firefox:
+.(L i
+.le
+When single clicking, edit typing bar does not appear consistently in edit
+boxes.  Need to double click to get typing bar in the correct place.
+.le
+When typing tab, edit typing bar goes one past where it should be.
+.)L i
+.le
+Copy and paste of rows would be very handy.
+.)L a
+.hc p
+... .le
+\fBCourses:\fP
+.(L a .3v
+.le
+MAJOR ERROR 1:
+.(L i
+.le
+After entering six rows, but before saving, I selected the small vertical line
+with 3 vertical dots on the left of a row and then hit the 'Delete' key; the
+intent was to try to delete an empty row.
+.le
+The program logged me out and put me back at the 'Login' page.
+.le
+All unsaved data were lost.
+.)L i
+MAJOR ERROR 2:
+.(L a
+.le
+While entering about the tenth course, I pressed the delete key in the normal
+way within a data entry box and I got this error:
+.(t
+There was an error getting the schedules: 500 The call failed on the server;
+see server log for details.
+.)t
+.le
+The entire document appears to be lost.
+.)L a
+.le
+Evidently there is no uniqueness criterion for courses.
+.(L i
+.le
+I entered separate rows, with the same values for all data fields and it saved
+OK.
+.le
+This should not be possible.
+.le
+That is, I suggest that the uniqueness criterion should be that no to courses
+can have exactly the same values for all data fields.
+.)L i
+.le
+\&'Department' heading should be 'Prefix'.
+.le
+\&'Catalog Number' heading should be 'Number'.
+.le
+In Firefox, the drop-down in the 'Course Type' is difficult to work with, in
+particular 'click-release' does not work to select the down arrow, but instead
+requires 'click-and-hold'.
+.le
+In Firefox, I could not get the drop-down under 'Associations' to select
+anything other that '(none)'.  [UPDATE: it worked after more than one course
+was entered; I think the initial error is reproducible.]
+.le
+\f[BI]WTU and SCU Conceptual Issues:\fP
+.(L i
+.le
+I believe the WTU value should have a defaults entered as follows: 4 for a
+3-hour lecture, 5 for a 4-hour lecture, 1 for a 3-hour lab.
+.le
+There needs to be some way to account for variable WTU values; it may be that
+we just enter multiple rows of the same course, but I'd prefer to be able to
+input a WTU range in one row, as in "1-4".
+.le
+I don't think we need the SCU column for scheduling purposes; I suggest we
+remove it.
+.)L i
+.)L a
+.hc p
+... .le
+\fBInstructors:\fP
+.(L a .3v
+.le
+MAJOR ERROR:
+.(L i
+While entering the third name, I pressed 'Delete' and I moved from the "Winter
+2012, V3" schedule to another schedule.
+.le
+Without a way to go back to the dismissed Home page, I had to log in again and
+select "Winter 2013, V3" again.  [Subsequent update -- I now see
+that 'File->New' 
+.le
+All entered instructor data were lost!
+.le
+I'm reticent to waste further time entering real data until the system is more
+usable and reliable; I'll proceed anyway.
+.)L i
+.le
+I think we need a clear way to include a middle initial
+.(L i
+.le
+Compare how names are
+listed in 
+.(Ah "http://schedules.calpoly.edu/all_person_52-CENG.htm"
+http://schedules.calpoly.edu/all_person_52-CENG.htm
+.)Ah
+and
+.(Ah "http://schedules.calpoly.edu/subject_CSC.htm"
+http://schedules.calpoly.edu/subject_CSC.htm
+.)Ah
+.le
+I suggest a column 'Name' with sub-columns 'Last', 'First', 'Middle'
+.)L i
+.)L a
+.hc p
+.le
+\fBRooms:\fP
+.(L a .3v
+.le
+\f[BI]Did not get this far.\fP
+.)L a
+.)L 1
+.pe
+
+.br
+.sh 1 "Generate a Schedule"
+.pp
+\f[BI]Did not get this far.\fP
+.pe
+
+.br
+.sh 1 "Edit the Schedule"
+.pp
+\f[BI]Did not get this far.\fP
+.pe
+
+.br
+.sh 1 "Save, Exit, Re-Open Schedule"
+.pp
+Worked initially, but then all data were lost.
+.pe
+
+.br
+.sh 1 "Quality Measures"
+.pp
+.(E .2v
+.ee
+\fIInstructor prefs need to be integrated into algorithm:\fP \f[BI]COULD NOT
+DETERMINE.\fP
+.ee
+\fIInstructor prefs saved when user navigates away from instructor page:\fP
+\f[BI]COULD NOT DETERMINE.\fP
+.ee
+\fIResource tables lecture/lab associations and more course types:\fP
+\f[BI]DOES NOT WORK.\fP
+.ee
+\fIResource tables course suffixing:\fP \f[BI]WORKS, BUT MAY BE MOOT\fP
+.ee
+\fIResource tables course invalid data remains on page:\fP \f[BI]GIVEN MAJOR
+DATA LOSS PROBLEMS THAT AT LEAST I EXPERIENCED IN FIREFOX, THIS DOES NOT
+WORK.\fP
+.ee
+\fIResource tables / generate course time TBA:\fP \f[BI]DOES NOT WORK,\fP based
+on previous assessments.
+.ee
+\fIGenerate short loading time:\fP \f[BI]COULD NOT DETERMINE.\fP
+.ee
+\fIGenerate drag and drop works consistently well:\fP \f[BI]COULD NOT
+DETERMINE.\fP
+.ee
+\fIGenerate no "unresponsive script" messages from browser:\fP \f[BI]COULD NOT
+DETERMINE.\fP
+.ee
+\fIGenerate no freezing due to database size:\fP \f[BI]DID NO SEE "FREEZING",
+BUT NOT ENOUGH TESTING TO ENSURE IT DOES NOT HAPPEN.\fP
+.)E
+.pe
+
+.br
+.sh 1 "Other Issues"
+.pp
+.(S +2
+\f[BI]I think the current version is complete disaster and we need to assess
+what direction we want to take next quarter.\fP
+.)S
+.pe
+.\" LocalWords:  nh fo Logon CAS aka iTunes updateheadersidths Browser's BI WTU
+.\" LocalWords:  Firefox SCU prefs TBA
