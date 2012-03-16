@@ -31,6 +31,11 @@ All actions performed successfully.
    <ul>
       <li>Annoying to have to double click on items.</li>
       <li>Need to support multiple course types.  LEC, LAB, SEM, IND, and ACT</li>
+      <li>Received 500 error when entering any instructor prefs. Opened a Jira issue for this <a href="https://scheduler.atlassian.net/browse/SCHED-237">https://scheduler.atlassian.net/browse/SCHED-237</a>.</li>
+      <li>Entering instructor preferences let's the user specify a range at the top of the Instructor Time Preferences page.  If the the user specifies from 10am to 11am the it fills in 2 hours worth of prefs instead of 1.  Opened a Jira issue for this <a href="https://scheduler.atlassian.net/browse/SCHED-238">https://scheduler.atlassian.net/browse/SCHED-238</a>.</li>
+      <li>Instructor prefs does not allow a user to specify multiple autofill options at the top of page.  Opened a Jira issue for this <a href="https://scheduler.atlassian.net/browse/SCHED-238">https://scheduler.atlassian.net/browse/SCHED-238</a>.</li>
+      <li>No option to delete a previously entered row.  I believe this previous Jira issue has to do with this <a href="https://scheduler.atlassian.net/browse/SCHED-102">https://scheduler.atlassian.net/browse/SCHED-102</a>.</li>
+      <li>Entering a blank course is reflected in Instructor Course Prefs etc.  This issue should be fixed if the previous one (Row Deletion) is.</li>
    </ul>
 </p>
 
@@ -42,9 +47,7 @@ All actions performed successfully.
 </a>
 <p>
    <ul>
-      <li>Lecture/Lab association is broken.</li>
-      <li>Having a lab without an associated lecture throws an error.</li>
-      <li>Required to input STAFF and TBA default items for instructor and location.  This should be done automatically.</li>
+      <li>Failed with 500 error.  This is due to the fact that instructor prefs are not being saved correctly.</li>
    </ul>
 </p>
 
@@ -66,7 +69,8 @@ All actions performed successfully.
 </a>
 <p>
    <ul>
-      <li>File and Settings menu seems a bit finicky.  See previously opened Jira issue <a href="https://scheduler.atlassian.net/browse/SCHED-231">https://scheduler.atlassian.net/browse/SCHED-231</a>.</li>
+      <li>File and Settings menu seems a bit finicky.  These need to disappear when a user logs out.  Right now a user can log out, select File-Open and open a previous schedule without even logging in.  This will cause us major issues when we implement access control.  See previously opened Jira issue <a href="https://scheduler.atlassian.net/browse/SCHED-231">https://scheduler.atlassian.net/browse/SCHED-231</a>.</li>
+      <li>Close option under the File Menu is not working.  Opened a Jira issue for this <a href="https://scheduler.atlassian.net/browse/SCHED-239">https://scheduler.atlassian.net/browse/SCHED-239</a>.</li>
    </ul>
 </p>
 
