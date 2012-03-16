@@ -39,6 +39,10 @@ in, I could then create "Test" again.</li>
 </h2>
 </a>
 <p>
+Overall, I was able to enter the necessary data in order to generate a schedule, with
+the following positives and negatives.
+</p>
+<p>
 <b>Things that worked:</b>
 <ul>
 <li>Tabbed data entry</li>
@@ -71,6 +75,7 @@ as the same course to be scheduled at the same time</li>
 <li>Shift+tab makes new row instead of going back a tab</li>
 <li>Scrolling sideways while the column headers are moving down with the top of the page
 results in the columns moving, but the headers staying fixed</li>
+<li>Needed to save and close document to see changes persist for instructor prefs</li>
 </ul>
 </p>
 
@@ -81,7 +86,9 @@ results in the columns moving, but the headers staying fixed</li>
 </h2>
 </a>
 <p>
-
+Failed to generate schedule. 500 error.<br>"Failed to get schedule: 
+com.google.gwt.user.client.rpc.StatusCodeException: 500 The call failed on the server; 
+see server log for details"
 </p>
 
 <br>
@@ -91,7 +98,7 @@ results in the columns moving, but the headers staying fixed</li>
 </h2>
 </a>
 <p>
-
+Unable to perform this since the schedule was not generated.
 </p>
 
 <br>
@@ -101,7 +108,8 @@ results in the columns moving, but the headers staying fixed</li>
 </h2>
 </a>
 <p>
-
+Resource tables are still populated with existing data. Schedule is 
+still not present.
 </p>
 
 <br>
@@ -111,7 +119,16 @@ results in the columns moving, but the headers staying fixed</li>
 </h2>
 </a>
 <p>
+This product is not usable, and should not be deployed as is. Some of the usability/quality
+concerns that I have are as follows:
 
+<ul>
+<li>A schedule cannot be generated</li>
+<li>500 errors persist and cause data entry to fail. Saving does not work after these errors</li>
+<li>Tab navigation of the cells is buggy, see <em>Enter Resource Data</em></li>
+<li>Homescreen seems fine, but making a new schedule does not automatically
+open up a new tab</li>
+</ul>
 </p>
 
 <br>
@@ -121,7 +138,8 @@ results in the columns moving, but the headers staying fixed</li>
 </h2>
 </a>
 <p>
-
+Most of the other issues were noted in my above sections, namely the
+<em>Enter Resource Data</em> section.
 </p>
 </body>
 </html>
