@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.view.web.client.views.resources.instructors;
+package scheduler.view.web.client.views.resources.instructors;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,9 +26,9 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
-import edu.calpoly.csc.scheduler.view.web.shared.DayGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
+import scheduler.view.web.client.GreetingServiceAsync;
+import scheduler.view.web.shared.DayGWT;
+import scheduler.view.web.shared.InstructorGWT;
 
 public class InstructorTimePreferencesWidget extends VerticalPanel {
 	class CellWidget extends FocusPanel {

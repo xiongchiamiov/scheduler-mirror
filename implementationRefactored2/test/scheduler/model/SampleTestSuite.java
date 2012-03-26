@@ -1,10 +1,10 @@
-package edu.calpoly.csc.scheduler.model;
+package scheduler.model;
 
 
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import edu.calpoly.csc.scheduler.model.db.DatabaseTestSimpleDB;
-import edu.calpoly.csc.scheduler.model.tempalgorithm.TempAlgorithmTestSimpleDB;
+import scheduler.model.db.DatabaseTestSimpleDB;
+import scheduler.model.tempalgorithm.TempAlgorithmTestSimpleDB;
 
 public class SampleTestSuite extends TestCase {
 

@@ -1,6 +1,6 @@
-package edu.calpoly.csc.scheduler.model.db.simple;
+package scheduler.model.db.simple;
 
-import edu.calpoly.csc.scheduler.model.db.IDBTime;
+import scheduler.model.db.IDBTime;
 
 public class DBTime extends DBObject implements IDBTime {
 	private static int idFromDayAndHalfHour(int day, int halfHour) {

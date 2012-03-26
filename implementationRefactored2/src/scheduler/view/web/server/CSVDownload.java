@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.view.web.server;
+package scheduler.view.web.server;
 
 import java.io.OutputStream;
 import java.util.HashMap;

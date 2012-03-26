@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.model.algorithm;
+package scheduler.model.algorithm;
 
 /**
  * Thrown when a start time is after an end time, or vice versa

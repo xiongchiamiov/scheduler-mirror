@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.view.web.client.views.resources.courses;
+package scheduler.view.web.client.views.resources.courses;
 
 import java.util.ArrayList;
 
@@ -8,8 +8,8 @@ import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.ListBox;
 
-import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
-import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
+import scheduler.view.web.client.table.OsmTable;
+import scheduler.view.web.shared.CourseGWT;
 
 public class AssociationsCell extends OsmTable.EditingCell {
 	public interface GetCoursesCallback {

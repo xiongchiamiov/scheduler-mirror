@@ -1,10 +1,10 @@
-package edu.calpoly.csc.scheduler.view.web.shared;
+package scheduler.view.web.shared;
 
 import junit.framework.TestCase;
 //import org.junit.*;
 //import org.junit.runner.RunWith;
 //import org.junit.runners.Suite;
-import edu.calpoly.csc.scheduler.view.web.shared.Selenium.*;
+import scheduler.view.web.shared.Selenium.*;
 
 /**
  * Abstract class DefaultSelTestCase 

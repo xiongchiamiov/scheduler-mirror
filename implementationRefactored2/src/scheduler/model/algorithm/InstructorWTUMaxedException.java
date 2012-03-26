@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.model.algorithm;
+package scheduler.model.algorithm;
 
 /**
  * Exception thrown when an instructor's wtu count are such that no course can

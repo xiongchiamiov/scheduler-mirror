@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.view.web.client.views;
+package scheduler.view.web.client.views;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,13 +34,13 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
-import edu.calpoly.csc.scheduler.view.web.client.HTMLUtilities;
-import edu.calpoly.csc.scheduler.view.web.client.IViewContents;
-import edu.calpoly.csc.scheduler.view.web.client.Import;
-import edu.calpoly.csc.scheduler.view.web.client.ViewFrame;
-import edu.calpoly.csc.scheduler.view.web.client.views.AdminScheduleNavView.OtherFilesStrategy;
-import edu.calpoly.csc.scheduler.view.web.shared.DocumentGWT;
+import scheduler.view.web.client.GreetingServiceAsync;
+import scheduler.view.web.client.HTMLUtilities;
+import scheduler.view.web.client.IViewContents;
+import scheduler.view.web.client.Import;
+import scheduler.view.web.client.ViewFrame;
+import scheduler.view.web.client.views.AdminScheduleNavView.OtherFilesStrategy;
+import scheduler.view.web.shared.DocumentGWT;
 
 public class SelectScheduleView extends VerticalPanel implements IViewContents, OtherFilesStrategy
 {

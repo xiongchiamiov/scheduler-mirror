@@ -1,21 +1,21 @@
-package edu.calpoly.csc.scheduler.model.tempalgorithm;
+package scheduler.model.tempalgorithm;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Set;
 
-import edu.calpoly.csc.scheduler.model.Course;
-import edu.calpoly.csc.scheduler.model.Day;
-import edu.calpoly.csc.scheduler.model.Document;
-import edu.calpoly.csc.scheduler.model.Identified;
-import edu.calpoly.csc.scheduler.model.Instructor;
-import edu.calpoly.csc.scheduler.model.Location;
-import edu.calpoly.csc.scheduler.model.Model;
-import edu.calpoly.csc.scheduler.model.Schedule;
-import edu.calpoly.csc.scheduler.model.ScheduleItem;
-import edu.calpoly.csc.scheduler.model.db.DatabaseException;
-import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
+import scheduler.model.Course;
+import scheduler.model.Day;
+import scheduler.model.Document;
+import scheduler.model.Identified;
+import scheduler.model.Instructor;
+import scheduler.model.Location;
+import scheduler.model.Model;
+import scheduler.model.Schedule;
+import scheduler.model.ScheduleItem;
+import scheduler.model.db.DatabaseException;
+import scheduler.model.db.IDatabase.NotFoundException;
 
 class BlockedOffTimes {
 	boolean[][] blockedOffTimes;

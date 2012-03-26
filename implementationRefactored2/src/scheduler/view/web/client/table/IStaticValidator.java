@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.view.web.client.table;
+package scheduler.view.web.client.table;
 
 
 public interface IStaticValidator<ObjectType, ValueType> {

@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.model.db;
+package scheduler.model.db;
 
 public interface IDBLocation extends IDBObject {
 	String getRoom();

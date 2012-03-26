@@ -1,4 +1,4 @@
-//package edu.calpoly.csc.scheduler.model;
+//package scheduler.model;
 //
 //import java.io.IOException;
 //import java.util.ArrayList;
@@ -15,22 +15,22 @@
 //
 //import com.csvreader.CsvReader;
 //
-//import edu.calpoly.csc.scheduler.model.db.Database;
-//import edu.calpoly.csc.scheduler.model.db.Time;
-//import edu.calpoly.csc.scheduler.model.db.TimeRange;
-//import edu.calpoly.csc.scheduler.model.db.cdb.Course;
-//import edu.calpoly.csc.scheduler.model.db.cdb.Course.CourseType;
-//import edu.calpoly.csc.scheduler.model.db.cdb.Lab;
-//import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
-//import edu.calpoly.csc.scheduler.model.db.idb.TimePreference;
-//import edu.calpoly.csc.scheduler.model.db.ldb.Location;
-//import edu.calpoly.csc.scheduler.model.db.ldb.Location.ProvidedEquipment;
-//import edu.calpoly.csc.scheduler.model.schedule.CouldNotBeScheduledException;
-//import edu.calpoly.csc.scheduler.model.schedule.Day;
-//import edu.calpoly.csc.scheduler.model.schedule.Schedule;
-//import edu.calpoly.csc.scheduler.model.schedule.ScheduleDecorator;
-//import edu.calpoly.csc.scheduler.model.schedule.ScheduleItem;
-//import edu.calpoly.csc.scheduler.model.schedule.Week;
+//import scheduler.model.db.Database;
+//import scheduler.model.db.Time;
+//import scheduler.model.db.TimeRange;
+//import scheduler.model.db.cdb.Course;
+//import scheduler.model.db.cdb.Course.CourseType;
+//import scheduler.model.db.cdb.Lab;
+//import scheduler.model.db.idb.Instructor;
+//import scheduler.model.db.idb.TimePreference;
+//import scheduler.model.db.ldb.Location;
+//import scheduler.model.db.ldb.Location.ProvidedEquipment;
+//import scheduler.model.schedule.CouldNotBeScheduledException;
+//import scheduler.model.schedule.Day;
+//import scheduler.model.schedule.Schedule;
+//import scheduler.model.schedule.ScheduleDecorator;
+//import scheduler.model.schedule.ScheduleItem;
+//import scheduler.model.schedule.Week;
 //
 //public class CSVImporter {
 //	private class Pair<A, B> {

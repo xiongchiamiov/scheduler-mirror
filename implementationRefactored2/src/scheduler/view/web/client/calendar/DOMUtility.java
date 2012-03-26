@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.view.web.client.calendar;
+package scheduler.view.web.client.calendar;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;

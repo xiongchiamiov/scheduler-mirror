@@ -1,14 +1,14 @@
-package edu.calpoly.csc.scheduler.model;
+package scheduler.model;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import edu.calpoly.csc.scheduler.model.Course;
-import edu.calpoly.csc.scheduler.model.Document;
-import edu.calpoly.csc.scheduler.model.Model;
-import edu.calpoly.csc.scheduler.model.db.DatabaseException;
-import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
+import scheduler.model.Course;
+import scheduler.model.Document;
+import scheduler.model.Model;
+import scheduler.model.db.DatabaseException;
+import scheduler.model.db.IDatabase.NotFoundException;
 
 public abstract class CoursesTest extends ModelTestCase
 {

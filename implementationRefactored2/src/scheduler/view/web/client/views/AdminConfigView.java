@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.view.web.client.views;
+package scheduler.view.web.client.views;
 
 import java.util.Comparator;
 import java.util.List;
@@ -9,17 +9,17 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
-import edu.calpoly.csc.scheduler.view.web.client.IViewContents;
-import edu.calpoly.csc.scheduler.view.web.client.ViewFrame;
-import edu.calpoly.csc.scheduler.view.web.client.table.IFactory;
-import edu.calpoly.csc.scheduler.view.web.client.table.IStaticGetter;
-import edu.calpoly.csc.scheduler.view.web.client.table.IStaticSetter;
-import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
-import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingSelectColumn;
-import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingStringColumn;
-import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.UserDataGWT;
+import scheduler.view.web.client.GreetingServiceAsync;
+import scheduler.view.web.client.IViewContents;
+import scheduler.view.web.client.ViewFrame;
+import scheduler.view.web.client.table.IFactory;
+import scheduler.view.web.client.table.IStaticGetter;
+import scheduler.view.web.client.table.IStaticSetter;
+import scheduler.view.web.client.table.OsmTable;
+import scheduler.view.web.client.table.columns.EditingSelectColumn;
+import scheduler.view.web.client.table.columns.EditingStringColumn;
+import scheduler.view.web.shared.CourseGWT;
+import scheduler.view.web.shared.UserDataGWT;
 
 public class AdminConfigView extends VerticalPanel implements IViewContents {	/** Images */
 	/** configuration table */

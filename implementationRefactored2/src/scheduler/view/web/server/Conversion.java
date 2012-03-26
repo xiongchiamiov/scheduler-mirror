@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.view.web.server;
+package scheduler.view.web.server;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -8,23 +8,23 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 
-import edu.calpoly.csc.scheduler.model.Course;
-import edu.calpoly.csc.scheduler.model.Day;
-import edu.calpoly.csc.scheduler.model.Document;
-import edu.calpoly.csc.scheduler.model.Instructor;
-import edu.calpoly.csc.scheduler.model.Location;
-import edu.calpoly.csc.scheduler.model.Model;
-import edu.calpoly.csc.scheduler.model.Schedule;
-import edu.calpoly.csc.scheduler.model.ScheduleItem;
-import edu.calpoly.csc.scheduler.model.db.DatabaseException;
-import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
-import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.DayGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.DocumentGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.OldScheduleItemGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
+import scheduler.model.Course;
+import scheduler.model.Day;
+import scheduler.model.Document;
+import scheduler.model.Instructor;
+import scheduler.model.Location;
+import scheduler.model.Model;
+import scheduler.model.Schedule;
+import scheduler.model.ScheduleItem;
+import scheduler.model.db.DatabaseException;
+import scheduler.model.db.IDatabase.NotFoundException;
+import scheduler.view.web.shared.CourseGWT;
+import scheduler.view.web.shared.DayGWT;
+import scheduler.view.web.shared.DocumentGWT;
+import scheduler.view.web.shared.InstructorGWT;
+import scheduler.view.web.shared.LocationGWT;
+import scheduler.view.web.shared.OldScheduleItemGWT;
+import scheduler.view.web.shared.ScheduleItemGWT;
 
 public abstract class Conversion {
 //	public static UserData fromGWT(UserDataGWT gwt) {

@@ -1,8 +1,8 @@
-package edu.calpoly.csc.scheduler.model.db.sqlite;
+package scheduler.model.db.sqlite;
 
-import edu.calpoly.csc.scheduler.model.db.IDBDocument;
-import edu.calpoly.csc.scheduler.model.db.IDBSchedule;
-import edu.calpoly.csc.scheduler.model.db.simple.DBDocument;
+import scheduler.model.db.IDBDocument;
+import scheduler.model.db.IDBSchedule;
+import scheduler.model.db.simple.DBDocument;
 
 public class SQLDocument extends SQLObject implements IDBDocument, IDBSchedule {
 	String name;

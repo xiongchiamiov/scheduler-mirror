@@ -1,8 +1,8 @@
-package edu.calpoly.csc.scheduler.model.algorithm;
+package scheduler.model.algorithm;
 
 import java.util.BitSet;
 
-import edu.calpoly.csc.scheduler.model.Course;
+import scheduler.model.Course;
 
 public class CourseDayAvail extends GenAvail<Course>
 {

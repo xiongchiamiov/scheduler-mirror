@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.view.web.client;
+package scheduler.view.web.client;
 
 
 
@@ -10,15 +10,15 @@ import java.util.List;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
-import edu.calpoly.csc.scheduler.model.db.DatabaseException;
-import edu.calpoly.csc.scheduler.view.web.shared.CouldNotBeScheduledExceptionGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.DocumentGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.OldScheduleItemGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemList;
+import scheduler.model.db.DatabaseException;
+import scheduler.view.web.shared.CouldNotBeScheduledExceptionGWT;
+import scheduler.view.web.shared.CourseGWT;
+import scheduler.view.web.shared.DocumentGWT;
+import scheduler.view.web.shared.InstructorGWT;
+import scheduler.view.web.shared.LocationGWT;
+import scheduler.view.web.shared.OldScheduleItemGWT;
+import scheduler.view.web.shared.ScheduleItemGWT;
+import scheduler.view.web.shared.ScheduleItemList;
 
 /**
  * The client side stub for the RPC service.

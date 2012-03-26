@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.model.algorithm;
+package scheduler.model.algorithm;
 
 /**
  * Thrown when adding a preference which already exists. Originally written by

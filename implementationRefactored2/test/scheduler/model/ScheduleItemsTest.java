@@ -1,9 +1,9 @@
-package edu.calpoly.csc.scheduler.model;
+package scheduler.model;
 
 import java.util.Set;
 import java.util.TreeSet;
 
-import edu.calpoly.csc.scheduler.model.db.DatabaseException;
+import scheduler.model.db.DatabaseException;
 
 public abstract class ScheduleItemsTest extends ModelTestCase {
 	private Model createModelWithStuff() throws DatabaseException {

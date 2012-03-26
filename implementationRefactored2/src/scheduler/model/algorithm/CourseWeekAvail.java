@@ -1,8 +1,8 @@
-package edu.calpoly.csc.scheduler.model.algorithm;
+package scheduler.model.algorithm;
 
 import java.io.Serializable;
 
-import edu.calpoly.csc.scheduler.model.Course;
+import scheduler.model.Course;
 
 public class CourseWeekAvail extends GenWeekAvail<Course, CourseDayAvail> 
                              implements Serializable

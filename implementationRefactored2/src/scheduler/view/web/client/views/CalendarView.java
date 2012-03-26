@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.view.web.client.views;
+package scheduler.view.web.client.views;
 
 import java.util.HashMap;
 
@@ -13,12 +13,12 @@ import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
-import edu.calpoly.csc.scheduler.view.web.client.IViewContents;
-import edu.calpoly.csc.scheduler.view.web.client.ViewFrame;
-import edu.calpoly.csc.scheduler.view.web.client.calendar.ScheduleEditWidget;
-import edu.calpoly.csc.scheduler.view.web.shared.DocumentGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.OldScheduleItemGWT;
+import scheduler.view.web.client.GreetingServiceAsync;
+import scheduler.view.web.client.IViewContents;
+import scheduler.view.web.client.ViewFrame;
+import scheduler.view.web.client.calendar.ScheduleEditWidget;
+import scheduler.view.web.shared.DocumentGWT;
+import scheduler.view.web.shared.OldScheduleItemGWT;
 
 public class CalendarView extends VerticalPanel implements IViewContents {
 	private GreetingServiceAsync service;

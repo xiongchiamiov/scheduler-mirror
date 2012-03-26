@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.view.web.client;
+package scheduler.view.web.client;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickHandler;

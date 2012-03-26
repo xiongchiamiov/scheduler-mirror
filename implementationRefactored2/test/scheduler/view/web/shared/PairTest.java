@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.view.web.shared;
+package scheduler.view.web.shared;
 //to get it to compile just add junit 3 to your build path
 
 //have jUnit *3* on the build path

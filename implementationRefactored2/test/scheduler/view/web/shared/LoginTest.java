@@ -1,6 +1,6 @@
-package edu.calpoly.csc.scheduler.view.web.shared;
+package scheduler.view.web.shared;
 
-import edu.calpoly.csc.scheduler.view.web.shared.Selenium.*;
+import scheduler.view.web.shared.Selenium.*;
 
 
 public class LoginTest extends DefaultSelTestCase {	

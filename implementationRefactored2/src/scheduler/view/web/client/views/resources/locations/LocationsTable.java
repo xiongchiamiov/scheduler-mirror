@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.view.web.client.views.resources.locations;
+package scheduler.view.web.client.views.resources.locations;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -10,17 +10,17 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.SimplePanel;
 
-import edu.calpoly.csc.scheduler.view.web.client.table.IFactory;
-import edu.calpoly.csc.scheduler.view.web.client.table.IStaticGetter;
-import edu.calpoly.csc.scheduler.view.web.client.table.IStaticSetter;
-import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator;
-import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
-import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.DeleteObserver;
-import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.ObjectChangedObserver;
-import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingMultiselectColumn;
-import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingSelectColumn;
-import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingStringColumn;
-import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
+import scheduler.view.web.client.table.IFactory;
+import scheduler.view.web.client.table.IStaticGetter;
+import scheduler.view.web.client.table.IStaticSetter;
+import scheduler.view.web.client.table.IStaticValidator;
+import scheduler.view.web.client.table.OsmTable;
+import scheduler.view.web.client.table.OsmTable.DeleteObserver;
+import scheduler.view.web.client.table.OsmTable.ObjectChangedObserver;
+import scheduler.view.web.client.table.columns.EditingMultiselectColumn;
+import scheduler.view.web.client.table.columns.EditingSelectColumn;
+import scheduler.view.web.client.table.columns.EditingStringColumn;
+import scheduler.view.web.shared.LocationGWT;
 
 public class LocationsTable extends SimplePanel {
 	private static final String LAPTOP_CONNECTIVITY = "LAPCON";

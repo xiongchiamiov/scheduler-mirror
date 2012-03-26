@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.view.web.client.views;
+package scheduler.view.web.client.views;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,14 +30,14 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
-import edu.calpoly.csc.scheduler.view.web.client.IViewContents;
-import edu.calpoly.csc.scheduler.view.web.client.ViewFrame;
-import edu.calpoly.csc.scheduler.view.web.client.views.resources.courses.CoursesView;
-import edu.calpoly.csc.scheduler.view.web.client.views.resources.instructors.InstructorsView;
-import edu.calpoly.csc.scheduler.view.web.client.views.resources.locations.LocationsView;
-import edu.calpoly.csc.scheduler.view.web.shared.DocumentGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.UserDataGWT;
+import scheduler.view.web.client.GreetingServiceAsync;
+import scheduler.view.web.client.IViewContents;
+import scheduler.view.web.client.ViewFrame;
+import scheduler.view.web.client.views.resources.courses.CoursesView;
+import scheduler.view.web.client.views.resources.instructors.InstructorsView;
+import scheduler.view.web.client.views.resources.locations.LocationsView;
+import scheduler.view.web.shared.DocumentGWT;
+import scheduler.view.web.shared.UserDataGWT;
 
 public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 	public interface OtherFilesStrategy {

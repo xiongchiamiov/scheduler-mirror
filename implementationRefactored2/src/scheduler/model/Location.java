@@ -1,13 +1,13 @@
-package edu.calpoly.csc.scheduler.model;
+package scheduler.model;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import edu.calpoly.csc.scheduler.model.db.DatabaseException;
-import edu.calpoly.csc.scheduler.model.db.IDBEquipmentType;
-import edu.calpoly.csc.scheduler.model.db.IDBLocation;
-import edu.calpoly.csc.scheduler.model.db.IDBProvidedEquipment;
-import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
+import scheduler.model.db.DatabaseException;
+import scheduler.model.db.IDBEquipmentType;
+import scheduler.model.db.IDBLocation;
+import scheduler.model.db.IDBProvidedEquipment;
+import scheduler.model.db.IDatabase.NotFoundException;
 
 public class Location extends Identified {
 	private final Model model;

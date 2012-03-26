@@ -1,6 +1,6 @@
-package edu.calpoly.csc.scheduler.model.db.simple;
+package scheduler.model.db.simple;
 
-import edu.calpoly.csc.scheduler.model.db.IDBEquipmentType;
+import scheduler.model.db.IDBEquipmentType;
 
 public class DBEquipmentType extends DBObject implements IDBEquipmentType {
 	int id;

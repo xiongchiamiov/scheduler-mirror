@@ -1,9 +1,9 @@
-package edu.calpoly.csc.scheduler.model.db.simple;
+package scheduler.model.db.simple;
 
 import java.util.Set;
 
-import edu.calpoly.csc.scheduler.model.Day;
-import edu.calpoly.csc.scheduler.model.db.IDBScheduleItem;
+import scheduler.model.Day;
+import scheduler.model.db.IDBScheduleItem;
 
 public class DBScheduleItem extends DBObject implements IDBScheduleItem {
 	Integer scheduleID;

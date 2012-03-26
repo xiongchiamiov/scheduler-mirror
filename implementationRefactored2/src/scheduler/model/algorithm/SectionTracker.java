@@ -1,9 +1,9 @@
-package edu.calpoly.csc.scheduler.model.algorithm;
+package scheduler.model.algorithm;
 
 import java.io.Serializable;
 import java.util.BitSet;
 
-import edu.calpoly.csc.scheduler.model.Course;
+import scheduler.model.Course;
 
 /**
  * Used to keep track of what sections of a course have been scheduled. Provides

@@ -1,8 +1,8 @@
-package edu.calpoly.csc.scheduler.model;
+package scheduler.model;
 
 
-import edu.calpoly.csc.scheduler.model.db.IDatabase;
+import scheduler.model.db.IDatabase;
 
 public class AlgorithmTestSimpleDB extends AlgorithmTestTwo {
-	public IDatabase createBlankDatabase() { return new edu.calpoly.csc.scheduler.model.db.simple.Database(); }
+	public IDatabase createBlankDatabase() { return new scheduler.model.db.simple.Database(); }
 }

@@ -1,11 +1,11 @@
-package edu.calpoly.csc.scheduler.model.algorithm;
+package scheduler.model.algorithm;
 
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.TreeSet;
 
-import edu.calpoly.csc.scheduler.model.Day;
+import scheduler.model.Day;
 
 /**
  * Represents a selection of days of the week. No duplicate days are allowed.

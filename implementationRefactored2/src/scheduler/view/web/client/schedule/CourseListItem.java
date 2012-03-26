@@ -1,8 +1,8 @@
-package edu.calpoly.csc.scheduler.view.web.client.schedule;
+package scheduler.view.web.client.schedule;
 
 import com.google.gwt.user.client.ui.Label;
 
-import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
+import scheduler.view.web.shared.CourseGWT;
 
 /**
  * Extension of the Label class for displaying a course in the listboxes which

@@ -1,7 +1,7 @@
-package edu.calpoly.csc.scheduler.model;
+package scheduler.model;
 
-import edu.calpoly.csc.scheduler.model.db.IDatabase;
+import scheduler.model.db.IDatabase;
 
 public class DocumentsTestSQLDB extends DocumentsTest {
-	public IDatabase createBlankDatabase() { return new edu.calpoly.csc.scheduler.model.db.sqlite.SQLdb(); }
+	public IDatabase createBlankDatabase() { return new scheduler.model.db.sqlite.SQLdb(); }
 }

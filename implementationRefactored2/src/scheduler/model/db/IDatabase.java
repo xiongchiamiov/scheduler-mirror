@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.model.db;
+package scheduler.model.db;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -7,8 +7,8 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-import edu.calpoly.csc.scheduler.model.Day;
-import edu.calpoly.csc.scheduler.model.db.simple.DBUsedEquipment;
+import scheduler.model.Day;
+import scheduler.model.db.simple.DBUsedEquipment;
 
 public interface IDatabase {
 	public class NotFoundException extends DatabaseException {

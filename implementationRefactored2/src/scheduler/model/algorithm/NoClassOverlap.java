@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.model.algorithm;
+package scheduler.model.algorithm;
 
 import java.io.Serializable;
 import java.util.BitSet;
@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Vector;
 
-import edu.calpoly.csc.scheduler.model.Course;
+import scheduler.model.Course;
 
 /**
  * Represent the schedule preference which specifies which courses should not

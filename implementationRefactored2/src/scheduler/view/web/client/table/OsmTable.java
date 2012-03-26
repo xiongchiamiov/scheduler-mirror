@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.view.web.client.table;
+package scheduler.view.web.client.table;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,14 +31,14 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-import edu.calpoly.csc.scheduler.view.web.client.HTMLUtilities;
-import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator.InputInvalid;
-import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator.InputValid;
-import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator.InputWarning;
-import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator.ValidateResult;
-import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.EditingCell.ExitedEditingModeHandler;
-import edu.calpoly.csc.scheduler.view.web.client.table.ResizeableWidget.ResizeCallback;
-import edu.calpoly.csc.scheduler.view.web.shared.Identified;
+import scheduler.view.web.client.HTMLUtilities;
+import scheduler.view.web.client.table.IStaticValidator.InputInvalid;
+import scheduler.view.web.client.table.IStaticValidator.InputValid;
+import scheduler.view.web.client.table.IStaticValidator.InputWarning;
+import scheduler.view.web.client.table.IStaticValidator.ValidateResult;
+import scheduler.view.web.client.table.OsmTable.EditingCell.ExitedEditingModeHandler;
+import scheduler.view.web.client.table.ResizeableWidget.ResizeCallback;
+import scheduler.view.web.shared.Identified;
 
 public class OsmTable<ObjectType extends Identified> extends VerticalPanel implements ClickHandler, DoubleClickHandler {
 	enum ColumnSortMode { NOT_SORTING, ASCENDING, DESCENDING }

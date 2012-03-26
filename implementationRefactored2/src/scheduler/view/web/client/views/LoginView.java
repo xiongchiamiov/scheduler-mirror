@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.view.web.client.views;
+package scheduler.view.web.client.views;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -19,10 +19,10 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
-import edu.calpoly.csc.scheduler.view.web.client.HTMLUtilities;
-import edu.calpoly.csc.scheduler.view.web.client.IViewContents;
-import edu.calpoly.csc.scheduler.view.web.client.ViewFrame;
+import scheduler.view.web.client.GreetingServiceAsync;
+import scheduler.view.web.client.HTMLUtilities;
+import scheduler.view.web.client.IViewContents;
+import scheduler.view.web.client.ViewFrame;
 
 public class LoginView extends VerticalPanel implements IViewContents {
 	GreetingServiceAsync service;

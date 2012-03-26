@@ -1,12 +1,12 @@
-package edu.calpoly.csc.scheduler.model.algorithm;
+package scheduler.model.algorithm;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-import edu.calpoly.csc.scheduler.model.Instructor;
-import edu.calpoly.csc.scheduler.model.Location;
+import scheduler.model.Instructor;
+import scheduler.model.Location;
 
 /**
  * This class is meant to hold the variables we only use during schedule generation 

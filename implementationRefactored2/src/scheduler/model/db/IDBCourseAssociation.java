@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.model.db;
+package scheduler.model.db;
 
 public interface IDBCourseAssociation extends IDBObject {
 	boolean isTethered();

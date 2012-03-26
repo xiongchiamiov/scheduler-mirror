@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.view.web.client;
+package scheduler.view.web.client;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -8,14 +8,14 @@ import java.util.Set;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.DayCombinationGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.DocumentGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.OldScheduleItemGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemList;
+import scheduler.view.web.shared.CourseGWT;
+import scheduler.view.web.shared.DayCombinationGWT;
+import scheduler.view.web.shared.DocumentGWT;
+import scheduler.view.web.shared.InstructorGWT;
+import scheduler.view.web.shared.LocationGWT;
+import scheduler.view.web.shared.OldScheduleItemGWT;
+import scheduler.view.web.shared.ScheduleItemGWT;
+import scheduler.view.web.shared.ScheduleItemList;
 
 /**
  * The async counterpart of <code>GreetingService</code>.

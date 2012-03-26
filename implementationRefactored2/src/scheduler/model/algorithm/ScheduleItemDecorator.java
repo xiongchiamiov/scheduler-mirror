@@ -1,16 +1,16 @@
-package edu.calpoly.csc.scheduler.model.algorithm;
+package scheduler.model.algorithm;
 
 
 
 import java.util.Set;
 
-import edu.calpoly.csc.scheduler.model.Course;
-import edu.calpoly.csc.scheduler.model.Day;
-import edu.calpoly.csc.scheduler.model.Instructor;
-import edu.calpoly.csc.scheduler.model.Model;
-import edu.calpoly.csc.scheduler.model.ScheduleItem;
-import edu.calpoly.csc.scheduler.model.db.DatabaseException;
-import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
+import scheduler.model.Course;
+import scheduler.model.Day;
+import scheduler.model.Instructor;
+import scheduler.model.Model;
+import scheduler.model.ScheduleItem;
+import scheduler.model.db.DatabaseException;
+import scheduler.model.db.IDatabase.NotFoundException;
 
 /**
  * Represents a single, scheduled item in the overall schedule. Contains 

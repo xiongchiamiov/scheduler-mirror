@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.model.db;
+package scheduler.model.db;
 
 public interface IDBTimePreference extends IDBObject {
 	int getPreference();

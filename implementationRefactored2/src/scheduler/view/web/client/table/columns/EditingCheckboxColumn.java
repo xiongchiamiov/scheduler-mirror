@@ -1,15 +1,15 @@
-package edu.calpoly.csc.scheduler.view.web.client.table.columns;
+package scheduler.view.web.client.table.columns;
 
-import edu.calpoly.csc.scheduler.view.web.client.table.IStaticGetter;
-import edu.calpoly.csc.scheduler.view.web.client.table.IStaticSetter;
-import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator.InputValid;
-import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator.ValidateResult;
-import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
-import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.Cell;
-import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.EditingCell;
-import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.IRowForColumn;
-import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.ReadingCell;
-import edu.calpoly.csc.scheduler.view.web.shared.Identified;
+import scheduler.view.web.client.table.IStaticGetter;
+import scheduler.view.web.client.table.IStaticSetter;
+import scheduler.view.web.client.table.IStaticValidator.InputValid;
+import scheduler.view.web.client.table.IStaticValidator.ValidateResult;
+import scheduler.view.web.client.table.OsmTable;
+import scheduler.view.web.client.table.OsmTable.Cell;
+import scheduler.view.web.client.table.OsmTable.EditingCell;
+import scheduler.view.web.client.table.OsmTable.IRowForColumn;
+import scheduler.view.web.client.table.OsmTable.ReadingCell;
+import scheduler.view.web.shared.Identified;
 
 public class EditingCheckboxColumn<ObjectType extends Identified> implements OsmTable.IEditingColumn<ObjectType> {
 	public interface enterReadingModeCallback {

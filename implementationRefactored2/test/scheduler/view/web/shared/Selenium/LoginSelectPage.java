@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.view.web.shared.Selenium;
+package scheduler.view.web.shared.Selenium;
 
 import java.util.*;
 import org.openqa.selenium.*;

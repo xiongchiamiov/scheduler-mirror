@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.model;
+package scheduler.model;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -6,13 +6,13 @@ import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeSet;
 
-import edu.calpoly.csc.scheduler.model.db.DatabaseException;
-import edu.calpoly.csc.scheduler.model.db.IDBCourse;
-import edu.calpoly.csc.scheduler.model.db.IDBCourseAssociation;
-import edu.calpoly.csc.scheduler.model.db.IDBEquipmentType;
-import edu.calpoly.csc.scheduler.model.db.IDBOfferedDayPattern;
-import edu.calpoly.csc.scheduler.model.db.IDBUsedEquipment;
-import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
+import scheduler.model.db.DatabaseException;
+import scheduler.model.db.IDBCourse;
+import scheduler.model.db.IDBCourseAssociation;
+import scheduler.model.db.IDBEquipmentType;
+import scheduler.model.db.IDBOfferedDayPattern;
+import scheduler.model.db.IDBUsedEquipment;
+import scheduler.model.db.IDatabase.NotFoundException;
 
 public class Course extends Identified {
 	private final Model model;

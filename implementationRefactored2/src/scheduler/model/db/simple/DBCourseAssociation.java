@@ -1,7 +1,7 @@
-package edu.calpoly.csc.scheduler.model.db.simple;
+package scheduler.model.db.simple;
 
-import edu.calpoly.csc.scheduler.model.db.IDBCourse;
-import edu.calpoly.csc.scheduler.model.db.IDBCourseAssociation;
+import scheduler.model.db.IDBCourse;
+import scheduler.model.db.IDBCourseAssociation;
 
 public class DBCourseAssociation extends DBObject implements IDBCourseAssociation {
 	// In this object, ID is the same as courseID

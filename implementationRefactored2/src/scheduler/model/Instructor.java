@@ -1,15 +1,15 @@
-package edu.calpoly.csc.scheduler.model;
+package scheduler.model;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import edu.calpoly.csc.scheduler.model.db.DatabaseException;
-import edu.calpoly.csc.scheduler.model.db.IDBCourse;
-import edu.calpoly.csc.scheduler.model.db.IDBCoursePreference;
-import edu.calpoly.csc.scheduler.model.db.IDBInstructor;
-import edu.calpoly.csc.scheduler.model.db.IDBTime;
-import edu.calpoly.csc.scheduler.model.db.IDBTimePreference;
-import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
+import scheduler.model.db.DatabaseException;
+import scheduler.model.db.IDBCourse;
+import scheduler.model.db.IDBCoursePreference;
+import scheduler.model.db.IDBInstructor;
+import scheduler.model.db.IDBTime;
+import scheduler.model.db.IDBTimePreference;
+import scheduler.model.db.IDatabase.NotFoundException;
 
 public class Instructor extends Identified {
 	public static final int DEFAULT_PREF = 5;

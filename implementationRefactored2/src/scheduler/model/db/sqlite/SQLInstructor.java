@@ -1,6 +1,6 @@
-package edu.calpoly.csc.scheduler.model.db.sqlite;
+package scheduler.model.db.sqlite;
 
-import edu.calpoly.csc.scheduler.model.db.IDBInstructor;
+import scheduler.model.db.IDBInstructor;
 
 public class SQLInstructor extends SQLObject implements IDBInstructor {
 	Integer id, docID, maxWTU;

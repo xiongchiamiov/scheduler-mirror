@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.view.web.client.views.resources.instructors;
+package scheduler.view.web.client.views.resources.instructors;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,12 +20,12 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
-import edu.calpoly.csc.scheduler.view.web.client.IViewContents;
-import edu.calpoly.csc.scheduler.view.web.client.ViewFrame;
-import edu.calpoly.csc.scheduler.view.web.client.views.LoadingPopup;
-import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
+import scheduler.view.web.client.GreetingServiceAsync;
+import scheduler.view.web.client.IViewContents;
+import scheduler.view.web.client.ViewFrame;
+import scheduler.view.web.client.views.LoadingPopup;
+import scheduler.view.web.shared.CourseGWT;
+import scheduler.view.web.shared.InstructorGWT;
 
 public class InstructorPreferencesView extends VerticalPanel {//implements IViewContents {
 	Panel container;

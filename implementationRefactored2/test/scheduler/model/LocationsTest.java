@@ -1,14 +1,14 @@
-package edu.calpoly.csc.scheduler.model;
+package scheduler.model;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import edu.calpoly.csc.scheduler.model.Document;
-import edu.calpoly.csc.scheduler.model.Location;
-import edu.calpoly.csc.scheduler.model.Model;
-import edu.calpoly.csc.scheduler.model.db.DatabaseException;
-import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
+import scheduler.model.Document;
+import scheduler.model.Location;
+import scheduler.model.Model;
+import scheduler.model.db.DatabaseException;
+import scheduler.model.db.IDatabase.NotFoundException;
 
 public abstract class LocationsTest extends ModelTestCase {
 	private static final int START_HALF_HOUR = 14; // 7am

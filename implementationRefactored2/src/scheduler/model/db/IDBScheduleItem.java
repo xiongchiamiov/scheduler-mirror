@@ -1,8 +1,8 @@
-package edu.calpoly.csc.scheduler.model.db;
+package scheduler.model.db;
 
 import java.util.Set;
 
-import edu.calpoly.csc.scheduler.model.Day;
+import scheduler.model.Day;
 
 public interface IDBScheduleItem extends IDBObject {
 	int getSection();

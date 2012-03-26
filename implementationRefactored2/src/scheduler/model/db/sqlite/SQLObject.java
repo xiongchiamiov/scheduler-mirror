@@ -1,6 +1,6 @@
-package edu.calpoly.csc.scheduler.model.db.sqlite;
+package scheduler.model.db.sqlite;
 
-import edu.calpoly.csc.scheduler.model.db.IDBObject;
+import scheduler.model.db.IDBObject;
 
 public class SQLObject implements IDBObject {
 	Integer id;

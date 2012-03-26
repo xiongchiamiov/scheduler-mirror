@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.view.web.client.views.resources.instructors;
+package scheduler.view.web.client.views.resources.instructors;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,20 +8,20 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.SimplePanel;
 
-import edu.calpoly.csc.scheduler.view.web.client.table.IFactory;
-import edu.calpoly.csc.scheduler.view.web.client.table.IStaticGetter;
-import edu.calpoly.csc.scheduler.view.web.client.table.IStaticSetter;
-import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator;
-import edu.calpoly.csc.scheduler.view.web.client.table.MemberIntegerComparator;
-import edu.calpoly.csc.scheduler.view.web.client.table.MemberStringComparator;
-import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
-import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.DeleteObserver;
-import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.ObjectChangedObserver;
-import edu.calpoly.csc.scheduler.view.web.client.table.columns.ButtonColumn;
-import edu.calpoly.csc.scheduler.view.web.client.table.columns.ButtonColumn.ClickCallback;
-import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingCheckboxColumn;
-import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingStringColumn;
-import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
+import scheduler.view.web.client.table.IFactory;
+import scheduler.view.web.client.table.IStaticGetter;
+import scheduler.view.web.client.table.IStaticSetter;
+import scheduler.view.web.client.table.IStaticValidator;
+import scheduler.view.web.client.table.MemberIntegerComparator;
+import scheduler.view.web.client.table.MemberStringComparator;
+import scheduler.view.web.client.table.OsmTable;
+import scheduler.view.web.client.table.OsmTable.DeleteObserver;
+import scheduler.view.web.client.table.OsmTable.ObjectChangedObserver;
+import scheduler.view.web.client.table.columns.ButtonColumn;
+import scheduler.view.web.client.table.columns.ButtonColumn.ClickCallback;
+import scheduler.view.web.client.table.columns.EditingCheckboxColumn;
+import scheduler.view.web.client.table.columns.EditingStringColumn;
+import scheduler.view.web.shared.InstructorGWT;
 
 public class InstructorsTable extends SimplePanel {
 	private static final String FIRSTNAME_HEADER = "\u00A0\u00A0First Name\u00A0\u00A0";

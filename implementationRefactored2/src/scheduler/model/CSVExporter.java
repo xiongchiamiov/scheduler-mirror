@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.model;
+package scheduler.model;
 
 import java.io.CharArrayWriter;
 import java.io.IOException;
@@ -12,8 +12,8 @@ import java.util.Set;
 
 import com.csvreader.CsvWriter;
 
-import edu.calpoly.csc.scheduler.model.db.DatabaseException;
-import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
+import scheduler.model.db.DatabaseException;
+import scheduler.model.db.IDatabase.NotFoundException;
 
 /**
  * The Class CSVExporter. Exports a model to a CSV formatted string.

@@ -1,6 +1,6 @@
-package edu.calpoly.csc.scheduler.model.db.sqlite;
+package scheduler.model.db.sqlite;
 
-import edu.calpoly.csc.scheduler.model.db.IDBLocation;
+import scheduler.model.db.IDBLocation;
 
 public class SQLLocation extends SQLObject implements IDBLocation {
 	Integer id, docID, maxOccupancy;

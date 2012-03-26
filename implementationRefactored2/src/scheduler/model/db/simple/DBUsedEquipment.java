@@ -1,6 +1,6 @@
-package edu.calpoly.csc.scheduler.model.db.simple;
+package scheduler.model.db.simple;
 
-import edu.calpoly.csc.scheduler.model.db.IDBUsedEquipment;
+import scheduler.model.db.IDBUsedEquipment;
 
 public class DBUsedEquipment extends DBObject implements IDBUsedEquipment {
 	Integer courseID;

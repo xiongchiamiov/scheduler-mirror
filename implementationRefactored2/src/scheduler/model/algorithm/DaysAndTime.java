@@ -1,6 +1,6 @@
-package edu.calpoly.csc.scheduler.model.algorithm;
+package scheduler.model.algorithm;
 
-import edu.calpoly.csc.scheduler.model.Day;
+import scheduler.model.Day;
 
 /**
  * Represents a collections of days and a start/end time for which an 

@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.view.web.client.views.resources.instructors;
+package scheduler.view.web.client.views.resources.instructors;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,13 +17,13 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
-import edu.calpoly.csc.scheduler.view.web.client.IViewContents;
-import edu.calpoly.csc.scheduler.view.web.client.ViewFrame;
-import edu.calpoly.csc.scheduler.view.web.client.views.LoadingPopup;
-import edu.calpoly.csc.scheduler.view.web.shared.DayGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.DocumentGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
+import scheduler.view.web.client.GreetingServiceAsync;
+import scheduler.view.web.client.IViewContents;
+import scheduler.view.web.client.ViewFrame;
+import scheduler.view.web.client.views.LoadingPopup;
+import scheduler.view.web.shared.DayGWT;
+import scheduler.view.web.shared.DocumentGWT;
+import scheduler.view.web.shared.InstructorGWT;
 
 public class InstructorsView extends VerticalPanel implements IViewContents, InstructorsTable.Strategy {
 	private GreetingServiceAsync service;
@@ -266,7 +266,7 @@ public class InstructorsView extends VerticalPanel implements IViewContents, Ins
 }
 
 
-//package edu.calpoly.csc.scheduler.view.web.client.views.resources.instructors;
+//package scheduler.view.web.client.views.resources.instructors;
 //
 //import java.util.HashMap;
 //import java.util.List;
@@ -279,24 +279,24 @@ public class InstructorsView extends VerticalPanel implements IViewContents, Ins
 //import com.google.gwt.user.client.ui.VerticalPanel;
 //import com.google.gwt.user.client.ui.Widget;
 //
-//import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
-//import edu.calpoly.csc.scheduler.view.web.client.IViewContents;
-//import edu.calpoly.csc.scheduler.view.web.client.ViewFrame;
-//import edu.calpoly.csc.scheduler.view.web.client.table.IFactory;
-//import edu.calpoly.csc.scheduler.view.web.client.table.IStaticGetter;
-//import edu.calpoly.csc.scheduler.view.web.client.table.IStaticSetter;
-//import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator;
-//import edu.calpoly.csc.scheduler.view.web.client.table.MemberIntegerComparator;
-//import edu.calpoly.csc.scheduler.view.web.client.table.MemberStringComparator;
-//import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
-//import edu.calpoly.csc.scheduler.view.web.client.table.columns.ButtonColumn;
-//import edu.calpoly.csc.scheduler.view.web.client.table.columns.ButtonColumn.ClickCallback;
-//import edu.calpoly.csc.scheduler.view.web.client.table.columns.DeleteColumn.DeleteObserver;
-//import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingCheckboxColumn;
-//import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingIntColumn;
-//import edu.calpoly.csc.scheduler.view.web.client.table.columns.EditingStringColumn;
-//import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
-//import edu.calpoly.csc.scheduler.view.web.shared.TimePreferenceGWT;
+//import scheduler.view.web.client.GreetingServiceAsync;
+//import scheduler.view.web.client.IViewContents;
+//import scheduler.view.web.client.ViewFrame;
+//import scheduler.view.web.client.table.IFactory;
+//import scheduler.view.web.client.table.IStaticGetter;
+//import scheduler.view.web.client.table.IStaticSetter;
+//import scheduler.view.web.client.table.IStaticValidator;
+//import scheduler.view.web.client.table.MemberIntegerComparator;
+//import scheduler.view.web.client.table.MemberStringComparator;
+//import scheduler.view.web.client.table.OsmTable;
+//import scheduler.view.web.client.table.columns.ButtonColumn;
+//import scheduler.view.web.client.table.columns.ButtonColumn.ClickCallback;
+//import scheduler.view.web.client.table.columns.DeleteColumn.DeleteObserver;
+//import scheduler.view.web.client.table.columns.EditingCheckboxColumn;
+//import scheduler.view.web.client.table.columns.EditingIntColumn;
+//import scheduler.view.web.client.table.columns.EditingStringColumn;
+//import scheduler.view.web.shared.InstructorGWT;
+//import scheduler.view.web.shared.TimePreferenceGWT;
 //
 //private class InstructorsOldView extends VerticalPanel implements IViewContents {
 //	/** Instructor table */

@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.model;
+package scheduler.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,19 +9,19 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
-import edu.calpoly.csc.scheduler.model.Course;
-import edu.calpoly.csc.scheduler.model.Day;
-import edu.calpoly.csc.scheduler.model.Document;
-import edu.calpoly.csc.scheduler.model.Instructor;
-import edu.calpoly.csc.scheduler.model.Location;
-import edu.calpoly.csc.scheduler.model.Model;
-import edu.calpoly.csc.scheduler.model.Schedule;
-import edu.calpoly.csc.scheduler.model.algorithm.Generate;
-import edu.calpoly.csc.scheduler.model.algorithm.ScheduleItemDecorator;
-import edu.calpoly.csc.scheduler.model.algorithm.Week;
-import edu.calpoly.csc.scheduler.model.db.DatabaseException;
-import edu.calpoly.csc.scheduler.model.db.simple.DBSchedule;
-import edu.calpoly.csc.scheduler.model.db.simple.Database;
+import scheduler.model.Course;
+import scheduler.model.Day;
+import scheduler.model.Document;
+import scheduler.model.Instructor;
+import scheduler.model.Location;
+import scheduler.model.Model;
+import scheduler.model.Schedule;
+import scheduler.model.algorithm.Generate;
+import scheduler.model.algorithm.ScheduleItemDecorator;
+import scheduler.model.algorithm.Week;
+import scheduler.model.db.DatabaseException;
+import scheduler.model.db.simple.DBSchedule;
+import scheduler.model.db.simple.Database;
 
 public class AlgorithmTest {
 	

@@ -1,5 +1,5 @@
-package edu.calpoly.csc.scheduler.model;
-//package edu.calpoly.csc.scheduler;
+package scheduler.model;
+//package scheduler;
 //
 //import java.util.ArrayList;
 //import java.util.HashMap;
@@ -9,17 +9,17 @@ package edu.calpoly.csc.scheduler.model;
 //import java.util.Map;
 //import java.util.Set;
 //
-//import edu.calpoly.csc.scheduler.model.Model;
-//import edu.calpoly.csc.scheduler.model.db.Time;
-//import edu.calpoly.csc.scheduler.model.db.cdb.Course;
-//import edu.calpoly.csc.scheduler.model.db.idb.CoursePreference;
-//import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
-//import edu.calpoly.csc.scheduler.model.db.idb.TimePreference;
-//import edu.calpoly.csc.scheduler.model.db.udb.UserData;
-//import edu.calpoly.csc.scheduler.model.schedule.Day;
-//import edu.calpoly.csc.scheduler.model.schedule.Schedule;
-//import edu.calpoly.csc.scheduler.model.schedule.Week;
-//import edu.calpoly.csc.scheduler.model.schedule.WeekAvail;
+//import scheduler.model.Model;
+//import scheduler.model.db.Time;
+//import scheduler.model.db.cdb.Course;
+//import scheduler.model.db.idb.CoursePreference;
+//import scheduler.model.db.idb.Instructor;
+//import scheduler.model.db.idb.TimePreference;
+//import scheduler.model.db.udb.UserData;
+//import scheduler.model.schedule.Day;
+//import scheduler.model.schedule.Schedule;
+//import scheduler.model.schedule.Week;
+//import scheduler.model.schedule.WeekAvail;
 //
 //public class AlgorithmStressTest {
 //

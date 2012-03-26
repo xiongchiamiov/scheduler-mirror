@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.model;
+package scheduler.model;
 
 
 public abstract class MiscModelTest extends ModelTestCase {

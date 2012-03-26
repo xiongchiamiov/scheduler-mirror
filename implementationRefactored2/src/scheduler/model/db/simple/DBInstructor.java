@@ -1,6 +1,6 @@
-package edu.calpoly.csc.scheduler.model.db.simple;
+package scheduler.model.db.simple;
 
-import edu.calpoly.csc.scheduler.model.db.IDBInstructor;
+import scheduler.model.db.IDBInstructor;
 
 public class DBInstructor extends DBObject implements IDBInstructor {
 	Integer documentID;

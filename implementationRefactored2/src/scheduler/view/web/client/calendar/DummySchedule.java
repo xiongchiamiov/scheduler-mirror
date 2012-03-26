@@ -1,8 +1,8 @@
-package edu.calpoly.csc.scheduler.view.web.client.calendar;
+package scheduler.view.web.client.calendar;
 
 import java.util.ArrayList;
 
-import edu.calpoly.csc.scheduler.view.web.shared.OldScheduleItemGWT;
+import scheduler.view.web.shared.OldScheduleItemGWT;
 
 /**
  * A dummy schedule for testing

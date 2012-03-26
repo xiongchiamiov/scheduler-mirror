@@ -1,6 +1,6 @@
-package edu.calpoly.csc.scheduler.model;
+package scheduler.model;
 
-import edu.calpoly.csc.scheduler.model.Model;
+import scheduler.model.Model;
 import junit.framework.*;
 
 public class CSVTest extends TestCase {

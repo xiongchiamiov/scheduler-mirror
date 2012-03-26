@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.view.web.client.calendar;
+package scheduler.view.web.client.calendar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,8 +13,8 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.RootPanel;
 
-import edu.calpoly.csc.scheduler.view.web.shared.DayGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
+import scheduler.view.web.shared.DayGWT;
+import scheduler.view.web.shared.ScheduleItemGWT;
 
 /**
  * Takes in various mouse events to determine when items are dragged/dropped. 

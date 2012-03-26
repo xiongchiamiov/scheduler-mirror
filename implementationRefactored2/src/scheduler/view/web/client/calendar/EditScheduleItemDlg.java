@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.view.web.client.calendar;
+package scheduler.view.web.client.calendar;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -20,12 +20,12 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
-import edu.calpoly.csc.scheduler.view.web.shared.DayGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.DocumentGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
+import scheduler.view.web.client.GreetingServiceAsync;
+import scheduler.view.web.shared.DayGWT;
+import scheduler.view.web.shared.DocumentGWT;
+import scheduler.view.web.shared.InstructorGWT;
+import scheduler.view.web.shared.LocationGWT;
+import scheduler.view.web.shared.ScheduleItemGWT;
 
 /**
  * A dialog that allows the user to edit the instructor, location, and time of a

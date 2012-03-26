@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.view.web.client.table.columns;
+package scheduler.view.web.client.table.columns;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -12,7 +12,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
+import scheduler.view.web.client.table.OsmTable;
 
 class EditingMultiselectCell extends OsmTable.EditingCell {
 	LinkedHashMap<String, String> options;

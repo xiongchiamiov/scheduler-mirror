@@ -1,9 +1,9 @@
-package edu.calpoly.csc.scheduler.model;
+package scheduler.model;
 
 import java.util.Collection;
 
-import edu.calpoly.csc.scheduler.model.db.DatabaseException;
-import edu.calpoly.csc.scheduler.model.db.IDBSchedule;
+import scheduler.model.db.DatabaseException;
+import scheduler.model.db.IDBSchedule;
 
 public class Schedule extends Identified {
 	private final Model model;

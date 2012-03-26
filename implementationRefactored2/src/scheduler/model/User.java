@@ -1,7 +1,7 @@
-package edu.calpoly.csc.scheduler.model;
+package scheduler.model;
 
-import edu.calpoly.csc.scheduler.model.db.DatabaseException;
-import edu.calpoly.csc.scheduler.model.db.IDBUser;
+import scheduler.model.db.DatabaseException;
+import scheduler.model.db.IDBUser;
 
 public class User extends Identified {
 	private final Model model;

@@ -1,4 +1,4 @@
-//package edu.calpoly.csc.scheduler.view.web.shared;
+//package scheduler.view.web.shared;
 //
 ////import scheduler.*;
 ////import scheduler.db.*;
@@ -8,15 +8,15 @@
 ////import scheduler.db.preferencesdb.*;
 ////import scheduler.generate.Week;
 //
-//import edu.calpoly.csc.scheduler.model.*;
-//import edu.calpoly.csc.scheduler.model.db.Time;
-//import edu.calpoly.csc.scheduler.model.db.idb.CoursePreference;
-//import edu.calpoly.csc.scheduler.model.db.idb.Instructor;
-//import edu.calpoly.csc.scheduler.model.db.idb.TimePreference;
-//import edu.calpoly.csc.scheduler.model.db.ldb.Location;
-//import edu.calpoly.csc.scheduler.model.db.pdb.DaysForClasses;
-//import edu.calpoly.csc.scheduler.model.schedule.Schedule;
-//import edu.calpoly.csc.scheduler.model.db.cdb.*;
+//import scheduler.model.*;
+//import scheduler.model.db.Time;
+//import scheduler.model.db.idb.CoursePreference;
+//import scheduler.model.db.idb.Instructor;
+//import scheduler.model.db.idb.TimePreference;
+//import scheduler.model.db.ldb.Location;
+//import scheduler.model.db.pdb.DaysForClasses;
+//import scheduler.model.schedule.Schedule;
+//import scheduler.model.db.cdb.*;
 //
 //import java.io.FileNotFoundException;
 //import java.io.PrintStream;

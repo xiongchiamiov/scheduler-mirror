@@ -1,22 +1,22 @@
-package edu.calpoly.csc.scheduler.model;
+package scheduler.model;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Vector;
 
-import edu.calpoly.csc.scheduler.model.Course;
-import edu.calpoly.csc.scheduler.model.Day;
-import edu.calpoly.csc.scheduler.model.Document;
-import edu.calpoly.csc.scheduler.model.Instructor;
-import edu.calpoly.csc.scheduler.model.Model;
-import edu.calpoly.csc.scheduler.model.ModelTestCase;
-import edu.calpoly.csc.scheduler.model.ModelTestUtility;
-import edu.calpoly.csc.scheduler.model.Schedule;
-import edu.calpoly.csc.scheduler.model.ScheduleItem;
-import edu.calpoly.csc.scheduler.model.db.DatabaseException;
-import edu.calpoly.csc.scheduler.model.algorithm.CouldNotBeScheduledException;
-import edu.calpoly.csc.scheduler.model.algorithm.Generate;
-import edu.calpoly.csc.scheduler.model.algorithm.ScheduleItemDecorator;
+import scheduler.model.Course;
+import scheduler.model.Day;
+import scheduler.model.Document;
+import scheduler.model.Instructor;
+import scheduler.model.Model;
+import scheduler.model.ModelTestCase;
+import scheduler.model.ModelTestUtility;
+import scheduler.model.Schedule;
+import scheduler.model.ScheduleItem;
+import scheduler.model.db.DatabaseException;
+import scheduler.model.algorithm.CouldNotBeScheduledException;
+import scheduler.model.algorithm.Generate;
+import scheduler.model.algorithm.ScheduleItemDecorator;
 
 public abstract class AlgorithmTestTwo extends ModelTestCase {
 	private static final int START_HALF_HOUR = 14; // 7am

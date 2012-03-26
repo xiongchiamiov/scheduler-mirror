@@ -1,10 +1,10 @@
-package edu.calpoly.csc.scheduler.view.web.client.table.columns;
+package scheduler.view.web.client.table.columns;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 
-import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
+import scheduler.view.web.client.table.OsmTable;
 
 class DeleteCell extends OsmTable.Cell {
 	public interface DeleteStrategy {

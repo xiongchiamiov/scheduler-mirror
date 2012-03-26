@@ -1,9 +1,9 @@
-package edu.calpoly.csc.scheduler.model.db.simple;
+package scheduler.model.db.simple;
 
 import java.util.Set;
 import java.util.TreeSet;
 
-import edu.calpoly.csc.scheduler.model.db.IDBDayPattern;
+import scheduler.model.db.IDBDayPattern;
 
 public class DBDayPattern extends DBObject implements IDBDayPattern {
 	public DBDayPattern(Integer id) {

@@ -1,6 +1,6 @@
-package edu.calpoly.csc.scheduler.model.db.simple;
+package scheduler.model.db.simple;
 
-import edu.calpoly.csc.scheduler.model.db.IDBCoursePreference;
+import scheduler.model.db.IDBCoursePreference;
 
 public class DBCoursePreference extends DBObject implements IDBCoursePreference {
 	Integer instructorID;

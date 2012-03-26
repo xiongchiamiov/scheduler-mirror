@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.view.web.client.table.columns;
+package scheduler.view.web.client.table.columns;
 
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
@@ -12,7 +12,7 @@ import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.TextBox;
 
-import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
+import scheduler.view.web.client.table.OsmTable;
 
 class EditingStringCell extends OsmTable.EditingCell {
 	TextBox editingBox;

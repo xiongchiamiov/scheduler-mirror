@@ -1,10 +1,10 @@
-package edu.calpoly.csc.scheduler.model.algorithm;
+package scheduler.model.algorithm;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Vector;
 
-import edu.calpoly.csc.scheduler.model.Course;
+import scheduler.model.Course;
 
 /**
  * Keeps track of what courses are booked for what days/times and, given a set

@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.view.web.client.calendar;
+package scheduler.view.web.client.calendar;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -9,9 +9,9 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.SimplePanel;
 
-import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.DayGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
+import scheduler.view.web.shared.CourseGWT;
+import scheduler.view.web.shared.DayGWT;
+import scheduler.view.web.shared.ScheduleItemGWT;
 
 public class CourseListView extends SimplePanel {
 
@@ -141,19 +141,19 @@ public class CourseListView extends SimplePanel {
 	private native void defineTableCallbacks() /*-{
 		var availableCourses = this;
 		$wnd.listDoubleClick = function(row) {
-			return availableCourses.@edu.calpoly.csc.scheduler.view.web.client.calendar.CourseListView::doubleClick(I)(row);
+			return availableCourses.@scheduler.view.web.client.calendar.CourseListView::doubleClick(I)(row);
 		}
 		$wnd.listMouseDown = function(row) {
-			return availableCourses.@edu.calpoly.csc.scheduler.view.web.client.calendar.CourseListView::mouseDown(I)(row);
+			return availableCourses.@scheduler.view.web.client.calendar.CourseListView::mouseDown(I)(row);
 		}
 		$wnd.listMouseUp = function(row) {
-			return availableCourses.@edu.calpoly.csc.scheduler.view.web.client.calendar.CourseListView::mouseUp(I)(row);
+			return availableCourses.@scheduler.view.web.client.calendar.CourseListView::mouseUp(I)(row);
 		}
 		$wnd.listMouseOver = function(row) {
-			return availableCourses.@edu.calpoly.csc.scheduler.view.web.client.calendar.CourseListView::mouseOver(I)(row);
+			return availableCourses.@scheduler.view.web.client.calendar.CourseListView::mouseOver(I)(row);
 		}
 		$wnd.listMouseOut = function(row) {
-			return availableCourses.@edu.calpoly.csc.scheduler.view.web.client.calendar.CourseListView::mouseOut(I)(row);
+			return availableCourses.@scheduler.view.web.client.calendar.CourseListView::mouseOut(I)(row);
 		}
     }-*/;
 }

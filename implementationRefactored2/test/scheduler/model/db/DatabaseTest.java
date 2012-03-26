@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.model.db;
+package scheduler.model.db;
 
 public abstract class DatabaseTest extends DatabaseTestCase {
 	private static IDBUser createTransientTestUser(IDatabase db) {

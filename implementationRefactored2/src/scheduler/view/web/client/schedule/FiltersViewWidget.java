@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.view.web.client.schedule;
+package scheduler.view.web.client.schedule;
 
 import java.util.ArrayList;
 
@@ -13,7 +13,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-import edu.calpoly.csc.scheduler.view.web.shared.OldScheduleItemGWT;
+import scheduler.view.web.shared.OldScheduleItemGWT;
 
 /**
  * A DialogBox which displays filters for viewing the schedule. Contains methods

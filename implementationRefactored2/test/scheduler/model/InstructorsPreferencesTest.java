@@ -1,13 +1,13 @@
-package edu.calpoly.csc.scheduler.model;
+package scheduler.model;
 
 import java.util.HashMap;
 
-import edu.calpoly.csc.scheduler.model.Day;
-import edu.calpoly.csc.scheduler.model.Document;
-import edu.calpoly.csc.scheduler.model.Instructor;
-import edu.calpoly.csc.scheduler.model.Model;
-import edu.calpoly.csc.scheduler.model.db.DatabaseException;
-import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
+import scheduler.model.Day;
+import scheduler.model.Document;
+import scheduler.model.Instructor;
+import scheduler.model.Model;
+import scheduler.model.db.DatabaseException;
+import scheduler.model.db.IDatabase.NotFoundException;
 
 public abstract class InstructorsPreferencesTest extends ModelTestCase {
 	private static final int START_HALF_HOUR = 14; // 7am

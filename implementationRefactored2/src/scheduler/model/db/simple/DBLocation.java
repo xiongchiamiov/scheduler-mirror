@@ -1,6 +1,6 @@
-package edu.calpoly.csc.scheduler.model.db.simple;
+package scheduler.model.db.simple;
 
-import edu.calpoly.csc.scheduler.model.db.IDBLocation;
+import scheduler.model.db.IDBLocation;
 
 public class DBLocation extends DBObject implements IDBLocation {
 	Integer documentID;

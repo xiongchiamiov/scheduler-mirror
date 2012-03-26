@@ -1,10 +1,10 @@
-package edu.calpoly.csc.scheduler.view.web.client.table.columns;
+package scheduler.view.web.client.table.columns;
 
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
 
-import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
+import scheduler.view.web.client.table.OsmTable;
 
 class EditingCheckboxCell extends OsmTable.EditingCell {
 	CheckBox checkbox;

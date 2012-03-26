@@ -1,12 +1,12 @@
-package edu.calpoly.csc.scheduler.model;
+package scheduler.model;
 
 import java.util.Collection;
 
-import edu.calpoly.csc.scheduler.model.db.DatabaseException;
-import edu.calpoly.csc.scheduler.model.db.IDBDocument;
-import edu.calpoly.csc.scheduler.model.db.IDBInstructor;
-import edu.calpoly.csc.scheduler.model.db.IDBLocation;
-import edu.calpoly.csc.scheduler.model.db.IDatabase.NotFoundException;
+import scheduler.model.db.DatabaseException;
+import scheduler.model.db.IDBDocument;
+import scheduler.model.db.IDBInstructor;
+import scheduler.model.db.IDBLocation;
+import scheduler.model.db.IDatabase.NotFoundException;
 
 public class Document extends Identified {
 	private final Model model;

@@ -1,6 +1,6 @@
-package edu.calpoly.csc.scheduler.model.db.simple;
+package scheduler.model.db.simple;
 
-import edu.calpoly.csc.scheduler.model.db.IDBDocument;
+import scheduler.model.db.IDBDocument;
 
 public class DBDocument extends DBObject implements IDBDocument {
 	String name;

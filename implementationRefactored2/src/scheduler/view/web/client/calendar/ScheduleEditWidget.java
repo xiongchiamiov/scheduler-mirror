@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.view.web.client.calendar;
+package scheduler.view.web.client.calendar;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,10 +30,10 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
-import edu.calpoly.csc.scheduler.view.web.client.schedule.FiltersViewWidget;
-import edu.calpoly.csc.scheduler.view.web.client.views.LoadingPopup;
-import edu.calpoly.csc.scheduler.view.web.shared.*;
+import scheduler.view.web.client.GreetingServiceAsync;
+import scheduler.view.web.client.schedule.FiltersViewWidget;
+import scheduler.view.web.client.views.LoadingPopup;
+import scheduler.view.web.shared.*;
 
 /**
  * This widget contains the calendar and list of available classes. It also

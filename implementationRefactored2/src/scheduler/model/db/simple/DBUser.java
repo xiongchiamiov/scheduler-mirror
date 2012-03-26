@@ -1,6 +1,6 @@
-package edu.calpoly.csc.scheduler.model.db.simple;
+package scheduler.model.db.simple;
 
-import edu.calpoly.csc.scheduler.model.db.IDBUser;
+import scheduler.model.db.IDBUser;
 
 public class DBUser extends DBObject implements IDBUser {
 	String username;

@@ -1,6 +1,6 @@
-package edu.calpoly.csc.scheduler.model.db.sqlite;
+package scheduler.model.db.sqlite;
 
-import edu.calpoly.csc.scheduler.model.db.IDBCourse;
+import scheduler.model.db.IDBCourse;
 
 public class SQLCourse extends SQLObject implements IDBCourse {
 	Integer id, docID, enrollment, wtu, scu, numSections, numHalfHours;

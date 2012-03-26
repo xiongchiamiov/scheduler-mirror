@@ -1,6 +1,6 @@
-package edu.calpoly.csc.scheduler.model.algorithm;
+package scheduler.model.algorithm;
 
-import edu.calpoly.csc.scheduler.model.Location;
+import scheduler.model.Location;
 
 public class LocationDecorator {
 

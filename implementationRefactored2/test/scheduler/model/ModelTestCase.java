@@ -1,6 +1,6 @@
-package edu.calpoly.csc.scheduler.model;
+package scheduler.model;
 
-import edu.calpoly.csc.scheduler.model.db.DatabaseTestCase;
+import scheduler.model.db.DatabaseTestCase;
 
 public abstract class ModelTestCase extends DatabaseTestCase {
 	protected Model createBlankModel() {

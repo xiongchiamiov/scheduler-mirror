@@ -1,6 +1,6 @@
-package edu.calpoly.csc.scheduler.view.web.client.table.validators;
+package scheduler.view.web.client.table.validators;
 
-//import edu.calpoly.csc.scheduler.view.web.client.table.IStaticValidator;
+//import scheduler.view.web.client.table.IStaticValidator;
 //
 //
 //public class StaticNumberValidator<ObjectType> implements IStaticValidator<ObjectType, String> {

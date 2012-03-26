@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.view.web.shared;
+package scheduler.view.web.shared;
 
 import java.io.Serializable;
 import java.util.HashSet;

@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.view.web.client.calendar;
+package scheduler.view.web.client.calendar;
 
 import java.util.Iterator;
 import java.util.List;
@@ -10,8 +10,8 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.calpoly.csc.scheduler.view.web.shared.DayGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
+import scheduler.view.web.shared.DayGWT;
+import scheduler.view.web.shared.ScheduleItemGWT;
 
 public class CalendarListView extends SimplePanel {
 
@@ -42,22 +42,22 @@ public class CalendarListView extends SimplePanel {
 	private native void defineTableCallbacks() /*-{
 		var scheduleTable = this;
 		$wnd.calendarListDoubleClick = function(row, col) {
-			return scheduleTable.@edu.calpoly.csc.scheduler.view.web.client.calendar.CalendarListView::doubleClick(II)(row, col);
+			return scheduleTable.@scheduler.view.web.client.calendar.CalendarListView::doubleClick(II)(row, col);
 		}
 		$wnd.calendarListMouseDown = function(row, col) {
-			return scheduleTable.@edu.calpoly.csc.scheduler.view.web.client.calendar.CalendarListView::mouseDown(II)(row, col);
+			return scheduleTable.@scheduler.view.web.client.calendar.CalendarListView::mouseDown(II)(row, col);
 		}
 		$wnd.calendarListMouseUp = function(row, col) {
-			return scheduleTable.@edu.calpoly.csc.scheduler.view.web.client.calendar.CalendarListView::mouseUp(II)(row, col);
+			return scheduleTable.@scheduler.view.web.client.calendar.CalendarListView::mouseUp(II)(row, col);
 		}
 		$wnd.calendarListMouseOver = function(row) {
-			return scheduleTable.@edu.calpoly.csc.scheduler.view.web.client.calendar.CalendarListView::mouseOver(I)(row);
+			return scheduleTable.@scheduler.view.web.client.calendar.CalendarListView::mouseOver(I)(row);
 		}
 		$wnd.calendarListMouseOut = function(row) {
-			return scheduleTable.@edu.calpoly.csc.scheduler.view.web.client.calendar.CalendarListView::mouseOut(I)(row);
+			return scheduleTable.@scheduler.view.web.client.calendar.CalendarListView::mouseOut(I)(row);
 		}
 		$wnd.calendarListKeyDown = function(row, keycode) {
-			return scheduleTable.@edu.calpoly.csc.scheduler.view.web.client.calendar.CalendarListView::keyDown(II)(row, keycode);
+			return scheduleTable.@scheduler.view.web.client.calendar.CalendarListView::keyDown(II)(row, keycode);
 		}
 	}-*/;
 

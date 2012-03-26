@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.view.web.client.views;
+package scheduler.view.web.client.views;
 
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;

@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.view.web.client.schedule;
+package scheduler.view.web.client.schedule;
 
 import java.util.ArrayList;
 
@@ -10,7 +10,7 @@ import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-import edu.calpoly.csc.scheduler.view.web.shared.OldScheduleItemGWT;
+import scheduler.view.web.shared.OldScheduleItemGWT;
 
 /**
  * A DialogBox is displayed when a course is dragged onto the schedule or when

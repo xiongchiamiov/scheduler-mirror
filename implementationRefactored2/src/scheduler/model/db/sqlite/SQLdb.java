@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.model.db.sqlite;
+package scheduler.model.db.sqlite;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -18,27 +18,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import edu.calpoly.csc.scheduler.model.Day;
-import edu.calpoly.csc.scheduler.model.db.DatabaseException;
-import edu.calpoly.csc.scheduler.model.db.IDBCourse;
-import edu.calpoly.csc.scheduler.model.db.IDBCourseAssociation;
-import edu.calpoly.csc.scheduler.model.db.IDBCoursePreference;
-import edu.calpoly.csc.scheduler.model.db.IDBDayPattern;
-import edu.calpoly.csc.scheduler.model.db.IDBDocument;
-import edu.calpoly.csc.scheduler.model.db.IDBEquipmentType;
-import edu.calpoly.csc.scheduler.model.db.IDBInstructor;
-import edu.calpoly.csc.scheduler.model.db.IDBLocation;
-import edu.calpoly.csc.scheduler.model.db.IDBObject;
-import edu.calpoly.csc.scheduler.model.db.IDBOfferedDayPattern;
-import edu.calpoly.csc.scheduler.model.db.IDBProvidedEquipment;
-import edu.calpoly.csc.scheduler.model.db.IDBSchedule;
-import edu.calpoly.csc.scheduler.model.db.IDBScheduleItem;
-import edu.calpoly.csc.scheduler.model.db.IDBTime;
-import edu.calpoly.csc.scheduler.model.db.IDBTimePreference;
-import edu.calpoly.csc.scheduler.model.db.IDBUsedEquipment;
-import edu.calpoly.csc.scheduler.model.db.IDBUser;
-import edu.calpoly.csc.scheduler.model.db.IDatabase;
-import edu.calpoly.csc.scheduler.model.db.simple.DBUsedEquipment;
+import scheduler.model.Day;
+import scheduler.model.db.DatabaseException;
+import scheduler.model.db.IDBCourse;
+import scheduler.model.db.IDBCourseAssociation;
+import scheduler.model.db.IDBCoursePreference;
+import scheduler.model.db.IDBDayPattern;
+import scheduler.model.db.IDBDocument;
+import scheduler.model.db.IDBEquipmentType;
+import scheduler.model.db.IDBInstructor;
+import scheduler.model.db.IDBLocation;
+import scheduler.model.db.IDBObject;
+import scheduler.model.db.IDBOfferedDayPattern;
+import scheduler.model.db.IDBProvidedEquipment;
+import scheduler.model.db.IDBSchedule;
+import scheduler.model.db.IDBScheduleItem;
+import scheduler.model.db.IDBTime;
+import scheduler.model.db.IDBTimePreference;
+import scheduler.model.db.IDBUsedEquipment;
+import scheduler.model.db.IDBUser;
+import scheduler.model.db.IDatabase;
+import scheduler.model.db.simple.DBUsedEquipment;
 
 public class SQLdb implements IDatabase {
 	

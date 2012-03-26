@@ -1,12 +1,12 @@
-package edu.calpoly.csc.scheduler.view.web.client.views;
+package scheduler.view.web.client.views;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.SimplePanel;
 
-import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
-import edu.calpoly.csc.scheduler.view.web.shared.DocumentGWT;
+import scheduler.view.web.client.GreetingServiceAsync;
+import scheduler.view.web.shared.DocumentGWT;
 
 public class SelectScheduleViewAutomatic extends SelectScheduleView
 {

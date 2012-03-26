@@ -1,13 +1,13 @@
-package edu.calpoly.csc.scheduler.view.web.client.table.columns;
+package scheduler.view.web.client.table.columns;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Image;
 
-import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable;
-import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.Cell;
-import edu.calpoly.csc.scheduler.view.web.client.table.OsmTable.IRowForColumn;
-import edu.calpoly.csc.scheduler.view.web.shared.Identified;
+import scheduler.view.web.client.table.OsmTable;
+import scheduler.view.web.client.table.OsmTable.Cell;
+import scheduler.view.web.client.table.OsmTable.IRowForColumn;
+import scheduler.view.web.shared.Identified;
 
 public class EditButtonColumn<ObjectType extends Identified> implements OsmTable.IColumn<ObjectType> {
 	public interface ClickCallback<ObjectType> {

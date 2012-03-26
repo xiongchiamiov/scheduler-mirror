@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.view.web.shared;
+package scheduler.view.web.shared;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -21,18 +21,18 @@ import java.util.Vector;
 
 import junit.framework.TestCase;
 
-import edu.calpoly.csc.scheduler.model.CSVExporter;
-import edu.calpoly.csc.scheduler.model.Course;
-import edu.calpoly.csc.scheduler.model.Day;
-import edu.calpoly.csc.scheduler.model.Document;
-import edu.calpoly.csc.scheduler.model.Instructor;
-import edu.calpoly.csc.scheduler.model.Location;
-import edu.calpoly.csc.scheduler.model.Model;
-import edu.calpoly.csc.scheduler.model.Schedule;
-import edu.calpoly.csc.scheduler.model.ScheduleItem;
-import edu.calpoly.csc.scheduler.model.db.DatabaseException;
-import edu.calpoly.csc.scheduler.model.db.IDatabase;
-import edu.calpoly.csc.scheduler.*;
+import scheduler.model.CSVExporter;
+import scheduler.model.Course;
+import scheduler.model.Day;
+import scheduler.model.Document;
+import scheduler.model.Instructor;
+import scheduler.model.Location;
+import scheduler.model.Model;
+import scheduler.model.Schedule;
+import scheduler.model.ScheduleItem;
+import scheduler.model.db.DatabaseException;
+import scheduler.model.db.IDatabase;
+import scheduler.*;
 
 /****
  * 

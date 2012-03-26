@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.view.web.shared;
+package scheduler.view.web.shared;
 
 import java.util.ArrayList;
 
@@ -6,7 +6,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import edu.calpoly.csc.scheduler.view.web.shared.Selenium.*;
+import scheduler.view.web.shared.Selenium.*;
 
 
 

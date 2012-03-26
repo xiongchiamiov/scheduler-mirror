@@ -1,6 +1,6 @@
-package edu.calpoly.csc.scheduler.model.algorithm;
+package scheduler.model.algorithm;
 
-import edu.calpoly.csc.scheduler.model.Instructor;
+import scheduler.model.Instructor;
 
 public class InstructorDecorator {
 

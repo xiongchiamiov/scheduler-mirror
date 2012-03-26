@@ -1,11 +1,11 @@
-package edu.calpoly.csc.scheduler.view.web.shared;
+package scheduler.view.web.shared;
 
 import java.io.Serializable;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.Vector;
 
-//import edu.calpoly.csc.scheduler.model.schedule.Day;
+//import scheduler.model.schedule.Day;
 
 public class DayCombinationGWT implements Serializable {
    private Set<Integer> days;

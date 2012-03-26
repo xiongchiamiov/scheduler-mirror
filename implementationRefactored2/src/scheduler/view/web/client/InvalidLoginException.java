@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.view.web.client;
+package scheduler.view.web.client;
 
 public class InvalidLoginException extends Exception {
 

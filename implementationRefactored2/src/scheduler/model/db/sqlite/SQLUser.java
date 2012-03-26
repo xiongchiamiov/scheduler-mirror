@@ -1,6 +1,6 @@
-package edu.calpoly.csc.scheduler.model.db.sqlite;
+package scheduler.model.db.sqlite;
 
-import edu.calpoly.csc.scheduler.model.db.IDBUser;
+import scheduler.model.db.IDBUser;
 
 public class SQLUser extends SQLObject implements IDBUser {
 	String username;

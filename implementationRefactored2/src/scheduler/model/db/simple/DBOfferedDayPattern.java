@@ -1,6 +1,6 @@
-package edu.calpoly.csc.scheduler.model.db.simple;
+package scheduler.model.db.simple;
 
-import edu.calpoly.csc.scheduler.model.db.IDBOfferedDayPattern;
+import scheduler.model.db.IDBOfferedDayPattern;
 
 public class DBOfferedDayPattern extends DBObject implements IDBOfferedDayPattern {
 	Integer courseID;

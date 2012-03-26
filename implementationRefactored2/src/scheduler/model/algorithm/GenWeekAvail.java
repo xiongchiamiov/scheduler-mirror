@@ -1,9 +1,9 @@
-package edu.calpoly.csc.scheduler.model.algorithm;
+package scheduler.model.algorithm;
 
 import java.io.Serializable;
 import java.util.Vector;
 
-import edu.calpoly.csc.scheduler.model.Day;
+import scheduler.model.Day;
 
 
 public class GenWeekAvail<T, U extends GenAvail<T>> extends Vector<U> 

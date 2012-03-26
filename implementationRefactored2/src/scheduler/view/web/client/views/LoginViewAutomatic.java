@@ -1,10 +1,10 @@
-package edu.calpoly.csc.scheduler.view.web.client.views;
+package scheduler.view.web.client.views;
 
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.SimplePanel;
 
-import edu.calpoly.csc.scheduler.view.web.client.GreetingServiceAsync;
-import edu.calpoly.csc.scheduler.view.web.client.ViewFrame;
+import scheduler.view.web.client.GreetingServiceAsync;
+import scheduler.view.web.client.ViewFrame;
 
 public class LoginViewAutomatic extends LoginView {
 	final String automaticLoginUsername;

@@ -1,8 +1,8 @@
-package edu.calpoly.csc.scheduler.view.web.client.schedule;
+package scheduler.view.web.client.schedule;
 
 import com.google.gwt.user.client.ui.HTML;
 
-import edu.calpoly.csc.scheduler.view.web.shared.OldScheduleItemGWT;
+import scheduler.view.web.shared.OldScheduleItemGWT;
 
 /**
  * The HTML which displays a schedule item.

@@ -1,4 +1,4 @@
-package edu.calpoly.csc.scheduler.view.web.server;
+package scheduler.view.web.server;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -17,25 +17,25 @@ import java.util.Vector;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
-import edu.calpoly.csc.scheduler.model.Course;
-import edu.calpoly.csc.scheduler.model.Document;
-import edu.calpoly.csc.scheduler.model.Instructor;
-import edu.calpoly.csc.scheduler.model.Location;
-import edu.calpoly.csc.scheduler.model.Model;
-import edu.calpoly.csc.scheduler.model.Schedule;
-import edu.calpoly.csc.scheduler.model.ScheduleItem;
-import edu.calpoly.csc.scheduler.model.algorithm.Generate;
-import edu.calpoly.csc.scheduler.model.db.DatabaseException;
-import edu.calpoly.csc.scheduler.view.web.client.GreetingService;
-import edu.calpoly.csc.scheduler.view.web.client.InvalidLoginException;
-import edu.calpoly.csc.scheduler.view.web.shared.CouldNotBeScheduledExceptionGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.CourseGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.DocumentGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.InstructorGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.LocationGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.OldScheduleItemGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemGWT;
-import edu.calpoly.csc.scheduler.view.web.shared.ScheduleItemList;
+import scheduler.model.Course;
+import scheduler.model.Document;
+import scheduler.model.Instructor;
+import scheduler.model.Location;
+import scheduler.model.Model;
+import scheduler.model.Schedule;
+import scheduler.model.ScheduleItem;
+import scheduler.model.algorithm.Generate;
+import scheduler.model.db.DatabaseException;
+import scheduler.view.web.client.GreetingService;
+import scheduler.view.web.client.InvalidLoginException;
+import scheduler.view.web.shared.CouldNotBeScheduledExceptionGWT;
+import scheduler.view.web.shared.CourseGWT;
+import scheduler.view.web.shared.DocumentGWT;
+import scheduler.view.web.shared.InstructorGWT;
+import scheduler.view.web.shared.LocationGWT;
+import scheduler.view.web.shared.OldScheduleItemGWT;
+import scheduler.view.web.shared.ScheduleItemGWT;
+import scheduler.view.web.shared.ScheduleItemList;
 
 /**
  * The server side implementation of the RPC service.
