@@ -1,2 +1,0 @@
-serviceClass: scheduler.view.web.client.GreetingService
-path: 522550A7533EBB5A6FC01D0B5A189759.gwt.rpc

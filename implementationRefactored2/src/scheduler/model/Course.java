@@ -15,7 +15,7 @@ import scheduler.model.db.IDBUsedEquipment;
 import scheduler.model.db.IDatabase.NotFoundException;
 
 public class Course extends Identified {
-	private final Model model;
+	private final Model mModel;
 	
 	IDBCourse underlyingCourse;
 	
@@ -34,7 +34,7 @@ public class Course extends Identified {
 	
 	
 	Course(Model model, IDBCourse underlyingCourse) {
-		this.model = model;
+		this.mModel = model;
 		this.underlyingCourse = underlyingCourse;
 		
 		// make sure its not in the cache yet (how could it be, we're not even
@@ -49,7 +49,7 @@ public class Course extends Identified {
 	public Course insert() throws DatabaseException {
 		assert (isTransient());
 		assert (document != null);
-		model.courseCache.insert(this);
+		mModel.courseCache.insert(this);
 		putOfferedDayPatternsIntoDB();
 		putUsedEquipmentIntoDB();
 		putAssociationIntoDB();
@@ -64,14 +64,14 @@ public class Course extends Identified {
 		putUsedEquipmentIntoDB();
 		putOfferedDayPatternsIntoDB();
 		putAssociationIntoDB();
-		model.courseCache.update(this);
+		mModel.courseCache.update(this);
 	}
 	
 	public void delete() throws DatabaseException {
 		removeAssociationFromDB();
 		removeOfferedDayPatternsFromDB();
 		removeUsedEquipmentFromDB();
-		model.courseCache.delete(this);
+		mModel.courseCache.delete(this);
 	}
 	
 	
@@ -180,9 +180,9 @@ public class Course extends Identified {
 	public Collection<Set<Day>> getDayPatterns() throws DatabaseException {
 		if (!offeredDayPatternsLoaded) {
 			offeredDayPatterns = new LinkedList<Set<Day>>();
-			for (IDBOfferedDayPattern offered : model.database.findOfferedDayPatternsForCourse(underlyingCourse))
+			for (IDBOfferedDayPattern offered : mModel.database.findOfferedDayPatternsForCourse(underlyingCourse))
 				offeredDayPatterns
-						.add(daysFromIntegers(model.database.getDayPatternForOfferedDayPattern(offered).getDays()));
+						.add(daysFromIntegers(mModel.database.getDayPatternForOfferedDayPattern(offered).getDays()));
 			
 			offeredDayPatternsLoaded = true;
 		}
@@ -195,8 +195,8 @@ public class Course extends Identified {
 	}
 	
 	private void removeOfferedDayPatternsFromDB() throws DatabaseException {
-		for (IDBOfferedDayPattern offered : model.database.findOfferedDayPatternsForCourse(underlyingCourse))
-			model.database.deleteOfferedDayPattern(offered);
+		for (IDBOfferedDayPattern offered : mModel.database.findOfferedDayPatternsForCourse(underlyingCourse))
+			mModel.database.deleteOfferedDayPattern(offered);
 	}
 	
 	private static Set<Day> daysFromIntegers(Set<Integer> integers) {
@@ -219,8 +219,8 @@ public class Course extends Identified {
 		try {
 			for (Set<Day> dayPattern : offeredDayPatterns) {
 				Set<Integer> integers = daysToIntegers(dayPattern);
-				model.database.insertOfferedDayPattern(underlyingCourse, model.database.findDayPatternByDays(integers),
-						model.database.assembleOfferedDayPattern());
+				mModel.database.insertOfferedDayPattern(underlyingCourse, mModel.database.findDayPatternByDays(integers),
+						mModel.database.assembleOfferedDayPattern());
 			}
 		}
 		catch (NotFoundException e) {
@@ -237,9 +237,9 @@ public class Course extends Identified {
 			return;
 		try {
 			for (String usedEquipmentDescription : usedEquipmentDescriptions)
-				model.database.insertUsedEquipment(underlyingCourse,
-						model.database.findEquipmentTypeByDescription(usedEquipmentDescription),
-						model.database.assembleUsedEquipment());
+				mModel.database.insertUsedEquipment(underlyingCourse,
+						mModel.database.findEquipmentTypeByDescription(usedEquipmentDescription),
+						mModel.database.assembleUsedEquipment());
 		}
 		catch (NotFoundException e) {
 			throw new AssertionError(e);
@@ -247,15 +247,15 @@ public class Course extends Identified {
 	}
 	
 	private void removeUsedEquipmentFromDB() throws DatabaseException {
-		for (IDBUsedEquipment usedEquipment : model.database.findUsedEquipmentByEquipmentForCourse(underlyingCourse)
+		for (IDBUsedEquipment usedEquipment : mModel.database.findUsedEquipmentByEquipmentForCourse(underlyingCourse)
 				.values())
-			model.database.deleteUsedEquipment(usedEquipment);
+			mModel.database.deleteUsedEquipment(usedEquipment);
 	}
 	
 	public Set<String> getUsedEquipment() throws DatabaseException {
 		if (!usedEquipmentLoaded) {
 			usedEquipmentDescriptions = new HashSet<String>();
-			for (IDBEquipmentType equipment : model.database.findUsedEquipmentByEquipmentForCourse(underlyingCourse)
+			for (IDBEquipmentType equipment : mModel.database.findUsedEquipmentByEquipmentForCourse(underlyingCourse)
 					.keySet())
 				usedEquipmentDescriptions.add(equipment.getDescription());
 			usedEquipmentLoaded = true;
@@ -277,14 +277,14 @@ public class Course extends Identified {
 		if (!lectureLoaded)
 			return;
 		if (lecture != null)
-			model.database.associateLectureAndLab(lecture.underlyingCourse, underlyingCourse);
+			mModel.database.associateLectureAndLab(lecture.underlyingCourse, underlyingCourse);
 	}
 	
 	private void removeAssociationFromDB() {
 		if (!lectureLoaded)
 			return;
 		if (lecture != null)
-			model.database.disassociateLectureAndLab(lecture.underlyingCourse, underlyingCourse);
+			mModel.database.disassociateLectureAndLab(lecture.underlyingCourse, underlyingCourse);
 	}
 	
 	private void loadLectureAndTethered() throws DatabaseException {
@@ -297,11 +297,11 @@ public class Course extends Identified {
 		System.out.println("is lab? " + underlyingCourse.getType().equals("LAB"));
 		
 		if (underlyingCourse.getType().equals("LAB")) {
-			IDBCourseAssociation assoc = model.database.getAssociationForLabOrNull(underlyingCourse);
+			IDBCourseAssociation assoc = mModel.database.getAssociationForLabOrNull(underlyingCourse);
 			System.out.println("assoc? " + assoc);
 			if (assoc != null) {
-				assert (model.database.getAssociationLab(assoc).getID() == underlyingCourse.getID());
-				lecture = model.findCourseByID(model.database.getAssociationLecture(assoc).getID());
+				assert (mModel.database.getAssociationLab(assoc).getID() == underlyingCourse.getID());
+				lecture = mModel.findCourseByID(mModel.database.getAssociationLecture(assoc).getID());
 				cachedTetheredToLecture = assoc.isTethered();
 			}
 		}
@@ -343,7 +343,7 @@ public class Course extends Identified {
 	public Document getDocument() throws DatabaseException {
 		if (!documentLoaded) {
 			assert (document == null);
-			document = model.findDocumentByID(model.database.findDocumentForCourse(underlyingCourse).getID());
+			document = mModel.findDocumentByID(mModel.database.findDocumentForCourse(underlyingCourse).getID());
 			documentLoaded = true;
 		}
 		return document;
