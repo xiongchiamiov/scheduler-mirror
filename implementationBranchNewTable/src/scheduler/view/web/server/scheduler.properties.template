@@ -1,0 +1,7 @@
+#this required property tells the scheduler where to write its database file to.
+databasefilepath=DatabaseState.javaser
+
+#this optional property tells the scheduler to feed databasefilepath to
+# the getServletContext().getRealPath(...) function. default is true.
+applyServletPath=true
+#applyServletPath=false
