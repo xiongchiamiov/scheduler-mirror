@@ -118,21 +118,23 @@ public class CoursesDataSource extends DataSource {
 	}
 
 	protected void add(final DSRequest dsRequest) {
+		Record record = dsRequest.getAttributeAsRecord("data");
+		
 		CourseGWT newCourse = new CourseGWT(
 				true,
-				dsRequest.getAttribute("name"),
-				dsRequest.getAttribute("catalogNumber"),
-				dsRequest.getAttribute("department"),
-				dsRequest.getAttribute("wtu"),
-				dsRequest.getAttribute("scu"),
-				dsRequest.getAttribute("numSections"),
-				dsRequest.getAttribute("type"),
-				dsRequest.getAttribute("maxEnrollment"),
+				record.getAttribute("name"),
+				record.getAttribute("catalogNumber"),
+				record.getAttribute("department"),
+				record.getAttribute("wtu"),
+				record.getAttribute("scu"),
+				record.getAttribute("numSections"),
+				record.getAttribute("type"),
+				record.getAttribute("maxEnrollment"),
 				-1, // lecture ID
-				dsRequest.getAttribute("halfHoursPerWeek"),
+				record.getAttribute("halfHoursPerWeek"),
 				new LinkedList<Set<DayGWT>>(), // day combinations
 				-1, // id
-				dsRequest.getAttributeAsBoolean("tetheredToLecture"),
+				record.getAttributeAsBoolean("tetheredToLecture"),
 				new TreeSet<String>() // equipment
 				);
 		
