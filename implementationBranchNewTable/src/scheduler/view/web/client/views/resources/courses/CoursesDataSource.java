@@ -61,6 +61,8 @@ public class CoursesDataSource extends DataSource {
 		DataSourceTextField scuField = new DataSourceTextField("scu");
 		
 		DataSourceTextField dayCombinationsField = new DataSourceTextField("dayCombinations");
+		dayCombinationsField.setMultiple(true);
+		dayCombinationsField.setValueMap("This", "is", "a", "test");
 		
 		DataSourceTextField hoursPerWeekField = new DataSourceTextField("hoursPerWeek");
 		

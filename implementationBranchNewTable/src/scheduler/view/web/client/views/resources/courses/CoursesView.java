@@ -9,10 +9,12 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.smartgwt.client.types.ListGridEditEvent;
+import com.smartgwt.client.types.MultipleAppearance;
 import com.smartgwt.client.types.RowEndEditAction;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 
@@ -66,7 +68,7 @@ public class CoursesView extends VerticalPanel implements IViewContents {
 		ListGridField maxEnrollmentField = new ListGridField("maxEnrollment", "Max Enrollment");
 		ListGridField courseTypeField = new ListGridField("coursesType", "Type");
 		ListGridField associationsField = new ListGridField("associations", "Associations");
-		
+
 		grid.setFields(departmentField, catalogNumberField, nameField, numSectionsField, wtuField, scuField,
 				dayCombinationsField, hoursPerWeekField, maxEnrollmentField, courseTypeField, associationsField);
 		
