@@ -83,8 +83,8 @@ public class CalendarListView extends SimplePanel {
 				+ "#ListTable {border-spacing:0px;cellspacing:0px;border:none;}"
 				+ "#ListTable tr {height:20px;}"
 				+ "#ListTable td {overflow:hidden;padding:4px;border-top:1px solid #d1dfdf;}"
-				+ "#ListTable td.item {text-align:center;border:1px solid black;}"
-				+ "#ListTable td.selectedItem {text-align:center; background-color:#DFF0CF; border:1px solid black;}"
+				+ "#ListTable td.item {text-align:center;background-color:#DFF0CF;border:1px solid #FFFFFF;}"
+				+ "#ListTable td.selectedItem {text-align:center; background-color:#D1DFDF; border:1px solid black;}"
 				+ "#ListTable td.columnHeader {position:relative;background-color:#edf2f2;border-right:1px solid #000000;border-bottom:1px solid #000000;font-weight:bold;text-align:center;z-index:2;}"
 				+ "#ListTable td.timeHeader {position:relative;background-color:#edf2f2;border-right:1px solid #000000;white-space:nowrap;text-align:right;}"
 				+ "#ListTable td#topCorner {border-bottom:1px solid #000000;background-color:#edf2f2;}"
@@ -224,7 +224,7 @@ public class CalendarListView extends SimplePanel {
 					+ tableRow + "," + tableCol + ")\" " + "tabindex=\"0\" "
 					+ "onkeydown=\"calendarListKeyDown(" + tableRow
 					+ ",event.which)\" " + "onselectstart=\"return false\" "
-					+ ">" + ScheduleEditWidget.START_TIMES[item.getStartHalfHour()] + "</td>");
+					+ ">" + ScheduleEditWidget.START_TIMES[CalendarTableView.getStartRow(item)] + "</td>");
 			tableCol++;
 
 			builder.append("<td " + "class=\"item\" id=\"x" + tableCol + "y"
@@ -236,7 +236,7 @@ public class CalendarListView extends SimplePanel {
 					+ tableRow + "," + tableCol + ")\" " + "tabindex=\"0\" "
 					+ "onkeydown=\"calendarListKeyDown(" + tableRow
 					+ ",event.which)\" " + "onselectstart=\"return false\" "
-					+ ">" + ScheduleEditWidget.END_TIMES[item.getEndHalfHour()] + "</td>");
+					+ ">" + ScheduleEditWidget.END_TIMES[CalendarTableView.getEndRow(item) + 1] + "</td>");
 			tableCol++;
 
 			builder.append("<td " + "class=\"item\" id=\"x" + tableCol + "y"
@@ -270,9 +270,9 @@ public class CalendarListView extends SimplePanel {
 			String current = it.next().toString();
 			if (current != null && current.compareTo("") != 0) {
 				if (current.compareTo("THURSDAY") == 0) {
-					returnString += "TR";
+					returnString += "Tr";
 				} else if (current.compareTo("SUNDAY") == 0) {
-					returnString += "SU";
+					returnString += "Su";
 				} else {
 					returnString += current.charAt(0) + "";
 				}
