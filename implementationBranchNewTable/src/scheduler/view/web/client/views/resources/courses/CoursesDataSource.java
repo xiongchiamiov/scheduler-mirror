@@ -219,12 +219,15 @@ public class CoursesDataSource extends DataSource {
 	}
 	
 	protected void remove(final DSRequest dsRequest) {
-		final Record record = dsRequest.getOldValues();
-		
+		final Record record = dsRequest.getAttributeAsRecord("data");
+		final CourseGWT course = readRecordIntoCourse(record);
+
 		service.removeCourse(record.getAttributeAsInt("id"), new AsyncCallback<Void>() {
 			@Override
 			public void onSuccess(Void result) {
-				processResponse(dsRequest.getRequestId(), new DSResponse());
+				DSResponse response = new DSResponse();
+				response.setData(new Record[] { readCourseIntoRecord(course) });
+				processResponse(dsRequest.getRequestId(), response);
 			}
 			
 			@Override

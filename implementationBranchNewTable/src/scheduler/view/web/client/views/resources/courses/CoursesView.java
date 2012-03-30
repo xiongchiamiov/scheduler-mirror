@@ -5,14 +5,14 @@ import scheduler.view.web.client.IViewContents;
 import scheduler.view.web.client.ViewFrame;
 import scheduler.view.web.shared.DocumentGWT;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.smartgwt.client.types.ListGridEditEvent;
 import com.smartgwt.client.types.RowEndEditAction;
-import com.smartgwt.client.widgets.IButton;
-import com.smartgwt.client.widgets.events.ClickEvent;
-import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -76,25 +76,23 @@ public class CoursesView extends VerticalPanel implements IViewContents {
 		
 		this.add(grid);
 		
-		IButton newButton = new IButton("Add New Course");
-		newButton.addClickHandler(new ClickHandler() {
+		this.add(new Button("Add New Course", new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				grid.startEditingNew();
+            ListGridRecord[] selectedRecords = grid.getSelectedRecords();  
+            for(ListGridRecord rec: selectedRecords) {  
+                grid.removeData(rec);  
+            }
 			}
-		});
-		this.add(newButton);
+		}));
 		
-		
-		IButton removeSelectedButton = new IButton("Remove Selected Courses");  
-		removeSelectedButton.addClickHandler(new ClickHandler() {  
-          public void onClick(ClickEvent event) {  
-              ListGridRecord[] selectedRecords = grid.getSelectedRecords();  
-              for(ListGridRecord rec: selectedRecords) {  
-                  grid.removeData(rec);  
-              }  
-          }             
-      });  
-      this.add(removeSelectedButton);
+		this.add(new Button("Remove Selected Courses", new ClickHandler() {
+			public void onClick(ClickEvent event) {
+            ListGridRecord[] selectedRecords = grid.getSelectedRecords();  
+            for(ListGridRecord rec: selectedRecords) {  
+                grid.removeData(rec);  
+            }
+			}
+		}));
 	}
 	
 	@Override
