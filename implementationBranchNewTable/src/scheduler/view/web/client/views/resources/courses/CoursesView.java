@@ -15,6 +15,7 @@ import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
+import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 public class CoursesView extends VerticalPanel implements IViewContents {
 	private GreetingServiceAsync service;
@@ -53,7 +54,10 @@ public class CoursesView extends VerticalPanel implements IViewContents {
 		grid.setEditByCell(true);
 		grid.setListEndEditAction(RowEndEditAction.NEXT);
 		//grid.setCellHeight(22);
-		grid.setDataSource(new CoursesDataSource(service, document, "myCourseDataSource"));
+		grid.setDataSource(new CoursesDataSource(service, document));
+		
+		ListGridField idField = new ListGridField("id");
+		idField.setHidden(true);
 		
 		ListGridField departmentField = new ListGridField("department", "Department");
 		ListGridField catalogNumberField = new ListGridField("catalogNumber", "Catalog Number");
@@ -67,18 +71,30 @@ public class CoursesView extends VerticalPanel implements IViewContents {
 		ListGridField courseTypeField = new ListGridField("coursesType", "Type");
 		ListGridField associationsField = new ListGridField("associations", "Associations");
 
-		grid.setFields(departmentField, catalogNumberField, nameField, numSectionsField, wtuField, scuField,
+		grid.setFields(idField, departmentField, catalogNumberField, nameField, numSectionsField, wtuField, scuField,
 				dayCombinationsField, hoursPerWeekField, maxEnrollmentField, courseTypeField, associationsField);
 		
 		this.add(grid);
 		
-		IButton button = new IButton("Edit New");
-		button.addClickHandler(new ClickHandler() {
+		IButton newButton = new IButton("Add New Course");
+		newButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				grid.startEditingNew();
 			}
 		});
-		this.add(button);
+		this.add(newButton);
+		
+		
+		IButton removeSelectedButton = new IButton("Remove Selected Courses");  
+		removeSelectedButton.addClickHandler(new ClickHandler() {  
+          public void onClick(ClickEvent event) {  
+              ListGridRecord[] selectedRecords = grid.getSelectedRecords();  
+              for(ListGridRecord rec: selectedRecords) {  
+                  grid.removeData(rec);  
+              }  
+          }             
+      });  
+      this.add(removeSelectedButton);
 	}
 	
 	@Override

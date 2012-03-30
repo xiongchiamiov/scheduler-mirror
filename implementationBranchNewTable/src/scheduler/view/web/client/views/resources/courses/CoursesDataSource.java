@@ -34,7 +34,7 @@ public class CoursesDataSource extends DataSource {
 	final GreetingServiceAsync service;
 	final DocumentGWT document;
 	
-	public CoursesDataSource(GreetingServiceAsync service, DocumentGWT document, String dataSourceID) {
+	public CoursesDataSource(GreetingServiceAsync service, DocumentGWT document) {
 		this.service = service;
 		this.document = document;
 		
@@ -45,6 +45,7 @@ public class CoursesDataSource extends DataSource {
 		
 		DataSourceIntegerField idField = new DataSourceIntegerField("id");
 		idField.setHidden(true);
+		idField.setRequired(true);
 		idField.setPrimaryKey(true);
 		
 		DataSourceTextField departmentField = new DataSourceTextField("department");
@@ -72,27 +73,51 @@ public class CoursesDataSource extends DataSource {
 		
 		DataSourceTextField associationsField = new DataSourceTextField("associations");
 		
-		setFields(departmentField, catalogNumberField, nameField, numSectionsField, wtuField, scuField,
+		setFields(idField, departmentField, catalogNumberField, nameField, numSectionsField, wtuField, scuField,
 				dayCombinationsField, hoursPerWeekField, maxEnrollmentField, courseTypeField, associationsField);
 		
 		setClientOnly(true);
 	}
 
-	void readCourseIntoResponseRecord(CourseGWT course, Record responseRecord) {
-		responseRecord.setAttribute("id", course.getID());
-		responseRecord.setAttribute("department", course.getDept());
-		responseRecord.setAttribute("catalogNumber", course.getCatalogNum());
-		responseRecord.setAttribute("name", course.getCourseName());
-		responseRecord.setAttribute("numSections", course.getNumSections());
-		responseRecord.setAttribute("wtu", course.getWtu());
-		responseRecord.setAttribute("scu", course.getScu());
-		responseRecord.setAttribute("dayCombinations", course.getDayPatterns().toString());
-		responseRecord.setAttribute("hoursPerWeek", course.getHalfHoursPerWeek());
-		responseRecord.setAttribute("maxEnrollment", course.getMaxEnroll());
-		responseRecord.setAttribute("type", course.getType());
-		responseRecord.setAttribute("associations", "?");
+	Record readCourseIntoRecord(CourseGWT course) {
+		Record record = new Record();
+		record.setAttribute("id", course.getID());
+		record.setAttribute("department", course.getDept());
+		record.setAttribute("catalogNumber", course.getCatalogNum());
+		record.setAttribute("name", course.getCourseName());
+		record.setAttribute("numSections", course.getNumSections());
+		record.setAttribute("wtu", course.getWtu());
+		record.setAttribute("scu", course.getScu());
+		record.setAttribute("dayCombinations", course.getDayPatterns().toString());
+		record.setAttribute("hoursPerWeek", course.getHalfHoursPerWeek());
+		record.setAttribute("maxEnrollment", course.getMaxEnroll());
+		record.setAttribute("type", course.getType());
+		record.setAttribute("associations", "?");
+		return record;
 	}
-	
+
+	CourseGWT readRecordIntoCourse(Record record) {
+		System.out.println("new record id " + record.getAttribute("id"));
+		
+		return new CourseGWT(
+				true,
+				record.getAttribute("name"),
+				record.getAttribute("catalogNumber"),
+				record.getAttribute("department"),
+				record.getAttribute("wtu"),
+				record.getAttribute("scu"),
+				record.getAttribute("numSections"),
+				record.getAttribute("type"),
+				record.getAttribute("maxEnrollment"),
+				-1, // lecture ID
+				record.getAttribute("halfHoursPerWeek"),
+				new LinkedList<Set<DayGWT>>(), // day combinations
+				record.getAttributeAsInt("id"), // id
+				record.getAttributeAsBoolean("tetheredToLecture"),
+				new TreeSet<String>() // equipment
+				);
+	}
+
 	protected void fetch(final DSRequest dsRequest) {
 		service.getCoursesForDocument(document.getID(), new AsyncCallback<List<CourseGWT>>() {
 			public void onSuccess(List<CourseGWT> result) {
@@ -100,11 +125,11 @@ public class CoursesDataSource extends DataSource {
 				
 				int responseRecordIndex = 0;
 				for (CourseGWT course : result) {
-					Record responseRecord = new Record();
-					readCourseIntoResponseRecord(course, responseRecord);
-					responseRecords[responseRecordIndex] = responseRecord;
-					responseRecordIndex++;
+					System.out.println("Fetch course result id " + course.getID());
+					System.out.println("Fetch record id " + readCourseIntoRecord(course).getAttribute("id"));
+					responseRecords[responseRecordIndex++] = readCourseIntoRecord(course);
 				}
+				
 				DSResponse response = new DSResponse();
 				response.setData(responseRecords);
 				processResponse(dsRequest.getRequestId(), response);
@@ -118,44 +143,97 @@ public class CoursesDataSource extends DataSource {
 			}
 		});
 	}
-
+	
 	protected void add(final DSRequest dsRequest) {
 		Record record = dsRequest.getAttributeAsRecord("data");
+		CourseGWT newCourse = readRecordIntoCourse(record);
 		
-		CourseGWT newCourse = new CourseGWT(
-				true,
-				record.getAttribute("name"),
-				record.getAttribute("catalogNumber"),
-				record.getAttribute("department"),
-				record.getAttribute("wtu"),
-				record.getAttribute("scu"),
-				record.getAttribute("numSections"),
-				record.getAttribute("type"),
-				record.getAttribute("maxEnrollment"),
-				-1, // lecture ID
-				record.getAttribute("halfHoursPerWeek"),
-				new LinkedList<Set<DayGWT>>(), // day combinations
-				-1, // id
-				record.getAttributeAsBoolean("tetheredToLecture"),
-				new TreeSet<String>() // equipment
-				);
+		System.out.println("new course id " + newCourse.getID());
 		
 		service.addCourseToDocument(document.getID(), newCourse, new AsyncCallback<CourseGWT>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				Window.alert("Failed to update course");
+				DSResponse dsResponse = new DSResponse();
+				Window.alert("Failed to update course!");
+				processResponse(dsRequest.getRequestId(), dsResponse);
 			}
 			
 			@Override
 			public void onSuccess(CourseGWT result) {
-				Record responseRecord = new Record();
-				readCourseIntoResponseRecord(result, responseRecord);
 				DSResponse response = new DSResponse();
-				response.setData(new Record[] { responseRecord });
+				System.out.println("result record id " + result.getID());
+				response.setData(new Record[] { readCourseIntoRecord(result) });
 				processResponse(dsRequest.getRequestId(), response);
 			}
 		});
+	}
+	
+	protected void update(final DSRequest dsRequest) {
+		Record record = dsRequest.getOldValues();
 		
+		Record changes = dsRequest.getAttributeAsRecord("data");
+		
+		assert(changes.getAttributeAsInt("id") == record.getAttributeAsInt("id"));
+		if (changes.getAttribute("department") != null)
+			record.setAttribute("department", changes.getAttribute("department"));
+		if (changes.getAttribute("catalogNumber") != null)
+			record.setAttribute("catalogNumber", changes.getAttribute("catalogNumber"));
+		if (changes.getAttribute("name") != null)
+			record.setAttribute("name", changes.getAttribute("name"));
+		if (changes.getAttribute("numSections") != null)
+			record.setAttribute("numSections", changes.getAttribute("numSections"));
+		if (changes.getAttribute("wtu") != null)
+			record.setAttribute("wtu", changes.getAttribute("wtu"));
+		if (changes.getAttribute("scu") != null)
+			record.setAttribute("scu", changes.getAttribute("scu"));
+		if (changes.getAttribute("dayCombinations") != null)
+			record.setAttribute("dayCombinations", changes.getAttribute("dayCombinations"));
+		if (changes.getAttribute("hoursPerWeek") != null)
+			record.setAttribute("hoursPerWeek", changes.getAttribute("hoursPerWeek"));
+		if (changes.getAttribute("maxEnrollment") != null)
+			record.setAttribute("maxEnrollment", changes.getAttribute("maxEnrollment"));
+		if (changes.getAttribute("type") != null)
+			record.setAttribute("type", changes.getAttribute("type"));
+		if (changes.getAttribute("associations") != null)
+			record.setAttribute("associations", changes.getAttribute("associations"));
+		
+		final CourseGWT course = readRecordIntoCourse(record);
+		
+		System.out.println("updating course id " + course.getID());
+		
+		service.editCourse(course, new AsyncCallback<Void>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				DSResponse dsResponse = new DSResponse();
+				Window.alert("Failed to update course!");
+				processResponse(dsRequest.getRequestId(), dsResponse);
+			}
+			
+			@Override
+			public void onSuccess(Void result) {
+				DSResponse response = new DSResponse();
+				response.setData(new Record[] { readCourseIntoRecord(course) });
+				processResponse(dsRequest.getRequestId(), response);
+			}
+		});
+	}
+	
+	protected void remove(final DSRequest dsRequest) {
+		final Record record = dsRequest.getOldValues();
+		
+		service.removeCourse(record.getAttributeAsInt("id"), new AsyncCallback<Void>() {
+			@Override
+			public void onSuccess(Void result) {
+				processResponse(dsRequest.getRequestId(), new DSResponse());
+			}
+			
+			@Override
+			public void onFailure(Throwable caught) {
+				DSResponse dsResponse = new DSResponse();
+				Window.alert("Failed to delete course!");
+				processResponse(dsRequest.getRequestId(), dsResponse);
+			}
+		});
 	}
 	
 	@Override
@@ -165,8 +243,8 @@ public class CoursesDataSource extends DataSource {
 		switch (dsRequest.getOperationType()) {
 			case FETCH: fetch(dsRequest); break;
 			case ADD: add(dsRequest); break;
-//			case UPDATE: update(dsRequest); break;
-//			case REMOVE: remove(dsRequest); break;
+			case UPDATE: update(dsRequest); break;
+			case REMOVE: remove(dsRequest); break;
 		}
 		
       return dsRequest;
