@@ -79,7 +79,8 @@ public class CoursesDataSource extends DataSource {
 		usedEquipmentField.setMultiple(true);
 		usedEquipmentField.setValueMap("Projector", "Computers");
 		
-		DataSourceTextField associationsField = new DataSourceTextField("associations");
+		DataSourceEnumField associationsField = new DataSourceEnumField("associations");
+		associationsField.setMultiple(false);
 		
 		setFields(idField, scheduleableField, departmentField, catalogNumberField, nameField, numSectionsField, wtuField, scuField,
 				dayCombinationsField, hoursPerWeekField, maxEnrollmentField, courseTypeField, usedEquipmentField, associationsField);
