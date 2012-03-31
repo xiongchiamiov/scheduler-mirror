@@ -8,8 +8,6 @@ import scheduler.view.web.client.ViewFrame;
 import scheduler.view.web.shared.DocumentGWT;
 import scheduler.view.web.shared.InstructorGWT;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -22,8 +20,12 @@ import com.google.gwt.user.client.ui.Widget;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridEditEvent;
 import com.smartgwt.client.types.RowEndEditAction;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Canvas;
-import com.smartgwt.client.widgets.IButton;
+import com.smartgwt.client.widgets.IButton;  
+import com.smartgwt.client.widgets.ImgButton;  
+import com.smartgwt.client.widgets.events.ClickEvent;  
+import com.smartgwt.client.widgets.events.ClickHandler; 
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -64,45 +66,38 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 					Integer colNum) {
 				String fieldName = this.getFieldName(colNum);
 				if (fieldName.equals("instructorPrefs")) {
-					IButton button = new IButton();
-					button.setHeight(18);
-					button.setWidth(65);
-					button.setTitle("Preferences");
-					button.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
-						@Override
-						public void onClick(
-								com.smartgwt.client.widgets.events.ClickEvent event) {
-							new com.smartgwt.client.widgets.events.ClickHandler() {
-								public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
-									System.out.println("BUTTON CLICKED CAPTAIN");
-									final int instructorID = record
-											.getAttributeAsInt("id");
-									service.getInstructorsForDocument(
-											document.getID(),
-											new AsyncCallback<List<InstructorGWT>>() {
-												public void onFailure(
-														Throwable caught) {
-													Window.alert("failed to get instructors!");
-												}
+					IButton button = new IButton();  
+                    button.setHeight(18);  
+                    button.setWidth(65);                      
+                    button.setTitle("Preferences");  
+                    button.addClickHandler(new ClickHandler() {  
+                        public void onClick(ClickEvent event) {  
+							final int instructorID = record
+									.getAttributeAsInt("id");
+							service.getInstructorsForDocument(
+									document.getID(),
+									new AsyncCallback<List<InstructorGWT>>() {
+										public void onFailure(
+												Throwable caught) {
+											Window.alert("failed to get instructors!");
+										}
 
-												@Override
-												public void onSuccess(
-														List<InstructorGWT> result) {
-													for (InstructorGWT instructor : result) {
-														if (instructor
-																.getID()
-																.equals(instructorID)) {
-															preferencesButtonClicked(instructor);
-															break;
-														}
-													}
+										@Override
+										public void onSuccess(
+												List<InstructorGWT> result) {
+											for (InstructorGWT instructor : result) {
+												if (instructor
+														.getID()
+														.equals(instructorID)) {
+													preferencesButtonClicked(instructor);
+													break;
 												}
-											});
-								}
-							};
-						}
-					});
-					return button;
+											}
+										}
+									});
+                        }  
+                    });  
+                    return button;
 				} else {
 					return null;
 				}
@@ -138,52 +133,22 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 
 		this.add(grid);
 
-		this.add(new Button("Add New Instructor", new ClickHandler() {
-			public void onClick(ClickEvent event) {
+		this.add(new Button("Add New Instructor", new com.google.gwt.event.dom.client.ClickHandler() {
+			@Override
+			public void onClick(com.google.gwt.event.dom.client.ClickEvent event) {
 				grid.startEditingNew();
 			}
 		}));
 
-		this.add(new Button("Remove Selected Instructors", new ClickHandler() {
-			public void onClick(ClickEvent event) {
+		this.add(new Button("Remove Selected Instructors", new com.google.gwt.event.dom.client.ClickHandler() {
+			@Override
+			public void onClick(com.google.gwt.event.dom.client.ClickEvent event) {
 				ListGridRecord[] selectedRecords = grid.getSelectedRecords();
 				for (ListGridRecord rec : selectedRecords) {
 					grid.removeData(rec);
 				}
 			}
 		}));
-
-		this.add(new Button(
-				"Open Preferences for Selected Instructor (temporary)",
-				new ClickHandler() {
-					public void onClick(ClickEvent event) {
-						System.out.println("OLD BUTTON CLICKED CAPTAIN");
-						ListGridRecord[] selectedRecords = grid
-								.getSelectedRecords();
-						if (selectedRecords.length == 1) {
-							final int instructorID = selectedRecords[0]
-									.getAttributeAsInt("id");
-							service.getInstructorsForDocument(document.getID(),
-									new AsyncCallback<List<InstructorGWT>>() {
-										public void onFailure(Throwable caught) {
-											Window.alert("failed to get instructors!");
-										}
-
-										@Override
-										public void onSuccess(
-												List<InstructorGWT> result) {
-											for (InstructorGWT instructor : result) {
-												if (instructor.getID().equals(
-														instructorID)) {
-													preferencesButtonClicked(instructor);
-													break;
-												}
-											}
-										}
-									});
-						}
-					}
-				}));
 	}
 
 	@Override
