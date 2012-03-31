@@ -80,10 +80,7 @@ public class CoursesView extends VerticalPanel implements IViewContents {
 		
 		this.add(new Button("Add New Course", new ClickHandler() {
 			public void onClick(ClickEvent event) {
-            ListGridRecord[] selectedRecords = grid.getSelectedRecords();  
-            for(ListGridRecord rec: selectedRecords) {  
-                grid.removeData(rec);  
-            }
+            grid.startEditingNew();
 			}
 		}));
 		
