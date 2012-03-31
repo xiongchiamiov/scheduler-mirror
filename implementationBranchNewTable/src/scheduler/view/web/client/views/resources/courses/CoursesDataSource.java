@@ -18,6 +18,7 @@ import com.smartgwt.client.data.DSResponse;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.data.fields.DataSourceBooleanField;
+import com.smartgwt.client.data.fields.DataSourceEnumField;
 import com.smartgwt.client.data.fields.DataSourceIntegerField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 import com.smartgwt.client.types.DSProtocol;
@@ -64,7 +65,7 @@ public class CoursesDataSource extends DataSource {
 		
 		DataSourceTextField scuField = new DataSourceTextField("scu");
 		
-		DataSourceTextField dayCombinationsField = new DataSourceTextField("dayCombinations");
+		DataSourceEnumField dayCombinationsField = new DataSourceEnumField("dayCombinations");
 		dayCombinationsField.setMultiple(true);
 		dayCombinationsField.setValueMap("M", "Tu", "W", "Th", "F", "MW", "MF", "WF", "TuTh", "MWF", "TuWThF", "MWThF", "MTuThF", "MTuWTh");
 		
@@ -74,7 +75,7 @@ public class CoursesDataSource extends DataSource {
 		
 		DataSourceTextField courseTypeField = new DataSourceTextField("type");
 
-		DataSourceTextField usedEquipmentField = new DataSourceTextField("usedEquipment");
+		DataSourceEnumField usedEquipmentField = new DataSourceEnumField("usedEquipment");
 		usedEquipmentField.setMultiple(true);
 		usedEquipmentField.setValueMap("Projector", "Computers");
 		
@@ -103,19 +104,12 @@ public class CoursesDataSource extends DataSource {
 	}
 	
 	Record readCourseIntoRecord(CourseGWT course) {
-		String dayCombinationsStringsCombined = "";
-		for (Set<DayGWT> dayCombination : course.getDayPatterns()) {
-			if (dayCombinationsStringsCombined.length() > 0)
-				dayCombinationsStringsCombined += ",";
-			dayCombinationsStringsCombined += dayCombinationToString(dayCombination);
-		}
+		String[] dayCombinationsStrings = new String[course.getDayPatterns().size()];
+		int dayCombinationIndex = 0;
+		for (Set<DayGWT> dayCombination : course.getDayPatterns())
+			dayCombinationsStrings[dayCombinationIndex++] = dayCombinationToString(dayCombination);
 		
-		String usedEquipmentsCombined = "";
-		for (String usedEquipment : course.getUsedEquipment()) {
-			if (usedEquipmentsCombined.length() > 0)
-				usedEquipmentsCombined += ",";
-			usedEquipmentsCombined += usedEquipment;
-		}
+		String[] usedEquipmentsStrings = course.getUsedEquipment().toArray(new String[0]);
 		
 		Record record = new Record();
 		record.setAttribute("id", course.getID());
@@ -126,11 +120,11 @@ public class CoursesDataSource extends DataSource {
 		record.setAttribute("numSections", course.getNumSections());
 		record.setAttribute("wtu", course.getWtu());
 		record.setAttribute("scu", course.getScu());
-		record.setAttribute("dayCombinations", dayCombinationsStringsCombined);
+		record.setAttribute("dayCombinations", dayCombinationsStrings);
 		record.setAttribute("hoursPerWeek", course.getHalfHoursPerWeek());
 		record.setAttribute("maxEnrollment", course.getMaxEnroll());
 		record.setAttribute("type", course.getType());
-		record.setAttribute("usedEquipment", usedEquipmentsCombined);
+		record.setAttribute("usedEquipment", usedEquipmentsStrings);
 		record.setAttribute("associations", "?");
 		return record;
 	}
@@ -155,16 +149,19 @@ public class CoursesDataSource extends DataSource {
 		System.out.println("new record id " + record.getAttribute("id"));
 
 		String dayCombinationsStringsCombined = record.getAttributeAsString("dayCombinations");
-		String[] dayCombinationsStrings = dayCombinationsStringsCombined.split(",");
 		Collection<Set<DayGWT>> dayCombinations = new LinkedList<Set<DayGWT>>();
-		for (String dayCombinationString : dayCombinationsStrings)
-			dayCombinations.add(dayCombinationFromString(dayCombinationString));
+		if (dayCombinationsStringsCombined.length() > 0) {
+			for (String dayCombinationString : dayCombinationsStringsCombined.split(","))
+				dayCombinations.add(dayCombinationFromString(dayCombinationString));
+		}
 		
 		
 		String usedEquipmentsCombined = record.getAttributeAsString("usedEquipment");
 		Set<String> usedEquipments = new TreeSet<String>();
-		for (String usedEquipment : usedEquipmentsCombined.split(","))
-			usedEquipments.add(usedEquipment);
+		if (usedEquipmentsCombined.length() > 0) {
+			for (String usedEquipment : usedEquipmentsCombined.split(","))
+				usedEquipments.add(usedEquipment);
+		}
 		
 		return new CourseGWT(
 				record.getAttributeAsBoolean("isSchedulable"),
