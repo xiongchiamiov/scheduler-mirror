@@ -81,14 +81,15 @@ public class CalendarListView extends SimplePanel {
 				+ mLeftOffset
 				+ "px;right:0px;bottom:33px;overflow:auto;background-color:#FFFFFF;}"
 				+ "#ListTable {border-spacing:0px;cellspacing:0px;border:none;}"
-				+ "#ListTable tr {height:20px;}"
-				+ "#ListTable td {overflow:hidden;padding:4px;border-top:1px solid #d1dfdf;}"
-				+ "#ListTable td.item {text-align:center;background-color:#DFF0CF;border:1px solid #FFFFFF;}"
-				+ "#ListTable td.selectedItem {text-align:center; background-color:#D1DFDF; border:1px solid black;}"
+				//+ "#ListTable tr {height:20px;}"
+				+ "#ListTable td {overflow:hidden;padding:4px;border-top:1px solid #ffffff;border-bottom:1px solid #D1DFDF; border-right:1px solid #000000;}"
+				+ "#ListTable td.item {height: 20px; text-align:center;background-color:#DFF0CF;}"
+				+ "#ListTable td.selectedItem {text-align:center; background-color:#D1DFDF;}"
 				+ "#ListTable td.columnHeader {position:relative;background-color:#edf2f2;border-right:1px solid #000000;border-bottom:1px solid #000000;font-weight:bold;text-align:center;z-index:2;}"
 				+ "#ListTable td.timeHeader {position:relative;background-color:#edf2f2;border-right:1px solid #000000;white-space:nowrap;text-align:right;}"
 				+ "#ListTable td#topCorner {border-bottom:1px solid #000000;background-color:#edf2f2;}"
-				+ "#ListTable td.daySpacer {border-right:1px solid #000000;padding:0px;margin:0px;width:0px;}"
+				//+ "#ListTable td.rowSpacer {border-bottom:1px solid #d1dfdf;padding:0px;margin:0px;height:0px;}"
+				+ "#ListTable td .ScheduleListItem {background-color:#DFF0CF;margin:1px;text-align:center;padding-top:4px;padding-bottom:4px;height:100%;width:100%;border:none;cursor:move;}"
 				+ "</style>");
 
 		builder.append("<div id=\"ListTableContainer\" onscroll=\"tableContainerScroll()\">");
@@ -130,7 +131,6 @@ public class CalendarListView extends SimplePanel {
 					+ mScheduleController.getCourseString(item.getCourseID())
 					+ "</td>");
 			tableCol++;
-
 			builder.append("<td " + "class=\"item\" id=\"x" + tableCol + "y"
 					+ tableRow + "\" "
 					+ "ondblclick=\"calendarListDoubleClick(" + tableRow + ","
@@ -252,6 +252,7 @@ public class CalendarListView extends SimplePanel {
 			tableCol++;
 
 			builder.append("</tr>");
+			//builder.append("<tr height=0><td class=\"rowSpacer\" colspan=\"12\"></td></tr>");
 			tableRow++;
 		}
 
