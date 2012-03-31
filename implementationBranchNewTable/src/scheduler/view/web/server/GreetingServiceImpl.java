@@ -131,6 +131,19 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 				throw new RuntimeException(e);
 			}
 		}
+		
+		try {
+			Collection<String> equipmentTypes = model.getEquipmentTypes();
+			if (equipmentTypes.size() == 0) {
+				model.insertEquipmentType("Computers");
+				model.insertEquipmentType("Projector");
+			}
+		}
+		catch (DatabaseException e) {
+			throw new RuntimeException(e);
+		}
+		
+//		for (String equipmentType : model.getEquipmentTypes())
 	}
 	
 	@Override

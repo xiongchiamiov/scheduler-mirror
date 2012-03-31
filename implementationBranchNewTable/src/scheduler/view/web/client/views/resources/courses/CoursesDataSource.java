@@ -1,5 +1,6 @@
 package scheduler.view.web.client.views.resources.courses;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -16,6 +17,7 @@ import com.smartgwt.client.data.DSRequest;
 import com.smartgwt.client.data.DSResponse;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.Record;
+import com.smartgwt.client.data.fields.DataSourceBooleanField;
 import com.smartgwt.client.data.fields.DataSourceIntegerField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 import com.smartgwt.client.types.DSProtocol;
@@ -48,8 +50,9 @@ public class CoursesDataSource extends DataSource {
 		idField.setRequired(true);
 		idField.setPrimaryKey(true);
 		
+		DataSourceBooleanField scheduleableField = new DataSourceBooleanField("isSchedulable");
+		
 		DataSourceTextField departmentField = new DataSourceTextField("department");
-		departmentField.setRequired(true);
 		
 		DataSourceTextField catalogNumberField = new DataSourceTextField("catalogNumber");
 		
@@ -70,37 +73,101 @@ public class CoursesDataSource extends DataSource {
 		DataSourceTextField maxEnrollmentField = new DataSourceTextField("maxEnrollment");
 		
 		DataSourceTextField courseTypeField = new DataSourceTextField("type");
+
+		DataSourceTextField usedEquipmentField = new DataSourceTextField("usedEquipment");
+		usedEquipmentField.setMultiple(true);
+		usedEquipmentField.setValueMap("Projector", "Computers");
 		
 		DataSourceTextField associationsField = new DataSourceTextField("associations");
 		
-		setFields(idField, departmentField, catalogNumberField, nameField, numSectionsField, wtuField, scuField,
-				dayCombinationsField, hoursPerWeekField, maxEnrollmentField, courseTypeField, associationsField);
+		setFields(idField, scheduleableField, departmentField, catalogNumberField, nameField, numSectionsField, wtuField, scuField,
+				dayCombinationsField, hoursPerWeekField, maxEnrollmentField, courseTypeField, usedEquipmentField, associationsField);
 		
 		setClientOnly(true);
 	}
 
+	String dayCombinationToString(Set<DayGWT> dayCombination) {
+		String result = "";
+		if (dayCombination.contains(DayGWT.MONDAY))
+			result += "M";
+		if (dayCombination.contains(DayGWT.TUESDAY))
+			result += "Tu";
+		if (dayCombination.contains(DayGWT.WEDNESDAY))
+			result += "W";
+		if (dayCombination.contains(DayGWT.THURSDAY))
+			result += "Th";
+		if (dayCombination.contains(DayGWT.FRIDAY))
+			result += "F";
+		assert(result.length() > 0);
+		return result;
+	}
+	
 	Record readCourseIntoRecord(CourseGWT course) {
+		String dayCombinationsStringsCombined = "";
+		for (Set<DayGWT> dayCombination : course.getDayPatterns()) {
+			if (dayCombinationsStringsCombined.length() > 0)
+				dayCombinationsStringsCombined += ",";
+			dayCombinationsStringsCombined += dayCombinationToString(dayCombination);
+		}
+		
+		String usedEquipmentsCombined = "";
+		for (String usedEquipment : course.getUsedEquipment()) {
+			if (usedEquipmentsCombined.length() > 0)
+				usedEquipmentsCombined += ",";
+			usedEquipmentsCombined += usedEquipment;
+		}
+		
 		Record record = new Record();
 		record.setAttribute("id", course.getID());
+		record.setAttribute("isSchedulable", course.isSchedulable());
 		record.setAttribute("department", course.getDept());
 		record.setAttribute("catalogNumber", course.getCatalogNum());
 		record.setAttribute("name", course.getCourseName());
 		record.setAttribute("numSections", course.getNumSections());
 		record.setAttribute("wtu", course.getWtu());
 		record.setAttribute("scu", course.getScu());
-		record.setAttribute("dayCombinations", course.getDayPatterns().toString());
+		record.setAttribute("dayCombinations", dayCombinationsStringsCombined);
 		record.setAttribute("hoursPerWeek", course.getHalfHoursPerWeek());
 		record.setAttribute("maxEnrollment", course.getMaxEnroll());
 		record.setAttribute("type", course.getType());
+		record.setAttribute("usedEquipment", usedEquipmentsCombined);
 		record.setAttribute("associations", "?");
 		return record;
 	}
 
+	Set<DayGWT> dayCombinationFromString(String string) {
+		Set<DayGWT> result = new TreeSet<DayGWT>();
+		if (string.contains("M"))
+			result.add(DayGWT.MONDAY);
+		if (string.contains("Tu")) // A 'T', as long as its not followed by an h
+			result.add(DayGWT.TUESDAY);
+		if (string.contains("W"))
+			result.add(DayGWT.WEDNESDAY);
+		if (string.contains("Th"))
+			result.add(DayGWT.THURSDAY);
+		if (string.contains("F"))
+			result.add(DayGWT.FRIDAY);
+		assert(result.size() > 0);
+		return result;
+	}
+	
 	CourseGWT readRecordIntoCourse(Record record) {
 		System.out.println("new record id " + record.getAttribute("id"));
+
+		String dayCombinationsStringsCombined = record.getAttributeAsString("dayCombinations");
+		String[] dayCombinationsStrings = dayCombinationsStringsCombined.split(",");
+		Collection<Set<DayGWT>> dayCombinations = new LinkedList<Set<DayGWT>>();
+		for (String dayCombinationString : dayCombinationsStrings)
+			dayCombinations.add(dayCombinationFromString(dayCombinationString));
+		
+		
+		String usedEquipmentsCombined = record.getAttributeAsString("usedEquipment");
+		Set<String> usedEquipments = new TreeSet<String>();
+		for (String usedEquipment : usedEquipmentsCombined.split(","))
+			usedEquipments.add(usedEquipment);
 		
 		return new CourseGWT(
-				true,
+				record.getAttributeAsBoolean("isSchedulable"),
 				record.getAttribute("name"),
 				record.getAttribute("catalogNumber"),
 				record.getAttribute("department"),
@@ -111,10 +178,10 @@ public class CoursesDataSource extends DataSource {
 				record.getAttribute("maxEnrollment"),
 				-1, // lecture ID
 				record.getAttribute("halfHoursPerWeek"),
-				new LinkedList<Set<DayGWT>>(), // day combinations
+				dayCombinations, // day combinations
 				record.getAttributeAsInt("id"), // id
 				record.getAttributeAsBoolean("tetheredToLecture"),
-				new TreeSet<String>() // equipment
+				usedEquipments // equipment
 				);
 	}
 
@@ -194,8 +261,12 @@ public class CoursesDataSource extends DataSource {
 			record.setAttribute("maxEnrollment", changes.getAttribute("maxEnrollment"));
 		if (changes.getAttribute("type") != null)
 			record.setAttribute("type", changes.getAttribute("type"));
+		if (changes.getAttribute("usedEquipment") != null)
+			record.setAttribute("usedEquipment", changes.getAttribute("usedEquipment"));
 		if (changes.getAttribute("associations") != null)
 			record.setAttribute("associations", changes.getAttribute("associations"));
+		if (changes.getAttributeAsBoolean("isSchedulable") != null)
+			record.setAttribute("isSchedulable", changes.getAttributeAsBoolean("isSchedulable"));
 		
 		final CourseGWT course = readRecordIntoCourse(record);
 		

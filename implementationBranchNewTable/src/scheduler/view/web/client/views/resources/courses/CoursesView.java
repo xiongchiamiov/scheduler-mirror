@@ -59,6 +59,7 @@ public class CoursesView extends VerticalPanel implements IViewContents {
 		ListGridField idField = new ListGridField("id");
 		idField.setHidden(true);
 		
+		ListGridField scheduleableField = new ListGridField("isSchedulable", "Schedulable");
 		ListGridField departmentField = new ListGridField("department", "Department");
 		ListGridField catalogNumberField = new ListGridField("catalogNumber", "Catalog Number");
 		ListGridField nameField = new ListGridField("name", "Name");
@@ -69,10 +70,11 @@ public class CoursesView extends VerticalPanel implements IViewContents {
 		ListGridField hoursPerWeekField = new ListGridField("hoursPerWeek", "Hours per Week");
 		ListGridField maxEnrollmentField = new ListGridField("maxEnrollment", "Max Enrollment");
 		ListGridField courseTypeField = new ListGridField("coursesType", "Type");
+		ListGridField usedEquipmentField = new ListGridField("usedEquipment", "Used Equipment");
 		ListGridField associationsField = new ListGridField("associations", "Associations");
 
-		grid.setFields(idField, departmentField, catalogNumberField, nameField, numSectionsField, wtuField, scuField,
-				dayCombinationsField, hoursPerWeekField, maxEnrollmentField, courseTypeField, associationsField);
+		grid.setFields(idField, scheduleableField, departmentField, catalogNumberField, nameField, numSectionsField, wtuField, scuField,
+				dayCombinationsField, hoursPerWeekField, maxEnrollmentField, courseTypeField, usedEquipmentField, associationsField);
 		
 		this.add(grid);
 		
