@@ -1,11 +1,7 @@
 package scheduler.view.web.client.views.resources.instructors;
 
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
 import scheduler.view.web.client.GreetingServiceAsync;
 import scheduler.view.web.shared.DayGWT;
@@ -18,8 +14,6 @@ import com.smartgwt.client.data.DSRequest;
 import com.smartgwt.client.data.DSResponse;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.Record;
-import com.smartgwt.client.data.fields.DataSourceBooleanField;
-import com.smartgwt.client.data.fields.DataSourceEnumField;
 import com.smartgwt.client.data.fields.DataSourceIntegerField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 import com.smartgwt.client.types.DSProtocol;
@@ -36,6 +30,7 @@ public class InstructorsDataSource extends DataSource {
 	// }
 	
 	final GreetingServiceAsync service;
+	
 	final DocumentGWT document;
 	
 	public InstructorsDataSource(GreetingServiceAsync service, DocumentGWT document) {
