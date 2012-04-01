@@ -151,7 +151,7 @@ public class CoursesDataSource extends DataSource {
 
 		String dayCombinationsStringsCombined = record.getAttributeAsString("dayCombinations");
 		Collection<Set<DayGWT>> dayCombinations = new LinkedList<Set<DayGWT>>();
-		if (dayCombinationsStringsCombined.length() > 0) {
+		if (dayCombinationsStringsCombined != null && dayCombinationsStringsCombined.length() > 0) {
 			for (String dayCombinationString : dayCombinationsStringsCombined.split(","))
 				dayCombinations.add(dayCombinationFromString(dayCombinationString));
 		}
@@ -159,7 +159,7 @@ public class CoursesDataSource extends DataSource {
 		
 		String usedEquipmentsCombined = record.getAttributeAsString("usedEquipment");
 		Set<String> usedEquipments = new TreeSet<String>();
-		if (usedEquipmentsCombined.length() > 0) {
+		if (usedEquipmentsCombined != null && usedEquipmentsCombined.length() > 0) {
 			for (String usedEquipment : usedEquipmentsCombined.split(","))
 				usedEquipments.add(usedEquipment);
 		}
