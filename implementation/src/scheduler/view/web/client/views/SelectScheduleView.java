@@ -3,13 +3,17 @@ package scheduler.view.web.client.views;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
+
+import scheduler.view.web.client.DocumentTabOpener;
+import scheduler.view.web.client.GreetingServiceAsync;
+import scheduler.view.web.client.HTMLUtilities;
+import scheduler.view.web.client.IViewContents;
+import scheduler.view.web.client.NewScheduleCreator;
+import scheduler.view.web.client.ViewFrame;
+import scheduler.view.web.shared.DocumentGWT;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Command;
@@ -18,42 +22,27 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import scheduler.view.web.client.GreetingServiceAsync;
-import scheduler.view.web.client.HTMLUtilities;
-import scheduler.view.web.client.IViewContents;
-import scheduler.view.web.client.Import;
-import scheduler.view.web.client.ViewFrame;
-import scheduler.view.web.client.views.AdminScheduleNavView.OtherFilesStrategy;
-import scheduler.view.web.shared.DocumentGWT;
-
-public class SelectScheduleView extends VerticalPanel implements IViewContents, OtherFilesStrategy
+public class SelectScheduleView extends VerticalPanel implements IViewContents
 {
    protected final GreetingServiceAsync      service;
 
    protected final MenuBar                     menuBar;
 
    protected final String                      username;
-   private String                            newDocName;
    private ArrayList<String>                 scheduleNames;
 
    private VerticalPanel                     vdocholder;
-
    protected ViewFrame                         myFrame;
 
    HashMap<Integer, DocumentGWT>                   allAvailableOriginalDocumentsByID;
@@ -68,7 +57,6 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
       this.service = service;
       this.menuBar = menuBar;
       this.username = username;
-      this.newDocName = "Untitled";
       this.scheduleNames = new ArrayList<String>();
       this.addStyleName("iViewPadding");
       this.checkedDocuments = new ArrayList<DocumentGWT>();
@@ -93,7 +81,6 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
       DOM.setElementAttribute(homeTab.getElement(), "id", "hometab");
       menuBar.addItem(homeTab);
 
-      final OtherFilesStrategy filesStrategy = this;
       MenuItem trashTab = new MenuItem("Trash", true, new Command()
       {
          public void execute()
@@ -101,7 +88,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
             if (myFrame.canPopViewsAboveMe())
             {
                myFrame.popFramesAboveMe();
-               myFrame.frameViewAndPushAboveMe(new ScheduleTrashView(service, scheduleNameContainer, menuBar, username, filesStrategy));
+               myFrame.frameViewAndPushAboveMe(new ScheduleTrashView(service, scheduleNameContainer, menuBar, username));
             }
          }
       });
@@ -293,7 +280,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
          @Override
          public void onClick(ClickEvent event)
          {
-            openDocInNewTab(document.getName(), document.getID());
+         	DocumentTabOpener.openDocInNewTab(username, document);
          }
       }));
       DOM.setElementAttribute(docname.getElement(), "id", "openDocument" + document.getName());
@@ -308,20 +295,6 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
       documentPanels.put(document.getID(), doc);
    }
 
-   protected void openDocInNewTab(String name, Integer documentid)
-   {
-      this.currentDocName = name;
-      String baseHref = Window.Location.getHref();
-      if (Window.Location.getHref().contains("?userid="))
-      {
-         baseHref = Window.Location.getHref().substring(0, Window.Location.getHref().lastIndexOf('?'));
-      }
-      Window.open(baseHref + "?originaldocumentid=" + documentid + "&schedulename=" + name + "&userid=" + username, "_new",
-            null);
-      // openInNewWindow(Window.Location.getHref(), scheduleid);
-      // selectSchedule(Integer.parseInt(scheduleid), name);
-   }
-
    @Override
    public void beforePop()
    {
@@ -330,57 +303,6 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
    interface NameScheduleCallback
    {
       void namedSchedule(String name);
-   }
-
-   /**
-    * Displays a popup for specifying a new schedule.
-    * 
-    * @param buttonLabel
-    * @param callback
-    */
-   private void displayNewSchedPopup(String buttonLabel, final NameScheduleCallback callback)
-   {
-      final TextBox tb = new TextBox();
-      final DialogBox db = new DialogBox(false);
-      FlowPanel fp = new FlowPanel();
-      final Button butt = new Button(buttonLabel, new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            db.hide();
-
-            final String scheduleName = tb.getText();
-
-            callback.namedSchedule(scheduleName);
-         }
-      });
-      final Button cancelButton = new Button("Cancel", new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            db.hide();
-         }
-      });
-
-      tb.addKeyPressHandler(new KeyPressHandler()
-      {
-         @Override
-         public void onKeyPress(KeyPressEvent event)
-         {
-            if (event.getCharCode() == KeyCodes.KEY_ENTER) butt.click();
-         }
-      });
-
-      db.setText("Name Schedule");
-      fp.add(new HTML("<center>Specify a new schedule name.</center>"));
-      fp.add(tb);
-      fp.add(butt);
-      fp.add(cancelButton);
-
-      db.setWidget(fp);
-      db.center();
    }
 
    @Override
@@ -406,143 +328,8 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents, 
       return this;
    }
 
-   @Override
-   public void fileNewPressed()
-   {
-      createNewSchedule();
-   }
-
-   @Override
-   public void fileOpenPressed()
-   {
-      String baseHref = Window.Location.getHref().substring(0, Window.Location.getHref().lastIndexOf('?'));
-      Window.open(baseHref + "?userid=" + username, "_new", null);
-   }
-
-   @Override
-   public void fileImportPressed()
-   {
-      Import.showImport();
-   }
-
-   @Override
-   public void fileMergePressed()
-   {
-
-      final ArrayList<CheckBox> checkBoxList = new ArrayList<CheckBox>();
-      final DialogBox db = new DialogBox();
-      final VerticalPanel vp = new VerticalPanel();
-      final VerticalPanel checkBoxPanel = new VerticalPanel();
-      FlowPanel fp = new FlowPanel();
-
-      final Button mergeButton = new Button("Merge", new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            int checkCount = 0;
-
-            for (CheckBox cb : checkBoxList)
-            {
-               if (cb.getValue()) checkCount++;
-            }
-
-            if (checkCount >= 2)
-            {
-               // TODO - Add merge call here when functionality is implemented
-               db.hide();
-            }
-            else
-            {
-               Window.alert("Please select 2 or more schedules to merge.");
-            }
-         }
-      });
-
-      final Button cancelButton = new Button("Cancel", new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            db.hide();
-         }
-      });
-
-      service.getAllOriginalDocuments(new AsyncCallback<Collection<DocumentGWT>>()
-      {
-
-         @Override
-         public void onSuccess(Collection<DocumentGWT> result)
-         {
-            for (DocumentGWT doc : result)
-            {
-               CheckBox checkBox = new CheckBox(doc.getName());
-               checkBoxList.add(checkBox);
-               checkBoxPanel.add(checkBox);
-            }
-         }
-
-         @Override
-         public void onFailure(Throwable caught)
-         {
-            Window.alert("Failed to retrieve documents.");
-         }
-      });
-
-      fp.add(mergeButton);
-      fp.add(cancelButton);
-
-      vp.add(checkBoxPanel);
-      vp.add(fp);
-
-      db.setText("Merge Schedules");
-      db.setWidget(vp);
-      db.center();
-      db.show();
-   }
-
    private void createNewSchedule()
    {
-
-      displayNewSchedPopup("Create", new NameScheduleCallback()
-      {
-         @Override
-         public void namedSchedule(final String name)
-         {
-            if (!scheduleNames.contains(name))
-            {
-               newDocName = name;
-               currentDocName = name;
-               final LoadingPopup popup = new LoadingPopup();
-               popup.show();
-
-               DOM.setElementAttribute(popup.getElement(), "id", "failSchedPopup");
-
-               service.createOriginalDocument(newDocName, new AsyncCallback<DocumentGWT>()
-               {
-
-                  @Override
-                  public void onSuccess(DocumentGWT result)
-                  {
-                     popup.hide();
-//                     openDocument(result);
-                     assert(newDocName.equals(result.getName()));
-                      openDocInNewTab(result.getName(), result.getID());
-                  }
-
-                  @Override
-                  public void onFailure(Throwable caught)
-                  {
-                     popup.hide();
-                     Window.alert("Failed to open new schedule in" + ": " + caught.getMessage());
-                  }
-               });
-            }
-            else
-            {
-               Window.alert("Error: Schedule named " + name + " already exists. Please enter a different name.");
-            }
-         }
-      });
+   	NewScheduleCreator.createNewSchedule(service, username);
    }
 }

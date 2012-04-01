@@ -43,7 +43,6 @@ public class ScheduleTrashView extends VerticalPanel implements IViewContents
 
    private final String                      username;
    private ArrayList<String>                 scheduleNames;
-   private OtherFilesStrategy                filesStrategy;
 
    private VerticalPanel                     vdocholder;
 
@@ -54,10 +53,8 @@ public class ScheduleTrashView extends VerticalPanel implements IViewContents
    private HashMap<Integer, HorizontalPanel> documentPanels;
    private boolean                           colorNextRow = false;
 
-   public ScheduleTrashView(final GreetingServiceAsync service, final SimplePanel scheduleNameContainer, final MenuBar menuBar, final String username,
-         final OtherFilesStrategy filesStrategy)
+   public ScheduleTrashView(final GreetingServiceAsync service, final SimplePanel scheduleNameContainer, final MenuBar menuBar, final String username)
    {
-      this.filesStrategy = filesStrategy;
       this.service = service;
       this.menuBar = menuBar;
       this.username = username;
@@ -88,11 +85,7 @@ public class ScheduleTrashView extends VerticalPanel implements IViewContents
       {
          public void execute()
          {
-            if (myFrame.canPopViewsAboveMe())
-            {
-               myFrame.popFramesAboveMe();
-               myFrame.frameViewAndPushAboveMe(new ScheduleTrashView(service, scheduleNameContainer, menuBar, username, filesStrategy));
-            }
+         	assert(false);
          }
       });
 
@@ -283,7 +276,7 @@ public class ScheduleTrashView extends VerticalPanel implements IViewContents
       if (myFrame.canPopViewsAboveMe())
       {
          myFrame.popFramesAboveMe();
-         myFrame.frameViewAndPushAboveMe(new AdminScheduleNavView(service, filesStrategy, menuBar, username, doc));
+         myFrame.frameViewAndPushAboveMe(new AdminScheduleNavView(service, menuBar, username, doc));
 
       }
    }

@@ -1,11 +1,16 @@
 package scheduler.view.web.client.views;
 
+import scheduler.view.web.client.GreetingServiceAsync;
+import scheduler.view.web.client.HTMLUtilities;
+import scheduler.view.web.client.IViewContents;
+import scheduler.view.web.client.Login;
+import scheduler.view.web.client.ViewFrame;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -13,16 +18,10 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.MenuBar;
-import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
-
-import scheduler.view.web.client.GreetingServiceAsync;
-import scheduler.view.web.client.HTMLUtilities;
-import scheduler.view.web.client.IViewContents;
-import scheduler.view.web.client.ViewFrame;
 
 public class LoginView extends VerticalPanel implements IViewContents {
 	GreetingServiceAsync service;
@@ -80,21 +79,13 @@ public class LoginView extends VerticalPanel implements IViewContents {
 			Window.alert("A username must contain only letters and numbers.");
 			return;
 		}
-
-		final LoadingPopup popup = new LoadingPopup();
-		popup.show();
 		
-		service.login(username, new AsyncCallback<Integer>() {
-			@Override
-			public void onSuccess(Integer userID) {
-				popup.hide();
+		Login.login(service, username, new AsyncCallback<Void>() {
+			public void onSuccess(Void result) {
 				LoginView.this.username = username;
 				pushSelectScheduleView(username);
 			}
-			
-			@Override
 			public void onFailure(Throwable caught) {
-				popup.hide();
 				Window.alert("Failed to log in: " + caught.getMessage());
 			}
 		});

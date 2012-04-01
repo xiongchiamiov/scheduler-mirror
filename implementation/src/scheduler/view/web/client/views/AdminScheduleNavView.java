@@ -14,6 +14,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
@@ -32,6 +33,8 @@ import com.google.gwt.user.client.ui.Widget;
 
 import scheduler.view.web.client.GreetingServiceAsync;
 import scheduler.view.web.client.IViewContents;
+import scheduler.view.web.client.Import;
+import scheduler.view.web.client.NewScheduleCreator;
 import scheduler.view.web.client.ViewFrame;
 import scheduler.view.web.client.views.resources.courses.CoursesView;
 import scheduler.view.web.client.views.resources.instructors.InstructorsView;
@@ -51,18 +54,16 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 	final String username;
 	final DocumentGWT document;
 	final MenuBar menuBar;
-	final OtherFilesStrategy otherFilesStrategy;
 	
 	MenuBar fileMenu, settingsMenu;
 	MenuItem instructorsMenuItem, locationsMenuItem, coursesMenuItem, scheduleMenuItem;
 
-	public AdminScheduleNavView(GreetingServiceAsync service, OtherFilesStrategy otherFilesStrategy, MenuBar MenuBar,
+	public AdminScheduleNavView(GreetingServiceAsync service, MenuBar menuBar,
 			String username, DocumentGWT document) {
-		this.otherFilesStrategy = otherFilesStrategy;
 		this.service = service;
 		this.username = username;
 		this.document = document;
-		this.menuBar = MenuBar;
+		this.menuBar = menuBar;
 	}
 
 	@Override
@@ -101,7 +102,7 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 		
 		MenuItem newItem = new MenuItem("New", true, new Command() {
 			public void execute() {
-				otherFilesStrategy.fileNewPressed();
+				fileNewPressed();
 			}
 		});
 		DOM.setElementAttribute(newItem.getElement(), "id", "newItem");
@@ -109,7 +110,7 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 
 		MenuItem openItem = new MenuItem("Open", true, new Command() {
 			public void execute() {
-				otherFilesStrategy.fileOpenPressed();
+				fileOpenPressed();
 			}
 		});
 		DOM.setElementAttribute(openItem.getElement(), "id", "openItem");
@@ -148,7 +149,7 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 		
 		MenuItem importItem = new MenuItem("Import", true, new Command() {
 			public void execute() {
-				otherFilesStrategy.fileImportPressed();
+				fileImportPressed();
 			}
 		});
 
@@ -179,7 +180,7 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 		
 		MenuItem mergeItem = new MenuItem("Merge", true, new Command() {
 			public void execute() {
-				otherFilesStrategy.fileMergePressed();
+				fileMergePressed();
 			}
 		});
 		
@@ -523,4 +524,96 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 		db.show();
 
 	}
+	
+
+   private void fileNewPressed()
+   {
+      NewScheduleCreator.createNewSchedule(service, username);
+   }
+
+   private void fileOpenPressed()
+   {
+      String baseHref = Window.Location.getHref().substring(0, Window.Location.getHref().lastIndexOf('?'));
+      Window.open(baseHref + "?userid=" + username, "_new", null);
+   }
+
+   private void fileImportPressed()
+   {
+      Import.showImport();
+   }
+
+   private void fileMergePressed()
+   {
+
+      final ArrayList<CheckBox> checkBoxList = new ArrayList<CheckBox>();
+      final DialogBox db = new DialogBox();
+      final VerticalPanel vp = new VerticalPanel();
+      final VerticalPanel checkBoxPanel = new VerticalPanel();
+      FlowPanel fp = new FlowPanel();
+
+      final Button mergeButton = new Button("Merge", new ClickHandler()
+      {
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            int checkCount = 0;
+
+            for (CheckBox cb : checkBoxList)
+            {
+               if (cb.getValue()) checkCount++;
+            }
+
+            if (checkCount >= 2)
+            {
+               // TODO - Add merge call here when functionality is implemented
+               db.hide();
+            }
+            else
+            {
+               Window.alert("Please select 2 or more schedules to merge.");
+            }
+         }
+      });
+
+      final Button cancelButton = new Button("Cancel", new ClickHandler()
+      {
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            db.hide();
+         }
+      });
+
+      service.getAllOriginalDocuments(new AsyncCallback<Collection<DocumentGWT>>()
+      {
+
+         @Override
+         public void onSuccess(Collection<DocumentGWT> result)
+         {
+            for (DocumentGWT doc : result)
+            {
+               CheckBox checkBox = new CheckBox(doc.getName());
+               checkBoxList.add(checkBox);
+               checkBoxPanel.add(checkBox);
+            }
+         }
+
+         @Override
+         public void onFailure(Throwable caught)
+         {
+            Window.alert("Failed to retrieve documents.");
+         }
+      });
+
+      fp.add(mergeButton);
+      fp.add(cancelButton);
+
+      vp.add(checkBoxPanel);
+      vp.add(fp);
+
+      db.setText("Merge Schedules");
+      db.setWidget(vp);
+      db.center();
+      db.show();
+   }
 }

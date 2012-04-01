@@ -1,125 +1,142 @@
 package scheduler.view.web.client;
 
+import scheduler.view.web.client.views.AdminScheduleNavView;
+import scheduler.view.web.client.views.LoadingPopup;
+import scheduler.view.web.client.views.LoginView;
+import scheduler.view.web.shared.DocumentGWT;
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.regexp.shared.MatchResult;
+import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-import scheduler.view.web.client.views.LoginView;
-import scheduler.view.web.client.views.LoginViewAutomatic;
-
 public class Scheduler implements EntryPoint
 {
-   private static final GreetingServiceAsync service = GWT.create(GreetingService.class);
+	private static final GreetingServiceAsync service = GWT.create(GreetingService.class);
+	
+	public void onModuleLoad()
+	{
+		VerticalPanel pagePanel = new VerticalPanel();
+		pagePanel.addStyleName("mainWidget");
+		
+		HorizontalPanel topBar = new HorizontalPanel();
+		topBar.addStyleName("topBar");
+		
+		SimplePanel scheduleNameContainer = new SimplePanel();
+		scheduleNameContainer.setStyleName("scheduleName");
+		topBar.add(scheduleNameContainer);
+		
+		VerticalPanel usernameAndLogout = new VerticalPanel();
+		usernameAndLogout.addStyleName("usernameAndLogout");
+		
+		SimplePanel usernameContainer = new SimplePanel();
+		usernameAndLogout.add(usernameContainer);
+		
+		SimplePanel logoutLinkContainer = new SimplePanel();
+		usernameAndLogout.add(logoutLinkContainer);
+		topBar.add(usernameAndLogout);
+		
+		pagePanel.add(topBar);
+		
+		MenuBar menuBar = new MenuBar();
+		pagePanel.add(menuBar);
+		
+		SimplePanel viewContainer = new SimplePanel();
+		pagePanel.add(viewContainer);
+		
+		RootPanel.get().add(pagePanel);
+		
+		openInitialView(true, scheduleNameContainer, viewContainer, usernameContainer, logoutLinkContainer, menuBar);
+	}
+	
+	private void openInitialView(
+			boolean parseURLArguments,
+			final SimplePanel scheduleNameContainer,
+			final SimplePanel viewContainer,
+			final SimplePanel usernameContainer,
+			final SimplePanel logoutLinkContainer,
+			final MenuBar menuBar) {
+		
+		final LoadingPopup loadingPopup = new LoadingPopup();
+		loadingPopup.show();
+		
+		scheduleNameContainer.clear();
+		viewContainer.clear();
+		usernameContainer.clear();
+		logoutLinkContainer.clear();
+		menuBar.clearItems();
+		
+		final String username = parseURLArguments ? parseURLArgument(Window.Location.getHref(), "userid") : null;
+		String documentIDStr = parseURLArguments ? parseURLArgument(Window.Location.getHref(), "originaldocumentid") : null;
+		assert ((username == null) == (documentIDStr == null));
+		
+		if (username == null || documentIDStr == null) {
+			ViewFrame newViewFrame = new ViewFrame(new LoginView(service, usernameContainer, logoutLinkContainer,
+					scheduleNameContainer, menuBar));
+			viewContainer.add(newViewFrame);
+			newViewFrame.afterPush();
+			loadingPopup.hide();
+			return;
+		}
+		
+		final int originalDocumentID = Integer.parseInt(documentIDStr);
+		
+		Login.login(service, username, new AsyncCallback<Void>() {
+			public void onSuccess(Void result) {
+				
+				usernameContainer.add(new Label(username));
+				logoutLinkContainer.add(HTMLUtilities.createLink("Log Out", "inAppLink", new ClickHandler() {
+					public void onClick(ClickEvent event) {
+						viewContainer.clear();
+						openInitialView(false, scheduleNameContainer, viewContainer, usernameContainer, logoutLinkContainer, menuBar);
+					}
+				}));
+				
+				service.createWorkingCopyForOriginalDocument(originalDocumentID, new AsyncCallback<DocumentGWT>() {
+					public void onSuccess(DocumentGWT workingCopyDocument) {
+						HTML documentNameHTML = new HTML("<h2>" + workingCopyDocument.getName() + "<h2>");
+						scheduleNameContainer.add(documentNameHTML);
+						
+						ViewFrame newViewFrame = new ViewFrame(new AdminScheduleNavView(service, menuBar, username,
+								workingCopyDocument));
+						viewContainer.add(newViewFrame);
+						newViewFrame.afterPush();
+						loadingPopup.hide();
+					}
+					public void onFailure(Throwable caught) {
+						Window.alert("Failed to get document!");
+						loadingPopup.hide();
+					}
+				});
+			}
+			
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert("Failed to log in as username " + username);
+				loadingPopup.hide();
+			}
+		});
+	}
 
-   MenuBar                                   menuBar;
-
-   public void onModuleLoad()
-   {
-      final VerticalPanel pagePanel = new VerticalPanel();
-      pagePanel.addStyleName("mainWidget");
-
-      HorizontalPanel topBar = new HorizontalPanel();
-      topBar.addStyleName("topBar");
-
-//      VerticalPanel scheduleNameThing = new VerticalPanel();
-//         scheduleNameThing.add(scheduleNameContainer);
-//      scheduleNameThing.addStyleName("schedulename");
-      final SimplePanel scheduleNameContainer = new SimplePanel();
-      scheduleNameContainer.setStyleName("scheduleName");
-      topBar.add(scheduleNameContainer);
-      VerticalPanel usernameAndLogout = new VerticalPanel();
-         usernameAndLogout.addStyleName("usernameAndLogout");
-         final SimplePanel usernameContainer = new SimplePanel();
-         usernameAndLogout.add(usernameContainer);
-         final SimplePanel logoutLinkContainer = new SimplePanel();
-         usernameAndLogout.add(logoutLinkContainer);
-      topBar.add(usernameAndLogout);
-
-      // Image logo = new Image("imgs/cp_logo.gif");
-      // logo.setAltText("Cal Poly Scheduler Project");
-      // // needs to be width 166 height 60
-      // topBar.add(logo);
-
-      // Image titleImage = new Image("imgs/TheSchedProjText.png");
-      // titleImage.setAltText("TheSchedulerProject");
-      // // needs to be height 60
-      // topBar.add(titleImage);
-
-      pagePanel.add(topBar);
-
-      menuBar = new MenuBar();
-      pagePanel.add(menuBar);
-
-      // service.openExistingSchedule(scheduleid, new AsyncCallback<Void>() {
-      // @Override
-      // public void onFailure(Throwable caught) {
-      // System.out.println("selectSchedule onFailure");
-      //
-      // // This is a workaround, see
-      // http://code.google.com/p/google-web-toolkit/issues/detail?id=2858
-      // if (caught instanceof StatusCodeException &&
-      // ((StatusCodeException)caught).getStatusCode() == 0) {
-      // // Do nothing
-      // }
-      // else {
-      // Window.alert("Failed to open schedule in: " + caught.getMessage());
-      // }
-      // }
-      // @Override
-      // public void onSuccess(Void v) {
-      // System.out.println("selectSchedule onSuccess");
-      //
-      // // Integer permissionLevel = permissionAndInstructor.getLeft();
-      // // InstructorGWT instructor = permissionAndInstructor.getRight();
-      // // ViewFrame newViewFrame = null;
-      // // newViewFrame = new ViewFrame(new AdminScheduleNavView(service,
-      // menuBar, username, scheduleid, schedulename));
-      // // pagePanel.add(newViewFrame);
-      // // newViewFrame.afterPush();
-      // // TODO: use alternate constructors n stuff
-      // }
-      // });
-      // }
-      // else
-      // {
-
-      ViewFrame newViewFrame = null;
-      if (Window.Location.getHref().contains("?userid="))
-      {
-         String query = Window.Location.getHref();
-         query = query.substring(query.lastIndexOf('?'));
-         String automaticLoginUsername = query.split("=")[1];
-         newViewFrame = new ViewFrame(new LoginViewAutomatic(service, usernameContainer, logoutLinkContainer,
-               scheduleNameContainer, menuBar, automaticLoginUsername));
-      }
-      else if (Window.Location.getHref().contains("?originaldocumentid="))
-      {
-         String query = Window.Location.getHref();
-         query = query.substring(query.lastIndexOf('?'));
-         String[] params = query.split("&");
-         String automaticLoginUsername = params[2].split("=")[1];
-         String documentName = params[1].split("=")[1];
-         HTML documentNameHTML = new HTML("<h2>" + documentName + "<h2>");
-         scheduleNameContainer.add(documentNameHTML);
-         int automaticOpenOriginalDocumentID = Integer.parseInt(params[0].split("=")[1]);
-         newViewFrame = new ViewFrame(new LoginViewAutomatic(service, usernameContainer, logoutLinkContainer,
-               scheduleNameContainer, menuBar, automaticLoginUsername, automaticOpenOriginalDocumentID));
-      }
-      else
-      {
-         newViewFrame = new ViewFrame(new LoginView(service, usernameContainer, logoutLinkContainer,
-               scheduleNameContainer, menuBar));
-      }
-
-      pagePanel.add(newViewFrame);
-      newViewFrame.afterPush();
-
-      RootPanel.get().add(pagePanel);
-   }
+	static String parseURLArgument(String url, String parameter) {
+		RegExp regExp = RegExp.compile("[\\?|&].*" + parameter + "=(\\w+)");
+		if (!regExp.test(url))
+			return null;
+		
+		MatchResult matcher = regExp.exec(url);
+		assert (matcher.getGroupCount() == 2);
+		
+		return matcher.getGroup(1);
+	}
 }
