@@ -1,7 +1,6 @@
 package scheduler.model;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Collection;
@@ -9,8 +8,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Properties;
 import java.util.Set;
+import java.util.TreeSet;
 
 import scheduler.model.db.DatabaseException;
 import scheduler.model.db.IDBCourse;
@@ -542,5 +541,12 @@ public class Model {
 
 	public void insertEquipmentType(String string) {
 		database.insertEquipmentType(string);
+	}
+
+	public Collection<String> getEquipmentTypes() throws DatabaseException {
+		Collection<String> equipmentTypeStrings = new TreeSet<String>();
+		for (IDBEquipmentType equipmentType : database.findAllEquipmentTypes())
+			equipmentTypeStrings.add(equipmentType.getDescription());
+		return equipmentTypeStrings;
 	}
 }

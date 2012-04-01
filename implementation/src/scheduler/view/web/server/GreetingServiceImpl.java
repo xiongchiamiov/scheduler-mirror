@@ -131,11 +131,24 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 				throw new RuntimeException(e);
 			}
 		}
+		
+		try {
+			Collection<String> equipmentTypes = model.getEquipmentTypes();
+			if (equipmentTypes.size() == 0) {
+				model.insertEquipmentType("Computers");
+				model.insertEquipmentType("Projector");
+			}
+		}
+		catch (DatabaseException e) {
+			throw new RuntimeException(e);
+		}
+		
+//		for (String equipmentType : model.getEquipmentTypes())
 	}
 	
 	@Override
 	public CourseGWT addCourseToDocument(int documentID, CourseGWT course) {
-		assert (course.getID() == -1);
+		assert (course.getID() == null);
 		
 		try {
 			Document document = model.findDocumentByID(documentID);
@@ -197,7 +210,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	
 	@Override
 	public InstructorGWT addInstructorToDocument(int documentID, InstructorGWT instructor) {
-		assert (instructor.getID() == -1);
+		assert (instructor.getID() == null);
 		
 		try {
 			Document document = model.findDocumentByID(documentID);
@@ -255,7 +268,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	
 	@Override
 	public LocationGWT addLocationToDocument(int documentID, LocationGWT location) {
-		assert (location.getID() == -1);
+		assert (location.getID() == null);
 		
 		try {
 			Document document = model.findDocumentByID(documentID);

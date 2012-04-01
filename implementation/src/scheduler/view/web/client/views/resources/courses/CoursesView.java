@@ -1,210 +1,107 @@
 package scheduler.view.web.client.views.resources.courses;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
-
 import scheduler.view.web.client.GreetingServiceAsync;
 import scheduler.view.web.client.IViewContents;
 import scheduler.view.web.client.ViewFrame;
-import scheduler.view.web.client.views.LoadingPopup;
-import scheduler.view.web.shared.CourseGWT;
-import scheduler.view.web.shared.DayGWT;
 import scheduler.view.web.shared.DocumentGWT;
 
-public class CoursesView extends VerticalPanel implements IViewContents, CoursesTable.Strategy {
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
+import com.smartgwt.client.types.ListGridEditEvent;
+import com.smartgwt.client.types.RowEndEditAction;
+import com.smartgwt.client.widgets.grid.ListGrid;
+import com.smartgwt.client.widgets.grid.ListGridField;
+import com.smartgwt.client.widgets.grid.ListGridRecord;
+
+public class CoursesView extends VerticalPanel implements IViewContents {
 	private GreetingServiceAsync service;
 	private final DocumentGWT document;
-	int nextTableCourseID = -2;
-	int transactionsPending = 0;
-	Map<Integer, Integer> realIDsByTableID = new HashMap<Integer, Integer>();
-	
-	ArrayList<Integer> deletedTableCourseIDs = new ArrayList<Integer>();
-	ArrayList<CourseGWT> editedTableCourses = new ArrayList<CourseGWT>();
-	ArrayList<CourseGWT> addedTableCourses = new ArrayList<CourseGWT>();
-	
-	private int generateTableCourseID() {
-		return nextTableCourseID--;
-	}
 	
 	public CoursesView(GreetingServiceAsync service, DocumentGWT document) {
 		this.service = service;
 		this.document = document;
-		this.addStyleName("iViewPadding");
+		// this.addStyleName("iViewPadding");
 	}
-
+	
 	@Override
 	public boolean canPop() {
 		return true;
-//		assert(table != null);
-//		if (table.isSaved())
-//			return true;
-//		return Window.confirm("You have unsaved data which will be lost. Are you sure you want to navigate away?");
+		// assert(table != null);
+		// if (table.isSaved())
+		// return true;
+		// return
+		// Window.confirm("You have unsaved data which will be lost. Are you sure you want to navigate away?");
 	}
 	
 	@Override
-	public void afterPush(ViewFrame frame) {		
+	public void afterPush(ViewFrame frame) {
 		this.setWidth("100%");
 		this.setHeight("100%");
-
+		
 		this.add(new HTML("<h2>Courses</h2>"));
-
-		CoursesTable table = new CoursesTable(this);
 		
-		add(table);
-	}
+		final ListGrid grid = new ListGrid();
+		grid.setWidth("100%");
+		grid.setHeight(300);
+		grid.setShowAllRecords(true);
+		grid.setAutoFetchData(true);
+		grid.setCanEdit(true);
+		grid.setEditEvent(ListGridEditEvent.CLICK);
+		grid.setEditByCell(true);
+		grid.setListEndEditAction(RowEndEditAction.NEXT);
+		//grid.setCellHeight(22);
+		grid.setDataSource(new CoursesDataSource(service, document));
+		
+		ListGridField idField = new ListGridField("id");
+		idField.setHidden(true);
+		
+		ListGridField scheduleableField = new ListGridField("isSchedulable", "Schedulable");
+		ListGridField departmentField = new ListGridField("department", "Department");
+		ListGridField catalogNumberField = new ListGridField("catalogNumber", "Catalog Number");
+		ListGridField nameField = new ListGridField("name", "Name");
+		ListGridField numSectionsField = new ListGridField("numSections", "Number of Sections");
+		ListGridField wtuField = new ListGridField("wtu", "WTU");
+		ListGridField scuField = new ListGridField("scu", "SCU");
+		ListGridField dayCombinationsField = new ListGridField("dayCombinations", "Day Combinations");
+		ListGridField hoursPerWeekField = new ListGridField("hoursPerWeek", "Hours per Week");
+		ListGridField maxEnrollmentField = new ListGridField("maxEnrollment", "Max Enrollment");
+		ListGridField courseTypeField = new ListGridField("coursesType", "Type");
+		ListGridField usedEquipmentField = new ListGridField("usedEquipment", "Used Equipment");
+		ListGridField associationsField = new ListGridField("associations", "Associations");
 
-	@Override
-	public void getInitialCourses(final AsyncCallback<List<CourseGWT>> callback) {
-		final LoadingPopup popup = new LoadingPopup();
-		popup.show();
-
-		service.getCoursesForDocument(document.getID(), new AsyncCallback<List<CourseGWT>>() {
-			public void onFailure(Throwable caught) {
-				popup.hide();
-				callback.onFailure(caught);
+		grid.setFields(idField, scheduleableField, departmentField, catalogNumberField, nameField, numSectionsField, wtuField, scuField,
+				dayCombinationsField, hoursPerWeekField, maxEnrollmentField, courseTypeField, usedEquipmentField, associationsField);
+		
+		this.add(grid);
+		
+		this.add(new Button("Add New Course", new ClickHandler() {
+			public void onClick(ClickEvent event) {
+            grid.startEditingNew();
 			}
-			
-			public void onSuccess(List<CourseGWT> courses){
-				assert(courses != null);
-				popup.hide();
-
-				for (CourseGWT course : courses)
-					realIDsByTableID.put(course.getID(), course.getID());
-				
-				callback.onSuccess(courses);
+		}));
+		
+		this.add(new Button("Remove Selected Courses", new ClickHandler() {
+			public void onClick(ClickEvent event) {
+            ListGridRecord[] selectedRecords = grid.getSelectedRecords();  
+            for(ListGridRecord rec: selectedRecords) {  
+                grid.removeData(rec);  
+            }
 			}
-		});
-	}
-
-	@Override
-	public CourseGWT createCourse() {
-		CourseGWT course = new CourseGWT(true, "", "", "", "", "", "", "LEC", "", -1, "", new LinkedList<Set<DayGWT>>(), generateTableCourseID(), false, new HashSet<String>());
-		
-		addedTableCourses.add(course);
-		
-		assert(!editedTableCourses.contains(course));
-		
-		assert(!deletedTableCourseIDs.contains(course));
-
-		sendUpdates();
-		
-		return course;
+		}));
 	}
 	
 	@Override
-	public void onCourseEdited(CourseGWT course) {
-		assert(!deletedTableCourseIDs.contains(course.getID()));
-		
-		System.out.println("onCourseEdited " + addedTableCourses.contains(course) + " " + editedTableCourses.contains(course));
-
-		if (!addedTableCourses.contains(course)) {
-			if (!editedTableCourses.contains(course)) {
-				editedTableCourses.add(course);
-			}
-		}
-		
-		sendUpdates();
+	public void beforePop() {}
+	@Override
+	public void beforeViewPushedAboveMe() {}
+	@Override
+	public void afterViewPoppedFromAboveMe() {}
+	@Override
+	public Widget getContents() {
+		return this;
 	}
-	
-	@Override
-	public void onCourseDeleted(CourseGWT course) {
-		editedTableCourses.remove(course);
-		
-		if (addedTableCourses.contains(course)) {
-			addedTableCourses.remove(course);
-			return;
-		}
-		
-		assert(!deletedTableCourseIDs.contains(course.getID()));
-		deletedTableCourseIDs.add(course.getID());
-		
-		sendUpdates();
-	}
-
-	private void sendUpdates() {
-		if (transactionsPending > 0)
-			return;
-		
-		transactionsPending = deletedTableCourseIDs.size() + editedTableCourses.size() + addedTableCourses.size();
-		if (transactionsPending == 0)
-			return;
-		
-		System.out.println("Sending updates! " + transactionsPending);
-
-		final ArrayList<Integer> copyOfDeletedTableCourseIDs = deletedTableCourseIDs;
-		deletedTableCourseIDs = new ArrayList<Integer>();
-		
-		final ArrayList<CourseGWT> copyOfEditedTableCourses = editedTableCourses;
-		editedTableCourses = new ArrayList<CourseGWT>();
-		
-		final ArrayList<CourseGWT> copyOfAddedTableCourses = addedTableCourses;
-		addedTableCourses = new ArrayList<CourseGWT>();
-		
-		for (Integer deletedTableCourseID : copyOfDeletedTableCourseIDs) {
-			Integer realCourseID = realIDsByTableID.get(deletedTableCourseID);
-			service.removeCourse(realCourseID, new AsyncCallback<Void>() {
-				public void onSuccess(Void result) { updateFinished(); }
-				public void onFailure(Throwable caught) { Window.alert("Update failed: " + caught.getMessage()); }
-			});
-		}
-		
-		for (CourseGWT editedTableCourse : copyOfEditedTableCourses) {
-			Integer realCourseID = realIDsByTableID.get(editedTableCourse.getID());
-			CourseGWT realCourse = new CourseGWT(editedTableCourse);
-			realCourse.setID(realCourseID);
-			System.out.println("Calling editCourse!");
-			service.editCourse(realCourse, new AsyncCallback<Void>() {
-				public void onSuccess(Void result) {
-					System.out.println("editCourse onSuccess");
-					updateFinished();
-				}
-				public void onFailure(Throwable caught) { Window.alert("Update failed: " + caught.getMessage()); }
-			});
-		}
-		
-		for (CourseGWT addedTableCourse : copyOfAddedTableCourses) {
-			final int tableCourseID = addedTableCourse.getID();
-			CourseGWT realCourse = new CourseGWT(addedTableCourse);
-			realCourse.setID(-1);
-			service.addCourseToDocument(document.getID(), realCourse, new AsyncCallback<CourseGWT>() {
-				public void onSuccess(CourseGWT result) {
-					realIDsByTableID.put(tableCourseID, result.getID());
-					updateFinished();
-				}
-				public void onFailure(Throwable caught) { Window.alert("Update failed: " + caught.getMessage()); }
-			});
-		}
-
-		copyOfDeletedTableCourseIDs.clear();
-		copyOfEditedTableCourses.clear();
-		copyOfAddedTableCourses.clear();
-	}
-	
-	private void updateFinished() {
-		assert(transactionsPending > 0);
-		System.out.println("Update finished!");
-		transactionsPending--;
-		if (transactionsPending == 0)
-			sendUpdates();
-	}
-
-	@Override
-	public void beforePop() { }
-	@Override
-	public void beforeViewPushedAboveMe() { }
-	@Override
-	public void afterViewPoppedFromAboveMe() { }
-	@Override
-	public Widget getContents() { return this; }
 }

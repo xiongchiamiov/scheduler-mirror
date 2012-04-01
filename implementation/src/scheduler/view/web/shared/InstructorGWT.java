@@ -8,7 +8,7 @@ import java.util.LinkedHashMap;
 public class InstructorGWT implements Serializable, Identified {
 	private static final long serialVersionUID = -4982539363690274674L;
 	
-	private int id;
+	private Integer id;
 	private String username;
 	private String firstName, lastName;
 	private String maxwtu;
@@ -19,7 +19,7 @@ public class InstructorGWT implements Serializable, Identified {
 
 	private boolean isSchedulable;
 
-	public InstructorGWT(int id, String username, String firstName,
+	public InstructorGWT(Integer id, String username, String firstName,
 			String lastName, String maxwtu,
 			int[][] tPrefs,
 			HashMap<Integer, Integer> hashMap) {
