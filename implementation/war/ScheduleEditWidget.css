@@ -1,0 +1,29 @@
+.floatingScheduleButtonBar {
+	position: fixed; /* Or fixed - depends on what you want */
+	right: 0;
+	/* The part that puts the Panel in bottom right of the page/client area */
+	bottom: 0;
+	/*background: #003300;*/
+	background: url("imgs/bottom_bar_bg.gif") no-repeat scroll 0 0 #003300;
+	padding: 5px 10px 5px 10px;
+	width: 100%;
+}
+
+.floatingScheduleButtonBarItemRight {
+	float: right;
+	margin: 0px 5px 0px 5px;
+}
+
+.floatingScheduleButtonBarItemLeft {
+	float: left;
+	margin: 0px 5px 0px 15px;
+}
+
+.ScheduleAvailableCoursesList {
+	margin: 10px;
+	height: 100%;
+}
+
+.hiddenCoursesList {
+	display: none;
+}
