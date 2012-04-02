@@ -4,10 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
-import scheduler.view.web.client.DocumentTabOpener;
 import scheduler.view.web.client.views.resources.instructors.InstructorsHomeView;
 
-import scheduler.view.web.client.DocumentTabOpener;
+import scheduler.view.web.client.TabOpener;
 import scheduler.view.web.client.GreetingServiceAsync;
 import scheduler.view.web.client.HTMLUtilities;
 import scheduler.view.web.client.IViewContents;
