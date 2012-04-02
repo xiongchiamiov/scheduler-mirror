@@ -23,15 +23,20 @@ public class SaveAsDialog {
 
 	public static void afterSaveAsPressed(final GreetingServiceAsync service, final DocumentGWT document) {
 
+		final com.smartgwt.client.widgets.Window window = new com.smartgwt.client.widgets.Window();
+		window.setAutoSize(true);
+		window.setTitle("Name Schedule");
+		window.setCanDragReposition(true);
+		window.setCanDragResize(true);
+		
 	      final ListBox saveAsListBox = new ListBox();
 	      final ArrayList<String> schedNames = new ArrayList<String>();
 	      final TextBox tb = new TextBox();
-	      final DialogBox db = new DialogBox();
 	      FlowPanel fp = new FlowPanel();
 	      final Button saveButton = new Button("Save", new ClickHandler() {
 	         public void onClick(ClickEvent event)
 	         {
-	            db.hide();
+	         	window.hide();
 
 	            final String scheduleName = tb.getText();
 	            if (scheduleName.isEmpty()) return;
@@ -64,7 +69,7 @@ public class SaveAsDialog {
 	         @Override
 	         public void onClick(ClickEvent event)
 	         {
-	            db.hide();
+	         	window.hide();
 	         }
 	      });
 
@@ -94,7 +99,6 @@ public class SaveAsDialog {
 			}
 		});
 
-	      db.setText("Name Schedule");
 	      fp.add(new HTML("<center>Specify a name to save the schedule as...</center>"));
 	      saveAsListBox.addClickHandler(new ClickHandler()
 	      {
@@ -110,9 +114,10 @@ public class SaveAsDialog {
 	      fp.add(saveButton);
 	      fp.add(cancelButton);
 
-	      db.setWidget(fp);
-	      db.center();
-	      db.show();
+			window.addItem(fp);
+
+			window.centerInPage();
+			window.show();
 	}
 
 }
