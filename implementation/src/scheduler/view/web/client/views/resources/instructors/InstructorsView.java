@@ -202,86 +202,37 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 			else
 			{
 				final Window messageWindow = new Window();
-				//messageWindow.
-				MessageDialog dlg = new MessageDialog("No courses available",
-						"There are currently no courses available. Do you want to proceed?",
-						MessageDialogType.YES_NO);
-				dlg.center();
-				messageWindow.addItem(dlg);
-				window.setAutoSize(true);
-				messageWindow.setSize("500px", "300px");
-				messageWindow.show();
-				if(dlg.getClickedButton() == MessageDialogClicked.YES)
-				{
-					System.out.println("Did I get in here??????????????????????");
-					messageWindow.hide();
-					window.show();
-				}
-				else
-				{
-					System.out.println("This project sucks");
-				}
-				
-			}
-			/*if(iipv.checkSize())
-			{
-				final Window window = new Window();
-				window.setAutoSize(true);
-				window.setTitle("Instructor Preferences");
-				window.setCanDragReposition(true);
-				window.setCanDragResize(true);
-				
-				final ScrollPanel weewee = new ScrollPanel();
-				weewee.setWidget(iipv);
-				weewee.setSize("700px", "600px");
-				window.addItem(weewee);
-	
-				ClickListener listener = new ClickListener() {
+				messageWindow.centerInPage();
+
+				VerticalPanel vp = new VerticalPanel();
+				ClickListener dlgListener = new ClickListener() {
 					public void onClick(Widget sender) {
 						System.out.println("Got here +++++++++++++++++++++++++++++");
-						window.hide();
+						//dlg.hide();
+						messageWindow.hide();
+						//dlg.hide();
+						window.show();
 					}
 				};
-				Button button = new Button("Close", listener);
-				iipv.add(button);
-				button.setStyleName("centerness");
-				window.show();
+				
+				ClickListener dlgNoListener = new ClickListener() {
+					public void onClick(Widget sender) {
+						System.out.println("Got here *************************");
+						//dlg.hide();
+						messageWindow.hide();
+						//dlg.hide();
+					}
+				};
+				Button dlgButton = new Button("Yes", dlgListener);
+				Button noButton = new Button("No", dlgNoListener);
+				vp.add(dlgButton);
+				vp.add(noButton);
+				messageWindow.addItem(vp);
+
+				window.setAutoSize(true);
+				messageWindow.setSize("500px", "300px");
+				messageWindow.show();	
 			}
-			else
-			{
-				MessageDialog dlg = new MessageDialog("No courses available",
-						"There are currently no courses available. Do you want to proceed?",
-						MessageDialogType.YES_NO);
-				dlg.center();
-				if(dlg.getClickedButton() == MessageDialogClicked.NO)
-				{
-					//close parent window
-					
-				}
-				else
-				{
-					final Window window = new Window();
-					window.setAutoSize(true);
-					window.setTitle("Instructor Preferences");
-					window.setCanDragReposition(true);
-					window.setCanDragResize(true);
-					
-					final ScrollPanel weewee = new ScrollPanel();
-					weewee.setWidget(iipv);
-					weewee.setSize("700px", "600px");
-					window.addItem(weewee);
-		
-					ClickListener listener = new ClickListener() {
-						public void onClick(Widget sender) {
-							window.hide();
-						}
-					};
-					Button button = new Button("Close", listener);
-					iipv.add(button);
-					button.setStyleName("centerness");
-					window.show();
-				}
-			}*/
 		}
 		else
 		{

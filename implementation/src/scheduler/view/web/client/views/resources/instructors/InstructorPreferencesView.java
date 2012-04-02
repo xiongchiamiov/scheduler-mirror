@@ -129,6 +129,7 @@ public class InstructorPreferencesView extends VerticalPanel {//implements IView
 				}
 				else
 				{
+					System.out.println("The size of the course list is not zero. It should open preferences");
 					checkSize = true;
 					HashMap<Integer, CourseGWT> newCoursesByID = new HashMap<Integer, CourseGWT>();
 					for (CourseGWT course : result)
