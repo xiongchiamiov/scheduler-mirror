@@ -17,6 +17,7 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.types.ListGridEditEvent;
 import com.smartgwt.client.types.RowEndEditAction;
 import com.smartgwt.client.util.SC;
@@ -96,7 +97,7 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 		};
 		
 		grid.setWidth("100%");
-		grid.setHeight(300);
+		grid.setAutoFitData(Autofit.VERTICAL);
 		grid.setShowAllRecords(true);
 		grid.setAutoFetchData(true);
 		grid.setCanEdit(true);

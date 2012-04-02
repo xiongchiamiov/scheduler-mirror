@@ -11,7 +11,9 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.types.ListGridEditEvent;
+import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.RowEndEditAction;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
@@ -45,8 +47,10 @@ public class CoursesView extends VerticalPanel implements IViewContents {
 //		this.add(new HTML("<h2>Courses</h2>"));
 		
 		final ListGrid grid = new ListGrid();
-		grid.setWidth("100%");
-		grid.setHeight(300);
+		grid.setWidth100();
+		
+		grid.setAutoFitData(Autofit.VERTICAL);
+		
 		grid.setShowAllRecords(true);
 		grid.setAutoFetchData(true);
 		grid.setCanEdit(true);
