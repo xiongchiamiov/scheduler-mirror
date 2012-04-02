@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
-import scheduler.view.web.client.TabOpener;
+import scheduler.view.web.client.DocumentTabOpener;
+import scheduler.view.web.client.views.resources.instructors.InstructorsHomeView;
+
+import scheduler.view.web.client.DocumentTabOpener;
 import scheduler.view.web.client.GreetingServiceAsync;
 import scheduler.view.web.client.HTMLUtilities;
 import scheduler.view.web.client.IViewContents;
@@ -179,13 +182,34 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents
             Window.alert("This feature is not yet implemented");
          }
       });
+      
+      Button tempButton = new Button("Temporary Instructors' Home View", new ClickHandler()
+      {
+         @Override
+         public void onClick(ClickEvent event)
+         {
+        	 com.smartgwt.client.widgets.Window instructorWindow = new com.smartgwt.client.widgets.Window();
+        	 
+        	 InstructorsHomeView homeView = new InstructorsHomeView();
+        	 
+        	 instructorWindow.addItem(homeView);
+        	 
+        	 homeView.setHorizontalAlignment(ALIGN_CENTER);
+        	 
+        	 instructorWindow.setSize("500px", "500px");
+        	 
+        	 instructorWindow.show();
+         }
+      });
       DOM.setElementAttribute(mergeButton.getElement(), "id", "mergeButton");
+      DOM.setElementAttribute(tempButton.getElement(), "id", "tempButton");
       HorizontalPanel botflow = new HorizontalPanel();
       botflow.setHorizontalAlignment(ALIGN_CENTER);
       botflow.setSpacing(5);
       botflow.setStyleName("buttonPadding");
       botflow.add(trashButton);
       botflow.add(mergeButton);
+      botflow.add(tempButton);
       this.add(botflow);
    }
 
