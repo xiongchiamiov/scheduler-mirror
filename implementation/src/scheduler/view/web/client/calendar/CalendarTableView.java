@@ -139,7 +139,7 @@ public class CalendarTableView extends SimplePanel {
 		builder.append("<style type=\"text/css\">"+
 			"* {-webkit-user-select:none;-moz-user-select:none;}" +
 			"#CalendarTableContainer {position:absolute;top:116px;left:"+mLeftOffset+"px;right:0px;bottom:33px;overflow:auto;background-color:#FFFFFF;}"+
-			"#CalendarTable {border-spacing:0px;cellspacing:0px;border:none;}"+
+			"#CalendarTable {border-spacing:0px;cellspacing:0px;border:none;min-width:100%;}"+
 			"#CalendarTable tr {height:20px;}"+
 			"#CalendarTable td {overflow:hidden;padding:4px;border-top:1px solid #d1dfdf;}"+
 			"#CalendarTable td.item {background-color:#DFF0CF;text-align:center;border:1px solid #FFFFFF;cursor:move;}"+
@@ -166,6 +166,7 @@ public class CalendarTableView extends SimplePanel {
 			builder.append("<tr id=\"y"+rowNum+"\" " +
 				"onmouseover=\"tableMouseOver("+rowNum+")\" " +
 				"onmouseout=\"tableMouseOut("+rowNum+")\" " +
+				"onmouseup=\"tableMouseUp("+rowNum+","+-1+")\" " +
 				"><td class=\"timeHeader\" id=\"h"+rowNum+"\">"+ ScheduleEditWidget.END_TIMES[rowNum]+"</td>");
 			
 			for (DayGWT day : DayGWT.values()) {
@@ -269,7 +270,7 @@ public class CalendarTableView extends SimplePanel {
 		}
 		
 		// Calculate all of the day offsets (the column each day starts on)
-		for (DayGWT day : Arrays.asList(DayGWT.values()).subList(1, DayGWT.values().length - 1)) {
+		for (DayGWT day : Arrays.asList(DayGWT.values()).subList(1, DayGWT.values().length)) {
 			DayGWT prevDay = DayGWT.values()[day.ordinal() - 1];
 			int prevOffset = model.get(prevDay).getOffset();
 			int prevWidth = model.get(prevDay).getWidth();

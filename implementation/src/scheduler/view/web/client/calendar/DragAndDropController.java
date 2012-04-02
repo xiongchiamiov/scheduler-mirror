@@ -118,8 +118,8 @@ public class DragAndDropController implements MouseMoveHandler, MouseOutHandler,
 		if (mDroppedItem != null) {
 			final String courseString = mWidget.getCourseString(mDroppedItem.getCourseID());
 			
-			if (row < 0 || day == null) {
-				System.out.println(courseString + " dropped on list");
+			if (row < 0) { // dropped on list
+				System.out.println(courseString+" dropped on list");
 				
 				if (fromCalendar) 
 					mWidget.removeItem(mDroppedItem);
@@ -127,10 +127,16 @@ public class DragAndDropController implements MouseMoveHandler, MouseOutHandler,
 					cancelDrop();
 			}
 			else {
-				System.out.println(courseString + " dropped on "+day.ordinal()+" at "+row);
-				
 				List<Integer> days = new ArrayList<Integer>();
-				days.add(day.ordinal());
+				
+				if (day == null) {// dropped on time column
+					System.out.println(courseString+" dropped on time column at "+row);
+				}
+				else { // dropped on a day column
+					System.out.println(courseString+" dropped on "+day.ordinal()+" at "+row);
+					days.add(day.ordinal());
+				}
+				
 				mWidget.editItem(!fromCalendar, mDroppedItem, days, row);
 			}
 			
