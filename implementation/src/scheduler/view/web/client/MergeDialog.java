@@ -20,8 +20,15 @@ public class MergeDialog {
    public static void fileMergePressed(GreetingServiceAsync service)
    {
 
+
+		final com.smartgwt.client.widgets.Window window = new com.smartgwt.client.widgets.Window();
+		window.setAutoSize(true);
+		window.setTitle("Merge");
+		window.setCanDragReposition(true);
+		window.setCanDragResize(true);
+		
+   	
       final ArrayList<CheckBox> checkBoxList = new ArrayList<CheckBox>();
-      final DialogBox db = new DialogBox();
       final VerticalPanel vp = new VerticalPanel();
       final VerticalPanel checkBoxPanel = new VerticalPanel();
       FlowPanel fp = new FlowPanel();
@@ -41,7 +48,7 @@ public class MergeDialog {
             if (checkCount >= 2)
             {
                // TODO - Add merge call here when functionality is implemented
-               db.hide();
+               window.destroy();
             }
             else
             {
@@ -55,7 +62,7 @@ public class MergeDialog {
          @Override
          public void onClick(ClickEvent event)
          {
-            db.hide();
+            window.destroy();
          }
       });
 
@@ -86,9 +93,9 @@ public class MergeDialog {
       vp.add(checkBoxPanel);
       vp.add(fp);
 
-      db.setText("Merge Schedules");
-      db.setWidget(vp);
-      db.center();
-      db.show();
+		window.addItem(vp);
+
+		window.centerInPage();
+		window.show();
    }
 }
