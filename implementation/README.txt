@@ -5,34 +5,10 @@ Setup Development Environment
 2.  Make sure you have the GWT plugin for eclipse and GWT developer plugin for
     your respective browser
 3.  Checkout the project
-4.  In /implementation/GWTView/:
-    1. Copy the file ".project template" and name it to ".project"
-    2. Copy the file ".classpath template" and name it to ".classpath"
-5.  Import the GWTView project into eclipse (import -> General -> existing
+5.  Import the Scheduler project into eclipse (import -> General -> existing
     projects)
-6.  Do a clean and a build. You should get a fuckton of errors about various
-    classes not found. This is normal.
-7.  Right click on the GWTView project, hit properties
-8.  Under java build path screen's source tab, hit Link Source
-9.  For the linked folder location, browse to repo/implementation/model/java
-10. for the folder name, type "modeljava"
-11. hit Finish.
-12. Go to the libraries tab (still in java build path screen)
-13. Hit add external jar. add
-    repo/implementation/model/java/mysql-connector-java-5.0.8-bin.jar.
-14. Hit add external jar. add repo/implementation/GWTView/gwt-dnd-3.1.2.jar.
-15. Hit add external jar. add
-    repo/implementation/GWTView/war/WEB-INF/lib/commons-fileupload-1.2.2.jar
-16. Hit add external jar. add
-    repo/implementation/GWTView/war/WEB-INF/lib/guava-r09.jar
-17. Hit add external jar. add repo/implementation/model/java/javacsv.jar
-18. Hit add external jar. add repo/implementation/GWTView/test/test-jars/junit-3.8.2.jar
-19. Hit add jar. add /GWTView/test/edu/calpoly/csc/scheduler/view/web/shared/Selenium/jar/selenium-server-standalone-2.8.0.jar
-20. also add the "dnd" jar by clicking on "Add JARs..." and browsing under
-    GWTView
-21. get out of the properties menu.
-22. Do a clean and a build. there should be no errors. (there may be some
-    warnings) There might be a warning about some server missing.
+6.  Do a clean and a build. there should be no errors. (there may be some
+    warnings)
 
 [eclipse]: http://www.eclipse.org/downloads/
 
