@@ -26,6 +26,7 @@ public class MessageDialog extends DialogBox {
 	public MessageDialog(final String header, final String message, MessageDialogType type) {
 		this.setText(header);
 		this.setGlassEnabled(true);
+		this.setModal(true);
         
         // the content panel of the dlg
         this.panel = new VerticalPanel();
