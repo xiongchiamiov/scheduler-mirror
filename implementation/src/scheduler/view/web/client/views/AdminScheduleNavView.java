@@ -114,6 +114,11 @@ public class AdminScheduleNavView extends VerticalPanel implements IViewContents
 		});
 		
 		MenuItem closeItem = new MenuItem("Close", "icons/16/folder_out.png", "Ctrl+W");
+		closeItem.addClickHandler(new ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				TabOpener.openHomeInThisTab(username);
+			}
+		});
 		
 		MenuItem saveItem = new MenuItem("Save", "icons/16/disk_blue.png", "Ctrl+S");
 		saveItem.addClickHandler(new ClickHandler() {

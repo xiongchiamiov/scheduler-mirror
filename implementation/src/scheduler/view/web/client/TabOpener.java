@@ -10,12 +10,18 @@ public class TabOpener {
 		System.out.println("url: " + url);
 		url = URLUtilities.appendArgumentToURL(url, "userid", username);
 		url = URLUtilities.appendArgumentToURL(url, "originaldocumentid", Integer.toString(document.getID()));
-		Window.open(url, "_new", null);
+		Window.open(url, "_blank", null);
 	}
 	
 	public static void openHomeInNewTab(String username) {
 		String baseHref = URLUtilities.getBaseURL();
 		String url = URLUtilities.appendArgumentToURL(baseHref, "userid", username);
-		Window.open(url, "_new", null);
+		Window.open(url, "_blank", null);
+	}
+
+	public static void openHomeInThisTab(String username) {
+		String baseHref = URLUtilities.getBaseURL();
+		String url = URLUtilities.appendArgumentToURL(baseHref, "userid", username);
+		Window.Location.replace(url);
 	}
 }

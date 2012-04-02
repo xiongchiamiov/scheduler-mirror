@@ -165,6 +165,8 @@ public class CoursesDataSource extends DataSource {
 				usedEquipments.add(usedEquipment);
 		}
 		
+		assert(record.getAttribute("type") != null);
+		
 		return new CourseGWT(
 				record.getAttributeAsBoolean("isSchedulable"),
 				record.getAttribute("name"),
