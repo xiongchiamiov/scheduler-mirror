@@ -3,6 +3,7 @@ package scheduler.view.web.client.views.resources.instructors;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -15,7 +16,12 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  */
 public class MessageDialog extends DialogBox {
 	private VerticalPanel panel;
-	private MessageDialogClicked clicked;
+	
+	private Button buttonClose;
+	private Button buttonOk;
+	private Button buttonYes;
+	private Button buttonNo;
+	private Button buttonCancel;
 	
 	/**
 	 * Creates a message box with the buttons defined by 'type'
@@ -32,100 +38,54 @@ public class MessageDialog extends DialogBox {
         this.panel = new VerticalPanel();
         this.panel.add(new Label(message));
         
-        this.clicked = MessageDialogClicked.NONE;
-        
-        final MessageDialog box = this; // hopefully this doesn't cause recursion
-        
-        
         // ------ Buttons ---------------
         
-        final Button buttonClose = new Button("Close",new ClickHandler() {
-            @Override
-            public void onClick(final ClickEvent event) {
-            	box.setClickedButton(MessageDialogClicked.CLOSE);
-                box.hide();
-            }
-        });
-        
-        final Button buttonOk = new Button("Ok",new ClickHandler() {
-            @Override
-            public void onClick(final ClickEvent event) {
-            	box.setClickedButton(MessageDialogClicked.OK);
-                box.hide();
-            }
-        });
-        
-        final Button buttonYes = new Button("Yes",new ClickHandler() {
-            @Override
-            public void onClick(final ClickEvent event) {
-            	box.setClickedButton(MessageDialogClicked.YES);
-                box.hide();
-            }
-        });
-        
-        final Button buttonNo = new Button("No",new ClickHandler() {
-            @Override
-            public void onClick(final ClickEvent event) {
-            	box.setClickedButton(MessageDialogClicked.NO);
-                box.hide();
-            }
-        });
-        
-        final Button buttonCancel = new Button("Cancel",new ClickHandler() {
-            @Override
-            public void onClick(final ClickEvent event) {
-            	box.setClickedButton(MessageDialogClicked.CANCEL);
-                box.hide();
-            }
-        });
+        this.buttonClose = new Button("Close");
+        this.buttonOk = new Button("Ok");
+        this.buttonYes = new Button("Yes");
+        this.buttonNo = new Button("No");
+        this.buttonCancel = new Button("Cancel");
         
         HorizontalPanel buttons = new HorizontalPanel();
         
         switch(type)
         {
         case CLOSE:
-        	buttons.add(buttonClose);
+        	buttons.add(this.buttonClose);
         	break;
         case OK:
-        	buttons.add(buttonOk);
+        	buttons.add(this.buttonOk);
         	break;
         case OK_CANCEL:
-        	buttons.add(buttonOk);
+        	buttons.add(this.buttonOk);
         	buttons.add(new Label("      "));
-        	buttons.add(buttonCancel);
+        	buttons.add(this.buttonCancel);
         	break;
         case YES_NO:
-        	buttons.add(buttonYes);
+        	buttons.add(this.buttonYes);
         	buttons.add(new Label("      "));
-        	buttons.add(buttonNo);
+        	buttons.add(this.buttonNo);
         	break;
         case YES_NO_CANCEL:
-        	buttons.add(buttonYes);
+        	buttons.add(this.buttonYes);
         	buttons.add(new Label("      "));
-        	buttons.add(buttonNo);
+        	buttons.add(this.buttonNo);
         	buttons.add(new Label("      "));
-        	buttons.add(buttonCancel);
+        	buttons.add(this.buttonCancel);
         	break;
         }
         this.panel.setCellHorizontalAlignment(buttons, HasAlignment.ALIGN_RIGHT);
         this.panel.add(buttons);
         this.add(this.panel);
+        this.setModal(true);
 	}
 	
-	/**
-	 * Set the info, which button was clicked
-	 * @param clicked
-	 */
-	public void setClickedButton(MessageDialogClicked clicked)
+	public void addClickHandler(ClickHandler handler)
 	{
-		this.clicked = clicked;
-	}
-	
-	/**
-	 * @return the button type which has been clicked (either YES, NO, CLOSE, OK or CANCEL)
-	 */
-	public MessageDialogClicked getClickedButton()
-	{
-		return this.clicked;
+		this.buttonClose.addClickHandler(handler);
+        this.buttonOk.addClickHandler(handler);
+        this.buttonYes.addClickHandler(handler);
+        this.buttonNo.addClickHandler(handler);
+        this.buttonCancel.addClickHandler(handler);
 	}
 }

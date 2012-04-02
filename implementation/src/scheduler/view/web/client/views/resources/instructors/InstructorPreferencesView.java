@@ -112,19 +112,8 @@ public class InstructorPreferencesView extends VerticalPanel {//implements IView
 			}
 			
 			public void onSuccess(List<CourseGWT> result) {
-//				result.clear();
-				// if there are no courses, a message dialog is shown
 				if(result.size() == 0)
 				{
-					/*MessageDialog dlg = new MessageDialog("No courses available",
-									"There are currently no courses available. Do you want to proceed?",
-									MessageDialogType.YES_NO);
-					dlg.center();
-					if(dlg.getClickedButton() == MessageDialogClicked.NO)
-					{
-						//close parent window
-						
-					}*/
 					checkSize = false;
 				}
 				else

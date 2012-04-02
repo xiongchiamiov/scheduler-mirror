@@ -194,6 +194,7 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 			Button button = new Button("Close", listener);
 			iipv.add(button);
 			button.setStyleName("centerness");
+			System.out.println(iipv.checkSize());
 			if(iipv.checkSize())
 			{
 				System.out.println("Hey there........");
@@ -201,6 +202,7 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 			}
 			else
 			{
+
 				final Window messageWindow = new Window();
 				messageWindow.centerInPage();
 
