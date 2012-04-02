@@ -28,7 +28,8 @@ public class NoCourseDialog extends Window {
 	 * @param type: determines which buttons are shown
 	 */
 	public NoCourseDialog(final String header, final String message) {
-		this.setAutoSize(true);
+//		this.setAutoSize(true);
+		this.setSize("320px", "140px");
 		this.setTitle(header);
 		
         // the content panel of the dlg
@@ -41,9 +42,12 @@ public class NoCourseDialog extends Window {
 
         HorizontalPanel buttons = new HorizontalPanel();
         
+        Label lspace = new Label();
+    	lspace.setWidth("100px");
+    	buttons.add(lspace);
     	buttons.add(this.buttonYes);
     	Label empty = new Label();
-    	empty.setWidth("25px");
+    	empty.setWidth("15px");
     	buttons.add(empty);
     	buttons.add(this.buttonNo);
         
@@ -51,15 +55,29 @@ public class NoCourseDialog extends Window {
     	buttons.setCellHorizontalAlignment(this.buttonNo, HasAlignment.ALIGN_RIGHT);
     	
         this.panel.setCellHorizontalAlignment(buttons, HasAlignment.ALIGN_RIGHT);
+        
+        Label vspace = new Label();
+    	vspace.setHeight("20px");
+    	buttons.add(empty);
+    	this.panel.add(vspace);
         this.panel.add(buttons);
         this.addItem(this.panel);
+        this.setAutoCenter(true);
 	}
 	
+	/**
+	 * this is for the yes button
+	 * @param handler
+	 */
 	public void addClickYesHandler(ClickHandler handler)
 	{
         this.buttonYes.addClickHandler(handler);
 	}
 	
+	/**
+	 * this is for the no button
+	 * @param handler
+	 */
 	public void addClickNoHandler(ClickHandler handler)
 	{
         this.buttonNo.addClickHandler(handler);

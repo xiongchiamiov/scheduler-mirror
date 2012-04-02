@@ -112,8 +112,8 @@ public class InstructorPreferencesView extends VerticalPanel {//implements IView
 				{
 					System.out.println("The size of the course list >>is<< zero. It should NOT open preferences");
 					final NoCourseDialog dlg = new NoCourseDialog("No courses in database",
-														"The database doesn't contain any course right now. Do you" +
-														"want to proceed?");
+														"The database doesn't contain any course right now. " +
+														"Do you want to proceed?");
 					dlg.addClickNoHandler(new ClickHandler(){
 						@Override
 						public void onClick(ClickEvent event) {
