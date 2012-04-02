@@ -1,5 +1,6 @@
 package scheduler.view.web.client.views.resources.instructors;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +38,8 @@ public class InstructorPreferencesView extends VerticalPanel {//implements IView
 	InstructorGWT savedInstructor;
 	Map<Integer, CourseGWT> coursesByID;
 	
+	private boolean checkSize = false;
+	
 	Map<Integer, ListBox> listBoxesByCourseID = new HashMap<Integer, ListBox>();
 	InstructorTimePreferencesWidget timePrefs;
 	FlexTable coursePrefs;
@@ -50,6 +53,11 @@ public class InstructorPreferencesView extends VerticalPanel {//implements IView
 		this.documentID = documentID;
 		this.instructor = instructor;
 		this.savedInstructor = new InstructorGWT(instructor);
+	}
+	
+	public boolean checkSize()
+	{
+		return checkSize;
 	}
 
 	//@Override
@@ -108,17 +116,20 @@ public class InstructorPreferencesView extends VerticalPanel {//implements IView
 				// if there are no courses, a message dialog is shown
 				if(result.size() == 0)
 				{
-					MessageDialog dlg = new MessageDialog("No courses available",
+					/*MessageDialog dlg = new MessageDialog("No courses available",
 									"There are currently no courses available. Do you want to proceed?",
 									MessageDialogType.YES_NO);
 					dlg.center();
 					if(dlg.getClickedButton() == MessageDialogClicked.NO)
 					{
 						//close parent window
-					}
+						
+					}*/
+					checkSize = false;
 				}
 				else
 				{
+					checkSize = true;
 					HashMap<Integer, CourseGWT> newCoursesByID = new HashMap<Integer, CourseGWT>();
 					for (CourseGWT course : result)
 						newCoursesByID.put(course.getID(), course);

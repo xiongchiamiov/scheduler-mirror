@@ -58,7 +58,7 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 		this.setWidth("100%");
 		this.setHeight("100%");
 
-//		this.add(new HTML("<h2>Instructors</h2>"));
+		this.add(new HTML("<h2>Instructors</h2>"));
 
 		final ListGrid grid = new ListGrid() {
 			@Override
@@ -173,45 +173,115 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 			// viewFrame.popFramesAboveMe();
 			InstructorPreferencesView iipv = new InstructorPreferencesView(
 					service, document.getID(), document.getName(), instructor);
-			
-
+			iipv.afterPush();
 			final Window window = new Window();
 			window.setAutoSize(true);
 			window.setTitle("Instructor Preferences");
 			window.setCanDragReposition(true);
 			window.setCanDragResize(true);
 			
-			
-			iipv.afterPush();
 			final ScrollPanel weewee = new ScrollPanel();
 			weewee.setWidget(iipv);
 			weewee.setSize("700px", "600px");
 			window.addItem(weewee);
-			// poopyhead.setTitle(instructor.getFirstName() + " " +
-			// instructor.getLastName() + "'s Preferences");
-			// iipv.setVisible(true);
-			// ipv.add(new Button("OK"));
-			// ipv.add(iipv);
-			// poopyhead.add(iipv);
-//			poopyhead.setPopupPosition(600, 0);
-			// poopyhead.add
+
 			ClickListener listener = new ClickListener() {
 				public void onClick(Widget sender) {
+					System.out.println("Got here +++++++++++++++++++++++++++++");
 					window.hide();
 				}
 			};
 			Button button = new Button("Close", listener);
 			iipv.add(button);
 			button.setStyleName("centerness");
-			window.show();
-			// ipv.setWidget(iipv);
-			// ipv.setVisible(true);
-			// this.add(ipv);
-			// ipv.center();
-			// ipv.show();
-			// viewFrame.frameViewAndPushAboveMe(new
-			// InstructorPreferencesView(service, document.getID(),
-			// document.getName(), instructor));
+			if(iipv.checkSize())
+			{
+				System.out.println("Hey there........");
+				window.show();
+			}
+			else
+			{
+				final Window messageWindow = new Window();
+				//messageWindow.
+				MessageDialog dlg = new MessageDialog("No courses available",
+						"There are currently no courses available. Do you want to proceed?",
+						MessageDialogType.YES_NO);
+				dlg.center();
+				messageWindow.addItem(dlg);
+				window.setAutoSize(true);
+				messageWindow.setSize("500px", "300px");
+				messageWindow.show();
+				if(dlg.getClickedButton() == MessageDialogClicked.YES)
+				{
+					System.out.println("Did I get in here??????????????????????");
+					messageWindow.hide();
+					window.show();
+				}
+				else
+				{
+					System.out.println("This project sucks");
+				}
+				
+			}
+			/*if(iipv.checkSize())
+			{
+				final Window window = new Window();
+				window.setAutoSize(true);
+				window.setTitle("Instructor Preferences");
+				window.setCanDragReposition(true);
+				window.setCanDragResize(true);
+				
+				final ScrollPanel weewee = new ScrollPanel();
+				weewee.setWidget(iipv);
+				weewee.setSize("700px", "600px");
+				window.addItem(weewee);
+	
+				ClickListener listener = new ClickListener() {
+					public void onClick(Widget sender) {
+						System.out.println("Got here +++++++++++++++++++++++++++++");
+						window.hide();
+					}
+				};
+				Button button = new Button("Close", listener);
+				iipv.add(button);
+				button.setStyleName("centerness");
+				window.show();
+			}
+			else
+			{
+				MessageDialog dlg = new MessageDialog("No courses available",
+						"There are currently no courses available. Do you want to proceed?",
+						MessageDialogType.YES_NO);
+				dlg.center();
+				if(dlg.getClickedButton() == MessageDialogClicked.NO)
+				{
+					//close parent window
+					
+				}
+				else
+				{
+					final Window window = new Window();
+					window.setAutoSize(true);
+					window.setTitle("Instructor Preferences");
+					window.setCanDragReposition(true);
+					window.setCanDragResize(true);
+					
+					final ScrollPanel weewee = new ScrollPanel();
+					weewee.setWidget(iipv);
+					weewee.setSize("700px", "600px");
+					window.addItem(weewee);
+		
+					ClickListener listener = new ClickListener() {
+						public void onClick(Widget sender) {
+							window.hide();
+						}
+					};
+					Button button = new Button("Close", listener);
+					iipv.add(button);
+					button.setStyleName("centerness");
+					window.show();
+				}
+			}*/
 		}
 		else
 		{
