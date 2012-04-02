@@ -1,0 +1,73 @@
+* 
+{
+   -webkit-user-select:none;
+    -moz-user-select:none;    
+}
+
+#ListTable 
+{
+   border-spacing:0px;
+   cellspacing:0px;
+   border:none;    
+}
+
+#ListTable td 
+{
+   overflow:hidden;
+   padding:4px;
+   border-top:1px solid #ffffff;
+   border-bottom:1px solid #D1DFDF;
+   border-right:1px solid #000000;    
+}
+
+#ListTable td.item 
+{
+   height: 20px;
+   text-align:center;
+   background-color:#DFF0CF;
+}
+
+#ListTable td.selectedItem 
+{
+   text-align:center;
+   background-color:#D1DFDF; 
+}
+
+#ListTable td.columnHeader 
+{
+   position:relative;
+   background-color:#edf2f2;
+   border-right:1px solid #000000;
+   border-bottom:1px solid #000000;
+   font-weight:bold;
+   text-align:center;
+   z-index:2;
+}
+
+#ListTable td.timeHeader 
+{
+   position:relative;
+   background-color:#edf2f2;
+   border-right:1px solid #000000;
+   white-space:nowrap;
+   text-align:right; 
+}
+
+#ListTable td#topCorner 
+{
+   border-bottom:1px solid #000000;
+   background-color:#edf2f2; 
+}
+
+#ListTable td .ScheduleListItem 
+{
+   background-color:#DFF0CF;
+   margin:1px;
+   text-align:center;
+   padding-top:4px;
+   padding-bottom:4px;
+   height:100%;
+   width:100%;
+   border:none;
+   cursor:move; 
+}

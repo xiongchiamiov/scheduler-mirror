@@ -1,0 +1,79 @@
+*
+{
+   -webkit-user-select:none;
+   -moz-user-select:none;
+}
+
+#CalendarTable 
+{
+   border-spacing:0px;
+   cellspacing:0px;
+   border:none;
+   min-width:100%;
+}
+   
+#CalendarTable tr 
+{
+   height:20px;
+}
+
+#CalendarTable td 
+{
+   overflow:hidden;
+   padding:4px;
+   border-top:1px solid #d1dfdf;
+}
+
+#CalendarTable td.item 
+{
+   background-color:#DFF0CF;
+   text-align:center;
+   border:1px solid #FFFFFF;
+   cursor:move;
+}
+
+#CalendarTable td.dayHeader 
+{
+   position:relative;
+   background-color:#edf2f2;
+   border-right:1px solid #000000;
+   border-bottom:1px solid #000000;
+   font-weight:bold;
+   text-align:center;
+   z-index:2;
+}
+
+#CalendarTable td.timeHeader 
+{
+   position:relative;
+   background-color:#edf2f2;
+   border-right:1px solid #000000;
+   white-space:nowrap;
+   text-align:right;
+}
+
+#CalendarTable td#topCorner 
+{
+   border-bottom:1px solid #000000;
+   background-color:#edf2f2;
+}
+
+#CalendarTable td.daySpacer 
+{
+   border-right:1px solid #000000;
+   padding:0px;
+   margin:0px;
+   width:0px;
+}
+
+.ScheduleAvailableCoursesList 
+{
+   position:absolute;
+   top:116px;
+   left:0px;
+   bottom:33px;
+   width:200px;
+   border-right:1px solid #000000;
+   background-color:#FFFFFF;
+}
+			

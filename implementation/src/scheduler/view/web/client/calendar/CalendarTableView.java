@@ -136,19 +136,10 @@ public class CalendarTableView extends SimplePanel {
 		mModel = buildTableModel();
 		
 		final StringBuilder builder = new StringBuilder();
+		builder.append("<link type=\"text/css\" rel=\"stylesheet\" href=\"CalendarTableView.css\">");
 		builder.append("<style type=\"text/css\">"+
-			"* {-webkit-user-select:none;-moz-user-select:none;}" +
-			"#CalendarTableContainer {position:absolute;top:116px;left:"+mLeftOffset+"px;right:0px;bottom:33px;overflow:auto;background-color:#FFFFFF;}"+
-			"#CalendarTable {border-spacing:0px;cellspacing:0px;border:none;min-width:100%;}"+
-			"#CalendarTable tr {height:20px;}"+
-			"#CalendarTable td {overflow:hidden;padding:4px;border-top:1px solid #d1dfdf;}"+
-			"#CalendarTable td.item {background-color:#DFF0CF;text-align:center;border:1px solid #FFFFFF;cursor:move;}"+
-			"#CalendarTable td.dayHeader {position:relative;background-color:#edf2f2;border-right:1px solid #000000;border-bottom:1px solid #000000;font-weight:bold;text-align:center;z-index:2;}"+
-			"#CalendarTable td.timeHeader {position:relative;background-color:#edf2f2;border-right:1px solid #000000;white-space:nowrap;text-align:right;}" +
-			"#CalendarTable td#topCorner {border-bottom:1px solid #000000;background-color:#edf2f2;}"+
-			"#CalendarTable td.daySpacer {border-right:1px solid #000000;padding:0px;margin:0px;width:0px;}"+
+			"#CalendarTableContainer {position:absolute;top:116px;left:"+mLeftOffset+"px;right:0px;bottom:33px;overflow:auto;background-color:#FFFFFF;}"+			
 			"#"+DragAndDropController.DRAGGED_ID+" {display:none;position:fixed;margin-left:-30px;margin-top:10px;width:70px;padding:3px;background-color:#DFF0CF;z-index:999;border:1px solid #FFFFFF;cursor:arrow;}"+
-			".ScheduleAvailableCoursesList {position:absolute;top:116px;left:0px;bottom:33px;width:200px;border-right:1px solid #000000;background-color:#FFFFFF;}"+
 			"</style>");
 		builder.append("<div id=\"CalendarTableContainer\" onscroll=\"tableContainerScroll()\">");
 		builder.append("<table id=\"CalendarTable\"><tr id=\"headerRow\"><td id=\"topCorner\" class=\"dayHeader\"></td>");
