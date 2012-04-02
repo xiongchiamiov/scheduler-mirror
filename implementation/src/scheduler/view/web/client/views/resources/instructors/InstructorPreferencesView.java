@@ -104,7 +104,7 @@ public class InstructorPreferencesView extends VerticalPanel {//implements IView
 			}
 			
 			public void onSuccess(List<CourseGWT> result) {
-				result.clear();
+//				result.clear();
 				// if there are no courses, a message dialog is shown
 				if(result.size() == 0)
 				{
