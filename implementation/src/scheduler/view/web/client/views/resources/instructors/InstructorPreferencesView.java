@@ -38,13 +38,11 @@ public class InstructorPreferencesView extends VerticalPanel {//implements IView
 	InstructorGWT savedInstructor;
 	Map<Integer, CourseGWT> coursesByID;
 	
-	private boolean checkSize = false;
-	private boolean isFinished = false;
-	
 	Map<Integer, ListBox> listBoxesByCourseID = new HashMap<Integer, ListBox>();
 	InstructorTimePreferencesWidget timePrefs;
 	FlexTable coursePrefs;
 	String[] styleNames = {"preferred", "acceptable", "notPreferred", "notQualified"};
+	private com.smartgwt.client.widgets.Window parent = null;
 	
 	public InstructorPreferencesView(GreetingServiceAsync service, int documentID, String scheduleName, InstructorGWT instructor) {
 		this.service = service;
@@ -54,16 +52,6 @@ public class InstructorPreferencesView extends VerticalPanel {//implements IView
 		this.documentID = documentID;
 		this.instructor = instructor;
 		this.savedInstructor = new InstructorGWT(instructor);
-	}
-	
-	public boolean checkSize()
-	{
-		return checkSize;
-	}
-	
-	public boolean isFinished()
-	{
-		return isFinished;
 	}
 
 	//@Override
@@ -111,6 +99,8 @@ public class InstructorPreferencesView extends VerticalPanel {//implements IView
 		coursePrefs.setWidget(0, 0, htmlCourse);
 		coursePrefs.setWidget(0, 1, htmlPreference);
 		
+		final com.smartgwt.client.widgets.Window parent = this.parent;
+		
 		service.getCoursesForDocument(documentID, new AsyncCallback<List<CourseGWT>>() {
 			@Override
 			public void onFailure(Throwable caught) {
@@ -120,12 +110,39 @@ public class InstructorPreferencesView extends VerticalPanel {//implements IView
 			public void onSuccess(List<CourseGWT> result) {
 				if(result.size() == 0)
 				{
-					checkSize = false;
+					System.out.println("The size of the course list >>is<< zero. It should NOT open preferences");
+					final NoCourseDialog dlg = new NoCourseDialog("No courses in database",
+														"The database doesn't contain any course right now. Do you" +
+														"want to proceed?");
+					dlg.addClickNoHandler(new ClickHandler(){
+						@Override
+						public void onClick(ClickEvent event) {
+							dlg.hide();
+							if(parent != null)
+							{
+								parent.hide();
+							}
+						}
+					});
+					
+					
+					dlg.addClickYesHandler(new ClickHandler(){
+						@Override
+						public void onClick(ClickEvent event) {
+							if(parent != null)
+							{
+								parent.show();
+							}
+							dlg.hide();
+						}
+					});
+					parent.hide();
+					dlg.show();
 				}
 				else
 				{
 					System.out.println("The size of the course list is not zero. It should open preferences");
-					checkSize = true;
+					
 					HashMap<Integer, CourseGWT> newCoursesByID = new HashMap<Integer, CourseGWT>();
 					for (CourseGWT course : result)
 						newCoursesByID.put(course.getID(), course);
@@ -133,7 +150,6 @@ public class InstructorPreferencesView extends VerticalPanel {//implements IView
 				}
 			}
 		});
-		isFinished = true;
 	}
 	
 	void populateCourses(Map<Integer, CourseGWT> newCoursesByID) {
@@ -164,6 +180,11 @@ public class InstructorPreferencesView extends VerticalPanel {//implements IView
 			
 			row++;
 		}
+	}
+	
+	public void setParent(com.smartgwt.client.widgets.Window parent)
+	{
+		this.parent = parent;
 	}
 	
 	void save() {

@@ -173,12 +173,14 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 			// viewFrame.popFramesAboveMe();
 			InstructorPreferencesView iipv = new InstructorPreferencesView(
 					service, document.getID(), document.getName(), instructor);
-			iipv.afterPush();
 			final Window window = new Window();
 			window.setAutoSize(true);
 			window.setTitle("Instructor Preferences");
 			window.setCanDragReposition(true);
 			window.setCanDragResize(true);
+			iipv.setParent(window);
+			iipv.afterPush();
+			
 			
 			final ScrollPanel weewee = new ScrollPanel();
 			weewee.setWidget(iipv);
@@ -194,54 +196,8 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 			Button button = new Button("Close", listener);
 			iipv.add(button);
 			button.setStyleName("centerness");
-
-			int count = 0;
-			while(!iipv.isFinished())
-			{
-				count++;
-				System.out.println("This many times: "+count);
-			}
-			
-			if(iipv.checkSize())
-			{
-				System.out.println("Hey there........");
-				window.show();
-			}
-			else
-			{
-
-				final Window messageWindow = new Window();
-				messageWindow.centerInPage();
-
-				VerticalPanel vp = new VerticalPanel();
-				ClickListener dlgListener = new ClickListener() {
-					public void onClick(Widget sender) {
-						System.out.println("Got here +++++++++++++++++++++++++++++");
-						//dlg.hide();
-						messageWindow.hide();
-						//dlg.hide();
-						window.show();
-					}
-				};
-				
-				ClickListener dlgNoListener = new ClickListener() {
-					public void onClick(Widget sender) {
-						System.out.println("Got here *************************");
-						//dlg.hide();
-						messageWindow.hide();
-						//dlg.hide();
-					}
-				};
-				Button dlgButton = new Button("Yes", dlgListener);
-				Button noButton = new Button("No", dlgNoListener);
-				vp.add(dlgButton);
-				vp.add(noButton);
-				messageWindow.addItem(vp);
-
-				window.setAutoSize(true);
-				messageWindow.setSize("500px", "300px");
-				messageWindow.show();	
-			}
+			window.setAutoSize(true);
+			window.show();
 		}
 		else
 		{
