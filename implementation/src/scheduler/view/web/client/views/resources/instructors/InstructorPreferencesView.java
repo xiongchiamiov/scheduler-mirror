@@ -15,6 +15,8 @@ import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasAlignment;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -102,10 +104,39 @@ public class InstructorPreferencesView extends VerticalPanel {//implements IView
 			}
 			
 			public void onSuccess(List<CourseGWT> result) {
-				HashMap<Integer, CourseGWT> newCoursesByID = new HashMap<Integer, CourseGWT>();
-				for (CourseGWT course : result)
-					newCoursesByID.put(course.getID(), course);
-				populateCourses(newCoursesByID);
+				result.clear();
+				// if there are no courses, a message dialog is shown
+				if(result.size() == 0)
+				{
+//					DialogBox dlg = new DialogBox();
+//					dlg.setTitle("No courses available");
+//					dlg.setText("There are currently no courses available.");
+//					dlg.add(new Button("OK"));
+//					dlg.setGlassEnabled(true);
+//					dlg.setModal(true);
+//					dlg.center();
+//					//dlg.show();
+					
+//					DialogBox dlg = InstructorPreferencesView.messageBox("No courses available",
+//											"There are currently no courses available.");
+//					dlg.center();
+					
+					MessageDialog dlg = new MessageDialog("No courses available",
+									"There are currently no courses available. Do you want to proceed?",
+									MessageDialogType.YES_NO);
+					dlg.center();
+					if(dlg.getClickedButton() == MessageDialogClicked.NO)
+					{
+						//close window
+					}
+				}
+				else
+				{
+					HashMap<Integer, CourseGWT> newCoursesByID = new HashMap<Integer, CourseGWT>();
+					for (CourseGWT course : result)
+						newCoursesByID.put(course.getID(), course);
+					populateCourses(newCoursesByID);
+				}
 			}
 		});
 	}
@@ -190,6 +221,45 @@ public class InstructorPreferencesView extends VerticalPanel {//implements IView
 				list.removeStyleName("changed");*/
 		}
 	}
+	
+//	/**
+//	 * Shows a modal popup dialog
+//	 * @param header: headline text
+//	 * @param content: content text
+//	 * @return the dialog which can be shown by using center()
+//	 */
+//	public static DialogBox messageBox(final String header, final String content) {
+//		// the dialog itself
+//        final DialogBox box = new DialogBox();
+//        box.setModal(true);
+//        box.setGlassEnabled(true);
+//        
+//        // the content panel of the dlg
+//        final VerticalPanel panel = new VerticalPanel();
+//        box.setText(header);
+//        panel.add(new Label(content));
+//        
+//        // add a button with a handler
+//        final Button buttonOk = new Button("Ok",new ClickHandler() {
+//            @Override
+//            public void onClick(final ClickEvent event) {
+//                box.hide();
+//            }
+//        });
+//        
+//        
+//        // few empty labels to make widget larger
+//        final Label emptyLabel = new Label("");
+//        emptyLabel.setSize("auto","25px");
+//        panel.add(emptyLabel);
+//        panel.add(emptyLabel);
+//        buttonOk.setWidth("90px");
+//        panel.add(buttonOk);
+//        panel.setCellHorizontalAlignment(buttonOk, HasAlignment.ALIGN_RIGHT);
+//        box.add(panel);
+//        return box;
+//    }
+
 
 	//@Override
 	public boolean canPop() { return true; }
