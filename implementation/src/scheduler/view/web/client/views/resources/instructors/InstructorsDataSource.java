@@ -14,6 +14,7 @@ import com.smartgwt.client.data.DSRequest;
 import com.smartgwt.client.data.DSResponse;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.Record;
+import com.smartgwt.client.data.fields.DataSourceBooleanField;
 import com.smartgwt.client.data.fields.DataSourceIntegerField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 import com.smartgwt.client.types.DSProtocol;
@@ -47,6 +48,8 @@ public class InstructorsDataSource extends DataSource {
 		idField.setRequired(true);
 		idField.setPrimaryKey(true);
 
+		DataSourceBooleanField scheduleableField = new DataSourceBooleanField("isSchedulable");
+		
 		DataSourceTextField usernameField = new DataSourceTextField("username");
 
 		DataSourceTextField firstNameField = new DataSourceTextField("firstName");
@@ -55,7 +58,7 @@ public class InstructorsDataSource extends DataSource {
 
 		DataSourceTextField maxWTUField = new DataSourceTextField("maxWTU");
 		
-		setFields(idField, usernameField, firstNameField, lastNameField, maxWTUField);
+		setFields(idField, scheduleableField, usernameField, firstNameField, lastNameField, maxWTUField);
 		
 		setClientOnly(true);
 	}
@@ -67,6 +70,7 @@ public class InstructorsDataSource extends DataSource {
 		record.setAttribute("firstName", instructor.getFirstName());
 		record.setAttribute("lastName", instructor.getLastName());
 		record.setAttribute("maxWTU", instructor.getMaxWtu());
+		record.setAttribute("isSchedulable", instructor.isSchedulable());
 		return record;
 	}
 
@@ -78,7 +82,8 @@ public class InstructorsDataSource extends DataSource {
 				record.getAttribute("lastName"),
 				record.getAttribute("maxWTU"),
 				new int[DayGWT.values().length][48],
-				new HashMap<Integer, Integer>());
+				new HashMap<Integer, Integer>(),
+				record.getAttributeAsBoolean("isSchedulable"));
 	}
 
 	protected void fetch(final DSRequest dsRequest) {

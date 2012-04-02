@@ -64,7 +64,8 @@ public abstract class Conversion {
 				instructor.getLastName(),
 				instructor.getMaxWTU(),
 				instructor.getTimePreferences(),
-				instructor.getCoursePreferences());
+				instructor.getCoursePreferences(),
+				instructor.isSchedulable());
 	}
 	
 	public static Course courseFromGWT(Model model, CourseGWT course) throws DatabaseException {

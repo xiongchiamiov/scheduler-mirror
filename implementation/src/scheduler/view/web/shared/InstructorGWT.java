@@ -22,7 +22,7 @@ public class InstructorGWT implements Serializable, Identified {
 	public InstructorGWT(Integer id, String username, String firstName,
 			String lastName, String maxwtu,
 			int[][] tPrefs,
-			HashMap<Integer, Integer> hashMap) {
+			HashMap<Integer, Integer> hashMap, boolean isSchedulable) {
 		super();
 		this.id = id;
 		this.username = username;
@@ -31,6 +31,7 @@ public class InstructorGWT implements Serializable, Identified {
 		this.maxwtu = maxwtu;
 		this.tPrefs = tPrefs;
 		this.coursePrefs = hashMap;
+		this.isSchedulable = isSchedulable;
 	}
 	
 	public InstructorGWT() {
@@ -39,7 +40,7 @@ public class InstructorGWT implements Serializable, Identified {
 
 	public InstructorGWT(InstructorGWT that) {
 		this(that.id, that.username, that.firstName, that.lastName,
-				that.maxwtu, null, null);
+				that.maxwtu, null, null, that.isSchedulable);
 		
 		int newTimePrefs[][] = new int[DayGWT.values().length][48];
 		for (DayGWT day : DayGWT.values())

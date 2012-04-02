@@ -55,7 +55,18 @@ body {
 }
 
 .scheduleName {
+	font-size: 200%;
+}
+
+.appName {
+	opacity: .3;
+	filter: alpha(opacity=30);
+	font-size: 200%;
+}
+
+.topBarLeftSide > div {
 	padding-left: 10px;
+	display: inline-block;
 }
 
 .quarterViewMenu {
@@ -583,19 +594,8 @@ h1 {
 	position: absolute;
 }
 
-.menutabset {
-}
-
-.menutabset .tabBar {
+.tabBar {
 	left: 143px !important;
-}
-
-.fileMenuButton {
-	fmargin-left: 5px;
-}
-
-.settingsMenuButton {
-	fmargin-left: 5px;
 }
 
 .menumenu {

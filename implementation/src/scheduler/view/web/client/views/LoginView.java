@@ -1,9 +1,9 @@
 package scheduler.view.web.client.views;
 
 import scheduler.view.web.client.GreetingServiceAsync;
-import scheduler.view.web.client.HTMLUtilities;
 import scheduler.view.web.client.IViewContents;
 import scheduler.view.web.client.Login;
+import scheduler.view.web.client.UpdateHeaderStrategy;
 import scheduler.view.web.client.ViewFrame;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -17,8 +17,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasAlignment;
-import com.google.gwt.user.client.ui.MenuBar;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -28,12 +26,10 @@ public class LoginView extends VerticalPanel implements IViewContents {
 	
 	String username;
 	ViewFrame myFrame;
-	final SimplePanel usernameContainer, logoutLinkContainer, scheduleNameContainer;
+	final UpdateHeaderStrategy updateHeaderStrategy;
 
-	public LoginView(GreetingServiceAsync service, SimplePanel usernameContainer, SimplePanel logoutLinkContainer, SimplePanel scheduleNameContainer) {
-		this.usernameContainer = usernameContainer;
-		this.logoutLinkContainer = logoutLinkContainer;
-		this.scheduleNameContainer = scheduleNameContainer;
+	public LoginView(GreetingServiceAsync service, UpdateHeaderStrategy updateHeaderStrategy) {
+		this.updateHeaderStrategy = updateHeaderStrategy;
 		
 		this.service = service;
 
@@ -90,33 +86,19 @@ public class LoginView extends VerticalPanel implements IViewContents {
 	protected void pushSelectScheduleView(String username) {
 		assert(myFrame.canPopViewsAboveMe());
 		myFrame.popFramesAboveMe();
-		myFrame.frameViewAndPushAboveMe(new SelectScheduleView(service, scheduleNameContainer, username));
+		myFrame.frameViewAndPushAboveMe(new SelectScheduleView(service, username));
 	}
 	
 	@Override
 	public void beforeViewPushedAboveMe() {
-		this.usernameContainer.add(new HTML(username));
-		
-		this.logoutLinkContainer.add(HTMLUtilities.createLink("Log Out", "inAppLink", new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				if (myFrame.canPopViewsAboveMe()) {
-					myFrame.popFramesAboveMe();
-					logout();
-				}
-			}
-		}));
+		this.updateHeaderStrategy.onLogin(username);
 	}
 	
 	@Override
 	public void afterViewPoppedFromAboveMe() {
-		this.usernameContainer.clear();
-		this.logoutLinkContainer.clear();
+		this.updateHeaderStrategy.clearHeader();
 	}
 	
-	private void logout() {
-		username = null;
-	}
-
 	@Override
 	public boolean canPop() { return true; }
 	@Override

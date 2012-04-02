@@ -269,20 +269,24 @@ public class AdminScheduleNavView extends VerticalPanel implements IViewContents
 		
 		MenuItem newItem = new MenuItem("New", "icons/16/document_plain_new.png", "Ctrl+N");
 		MenuItem openItem = new MenuItem("Open", "icons/16/folder_out.png", "Ctrl+O");
+		MenuItem closeItem = new MenuItem("Close", "icons/16/folder_out.png", "Ctrl+W");
 		MenuItem saveItem = new MenuItem("Save", "icons/16/disk_blue.png", "Ctrl+S");
 		MenuItem saveAsItem = new MenuItem("Save As", "icons/16/save_as.png");
+		MenuItem mergeItem = new MenuItem("Merge", "icons/16/folder_out.png", "Ctrl+M");
 		
-		MenuItem recentDocItem = new MenuItem("Recent Documents", "icons/16/folder_document.png");
+//		MenuItem recentDocItem = new MenuItem("Recent Documents", "icons/16/folder_document.png");
 		
-		Menu recentDocSubMenu = new Menu();
-		MenuItem dataSM = new MenuItem("data.xml");
-		dataSM.setChecked(true);
-		MenuItem componentSM = new MenuItem("Component Guide.doc");
-		MenuItem ajaxSM = new MenuItem("AJAX.doc");
-		recentDocSubMenu.setItems(dataSM, componentSM, ajaxSM);
+//		Menu recentDocSubMenu = new Menu();
+//		MenuItem dataSM = new MenuItem("data.xml");
+//		dataSM.setChecked(true);
+//		MenuItem componentSM = new MenuItem("Component Guide.doc");
+//		MenuItem ajaxSM = new MenuItem("AJAX.doc");
+//		recentDocSubMenu.setItems(dataSM, componentSM, ajaxSM);
 		
-		recentDocItem.setSubmenu(recentDocSubMenu);
-		
+//		recentDocItem.setSubmenu(recentDocSubMenu);
+
+		MenuItem importItem = new MenuItem("Import", "icons/16/folder_out.png", "Ctrl+I");
+
 		MenuItem exportItem = new MenuItem("Export as...", "icons/16/export1.png");
 		Menu exportSM = new Menu();
 		exportSM.setItems(
@@ -296,8 +300,8 @@ public class AdminScheduleNavView extends VerticalPanel implements IViewContents
 		
 		MenuItemSeparator separator = new MenuItemSeparator();
 		
-		menu.setItems(newItem, openItem, separator, saveItem, saveAsItem,
-				separator, recentDocItem, separator, exportItem, separator, printItem);
+		menu.setItems(newItem, openItem, separator, saveItem, saveAsItem, closeItem,
+				separator, mergeItem, separator, importItem, exportItem, separator, printItem);
 		menu.setZIndex(1100000);
 		menu.addStyleName("menumenu");
 		
@@ -326,39 +330,31 @@ public class AdminScheduleNavView extends VerticalPanel implements IViewContents
 		return menuButton;
 	}
 	
+	private ToolStrip makeToolStrip() {
+		ToolStrip toolStrip = new ToolStrip();
+		toolStrip.setOverflow(Overflow.VISIBLE);
+		toolStrip.setZIndex(1000000);
+		toolStrip.setAutoWidth();
+		toolStrip.setHeight(25);
+		
+		toolStrip.addSpacer(5);
+		
+		toolStrip.addMenuButton(makeFileMenuAndButton());
+		
+		toolStrip.addSpacer(5);
+		
+		toolStrip.addMenuButton(makeSettingsMenuAndButton());
+		
+		// I have no idea why we need two of them here, but it's the only way
+		// it seems to work... -eo
+		toolStrip.addSpacer(5);
+		toolStrip.addSpacer(5);
+		
+		return toolStrip;
+	}
 	
-	private void addMenus() {
-		Panel panel = new FlowPanel();
-		panel.addStyleName("menubarcontainer");
-		
-		Panel container = new SimplePanel();
-		container.addStyleName("menubar");
-		panel.add(container);
-		
-		{
-			ToolStrip toolStrip = new ToolStrip();
-			toolStrip.setOverflow(Overflow.VISIBLE);
-			toolStrip.setZIndex(1000000);
-			toolStrip.setAutoWidth();
-			toolStrip.setHeight(25);
-			
-			toolStrip.addSpacer(5);
-			
-			toolStrip.addMenuButton(makeFileMenuAndButton());
-			
-			toolStrip.addSpacer(5);
-			
-			toolStrip.addMenuButton(makeSettingsMenuAndButton());
-			
-			// I have no idea why we need two of them here, but it's the only way
-			// it seems to work... -eo
-			toolStrip.addSpacer(5);
-			toolStrip.addSpacer(5);
-			
-			container.add(toolStrip);
-		}
-		
-		
+	private TabSet makeTabs() {
+
 		TabSet tabSet = new TabSet();
 		tabSet.setTabBarPosition(Side.TOP);
 		
@@ -371,9 +367,18 @@ public class AdminScheduleNavView extends VerticalPanel implements IViewContents
 //		tabSet.setPaneCon
 
 		final Tab coursesTab = new Tab("Courses");
+		tabSet.addTab(coursesTab);
+
 		final Tab instructorsTab = new Tab("Instructors");	
+		tabSet.addTab(instructorsTab);
+
 		final Tab locationsTab = new Tab("Locations");	
+		tabSet.addTab(locationsTab);
+
 		final Tab scheduleTab = new Tab("Schedule");
+		tabSet.addTab(scheduleTab);
+			
+		tabSet.setTabBarControls(TabBarControls.TAB_SCROLLER, TabBarControls.TAB_PICKER);
 		
 		tabSet.addTabSelectedHandler(new TabSelectedHandler() {
 			public void onTabSelected(TabSelectedEvent event) {
@@ -409,28 +414,23 @@ public class AdminScheduleNavView extends VerticalPanel implements IViewContents
 				viewFrameContainer.clear();
 			}
 		});
-		tabSet.addTab(coursesTab);
-
-		tabSet.addTab(instructorsTab);
-
-		tabSet.addTab(locationsTab);
-
-		tabSet.addTab(scheduleTab);
-			
-		tabSet.setTabBarControls(TabBarControls.TAB_SCROLLER, TabBarControls.TAB_PICKER);
 		
-		SimplePanel tabsetcontainer = new SimplePanel();
-//		tabSet.draw();
-		tabsetcontainer.addStyleName("menutabset");
-		panel.add(tabsetcontainer);
+		return tabSet;
+	}
+	
+	
+	private void addMenus() {
+		Panel panel = new FlowPanel();
+		panel.addStyleName("menubarcontainer");
+			Panel container = new SimplePanel();
+			container.addStyleName("menubar");
+				container.add(makeToolStrip());
+			panel.add(container);
+		add(panel);
 
 		viewFrameContainer = new SimplePanel();
+		add(viewFrameContainer);
 
-		
-		this.add(panel);
-		this.add(viewFrameContainer);
-
-		tabsetcontainer.add(tabSet);
-		
+		panel.add(makeTabs());
 	}
 }

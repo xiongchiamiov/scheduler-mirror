@@ -47,10 +47,9 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents
    private ArrayList<DocumentGWT>            checkedDocuments;
    private HashMap<Integer, HorizontalPanel> documentPanels;
    private boolean                           colorNextRow = false;
-   final SimplePanel scheduleNameContainer;
    String currentDocName;
    
-   public SelectScheduleView(final GreetingServiceAsync service, final SimplePanel scheduleNameContainer, final String username)
+   public SelectScheduleView(final GreetingServiceAsync service, final String username)
    {
       this.service = service;
       this.username = username;
@@ -58,14 +57,13 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents
       this.addStyleName("iViewPadding");
       this.checkedDocuments = new ArrayList<DocumentGWT>();
       this.documentPanels = new HashMap<Integer, HorizontalPanel>();
-      this.scheduleNameContainer = scheduleNameContainer;
 
       Button homeTab = new Button("Home", new ClickHandler() {
 			public void onClick(ClickEvent event) {
             if (myFrame.canPopViewsAboveMe())
             {
                myFrame.popFramesAboveMe();
-               myFrame.frameViewAndPushAboveMe(new SelectScheduleView(service, scheduleNameContainer, username));
+               myFrame.frameViewAndPushAboveMe(new SelectScheduleView(service, username));
             }
 			}
 		});
@@ -82,7 +80,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents
             if (myFrame.canPopViewsAboveMe())
             {
                myFrame.popFramesAboveMe();
-               myFrame.frameViewAndPushAboveMe(new ScheduleTrashView(service, scheduleNameContainer, username));
+               myFrame.frameViewAndPushAboveMe(new ScheduleTrashView(service, username));
             }
 			}
 		});
@@ -313,7 +311,6 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents
    @Override
    public void afterViewPoppedFromAboveMe()
    {
-      this.scheduleNameContainer.clear();
    }
 
    @Override

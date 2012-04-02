@@ -1,14 +1,10 @@
 package scheduler.view.web.client.views.resources.locations;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
 import scheduler.view.web.client.GreetingServiceAsync;
-import scheduler.view.web.shared.DayGWT;
 import scheduler.view.web.shared.DocumentGWT;
 import scheduler.view.web.shared.LocationGWT;
 
@@ -52,6 +48,8 @@ public class LocationsDataSource extends DataSource {
 		idField.setRequired(true);
 		idField.setPrimaryKey(true);
 
+		DataSourceBooleanField scheduleableField = new DataSourceBooleanField("isSchedulable");
+		
 		DataSourceTextField roomField = new DataSourceTextField("username");
 
 		DataSourceTextField typeField = new DataSourceTextField("firstName");
@@ -62,9 +60,7 @@ public class LocationsDataSource extends DataSource {
 		equipmentField.setMultiple(true);
 		equipmentField.setValueMap("Projector", "Overhead");
 
-		DataSourceTextField scheduleableField = new DataSourceTextField("maxWTU");
-		
-		setFields(idField, roomField, typeField, maxOccupancyField, equipmentField, scheduleableField);
+		setFields(idField, scheduleableField, roomField, typeField, maxOccupancyField, equipmentField);
 		
 		setClientOnly(true);
 	}

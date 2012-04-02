@@ -13,72 +13,80 @@ import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.MenuBar;
+import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-public class Scheduler implements EntryPoint
+public class Scheduler implements EntryPoint, UpdateHeaderStrategy
 {
 	private static final GreetingServiceAsync service = GWT.create(GreetingService.class);
+	
+	SimplePanel scheduleNameContainer;
+	SimplePanel appNameContainer;
+	SimplePanel usernameContainer;
+	SimplePanel logoutLinkContainer;
+	SimplePanel viewContainer;
 	
 	public void onModuleLoad()
 	{
 		VerticalPanel pagePanel = new VerticalPanel();
 		pagePanel.addStyleName("mainWidget");
 		
-		HorizontalPanel topBar = new HorizontalPanel();
-		topBar.addStyleName("topBar");
-		
-		SimplePanel scheduleNameContainer = new SimplePanel();
-		scheduleNameContainer.setStyleName("scheduleName");
-		topBar.add(scheduleNameContainer);
-		
-		VerticalPanel usernameAndLogout = new VerticalPanel();
-		usernameAndLogout.addStyleName("usernameAndLogout");
-		
-		SimplePanel usernameContainer = new SimplePanel();
-		usernameAndLogout.add(usernameContainer);
-		
-		SimplePanel logoutLinkContainer = new SimplePanel();
-		usernameAndLogout.add(logoutLinkContainer);
-		topBar.add(usernameAndLogout);
+			HorizontalPanel topBar = new HorizontalPanel();
+			topBar.addStyleName("topBar");
+			
+			FlowPanel topBarLeftSide = new FlowPanel();
+			topBarLeftSide.addStyleName("topBarLeftSide");
+			topBar.add(topBarLeftSide);
+			
+			scheduleNameContainer = new SimplePanel();
+			scheduleNameContainer.setStyleName("scheduleName");
+			topBarLeftSide.add(scheduleNameContainer);
+			
+			appNameContainer = new SimplePanel();
+			appNameContainer.setStyleName("appName");
+			appNameContainer.add(new Label("Schedulizerifier"));
+			topBarLeftSide.add(appNameContainer);
+			
+			VerticalPanel usernameAndLogout = new VerticalPanel();
+			usernameAndLogout.addStyleName("usernameAndLogout");
+			
+			usernameContainer = new SimplePanel();
+			usernameAndLogout.add(usernameContainer);
+			
+			logoutLinkContainer = new SimplePanel();
+			usernameAndLogout.add(logoutLinkContainer);
+			topBar.add(usernameAndLogout);
 		
 		pagePanel.add(topBar);
 		
-		SimplePanel viewContainer = new SimplePanel();
+		viewContainer = new SimplePanel();
 		pagePanel.add(viewContainer);
-		
+
 		RootPanel.get().add(pagePanel);
 		
-		openInitialView(true, scheduleNameContainer, viewContainer, usernameContainer, logoutLinkContainer);
+		openInitialView(true, viewContainer);
 	}
 	
 	private void openInitialView(
 			boolean parseURLArguments,
-			final SimplePanel scheduleNameContainer,
-			final SimplePanel viewContainer,
-			final SimplePanel usernameContainer,
-			final SimplePanel logoutLinkContainer) {
+			final Panel viewContainer) {
 		
 		final LoadingPopup loadingPopup = new LoadingPopup();
 		loadingPopup.show();
 		
-		scheduleNameContainer.clear();
 		viewContainer.clear();
-		usernameContainer.clear();
-		logoutLinkContainer.clear();
 		
 		final String username = parseURLArguments ? parseURLArgument(Window.Location.getHref(), "userid") : null;
 		String documentIDStr = parseURLArguments ? parseURLArgument(Window.Location.getHref(), "originaldocumentid") : null;
 		assert ((username == null) == (documentIDStr == null));
 		
 		if (username == null || documentIDStr == null) {
-			ViewFrame newViewFrame = new ViewFrame(new LoginView(service, usernameContainer, logoutLinkContainer,
-					scheduleNameContainer));
+			ViewFrame newViewFrame = new ViewFrame(new LoginView(service, this));
 			viewContainer.add(newViewFrame);
 			newViewFrame.afterPush();
 			loadingPopup.hide();
@@ -89,22 +97,13 @@ public class Scheduler implements EntryPoint
 		
 		Login.login(service, username, new AsyncCallback<Void>() {
 			public void onSuccess(Void result) {
-				
-				usernameContainer.add(new Label(username));
-				logoutLinkContainer.add(HTMLUtilities.createLink("Log Out", "inAppLink", new ClickHandler() {
-					public void onClick(ClickEvent event) {
-						viewContainer.clear();
-						openInitialView(false, scheduleNameContainer, viewContainer, usernameContainer, logoutLinkContainer);
-					}
-				}));
+				onLogin(username);
 				
 				service.createWorkingCopyForOriginalDocument(originalDocumentID, new AsyncCallback<DocumentGWT>() {
 					public void onSuccess(DocumentGWT workingCopyDocument) {
-						HTML documentNameHTML = new HTML("<h2>" + workingCopyDocument.getName() + "<h2>");
-						scheduleNameContainer.add(documentNameHTML);
+						onOpenedDocument(workingCopyDocument.getName());
 						
-						ViewFrame newViewFrame = new ViewFrame(new AdminScheduleNavView(service, username,
-								workingCopyDocument));
+						ViewFrame newViewFrame = new ViewFrame(new AdminScheduleNavView(service, username, workingCopyDocument));
 						viewContainer.add(newViewFrame);
 						newViewFrame.afterPush();
 						loadingPopup.hide();
@@ -133,5 +132,29 @@ public class Scheduler implements EntryPoint
 		assert (matcher.getGroupCount() == 2);
 		
 		return matcher.getGroup(1);
+	}
+
+	public void onOpenedDocument(String documentName) {
+		scheduleNameContainer.add(new Label(documentName));
+		
+		appNameContainer.clear();
+		appNameContainer.add(new Label("- Schedulizerifier"));
+	}
+	
+	public void onLogin(String username) {
+		usernameContainer.add(new Label(username));
+		logoutLinkContainer.add(HTMLUtilities.createLink("Log Out", "inAppLink", new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				viewContainer.clear();
+				openInitialView(false, viewContainer);
+			}
+		}));
+	}
+
+	@Override
+	public void clearHeader() {
+		scheduleNameContainer.clear();
+		usernameContainer.clear();
+		logoutLinkContainer.clear();
 	}
 }

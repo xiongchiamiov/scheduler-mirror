@@ -21,11 +21,11 @@ import com.smartgwt.client.types.ListGridEditEvent;
 import com.smartgwt.client.types.RowEndEditAction;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Canvas;
-import com.smartgwt.client.widgets.IButton;  
-import com.smartgwt.client.widgets.ImgButton;  
+import com.smartgwt.client.widgets.IButton;
+import com.smartgwt.client.widgets.ImgButton;
 import com.smartgwt.client.widgets.Window;
-import com.smartgwt.client.widgets.events.ClickEvent;  
-import com.smartgwt.client.widgets.events.ClickHandler; 
+import com.smartgwt.client.widgets.events.ClickEvent;
+import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -34,13 +34,13 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 	private GreetingServiceAsync service;
 	private final DocumentGWT document;
 	private ViewFrame frame;
-
+	
 	public InstructorsView(GreetingServiceAsync service, DocumentGWT document) {
 		this.service = service;
 		this.document = document;
 		// this.addStyleName("iViewPadding");
 	}
-
+	
 	@Override
 	public boolean canPop() {
 		return true;
@@ -50,59 +50,51 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 		// return
 		// Window.confirm("You have unsaved data which will be lost. Are you sure you want to navigate away?");
 	}
-
+	
 	@Override
 	public void afterPush(ViewFrame frame) {
 		this.frame = frame;
-
+		
 		this.setWidth("100%");
 		this.setHeight("100%");
-
-		this.add(new HTML("<h2>Instructors</h2>"));
-
+		
+		// this.add(new HTML("<h2>Instructors</h2>"));
+		
 		final ListGrid grid = new ListGrid() {
 			@Override
-			protected Canvas createRecordComponent(final ListGridRecord record,
-					Integer colNum) {
+			protected Canvas createRecordComponent(final ListGridRecord record, Integer colNum) {
 				String fieldName = this.getFieldName(colNum);
 				if (fieldName.equals("instructorPrefs")) {
-					IButton button = new IButton();  
-                    button.setHeight(18);  
-                    button.setWidth(65);                      
-                    button.setTitle("Preferences");  
-                    button.addClickHandler(new ClickHandler() {  
-                        public void onClick(ClickEvent event) {  
-							final int instructorID = record
-									.getAttributeAsInt("id");
-							service.getInstructorsForDocument(
-									document.getID(),
-									new AsyncCallback<List<InstructorGWT>>() {
-										public void onFailure(
-												Throwable caught) {
-											com.google.gwt.user.client.Window.alert("failed to get instructors!");
+					IButton button = new IButton();
+					button.setHeight(18);
+					button.setWidth(65);
+					button.setTitle("Preferences");
+					button.addClickHandler(new ClickHandler() {
+						public void onClick(ClickEvent event) {
+							final int instructorID = record.getAttributeAsInt("id");
+							service.getInstructorsForDocument(document.getID(), new AsyncCallback<List<InstructorGWT>>() {
+								public void onFailure(Throwable caught) {
+									com.google.gwt.user.client.Window.alert("Failed to get instructors!");
+								}
+								public void onSuccess(List<InstructorGWT> result) {
+									for (InstructorGWT instructor : result) {
+										if (instructor.getID().equals(instructorID)) {
+											preferencesButtonClicked(instructor);
+											break;
 										}
-
-										@Override
-										public void onSuccess(
-												List<InstructorGWT> result) {
-											for (InstructorGWT instructor : result) {
-												if (instructor
-														.getID()
-														.equals(instructorID)) {
-													preferencesButtonClicked(instructor);
-													break;
-												}
-											}
-										}
-									});
-                        }  
-                    });  
-                    return button;
-				} else {
+									}
+								}
+							});
+						}
+					});
+					return button;
+				}
+				else {
 					return null;
 				}
 			}
 		};
+		
 		grid.setWidth("100%");
 		grid.setHeight(300);
 		grid.setShowAllRecords(true);
@@ -115,31 +107,30 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 		grid.setDataSource(new InstructorsDataSource(service, document));
 		grid.setShowRecordComponents(true);
 		grid.setShowRecordComponentsByCell(true);
-
+		
 		ListGridField idField = new ListGridField("id");
 		idField.setHidden(true);
 
+		ListGridField scheduleableField = new ListGridField("isSchedulable", "Schedulable");
 		ListGridField usernameField = new ListGridField("username", "Username");
-		ListGridField firstNameField = new ListGridField("firstName",
-				"First Name");
+		ListGridField firstNameField = new ListGridField("firstName", "First Name");
 		ListGridField lastNameField = new ListGridField("lastName", "Last Name");
 		ListGridField maxWTUField = new ListGridField("maxWTU", "Max WTU");
-		ListGridField instructorPrefsField = new ListGridField(
-				"instructorPrefs", "Preferences");
+		ListGridField instructorPrefsField = new ListGridField("instructorPrefs", "Preferences");
 		instructorPrefsField.setAlign(Alignment.CENTER);
-
-		grid.setFields(idField, usernameField, firstNameField, lastNameField,
+		
+		grid.setFields(idField, scheduleableField, usernameField, firstNameField, lastNameField,
 				maxWTUField, instructorPrefsField);
-
+		
 		this.add(grid);
-
+		
 		this.add(new Button("Add New Instructor", new com.google.gwt.event.dom.client.ClickHandler() {
 			@Override
 			public void onClick(com.google.gwt.event.dom.client.ClickEvent event) {
 				grid.startEditingNew();
 			}
 		}));
-
+		
 		this.add(new Button("Remove Selected Instructors", new com.google.gwt.event.dom.client.ClickHandler() {
 			@Override
 			public void onClick(com.google.gwt.event.dom.client.ClickEvent event) {
@@ -150,24 +141,21 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 			}
 		}));
 	}
-
+	
 	@Override
-	public void beforePop() {
-	}
-
+	public void beforePop() {}
+	
 	@Override
-	public void beforeViewPushedAboveMe() {
-	}
-
+	public void beforeViewPushedAboveMe() {}
+	
 	@Override
-	public void afterViewPoppedFromAboveMe() {
-	}
-
+	public void afterViewPoppedFromAboveMe() {}
+	
 	@Override
 	public Widget getContents() {
 		return this;
 	}
-
+	
 	public void preferencesButtonClicked(InstructorGWT instructor) {
 		if (frame.canPopViewsAboveMe()) {
 			// viewFrame.popFramesAboveMe();
@@ -186,7 +174,7 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 			weewee.setWidget(iipv);
 			weewee.setSize("700px", "600px");
 			window.addItem(weewee);
-
+			
 			ClickListener listener = new ClickListener() {
 				public void onClick(Widget sender) {
 					System.out.println("Got here +++++++++++++++++++++++++++++");
@@ -196,6 +184,7 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 			Button button = new Button("Close", listener);
 			iipv.add(button);
 			button.setStyleName("centerness");
+
 			window.setAutoSize(true);
 			window.show();
 		}
@@ -204,5 +193,5 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 			System.out.println("ABANDON SHIP CAPTAIN");
 		}
 	}
-
+	
 }

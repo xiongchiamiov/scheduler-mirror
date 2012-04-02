@@ -48,7 +48,7 @@ public class ScheduleTrashView extends VerticalPanel implements IViewContents {
 	private HashMap<Integer, HorizontalPanel> documentPanels;
 	private boolean colorNextRow = false;
 	
-	public ScheduleTrashView(final GreetingServiceAsync service, final SimplePanel scheduleNameContainer, final String username) {
+	public ScheduleTrashView(final GreetingServiceAsync service, final String username) {
 		this.service = service;
 		this.username = username;
 		this.scheduleNames = new ArrayList<String>();
@@ -63,8 +63,7 @@ public class ScheduleTrashView extends VerticalPanel implements IViewContents {
 			public void execute() {
 				if (myFrame.canPopViewsAboveMe()) {
 					myFrame.popFramesAboveMe();
-					myFrame
-							.frameViewAndPushAboveMe(new SelectScheduleView(service, scheduleNameContainer, username));
+					myFrame.frameViewAndPushAboveMe(new SelectScheduleView(service, username));
 				}
 			}
 		});
