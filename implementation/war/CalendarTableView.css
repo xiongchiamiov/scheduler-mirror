@@ -61,6 +61,7 @@
 #CalendarTable td.daySpacer 
 {
    border-right:1px solid #000000;
+   border-bottom:1px solid #000000;
    padding:0px;
    margin:0px;
    width:0px;

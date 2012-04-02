@@ -75,6 +75,7 @@ public class CalendarListView extends SimplePanel {
 		clear();
 
 		final StringBuilder builder = new StringBuilder();
+		builder.append("<link type=\"text/css\" rel=\"stylesheet\" href=\"CalendarListView.css\">");
 		builder.append("<style type=\"text/css\">"
 				+ "#ListTableContainer {position:absolute;top:116px;left:"
 				+ mLeftOffset

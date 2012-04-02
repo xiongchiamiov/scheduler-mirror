@@ -42,15 +42,7 @@ public class CourseListView extends SimplePanel {
 	
 	public void drawList() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("<style type=\"text/css\">"+
-				"#ScheduleListContainer {position:absolute;top:116px;bottom:33px;left:0px;width:200px;border-right:1px solid #000000;}"+
-				"#ScheduleListTableContainer {position:absolute;top:28px;left:0px;right:0px;bottom:0px;width:100%;border:none;margin:0px;padding:0px;overflow-y:auto;overflow-x:hidden;}"+
-				"#ScheduleList {margin:0px;background-color:#000000;border:none;cellspacing:0px;border-spacing:0px;width:100%;}"+
-				"#ScheduleList tr {height:20px;}"+
-				"#ScheduleList td {background-color:#FFFFFF;border-bottom:1px solid #d1dfdf;text-align:center;padding:0px;margin:0px;}"+
-				"#ScheduleListHeader {width:100%;height:19px;background-color:#edf2f2;font-weight:bold;border-bottom:1px solid #000000;padding:0px;margin:0px;padding-top:4px;padding-bottom:4px;}"+
-				"#ScheduleList td .ScheduleListItem {background-color:#DFF0CF;margin:1px;text-align:center;padding-top:4px;padding-bottom:4px;height:100%;width:100%;border:none;cursor:move;}"+
-				"</style>");
+		builder.append("<link type=\"text/css\" rel=\"stylesheet\" href=\"CourseListView.css\">");
 		builder.append("<div id=\"ScheduleListContainer\"" +
 				"onmouseup=\"listMouseUp("+-1+")\" " +
 				">");
