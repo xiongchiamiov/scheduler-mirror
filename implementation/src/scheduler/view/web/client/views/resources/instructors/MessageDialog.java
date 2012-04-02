@@ -9,11 +9,20 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-
+/**
+ * This dialog is a message box
+ * @author Carsten Pfeffer
+ */
 public class MessageDialog extends DialogBox {
 	private VerticalPanel panel;
 	private MessageDialogClicked clicked;
 	
+	/**
+	 * Creates a message box with the buttons defined by 'type'
+	 * @param header: headline message
+	 * @param message: message shown in the dialog
+	 * @param type: determines which buttons are shown
+	 */
 	public MessageDialog(final String header, final String message, MessageDialogType type) {
 		this.setText(header);
 		this.setGlassEnabled(true);
@@ -102,11 +111,18 @@ public class MessageDialog extends DialogBox {
         this.add(this.panel);
 	}
 	
+	/**
+	 * Set the info, which button was clicked
+	 * @param clicked
+	 */
 	public void setClickedButton(MessageDialogClicked clicked)
 	{
 		this.clicked = clicked;
 	}
 	
+	/**
+	 * @return the button type which has been clicked (either YES, NO, CLOSE, OK or CANCEL)
+	 */
 	public MessageDialogClicked getClickedButton()
 	{
 		return this.clicked;
