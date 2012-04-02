@@ -16,7 +16,7 @@ import scheduler.view.web.shared.DocumentGWT;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -24,6 +24,8 @@ import com.google.gwt.user.client.ui.Widget;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.Side;
 import com.smartgwt.client.types.TabBarControls;
+import com.smartgwt.client.widgets.Canvas;
+import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
 import com.smartgwt.client.widgets.menu.MenuItemSeparator;
@@ -293,17 +295,15 @@ public class AdminScheduleNavView extends VerticalPanel implements IViewContents
 	
 	
 	private void addMenus() {
-		Panel panel = new FlowPanel();
-		panel.addStyleName("menubarcontainer");
-		Panel container = new SimplePanel();
-		container.addStyleName("menubar");
-		container.add(makeToolStrip());
-		panel.add(container);
-		add(panel);
+		HLayout navBar = new HLayout();
+		navBar.setWidth100();
+		navBar.setHeight(40);
+		add(navBar);
 		
 		viewFrameContainer = new SimplePanel();
 		add(viewFrameContainer);
-		
-		panel.add(makeTabs());
+
+		navBar.addMember(makeToolStrip());
+		navBar.addMember(makeTabs());
 	}
 }
