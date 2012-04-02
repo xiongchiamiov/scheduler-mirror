@@ -58,7 +58,7 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 		this.setWidth("100%");
 		this.setHeight("100%");
 
-		this.add(new HTML("<h2>Instructors</h2>"));
+//		this.add(new HTML("<h2>Instructors</h2>"));
 
 		final ListGrid grid = new ListGrid() {
 			@Override

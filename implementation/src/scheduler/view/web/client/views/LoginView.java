@@ -25,21 +25,17 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class LoginView extends VerticalPanel implements IViewContents {
 	GreetingServiceAsync service;
-	final MenuBar menuBar;
 	
 	String username;
 	ViewFrame myFrame;
 	final SimplePanel usernameContainer, logoutLinkContainer, scheduleNameContainer;
 
-	public LoginView(GreetingServiceAsync service, SimplePanel usernameContainer, SimplePanel logoutLinkContainer, SimplePanel scheduleNameContainer, MenuBar menuBar) {
+	public LoginView(GreetingServiceAsync service, SimplePanel usernameContainer, SimplePanel logoutLinkContainer, SimplePanel scheduleNameContainer) {
 		this.usernameContainer = usernameContainer;
 		this.logoutLinkContainer = logoutLinkContainer;
 		this.scheduleNameContainer = scheduleNameContainer;
 		
 		this.service = service;
-		this.menuBar = menuBar;
-		
-		DOM.setElementAttribute(menuBar.getElement(), "id", "menu");
 
 		this.setWidth("100%");
 		this.setHorizontalAlignment(HasAlignment.ALIGN_CENTER);
@@ -94,7 +90,7 @@ public class LoginView extends VerticalPanel implements IViewContents {
 	protected void pushSelectScheduleView(String username) {
 		assert(myFrame.canPopViewsAboveMe());
 		myFrame.popFramesAboveMe();
-		myFrame.frameViewAndPushAboveMe(new SelectScheduleView(service, scheduleNameContainer, menuBar, username));
+		myFrame.frameViewAndPushAboveMe(new SelectScheduleView(service, scheduleNameContainer, username));
 	}
 	
 	@Override

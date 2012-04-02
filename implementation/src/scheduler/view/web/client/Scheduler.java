@@ -49,15 +49,12 @@ public class Scheduler implements EntryPoint
 		
 		pagePanel.add(topBar);
 		
-		MenuBar menuBar = new MenuBar();
-		pagePanel.add(menuBar);
-		
 		SimplePanel viewContainer = new SimplePanel();
 		pagePanel.add(viewContainer);
 		
 		RootPanel.get().add(pagePanel);
 		
-		openInitialView(true, scheduleNameContainer, viewContainer, usernameContainer, logoutLinkContainer, menuBar);
+		openInitialView(true, scheduleNameContainer, viewContainer, usernameContainer, logoutLinkContainer);
 	}
 	
 	private void openInitialView(
@@ -65,8 +62,7 @@ public class Scheduler implements EntryPoint
 			final SimplePanel scheduleNameContainer,
 			final SimplePanel viewContainer,
 			final SimplePanel usernameContainer,
-			final SimplePanel logoutLinkContainer,
-			final MenuBar menuBar) {
+			final SimplePanel logoutLinkContainer) {
 		
 		final LoadingPopup loadingPopup = new LoadingPopup();
 		loadingPopup.show();
@@ -75,7 +71,6 @@ public class Scheduler implements EntryPoint
 		viewContainer.clear();
 		usernameContainer.clear();
 		logoutLinkContainer.clear();
-		menuBar.clearItems();
 		
 		final String username = parseURLArguments ? parseURLArgument(Window.Location.getHref(), "userid") : null;
 		String documentIDStr = parseURLArguments ? parseURLArgument(Window.Location.getHref(), "originaldocumentid") : null;
@@ -83,7 +78,7 @@ public class Scheduler implements EntryPoint
 		
 		if (username == null || documentIDStr == null) {
 			ViewFrame newViewFrame = new ViewFrame(new LoginView(service, usernameContainer, logoutLinkContainer,
-					scheduleNameContainer, menuBar));
+					scheduleNameContainer));
 			viewContainer.add(newViewFrame);
 			newViewFrame.afterPush();
 			loadingPopup.hide();
@@ -99,7 +94,7 @@ public class Scheduler implements EntryPoint
 				logoutLinkContainer.add(HTMLUtilities.createLink("Log Out", "inAppLink", new ClickHandler() {
 					public void onClick(ClickEvent event) {
 						viewContainer.clear();
-						openInitialView(false, scheduleNameContainer, viewContainer, usernameContainer, logoutLinkContainer, menuBar);
+						openInitialView(false, scheduleNameContainer, viewContainer, usernameContainer, logoutLinkContainer);
 					}
 				}));
 				
@@ -108,7 +103,7 @@ public class Scheduler implements EntryPoint
 						HTML documentNameHTML = new HTML("<h2>" + workingCopyDocument.getName() + "<h2>");
 						scheduleNameContainer.add(documentNameHTML);
 						
-						ViewFrame newViewFrame = new ViewFrame(new AdminScheduleNavView(service, menuBar, username,
+						ViewFrame newViewFrame = new ViewFrame(new AdminScheduleNavView(service, username,
 								workingCopyDocument));
 						viewContainer.add(newViewFrame);
 						newViewFrame.afterPush();

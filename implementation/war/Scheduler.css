@@ -574,3 +574,34 @@ h1 {
 .exportChoice:focus {
 	background-color: #D3D3D3;
 }
+
+.menubarcontainer {
+	position: relative;
+}
+
+.menubar {
+	position: absolute;
+}
+
+.menutabset {
+}
+
+.menutabset .tabBar {
+	left: 143px !important;
+}
+
+.fileMenuButton {
+	fmargin-left: 5px;
+}
+
+.settingsMenuButton {
+	fmargin-left: 5px;
+}
+
+.menumenu {
+	z-index: 111000000 !important;
+}
+
+.tabSetContainer {
+	border-bottom-width: 0 !important;
+}

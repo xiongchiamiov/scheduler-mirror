@@ -37,8 +37,6 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents
 {
    protected final GreetingServiceAsync      service;
 
-   protected final MenuBar                     menuBar;
-
    protected final String                      username;
    private ArrayList<String>                 scheduleNames;
 
@@ -52,10 +50,9 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents
    final SimplePanel scheduleNameContainer;
    String currentDocName;
    
-   public SelectScheduleView(final GreetingServiceAsync service, final SimplePanel scheduleNameContainer, final MenuBar menuBar, final String username)
+   public SelectScheduleView(final GreetingServiceAsync service, final SimplePanel scheduleNameContainer, final String username)
    {
       this.service = service;
-      this.menuBar = menuBar;
       this.username = username;
       this.scheduleNames = new ArrayList<String>();
       this.addStyleName("iViewPadding");
@@ -63,38 +60,35 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents
       this.documentPanels = new HashMap<Integer, HorizontalPanel>();
       this.scheduleNameContainer = scheduleNameContainer;
 
-      menuBar.clearItems();
+      Button homeTab = new Button("Home", new ClickHandler() {
+			public void onClick(ClickEvent event) {
+            if (myFrame.canPopViewsAboveMe())
+            {
+               myFrame.popFramesAboveMe();
+               myFrame.frameViewAndPushAboveMe(new SelectScheduleView(service, scheduleNameContainer, username));
+            }
+			}
+		});
+      
       // Put tabs in menu bar
-      MenuItem homeTab = new MenuItem("Home", true, new Command()
-      {
-         @Override
-         public void execute()
-         {
-            if (myFrame.canPopViewsAboveMe())
-            {
-               myFrame.popFramesAboveMe();
-               myFrame.frameViewAndPushAboveMe(new SelectScheduleView(service, scheduleNameContainer, menuBar, username));
-            }
-         }
-      });
-
+      
       DOM.setElementAttribute(homeTab.getElement(), "id", "hometab");
-      menuBar.addItem(homeTab);
+      this.add(homeTab);
 
-      MenuItem trashTab = new MenuItem("Trash", true, new Command()
-      {
-         public void execute()
-         {
+      Button trashTab = new Button("Trash", new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
             if (myFrame.canPopViewsAboveMe())
             {
                myFrame.popFramesAboveMe();
-               myFrame.frameViewAndPushAboveMe(new ScheduleTrashView(service, scheduleNameContainer, menuBar, username));
+               myFrame.frameViewAndPushAboveMe(new ScheduleTrashView(service, scheduleNameContainer, username));
             }
-         }
-      });
-
+			}
+		});
+      
       DOM.setElementAttribute(trashTab.getElement(), "id", "trashtab");
-      menuBar.addItem(trashTab);
+      this.add(trashTab);
 
       // Home panel
       this.addStyleName("homeView");

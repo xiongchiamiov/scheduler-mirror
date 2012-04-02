@@ -14,10 +14,10 @@ public final class ViewFrame extends SimplePanel {
 	protected boolean canPop() {
 		return contents.canPop();
 	}
-	protected void afterPush() {
+	public void afterPush() {
 		contents.afterPush(this);
 	}
-	protected void beforePop() {
+	public void beforePop() {
 		contents.beforePop();
 	}
 	protected void beforeViewPushedAboveMe() {

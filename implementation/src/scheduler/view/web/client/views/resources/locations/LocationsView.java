@@ -53,7 +53,7 @@ public class LocationsView extends VerticalPanel implements IViewContents {
 		this.setWidth("100%");
 		this.setHeight("100%");
 		
-		this.add(new HTML("<h2>Locations</h2>"));
+//		this.add(new HTML("<h2>Locations</h2>"));
 		
 		final ListGrid grid = new ListGrid();
 		grid.setWidth("100%");
