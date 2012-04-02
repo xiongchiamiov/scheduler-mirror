@@ -108,26 +108,13 @@ public class InstructorPreferencesView extends VerticalPanel {//implements IView
 				// if there are no courses, a message dialog is shown
 				if(result.size() == 0)
 				{
-//					DialogBox dlg = new DialogBox();
-//					dlg.setTitle("No courses available");
-//					dlg.setText("There are currently no courses available.");
-//					dlg.add(new Button("OK"));
-//					dlg.setGlassEnabled(true);
-//					dlg.setModal(true);
-//					dlg.center();
-//					//dlg.show();
-					
-//					DialogBox dlg = InstructorPreferencesView.messageBox("No courses available",
-//											"There are currently no courses available.");
-//					dlg.center();
-					
 					MessageDialog dlg = new MessageDialog("No courses available",
 									"There are currently no courses available. Do you want to proceed?",
 									MessageDialogType.YES_NO);
 					dlg.center();
 					if(dlg.getClickedButton() == MessageDialogClicked.NO)
 					{
-						//close window
+						//close parent window
 					}
 				}
 				else
