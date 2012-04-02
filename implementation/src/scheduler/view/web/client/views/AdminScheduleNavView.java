@@ -8,10 +8,10 @@ import scheduler.view.web.client.views.resources.instructors.InstructorsView;
 import scheduler.view.web.client.views.resources.locations.LocationsView;
 import scheduler.view.web.shared.DocumentGWT;
 
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.Side;
@@ -28,7 +28,7 @@ import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripMenuButton;
 
-public class AdminScheduleNavView extends SimplePanel implements IViewContents {
+public class AdminScheduleNavView extends VerticalPanel implements IViewContents {
 	final GreetingServiceAsync service;
 	final String username;
 	final DocumentGWT document;
@@ -425,12 +425,12 @@ public class AdminScheduleNavView extends SimplePanel implements IViewContents {
 		panel.add(tabsetcontainer);
 
 		viewFrameContainer = new SimplePanel();
-		panel.add(viewFrameContainer);
 
-		tabsetcontainer.add(tabSet);
 		
 		this.add(panel);
+		this.add(viewFrameContainer);
 
+		tabsetcontainer.add(tabSet);
 		
 	}
 }
