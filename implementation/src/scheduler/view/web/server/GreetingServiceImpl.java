@@ -153,6 +153,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		try {
 			Document document = model.findDocumentByID(documentID);
 			assert (document.getOriginal() != null);
+			assert(document.getStaffInstructor() != null);
+			assert(document.getTBALocation() != null);
 			int id = Conversion.courseFromGWT(model, course).setDocument(document).insert().getID();
 			course.setID(id);
 			return course;
@@ -184,6 +186,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		try {
 			Document document = model.findDocumentByID(documentID);
 			assert (document.getOriginal() != null);
+			assert(document.getStaffInstructor() != null);
+			assert(document.getTBALocation() != null);
 			List<CourseGWT> result = new LinkedList<CourseGWT>();
 			for (Course course : model.findCoursesForDocument(document)) {
 				System.out.println("for doc id " + documentID + " returning course name " + course.getName());
@@ -215,6 +219,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		try {
 			Document document = model.findDocumentByID(documentID);
 			assert (document.getOriginal() != null);
+			assert(document.getStaffInstructor() != null);
+			assert(document.getTBALocation() != null);
 			int id = Conversion.instructorFromGWT(model, instructor).setDocument(document).insert().getID();
 			instructor.setID(id);
 			return instructor;
@@ -244,6 +250,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			List<InstructorGWT> result = new LinkedList<InstructorGWT>();
 			Document document = model.findDocumentByID(documentID);
 			assert (document.getOriginal() != null);
+			assert(document.getStaffInstructor() != null);
+			assert(document.getTBALocation() != null);
 			for (Instructor instructor : model.findInstructorsForDocument(document)) {
 				result.add(Conversion.instructorToGWT(instructor));
 			}
@@ -273,6 +281,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		try {
 			Document document = model.findDocumentByID(documentID);
 			assert (document.getOriginal() != null);
+			assert(document.getStaffInstructor() != null);
+			assert(document.getTBALocation() != null);
 			Location modelLocation = model.createTransientLocation(
 					location.getRoom(), location.getType(), location.getRawMaxOccupancy(), true);
 			modelLocation.setProvidedEquipment(location.getEquipment());
@@ -304,6 +314,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		try {
 			Document document = model.findDocumentByID(documentID);
 			assert (document.getOriginal() != null);
+			assert(document.getStaffInstructor() != null);
+			assert(document.getTBALocation() != null);
 			List<LocationGWT> result = new LinkedList<LocationGWT>();
 			for (Location location : model.findLocationsForDocument(document))
 				result.add(Conversion.locationToGWT(location));
@@ -346,6 +358,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		try {
 			Collection<DocumentGWT> result = new LinkedList<DocumentGWT>();
 			for (Document doc : model.findAllDocuments()) {
+				assert(doc.getStaffInstructor() != null);
+				assert(doc.getTBALocation() != null);
+				
 				if (doc.isWorkingCopy())
 					continue;
 				System.out.println("found original doc " + doc.isTrashed());
@@ -394,6 +409,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	public DocumentGWT createWorkingCopyForOriginalDocument(Integer originalDocumentID) {
 		try {
 			Document originalDocument = model.findDocumentByID(originalDocumentID);
+			assert(originalDocument.getStaffInstructor() != null);
+			assert(originalDocument.getTBALocation() != null);
 			
 			Document workingCopyDocument = originalDocument.getWorkingCopy();
 			
@@ -424,6 +441,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	public void saveWorkingCopyToOriginalDocument(Integer workingCopyDocumentID) {
 		try {
 			Document workingCopyDocument = model.findDocumentByID(workingCopyDocumentID);
+			assert(workingCopyDocument.getStaffInstructor() != null);
+			assert(workingCopyDocument.getTBALocation() != null);
 			
 			Document originalDocument = workingCopyDocument.getOriginal();
 			assert (originalDocument != null);
@@ -439,6 +458,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			workingCopyDocument.setOriginal(originalDocument);
 			originalDocument.update();
 			workingCopyDocument.update();
+			
+			assert(originalDocument.getStaffInstructor() != null);
+			assert(originalDocument.getTBALocation() != null);
 			
 			
 			if (this.loadAndSaveFromFileSystem) {
@@ -464,6 +486,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	public void deleteWorkingCopyDocument(Integer workingCopyDocumentID) {
 		try {
 			Document workingCopyDocument = model.findDocumentByID(workingCopyDocumentID);
+			assert(workingCopyDocument.getStaffInstructor() != null);
+			assert(workingCopyDocument.getTBALocation() != null);
 			
 			// Document originalDocument =
 			// model.getOriginalForWorkingCopyDocument(workingCopyDocument);
@@ -483,6 +507,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		
 		try {
 			Document workingCopyDocument = model.findDocumentByID(workingCopyDocumentID);
+			assert(workingCopyDocument.getStaffInstructor() != null);
+			assert(workingCopyDocument.getTBALocation() != null);
 			
 			Document newOriginal = model.copyDocument(workingCopyDocument, scheduleName);
 			newOriginal.setOriginal(null);
@@ -560,6 +586,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		try {
 			Schedule schedule = model.findScheduleByID(scheduleID);
 			assert (schedule.getDocument().getOriginal() != null);
+			assert(schedule.getDocument().getStaffInstructor() != null);
+			assert(schedule.getDocument().getTBALocation() != null);
 			
 			assert (scheduleItem.getCourseID() >= 0);
 			// temporary, please hand in the staffinstructor id and tbalocation id
@@ -667,6 +695,10 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		try {
 			System.out.println("got gwt doc " + documentGWT.isTrashed());
 			Document document = Conversion.readDocumentFromGWT(model, documentGWT);
+
+			assert (document.getStaffInstructor() != null);
+			assert (document.getTBALocation() != null);
+			
 			System.out.println("updating model doc " + document.isTrashed());
 			document.update();
 		}
@@ -679,6 +711,10 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	public DocumentGWT findDocumentByID(int automaticOpenDocumentID) {
 		try {
 			Document doc = model.findDocumentByID(automaticOpenDocumentID);
+
+			assert (doc.getStaffInstructor() != null);
+			assert (doc.getTBALocation() != null);
+			
 			Schedule schedule = doc.getSchedules().iterator().next();
 			return Conversion.documentToGWT(doc, schedule.getID());
 		}

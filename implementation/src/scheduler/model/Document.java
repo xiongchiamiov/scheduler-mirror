@@ -55,8 +55,10 @@ public class Document extends Identified {
 			schedule.delete();
 		for (Location location : getLocations())
 			location.delete();
+		getTBALocation().delete();
 		for (Instructor instructor : getInstructors())
 			instructor.delete();
+		getStaffInstructor().delete();
 		for (Course course : getCourses())
 			course.delete();
 

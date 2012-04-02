@@ -366,7 +366,8 @@ public class Model {
 	public Collection<Instructor> findInstructorsForDocument(Document doc) throws DatabaseException {
 		Collection<Instructor> result = new LinkedList<Instructor>();
 		for (IDBInstructor underlying : database.findInstructorsForDocument(doc.underlyingDocument))
-			result.add(instructorCache.decorateAndPutIfNotPresent(underlying));
+			if (!underlying.getID().equals(doc.getStaffInstructor().getID()))
+				result.add(instructorCache.decorateAndPutIfNotPresent(underlying));
 		return result;
 	}
 
@@ -449,7 +450,8 @@ public class Model {
 	public Collection<Location> findLocationsForDocument(Document doc) throws DatabaseException {
 		Collection<Location> result = new LinkedList<Location>();
 		for (IDBLocation underlying : database.findLocationsForDocument(doc.underlyingDocument))
-			result.add(locationCache.decorateAndPutIfNotPresent(underlying));
+			if (!underlying.getID().equals(doc.getTBALocation().getID()))
+				result.add(locationCache.decorateAndPutIfNotPresent(underlying));
 		return result;
 	}
 
