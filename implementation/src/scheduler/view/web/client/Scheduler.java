@@ -1,16 +1,18 @@
 package scheduler.view.web.client;
 
+import java.util.Map;
+import java.util.TreeMap;
+
 import scheduler.view.web.client.views.AdminScheduleNavView;
 import scheduler.view.web.client.views.LoadingPopup;
 import scheduler.view.web.client.views.LoginView;
+import scheduler.view.web.client.views.SelectScheduleView;
 import scheduler.view.web.shared.DocumentGWT;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.regexp.shared.MatchResult;
-import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -81,23 +83,32 @@ public class Scheduler implements EntryPoint, UpdateHeaderStrategy
 		
 		viewContainer.clear();
 		
-		final String username = parseURLArguments ? parseURLArgument(Window.Location.getHref(), "userid") : null;
-		String documentIDStr = parseURLArguments ? parseURLArgument(Window.Location.getHref(), "originaldocumentid") : null;
-		assert ((username == null) == (documentIDStr == null));
+		Map<String, String> urlArguments = new TreeMap<String, String>();
 		
-		if (username == null || documentIDStr == null) {
+		if (parseURLArguments)
+			urlArguments = URLUtilities.parseURLArguments(Window.Location.getHref());
+		
+		final String username = urlArguments.get("userid");
+		String documentIDStr = urlArguments.get("originaldocumentid");
+		
+		if (username == null) {
+			assert(documentIDStr == null);
 			ViewFrame newViewFrame = new ViewFrame(new LoginView(service, this));
 			viewContainer.add(newViewFrame);
 			newViewFrame.afterPush();
 			loadingPopup.hide();
-			return;
 		}
-		
-		final int originalDocumentID = Integer.parseInt(documentIDStr);
-		
-		Login.login(service, username, new AsyncCallback<Void>() {
-			public void onSuccess(Void result) {
-				onLogin(username);
+		else {
+			onLogin(username);
+			
+			if (documentIDStr == null) {
+				ViewFrame newViewFrame = new ViewFrame(new SelectScheduleView(service, username));
+				viewContainer.add(newViewFrame);
+				newViewFrame.afterPush();
+				loadingPopup.hide();
+			}
+			else {
+				final int originalDocumentID = Integer.parseInt(documentIDStr);
 				
 				service.createWorkingCopyForOriginalDocument(originalDocumentID, new AsyncCallback<DocumentGWT>() {
 					public void onSuccess(DocumentGWT workingCopyDocument) {
@@ -114,25 +125,19 @@ public class Scheduler implements EntryPoint, UpdateHeaderStrategy
 					}
 				});
 			}
-			
-			@Override
-			public void onFailure(Throwable caught) {
-				Window.alert("Failed to log in as username " + username);
-				loadingPopup.hide();
-			}
-		});
+		}
 	}
 
-	static String parseURLArgument(String url, String parameter) {
-		RegExp regExp = RegExp.compile("[\\?|&].*" + parameter + "=(\\w+)");
-		if (!regExp.test(url))
-			return null;
-		
-		MatchResult matcher = regExp.exec(url);
-		assert (matcher.getGroupCount() == 2);
-		
-		return matcher.getGroup(1);
-	}
+//	static String parseURLArgument(String url, String parameter) {
+//		RegExp regExp = RegExp.compile("[\\?|&].*" + parameter + "=(\\w+)");
+//		if (!regExp.test(url))
+//			return null;
+//		
+//		MatchResult matcher = regExp.exec(url);
+//		assert (matcher.getGroupCount() == 2);
+//		
+//		return matcher.getGroup(1);
+//	}
 
 	public void onOpenedDocument(String documentName) {
 		scheduleNameContainer.add(new Label(documentName));

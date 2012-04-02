@@ -14,18 +14,17 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.TextBox;
+
 
 public class NewScheduleCreator {
 	private interface NamedScheduleCallback {
 		void namedSchedule(String scheduleName);
 	}
 	
-	public static void createNewSchedule(final GreetingServiceAsync service, final String username)
-	{
+	public static void createNewSchedule(final GreetingServiceAsync service, final String username) {
 		displayNewSchedPopup("Create", new NamedScheduleCallback() {
 			@Override
 			public void namedSchedule(final String newDocumentName) {
@@ -45,21 +44,14 @@ public class NewScheduleCreator {
 							
 							DOM.setElementAttribute(popup.getElement(), "id", "failSchedPopup");
 							
-							service.createOriginalDocument(newDocumentName, new AsyncCallback<DocumentGWT>()
-							{
-								
-								@Override
-								public void onSuccess(DocumentGWT newDocument)
-								{
+							service.createOriginalDocument(newDocumentName, new AsyncCallback<DocumentGWT>() {
+								public void onSuccess(DocumentGWT newDocument) {
 									popup.hide();
-									// openDocument(result);
 									assert (newDocumentName.equals(newDocument.getName()));
-									DocumentTabOpener.openDocInNewTab(username, newDocument);
+									TabOpener.openDocInNewTab(username, newDocument);
 								}
 								
-								@Override
-								public void onFailure(Throwable caught)
-								{
+								public void onFailure(Throwable caught) {
 									popup.hide();
 									Window.alert("Failed to open new schedule in" + ": " + caught.getMessage());
 								}
@@ -90,47 +82,46 @@ public class NewScheduleCreator {
 	private static void displayNewSchedPopup(String buttonLabel, final NamedScheduleCallback callback)
 	{
 		final TextBox tb = new TextBox();
-		final DialogBox db = new DialogBox(false);
+		
+
+		final com.smartgwt.client.widgets.Window window = new com.smartgwt.client.widgets.Window();
+		window.setAutoSize(true);
+		window.setTitle("Name Schedule");
+		window.setCanDragReposition(true);
+		window.setCanDragResize(true);
+		
+		
+		
 		FlowPanel fp = new FlowPanel();
-		final Button butt = new Button(buttonLabel, new ClickHandler()
-		{
+		final Button butt = new Button(buttonLabel, new ClickHandler() {
 			@Override
-			public void onClick(ClickEvent event)
-			{
-				db.hide();
-				
+			public void onClick(ClickEvent event) {
+				window.destroy();
 				final String scheduleName = tb.getText();
-				
 				callback.namedSchedule(scheduleName);
 			}
 		});
-		final Button cancelButton = new Button("Cancel", new ClickHandler()
-		{
-			@Override
-			public void onClick(ClickEvent event)
-			{
-				db.hide();
+		final Button cancelButton = new Button("Cancel", new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				window.destroy();
 			}
 		});
 		
-		tb.addKeyPressHandler(new KeyPressHandler()
-		{
-			@Override
-			public void onKeyPress(KeyPressEvent event)
-			{
+		tb.addKeyPressHandler(new KeyPressHandler() {
+			public void onKeyPress(KeyPressEvent event) {
 				if (event.getCharCode() == KeyCodes.KEY_ENTER)
 					butt.click();
 			}
 		});
 		
-		db.setText("Name Schedule");
 		fp.add(new HTML("<center>Specify a new schedule name.</center>"));
 		fp.add(tb);
 		fp.add(butt);
 		fp.add(cancelButton);
-		
-		db.setWidget(fp);
-		db.center();
+		window.addItem(fp);
+
+		window.centerInPage();
+		window.show();
 	}
 	
 	// displayNewSchedPopup("Create", new NameScheduleCallback()

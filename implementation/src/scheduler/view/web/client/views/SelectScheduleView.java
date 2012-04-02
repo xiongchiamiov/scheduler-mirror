@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
-import scheduler.view.web.client.DocumentTabOpener;
+import scheduler.view.web.client.TabOpener;
 import scheduler.view.web.client.GreetingServiceAsync;
 import scheduler.view.web.client.HTMLUtilities;
 import scheduler.view.web.client.IViewContents;
@@ -272,7 +272,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents
          @Override
          public void onClick(ClickEvent event)
          {
-         	DocumentTabOpener.openDocInNewTab(username, document);
+         	TabOpener.openDocInNewTab(username, document);
          }
       }));
       DOM.setElementAttribute(docname.getElement(), "id", "openDocument" + document.getName());

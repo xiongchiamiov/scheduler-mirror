@@ -1,13 +1,21 @@
 package scheduler.view.web.client.views;
 
+import scheduler.view.web.client.ExportDialog;
 import scheduler.view.web.client.GreetingServiceAsync;
 import scheduler.view.web.client.IViewContents;
+import scheduler.view.web.client.Import;
+import scheduler.view.web.client.MergeDialog;
+import scheduler.view.web.client.NewScheduleCreator;
+import scheduler.view.web.client.SaveAsDialog;
+import scheduler.view.web.client.TabOpener;
 import scheduler.view.web.client.ViewFrame;
 import scheduler.view.web.client.views.resources.courses.CoursesView;
 import scheduler.view.web.client.views.resources.instructors.InstructorsView;
 import scheduler.view.web.client.views.resources.locations.LocationsView;
 import scheduler.view.web.shared.DocumentGWT;
 
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -19,6 +27,8 @@ import com.smartgwt.client.types.TabBarControls;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
 import com.smartgwt.client.widgets.menu.MenuItemSeparator;
+import com.smartgwt.client.widgets.menu.events.ClickHandler;
+import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
 import com.smartgwt.client.widgets.tab.events.TabDeselectedEvent;
@@ -82,218 +92,81 @@ public class AdminScheduleNavView extends VerticalPanel implements IViewContents
 	
 	
 	
-	// private void makeFileMenu(final ViewFrame viewFrame) {
-	// fileMenu = new MenuBar(true);
-	// DOM.setElementAttribute(fileMenu.getElement(), "id", "fileMenu");
-	//
-	// MenuItem newItem = new MenuItem("New", true, new Command() {
-	// public void execute() {
-	// NewScheduleCreator.createNewSchedule(service, username);
-	// }
-	// });
-	// DOM.setElementAttribute(newItem.getElement(), "id", "newItem");
-	// fileMenu.addItem(newItem);
-	//
-	// MenuItem openItem = new MenuItem("Open", true, new Command() {
-	// public void execute() {
-	// String baseHref = Window.Location.getHref().substring(0,
-	// Window.Location.getHref().lastIndexOf('?'));
-	// Window.open(baseHref + "?userid=" + username, "_new", null);
-	// }
-	// });
-	// DOM.setElementAttribute(openItem.getElement(), "id", "openItem");
-	// fileMenu.addItem(openItem);
-	//
-	// fileMenu.addSeparator();
-	//
-	// MenuItem closeItem = new MenuItem("Close", true, new Command() {
-	// public void execute() {
-	// assert(false);
-	// }
-	// });
-	//
-	// DOM.setElementAttribute(closeItem.getElement(), "id", "closeItem");
-	// fileMenu.addItem(closeItem);
-	//
-	// MenuItem saveItem = new MenuItem("Save", true, new Command() {
-	// public void execute() {
-	// service.saveWorkingCopyToOriginalDocument(document.getID(), new
-	// AsyncCallback<Void>() {
-	// public void onSuccess(Void result) {
-	// Window.alert("Successfully saved!");
-	// }
-	// public void onFailure(Throwable caught) {
-	// Window.alert("Failed to save! " + caught.getMessage());
-	// }
-	// });
-	// }
-	// });
-	//
-	// DOM.setElementAttribute(saveItem.getElement(), "id", "saveItem");
-	// fileMenu.addItem(saveItem);
-	//
-	// MenuItem saveAsItem = new MenuItem("Save As", true, new Command() {
-	// public void execute() {
-	// SaveAsDialog.afterSaveAsPressed(service, document);
-	// }
-	// });
-	//
-	// DOM.setElementAttribute(saveAsItem.getElement(), "id", "saveAsItem");
-	// fileMenu.addItem(saveAsItem);
-	//
-	// fileMenu.addSeparator();
-	//
-	// MenuItem importItem = new MenuItem("Import", true, new Command() {
-	// public void execute() {
-	// Import.showImport();
-	// }
-	// });
-	//
-	// DOM.setElementAttribute(importItem.getElement(), "id", "importItem");
-	// fileMenu.addItem(importItem);
-	//
-	// MenuItem exportItem = new MenuItem("Export", true, new Command() {
-	// public void execute() {
-	// ExportDialog.displayExportPopup();
-	// }
-	//
-	// });
-	//
-	// DOM.setElementAttribute(exportItem.getElement(), "id", "exportItem");
-	// fileMenu.addItem(exportItem);
-	//
-	// fileMenu.addSeparator();
-	//
-	// MenuItem printItem = new MenuItem("Print", true, new Command() {
-	// public void execute() {
-	// Window.alert("Not yet implemented");
-	// }
-	// });
-	//
-	// DOM.setElementAttribute(printItem.getElement(), "id", "printItem");
-	// fileMenu.addItem(printItem);
-	//
-	//
-	// MenuItem mergeItem = new MenuItem("Merge", true, new Command() {
-	// public void execute() {
-	// MergeDialog.fileMergePressed(service);
-	// }
-	// });
-	//
-	// DOM.setElementAttribute(mergeItem.getElement(), "id", "mergeItem");
-	// fileMenu.addItem(mergeItem);
-	//
-	// // fileMenuItem = new MenuItem("File v", true, fileMenu);
-	// // DOM.setElementAttribute(fileMenuItem.getElement(), "id", "FileVIitem");
-	// }
-	//
-	// private void makeSettingsMenu() {
-	// settingsMenu = new MenuBar(true);
-	// DOM.setElementAttribute(settingsMenu.getElement(), "id", "settingsMenu");
-	//
-	// MenuItem timesItem = new MenuItem("Times", true, new Command() {
-	// public void execute() {
-	// Window.alert("Unimplemented");
-	// }
-	// });
-	// DOM.setElementAttribute(timesItem.getElement(), "id", "timesItem");
-	// settingsMenu.addItem(timesItem);
-	//
-	// MenuItem preferencesItem = new MenuItem("Preferences", true, new Command()
-	// {
-	// public void execute() {
-	// Window.alert("Unimplemented");
-	// }
-	// });
-	// DOM.setElementAttribute(preferencesItem.getElement(), "id",
-	// "preferencesItem");
-	// settingsMenu.addItem(preferencesItem);
-	//
-	// MenuItem permissionsItem = new MenuItem("Permissions/Roles", true, new
-	// Command() {
-	// public void execute() {
-	// Window.alert("Unimplemented");
-	// }
-	// });
-	// DOM.setElementAttribute(permissionsItem.getElement(), "id", "timesItem");
-	// settingsMenu.addItem(permissionsItem);
-	// }
-	//
-	// private void makeResourcesAndScheduleViewsMenuItems(final ViewFrame
-	// viewFrame) {
-	// menuBar.addItem(instructorsMenuItem = new MenuItem("Instructors", true,
-	// new Command() {
-	// public void execute() {
-	// if (viewFrame.canPopViewsAboveMe()) {
-	// viewFrame.popFramesAboveMe();
-	// viewFrame.frameViewAndPushAboveMe(new InstructorsView(service, document));
-	// }
-	// }
-	// }));
-	//
-	// menuBar.addItem(locationsMenuItem = new MenuItem("Locations", true,
-	// new Command() {
-	// public void execute() {
-	// if (viewFrame.canPopViewsAboveMe()) {
-	// viewFrame.popFramesAboveMe();
-	// viewFrame.frameViewAndPushAboveMe(new LocationsView(service, document));
-	// }
-	// }
-	// }));
-	//
-	// menuBar.addItem(coursesMenuItem = new MenuItem("Courses", true,
-	// new Command() {
-	// public void execute() {
-	// if (viewFrame.canPopViewsAboveMe()) {
-	// viewFrame.popFramesAboveMe();
-	// viewFrame.frameViewAndPushAboveMe(new CoursesView(service, document));
-	// }
-	// }
-	// }));
-	//
-	// menuBar.addItem(scheduleMenuItem = new MenuItem("Schedule", true,
-	// new Command() {
-	// public void execute() {
-	// if (viewFrame.canPopViewsAboveMe()) {
-	// viewFrame.popFramesAboveMe();
-	// viewFrame.frameViewAndPushAboveMe(new CalendarView(service, document));
-	// }
-	// }
-	// }));
-	// }
-	
 	private ToolStripMenuButton makeFileMenuAndButton() {
 		Menu menu = new Menu();
 		menu.setShowShadow(true);
 		menu.setShadowDepth(3);
 		
 		MenuItem newItem = new MenuItem("New", "icons/16/document_plain_new.png", "Ctrl+N");
+		newItem.addClickHandler(new ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				NewScheduleCreator.createNewSchedule(service, username);
+			}
+		});
+		
 		MenuItem openItem = new MenuItem("Open", "icons/16/folder_out.png", "Ctrl+O");
+		openItem.addClickHandler(new ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				TabOpener.openHomeInNewTab(username);
+			}
+		});
+		
 		MenuItem closeItem = new MenuItem("Close", "icons/16/folder_out.png", "Ctrl+W");
+		
 		MenuItem saveItem = new MenuItem("Save", "icons/16/disk_blue.png", "Ctrl+S");
+		saveItem.addClickHandler(new ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				service.saveWorkingCopyToOriginalDocument(document.getID(), new
+						AsyncCallback<Void>() {
+							public void onSuccess(Void result) {
+								Window.alert("Successfully saved!");
+							}
+							public void onFailure(Throwable caught) {
+								Window.alert("Failed to save! " + caught.getMessage());
+							}
+						});
+			}
+		});
+		
 		MenuItem saveAsItem = new MenuItem("Save As", "icons/16/save_as.png");
+		saveAsItem.addClickHandler(new ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				SaveAsDialog.afterSaveAsPressed(service, document);
+			}
+		});
+		
 		MenuItem mergeItem = new MenuItem("Merge", "icons/16/folder_out.png", "Ctrl+M");
+		mergeItem.addClickHandler(new ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				MergeDialog.fileMergePressed(service);
+			}
+		});
 		
-//		MenuItem recentDocItem = new MenuItem("Recent Documents", "icons/16/folder_document.png");
+		// MenuItem recentDocItem = new MenuItem("Recent Documents",
+		// "icons/16/folder_document.png");
 		
-//		Menu recentDocSubMenu = new Menu();
-//		MenuItem dataSM = new MenuItem("data.xml");
-//		dataSM.setChecked(true);
-//		MenuItem componentSM = new MenuItem("Component Guide.doc");
-//		MenuItem ajaxSM = new MenuItem("AJAX.doc");
-//		recentDocSubMenu.setItems(dataSM, componentSM, ajaxSM);
+		// Menu recentDocSubMenu = new Menu();
+		// MenuItem dataSM = new MenuItem("data.xml");
+		// dataSM.setChecked(true);
+		// MenuItem componentSM = new MenuItem("Component Guide.doc");
+		// MenuItem ajaxSM = new MenuItem("AJAX.doc");
+		// recentDocSubMenu.setItems(dataSM, componentSM, ajaxSM);
 		
-//		recentDocItem.setSubmenu(recentDocSubMenu);
-
+		// recentDocItem.setSubmenu(recentDocSubMenu);
+		
 		MenuItem importItem = new MenuItem("Import", "icons/16/folder_out.png", "Ctrl+I");
-
+		importItem.addClickHandler(new ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				Import.showImport();
+			}
+		});
+		
 		MenuItem exportItem = new MenuItem("Export as...", "icons/16/export1.png");
-		Menu exportSM = new Menu();
-		exportSM.setItems(
-				new MenuItem("XML"),
-				new MenuItem("CSV"),
-				new MenuItem("Plain text"));
-		exportItem.setSubmenu(exportSM);
+		exportItem.addClickHandler(new ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				ExportDialog.displayExportPopup();
+			}
+		});
 		
 		MenuItem printItem = new MenuItem("Print", "icons/16/printer3.png", "Ctrl+P");
 		printItem.setEnabled(false);
@@ -354,7 +227,7 @@ public class AdminScheduleNavView extends VerticalPanel implements IViewContents
 	}
 	
 	private TabSet makeTabs() {
-
+		
 		TabSet tabSet = new TabSet();
 		tabSet.setTabBarPosition(Side.TOP);
 		
@@ -364,25 +237,25 @@ public class AdminScheduleNavView extends VerticalPanel implements IViewContents
 		tabSet.setHeight(25);
 		tabSet.setOverflow(Overflow.VISIBLE);
 		tabSet.setPaneContainerOverflow(Overflow.VISIBLE);
-//		tabSet.setPaneCon
-
+		// tabSet.setPaneCon
+		
 		final Tab coursesTab = new Tab("Courses");
 		tabSet.addTab(coursesTab);
-
-		final Tab instructorsTab = new Tab("Instructors");	
+		
+		final Tab instructorsTab = new Tab("Instructors");
 		tabSet.addTab(instructorsTab);
-
-		final Tab locationsTab = new Tab("Locations");	
+		
+		final Tab locationsTab = new Tab("Locations");
 		tabSet.addTab(locationsTab);
-
+		
 		final Tab scheduleTab = new Tab("Schedule");
 		tabSet.addTab(scheduleTab);
-			
+		
 		tabSet.setTabBarControls(TabBarControls.TAB_SCROLLER, TabBarControls.TAB_PICKER);
 		
 		tabSet.addTabSelectedHandler(new TabSelectedHandler() {
 			public void onTabSelected(TabSelectedEvent event) {
-//				Window.alert(event.getTab().getTitle());
+				// Window.alert(event.getTab().getTitle());
 				if (event.getTab() == coursesTab) {
 					currentViewFrame = new ViewFrame(new CoursesView(service, document));
 					viewFrameContainer.add(currentViewFrame);
@@ -404,13 +277,13 @@ public class AdminScheduleNavView extends VerticalPanel implements IViewContents
 					currentViewFrame.afterPush();
 				}
 				else
-					assert(false);
+					assert (false);
 			}
 		});
-
+		
 		tabSet.addTabDeselectedHandler(new TabDeselectedHandler() {
 			public void onTabDeselected(TabDeselectedEvent event) {
-//				currentViewFrame.beforePop();
+				// currentViewFrame.beforePop();
 				viewFrameContainer.clear();
 			}
 		});
@@ -422,15 +295,15 @@ public class AdminScheduleNavView extends VerticalPanel implements IViewContents
 	private void addMenus() {
 		Panel panel = new FlowPanel();
 		panel.addStyleName("menubarcontainer");
-			Panel container = new SimplePanel();
-			container.addStyleName("menubar");
-				container.add(makeToolStrip());
-			panel.add(container);
+		Panel container = new SimplePanel();
+		container.addStyleName("menubar");
+		container.add(makeToolStrip());
+		panel.add(container);
 		add(panel);
-
+		
 		viewFrameContainer = new SimplePanel();
 		add(viewFrameContainer);
-
+		
 		panel.add(makeTabs());
 	}
 }

@@ -1,5 +1,7 @@
 package scheduler.view.web.client;
 
+import scheduler.view.web.client.views.resources.instructors.InstructorPreferencesView;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
@@ -10,6 +12,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.smartgwt.client.widgets.Window;
 
 public class ExportDialog {
 
@@ -17,8 +20,14 @@ public class ExportDialog {
 	 * Displays a popup to export schedule.
 	 */
 	public static void displayExportPopup()
-	{	
-		final DialogBox db = new DialogBox();
+	{
+		final Window window = new Window();
+		window.setAutoSize(true);
+		window.setTitle("Export As");
+		window.setCanDragReposition(true);
+		window.setCanDragResize(true);
+		
+		
 		VerticalPanel mainVerticalPanel = new VerticalPanel();
 		
 		VerticalPanel verticalPanel = new VerticalPanel();
@@ -85,7 +94,7 @@ public class ExportDialog {
 		final Button cancelButton = new Button("Cancel", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				db.hide();
+				window.destroy();
 			}
 		});
 		
@@ -94,7 +103,7 @@ public class ExportDialog {
 			@Override
 			public void onClick(ClickEvent event) {
 
-				db.hide();
+				window.destroy();
 				//TODO Add Selection between PDF and CSV options
 
 				//Temporary dialogue box until CSV functionality is officially integrate
@@ -132,14 +141,12 @@ public class ExportDialog {
 		Buttons.add(nextButton);
 		nextButton.setWidth("65px");
 		
-		db.setText("Export As");
-		db.setWidget(mainVerticalPanel);
+		window.addItem(mainVerticalPanel);
 		mainVerticalPanel.setSize("103px", "23px");
 		
 	
-		db.center();
-		db.show();
-
+		window.centerInPage();
+		window.show();
 	}
 	
 }
