@@ -136,7 +136,6 @@ public class InstructorPreferencesView extends VerticalPanel {//implements IView
 							dlg.hide();
 						}
 					});
-					parent.hide();
 					dlg.show();
 				}
 				else
