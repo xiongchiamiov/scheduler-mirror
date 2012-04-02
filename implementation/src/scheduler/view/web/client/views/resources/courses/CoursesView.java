@@ -69,7 +69,7 @@ public class CoursesView extends VerticalPanel implements IViewContents {
 		ListGridField dayCombinationsField = new ListGridField("dayCombinations", "Day Combinations");
 		ListGridField hoursPerWeekField = new ListGridField("hoursPerWeek", "Hours per Week");
 		ListGridField maxEnrollmentField = new ListGridField("maxEnrollment", "Max Enrollment");
-		ListGridField courseTypeField = new ListGridField("coursesType", "Type");
+		ListGridField courseTypeField = new ListGridField("type", "Type");
 		ListGridField usedEquipmentField = new ListGridField("usedEquipment", "Used Equipment");
 		ListGridField associationsField = new ListGridField("associations", "Associations");
 

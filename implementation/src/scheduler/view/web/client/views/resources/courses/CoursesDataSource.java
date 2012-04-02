@@ -22,7 +22,6 @@ import com.smartgwt.client.data.fields.DataSourceEnumField;
 import com.smartgwt.client.data.fields.DataSourceIntegerField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 import com.smartgwt.client.types.DSProtocol;
-import com.smartgwt.client.widgets.form.fields.SelectItem;
 
 public class CoursesDataSource extends DataSource {
 	
@@ -75,7 +74,6 @@ public class CoursesDataSource extends DataSource {
 		DataSourceTextField maxEnrollmentField = new DataSourceTextField("maxEnrollment");
 		
 		DataSourceEnumField courseTypeField = new DataSourceEnumField("type");
-		courseTypeField.setEditorType(new SelectItem());
 		courseTypeField.setValueMap("LEC", "LAB", "ACT", "DIS", "SEM");
 
 		DataSourceEnumField usedEquipmentField = new DataSourceEnumField("usedEquipment");
