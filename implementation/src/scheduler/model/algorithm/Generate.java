@@ -394,6 +394,10 @@ public class Generate {
 
 	   public static boolean canTeach (Course course, InstructorDecorator id) throws DatabaseException
 	   {
+		  assert(id != null);
+		  assert(id.getInstructor() != null);
+		  assert(id.getInstructor().getDocument() != null);
+		  assert(id.getInstructor().getDocument().getStaffInstructor() != null);
 		  if(id.getInstructor().getDocument().getStaffInstructor() == id.getInstructor())
 			  return true;
 		   
@@ -895,6 +899,8 @@ public class Generate {
 			   Vector<LocationDecorator> ld_vec) throws DatabaseException
 	   {
 		  //might have to look into TBA location for IND type courses
+		  assert(schedule.getDocument().getTBALocation() != null);
+		  Location tbaLocation = schedule.getDocument().getTBALocation();
 	      Vector<ScheduleItemDecorator> si_list = new Vector<ScheduleItemDecorator>();
 
 	      debug ("HAVE " + sis.size() + " ITEMS FOR LOCATIONS TO TRY");
@@ -920,6 +926,14 @@ public class Generate {
 	                  si_list.add(new ScheduleItemDecorator(base));
 	               }
 	            }
+	         }
+	         //If no valid location is found, use TBA
+	         if(si_list.isEmpty()) 
+	         {
+	        	 ScheduleItem base = si.getItem().createTransientCopy();
+	        	 base.setLocation(tbaLocation);
+	        	 
+	        	 si_list.add(new ScheduleItemDecorator(base));
 	         }
 	      }
 
