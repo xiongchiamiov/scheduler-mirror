@@ -176,7 +176,7 @@ public class CoursesDataSource extends DataSource {
 				record.getAttribute("type"),
 				record.getAttribute("maxEnrollment"),
 				-1, // lecture ID
-				record.getAttribute("halfHoursPerWeek"),
+				record.getAttribute("hoursPerWeek"),
 				dayCombinations, // day combinations
 				record.getAttributeAsInt("id"), // id
 				record.getAttributeAsBoolean("tetheredToLecture"),
