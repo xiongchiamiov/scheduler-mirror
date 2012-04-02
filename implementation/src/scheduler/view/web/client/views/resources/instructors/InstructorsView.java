@@ -194,7 +194,14 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 			Button button = new Button("Close", listener);
 			iipv.add(button);
 			button.setStyleName("centerness");
-			System.out.println(iipv.checkSize());
+
+			int count = 0;
+			while(!iipv.isFinished())
+			{
+				count++;
+				System.out.println("This many times: "+count);
+			}
+			
 			if(iipv.checkSize())
 			{
 				System.out.println("Hey there........");

@@ -39,6 +39,7 @@ public class InstructorPreferencesView extends VerticalPanel {//implements IView
 	Map<Integer, CourseGWT> coursesByID;
 	
 	private boolean checkSize = false;
+	private boolean isFinished = false;
 	
 	Map<Integer, ListBox> listBoxesByCourseID = new HashMap<Integer, ListBox>();
 	InstructorTimePreferencesWidget timePrefs;
@@ -58,6 +59,11 @@ public class InstructorPreferencesView extends VerticalPanel {//implements IView
 	public boolean checkSize()
 	{
 		return checkSize;
+	}
+	
+	public boolean isFinished()
+	{
+		return isFinished;
 	}
 
 	//@Override
@@ -127,6 +133,7 @@ public class InstructorPreferencesView extends VerticalPanel {//implements IView
 				}
 			}
 		});
+		isFinished = true;
 	}
 	
 	void populateCourses(Map<Integer, CourseGWT> newCoursesByID) {
