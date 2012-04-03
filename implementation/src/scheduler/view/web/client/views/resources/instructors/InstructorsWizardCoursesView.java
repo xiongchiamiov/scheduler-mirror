@@ -16,13 +16,16 @@ import scheduler.view.web.shared.CourseGWT;
 
 /**
  * this class shows the course preferences for a user logged in as an instructor
- * @author carsten
+ * @author Carsten Pfeffer (pfeffer@tzi.de)
  */
 public class InstructorsWizardCoursesView extends VerticalPanel {
 	private FlexTable coursePrefs;
 	private Map<Integer, ListBox> listBoxesByCourseID = new HashMap<Integer, ListBox>();
 //	private InstructorGWT instructor;
 	
+	/**
+	 * The constructor currently constructs the panel and fills it with some testing data
+	 */
 	public InstructorsWizardCoursesView()
 	{
 		// adjust the size to the parent window
@@ -49,6 +52,10 @@ public class InstructorsWizardCoursesView extends VerticalPanel {
 		this.setCourses(courses);
 	}
 	
+	/**
+	 * clears the current list of courses and fills it with the given ones
+	 * @param courses: this courses will be inserted to the list
+	 */
 	protected void setCourses(List<CourseGWT> courses)
 	{	
 		// create a new table (the old one will be garbage collected)
