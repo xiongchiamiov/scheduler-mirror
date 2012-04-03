@@ -10,6 +10,9 @@ Design and Implementation Conventions</strong>
 <ul>
     <li>ScheduleTrashView.java and SelectScheduleView.java have some tab spacing issues</li>
     <li>naming conventions seem to be ok</li>
+    <li>The constructors for ScheduleTrashView.java and SelectScheduleView.java are ginormous</li>
+    <li>Some methods throughout the files exceed the 50-line maximum. At this point in the project, I think it's a waste of time to worry about that stuff</li>
+    <li>Almost no view files end with the "UI" suffix, but at this point, that would also be a waste of time to fix</li>
 </ul>
 <br>
 <font size=+2>
@@ -28,6 +31,7 @@ Conventions</strong>
 <br>
 <ul>
     <li>CSVImporter.java is completely commented out</li>
+    <li>Might want to add a modifier to the CSVStructure.java class (i.e. make the class "public" or "private"... probably "public").</li>
 </ul>
 <br>
 <font size=+2>
@@ -36,7 +40,7 @@ Conventions</strong>
 <br>
 <ul>
     <li>SelectScheduleView.java passes usability tests, but if you create a new schedule,
-        it doesn't show up until you refresh the browser (and a popup warning is shown).</li>
+        it doesn't show up in the schedule list until you refresh the browser.</li>
     <li></li>
     <li></li>
     <li></li>
