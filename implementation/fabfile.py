@@ -1,4 +1,5 @@
 from fabric.api import env, local, put, run
+from fabric.contrib.project import rsync_project as rsync
 
 env.hosts = ['scheduler.csc.calpoly.edu']
 
@@ -27,6 +28,10 @@ def deploy(*directories):
 		# the getServletContext().getRealPath(...) function. default is true.
 		#applyServletPath=true
 		applyServletPath=false" > war/WEB-INF/classes/scheduler/view/web/server/scheduler.properties''' % directory)
-		put('war/*', '/var/lib/tomcat6/webapps/'+directory+'/')
+		rsync(local_dir='war/*', \
+		      remote_dir='/var/lib/tomcat6/webapps/'+directory+'/', \
+		      exclude='.svn', \
+		      delete=True, \
+		      extra_opts='--omit-dir-times --no-perms')
 	restart_tomcat()
 
