@@ -251,45 +251,6 @@ public class InstructorPreferencesView extends VerticalPanel {// implements
 		}
 	}
 
-	// /**
-	// * Shows a modal popup dialog
-	// * @param header: headline text
-	// * @param content: content text
-	// * @return the dialog which can be shown by using center()
-	// */
-	// public static DialogBox messageBox(final String header, final String
-	// content) {
-	// // the dialog itself
-	// final DialogBox box = new DialogBox();
-	// box.setModal(true);
-	// box.setGlassEnabled(true);
-	//
-	// // the content panel of the dlg
-	// final VerticalPanel panel = new VerticalPanel();
-	// box.setText(header);
-	// panel.add(new Label(content));
-	//
-	// // add a button with a handler
-	// final Button buttonOk = new Button("Ok",new ClickHandler() {
-	// @Override
-	// public void onClick(final ClickEvent event) {
-	// box.hide();
-	// }
-	// });
-	//
-	//
-	// // few empty labels to make widget larger
-	// final Label emptyLabel = new Label("");
-	// emptyLabel.setSize("auto","25px");
-	// panel.add(emptyLabel);
-	// panel.add(emptyLabel);
-	// buttonOk.setWidth("90px");
-	// panel.add(buttonOk);
-	// panel.setCellHorizontalAlignment(buttonOk, HasAlignment.ALIGN_RIGHT);
-	// box.add(panel);
-	// return box;
-	// }
-
 	// @Override
 	public boolean canPop() {
 		return true;
