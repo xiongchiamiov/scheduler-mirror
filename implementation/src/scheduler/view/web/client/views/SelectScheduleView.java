@@ -4,21 +4,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
-import scheduler.view.web.client.views.resources.instructors.InstructorsHomeView;
-
-import scheduler.view.web.client.TabOpener;
 import scheduler.view.web.client.GreetingServiceAsync;
 import scheduler.view.web.client.HTMLUtilities;
-import scheduler.view.web.client.IViewContents;
 import scheduler.view.web.client.NewScheduleCreator;
-import scheduler.view.web.client.ViewFrame;
+import scheduler.view.web.client.TabOpener;
+import scheduler.view.web.client.views.resources.instructors.InstructorsHomeView;
 import scheduler.view.web.shared.DocumentGWT;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -28,14 +24,11 @@ import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.MenuBar;
-import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
-public class SelectScheduleView extends VerticalPanel implements IViewContents
+public class SelectScheduleView extends VerticalPanel
 {
    protected final GreetingServiceAsync      service;
 
@@ -43,7 +36,6 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents
    private ArrayList<String>                 scheduleNames;
 
    private VerticalPanel                     vdocholder;
-   protected ViewFrame                         myFrame;
 
    HashMap<Integer, DocumentGWT>                   allAvailableOriginalDocumentsByID;
    private ArrayList<DocumentGWT>            checkedDocuments;
@@ -51,7 +43,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents
    private boolean                           colorNextRow = false;
    String currentDocName;
    
-   public SelectScheduleView(final GreetingServiceAsync service, final String username)
+   public SelectScheduleView(final GreetingServiceAsync service, final SimplePanel parentPanel, final String username)
    {
       this.service = service;
       this.username = username;
@@ -62,11 +54,6 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents
 
       Button homeTab = new Button("Home", new ClickHandler() {
 			public void onClick(ClickEvent event) {
-            if (myFrame.canPopViewsAboveMe())
-            {
-               myFrame.popFramesAboveMe();
-               myFrame.frameViewAndPushAboveMe(new SelectScheduleView(service, username));
-            }
 			}
 		});
       
@@ -79,11 +66,8 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents
 			
 			@Override
 			public void onClick(ClickEvent event) {
-            if (myFrame.canPopViewsAboveMe())
-            {
-               myFrame.popFramesAboveMe();
-               myFrame.frameViewAndPushAboveMe(new ScheduleTrashView(service, username));
-            }
+				removeFromParent();
+				parentPanel.add(new ScheduleTrashView(service, parentPanel, username));
 			}
 		});
       
@@ -210,12 +194,7 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents
       botflow.add(mergeButton);
       botflow.add(tempButton);
       this.add(botflow);
-   }
-
-   @Override
-   public void afterPush(ViewFrame frame)
-   {
-      this.myFrame = frame;
+      
 
       service.getAllOriginalDocuments(new AsyncCallback<Collection<DocumentGWT>>()
       {
@@ -243,15 +222,8 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents
                   scheduleNames.add(doc.getName());
                }
             }
-
-            doneAddingDocuments();
          }
       });
-   }
-
-   // For subclasses
-   protected void doneAddingDocuments()
-   {
    }
 
    private void addNewDocument(final DocumentGWT document)
@@ -310,36 +282,9 @@ public class SelectScheduleView extends VerticalPanel implements IViewContents
       documentPanels.put(document.getID(), doc);
    }
 
-   @Override
-   public void beforePop()
-   {
-   }
-
    interface NameScheduleCallback
    {
       void namedSchedule(String name);
-   }
-
-   @Override
-   public boolean canPop()
-   {
-      return true;
-   }
-
-   @Override
-   public void beforeViewPushedAboveMe()
-   {
-   }
-
-   @Override
-   public void afterViewPoppedFromAboveMe()
-   {
-   }
-
-   @Override
-   public Widget getContents()
-   {
-      return this;
    }
 
    private void createNewSchedule()

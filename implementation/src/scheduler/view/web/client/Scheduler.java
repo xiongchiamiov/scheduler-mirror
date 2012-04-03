@@ -76,7 +76,7 @@ public class Scheduler implements EntryPoint, UpdateHeaderStrategy
 	
 	private void openInitialView(
 			boolean parseURLArguments,
-			final Panel viewContainer) {
+			final SimplePanel viewContainer) {
 		
 		final LoadingPopup loadingPopup = new LoadingPopup();
 		loadingPopup.show();
@@ -93,18 +93,14 @@ public class Scheduler implements EntryPoint, UpdateHeaderStrategy
 		
 		if (username == null) {
 			assert(documentIDStr == null);
-			ViewFrame newViewFrame = new ViewFrame(new LoginView(service, this));
-			viewContainer.add(newViewFrame);
-			newViewFrame.afterPush();
+			viewContainer.add(new LoginView(service, this));
 			loadingPopup.hide();
 		}
 		else {
 			onLogin(username);
 			
 			if (documentIDStr == null) {
-				ViewFrame newViewFrame = new ViewFrame(new SelectScheduleView(service, username));
-				viewContainer.add(newViewFrame);
-				newViewFrame.afterPush();
+				viewContainer.add(new SelectScheduleView(service, viewContainer, username));
 				loadingPopup.hide();
 			}
 			else {
@@ -114,9 +110,7 @@ public class Scheduler implements EntryPoint, UpdateHeaderStrategy
 					public void onSuccess(DocumentGWT workingCopyDocument) {
 						onOpenedDocument(workingCopyDocument.getName());
 						
-						ViewFrame newViewFrame = new ViewFrame(new AdminScheduleNavView(service, username, workingCopyDocument));
-						viewContainer.add(newViewFrame);
-						newViewFrame.afterPush();
+						viewContainer.add(new AdminScheduleNavView(service, username, workingCopyDocument));
 						loadingPopup.hide();
 					}
 					public void onFailure(Throwable caught) {

@@ -1,10 +1,9 @@
 package scheduler.view.web.client.views;
 
 import scheduler.view.web.client.GreetingServiceAsync;
-import scheduler.view.web.client.IViewContents;
 import scheduler.view.web.client.Login;
+import scheduler.view.web.client.TabOpener;
 import scheduler.view.web.client.UpdateHeaderStrategy;
-import scheduler.view.web.client.ViewFrame;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -19,13 +18,11 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
-public class LoginView extends VerticalPanel implements IViewContents {
+public class LoginView extends VerticalPanel {
 	GreetingServiceAsync service;
 	
 	String username;
-	ViewFrame myFrame;
 	final UpdateHeaderStrategy updateHeaderStrategy;
 
 	public LoginView(GreetingServiceAsync service, UpdateHeaderStrategy updateHeaderStrategy) {
@@ -84,27 +81,6 @@ public class LoginView extends VerticalPanel implements IViewContents {
 	}
 	
 	protected void pushSelectScheduleView(String username) {
-		assert(myFrame.canPopViewsAboveMe());
-		myFrame.popFramesAboveMe();
-		myFrame.frameViewAndPushAboveMe(new SelectScheduleView(service, username));
+		TabOpener.openHomeInThisTab(username);
 	}
-	
-	@Override
-	public void beforeViewPushedAboveMe() {
-		this.updateHeaderStrategy.onLogin(username);
-	}
-	
-	@Override
-	public void afterViewPoppedFromAboveMe() {
-		this.updateHeaderStrategy.clearHeader();
-	}
-	
-	@Override
-	public boolean canPop() { return true; }
-	@Override
-	public void afterPush(ViewFrame frame) { myFrame = frame; }
-	@Override
-	public void beforePop() { }
-	@Override
-	public Widget getContents() { return this; }
 }

@@ -1,8 +1,6 @@
 package scheduler.view.web.client.views.resources.courses;
 
 import scheduler.view.web.client.GreetingServiceAsync;
-import scheduler.view.web.client.IViewContents;
-import scheduler.view.web.client.ViewFrame;
 import scheduler.view.web.shared.DocumentGWT;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -19,7 +17,7 @@ import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
-public class CoursesView extends VerticalPanel implements IViewContents {
+public class CoursesView extends VerticalPanel {
 	private GreetingServiceAsync service;
 	private final DocumentGWT document;
 	
@@ -27,20 +25,7 @@ public class CoursesView extends VerticalPanel implements IViewContents {
 		this.service = service;
 		this.document = document;
 		// this.addStyleName("iViewPadding");
-	}
-	
-	@Override
-	public boolean canPop() {
-		return true;
-		// assert(table != null);
-		// if (table.isSaved())
-		// return true;
-		// return
-		// Window.confirm("You have unsaved data which will be lost. Are you sure you want to navigate away?");
-	}
-	
-	@Override
-	public void afterPush(ViewFrame frame) {
+		
 		this.setWidth("100%");
 		this.setHeight("100%");
 		
@@ -96,16 +81,5 @@ public class CoursesView extends VerticalPanel implements IViewContents {
             }
 			}
 		}));
-	}
-	
-	@Override
-	public void beforePop() {}
-	@Override
-	public void beforeViewPushedAboveMe() {}
-	@Override
-	public void afterViewPoppedFromAboveMe() {}
-	@Override
-	public Widget getContents() {
-		return this;
 	}
 }

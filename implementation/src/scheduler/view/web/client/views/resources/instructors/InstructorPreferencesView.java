@@ -1,9 +1,12 @@
 package scheduler.view.web.client.views.resources.instructors;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import scheduler.view.web.client.GreetingServiceAsync;
+import scheduler.view.web.shared.CourseGWT;
+import scheduler.view.web.shared.InstructorGWT;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -11,24 +14,13 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HasAlignment;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
-
-import scheduler.view.web.client.GreetingServiceAsync;
-import scheduler.view.web.client.IViewContents;
-import scheduler.view.web.client.ViewFrame;
-import scheduler.view.web.client.views.LoadingPopup;
-import scheduler.view.web.shared.CourseGWT;
-import scheduler.view.web.shared.InstructorGWT;
 
 public class InstructorPreferencesView extends VerticalPanel {// implements
 																// IViewContents

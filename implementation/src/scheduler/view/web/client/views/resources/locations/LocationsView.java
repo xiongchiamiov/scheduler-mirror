@@ -1,24 +1,12 @@
 package scheduler.view.web.client.views.resources.locations;
 
-import java.util.List;
-
 import scheduler.view.web.client.GreetingServiceAsync;
-import scheduler.view.web.client.IViewContents;
-import scheduler.view.web.client.ViewFrame;
 import scheduler.view.web.shared.DocumentGWT;
-import scheduler.view.web.shared.LocationGWT;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.types.ListGridEditEvent;
 import com.smartgwt.client.types.RowEndEditAction;
@@ -26,31 +14,8 @@ import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
-public class LocationsView extends VerticalPanel implements IViewContents {
-	private GreetingServiceAsync service;
-	private final DocumentGWT document;
-	private ViewFrame frame;
-	
-	public LocationsView(GreetingServiceAsync service, DocumentGWT document) {
-		this.service = service;
-		this.document = document;
-		// this.addStyleName("iViewPadding");
-	}
-	
-	@Override
-	public boolean canPop() {
-		return true;
-		// assert(table != null);
-		// if (table.isSaved())
-		// return true;
-		// return
-		// Window.confirm("You have unsaved data which will be lost. Are you sure you want to navigate away?");
-	}
-	
-	@Override
-	public void afterPush(ViewFrame frame) {
-		this.frame = frame;
-		
+public class LocationsView extends VerticalPanel {
+	public LocationsView(final GreetingServiceAsync service, final DocumentGWT document) {
 		this.setWidth("100%");
 		this.setHeight("100%");
 		
@@ -96,13 +61,4 @@ public class LocationsView extends VerticalPanel implements IViewContents {
 			}
 		}));
 	}
-
-	@Override
-	public void beforePop() { }
-	@Override
-	public void beforeViewPushedAboveMe() { }
-	@Override
-	public void afterViewPoppedFromAboveMe() { }
-	@Override
-	public Widget getContents() { return this; }
 }

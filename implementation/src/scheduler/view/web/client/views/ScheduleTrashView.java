@@ -4,11 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
-import scheduler.view.web.client.TabOpener;
 import scheduler.view.web.client.GreetingServiceAsync;
 import scheduler.view.web.client.HTMLUtilities;
-import scheduler.view.web.client.IViewContents;
-import scheduler.view.web.client.ViewFrame;
+import scheduler.view.web.client.TabOpener;
 import scheduler.view.web.shared.DocumentGWT;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -25,14 +23,12 @@ import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
-public class ScheduleTrashView extends VerticalPanel implements IViewContents {
+public class ScheduleTrashView extends VerticalPanel {
 	protected final GreetingServiceAsync service;
 	public static final String TRASH_PREFIX = "~trashed~";
 	
@@ -41,45 +37,41 @@ public class ScheduleTrashView extends VerticalPanel implements IViewContents {
 	
 	private VerticalPanel vdocholder;
 	
-	private ViewFrame myFrame;
-	
 	Collection<DocumentGWT> availableDocuments;
 	private ArrayList<DocumentGWT> checkedDocuments;
 	private HashMap<Integer, HorizontalPanel> documentPanels;
 	private boolean colorNextRow = false;
 	
-	public ScheduleTrashView(final GreetingServiceAsync service, final String username) {
+	public ScheduleTrashView(final GreetingServiceAsync service, final SimplePanel parentPanel, final String username) {
 		this.service = service;
 		this.username = username;
 		this.scheduleNames = new ArrayList<String>();
 		this.addStyleName("iViewPadding");
 		this.checkedDocuments = new ArrayList<DocumentGWT>();
 		this.documentPanels = new HashMap<Integer, HorizontalPanel>();
-		
-//		menuBar.clearItems();
-		// Put tabs in menu bar
-		MenuItem homeTab = new MenuItem("Home", true, new Command() {
+
+      Button homeTab = new Button("Home", new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				removeFromParent();
+				parentPanel.add(new SelectScheduleView(service, parentPanel, username));
+			}
+		});
+      
+      // Put tabs in menu bar
+      
+      DOM.setElementAttribute(homeTab.getElement(), "id", "hometab");
+      this.add(homeTab);
+
+      Button trashTab = new Button("Trash", new ClickHandler() {
+			
 			@Override
-			public void execute() {
-				if (myFrame.canPopViewsAboveMe()) {
-					myFrame.popFramesAboveMe();
-					myFrame.frameViewAndPushAboveMe(new SelectScheduleView(service, username));
-				}
+			public void onClick(ClickEvent event) {
 			}
 		});
-		
-		DOM.setElementAttribute(homeTab.getElement(), "id", "hometab");
-//		menuBar.addItem(homeTab);
-		
-		MenuItem trashTab = new MenuItem("Trash", true, new Command() {
-			public void execute() {
-				assert (false);
-			}
-		});
-		
-		DOM.setElementAttribute(trashTab.getElement(), "id", "trashtab");
-//		menuBar.addItem(trashTab);
-		
+      
+      DOM.setElementAttribute(trashTab.getElement(), "id", "trashtab");
+      this.add(trashTab);
+
 		// Home panel
 		this.addStyleName("homeView");
 		
@@ -120,12 +112,7 @@ public class ScheduleTrashView extends VerticalPanel implements IViewContents {
 		});
 		DOM.setElementAttribute(untrashButton.getElement(), "id", "untrashButton");
 		this.add(untrashButton);
-	}
-	
-	@Override
-	public void afterPush(ViewFrame frame) {
-		this.myFrame = frame;
-		
+
 		service.getAllOriginalDocuments(new AsyncCallback<Collection<DocumentGWT>>() {
 			@Override
 			public void onFailure(Throwable caught) {
@@ -194,32 +181,7 @@ public class ScheduleTrashView extends VerticalPanel implements IViewContents {
 		vdocholder.add(doc);
 	}
 	
-	@Override
-	public void beforePop() {}
-	
-	@Override
-	public boolean canPop() {
-		return true;
-	}
-	
-	@Override
-	public void beforeViewPushedAboveMe() {}
-	
-	@Override
-	public void afterViewPoppedFromAboveMe() {}
-	
-	@Override
-	public Widget getContents() {
-		return this;
-	}
-	
 	protected void openLoadedSchedule(DocumentGWT doc) {
-		System.out.println("openloadedschedule?");
-		
-		if (myFrame.canPopViewsAboveMe()) {
-			myFrame.popFramesAboveMe();
-			myFrame.frameViewAndPushAboveMe(new AdminScheduleNavView(service, username, doc));
-		}
+		TabOpener.openDocInNewTab(username, doc);
 	}
-	
 }

@@ -3,16 +3,12 @@ package scheduler.view.web.client.views.resources.instructors;
 import java.util.List;
 
 import scheduler.view.web.client.GreetingServiceAsync;
-import scheduler.view.web.client.IViewContents;
-import scheduler.view.web.client.ViewFrame;
 import scheduler.view.web.shared.DocumentGWT;
 import scheduler.view.web.shared.InstructorGWT;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -20,10 +16,8 @@ import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.types.ListGridEditEvent;
 import com.smartgwt.client.types.RowEndEditAction;
-import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.IButton;
-import com.smartgwt.client.widgets.ImgButton;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -31,31 +25,17 @@ import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
-public class InstructorsView extends VerticalPanel implements IViewContents {
+public class InstructorsView extends VerticalPanel {
 	private GreetingServiceAsync service;
 	private final DocumentGWT document;
-	private ViewFrame frame;
+//	private ViewFrame frame;
 	
-	public InstructorsView(GreetingServiceAsync service, DocumentGWT document) {
+	public InstructorsView(final GreetingServiceAsync service, final DocumentGWT document) {
 		this.service = service;
 		this.document = document;
 		// this.addStyleName("iViewPadding");
-	}
-	
-	@Override
-	public boolean canPop() {
-		return true;
-		// assert(table != null);
-		// if (table.isSaved())
-		// return true;
-		// return
-		// Window.confirm("You have unsaved data which will be lost. Are you sure you want to navigate away?");
-	}
-	
-	@Override
-	public void afterPush(ViewFrame frame) {
-		this.frame = frame;
 		
+
 		this.setWidth("100%");
 		this.setHeight("100%");
 		
@@ -113,14 +93,14 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 		idField.setHidden(true);
 
 		ListGridField scheduleableField = new ListGridField("isSchedulable", "Schedulable");
-		ListGridField usernameField = new ListGridField("username", "Username");
-		ListGridField firstNameField = new ListGridField("firstName", "First Name");
 		ListGridField lastNameField = new ListGridField("lastName", "Last Name");
+		ListGridField firstNameField = new ListGridField("firstName", "First Name");
+		ListGridField usernameField = new ListGridField("username", "Username");
 		ListGridField maxWTUField = new ListGridField("maxWTU", "Max WTU");
 		ListGridField instructorPrefsField = new ListGridField("instructorPrefs", "Preferences");
 		instructorPrefsField.setAlign(Alignment.CENTER);
 		
-		grid.setFields(idField, scheduleableField, usernameField, firstNameField, lastNameField,
+		grid.setFields(idField, scheduleableField, lastNameField, firstNameField, usernameField,
 				maxWTUField, instructorPrefsField);
 		
 		this.add(grid);
@@ -143,56 +123,34 @@ public class InstructorsView extends VerticalPanel implements IViewContents {
 		}));
 	}
 	
-	@Override
-	public void beforePop() {}
-	
-	@Override
-	public void beforeViewPushedAboveMe() {}
-	
-	@Override
-	public void afterViewPoppedFromAboveMe() {}
-	
-	@Override
-	public Widget getContents() {
-		return this;
-	}
-	
 	public void preferencesButtonClicked(InstructorGWT instructor) {
-		if (frame.canPopViewsAboveMe()) {
-			// viewFrame.popFramesAboveMe();
-			InstructorPreferencesView iipv = new InstructorPreferencesView(
-					service, document.getID(), document.getName(), instructor);
-			final Window window = new Window();
-			window.setAutoSize(true);
-			window.setTitle("Instructor Preferences");
-			window.setCanDragReposition(true);
-			window.setCanDragResize(true);
-			iipv.setParent(window);
-			iipv.afterPush();
-			
-			
-			final ScrollPanel weewee = new ScrollPanel();
-			weewee.setWidget(iipv);
-			weewee.setSize("700px", "600px");
-			window.addItem(weewee);
-			
-			ClickListener listener = new ClickListener() {
-				public void onClick(Widget sender) {
-					System.out.println("Got here +++++++++++++++++++++++++++++");
-					window.hide();
-				}
-			};
-			Button button = new Button("Close", listener);
-			iipv.add(button);
-			button.setStyleName("centerness");
+		InstructorPreferencesView iipv = new InstructorPreferencesView(
+				service, document.getID(), document.getName(), instructor);
+		final Window window = new Window();
+		window.setAutoSize(true);
+		window.setTitle("Instructor Preferences");
+		window.setCanDragReposition(true);
+		window.setCanDragResize(true);
+		iipv.setParent(window);
+		iipv.afterPush();
+		
+		
+		final ScrollPanel weewee = new ScrollPanel();
+		weewee.setWidget(iipv);
+		weewee.setSize("700px", "600px");
+		window.addItem(weewee);
+		
+		ClickListener listener = new ClickListener() {
+			public void onClick(Widget sender) {
+				System.out.println("Got here +++++++++++++++++++++++++++++");
+				window.hide();
+			}
+		};
+		Button button = new Button("Close", listener);
+		iipv.add(button);
+		button.setStyleName("centerness");
 
-			window.setAutoSize(true);
-			window.show();
-		}
-		else
-		{
-			System.out.println("ABANDON SHIP CAPTAIN");
-		}
+		window.setAutoSize(true);
+		window.show();
 	}
-	
 }

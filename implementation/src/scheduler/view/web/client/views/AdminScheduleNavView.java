@@ -2,13 +2,11 @@ package scheduler.view.web.client.views;
 
 import scheduler.view.web.client.ExportDialog;
 import scheduler.view.web.client.GreetingServiceAsync;
-import scheduler.view.web.client.IViewContents;
 import scheduler.view.web.client.Import;
 import scheduler.view.web.client.MergeDialog;
 import scheduler.view.web.client.NewScheduleCreator;
 import scheduler.view.web.client.SaveAsDialog;
 import scheduler.view.web.client.TabOpener;
-import scheduler.view.web.client.ViewFrame;
 import scheduler.view.web.client.views.resources.courses.CoursesView;
 import scheduler.view.web.client.views.resources.instructors.InstructorsView;
 import scheduler.view.web.client.views.resources.locations.LocationsView;
@@ -16,15 +14,11 @@ import scheduler.view.web.shared.DocumentGWT;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.Side;
 import com.smartgwt.client.types.TabBarControls;
-import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
@@ -40,13 +34,12 @@ import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripMenuButton;
 
-public class AdminScheduleNavView extends VerticalPanel implements IViewContents {
+public class AdminScheduleNavView extends VerticalPanel {
 	final GreetingServiceAsync service;
 	final String username;
 	final DocumentGWT document;
 	
 	SimplePanel viewFrameContainer;
-	ViewFrame currentViewFrame;
 	
 	// final MenuBar menuBar;
 	
@@ -58,41 +51,9 @@ public class AdminScheduleNavView extends VerticalPanel implements IViewContents
 		this.service = service;
 		this.username = username;
 		this.document = document;
-	}
-	
-	@Override
-	public Widget getContents() {
-		return this;
-	}
-	
-	@Override
-	public void afterPush(final ViewFrame viewFrame) {
-		// makeFileMenu(viewFrame);
-		// makeSettingsMenu();
-		// makeResourcesAndScheduleViewsMenuItems(viewFrame);
-		
+
 		addMenus();
-		
-		// coursesMenuItem.getCommand().execute();
 	}
-	
-	@Override
-	public boolean canPop() {
-		return true;
-	}
-	
-	@Override
-	public void beforePop() {
-		
-	}
-	
-	@Override
-	public void beforeViewPushedAboveMe() {}
-	
-	@Override
-	public void afterViewPoppedFromAboveMe() {}
-	
-	
 	
 	private ToolStripMenuButton makeFileMenuAndButton() {
 		Menu menu = new Menu();
@@ -264,24 +225,16 @@ public class AdminScheduleNavView extends VerticalPanel implements IViewContents
 			public void onTabSelected(TabSelectedEvent event) {
 				// Window.alert(event.getTab().getTitle());
 				if (event.getTab() == coursesTab) {
-					currentViewFrame = new ViewFrame(new CoursesView(service, document));
-					viewFrameContainer.add(currentViewFrame);
-					currentViewFrame.afterPush();
+					viewFrameContainer.add(new CoursesView(service, document));
 				}
 				else if (event.getTab() == instructorsTab) {
-					currentViewFrame = new ViewFrame(new InstructorsView(service, document));
-					viewFrameContainer.add(currentViewFrame);
-					currentViewFrame.afterPush();
+					viewFrameContainer.add(new InstructorsView(service, document));
 				}
 				else if (event.getTab() == locationsTab) {
-					currentViewFrame = new ViewFrame(new LocationsView(service, document));
-					viewFrameContainer.add(currentViewFrame);
-					currentViewFrame.afterPush();
+					viewFrameContainer.add(new LocationsView(service, document));
 				}
 				else if (event.getTab() == scheduleTab) {
-					currentViewFrame = new ViewFrame(new CalendarView(service, document));
-					viewFrameContainer.add(currentViewFrame);
-					currentViewFrame.afterPush();
+					viewFrameContainer.add(new CalendarView(service, document));
 				}
 				else
 					assert (false);
