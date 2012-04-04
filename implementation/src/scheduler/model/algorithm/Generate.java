@@ -650,17 +650,9 @@ public class Generate {
 	    * 
 	    * @return True if the instructor is available for the given time range
 	    *         across the given Week
-	 * @throws DatabaseException 
-	 * @throws EndBeforeStartException 
-	    */
-	   public static boolean isAvailable (Instructor i, Week days, TimeRange tr, ScheduleDecorator sd) throws EndBeforeStartException, DatabaseException
-	   {
-		   if(i.getDocument().getStaffInstructor() == i)
-			   return true;
-		   
-	       return sd.getIAvailability(i).isFree(tr.getS(), tr.getE(), days);
-	   }
-	   
+	    * @throws DatabaseException 
+	    * @throws EndBeforeStartException 
+	    */	   
 	   public static boolean isAvailable (Week days, TimeRange tr, InstructorDecorator id) throws EndBeforeStartException, DatabaseException
 	   {
 		   if(id.getInstructor().getDocument().getStaffInstructor() == id.getInstructor())
@@ -684,11 +676,6 @@ public class Generate {
 	    * 
 	    *         Written by: Eric Liebowitz
 	    */
-	   public static boolean isAvailable(Location location, Day dayOfWeek, int s, int e, ScheduleDecorator sd)
-	   {		   
-		   return sd.getLAvailability(location).isFree(s, e, dayOfWeek);
-	   }
-	   
 	   public static boolean isAvailable(Day dayOfWeek, int s, int e, LocationDecorator ld)
 	   {		   
 		   return ld.getAvailability().isFree(s, e, dayOfWeek);
@@ -709,11 +696,6 @@ public class Generate {
 	    * 
 	    *         Written by: Eric Liebowitz
 	    */
-	   public static boolean isAvailable(Location location, Week week, int s, int e, ScheduleDecorator sd)
-	   {
-		   return sd.getLAvailability(location).isFree(s, e, week);
-	   }
-	   
 	   public static boolean isAvailable(Week week, int s, int e, LocationDecorator ld)
 	   {
 		   return ld.getAvailability().isFree(s, e, week);
@@ -729,16 +711,8 @@ public class Generate {
 	    *           TimeRange to check
 	    * 
 	    * @return True if the TimeRange is free on all days of "week"
-	 * @throws DatabaseException 
-	    */
-	   public static boolean isAvailable(Location location, Week week, TimeRange tr, ScheduleDecorator sd) throws DatabaseException
-	   {
-		   if(location.getDocument().getTBALocation() == location)
-			   return true;
-		   
-		   return sd.getLAvailability(location).isFree(tr, week);
-	   }
-	   
+	    * @throws DatabaseException 
+	    */	   
 	   public static boolean isAvailable(Week week, TimeRange tr, LocationDecorator ld) throws DatabaseException
 	   {
 		   if(ld.getLocation().getDocument().getTBALocation() == ld.getLocation())
@@ -1087,10 +1061,6 @@ public class Generate {
 	    * @return True if the instructor was booked. False if he was already booked
 	    *         for any part of the time specified.
 	    */
-	   public static boolean book (Instructor ins, boolean b, Week days, TimeRange tr, ScheduleDecorator sd)
-	   {
-	       return sd.getIAvailability(ins).book(b, days, tr);
-	   }
 	   
 	   public static boolean book (boolean b, Week days, TimeRange tr, InstructorDecorator id)
 	   {
@@ -1111,17 +1081,6 @@ public class Generate {
 	    * 
 	    *         Written by: Eric Liebowitz
 	    */
-	   public boolean book(Location location, boolean b, Week week, int s, int e, ScheduleDecorator sd)
-	   {
-		   return sd.getLAvailability(location).book(b, s, e, week);
-	   }
-
-	   public static boolean book(Location location, boolean b, Week week, TimeRange tr, ScheduleDecorator sd)
-	   {
-	       return sd.getLAvailability(location).book(b, week, tr);
-	   }
-	   
-	   //New decorator versions
 	   public boolean book(boolean b, Week week, int s, int e, LocationDecorator ld)
 	   {
 		   return ld.getAvailability().book(b, s, e, week);
@@ -1145,10 +1104,6 @@ public class Generate {
 	    * 
 	    *           Written by: Eric Liebowitz
 	    */
-	   public static boolean book(Location location, boolean b, Day dayOfWeek, int s, int e, ScheduleDecorator sd)
-	   {
-		   return sd.getLAvailability(location).book(b, s, e, dayOfWeek);
-	   }
 	   
 	   //TODO: can probably get rid of this eventually and just call ld.getAvailability() in the caller
 	   public static boolean book(boolean b, Day dayOfWeek, int s, int e, LocationDecorator ld)
