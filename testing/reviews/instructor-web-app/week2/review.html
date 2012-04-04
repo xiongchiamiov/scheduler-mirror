@@ -7,23 +7,76 @@ Design and Implementation Conventions</strong>
 </a>
 </font>
 <br>
+InstructorsView<br>
+-The method afterPush() has more than 50 lines.<br>
 <br>
+InstructorPreferencesView<br>
+- It contains package public variables.<br>
+- The method afterPush() has more than 50 lines.<br>
+<br>
+InstructorTimePreferencesWidget<br>
+- It does not use this.X in places.  ie. line 41 this.add(list) list should have a this.<br>
+- A number of If statments in setMultiplePreferences() and redraw() are put on 1 line.<br>
+<br>
+NoCourseDialog<br>
+- Looks good<br>
 <br>
 <font size=+2>
 <strong>2. Javadoc Is Complete and Follows Design and Implementation
 Conventions</strong>
 </font>
 <br>
+InstructorsView<br>
+- No Javadocs for anything<br>
 <br>
+InstructorPreferencesView<br>
+- No Javadocs for anything<br>
+<br>
+InstructorTimePreferencesWidget<br>
+- No Javadocs for anything<br>
+<br>
+NoCourseDialog<br>
+- It has a basic class javadoc.  The NoCourseDialog() javadoc lists 3 parameters but only takes 2.<br>
 <br>
 <font size=+2>
 3. <strong>Design of the Code is Good</strong>
 </font>
 <br>
+InstructorsView<br>
+- Blocks of commented code do not have reasons for comments with them<br>
+- The method preferencesButtonClicked() handles failure with a print line of "ABANDON SHIP CAPTAIN"<br>
+- It ideally should handle errors first and exit early.<br>
 <br>
+InstructorPreferencesView<br>
+- Blocks of commented code do not have reasons for comments with them<br>
+- It used to implement an interface.  The interface portion is still there, just commented out with no reasons given.<br>
+- Uses magic numbers.<br>
+- IViewContents interface methods (afterViewPoppedFromAboveMe, etc.) are mostly empty with no explainations given. The method canPop() always returns true with no explaination as to why.<br>
+<br>
+InstructorTimePreferencesWidget<br>
+- The method onLoad() has a variable called "topStuff", which is not descriptive<br>
+- Stylenames of "Rightness" and "Centerness" could be more descriptive<br>
+- In method redraw(), the variable name "desire" is vague.  Desire appears to be instructor desire level to teach at a certain time.<br>
+- Uses magic numbers<br>
+<br>
+NoCourseDialog<br>
+- Looks good<br>
 <br>
 <font size=+2>
 <strong>4. Code Passes Its Tests and Has Sensible User-Level Behavior </strong>
+</font>
+<br>InstructorsView<br>
+- No tests found<br>
+<br>
+InstructorPreferencesView<br>
+- InstructorPreferencesTest did not seem to be recognized by Junit.<br>
+- InstructorPreferencesTest SimpleDB passes<br>
+<br>
+InstructorTimePreferencesWidget<br>
+- No test<br>
+<br>
+NoCourseDialog<br>
+- No test<br>
 </font>
 </body>
 </html>
