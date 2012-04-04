@@ -62,13 +62,29 @@
     <antcall target="build"/>
   </target>
   
-  
   <path id="project.class.path">
     <pathelement location="src"/>
     <pathelement location="war/WEB-INF/classes"/>
     <!-- Add any additional non-server libs (such as JUnit) -->
     <fileset dir="war/WEB-INF/lib" includes="**/*.jar"/>
   </path>
+  
+  <path id="test.class.path">
+    <path refid="project.class.path"/>
+    <pathelement location="test-classes"/>
+    <!-- Add any additional non-server libs (such as JUnit) -->
+    <fileset dir="test-classes" includes="**/*.jar"/>
+  </path>
+  
+  <target name="test">
+    <junit fork="yes" haltonfailure="yes">
+      <formatter type="plain" usefile="false" />
+      <classpath refid="test.class.path" />
+      <batchtest>
+        <fileset dir="test-classes" includes="**/*Test.class" />
+      </batchtest>
+    </junit>
+  </target>
   
   <target name="gwtc" depends="build" description="GWT compile to JavaScript (production mode)">
     <java failonerror="true" fork="true" classname="com.google.gwt.dev.Compiler">

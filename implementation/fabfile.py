@@ -13,6 +13,10 @@ def build():
 	local('ant build')
 	local('ant gwtc')
 
+def test():
+	print('Running JUnit tests...')
+	local('ant test')
+
 def restart_tomcat():
 	print('Restarting tomcat...')
 	run('sudo service tomcat6 restart')
