@@ -96,6 +96,18 @@ public class SQLdb implements IDatabase {
 					new Table.Column("schedulable", Boolean.class),
 					new Table.Column("numHalfHours", Integer.class)
 	});
+	Table<SQLScheduleItem> scheduleItemTable = new Table<SQLScheduleItem>(SQLScheduleItem.class, "scheduleitem",
+			new Table.Column[] {
+					new Table.Column("id", Integer.class),
+					new Table.Column("docID", Integer.class),
+					new Table.Column("instID", Integer.class),
+					new Table.Column("locID", Integer.class),
+					new Table.Column("courseID", Integer.class),
+					new Table.Column("startTime", Integer.class),
+					new Table.Column("endTime", String.class),
+					new Table.Column("dayPatternID", String.class),
+					new Table.Column("sectionNum", String.class)
+	});
 	
 	public static void main(String[] args) throws Exception {
 		SQLdb db = new SQLdb();
@@ -189,7 +201,6 @@ public class SQLdb implements IDatabase {
 					queryString += column.name + " = ?,";
 			queryString = queryString = queryString.substring(0, queryString.length() - 1);
 			queryString += " WHERE ID = ?";
-			
 			
 			try {
 				stmnt = conn.prepareStatement(queryString);
@@ -588,16 +599,32 @@ public class SQLdb implements IDatabase {
 	@Override
 	public Collection<IDBScheduleItem> findScheduleItemsBySchedule(
 			IDBSchedule schedule) throws DatabaseException {
-		// TODO Auto-generated method stub
-		return null;
+		Collection<IDBScheduleItem> result = new LinkedList<IDBScheduleItem>();
+		SQLDocument sched = (SQLDocument) schedule;
+		HashMap<String, Object> wheres = new HashMap<String, Object>();
+		
+		wheres.put("id", sched.getID());
+		
+		for(SQLScheduleItem schedItem : scheduleItemTable.select(wheres))
+			result.add(schedItem);
+		
+		return result;
 	}
 
 
 	@Override
 	public Collection<IDBScheduleItem> findAllScheduleItemsForSchedule(
 			IDBSchedule schedule) throws DatabaseException {
-		// TODO Auto-generated method stub
-		return null;
+		Collection<IDBScheduleItem> result = new LinkedList<IDBScheduleItem>();
+		SQLDocument sched = (SQLDocument) schedule;
+		HashMap<String, Object> wheres = new HashMap<String, Object>();
+		
+		wheres.put("id", sched.getID());
+		
+		for(SQLScheduleItem schedItem : scheduleItemTable.select(wheres))
+			result.add(schedItem);
+		
+		return result;
 	}
 
 
@@ -1143,8 +1170,8 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public boolean isEmpty() {
-		// TODO Auto-generated method stub
 		return false;
+		// TODO Auto-generated method stub
 	}
 
 
