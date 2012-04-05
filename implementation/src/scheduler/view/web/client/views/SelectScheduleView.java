@@ -7,6 +7,7 @@ import java.util.HashMap;
 import scheduler.view.web.client.GreetingServiceAsync;
 import scheduler.view.web.client.HTMLUtilities;
 import scheduler.view.web.client.NewScheduleCreator;
+import scheduler.view.web.client.NewScheduleCreator.CreatedScheduleCallback;
 import scheduler.view.web.client.TabOpener;
 import scheduler.view.web.client.views.resources.instructors.InstructorsHomeView;
 import scheduler.view.web.shared.DocumentGWT;
@@ -282,13 +283,15 @@ public class SelectScheduleView extends VerticalPanel
       documentPanels.put(document.getID(), doc);
    }
 
-   interface NameScheduleCallback
-   {
-      void namedSchedule(String name);
-   }
+//   interface NameScheduleCallback
+//   {
+//      void namedSchedule(String name);
+//   }
 
    private void createNewSchedule()
    {
-   	NewScheduleCreator.createNewSchedule(service, username);
+   	NewScheduleCreator.createNewSchedule(service, username, new CreatedScheduleCallback() {
+			public void createdSchedule() { }
+		});
    }
 }

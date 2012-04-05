@@ -146,4 +146,6 @@ public interface GreetingService extends RemoteService {
 	Collection<ScheduleItemGWT> getScheduleItems(int scheduleID);
 
 	DocumentGWT findDocumentByID(int automaticOpenDocumentID);
+
+	void removeOriginalDocument(Integer id);
 }

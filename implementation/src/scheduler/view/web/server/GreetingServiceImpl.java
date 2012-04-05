@@ -722,4 +722,14 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			throw new RuntimeException(e);
 		}
 	}
+
+	@Override
+	public void removeOriginalDocument(Integer id) {
+		try {
+			model.findDocumentByID(id).delete();
+		}
+		catch (DatabaseException e) {
+			throw new RuntimeException(e);
+		}
+	}
 }

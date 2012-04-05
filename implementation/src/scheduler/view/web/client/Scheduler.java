@@ -6,7 +6,7 @@ import java.util.TreeMap;
 import scheduler.view.web.client.views.AdminScheduleNavView;
 import scheduler.view.web.client.views.LoadingPopup;
 import scheduler.view.web.client.views.LoginView;
-import scheduler.view.web.client.views.SelectScheduleView;
+import scheduler.view.web.client.views.home.HomeView;
 import scheduler.view.web.shared.DocumentGWT;
 
 import com.google.gwt.core.client.EntryPoint;
@@ -18,7 +18,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -100,7 +99,7 @@ public class Scheduler implements EntryPoint, UpdateHeaderStrategy
 			onLogin(username);
 			
 			if (documentIDStr == null) {
-				viewContainer.add(new SelectScheduleView(service, viewContainer, username));
+				viewContainer.add(new HomeView(service, viewContainer, username));
 				loadingPopup.hide();
 			}
 			else {

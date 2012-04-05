@@ -5,6 +5,7 @@ import scheduler.view.web.client.GreetingServiceAsync;
 import scheduler.view.web.client.Import;
 import scheduler.view.web.client.MergeDialog;
 import scheduler.view.web.client.NewScheduleCreator;
+import scheduler.view.web.client.NewScheduleCreator.CreatedScheduleCallback;
 import scheduler.view.web.client.SaveAsDialog;
 import scheduler.view.web.client.TabOpener;
 import scheduler.view.web.client.views.resources.courses.CoursesView;
@@ -63,7 +64,9 @@ public class AdminScheduleNavView extends VerticalPanel {
 		MenuItem newItem = new MenuItem("New", "icons/16/document_plain_new.png", "Ctrl+N");
 		newItem.addClickHandler(new ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				NewScheduleCreator.createNewSchedule(service, username);
+				NewScheduleCreator.createNewSchedule(service, username, new CreatedScheduleCallback() {
+					public void createdSchedule() { }
+				});
 			}
 		});
 		

@@ -20,11 +20,15 @@ import com.google.gwt.user.client.ui.TextBox;
 
 
 public class NewScheduleCreator {
+	public interface CreatedScheduleCallback {
+		void createdSchedule();
+	}
+	
 	private interface NamedScheduleCallback {
 		void namedSchedule(String scheduleName);
 	}
 	
-	public static void createNewSchedule(final GreetingServiceAsync service, final String username) {
+	public static void createNewSchedule(final GreetingServiceAsync service, final String username, final CreatedScheduleCallback callback) {
 		displayNewSchedPopup("Create", new NamedScheduleCallback() {
 			@Override
 			public void namedSchedule(final String newDocumentName) {
@@ -49,6 +53,7 @@ public class NewScheduleCreator {
 									popup.hide();
 									assert (newDocumentName.equals(newDocument.getName()));
 									TabOpener.openDocInNewTab(username, newDocument);
+									callback.createdSchedule();
 								}
 								
 								public void onFailure(Throwable caught) {

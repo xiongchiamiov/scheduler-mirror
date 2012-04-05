@@ -47,4 +47,15 @@ public class DocumentGWT implements Serializable {
 	public void setStartHalfHour(int startHalfHour) { this.startHalfHour = startHalfHour; }
 	public int getEndHalfHour() { return endHalfHour; }
 	public void setEndHalfHour(int endHalfHour) { this.endHalfHour = endHalfHour; }
+
+	public boolean fieldsEqual(DocumentGWT that) {
+		return id == that.id &&
+				name.equals(that.name) &&
+				scheduleID == that.scheduleID &&
+				staffInstructorID == that.staffInstructorID &&
+				tbaLocationID == that.tbaLocationID &&
+				isTrashed == that.isTrashed &&
+				startHalfHour == that.startHalfHour &&
+				endHalfHour == that.endHalfHour;
+	}
 }

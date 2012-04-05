@@ -188,4 +188,5 @@ public interface GreetingServiceAsync {
 			AsyncCallback<Void> callback);
 	void findDocumentByID(int automaticOpenDocumentID, AsyncCallback<DocumentGWT> callback);
 	void getAllOriginalDocuments(AsyncCallback<Collection<DocumentGWT>> callback);
+	void removeOriginalDocument(Integer id, AsyncCallback<Void> asyncCallback);
 }
