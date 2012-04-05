@@ -21,7 +21,7 @@ import com.google.gwt.user.client.ui.TextBox;
 
 public class SaveAsDialog {
 
-	public static void afterSaveAsPressed(final GreetingServiceAsync service, final DocumentGWT document) {
+	public static void afterSaveAsPressed(final GreetingServiceAsync service, final DocumentGWT document, final UpdateHeaderStrategy updateHeaderStrategy) {
 
 		final com.smartgwt.client.widgets.Window window = new com.smartgwt.client.widgets.Window();
 		window.setAutoSize(true);
@@ -50,14 +50,14 @@ public class SaveAsDialog {
 	               else return;
 	            }
 
-	            service.moveWorkingCopyToNewOriginalDocument(document.getID(), scheduleName, allowOverwrite, new AsyncCallback<Void>() {
+	            service.associateWorkingCopyWithNewOriginalDocument(document.getID(), scheduleName, allowOverwrite, new AsyncCallback<Void>() {
 	            	@Override
 	            	public void onFailure(Throwable caught) {
-	            		// TODO Auto-generated method stub
-	            		
+	            		Window.alert("Failed to save!");
 	            	}
 	            	@Override
 	            	public void onSuccess(Void v) {
+	            		updateHeaderStrategy.onDocumentNameChanged(scheduleName);
 	            		Window.alert("Successfully saved.");
 	            	}
 	            });

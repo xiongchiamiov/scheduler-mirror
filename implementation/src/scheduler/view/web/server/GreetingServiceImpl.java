@@ -487,7 +487,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	}
 	
 	@Override
-	public void moveWorkingCopyToNewOriginalDocument(
+	public void associateWorkingCopyWithNewOriginalDocument(
 			Integer workingCopyDocumentID, String scheduleName,
 			boolean allowOverwrite) {
 		

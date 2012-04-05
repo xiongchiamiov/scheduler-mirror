@@ -183,7 +183,7 @@ public interface GreetingServiceAsync {
 	void newRemoveScheduleItem(ScheduleItemGWT itemGWT,
 			AsyncCallback<Collection<ScheduleItemGWT>> callback);
 	void updateDocument(DocumentGWT document, AsyncCallback<Void> callback);
-	void moveWorkingCopyToNewOriginalDocument(Integer workingCopyID,
+	void associateWorkingCopyWithNewOriginalDocument(Integer workingCopyID,
 			String scheduleName, boolean allowOverwrite,
 			AsyncCallback<Void> callback);
 	void findDocumentByID(int automaticOpenDocumentID, AsyncCallback<DocumentGWT> callback);

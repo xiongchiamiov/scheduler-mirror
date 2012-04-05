@@ -109,7 +109,7 @@ public class Scheduler implements EntryPoint, UpdateHeaderStrategy
 					public void onSuccess(DocumentGWT workingCopyDocument) {
 						onOpenedDocument(workingCopyDocument.getName());
 						
-						viewContainer.add(new AdminScheduleNavView(service, username, workingCopyDocument));
+						viewContainer.add(new AdminScheduleNavView(service, Scheduler.this, username, workingCopyDocument));
 						loadingPopup.hide();
 					}
 					public void onFailure(Throwable caught) {
@@ -154,5 +154,11 @@ public class Scheduler implements EntryPoint, UpdateHeaderStrategy
 		scheduleNameContainer.clear();
 		usernameContainer.clear();
 		logoutLinkContainer.clear();
+	}
+
+	@Override
+	public void onDocumentNameChanged(String newDocumentName) {
+		scheduleNameContainer.clear();
+		scheduleNameContainer.add(new Label(newDocumentName));
 	}
 }

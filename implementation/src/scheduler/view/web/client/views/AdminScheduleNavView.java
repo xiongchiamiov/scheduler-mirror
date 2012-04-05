@@ -8,6 +8,7 @@ import scheduler.view.web.client.NewScheduleCreator;
 import scheduler.view.web.client.NewScheduleCreator.CreatedScheduleCallback;
 import scheduler.view.web.client.SaveAsDialog;
 import scheduler.view.web.client.TabOpener;
+import scheduler.view.web.client.UpdateHeaderStrategy;
 import scheduler.view.web.client.views.resources.courses.CoursesView;
 import scheduler.view.web.client.views.resources.instructors.InstructorsView;
 import scheduler.view.web.client.views.resources.locations.LocationsView;
@@ -48,15 +49,15 @@ public class AdminScheduleNavView extends VerticalPanel {
 	// MenuItem instructorsMenuItem, locationsMenuItem, coursesMenuItem,
 	// scheduleMenuItem;
 	
-	public AdminScheduleNavView(GreetingServiceAsync service, String username, DocumentGWT document) {
+	public AdminScheduleNavView(GreetingServiceAsync service, final UpdateHeaderStrategy updateHeaderStrategy, String username, DocumentGWT document) {
 		this.service = service;
 		this.username = username;
 		this.document = document;
 
-		addMenus();
+		addMenus(updateHeaderStrategy);
 	}
 	
-	private ToolStripMenuButton makeFileMenuAndButton() {
+	private ToolStripMenuButton makeFileMenuAndButton(final UpdateHeaderStrategy updateHeaderStrategy) {
 		Menu menu = new Menu();
 		menu.setShowShadow(true);
 		menu.setShadowDepth(3);
@@ -102,7 +103,7 @@ public class AdminScheduleNavView extends VerticalPanel {
 		MenuItem saveAsItem = new MenuItem("Save As", "icons/16/save_as.png");
 		saveAsItem.addClickHandler(new ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				SaveAsDialog.afterSaveAsPressed(service, document);
+				SaveAsDialog.afterSaveAsPressed(service, document, updateHeaderStrategy);
 			}
 		});
 		
@@ -174,7 +175,7 @@ public class AdminScheduleNavView extends VerticalPanel {
 		return menuButton;
 	}
 	
-	private ToolStrip makeToolStrip() {
+	private ToolStrip makeToolStrip(UpdateHeaderStrategy updateHeaderStrategy) {
 		ToolStrip toolStrip = new ToolStrip();
 		toolStrip.setOverflow(Overflow.VISIBLE);
 		toolStrip.setZIndex(1000000);
@@ -183,7 +184,7 @@ public class AdminScheduleNavView extends VerticalPanel {
 		
 		toolStrip.addSpacer(5);
 		
-		toolStrip.addMenuButton(makeFileMenuAndButton());
+		toolStrip.addMenuButton(makeFileMenuAndButton(updateHeaderStrategy));
 		
 		toolStrip.addSpacer(5);
 		
@@ -255,7 +256,7 @@ public class AdminScheduleNavView extends VerticalPanel {
 	}
 	
 	
-	private void addMenus() {
+	private void addMenus(UpdateHeaderStrategy updateHeaderStrategy) {
 		HLayout navBar = new HLayout();
 		navBar.setWidth100();
 		navBar.setHeight(40);
@@ -264,7 +265,7 @@ public class AdminScheduleNavView extends VerticalPanel {
 		viewFrameContainer = new SimplePanel();
 		add(viewFrameContainer);
 
-		navBar.addMember(makeToolStrip());
+		navBar.addMember(makeToolStrip(updateHeaderStrategy));
 		navBar.addMember(makeTabs());
 	}
 }

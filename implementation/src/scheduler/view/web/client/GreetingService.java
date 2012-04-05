@@ -109,7 +109,7 @@ public interface GreetingService extends RemoteService {
 
 	void deleteWorkingCopyDocument(Integer documentID);
 	
-	void moveWorkingCopyToNewOriginalDocument(
+	void associateWorkingCopyWithNewOriginalDocument(
 			Integer workingCopyID, String scheduleName,
 			boolean allowOverwrite);
 
