@@ -9,6 +9,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.types.ListGridEditEvent;
 import com.smartgwt.client.types.Overflow;
@@ -69,7 +70,9 @@ public class CoursesView extends VerticalPanel {
 		
 		this.add(new Button("Add New Course", new ClickHandler() {
 			public void onClick(ClickEvent event) {
-            grid.startEditingNew();
+				Record defaultValues = new Record();
+				defaultValues.setAttribute("type", "LEC");
+            grid.startEditingNew(defaultValues);
 			}
 		}));
 		
