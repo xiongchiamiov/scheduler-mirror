@@ -31,7 +31,7 @@ public class InstructorsView extends VerticalPanel {
 	private final DocumentGWT document;
 //	private ViewFrame frame;
 	
-	public InstructorsView(final GreetingServiceAsync service, final DocumentGWT document, UnsavedDocumentStrategy unsavedDocumentStrategy) {
+	public InstructorsView(final GreetingServiceAsync service, final DocumentGWT document, final UnsavedDocumentStrategy unsavedDocumentStrategy) {
 		this.service = service;
 		this.document = document;
 		// this.addStyleName("iViewPadding");
@@ -61,7 +61,7 @@ public class InstructorsView extends VerticalPanel {
 								public void onSuccess(List<InstructorGWT> result) {
 									for (InstructorGWT instructor : result) {
 										if (instructor.getID().equals(instructorID)) {
-											preferencesButtonClicked(instructor);
+											preferencesButtonClicked(instructor, unsavedDocumentStrategy);
 											break;
 										}
 									}
@@ -124,9 +124,9 @@ public class InstructorsView extends VerticalPanel {
 		}));
 	}
 	
-	public void preferencesButtonClicked(InstructorGWT instructor) {
+	public void preferencesButtonClicked(InstructorGWT instructor, UnsavedDocumentStrategy unsavedDocumentStrategy) {
 		InstructorPreferencesView iipv = new InstructorPreferencesView(
-				service, document.getID(), document.getName(), instructor);
+				service, document.getID(), document.getName(), instructor, unsavedDocumentStrategy);
 		final Window window = new Window();
 		window.setAutoSize(true);
 		window.setTitle("Instructor Preferences");

@@ -1,6 +1,7 @@
 package scheduler.view.web.client.views.resources.instructors;
 
 import scheduler.view.web.client.GreetingServiceAsync;
+import scheduler.view.web.client.UnsavedDocumentStrategy;
 import scheduler.view.web.shared.InstructorGWT;
 
 import com.google.gwt.user.client.ui.FocusPanel;
@@ -28,9 +29,10 @@ public class InstructorPreferencesView extends VerticalPanel {
 	 * @param service
 	 * @param documentID
 	 * @param instructor
+	 * @param unsavedDocumentStrategy 
 	 */
 	public InstructorPreferencesView(GreetingServiceAsync service,
-			int documentID, String scheduleName, InstructorGWT instructor) {
+			int documentID, String scheduleName, InstructorGWT instructor, UnsavedDocumentStrategy unsavedDocumentStrategy) {
 		this.service = service;
 
 		instructor.verify();
