@@ -3,6 +3,7 @@ package scheduler.view.web.client.views.resources.instructors;
 import java.util.List;
 
 import scheduler.view.web.client.GreetingServiceAsync;
+import scheduler.view.web.client.UnsavedDocumentStrategy;
 import scheduler.view.web.shared.DocumentGWT;
 import scheduler.view.web.shared.InstructorGWT;
 
@@ -30,7 +31,7 @@ public class InstructorsView extends VerticalPanel {
 	private final DocumentGWT document;
 //	private ViewFrame frame;
 	
-	public InstructorsView(final GreetingServiceAsync service, final DocumentGWT document) {
+	public InstructorsView(final GreetingServiceAsync service, final DocumentGWT document, UnsavedDocumentStrategy unsavedDocumentStrategy) {
 		this.service = service;
 		this.document = document;
 		// this.addStyleName("iViewPadding");
@@ -85,7 +86,7 @@ public class InstructorsView extends VerticalPanel {
 		grid.setEditByCell(true);
 		grid.setListEndEditAction(RowEndEditAction.NEXT);
 		// grid.setCellHeight(22);
-		grid.setDataSource(new InstructorsDataSource(service, document));
+		grid.setDataSource(new InstructorsDataSource(service, document, unsavedDocumentStrategy));
 		grid.setShowRecordComponents(true);
 		grid.setShowRecordComponentsByCell(true);
 		

@@ -13,6 +13,8 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -27,13 +29,13 @@ public class Scheduler implements EntryPoint, UpdateHeaderStrategy
 	private static final GreetingServiceAsync service = GWT.create(GreetingService.class);
 	
 	SimplePanel scheduleNameContainer;
+	SimplePanel documentChangedIndicatorContainer;
 	SimplePanel appNameContainer;
 	SimplePanel usernameContainer;
 	SimplePanel logoutLinkContainer;
 	SimplePanel viewContainer;
 	
-	public void onModuleLoad()
-	{
+	public void onModuleLoad() {
 		VerticalPanel pagePanel = new VerticalPanel();
 		pagePanel.addStyleName("mainWidget");
 		
@@ -47,6 +49,10 @@ public class Scheduler implements EntryPoint, UpdateHeaderStrategy
 			scheduleNameContainer = new SimplePanel();
 			scheduleNameContainer.setStyleName("scheduleName");
 			topBarLeftSide.add(scheduleNameContainer);
+			
+			documentChangedIndicatorContainer = new SimplePanel();
+			documentChangedIndicatorContainer.setStyleName("documentChangedIndicator");
+			topBarLeftSide.add(documentChangedIndicatorContainer);
 			
 			appNameContainer = new SimplePanel();
 			appNameContainer.setStyleName("appName");
@@ -69,6 +75,8 @@ public class Scheduler implements EntryPoint, UpdateHeaderStrategy
 		pagePanel.add(viewContainer);
 
 		RootPanel.get().add(pagePanel);
+
+		refreshWindowTitle();
 		
 		openInitialView(true, viewContainer);
 	}
@@ -136,7 +144,9 @@ public class Scheduler implements EntryPoint, UpdateHeaderStrategy
 		scheduleNameContainer.add(new Label(documentName));
 		
 		appNameContainer.clear();
-		appNameContainer.add(new Label("- Schedulizerifier"));
+		appNameContainer.add(new Label(" - Schedulizerifier"));
+
+		refreshWindowTitle();
 	}
 	
 	public void onLogin(String username) {
@@ -147,6 +157,8 @@ public class Scheduler implements EntryPoint, UpdateHeaderStrategy
 				openInitialView(false, viewContainer);
 			}
 		}));
+
+		refreshWindowTitle();
 	}
 
 	@Override
@@ -154,11 +166,34 @@ public class Scheduler implements EntryPoint, UpdateHeaderStrategy
 		scheduleNameContainer.clear();
 		usernameContainer.clear();
 		logoutLinkContainer.clear();
+		documentChangedIndicatorContainer.clear();
+		appNameContainer.clear();
+
+		refreshWindowTitle();
 	}
 
 	@Override
 	public void onDocumentNameChanged(String newDocumentName) {
 		scheduleNameContainer.clear();
 		scheduleNameContainer.add(new Label(newDocumentName));
+
+		refreshWindowTitle();
+	}
+
+	@Override
+	public void setDocumentChanged(boolean documentChanged) {
+		documentChangedIndicatorContainer.clear();
+		
+		if (documentChanged) {
+			Label label = new Label("*");
+			label.setTitle("This document has been changed, and hasn't been saved yet.");
+			documentChangedIndicatorContainer.add(label);
+		}
+		
+		refreshWindowTitle();
+	}
+	
+	private void refreshWindowTitle() {
+		Window.setTitle(scheduleNameContainer.getElement().getInnerText() + documentChangedIndicatorContainer.getElement().getInnerText() + this.appNameContainer.getElement().getInnerText());
 	}
 }

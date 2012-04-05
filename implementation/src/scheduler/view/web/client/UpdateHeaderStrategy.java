@@ -5,4 +5,5 @@ public interface UpdateHeaderStrategy {
 	public void onLogin(String username);
 	public void onOpenedDocument(String documentName);
 	public void onDocumentNameChanged(String newDocumentName);
+	public void setDocumentChanged(boolean documentChanged); 
 }

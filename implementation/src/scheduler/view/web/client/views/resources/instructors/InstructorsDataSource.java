@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import scheduler.view.web.client.GreetingServiceAsync;
+import scheduler.view.web.client.UnsavedDocumentStrategy;
 import scheduler.view.web.shared.DayGWT;
 import scheduler.view.web.shared.DocumentGWT;
 import scheduler.view.web.shared.InstructorGWT;
@@ -34,9 +35,12 @@ public class InstructorsDataSource extends DataSource {
 	
 	final DocumentGWT document;
 	
-	public InstructorsDataSource(GreetingServiceAsync service, DocumentGWT document) {
+	UnsavedDocumentStrategy unsavedDocumentStrategy;
+	
+	public InstructorsDataSource(GreetingServiceAsync service, DocumentGWT document, UnsavedDocumentStrategy unsavedDocumentStrategy) {
 		this.service = service;
 		this.document = document;
+		this.unsavedDocumentStrategy = unsavedDocumentStrategy;
 		
 		setDataProtocol(DSProtocol.CLIENTCUSTOM);
 		
@@ -126,6 +130,7 @@ public class InstructorsDataSource extends DataSource {
 			
 			@Override
 			public void onSuccess(InstructorGWT result) {
+				unsavedDocumentStrategy.setDocumentChanged(true);
 				DSResponse response = new DSResponse();
 				System.out.println("result record id " + result.getID());
 				response.setData(new Record[] { readInstructorIntoRecord(result) });
@@ -147,7 +152,7 @@ public class InstructorsDataSource extends DataSource {
 		if (changes.getAttribute("lastName") != null)
 			record.setAttribute("lastName", changes.getAttribute("lastName"));
 		if (changes.getAttribute("maxWTU") != null)
-			record.setAttribute("maxWTU", changes.getAttributeAsInt("maxWTU"));
+			record.setAttribute("maxWTU", changes.getAttribute("maxWTU"));
 		
 		final InstructorGWT instructor = readRecordIntoInstructor(record);
 		
@@ -161,6 +166,7 @@ public class InstructorsDataSource extends DataSource {
 			
 			@Override
 			public void onSuccess(Void result) {
+				unsavedDocumentStrategy.setDocumentChanged(true);
 				DSResponse response = new DSResponse();
 				response.setData(new Record[] { readInstructorIntoRecord(instructor) });
 				processResponse(dsRequest.getRequestId(), response);
@@ -175,6 +181,7 @@ public class InstructorsDataSource extends DataSource {
 		service.removeInstructor(record.getAttributeAsInt("id"), new AsyncCallback<Void>() {
 			@Override
 			public void onSuccess(Void result) {
+				unsavedDocumentStrategy.setDocumentChanged(true);
 				DSResponse response = new DSResponse();
 				response.setData(new Record[] { readInstructorIntoRecord(instructor) });
 				processResponse(dsRequest.getRequestId(), response);

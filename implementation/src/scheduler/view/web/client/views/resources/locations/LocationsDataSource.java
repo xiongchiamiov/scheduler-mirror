@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import scheduler.view.web.client.GreetingServiceAsync;
+import scheduler.view.web.client.UnsavedDocumentStrategy;
 import scheduler.view.web.shared.DocumentGWT;
 import scheduler.view.web.shared.LocationGWT;
 
@@ -33,10 +34,12 @@ public class LocationsDataSource extends DataSource {
 	
 	final GreetingServiceAsync service;
 	final DocumentGWT document;
+	UnsavedDocumentStrategy unsavedDocumentStrategy;
 	
-	public LocationsDataSource(GreetingServiceAsync service, DocumentGWT document) {
+	public LocationsDataSource(GreetingServiceAsync service, DocumentGWT document, UnsavedDocumentStrategy unsavedDocumentStrategy) {
 		this.service = service;
 		this.document = document;
+		this.unsavedDocumentStrategy = unsavedDocumentStrategy;
 		
 		setDataProtocol(DSProtocol.CLIENTCUSTOM);
 		
@@ -135,6 +138,7 @@ public class LocationsDataSource extends DataSource {
 			
 			@Override
 			public void onSuccess(LocationGWT result) {
+				unsavedDocumentStrategy.setDocumentChanged(true);
 				DSResponse response = new DSResponse();
 				System.out.println("result record id " + result.getID());
 				response.setData(new Record[] { readLocationIntoRecord(result) });
@@ -172,6 +176,7 @@ public class LocationsDataSource extends DataSource {
 			
 			@Override
 			public void onSuccess(Void result) {
+				unsavedDocumentStrategy.setDocumentChanged(true);
 				DSResponse response = new DSResponse();
 				response.setData(new Record[] { readLocationIntoRecord(location) });
 				processResponse(dsRequest.getRequestId(), response);
@@ -186,6 +191,7 @@ public class LocationsDataSource extends DataSource {
 		service.removeLocation(record.getAttributeAsInt("id"), new AsyncCallback<Void>() {
 			@Override
 			public void onSuccess(Void result) {
+				unsavedDocumentStrategy.setDocumentChanged(true);
 				DSResponse response = new DSResponse();
 				response.setData(new Record[] { readLocationIntoRecord(location) });
 				processResponse(dsRequest.getRequestId(), response);

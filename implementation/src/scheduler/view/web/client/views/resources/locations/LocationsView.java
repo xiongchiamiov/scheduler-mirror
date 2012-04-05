@@ -1,6 +1,7 @@
 package scheduler.view.web.client.views.resources.locations;
 
 import scheduler.view.web.client.GreetingServiceAsync;
+import scheduler.view.web.client.UnsavedDocumentStrategy;
 import scheduler.view.web.shared.DocumentGWT;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -15,7 +16,7 @@ import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 public class LocationsView extends VerticalPanel {
-	public LocationsView(final GreetingServiceAsync service, final DocumentGWT document) {
+	public LocationsView(final GreetingServiceAsync service, final DocumentGWT document, UnsavedDocumentStrategy unsavedDocumentStrategy) {
 		this.setWidth("100%");
 		this.setHeight("100%");
 		
@@ -31,7 +32,7 @@ public class LocationsView extends VerticalPanel {
 		grid.setEditByCell(true);
 		grid.setListEndEditAction(RowEndEditAction.NEXT);
 		//grid.setCellHeight(22);
-		grid.setDataSource(new LocationsDataSource(service, document));
+		grid.setDataSource(new LocationsDataSource(service, document, unsavedDocumentStrategy));
 		
 		ListGridField idField = new ListGridField("id");
 		idField.setHidden(true);

@@ -1,6 +1,7 @@
 package scheduler.view.web.client.views.resources.courses;
 
 import scheduler.view.web.client.GreetingServiceAsync;
+import scheduler.view.web.client.UnsavedDocumentStrategy;
 import scheduler.view.web.shared.DocumentGWT;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -22,7 +23,7 @@ public class CoursesView extends VerticalPanel {
 	private GreetingServiceAsync service;
 	private final DocumentGWT document;
 	
-	public CoursesView(GreetingServiceAsync service, DocumentGWT document) {
+	public CoursesView(GreetingServiceAsync service, DocumentGWT document, UnsavedDocumentStrategy unsavedDocumentStrategy) {
 		this.service = service;
 		this.document = document;
 		// this.addStyleName("iViewPadding");
@@ -44,7 +45,7 @@ public class CoursesView extends VerticalPanel {
 		grid.setEditByCell(true);
 		grid.setListEndEditAction(RowEndEditAction.NEXT);
 		//grid.setCellHeight(22);
-		grid.setDataSource(new CoursesDataSource(service, document));
+		grid.setDataSource(new CoursesDataSource(service, document, unsavedDocumentStrategy));
 		
 		ListGridField idField = new ListGridField("id");
 		idField.setHidden(true);

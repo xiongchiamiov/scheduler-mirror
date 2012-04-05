@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import scheduler.view.web.client.GreetingServiceAsync;
+import scheduler.view.web.client.UnsavedDocumentStrategy;
 import scheduler.view.web.shared.CourseGWT;
 import scheduler.view.web.shared.DayGWT;
 import scheduler.view.web.shared.DocumentGWT;
@@ -36,10 +37,12 @@ public class CoursesDataSource extends DataSource {
 	
 	final GreetingServiceAsync service;
 	final DocumentGWT document;
+	UnsavedDocumentStrategy unsavedDocumentStrategy;
 	
-	public CoursesDataSource(GreetingServiceAsync service, DocumentGWT document) {
+	public CoursesDataSource(GreetingServiceAsync service, DocumentGWT document, UnsavedDocumentStrategy unsavedDocumentStrategy) {
 		this.service = service;
 		this.document = document;
+		this.unsavedDocumentStrategy = unsavedDocumentStrategy;
 		
 		setDataProtocol(DSProtocol.CLIENTCUSTOM);
 		
@@ -228,6 +231,7 @@ public class CoursesDataSource extends DataSource {
 			
 			@Override
 			public void onSuccess(CourseGWT result) {
+				unsavedDocumentStrategy.setDocumentChanged(true);
 				DSResponse response = new DSResponse();
 				System.out.println("result record id " + result.getID());
 				response.setData(new Record[] { readCourseIntoRecord(result) });
@@ -283,6 +287,7 @@ public class CoursesDataSource extends DataSource {
 			
 			@Override
 			public void onSuccess(Void result) {
+				unsavedDocumentStrategy.setDocumentChanged(true);
 				DSResponse response = new DSResponse();
 				response.setData(new Record[] { readCourseIntoRecord(course) });
 				processResponse(dsRequest.getRequestId(), response);
@@ -297,6 +302,7 @@ public class CoursesDataSource extends DataSource {
 		service.removeCourse(record.getAttributeAsInt("id"), new AsyncCallback<Void>() {
 			@Override
 			public void onSuccess(Void result) {
+				unsavedDocumentStrategy.setDocumentChanged(true);
 				DSResponse response = new DSResponse();
 				response.setData(new Record[] { readCourseIntoRecord(course) });
 				processResponse(dsRequest.getRequestId(), response);

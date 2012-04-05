@@ -21,7 +21,7 @@ import com.google.gwt.user.client.ui.TextBox;
 
 public class SaveAsDialog {
 
-	public static void afterSaveAsPressed(final GreetingServiceAsync service, final DocumentGWT document, final UpdateHeaderStrategy updateHeaderStrategy) {
+	public static void afterSaveAsPressed(final GreetingServiceAsync service, final DocumentGWT document, final UpdateHeaderStrategy updateHeaderStrategy, final UnsavedDocumentStrategy unsavedDocumentStrategy) {
 
 		final com.smartgwt.client.widgets.Window window = new com.smartgwt.client.widgets.Window();
 		window.setAutoSize(true);
@@ -58,6 +58,7 @@ public class SaveAsDialog {
 	            	@Override
 	            	public void onSuccess(Void v) {
 	            		updateHeaderStrategy.onDocumentNameChanged(scheduleName);
+	            		unsavedDocumentStrategy.setDocumentChanged(false);
 	            		Window.alert("Successfully saved.");
 	            	}
 	            });

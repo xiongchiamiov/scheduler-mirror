@@ -8,6 +8,7 @@ import scheduler.view.web.client.NewScheduleCreator;
 import scheduler.view.web.client.NewScheduleCreator.CreatedScheduleCallback;
 import scheduler.view.web.client.SaveAsDialog;
 import scheduler.view.web.client.TabOpener;
+import scheduler.view.web.client.UnsavedDocumentStrategy;
 import scheduler.view.web.client.UpdateHeaderStrategy;
 import scheduler.view.web.client.views.resources.courses.CoursesView;
 import scheduler.view.web.client.views.resources.instructors.InstructorsView;
@@ -36,12 +37,14 @@ import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripMenuButton;
 
-public class AdminScheduleNavView extends VerticalPanel {
+public class AdminScheduleNavView extends VerticalPanel implements UnsavedDocumentStrategy {
 	final GreetingServiceAsync service;
 	final String username;
 	final DocumentGWT document;
+	boolean documentChanged;
 	
 	SimplePanel viewFrameContainer;
+	UpdateHeaderStrategy updateHeaderStrategy;
 	
 	// final MenuBar menuBar;
 	
@@ -53,8 +56,17 @@ public class AdminScheduleNavView extends VerticalPanel {
 		this.service = service;
 		this.username = username;
 		this.document = document;
+		this.documentChanged = false;
+		this.updateHeaderStrategy = updateHeaderStrategy;
+		
+		Window.addWindowClosingHandler(new Window.ClosingHandler() {
+			public void onWindowClosing(Window.ClosingEvent closingEvent) {
+				if (documentChanged)
+					closingEvent.setMessage("You have unsaved data! Are you sure you want to close?");
+			}
+		});
 
-		addMenus(updateHeaderStrategy);
+		addMenus();
 	}
 	
 	private ToolStripMenuButton makeFileMenuAndButton(final UpdateHeaderStrategy updateHeaderStrategy) {
@@ -91,6 +103,7 @@ public class AdminScheduleNavView extends VerticalPanel {
 				service.saveWorkingCopyToOriginalDocument(document.getID(), new
 						AsyncCallback<Void>() {
 							public void onSuccess(Void result) {
+								setDocumentChanged(false);
 								Window.alert("Successfully saved!");
 							}
 							public void onFailure(Throwable caught) {
@@ -103,7 +116,7 @@ public class AdminScheduleNavView extends VerticalPanel {
 		MenuItem saveAsItem = new MenuItem("Save As", "icons/16/save_as.png");
 		saveAsItem.addClickHandler(new ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				SaveAsDialog.afterSaveAsPressed(service, document, updateHeaderStrategy);
+				SaveAsDialog.afterSaveAsPressed(service, document, updateHeaderStrategy, (UnsavedDocumentStrategy)AdminScheduleNavView.this);
 			}
 		});
 		
@@ -229,16 +242,16 @@ public class AdminScheduleNavView extends VerticalPanel {
 			public void onTabSelected(TabSelectedEvent event) {
 				// Window.alert(event.getTab().getTitle());
 				if (event.getTab() == coursesTab) {
-					viewFrameContainer.add(new CoursesView(service, document));
+					viewFrameContainer.add(new CoursesView(service, document, (UnsavedDocumentStrategy)AdminScheduleNavView.this));
 				}
 				else if (event.getTab() == instructorsTab) {
-					viewFrameContainer.add(new InstructorsView(service, document));
+					viewFrameContainer.add(new InstructorsView(service, document, (UnsavedDocumentStrategy)AdminScheduleNavView.this));
 				}
 				else if (event.getTab() == locationsTab) {
-					viewFrameContainer.add(new LocationsView(service, document));
+					viewFrameContainer.add(new LocationsView(service, document, (UnsavedDocumentStrategy)AdminScheduleNavView.this));
 				}
 				else if (event.getTab() == scheduleTab) {
-					viewFrameContainer.add(new CalendarView(service, document));
+					viewFrameContainer.add(new CalendarView(service, document, (UnsavedDocumentStrategy)AdminScheduleNavView.this));
 				}
 				else
 					assert (false);
@@ -256,7 +269,7 @@ public class AdminScheduleNavView extends VerticalPanel {
 	}
 	
 	
-	private void addMenus(UpdateHeaderStrategy updateHeaderStrategy) {
+	private void addMenus() {
 		HLayout navBar = new HLayout();
 		navBar.setWidth100();
 		navBar.setHeight(40);
@@ -267,5 +280,11 @@ public class AdminScheduleNavView extends VerticalPanel {
 
 		navBar.addMember(makeToolStrip(updateHeaderStrategy));
 		navBar.addMember(makeTabs());
+	}
+
+	@Override
+	public void setDocumentChanged(boolean documentChanged) {
+		this.documentChanged = documentChanged;
+		this.updateHeaderStrategy.setDocumentChanged(documentChanged);
 	}
 }

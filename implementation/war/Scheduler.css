@@ -55,17 +55,22 @@ body {
 }
 
 .scheduleName {
+	padding-left: 10px;
+	font-size: 200%;
+}
+
+.documentChangedIndicator {
 	font-size: 200%;
 }
 
 .appName {
+	padding-left: 10px;
 	opacity: .3;
 	filter: alpha(opacity=30);
 	font-size: 200%;
 }
 
 .topBarLeftSide > div {
-	padding-left: 10px;
 	display: inline-block;
 }
 
