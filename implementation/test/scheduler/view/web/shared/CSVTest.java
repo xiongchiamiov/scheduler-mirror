@@ -207,7 +207,7 @@ public class CSVTest extends TestCase {
 
 		// Setup
 		Model model = new Model();
-		model.createTransientDocument("TestDayPrefs", 14, 44).insert();
+		model.createAndInsertDocumentWithTBAStaffAndSchedule("TestDayPrefs", 14, 44);
 		Collection<Document> docs = model.findAllDocuments();
 		Document doc = model.findAllDocuments().iterator().next();
 
@@ -508,7 +508,7 @@ public class CSVTest extends TestCase {
 		for (int items = 0; items < 100; items++) {
 			try {
 				Model model = new Model();
-				model.createTransientDocument("Doc" + items, 14, 44).insert();
+				model.createAndInsertDocumentWithTBAStaffAndSchedule("Doc" + items, 14, 44);
 				Collection<Document> docs = model.findAllDocuments();
 				Document doc = model.findAllDocuments().iterator().next();
 

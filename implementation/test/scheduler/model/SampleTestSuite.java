@@ -4,7 +4,6 @@ package scheduler.model;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import scheduler.model.db.DatabaseTestSimpleDB;
-import scheduler.model.tempalgorithm.TempAlgorithmTestSimpleDB;
 
 public class SampleTestSuite extends TestCase {
 
@@ -32,7 +31,6 @@ public class SampleTestSuite extends TestCase {
 		suite.addTestSuite(InstructorsPreferencesTestSimpleDB.class);
 		suite.addTestSuite(LocationsTestSimpleDB.class);
 		suite.addTestSuite(CoursesTestSimpleDB.class);
-		suite.addTestSuite(TempAlgorithmTestSimpleDB.class);
 		suite.addTestSuite(ScheduleItemsTestSimpleDB.class);
 		suite.addTestSuite(CSVTest.class);
 		

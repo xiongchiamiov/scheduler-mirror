@@ -148,7 +148,26 @@ public class Model {
 		}
 	};
 
-	public Document createTransientDocument(String name, int startHalfHour, int endHalfHour) throws DatabaseException {
+	public Document createAndInsertDocumentWithTBAStaffAndSchedule(String name, int startHalfHour, int endHalfHour) throws DatabaseException {
+		Document document = createTransientDocument(name, startHalfHour, endHalfHour)
+				.insert();
+
+		document.setStaffInstructor(createTransientInstructor("STAFF", "STAFF", "STAFF", "1000000", true)
+				.setDocument(document)
+				.insert());
+		
+		document.setTBALocation(createTransientLocation("TBA", "Lecture", "1000000", true)
+				.setDocument(document)
+				.insert());
+
+		createTransientSchedule().setDocument(document).insert().getID();
+		
+		document.update();
+		
+		return document;
+	}
+	
+	private Document createTransientDocument(String name, int startHalfHour, int endHalfHour) throws DatabaseException {
 		return new Document(this, database.assembleDocument(name, startHalfHour, endHalfHour));
 	}
 	

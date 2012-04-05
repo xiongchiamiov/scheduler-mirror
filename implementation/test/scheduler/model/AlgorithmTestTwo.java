@@ -25,7 +25,7 @@ public abstract class AlgorithmTestTwo extends ModelTestCase {
 	public void testGenerate() throws DatabaseException, CouldNotBeScheduledException {
 		Model model = createBlankModel();
 		
-		Document doc = model.createTransientDocument("doc", START_HALF_HOUR, END_HALF_HOUR).insert();
+		Document doc = model.createAndInsertDocumentWithTBAStaffAndSchedule("doc", START_HALF_HOUR, END_HALF_HOUR);
 		
 		model.createTransientLocation("roomlol", "LEC", "30", true).setDocument(doc).insert();
 		
@@ -55,7 +55,7 @@ public abstract class AlgorithmTestTwo extends ModelTestCase {
 	public void testGenerateMultiple() throws DatabaseException, CouldNotBeScheduledException {
 		Model model = createBlankModel();
 		
-		Document doc = model.createTransientDocument("doc", START_HALF_HOUR, END_HALF_HOUR).insert();
+		Document doc = model.createAndInsertDocumentWithTBAStaffAndSchedule("doc", START_HALF_HOUR, END_HALF_HOUR);
 		
 		model.createTransientLocation("roomlol", "LEC", "30", true).setDocument(doc).insert();
 		
@@ -85,7 +85,7 @@ public abstract class AlgorithmTestTwo extends ModelTestCase {
 	public void testRunOutOfInstructors() throws DatabaseException, CouldNotBeScheduledException {
 		Model model = createBlankModel();
 		
-		Document doc = model.createTransientDocument("doc", START_HALF_HOUR, END_HALF_HOUR).insert();
+		Document doc = model.createAndInsertDocumentWithTBAStaffAndSchedule("doc", START_HALF_HOUR, END_HALF_HOUR);
 		
 		model.createTransientLocation("roomlol", "LEC", "30", true).setDocument(doc).insert();
 		

@@ -31,13 +31,7 @@ public class AlgorithmTest {
 	public static void main(String[] args) throws DatabaseException {
 		Model model = new Model();
 		
-		Document doc = model.createTransientDocument("doc", START_HALF_HOUR, END_HALF_HOUR).insert();
-		
-		doc.setStaffInstructor(model.createTransientInstructor("STAFF", "STAFF", "STAFF", "1000000", true)
-				.setDocument(doc).insert());
-		
-		doc.setTBALocation(model.createTransientLocation("TBA", "Lecture", "1000000", true)
-				.setDocument(doc).insert());
+		Document doc = model.createAndInsertDocumentWithTBAStaffAndSchedule("doc", START_HALF_HOUR, END_HALF_HOUR);
 		
 		Schedule schedule = model.createTransientSchedule().setDocument(doc).insert();
 		

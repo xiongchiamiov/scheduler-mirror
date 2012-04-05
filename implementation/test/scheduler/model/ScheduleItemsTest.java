@@ -9,21 +9,7 @@ public abstract class ScheduleItemsTest extends ModelTestCase {
 	private Model createModelWithStuff() throws DatabaseException {
 		Model model = createBlankModel();
 		
-		Document doc = model.createTransientDocument("doc", 14, 44).insert();
-		
-		Location tbaLocation = model.createTransientLocation("room", "LEC", "20", true).setDocument(doc).insert();
-		doc.setTBALocation(tbaLocation);
-		tbaLocation.update();
-		
-		Instructor staffInstructor = model.createTransientInstructor("e", "o", "eo", "20", true).setDocument(doc).insert();
-		doc.setStaffInstructor(staffInstructor);
-		staffInstructor.update();
-		
-		doc.update();
-		
-		Schedule schedule = model.createTransientSchedule();
-		schedule.setDocument(doc);
-		schedule.insert();
+		model.createAndInsertDocumentWithTBAStaffAndSchedule("doc", 14, 44);
 		
 		return model;
 	}

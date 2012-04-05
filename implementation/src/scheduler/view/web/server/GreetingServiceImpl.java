@@ -379,23 +379,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	@Override
 	public DocumentGWT createOriginalDocument(String newDocName) {
 		try {
-			Document newOriginalDocument = model.createTransientDocument(newDocName, 14, 44);
-			newOriginalDocument.insert();
+			Document newOriginalDocument = model.createAndInsertDocumentWithTBAStaffAndSchedule(newDocName, 14, 44);
 			
-			int scheduleID = model.createTransientSchedule().setDocument(newOriginalDocument).insert().getID();
-			
-			// TODO: have wtu and loc's max occ be 0
-			
-			newOriginalDocument.setStaffInstructor(
-					model.createTransientInstructor("", "TBA", "TBA", "10000", true)
-							.setDocument(newOriginalDocument)
-							.insert());
-			newOriginalDocument.setTBALocation(
-					model.createTransientLocation("TBA", "LEC", "10000", true)
-							.setDocument(newOriginalDocument)
-							.insert());
-			
-			newOriginalDocument.update();
+			int scheduleID = model.findSchedulesForDocument(newOriginalDocument).iterator().next().getID();
 			
 			return Conversion.documentToGWT(newOriginalDocument, scheduleID);
 		}
