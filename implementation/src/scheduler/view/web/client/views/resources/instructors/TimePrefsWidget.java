@@ -1,41 +1,42 @@
 package scheduler.view.web.client.views.resources.instructors;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseUpEvent;
-import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 import scheduler.view.web.client.GreetingServiceAsync;
 import scheduler.view.web.shared.DayGWT;
 import scheduler.view.web.shared.InstructorGWT;
 
-public class InstructorTimePreferencesWidget extends VerticalPanel {
-	class CellWidget extends FocusPanel {
+/**
+ * This is a widget to show and modify the time
+ * preferences of an instructor
+ * @author unknown, modified by Carsten Pfeffer <pfeffer@tzi.de>
+ */
+public class TimePrefsWidget extends VerticalPanel {
+	class TimePrefsCellWidget extends FocusPanel {
 		int halfHour, day;
 		ListBox list = new ListBox();
 		
-		CellWidget(int halfHour, int day) {
+		TimePrefsCellWidget(int halfHour, int day) {
 			this.halfHour = halfHour;
 			this.day = day;
 			this.add(list);
@@ -105,10 +106,10 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 	
 	String[] styleNames = {"preferred", "acceptable", "notPreferred", "notQualified"};
 	
-	CellWidget[][] cells;
-	List<CellWidget> selectedCells;
-	CellWidget anchorCell;
-	CellWidget lastSelectedCell;
+	TimePrefsCellWidget[][] cells;
+	List<TimePrefsCellWidget> selectedCells;
+	TimePrefsCellWidget anchorCell;
+	TimePrefsCellWidget lastSelectedCell;
 	CheckBox monday = new CheckBox("Monday", true);
 	CheckBox tuesday = new CheckBox("Tuesday", true);
 	CheckBox wednesday = new CheckBox("Wednesday", true);
@@ -116,12 +117,40 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 	CheckBox friday = new CheckBox("Friday", true);
 	final FocusPanel focus = new FocusPanel();
 	final FocusPanel focusTwo = new FocusPanel();
+//	private int documentID;
+	private InstructorGWT instructor;
+	private InstructorGWT savedInstructor;
 	
-	public InstructorTimePreferencesWidget(GreetingServiceAsync service, Strategy strategy) {
+	/**
+	 * The following parameters are needed to get and save the time preferences
+	 * @param service
+	 * @param documentID
+	 * @param instructor
+	 */
+	public TimePrefsWidget(GreetingServiceAsync service,
+			int documentID, final InstructorGWT instructor)
+	{
 		this.service = service;
-		this.strategy = strategy;
+		instructor.verify();
+//		this.documentID = documentID;
+		this.instructor = instructor;
+		this.savedInstructor = new InstructorGWT(instructor);
+		this.service = service;
+		this.strategy = new TimePrefsWidget.Strategy() {
+			public InstructorGWT getSavedInstructor() {
+				return savedInstructor;
+			}
 
-		selectedCells = new LinkedList<CellWidget>();
+			public InstructorGWT getInstructor() {
+				return instructor;
+			}
+
+			public void autoSave() {
+				save();
+			}
+		};
+
+		selectedCells = new LinkedList<TimePrefsCellWidget>();
 
 		strategy.getInstructor().verify();
 		strategy.getSavedInstructor().verify();
@@ -136,17 +165,17 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 	}
 
 	void setSelectedCellsContents(int value) {
-		for (CellWidget cell : selectedCells)
+		for (TimePrefsCellWidget cell : selectedCells)
 			setPreference(cell, value);
 		//redoColors();
 	}
 
-	void setPreference(CellWidget cell, int desire) {
+	void setPreference(TimePrefsCellWidget cell, int desire) {
 		InstructorGWT instructor = strategy.getInstructor();
 		
-		int hour = cell.halfHour / 2 + 7; // divide by two to get hours 0-15. Add 7 to get hours 7-22.
+//		int hour = cell.halfHour / 2 + 7; // divide by two to get hours 0-15. Add 7 to get hours 7-22.
 		
-		Integer time = hour * 60 + cell.halfHour % 2 * 30;
+//		Integer time = hour * 60 + cell.halfHour % 2 * 30;
 
 		Integer dayNum = cell.day;
 		DayGWT day = DayGWT.values()[dayNum];
@@ -154,7 +183,7 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 		instructor.gettPrefs()[day.ordinal()][cell.halfHour] = desire;
 		instructor.gettPrefs()[day.ordinal()][cell.halfHour + 1] = desire;
 		
-		time = hour * 60 + cell.halfHour % 2 * 30;
+//		time = hour * 60 + cell.halfHour % 2 * 30;
 
 		dayNum = cell.day;
 		day = DayGWT.values()[dayNum];
@@ -168,9 +197,9 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 	}
 
 	int getPreference(InstructorGWT ins, int halfHour, int dayNum) {
-		int hour = halfHour / 2 + 7; // divide by two to get hours 0-15. Add 7 to get hours 7-22.
+//		int hour = halfHour / 2 + 7; // divide by two to get hours 0-15. Add 7 to get hours 7-22.
 		
-		Integer time = hour * 60 + halfHour % 2 * 30;
+//		Integer time = hour * 60 + halfHour % 2 * 30;
 		
 		DayGWT day = DayGWT.values()[dayNum];
 		return ins.gettPrefs()[day.ordinal()][halfHour];
@@ -214,7 +243,7 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 		toList.setTitle("To: ");
 				
 		for (int halfHour = 0; halfHour < 30; halfHour+=2) { // There are 30 half-hours between 7am and 10pm
-			int row = halfHour + 1;
+//			int row = halfHour + 1;
 			int hour = halfHour / 2 + 7; // divide by two to get hours 0-15. Add 7 to get hours 7-22.
 			String string = ((hour + 12 - 1) % 12 + 1) + ":" + (halfHour % 2 == 0 ? "00" : "30") + (hour < 12 ? "am" : "pm");
 			fromList.addItem(string);
@@ -293,7 +322,7 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 				if (event.getNativeKeyCode() == KeyCodes.KEY_TAB) {
 					if (lastSelectedCell != null && lastSelectedCell.day + 1 < 7) {
 						clearSelectedCells();
-						CellWidget cell = cells[lastSelectedCell.halfHour][lastSelectedCell.day + 1];
+						TimePrefsCellWidget cell = cells[lastSelectedCell.halfHour][lastSelectedCell.day + 1];
 						selectCell(cell);
 						lastSelectedCell = cell;
 					}
@@ -340,7 +369,7 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 		
 		
 		
-		cells = new CellWidget[15][days.size()];
+		cells = new TimePrefsCellWidget[15][days.size()];
 		//System.out.println("cells 2nd dim " + days.size());
 		
 		final int totalHalfHours = 30;
@@ -362,7 +391,7 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 				int desire = this.getPreference(strategy.getInstructor(), halfHour, prefCol);
 				if(desire > 3) desire = 3;
 				if(desire < 0) desire = 0;
-				final CellWidget cell = new CellWidget(halfHour, dayNum);
+				final TimePrefsCellWidget cell = new TimePrefsCellWidget(halfHour, dayNum);
 				cell.addStyleName("desireCell");
 				cell.addItems();
 				cell.setIndex(desire);
@@ -405,7 +434,7 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 		System.out.println("X: "+x+", Y: "+y);
 	}
 	
-	void cellWidgetMouseDown(CellWidget cell, MouseDownEvent event)
+	void cellWidgetMouseDown(TimePrefsCellWidget cell, MouseDownEvent event)
 	{
 		event.preventDefault();
 		
@@ -418,7 +447,7 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 		selectRangeOfCells(anchorCell.halfHour, anchorCell.day, cell.halfHour, cell.day);
 	}
 	
-	void cellWidgetMouseUp(CellWidget cell, MouseUpEvent event)
+	void cellWidgetMouseUp(TimePrefsCellWidget cell, MouseUpEvent event)
 	{
 		event.preventDefault();
 		
@@ -476,7 +505,7 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 				selectCell(cells[halfHour][day]);
 	}
 	
-	void setAnchorCell(CellWidget cell) {
+	void setAnchorCell(TimePrefsCellWidget cell) {
 		if (anchorCell != null) {
 			anchorCell.removeStyleName("anchorCell");
 			anchorCell = null;
@@ -486,7 +515,7 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 		anchorCell.addStyleName("anchorCell");
 	}
 	
-	void selectCell(CellWidget cell) {
+	void selectCell(TimePrefsCellWidget cell) {
 		if (!selectedCells.contains(cell)) {
 			selectedCells.add(cell);
 			cell.addStyleName("selectedCell");
@@ -494,13 +523,13 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 	}
 	
 	void clearSelectedCells() {
-		for (CellWidget c : selectedCells)
+		for (TimePrefsCellWidget c : selectedCells)
 			c.removeStyleName("selectedCell");
 			
 		selectedCells.clear();
 	}
 	
-	void toggleCellSelected(CellWidget cell) {
+	void toggleCellSelected(TimePrefsCellWidget cell) {
 		if (!selectedCells.contains(cell)) {
 			selectedCells.add(cell);
 			cell.addStyleName("selectedCell");
@@ -513,18 +542,35 @@ public class InstructorTimePreferencesWidget extends VerticalPanel {
 	
 	void redoColors() {
 		for (int halfHour = 0; halfHour < 30; halfHour++) {
-			int hour = halfHour / 2 + 7; // divide by two to get hours 0-15. Add 7 to get hours 7-22.
+//			int hour = halfHour / 2 + 7; // divide by two to get hours 0-15. Add 7 to get hours 7-22.
 			
-			Integer time = hour * 60 + halfHour % 2 * 30;
+//			Integer time = hour * 60 + halfHour % 2 * 30;
 			
 			for (int dayNum = 0; dayNum < 5; dayNum++) {
-				CellWidget cell = cells[halfHour/2][dayNum];
+				TimePrefsCellWidget cell = cells[halfHour/2][dayNum];
 				if (getPreference(strategy.getInstructor(), halfHour, dayNum) != getPreference(strategy.getSavedInstructor(), halfHour, dayNum))
 					cell.addStyleName("changed");
 				else
 					cell.removeStyleName("changed");
 			}
 		}
+	}
+	
+	void save() {
+		service.editInstructor(instructor, new AsyncCallback<Void>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				// popup.hide();
+				Window.alert("Error saving instructor: " + caught.getMessage());
+			}
+
+			@Override
+			public void onSuccess(Void result) {
+				savedInstructor = instructor;
+				instructor = new InstructorGWT(instructor);
+				redoColors();
+			}
+		});
 	}
 	
 }

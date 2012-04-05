@@ -142,7 +142,6 @@ public class InstructorsView extends VerticalPanel {
 		
 		ClickListener listener = new ClickListener() {
 			public void onClick(Widget sender) {
-				System.out.println("Got here +++++++++++++++++++++++++++++");
 				window.hide();
 			}
 		};
