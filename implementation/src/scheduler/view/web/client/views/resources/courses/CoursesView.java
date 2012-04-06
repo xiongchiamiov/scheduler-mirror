@@ -7,6 +7,7 @@ import scheduler.view.web.shared.DocumentGWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
@@ -32,7 +33,9 @@ public class CoursesView extends VerticalPanel {
 		this.setHeight("100%");
 		
 //		this.add(new HTML("<h2>Courses</h2>"));
+		HorizontalPanel gridPanel = new HorizontalPanel();
 		
+		gridPanel.setHorizontalAlignment(ALIGN_CENTER);
 		final ListGrid grid = new ListGrid();
 		grid.setWidth100();
 		
@@ -56,14 +59,19 @@ public class CoursesView extends VerticalPanel {
 		});
 		idField.setWidth(20);
 		idField.setAlign(Alignment.CENTER);
+		idField.setAlign(Alignment.CENTER);
 		
 		IntegerRangeValidator nonnegativeInt = new IntegerRangeValidator();  
 		nonnegativeInt.setMin(0);  
 		
 		ListGridField scheduleableField = new ListGridField("isSchedulable", "Schedulable");
+		scheduleableField.setAlign(Alignment.CENTER);
 		ListGridField departmentField = new ListGridField("department", "Department");
+		departmentField.setAlign(Alignment.CENTER);
 		ListGridField catalogNumberField = new ListGridField("catalogNumber", "Catalog Number");
+		catalogNumberField.setAlign(Alignment.CENTER);
 		ListGridField nameField = new ListGridField("name", "Name");
+		nameField.setAlign(Alignment.CENTER);
 		ListGridField numSectionsField = new ListGridField("numSections", "Number of Sections");
 		numSectionsField.setValidators(nonnegativeInt);
 		ListGridField wtuField = new ListGridField("wtu", "WTU");
@@ -71,18 +79,22 @@ public class CoursesView extends VerticalPanel {
 		ListGridField scuField = new ListGridField("scu", "SCU");
 		scuField.setValidators(nonnegativeInt);
 		ListGridField dayCombinationsField = new ListGridField("dayCombinations", "Day Combinations");
+		dayCombinationsField.setAlign(Alignment.CENTER);
 		ListGridField hoursPerWeekField = new ListGridField("hoursPerWeek", "Hours per Week");
 		hoursPerWeekField.setValidators(nonnegativeInt);
 		ListGridField maxEnrollmentField = new ListGridField("maxEnrollment", "Max Enrollment");
 		maxEnrollmentField.setValidators(nonnegativeInt);
 		ListGridField courseTypeField = new ListGridField("type", "Type");
+		courseTypeField.setAlign(Alignment.CENTER);
 		ListGridField usedEquipmentField = new ListGridField("usedEquipment", "Used Equipment");
+		usedEquipmentField.setAlign(Alignment.CENTER);
 		ListGridField associationsField = new ListGridField("associations", "Associations");
+		associationsField.setAlign(Alignment.CENTER);
 
 		grid.setFields(idField, scheduleableField, departmentField, catalogNumberField, nameField, numSectionsField, wtuField, scuField,
 				dayCombinationsField, hoursPerWeekField, maxEnrollmentField, courseTypeField, usedEquipmentField, associationsField);
-		
-		this.add(grid);
+		gridPanel.add(grid);
+		this.add(gridPanel);
 		
 		this.add(new Button("Add New Course", new ClickHandler() {
 			public void onClick(ClickEvent event) {

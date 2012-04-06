@@ -70,7 +70,7 @@ public class CoursesDataSource extends DataSource {
 		
 		DataSourceEnumField dayCombinationsField = new DataSourceEnumField("dayCombinations");
 		dayCombinationsField.setMultiple(true);
-		dayCombinationsField.setValueMap("M", "Tu", "W", "Th", "F", "MW", "MF", "WF", "TuTh", "MWF", "TuWThF", "MWThF", "MTuThF", "MTuWTh");
+		dayCombinationsField.setValueMap("M", "Tu", "W", "Th", "F", "MW", "MF", "WF", "TuTh", "MWF", "TuWThF", "MWThF", "MTuThF", "MTuWTh", "TuThF", "Sa", "Su");
 		
 		DataSourceTextField hoursPerWeekField = new DataSourceTextField("hoursPerWeek");
 		
@@ -105,6 +105,10 @@ public class CoursesDataSource extends DataSource {
 			result += "Th";
 		if (dayCombination.contains(DayGWT.FRIDAY))
 			result += "F";
+		if (dayCombination.contains(DayGWT.SATURDAY))
+			result += "Sa";
+		if (dayCombination.contains(DayGWT.SUNDAY))
+			result += "Su";
 		assert(result.length() > 0);
 		return result;
 	}
@@ -147,6 +151,10 @@ public class CoursesDataSource extends DataSource {
 			result.add(DayGWT.THURSDAY);
 		if (string.contains("F"))
 			result.add(DayGWT.FRIDAY);
+		if (string.contains("Sa"))
+			result.add(DayGWT.SATURDAY);
+		if (string.contains("Su"))
+			result.add(DayGWT.SUNDAY);
 		assert(result.size() > 0);
 		return result;
 	}
