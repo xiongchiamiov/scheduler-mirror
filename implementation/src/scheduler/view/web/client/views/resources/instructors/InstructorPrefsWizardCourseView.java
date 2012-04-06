@@ -6,6 +6,7 @@ import scheduler.view.web.shared.InstructorGWT;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
@@ -32,6 +33,8 @@ public class InstructorPrefsWizardCourseView extends VerticalPanel {
 		this.setWidth("100%");
 		this.setHeight("100%");
 		this.coursePrefs = new CoursePrefsWidget(service, documentID, instructor);
+		this.setCellHorizontalAlignment(this.coursePrefs, ALIGN_CENTER);
+		this.coursePrefs.setStyleName("otherCenterness");
 		this.close = new Button("close");
 		this.next = new Button("next >");
 		
@@ -40,11 +43,14 @@ public class InstructorPrefsWizardCourseView extends VerticalPanel {
 		HorizontalPanel buttons = new HorizontalPanel();		
 		buttons.setWidth("100%");
 		buttons.add(this.close);
+		Label empty = new Label();
+		empty.setWidth("10px");
+		buttons.add(empty);
 		buttons.add(this.next);
-		buttons.setCellHorizontalAlignment(this.close, ALIGN_LEFT);
-		buttons.setCellHorizontalAlignment(this.next, ALIGN_RIGHT);
-		this.setCellVerticalAlignment(buttons, ALIGN_BOTTOM);
+		buttons.setCellHorizontalAlignment(this.close, ALIGN_RIGHT);
+		buttons.setCellHorizontalAlignment(this.next, ALIGN_LEFT);
 		this.add(buttons);
+		this.setCellVerticalAlignment(buttons, ALIGN_BOTTOM);
 	}
 	
 	/**

@@ -6,6 +6,7 @@ import scheduler.view.web.shared.InstructorGWT;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
@@ -40,9 +41,12 @@ public class InstructorPrefsWizardTimeView extends VerticalPanel{
 		HorizontalPanel buttons = new HorizontalPanel();		
 		buttons.setWidth("100%");
 		buttons.add(this.back);
+		Label empty = new Label();
+		empty.setWidth("10px");
+		buttons.add(empty);
 		buttons.add(this.finish);
-		buttons.setCellHorizontalAlignment(this.back, ALIGN_LEFT);
-		buttons.setCellHorizontalAlignment(this.finish, ALIGN_RIGHT);
+		buttons.setCellHorizontalAlignment(this.back, ALIGN_RIGHT);
+		buttons.setCellHorizontalAlignment(this.finish, ALIGN_LEFT);
 		this.setCellVerticalAlignment(buttons, ALIGN_BOTTOM);
 		this.add(buttons);
 	}
