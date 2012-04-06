@@ -114,14 +114,24 @@ public class InstructorsView extends VerticalPanel {
 		ListGridField usernameField = new ListGridField("username", "Username");
 		usernameField.setValidators(new CustomValidator() {
 			protected boolean condition(Object value) {
-				if (value == null)
+				if (value == null) {
+					setErrorMessage("Username must be present!");
 					return false;
+				}
 				
 				assert(value instanceof String);
 				String username = (String)value;
-				for (Record record : grid.getDataAsRecordList().getRange(0, grid.getDataAsRecordList().getLength()))
-					if (username.equals(record.getAttribute("username")))
+				if (username.trim().length() == 0) {
+					setErrorMessage("Username must be present!");
+					return false;
+				}
+				
+				for (Record record : grid.getDataAsRecordList().getRange(0, grid.getDataAsRecordList().getLength())) {
+					if (username.equals(record.getAttribute("username"))) {
+						setErrorMessage("Username \"" + username + "\" already exists!");
 						return false;
+					}
+				}
 				return true;
 			}
 		});
