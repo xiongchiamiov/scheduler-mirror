@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.types.ListGridEditEvent;
@@ -22,6 +23,9 @@ import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.form.validator.CustomValidator;
+import com.smartgwt.client.widgets.form.validator.IntegerRangeValidator;
+import com.smartgwt.client.widgets.form.validator.Validator;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -93,11 +97,29 @@ public class InstructorsView extends VerticalPanel {
 		ListGridField idField = new ListGridField("id");
 		idField.setHidden(true);
 
+		IntegerRangeValidator nonnegativeInt = new IntegerRangeValidator();  
+		nonnegativeInt.setMin(0);  
+		
 		ListGridField scheduleableField = new ListGridField("isSchedulable", "Schedulable");
 		ListGridField lastNameField = new ListGridField("lastName", "Last Name");
 		ListGridField firstNameField = new ListGridField("firstName", "First Name");
 		ListGridField usernameField = new ListGridField("username", "Username");
+		usernameField.setValidators(new CustomValidator() {
+			protected boolean condition(Object value) {
+				if (value == null)
+					return false;
+				
+				assert(value instanceof String);
+				String username = (String)value;
+				for (Record record : grid.getDataAsRecordList().getRange(0, grid.getDataAsRecordList().getLength()))
+					if (username.equals(record.getAttribute("username")))
+						return false;
+				return true;
+			}
+		});
+		
 		ListGridField maxWTUField = new ListGridField("maxWTU", "Max WTU");
+		maxWTUField.setValidators(nonnegativeInt);
 		ListGridField instructorPrefsField = new ListGridField("instructorPrefs", "Preferences");
 		instructorPrefsField.setAlign(Alignment.CENTER);
 		
@@ -109,7 +131,9 @@ public class InstructorsView extends VerticalPanel {
 		this.add(new Button("Add New Instructor", new com.google.gwt.event.dom.client.ClickHandler() {
 			@Override
 			public void onClick(com.google.gwt.event.dom.client.ClickEvent event) {
-				grid.startEditingNew();
+				Record defaultValues = new Record();
+				defaultValues.setAttribute("maxWTU", 0);
+            grid.startEditingNew(defaultValues);
 			}
 		}));
 		

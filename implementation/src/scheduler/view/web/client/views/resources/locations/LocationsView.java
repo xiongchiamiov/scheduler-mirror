@@ -41,9 +41,9 @@ public class LocationsView extends VerticalPanel {
 		ListGridField usernameField = new ListGridField("room", "Room");
 		ListGridField firstNameField = new ListGridField("type", "Type");
 		ListGridField lastNameField = new ListGridField("maxOccupancy", "Max Occupancy");
-		ListGridField maxWTUField = new ListGridField("equipment", "Equipment");
+		ListGridField equipmentField = new ListGridField("equipment", "Equipment");
 
-		grid.setFields(idField, scheduleableField, usernameField, firstNameField, lastNameField, maxWTUField);
+		grid.setFields(idField, scheduleableField, usernameField, firstNameField, lastNameField, equipmentField);
 		
 		this.add(grid);
 		

@@ -7,14 +7,12 @@ import scheduler.view.web.shared.DocumentGWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.types.ListGridEditEvent;
-import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.RowEndEditAction;
+import com.smartgwt.client.widgets.form.validator.IntegerRangeValidator;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -50,16 +48,24 @@ public class CoursesView extends VerticalPanel {
 		ListGridField idField = new ListGridField("id");
 		idField.setHidden(true);
 		
+		IntegerRangeValidator nonnegativeInt = new IntegerRangeValidator();  
+		nonnegativeInt.setMin(0);  
+		
 		ListGridField scheduleableField = new ListGridField("isSchedulable", "Schedulable");
 		ListGridField departmentField = new ListGridField("department", "Department");
 		ListGridField catalogNumberField = new ListGridField("catalogNumber", "Catalog Number");
 		ListGridField nameField = new ListGridField("name", "Name");
 		ListGridField numSectionsField = new ListGridField("numSections", "Number of Sections");
+		numSectionsField.setValidators(nonnegativeInt);
 		ListGridField wtuField = new ListGridField("wtu", "WTU");
+		wtuField.setValidators(nonnegativeInt);
 		ListGridField scuField = new ListGridField("scu", "SCU");
+		scuField.setValidators(nonnegativeInt);
 		ListGridField dayCombinationsField = new ListGridField("dayCombinations", "Day Combinations");
 		ListGridField hoursPerWeekField = new ListGridField("hoursPerWeek", "Hours per Week");
+		hoursPerWeekField.setValidators(nonnegativeInt);
 		ListGridField maxEnrollmentField = new ListGridField("maxEnrollment", "Max Enrollment");
+		maxEnrollmentField.setValidators(nonnegativeInt);
 		ListGridField courseTypeField = new ListGridField("type", "Type");
 		ListGridField usedEquipmentField = new ListGridField("usedEquipment", "Used Equipment");
 		ListGridField associationsField = new ListGridField("associations", "Associations");
@@ -73,6 +79,11 @@ public class CoursesView extends VerticalPanel {
 			public void onClick(ClickEvent event) {
 				Record defaultValues = new Record();
 				defaultValues.setAttribute("type", "LEC");
+				defaultValues.setAttribute("numSections", 0);
+				defaultValues.setAttribute("wtu", 0);
+				defaultValues.setAttribute("scu", 0);
+				defaultValues.setAttribute("hoursPerWeek", 0);
+				defaultValues.setAttribute("maxEnrollment", 0);
             grid.startEditingNew(defaultValues);
 			}
 		}));
