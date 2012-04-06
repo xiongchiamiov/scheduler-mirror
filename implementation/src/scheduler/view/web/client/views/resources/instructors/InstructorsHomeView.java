@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
+import scheduler.model.Instructor;
 import scheduler.view.web.client.GreetingServiceAsync;
+import scheduler.view.web.shared.DayGWT;
 import scheduler.view.web.shared.DocumentGWT;
 import scheduler.view.web.shared.InstructorGWT;
 
@@ -90,58 +92,55 @@ public class InstructorsHomeView extends VerticalPanel
 				final Window win1 = new Window();
 				win1.setTitle("Course Preferences");
 				win1.setAutoCenter(true);
-				win1.setSize("500px", "400px");
+				win1.setSize("750px", "600px");
 				
 				final Window win2 = new Window();
 				win2.setTitle("Time Preferences");
 				win2.setAutoCenter(true);
-				win2.setSize("500px", "400px");
+				win2.setSize("750px", "600px");
 
-//================================================================================
-//				the following code is important, but can not be executed yet,
-//				because there is some data missing (service, documentID and instructor):
-//================================================================================
-//				
-//				// has to be fetched...
-//				int documentID = 0;
-//				InstructorGWT instructor = null;
-//				
-//				final InstructorPrefsWizardCourseView courses =
-//						new InstructorPrefsWizardCourseView(service, doc.getID(), instructor);
-//				final InstructorPrefsWizardTimeView times =
-//						new InstructorPrefsWizardTimeView(service, doc.getID(), instructor);
-//				courses.addCloseClickHandler(new ClickHandler(){
-//					@Override
-//					public void onClick(ClickEvent event) {
-//						win1.hide();
-//					}
-//				});
-//				courses.addNextClickHandler(new ClickHandler(){
-//					@Override
-//					public void onClick(ClickEvent event) {
-//						win1.hide();
-//						win2.show();
-//					}
-//				});
-//				times.addFinishClickHandler(new ClickHandler(){
-//					@Override
-//					public void onClick(ClickEvent event) {
-//						win2.hide();
-//					}
-//				});
-//				times.addBackClickHandler(new ClickHandler(){
-//					@Override
-//					public void onClick(ClickEvent event) {
-//						win2.hide();
-//						win1.show();
-//					}
-//				});
-//				courses.setParent(win1);
-//				courses.afterPush();
-//				
-//				win1.addItem(courses);
-//				win2.addItem(times);
-//================================================================================
+//===================================================================================
+//				this is still a dummy and has to be fetched from the real login name:
+//===================================================================================
+				InstructorGWT instructor = new InstructorGWT(1, "foobar", "Hello",
+						"World", "120", new int[DayGWT.values().length][48],
+						new HashMap<Integer, Integer>(), true);
+				
+				final InstructorPrefsWizardCourseView courses =
+						new InstructorPrefsWizardCourseView(service, doc.getID(), instructor);
+				final InstructorPrefsWizardTimeView times =
+						new InstructorPrefsWizardTimeView(service, doc.getID(), instructor);
+				courses.addCloseClickHandler(new ClickHandler(){
+					@Override
+					public void onClick(ClickEvent event) {
+						win1.hide();
+					}
+				});
+				courses.addNextClickHandler(new ClickHandler(){
+					@Override
+					public void onClick(ClickEvent event) {
+						win1.hide();
+						win2.show();
+					}
+				});
+				times.addFinishClickHandler(new ClickHandler(){
+					@Override
+					public void onClick(ClickEvent event) {
+						win2.hide();
+					}
+				});
+				times.addBackClickHandler(new ClickHandler(){
+					@Override
+					public void onClick(ClickEvent event) {
+						win2.hide();
+						win1.show();
+					}
+				});
+				courses.setParent(win1);
+				courses.afterPush();
+				
+				win1.addItem(courses);
+				win2.addItem(times);
 				win1.show();
 			}
 			

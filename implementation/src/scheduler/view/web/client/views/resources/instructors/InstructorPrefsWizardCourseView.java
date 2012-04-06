@@ -46,6 +46,23 @@ public class InstructorPrefsWizardCourseView extends VerticalPanel {
 		this.setCellVerticalAlignment(buttons, ALIGN_BOTTOM);
 		this.add(buttons);
 	}
+	
+	/**
+	 * set the parent window, so that it can be closed when an error occurs
+	 * @param parent
+	 */
+	public void setParent(com.smartgwt.client.widgets.Window parent) {
+		this.coursePrefs.setParent(parent);
+	}
+	
+	/**
+	 * this method should be called after instantiating the panel and
+	 * after setParent. It sets up the UI and data for the course selection
+	 */
+	public void afterPush()
+	{
+		this.coursePrefs.afterPush();
+	}
 
 	/**
 	 * adds a ClickHandler to the close button
