@@ -153,8 +153,7 @@ public class Scheduler implements EntryPoint, UpdateHeaderStrategy
 		usernameContainer.add(new Label(username));
 		logoutLinkContainer.add(HTMLUtilities.createLink("Log Out", "inAppLink", new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				viewContainer.clear();
-				openInitialView(false, viewContainer);
+				TabOpener.openLoginInThisTab();
 			}
 		}));
 

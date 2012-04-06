@@ -24,4 +24,9 @@ public class TabOpener {
 		String url = URLUtilities.appendArgumentToURL(baseHref, "userid", username);
 		Window.Location.replace(url);
 	}
+
+	public static void openLoginInThisTab() {
+		String url = URLUtilities.getBaseURL();
+		Window.Location.replace(url);
+	}
 }
