@@ -1,0 +1,184 @@
+<html>
+<head>
+<title>
+Spring Week N Acceptance Test Report for the X Department
+</title>
+</head>
+<body bgcolor=white>
+<p align=center>
+<font size=+2>
+<strong>Spring Week N Acceptance Test Report for the X Department</strong>
+</font>
+</p>
+<br>
+<h2>
+Browser Used for Testing: Safari
+</h2>
+<br>
+<br>
+<a name="Create, Save, and Re-Open a New Schedule">
+<h2>
+1.  Create, Save, and Re-Open a New Schedule
+</h2>
+</a>
+<p>
+<strong>On the Login Page:</strong>
+<ol type=a>
+<p> <li>
+We still have a MAJOR PROBLEM with database bleeding.  The CSC  page started
+out with a default schedule named 'Derp', which is apparently from the GRC
+department.
+<p> <li>
+Initial loading took about 20 seconds.  This my have to do with mounted disk
+access, but we should look into this.
+<p> <li>
+MAJOR PROBLEM: I had to logout and log back in to see a newly created schedule.
+<p> <li>
+The 'Schedule already exists ...' pop-up message took around a minute to
+appear; it should happen instantly when the user tries to name a new schedule
+with an existing name.
+<p> <li>
+Change the label "Schedulizerifier" to "Class Scheduler" on all pages.  Also,
+the topmost label needs to be made more distinctive in terms of placing (I
+suggest centered), color (I suggest some shade of Cal Poly dark green) font (I
+suggest less formal looking something like Calbri, with a lighter shade of
+green shadow).
+<p> <li>
+Most buttons still need some padding.  Also, they should be laid out
+horizontally, not vertically.
+</ol>
+</p>
+
+<br>
+<a name="Enter Resource Data">
+<h2>
+2.  Enter Resource Data
+</h2>
+</a>
+<p>
+<strong>Courses:</strong>
+<ol type=a>
+<p> <li>
+Spacing in column names needs to be adjust so that short names are in narrower
+columns and longer names show the full label text by default.  This means we
+should likely update the column names to be shorter abbreviations and/or put
+column names in two centered lines instead of one
+<p> <li>
+For me, the first column title 'Schedulable' is not clear.  I suggest
+'In\nSchedule'.
+<p> <li>
+I recall a decision to put number as the left-most entry in each row, a la
+Excel and Google Docs spreadsheets.  I like this decision.
+<p> <li>
+'Type' drop-down took about 5 seconds to appear the first time.  MAJOR PROBLEM:
+In the midst of entering course data, I got the pop-up message 'Failed to
+retrieve courses!'.
+<ul>
+<li>
+Under normal operating conditions, this message should never appear.
+<li>
+I had to log out and log back in again to re-connect to the database.  All
+entered courses appear to have been lost.
+<li>
+I cleared out all browser caches and history, exited the browser and started
+again, with all entered data still showing as having been lost.  While adding
+the first new row, I got the 'Failed to retrieve courses!' error dialog again
+when clicking on the 'Associations' drop-down.
+<li>
+Subsequently, 'Associations' drop-down list said 'No Items To Show'.
+</ul>
+<p> <li>
+MAJOR PROBLEM: I proceeded to add a new row, and in the middle of typing, some
+old data showed up, along with.
+<p> <li>
+Since I was having trouble in Safari, I tried to connect with Firefox, without
+closing the Safari session.
+<ul>
+<li>
+I had trouble in one Firefox window, but was able to connect in another Firefox
+window.
+<li>
+MAJOR PROBLEM: I then went back to the Safari window and the 'Associations'
+drop-down appeared one time only, and then failed to appear with additional
+clicks on the any enter in the 'Associations' column; the 'No Items To Show'
+message appeared.
+</ul>
+<p> <li>
+As in Login page, buttons need some padding and should be laid out
+horizontally, not vertically.
+</ol>
+<p>
+<strong>Instructors:</strong>
+<ol type=a>
+<li>
+Made one entry and pressed its 'Preferences' button.
+<li>
+The preference dialog appeared with the message 'The database doesn't contain
+any course right now ...', even though there had been two visible entries in
+the Courses resource table before going to 'Instructors'.
+<li>
+Went back to look at 'Courses' table, and the 'No items to show.' message
+appeared in the place where data rows had been previously.
+</ol>
+</p>
+
+<br>
+<a name="Generate a Schedule">
+<h2>
+3.  Generate a Schedule
+</h2>
+</a>
+<p>
+Given inability to reliably enter resource data, I did not perform this test.
+</p>
+
+<br>
+<a name="Edit the Schedule">
+<h2>
+4.  Edit the Schedule
+</h2>
+</a>
+<p>
+Given inability to reliably enter resource data, I did not perform this test.
+</p>
+
+<br>
+<a name="Save, Exit, Re-Open Schedule">
+<h2>
+5.  Save, Exit, Re-Open Schedule
+</h2>
+</a>
+<p>
+Given inability to reliably enter resource data, I did not perform this test.
+</p>
+
+<br>
+<a name="Quality Measures">
+<h2>
+6.  Quality Measures
+</h2>
+</a>
+<p>
+Given inability to reliably enter resource data, doing a detailed evaluation of
+quality measures is inappropriate at this time.
+<li>
+My overall rating of the program at this totally unacceptable.
+</p>
+
+<br>
+<a name="Other Issues">
+<h2>
+7.  Other Issues
+</h2>
+</a>
+<p>
+<ol type=a>
+<p> <li>
+Fix all MAJOR PROBLEMS noted above ASAP.
+<li>
+Address all other problems ASAP.
+</ol>
+
+</p>
+</body>
+</html>
