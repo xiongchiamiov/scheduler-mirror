@@ -1,0 +1,252 @@
+<html>
+<head>
+<title>
+Instructions for Spring Quarter Acceptance Testing
+</title>
+</head>
+<body bgcolor=white>
+<p align=center>
+<font size=+2>
+<strong>Instructions for Spring Quarter Acceptance Testing</strong>
+</font>
+</p>
+<br>
+<br>
+<br>
+<h3>
+General Information
+</h3>
+<p>
+There is a simple report template in the file
+<a href="http://scheduler.csc.calpoly.edu/releases/alpha/testing/acceptance">
+<tt>testing/acceptance/templates/report.html</tt>,
+</a>
+Suppose you are performing acceptance testing during week N for department X.
+Make a copy of <tt>templates/report.html</tt> into X/weekSN-report.html.  For
+example, if you're doing acceptance testing during week 3 for the CHEM
+department, do this in the <tt>testing/acceptance</tt> directory:
+<blockquote>
+<tt>cp templates/report.html CHEM/weekS3-report.html</tt>
+</blockquote>
+To perform your acceptance testing:
+<ol type=1>
+<p> <li>
+svn update your working project directory
+<p> <li>
+fill in the file <tt>finals-week-report.html</tt>
+<p> <li>
+commit the file when you're done.
+</ol>
+</p><p>
+The report template is a very simple HTML file.  You can edit the file directly
+in a plain text editor, or use some form of word processor and save it as an
+HTML file.  In either case, make sure you fill in all seven sections of the
+report.
+</p><p>
+The objective of this acceptance testing process is to re-create the Winter
+2012 schedule that was published for your department.  The title for each
+section of the report describes the actions to be performed for that section.
+This is exactly the same acceptance test procedure we did earlier in the
+quarter.
+</p><p>
+For each section of the report, if the actions can be performed 100%
+successfully, then say "All actions performed successfully."  If there are any
+problems, describe them clearly.  A "problem" is a bug, sub-standard
+performance, or any aspect of program behavior that is not 100% satisfactory.
+Post a Jira issue for any problems, if an issue for that problem has not
+already been posted.
+</p>
+
+<h3>
+Details for Each Section of the Report
+</h3>
+<p>
+The following are further specific instructions for each section of the report:
+<ol type=1>
+<p> <li>
+<strong>Create a new schedule for Winter 2012</strong>.  Save an empty version
+of that schedule and re-open it.  Use this newly-created schedule for the rest
+of the testing.
+<p>
+<p> <li>
+<strong>Enter all of the necessary resource data</strong> for the Winter 2012
+schedule.  This includes all instructors, courses, rooms, and preferences.
+<br>
+<br>
+If you want to force the generation of a correct schedule, you can try to enter
+specific instructor preferences to ensure that each instructor gets exactly the
+classes that are scheduled for that instructor in the Winter 2012 schedule.  It
+would be better to enter preferences more broadly, such that Winter 2012
+scheduled items are within the preference ranges, but preferences don't dictate
+a particular schedule.
+<p>
+<p> <li>
+<strong>Generate the schedule</strong>.  In addition to any reported problem,
+describe the quality of the schedule that was automatically generated, in
+particular:
+<ol type=a>
+<p> <li>
+Did it contain all classes?
+<p> <li>
+Were they at reasonable times?
+<p> <li>
+Were there any scheduling conflicts?
+</ol>
+<br>
+<br>
+If the exact Winter 2012 was generated directly, say "Winter 2012 schedule
+successfully generated, with no edits."  If there were one or more problems,
+include links to the Jira issues that were posted for the problems.
+<p>
+<p> <li>
+<strong>Edit the generated schedule</strong> to get as close as possible to the
+published Winter 2012 schedule.  Describe how close you were able to get to the
+actual Winter 2012 schedule for the department, using the Scheduler program
+editing functionality.  Again, our objective here is to use the Scheduler
+program to create precisely the schedule that is published by the department
+for Winter 2012.
+<br>
+<br>
+After the preceding edits are done, perform some additional edits to test the
+schedule editing functionality.  In particular, move courses around in the
+schedule to test the incremental constraint and preference validation.
+<p>
+<p> <li>
+<strong>Save the schedule</strong>, exit the program, restart, and re-open the
+saved schedule schedule.  Save a copy of the schedule on a different file,
+exit, restart, and re-open both files.
+<p>
+<p> <li>
+<strong>Describe any quality measures</strong> that were not achieved during
+the preceding testing.  The quality measures are those listed under the revised
+Week 5 features list in the project file:
+<a href="http://scheduler.csc.calpoly.edu/releases/alpha/requirements/matrix.html">
+<tt>requirements/matrix.html</tt>.
+</a>
+<br>
+<br>
+If all quality measures are achieved satisfactorily, say "All quality measures
+met."  If not all quality measures were covered during the preceding testing,
+then indicate this.  For example, if you did not need to use course suffixing
+for your department, say "Use of course suffixing not required for X
+department."
+<p> <li>
+<strong>Describe any other problems or issues</strong> that were not covered in
+the preceding testing steps, including overall UI look-and-feel and usability.
+Include links to any new Jira issues that you post.
+</ol>
+</p>
+
+<h3>
+Details for Entering Resource Data
+</h3>
+<p>
+To enter the resource data for your department, use the Winter 12 schedule
+published at
+<a href="http://schedules.calpoly.edu">
+schedules.csc.calpoly.edu
+</a>
+The following tables indicate how to convert the data in the <tt>schedules</tt>
+table to the scheduler program resource pages.
+</p><p>
+<strong><em>Courses:</em></strong>
+<table align=center border=1 cellpadding=4>
+  <tr>
+    <td valign=top><strong>Scheduler Program</strong>
+    <td valign=top><strong>schedules.calpoly.edu</strong>
+  <tr>
+    <td valign=top>Department
+    <td valign=top>1st part of Course
+  <tr>
+    <td valign=top>Catalog Number
+    <td valign=top>2nd part of Course
+  <tr>
+    <td valign=top>Course Name
+    <td valign=top>
+hover over Course link
+  <tr>
+    <td valign=top># of Sections
+    <td valign=top>max value of Sect for any given course
+  <tr>
+    <td valign=top>WTU
+    <td valign=top>4 if no lab with course, 5 if lab with course
+  <tr>
+    <td valign=top>SCU
+    <td valign=top>number of units in the catalog for the course
+  <tr>
+    <td valign=top>Day Combinations
+    <td valign=top>Days
+  <tr>
+    <td valign=top>Hours Per Week
+    <td valign=top>Compute from values in Days, Start, and End
+  <tr>
+    <td valign=top>Max Enrollment
+    <td valign=top>ECap
+  <tr>
+    <td valign=top>Course Type
+    <td valign=top>Type
+  <tr>
+    <td valign=top>Assoc
+    <td valign=top><em>doesn't work so don't enter anything here</em>
+</table>
+</p><p>
+<strong><em>Instructors:</em></strong>
+<br>
+<br>
+<table align=center border=1 cellpadding=4>
+  <tr>
+    <td valign=top><strong>Scheduler Program</strong>
+    <td valign=top><strong>schedules.calpoly.edu</strong>
+  <tr>
+    <td valign=top>Last Name
+    <td valign=top>last part of Instructor
+  <tr>
+    <td valign=top>First Name
+    <td valign=top>first part of Instructor
+  <tr>
+    <td valign=top>User Name
+    <td valign=top>
+Goto the Directory Information channel on portal and copy/paste the
+instructor's name into the search box
+  <tr>
+    <td valign=top>Max WTU
+    <td valign=top>12 unconditionally
+  <tr>
+    <td valign=top>Disabilities
+    <td valign=top>say yes for exactly one department instructor
+  <tr>
+    <td valign=top>Preferences
+    <td valign=top>
+For courses prefs, put the ones they actually teach in Winter 12
+as 'Preferred'; put an even spread of 'Acceptable', 'Not Preferred',
+and 'Not Possible' the rest of the courses.
+<br>
+<br>
+For times prefs, put two hours around the times that actually got assigned
+as 'Preferred'; put an even spread of 'Acceptable', 'Not Preferred', and 'Not
+Possible' the rest of the times.
+</table>
+</p><p>
+<strong><em>Rooms:</em></strong>
+<br>
+<br>
+<table align=center border=1 cellpadding=4>
+  <tr>
+    <td valign=top><strong>Scheduler Program</strong>
+    <td valign=top><strong>schedules.calpoly.edu</strong>
+  <tr>
+    <td valign=top>Location
+    <td valign=top>Location
+  <tr>
+    <td valign=top>Type
+    <td valign=top>Type
+  <tr>
+    <td valign=top>Max Capacity
+    <td valign=top>LCap
+  <tr>
+    <td valign=top>Equipment
+    <td valign=top>Be creative
+</table>
+
+</body>
+</html>
