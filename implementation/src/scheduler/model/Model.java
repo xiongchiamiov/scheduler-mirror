@@ -570,4 +570,11 @@ public class Model {
 			equipmentTypeStrings.add(equipmentType.getDescription());
 		return equipmentTypeStrings;
 	}
+
+	public Document findDocumentByNameOrNull(String scheduleName) {
+		IDBDocument doc = database.findDocumentByName(scheduleName);
+		if (doc == null)
+			return null;
+		return documentCache.decorateAndPutIfNotPresent(doc);
+	}
 }

@@ -32,9 +32,7 @@ public class InstructorsDataSource extends DataSource {
 	// }
 	
 	final GreetingServiceAsync service;
-	
 	final DocumentGWT document;
-	
 	UnsavedDocumentStrategy unsavedDocumentStrategy;
 	
 	public InstructorsDataSource(GreetingServiceAsync service, DocumentGWT document, UnsavedDocumentStrategy unsavedDocumentStrategy) {
@@ -49,7 +47,7 @@ public class InstructorsDataSource extends DataSource {
 		
 		DataSourceIntegerField idField = new DataSourceIntegerField("id");
 		idField.setHidden(true);
-		idField.setRequired(true);
+//		idField.setRequired(true);
 		idField.setPrimaryKey(true);
 
 		DataSourceBooleanField scheduleableField = new DataSourceBooleanField("isSchedulable");
@@ -134,6 +132,7 @@ public class InstructorsDataSource extends DataSource {
 				DSResponse response = new DSResponse();
 				System.out.println("result record id " + result.getID());
 				response.setData(new Record[] { readInstructorIntoRecord(result) });
+				assert(response.getData()[0].getAttributeAsInt("id") != null);
 				processResponse(dsRequest.getRequestId(), response);
 			}
 		});

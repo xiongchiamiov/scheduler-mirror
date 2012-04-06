@@ -97,11 +97,21 @@ public class CoursesView extends VerticalPanel {
 			}
 		}));
 		
+		this.add(new Button("Duplicate Selected Courses", new ClickHandler() {
+			public void onClick(ClickEvent event) {
+            ListGridRecord[] selectedRecords = grid.getSelectedRecords();  
+            for(ListGridRecord rec: selectedRecords) {
+					rec.setAttribute("id", (Integer)null);
+					grid.startEditingNew(rec);
+            }
+			}
+		}));
+		
 		this.add(new Button("Remove Selected Courses", new ClickHandler() {
 			public void onClick(ClickEvent event) {
             ListGridRecord[] selectedRecords = grid.getSelectedRecords();  
             for(ListGridRecord rec: selectedRecords) {  
-                grid.removeData(rec);  
+                grid.removeData(rec);
             }
 			}
 		}));

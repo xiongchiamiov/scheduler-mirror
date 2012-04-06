@@ -51,7 +51,7 @@ public class CoursesDataSource extends DataSource {
 		
 		DataSourceIntegerField idField = new DataSourceIntegerField("id");
 		idField.setHidden(true);
-		idField.setRequired(true);
+//		idField.setRequired(true);
 		idField.setPrimaryKey(true);
 		
 		DataSourceBooleanField scheduleableField = new DataSourceBooleanField("isSchedulable");
@@ -84,6 +84,7 @@ public class CoursesDataSource extends DataSource {
 		usedEquipmentField.setValueMap("Projector", "Computers");
 		
 		DataSourceEnumField associationsField = new DataSourceEnumField("associations");
+		associationsField.setValueMap("?");
 		associationsField.setMultiple(false);
 		
 		setFields(idField, scheduleableField, departmentField, catalogNumberField, nameField, numSectionsField, wtuField, scuField,
@@ -235,6 +236,7 @@ public class CoursesDataSource extends DataSource {
 				DSResponse response = new DSResponse();
 				System.out.println("result record id " + result.getID());
 				response.setData(new Record[] { readCourseIntoRecord(result) });
+				assert(response.getData()[0].getAttributeAsInt("id") != null);
 				processResponse(dsRequest.getRequestId(), response);
 			}
 		});

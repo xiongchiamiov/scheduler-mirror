@@ -1300,5 +1300,11 @@ public class SQLdb implements IDatabase {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public IDBDocument findDocumentByName(String scheduleName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }

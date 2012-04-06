@@ -154,6 +154,17 @@ public class InstructorsView extends VerticalPanel {
             grid.startEditingNew(defaultValues);
 			}
 		}));
+
+		this.add(new Button("Duplicate Selected Instructors", new com.google.gwt.event.dom.client.ClickHandler() {
+			public void onClick(com.google.gwt.event.dom.client.ClickEvent event) {
+            ListGridRecord[] selectedRecords = grid.getSelectedRecords();  
+            for(ListGridRecord rec: selectedRecords) {
+					rec.setAttribute("id", (Integer)null);
+					rec.setAttribute("instructorPrefs", (Integer)null);
+					grid.startEditingNew(rec);
+            }
+			}
+		}));
 		
 		this.add(new Button("Remove Selected Instructors", new com.google.gwt.event.dom.client.ClickHandler() {
 			@Override

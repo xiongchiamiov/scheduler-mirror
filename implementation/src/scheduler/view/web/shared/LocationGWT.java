@@ -8,7 +8,7 @@ import java.util.Set;
 public class LocationGWT implements Serializable, Identified {
 	private static final long serialVersionUID = 1015108352203434920L;
 
-	private int id;
+	private Integer id;
 	private String room;
 	private String type;
 	private String maxOccupancy;
@@ -18,7 +18,7 @@ public class LocationGWT implements Serializable, Identified {
 	
 	public LocationGWT() { }
 
-	public LocationGWT(int id, String room, String type, String maxOccupancy, Set<String> equipment, boolean isSchedulable) {
+	public LocationGWT(Integer id, String room, String type, String maxOccupancy, Set<String> equipment, boolean isSchedulable) {
 		super();
 		this.id = id;
 		this.room = room;

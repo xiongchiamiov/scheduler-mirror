@@ -48,7 +48,7 @@ public class LocationsDataSource extends DataSource {
 		
 		DataSourceIntegerField idField = new DataSourceIntegerField("id");
 		idField.setHidden(true);
-		idField.setRequired(true);
+//		idField.setRequired(true);
 		idField.setPrimaryKey(true);
 
 		DataSourceBooleanField scheduleableField = new DataSourceBooleanField("isSchedulable");
@@ -84,7 +84,7 @@ public class LocationsDataSource extends DataSource {
 	LocationGWT readRecordIntoLocation(Record record) {
 		String equipmentsCombined = record.getAttributeAsString("equipment");
 		Set<String> equipments = new TreeSet<String>();
-		if (equipmentsCombined.length() > 0) {
+		if (equipmentsCombined != null && equipmentsCombined.length() > 0) {
 			for (String usedEquipment : equipmentsCombined.split(","))
 				equipments.add(usedEquipment);
 		}

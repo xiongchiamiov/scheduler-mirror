@@ -977,4 +977,14 @@ public class Database implements IDatabase {
 	public void insertEquipmentType(String string) {
 		equipmentTypeTable.insert(new DBEquipmentType(null, string));
 	}
+
+
+	@Override
+	public IDBDocument findDocumentByName(String scheduleName) {
+		for (IDBDocument doc : documentTable.getAll())
+			if (doc.getName().equals(scheduleName))
+				return doc;
+		
+		return null;
+	}
 }

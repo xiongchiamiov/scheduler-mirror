@@ -62,6 +62,16 @@ public class LocationsView extends VerticalPanel {
 			}
 		}));
 
+		this.add(new Button("Duplicate Selected Locations", new com.google.gwt.event.dom.client.ClickHandler() {
+			public void onClick(com.google.gwt.event.dom.client.ClickEvent event) {
+            ListGridRecord[] selectedRecords = grid.getSelectedRecords();  
+            for(ListGridRecord rec: selectedRecords) {
+					rec.setAttribute("id", (Integer)null);
+					grid.startEditingNew(rec);
+            }
+			}
+		}));
+		
 		this.add(new Button("Remove Selected Locations", new ClickHandler() {
 			public void onClick(ClickEvent event) {
             ListGridRecord[] selectedRecords = grid.getSelectedRecords();  

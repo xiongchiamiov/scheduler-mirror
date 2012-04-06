@@ -490,8 +490,17 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	public void associateWorkingCopyWithNewOriginalDocument(
 			Integer workingCopyDocumentID, String scheduleName,
 			boolean allowOverwrite) {
-		
 		try {
+			Document existingDocumentByThatName = model.findDocumentByNameOrNull(scheduleName);
+			if (existingDocumentByThatName != null) {
+				if (allowOverwrite) {
+					existingDocumentByThatName.delete();
+				}
+				else {
+					throw new RuntimeException("Document by name " + scheduleName + " already exists!");
+				}
+			}
+			
 			Document workingCopyDocument = model.findDocumentByID(workingCopyDocumentID);
 			assert(workingCopyDocument.getStaffInstructor() != null);
 			assert(workingCopyDocument.getTBALocation() != null);

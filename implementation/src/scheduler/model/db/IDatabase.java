@@ -170,5 +170,6 @@ public interface IDatabase {
 	void writeState(ObjectOutputStream oos) throws IOException;
 	void readState(ObjectInputStream ois) throws IOException;
 	IDBScheduleItem getScheduleItemLectureOrNull(IDBScheduleItem underlying) throws DatabaseException;
+	IDBDocument findDocumentByName(String scheduleName);
 	
 }
