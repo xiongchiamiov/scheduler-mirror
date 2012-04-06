@@ -108,11 +108,6 @@ public class SQLdb implements IDatabase {
 					new Table.Column("dayPatternID", String.class),
 					new Table.Column("sectionNum", String.class)
 	});
-	
-	public static void main(String[] args) throws Exception {
-		SQLdb db = new SQLdb();
-		db.openConnection();
-	}
 
 	public SQLdb() {
 		try {
@@ -143,11 +138,6 @@ public class SQLdb implements IDatabase {
 		{
 			System.out.println("Connection is null, never opened");
 		}
-	}
-	
-	public Connection getConnection()
-	{
-		return conn;
 	}
 
 	static class Table<T extends IDBObject> {
@@ -220,6 +210,22 @@ public class SQLdb implements IDatabase {
 			}
 			
 		}
+		
+		public List<T> selectAll() throws DatabaseException {
+			PreparedStatement stmnt = null;
+			String queryString = "SELECT * FROM " + name;
+			
+			ResultSet rs = null;
+			
+			try {
+				stmnt = conn.prepareStatement(queryString);
+				rs = stmnt.executeQuery();
+			} catch (SQLException e) {
+				throw new DatabaseException(e);
+			}
+			
+			return parseResultSet(rs);
+  		}
 		
 		public List<T> select(Map<String, Object> wheres) throws DatabaseException {
 			PreparedStatement stmnt = null;  
@@ -338,23 +344,11 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public IDBUser findUserByUsername(String username) throws DatabaseException {
-		IDBUser user = null;
-		PreparedStatement stmnt = null;
-		
-		try {
-			stmnt = conn.prepareStatement("select * from userdata where userid = ?");
-			stmnt.setString(1, username);
-			
-			ResultSet rs = stmnt.executeQuery();
-			if (rs.next())
-				user = new SQLUser(rs.getInt("id"), rs.getString("username"), rs.getBoolean("isAdmin"));
-			else
-				throw new NotFoundException();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			throw new DatabaseException(e);
-		}
-		return user;
+		IDBUser result;
+		HashMap<String, Object> wheres = new HashMap<String, Object>();
+		wheres.put("username", username);
+		result = userdataTable.select(wheres).get(0);
+		return result;
 	}
 
 	@Override
@@ -365,7 +359,6 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public void insertUser(IDBUser user) throws DatabaseException {
-		PreparedStatement stmnt = null;
 		SQLUser sqluser = (SQLUser) user;
 		
 		sqluser.id = userdataTable.insert(new Object[]{ user.getUsername(), user.isAdmin()});
@@ -374,98 +367,40 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public void updateUser(IDBUser user) throws DatabaseException {
-		PreparedStatement stmnt = null;
-		
-		try {
-			stmnt = conn.prepareStatement("update userdata set username = ?, isAdmin = ?," +
-					" where id = ?");
-			stmnt.setString(1, user.getUsername());
-			stmnt.setBoolean(2, user.isAdmin());
-			stmnt.setInt(3, user.getID());
-			
-			stmnt.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			throw new DatabaseException(e);
-		}
+		userdataTable.update(new Object[] {user.getUsername(), user.isAdmin()}, user.getID());
 	}
 
 
 	@Override
 	public void deleteUser(IDBUser user) throws DatabaseException {
-		PreparedStatement stmnt = null;
-		
-		try {
-			stmnt = conn.prepareStatement("delete from userdata where id = ?");
-			stmnt.setInt(1, user.getID());
-			
-			stmnt.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			throw new DatabaseException(e);
-		}
+		userdataTable.delete(user.getID());
 	}
 
 
 	@Override
 	public Collection<IDBDocument> findAllDocuments() throws DatabaseException {
-		ArrayList<IDBDocument> docs = new ArrayList<IDBDocument>();
-		PreparedStatement stmnt = null;
+		ArrayList<IDBDocument> result = new ArrayList<IDBDocument>();
+		documentTable.selectAll();
+		for(SQLDocument docItem : documentTable.selectAll())
+			result.add(docItem);
 		
-		
-		try {
-			stmnt = conn.prepareStatement("select * from document inner join workingcopy using (id)");
-			
-			ResultSet rs = stmnt.executeQuery();
-			while (rs.next()) {
-				docs.add(new SQLDocument(rs.getInt("id"), rs.getString("name"),
-						rs.getInt("startHalfHour"), rs.getInt("endHalfHour")));
-			}
-			if (docs.size() == 0)
-			{
-				throw new NotFoundException();
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-			throw new DatabaseException(e);
-		}
-		
-		return docs;
+		return result;
 	}
 
 
 	@Override
-	public IDBDocument findDocumentByID(int id) throws DatabaseException {
-		SQLDocument doc = null;
-		PreparedStatement stmnt = null;
-		
-		try {
-			stmnt = conn.prepareStatement("select * from document inner join workingcopy using (id)" +
-					" where id = ?");
-			stmnt.setInt(1, id);
-			
-			ResultSet rs = stmnt.executeQuery();
-			if (rs.next()) {
-				doc = new SQLDocument(rs.getInt("id"), rs.getString("name"),
-						rs.getInt("startHalfHour"), rs.getInt("endHalfHour"));
-			}
-			else {
-				throw new NotFoundException();
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-			throw new DatabaseException(e);
-		}
-		
-		return doc;
+	public IDBDocument findDocumentByID(int id) throws DatabaseException {		
+		IDBDocument result;
+		HashMap<String, Object> wheres = new HashMap<String, Object>();
+		wheres.put("id", id);
+		result = documentTable.select(wheres).get(0);
+		return result;
 	}
 
 
 	@Override
 	public void insertDocument(IDBDocument document) throws DatabaseException {
-		PreparedStatement stmnt = null;
 		SQLDocument doc = (SQLDocument) document;
-		
 		doc.id = documentTable.insert(new Object[]{ doc.getName(), doc.isTrashed(), doc.getStartHalfHour(), doc.getEndHalfHour() });
 	}
 
@@ -478,19 +413,15 @@ public class SQLdb implements IDatabase {
 
 
 	@Override
-	public void updateDocument(IDBDocument document) throws DatabaseException {
-		SQLDocument doc = (SQLDocument) document;
-		
-		documentTable.update(new Object[] {doc.getName(), doc.isTrashed(), doc.getStartHalfHour(), doc.getEndHalfHour()}, 
-						     doc.getID());
+	public void updateDocument(IDBDocument document) throws DatabaseException {		
+		documentTable.update(new Object[] {document.getName(), document.isTrashed(), document.getStartHalfHour(), 
+				document.getEndHalfHour()}, document.getID());
 	}
 
 
 	@Override
 	public void deleteDocument(IDBDocument document) throws DatabaseException {
-		SQLDocument doc = (SQLDocument) document;
-		
-		documentTable.delete(doc.getID());
+		documentTable.delete(document.getID());
 	}
 
 
