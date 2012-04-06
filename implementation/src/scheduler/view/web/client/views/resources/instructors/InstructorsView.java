@@ -108,7 +108,7 @@ public class InstructorsView extends VerticalPanel {
 		IntegerRangeValidator nonnegativeInt = new IntegerRangeValidator();  
 		nonnegativeInt.setMin(0);  
 		
-		ListGridField scheduleableField = new ListGridField("isSchedulable", "Schedulable");
+		ListGridField schedulableField = new ListGridField("isSchedulable", "Schedulable");
 		ListGridField lastNameField = new ListGridField("lastName", "Last Name");
 		ListGridField firstNameField = new ListGridField("firstName", "First Name");
 		ListGridField usernameField = new ListGridField("username", "Username");
@@ -141,7 +141,7 @@ public class InstructorsView extends VerticalPanel {
 		ListGridField instructorPrefsField = new ListGridField("instructorPrefs", "Preferences");
 		instructorPrefsField.setAlign(Alignment.CENTER);
 		
-		grid.setFields(idField, scheduleableField, lastNameField, firstNameField, usernameField,
+		grid.setFields(idField, schedulableField, lastNameField, firstNameField, usernameField,
 				maxWTUField, instructorPrefsField);
 		
 		this.add(grid);

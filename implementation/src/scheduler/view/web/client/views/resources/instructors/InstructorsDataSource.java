@@ -50,7 +50,7 @@ public class InstructorsDataSource extends DataSource {
 //		idField.setRequired(true);
 		idField.setPrimaryKey(true);
 
-		DataSourceBooleanField scheduleableField = new DataSourceBooleanField("isSchedulable");
+		DataSourceBooleanField schedulableField = new DataSourceBooleanField("isSchedulable");
 		
 		DataSourceTextField usernameField = new DataSourceTextField("username");
 
@@ -60,7 +60,7 @@ public class InstructorsDataSource extends DataSource {
 
 		DataSourceTextField maxWTUField = new DataSourceTextField("maxWTU");
 		
-		setFields(idField, scheduleableField, usernameField, firstNameField, lastNameField, maxWTUField);
+		setFields(idField, schedulableField, usernameField, firstNameField, lastNameField, maxWTUField);
 		
 		setClientOnly(true);
 	}

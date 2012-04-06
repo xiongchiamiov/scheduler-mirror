@@ -64,7 +64,7 @@ public class CoursesView extends VerticalPanel {
 		IntegerRangeValidator nonnegativeInt = new IntegerRangeValidator();  
 		nonnegativeInt.setMin(0);  
 		
-		ListGridField scheduleableField = new ListGridField("isSchedulable", "Schedulable");
+		ListGridField schedulableField = new ListGridField("isSchedulable", "Schedulable");
 		scheduleableField.setAlign(Alignment.CENTER);
 		ListGridField departmentField = new ListGridField("department", "Department");
 		departmentField.setAlign(Alignment.CENTER);
@@ -91,7 +91,7 @@ public class CoursesView extends VerticalPanel {
 		ListGridField associationsField = new ListGridField("associations", "Associations");
 		associationsField.setAlign(Alignment.CENTER);
 
-		grid.setFields(idField, scheduleableField, departmentField, catalogNumberField, nameField, numSectionsField, wtuField, scuField,
+		grid.setFields(idField, schedulableField, departmentField, catalogNumberField, nameField, numSectionsField, wtuField, scuField,
 				dayCombinationsField, hoursPerWeekField, maxEnrollmentField, courseTypeField, usedEquipmentField, associationsField);
 		gridPanel.add(grid);
 		this.add(gridPanel);

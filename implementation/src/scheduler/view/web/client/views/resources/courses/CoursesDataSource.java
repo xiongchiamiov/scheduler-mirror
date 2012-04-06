@@ -54,7 +54,7 @@ public class CoursesDataSource extends DataSource {
 //		idField.setRequired(true);
 		idField.setPrimaryKey(true);
 		
-		DataSourceBooleanField scheduleableField = new DataSourceBooleanField("isSchedulable");
+		DataSourceBooleanField schedulableField = new DataSourceBooleanField("isSchedulable");
 		
 		DataSourceTextField departmentField = new DataSourceTextField("department");
 		
@@ -87,7 +87,7 @@ public class CoursesDataSource extends DataSource {
 		associationsField.setValueMap("?");
 		associationsField.setMultiple(false);
 		
-		setFields(idField, scheduleableField, departmentField, catalogNumberField, nameField, numSectionsField, wtuField, scuField,
+		setFields(idField, schedulableField, departmentField, catalogNumberField, nameField, numSectionsField, wtuField, scuField,
 				dayCombinationsField, hoursPerWeekField, maxEnrollmentField, courseTypeField, usedEquipmentField, associationsField);
 		
 		setClientOnly(true);

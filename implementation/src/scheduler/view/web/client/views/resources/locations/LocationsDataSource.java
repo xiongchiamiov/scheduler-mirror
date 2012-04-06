@@ -51,7 +51,7 @@ public class LocationsDataSource extends DataSource {
 //		idField.setRequired(true);
 		idField.setPrimaryKey(true);
 
-		DataSourceBooleanField scheduleableField = new DataSourceBooleanField("isSchedulable");
+		DataSourceBooleanField schedulableField = new DataSourceBooleanField("isSchedulable");
 		
 		DataSourceTextField roomField = new DataSourceTextField("username");
 
@@ -63,7 +63,7 @@ public class LocationsDataSource extends DataSource {
 		equipmentField.setMultiple(true);
 		equipmentField.setValueMap("Projector", "Overhead");
 
-		setFields(idField, scheduleableField, roomField, typeField, maxOccupancyField, equipmentField);
+		setFields(idField, schedulableField, roomField, typeField, maxOccupancyField, equipmentField);
 		
 		setClientOnly(true);
 	}

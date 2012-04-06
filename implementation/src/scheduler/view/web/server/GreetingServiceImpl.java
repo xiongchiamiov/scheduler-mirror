@@ -148,6 +148,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	
 	@Override
 	public CourseGWT addCourseToDocument(int documentID, CourseGWT course) {
+		System.out.println("Called addCourse with " + course.getDept() + " " + course.getCatalogNum());
+		
 		assert (course.getID() == null);
 		
 		try {
@@ -166,6 +168,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	
 	@Override
 	public void editCourse(CourseGWT source) {
+		System.out.println("Called editCourse with id " + source.getID() + ": " + source.getDept() + " " + source.getCatalogNum());
 		try {
 			Course course = model.findCourseByID(source.getID());
 			assert (course.getID() > 0);
