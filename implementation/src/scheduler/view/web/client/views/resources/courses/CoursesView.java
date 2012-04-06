@@ -9,10 +9,12 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.smartgwt.client.data.Record;
+import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.types.ListGridEditEvent;
 import com.smartgwt.client.types.RowEndEditAction;
 import com.smartgwt.client.widgets.form.validator.IntegerRangeValidator;
+import com.smartgwt.client.widgets.grid.CellFormatter;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -45,8 +47,15 @@ public class CoursesView extends VerticalPanel {
 		//grid.setCellHeight(22);
 		grid.setDataSource(new CoursesDataSource(service, document, unsavedDocumentStrategy));
 		
-		ListGridField idField = new ListGridField("id");
-		idField.setHidden(true);
+		ListGridField idField = new ListGridField("id", "&nbsp;");
+		idField.setCanEdit(false);
+		idField.setCellFormatter(new CellFormatter() {
+			public String format(Object value, ListGridRecord record, int rowNum, int colNum) {
+				return "\u22EE";
+			}
+		});
+		idField.setWidth(20);
+		idField.setAlign(Alignment.CENTER);
 		
 		IntegerRangeValidator nonnegativeInt = new IntegerRangeValidator();  
 		nonnegativeInt.setMin(0);  
