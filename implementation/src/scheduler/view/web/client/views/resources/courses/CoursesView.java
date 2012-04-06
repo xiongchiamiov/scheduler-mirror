@@ -65,7 +65,7 @@ public class CoursesView extends VerticalPanel {
 		nonnegativeInt.setMin(0);  
 		
 		ListGridField schedulableField = new ListGridField("isSchedulable", "Schedulable");
-		scheduleableField.setAlign(Alignment.CENTER);
+		schedulableField.setAlign(Alignment.CENTER);
 		ListGridField departmentField = new ListGridField("department", "Department");
 		departmentField.setAlign(Alignment.CENTER);
 		ListGridField catalogNumberField = new ListGridField("catalogNumber", "Catalog Number");
