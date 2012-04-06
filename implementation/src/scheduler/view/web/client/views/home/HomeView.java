@@ -19,6 +19,7 @@ import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.types.Overflow;
+import com.smartgwt.client.types.SelectionAppearance;
 import com.smartgwt.client.types.Side;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -172,6 +173,7 @@ public class HomeView extends VerticalPanel {
 		aliveOriginalDocumentsGrid.setShowAllRecords(true);
 		aliveOriginalDocumentsGrid.setAutoFetchData(true);
 		aliveOriginalDocumentsGrid.setCanEdit(false);
+		aliveOriginalDocumentsGrid.setSelectionAppearance(SelectionAppearance.CHECKBOX);
 		aliveOriginalDocumentsGrid.setDataSource(new OriginalDocumentsCacheDataSource(documentsCache, OriginalDocumentsCacheDataSource.Mode.LIVE_DOCUMENTS_ONLY));
 		
 		ListGridField idField = new ListGridField("id");
@@ -216,6 +218,7 @@ public class HomeView extends VerticalPanel {
 		deletedOriginalDocumentsGrid.setShowAllRecords(true);
 		deletedOriginalDocumentsGrid.setAutoFetchData(true);
 		deletedOriginalDocumentsGrid.setCanEdit(false);
+		deletedOriginalDocumentsGrid.setSelectionAppearance(SelectionAppearance.CHECKBOX);
 		deletedOriginalDocumentsGrid.setDataSource(new OriginalDocumentsCacheDataSource(documentsCache, OriginalDocumentsCacheDataSource.Mode.DELETED_DOCUMENTS_ONLY));
 		
 		ListGridField idField = new ListGridField("id");
