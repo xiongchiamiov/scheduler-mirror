@@ -10,6 +10,6 @@
 	<classpathentry kind="lib" path="war/WEB-INF/lib/sqlitejdbc-v056.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/smartgwt-skins.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/smartgwt.jar"/>
-	<classpathentry kind="lib" path="/Users/salomenavarrete/scheduler/implementation/test/scheduler/view/web/shared/Selenium/selenium-server-standalone-2.20.0.jar"/>
+	<classpathentry kind="lib" path="test/selenium-server-standalone-2.8.0.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
