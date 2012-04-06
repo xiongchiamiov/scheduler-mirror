@@ -174,7 +174,7 @@ public class SelectScheduleView extends VerticalPanel
          {
         	 com.smartgwt.client.widgets.Window instructorWindow = new com.smartgwt.client.widgets.Window();
         	 
-        	 InstructorsHomeView homeView = new InstructorsHomeView();
+        	 InstructorsHomeView homeView = new InstructorsHomeView(service, username);
         	 
         	 instructorWindow.addItem(homeView);
         	 

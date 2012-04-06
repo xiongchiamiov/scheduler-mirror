@@ -1,25 +1,87 @@
 package scheduler.view.web.client.views.resources.instructors;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+
 import scheduler.view.web.client.GreetingServiceAsync;
+import scheduler.view.web.shared.DocumentGWT;
 import scheduler.view.web.shared.InstructorGWT;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.smartgwt.client.widgets.Window;
 
-public class InstructorsHomeView extends VerticalPanel{
-	//private List<CourseGWT> courseList = new ArrayList<CourseGWT>();
+public class InstructorsHomeView extends VerticalPanel
+{
+	private GreetingServiceAsync service;
+	private String username;
+	private ArrayList<String> scheduleNames;
+	private HashMap<Integer, DocumentGWT> allAvailableOriginalDocumentsByID;	
 	private FlexTable schedList = new FlexTable();
 	
-	public InstructorsHomeView()
-	{
-		//Hard coding temporary data for the schedule list
+	public InstructorsHomeView(final GreetingServiceAsync service, String username)
+	{	
+		this.service = service;
+		this.username = username;
+		this.scheduleNames = new ArrayList<String>();
 		
-		schedList.setWidget(0, 0, new HTML("Winter 2012 &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"));
+		// ------------------------------------
+		
+		this.setWidth("100%");
+		this.schedList.setStyleName("otherCenterness");
+		this.schedList.setWidth("80%");
+		HTML schedule = new HTML("Scheduler\n\n\n");
+		
+		HTML mydocs = new HTML("My Scheduling Documents:");
+		mydocs.setStyleName("centerness");
+		
+		schedule.addStyleName("editTableHeading");
+		
+		this.setStyleName("centerness");
+		this.add(schedule);
+		this.add(mydocs);
+		this.add(schedList);
+
+		// ------------------------------------
+		
+		this.service.getAllOriginalDocuments(new AsyncCallback<Collection<DocumentGWT>>(){
+					 @Override
+					 public void onFailure(Throwable caught)
+					 {
+						 com.google.gwt.user.client.Window.alert("There was an error getting the schedules: " + caught.getMessage());
+					 }
+					
+					 @Override
+					 public void onSuccess(Collection<DocumentGWT> result)
+					 {
+						 allAvailableOriginalDocumentsByID = new HashMap<Integer, DocumentGWT>();
+					
+						 for (DocumentGWT doc : result)
+						 {
+							 assert(doc.getID() != null);
+							 allAvailableOriginalDocumentsByID.put(doc.getID(), doc);
+					        	
+							 if (!doc.isTrashed())
+							 {
+								 addNewDocument(doc);
+								 scheduleNames.add(doc.getName());
+							 }
+						 }
+					 }
+				  });
+	}
+	
+	public void addNewDocument(final DocumentGWT doc)
+	{
+		int row = this.schedList.getRowCount();
+		this.schedList.setWidget(row, 0, new HTML(doc.getName()));
 		Button prefs = new Button("Preferences");
 		prefs.addClickHandler(new ClickHandler(){
 
@@ -41,14 +103,13 @@ public class InstructorsHomeView extends VerticalPanel{
 //================================================================================
 //				
 //				// has to be fetched...
-//				GreetingServiceAsync service = null;
 //				int documentID = 0;
 //				InstructorGWT instructor = null;
 //				
 //				final InstructorPrefsWizardCourseView courses =
-//						new InstructorPrefsWizardCourseView(service, documentID, instructor);
+//						new InstructorPrefsWizardCourseView(service, doc.getID(), instructor);
 //				final InstructorPrefsWizardTimeView times =
-//						new InstructorPrefsWizardTimeView(service, documentID, instructor);
+//						new InstructorPrefsWizardTimeView(service, doc.getID(), instructor);
 //				courses.addCloseClickHandler(new ClickHandler(){
 //					@Override
 //					public void onClick(ClickEvent event) {
@@ -85,21 +146,7 @@ public class InstructorsHomeView extends VerticalPanel{
 			}
 			
 		});
-		schedList.setWidget(0, 1, prefs);
-		
-		schedList.setStyleName("otherCenterness");
-		HTML schedule = new HTML("Scheduler\n\n\n");
-		
-		HTML mydocs = new HTML("My Scheduling Documents:");
-		mydocs.setStyleName("centerness");
-		
-		schedule.addStyleName("editTableHeading");
-		
-		this.setStyleName("centerness");
-		add(schedule);
-		add(mydocs);
-		add(schedList);
+		schedList.setWidget(row, 1, prefs);
 	}
-	
 	
 }

@@ -10,6 +10,7 @@ import scheduler.view.web.client.NewScheduleCreator;
 import scheduler.view.web.client.NewScheduleCreator.CreatedScheduleCallback;
 import scheduler.view.web.client.TabOpener;
 import scheduler.view.web.client.views.home.OriginalDocumentsCache.Observer;
+import scheduler.view.web.client.views.resources.instructors.InstructorsHomeView;
 import scheduler.view.web.shared.DocumentGWT;
 
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -114,7 +115,12 @@ public class HomeView extends VerticalPanel {
 
 		IButton instructorsButton = new IButton("Instructors Home View (temporary)", new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				Import.showImport();
+	        	 com.smartgwt.client.widgets.Window instructorWindow = new com.smartgwt.client.widgets.Window();
+	        	 InstructorsHomeView homeView = new InstructorsHomeView(service, username);
+	        	 instructorWindow.addItem(homeView);
+	        	 homeView.setHorizontalAlignment(ALIGN_CENTER);
+	        	 instructorWindow.setSize("500px", "500px");
+	        	 instructorWindow.show();
 			}
 		});
 		instructorsButton.setAutoWidth();
