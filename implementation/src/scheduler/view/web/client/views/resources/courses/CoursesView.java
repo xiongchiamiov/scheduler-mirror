@@ -1,8 +1,11 @@
 package scheduler.view.web.client.views.resources.courses;
 
+import java.util.ArrayList;
+
 import scheduler.view.web.client.GreetingServiceAsync;
 import scheduler.view.web.client.UnsavedDocumentStrategy;
 import scheduler.view.web.shared.DocumentGWT;
+import scheduler.view.web.client.views.resources.courses.CoursesDataSource;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -14,16 +17,18 @@ import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.types.ListGridEditEvent;
 import com.smartgwt.client.types.RowEndEditAction;
+import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.validator.IntegerRangeValidator;
 import com.smartgwt.client.widgets.grid.CellFormatter;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
+
 public class CoursesView extends VerticalPanel {
 	private GreetingServiceAsync service;
 	private final DocumentGWT document;
-	
+
 	public CoursesView(GreetingServiceAsync service, DocumentGWT document, UnsavedDocumentStrategy unsavedDocumentStrategy) {
 		this.service = service;
 		this.document = document;
@@ -48,7 +53,13 @@ public class CoursesView extends VerticalPanel {
 		grid.setEditByCell(true);
 		grid.setListEndEditAction(RowEndEditAction.NEXT);
 		//grid.setCellHeight(22);
-		grid.setDataSource(new CoursesDataSource(service, document, unsavedDocumentStrategy));
+		grid.setDataSource(new CoursesDataSource(service, document, unsavedDocumentStrategy, new CoursesDataSource.GetAllRecordsStrategy(){
+			@Override
+			public Record[] getAllRecords()
+			{
+				return grid.getRecords();
+			}
+		}));
 		
 		ListGridField idField = new ListGridField("id", "&nbsp;");
 		idField.setCanEdit(false);
@@ -66,6 +77,7 @@ public class CoursesView extends VerticalPanel {
 		
 		ListGridField schedulableField = new ListGridField("isSchedulable", "Schedulable");
 		schedulableField.setAlign(Alignment.CENTER);
+		schedulableField.setDefaultValue(true);
 		ListGridField departmentField = new ListGridField("department", "Department");
 		departmentField.setAlign(Alignment.CENTER);
 		ListGridField catalogNumberField = new ListGridField("catalogNumber", "Catalog Number");
@@ -90,7 +102,37 @@ public class CoursesView extends VerticalPanel {
 		usedEquipmentField.setAlign(Alignment.CENTER);
 		ListGridField associationsField = new ListGridField("associations", "Associations");
 		associationsField.setAlign(Alignment.CENTER);
-
+		
+		
+		
+		//For a combo box associations field CURRENTLY NOT WORKING
+//		final SelectItem test = new SelectItem();
+//		test.setName("association");
+//		test.addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+//			
+//			@Override
+//			public void onClick(
+//					com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+//				ArrayList<String> lectureList = new ArrayList<String>();
+//				System.out.println("About to get records");
+//				for(ListGridRecord record : grid.getRecords())
+//				{
+//					System.out.println("Got some records");
+//					if(record.getAttributeAsString("type").equals("LEC"))
+//					{
+//						//It is a lecture, add to possible associations
+//						String lectureName = record.getAttributeAsString("catalogNumber");
+//						System.out.println("Found lecture: " + lectureName);
+//						lectureList.add(lectureName);
+//					}
+//				}
+////				grid.getField("associations").setValueMap("101", "TEST", "TESTAGAION");
+////				test.setValueMap("TEST", "TESTER");
+//				test.setMultiple(true);
+//			}
+//		} );
+//		associationsField.setEditorType(test);
+		
 		grid.setFields(idField, schedulableField, departmentField, catalogNumberField, nameField, numSectionsField, wtuField, scuField,
 				dayCombinationsField, hoursPerWeekField, maxEnrollmentField, courseTypeField, usedEquipmentField, associationsField);
 		gridPanel.add(grid);

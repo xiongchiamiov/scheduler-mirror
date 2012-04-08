@@ -38,11 +38,13 @@ public class CoursesDataSource extends DataSource {
 	final GreetingServiceAsync service;
 	final DocumentGWT document;
 	UnsavedDocumentStrategy unsavedDocumentStrategy;
+	GetAllRecordsStrategy getAllRecordsStrategy;
 	
-	public CoursesDataSource(GreetingServiceAsync service, DocumentGWT document, UnsavedDocumentStrategy unsavedDocumentStrategy) {
+	public CoursesDataSource(GreetingServiceAsync service, DocumentGWT document, UnsavedDocumentStrategy unsavedDocumentStrategy, GetAllRecordsStrategy getAllRecordsStrategy) {
 		this.service = service;
 		this.document = document;
 		this.unsavedDocumentStrategy = unsavedDocumentStrategy;
+		this.getAllRecordsStrategy = getAllRecordsStrategy;
 		
 		setDataProtocol(DSProtocol.CLIENTCUSTOM);
 		
@@ -83,9 +85,11 @@ public class CoursesDataSource extends DataSource {
 		usedEquipmentField.setMultiple(true);
 		usedEquipmentField.setValueMap("Projector", "Computers");
 		
-		DataSourceEnumField associationsField = new DataSourceEnumField("associations");
-		associationsField.setValueMap("?");
-		associationsField.setMultiple(false);
+//		DataSourceEnumField associationsField = new DataSourceEnumField("associations");
+//		associationsField.setValueMap("?");
+//		associationsField.setMultiple(true);
+		
+		DataSourceTextField associationsField = new DataSourceTextField("associations");
 		
 		setFields(idField, schedulableField, departmentField, catalogNumberField, nameField, numSectionsField, wtuField, scuField,
 				dayCombinationsField, hoursPerWeekField, maxEnrollmentField, courseTypeField, usedEquipmentField, associationsField);
@@ -135,7 +139,11 @@ public class CoursesDataSource extends DataSource {
 		record.setAttribute("maxEnrollment", course.getMaxEnroll());
 		record.setAttribute("type", course.getType());
 		record.setAttribute("usedEquipment", usedEquipmentsStrings);
-		record.setAttribute("associations", "?");
+//		record.setAttribute("associations", "?");
+		if(course.getLectureID() != -1)
+		{
+			record.setAttribute("associations", "LecID: " + course.getLectureID() + " Tethered? " + course.getTetheredToLecture());
+		}
 		return record;
 	}
 
@@ -177,9 +185,64 @@ public class CoursesDataSource extends DataSource {
 				usedEquipments.add(usedEquipment);
 		}
 		
+		String associations = record.getAttributeAsString("associations");
+		System.out.println("Association: " + associations);
+		int lectureID = -1;
+		boolean isTethered = false;
+		System.out.println("Type before assoc: " + record.getAttributeAsString("type"));
+		if(record.getAttributeAsString("type").equals("LAB"))
+		{
+			System.out.println("Type is Lab, associating things");
+			if(associations != null && associations.length() > 0)
+			{
+				//TODO: validate this next part
+				String[] split = associations.split(" ");
+				String dept = "";
+				String catalogNum = "";
+				String tethered = "";
+				if(split.length > 0)
+				{
+					dept = split[0];
+					if(split.length > 1)
+					{
+						catalogNum = split[1];
+						if(split.length > 2)
+						{
+							tethered = split[2];
+						}
+					}
+				}
+				System.out.println("DEPT: " + dept);
+				System.out.println("CATALOGNUM: " + catalogNum);
+				System.out.println("TETHERED: " + tethered);
+				Record[] records = getAllRecordsStrategy.getAllRecords();
+				for(Record r : records)
+				{
+					System.out.println("Got a record");
+					if(r.getAttributeAsString("type").equals("LEC"))
+					{
+						System.out.println("Is a lecture");
+						if(r.getAttributeAsString("department").equals(dept))
+						{
+							System.out.println("Department match, cat num: " + r.getAttributeAsString("catalogNumber"));
+							if(r.getAttributeAsString("catalogNumber").equals(catalogNum))
+							{
+								//Match
+								System.out.println("Found a lecture match");
+								lectureID = r.getAttributeAsInt("id");
+							}
+						}
+					}
+				}
+				isTethered = tethered.equals("(tethered)");
+			}
+		}
+		System.out.println("Tethered is " + isTethered);
+		
+		
 		assert(record.getAttribute("type") != null);
 		
-		return new CourseGWT(
+		CourseGWT course = new CourseGWT(
 				record.getAttributeAsBoolean("isSchedulable"),
 				record.getAttribute("name"),
 				record.getAttribute("catalogNumber"),
@@ -189,13 +252,15 @@ public class CoursesDataSource extends DataSource {
 				record.getAttribute("numSections"),
 				record.getAttribute("type"),
 				record.getAttribute("maxEnrollment"),
-				-1, // lecture ID
+				lectureID, // lecture ID
 				record.getAttribute("hoursPerWeek"),
 				dayCombinations, // day combinations
 				record.getAttributeAsInt("id"), // id
-				record.getAttributeAsBoolean("tetheredToLecture"),
+				isTethered,
 				usedEquipments // equipment
 				);
+		
+		return course;
 	}
 
 	protected void fetch(final DSRequest dsRequest) {
@@ -373,4 +438,11 @@ public class CoursesDataSource extends DataSource {
 		
 //		setDataURL("ds/test_data/country.data.xml");
 //		setClientOnly(true);
+	
+	
+	
+	public interface GetAllRecordsStrategy
+	{
+		public Record[] getAllRecords();
+	}
 }
