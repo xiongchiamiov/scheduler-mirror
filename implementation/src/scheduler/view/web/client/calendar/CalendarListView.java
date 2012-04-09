@@ -168,6 +168,7 @@ public class CalendarListView extends SimplePanel {
 					+ ">" + mScheduleController.getCourse(item.getCourseID()).getWtu() + "</td>");
 			tableCol++;
 
+			
 			builder.append("<td " + "class=\"item\" id=\"x" + tableCol + "y"
 					+ tableRow + "\" "
 					+ "ondblclick=\"calendarListDoubleClick(" + tableRow + ","
@@ -177,7 +178,16 @@ public class CalendarListView extends SimplePanel {
 					+ tableRow + "," + tableCol + ")\" " + "tabindex=\"0\" "
 					+ "onkeydown=\"calendarListKeyDown(" + tableRow
 					+ ",event.which)\" " + "onselectstart=\"return false\" "
-					+ ">" + mScheduleController.getInstructor(item.getInstructorID()).getLastName() + "</td>");
+					+ ">");
+			
+			if (mScheduleController.getInstructor(item.getInstructorID()) != null ) {
+				builder.append(mScheduleController.getInstructor(item.getInstructorID()).getLastName());
+			}			
+			else {
+				builder.append("TBA");
+			}
+			
+			builder.append("</td>");
 			tableCol++;
 
 			builder.append("<td " + "class=\"item\" id=\"x" + tableCol + "y"
@@ -189,7 +199,16 @@ public class CalendarListView extends SimplePanel {
 					+ tableRow + "," + tableCol + ")\" " + "tabindex=\"0\" "
 					+ "onkeydown=\"calendarListKeyDown(" + tableRow
 					+ ",event.which)\" " + "onselectstart=\"return false\" "
-					+ ">" + mScheduleController.getLocation(item.getLocationID()).getRoom() + "</td>");
+					+ ">");
+			
+			if (mScheduleController.getLocation(item.getLocationID()) != null) {
+				builder.append(mScheduleController.getLocation(item.getLocationID()).getRoom()); 
+			}
+			else {
+				builder.append("TBA");
+			}
+			
+			builder.append("</td>");
 			tableCol++;
 
 			builder.append("<td " + "class=\"item\" id=\"x" + tableCol + "y"
