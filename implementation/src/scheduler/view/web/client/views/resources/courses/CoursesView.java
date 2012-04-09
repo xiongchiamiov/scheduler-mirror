@@ -44,7 +44,6 @@ public class CoursesView extends VerticalPanel {
 		gridPanel.setHorizontalAlignment(ALIGN_CENTER);
 		final ListGrid grid = new ListGrid();
 		grid.setWidth100();
-		grid.setID("s_gridCoursesTbl");
 		grid.setAutoFitData(Autofit.VERTICAL);
 		
 		grid.setShowAllRecords(true);
@@ -139,7 +138,8 @@ public class CoursesView extends VerticalPanel {
 				dayCombinationsField, hoursPerWeekField, maxEnrollmentField, courseTypeField, usedEquipmentField, associationsField);
 		
 		DOM.setElementAttribute(this.getElement(), "id", "s_coursesTab");
-		
+
+		grid.getElement().setId("s_gridCoursesTbl");
 		gridPanel.add(grid);
 		this.add(gridPanel);
 		

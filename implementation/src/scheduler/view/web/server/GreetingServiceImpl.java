@@ -1,5 +1,6 @@
 package scheduler.view.web.server;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -14,8 +15,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
-
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import scheduler.model.Course;
 import scheduler.model.Document;
@@ -36,6 +35,8 @@ import scheduler.view.web.shared.LocationGWT;
 import scheduler.view.web.shared.OldScheduleItemGWT;
 import scheduler.view.web.shared.ScheduleItemGWT;
 import scheduler.view.web.shared.ScheduleItemList;
+
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**
  * The server side implementation of the RPC service.
@@ -456,7 +457,16 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 				
 				String filepath = getDatabaseStateFilepath();
 				System.out.println("Saving state to " + filepath + "!");
-				FileOutputStream fos = new FileOutputStream(filepath);
+				
+				File file = new File(filepath);
+				if (!file.exists()) {
+					System.out.println("Creating file " + filepath);
+					if (!file.createNewFile())
+						throw new RuntimeException("Couldnt make file " + filepath);
+				}
+				
+				assert(file.exists());
+				FileOutputStream fos = new FileOutputStream(file);
 				ObjectOutputStream oos = new ObjectOutputStream(fos);
 				
 				model.writeState(oos);
@@ -627,11 +637,23 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			
 			assert (document.getOriginal() != null);
 			
-			Vector<ScheduleItem> generated = Generate.generate(model, schedule, schedule.getItems(), schedule
-					.getDocument().getCourses(), schedule.getDocument().getInstructors(), schedule.getDocument()
-					.getLocations());
+			Collection<Course> schedulableCourses = new LinkedList<Course>();
+			for (Course course : schedule.getDocument().getCourses())
+				if (course.isSchedulable())
+					schedulableCourses.add(course);
+			
+			Collection<Instructor> schedulableInstructors = new LinkedList<Instructor>();
+			for (Instructor instructor : schedule.getDocument().getInstructors())
+				if (instructor.isSchedulable())
+					schedulableInstructors.add(instructor);
+			
+			Collection<Location> schedulableLocations = new LinkedList<Location>();
+			for (Location location : schedule.getDocument().getLocations())
+				if (location.isSchedulable())
+					schedulableLocations.add(location);
+			
+			Vector<ScheduleItem> generated = Generate.generate(model, schedule, schedule.getItems(), schedulableCourses, schedulableInstructors, schedulableLocations);
 			for (ScheduleItem item : generated) {
-				// assert(item.getSchedule() == null);
 				item.setSchedule(schedule);
 				item.insert();
 			}

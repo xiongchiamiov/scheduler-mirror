@@ -190,7 +190,7 @@ public class CoursesDataSource extends DataSource {
 		int lectureID = -1;
 		boolean isTethered = false;
 		System.out.println("Type before assoc: " + record.getAttributeAsString("type"));
-		if(record.getAttributeAsString("type").equals("LAB"))
+		if(record.getAttributeAsString("type") != null && record.getAttributeAsString("type").equals("LAB"))
 		{
 			System.out.println("Type is Lab, associating things");
 			if(associations != null && associations.length() > 0)
