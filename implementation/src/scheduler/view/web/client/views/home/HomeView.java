@@ -191,11 +191,13 @@ public class HomeView extends VerticalPanel {
 		aliveOriginalDocumentsGrid.setCanEdit(false);
 		aliveOriginalDocumentsGrid.setSelectionAppearance(SelectionAppearance.CHECKBOX);
 		aliveOriginalDocumentsGrid.setDataSource(new OriginalDocumentsCacheDataSource(documentsCache, OriginalDocumentsCacheDataSource.Mode.LIVE_DOCUMENTS_ONLY));
+		aliveOriginalDocumentsGrid.setID("s_doclistTbl");
 		
 		ListGridField idField = new ListGridField("id");
 		idField.setHidden(true);
 		
 		ListGridField nameField = new ListGridField("name", "Name");
+		//nameField.
 
 		aliveOriginalDocumentsGrid.setFields(idField, nameField);
 		

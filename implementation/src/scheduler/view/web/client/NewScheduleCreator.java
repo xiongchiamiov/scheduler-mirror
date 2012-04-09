@@ -44,6 +44,7 @@ public class NewScheduleCreator {
 						
 						if (newDocumentNameExists == false) {
 							final LoadingPopup popup = new LoadingPopup();
+							DOM.setElementAttribute(popup.getElement(), "id", "s_loadPop");
 							popup.show();
 							
 							DOM.setElementAttribute(popup.getElement(), "id", "failSchedPopup");
@@ -88,17 +89,20 @@ public class NewScheduleCreator {
 	{
 		final TextBox tb = new TextBox();
 		
+		DOM.setElementAttribute(tb.getElement(), "id", "s_createBox");
 
 		final com.smartgwt.client.widgets.Window window = new com.smartgwt.client.widgets.Window();
+		window.setID("s_NameTxt");
 		window.setAutoSize(true);
 		window.setTitle("Name Schedule");
 		window.setCanDragReposition(true);
 		window.setCanDragResize(true);
-		
+	
+		//DOM.setElementAttribute(window.getElement(), "id", "s_NameTxt");
 		
 		
 		FlowPanel fp = new FlowPanel();
-		final Button butt = new Button(buttonLabel, new ClickHandler() {
+		final Button create = new Button(buttonLabel, new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				window.destroy();
@@ -106,23 +110,29 @@ public class NewScheduleCreator {
 				callback.namedSchedule(scheduleName);
 			}
 		});
+		
+		DOM.setElementAttribute(create.getElement(), "id", "s_createNamedDocBtn");
+		
 		final Button cancelButton = new Button("Cancel", new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				window.destroy();
 			}
 		});
 		
+		DOM.setElementAttribute(cancelButton.getElement(), "id", "s_cancelNamedDocBtn");
+		
 		tb.addKeyPressHandler(new KeyPressHandler() {
 			public void onKeyPress(KeyPressEvent event) {
 				if (event.getCharCode() == KeyCodes.KEY_ENTER)
-					butt.click();
+					create.click();
 			}
 		});
 		
 		fp.add(new HTML("<center>Specify a new schedule name.</center>"));
 		fp.add(tb);
-		fp.add(butt);
+		fp.add(create);
 		fp.add(cancelButton);
+		DOM.setElementAttribute(fp.getElement(), "id", "s_subheaderPop");
 		window.addItem(fp);
 
 		window.centerInPage();
