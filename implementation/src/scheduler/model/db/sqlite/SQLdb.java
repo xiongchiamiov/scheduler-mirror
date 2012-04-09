@@ -189,7 +189,7 @@ public class SQLdb implements IDatabase {
 			for (Column column : columns)
 				if (!column.name.equals("id"))
 					queryString += column.name + " = ?,";
-			queryString = queryString = queryString.substring(0, queryString.length() - 1);
+			queryString = queryString.substring(0, queryString.length() - 1);
 			queryString += " WHERE ID = ?";
 			
 			try {
