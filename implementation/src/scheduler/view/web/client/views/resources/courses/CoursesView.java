@@ -9,6 +9,7 @@ import scheduler.view.web.client.views.resources.courses.CoursesDataSource;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -33,7 +34,7 @@ public class CoursesView extends VerticalPanel {
 		this.service = service;
 		this.document = document;
 		// this.addStyleName("iViewPadding");
-		
+		DOM.setElementAttribute(this.getElement(), "id", "s_courseviewTab");
 		this.setWidth("100%");
 		this.setHeight("100%");
 		
@@ -43,7 +44,7 @@ public class CoursesView extends VerticalPanel {
 		gridPanel.setHorizontalAlignment(ALIGN_CENTER);
 		final ListGrid grid = new ListGrid();
 		grid.setWidth100();
-		
+		grid.setID("s_gridCoursesTbl");
 		grid.setAutoFitData(Autofit.VERTICAL);
 		
 		grid.setShowAllRecords(true);
@@ -62,6 +63,7 @@ public class CoursesView extends VerticalPanel {
 		}));
 		
 		ListGridField idField = new ListGridField("id", "&nbsp;");
+
 		idField.setCanEdit(false);
 		idField.setCellFormatter(new CellFormatter() {
 			public String format(Object value, ListGridRecord record, int rowNum, int colNum) {
@@ -135,10 +137,13 @@ public class CoursesView extends VerticalPanel {
 		
 		grid.setFields(idField, schedulableField, departmentField, catalogNumberField, nameField, numSectionsField, wtuField, scuField,
 				dayCombinationsField, hoursPerWeekField, maxEnrollmentField, courseTypeField, usedEquipmentField, associationsField);
+		
+		DOM.setElementAttribute(this.getElement(), "id", "s_coursesTab");
+		
 		gridPanel.add(grid);
 		this.add(gridPanel);
 		
-		this.add(new Button("Add New Course", new ClickHandler() {
+		Button course = new Button("Add New Course", new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				Record defaultValues = new Record();
 				defaultValues.setAttribute("type", "LEC");
@@ -149,25 +154,38 @@ public class CoursesView extends VerticalPanel {
 				defaultValues.setAttribute("maxEnrollment", 0);
             grid.startEditingNew(defaultValues);
 			}
-		}));
+		}); 
 		
-		this.add(new Button("Duplicate Selected Courses", new ClickHandler() {
-			public void onClick(ClickEvent event) {
-            ListGridRecord[] selectedRecords = grid.getSelectedRecords();  
-            for(ListGridRecord rec: selectedRecords) {
-					rec.setAttribute("id", (Integer)null);
-					grid.startEditingNew(rec);
-            }
-			}
-		}));
+		DOM.setElementAttribute(course.getElement(), "id", "s_newCourseBtn");
 		
-		this.add(new Button("Remove Selected Courses", new ClickHandler() {
+		this.add(course);
+		
+		Button dupeBtn = new Button("Duplicate Selected Courses", new ClickHandler() {
 			public void onClick(ClickEvent event) {
-            ListGridRecord[] selectedRecords = grid.getSelectedRecords();  
-            for(ListGridRecord rec: selectedRecords) {  
-                grid.removeData(rec);
-            }
-			}
-		}));
+	            ListGridRecord[] selectedRecords = grid.getSelectedRecords();  
+	            for(ListGridRecord rec: selectedRecords) {
+						rec.setAttribute("id", (Integer)null);
+						grid.startEditingNew(rec);
+	            }
+				}
+			});
+		
+		DOM.setElementAttribute(dupeBtn.getElement(), "id", "s_dupeBtn");
+		
+		this.add(dupeBtn);
+		
+		Button remove = new Button("Remove Selected Courses", new ClickHandler() {
+			public void onClick(ClickEvent event) {
+	            ListGridRecord[] selectedRecords = grid.getSelectedRecords();  
+	            for(ListGridRecord rec: selectedRecords) {  
+	                grid.removeData(rec);
+	            }
+				}
+			});
+		
+		
+		DOM.setElementAttribute(remove.getElement(), "id", "s_removeBtn");
+		
+		this.add(remove);
 	}
 }

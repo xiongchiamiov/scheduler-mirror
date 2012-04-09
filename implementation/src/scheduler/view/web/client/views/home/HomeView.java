@@ -197,7 +197,6 @@ public class HomeView extends VerticalPanel {
 		idField.setHidden(true);
 		
 		ListGridField nameField = new ListGridField("name", "Name");
-		//nameField.
 
 		aliveOriginalDocumentsGrid.setFields(idField, nameField);
 		
