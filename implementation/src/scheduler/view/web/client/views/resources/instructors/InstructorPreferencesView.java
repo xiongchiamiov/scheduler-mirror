@@ -4,6 +4,7 @@ import scheduler.view.web.client.GreetingServiceAsync;
 import scheduler.view.web.client.UnsavedDocumentStrategy;
 import scheduler.view.web.shared.InstructorGWT;
 
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -49,6 +50,7 @@ public class InstructorPreferencesView extends VerticalPanel {
 		HTML instructorName = new HTML("Instructor Time Preferences");
 		fpanel.setStyleName("bigBold");
 		instructorName.setStyleName("bigBold");
+		DOM.setElementAttribute(instructorName.getElement(), "id", "instructorName");
 		fpanel.add(instructorName);
 		this.add(fpanel);
 

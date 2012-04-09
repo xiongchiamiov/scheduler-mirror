@@ -12,6 +12,7 @@ import scheduler.view.web.shared.InstructorGWT;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -46,6 +47,7 @@ public class InstructorsHomeView extends VerticalPanel
 		
 		schedule.addStyleName("editTableHeading");
 		
+		DOM.setElementAttribute(this.schedList.getElement(), "id", "schedList");
 		this.setStyleName("centerness");
 		this.add(schedule);
 		this.add(mydocs);

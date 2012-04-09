@@ -1,10 +1,8 @@
 package scheduler.view.web.client.views.resources.instructors;
 
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HasAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -13,7 +11,7 @@ import com.smartgwt.client.widgets.Window;
 
 /**
  * This dialog is a message box
- * @author Carsten Pfeffer
+ * @author Carsten Pfeffer <pfeffer@tzi.de>
  */
 public class NoCourseDialog extends Window {
 	private VerticalPanel panel;
@@ -28,7 +26,6 @@ public class NoCourseDialog extends Window {
 	 * @param type: determines which buttons are shown
 	 */
 	public NoCourseDialog(final String header, final String message) {
-//		this.setAutoSize(true);
 		this.setSize("320px", "140px");
 		this.setTitle(header);
 		
@@ -39,6 +36,9 @@ public class NoCourseDialog extends Window {
         // ------ Buttons ---------------
         this.buttonYes = new Button("Yes");
         this.buttonNo = new Button("No");
+        
+        DOM.setElementAttribute(this.buttonYes.getElement(), "id", "yesButton");
+        DOM.setElementAttribute(this.buttonNo.getElement(), "id", "noButton");
 
         HorizontalPanel buttons = new HorizontalPanel();
         

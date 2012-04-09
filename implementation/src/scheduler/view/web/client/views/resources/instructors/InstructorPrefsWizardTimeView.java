@@ -4,6 +4,7 @@ import scheduler.view.web.client.GreetingServiceAsync;
 import scheduler.view.web.shared.InstructorGWT;
 
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -37,6 +38,10 @@ public class InstructorPrefsWizardTimeView extends VerticalPanel{
 		this.finish = new Button("finish");
 		
 		this.add(this.timePrefs);
+		
+		DOM.setElementAttribute(this.back.getElement(), "id", "wizBackButton");
+		DOM.setElementAttribute(this.finish.getElement(), "id", "wizFinishButton");
+		DOM.setElementAttribute(this.timePrefs.getElement(), "id", "wizTimePrefs");
 		
 		HorizontalPanel buttons = new HorizontalPanel();		
 		buttons.setWidth("100%");
