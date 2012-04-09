@@ -57,7 +57,7 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 	private final DragAndDropController mDragController = new DragAndDropController(this);
 	private CourseListView mAvailableCoursesView = new CourseListView(this, mDragController);
 	private CalendarTableView mCalendarTableView = new CalendarTableView(this, mDragController);
-	private CalendarListView mListTableView = new CalendarListView(this);
+	private CalendarListView mCalendarListView = new CalendarListView(this);
 
 	private FiltersViewWidget mFiltersDialog = new FiltersViewWidget();
 
@@ -86,6 +86,8 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 	
 	public static final String DAYS[] = { "Monday", "Tuesday", "Wednesday", 
 		"Thursday", "Friday" };
+	
+	private static final int AVAILABLE_COURSES_LIST_WIDTH = 200;
 	
 	public ScheduleEditWidget(GreetingServiceAsync service, DocumentGWT document) {
 		mGreetingService = service;
@@ -182,8 +184,8 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 						mCalendarTableView.setScheduleItems(mCalendarItems);
 						mCalendarTableView.drawTable();
 
-						mListTableView.setScheduleItems(mCalendarItems);
-						mListTableView.drawList();
+						mCalendarListView.setScheduleItems(mCalendarItems);
+						mCalendarListView.drawList();
 
 						populateAvailableCoursesList();
 
@@ -289,8 +291,8 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 							mCalendarTableView.setScheduleItems(mCalendarItems);
 							mCalendarTableView.drawTable();
 
-							mListTableView.setScheduleItems(mCalendarItems);
-							mListTableView.drawList();
+							mCalendarListView.setScheduleItems(mCalendarItems);
+							mCalendarListView.drawList();
 
 							populateAvailableCoursesList();
 
@@ -364,22 +366,24 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 
 		FlowPanel bottomButtonFlowPanel = new FlowPanel();
 		bottomButtonFlowPanel.addStyleName("floatingScheduleButtonBar");
-
 		
 		mCollapseScheduleButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				if (!mIsCourseListCollapsed) {
 					mCollapseScheduleButton.setText(">");
-					mAvailableCoursesView.toggle(true);
 					mIsCourseListCollapsed = true;
+					
+					mAvailableCoursesView.toggle(true);
 					mCalendarTableView.setLeftOffset(0);
-					mListTableView.setLeftOffset(0);
-				} else {
+					mCalendarListView.setLeftOffset(0);
+				}
+				else {
 					mCollapseScheduleButton.setText("<");
-					mAvailableCoursesView.toggle(false);
 					mIsCourseListCollapsed = false;
-					mCalendarTableView.setLeftOffset(200);
-					mListTableView.setLeftOffset(200);
+					
+					mAvailableCoursesView.toggle(false);
+					mCalendarTableView.setLeftOffset(AVAILABLE_COURSES_LIST_WIDTH);
+					mCalendarListView.setLeftOffset(AVAILABLE_COURSES_LIST_WIDTH);
 				}
 			}
 		});
@@ -403,14 +407,25 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 				int selectedIndex = listBoxViewSelector.getSelectedIndex();
 				if (selectedIndex == 0) {
 					mCurrentDisplayType = DisplayType.Calendar;
-					mBoxesAndSchedulePanel.remove(mListTableView);			
+					mBoxesAndSchedulePanel.remove(mCalendarListView);
 					mBoxesAndSchedulePanel.add(mCalendarTableView);
-
+					
+					mCalendarTableView.drawTable();
+					if (mIsCourseListCollapsed)
+						mCalendarTableView.setLeftOffset(0);
+					else
+						mCalendarTableView.setLeftOffset(AVAILABLE_COURSES_LIST_WIDTH);
 				}
 				else {
 					mCurrentDisplayType = DisplayType.List;
 					mBoxesAndSchedulePanel.remove(mCalendarTableView);			
-					mBoxesAndSchedulePanel.add(mListTableView);
+					mBoxesAndSchedulePanel.add(mCalendarListView);
+					
+					mCalendarListView.drawList();
+					if (mIsCourseListCollapsed)
+						mCalendarListView.setLeftOffset(0);
+					else
+						mCalendarListView.setLeftOffset(AVAILABLE_COURSES_LIST_WIDTH);
 				}
 				
 				// TODO: change to correct view display
@@ -489,7 +504,8 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 
 							for (CourseGWT course : mCourses.values())
 								if (course.isValid()
-										&& course.getNumSections() > 0)
+										&& course.getNumSections() > 0
+										&& course.isSchedulable())
 									availableItems.add(course);
 
 							mAvailableCoursesView.setItems(availableItems);
@@ -511,14 +527,14 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 		mBoxesAndSchedulePanel.add(mAvailableCoursesView);
 		mAvailableCoursesView.drawList();
 
-		mCalendarTableView.setLeftOffset(200);
-		mListTableView.setLeftOffset(200);
+		mCalendarTableView.setLeftOffset(AVAILABLE_COURSES_LIST_WIDTH);
+		mCalendarListView.setLeftOffset(AVAILABLE_COURSES_LIST_WIDTH);
 
 		if (mCurrentDisplayType == DisplayType.Calendar) {
 			mBoxesAndSchedulePanel.add(mCalendarTableView);			
 		}
 		else if (mCurrentDisplayType == DisplayType.List) {
-			mBoxesAndSchedulePanel.add(mListTableView);
+			mBoxesAndSchedulePanel.add(mCalendarListView);
 		}
 		
 		mMainPanel.add(mBoxesAndSchedulePanel);		
@@ -572,8 +588,8 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 						mCalendarTableView.setScheduleItems(mCalendarItems);
 						mCalendarTableView.drawTable();
 
-						mListTableView.setScheduleItems(mCalendarItems);
-						mListTableView.drawList();
+						mCalendarListView.setScheduleItems(mCalendarItems);
+						mCalendarListView.drawList();
 
 						populateAvailableCoursesList();
 
@@ -626,8 +642,8 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 						mCalendarTableView.setScheduleItems(mCalendarItems);
 						mCalendarTableView.drawTable();
 
-						mListTableView.setScheduleItems(mCalendarItems);
-						mListTableView.drawList();
+						mCalendarListView.setScheduleItems(mCalendarItems);
+						mCalendarListView.drawList();
 
 						populateAvailableCoursesList();
 
@@ -694,8 +710,8 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 						mCalendarTableView.setScheduleItems(mCalendarItems);
 						mCalendarTableView.drawTable();
 
-						mListTableView.setScheduleItems(mCalendarItems);
-						mListTableView.drawList();
+						mCalendarListView.setScheduleItems(mCalendarItems);
+						mCalendarListView.drawList();
 
 						populateAvailableCoursesList();
 

@@ -1,7 +1,11 @@
-* 
+#ListTableContainer 
 {
-   -webkit-user-select:none;
-    -moz-user-select:none;    
+   position:absolute;
+   top:100px;
+   right:0px;
+   bottom:33px;
+   overflow:auto;
+   background-color:#FFFFFF;
 }
 
 #ListTable 

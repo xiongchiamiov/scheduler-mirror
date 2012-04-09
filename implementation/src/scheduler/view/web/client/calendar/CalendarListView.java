@@ -32,8 +32,11 @@ public class CalendarListView extends SimplePanel {
 
 	public void setLeftOffset(int pixels) {
 		mLeftOffset = pixels + 1;
-		DOMUtility.setStyleAttribute("ListTableContainer", "left", mLeftOffset
-				+ "px");
+		DOMUtility.setStyleAttribute("ListTableContainer", "left", (mLeftOffset+1)+"px");
+	}
+
+	private void setTopOffset(int pixels) {
+		DOMUtility.setStyleAttribute("ListTableContainer", "top", pixels+"px");
 	}
 
 	/**
@@ -73,15 +76,8 @@ public class CalendarListView extends SimplePanel {
 
 	public void drawList() {
 		clear();
-
+		
 		final StringBuilder builder = new StringBuilder();
-		builder.append("<link type=\"text/css\" rel=\"stylesheet\" href=\"CalendarListView.css\">");
-		builder.append("<style type=\"text/css\">"
-				+ "#ListTableContainer {position:absolute;top:116px;left:"
-				+ mLeftOffset
-				+ "px;right:0px;bottom:33px;overflow:auto;background-color:#FFFFFF;}"
-				+ "</style>");
-
 		builder.append("<div id=\"ListTableContainer\" onscroll=\"tableContainerScroll()\">");
 		builder.append("<table id=\"ListTable\"><tr id=\"headerRow\">");
 
@@ -269,6 +265,8 @@ public class CalendarListView extends SimplePanel {
 
 		mInnerHTML = builder.toString();
 		setHTML(mInnerHTML);
+		setLeftOffset(mLeftOffset);
+		setTopOffset(mScheduleController.getWidget().getAbsoluteTop());
 	}
 
 	private String GetDaysString(Set<DayGWT> days) {

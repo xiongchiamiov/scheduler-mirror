@@ -42,7 +42,6 @@ public class CourseListView extends SimplePanel {
 	
 	public void drawList() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("<link type=\"text/css\" rel=\"stylesheet\" href=\"CourseListView.css\">");
 		builder.append("<div id=\"ScheduleListContainer\"" +
 				"onmouseup=\"listMouseUp("+-1+")\" " +
 				">");
@@ -69,8 +68,13 @@ public class CourseListView extends SimplePanel {
 		builder.append("</div></table></div>");
 		
 		setHTML(builder.toString());
+		setTopOffset(mScheduleController.getWidget().getAbsoluteTop());
 	}
-	
+
+	private void setTopOffset(int pixels) {
+		DOMUtility.setStyleAttribute("ScheduleListContainer", "top", pixels+"px");
+	}
+
 	private void setHTML(String html) {
 		clear();
 		add(new HTML(html));

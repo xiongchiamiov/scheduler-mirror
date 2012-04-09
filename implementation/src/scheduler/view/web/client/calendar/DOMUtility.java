@@ -23,6 +23,10 @@ public class DOMUtility {
 	 */
 	public static boolean setStyleAttribute(String elemID, String attribute, String value) {
 		final Element elem = DOM.getElementById(elemID);
+		return setStyleAttribute(elem, attribute, value);
+	}
+	
+	public static boolean setStyleAttribute(Element elem, String attribute, String value) {
 		if (elem == null) 
 			return false;
 		

@@ -136,11 +136,6 @@ public class CalendarTableView extends SimplePanel {
 		mModel = buildTableModel();
 		
 		final StringBuilder builder = new StringBuilder();
-		builder.append("<link type=\"text/css\" rel=\"stylesheet\" href=\"CalendarTableView.css\">");
-		builder.append("<style type=\"text/css\">"+
-			"#CalendarTableContainer {position:absolute;top:116px;left:"+mLeftOffset+"px;right:0px;bottom:33px;overflow:auto;background-color:#FFFFFF;}"+			
-			"#"+DragAndDropController.DRAGGED_ID+" {display:none;position:fixed;margin-left:-30px;margin-top:10px;width:70px;padding:3px;background-color:#DFF0CF;z-index:999;border:1px solid #FFFFFF;cursor:arrow;}"+
-			"</style>");
 		builder.append("<div id=\"CalendarTableContainer\" onscroll=\"tableContainerScroll()\">");
 		builder.append("<table id=\"CalendarTable\"><tr id=\"headerRow\"><td id=\"topCorner\" class=\"dayHeader\"></td>");
 		
@@ -200,6 +195,8 @@ public class CalendarTableView extends SimplePanel {
 		
 		mInnerHTML = builder.toString();
 		setHTML(mInnerHTML);
+		setLeftOffset(mLeftOffset);
+		setTopOffset(mScheduleController.getWidget().getAbsoluteTop());
 	}
 	
 	private void setHTML(String html) {
@@ -371,10 +368,14 @@ public class CalendarTableView extends SimplePanel {
     }-*/;
 	
 	public void setLeftOffset(int pixels) {
-		mLeftOffset = pixels + 1;
-		DOMUtility.setStyleAttribute("CalendarTableContainer", "left", mLeftOffset+"px");
+		mLeftOffset = pixels;
+		DOMUtility.setStyleAttribute("CalendarTableContainer", "left", (mLeftOffset+1)+"px");
 	}
-	
+
+	private void setTopOffset(int pixels) {
+		DOMUtility.setStyleAttribute("CalendarTableContainer", "top", pixels+"px");
+	}
+
 	private void applyFilters() {
 		// TODO implement filtering
 		mFilteredScheduleItems = mScheduleItems;

@@ -63,7 +63,10 @@ public class DragAndDropController implements MouseMoveHandler, MouseOutHandler,
 			DOMUtility.setStyleAttribute(mItemView.getId(), "color", "#FFFFFF");
 			DOMUtility.setStyleAttribute(mItemView.getId(), "backgroundColor", "#FFFFFF");
 			
-			// TODO Hide contents of ever occurrence of the dragged item on the table
+			// Disable text selection
+			setTextSelection(false);
+			
+			// TODO Hide contents of every occurrence of the dragged item on the table (if it appears on multiple days)
 			// TODO if this is a list item with multiple sections remaining, just decrement section count and don't hide
 		}
 	}
@@ -167,6 +170,9 @@ public class DragAndDropController implements MouseMoveHandler, MouseOutHandler,
 		
 		// Hide the div that follows the cursor while dragging
 		DOMUtility.setStyleAttribute(DRAGGED_ID, "display", "none");
+		
+		// Allow text selection
+		setTextSelection(true);
 	}
 	
 	private void addMouseHandlers() {
@@ -176,5 +182,24 @@ public class DragAndDropController implements MouseMoveHandler, MouseOutHandler,
 		RootPanel.get().addDomHandler(this, MouseMoveEvent.getType());
 		RootPanel.get().addDomHandler(this, MouseOutEvent.getType());
 		RootPanel.get().addDomHandler(this, MouseUpEvent.getType());
+	}
+	
+	/**
+	 * Allow or disallow text selection.
+	 * 
+	 * @param selectionAllowed true if text selection should be allowed, false if it should be disabled
+	 */
+	private void setTextSelection(boolean selectionAllowed) {
+		String attrVal = "text";
+		if (!selectionAllowed)
+			attrVal = "none";
+		
+		// Set the user select attribute for all browsers
+		DOMUtility.setStyleAttribute(RootPanel.getBodyElement(), "webkitTouchCallout", attrVal);
+		DOMUtility.setStyleAttribute(RootPanel.getBodyElement(), "webkitUserSelect", attrVal);
+		DOMUtility.setStyleAttribute(RootPanel.getBodyElement(), "khtmlUserSelect", attrVal);
+		DOMUtility.setStyleAttribute(RootPanel.getBodyElement(), "mozUserSelect", attrVal);
+		DOMUtility.setStyleAttribute(RootPanel.getBodyElement(), "msUserSelect", attrVal);
+		DOMUtility.setStyleAttribute(RootPanel.getBodyElement(), "userSelect", attrVal);
 	}
 }

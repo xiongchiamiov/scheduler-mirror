@@ -1,15 +1,19 @@
-*
+#CalendarTableContainer
 {
-   -webkit-user-select:none;
-   -moz-user-select:none;
-}
+   position:absolute;
+   left:0px;
+   top:100px;
+   right:0px;
+   bottom:33px;
+   overflow:auto;
+   background-color:#FFFFFF;
+}			
 
 #CalendarTable 
 {
    border-spacing:0px;
    cellspacing:0px;
    border:none;
-   min-width:100%;
 }
    
 #CalendarTable tr 
@@ -61,7 +65,7 @@
 #CalendarTable td.daySpacer 
 {
    border-right:1px solid #000000;
-   border-bottom:1px solid #000000;
+   border-top:none;
    padding:0px;
    margin:0px;
    width:0px;
@@ -77,4 +81,3 @@
    border-right:1px solid #000000;
    background-color:#FFFFFF;
 }
-			
