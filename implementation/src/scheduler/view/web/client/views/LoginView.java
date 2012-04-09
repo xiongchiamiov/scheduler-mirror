@@ -34,9 +34,10 @@ public class LoginView extends VerticalPanel {
 		this.setHorizontalAlignment(HasAlignment.ALIGN_CENTER);
 		
 		this.add(new HTML("<h2>Login</h2>"));
+		DOM.setElementAttribute(this.getElement(), "id", "s_loginTag");
 
 		final TextBox textBox = new TextBox();
-		DOM.setElementAttribute(textBox.getElement(), "id", "uname");
+		DOM.setElementAttribute(textBox.getElement(), "id", "s_unameBox");
 		
 		textBox.addKeyPressHandler(new KeyPressHandler() {
 			@Override
@@ -54,7 +55,7 @@ public class LoginView extends VerticalPanel {
 			}
 		});
 		
-	    DOM.setElementAttribute(login.getElement(), "id", "login");
+	    DOM.setElementAttribute(login.getElement(), "id", "s_loginBtn");
 		this.add(login);	
 	}
 

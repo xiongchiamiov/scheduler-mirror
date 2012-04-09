@@ -13,6 +13,7 @@ import scheduler.view.web.client.views.home.OriginalDocumentsCache.Observer;
 import scheduler.view.web.client.views.resources.instructors.InstructorsHomeView;
 import scheduler.view.web.shared.DocumentGWT;
 
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.smartgwt.client.data.Record;
@@ -49,6 +50,9 @@ public class HomeView extends VerticalPanel {
 				});
 			}
 		});
+		
+		
+		createButton.setID("s_createBtn");
 		createButton.setAutoWidth();
 		createButton.setOverflow(Overflow.VISIBLE);
 		topButtons.addMember(createButton);
@@ -60,15 +64,16 @@ public class HomeView extends VerticalPanel {
 		});
 		importButton.setAutoWidth();
 		importButton.setOverflow(Overflow.VISIBLE);
+        importButton.setID("s_ImportBtn");
 		topButtons.addMember(importButton);
-		
+
 		return topButtons;
 	}
 	
 	HLayout makeTrashBottomButtons(final ListGrid deletedOriginalDocumentsGrid) {
 		HLayout bottomButtons = new HLayout();
 
-		IButton deleteButton = new IButton("Restore Selected Documents", new ClickHandler() {
+		IButton restoreButton = new IButton("Restore Selected Documents", new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				Collection<Integer> selectedIDs = new TreeSet<Integer>();
 				Record[] selectedRecords = deletedOriginalDocumentsGrid.getSelectedRecords();
@@ -77,9 +82,10 @@ public class HomeView extends VerticalPanel {
 				restoreSelectedDocuments(selectedIDs);
 			}
 		});
-		deleteButton.setAutoWidth();
-		deleteButton.setOverflow(Overflow.VISIBLE);
-		bottomButtons.addMember(deleteButton);
+		restoreButton.setAutoWidth();
+		restoreButton.setOverflow(Overflow.VISIBLE);
+		restoreButton.setID("s_restoreBtn");
+		bottomButtons.addMember(restoreButton);
 
 		return bottomButtons;
 	}
@@ -99,6 +105,7 @@ public class HomeView extends VerticalPanel {
 		});
 		deleteButton.setAutoWidth();
 		deleteButton.setOverflow(Overflow.VISIBLE);
+		deleteButton.setID("s_deleteBtn");
 		bottomButtons.addMember(deleteButton);
 
 		IButton mergeButton = new IButton("Merge Selected Documents", new ClickHandler() {
@@ -112,6 +119,7 @@ public class HomeView extends VerticalPanel {
 		});
 		mergeButton.setAutoWidth();
 		mergeButton.setOverflow(Overflow.VISIBLE);
+		mergeButton.setID("s_mergeBtn");
 		bottomButtons.addMember(mergeButton);
 
 		IButton instructorsButton = new IButton("Instructors Home View (temporary)", new ClickHandler() {
@@ -126,14 +134,20 @@ public class HomeView extends VerticalPanel {
 		});
 		instructorsButton.setAutoWidth();
 		instructorsButton.setOverflow(Overflow.VISIBLE);
-		bottomButtons.addMember(instructorsButton);
 		
-		bottomButtons.addMember(new IButton("open (temporary)", new ClickHandler() {
+		instructorsButton.setID("s_instructorsTab");
+		
+		bottomButtons.addMember(instructorsButton);
+		IButton tmpOpen = new IButton("open (temporary)", new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				int docID = aliveOriginalDocumentsGrid.getSelectedRecord().getAttributeAsInt("id");
 				TabOpener.openDocInNewTab(username, documentsCache.getDocumentByID(docID));
 			}
-		}));
+		});
+
+		tmpOpen.setID("s_opendocBtn");
+		
+		bottomButtons.addMember(tmpOpen);
 		
 		return bottomButtons;
 	}
@@ -163,6 +177,8 @@ public class HomeView extends VerticalPanel {
 		final Tab homeTab = new Tab("Home");
 		VLayout homePane = new VLayout();
 		homeTab.setPane(homePane);
+		
+		homeTab.setID("s_HomeTab");
 
 		homePane.addMember(makeHomeTopButtons(username));
 		

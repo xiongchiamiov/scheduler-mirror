@@ -15,6 +15,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -54,10 +55,13 @@ public class Scheduler implements EntryPoint, UpdateHeaderStrategy
 			documentChangedIndicatorContainer.setStyleName("documentChangedIndicator");
 			topBarLeftSide.add(documentChangedIndicatorContainer);
 			
+			//need for selenium
+			Label lbl = new Label("Schedulizerifier");
 			appNameContainer = new SimplePanel();
 			appNameContainer.setStyleName("appName");
-			appNameContainer.add(new Label("Schedulizerifier"));
+			appNameContainer.add(lbl);
 			topBarLeftSide.add(appNameContainer);
+			DOM.setElementAttribute(lbl.getElement(), "id", "appNameTtl");
 			
 			VerticalPanel usernameAndLogout = new VerticalPanel();
 			usernameAndLogout.addStyleName("usernameAndLogout");
@@ -150,7 +154,10 @@ public class Scheduler implements EntryPoint, UpdateHeaderStrategy
 	}
 	
 	public void onLogin(String username) {
-		usernameContainer.add(new Label(username));
+		Label uname = new Label(username);
+		DOM.setElementAttribute(uname.getElement(), "id", "s_unameLbl");
+		usernameContainer.add(uname);
+		
 		logoutLinkContainer.add(HTMLUtilities.createLink("Log Out", "inAppLink", new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				TabOpener.openLoginInThisTab();
@@ -158,6 +165,7 @@ public class Scheduler implements EntryPoint, UpdateHeaderStrategy
 		}));
 
 		refreshWindowTitle();
+	    DOM.setElementAttribute(logoutLinkContainer.getWidget().getElement(), "id", "s_logoutLnk");
 	}
 
 	@Override
