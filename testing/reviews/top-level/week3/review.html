@@ -31,10 +31,26 @@ CSVTest.java
 3. <strong>Design of the Code is Good</strong>
 </font>
 <br>
+CSVTest.java
+<ul>
+    <li>Some imports are unnecessary (like BufferedReader,
+        FileOutputStream, LinkedList and Vector), it's ok if that's just for the moment, because
+        the class is not finished yet, but when the class is finished, the needless exports should be removed</li>
+    <li>the method <i>testExportCase</i> is completely commented out
+        (but maybe that's just because it doesn't work yet, but in this case it would be better to comment the method header too
+        or add a "fail" to the method that the method body may not be forgotten)</li>
+    <li>The class should not contain a main method</li>
+    <li>There are some warnings because of unused variables and methods. Those should be resolved for the final version
+        (especially the unused method, if it remained from an older version of this file)</li>
+</ul>
 <br>
 <br>
 <font size=+2>
 <strong>4. Code Passes Its Tests and Has Sensible User-Level Behavior </strong>
 </font>
+CSVTest.java
+<ul>
+    <li>CSVTest is a test class</li>
+    <li>Both tests <i>"testExport"</i> and <i>"testDayPrefs"</i> finished successfully without any error.
 </body>
 </html>
