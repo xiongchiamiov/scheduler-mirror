@@ -1,5 +1,6 @@
-package scheduler.view.web.shared;
+package scheduler.view.web.shared.old;
 
+import scheduler.view.web.shared.DefaultSelTestCase;
 import scheduler.view.web.shared.Selenium.*;
 
 
@@ -16,8 +17,8 @@ public class LoginTest extends DefaultSelTestCase {
 	//@Before
 	public void setUp() {
 		//log in to scheduler
-		super.setUp(protoURL);
-		sbot = super.bot;
+		//super.setUp(protoURL);
+		//sbot = super.bot;
 	}
 	
 	/**

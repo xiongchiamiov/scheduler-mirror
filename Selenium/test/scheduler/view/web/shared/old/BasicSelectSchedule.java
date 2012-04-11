@@ -1,4 +1,4 @@
-package scheduler.view.web.shared;
+package scheduler.view.web.shared.old;
 
 import java.util.ArrayList;
 
@@ -6,6 +6,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import scheduler.view.web.shared.DefaultSelTestCase;
 import scheduler.view.web.shared.Selenium.*;
 
 
@@ -26,8 +27,8 @@ public class BasicSelectSchedule extends DefaultSelTestCase {
 	@Before
 	public void setUp() {
 		//log in to scheduler
-		super.setUp(protoURL);
-		sbot = super.bot;
+		//super.setUp(protoURL);
+		//sbot = super.bot;
 	}	
 	
 	/**
