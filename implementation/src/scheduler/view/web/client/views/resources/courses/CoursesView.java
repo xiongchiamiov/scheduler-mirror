@@ -43,7 +43,8 @@ public class CoursesView extends VerticalPanel {
 		
 		gridPanel.setHorizontalAlignment(ALIGN_CENTER);
 		final ListGrid grid = new ListGrid();
-		grid.setWidth100();
+//		grid.setWidth100();
+		grid.setWidth("98%");
 		grid.setAutoFitData(Autofit.VERTICAL);
 		
 		grid.setShowAllRecords(true);
@@ -70,7 +71,6 @@ public class CoursesView extends VerticalPanel {
 			}
 		});
 		idField.setWidth(20);
-		idField.setAlign(Alignment.CENTER);
 		idField.setAlign(Alignment.CENTER);
 		
 		IntegerRangeValidator nonnegativeInt = new IntegerRangeValidator();  
@@ -146,7 +146,9 @@ public class CoursesView extends VerticalPanel {
 
 		grid.getElement().setId("s_gridCoursesTbl");
 		gridPanel.add(grid);
+		this.setHorizontalAlignment(ALIGN_CENTER);
 		this.add(gridPanel);
+		this.setHorizontalAlignment(ALIGN_LEFT);
 		
 		Button course = new Button("Add New Course", new ClickHandler() {
 			public void onClick(ClickEvent event) {
@@ -157,6 +159,7 @@ public class CoursesView extends VerticalPanel {
 				defaultValues.setAttribute("scu", 0);
 				defaultValues.setAttribute("hoursPerWeek", 0);
 				defaultValues.setAttribute("maxEnrollment", 0);
+				defaultValues.setAttribute("dayCombinations", "M");
             grid.startEditingNew(defaultValues);
 			}
 		}); 
