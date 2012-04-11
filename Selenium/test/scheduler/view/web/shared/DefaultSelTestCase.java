@@ -24,6 +24,7 @@ public class DefaultSelTestCase extends TestCase {
 	 * @see junit.framework.TestCase#setUp()
 	 */
 	public void setUp(String url, WebDriver drv) {
+		this.driver = drv;
 		drv.get(url);
 	}
 	

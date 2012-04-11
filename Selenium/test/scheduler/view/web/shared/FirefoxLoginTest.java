@@ -82,8 +82,6 @@ public class FirefoxLoginTest extends DefaultSelTestCase {
 	 */
 	public void tearDown() {
 		//close browser session
-		driver.close();
-		driver.quit();
 		super.tearDown();
 	}
 }
