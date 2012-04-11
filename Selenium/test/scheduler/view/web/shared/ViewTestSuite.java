@@ -1,13 +1,13 @@
 package scheduler.view.web.shared;
 
-import junit.framework.TestCase;
+import junit.framework.TestResult;
 import junit.framework.TestSuite;
 
 /**
  * Container for all view testcases
  * current est. coverage: 
  */
-public class ViewTestSuite extends TestCase {
+public class ViewTestSuite extends TestSuite {
 
 	/**
 	 * Instantiates a new view test suite.
@@ -15,7 +15,7 @@ public class ViewTestSuite extends TestCase {
 	 * @param name the name
 	 */
 	public ViewTestSuite(String name) {
-		super(name);
+		super();
 	}
 	
 	/**
@@ -26,8 +26,7 @@ public class ViewTestSuite extends TestCase {
 	public static TestSuite suite() {
 		TestSuite suite = new TestSuite("View testcases");
 		
-		suite.addTest(new FirefoxLoginTest());
-		
+		suite.addTestSuite(FirefoxLoginTest.class);
 		return suite;
 	}
 }
