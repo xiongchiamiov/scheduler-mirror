@@ -168,7 +168,7 @@ public class CoursesDataSource extends DataSource {
 	}
 	
 	CourseGWT readRecordIntoCourse(Record record) {
-		System.out.println("new record id " + record.getAttribute("id"));
+		System.out.println("Reading record into course, new record id " + record.getAttribute("id"));
 
 		String dayCombinationsStringsCombined = record.getAttributeAsString("dayCombinations");
 		Collection<Set<DayGWT>> dayCombinations = new LinkedList<Set<DayGWT>>();
