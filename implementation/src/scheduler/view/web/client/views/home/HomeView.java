@@ -13,7 +13,6 @@ import scheduler.view.web.client.views.home.OriginalDocumentsCache.Observer;
 import scheduler.view.web.client.views.resources.instructors.InstructorsHomeView;
 import scheduler.view.web.shared.DocumentGWT;
 
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.smartgwt.client.data.Record;
@@ -22,11 +21,17 @@ import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.SelectionAppearance;
 import com.smartgwt.client.types.Side;
+import com.smartgwt.client.util.SC;
+import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.IButton;
+import com.smartgwt.client.widgets.ImgButton;
+import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.grid.CellFormatter;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
+import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
@@ -137,18 +142,6 @@ public class HomeView extends VerticalPanel {
 		
 		instructorsButton.setID("s_instructorsTab");
 		
-		bottomButtons.addMember(instructorsButton);
-		IButton tmpOpen = new IButton("open (temporary)", new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				int docID = aliveOriginalDocumentsGrid.getSelectedRecord().getAttributeAsInt("id");
-				TabOpener.openDocInNewTab(username, documentsCache.getDocumentByID(docID));
-			}
-		});
-
-		tmpOpen.setID("s_opendocBtn");
-		
-		bottomButtons.addMember(tmpOpen);
-		
 		return bottomButtons;
 	}
 	
@@ -168,12 +161,12 @@ public class HomeView extends VerticalPanel {
 
 		tabSet.addTab(makeHomeTabAndPane(username));
 		
-		tabSet.addTab(makeTrashTabAndPane());
+		tabSet.addTab(makeTrashTabAndPane(username));
 		
 		this.add(tabSet);
 	}
 	
-	Tab makeHomeTabAndPane(String username) {
+	Tab makeHomeTabAndPane(final String username) {
 		final Tab homeTab = new Tab("Home");
 		VLayout homePane = new VLayout();
 		homeTab.setPane(homePane);
@@ -183,20 +176,54 @@ public class HomeView extends VerticalPanel {
 		homePane.addMember(makeHomeTopButtons(username));
 		
 		// Documents List
-		final ListGrid aliveOriginalDocumentsGrid = new ListGrid();
+		final ListGrid aliveOriginalDocumentsGrid = new ListGrid() {
+			@Override
+			protected Canvas createRecordComponent(final ListGridRecord record, Integer colNum) {
+				String fieldName = this.getFieldName(colNum);
+				
+				if (fieldName.equals("linkField")) {
+					Label label = new Label(record.getAttribute("name"));
+					label.addStyleName("inAppLink homeDocumentLink"); // for some reason two separate calls didn't work here, it wouldn't pick up the first one. - eo
+					label.setAutoWidth();
+					label.setOverflow(Overflow.VISIBLE);
+					label.setAutoHeight();
+					label.setOverflow(Overflow.VISIBLE);
+					label.addClickHandler(new ClickHandler() {
+						public void onClick(ClickEvent event) {
+							int docID = record.getAttributeAsInt("id");
+							TabOpener.openDocInNewTab(username, documentsCache.getDocumentByID(docID));
+						}
+					});
+					return label;
+				}
+				else {
+					return null;
+				}
+			}
+		};
+
+		aliveOriginalDocumentsGrid.setShowRecordComponents(true);          
+      aliveOriginalDocumentsGrid.setShowRecordComponentsByCell(true);  
 		aliveOriginalDocumentsGrid.setWidth100();
 		aliveOriginalDocumentsGrid.setAutoFitData(Autofit.VERTICAL);
 		aliveOriginalDocumentsGrid.setShowAllRecords(true);
 		aliveOriginalDocumentsGrid.setAutoFetchData(true);
 		aliveOriginalDocumentsGrid.setCanEdit(false);
-		aliveOriginalDocumentsGrid.setSelectionAppearance(SelectionAppearance.CHECKBOX);
 		aliveOriginalDocumentsGrid.setDataSource(new OriginalDocumentsCacheDataSource(documentsCache, OriginalDocumentsCacheDataSource.Mode.LIVE_DOCUMENTS_ONLY));
 		aliveOriginalDocumentsGrid.setID("s_doclistTbl");
+
+		ListGridField idField = new ListGridField("id", "&nbsp;");
+
+		idField.setCanEdit(false);
+		idField.setCellFormatter(new CellFormatter() {
+			public String format(Object value, ListGridRecord record, int rowNum, int colNum) {
+				return "\u22EE";
+			}
+		});
+		idField.setWidth(20);
+		idField.setAlign(Alignment.CENTER);
 		
-		ListGridField idField = new ListGridField("id");
-		idField.setHidden(true);
-		
-		ListGridField nameField = new ListGridField("name", "Name");
+		ListGridField nameField = new ListGridField("linkField", "Document");
 
 		aliveOriginalDocumentsGrid.setFields(idField, nameField);
 		
@@ -224,25 +251,63 @@ public class HomeView extends VerticalPanel {
 		return homeTab;
 	}
 	
-	Tab makeTrashTabAndPane() {
+	Tab makeTrashTabAndPane(final String username) {
 		final Tab trashTab = new Tab("Trash");
 		VLayout trashPane = new VLayout();
 		trashTab.setPane(trashPane);
 
-		final ListGrid deletedOriginalDocumentsGrid = new ListGrid();
-		deletedOriginalDocumentsGrid.setWidth100();
+		// Documents List
+		final ListGrid deletedOriginalDocumentsGrid = new ListGrid() {
+			@Override
+			protected Canvas createRecordComponent(final ListGridRecord record, Integer colNum) {
+				String fieldName = this.getFieldName(colNum);
+				
+				if (fieldName.equals("linkField")) {
+					Label label = new Label(record.getAttribute("name"));
+					label.addStyleName("inAppLink homeDocumentLink"); // for some reason two separate calls didn't work here, it wouldn't pick up the first one. - eo
+					label.setAutoWidth();
+					label.setOverflow(Overflow.VISIBLE);
+					label.setAutoHeight();
+					label.setOverflow(Overflow.VISIBLE);
+					label.addClickHandler(new ClickHandler() {
+						public void onClick(ClickEvent event) {
+							int docID = record.getAttributeAsInt("id");
+							TabOpener.openDocInNewTab(username, documentsCache.getDocumentByID(docID));
+						}
+					});
+					return label;
+				}
+				else {
+					return null;
+				}
+			}
+		};
+
+		deletedOriginalDocumentsGrid.setShowRecordComponents(true);          
+		deletedOriginalDocumentsGrid.setShowRecordComponentsByCell(true);  
+      deletedOriginalDocumentsGrid.setWidth100();
 		deletedOriginalDocumentsGrid.setAutoFitData(Autofit.VERTICAL);
 		deletedOriginalDocumentsGrid.setShowAllRecords(true);
 		deletedOriginalDocumentsGrid.setAutoFetchData(true);
 		deletedOriginalDocumentsGrid.setCanEdit(false);
-		deletedOriginalDocumentsGrid.setSelectionAppearance(SelectionAppearance.CHECKBOX);
-		deletedOriginalDocumentsGrid.setDataSource(new OriginalDocumentsCacheDataSource(documentsCache, OriginalDocumentsCacheDataSource.Mode.DELETED_DOCUMENTS_ONLY));
-		
-		ListGridField idField = new ListGridField("id");
-		idField.setHidden(true);
-		
-		ListGridField nameField = new ListGridField("name", "Name");
+		deletedOriginalDocumentsGrid.setDataSource(new OriginalDocumentsCacheDataSource(documentsCache, OriginalDocumentsCacheDataSource.Mode.LIVE_DOCUMENTS_ONLY));
+		deletedOriginalDocumentsGrid.setID("s_doclistTrashTbl");
 
+		ListGridField idField = new ListGridField("id", "&nbsp;");
+
+		idField.setCanEdit(false);
+		idField.setCellFormatter(new CellFormatter() {
+			public String format(Object value, ListGridRecord record, int rowNum, int colNum) {
+				return "\u22EE";
+			}
+		});
+		idField.setWidth(20);
+		idField.setAlign(Alignment.CENTER);
+		
+		ListGridField nameField = new ListGridField("linkField", "Document");
+
+		deletedOriginalDocumentsGrid.setFields(idField, nameField);
+		
 		deletedOriginalDocumentsGrid.setFields(idField, nameField);
 		
 		trashPane.addMember(deletedOriginalDocumentsGrid);

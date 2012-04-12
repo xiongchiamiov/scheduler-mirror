@@ -616,3 +616,8 @@ h1 {
 #login {
 	margin-top: 10px;
 }
+
+.homeDocumentLink {
+	padding-left: .5em;
+	padding-right: .5em;
+}
