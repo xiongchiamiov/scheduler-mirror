@@ -219,7 +219,7 @@ public class HomeView extends VerticalPanel {
 				aliveOriginalDocumentsGrid.invalidateCache();
 				aliveOriginalDocumentsGrid.fetchData();
 			}
-		}).scheduleRepeating(1000);
+		}).scheduleRepeating(5000);
 
 		ListGridField idField = new ListGridField("id", "&nbsp;");
 
@@ -324,7 +324,7 @@ public class HomeView extends VerticalPanel {
 	      	deletedOriginalDocumentsGrid.invalidateCache();
 	      	deletedOriginalDocumentsGrid.fetchData();
 	      }
-	    }).scheduleRepeating(1000);
+	    }).scheduleRepeating(5000);
 
 		ListGridField idField = new ListGridField("id", "&nbsp;");
 
