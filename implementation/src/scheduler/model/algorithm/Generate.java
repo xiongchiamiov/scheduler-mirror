@@ -1,5 +1,6 @@
 package scheduler.model.algorithm;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +24,7 @@ public class Generate {
 	/**
 	 * Used for debugging. Toggle it to get debugging output
 	 */
-	 private static final boolean DEBUG = !true; // !true == false ; )
+	 private static final boolean DEBUG = true; // !true == false ; )
 	   
 	/**
 	 * Prints a message to STDERR if DEBUG is true
@@ -45,7 +46,6 @@ public class Generate {
 		Vector<ScheduleItemDecorator> items = new Vector<ScheduleItemDecorator>();
 		for (ScheduleItem si : s_items)
 			items.add(new ScheduleItemDecorator(si));
-//		items.addAll(s_items);
 		
 		HashMap<Integer, SectionTracker> sections = new HashMap<Integer, SectionTracker>();
 		TimeRange bounds = new TimeRange(14, 44);
@@ -62,6 +62,19 @@ public class Generate {
 	    for(Location l : l_coll) {
 	    	ld_vec.add(new LocationDecorator(l));
 	    }
+	    
+	    //Set staff preferences for this schedule generation.
+	    Instructor staff = schedule.getDocument().getStaffInstructor();
+	    HashMap<Integer, Integer> coursePrefs = new HashMap<Integer, Integer>();
+	    for (Course course : c_list) {
+	    	coursePrefs.put(course.getID(), 10);
+	    }
+	    staff.setCoursePreferences(coursePrefs);
+	    
+	    int[][] timePrefs = Instructor.createUniformTimePreferences(10);
+	    staff.setTimePreferences(timePrefs);
+	    
+	    staff.update();
 
 	    debug("GENERATING");
 	    debug("COURSES: " + c_list);
@@ -69,17 +82,20 @@ public class Generate {
 	    debug("LOCATIONS : " + l_coll);
 	      
 	    //Generate labs from the course list
-	      HashMap<Integer, Course> labList = new HashMap<Integer, Course>();
-	      for (Course c : c_list) {
-	    	//Is a lab (or until a case found otherwise, an ACT or DIS) associated with a lecture
-	    	  if(c.getTypeEnum() == Course.CourseType.LAB || c.getTypeEnum() == Course.CourseType.ACT ||
-	    			  c.getTypeEnum() == Course.CourseType.DIS) { 
+	    HashMap<Integer, Course> tetheredLabs = new HashMap<Integer, Course>();
+	    ArrayList<Course> untetheredLabs = new ArrayList<Course>();
+	    for (Course c : c_list) {
+	        //Is a lab (or until a case found otherwise, an ACT or DIS) associated with a lecture
+	    	if(c.getTypeEnum() == Course.CourseType.LAB || c.getTypeEnum() == Course.CourseType.ACT || 
+	    			c.getTypeEnum() == Course.CourseType.DIS) { 
 	    		  
-	    		  debug ("Found act/dis/lab: " + c.getTypeEnum() + " " + c.getCatalogNumber() + " " + c.getName());
-	    		  labList.put(c.getLecture().getID(), c);
-	    	  }
-	    	  // IND/SEM treated as lectures until found otherwise     	  
-	      }
+	            debug ("Found act/dis/lab: " + c.getTypeEnum() + " " + c.getCatalogNumber() + " " + c.getName());
+	    	    if(c.isTetheredToLecture())
+	    		    tetheredLabs.put(c.getLecture().getID(), c);
+	    	    else
+	    		    untetheredLabs.add(c);
+	        }    	  
+	    }
 
 	      for (Course c : c_list)
 	      {
@@ -107,37 +123,52 @@ public class Generate {
 	                          System.err.println("GENERATION MADE A BAD LEC");
 	                          System.err.println(lec_si);
 	                     }
-	                //}
-	                
-	                debug ("Done with scheduling LECTURE");
-	                
-	                if(labList.containsKey(c.getID())) { //Have a lab or labs that we need to schedule
-	                	debug ("Found lab/act/dis for " + c.toString());
-	                	
-	                	Course lab = labList.get(c.getID());
-	                	
-	                	debug ("Now scheduling labs/act/dis for " + c.toString());
-	                	
-	                	/*st = getSectionTracker(lab);
-	                    for (int i = 0; i < c.getNumOfSections(); i ++)
-	                    {*/
-	                	    ScheduleItemDecorator lab_si = genLabItem(model, schedule, lab, lec_si,
-	                	    		lab_bounds, id_vec, ld_vec);
-	                        try
-	                        {
-	                           add(model, lab_si, items, sections, id_vec, ld_vec);
-	                           lec_si.getItem().getLabs().add(lab_si.getItem());
-	                        }
-	                        catch (CouldNotBeScheduledException e)
-	                        {
-	                           System.err.println("GENERATION MADE A BAD LAB");
-	                           System.err.println(lab_si);
-	                        }
-//	                        debug ("The lab enrollment is: " + Integer.toString(lab_si.getCourse().getEnrollment()));
-	                    //}
+	                     
+	                     //Have a tethered lab.  Since tethered lab sections should always match
+	                     //the course sections, we need to schedule a lab section here.
+	                     if(tetheredLabs.containsKey(c.getID())) {
+	                    	 debug ("Found tethered LAB/ACT/DIS for " + c.toString());
+	                    	 
+	                    	 Course lab = tetheredLabs.get(c.getID());
+	                    	 
+	                    	 ScheduleItemDecorator lab_si = genLabItem(model, schedule, lab, lec_si, 
+	                    			 lab_bounds, id_vec, ld_vec);
+	                    	 
+	                    	 try
+		                     {
+		                         add(model, lab_si, items, sections, id_vec, ld_vec);
+		                         lec_si.getItem().getLabs().add(lab_si.getItem());
+		                     }
+		                     catch (CouldNotBeScheduledException e)
+		                     {
+		                         System.err.println("GENERATION MADE A BAD LAB");
+		                         System.err.println(lab_si);
+		                     }
+	                     }
+	                     //Update the section number we're on in the SectionTracker
+	                     st.setCurSection(st.getCurSection() + 1);
 	                }
-	                }
+	                
+	                debug ("Done with scheduling LEC");
 	           }
+	                
+	           //Now schedule any untethered labs left over
+	           for (Course lab : untetheredLabs) {
+	            	debug ("Now scheduling untethered LAB/ACT/DIS");
+	                	
+	              	ScheduleItemDecorator lab_si = genLabItem(model, schedule, lab, null,
+               	    		lab_bounds, id_vec, ld_vec);
+	                	
+                    try
+                    {
+                        add(model, lab_si, items, sections, id_vec, ld_vec);
+                    }
+                    catch (CouldNotBeScheduledException e)
+                    {
+                        System.err.println("Generation made a bad Untethered LAB");
+                        System.err.println(lab_si);
+                    }
+	            }
 	      }
 
 	      debug ("GENERATION FINISHED W/: " + items.size());
@@ -187,7 +218,6 @@ public class Generate {
 	      ScheduleItem lec_si = model.createTransientScheduleItem(0, lec.getDayPatterns().iterator().next(),
 	    		  lec_bounds.getS(), lec_bounds.getE(), false, false);
 	      lec_si.setCourse(lec);
-	      //TODO?  May need to add list for do not schedule here
 	      
 	      lec_si.setInstructor(findInstructor(lec, id_vec));
 
@@ -210,27 +240,12 @@ public class Generate {
 					   throws CouldNotBeScheduledException, DatabaseException
 	   {
 	      boolean r;
-	      /*
-	       * Verification checks the ScheduleItem and its lab component (if
-	       * applicable) all in one go.
-	       */
-	      //TODO: COME BACK HERE
+
+	      assert(si.getItem().getInstructor() != null);
+	      InstructorDecorator id = new InstructorDecorator(si.getItem().getInstructor());
 	      
-	      //really need to find a better way to do this. thought don't really want a hashmap since instructor dec's have the instructor
-	      //already
-	      InstructorDecorator id = id_vec.get(0);
-	      for(InstructorDecorator dec: id_vec) {
-	    	  //get the actual instructor we care about
-	    	  if(dec.getInstructor() == model.findInstructorByID(si.getItem().getInstructor().getID()))
-	    		  id = dec;
-	      }
-	      
-	      LocationDecorator ld = ld_vec.get(0);
-	      for(LocationDecorator dec: ld_vec) {
-	    	  //get the actual instructor we care about
-	    	  if(dec.getLocation() == model.findLocationByID(si.getItem().getLocation().getID()))
-	    		 ld = dec;
-	      }
+	      assert(si.getItem().getLocation() != null);
+	      LocationDecorator ld = new LocationDecorator(si.getItem().getLocation());
 
 	      if (r = verify(model, si, id, ld))
 	      {
@@ -263,13 +278,15 @@ public class Generate {
 	   {
 		  ScheduleItem lab_si = model.createTransientScheduleItem(0, lab.getDayPatterns().iterator().next(), lab_bounds.getS(),
 				  lab_bounds.getE(), false, false);
+		  lab_si.setCourse(lab);
+		  lab_si.setInstructor(findInstructor(lab, id_vec));
 	      
 	      TimeRange tr = lab_bounds;
 	      
 	      if (lab.isTetheredToLecture())
 	      {
 	    	 debug ("Found tethered lab");
-	         tr = new TimeRange(lec_si.getItem().getEndHalfHour(), lab.getNumHalfHoursPerWeekInt() / lab_si.getDays().size());
+	         tr = new TimeRange(lec_si.getItem().getEndHalfHour(), lec_si.getItem().getEndHalfHour() + (lab.getNumHalfHoursPerWeekInt() / lab_si.getDays().size()));
 	      }
 
 	      return genBestTime(model, schedule, lab_si, tr, id_vec, ld_vec);
@@ -394,10 +411,8 @@ public class Generate {
 
 	   public static boolean canTeach (Course course, InstructorDecorator id) throws DatabaseException
 	   {
-		  assert(id != null);
-		  assert(id.getInstructor() != null);
-		  assert(id.getInstructor().getDocument() != null);
-		  assert(id.getInstructor().getDocument().getStaffInstructor() != null);
+		  //TODO - Need to implement an equals method for Instructor.  Can't do == to check for STAFF
+		  //because we clone instructors and it will return false.
 		  if(id.getInstructor().getDocument().getStaffInstructor() == id.getInstructor())
 			  return true;
 		   
@@ -513,9 +528,12 @@ public class Generate {
 	         do
 	         {
 	            Instructor i = findInstructor(c, haveTriedInstructorIDs, id_vec);
+	            debug ("FindInsructor returned: " + i.toString());
 	            
-//	            debug ("NO TIMES FOUND FOR " + base.getInstructor());
-//	            debug ("TRYING " + i);
+	            id = new InstructorDecorator(i);
+	            
+	            debug ("NO TIMES FOUND FOR " + base.getInstructor());
+	            debug ("TRYING " + i);
 	            
 	            clone.setInstructor(i);
 	            si_list = findTimes(model, schedule, clone, tr, id);
@@ -571,19 +589,23 @@ public class Generate {
 
 	      if (!isAvailable(days, tr, ins))
 	      {
+	    	 debug("Instructor is not available.  Verification FAIL.");
 	         throw new CouldNotBeScheduledException(ConflictType.I_DBL_BK, si);
 	      }
 	      //possible bug this was 'i' and switched to 'l' since that's the type of booking error we're looking for
 	      if (!isAvailable(days, tr, loc))
 	      {
+	    	 debug("Location is not available. Verification FAIL.");
 	         throw new CouldNotBeScheduledException(ConflictType.L_DBL_BK, si);
 	      }
 	      if (getAvgPrefForTimeRange(i, days, tr.getS(), tr.getE()) == 0)
 	      {
+	    	  debug("No desire to teach course.  Verification FAIL.");
 	         throw new CouldNotBeScheduledException(ConflictType.NO_DESIRE, si);
 	      }
 	      if (!canTeach(c, ins))
 	      {
+	    	  debug("Instructor not able to teach time.  Verification FAIL.");
 	         throw new CouldNotBeScheduledException(ConflictType.CANNOT_TEACH, si);
 	      }
 
@@ -813,7 +835,7 @@ public class Generate {
 	    * @param si ScheduleItem w/ the course and instructor we're to use in
 	    *        computing times to consider. This ScheduleItem is cloned for every
 	    *        time range returned.
-	    * 
+	    * findTimes
 	    * @return A list of ScheduleItems w/ their days and time ranges set to times
 	    *         which the instructor wants to/can teach and on the days the Course
 	    *         is to be taught on.
@@ -829,6 +851,9 @@ public class Generate {
 	      Instructor i = model.findInstructorByID(si.getInstructor().getID());
 	      
 	      TimeRange tr = new TimeRange(range.getS(), range.getS() + getDayLength(c));
+	      debug("Daylength: " + getDayLength(c));
+	      debug("Time range end is: " + tr.getE());
+	      debug("End of day range is: " + range.getE());
 	      for (; tr.getE() < range.getE(); tr.addHalf())
 	      {
 	         Set<Day> days = c.getDayPatterns().iterator().next();	         
@@ -849,6 +874,29 @@ public class Generate {
 	               sis.add(new ScheduleItemDecorator(toAdd));
 	            }
 	         }
+	      }
+	      //TODO - Quick fix.  Does not address the fact that STAFF probably won't teach the lab.
+	      if(sis.isEmpty()) { //Didn't find any times.  Probably a tethered lab.
+	    	  debug("Found no matching times.  Tethered lab?");
+	    	  if(si.getCourse().isTetheredToLecture()) {
+	    		  debug("Found tethered lab.");
+	    		  Set<Day> days = c.getDayPatterns().iterator().next();	
+	    		  debug("Calling isAvailable with: " + id.getInstructor().toString());
+	    		  if(isAvailable(new Week(days), tr, id)) {
+	    			  debug("AVAILABLE - Tethered");
+	    			  double pref;
+	  	              if ((pref = getAvgPrefForTimeRange(i, new Week(days), tr.getS(), tr.getE())) > 0)
+	  	              {
+	  	                 debug("WANTS: " + pref);
+	  	                 ScheduleItem toAdd = si.createTransientCopy();
+	  	                 toAdd.setDays(days);
+	  	                 toAdd.setStartHalfHour(tr.getS());
+	  	                 toAdd.setEndHalfHour(tr.getE());
+
+	  	                 sis.add(new ScheduleItemDecorator(toAdd));
+	  	              }
+	    		  }
+	    	  }
 	      }
 
 	      return sis;

@@ -106,6 +106,11 @@ public class SectionTracker implements Serializable
    {
       return curSection;
    }
+   
+   public void setCurSection(int curSec)
+   {
+	   curSection = curSec;
+   }
 
    /**
     * Returns the current number of sections that have been added by this 
