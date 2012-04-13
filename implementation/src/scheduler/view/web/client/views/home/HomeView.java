@@ -14,7 +14,6 @@ import scheduler.view.web.client.views.resources.instructors.InstructorsHomeView
 import scheduler.view.web.shared.DocumentGWT;
 
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.smartgwt.client.data.Record;
@@ -283,12 +282,18 @@ public class HomeView extends VerticalPanel {
 
 		// Documents List
 		final ListGrid deletedOriginalDocumentsGrid = new ListGrid() {
+//			protected int rowCount = 0;
 			@Override
 			protected Canvas createRecordComponent(final ListGridRecord record, Integer colNum) {
 				String fieldName = this.getFieldName(colNum);
 				
 				if (fieldName.equals("linkField")) {
 					Label label = new Label(record.getAttribute("name"));
+//					String seleniumID = "isc_T-"+this.rowCount;
+//					this.rowCount++;
+//					DOM.setElementAttribute(label.getElement(), "id", seleniumID);
+//					label.setID(seleniumID);
+					
 					label.addStyleName("inAppLink homeDocumentLink"); // for some reason two separate calls didn't work here, it wouldn't pick up the first one. - eo
 					label.setAutoWidth();
 					label.setOverflow(Overflow.VISIBLE);

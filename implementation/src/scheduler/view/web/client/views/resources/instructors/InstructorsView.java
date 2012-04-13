@@ -7,6 +7,7 @@ import scheduler.view.web.client.UnsavedDocumentStrategy;
 import scheduler.view.web.shared.DocumentGWT;
 import scheduler.view.web.shared.InstructorGWT;
 
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -147,25 +148,29 @@ public class InstructorsView extends VerticalPanel {
 		
 		this.add(grid);
 		
-		this.add(new Button("Add New Instructor", new com.google.gwt.event.dom.client.ClickHandler() {
+		Button addBtn = new Button("Add New Instructor", new com.google.gwt.event.dom.client.ClickHandler() {
 			@Override
 			public void onClick(com.google.gwt.event.dom.client.ClickEvent event) {
 				Record defaultValues = new Record();
 				defaultValues.setAttribute("maxWTU", 0);
             grid.startEditingNew(defaultValues);
 			}
-		}));
+		});
+		DOM.setElementAttribute(addBtn.getElement(), "id", "addInstructorBtn");
+		this.add(addBtn);
 
-		this.add(new Button("Duplicate Selected Instructors", new com.google.gwt.event.dom.client.ClickHandler() {
+		Button duplicateBtn = new Button("Duplicate Selected Instructors", new com.google.gwt.event.dom.client.ClickHandler() {
 			public void onClick(com.google.gwt.event.dom.client.ClickEvent event) {
-            ListGridRecord[] selectedRecords = grid.getSelectedRecords();  
-            for(ListGridRecord rec: selectedRecords) {
-					rec.setAttribute("id", (Integer)null);
-					rec.setAttribute("instructorPrefs", (Integer)null);
-					grid.startEditingNew(rec);
-            }
-			}
-		}));
+	            ListGridRecord[] selectedRecords = grid.getSelectedRecords();  
+	            for(ListGridRecord rec: selectedRecords) {
+						rec.setAttribute("id", (Integer)null);
+						rec.setAttribute("instructorPrefs", (Integer)null);
+						grid.startEditingNew(rec);
+	            }
+				}
+			});
+		DOM.setElementAttribute(duplicateBtn.getElement(), "id", "duplicateBtn");
+		this.add(duplicateBtn);
 
 		grid.addKeyPressHandler(new KeyPressHandler() {
 			public void onKeyPress(KeyPressEvent event) {
@@ -175,7 +180,7 @@ public class InstructorsView extends VerticalPanel {
 			}
 		});
 		
-		this.add(new Button("Remove Selected Instructors", new com.google.gwt.event.dom.client.ClickHandler() {
+		Button removeBtn = new Button("Remove Selected Instructors", new com.google.gwt.event.dom.client.ClickHandler() {
 			@Override
 			public void onClick(com.google.gwt.event.dom.client.ClickEvent event) {
 				ListGridRecord[] selectedRecords = grid.getSelectedRecords();
@@ -183,7 +188,9 @@ public class InstructorsView extends VerticalPanel {
 					grid.removeData(rec);
 				}
 			}
-		}));
+		});
+		DOM.setElementAttribute(removeBtn.getElement(), "id", "removeBtn");
+		this.add(removeBtn);
 	}
 	
 	public void preferencesButtonClicked(InstructorGWT instructor, UnsavedDocumentStrategy unsavedDocumentStrategy) {
