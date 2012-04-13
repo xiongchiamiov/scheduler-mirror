@@ -46,6 +46,12 @@ public class DragAndDropController implements MouseMoveHandler, MouseOutHandler,
 	}
 	
 	public boolean isDragging() {
+		System.out.println();
+		System.out.println("DRAGGING "+(isMoving&&isHolding()));
+		System.out.println("draggeditem "+ (mDraggingItem!=null));
+		System.out.println("itemview "+ (mItemView!=null));
+		System.out.println("isMoving "+isMoving);
+		System.out.println("isholding "+isHolding());
 		return isMoving && isHolding();
 	}
 	
@@ -63,8 +69,7 @@ public class DragAndDropController implements MouseMoveHandler, MouseOutHandler,
 			DOMUtility.setStyleAttribute(mItemView.getId(), "color", "#FFFFFF");
 			DOMUtility.setStyleAttribute(mItemView.getId(), "backgroundColor", "#FFFFFF");
 			
-			// Disable text selection
-			setTextSelection(false);
+			
 			
 			// TODO Hide contents of every occurrence of the dragged item on the table (if it appears on multiple days)
 			// TODO if this is a list item with multiple sections remaining, just decrement section count and don't hide
@@ -103,6 +108,9 @@ public class DragAndDropController implements MouseMoveHandler, MouseOutHandler,
 			mItemView = DOM.getElementById("x"+tableCol+"y"+row);
 			fromCalendar = true;
 		}
+		
+		// Disable text selection
+		setTextSelection(false);
 	}
 	
 	/**
@@ -189,17 +197,13 @@ public class DragAndDropController implements MouseMoveHandler, MouseOutHandler,
 	 * 
 	 * @param selectionAllowed true if text selection should be allowed, false if it should be disabled
 	 */
-	private void setTextSelection(boolean selectionAllowed) {
-		String attrVal = "text";
-		if (!selectionAllowed)
-			attrVal = "none";
-		
-		// Set the user select attribute for all browsers
-		DOMUtility.setStyleAttribute(RootPanel.getBodyElement(), "webkitTouchCallout", attrVal);
-		DOMUtility.setStyleAttribute(RootPanel.getBodyElement(), "webkitUserSelect", attrVal);
-		DOMUtility.setStyleAttribute(RootPanel.getBodyElement(), "khtmlUserSelect", attrVal);
-		DOMUtility.setStyleAttribute(RootPanel.getBodyElement(), "mozUserSelect", attrVal);
-		DOMUtility.setStyleAttribute(RootPanel.getBodyElement(), "msUserSelect", attrVal);
-		DOMUtility.setStyleAttribute(RootPanel.getBodyElement(), "userSelect", attrVal);
+	public static void setTextSelection(boolean selectionAllowed) {
+
+		if (!selectionAllowed) {
+			RootPanel.getBodyElement().addClassName("nonSelectableElement");
+		}
+		else {
+			RootPanel.getBodyElement().removeClassName("nonSelectableElement");
+		}
 	}
 }

@@ -196,7 +196,7 @@ public class CalendarTableView extends SimplePanel {
 		mInnerHTML = builder.toString();
 		setHTML(mInnerHTML);
 		setLeftOffset(mLeftOffset);
-		setTopOffset(mScheduleController.getWidget().getAbsoluteTop());
+		setTopOffset(mScheduleController.getWidget().getAbsoluteTop());				
 	}
 	
 	private void setHTML(String html) {
@@ -312,6 +312,8 @@ public class CalendarTableView extends SimplePanel {
 	 */
 	public void mouseOver(int row) {
 		if (mDragController.isDragging()) {
+			System.out.println()
+			;System.out.println("hoverwed with item!");
 			DOMUtility.setStyleAttribute("y"+row, "backgroundColor", "#d1dfdf");
 			DOMUtility.setStyleAttribute("h"+row, "backgroundColor", "#d1dfdf");
 		}

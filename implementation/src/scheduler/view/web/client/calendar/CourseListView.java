@@ -113,7 +113,7 @@ public class CourseListView extends SimplePanel {
 	 * Called when the any cell on the table gets a mouse up event
 	 */
 	public void mouseUp(int row) {
-		mDragController.onDrop(row, null);
+		mDragController.onDrop(-1, null);//row = -1 indicates dropped on list
 	}
 	
 	/**
