@@ -42,7 +42,7 @@ public class LoginView extends VerticalPanel {
 		textBox.addKeyPressHandler(new KeyPressHandler() {
 			@Override
 			public void onKeyPress(KeyPressEvent event) {
-				if (event.getCharCode() == KeyCodes.KEY_ENTER)
+				if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER)
 					submitLogin(textBox.getText());
 			}
 		});
