@@ -13,18 +13,17 @@ import scheduler.view.web.client.views.home.OriginalDocumentsCache.Observer;
 import scheduler.view.web.client.views.resources.instructors.InstructorsHomeView;
 import scheduler.view.web.shared.DocumentGWT;
 
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.types.Overflow;
-import com.smartgwt.client.types.SelectionAppearance;
 import com.smartgwt.client.types.Side;
-import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.IButton;
-import com.smartgwt.client.widgets.ImgButton;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -213,6 +212,14 @@ public class HomeView extends VerticalPanel {
 		aliveOriginalDocumentsGrid.setCanEdit(false);
 		aliveOriginalDocumentsGrid.setDataSource(new OriginalDocumentsCacheDataSource(documentsCache, OriginalDocumentsCacheDataSource.Mode.LIVE_DOCUMENTS_ONLY));
 		aliveOriginalDocumentsGrid.setID("s_doclistTbl");
+		
+		(new Timer() {
+			public void run() {
+	      	documentsCache.updateFromServer();
+				aliveOriginalDocumentsGrid.invalidateCache();
+				aliveOriginalDocumentsGrid.fetchData();
+			}
+		}).scheduleRepeating(1000);
 
 		ListGridField idField = new ListGridField("id", "&nbsp;");
 
@@ -310,6 +317,14 @@ public class HomeView extends VerticalPanel {
 		deletedOriginalDocumentsGrid.setCanEdit(false);
 		deletedOriginalDocumentsGrid.setDataSource(new OriginalDocumentsCacheDataSource(documentsCache, OriginalDocumentsCacheDataSource.Mode.DELETED_DOCUMENTS_ONLY));
 		deletedOriginalDocumentsGrid.setID("s_doclistTrashTbl");
+
+		(new Timer() {
+	      public void run() {
+	      	documentsCache.updateFromServer();
+	      	deletedOriginalDocumentsGrid.invalidateCache();
+	      	deletedOriginalDocumentsGrid.fetchData();
+	      }
+	    }).scheduleRepeating(1000);
 
 		ListGridField idField = new ListGridField("id", "&nbsp;");
 

@@ -50,8 +50,6 @@ public class OriginalDocumentsCacheDataSource extends DataSource {
 		
 		Collection<DocumentGWT> originalDocuments = documentsCache.getAllDocuments();
 		
-		System.out.println("transformrequest got originaldocs size " + originalDocuments.size());
-		
 		Collection<DocumentGWT> resultDocuments;
 		
 		if (mode == Mode.LIVE_DOCUMENTS_ONLY) {

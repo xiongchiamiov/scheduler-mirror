@@ -48,8 +48,6 @@ public class OriginalDocumentsCache {
 	}
 	
 	private void refreshFromResponse(Collection<DocumentGWT> responseDocuments) {
-		System.out.println("got response size: " + responseDocuments.size());
-		
 		for (int documentID : new LinkedList<Integer>(documents.keySet())) {
 			if (!collectionHasDocID(responseDocuments, documentID)) {
 				DocumentGWT document = documents.get(documentID);

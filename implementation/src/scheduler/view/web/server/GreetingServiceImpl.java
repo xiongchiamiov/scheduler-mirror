@@ -367,10 +367,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 				
 				if (doc.isWorkingCopy())
 					continue;
-				System.out.println("found original doc " + doc.isTrashed());
 				int scheduleID = model.findSchedulesForDocument(doc).iterator().next().getID();
 				DocumentGWT gwt = Conversion.documentToGWT(doc, scheduleID);
-				System.out.println("sending to client doc with istrashed " + gwt.isTrashed());
 				result.add(gwt);
 			}
 			return result;
