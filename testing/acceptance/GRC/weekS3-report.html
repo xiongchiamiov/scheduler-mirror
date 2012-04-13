@@ -1,0 +1,251 @@
+pcp070104pcs:GRC Tachyon$ cat weekS3-report.html 
+<html>
+<head>
+<title>
+Initial Report on Generating Winter 2012 Schedule for GRC Department
+</title>
+</head>
+<body bgcolor=white>
+<p align=center>
+<font size=+2>
+<strong>Initial Report on Generating Winter 2012 Schedule for GRC Department</strong>
+</font>
+</p>
+
+home page has document names that span two lines (Spring 2012)
+
+
+<br>
+<br>
+<h3>
+Entering Resource Data
+</h3>
+<p>
+
+
+<br/>
+the delete icon is there, oops
+<br/>
+there should be an add new course at the top, IMO, because i want to add like 10 at a time<br/>
+click tab bug is still there<br/>
+theres some white space to the left of the selecting ellipsis<br/>
+no IND type on courses<br/>
+we should have that AI default thing.<br/>
+at the very least, make the defaults sensible, like 1 for # sections.
+<br/>name field should be wider
+<br/>i want some sort of way to say "i want this course on all 1-day combinations", perhaps a table of checkboxes, with a column to the left thats rowspanned? thatd be cool…
+<br/>when i try to deselect all the day combinations, it selects M.
+<br/>i can imagine when someone tries to fill out MW, they may hit M and W by mistake.
+<br/>associations got lost somehow
+<br/>course type should have a default
+<br/>when i tab past the end, it doesnt fill the defaults
+<br/>for max enroll, not sure if i should fill out the total enrollment for all lab section combined, or enrollment for each lab section
+<br/>i dont like how name is centered, but that could just be me
+<br/>resizing columns that started large to be smaller causes misalignment
+<br/>it took an entire second to save instructors
+<br/>i can imagine the instructor time prefs mass-change thing can be confusing. we need some description or a very nice label.
+<br/>on instructor time prefs, doing 7-7 filled the first row. we might need to make it clear that that second field is inclusive (perhaps people will figure it
+<br/>changing fields to acceptable makes their background yellow too, and it stays that way, doesnt update when i change it from acceptable to something else. sometimes it doesnt kick in until i change it again.
+<br/>ctrl+s doesnt work
+<br/>instructors schedulable wont stay checked. its waiting for the response from the server before it unchecks it though, so its definitely a server thing.
+
+
+<p>
+Big error:
+got a "failed to retrieve documents from server!" from the home page once i saved on the other window (could have been coincidence). once that happened, could no longer save the document. couldnt get document at all after that, the home page kept bugging out
+
+<pre>
+SEVERE: Exception while dispatching incoming RPC call
+com.google.gwt.user.server.rpc.UnexpectedException: Service method 'public abstract java.util.Collection scheduler.view.web.client.GreetingService.getAllOriginalDocuments()' threw an unexpected exception: java.util.NoSuchElementException
+        at com.google.gwt.user.server.rpc.RPC.encodeResponseForFailure(RPC.java:385)
+        at com.google.gwt.user.server.rpc.RPC.invokeAndEncodeResponse(RPC.java:588)
+        at com.google.gwt.user.server.rpc.RemoteServiceServlet.processCall(RemoteServiceServlet.java:208)
+        at com.google.gwt.user.server.rpc.RemoteServiceServlet.processPost(RemoteServiceServlet.java:248)
+        at com.google.gwt.user.server.rpc.AbstractRemoteServiceServlet.doPost(AbstractRemoteServiceServlet.java:62)
+        at javax.servlet.http.HttpServlet.service(HttpServlet.java:637)
+        at javax.servlet.http.HttpServlet.service(HttpServlet.java:717)
+        at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:290)
+        at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:206)
+        at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:233)
+        at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:191)
+        at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:127)
+        at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:102)
+        at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:109)
+        at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:298)
+        at org.apache.coyote.http11.Http11Processor.process(Http11Processor.java:857)
+        at org.apache.coyote.http11.Http11Protocol$Http11ConnectionHandler.process(Http11Protocol.java:588)
+        at org.apache.tomcat.util.net.JIoEndpoint$Worker.run(JIoEndpoint.java:489)
+        at java.lang.Thread.run(Thread.java:636)
+Caused by: java.util.NoSuchElementException
+        at java.util.LinkedList$ListItr.next(LinkedList.java:715)
+        at scheduler.view.web.server.GreetingServiceImpl.getAllOriginalDocuments(GreetingServiceImpl.java:370)
+        at sun.reflect.GeneratedMethodAccessor34.invoke(Unknown Source)
+        at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+        at java.lang.reflect.Method.invoke(Method.java:616)
+        at com.google.gwt.user.server.rpc.RPC.invokeAndEncodeResponse(RPC.java:569)
+        ... 17 more
+
+
+com.google.gwt.user.server.rpc.UnexpectedException: Service method 'public abstract java.util.Collection scheduler.view.web.client.GreetingService.getAllOriginalDocuments()' threw an unexpected exception: java.lang.NullPointerException
+        at com.google.gwt.user.server.rpc.RPC.encodeResponseForFailure(RPC.java:385)
+        at com.google.gwt.user.server.rpc.RPC.invokeAndEncodeResponse(RPC.java:588)
+        at com.google.gwt.user.server.rpc.RemoteServiceServlet.processCall(RemoteServiceServlet.java:208)
+        at com.google.gwt.user.server.rpc.RemoteServiceServlet.processPost(RemoteServiceServlet.java:248)
+        at com.google.gwt.user.server.rpc.AbstractRemoteServiceServlet.doPost(AbstractRemoteServiceServlet.java:62)
+        at javax.servlet.http.HttpServlet.service(HttpServlet.java:637)
+        at javax.servlet.http.HttpServlet.service(HttpServlet.java:717)
+        at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:290)
+        at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:206)
+        at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:233)
+        at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:191)
+        at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:127)
+        at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:102)
+        at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:109)
+        at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:298)
+        at org.apache.coyote.http11.Http11Processor.process(Http11Processor.java:857)
+        at org.apache.coyote.http11.Http11Protocol$Http11ConnectionHandler.process(Http11Protocol.java:588)
+        at org.apache.tomcat.util.net.JIoEndpoint$Worker.run(JIoEndpoint.java:489)
+        at java.lang.Thread.run(Thread.java:636)
+Caused by: java.lang.NullPointerException
+        at scheduler.view.web.server.Conversion.documentToGWT(Conversion.java:185)
+        at scheduler.view.web.server.GreetingServiceImpl.getAllOriginalDocuments(GreetingServiceImpl.java:371)
+        at sun.reflect.GeneratedMethodAccessor34.invoke(Unknown Source)
+        at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+        at java.lang.reflect.Method.invoke(Method.java:616)
+        at com.google.gwt.user.server.rpc.RPC.invokeAndEncodeResponse(RPC.java:569)
+        ... 17 more
+
+com.google.gwt.user.server.rpc.UnexpectedException: Service method 'public abstract void scheduler.view.web.client.GreetingService.saveWorkingCopyToOriginalDocument(java.lang.Integer)' threw an unexpected exception: java.lang.RuntimeException: java.lang.NullPointerException
+        at com.google.gwt.user.server.rpc.RPC.encodeResponseForFailure(RPC.java:385)
+        at com.google.gwt.user.server.rpc.RPC.invokeAndEncodeResponse(RPC.java:588)
+        at com.google.gwt.user.server.rpc.RemoteServiceServlet.processCall(RemoteServiceServlet.java:208)
+        at com.google.gwt.user.server.rpc.RemoteServiceServlet.processPost(RemoteServiceServlet.java:248)
+        at com.google.gwt.user.server.rpc.AbstractRemoteServiceServlet.doPost(AbstractRemoteServiceServlet.java:62)
+        at javax.servlet.http.HttpServlet.service(HttpServlet.java:637)
+        at javax.servlet.http.HttpServlet.service(HttpServlet.java:717)
+        at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:290)
+        at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:206)
+        at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:233)
+        at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:191)
+        at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:127)
+        at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:102)
+        at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:109)
+        at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:298)
+        at org.apache.coyote.http11.Http11Processor.process(Http11Processor.java:857)
+        at org.apache.coyote.http11.Http11Protocol$Http11ConnectionHandler.process(Http11Protocol.java:588)
+        at org.apache.tomcat.util.net.JIoEndpoint$Worker.run(JIoEndpoint.java:489)
+        at java.lang.Thread.run(Thread.java:636)
+Caused by: java.lang.RuntimeException: java.lang.NullPointerException
+        at scheduler.view.web.server.GreetingServiceImpl.saveWorkingCopyToOriginalDocument(GreetingServiceImpl.java:478)
+        at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+        at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+        at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+        at java.lang.reflect.Method.invoke(Method.java:616)
+        at com.google.gwt.user.server.rpc.RPC.invokeAndEncodeResponse(RPC.java:569)
+        ... 17 more
+Caused by: java.lang.NullPointerException
+        at scheduler.model.Model.findLocationsForDocument(Model.java:472)
+        at scheduler.model.Document.getLocations(Document.java:110)
+        at scheduler.model.Document.delete(Document.java:56)
+        at scheduler.view.web.server.GreetingServiceImpl.saveWorkingCopyToOriginalDocument(GreetingServiceImpl.java:442)
+        ... 22 more
+
+SEVERE: Exception while dispatching incoming RPC call
+com.google.gwt.user.server.rpc.UnexpectedException: Service method 'public abstract scheduler.view.web.shared.DocumentGWT scheduler.view.web.client.GreetingService.createWorkingCopyForOriginalDocument(java.lang.Integer)' threw an unexpected exception: java.lang.NullPointerException
+        at com.google.gwt.user.server.rpc.RPC.encodeResponseForFailure(RPC.java:385)
+        at com.google.gwt.user.server.rpc.RPC.invokeAndEncodeResponse(RPC.java:588)
+        at com.google.gwt.user.server.rpc.RemoteServiceServlet.processCall(RemoteServiceServlet.java:208)
+        at com.google.gwt.user.server.rpc.RemoteServiceServlet.processPost(RemoteServiceServlet.java:248)
+        at com.google.gwt.user.server.rpc.AbstractRemoteServiceServlet.doPost(AbstractRemoteServiceServlet.java:62)
+        at javax.servlet.http.HttpServlet.service(HttpServlet.java:637)
+        at javax.servlet.http.HttpServlet.service(HttpServlet.java:717)
+        at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:290)
+        at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:206)
+        at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:233)
+        at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:191)
+        at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:127)
+        at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:102)
+        at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:109)
+        at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:298)
+        at org.apache.coyote.http11.Http11Processor.process(Http11Processor.java:857)
+        at org.apache.coyote.http11.Http11Protocol$Http11ConnectionHandler.process(Http11Protocol.java:588)
+        at org.apache.tomcat.util.net.JIoEndpoint$Worker.run(JIoEndpoint.java:489)
+        at java.lang.Thread.run(Thread.java:636)
+Caused by: java.lang.NullPointerException
+        at scheduler.model.Document.update(Document.java:44)
+        at scheduler.view.web.server.GreetingServiceImpl.createWorkingCopyForOriginalDocument(GreetingServiceImpl.java:419)
+        at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+        at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+        at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+        at java.lang.reflect.Method.invoke(Method.java:616)
+        at com.google.gwt.user.server.rpc.RPC.invokeAndEncodeResponse(RPC.java:569)
+        ... 17 more
+
+SEVERE: Exception while dispatching incoming RPC call
+com.google.gwt.user.server.rpc.UnexpectedException: Service method 'public abstract java.util.Collection scheduler.view.web.client.GreetingService.getAllOriginalDocuments()' threw an unexpected exception: java.util.NoSuchElementException
+        at com.google.gwt.user.server.rpc.RPC.encodeResponseForFailure(RPC.java:385)
+        at com.google.gwt.user.server.rpc.RPC.invokeAndEncodeResponse(RPC.java:588)
+        at com.google.gwt.user.server.rpc.RemoteServiceServlet.processCall(RemoteServiceServlet.java:208)
+        at com.google.gwt.user.server.rpc.RemoteServiceServlet.processPost(RemoteServiceServlet.java:248)
+        at com.google.gwt.user.server.rpc.AbstractRemoteServiceServlet.doPost(AbstractRemoteServiceServlet.java:62)
+        at javax.servlet.http.HttpServlet.service(HttpServlet.java:637)
+        at javax.servlet.http.HttpServlet.service(HttpServlet.java:717)
+        at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:290)
+        at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:206)
+        at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:233)
+        at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:191)
+        at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:127)
+        at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:102)
+        at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:109)
+        at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:298)
+        at org.apache.coyote.http11.Http11Processor.process(Http11Processor.java:857)
+        at org.apache.coyote.http11.Http11Protocol$Http11ConnectionHandler.process(Http11Protocol.java:588)
+        at org.apache.tomcat.util.net.JIoEndpoint$Worker.run(JIoEndpoint.java:489)
+        at java.lang.Thread.run(Thread.java:636)
+Caused by: java.util.NoSuchElementException
+        at java.util.LinkedList$ListItr.next(LinkedList.java:715)
+        at scheduler.view.web.server.GreetingServiceImpl.getAllOriginalDocuments(GreetingServiceImpl.java:370)
+        at sun.reflect.GeneratedMethodAccessor34.invoke(Unknown Source)
+        at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+        at java.lang.reflect.Method.invoke(Method.java:616)
+        at com.google.gwt.user.server.rpc.RPC.invokeAndEncodeResponse(RPC.java:569)
+        ... 17 more
+</pre>
+</p>
+
+
+<br>
+<h3>
+Generating a Schedule
+</h3>
+<p>
+The generated schedule I had put everything at 7-8am. On top of that, it was ridiculously slow. That was only when it did work. I used to get 500 errors, though I can't reproduce it now.
+</p>
+<p>
+It did appear to contain all of the classes from the courses tab. However, I couldn't enter a lot of the courses into the courses tab, so I suppose we don't know if the scheduling view will work with those courses.
+</p>
+<p>
+I didn't see any scheduling conflicts.
+</p>
+
+<br>
+<h3>
+Editing the Schedule
+</h3>
+<p>
+When it isn't giving me 500 errors, dragging and dropping is incredibly slow. Other than that, it worked fine.
+</p>
+
+<br>
+<h3>
+Other Issues
+</h3>
+<p>
+Many other smaller issues, see the JIRA.
+</p>
+
+<br>
+</body>
+</html>
+pcp070104pcs:GRC Tachyon$ 
+
