@@ -1,5 +1,6 @@
 package scheduler.model;
 
+import junit.framework.TestResult;
 import junit.framework.TestSuite;
 
 public class ModelTestSuite {
@@ -31,6 +32,7 @@ public class ModelTestSuite {
 		suite.addTest(new LocationsTestSimpleDB());
 		suite.addTest(new ScheduleItemsTestSimpleDB());
 		suite.addTest(new UsersTestSimpleDB());
+		suite.run(new TestResult());
 		
 		return suite;
 	}
