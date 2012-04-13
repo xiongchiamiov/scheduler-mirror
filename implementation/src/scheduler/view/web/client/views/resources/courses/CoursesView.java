@@ -174,7 +174,7 @@ public class CoursesView extends VerticalPanel {
 				defaultValues.setAttribute("scu", 0);
 				defaultValues.setAttribute("hoursPerWeek", 0);
 				defaultValues.setAttribute("maxEnrollment", 0);
-				defaultValues.setAttribute("dayCombinations", "M");
+//				defaultValues.setAttribute("dayCombinations", "M");
             grid.startEditingNew(defaultValues);
 			}
 		}); 
