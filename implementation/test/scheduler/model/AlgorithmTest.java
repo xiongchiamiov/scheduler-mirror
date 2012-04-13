@@ -39,8 +39,6 @@ public class AlgorithmTest {
 		
 		List<Instructor> instructors = generateInstructorList(model, doc, courses);
 		
-		instructors.add(doc.getStaffInstructor());
-		
 		List<Location> locations = generateLocationList(model, doc);
 		
 		locations.add(doc.getTBALocation());
@@ -66,7 +64,19 @@ public class AlgorithmTest {
 		course.setDocument(doc).insert();
 		courses.add(course);
 		
+		Course lab = model.createTransientCourse("Test1 - Lab", "101", "CSC", "4", "4", "2", "LAB", "60", "6", true);
+		ModelTestUtility.addDayPattern(lab, Day.MONDAY, Day.WEDNESDAY, Day.FRIDAY);
+		lab.setLecture(course);
+		lab.setTetheredToLecture(Boolean.TRUE);
+		lab.setDocument(doc).insert();
+		courses.add(lab);
+		
 		course = model.createTransientCourse("Test2", "102", "CSC", "4", "4", "2", "LEC", "60", "6", true);
+		ModelTestUtility.addDayPattern(course, Day.TUESDAY, Day.THURSDAY);
+		course.setDocument(doc).insert();
+		courses.add(course);
+		
+		course = model.createTransientCourse("Test3", "103", "CSC", "4", "4", "1", "LEC", "30", "6", true);
 		ModelTestUtility.addDayPattern(course, Day.TUESDAY, Day.THURSDAY);
 		course.setDocument(doc).insert();
 		courses.add(course);
@@ -80,6 +90,8 @@ public class AlgorithmTest {
 		HashMap<Integer, Integer> coursePrefs = new HashMap<Integer, Integer>();
 		coursePrefs.put(courses.get(0).getID(), 10);
 		coursePrefs.put(courses.get(1).getID(), 10);
+		coursePrefs.put(courses.get(2).getID(), 10);
+		coursePrefs.put(courses.get(3).getID(), 0);
 		
 		Instructor instructor = model.createTransientInstructor("Evan", "Ovadia", "eovadia", "20", true)
 				.setTimePreferences(Instructor.createDefaultTimePreferences())
@@ -95,7 +107,7 @@ public class AlgorithmTest {
 	public static List<Location> generateLocationList(Model model, Document doc) throws DatabaseException {
 		List <Location> locations = new ArrayList<Location>();
 		
-		Location location = model.createTransientLocation("roomlol", "LEC", "30", true);
+		Location location = model.createTransientLocation("roomlol", "LEC", "100", true);
 		location.setDocument(doc).insert();
 		locations.add(location);
 		
