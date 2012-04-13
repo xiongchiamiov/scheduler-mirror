@@ -10,6 +10,7 @@ import scheduler.view.web.client.views.resources.courses.CoursesDataSource;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -18,12 +19,16 @@ import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.types.ListGridEditEvent;
 import com.smartgwt.client.types.RowEndEditAction;
+import com.smartgwt.client.widgets.events.KeyPressEvent;
+import com.smartgwt.client.widgets.events.KeyPressHandler;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.validator.IntegerRangeValidator;
 import com.smartgwt.client.widgets.grid.CellFormatter;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
+import com.smartgwt.client.widgets.grid.events.BodyKeyPressEvent;
+import com.smartgwt.client.widgets.grid.events.BodyKeyPressHandler;
 
 
 public class CoursesView extends VerticalPanel {
@@ -47,6 +52,8 @@ public class CoursesView extends VerticalPanel {
 		grid.setWidth("98%");
 		grid.setAutoFitData(Autofit.VERTICAL);
 		
+		grid.setCanRemoveRecords(true);
+		
 		grid.setShowAllRecords(true);
 		grid.setAutoFetchData(true);
 		grid.setCanEdit(true);
@@ -61,6 +68,14 @@ public class CoursesView extends VerticalPanel {
 				return grid.getRecords();
 			}
 		}));
+		
+		grid.addKeyPressHandler(new KeyPressHandler() {
+			public void onKeyPress(KeyPressEvent event) {
+				if (event.getKeyName().equals("Backspace") || event.getKeyName().equals("Delete"))
+					if (Window.confirm("Are you sure you want to remove this course?"))
+						grid.removeSelectedData();
+			}
+		});
 		
 		ListGridField idField = new ListGridField("id", "&nbsp;");
 

@@ -23,9 +23,10 @@ import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.events.KeyPressEvent;
+import com.smartgwt.client.widgets.events.KeyPressHandler;
 import com.smartgwt.client.widgets.form.validator.CustomValidator;
 import com.smartgwt.client.widgets.form.validator.IntegerRangeValidator;
-import com.smartgwt.client.widgets.form.validator.Validator;
 import com.smartgwt.client.widgets.grid.CellFormatter;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
@@ -165,6 +166,14 @@ public class InstructorsView extends VerticalPanel {
             }
 			}
 		}));
+
+		grid.addKeyPressHandler(new KeyPressHandler() {
+			public void onKeyPress(KeyPressEvent event) {
+				if (event.getKeyName().equals("Backspace") || event.getKeyName().equals("Delete"))
+					if (com.google.gwt.user.client.Window.confirm("Are you sure you want to remove this instructor?"))
+						grid.removeSelectedData();
+			}
+		});
 		
 		this.add(new Button("Remove Selected Instructors", new com.google.gwt.event.dom.client.ClickHandler() {
 			@Override

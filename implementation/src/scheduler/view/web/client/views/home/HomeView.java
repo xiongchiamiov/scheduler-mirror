@@ -28,6 +28,8 @@ import com.smartgwt.client.widgets.ImgButton;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.events.KeyPressEvent;
+import com.smartgwt.client.widgets.events.KeyPressHandler;
 import com.smartgwt.client.widgets.grid.CellFormatter;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
@@ -227,6 +229,22 @@ public class HomeView extends VerticalPanel {
 
 		aliveOriginalDocumentsGrid.setFields(idField, nameField);
 		
+
+		aliveOriginalDocumentsGrid.addKeyPressHandler(new KeyPressHandler() {
+			@Override
+			public void onKeyPress(KeyPressEvent event) {
+				if (event.getKeyName().equals("Backspace") || event.getKeyName().equals("Delete")) {
+					if (com.google.gwt.user.client.Window.confirm("Are you sure you want to move this document to the trash?")) {
+						Collection<Integer> selectedIDs = new TreeSet<Integer>();
+						Record[] selectedRecords = aliveOriginalDocumentsGrid.getSelectedRecords();
+						for (Record selectedRecord : selectedRecords)
+							selectedIDs.add(selectedRecord.getAttributeAsInt("id"));
+						trashSelectedDocuments(selectedIDs);
+					}
+				}
+			}
+		});
+		
 		homePane.addMember(aliveOriginalDocumentsGrid);
 		
 		homePane.addMember(makeHomeBottomButtons(aliveOriginalDocumentsGrid, username));
@@ -290,7 +308,7 @@ public class HomeView extends VerticalPanel {
 		deletedOriginalDocumentsGrid.setShowAllRecords(true);
 		deletedOriginalDocumentsGrid.setAutoFetchData(true);
 		deletedOriginalDocumentsGrid.setCanEdit(false);
-		deletedOriginalDocumentsGrid.setDataSource(new OriginalDocumentsCacheDataSource(documentsCache, OriginalDocumentsCacheDataSource.Mode.LIVE_DOCUMENTS_ONLY));
+		deletedOriginalDocumentsGrid.setDataSource(new OriginalDocumentsCacheDataSource(documentsCache, OriginalDocumentsCacheDataSource.Mode.DELETED_DOCUMENTS_ONLY));
 		deletedOriginalDocumentsGrid.setID("s_doclistTrashTbl");
 
 		ListGridField idField = new ListGridField("id", "&nbsp;");
@@ -349,6 +367,7 @@ public class HomeView extends VerticalPanel {
 		for (Integer documentID : selectedIDs) {
 			System.out.println("Trashing " + documentID);
 			DocumentGWT document = documentsCache.getDocumentByID(documentID);
+			assert(document.isTrashed() == false);
 			document.setTrashed(true);
 			documentsCache.updateDocument(document);
 			

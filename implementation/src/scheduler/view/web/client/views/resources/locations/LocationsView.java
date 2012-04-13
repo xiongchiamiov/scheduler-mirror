@@ -6,12 +6,15 @@ import scheduler.view.web.shared.DocumentGWT;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.types.ListGridEditEvent;
 import com.smartgwt.client.types.RowEndEditAction;
+import com.smartgwt.client.widgets.events.KeyPressEvent;
+import com.smartgwt.client.widgets.events.KeyPressHandler;
 import com.smartgwt.client.widgets.grid.CellFormatter;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
@@ -80,5 +83,14 @@ public class LocationsView extends VerticalPanel {
             }
 			}
 		}));
+
+		grid.addKeyPressHandler(new KeyPressHandler() {
+			public void onKeyPress(KeyPressEvent event) {
+				if (event.getKeyName().equals("Backspace") || event.getKeyName().equals("Delete"))
+					if (Window.confirm("Are you sure you want to remove this location?"))
+						grid.removeSelectedData();
+			}
+		});
+		
 	}
 }
