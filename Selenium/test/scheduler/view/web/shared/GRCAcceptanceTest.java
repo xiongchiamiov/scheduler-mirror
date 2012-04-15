@@ -104,7 +104,7 @@ public abstract class GRCAcceptanceTest extends DefaultSelTestCase {
 		WebElement newCourseDeptCell = elementForResourceTableCell(row0Based, col0Based);
 		newCourseDeptCell.click();
 		
-		WebElement input = elementForResourceTableCell(0, 2).findElement(By.xpath("//input"));
+		WebElement input = elementForResourceTableCell(row0Based, col0Based).findElement(By.xpath("//input"));
 		input.sendKeys(text);
 
 		driver.findElement(By.tagName("body")).click();
