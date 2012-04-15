@@ -67,17 +67,17 @@ public class HomeView extends VerticalPanel {
 				Import.showImport();
 			}
 		});
+		importButton.setID("importButton");
 		importButton.setAutoWidth();
 		importButton.setOverflow(Overflow.VISIBLE);
-        importButton.setID("s_ImportBtn");
 		topButtons.addMember(importButton);
-
+		
 		return topButtons;
 	}
 	
 	HLayout makeTrashBottomButtons(final ListGrid deletedOriginalDocumentsGrid) {
 		HLayout bottomButtons = new HLayout();
-
+		
 		IButton restoreButton = new IButton("Restore Selected Documents", new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				Collection<Integer> selectedIDs = new TreeSet<Integer>();
@@ -91,7 +91,7 @@ public class HomeView extends VerticalPanel {
 		restoreButton.setOverflow(Overflow.VISIBLE);
 		restoreButton.setID("s_restoreBtn");
 		bottomButtons.addMember(restoreButton);
-
+		
 		return bottomButtons;
 	}
 	
@@ -112,7 +112,7 @@ public class HomeView extends VerticalPanel {
 		deleteButton.setOverflow(Overflow.VISIBLE);
 		deleteButton.setID("s_deleteBtn");
 		bottomButtons.addMember(deleteButton);
-
+		
 		IButton mergeButton = new IButton("Merge Selected Documents", new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				Collection<Integer> selectedIDs = new TreeSet<Integer>();
@@ -126,15 +126,15 @@ public class HomeView extends VerticalPanel {
 		mergeButton.setOverflow(Overflow.VISIBLE);
 		mergeButton.setID("s_mergeBtn");
 		bottomButtons.addMember(mergeButton);
-
+		
 		IButton instructorsButton = new IButton("Instructors Home View (temporary)", new ClickHandler() {
 			public void onClick(ClickEvent event) {
-	        	 com.smartgwt.client.widgets.Window instructorWindow = new com.smartgwt.client.widgets.Window();
-	        	 InstructorsHomeView homeView = new InstructorsHomeView(service, username);
-	        	 instructorWindow.addItem(homeView);
-	        	 homeView.setHorizontalAlignment(ALIGN_CENTER);
-	        	 instructorWindow.setSize("500px", "500px");
-	        	 instructorWindow.show();
+				com.smartgwt.client.widgets.Window instructorWindow = new com.smartgwt.client.widgets.Window();
+				InstructorsHomeView homeView = new InstructorsHomeView(service, username);
+				instructorWindow.addItem(homeView);
+				homeView.setHorizontalAlignment(ALIGN_CENTER);
+				instructorWindow.setSize("500px", "500px");
+				instructorWindow.show();
 			}
 		});
 		instructorsButton.setAutoWidth();
@@ -158,7 +158,7 @@ public class HomeView extends VerticalPanel {
 		tabSet.setHeight(25);
 		tabSet.setOverflow(Overflow.VISIBLE);
 		tabSet.setPaneContainerOverflow(Overflow.VISIBLE);
-
+		
 		tabSet.addTab(makeHomeTabAndPane(username));
 		
 		tabSet.addTab(makeTrashTabAndPane(username));
@@ -172,7 +172,7 @@ public class HomeView extends VerticalPanel {
 		homeTab.setPane(homePane);
 		
 		homeTab.setID("s_HomeTab");
-
+		
 		homePane.addMember(makeHomeTopButtons(username));
 		
 		// Documents List
@@ -183,7 +183,16 @@ public class HomeView extends VerticalPanel {
 				
 				if (fieldName.equals("linkField")) {
 					Label label = new Label(record.getAttribute("name"));
-					label.addStyleName("inAppLink homeDocumentLink"); // for some reason two separate calls didn't work here, it wouldn't pick up the first one. - eo
+					label.addStyleName("inAppLink homeDocumentLink"); // for some
+																						// reason two
+																						// separate
+																						// calls
+																						// didn't work
+																						// here, it
+																						// wouldn't
+																						// pick up the
+																						// first one.
+																						// - eo
 					label.setAutoWidth();
 					label.setOverflow(Overflow.VISIBLE);
 					label.setAutoHeight();
@@ -201,27 +210,28 @@ public class HomeView extends VerticalPanel {
 				}
 			}
 		};
-
-		aliveOriginalDocumentsGrid.setShowRecordComponents(true);          
-      aliveOriginalDocumentsGrid.setShowRecordComponentsByCell(true);  
+		
+		aliveOriginalDocumentsGrid.setShowRecordComponents(true);
+		aliveOriginalDocumentsGrid.setShowRecordComponentsByCell(true);
 		aliveOriginalDocumentsGrid.setWidth100();
 		aliveOriginalDocumentsGrid.setAutoFitData(Autofit.VERTICAL);
 		aliveOriginalDocumentsGrid.setShowAllRecords(true);
 		aliveOriginalDocumentsGrid.setAutoFetchData(true);
 		aliveOriginalDocumentsGrid.setCanEdit(false);
-		aliveOriginalDocumentsGrid.setDataSource(new OriginalDocumentsCacheDataSource(documentsCache, OriginalDocumentsCacheDataSource.Mode.LIVE_DOCUMENTS_ONLY));
+		aliveOriginalDocumentsGrid.setDataSource(new OriginalDocumentsCacheDataSource(documentsCache,
+				OriginalDocumentsCacheDataSource.Mode.LIVE_DOCUMENTS_ONLY));
 		aliveOriginalDocumentsGrid.setID("s_doclistTbl");
 		
 		(new Timer() {
 			public void run() {
-	      	documentsCache.updateFromServer();
+				documentsCache.updateFromServer();
 				aliveOriginalDocumentsGrid.invalidateCache();
 				aliveOriginalDocumentsGrid.fetchData();
 			}
 		}).scheduleRepeating(5000);
-
+		
 		ListGridField idField = new ListGridField("id", "&nbsp;");
-
+		
 		idField.setCanEdit(false);
 		idField.setCellFormatter(new CellFormatter() {
 			public String format(Object value, ListGridRecord record, int rowNum, int colNum) {
@@ -232,15 +242,16 @@ public class HomeView extends VerticalPanel {
 		idField.setAlign(Alignment.CENTER);
 		
 		ListGridField nameField = new ListGridField("linkField", "Document");
-
+		
 		aliveOriginalDocumentsGrid.setFields(idField, nameField);
 		
-
+		
 		aliveOriginalDocumentsGrid.addKeyPressHandler(new KeyPressHandler() {
 			@Override
 			public void onKeyPress(KeyPressEvent event) {
 				if (event.getKeyName().equals("Backspace") || event.getKeyName().equals("Delete")) {
-					if (com.google.gwt.user.client.Window.confirm("Are you sure you want to move this document to the trash?")) {
+					if (com.google.gwt.user.client.Window
+							.confirm("Are you sure you want to move this document to the trash?")) {
 						Collection<Integer> selectedIDs = new TreeSet<Integer>();
 						Record[] selectedRecords = aliveOriginalDocumentsGrid.getSelectedRecords();
 						for (Record selectedRecord : selectedRecords)
@@ -254,7 +265,7 @@ public class HomeView extends VerticalPanel {
 		homePane.addMember(aliveOriginalDocumentsGrid);
 		
 		homePane.addMember(makeHomeBottomButtons(aliveOriginalDocumentsGrid, username));
-
+		
 		this.documentsCache.addObserver(new Observer() {
 			public void afterDocumentAdded(DocumentGWT document) {
 				System.out.println("added " + document.isTrashed());
@@ -279,22 +290,31 @@ public class HomeView extends VerticalPanel {
 		final Tab trashTab = new Tab("Trash");
 		VLayout trashPane = new VLayout();
 		trashTab.setPane(trashPane);
-
+		
 		// Documents List
 		final ListGrid deletedOriginalDocumentsGrid = new ListGrid() {
-//			protected int rowCount = 0;
+			// protected int rowCount = 0;
 			@Override
 			protected Canvas createRecordComponent(final ListGridRecord record, Integer colNum) {
 				String fieldName = this.getFieldName(colNum);
 				
 				if (fieldName.equals("linkField")) {
 					Label label = new Label(record.getAttribute("name"));
-//					String seleniumID = "isc_T-"+this.rowCount;
-//					this.rowCount++;
-//					DOM.setElementAttribute(label.getElement(), "id", seleniumID);
-//					label.setID(seleniumID);
+					// String seleniumID = "isc_T-"+this.rowCount;
+					// this.rowCount++;
+					// DOM.setElementAttribute(label.getElement(), "id", seleniumID);
+					// label.setID(seleniumID);
 					
-					label.addStyleName("inAppLink homeDocumentLink"); // for some reason two separate calls didn't work here, it wouldn't pick up the first one. - eo
+					label.addStyleName("inAppLink homeDocumentLink"); // for some
+																						// reason two
+																						// separate
+																						// calls
+																						// didn't work
+																						// here, it
+																						// wouldn't
+																						// pick up the
+																						// first one.
+																						// - eo
 					label.setAutoWidth();
 					label.setOverflow(Overflow.VISIBLE);
 					label.setAutoHeight();
@@ -312,27 +332,28 @@ public class HomeView extends VerticalPanel {
 				}
 			}
 		};
-
-		deletedOriginalDocumentsGrid.setShowRecordComponents(true);          
-		deletedOriginalDocumentsGrid.setShowRecordComponentsByCell(true);  
-      deletedOriginalDocumentsGrid.setWidth100();
+		
+		deletedOriginalDocumentsGrid.setShowRecordComponents(true);
+		deletedOriginalDocumentsGrid.setShowRecordComponentsByCell(true);
+		deletedOriginalDocumentsGrid.setWidth100();
 		deletedOriginalDocumentsGrid.setAutoFitData(Autofit.VERTICAL);
 		deletedOriginalDocumentsGrid.setShowAllRecords(true);
 		deletedOriginalDocumentsGrid.setAutoFetchData(true);
 		deletedOriginalDocumentsGrid.setCanEdit(false);
-		deletedOriginalDocumentsGrid.setDataSource(new OriginalDocumentsCacheDataSource(documentsCache, OriginalDocumentsCacheDataSource.Mode.DELETED_DOCUMENTS_ONLY));
+		deletedOriginalDocumentsGrid.setDataSource(new OriginalDocumentsCacheDataSource(documentsCache,
+				OriginalDocumentsCacheDataSource.Mode.DELETED_DOCUMENTS_ONLY));
 		deletedOriginalDocumentsGrid.setID("s_doclistTrashTbl");
-
+		
 		(new Timer() {
-	      public void run() {
-	      	documentsCache.updateFromServer();
-	      	deletedOriginalDocumentsGrid.invalidateCache();
-	      	deletedOriginalDocumentsGrid.fetchData();
-	      }
-	    }).scheduleRepeating(5000);
-
+			public void run() {
+				documentsCache.updateFromServer();
+				deletedOriginalDocumentsGrid.invalidateCache();
+				deletedOriginalDocumentsGrid.fetchData();
+			}
+		}).scheduleRepeating(5000);
+		
 		ListGridField idField = new ListGridField("id", "&nbsp;");
-
+		
 		idField.setCanEdit(false);
 		idField.setCellFormatter(new CellFormatter() {
 			public String format(Object value, ListGridRecord record, int rowNum, int colNum) {
@@ -343,13 +364,13 @@ public class HomeView extends VerticalPanel {
 		idField.setAlign(Alignment.CENTER);
 		
 		ListGridField nameField = new ListGridField("linkField", "Document");
-
+		
 		deletedOriginalDocumentsGrid.setFields(idField, nameField);
 		
 		deletedOriginalDocumentsGrid.setFields(idField, nameField);
 		
 		trashPane.addMember(deletedOriginalDocumentsGrid);
-
+		
 		this.documentsCache.addObserver(new Observer() {
 			public void afterDocumentAdded(DocumentGWT document) {
 				deletedOriginalDocumentsGrid.invalidateCache();
@@ -369,7 +390,7 @@ public class HomeView extends VerticalPanel {
 		
 		return trashTab;
 	}
-
+	
 	protected void restoreSelectedDocuments(Collection<Integer> selectedIDs) {
 		for (Integer documentID : selectedIDs) {
 			System.out.println("Trashing " + documentID);
@@ -378,22 +399,23 @@ public class HomeView extends VerticalPanel {
 			documentsCache.updateDocument(document);
 		}
 	}
-
+	
 	protected void mergeSelectedDocuments(Collection<Integer> selectedIDs) {
 		MergeDialog.fileMergePressed(service);
 	}
-
+	
 	protected void trashSelectedDocuments(Collection<Integer> selectedIDs) {
 		for (Integer documentID : selectedIDs) {
 			System.out.println("Trashing " + documentID);
 			DocumentGWT document = documentsCache.getDocumentByID(documentID);
-			assert(document.isTrashed() == false);
+			assert (document.isTrashed() == false);
 			document.setTrashed(true);
 			documentsCache.updateDocument(document);
 			
-//			access a cached copy in the datasource, then tell datasource to send that for editing
-//			in the meantime, move it to the trashed list
-//			the trashed list should refresh based on the cached datasource
+			// access a cached copy in the datasource, then tell datasource to send
+			// that for editing
+			// in the meantime, move it to the trashed list
+			// the trashed list should refresh based on the cached datasource
 		}
 	}
 }

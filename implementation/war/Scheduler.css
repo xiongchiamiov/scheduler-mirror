@@ -621,3 +621,7 @@ h1 {
 	padding-left: .5em;
 	padding-right: .5em;
 }
+
+.homeButton {
+	margin: .5em;
+}

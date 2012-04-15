@@ -36,7 +36,7 @@ public class NewScheduleCreator {
 					public void onSuccess(Collection<DocumentGWT> existingDocuments) {
 						boolean newDocumentNameExists = false;
 						for (DocumentGWT existingDocument : existingDocuments) {
-							if (existingDocument.getName().equals(newDocumentName)) {
+							if (!existingDocument.isTrashed() && existingDocument.getName().equals(newDocumentName)) {
 								newDocumentNameExists = true;
 								break;
 							}

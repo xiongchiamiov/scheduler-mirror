@@ -1,12 +1,12 @@
 package scheduler.view.web.shared;
 
-import org.openqa.selenium.WebDriver;
+import java.util.concurrent.TimeUnit;
 
 import junit.framework.TestCase;
-//import org.junit.*;
-//import org.junit.runner.RunWith;
-//import org.junit.runners.Suite;
-import scheduler.view.web.shared.Selenium.*;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 
 /**
  * Abstract class DefaultSelTestCase 
@@ -26,6 +26,7 @@ public class DefaultSelTestCase extends TestCase {
 	public void setUp(String url, WebDriver drv) {
 		this.driver = drv;
 		drv.get(url);
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	}
 	
 	/* (non-Javadoc)
@@ -35,5 +36,9 @@ public class DefaultSelTestCase extends TestCase {
 		/** cleanup artifacts and quit the browser session for the current test*/
 		driver.close();
 		driver.quit();
+	}
+
+	protected WebElement findElementBySmartGWTID(String smartGWTID) {
+		return driver.findElement(By.xpath("//div[@eventproxy='" + smartGWTID + "']"));
 	}
 }

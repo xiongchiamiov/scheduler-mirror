@@ -467,6 +467,8 @@ public class Model {
 	}
 
 	public Collection<Location> findLocationsForDocument(Document doc) throws DatabaseException {
+		assert(doc.getTBALocation() != null);
+		assert(doc.getTBALocation().getID() != null);
 		Collection<Location> result = new LinkedList<Location>();
 		for (IDBLocation underlying : database.findLocationsForDocument(doc.underlyingDocument))
 			if (!underlying.getID().equals(doc.getTBALocation().getID()))

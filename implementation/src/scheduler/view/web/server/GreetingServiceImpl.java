@@ -96,6 +96,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		if (applyServletPath) {
 			try {
 				filepath = getServletContext().getRealPath(filepath);
+				System.out.println("Applied servlet path, got: " + filepath);
 			}
 			catch (Exception e) {
 				e.printStackTrace();
@@ -111,8 +112,13 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		this.loadAndSaveFromFileSystem = loadAndSaveFromFileSystem;
 		model = new Model();
 		
+		System.out.println("Loading and saving from file system?: " + loadAndSaveFromFileSystem);
+		
 		if (loadAndSaveFromFileSystem) {
 			String filepath = getDatabaseStateFilepath();
+
+			System.out.println("Using database state filepath: " + filepath);
+			System.err.println("Using database state filepath: " + filepath);
 			
 			try {
 				FileInputStream fos = new FileInputStream(filepath);
@@ -141,10 +147,29 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			}
 		}
 		catch (DatabaseException e) {
+			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
 		
 //		for (String equipmentType : model.getEquipmentTypes())
+		
+		sanityCheck();
+	}
+	
+	private void sanityCheck() {
+		try {
+			for (Document doc : model.findAllDocuments()) {
+				assert(doc.getTBALocation() != null);
+				assert(doc.getTBALocation().getID() != null);
+				assert(doc.getStaffInstructor() != null);
+				assert(doc.getStaffInstructor().getID() != null);
+				assert(doc.getSchedules().size() == 1);
+				assert(doc.getSchedules().iterator().next().getID() != null);
+			}
+		}
+		catch (DatabaseException e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
 	@Override
@@ -160,6 +185,10 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			assert(document.getTBALocation() != null);
 			int id = Conversion.courseFromGWT(model, course).setDocument(document).insert().getID();
 			course.setID(id);
+			
+			sanityCheck();
+			flushToFileSystem();
+			
 			return course;
 		}
 		catch (DatabaseException e) {
@@ -179,6 +208,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			Conversion.readCourseFromGWT(source, course);
 			
 			course.update();
+			
+			sanityCheck();
+			flushToFileSystem();
 		}
 		catch (DatabaseException e) {
 			throw new RuntimeException(e);
@@ -197,6 +229,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 				System.out.println("for doc id " + documentID + " returning course name " + course.getName());
 				result.add(Conversion.courseToGWT(course));
 			}
+			
+			sanityCheck();
+			
 			return result;
 		}
 		catch (DatabaseException e) {
@@ -210,6 +245,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			Course course = model.findCourseByID(courseID);
 			assert (course.getDocument().getOriginal() != null);
 			course.delete();
+			
+			sanityCheck();
+			flushToFileSystem();
 		}
 		catch (DatabaseException e) {
 			throw new RuntimeException(e);
@@ -227,6 +265,10 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			assert(document.getTBALocation() != null);
 			int id = Conversion.instructorFromGWT(model, instructor).setDocument(document).insert().getID();
 			instructor.setID(id);
+			
+			sanityCheck();
+			flushToFileSystem();
+			
 			return instructor;
 		}
 		catch (DatabaseException e) {
@@ -242,6 +284,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			assert (result.getID() > 0);
 			Conversion.readInstructorFromGWT(source, result);
 			result.update();
+			
+			sanityCheck();
+			flushToFileSystem();
 		}
 		catch (DatabaseException e) {
 			throw new RuntimeException(e);
@@ -259,6 +304,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			for (Instructor instructor : model.findInstructorsForDocument(document)) {
 				result.add(Conversion.instructorToGWT(instructor));
 			}
+			
+			sanityCheck();
+			
 			return result;
 		}
 		catch (DatabaseException e) {
@@ -272,6 +320,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			Instructor instructor = model.findInstructorByID(instructorID);
 			assert (instructor.getDocument().getOriginal() != null);
 			instructor.delete();
+			
+			sanityCheck();
+			flushToFileSystem();
 		}
 		catch (DatabaseException e) {
 			throw new RuntimeException(e);
@@ -292,6 +343,10 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			modelLocation.setProvidedEquipment(location.getEquipment());
 			int id = modelLocation.setDocument(document).insert().getID();
 			location.setID(id);
+			
+			sanityCheck();
+			flushToFileSystem();
+			
 			return location;
 		}
 		catch (DatabaseException e) {
@@ -307,6 +362,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			assert (result.getDocument().getOriginal() != null);
 			Conversion.readLocationFromGWT(source, result);
 			result.update();
+			
+			sanityCheck();
+			flushToFileSystem();
 		}
 		catch (DatabaseException e) {
 			throw new RuntimeException(e);
@@ -323,6 +381,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			List<LocationGWT> result = new LinkedList<LocationGWT>();
 			for (Location location : model.findLocationsForDocument(document))
 				result.add(Conversion.locationToGWT(location));
+			
+			sanityCheck();
+			
 			return result;
 		}
 		catch (DatabaseException e) {
@@ -336,6 +397,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			Location location = model.findLocationByID(locationID);
 			assert (location.getDocument().getOriginal() != null);
 			location.delete();
+			
+			sanityCheck();
+			flushToFileSystem();
 		}
 		catch (DatabaseException e) {
 			throw new RuntimeException(e);
@@ -345,7 +409,11 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	@Override
 	public Integer login(String username) throws InvalidLoginException {
 		try {
-			return model.findUserByUsername(username).getID();
+			Integer result = model.findUserByUsername(username).getID();
+			
+			sanityCheck();
+			
+			return result;
 		}
 		catch (DatabaseException e) {
 			try {
@@ -371,6 +439,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 				DocumentGWT gwt = Conversion.documentToGWT(doc, scheduleID);
 				result.add(gwt);
 			}
+			
+			sanityCheck();
+			
 			return result;
 		}
 		catch (DatabaseException e) {
@@ -385,7 +456,12 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			
 			int scheduleID = model.findSchedulesForDocument(newOriginalDocument).iterator().next().getID();
 			
-			return Conversion.documentToGWT(newOriginalDocument, scheduleID);
+			DocumentGWT result = Conversion.documentToGWT(newOriginalDocument, scheduleID);
+
+			sanityCheck();
+			flushToFileSystem();
+			
+			return result;
 		}
 		catch (DatabaseException e) {
 			throw new RuntimeException(e);
@@ -417,10 +493,46 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			workingCopyDocument.update();
 			
 			originalDocument.update();
-			return Conversion.documentToGWT(workingCopyDocument, model.findSchedulesForDocument(workingCopyDocument)
+			DocumentGWT result = Conversion.documentToGWT(workingCopyDocument, model.findSchedulesForDocument(workingCopyDocument)
 					.iterator().next().getID());
+
+			sanityCheck();
+			flushToFileSystem();
+			
+			return result;
 		}
 		catch (DatabaseException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	private void flushToFileSystem() {
+		try {
+			if (this.loadAndSaveFromFileSystem) {
+				String filepath = getDatabaseStateFilepath();
+				
+				File file = new File(filepath);
+				System.out.println("Saving state to " + filepath + " (" + file.getAbsolutePath() + ")");
+				
+				if (!file.exists()) {
+					System.out.println("Creating file " + filepath);
+					if (!file.createNewFile())
+						throw new RuntimeException("Couldnt make file " + filepath);
+				}
+				
+				assert(file.exists());
+				FileOutputStream fos = new FileOutputStream(file);
+				ObjectOutputStream oos = new ObjectOutputStream(fos);
+				
+				model.writeState(oos);
+				
+				oos.close();
+	
+				sanityCheck();
+			}
+		}
+		catch (IOException e) {
+			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
 	}
@@ -449,28 +561,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			
 			assert(originalDocument.getStaffInstructor() != null);
 			assert(originalDocument.getTBALocation() != null);
-			
-			
-			if (this.loadAndSaveFromFileSystem) {
-				
-				String filepath = getDatabaseStateFilepath();
-				System.out.println("Saving state to " + filepath + "!");
-				
-				File file = new File(filepath);
-				if (!file.exists()) {
-					System.out.println("Creating file " + filepath);
-					if (!file.createNewFile())
-						throw new RuntimeException("Couldnt make file " + filepath);
-				}
-				
-				assert(file.exists());
-				FileOutputStream fos = new FileOutputStream(file);
-				ObjectOutputStream oos = new ObjectOutputStream(fos);
-				
-				model.writeState(oos);
-				
-				oos.close();
-			}
+
+			sanityCheck();
+			flushToFileSystem();
 		}
 		catch (Exception e) {
 			System.out.println("Couldnt save state!");
@@ -491,6 +584,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			workingCopyDocument.setOriginal(null);
 			
 			workingCopyDocument.delete();
+
+			sanityCheck();
+			flushToFileSystem();
 		}
 		catch (DatabaseException e) {
 			throw new RuntimeException(e);
@@ -522,6 +618,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			
 			newOriginal.update();
 			workingCopyDocument.update();
+
+			sanityCheck();
+			flushToFileSystem();
 		}
 		catch (DatabaseException e) {
 			e.printStackTrace();
@@ -615,8 +714,12 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			//
 			// Generate.generate(model, schedule, s_items, c_list, i_list, l_list)
 			
-			return getScheduleItems(scheduleID);
+			Collection<ScheduleItemGWT> result = getScheduleItems(scheduleID);
+
+			sanityCheck();
+			flushToFileSystem();
 			
+			return result;
 		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
@@ -656,7 +759,12 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 				item.insert();
 			}
 			
-			return getScheduleItems(scheduleID);
+			Collection<ScheduleItemGWT> result = getScheduleItems(scheduleID);
+
+			sanityCheck();
+			flushToFileSystem();
+			
+			return result;
 		}
 		catch (DatabaseException e) {
 			throw new RuntimeException(e);
@@ -671,7 +779,12 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			Conversion.readScheduleItemFromGWT(model, itemGWT, item);
 			item.update();
 			
-			return getScheduleItems(item.getSchedule().getID());
+			Collection<ScheduleItemGWT> result = getScheduleItems(item.getSchedule().getID());
+
+			sanityCheck();
+			flushToFileSystem();
+			
+			return result;
 		}
 		catch (DatabaseException e) {
 			throw new RuntimeException(e);
@@ -686,7 +799,12 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			
 			model.findScheduleItemByID(itemGWT.getID()).delete();
 			
-			return getScheduleItems(schedule.getID());
+			Collection<ScheduleItemGWT> result = getScheduleItems(schedule.getID());
+
+			sanityCheck();
+			flushToFileSystem();
+			
+			return result;
 		}
 		catch (DatabaseException e) {
 			throw new RuntimeException(e);
@@ -701,6 +819,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			Collection<ScheduleItemGWT> result = new LinkedList<ScheduleItemGWT>();
 			for (ScheduleItem item : model.findAllScheduleItemsForSchedule(schedule))
 				result.add(Conversion.scheduleItemToGWT(item));
+			
+			sanityCheck();
+			
 			return result;
 		}
 		catch (DatabaseException e) {
@@ -711,6 +832,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	@Override
 	public void updateDocument(DocumentGWT documentGWT) {
 		try {
+			sanityCheck();
+			
 			System.out.println("got gwt doc " + documentGWT.isTrashed());
 			Document document = Conversion.readDocumentFromGWT(model, documentGWT);
 
@@ -719,6 +842,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			
 			System.out.println("updating model doc " + document.isTrashed());
 			document.update();
+
+			sanityCheck();
+			flushToFileSystem();
 		}
 		catch (DatabaseException e) {
 			throw new RuntimeException(e);
@@ -734,7 +860,11 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			assert (doc.getTBALocation() != null);
 			
 			Schedule schedule = doc.getSchedules().iterator().next();
-			return Conversion.documentToGWT(doc, schedule.getID());
+			DocumentGWT result = Conversion.documentToGWT(doc, schedule.getID());
+
+			sanityCheck();
+			
+			return result;
 		}
 		catch (DatabaseException e) {
 			throw new RuntimeException(e);
@@ -745,6 +875,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	public void removeOriginalDocument(Integer id) {
 		try {
 			model.findDocumentByID(id).delete();
+
+			sanityCheck();
+			flushToFileSystem();
 		}
 		catch (DatabaseException e) {
 			throw new RuntimeException(e);
