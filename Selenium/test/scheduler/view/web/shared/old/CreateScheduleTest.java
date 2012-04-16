@@ -31,30 +31,30 @@ public class CreateScheduleTest extends DefaultSelTestCase {
 		//log in to scheduler
 		//super.setUp(protoURL);
 		//sbot = super.bot;
-		sbot.login("SelTCLogin");
+		//sbot.login("SelTCLogin");
 	}
 	
 	
 	
-	/**
-	 * create a new schedule
-	 */
-	//@Test
-	public void testCreateSchedule() {	
-		System.out.println();
-		System.out.println("--------Testcase 1: Create Schedule-----------------------------");
-		
-		sbot.createNewSchedule();
-	}
-	
-	
-		
-	/* (non-Javadoc)
-	 * @see GWTTests.DefaultSelTestCase#tearDown()
-	 */
-	//@After
-	public void tearDown() {
-		//close browser session
-		super.tearDown();
-	}
+//	/**
+//	 * create a new schedule
+//	 */
+//	//@Test
+//	public void testCreateSchedule() {	
+//		System.out.println();
+//		System.out.println("--------Testcase 1: Create Schedule-----------------------------");
+//		
+//		sbot.createNewSchedule();
+//	}
+//	
+//	
+//		
+//	/* (non-Javadoc)
+//	 * @see GWTTests.DefaultSelTestCase#tearDown()
+//	 */
+//	//@After
+//	public void tearDown() {
+//		//close browser session
+//		super.tearDown();
+//	}
 }

@@ -1,6 +1,5 @@
 package scheduler.view.web.shared;
 
-import junit.framework.TestResult;
 import junit.framework.TestSuite;
 
 /**
@@ -26,7 +25,9 @@ public class ViewTestSuite extends TestSuite {
 	public static TestSuite suite() {
 		TestSuite suite = new TestSuite("View testcases");
 		
-		suite.addTestSuite(FirefoxLoginTest.class);
+		//suite.addTestSuite(FirefoxLoginTest.class);
+		suite.addTestSuite(GRCAcceptanceTestFirefox.class);
+		
 		return suite;
 	}
 }

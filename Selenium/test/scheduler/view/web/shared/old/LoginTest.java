@@ -21,29 +21,29 @@ public class LoginTest extends DefaultSelTestCase {
 		//sbot = super.bot;
 	}
 	
-	/**
-	 * Test fail login.
-	 */
-	//@Test 
-	public void testEmptyLogin() {
-		System.out.println();
-		System.out.println("--------Login Testcase 1: Empty username-------------------------");
-
-		assertEquals("Please enter a username.", sbot.login(""));
-	}
-	
-	//need a real username eventually
-	/**
-	 * Test real login.
-	 */
-	//@Test
-	public void testRealLogin() {
-		System.out.println();
-		System.out.println("--------Login Testcase 2: Login user 'SelTCLogin'------------------");
-		
-		assertEquals("success", sbot.login("SelTCLogin"));
-	}
-	
+//	/**
+//	 * Test fail login.
+//	 */
+//	//@Test 
+//	public void testEmptyLogin() {
+//		System.out.println();
+//		System.out.println("--------Login Testcase 1: Empty username-------------------------");
+//
+//		assertEquals("Please enter a username.", sbot.login(""));
+//	}
+//	
+//	//need a real username eventually
+//	/**
+//	 * Test real login.
+//	 */
+//	//@Test
+//	public void testRealLogin() {
+//		System.out.println();
+//		System.out.println("--------Login Testcase 2: Login user 'SelTCLogin'------------------");
+//		
+//		assertEquals("success", sbot.login("SelTCLogin"));
+//	}
+//	
 	/* (non-Javadoc)
 	 * @see GWTTests.DefaultSelTestCase#tearDown()
 	 */

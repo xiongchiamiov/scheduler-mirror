@@ -1,13 +1,17 @@
 package scheduler.view.web.shared.Selenium;
 
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
+import java.util.Set;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.*;
 import org.openqa.selenium.chrome.*;
 import org.openqa.selenium.ie.*;
-//TODO: had problems with the other browser drivers, pulled multibrowser support out for now
-//
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import com.google.common.base.Predicate;
 
 /**
  * SchedulerBot provides an intermediary navigator of the Scheduler UI
@@ -17,323 +21,428 @@ import org.openqa.selenium.ie.*;
  * @version 1.0 Nov 22 2011
  */
 public class SchedulerBot {
+	private WebDriver driver;
 	
-	/** The prototype URL */
-	private static final String defaultURL = "http://scheduler.csc.calpoly.edu/dev"; 
-	/** The provided URL, optional field */
-	private String protoURL;
-	/** The Firefox Driver. */
-	private FirefoxDriver fBot;
-	/** The Chrome Driver */
-	private ChromeDriver cBot;
-	/** The Internet Explorer Driver */
-	private InternetExplorerDriver ieBot;
-	/** The list of webdrivers */
-	private ArrayList<WebDriver> browsers = new ArrayList<WebDriver>();
-	/** The login and schedule selection functionality */
-	private LoginSelectPage login;	
-	/** The location editing functionality. */
-	private LocationsPage locations;	
-	/** The course editing functionality. */
-	private CoursesPage courses;
-	/** The instructor preferences functionality */
-	private InstructorsPage instructors;	
-	/** The calendar's functionality */
-	private CalendarPage calendar;
-	/** The basic toolbar functionality */
-	private Toolbar toolbar;
-	private static final String SUCCESS = "success";
-	
-	/**
-	 * Instantiates a new scheduler bot, page functionality groups,
-	 *  and browser drivers. Uses the default prototype url '/test'
-	 */
-	public SchedulerBot() {
-		//hardcoded since removed multibrowser support 
-		//fBot = new FirefoxDriver();
-		//fBot.get(defaultURL);
-		
-		System.out.println("Using default bot url: " + defaultURL);
-		
-		initBots();
-		this.fBot.get(defaultURL);
-		//for(WebDriver wd : browsers) {
-			//wd.get(defaultURL);
-		//}
+	public SchedulerBot(WebDriver driver) {
+		if(driver!=null)
+			this.driver = driver;
+		else throw new WebDriverException("Driver not found");
 	}
 	
-	public SchedulerBot(boolean firefox, boolean ie, boolean chrome) {
-		
-	}
-	
-	/**
-	 * Instantiates a new scheduler bot, page functionality groups,
-	 *  and browser drivers. Uses the provided prototype url
-	 *  
-	 *  @param String prototypeURL the specified URL of the prototype to be tested
-	 */
-	public SchedulerBot(String prototypeURL) {
-		this.protoURL = prototypeURL;
-		
-		System.out.println("Using provided url: " + protoURL);
-
-		initBots();
-		this.fBot.get(protoURL);
-		//for(WebDriver wd : browsers) 
-			//wd.get(protoURL);
-	}
-	
-	private void initBots() {
-		this.fBot = new FirefoxDriver();
-		//cBot = new ChromeDriver();
-		//ieBot = new InternetExplorerDriver();		
-		
-		//browsers.add(fBot);
-		//browsers.add(cBot);
-		//browsers.add(ieBot);
-		
-		//first thing on starting, load the login page elements
-		//and pass a copy of the controller to the various 'pages'
-		this.login = new LoginSelectPage(fBot);
-		this.toolbar = new Toolbar(fBot);
-		this.instructors = new InstructorsPage(fBot);
-		this.locations = new LocationsPage(fBot);
-		this.courses= new CoursesPage(fBot);
-		this.calendar = new CalendarPage(fBot);
-	}
-	
-	/**
-	 * If you're worried an error might be a timing issue, trying to access content
-	 * before it loads. Using 3000 for now, feel free to change as needed
-	 * 
-	 */
-	public void pause() {
+	public boolean isElementPresent(By by) {
 		try {
-			Thread.currentThread().sleep(3000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	//log in to the scheduler and populate schedule
-	/**
-	 * Login accesses the login page and uses the provided credentials
-	 * to log in to the Scheduler Application
-	 *
-	 * @param String username the provided user name
-	 * @return String "success" if successful, else error message
-	 */
-	public String login(String username) {
-		String err;
-		if((err = login.CASLogin(username)).equals(SUCCESS)) {
-			pause();
-			login.initScheduleSelection();
-			pause();
-			toolbar.initPrimary();
-			return SUCCESS;
-		}
-		return err;
-	}
-	
-	public boolean logout() {
-		toolbar.logout();
-		
-		try {
-			WebElement login = fBot.findElement(By.id("login"));
-		} catch(org.openqa.selenium.NotFoundException ex) {
+			driver.findElement(by);
+			return true;
+		} catch (NoSuchElementException e) {
 			return false;
 		}
-		return true;
 	}
 	
-	//cleanup and close browser
-	/**
-	 * Quit and cleanup the active browser session.
-	 */
-	public void quitSession() {
-		fBot.close();		
-		//for(WebDriver wd : browsers) 
-			//wd.close();
+	public WebElement elementForResourceTableCell(int row0Based, int col0Based) {
+		return driver.findElement(By.xpath("((//table[@class='listTable']/tbody/tr[@role='listitem'])[" + (1 + row0Based) + "]/td)[" + (1 + col0Based) + "]"));
 	}
 	
-	/**
-	 * Select a specific schedule associated with the logged-in ID previously provided
-	 *
-	 * @param String schedule the name of the schedule
-	 * @return true, if successful else false
-	 */
-	public boolean selectSchedule(String schedule) {
-		boolean success =  login.selectPreviousSchedule(schedule);	
+	public void enterIntoResourceTableCell(int row0Based, int col0Based, String text) {
+		WebElement newCourseDeptCell = elementForResourceTableCell(row0Based, col0Based);
+		newCourseDeptCell.click();
+		
+		WebElement input = elementForResourceTableCell(row0Based, col0Based).findElement(By.xpath("//input"));
+		input.sendKeys(text);
 
-		if(success) {
-			toolbar.init();
-			return true;
+		driver.findElement(By.tagName("body")).click();
+	}
+	
+	public void enterIntoResourceTableRow(int row0Based, Object... values) {
+		for (int i = 0; i < values.length; i++) {
+			Object object = values[i];
+			if (object == null)
+				;
+			else if (object instanceof String)
+				enterIntoResourceTableCell(row0Based, i, (String)object);
+			else
+				assert(false);
 		}
-		return false;
 	}
 	
-	public boolean createNewSchedule() {
-		login.addNewSchedule();
-		//if it cant init the toolbar it didnt create a schedule
-		//and elements'll throw exceptions
-		toolbar.init();
-		//change to be more meaningful
-		return true;
-	}
-	
-	public String getLoggedInUser() {
-		return toolbar.checkUsername();
-	}
-	
-	/**
-	 * Gets the list of previous schedules.
-	 *
-	 * @return List<String>  a list of previous schedules available
-	 */
-	public ArrayList<String> getPreviousSchedules() {	
-		return login.getPreviousSchedules();
+	public void enterIntoResourceTableNewRow(int row0Based, Object...values) {
+		driver.findElement(By.id("s_newCourseBtn")).click();
+		enterIntoResourceTableRow(row0Based, values);
 	}
 
-	/**
-	 * Adds an instructor
-	 */
-	public void addInstructors() {
-		toolbar.gotoInstructors();
-		pause();
-		instructors.init();
-		
+	interface Waitable {
+		public boolean stopWaiting();
 	}
+	
+	public void waitForElementPresent(final By by) throws InterruptedException {
+		new WebDriverWait(driver, 60).until(new Predicate<WebDriver>() {
+			public boolean apply(WebDriver arg0) {
+				try {
+					if (isElementPresent(by))
+						return true;
+				} catch (Exception e) {}
+				return false;
+			}
+		});
+	}
+	
+	public void mouseDownAndUpAt(By by, int x, int y) {
+		WebElement element = driver.findElement(by);
 
-	/** 
-	 */
-	public void addInstructors(ArrayList<String> inslist) {
-		
+		new Actions(driver)
+				.clickAndHold(element)
+				.moveByOffset(x, y)
+				.release(element)
+				.build()
+				.perform(); 
 	}
 	
-	/** 
-	 * Gets the list of instructors
-	 * @return ArrayList<String> a list of instructors
-	 * @postcondition: Courses are formatted as follows:
-	 * [to be determined]
-	 */
-	public ArrayList<String> getInstructors() {
-		return null;
+	public PopupWaiter getPopupWaiter() {
+		return new PopupWaiter();
 	}
 	
-	/**
-	 * Removes the instructor.
-	 * NOTE: this functionality not yet available in the prototype
-	 */
-	public void removeInstructor() {
-		
+	public class PopupWaiter {
+		final Set<String> initialWindows;
+		String poppedUpWindow;
+		public PopupWaiter() {
+			initialWindows = driver.getWindowHandles();
+		}
+		public String waitForPopup() {
+			new WebDriverWait(driver, 20).until(new Predicate<WebDriver>() {
+				public boolean apply(WebDriver arg0) {
+					Set<String> currentWindows = driver.getWindowHandles();
+					currentWindows.removeAll(initialWindows);
+					if (!currentWindows.isEmpty()) {
+						poppedUpWindow = currentWindows.iterator().next();
+						return true;
+					}
+					else {
+						return false;
+					}
+				}
+			});
+			assert(poppedUpWindow != null);
+			return poppedUpWindow;
+		}
 	}
 	
-	/**
-	 * Removes all instructors.
-	 * NOTE: this functionality not yet available in the prototype
-	 */
-	public void removeAllInstructors() {
-		
-	}
-	
-	/**
-	 * Add courses to the course list.
-	 * NOTE: this functionality not yet available in the prototype.
-	 * 
-	 * @param String cname the name of the course
-	 * @param int catalogNumber the offical catalog number of the course
-	 * @param String dptmt the name of the department
-	 * @param int wtu work time units of the course
-	 */
-	public void addCourse(String cname, int catalogNumber, String dptmt, int wtu) {
-		toolbar.gotoCourses();
-		//courses.init();
-	}
-	
-	/** 
-	 * Add the list of courses to the courselist
-	 * @param ArrayList<String> courselist a list of courses
-	 * @precondition: Courses are formatted as follows:
-	 * [to be determined]
-	 */
-	public void addCourses(ArrayList<String> courselist) {
-		
-	}
-	
-	/**
-	 * Removes the course.
-	 * NOTE: this functionality not yet available in the prototype
-	 */
-	public void removeCourse() {
-		
-	}
-	
-	/**
-	 * Removes all courses.
-	 * NOTE: this functionality not yet available in the prototype
-	 */
-	public void removeAllCourses() {
-		
-	}
-	
-	/** 
-	 * Gets the list of courses
-	 * @return ArrayList<String> a list of instructors
-	 * @postcondition: Courses are formatted as follows:
-	 * [to be determined]
-	 */
-	public ArrayList<String> getCourses() {
-		return null;
-	}
-	
-	/**
-	 * Adds the locations to the locations list.
-	 * 
-	 * NOTE: Functionality not yet fully available in the prototype
-	 * NOTE: Parameter types to be determined
-	 */
-	public void addLocation() {
-		toolbar.gotoLocations();
-		//locations.init();
-	}
-	
-	/** 
-	 * Add the list of locations
-	 * @param ArrayList<String> locationList a list of locations
-	 * @precondition: Locations are formatted as follows:
-	 * [to be determined]
-	 */
-	public void addLocations(ArrayList<String> locationList) {
-		
-	}
-	
-	/**
-	 * Removes the location.
-	 * NOTE: this functionality not yet available in the prototype
-	 * 
-	 * @param String roomID the room number and letter, if applicable. ie 'C303'
-	 * or '253', precise ID format to be determined based on prototype
-	 * @return true if successful, false otherwise
-	 */
-	public boolean removeLocation(String roomID) {
-		return false;
-	}
-	
-	/**
-	 * Removes all locations.
-	 * NOTE: this functionality not yet available in the prototype
-	 */
-	public void removeAllLocations() {
-		
-	}
-	
-	/** 
-	 * Gets the list of locations
-	 * @return ArrayList<String> a list of locations
-	 * @postcondition: locations are formatted as follows:
-	 * [to be determined]
-	 */
-	public ArrayList<String> getLocations() {
-		return null;
-	}
 }
+//	
+//	/** The prototype URL */
+//	private static final String defaultURL = "http://scheduler.csc.calpoly.edu/dev"; 
+//	/** The provided URL, optional field */
+//	private String protoURL;
+//	/** The Firefox Driver. */
+//	private FirefoxDriver fBot;
+//	/** The Chrome Driver */
+//	private ChromeDriver cBot;
+//	/** The Internet Explorer Driver */
+//	private InternetExplorerDriver ieBot;
+//	/** The list of webdrivers */
+//	private ArrayList<WebDriver> browsers = new ArrayList<WebDriver>();
+//	/** The login and schedule selection functionality */
+//	private LoginSelectPage login;	
+//	/** The location editing functionality. */
+//	private LocationsPage locations;	
+//	/** The course editing functionality. */
+//	private CoursesPage courses;
+//	/** The instructor preferences functionality */
+//	private InstructorsPage instructors;	
+//	/** The calendar's functionality */
+//	private CalendarPage calendar;
+//	/** The basic toolbar functionality */
+//	private Toolbar toolbar;
+//	private static final String SUCCESS = "success";
+//	
+//	/**
+//	 * Instantiates a new scheduler bot, page functionality groups,
+//	 *  and browser drivers. Uses the default prototype url '/test'
+//	 */
+//	public SchedulerBot() {
+//		//hardcoded since removed multibrowser support 
+//		//fBot = new FirefoxDriver();
+//		//fBot.get(defaultURL);
+//		
+//		System.out.println("Using default bot url: " + defaultURL);
+//		
+//		initBots();
+//		this.fBot.get(defaultURL);
+//		//for(WebDriver wd : browsers) {
+//			//wd.get(defaultURL);
+//		//}
+//	}
+//	
+//	public SchedulerBot(boolean firefox, boolean ie, boolean chrome) {
+//		
+//	}
+//	
+//	/**
+//	 * Instantiates a new scheduler bot, page functionality groups,
+//	 *  and browser drivers. Uses the provided prototype url
+//	 *  
+//	 *  @param String prototypeURL the specified URL of the prototype to be tested
+//	 */
+//	public SchedulerBot(String prototypeURL) {
+//		this.protoURL = prototypeURL;
+//		
+//		System.out.println("Using provided url: " + protoURL);
+//
+//		initBots();
+//		this.fBot.get(protoURL);
+//		//for(WebDriver wd : browsers) 
+//			//wd.get(protoURL);
+//	}
+//	
+//	private void initBots() {
+//		this.fBot = new FirefoxDriver();
+//		//cBot = new ChromeDriver();
+//		//ieBot = new InternetExplorerDriver();		
+//		
+//		//browsers.add(fBot);
+//		//browsers.add(cBot);
+//		//browsers.add(ieBot);
+//		
+//		//first thing on starting, load the login page elements
+//		//and pass a copy of the controller to the various 'pages'
+//		this.login = new LoginSelectPage(fBot);
+//		this.toolbar = new Toolbar(fBot);
+//		this.instructors = new InstructorsPage(fBot);
+//		this.locations = new LocationsPage(fBot);
+//		this.courses= new CoursesPage(fBot);
+//		this.calendar = new CalendarPage(fBot);
+//	}
+//	
+//	/**
+//	 * If you're worried an error might be a timing issue, trying to access content
+//	 * before it loads. Using 3000 for now, feel free to change as needed
+//	 * 
+//	 */
+//	public void pause() {
+//		try {
+//			Thread.currentThread().sleep(3000);
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}
+//	}
+//	
+//	//log in to the scheduler and populate schedule
+//	/**
+//	 * Login accesses the login page and uses the provided credentials
+//	 * to log in to the Scheduler Application
+//	 *
+//	 * @param String username the provided user name
+//	 * @return String "success" if successful, else error message
+//	 */
+//	public String login(String username) {
+//		String err;
+//		if((err = login.CASLogin(username)).equals(SUCCESS)) {
+//			pause();
+//			login.initScheduleSelection();
+//			pause();
+//			toolbar.initPrimary();
+//			return SUCCESS;
+//		}
+//		return err;
+//	}
+//	
+//	public boolean logout() {
+//		toolbar.logout();
+//		
+//		try {
+//			WebElement login = fBot.findElement(By.id("login"));
+//		} catch(org.openqa.selenium.NotFoundException ex) {
+//			return false;
+//		}
+//		return true;
+//	}
+//	
+//	//cleanup and close browser
+//	/**
+//	 * Quit and cleanup the active browser session.
+//	 */
+//	public void quitSession() {
+//		fBot.close();		
+//		//for(WebDriver wd : browsers) 
+//			//wd.close();
+//	}
+//	
+//	/**
+//	 * Select a specific schedule associated with the logged-in ID previously provided
+//	 *
+//	 * @param String schedule the name of the schedule
+//	 * @return true, if successful else false
+//	 */
+//	public boolean selectSchedule(String schedule) {
+//		boolean success =  login.selectPreviousSchedule(schedule);	
+//
+//		if(success) {
+//			toolbar.init();
+//			return true;
+//		}
+//		return false;
+//	}
+//	
+//	public boolean createNewSchedule() {
+//		login.addNewSchedule();
+//		//if it cant init the toolbar it didnt create a schedule
+//		//and elements'll throw exceptions
+//		toolbar.init();
+//		//change to be more meaningful
+//		return true;
+//	}
+//	
+//	public String getLoggedInUser() {
+//		return toolbar.checkUsername();
+//	}
+//	
+//	/**
+//	 * Gets the list of previous schedules.
+//	 *
+//	 * @return List<String>  a list of previous schedules available
+//	 */
+//	public ArrayList<String> getPreviousSchedules() {	
+//		return login.getPreviousSchedules();
+//	}
+//
+//	/**
+//	 * Adds an instructor
+//	 */
+//	public void addInstructors() {
+//		toolbar.gotoInstructors();
+//		pause();
+//		instructors.init();
+//		
+//	}
+//
+//	/** 
+//	 */
+//	public void addInstructors(ArrayList<String> inslist) {
+//		
+//	}
+//	
+//	/** 
+//	 * Gets the list of instructors
+//	 * @return ArrayList<String> a list of instructors
+//	 * @postcondition: Courses are formatted as follows:
+//	 * [to be determined]
+//	 */
+//	public ArrayList<String> getInstructors() {
+//		return null;
+//	}
+//	
+//	/**
+//	 * Removes the instructor.
+//	 * NOTE: this functionality not yet available in the prototype
+//	 */
+//	public void removeInstructor() {
+//		
+//	}
+//	
+//	/**
+//	 * Removes all instructors.
+//	 * NOTE: this functionality not yet available in the prototype
+//	 */
+//	public void removeAllInstructors() {
+//		
+//	}
+//	
+//	/**
+//	 * Add courses to the course list.
+//	 * NOTE: this functionality not yet available in the prototype.
+//	 * 
+//	 * @param String cname the name of the course
+//	 * @param int catalogNumber the offical catalog number of the course
+//	 * @param String dptmt the name of the department
+//	 * @param int wtu work time units of the course
+//	 */
+//	public void addCourse(String cname, int catalogNumber, String dptmt, int wtu) {
+//		toolbar.gotoCourses();
+//		//courses.init();
+//	}
+//	
+//	/** 
+//	 * Add the list of courses to the courselist
+//	 * @param ArrayList<String> courselist a list of courses
+//	 * @precondition: Courses are formatted as follows:
+//	 * [to be determined]
+//	 */
+//	public void addCourses(ArrayList<String> courselist) {
+//		
+//	}
+//	
+//	/**
+//	 * Removes the course.
+//	 * NOTE: this functionality not yet available in the prototype
+//	 */
+//	public void removeCourse() {
+//		
+//	}
+//	
+//	/**
+//	 * Removes all courses.
+//	 * NOTE: this functionality not yet available in the prototype
+//	 */
+//	public void removeAllCourses() {
+//		
+//	}
+//	
+//	/** 
+//	 * Gets the list of courses
+//	 * @return ArrayList<String> a list of instructors
+//	 * @postcondition: Courses are formatted as follows:
+//	 * [to be determined]
+//	 */
+//	public ArrayList<String> getCourses() {
+//		return null;
+//	}
+//	
+//	/**
+//	 * Adds the locations to the locations list.
+//	 * 
+//	 * NOTE: Functionality not yet fully available in the prototype
+//	 * NOTE: Parameter types to be determined
+//	 */
+//	public void addLocation() {
+//		toolbar.gotoLocations();
+//		//locations.init();
+//	}
+//	
+//	/** 
+//	 * Add the list of locations
+//	 * @param ArrayList<String> locationList a list of locations
+//	 * @precondition: Locations are formatted as follows:
+//	 * [to be determined]
+//	 */
+//	public void addLocations(ArrayList<String> locationList) {
+//		
+//	}
+//	
+//	/**
+//	 * Removes the location.
+//	 * NOTE: this functionality not yet available in the prototype
+//	 * 
+//	 * @param String roomID the room number and letter, if applicable. ie 'C303'
+//	 * or '253', precise ID format to be determined based on prototype
+//	 * @return true if successful, false otherwise
+//	 */
+//	public boolean removeLocation(String roomID) {
+//		return false;
+//	}
+//	
+//	/**
+//	 * Removes all locations.
+//	 * NOTE: this functionality not yet available in the prototype
+//	 */
+//	public void removeAllLocations() {
+//		
+//	}
+//	
+//	/** 
+//	 * Gets the list of locations
+//	 * @return ArrayList<String> a list of locations
+//	 * @postcondition: locations are formatted as follows:
+//	 * [to be determined]
+//	 */
+//	public ArrayList<String> getLocations() {
+//		return null;
+//	}
+//}

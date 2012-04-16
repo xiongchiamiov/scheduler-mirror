@@ -9,6 +9,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import scheduler.view.web.shared.Selenium.SchedulerBot;
+import scheduler.view.web.shared.Selenium.SchedulerBot.PopupWaiter;
 
 import com.google.common.base.Predicate;
 
@@ -16,8 +18,7 @@ public abstract class GRCAcceptanceTest extends DefaultSelTestCase {
 	private WebDriver driver;
 	private StringBuffer verificationErrors = new StringBuffer();
 	private static final String protoURL = "http://localhost:8080/GRC";
-	
-	
+	private SchedulerBot bot;	
 	
 	/* (non-Javadoc)
 	 * @see GWTTests.DefaultSelTestCase#setUp()
@@ -25,6 +26,7 @@ public abstract class GRCAcceptanceTest extends DefaultSelTestCase {
 	public void setUp(WebDriver drv) {
 		this.driver = drv;
 		super.setUp(protoURL, drv);
+		bot = new SchedulerBot(driver);
 	}
 	
 	public void tearDown() {
@@ -33,98 +35,6 @@ public abstract class GRCAcceptanceTest extends DefaultSelTestCase {
 		if (!"".equals(verificationErrorString)) {
 			fail(verificationErrorString);
 		}
-	}
-
-	private boolean isElementPresent(By by) {
-		try {
-			driver.findElement(by);
-			return true;
-		} catch (NoSuchElementException e) {
-			return false;
-		}
-	}
-	
-	interface Waitable {
-		public boolean stopWaiting();
-	}
-	
-	private void waitForElementPresent(final By by) throws InterruptedException {
-		new WebDriverWait(driver, 60).until(new Predicate<WebDriver>() {
-			public boolean apply(WebDriver arg0) {
-				try {
-					if (isElementPresent(by))
-						return true;
-				} catch (Exception e) {}
-				return false;
-			}
-		});
-	}
-	
-	private void mouseDownAndUpAt(By by, int x, int y) {
-		WebElement element = driver.findElement(by);
-
-		new Actions(driver)
-				.clickAndHold(element)
-				.moveByOffset(x, y)
-				.release(element)
-				.build()
-				.perform(); 
-	}
-	
-	class PopupWaiter {
-		final Set<String> initialWindows;
-		String poppedUpWindow;
-		public PopupWaiter() {
-			initialWindows = driver.getWindowHandles();
-		}
-		String waitForPopup() {
-			new WebDriverWait(driver, 20).until(new Predicate<WebDriver>() {
-				public boolean apply(WebDriver arg0) {
-					Set<String> currentWindows = driver.getWindowHandles();
-					currentWindows.removeAll(initialWindows);
-					if (!currentWindows.isEmpty()) {
-						poppedUpWindow = currentWindows.iterator().next();
-						return true;
-					}
-					else {
-						return false;
-					}
-				}
-			});
-			assert(poppedUpWindow != null);
-			return poppedUpWindow;
-		}
-	}
-	
-	private WebElement elementForResourceTableCell(int row0Based, int col0Based) {
-		return driver.findElement(By.xpath("((//table[@class='listTable']/tbody/tr[@role='listitem'])[" + (1 + row0Based) + "]/td)[" + (1 + col0Based) + "]"));
-	}
-	
-	private void enterIntoResourceTableCell(int row0Based, int col0Based, String text) {
-		WebElement newCourseDeptCell = elementForResourceTableCell(row0Based, col0Based);
-		newCourseDeptCell.click();
-		
-		WebElement input = elementForResourceTableCell(row0Based, col0Based).findElement(By.xpath("//input"));
-		input.sendKeys(text);
-
-		driver.findElement(By.tagName("body")).click();
-	}
-	
-	private void enterIntoResourceTableRow(int row0Based, Object... values) {
-		for (int i = 0; i < values.length; i++) {
-			Object object = values[i];
-			if (object == null)
-				;
-			else if (object instanceof String)
-				enterIntoResourceTableCell(row0Based, i, (String)object);
-			else
-				assert(false);
-		}
-	}
-	
-	private void enterIntoResourceTableNewRow(int row0Based, Object...values) {
-		driver.findElement(By.id("s_newCourseBtn")).click();
-		enterIntoResourceTableRow(row0Based, values);
 	}
 	
 	/**
@@ -139,16 +49,16 @@ public abstract class GRCAcceptanceTest extends DefaultSelTestCase {
 		driver.findElement(By.id("s_unameBox")).clear();
 		driver.findElement(By.id("s_unameBox")).sendKeys("eovadia");
 		driver.findElement(By.id("s_loginBtn")).click();
-		waitForElementPresent(By.xpath("//div[@eventproxy='s_createBtn']"));
+		bot.waitForElementPresent(By.xpath("//div[@eventproxy='s_createBtn']"));
 		
-		mouseDownAndUpAt(By.xpath("//div[@eventproxy='s_createBtn']"), 5, 5);
+		bot.mouseDownAndUpAt(By.xpath("//div[@eventproxy='s_createBtn']"), 5, 5);
 
-		waitForElementPresent(By.id("s_createBox"));
+		bot.waitForElementPresent(By.id("s_createBox"));
 		
 		driver.findElement(By.id("s_createBox")).clear();
 		driver.findElement(By.id("s_createBox")).sendKeys(documentName);
 
-		PopupWaiter popupWaiter = new PopupWaiter();
+		PopupWaiter popupWaiter = bot.getPopupWaiter();
 		
 		driver.findElement(By.id("s_createNamedDocBtn")).click();
 		
@@ -158,8 +68,8 @@ public abstract class GRCAcceptanceTest extends DefaultSelTestCase {
 
 		// TODO: see if documentName appears anywhere on screen?
 
-		enterIntoResourceTableNewRow(0, null, null, "GRC", "201", "Graphics", "4", "3", "3", null, "4", "30");
-		enterIntoResourceTableNewRow(1, null, null, "GRC", "202", "GraphicsB", "4", "3", "3", null, "4", "30");
+		bot.enterIntoResourceTableNewRow(0, null, null, "GRC", "201", "Graphics", "4", "3", "3", null, "4", "30");
+		bot.enterIntoResourceTableNewRow(1, null, null, "GRC", "202", "GraphicsB", "4", "3", "3", null, "4", "30");
 
 		// TODO: save
 	}
