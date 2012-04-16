@@ -7,6 +7,7 @@ import scheduler.view.web.client.views.AdminScheduleNavView;
 import scheduler.view.web.client.views.LoadingPopup;
 import scheduler.view.web.client.views.LoginView;
 import scheduler.view.web.client.views.home.HomeView;
+import scheduler.view.web.client.views.resources.instructors.InstructorsHomeView;
 import scheduler.view.web.shared.DocumentGWT;
 
 import com.google.gwt.core.client.EntryPoint;
@@ -109,6 +110,13 @@ public class Scheduler implements EntryPoint, UpdateHeaderStrategy
 		}
 		else {
 			onLogin(username);
+			
+			if(username.equals("instructor"))
+			{
+				viewContainer.add(new InstructorsHomeView(service, username));
+				loadingPopup.hide();
+				return;
+			}
 			
 			if (documentIDStr == null) {
 				viewContainer.add(new HomeView(service, viewContainer, username));
