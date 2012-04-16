@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
-import scheduler.model.Instructor;
 import scheduler.view.web.client.GreetingServiceAsync;
 import scheduler.view.web.shared.DayGWT;
 import scheduler.view.web.shared.DocumentGWT;
@@ -17,17 +16,16 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.smartgwt.client.widgets.Window;
 
 public class InstructorsHomeView extends VerticalPanel
 {
-	private GreetingServiceAsync service;
-	private String username;
-	private ArrayList<String> scheduleNames;
-	private HashMap<Integer, DocumentGWT> allAvailableOriginalDocumentsByID;	
-	private FlexTable schedList = new FlexTable();
+	protected GreetingServiceAsync service;
+	protected String username;
+	protected ArrayList<String> scheduleNames;
+	protected HashMap<Integer, DocumentGWT> allAvailableOriginalDocumentsByID;	
+	protected FlexTable schedList = new FlexTable();
 	
 	public InstructorsHomeView(final GreetingServiceAsync service, String username)
 	{	

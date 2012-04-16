@@ -16,9 +16,9 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @author Carsten Pfeffer <pfeffer@tzi.de>
  */
 public class InstructorPrefsWizardTimeView extends VerticalPanel{
-	private TimePrefsWidget timePrefs;
-	private Button back;
-	private Button finish;
+	protected TimePrefsWidget timePrefs;
+	protected Button back;
+	protected Button finish;
 	
 	/**
 	 * The constructor sets up the UI and passes the

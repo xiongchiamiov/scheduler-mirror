@@ -16,13 +16,13 @@ import com.google.gwt.user.client.ui.Widget;
  * @author unknown, modified by Carsten Pfeffer <pfeffer@tzi.de>
  */
 public class InstructorPreferencesView extends VerticalPanel {
-	private GreetingServiceAsync service;
-	private int documentID;
-	private InstructorGWT instructor;
+	protected GreetingServiceAsync service;
+	protected int documentID;
+	protected InstructorGWT instructor;
 	
-	private TimePrefsWidget timePrefs;
-	private CoursePrefsWidget coursePrefs;
-	private com.smartgwt.client.widgets.Window parent = null;
+	protected TimePrefsWidget timePrefs;
+	protected CoursePrefsWidget coursePrefs;
+	protected com.smartgwt.client.widgets.Window parent = null;
 
 	/**
 	 * The constructor sets up the UI and passes the

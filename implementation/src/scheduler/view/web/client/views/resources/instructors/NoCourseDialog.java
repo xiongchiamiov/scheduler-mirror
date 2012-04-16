@@ -14,10 +14,10 @@ import com.smartgwt.client.widgets.Window;
  * @author Carsten Pfeffer <pfeffer@tzi.de>
  */
 public class NoCourseDialog extends Window {
-	private VerticalPanel panel;
+	protected VerticalPanel panel;
 
-	private Button buttonYes;
-	private Button buttonNo;
+	protected Button buttonYes;
+	protected Button buttonNo;
 	
 	/**
 	 * Creates a message box with the buttons defined by 'type'

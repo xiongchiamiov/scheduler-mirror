@@ -16,9 +16,9 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @author Carsten Pfeffer <pfeffer@tzi.de>
  */
 public class InstructorPrefsWizardCourseView extends VerticalPanel {
-	private CoursePrefsWidget coursePrefs;
-	private Button close;
-	private Button next;
+	protected CoursePrefsWidget coursePrefs;
+	protected Button close;
+	protected Button next;
 	
 	/**
 	 * The constructor sets up the UI and passes the

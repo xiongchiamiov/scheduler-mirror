@@ -22,7 +22,7 @@ import com.smartgwt.client.types.DSProtocol;
 
 public class InstructorsDataSource extends DataSource {
 	
-	// private static InstructorDataSource instance = null;
+	// protected static InstructorDataSource instance = null;
 	//
 	// public static InstructorDataSource getInstance() {
 	// if (instance == null) {
@@ -31,9 +31,9 @@ public class InstructorsDataSource extends DataSource {
 	// return instance;
 	// }
 	
-	final GreetingServiceAsync service;
-	final DocumentGWT document;
-	UnsavedDocumentStrategy unsavedDocumentStrategy;
+	protected final GreetingServiceAsync service;
+	protected final DocumentGWT document;
+	protected UnsavedDocumentStrategy unsavedDocumentStrategy;
 	
 	public InstructorsDataSource(GreetingServiceAsync service, DocumentGWT document, UnsavedDocumentStrategy unsavedDocumentStrategy) {
 		this.service = service;

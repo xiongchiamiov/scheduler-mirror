@@ -12,6 +12,7 @@ import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseUpEvent;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.CheckBox;
@@ -95,31 +96,33 @@ public class TimePrefsWidget extends VerticalPanel {
 		void autoSave();
 	}
 	
-	ListBox fromList = new ListBox();
-	ListBox toList = new ListBox();
-	ListBox multiSet = new ListBox();
-	GreetingServiceAsync service;
-	Strategy strategy;
+	protected ListBox fromList = new ListBox();
+	protected ListBox toList = new ListBox();
+	protected ListBox multiSet = new ListBox();
+	protected GreetingServiceAsync service;
+	protected Strategy strategy;
 	
-	FlexTable timePrefsTable;
-	FlexTable topStuff;
+	protected FlexTable timePrefsTable;
+	protected FlexTable topStuff;
 	
-	String[] styleNames = {"preferred", "acceptable", "notPreferred", "notQualified"};
+	protected String[] styleNames = {"preferred", "acceptable", "notPreferred", "notQualified"};
 	
-	TimePrefsCellWidget[][] cells;
-	List<TimePrefsCellWidget> selectedCells;
-	TimePrefsCellWidget anchorCell;
-	TimePrefsCellWidget lastSelectedCell;
-	CheckBox monday = new CheckBox("Monday", true);
-	CheckBox tuesday = new CheckBox("Tuesday", true);
-	CheckBox wednesday = new CheckBox("Wednesday", true);
-	CheckBox thursday = new CheckBox("Thursday", true);
-	CheckBox friday = new CheckBox("Friday", true);
-	final FocusPanel focus = new FocusPanel();
-	final FocusPanel focusTwo = new FocusPanel();
+	protected TimePrefsCellWidget[][] cells;
+	protected List<TimePrefsCellWidget> selectedCells;
+	protected TimePrefsCellWidget anchorCell;
+	protected TimePrefsCellWidget lastSelectedCell;
+	protected CheckBox monday = new CheckBox("Monday", true);
+	protected CheckBox tuesday = new CheckBox("Tuesday", true);
+	protected CheckBox wednesday = new CheckBox("Wednesday", true);
+	protected CheckBox thursday = new CheckBox("Thursday", true);
+	protected CheckBox friday = new CheckBox("Friday", true);
+	
+	
+	protected final FocusPanel focus = new FocusPanel();
+	protected final FocusPanel focusTwo = new FocusPanel();
 //	private int documentID;
-	private InstructorGWT instructor;
-	private InstructorGWT savedInstructor;
+	protected InstructorGWT instructor;
+	protected InstructorGWT savedInstructor;
 	
 	/**
 	 * The following parameters are needed to get and save the time preferences
@@ -130,6 +133,12 @@ public class TimePrefsWidget extends VerticalPanel {
 	public TimePrefsWidget(GreetingServiceAsync service,
 			int documentID, final InstructorGWT instructor)
 	{
+		DOM.setElementAttribute(this.monday.getElement(), "id", "mondayCheck");
+		DOM.setElementAttribute(this.tuesday.getElement(), "id", "tuesdayCheck");
+		DOM.setElementAttribute(this.wednesday.getElement(), "id", "wednesdayCheck");
+		DOM.setElementAttribute(this.thursday.getElement(), "id", "thursdayCheck");
+		DOM.setElementAttribute(this.friday.getElement(), "id", "fridayCheck");
+		
 		this.service = service;
 		instructor.verify();
 //		this.documentID = documentID;
@@ -334,14 +343,15 @@ public class TimePrefsWidget extends VerticalPanel {
 	
 	public void redraw()
 	{
-		timePrefsTable = new FlexTable();
+		this.timePrefsTable = new FlexTable();
 		//timePrefsTable.setBorderWidth(10);
 		//timePrefsTable.setText(0, 0, "            ");
 		focus.add(timePrefsTable);
-		timePrefsTable.addStyleName("timePreferencesTable");
-		timePrefsTable.setWidth("100%");
-		timePrefsTable.setCellSpacing(0);
-		timePrefsTable.setCellPadding(0);
+		this.timePrefsTable.addStyleName("timePreferencesTable");
+		this.timePrefsTable.setWidth("100%");
+		this.timePrefsTable.setCellSpacing(0);
+		this.timePrefsTable.setCellPadding(0);
+		DOM.setElementAttribute(this.timePrefsTable.getElement(), "id", "timePrefsTable");
 		
 		//timePrefsTable.setWidget(0, 0, new HTML("           "));
 		for (int halfHour = 0; halfHour < 30; halfHour+=2) {
@@ -349,7 +359,7 @@ public class TimePrefsWidget extends VerticalPanel {
 			int row = halfHour/2 + 1;
 			int hour = halfHour / 2 + 7; // divide by two to get hours 0-15. Add 7 to get hours 7-22.
 			String string = ((hour + 12 - 1) % 12 + 1) + ":" + (halfHour % 2 == 0 ? "00" : "30") + (hour < 12 ? "am" : "pm");
-			timePrefsTable.setText(row, 0, string);// new HTML(new String("   ")+string));
+			this.timePrefsTable.setText(row, 0, string);// new HTML(new String("   ")+string));
 		}
 		
 		//String days[] = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" };
@@ -363,13 +373,13 @@ public class TimePrefsWidget extends VerticalPanel {
 			HTML html = new HTML(days.get(day));
 			html.setStyleName("timePrefs");
 			//Widget widget = new Widget(html);
-			timePrefsTable.setWidget(0, day + 1, html);
-			timePrefsTable.getWidget(0, day + 1).setStyleName("timePrefs");
+			this.timePrefsTable.setWidget(0, day + 1, html);
+			this.timePrefsTable.getWidget(0, day + 1).setStyleName("timePrefs");
 		}
 		
 		
 		
-		cells = new TimePrefsCellWidget[15][days.size()];
+		this.cells = new TimePrefsCellWidget[15][days.size()];
 		//System.out.println("cells 2nd dim " + days.size());
 		
 		final int totalHalfHours = 30;
@@ -397,7 +407,7 @@ public class TimePrefsWidget extends VerticalPanel {
 				cell.setIndex(desire);
 				
 				//cell.add(list);
-				cell.addListStyle(styleNames[3-desire]);
+				cell.addListStyle(this.styleNames[3-desire]);
 				//cell.add(new HTML(Integer.toString(desire)));
 				/*cell.addClickHandler(new ClickHandler() {
 					@Override
@@ -422,9 +432,9 @@ public class TimePrefsWidget extends VerticalPanel {
 					}
 				});*/
 								
-				timePrefsTable.setWidget(row, col, cell);
+				this.timePrefsTable.setWidget(row, col, cell);
 				
-				cells[halfHour/2][dayNum] = cell;
+				this.cells[halfHour/2][dayNum] = cell;
 			}
 		}
 	}
@@ -440,11 +450,11 @@ public class TimePrefsWidget extends VerticalPanel {
 		
 		if (!event.isControlKeyDown()) {
 			clearSelectedCells();
-			anchorCell = null;
+			this.anchorCell = null;
 		}
-		if (anchorCell == null)
-			anchorCell = cell;
-		selectRangeOfCells(anchorCell.halfHour, anchorCell.day, cell.halfHour, cell.day);
+		if (this.anchorCell == null)
+			this.anchorCell = cell;
+		selectRangeOfCells(this.anchorCell.halfHour, this.anchorCell.day, cell.halfHour, cell.day);
 	}
 	
 	void cellWidgetMouseUp(TimePrefsCellWidget cell, MouseUpEvent event)
@@ -452,7 +462,7 @@ public class TimePrefsWidget extends VerticalPanel {
 		event.preventDefault();
 		
 		selectRangeOfCells(anchorCell.halfHour, anchorCell.day, cell.halfHour, cell.day);
-		anchorCell = null;
+		this.anchorCell = null;
 	}
 	
 	void CheckBoxClicked(ClickEvent event)
@@ -502,40 +512,40 @@ public class TimePrefsWidget extends VerticalPanel {
 		
 		for (int halfHour = fromHalfHour; halfHour <= toHalfHour; halfHour++)
 			for (int day = fromDay; day <= toDay; day++)
-				selectCell(cells[halfHour][day]);
+				selectCell(this.cells[halfHour][day]);
 	}
 	
 	void setAnchorCell(TimePrefsCellWidget cell) {
-		if (anchorCell != null) {
-			anchorCell.removeStyleName("anchorCell");
-			anchorCell = null;
+		if (this.anchorCell != null) {
+			this.anchorCell.removeStyleName("anchorCell");
+			this.anchorCell = null;
 		}
 		
-		anchorCell = cell;
-		anchorCell.addStyleName("anchorCell");
+		this.anchorCell = cell;
+		this.anchorCell.addStyleName("anchorCell");
 	}
 	
 	void selectCell(TimePrefsCellWidget cell) {
-		if (!selectedCells.contains(cell)) {
-			selectedCells.add(cell);
+		if (!this.selectedCells.contains(cell)) {
+			this.selectedCells.add(cell);
 			cell.addStyleName("selectedCell");
 		}
 	}
 	
 	void clearSelectedCells() {
-		for (TimePrefsCellWidget c : selectedCells)
+		for (TimePrefsCellWidget c : this.selectedCells)
 			c.removeStyleName("selectedCell");
 			
-		selectedCells.clear();
+		this.selectedCells.clear();
 	}
 	
 	void toggleCellSelected(TimePrefsCellWidget cell) {
-		if (!selectedCells.contains(cell)) {
-			selectedCells.add(cell);
+		if (!this.selectedCells.contains(cell)) {
+			this.selectedCells.add(cell);
 			cell.addStyleName("selectedCell");
 		}
 		else {
-			selectedCells.remove(cell);
+			this.selectedCells.remove(cell);
 			cell.removeStyleName("selectedCell");
 		}
 	}
@@ -557,7 +567,7 @@ public class TimePrefsWidget extends VerticalPanel {
 	}
 	
 	void save() {
-		service.editInstructor(instructor, new AsyncCallback<Void>() {
+		this.service.editInstructor(instructor, new AsyncCallback<Void>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				// popup.hide();

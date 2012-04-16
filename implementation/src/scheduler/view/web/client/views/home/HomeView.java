@@ -177,6 +177,7 @@ public class HomeView extends VerticalPanel {
 		
 		// Documents List
 		final ListGrid aliveOriginalDocumentsGrid = new ListGrid() {
+			protected int rowCount = 0;
 			@Override
 			protected Canvas createRecordComponent(final ListGridRecord record, Integer colNum) {
 				String fieldName = this.getFieldName(colNum);
@@ -203,6 +204,8 @@ public class HomeView extends VerticalPanel {
 							TabOpener.openDocInNewTab(username, documentsCache.getDocumentByID(docID));
 						}
 					});
+					label.setID("sc_document_"+this.rowCount);
+					this.rowCount++;
 					return label;
 				}
 				else {

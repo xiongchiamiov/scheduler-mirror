@@ -27,18 +27,17 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  */
 public class CoursePrefsWidget extends VerticalPanel
 {
-	private GreetingServiceAsync service;
-	private int documentID;
-	private InstructorGWT instructor;
-	@SuppressWarnings("unused")
-	private InstructorGWT savedInstructor;
+	protected GreetingServiceAsync service;
+	protected int documentID;
+	protected InstructorGWT instructor;
+	protected InstructorGWT savedInstructor;
 	
-	private FlexTable table;
-	private com.smartgwt.client.widgets.Window parent = null;
-	private String[] styleNames = { "preferred", "acceptable", "notPreferred",
+	protected FlexTable table;
+	protected com.smartgwt.client.widgets.Window parent = null;
+	protected String[] styleNames = { "preferred", "acceptable", "notPreferred",
 			"notQualified" };
-	private Map<Integer, ListBox> listBoxesByCourseID = new HashMap<Integer, ListBox>();
-	private Map<Integer, CourseGWT> coursesByID;
+	protected Map<Integer, ListBox> listBoxesByCourseID = new HashMap<Integer, ListBox>();
+	protected Map<Integer, CourseGWT> coursesByID;
 	
 	/**
 	 * The following parameters are needed to get and save the course preferences

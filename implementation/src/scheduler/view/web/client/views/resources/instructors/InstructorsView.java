@@ -10,10 +10,8 @@ import scheduler.view.web.shared.InstructorGWT;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Autofit;
@@ -34,9 +32,9 @@ import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 public class InstructorsView extends VerticalPanel {
-	private GreetingServiceAsync service;
-	private final DocumentGWT document;
-//	private ViewFrame frame;
+	protected GreetingServiceAsync service;
+	protected final DocumentGWT document;
+//	protected ViewFrame frame;
 	
 	public InstructorsView(final GreetingServiceAsync service, final DocumentGWT document, final UnsavedDocumentStrategy unsavedDocumentStrategy) {
 		this.service = service;
@@ -50,6 +48,7 @@ public class InstructorsView extends VerticalPanel {
 		// this.add(new HTML("<h2>Instructors</h2>"));
 		
 		final ListGrid grid = new ListGrid() {
+			protected int rowCount = 0;
 			@Override
 			protected Canvas createRecordComponent(final ListGridRecord record, Integer colNum) {
 				String fieldName = this.getFieldName(colNum);
@@ -58,6 +57,8 @@ public class InstructorsView extends VerticalPanel {
 					button.setHeight(18);
 					button.setWidth(65);
 					button.setTitle("Preferences");
+					button.setID("instrPrefsButton_"+this.rowCount);
+					this.rowCount++;
 					button.addClickHandler(new ClickHandler() {
 						public void onClick(ClickEvent event) {
 							final int instructorID = record.getAttributeAsInt("id");
@@ -210,12 +211,15 @@ public class InstructorsView extends VerticalPanel {
 		weewee.setSize("700px", "600px");
 		window.addItem(weewee);
 		
-		ClickListener listener = new ClickListener() {
-			public void onClick(Widget sender) {
+		com.google.gwt.event.dom.client.ClickHandler handler 
+				= new com.google.gwt.event.dom.client.ClickHandler() {
+			@Override
+			public void onClick(com.google.gwt.event.dom.client.ClickEvent event) {
 				window.hide();
 			}
 		};
-		Button button = new Button("Close", listener);
+		Button button = new Button("Close");
+		button.addClickHandler(handler);
 		iipv.add(button);
 		button.setStyleName("centerness");
 
