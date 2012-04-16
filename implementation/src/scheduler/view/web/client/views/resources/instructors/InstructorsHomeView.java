@@ -88,28 +88,11 @@ public class InstructorsHomeView extends VerticalPanel
 		// set the instructor
 		final String username = this.username;
 		final InstructorGWT instructor = this.instructor;
-		
-		service.getInstructorsForDocument(doc.getID(), new AsyncCallback<List<InstructorGWT>>() {
-			public void onFailure(Throwable caught) {
-				com.google.gwt.user.client.Window.alert("Failed to get instructors!");
-			}
-			public void onSuccess(List<InstructorGWT> result) {
-				for (InstructorGWT i : result) {
-					if (i.getName().equals(username)) {
-						if(instructor == null)
-						{
-							setInstructor(i);
-						}
-						break;
-					}
-				}
-			}
-		});
-		if(this.instructor == null)
+
+		/*if(this.instructor == null)
 		{
 			return;
-		}
-		
+		}*/
 		int row = this.schedList.getRowCount();
 		this.schedList.setWidget(row, 0, new HTML(doc.getName()));
 		Button prefs = new Button("Preferences");
@@ -117,74 +100,96 @@ public class InstructorsHomeView extends VerticalPanel
 
 			@Override
 			public void onClick(ClickEvent event) {
-				final Window win1 = new Window();
-				win1.setTitle("Course Preferences");
-				win1.setAutoCenter(true);
-				win1.setSize("750px", "600px");
+				service.getInstructorsForDocument(doc.getID(), new AsyncCallback<List<InstructorGWT>>() {
+					public void onFailure(Throwable caught) {
+						com.google.gwt.user.client.Window.alert("Failed to get instructors!");
+					}
+					public void onSuccess(List<InstructorGWT> result) {
+						for (InstructorGWT i : result) {
+							if (i.getUsername().equals(username)) {
+								System.out.println(i.getUsername()+", "+username);
+								if(instructor == null)
+								{
+									System.out.println("SSSHHHHIIIITTTTTT");
+									setInstructor(i, doc);
+								}
+								break;
+							}
+						}
+					}
+				});
 				
-				final Window win2 = new Window();
-				win2.setTitle("Time Preferences");
-				win2.setAutoCenter(true);
-				win2.setSize("750px", "600px");
-
-//===================================================================================
-//				this is still a dummy and has to be fetched from the real login name:
-//===================================================================================
-//				final InstructorGWT instructor  = new InstructorGWT(1, "foobar", "Hello",
-//						"World", "120", new int[DayGWT.values().length][48],
-//						new HashMap<Integer, Integer>(), true);
-						
-				final InstructorPrefsWizardCourseView courses =
-						new InstructorPrefsWizardCourseView(service, doc.getID(), instructor);
-				final InstructorPrefsWizardTimeView times =
-						new InstructorPrefsWizardTimeView(service, doc.getID(), instructor);
-				courses.addCloseClickHandler(new ClickHandler(){
-					@Override
-					public void onClick(ClickEvent event) {
-						win1.hide();
-					}
-				});
-				courses.addNextClickHandler(new ClickHandler(){
-					@Override
-					public void onClick(ClickEvent event) {
-						win1.hide();
-						win2.show();
-					}
-				});
-				times.addFinishClickHandler(new ClickHandler(){
-					@Override
-					public void onClick(ClickEvent event) {
-						win2.hide();
-					}
-				});
-				times.addBackClickHandler(new ClickHandler(){
-					@Override
-					public void onClick(ClickEvent event) {
-						win2.hide();
-						win1.show();
-					}
-				});
-				courses.setParent(win1);
-				courses.afterPush();
-				
-				win1.addItem(courses);
-				win2.addItem(times);
-				win1.show();
 			}
 			
 		});
 		schedList.setWidget(row, 1, prefs);
 		
-		this.instructor = null; // dirty hack to use an attribute,
+		//this.instructor = null; // dirty hack to use an attribute,
 								// but otherwise we wouldn't be able to access this variable
+		
 	}
 	
 	/**
 	 * sets the instructor who shows the document
 	 * @param instructor
 	 */
-	public void setInstructor(InstructorGWT instructor)
+	public void setInstructor(InstructorGWT instructor1, DocumentGWT doc)
 	{
-		this.instructor = instructor;
+		//System.out.println("Instructor shit: "+instructor.getUsername());
+		this.instructor = instructor1;
+		
+		final Window win1 = new Window();
+		win1.setTitle("Course Preferences");
+		win1.setAutoCenter(true);
+		win1.setSize("750px", "600px");
+		
+		final Window win2 = new Window();
+		win2.setTitle("Time Preferences");
+		win2.setAutoCenter(true);
+		win2.setSize("750px", "600px");
+
+//===================================================================================
+//		this is still a dummy and has to be fetched from the real login name:
+//===================================================================================
+//		final InstructorGWT instructor  = new InstructorGWT(1, "foobar", "Hello",
+//				"World", "120", new int[DayGWT.values().length][48],
+//				new HashMap<Integer, Integer>(), true);
+				
+		final InstructorPrefsWizardCourseView courses =
+				new InstructorPrefsWizardCourseView(service, doc.getID(), instructor);
+		final InstructorPrefsWizardTimeView times =
+				new InstructorPrefsWizardTimeView(service, doc.getID(), instructor);
+		courses.addCloseClickHandler(new ClickHandler(){
+			@Override
+			public void onClick(ClickEvent event) {
+				win1.hide();
+			}
+		});
+		courses.addNextClickHandler(new ClickHandler(){
+			@Override
+			public void onClick(ClickEvent event) {
+				win1.hide();
+				win2.show();
+			}
+		});
+		times.addFinishClickHandler(new ClickHandler(){
+			@Override
+			public void onClick(ClickEvent event) {
+				win2.hide();
+			}
+		});
+		times.addBackClickHandler(new ClickHandler(){
+			@Override
+			public void onClick(ClickEvent event) {
+				win2.hide();
+				win1.show();
+			}
+		});
+		courses.setParent(win1);
+		courses.afterPush();
+		
+		win1.addItem(courses);
+		win2.addItem(times);
+		win1.show();
 	}
 }
