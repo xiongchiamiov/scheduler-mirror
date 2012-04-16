@@ -435,34 +435,34 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 		listBoxViewSelector.setStyleName("floatingScheduleButtonBarItemRight");
 		bottomButtonFlowPanel.add(listBoxViewSelector);
 
-		Button filterButton = new Button("Publish...", new ClickHandler() {
+		Button publishButton = new Button("Publish...", new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				Window.alert("Not implemented yet.");
 			}
 		});
-		filterButton.setStyleName("floatingScheduleButtonBarItemRight");
-		bottomButtonFlowPanel.add(filterButton);
+		publishButton.setStyleName("floatingScheduleButtonBarItemRight");
+		bottomButtonFlowPanel.add(publishButton);
 
-		mSearchBox = new TextBox();
-		mSearchBox.addKeyPressHandler(new KeyPressHandler() {
-			public void onKeyPress(KeyPressEvent event) {
-				if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
-					search();
-				}
-			}
-		});
-		mSearchBox.setStyleName("floatingScheduleButtonBarItemRight");
-		bottomButtonFlowPanel.add(mSearchBox);
-
-		Button filtersButton = new Button("Filters", new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				// Causes the filters dialog to appear in the center of this
-				// widget
-				mFiltersDialog.center();
-			}
-		});
-		filtersButton.setStyleName("floatingScheduleButtonBarItemRight");
-		bottomButtonFlowPanel.add(filtersButton);
+//		mSearchBox = new TextBox();
+//		mSearchBox.addKeyPressHandler(new KeyPressHandler() {
+//			public void onKeyPress(KeyPressEvent event) {
+//				if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
+//					search();
+//				}
+//			}
+//		});
+//		mSearchBox.setStyleName("floatingScheduleButtonBarItemRight");
+//		bottomButtonFlowPanel.add(mSearchBox);
+//
+//		Button filtersButton = new Button("Filters", new ClickHandler() {
+//			public void onClick(ClickEvent event) {
+//				// Causes the filters dialog to appear in the center of this
+//				// widget
+//				mFiltersDialog.center();
+//			}
+//		});
+//		filtersButton.setStyleName("floatingScheduleButtonBarItemRight");
+//		bottomButtonFlowPanel.add(filtersButton);
 
 		RootPanel.get().add(bottomButtonFlowPanel);
 		mMainPanel.add(bottomButtonFlowPanel);

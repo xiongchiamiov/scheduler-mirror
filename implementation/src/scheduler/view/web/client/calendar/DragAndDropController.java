@@ -69,8 +69,6 @@ public class DragAndDropController implements MouseMoveHandler, MouseOutHandler,
 			DOMUtility.setStyleAttribute(mItemView.getId(), "color", "#FFFFFF");
 			DOMUtility.setStyleAttribute(mItemView.getId(), "backgroundColor", "#FFFFFF");
 			
-			
-			
 			// TODO Hide contents of every occurrence of the dragged item on the table (if it appears on multiple days)
 			// TODO if this is a list item with multiple sections remaining, just decrement section count and don't hide
 		}
@@ -199,11 +197,14 @@ public class DragAndDropController implements MouseMoveHandler, MouseOutHandler,
 	 */
 	public static void setTextSelection(boolean selectionAllowed) {
 
+		// TODO this is just a temporary fix
+		// it works for chrome, but not firefox
+		
 		if (!selectionAllowed) {
-			RootPanel.getBodyElement().addClassName("nonSelectableElement");
+			RootPanel.getBodyElement().addClassName("nonselectableElement");
 		}
 		else {
-			RootPanel.getBodyElement().removeClassName("nonSelectableElement");
+			RootPanel.getBodyElement().removeClassName("nonselectableElement");
 		}
 	}
 }

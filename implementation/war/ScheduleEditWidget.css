@@ -9,13 +9,17 @@
 	width: 100%;
 }
 
-.nonSelectableElement * {
+/* the body * part breaks firefox, but fixes chrome. this is just a temporary fix */
+.nonselectableElement *,
+#CalendarTableContainer *, 
+#ScheduleListContainer *, 
+#CalendarTableContainer * {
    -webkit-touch-callout: none;
    -webkit-user-select: none;
    -khtml-user-select: none;
    -moz-user-select: none;
    -ms-user-select: none;
-   -user-select: none;	
+   user-select: none;	
 }
 
 #dragItem 
@@ -27,7 +31,7 @@
    width:70px;
    padding:3px;
    background-color:#DFF0CF;
-   z-index:999;
+   z-index:9999999;
    border:1px solid #FFFFFF;
    cursor:arrow;
 }

@@ -311,9 +311,13 @@ public class CalendarTableView extends SimplePanel {
 	 * Called when the any cell on the table gets a mouse up event
 	 */
 	public void mouseOver(int row) {
+		System.out.println();
+		System.out.println("hovered tabled");
+		System.out.println();
+		
 		if (mDragController.isDragging()) {
-			System.out.println()
-			;System.out.println("hoverwed with item!");
+			System.out.println();
+			System.out.println("hoverwed with item!");
 			DOMUtility.setStyleAttribute("y"+row, "backgroundColor", "#d1dfdf");
 			DOMUtility.setStyleAttribute("h"+row, "backgroundColor", "#d1dfdf");
 		}

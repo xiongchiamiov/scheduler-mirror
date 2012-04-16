@@ -12,7 +12,8 @@
 {
    border-spacing:0px;
    cellspacing:0px;
-   border:none;    
+   border:none;
+   width:100%;
 }
 
 #ListTable td 
