@@ -41,7 +41,7 @@ public class AlgorithmTest {
 		
 		List<Location> locations = generateLocationList(model, doc);
 		
-		locations.add(doc.getTBALocation());
+		//locations.add(doc.getTBALocation());
 		
 		Vector<ScheduleItem> sids = new Vector<ScheduleItem>();
 		

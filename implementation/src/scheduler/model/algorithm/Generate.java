@@ -110,11 +110,9 @@ public class Generate {
 	                {
 	                     debug ("SECTIONS SCHEDULED: " + st.getCurSection()
 	                        + " / " + c.getNumSections());
-	                     
+	            
 	                     lec_si = genLecItem(model, schedule, c, lec_bounds, id_vec, ld_vec);
-	                     lec_si.getItem().setSection(i + 1);
 	                     debug ("MADE LEC_SI\n" + lec_si);
-	                     
 	                     try
 	                     {
 	                          add(model, lec_si, items, sections, id_vec, ld_vec);
@@ -925,6 +923,7 @@ public class Generate {
 		  //might have to look into TBA location for IND type courses
 		  assert(schedule.getDocument().getTBALocation() != null);
 		  Location tbaLocation = schedule.getDocument().getTBALocation();
+		  
 	      Vector<ScheduleItemDecorator> si_list = new Vector<ScheduleItemDecorator>();
 
 	      debug ("HAVE " + sis.size() + " ITEMS FOR LOCATIONS TO TRY");
@@ -952,16 +951,24 @@ public class Generate {
 	            }
 	         }
 	         //If no valid location is found, use TBA
-	         if(si_list.isEmpty()) 
-	         {
-	        	 ScheduleItem base = si.getItem().createTransientCopy();
-	        	 base.setLocation(tbaLocation);
-	        	 
-	        	 si_list.add(new ScheduleItemDecorator(base));
-	         }
+//	         if(si_list.isEmpty()) 
+//	         {
+//	        	 ScheduleItem base = si.getItem().createTransientCopy();
+//	        	 base.setLocation(tbaLocation);
+//	        	 
+//	        	 si_list.add(new ScheduleItemDecorator(base));
+//	         }
 	      }
 
 	      return si_list;
+	   }
+	   
+	   /*
+	    * If there's no location available, use TBA 
+	    */
+	   private static Location getTBA(Document doc) throws DatabaseException {
+		   assert(doc.getTBALocation() != null);
+		   return doc.getTBALocation(); 
 	   }
 
 	   /**
@@ -1003,7 +1010,6 @@ public class Generate {
 	    */
 	   private static int splitLengthOverDays(Course c, int size) {
 		   assert(false);
-		// TODO Auto-generated method stub
 		return 0;
 	   }
 	   
