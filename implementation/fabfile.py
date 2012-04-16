@@ -23,6 +23,9 @@ def restart_tomcat():
 
 def deploy(*directories):
 	#build()
+	if len(directories) == 1 and directories[0] == 'all':
+		directories = ['AERO','BUS','CHEM','CM','CSC','EE','ENGL','FSN','GRC','IME','MU','RPTA']
+	
 	for directory in directories:
 		print('Deploying %s...' % directory)
 		local('''echo "#this required property tells the scheduler where to write its database file to.
