@@ -118,6 +118,8 @@ public class CoursesDataSource extends DataSource {
 	}
 	
 	Record readCourseIntoRecord(CourseGWT course) {
+		System.out.println("In readCourseIntoRecord");
+		System.out.println("schedulable is: " + course.isSchedulable());
 		String[] dayCombinationsStrings = new String[course.getDayPatterns().size()];
 		int dayCombinationIndex = 0;
 		for (Set<DayGWT> dayCombination : course.getDayPatterns())
@@ -169,6 +171,7 @@ public class CoursesDataSource extends DataSource {
 	
 	CourseGWT readRecordIntoCourse(Record record) {
 		System.out.println("Reading record into course, new record id " + record.getAttribute("id"));
+		System.out.println("schedulable is: "+ record.getAttributeAsBoolean("isSchedulable"));
 
 		String dayCombinationsStringsCombined = record.getAttributeAsString("dayCombinations");
 		Collection<Set<DayGWT>> dayCombinations = new LinkedList<Set<DayGWT>>();
@@ -242,6 +245,7 @@ public class CoursesDataSource extends DataSource {
 		
 		assert(record.getAttribute("type") != null);
 		
+		System.out.println("Making the courseGWT: schedulable is: " + record.getAttributeAsBoolean("isSchedulable"));
 		CourseGWT course = new CourseGWT(
 				record.getAttributeAsBoolean("isSchedulable"),
 				record.getAttribute("name"),
@@ -264,6 +268,7 @@ public class CoursesDataSource extends DataSource {
 	}
 
 	protected void fetch(final DSRequest dsRequest) {
+		System.out.println("In fetch");
 		service.getCoursesForDocument(document.getID(), new AsyncCallback<List<CourseGWT>>() {
 			public void onSuccess(List<CourseGWT> result) {
 				Record[] responseRecords = new Record[result.size()];
@@ -290,6 +295,7 @@ public class CoursesDataSource extends DataSource {
 	}
 	
 	protected void add(final DSRequest dsRequest) {
+		System.out.println("In add");
 		Record record = dsRequest.getAttributeAsRecord("data");
 		CourseGWT newCourse = readRecordIntoCourse(record);
 		
@@ -316,6 +322,7 @@ public class CoursesDataSource extends DataSource {
 	}
 	
 	protected void update(final DSRequest dsRequest) {
+		System.out.println("In update");
 		Record record = dsRequest.getOldValues();
 		
 		Record changes = dsRequest.getAttributeAsRecord("data");
@@ -347,6 +354,10 @@ public class CoursesDataSource extends DataSource {
 			record.setAttribute("associations", changes.getAttribute("associations"));
 		if (changes.getAttributeAsBoolean("isSchedulable") != null)
 			record.setAttribute("isSchedulable", changes.getAttributeAsBoolean("isSchedulable"));
+		System.out.println("in update, changes isSchedulable is: " + changes.getAttributeAsBoolean("isSchedulable"));
+		System.out.println("in update, changes Schedulable is: " + changes.getAttributeAsBoolean("Schedulable"));
+		System.out.println("in update, changes isSchedulable dsreq is: " + dsRequest.getAttributeAsBoolean("isSchedulable"));
+		
 		
 		final CourseGWT course = readRecordIntoCourse(record);
 		
@@ -371,6 +382,7 @@ public class CoursesDataSource extends DataSource {
 	}
 	
 	protected void remove(final DSRequest dsRequest) {
+		System.out.println("In remove");
 		final Record record = dsRequest.getAttributeAsRecord("data");
 		final CourseGWT course = readRecordIntoCourse(record);
 
@@ -395,7 +407,7 @@ public class CoursesDataSource extends DataSource {
 	@Override
    protected Object transformRequest(final DSRequest dsRequest) {
 //		FETCH ADD UPDATE REMOVE VALIDATE
-		
+		System.out.println("Transform Request (Courses): " + dsRequest.getOperationType());
 		switch (dsRequest.getOperationType()) {
 			case FETCH: fetch(dsRequest); break;
 			case ADD: add(dsRequest); break;

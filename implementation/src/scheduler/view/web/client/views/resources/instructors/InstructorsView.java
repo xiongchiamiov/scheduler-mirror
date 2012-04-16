@@ -112,6 +112,7 @@ public class InstructorsView extends VerticalPanel {
 		nonnegativeInt.setMin(0);  
 		
 		ListGridField schedulableField = new ListGridField("isSchedulable", "Schedulable");
+		schedulableField.setDefaultValue(true);
 		ListGridField lastNameField = new ListGridField("lastName", "Last Name");
 		ListGridField firstNameField = new ListGridField("firstName", "First Name");
 		ListGridField usernameField = new ListGridField("username", "Username");

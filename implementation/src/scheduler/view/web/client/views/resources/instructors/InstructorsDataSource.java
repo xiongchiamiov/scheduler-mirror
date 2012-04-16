@@ -152,6 +152,9 @@ public class InstructorsDataSource extends DataSource {
 			record.setAttribute("lastName", changes.getAttribute("lastName"));
 		if (changes.getAttribute("maxWTU") != null)
 			record.setAttribute("maxWTU", changes.getAttribute("maxWTU"));
+		if (changes.getAttributeAsBoolean("isSchedulable") != null)
+			record.setAttribute("isSchedulable", changes.getAttributeAsBoolean("isSchedulable"));
+		System.out.println("in update, changes isSchedulable is: " + changes.getAttributeAsBoolean("isSchedulable"));
 		
 		final InstructorGWT instructor = readRecordIntoInstructor(record);
 		
@@ -198,7 +201,7 @@ public class InstructorsDataSource extends DataSource {
 	@Override
    protected Object transformRequest(final DSRequest dsRequest) {
 //		FETCH ADD UPDATE REMOVE VALIDATE
-		
+		System.out.println("Transform Request(Instructors): " + dsRequest.getOperationType());
 		switch (dsRequest.getOperationType()) {
 			case FETCH: fetch(dsRequest); break;
 			case ADD: add(dsRequest); break;
