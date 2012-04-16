@@ -492,7 +492,7 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 					public void onSuccess(List<CourseGWT> result) {
 						long endTimestamp = System.currentTimeMillis();
 						long secondsElapsed = (endTimestamp - startTimestamp) / 1000;
-						Window.alert("Took "+secondsElapsed+" to retrieve available courses");
+						Window.alert("Took "+secondsElapsed+"s to retrieve available courses");
 						
 						if (result != null) {
 							mCourses.clear();
@@ -579,7 +579,7 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 					public void onSuccess(Collection<ScheduleItemGWT> result) {
 						long endTimestamp = System.currentTimeMillis();
 						long secondsElapsed = (endTimestamp - startTimestamp) / 1000;
-						Window.alert("Took "+secondsElapsed+" to update item in schedule");
+						Window.alert("Took "+secondsElapsed+"s to update item in schedule");
 						
 						mCalendarItems = new ArrayList<ScheduleItemGWT>();
 
@@ -639,7 +639,7 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 					public void onSuccess(Collection<ScheduleItemGWT> result) {
 						long endTimestamp = System.currentTimeMillis();
 						long secondsElapsed = (endTimestamp - startTimestamp) / 1000;
-						Window.alert("Took "+secondsElapsed+" to insert item in schedule");
+						Window.alert("Took "+secondsElapsed+"s to insert item in schedule");
 						
 						mCalendarItems = new ArrayList<ScheduleItemGWT>();
 
@@ -719,7 +719,7 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 					public void onSuccess(Collection<ScheduleItemGWT> result) {
 						long endTimestamp = System.currentTimeMillis();
 						long secondsElapsed = (endTimestamp - startTimestamp) / 1000;
-						Window.alert("Took "+secondsElapsed+" to remove item from schedule");
+						Window.alert("Took "+secondsElapsed+"s to remove item from schedule");
 						
 						mCalendarItems = new ArrayList<ScheduleItemGWT>();
 						for (ScheduleItemGWT schdItem : result) {
