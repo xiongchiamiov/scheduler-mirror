@@ -502,11 +502,11 @@ public class Generate {
 	       * try other instructors until we find one w/ at least one time he
 	       * can teach
 	       */
-	      InstructorDecorator id = id_vec.get(0);
+	      InstructorDecorator id = new InstructorDecorator(schedule.getDocument().getStaffInstructor());
 	      for(InstructorDecorator dec: id_vec) {
 	    	  //get the actual instructor we care about
 	    	  if(dec.getInstructor() == model.findInstructorByID(base.getInstructor().getID()))
-	    		  id = dec;
+	    	     id = dec;
 	      }
 	      
 	      debug("Model instructor chosen: " + model.findInstructorByID(base.getInstructor().getID()));
