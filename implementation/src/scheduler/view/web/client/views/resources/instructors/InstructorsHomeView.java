@@ -3,6 +3,7 @@ package scheduler.view.web.client.views.resources.instructors;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 import scheduler.view.web.client.GreetingServiceAsync;
 import scheduler.view.web.shared.DayGWT;
@@ -26,18 +27,20 @@ public class InstructorsHomeView extends VerticalPanel
 	protected ArrayList<String> scheduleNames;
 	protected HashMap<Integer, DocumentGWT> allAvailableOriginalDocumentsByID;	
 	protected FlexTable schedList = new FlexTable();
+	protected InstructorGWT instructor;
 	
 	public InstructorsHomeView(final GreetingServiceAsync service, String username)
 	{	
 		this.service = service;
 		this.username = username;
 		this.scheduleNames = new ArrayList<String>();
+		this.setStyleName("centerness");
 		
 		// ------------------------------------
 		
-		this.setWidth("100%");
+		this.setWidth("90%");
 		this.schedList.setStyleName("otherCenterness");
-		this.schedList.setWidth("80%");
+		this.schedList.setWidth("100%");
 		HTML schedule = new HTML("Scheduler\n\n\n");
 		
 		HTML mydocs = new HTML("My Scheduling Documents:");
@@ -82,6 +85,31 @@ public class InstructorsHomeView extends VerticalPanel
 	
 	public void addNewDocument(final DocumentGWT doc)
 	{
+		// set the instructor
+		final String username = this.username;
+		final InstructorGWT instructor = this.instructor;
+		
+		service.getInstructorsForDocument(doc.getID(), new AsyncCallback<List<InstructorGWT>>() {
+			public void onFailure(Throwable caught) {
+				com.google.gwt.user.client.Window.alert("Failed to get instructors!");
+			}
+			public void onSuccess(List<InstructorGWT> result) {
+				for (InstructorGWT i : result) {
+					if (i.getName().equals(username)) {
+						if(instructor == null)
+						{
+							setInstructor(i);
+						}
+						break;
+					}
+				}
+			}
+		});
+		if(this.instructor == null)
+		{
+			return;
+		}
+		
 		int row = this.schedList.getRowCount();
 		this.schedList.setWidget(row, 0, new HTML(doc.getName()));
 		Button prefs = new Button("Preferences");
@@ -102,10 +130,10 @@ public class InstructorsHomeView extends VerticalPanel
 //===================================================================================
 //				this is still a dummy and has to be fetched from the real login name:
 //===================================================================================
-				InstructorGWT instructor = new InstructorGWT(1, "foobar", "Hello",
-						"World", "120", new int[DayGWT.values().length][48],
-						new HashMap<Integer, Integer>(), true);
-				
+//				final InstructorGWT instructor  = new InstructorGWT(1, "foobar", "Hello",
+//						"World", "120", new int[DayGWT.values().length][48],
+//						new HashMap<Integer, Integer>(), true);
+						
 				final InstructorPrefsWizardCourseView courses =
 						new InstructorPrefsWizardCourseView(service, doc.getID(), instructor);
 				final InstructorPrefsWizardTimeView times =
@@ -146,6 +174,17 @@ public class InstructorsHomeView extends VerticalPanel
 			
 		});
 		schedList.setWidget(row, 1, prefs);
+		
+		this.instructor = null; // dirty hack to use an attribute,
+								// but otherwise we wouldn't be able to access this variable
 	}
 	
+	/**
+	 * sets the instructor who shows the document
+	 * @param instructor
+	 */
+	public void setInstructor(InstructorGWT instructor)
+	{
+		this.instructor = instructor;
+	}
 }

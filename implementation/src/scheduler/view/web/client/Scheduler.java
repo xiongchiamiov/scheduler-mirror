@@ -111,7 +111,7 @@ public class Scheduler implements EntryPoint, UpdateHeaderStrategy
 		else {
 			onLogin(username);
 			
-			if(username.equals("instructor"))
+			if(username.equals("jjuszak"))
 			{
 				viewContainer.add(new InstructorsHomeView(service, username));
 				loadingPopup.hide();
