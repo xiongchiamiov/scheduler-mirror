@@ -24,7 +24,7 @@ public class Generate {
 	/**
 	 * Used for debugging. Toggle it to get debugging output
 	 */
-	 private static final boolean DEBUG = !true; // !true == false ; )
+	 private static final boolean DEBUG = true; // !true == false ; )
 	   
 	/**
 	 * Prints a message to STDERR if DEBUG is true
@@ -110,9 +110,11 @@ public class Generate {
 	                {
 	                     debug ("SECTIONS SCHEDULED: " + st.getCurSection()
 	                        + " / " + c.getNumSections());
-	            
+	                     
 	                     lec_si = genLecItem(model, schedule, c, lec_bounds, id_vec, ld_vec);
+	                     lec_si.getItem().setSection(i + 1);
 	                     debug ("MADE LEC_SI\n" + lec_si);
+	                     
 	                     try
 	                     {
 	                          add(model, lec_si, items, sections, id_vec, ld_vec);
