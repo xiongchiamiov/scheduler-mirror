@@ -1,14 +1,9 @@
 package scheduler.view.web.client.views.home;
 
 import java.util.Collection;
-import java.util.LinkedList;
 
-import scheduler.view.web.client.GreetingServiceAsync;
-import scheduler.view.web.client.views.home.OriginalDocumentsCacheDataSource.Mode;
 import scheduler.view.web.shared.DocumentGWT;
 
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.smartgwt.client.data.DSRequest;
 import com.smartgwt.client.data.DSResponse;
 import com.smartgwt.client.data.DataSource;
@@ -18,15 +13,15 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
 import com.smartgwt.client.types.DSOperationType;
 import com.smartgwt.client.types.DSProtocol;
 
-public class OriginalDocumentsCacheDataSource extends DataSource {
-	enum Mode { LIVE_DOCUMENTS_ONLY, DELETED_DOCUMENTS_ONLY };
+public class DocumentsDataSource extends DataSource {
+	interface DocumentsStrategy {
+		Collection<DocumentGWT> getAllDocuments();
+	}
 	
-	OriginalDocumentsCache documentsCache;
-	Mode mode;
+	DocumentsStrategy documentsStrategy;
 
-	public OriginalDocumentsCacheDataSource(OriginalDocumentsCache documentsCache, Mode mode) {
-		this.documentsCache = documentsCache;
-		this.mode = mode;
+	public DocumentsDataSource(DocumentsStrategy documentsStrategy) {
+		this.documentsStrategy = documentsStrategy;
 
 		setDataProtocol(DSProtocol.CLIENTCUSTOM);
 		
@@ -48,24 +43,9 @@ public class OriginalDocumentsCacheDataSource extends DataSource {
    protected Object transformRequest(final DSRequest dsRequest) {
 		assert(dsRequest.getOperationType() == DSOperationType.FETCH);
 		
-		Collection<DocumentGWT> originalDocuments = documentsCache.getAllDocuments();
+		System.out.println("DocumentsDataSource transformRequest()");
 		
-		Collection<DocumentGWT> resultDocuments;
-		
-		if (mode == Mode.LIVE_DOCUMENTS_ONLY) {
-			Collection<DocumentGWT> liveOriginalDocuments = new LinkedList<DocumentGWT>();
-			for (DocumentGWT originalDocument : originalDocuments)
-				if (!originalDocument.isTrashed())
-					liveOriginalDocuments.add(originalDocument);
-			resultDocuments = liveOriginalDocuments;
-		}
-		else {
-			Collection<DocumentGWT> deletedOriginalDocuments = new LinkedList<DocumentGWT>();
-			for (DocumentGWT originalDocument : originalDocuments)
-				if (originalDocument.isTrashed())
-					deletedOriginalDocuments.add(originalDocument);
-			resultDocuments = deletedOriginalDocuments;
-		}
+		Collection<DocumentGWT> resultDocuments = documentsStrategy.getAllDocuments();
 		
 		Record[] resultRecords = new Record[resultDocuments.size()];
 		int resultRecordIndex = 0;
@@ -79,6 +59,8 @@ public class OriginalDocumentsCacheDataSource extends DataSource {
 		DSResponse response = new DSResponse();
 		response.setData(resultRecords);
 		processResponse(dsRequest.getRequestId(), response);
+
+		System.out.println("End DocumentsDataSource transformRequest()");
 		
 		return dsRequest;
 	}

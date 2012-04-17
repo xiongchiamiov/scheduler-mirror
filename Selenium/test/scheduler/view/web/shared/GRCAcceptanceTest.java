@@ -1,7 +1,11 @@
 package scheduler.view.web.shared;
 
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 
 import scheduler.view.web.shared.Selenium.SchedulerBot;
 import scheduler.view.web.shared.Selenium.SchedulerBot.PopupWaiter;
@@ -42,6 +46,14 @@ public abstract class GRCAcceptanceTest extends DefaultSelTestCase {
 		driver.findElement(By.id("s_unameBox")).sendKeys("eovadia");
 		driver.findElement(By.id("s_loginBtn")).click();
 		bot.waitForElementPresent(By.xpath("//div[@eventproxy='s_createBtn']"));
+		
+//		Thread.sleep(2000);
+//
+//		driver.manage().timeouts().implicitlyWait(0, TimeUnit.MILLISECONDS);
+//		List<WebElement> existingDocuments = driver.findElements(By.xpath("//gridBody//tr[@role='listitem']"));
+//		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+//		
+//		
 		
 		bot.mouseDownAndUpAt(By.xpath("//div[@eventproxy='s_createBtn']"), 5, 5);
 

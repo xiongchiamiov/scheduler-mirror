@@ -42,7 +42,7 @@ public class OriginalDocumentsCache {
 				refreshFromResponse(result);
 			}
 			public void onFailure(Throwable caught) {
-				Window.alert("Failed to retrieve documents from server!");
+				Window.alert("Failed to retrieve documents from server: " +  caught.getMessage());
 			}
 		});
 	}

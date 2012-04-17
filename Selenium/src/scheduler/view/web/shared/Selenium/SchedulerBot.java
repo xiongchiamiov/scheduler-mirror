@@ -1,8 +1,10 @@
 package scheduler.view.web.shared.Selenium;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -94,6 +96,46 @@ public class SchedulerBot {
 		driver.findElement(By.tagName("body")).click();
 	}
 
+	private void setResourceTableMultiselectCell(int row0Based, int col0Based, String text) {
+//		WebElement cell = elementForResourceTableCell(row0Based, col0Based);
+//		cell.click();
+//		
+//		WebElement selectBeforeExpand = elementForResourceTableCell(row0Based, col0Based).findElement(By.xpath("div/nobr/span/table"));
+//		selectBeforeExpand.click();
+//
+//		Set<String> dayCombinationStrings = new TreeSet<String>(Arrays.asList(text.split(",")));
+//		
+//		List<WebElement> checkboxRows = elementForResourceTableCell(row0Based, col0Based).findElements(By.xpath("//td[@class='pickListCell']/div/nobr/img"));
+//		
+//		for (WebElement checkboxRow : checkboxRows) {
+//			
+//		}
+		
+		
+		
+		
+		
+		
+		
+		
+//		
+//		boolean foundOptionToClickOn = false;
+//		List<WebElement> options = elementForResourceTableCell(row0Based, col0Based).findElements(By.xpath("//tr[@role='listitem']"));
+//		for (WebElement option : options) {
+//			if (option.getText().trim().equalsIgnoreCase(text)) {
+//				option.click();
+//				foundOptionToClickOn = true;
+//				break;
+//			}
+//		}
+//		
+//		assert(foundOptionToClickOn) : "Couldnt find option " + text;
+
+//		driver.findElement(By.tagName("body")).click();
+//		
+//		assert(elementForResourceTableCell(row0Based, col0Based).getText().trim().equalsIgnoreCase(text));
+	}
+
 	private void setResourceTableSelectCell(int row0Based, int col0Based, String text) {
 		WebElement cell = elementForResourceTableCell(row0Based, col0Based);
 		cell.click();
@@ -106,9 +148,10 @@ public class SchedulerBot {
 		WebElement selectBeforeExpand = elementForResourceTableCell(row0Based, col0Based).findElement(By.xpath("div/nobr/span/table"));
 		selectBeforeExpand.click();
 		
+		WebElement popupList = driver.findElement(By.xpath("/html/body/div/div/div[@class='pickListMenuBody']"));
+		
 		boolean foundOptionToClickOn = false;
-		List<WebElement> options = elementForResourceTableCell(row0Based, col0Based).findElements(By.xpath("//tr[@role='listitem']"));
-		for (WebElement option : options) {
+		for (WebElement option : popupList.findElements(By.xpath("//tr[@role='listitem']"))) {
 			if (option.getText().trim().equalsIgnoreCase(text)) {
 				option.click();
 				foundOptionToClickOn = true;
@@ -196,7 +239,7 @@ public class SchedulerBot {
 		setResourceTableTextCell(row0Based, 5, numSections);
 		setResourceTableTextCell(row0Based, 6, wtu);
 		setResourceTableTextCell(row0Based, 7, scu);
-//		setResourceTableSelectCell(row0Based, 8, dayCombinations);
+		setResourceTableMultiselectCell(row0Based, 8, dayCombinations);
 		setResourceTableTextCell(row0Based, 9, hoursPerWeek);
 		setResourceTableTextCell(row0Based, 10, maxEnrollment);
 		setResourceTableSelectCell(row0Based, 11, type);
