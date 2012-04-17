@@ -46,7 +46,7 @@ public class SchedulerBot {
 		public boolean stopWaiting();
 	}
 	
-	private void mouseDownAndUpAt(WebElement element, int x, int y) {
+	public void mouseDownAndUpAt(WebElement element, int x, int y) {
 		new Actions(driver)
 		.clickAndHold(element)
 		.moveByOffset(x, y)
@@ -85,8 +85,6 @@ public class SchedulerBot {
 	}
 	
 	private void setResourceTableTextCell(int row0Based, int col0Based, String text) {
-		System.out.println("Entering " + text + " into (" + row0Based + "," + col0Based + ")");
-		
 		WebElement cell = elementForResourceTableCell(row0Based, col0Based);
 		cell.click();
 		
@@ -167,17 +165,12 @@ public class SchedulerBot {
 	}
 	
 	private void setResourceTableCheckboxCell(int row0Based, int col0Based, boolean newValue) {
-		System.out.println("row " + row0Based + " col " + col0Based);
-		
 //		WebElement newCourseDeptCell = elementForResourceTableCell(row0Based, col0Based);
 //		newCourseDeptCell.click();
 		
 		WebElement img = elementForResourceTableCell(row0Based, col0Based).findElement(By.xpath("//div[@class='labelAnchor']/img"));
 		WebElement imgParent = img.findElement(By.xpath("parent::*"));
 		assert(imgParent.getTagName().equals("div"));
-		
-		System.out.println(imgParent.getTagName());
-		System.out.println("checked: " + imgParent.getAttribute("aria-checked"));
 		
 		boolean currentValue = "true".equals(imgParent.getAttribute("aria-checked"));
 		
@@ -226,7 +219,9 @@ public class SchedulerBot {
 			String dayCombinations,
 			String hoursPerWeek,
 			String maxEnrollment,
-			String type) {
+			String type,
+			String usedEquipment,
+			String association) {
 		
 		assert(dayCombinations == null);
 		
@@ -243,6 +238,8 @@ public class SchedulerBot {
 		setResourceTableTextCell(row0Based, 9, hoursPerWeek);
 		setResourceTableTextCell(row0Based, 10, maxEnrollment);
 		setResourceTableSelectCell(row0Based, 11, type);
+		setResourceTableMultiselectCell(row0Based, 12, usedEquipment);
+		setResourceTableTextCell(row0Based, 13, association);
 	}
 	
 	public void waitForElementPresent(final By by) throws InterruptedException {
