@@ -230,6 +230,8 @@ public class SchedulerBot {
 			String usedEquipment,
 			String association) throws InterruptedException {
 		
+		System.out.println("Entering row index " + row0Based);
+		
 		driver.findElement(By.id("s_newCourseBtn")).click();
 		
 		setResourceTableCheckboxCell(row0Based, 1, isSchedulable);

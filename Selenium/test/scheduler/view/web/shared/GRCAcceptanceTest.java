@@ -132,7 +132,7 @@ public abstract class GRCAcceptanceTest extends DefaultSelTestCase {
 		bot.enterIntoResourceTableNewRow(31, true, "GRC", "421", "Production Management for Print and Digital Media", "2", "3", "3", null, "2", "20", "ACT", null, null);
 		bot.enterIntoResourceTableNewRow(32, false, "GRC", "422", "Human Resource Management Issues for Print and Digital Media", "1", "3", "3", "TuTh", "3", "40", "LEC", null, null);
 		bot.enterIntoResourceTableNewRow(33, false, "GRC", "422", "Human Resource Management Issues for Print and Digital Media", "2", "3", "3", null, "3", "20", "LAB", null, null);
-		bot.enterIntoResourceTableNewRow(34, true, "GRC", "429", "Digital Media", "1", "3", "3", null, "2", "46", "M", null, null);
+		bot.enterIntoResourceTableNewRow(34, true, "GRC", "429", "Digital Media", "1", "3", "3", "M", "2", "46", "LEC", null, null);
 		bot.enterIntoResourceTableNewRow(35, true, "GRC", "429", "Digital Media", "2", "3", "3", null, "3", "12", "LAB", null, null);
 		bot.enterIntoResourceTableNewRow(36, true, "GRC", "440", "Magazine and Newspaper Design Technology", "1", "3", "3", "TuTh", "3", "48", "LEC", null, null);
 		bot.enterIntoResourceTableNewRow(37, true, "GRC", "440", "Magazine and Newspaper Design Technology", "2", "3", "3", null, "3", "12", "LAB", null, null);
