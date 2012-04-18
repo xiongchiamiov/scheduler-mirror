@@ -95,7 +95,7 @@ public class LocationsDataSource extends DataSource {
 				record.getAttribute("type"),
 				record.getAttribute("maxOccupancy"),
 				equipments,
-				record.getAttributeAsBoolean("isSchedulable"));
+				record.getAttribute("isSchedulable").equals("true"));
 	}
 
 	protected void fetch(final DSRequest dsRequest) {
@@ -161,8 +161,8 @@ public class LocationsDataSource extends DataSource {
 			record.setAttribute("maxOccupancy", changes.getAttribute("maxOccupancy"));
 		if (changes.getAttribute("equipment") != null)
 			record.setAttribute("equipment", changes.getAttribute("equipment"));
-		if (changes.getAttributeAsBoolean("isSchedulable") != null)
-			record.setAttribute("isSchedulable", changes.getAttributeAsBoolean("isSchedulable"));
+		if (changes.getAttribute("isSchedulable") != null)
+			record.setAttribute("isSchedulable", changes.getAttribute("isSchedulable"));
 		
 		final LocationGWT location = readRecordIntoLocation(record);
 		

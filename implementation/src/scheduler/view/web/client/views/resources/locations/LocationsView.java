@@ -50,6 +50,7 @@ public class LocationsView extends VerticalPanel {
 		idField.setAlign(Alignment.CENTER);
 		
 		ListGridField schedulableField = new ListGridField("isSchedulable", "Schedulable");
+		schedulableField.setDefaultValue(true);
 		ListGridField usernameField = new ListGridField("room", "Room");
 		ListGridField firstNameField = new ListGridField("type", "Type");
 		ListGridField lastNameField = new ListGridField("maxOccupancy", "Max Occupancy");

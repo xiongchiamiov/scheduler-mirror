@@ -22,7 +22,7 @@ import com.smartgwt.client.types.DSProtocol;
 
 public class InstructorsDataSource extends DataSource {
 	
-	// protected static InstructorDataSource instance = null;
+	// private static InstructorDataSource instance = null;
 	//
 	// public static InstructorDataSource getInstance() {
 	// if (instance == null) {
@@ -31,9 +31,9 @@ public class InstructorsDataSource extends DataSource {
 	// return instance;
 	// }
 	
-	protected final GreetingServiceAsync service;
-	protected final DocumentGWT document;
-	protected UnsavedDocumentStrategy unsavedDocumentStrategy;
+	final GreetingServiceAsync service;
+	final DocumentGWT document;
+	UnsavedDocumentStrategy unsavedDocumentStrategy;
 	
 	public InstructorsDataSource(GreetingServiceAsync service, DocumentGWT document, UnsavedDocumentStrategy unsavedDocumentStrategy) {
 		this.service = service;
@@ -85,7 +85,7 @@ public class InstructorsDataSource extends DataSource {
 				record.getAttribute("maxWTU"),
 				new int[DayGWT.values().length][48],
 				new HashMap<Integer, Integer>(),
-				record.getAttributeAsBoolean("isSchedulable"));
+				record.getAttribute("isSchedulable").equals("true"));
 	}
 
 	protected void fetch(final DSRequest dsRequest) {
@@ -152,9 +152,8 @@ public class InstructorsDataSource extends DataSource {
 			record.setAttribute("lastName", changes.getAttribute("lastName"));
 		if (changes.getAttribute("maxWTU") != null)
 			record.setAttribute("maxWTU", changes.getAttribute("maxWTU"));
-		if (changes.getAttributeAsBoolean("isSchedulable") != null)
-			record.setAttribute("isSchedulable", changes.getAttributeAsBoolean("isSchedulable"));
-		System.out.println("in update, changes isSchedulable is: " + changes.getAttributeAsBoolean("isSchedulable"));
+		if (changes.getAttribute("isSchedulable") != null)
+			record.setAttribute("isSchedulable", changes.getAttribute("isSchedulable"));
 		
 		final InstructorGWT instructor = readRecordIntoInstructor(record);
 		
@@ -201,7 +200,6 @@ public class InstructorsDataSource extends DataSource {
 	@Override
    protected Object transformRequest(final DSRequest dsRequest) {
 //		FETCH ADD UPDATE REMOVE VALIDATE
-		System.out.println("Transform Request(Instructors): " + dsRequest.getOperationType());
 		switch (dsRequest.getOperationType()) {
 			case FETCH: fetch(dsRequest); break;
 			case ADD: add(dsRequest); break;
