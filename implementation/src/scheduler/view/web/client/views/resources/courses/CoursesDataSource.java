@@ -79,7 +79,7 @@ public class CoursesDataSource extends DataSource {
 		DataSourceTextField maxEnrollmentField = new DataSourceTextField("maxEnrollment");
 		
 		DataSourceEnumField courseTypeField = new DataSourceEnumField("type");
-		courseTypeField.setValueMap("LEC", "LAB", "ACT", "DIS", "SEM");
+		courseTypeField.setValueMap("LEC", "LAB", "ACT", "DIS", "SEM", "IND");
 
 		DataSourceEnumField usedEquipmentField = new DataSourceEnumField("usedEquipment");
 		usedEquipmentField.setMultiple(true);

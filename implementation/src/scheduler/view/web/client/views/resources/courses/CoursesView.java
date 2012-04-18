@@ -52,8 +52,6 @@ public class CoursesView extends VerticalPanel {
 		grid.setWidth("98%");
 		grid.setAutoFitData(Autofit.VERTICAL);
 		
-		grid.setCanRemoveRecords(true);
-		
 		grid.setShowAllRecords(true);
 		grid.setAutoFetchData(true);
 		grid.setCanEdit(true);

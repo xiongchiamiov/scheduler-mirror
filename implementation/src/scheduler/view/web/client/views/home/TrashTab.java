@@ -41,6 +41,13 @@ public class TrashTab extends Tab {
 
 		VLayout trashPane = new VLayout();
 		setPane(trashPane);
+
+		{
+			Canvas spacer = new Canvas();
+			spacer.setHeight(10);
+			spacer.setWidth(10);
+			trashPane.addMember(spacer);
+		}
 		
 		// Documents List
 		deletedOriginalDocumentsGrid = new ListGrid() {
@@ -116,6 +123,11 @@ public class TrashTab extends Tab {
 		deletedOriginalDocumentsGrid.setFields(idField, nameField);
 		
 		trashPane.addMember(deletedOriginalDocumentsGrid);
+
+		Canvas label = new Canvas();
+		label.setHeight(10);
+		label.setWidth(10);
+		trashPane.addMember(label);
 		
 		trashPane.addMember(makeTrashBottomButtons(deletedOriginalDocumentsGrid));
 	}
@@ -123,6 +135,7 @@ public class TrashTab extends Tab {
 
 	HLayout makeTrashBottomButtons(final ListGrid deletedOriginalDocumentsGrid) {
 		HLayout bottomButtons = new HLayout();
+		bottomButtons.setAlign(Alignment.CENTER);
 		
 		IButton restoreButton = new IButton("Restore Selected Documents", new ClickHandler() {
 			public void onClick(ClickEvent event) {

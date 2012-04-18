@@ -49,8 +49,22 @@ public class HomeTab extends Tab {
 		setPane(homePane);
 		
 		setID("s_HomeTab");
+
+		{
+			Canvas spacer = new Canvas();
+			spacer.setHeight(10);
+			spacer.setWidth(10);
+			homePane.addMember(spacer);
+		}
 		
 		homePane.addMember(makeHomeTopButtons());
+
+		{
+			Canvas spacer = new Canvas();
+			spacer.setHeight(10);
+			spacer.setWidth(10);
+			homePane.addMember(spacer);
+		}
 		
 		// Documents List
 		aliveOriginalDocumentsGrid = new ListGrid() {
@@ -137,9 +151,15 @@ public class HomeTab extends Tab {
 		});
 		
 		homePane.addMember(aliveOriginalDocumentsGrid);
+
+		{
+			Canvas spacer = new Canvas();
+			spacer.setHeight(10);
+			spacer.setWidth(10);
+			homePane.addMember(spacer);
+		}
 		
 		homePane.addMember(makeHomeBottomButtons(aliveOriginalDocumentsGrid));
-		
 	}
 
 	HLayout makeHomeBottomButtons(final ListGrid aliveOriginalDocumentsGrid) {
@@ -159,6 +179,13 @@ public class HomeTab extends Tab {
 		deleteButton.setOverflow(Overflow.VISIBLE);
 		deleteButton.setID("s_deleteBtn");
 		bottomButtons.addMember(deleteButton);
+
+		{
+			Canvas spacer = new Canvas();
+			spacer.setHeight(10);
+			spacer.setWidth(10);
+			bottomButtons.addMember(spacer);
+		}
 		
 		IButton mergeButton = new IButton("Merge Selected Documents", new ClickHandler() {
 			public void onClick(ClickEvent event) {
@@ -192,6 +219,13 @@ public class HomeTab extends Tab {
 		createButton.setAutoWidth();
 		createButton.setOverflow(Overflow.VISIBLE);
 		topButtons.addMember(createButton);
+
+		{
+			Canvas spacer = new Canvas();
+			spacer.setHeight(10);
+			spacer.setWidth(10);
+			topButtons.addMember(spacer);
+		}
 		
 		IButton importButton = new IButton("Import Document", new ClickHandler() {
 			public void onClick(ClickEvent event) {

@@ -24,6 +24,7 @@ public class LoginView extends VerticalPanel {
 	
 	String username;
 	final UpdateHeaderStrategy updateHeaderStrategy;
+	TextBox textBox;
 
 	public LoginView(GreetingServiceAsync service, UpdateHeaderStrategy updateHeaderStrategy) {
 		this.updateHeaderStrategy = updateHeaderStrategy;
@@ -36,7 +37,7 @@ public class LoginView extends VerticalPanel {
 		this.add(new HTML("<h2>Login</h2>"));
 		DOM.setElementAttribute(this.getElement(), "id", "s_loginTag");
 
-		final TextBox textBox = new TextBox();
+		textBox = new TextBox();
 		DOM.setElementAttribute(textBox.getElement(), "id", "s_unameBox");
 		
 		textBox.addKeyPressHandler(new KeyPressHandler() {
@@ -56,7 +57,14 @@ public class LoginView extends VerticalPanel {
 		});
 		
 	    DOM.setElementAttribute(login.getElement(), "id", "s_loginBtn");
-		this.add(login);	
+		this.add(login);
+	}
+	
+	@Override
+	protected void onLoad() {
+		super.onLoad();
+		
+		textBox.setFocus(true);
 	}
 
    protected void submitLogin(final String username) {

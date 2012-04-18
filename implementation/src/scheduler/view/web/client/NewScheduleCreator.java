@@ -92,7 +92,7 @@ public class NewScheduleCreator {
 		DOM.setElementAttribute(tb.getElement(), "id", "s_createBox");
 
 		final com.smartgwt.client.widgets.Window window = new com.smartgwt.client.widgets.Window();
-		window.setID("s_NameTxt");
+//		window.setID("s_NameTxt"); Don't put IDs on smartgwt widgets, it makes it add the window to a global list for later recalling
 		window.setAutoSize(true);
 		window.setTitle("Name Schedule");
 		window.setCanDragReposition(true);
