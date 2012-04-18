@@ -24,7 +24,7 @@ public class Generate {
 	/**
 	 * Used for debugging. Toggle it to get debugging output
 	 */
-	 private static final boolean DEBUG = true; // !true == false ; )
+	 private static final boolean DEBUG = !true; // !true == false ; )
 	   
 	/**
 	 * Prints a message to STDERR if DEBUG is true
@@ -112,6 +112,7 @@ public class Generate {
 	                        + " / " + c.getNumSections());
 	            
 	                     lec_si = genLecItem(model, schedule, c, lec_bounds, id_vec, ld_vec);
+	                     lec_si.getItem().setSection(i + 1);
 	                     debug ("MADE LEC_SI\n" + lec_si);
 	                     try
 	                     {
@@ -680,67 +681,25 @@ public class Generate {
 		   if(id.getInstructor().getDocument().getStaffInstructor() == id.getInstructor())
 			   return true;
 		   
-	       return id.getAvailability().isFree(tr.getS(), tr.getE(), days);
-	   }
-
-	   /**
-	    * This method will tell whether this location is availble during the given
-	    * time slot.
-	    * 
-	    * @param dayOfWeek
-	    *           The day (0 = Sun; 6 = Sat)
-	    * @param s
-	    *           The start time
-	    * @param e
-	    *           The end time
-	    * 
-	    * @return True if the given span of time is available. False otherwise.
-	    * 
-	    *         Written by: Eric Liebowitz
-	    */
-	   public static boolean isAvailable(Day dayOfWeek, int s, int e, LocationDecorator ld)
-	   {		   
-		   return ld.getAvailability().isFree(s, e, dayOfWeek);
+	       return id.getAvailability().isFree(days, tr);
 	   }
 
 	   /**
 	    * Determines whether a location is available during the given span of time,
 	    * over the given week of days.
 	    * 
-	    * @param week
-	    *           The week of days that must be free
-	    * @param s
-	    *           The start time
-	    * @param e
-	    *           The end time
-	    * 
-	    * @return True if the time between "s" and "e" is free on all days of "week"
-	    * 
-	    *         Written by: Eric Liebowitz
-	    */
-	   public static boolean isAvailable(Week week, int s, int e, LocationDecorator ld)
-	   {
-		   return ld.getAvailability().isFree(s, e, week);
-	   }
-
-	   /**
-	    * Determines whether a location is available during the given span of time,
-	    * over the given week of days.
-	    * 
-	    * @param week
-	    *           The week of days that must be free
-	    * @param tr
-	    *           TimeRange to check
+	    * @param week The week of days that must be free
+	    * @param tr TimeRange to check
 	    * 
 	    * @return True if the TimeRange is free on all days of "week"
 	    * @throws DatabaseException 
 	    */	   
-	   public static boolean isAvailable(Week week, TimeRange tr, LocationDecorator ld) throws DatabaseException
+	   public static boolean isAvailable(Week days, TimeRange tr, LocationDecorator ld) throws EndBeforeStartException, DatabaseException
 	   {
 		   if(ld.getLocation().getDocument().getTBALocation() == ld.getLocation())
 			   return true;
 		   
-		   return ld.getAvailability().isFree(tr, week);
+		   return ld.getAvailability().isFree(days, tr);
 	   }
 
 	   /**
@@ -765,10 +724,10 @@ public class Generate {
 
 	      debug ("BOOKING");
 	      
-	      book(true, days, tr, id);
-	      //TODO: I think there's a bug here...doesn't make sense to book i twice with same fields and l is unused
-	      //so switched i to l in second book call.
-	      book(true, days, tr, ld);
+	      book(days, tr, id);
+	      //TODO - TEST, remove following line later
+	      debug(id.getAvailability().toString());
+	      book(days, tr, ld);
 
 	      id.addWTU(si.getItem().getCourse().getWTUInt());
 
@@ -777,9 +736,7 @@ public class Generate {
 	      si.getItem().setSection(st.getCurSection());
 	      
 	      items.add(si);
-	      
-//	      debug ("JUST ADDED SECTION " + st.getCurSection() + " OF " + 
-//	         si.getCourse());
+
 	      debug ("ITEM COUNT AT : " + items.size());
 	   }
 	   
@@ -859,6 +816,8 @@ public class Generate {
 	         Set<Day> days = c.getDayPatterns().iterator().next();	         
 
 	         debug("CONSIDERING Time Range: " + tr);
+	         //TODO - BUG HERE - We have id getting passed to isAvailable and Instructor i to the next
+	         //call ..... hmmmmm
 	         if (isAvailable(new Week(days), tr, id))
 	         {
 	            debug("AVAILABLE");
@@ -1084,8 +1043,8 @@ public class Generate {
 	         LocationDecorator ld = getLocationDecorator(ld_vec, model, si.getItem());
 	         
 	         s_items.remove(si);
-	         book(false, days, tr, id);
-	         book(false, days, tr, ld);
+	         unbook(days, tr, id);
+	         unbook(days, tr, ld);
 
 	         id.subtractWTU(si.getItem().getCourse().getWTUInt());
 
@@ -1118,55 +1077,37 @@ public class Generate {
 	    *         for any part of the time specified.
 	    */
 	   
-	   public static boolean book (boolean b, Week days, TimeRange tr, InstructorDecorator id)
+	   public static boolean book (Week days, TimeRange tr, InstructorDecorator id)
 	   {
-	       return id.getAvailability().book(b, days, tr);
+	       return id.getAvailability().book(days, tr);
 	   }
 
 	   /**
-	    * Books this location for a given time over a given span of days (Week).
-	    * 
-	    * @param week
-	    *           The span of days to book
-	    * @param s
-	    *           The start time
-	    * @param e
-	    *           The end time
-	    * 
-	    * @return if the time was booked, and thus free beforehand.
-	    * 
-	    *         Written by: Eric Liebowitz
+	    * Books the specified Location so no other classes are scheduled in the Location for the
+	    * specified TimeRange
+        *
+	    * @return True if Location is successfully booked, otherwise false.
 	    */
-	   public boolean book(boolean b, Week week, int s, int e, LocationDecorator ld)
+	   public static boolean book(Week days, TimeRange tr, LocationDecorator ld)
 	   {
-		   return ld.getAvailability().book(b, s, e, week);
+	       return ld.getAvailability().book(days, tr);
 	   }
-
-	   public static boolean book(boolean b, Week week, TimeRange tr, LocationDecorator ld)
-	   {
-	       return ld.getAvailability().book(b, week, tr);
-	   }
-
+	   
 	   /**
-	    * This method will take in a day, start time, and end time and set that time
-	    * interval as busy for this location.
-	    * 
-	    * @param dayOfWeek
-	    *           The day (0 = Sun; 6 = Sat)
-	    * @param s
-	    *           The start time
-	    * @param e
-	    *           The end time
-	    * 
-	    *           Written by: Eric Liebowitz
+	    * Unbooks the specified Instructor from the specified TimeRange
 	    */
-	   
-	   //TODO: can probably get rid of this eventually and just call ld.getAvailability() in the caller
-	   public static boolean book(boolean b, Day dayOfWeek, int s, int e, LocationDecorator ld)
+	   public static boolean unbook(Week days, TimeRange tr, InstructorDecorator id)
 	   {
-		   return ld.getAvailability().book(b, s, e, dayOfWeek);
+		   return id.getAvailability().unbook(days, tr);
 	   }
 	   
+	   /**
+	    * Unbooks the specified Location from the specified TimeRange
+	    */
+	   public static boolean unbook(Week days, TimeRange tr, LocationDecorator ld)
+	   {
+		   return ld.getAvailability().unbook(days, tr);
+	   }
 	   
 	   private static void removeItem (Model model, InstructorDecorator ins, LocationDecorator loc, 
 			   Vector<ScheduleItemDecorator> s_items, List<ScheduleItemDecorator> toRemove, Vector<InstructorDecorator> id_vec,
@@ -1201,103 +1142,4 @@ public class Generate {
 		      }
 		      return ld;
 	   }
-
-	   
-	   /**
-	    * Determines the time range a lab can be taught for. In particular, if the
-	    * lab is teathered to its lecture, it must be taught directly after the
-	    * lecture. Otherwise, it can float around and be taught anywhere.
-	    * 
-	    * @param lab Lab to check for teathering
-	    * @param lec_si Schedule info for the lecture. Used for figuring out when a
-	    *        teathered lab to start
-	    * 
-	    * @return the TimeRange within which the given lab can be taught
-	    */
-//	   private TimeRange getLabTimeRange (Lab lab, ScheduleItem lec_si)
-//	   {
-//	      TimeRange tr;
-//	      if (lab.isTethered())
-//	      {
-//	         /*
-//	          * Find times directly after the lecture only
-//	          */
-//	         tr = new TimeRange(lec_si.getEnd(), lab.getLength());
-//	      }
-//	      /*
-//	       * Otherwise, lab can go anywhere within schedule bounds
-//	       */
-//	      else
-//	      {
-//	         tr = this.bounds;
-//	      }
-//	      return tr;
-//	   }
-	   
-	   /**
-	    * Adds a ScheduleItem to our list of bad/conflicting ScheduleItems. The item
-	    * will only be added if 1) It's actually a conflicting item and 2) It's not
-	    * already present in our list of conflicting items
-	    *  
-	    * @param si Conflicting Item to add
-	    * 
-	    * @return true if the item was added to our list. False otherwise. 
-	    */
-//	   public boolean addConflictingItem (ScheduleItem si, ScheduleDecorator sd)
-//	   {
-//	      boolean isDirty = false;
-//	      try
-//	      {
-//	         verify(si, sd);
-//	      }
-//	      catch (CouldNotBeScheduledException e)
-//	      {
-//	         isDirty = true;
-//	      }
-//	      
-//	      boolean r = false;
-//	      if (isDirty)
-//	      {
-//	         r = this.dirtyList.add(si);
-//	      }
-//	      
-//	      return r;
-//	   }
-	   
-	   /**
-	    * Removes a ScheduleItem from our list of conflicting items. 
-	    * 
-	    * @param si ScheduleItem to remove from the list
-	    * 
-	    * @return true if the item actually existed in our list and was removed. 
-	    *         False otherwise.
-	    */
-//	   public boolean removeConflictingItem (ScheduleItem si)
-//	   {
-//	      return this.dirtyList.remove(si);
-//	   }
-	   
-	   /**
-	    * Returns the list of conflicting items
-	    * 
-	    * @return the list of conflicting items.
-	    */
-//	   public HashSet<ScheduleItem> getDirtyList ()
-//	   {
-//	      return this.dirtyList;
-//	   }
-	   
-	   /**
-	    * Sets the lecture time bounds
-	    * 
-	    * @param tr Bounds you want lectures to be taught within
-	    * 
-	    * @return The old lec_bounds value
-	    */
-//	   private TimeRange setLecBounds (TimeRange tr)
-//	   {
-//	      TimeRange oldBounds = this.lec_bounds;
-//	      this.lec_bounds = tr;
-//	      return oldBounds;
-//	   }
 }
