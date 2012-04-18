@@ -8,6 +8,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
@@ -31,17 +32,22 @@ public class InstructorPrefsWizardTimeView extends VerticalPanel{
 	public InstructorPrefsWizardTimeView(GreetingServiceAsync service,
 			int documentID, InstructorGWT instructor)
 	{
+		this.setSpacing(15);
 		this.setWidth("100%");
 		this.setHeight("100%");
 		this.timePrefs = new TimePrefsWidget(service, documentID, instructor);
 		this.back = new Button("< back");
 		this.finish = new Button("finish");
-		
-		this.add(this.timePrefs);
+		this.back.setWidth("150px");
+		this.finish.setWidth("150px");
 		
 		DOM.setElementAttribute(this.back.getElement(), "id", "wizBackButton");
 		DOM.setElementAttribute(this.finish.getElement(), "id", "wizFinishButton");
 		DOM.setElementAttribute(this.timePrefs.getElement(), "id", "wizTimePrefs");
+		
+		ScrollPanel scroll = new ScrollPanel(this.timePrefs);
+		scroll.setSize("100%", "490px");
+		this.add(scroll);
 		
 		HorizontalPanel buttons = new HorizontalPanel();		
 		buttons.setWidth("100%");

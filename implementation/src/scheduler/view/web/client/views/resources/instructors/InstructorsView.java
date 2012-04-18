@@ -205,7 +205,10 @@ public class InstructorsView extends VerticalPanel {
 				service, document.getID(), document.getName(), instructor, unsavedDocumentStrategy);
 		final Window window = new Window();
 		window.setAutoSize(true);
-		window.setTitle("Instructor Preferences");
+		window.setTitle("Instructor Preferences - <i>"
+					+ instructor.getUsername() + "</i> ("
+					+ instructor.getFirstName() 
+					+ " " + instructor.getLastName() + ")");
 		window.setCanDragReposition(true);
 		window.setCanDragResize(true);
 		iipv.setParent(window);

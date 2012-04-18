@@ -8,6 +8,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
@@ -31,6 +32,7 @@ public class InstructorPrefsWizardCourseView extends VerticalPanel {
 	public InstructorPrefsWizardCourseView(GreetingServiceAsync service,
 			int documentID, InstructorGWT instructor)
 	{
+		this.setSpacing(15);
 		this.setWidth("100%");
 		this.setHeight("100%");
 		this.coursePrefs = new CoursePrefsWidget(service, documentID, instructor);
@@ -38,12 +40,16 @@ public class InstructorPrefsWizardCourseView extends VerticalPanel {
 		this.coursePrefs.setStyleName("otherCenterness");
 		this.close = new Button("close");
 		this.next = new Button("next >");
+		this.close.setWidth("150px");
+		this.next.setWidth("150px");
 		
 		DOM.setElementAttribute(this.close.getElement(), "id", "wizCloseButton");
 		DOM.setElementAttribute(this.next.getElement(), "id", "wizNextButton");
 		DOM.setElementAttribute(this.coursePrefs.getElement(), "id", "wizCoursePrefs");
 		
-		this.add(this.coursePrefs);
+		ScrollPanel scroll = new ScrollPanel(this.coursePrefs);
+		scroll.setSize("100%", "490px");
+		this.add(scroll);
 		
 		HorizontalPanel buttons = new HorizontalPanel();		
 		buttons.setWidth("100%");
@@ -54,8 +60,8 @@ public class InstructorPrefsWizardCourseView extends VerticalPanel {
 		buttons.add(this.next);
 		buttons.setCellHorizontalAlignment(this.close, ALIGN_RIGHT);
 		buttons.setCellHorizontalAlignment(this.next, ALIGN_LEFT);
-		this.add(buttons);
 		this.setCellVerticalAlignment(buttons, ALIGN_BOTTOM);
+		this.add(buttons);
 	}
 	
 	/**

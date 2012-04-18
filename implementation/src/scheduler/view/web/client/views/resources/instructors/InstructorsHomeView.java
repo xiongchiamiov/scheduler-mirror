@@ -18,6 +18,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.Window;
 
 public class InstructorsHomeView extends VerticalPanel
@@ -38,12 +39,12 @@ public class InstructorsHomeView extends VerticalPanel
 		
 		// ------------------------------------
 		
-		this.setWidth("90%");
+		this.setWidth("50%");
 		this.schedList.setStyleName("otherCenterness");
 		this.schedList.setWidth("100%");
-		HTML schedule = new HTML("Scheduler\n\n\n");
+		HTML schedule = new HTML("Scheduler<br/>\n\n\n");
 		
-		HTML mydocs = new HTML("My Scheduling Documents:");
+		HTML mydocs = new HTML("My Scheduling Documents:<br/>");
 		mydocs.setStyleName("centerness");
 		
 		schedule.addStyleName("editTableHeading");
@@ -52,6 +53,9 @@ public class InstructorsHomeView extends VerticalPanel
 		this.setStyleName("centerness");
 		this.add(schedule);
 		this.add(mydocs);
+		Label spacer = new Label();
+		spacer.setHeight("10px");
+		this.add(spacer);
 		this.add(schedList);
 
 		// ------------------------------------
@@ -87,15 +91,11 @@ public class InstructorsHomeView extends VerticalPanel
 	{
 		// set the instructor
 		final String username = this.username;
-		final InstructorGWT instructor = this.instructor;
 
-		/*if(this.instructor == null)
-		{
-			return;
-		}*/
 		int row = this.schedList.getRowCount();
 		this.schedList.setWidget(row, 0, new HTML(doc.getName()));
 		Button prefs = new Button("Preferences");
+		this.schedList.getCellFormatter().addStyleName(row, 1, "rightness");
 		prefs.addClickHandler(new ClickHandler(){
 
 			@Override
@@ -139,12 +139,12 @@ public class InstructorsHomeView extends VerticalPanel
 		this.instructor = instructor1;
 		
 		final Window win1 = new Window();
-		win1.setTitle("Course Preferences");
+		win1.setTitle(doc.getName() + " - Course Preferences");
 		win1.setAutoCenter(true);
 		win1.setSize("750px", "600px");
 		
 		final Window win2 = new Window();
-		win2.setTitle("Time Preferences");
+		win2.setTitle(doc.getName() + " - Time Preferences");
 		win2.setAutoCenter(true);
 		win2.setSize("750px", "600px");
 
