@@ -65,11 +65,13 @@ public class LocationsView extends VerticalPanel {
 		
 		this.add(grid);
 		this.setHorizontalAlignment(ALIGN_DEFAULT);
-		this.add(new Button("Add New Location", new ClickHandler() {
+		Button newButton = new Button("Add New Location", new ClickHandler() {
 			public void onClick(ClickEvent event) {
             grid.startEditingNew();
 			}
-		}));
+		});
+		newButton.getElement().setId("addLocationButton");
+		this.add(newButton);
 
 		this.add(new Button("Duplicate Selected Locations", new com.google.gwt.event.dom.client.ClickHandler() {
 			public void onClick(com.google.gwt.event.dom.client.ClickEvent event) {

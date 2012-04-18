@@ -21,6 +21,7 @@ public class OriginalDocumentsCache {
 	GreetingServiceAsync service;
 	HashMap<Integer, DocumentGWT> documents = new HashMap<Integer, DocumentGWT>();
 	List<Observer> observers = new LinkedList<Observer>();
+	boolean connectionDead = false;
 	
 	public OriginalDocumentsCache(GreetingServiceAsync service) {
 		this.service = service;
@@ -37,12 +38,16 @@ public class OriginalDocumentsCache {
 	}
 	
 	public void updateFromServer() {
+		if (connectionDead)
+			return;
+		
 		service.getAllOriginalDocuments(new AsyncCallback<Collection<DocumentGWT>>() {
 			public void onSuccess(Collection<DocumentGWT> result) {
 				refreshFromResponse(result);
 			}
 			public void onFailure(Throwable caught) {
-				Window.alert("Failed to retrieve documents from server: " +  caught.getMessage());
+				connectionDead = true;
+				Window.alert("Failed to retrieve documents from server. The page will not automatically update from the server. Please refresh the page. " +  caught.getMessage());
 			}
 		});
 	}

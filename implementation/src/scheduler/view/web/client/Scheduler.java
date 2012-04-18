@@ -57,7 +57,7 @@ public class Scheduler implements EntryPoint, UpdateHeaderStrategy
 			topBarLeftSide.add(documentChangedIndicatorContainer);
 			
 			//need for selenium
-			Label lbl = new Label("Schedulizerifier");
+			Label lbl = new Label("The Scheduler Project");
 			appNameContainer = new SimplePanel();
 			appNameContainer.setStyleName("appName");
 			appNameContainer.add(lbl);

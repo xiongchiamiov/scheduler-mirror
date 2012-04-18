@@ -214,7 +214,7 @@ public class SchedulerBot {
 //	}
 
 //	bot.enterIntoResourceTableNewRow(0, true, "GRC", "101", "Graphics", "1", "3", "3", null, "3", "97", "LEC");
-	public void enterIntoResourceTableNewRow(
+	public void enterIntoCoursesResourceTableNewRow(
 			int row0Based,
 			boolean isSchedulable,
 			String department,
@@ -275,6 +275,45 @@ public class SchedulerBot {
 	
 	public PopupWaiter getPopupWaiter() {
 		return new PopupWaiter();
+	}
+
+	public void enterIntoInstructorsResourceTableNewRow(
+			int row0Based,
+			boolean isSchedulable,
+			String lastName,
+			String firstName,
+			String username,
+			String maxWTU) {
+
+		System.out.println("Entering row index " + row0Based);
+		
+		driver.findElement(By.id("addInstructorBtn")).click();
+		
+		setResourceTableCheckboxCell(row0Based, 1, isSchedulable);
+		setResourceTableTextCell(row0Based, 2, lastName);
+		setResourceTableTextCell(row0Based, 3, firstName);
+		setResourceTableTextCell(row0Based, 4, username);
+		setResourceTableTextCell(row0Based, 5, maxWTU);
+	}
+	
+
+	public void enterIntoLocationsResourceTableNewRow(
+			int row0Based,
+			boolean isSchedulable,
+			String room,
+			String type,
+			String maxOccupancy,
+			String equipment) {
+
+		System.out.println("Entering row index " + row0Based);
+		
+		driver.findElement(By.id("addLocationButton")).click();
+		
+		setResourceTableCheckboxCell(row0Based, 1, isSchedulable);
+		setResourceTableTextCell(row0Based, 2, room);
+		setResourceTableTextCell(row0Based, 3, type);
+		setResourceTableTextCell(row0Based, 4, maxOccupancy);
+		setResourceTableTextCell(row0Based, 5, equipment);
 	}
 	
 }
