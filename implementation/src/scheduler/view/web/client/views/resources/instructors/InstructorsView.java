@@ -44,7 +44,7 @@ public class InstructorsView extends VerticalPanel {
 
 		this.setWidth("100%");
 		this.setHeight("100%");
-		
+		this.setHorizontalAlignment(ALIGN_CENTER);
 		// this.add(new HTML("<h2>Instructors</h2>"));
 		
 		final ListGrid grid = new ListGrid() {
@@ -85,7 +85,7 @@ public class InstructorsView extends VerticalPanel {
 			}
 		};
 		
-		grid.setWidth("100%");
+		grid.setWidth("98%");
 		grid.setAutoFitData(Autofit.VERTICAL);
 		grid.setShowAllRecords(true);
 		grid.setAutoFetchData(true);
@@ -113,9 +113,13 @@ public class InstructorsView extends VerticalPanel {
 		
 		ListGridField schedulableField = new ListGridField("isSchedulable", "Schedulable");
 		schedulableField.setDefaultValue(true);
+		schedulableField.setAlign(Alignment.CENTER);
 		ListGridField lastNameField = new ListGridField("lastName", "Last Name");
+		lastNameField.setAlign(Alignment.CENTER);
 		ListGridField firstNameField = new ListGridField("firstName", "First Name");
+		firstNameField.setAlign(Alignment.CENTER);
 		ListGridField usernameField = new ListGridField("username", "Username");
+		usernameField.setAlign(Alignment.CENTER);
 		usernameField.setValidators(new CustomValidator() {
 			protected boolean condition(Object value) {
 				if (value == null) {
@@ -142,6 +146,7 @@ public class InstructorsView extends VerticalPanel {
 		
 		ListGridField maxWTUField = new ListGridField("maxWTU", "Max WTU");
 		maxWTUField.setValidators(nonnegativeInt);
+		maxWTUField.setAlign(Alignment.CENTER);
 		ListGridField instructorPrefsField = new ListGridField("instructorPrefs", "Preferences");
 		instructorPrefsField.setAlign(Alignment.CENTER);
 		
@@ -149,7 +154,7 @@ public class InstructorsView extends VerticalPanel {
 				maxWTUField, instructorPrefsField);
 		
 		this.add(grid);
-		
+		this.setHorizontalAlignment(ALIGN_DEFAULT);
 		Button addBtn = new Button("Add New Instructor", new com.google.gwt.event.dom.client.ClickHandler() {
 			@Override
 			public void onClick(com.google.gwt.event.dom.client.ClickEvent event) {

@@ -24,11 +24,11 @@ public class LocationsView extends VerticalPanel {
 	public LocationsView(final GreetingServiceAsync service, final DocumentGWT document, UnsavedDocumentStrategy unsavedDocumentStrategy) {
 		this.setWidth("100%");
 		this.setHeight("100%");
-		
+		this.setHorizontalAlignment(ALIGN_CENTER);
 //		this.add(new HTML("<h2>Locations</h2>"));
 		
 		final ListGrid grid = new ListGrid();
-		grid.setWidth("100%");
+		grid.setWidth("98%");
 		grid.setAutoFitData(Autofit.VERTICAL);
 		grid.setShowAllRecords(true);
 		grid.setAutoFetchData(true);
@@ -51,15 +51,20 @@ public class LocationsView extends VerticalPanel {
 		
 		ListGridField schedulableField = new ListGridField("isSchedulable", "Schedulable");
 		schedulableField.setDefaultValue(true);
-		ListGridField usernameField = new ListGridField("room", "Room");
-		ListGridField firstNameField = new ListGridField("type", "Type");
-		ListGridField lastNameField = new ListGridField("maxOccupancy", "Max Occupancy");
+		schedulableField.setAlign(Alignment.CENTER);
+		ListGridField roomField = new ListGridField("room", "Room");
+		roomField.setAlign(Alignment.CENTER);
+		ListGridField typeField = new ListGridField("type", "Type");
+		typeField.setAlign(Alignment.CENTER);
+		ListGridField maxOccupancyField = new ListGridField("maxOccupancy", "Max Occupancy");
+		maxOccupancyField.setAlign(Alignment.CENTER);
 		ListGridField equipmentField = new ListGridField("equipment", "Equipment");
+		equipmentField.setAlign(Alignment.CENTER);
 
-		grid.setFields(idField, schedulableField, usernameField, firstNameField, lastNameField, equipmentField);
+		grid.setFields(idField, schedulableField, roomField, typeField, maxOccupancyField, equipmentField);
 		
 		this.add(grid);
-		
+		this.setHorizontalAlignment(ALIGN_DEFAULT);
 		this.add(new Button("Add New Location", new ClickHandler() {
 			public void onClick(ClickEvent event) {
             grid.startEditingNew();
