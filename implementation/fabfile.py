@@ -16,6 +16,8 @@ def build():
 def test():
 	print('Running JUnit tests...')
 	local('ant test')
+	print('Running Selenium tests...')
+	local('cd ../Selenium && ant test')
 
 def restart_tomcat():
 	print('Restarting tomcat...')

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="build" name="GWTView">
+  <property environment="env"/>
+  <property name="debuglevel" value="source,lines,vars"/>
+  <property name="target" value="1.6"/>
+  <property name="source" value="1.6"/>
+  <path id="GWTView.classpath">
+    <pathelement location="classes"/>
+    <pathelement location="test-classes"/>
+    <fileset dir="seljars" includes="**/*.jar"/>
+  </path>
+  
+  <target name="init">
+    <mkdir dir="classes"/>
+    <mkdir dir="test-classes"/>
+    <copy includeemptydirs="false" todir="classes">
+      <fileset dir="src">
+      <exclude name="**/*.java"/>
+      </fileset>
+    </copy>
+    <copy includeemptydirs="false" todir="test-classes">
+      <fileset dir="test">
+      <exclude name="**/*.java"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="clean">
+    <delete dir="classes"/>
+    <delete dir="test-classes"/>
+  </target>
+  
+  <target depends="init" name="build">
+    <echo message="${ant.project.name}: ${ant.file}"/>
+    <javac debug="true" debuglevel="${debuglevel}" destdir="classes" source="${source}" target="${target}">
+      <src path="src"/>
+      <classpath refid="GWTView.classpath"/>
+    </javac>
+    <javac debug="true" debuglevel="${debuglevel}" destdir="test-classes" source="${source}" target="${target}">
+      <src path="test"/>
+      <classpath refid="GWTView.classpath"/>
+    </javac>
+  </target>
+  
+  <target description="compile project with Eclipse compiler" name="build-eclipse-compiler">
+    <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+    <antcall target="build"/>
+  </target>
+  
+  <path id="project.class.path">
+    <pathelement location="src"/>
+    <pathelement location="test-classes"/>
+    <!-- Add any additional non-server libs (such as JUnit) -->
+    <fileset dir="seljars" includes="**/*.jar"/>
+  </path>
+  
+  <path id="test.class.path">
+    <path refid="project.class.path"/>
+    <pathelement location="test-classes"/>
+    <!-- Add any additional non-server libs (such as JUnit) -->
+    <fileset dir="test-classes" includes="**/*.jar"/>
+  </path>
+  
+  <target name="test">
+    <junit fork="yes" haltonfailure="yes">
+      <formatter type="plain" usefile="false" />
+      <classpath refid="test.class.path" />
+      <test name="scheduler.view.web.shared.ViewTestSuite" />
+      <!--<batchtest>-->
+      <!--<fileset dir="test-classes" includes="**/*Test.class" />-->
+      <!--</batchtest>-->
+    </junit>
+  </target>
+</project>
+
