@@ -121,7 +121,7 @@ public class SchedulerBot {
 		
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 		System.out.println(popupListRows.size());
-		assert(popupListRows.size() == 17);
+		assert(popupListRows.size() >= 2);
 		for (WebElement popupListRow : popupListRows) {
 			String text = popupListRow.findElement(By.xpath("td[2]/div/nobr")).getText().trim();
 			if (options.contains(text)) {

@@ -98,13 +98,13 @@ public abstract class GRCAcceptanceTest extends DefaultSelTestCase {
 		
 		// TODO: see if documentName appears anywhere on screen?
 
-		bot.enterIntoResourceTableNewRow(0, true, "GRC", "101", "Graphics", "1", "3", "3", "MW,TuTh", "3", "97", "LEC", null, null);
+		bot.enterIntoResourceTableNewRow(0, true, "GRC", "101", "Graphics", "1", "3", "3", "MW,TuTh", "3", "97", "LEC", "Smart Room", null);
 		bot.enterIntoResourceTableNewRow(1, true, "GRC", "200", "Special Problems", "1", "3", "3", null, null, "10", "IND", null, null);
 		bot.enterIntoResourceTableNewRow(2, true, "GRC", "200", "Special Problems", "1", "3", "3", null, null, "10", "IND", null, null);
 		bot.enterIntoResourceTableNewRow(3, true, "GRC", "202", "Digital Photography", "1", "3", "3", "MW", "2", "50", "LEC", null, null);
-		bot.enterIntoResourceTableNewRow(4, true, "GRC", "202", "Digital Photography", "3", "3", "3", null, "3", "20", "LAB", null, null);
+		bot.enterIntoResourceTableNewRow(4, true, "GRC", "202", "Digital Photography", "3", "3", "3", null, "3", "20", "LAB", null, "GRC 202");
 		bot.enterIntoResourceTableNewRow(5, true, "GRC", "203", "Digital File Preparation and Workflow", "1", "2", "3", "TuTh", "1", "45", "LEC", null, null);
-		bot.enterIntoResourceTableNewRow(6, true, "GRC", "203", "Digital File Preparation and Workflow", "3", "3", "3", null, "3", "15", "LAB", null, null);
+		bot.enterIntoResourceTableNewRow(6, true, "GRC", "203", "Digital File Preparation and Workflow", "3", "3", "3", null, "3", "15", "LAB", null, "GRC 203 (tethered)");
 		bot.enterIntoResourceTableNewRow(7, true, "GRC", "211", "Substrates, Inks and Toners", "1", "3", "3", "TuTh", "3", "43", "LEC", null, null);
 		bot.enterIntoResourceTableNewRow(8, true, "GRC", "211", "Substrates, Inks and Toners", "3", "3", "3", null, "3", "14", "LAB", null, null);
 		bot.enterIntoResourceTableNewRow(9, true, "GRC", "212", "Substrates, Inks and Toners: Theory", "1", "3", "3", "TuTh", "3", "6", "LEC", null, null);

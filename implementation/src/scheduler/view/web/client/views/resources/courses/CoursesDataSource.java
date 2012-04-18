@@ -83,7 +83,7 @@ public class CoursesDataSource extends DataSource {
 
 		DataSourceEnumField usedEquipmentField = new DataSourceEnumField("usedEquipment");
 		usedEquipmentField.setMultiple(true);
-		usedEquipmentField.setValueMap("Projector", "Computers");
+		usedEquipmentField.setValueMap("Laptop Connectivity", "Overhead", "Smart Room");
 		
 //		DataSourceEnumField associationsField = new DataSourceEnumField("associations");
 //		associationsField.setValueMap("?");

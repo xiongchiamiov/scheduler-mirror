@@ -140,10 +140,14 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		}
 		
 		try {
+			// We dont use projector anymore. If this assert fails, you need to erase your database.
+			assert(!model.getEquipmentTypes().contains("Projector"));
+			
 			Collection<String> equipmentTypes = model.getEquipmentTypes();
 			if (equipmentTypes.size() == 0) {
-				model.insertEquipmentType("Computers");
-				model.insertEquipmentType("Projector");
+				model.insertEquipmentType("Laptop Connectivity");
+				model.insertEquipmentType("Overhead");
+				model.insertEquipmentType("Smart Room");
 			}
 		}
 		catch (DatabaseException e) {
