@@ -435,23 +435,26 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public boolean isOriginalDocument(IDBDocument doc) throws DatabaseException {
-		// TODO Auto-generated method stub
-		return false;
+//		IDBDocument result;
+//		HashMap<String, Object> wheres = new HashMap<String, Object>();
+//		wheres.put("id", doc.getID());
+//		result = documentTable.select(wheres).get(0);
+//		return result;
+		return !(((SQLDocument)doc).isWorkingCopy());
 	}
 
 
 	@Override
 	public boolean documentIsWorkingCopy(IDBDocument document)
 			throws DatabaseException {
-		// TODO Auto-generated method stub
-		return false;
+		return ((SQLDocument)document).isWorkingCopy();
 	}
 
 
 	@Override
 	public IDBDocument getOriginalForWorkingCopyDocumentOrNull(IDBDocument rawDocument)
 			throws DatabaseException {
-		// TODO Auto-generated method stub
+		//return ((SQLDocument)rawDocument).getWorkingCopyID();
 		return null;
 	}
 
@@ -492,9 +495,9 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	//We can't have this method, ScheduleID isn't enough to identify a Schedule
 	@Override
 	public IDBSchedule findScheduleByID(int id) throws DatabaseException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -508,14 +511,16 @@ public class SQLdb implements IDatabase {
 	@Override
 	public void insertSchedule(IDBDocument containingDocument,
 			IDBSchedule schedule) throws DatabaseException {
-		// TODO Auto-generated method stub
+		((SQLScheduleItem)schedule).docID = containingDocument.getID();
+
 		
 	}
 
-
+	/**
+	 * What is this even supposed to do?
+	 */
 	@Override
 	public void updateSchedule(IDBSchedule schedule) throws DatabaseException {
-		// TODO Auto-generated method stub
 		
 	}
 
