@@ -633,64 +633,6 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	}
 	
 	@Override
-	@Deprecated
-	public List<OldScheduleItemGWT> generateSchedule(
-			List<CourseGWT> mAllCourses,
-			HashMap<String, OldScheduleItemGWT> mSchedItems) {
-		throw new UnsupportedOperationException();
-	}
-	
-	@Override
-	public List<OldScheduleItemGWT> getSchedule(
-			HashMap<String, OldScheduleItemGWT> mSchedItems) {
-		throw new UnsupportedOperationException();
-	}
-	
-	@Override
-	public ScheduleItemList rescheduleCourse(OldScheduleItemGWT scheduleItem,
-			ArrayList<Integer> days, int startHour, boolean atHalfHour,
-			boolean inSchedule, HashMap<String, OldScheduleItemGWT> mSchedItems) {
-		throw new UnsupportedOperationException();
-	}
-	
-	@Override
-	public List<OldScheduleItemGWT> removeScheduleItem(
-			OldScheduleItemGWT removed,
-			HashMap<String, OldScheduleItemGWT> mSchedItems) {
-		throw new UnsupportedOperationException();
-	}
-	
-	@Override
-	public Collection<OldScheduleItemGWT> intermediateGetScheduleItems(int documentID) {
-		throw new UnsupportedOperationException();
-	}
-	
-	@Override
-	public void intermediateInsertScheduleItem(int documentID, OldScheduleItemGWT itemOldGWT) {
-		throw new UnsupportedOperationException();
-	}
-	
-	@Override
-	public void intermediateUpdateScheduleItem(
-			int documentID,
-			OldScheduleItemGWT oldItemOldGWT,
-			OldScheduleItemGWT newItemOldGWT) {
-		throw new UnsupportedOperationException();
-	}
-	
-	@Override
-	public void intermediateRemoveScheduleItem(int documentID, OldScheduleItemGWT oldItemOldGWT) {
-		throw new UnsupportedOperationException();
-	}
-	
-	@Override
-	public Collection<OldScheduleItemGWT> intermediateGenerateRestOfSchedule(int documentID) {
-		throw new UnsupportedOperationException();
-	}
-	
-	
-	
-	@Override
 	public Collection<ScheduleItemGWT> insertScheduleItem(int scheduleID, ScheduleItemGWT scheduleItem) {
 		try {
 			Schedule schedule = model.findScheduleByID(scheduleID);
@@ -711,6 +653,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			newItem.setCourse(model.findCourseByID(scheduleItem.getCourseID()));
 			newItem.setInstructor(model.findInstructorByID(scheduleItem.getInstructorID()));
 			newItem.insert();
+			System.out.println("Inserted new item: " + newItem.getID());
 			
 			// Generate.generate(model, schedule, s_items, c_list, i_list, l_list)
 			//

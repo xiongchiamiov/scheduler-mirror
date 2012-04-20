@@ -200,22 +200,6 @@ public abstract class Conversion {
 				doc.getEndHalfHour());
 	}
 
-	@Deprecated
-	public static OldScheduleItemGWT scheduleItemFromGWTToOldGWT(ScheduleItemGWT source, Course course, Instructor instructor, Location location) throws DatabaseException {
-		CourseGWT courseGWT = courseToGWT(course);
-		LocationGWT locationGWT = locationToGWT(location);
-		InstructorGWT instructorGWT = instructorToGWT(instructor);
-		
-		ArrayList<Integer> daysInts = new ArrayList<Integer>();
-		for (DayGWT day : source.getDays())
-			daysInts.add(day.ordinal());
-		int startTimeHour = source.getStartHalfHour() / 2;
-		int startTimeMinute = source.getStartHalfHour() % 2 * 30 + 10;
-		int endTimeHour = source.getEndHalfHour() / 2;
-		int endTimeMinute = source.getEndHalfHour() % 2 * 30 + 10;
-		return new OldScheduleItemGWT(courseGWT, courseGWT.getCourseName(), instructorGWT.getUsername(), courseGWT.getDept(), courseGWT.getCatalogNum(), source.getSection(), daysInts, startTimeHour, startTimeMinute, endTimeHour, endTimeMinute, locationGWT.getRoom(), source.isConflicted());
-	}
-
 	public static void readScheduleItemGWTFromOldGWT(ScheduleItemGWT result, OldScheduleItemGWT itemOldGWT, Collection<Instructor> instructors, Collection<Location> locations) {
 		Set<DayGWT> days = new TreeSet<DayGWT>();
 		for (int integer : itemOldGWT.getDayNums())

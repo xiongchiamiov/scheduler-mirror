@@ -52,7 +52,7 @@ public abstract class GRCAcceptanceTest extends DefaultSelTestCase {
 			
 			bot.mouseDownAndUpAt(By.xpath("//div[@eventproxy='s_deleteBtn']"), 5, 5);
 			
-			Thread.sleep(2000);
+			Thread.sleep(5000);
 			
 			assert(driver.findElements(By.xpath("//div[@class='gridBody']//td[contains(@class, 'homeDocumentLink')]")).size() == existingDocumentsNames.size() - 1);
 		}
@@ -137,6 +137,10 @@ public abstract class GRCAcceptanceTest extends DefaultSelTestCase {
 		bot.enterIntoCoursesResourceTableNewRow(43, false, "GRC", "473", "Applied Graphic Communication Practices", "1", "3", "3", "M", "2", "20", "LEC", null, null);
 		bot.enterIntoCoursesResourceTableNewRow(44, true, "GRC", "485", "Cooperative Education Experience", "3", "3", "3", null, null, "10", "IND", null, null);
 		bot.enterIntoCoursesResourceTableNewRow(45, true, "GRC", "495", "Cooperative Education Experience", "2", "3", "3", null, null, "5", "IND", null, null);
+		
+		// Test saving
+		driver.findElement(By.xpath("//div[@class='toolStrip']//td[@class='buttonTitle'][text()='File']")).click();
+		driver.findElement(By.xpath("//td[@class='menuTitleField']/nobr[text()='Save']")).click();
 
 		// Click on the instructors tab
 		driver.findElement(By.xpath("//td[@class='tabTitle'][text()='Instructors']")).click();
@@ -155,5 +159,3 @@ public abstract class GRCAcceptanceTest extends DefaultSelTestCase {
 // TODO: see if documentName appears anywhere on screen?
 
 // saving:
-//driver.findElement(By.xpath("//div[@class='toolStrip']//td[@class='buttonTitle'][text()='File']")).click();
-//driver.findElement(By.xpath("//td[@class='menuTitleField']/nobr[text()='Save']")).click();
