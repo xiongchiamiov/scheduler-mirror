@@ -138,7 +138,7 @@ public abstract class Conversion {
 				course.getUsedEquipment());
 	}
 	
-	static void readCourseFromGWT(CourseGWT source, Course result) {
+	static void readCourseFromGWT(CourseGWT source, Course result, Model model) throws DatabaseException {
 		result.setIsSchedulable(source.isSchedulable());
 		result.setName(source.getCourseName());
 		result.setCatalogNumber(source.getCatalogNum());
@@ -156,6 +156,8 @@ public abstract class Conversion {
 		result.setDayPatterns(dayPatterns);
 		
 		result.setUsedEquipment(source.getUsedEquipment());
+		result.setLecture(model.findCourseByID(source.getLectureID()));
+		result.setTetheredToLecture(source.getTetheredToLecture());
 	}
 
 	public static void readInstructorFromGWT(InstructorGWT source, Instructor result) {

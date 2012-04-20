@@ -209,7 +209,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			
 			assert (course.getDocument().getOriginal() != null);
 			
-			Conversion.readCourseFromGWT(source, course);
+			Conversion.readCourseFromGWT(source, course, model);
 			
 			course.update();
 			
