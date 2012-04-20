@@ -48,7 +48,6 @@ public class DBDocument extends DBObject implements IDBDocument {
 
 	public void sanityCheck() {
 		assert(name != null);
-		assert(originalID != null);
 		assert(staffInstructorID != null);
 		assert(tbaLocationID != null);
 	}
