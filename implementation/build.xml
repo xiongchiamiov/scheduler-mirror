@@ -80,9 +80,10 @@
     <junit fork="yes" haltonfailure="yes">
       <formatter type="plain" usefile="false" />
       <classpath refid="test.class.path" />
-      <batchtest>
-        <fileset dir="test-classes" includes="**/*Test.class" />
-      </batchtest>
+      <!--<batchtest>-->
+        <!--<fileset dir="test-classes" includes="**/*Test.class" />-->
+      <!--</batchtest>-->
+      <test name="scheduler.model.ModelTestSuite" />
     </junit>
   </target>
   
