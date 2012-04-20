@@ -107,7 +107,7 @@ public class ScheduleItem extends Identified {
 	
 	// Labs
 	
-	public Collection<ScheduleItem> getLabs() {
+	public Collection<ScheduleItem> getLabs() throws DatabaseException {
 		return model.getLabScheduleItemsForScheduleItem(this);
 	}
 	

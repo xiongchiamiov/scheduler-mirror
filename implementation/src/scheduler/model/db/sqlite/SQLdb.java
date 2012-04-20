@@ -38,6 +38,7 @@ import scheduler.model.db.IDBTimePreference;
 import scheduler.model.db.IDBUsedEquipment;
 import scheduler.model.db.IDBUser;
 import scheduler.model.db.IDatabase;
+import scheduler.model.db.simple.DBScheduleItem;
 import scheduler.model.db.simple.DBUsedEquipment;
 
 public class SQLdb implements IDatabase {
@@ -1164,7 +1165,6 @@ public class SQLdb implements IDatabase {
 		
 	}
 
-
 	@Override
 	public IDBInstructor getDocumentStaffInstructorOrNull(
 			IDBDocument underlyingDocument) throws NotFoundException {
@@ -1172,14 +1172,12 @@ public class SQLdb implements IDatabase {
 		return null;
 	}
 
-
 	@Override
-	public IDBLocation getDocumentTBALocationOrNull(IDBDocument underlyingDocument)
-			throws NotFoundException {
+	public IDBLocation getDocumentTBALocationOrNull(
+			IDBDocument underlyingDocument) throws NotFoundException {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 
 	@Override
 	public void setDocumentStaffInstructor(IDBDocument underlyingDocument,
@@ -1188,17 +1186,9 @@ public class SQLdb implements IDatabase {
 		
 	}
 
-
 	@Override
 	public void setDocumentTBALocation(IDBDocument underlyingDocument,
 			IDBLocation underlyingLocation) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
-	public void disassociateLectureAndLab(IDBCourse lecture, IDBCourse lab) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -1225,22 +1215,40 @@ public class SQLdb implements IDatabase {
 	}
 
 	@Override
-	public IDBScheduleItem getScheduleItemLectureOrNull(IDBScheduleItem underlying)
-			throws DatabaseException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void insertEquipmentType(String string) {
+	public void disassociateLectureAndLab(IDBCourse lecture, IDBCourse lab) throws DatabaseException {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public IDBDocument findDocumentByName(String scheduleName) {
+	public void insertEquipmentType(String string) throws DatabaseException {
 		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public IDBScheduleItem getScheduleItemLectureOrNull(
+			IDBScheduleItem underlying) throws DatabaseException {
+		SQLScheduleItem lab = (SQLScheduleItem) underlying;
+		
+		//if (lab.lectureScheduleItemID == null)
+			//return null;
 		return null;
+	}
+
+	@Override
+	public IDBDocument findDocumentByName(String scheduleName)
+			throws DatabaseException {
+		IDBDocument document = null;
+		HashMap<String, Object> wheres = new HashMap<String, Object>();
+		wheres.put("name", scheduleName);
+		
+		List<SQLDocument> list = documentTable.select(wheres);
+		if (list != null)
+			document = list.get(0);
+		else
+			throw new DatabaseException(new Throwable("Document " + scheduleName + " not found."));
+		return document;
 	}
 	
 }

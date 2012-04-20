@@ -550,7 +550,7 @@ public class Model {
 		scheduleCache.cache.clear();
 	}
 
-	public Collection<ScheduleItem> getLabScheduleItemsForScheduleItem(ScheduleItem item) {
+	public Collection<ScheduleItem> getLabScheduleItemsForScheduleItem(ScheduleItem item) throws DatabaseException {
 		Collection<ScheduleItem> result = new LinkedList<ScheduleItem>();
 		for (IDBScheduleItem lab : database.findAllLabScheduleItemsForScheduleItem(item.underlying))
 			result.add(itemCache.decorateAndPutIfNotPresent(lab));
@@ -562,7 +562,7 @@ public class Model {
 		return itemCache.decorateAndPutIfNotPresent(lecture);
 	}
 
-	public void insertEquipmentType(String string) {
+	public void insertEquipmentType(String string) throws DatabaseException {
 		database.insertEquipmentType(string);
 	}
 
@@ -573,7 +573,7 @@ public class Model {
 		return equipmentTypeStrings;
 	}
 
-	public Document findDocumentByNameOrNull(String scheduleName) {
+	public Document findDocumentByNameOrNull(String scheduleName) throws DatabaseException {
 		IDBDocument doc = database.findDocumentByName(scheduleName);
 		if (doc == null)
 			return null;

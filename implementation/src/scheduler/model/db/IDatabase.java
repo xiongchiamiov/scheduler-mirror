@@ -36,10 +36,10 @@ public interface IDatabase {
 	void deleteDocument(IDBDocument document) throws DatabaseException;
 	IDBDocument findDocumentForSchedule(IDBSchedule schedule) throws DatabaseException;
 
-	IDBInstructor getDocumentStaffInstructorOrNull(IDBDocument underlyingDocument) throws NotFoundException;
-	IDBLocation getDocumentTBALocationOrNull(IDBDocument underlyingDocument) throws NotFoundException;
-	void setDocumentStaffInstructor(IDBDocument underlyingDocument, IDBInstructor underlyingInstructor);
-	void setDocumentTBALocation(IDBDocument underlyingDocument, IDBLocation underlyingLocation);
+	IDBInstructor getDocumentStaffInstructorOrNull(IDBDocument underlyingDocument) throws DatabaseException;
+	IDBLocation getDocumentTBALocationOrNull(IDBDocument underlyingDocument) throws DatabaseException;
+	void setDocumentStaffInstructor(IDBDocument underlyingDocument, IDBInstructor underlyingInstructor) throws DatabaseException;
+	void setDocumentTBALocation(IDBDocument underlyingDocument, IDBLocation underlyingLocation) throws DatabaseException;
 	
 	// Working Copy
 	boolean isOriginalDocument(IDBDocument doc) throws DatabaseException;
@@ -73,9 +73,9 @@ public interface IDatabase {
 	void setScheduleItemCourse(IDBScheduleItem underlying, IDBCourse findCourseByID) throws DatabaseException;
 	void setScheduleItemLocation(IDBScheduleItem underlying, IDBLocation findLocationByID) throws DatabaseException;
 	void setScheduleItemInstructor(IDBScheduleItem underlying, IDBInstructor findInstructorByID) throws DatabaseException;
-	Collection<IDBScheduleItem> findAllLabScheduleItemsForScheduleItem(IDBScheduleItem underlying);
-	void associateScheduleItemLab(IDBScheduleItem lecture, IDBScheduleItem lab);
-	void disassociateScheduleItemLab(IDBScheduleItem lecture, IDBScheduleItem lab);
+	Collection<IDBScheduleItem> findAllLabScheduleItemsForScheduleItem(IDBScheduleItem underlying) throws DatabaseException;
+	void associateScheduleItemLab(IDBScheduleItem lecture, IDBScheduleItem lab) throws DatabaseException;
+	void disassociateScheduleItemLab(IDBScheduleItem lecture, IDBScheduleItem lab) throws DatabaseException;
 	
 	// Locations
 	Collection<IDBLocation> findLocationsForDocument(IDBDocument document) throws DatabaseException;
@@ -104,7 +104,7 @@ public interface IDatabase {
 	IDBCourse getAssociationLecture(IDBCourseAssociation association) throws DatabaseException;
 	IDBCourse getAssociationLab(IDBCourseAssociation association) throws DatabaseException;
 	void associateLectureAndLab(IDBCourse lecture, IDBCourse lab) throws DatabaseException;
-	void disassociateLectureAndLab(IDBCourse lecture, IDBCourse lab);
+	void disassociateLectureAndLab(IDBCourse lecture, IDBCourse lab) throws DatabaseException;
 
 	// Instructors
 	Collection<IDBInstructor> findInstructorsForDocument(IDBDocument document) throws DatabaseException;
@@ -136,7 +136,7 @@ public interface IDatabase {
 	// Equipment Types
 	IDBEquipmentType findEquipmentTypeByDescription(String equipmentTypeDescription) throws DatabaseException;
 	Collection<IDBEquipmentType> findAllEquipmentTypes() throws DatabaseException;
-	void insertEquipmentType(String string);
+	void insertEquipmentType(String string) throws DatabaseException;
 	
 	// Used Equipment
 	Map<IDBEquipmentType, IDBUsedEquipment> findUsedEquipmentByEquipmentForCourse(IDBCourse course) throws DatabaseException;
@@ -170,6 +170,6 @@ public interface IDatabase {
 	void writeState(ObjectOutputStream oos) throws IOException;
 	void readState(ObjectInputStream ois) throws IOException;
 	IDBScheduleItem getScheduleItemLectureOrNull(IDBScheduleItem underlying) throws DatabaseException;
-	IDBDocument findDocumentByName(String scheduleName);
+	IDBDocument findDocumentByName(String scheduleName) throws DatabaseException;
 	
 }

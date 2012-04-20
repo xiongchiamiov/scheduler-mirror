@@ -109,6 +109,13 @@ create table scheduleitem (
     foreign key (dayPatternID) references pattern(id)
 );
 
+drop table labassociations;
+create table labassociations (
+    id integer primary key,
+    lecID,
+    foreign key (lecID) references course(id)
+);
+
 drop table tethered; 
 create table tethered (
     id integer primary key,

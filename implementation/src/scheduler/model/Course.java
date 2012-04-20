@@ -280,7 +280,7 @@ public class Course extends Identified {
 			mModel.database.associateLectureAndLab(lecture.underlyingCourse, underlyingCourse);
 	}
 	
-	private void removeAssociationFromDB() {
+	private void removeAssociationFromDB() throws DatabaseException {
 		if (!lectureLoaded)
 			return;
 		if (lecture != null)
