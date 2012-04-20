@@ -40,7 +40,6 @@ def deploy(*directories):
 		rsync(local_dir='war/*', \
 		      remote_dir='/var/lib/tomcat6/webapps/'+directory+'/', \
 		      exclude='.svn', \
-		      delete=True, \
 		      extra_opts='--omit-dir-times --no-perms')
 	restart_tomcat()
 
