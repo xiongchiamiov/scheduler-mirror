@@ -24,4 +24,8 @@ public class DBUser extends DBObject implements IDBUser {
 	public boolean isAdmin() { return isAdmin; }
 	@Override
 	public void setAdmin(boolean isAdmin) { this.isAdmin = isAdmin; }
+	
+	public void sanityCheck() {
+		assert(username != null);
+	}
 }

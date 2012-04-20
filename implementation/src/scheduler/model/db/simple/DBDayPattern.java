@@ -35,4 +35,8 @@ public class DBDayPattern extends DBObject implements IDBDayPattern {
 			if (days.contains(i))
 				id |= 1 << i;
 	}
+
+	public void sanityCheck() {
+	}
+
 }

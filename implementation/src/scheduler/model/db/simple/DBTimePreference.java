@@ -16,7 +16,12 @@ public class DBTimePreference extends DBObject implements IDBTimePreference {
 	public DBTimePreference(DBTimePreference that) {
 		this(that.id, that.instructorID, that.timeID, that.preference);
 	}
-	
+
+	public void sanityCheck() {
+		assert(instructorID != null);
+		assert(timeID != null);
+	}
+
 	@Override
 	public int getPreference() { return preference; }
 	@Override

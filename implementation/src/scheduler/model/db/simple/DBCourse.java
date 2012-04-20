@@ -41,6 +41,18 @@ public class DBCourse extends DBObject implements IDBCourse {
 		this(that.id, that.documentID, that.name, that.catalogNumber, that.department, that.wtu, that.scu, that.numSections, that.type, that.maxEnrollment, that.numHalfHoursPerWeek, that.isSchedulable, that.lectureID, that.tetheredToLecture);
 	}
 
+	public void sanityCheck() {
+		assert(documentID != null);
+		assert(name != null);
+		assert(catalogNumber != null);
+		assert(wtu != null);
+		assert(scu != null);
+		assert(numSections != null);
+		assert(type != null);
+		assert(maxEnrollment != null);
+		assert(numHalfHoursPerWeek != null);
+	}
+
 	@Override
 	public String getName() { return name; }
 	@Override

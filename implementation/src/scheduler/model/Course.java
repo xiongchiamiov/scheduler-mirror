@@ -293,6 +293,7 @@ public class Course extends Identified {
 		
 		assert (lecture == null);
 		assert (cachedTetheredToLecture == null);
+		assert(underlyingCourse.getType() != null);
 		
 		System.out.println("is lab? " + underlyingCourse.getType().equals("LAB"));
 		

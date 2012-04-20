@@ -49,6 +49,8 @@ public class Database implements IDatabase {
 		int insert(T newObject) {
 			assert(newObject.id == null);
 			
+			newObject.sanityCheck();
+			
 			newObject.id = generateUnusedID();
 			
 			objectsByID.put(newObject.id, newObject);
@@ -65,6 +67,8 @@ public class Database implements IDatabase {
 				System.out.println("Couldn't find id " + id);
 				throw new NotFoundException();
 			}
+
+			result.sanityCheck();
 			return result;
 		}
 		
@@ -79,14 +83,15 @@ public class Database implements IDatabase {
 		}
 	
 		public void update(T object) {
+			object.sanityCheck();
 			assert(objectsByID.containsKey(object.id));
 			objectsByID.put(object.id, object);
 		}
 
 		public boolean isEmpty() { return objectsByID.isEmpty(); }
 
-		public boolean contains(IDBCourse rawLecture) {
-			return objectsByID.containsKey(rawLecture.getID());
+		public boolean contains(T raw) {
+			return objectsByID.containsKey(raw.getID());
 		}
 	}
 
@@ -554,11 +559,11 @@ public class Database implements IDatabase {
 
 	@Override
 	public void associateLectureAndLab(IDBCourse rawLecture, IDBCourse rawLab) {
-		assert(courseTable.contains(rawLecture));
-		assert(courseTable.contains(rawLab));
-		
 		DBCourse lab = (DBCourse)rawLab;
 		DBCourse lecture = (DBCourse)rawLecture;
+		
+		assert(courseTable.contains(lecture));
+		assert(courseTable.contains(lab));
 		
 		assert(lab.lectureID == null);
 		lab.lectureID = lecture.id;

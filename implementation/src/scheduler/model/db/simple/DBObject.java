@@ -15,4 +15,5 @@ abstract class DBObject implements IDBObject, Serializable {
 	}
 	
 	public boolean isTransient() { return id == null; }
+	abstract public void sanityCheck();
 }

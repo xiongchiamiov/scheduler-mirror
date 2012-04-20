@@ -21,6 +21,14 @@ public class DBLocation extends DBObject implements IDBLocation {
 		this(that.id, that.documentID, that.room, that.type, that.maxOccupancy, that.isSchedulable);
 	}
 
+	public void sanityCheck() {
+		assert(documentID != null);
+		assert(room != null);
+		assert(type != null);
+		assert(maxOccupancy != null);
+	}
+
+
 	@Override
 	public void setRoom(String room) { this.room = room; }
 	@Override

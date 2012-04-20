@@ -15,4 +15,10 @@ public class DBUsedEquipment extends DBObject implements IDBUsedEquipment {
 	public DBUsedEquipment(DBUsedEquipment that) {
 		this(that.id, that.courseID, that.equipmentTypeID);
 	}
+
+	public void sanityCheck() {
+		assert(courseID != null);
+		assert(equipmentTypeID != null);
+	}
+
 }

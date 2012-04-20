@@ -15,4 +15,9 @@ public class DBProvidedEquipment extends DBObject implements IDBProvidedEquipmen
 	public DBProvidedEquipment(DBProvidedEquipment that) {
 		this(that.id, that.locationID, that.equipmentTypeID);
 	}
+
+	public void sanityCheck() {
+		assert(locationID != null);
+		assert(equipmentTypeID != null);
+	}
 }

@@ -45,4 +45,11 @@ public class DBDocument extends DBObject implements IDBDocument {
 	public int getEndHalfHour() { return endHalfHour; }
 	@Override
 	public void setEndHalfHour(int halfHour) { endHalfHour = halfHour; }
+
+	public void sanityCheck() {
+		assert(name != null);
+		assert(originalID != null);
+		assert(staffInstructorID != null);
+		assert(tbaLocationID != null);
+	}
 }

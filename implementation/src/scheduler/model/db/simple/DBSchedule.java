@@ -14,4 +14,7 @@ public class DBSchedule extends DBObject implements IDBSchedule {
 		this(that.id, that.documentID);
 	}
 
+	public void sanityCheck() {
+		assert(documentID != null);
+	}
 }

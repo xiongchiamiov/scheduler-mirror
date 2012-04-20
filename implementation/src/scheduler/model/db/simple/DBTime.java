@@ -46,4 +46,8 @@ public class DBTime extends DBObject implements IDBTime {
 	public boolean equals(Object obj) { return ((DBTime)obj).id == id; }
 	@Override
 	public int hashCode() { return id; }
+
+	public void sanityCheck() {
+	}
+
 }

@@ -19,4 +19,8 @@ public class DBEquipmentType extends DBObject implements IDBEquipmentType {
 	public void setDescription(String description) { this.description = description; }
 	@Override
 	public String getDescription() { return description; }
+
+	public void sanityCheck() {
+		assert(description != null);
+	}
 }

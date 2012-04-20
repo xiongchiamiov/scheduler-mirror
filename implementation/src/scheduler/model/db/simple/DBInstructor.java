@@ -24,6 +24,14 @@ public class DBInstructor extends DBObject implements IDBInstructor {
 		this(that.id, that.documentID, that.firstName, that.lastName, that.username, that.maxWTU, that.isSchedulable);
 	}
 
+	public void sanityCheck() {
+		assert(documentID != null);
+		assert(firstName != null);
+		assert(lastName != null);
+		assert(username != null);
+		assert(maxWTU != null);
+	}
+
 	@Override
 	public String getFirstName() { return firstName; }
 	@Override

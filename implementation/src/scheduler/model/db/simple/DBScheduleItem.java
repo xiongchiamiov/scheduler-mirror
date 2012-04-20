@@ -36,6 +36,14 @@ public class DBScheduleItem extends DBObject implements IDBScheduleItem {
 	public DBScheduleItem(DBScheduleItem that) {
 		this(that.id, that.scheduleID, that.instructorID, that.courseID, that.locationID, that.section, that.days, that.startHalfHour, that.endHalfHour, that.isPlaced, that.isConflicted, that.lectureScheduleItemID);
 	}
+
+	public void sanityCheck() {
+		assert(scheduleID != null);
+		assert(instructorID != null);
+		assert(courseID != null);
+		assert(locationID != null);
+		assert(days != null);
+	}
 	
 	@Override
 	public int getSection() { return section; }

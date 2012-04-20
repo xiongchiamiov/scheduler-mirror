@@ -15,4 +15,9 @@ public class DBOfferedDayPattern extends DBObject implements IDBOfferedDayPatter
 	public DBOfferedDayPattern(DBOfferedDayPattern that) {
 		this(that.id, that.courseID, that.dayPatternID);
 	}
+
+	public void sanityCheck() {
+		assert(courseID != null);
+		assert(dayPatternID != null);
+	}
 }

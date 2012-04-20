@@ -21,4 +21,10 @@ public class DBCoursePreference extends DBObject implements IDBCoursePreference 
 	public int getPreference() { return preference; }
 	@Override
 	public void setPreference(int preference) { this.preference = preference; }
+
+	public void sanityCheck() {
+		assert(instructorID != null);
+		assert(courseID != null);
+		assert(preference != null);
+	}
 }

@@ -21,4 +21,8 @@ public class DBCourseAssociation extends DBObject implements IDBCourseAssociatio
 	public boolean isTethered() { return isTethered; }
 	@Override
 	public void setIsTethered(boolean isTethered) { this.isTethered = isTethered; }
+
+	public void sanityCheck() {
+	}
+
 }
