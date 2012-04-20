@@ -7,7 +7,11 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
 
+import net.sourceforge.htmlunit.corejs.javascript.JavaScriptException;
+
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoSuchWindowException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
@@ -295,7 +299,6 @@ public class SchedulerBot {
 		setResourceTableTextCell(row0Based, 4, username);
 		setResourceTableTextCell(row0Based, 5, maxWTU);
 	}
-	
 
 	public void enterIntoLocationsResourceTableNewRow(
 			int row0Based,
@@ -315,5 +318,4 @@ public class SchedulerBot {
 		setResourceTableTextCell(row0Based, 4, maxOccupancy);
 		setResourceTableTextCell(row0Based, 5, equipment);
 	}
-	
 }

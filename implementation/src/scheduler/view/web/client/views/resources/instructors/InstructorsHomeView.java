@@ -30,7 +30,7 @@ public class InstructorsHomeView extends VerticalPanel
 	protected FlexTable schedList = new FlexTable();
 	protected InstructorGWT instructor;
 	
-	public InstructorsHomeView(final GreetingServiceAsync service, String username)
+	public InstructorsHomeView(final GreetingServiceAsync service, final String username)
 	{	
 		this.service = service;
 		this.username = username;
@@ -72,16 +72,31 @@ public class InstructorsHomeView extends VerticalPanel
 					 {
 						 allAvailableOriginalDocumentsByID = new HashMap<Integer, DocumentGWT>();
 					
-						 for (DocumentGWT doc : result)
+						 for (final DocumentGWT doc : result)
 						 {
 							 assert(doc.getID() != null);
-							 allAvailableOriginalDocumentsByID.put(doc.getID(), doc);
-					        	
-							 if (!doc.isTrashed())
-							 {
-								 addNewDocument(doc);
-								 scheduleNames.add(doc.getName());
-							 }
+							 
+							 service.getInstructorsForDocument(doc.getID(), new AsyncCallback<List<InstructorGWT>>() {
+									public void onFailure(Throwable caught) {
+										com.google.gwt.user.client.Window.alert("Failed to get instructors!");
+									}
+									public void onSuccess(List<InstructorGWT> result) {
+										for (InstructorGWT i : result) {
+											if (i.getUsername().equals(username)) {
+												System.out.println(i.getUsername()+", "+username);
+													
+												allAvailableOriginalDocumentsByID.put(doc.getID(), doc);
+												 
+												if (!doc.isTrashed())
+												{
+													addNewDocument(doc);
+													scheduleNames.add(doc.getName());
+												}
+												break;
+											}
+										}
+									}
+								});
 						 }
 					 }
 				  });

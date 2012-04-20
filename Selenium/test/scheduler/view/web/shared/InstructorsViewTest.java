@@ -5,6 +5,8 @@ import java.util.List;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
+
+import scheduler.view.web.shared.Selenium.SchedulerBot;
 import junit.framework.TestCase;
 
 /**
@@ -16,6 +18,7 @@ import junit.framework.TestCase;
  */
 public class InstructorsViewTest extends TestCase {
 	private FirefoxDriver driver;
+	private SchedulerBot bot;
 	
 	/**
 	 * sets up the test class and initializes the Firefox driver
@@ -24,8 +27,21 @@ public class InstructorsViewTest extends TestCase {
 	{
 		this.driver = new FirefoxDriver();
 		driver.get("http://scheduler.csc.calpoly.edu/dev");
+		this.bot = new SchedulerBot(driver);
 		
-		this.waitMillis(1000);
+		try {
+			this.bot.waitForElementPresent(By.id("s_loginBtn"));
+		} catch (InterruptedException e) {
+			// print the exception and wait 1 second instead and hope that it works
+			e.printStackTrace();
+			this.waitMillis(1000);
+		}
+		
+		WebElement loginBtn = driver.findElement(By.id("s_loginBtn")); 
+		WebElement unameField = driver.findElement(By.id("s_unameBox"));
+		
+		unameField.sendKeys("admin");
+		loginBtn.click();
 		
 		// klick the first item in the schedule document list
 		WebElement first_doc = this.getElementBySmartGWTID("sc_document_0");
