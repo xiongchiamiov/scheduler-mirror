@@ -228,7 +228,14 @@ public class CalendarListView extends SimplePanel {
 					+ tableRow + "," + tableCol + ")\" " + "tabindex=\"0\" "
 					+ "onkeydown=\"calendarListKeyDown(" + tableRow
 					+ ",event.which)\" " + "onselectstart=\"return false\" "
-					+ ">" + ScheduleEditWidget.START_TIMES[CalendarTableView.getStartRow(item)] + "</td>");
+					+ ">");
+			
+			if (CalendarTableView.getStartRow(item) >= 99) {
+			   builder.append(ScheduleEditWidget.START_TIMES[CalendarTableView.getStartRow(item)]); 
+			}
+			
+			builder.append("</td>");
+			
 			tableCol++;
 
 			builder.append("<td " + "class=\"item\" id=\"x" + tableCol + "y"
@@ -240,7 +247,13 @@ public class CalendarListView extends SimplePanel {
 					+ tableRow + "," + tableCol + ")\" " + "tabindex=\"0\" "
 					+ "onkeydown=\"calendarListKeyDown(" + tableRow
 					+ ",event.which)\" " + "onselectstart=\"return false\" "
-					+ ">" + ScheduleEditWidget.END_TIMES[CalendarTableView.getEndRow(item) + 1] + "</td>");
+					+ ">");
+									
+			if (CalendarTableView.getEndRow(item) + 1 >= 0) {
+				builder.append(ScheduleEditWidget.END_TIMES[CalendarTableView.getEndRow(item) + 1]); 
+			}
+			
+			builder.append("</td>");
 			tableCol++;
 
 			builder.append("<td " + "class=\"item\" id=\"x" + tableCol + "y"
