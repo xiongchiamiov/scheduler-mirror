@@ -33,6 +33,8 @@ import scheduler.model.db.IDatabase;
 
 public class Database implements IDatabase {
 	static class SimpleTable<T extends DBObject> implements Serializable {
+		private static final long serialVersionUID = 8869725561395493377L;
+		
 		Map<Integer, T> objectsByID;
 		
 		public SimpleTable() {
@@ -49,7 +51,7 @@ public class Database implements IDatabase {
 		int insert(T newObject) {
 			assert(newObject.id == null);
 			
-			newObject.sanityCheck();
+//			newObject.sanityCheck();
 			
 			newObject.id = generateUnusedID();
 			
@@ -68,7 +70,7 @@ public class Database implements IDatabase {
 				throw new NotFoundException();
 			}
 
-			result.sanityCheck();
+//			result.sanityCheck();
 			return result;
 		}
 		
@@ -83,7 +85,7 @@ public class Database implements IDatabase {
 		}
 	
 		public void update(T object) {
-			object.sanityCheck();
+//			object.sanityCheck();
 			assert(objectsByID.containsKey(object.id));
 			objectsByID.put(object.id, object);
 		}
