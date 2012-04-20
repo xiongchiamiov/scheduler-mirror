@@ -10,6 +10,7 @@ import scheduler.view.web.shared.InstructorGWT;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.smartgwt.client.data.Record;
@@ -34,57 +35,68 @@ import com.smartgwt.client.widgets.grid.ListGridRecord;
 public class InstructorsView extends VerticalPanel {
 	protected GreetingServiceAsync service;
 	protected final DocumentGWT document;
-//	protected ViewFrame frame;
-	
-	public InstructorsView(final GreetingServiceAsync service, final DocumentGWT document, final UnsavedDocumentStrategy unsavedDocumentStrategy) {
+
+	// protected ViewFrame frame;
+
+	public InstructorsView(final GreetingServiceAsync service,
+			final DocumentGWT document,
+			final UnsavedDocumentStrategy unsavedDocumentStrategy) {
 		this.service = service;
 		this.document = document;
 		// this.addStyleName("iViewPadding");
-		
 
 		this.setWidth("100%");
 		this.setHeight("100%");
 		this.setHorizontalAlignment(ALIGN_CENTER);
 		// this.add(new HTML("<h2>Instructors</h2>"));
-		
+
 		final ListGrid grid = new ListGrid() {
 			protected int rowCount = 0;
+
 			@Override
-			protected Canvas createRecordComponent(final ListGridRecord record, Integer colNum) {
+			protected Canvas createRecordComponent(final ListGridRecord record,
+					Integer colNum) {
 				String fieldName = this.getFieldName(colNum);
 				if (fieldName.equals("instructorPrefs")) {
 					IButton button = new IButton();
 					button.setHeight(18);
 					button.setWidth(65);
 					button.setTitle("Preferences");
-					button.setID("instrPrefsButton_"+this.rowCount);
+					button.setID("instrPrefsButton_" + this.rowCount);
 					this.rowCount++;
 					button.addClickHandler(new ClickHandler() {
 						public void onClick(ClickEvent event) {
-							final int instructorID = record.getAttributeAsInt("id");
-							service.getInstructorsForDocument(document.getID(), new AsyncCallback<List<InstructorGWT>>() {
-								public void onFailure(Throwable caught) {
-									com.google.gwt.user.client.Window.alert("Failed to get instructors!");
-								}
-								public void onSuccess(List<InstructorGWT> result) {
-									for (InstructorGWT instructor : result) {
-										if (instructor.getID().equals(instructorID)) {
-											preferencesButtonClicked(instructor, unsavedDocumentStrategy);
-											break;
+							final int instructorID = record
+									.getAttributeAsInt("id");
+							service.getInstructorsForDocument(document.getID(),
+									new AsyncCallback<List<InstructorGWT>>() {
+										public void onFailure(Throwable caught) {
+											com.google.gwt.user.client.Window
+													.alert("Failed to get instructors!");
 										}
-									}
-								}
-							});
+
+										public void onSuccess(
+												List<InstructorGWT> result) {
+											for (InstructorGWT instructor : result) {
+												if (instructor.getID().equals(
+														instructorID)) {
+													preferencesButtonClicked(
+															instructor,
+															unsavedDocumentStrategy);
+													break;
+												}
+											}
+										}
+									});
 						}
 					});
 					return button;
-				}
-				else {
+				} else {
 					return null;
 				}
 			}
 		};
-		
+
 		grid.setWidth("98%");
 		grid.setAutoFitData(Autofit.VERTICAL);
 		grid.setShowAllRecords(true);
@@ -94,29 +106,33 @@ public class InstructorsView extends VerticalPanel {
 		grid.setEditByCell(true);
 		grid.setListEndEditAction(RowEndEditAction.NEXT);
 		// grid.setCellHeight(22);
-		grid.setDataSource(new InstructorsDataSource(service, document, unsavedDocumentStrategy));
+		grid.setDataSource(new InstructorsDataSource(service, document,
+				unsavedDocumentStrategy));
 		grid.setShowRecordComponents(true);
 		grid.setShowRecordComponentsByCell(true);
 
 		ListGridField idField = new ListGridField("id", "&nbsp;");
 		idField.setCanEdit(false);
 		idField.setCellFormatter(new CellFormatter() {
-			public String format(Object value, ListGridRecord record, int rowNum, int colNum) {
+			public String format(Object value, ListGridRecord record,
+					int rowNum, int colNum) {
 				return "\u22EE";
 			}
 		});
 		idField.setWidth(20);
 		idField.setAlign(Alignment.CENTER);
-		
-		IntegerRangeValidator nonnegativeInt = new IntegerRangeValidator();  
-		nonnegativeInt.setMin(0);  
-		
-		ListGridField schedulableField = new ListGridField("isSchedulable", "Schedulable");
+
+		IntegerRangeValidator nonnegativeInt = new IntegerRangeValidator();
+		nonnegativeInt.setMin(0);
+
+		ListGridField schedulableField = new ListGridField("isSchedulable",
+				"Schedulable");
 		schedulableField.setDefaultValue(true);
 		schedulableField.setAlign(Alignment.CENTER);
 		ListGridField lastNameField = new ListGridField("lastName", "Last Name");
 		lastNameField.setAlign(Alignment.CENTER);
-		ListGridField firstNameField = new ListGridField("firstName", "First Name");
+		ListGridField firstNameField = new ListGridField("firstName",
+				"First Name");
 		firstNameField.setAlign(Alignment.CENTER);
 		ListGridField usernameField = new ListGridField("username", "Username");
 		usernameField.setAlign(Alignment.CENTER);
@@ -126,102 +142,74 @@ public class InstructorsView extends VerticalPanel {
 					setErrorMessage("Username must be present!");
 					return false;
 				}
-				
-				assert(value instanceof String);
-				String username = (String)value;
+
+				assert (value instanceof String);
+				String username = (String) value;
 				if (username.trim().length() == 0) {
 					setErrorMessage("Username must be present!");
 					return false;
 				}
-				
-				for (Record record : grid.getDataAsRecordList().getRange(0, grid.getDataAsRecordList().getLength())) {
+
+				for (Record record : grid.getDataAsRecordList().getRange(0,
+						grid.getDataAsRecordList().getLength())) {
 					if (username.equals(record.getAttribute("username"))) {
-						setErrorMessage("Username \"" + username + "\" already exists!");
+						setErrorMessage("Username \"" + username
+								+ "\" already exists!");
 						return false;
 					}
 				}
 				return true;
 			}
 		});
-		
+
 		ListGridField maxWTUField = new ListGridField("maxWTU", "Max WTU");
 		maxWTUField.setValidators(nonnegativeInt);
 		maxWTUField.setAlign(Alignment.CENTER);
-		ListGridField instructorPrefsField = new ListGridField("instructorPrefs", "Preferences");
+		ListGridField instructorPrefsField = new ListGridField(
+				"instructorPrefs", "Preferences");
 		instructorPrefsField.setAlign(Alignment.CENTER);
-		
-		grid.setFields(idField, schedulableField, lastNameField, firstNameField, usernameField,
-				maxWTUField, instructorPrefsField);
-		
+
+		grid.setFields(idField, schedulableField, lastNameField,
+				firstNameField, usernameField, maxWTUField,
+				instructorPrefsField);
+
 		this.add(grid);
 		this.setHorizontalAlignment(ALIGN_DEFAULT);
-		Button addBtn = new Button("Add New Instructor", new com.google.gwt.event.dom.client.ClickHandler() {
-			@Override
-			public void onClick(com.google.gwt.event.dom.client.ClickEvent event) {
-				Record defaultValues = new Record();
-				defaultValues.setAttribute("maxWTU", 0);
-            grid.startEditingNew(defaultValues);
-			}
-		});
-		DOM.setElementAttribute(addBtn.getElement(), "id", "addInstructorBtn");
-		this.add(addBtn);
-
-		Button duplicateBtn = new Button("Duplicate Selected Instructors", new com.google.gwt.event.dom.client.ClickHandler() {
-			public void onClick(com.google.gwt.event.dom.client.ClickEvent event) {
-	            ListGridRecord[] selectedRecords = grid.getSelectedRecords();  
-	            for(ListGridRecord rec: selectedRecords) {
-						rec.setAttribute("id", (Integer)null);
-						rec.setAttribute("instructorPrefs", (Integer)null);
-						grid.startEditingNew(rec);
-	            }
-				}
-			});
-		DOM.setElementAttribute(duplicateBtn.getElement(), "id", "duplicateBtn");
-		this.add(duplicateBtn);
 
 		grid.addKeyPressHandler(new KeyPressHandler() {
 			public void onKeyPress(KeyPressEvent event) {
-				if (event.getKeyName().equals("Backspace") || event.getKeyName().equals("Delete"))
-					if (com.google.gwt.user.client.Window.confirm("Are you sure you want to remove this instructor?"))
+				if (event.getKeyName().equals("Backspace")
+						|| event.getKeyName().equals("Delete"))
+					if (com.google.gwt.user.client.Window
+							.confirm("Are you sure you want to remove this instructor?"))
 						grid.removeSelectedData();
 			}
 		});
-		
-		Button removeBtn = new Button("Remove Selected Instructors", new com.google.gwt.event.dom.client.ClickHandler() {
-			@Override
-			public void onClick(com.google.gwt.event.dom.client.ClickEvent event) {
-				ListGridRecord[] selectedRecords = grid.getSelectedRecords();
-				for (ListGridRecord rec : selectedRecords) {
-					grid.removeData(rec);
-				}
-			}
-		});
-		DOM.setElementAttribute(removeBtn.getElement(), "id", "removeBtn");
-		this.add(removeBtn);
+		layoutBottomButtonBar(grid);
 	}
-	
-	public void preferencesButtonClicked(InstructorGWT instructor, UnsavedDocumentStrategy unsavedDocumentStrategy) {
-		InstructorPreferencesView iipv = new InstructorPreferencesView(
-				service, document.getID(), document.getName(), instructor, unsavedDocumentStrategy);
+
+	public void preferencesButtonClicked(InstructorGWT instructor,
+			UnsavedDocumentStrategy unsavedDocumentStrategy) {
+		InstructorPreferencesView iipv = new InstructorPreferencesView(service,
+				document.getID(), document.getName(), instructor,
+				unsavedDocumentStrategy);
 		final Window window = new Window();
 		window.setAutoSize(true);
 		window.setTitle("Instructor Preferences - <i>"
-					+ instructor.getUsername() + "</i> ("
-					+ instructor.getFirstName() 
-					+ " " + instructor.getLastName() + ")");
+				+ instructor.getUsername() + "</i> ("
+				+ instructor.getFirstName() + " " + instructor.getLastName()
+				+ ")");
 		window.setCanDragReposition(true);
 		window.setCanDragResize(true);
 		iipv.setParent(window);
 		iipv.afterPush();
-		
-		
+
 		final ScrollPanel weewee = new ScrollPanel();
 		weewee.setWidget(iipv);
 		weewee.setSize("700px", "600px");
 		window.addItem(weewee);
-		
-		com.google.gwt.event.dom.client.ClickHandler handler 
-				= new com.google.gwt.event.dom.client.ClickHandler() {
+
+		com.google.gwt.event.dom.client.ClickHandler handler = new com.google.gwt.event.dom.client.ClickHandler() {
 			@Override
 			public void onClick(com.google.gwt.event.dom.client.ClickEvent event) {
 				window.hide();
@@ -234,5 +222,63 @@ public class InstructorsView extends VerticalPanel {
 
 		window.setAutoSize(true);
 		window.show();
+	}
+
+	/**
+	 * Lays out the buttons which will appear on this widget
+	 */
+	private void layoutBottomButtonBar(final ListGrid grid) {
+		FlowPanel bottomButtonFlowPanel = new FlowPanel();
+		bottomButtonFlowPanel.addStyleName("floatingScheduleButtonBar");
+
+		Button addBtn = new Button("Add New Instructor",
+				new com.google.gwt.event.dom.client.ClickHandler() {
+					@Override
+					public void onClick(
+							com.google.gwt.event.dom.client.ClickEvent event) {
+						Record defaultValues = new Record();
+						defaultValues.setAttribute("maxWTU", 0);
+						grid.startEditingNew(defaultValues);
+					}
+				});
+		DOM.setElementAttribute(addBtn.getElement(), "id", "addInstructorBtn");
+		addBtn.setStyleName("floatingScheduleButtonBarItemLeft");
+		bottomButtonFlowPanel.add(addBtn);
+
+		Button duplicateBtn = new Button("Duplicate Selected Instructors",
+				new com.google.gwt.event.dom.client.ClickHandler() {
+					public void onClick(
+							com.google.gwt.event.dom.client.ClickEvent event) {
+						ListGridRecord[] selectedRecords = grid
+								.getSelectedRecords();
+						for (ListGridRecord rec : selectedRecords) {
+							rec.setAttribute("id", (Integer) null);
+							rec.setAttribute("instructorPrefs", (Integer) null);
+							grid.startEditingNew(rec);
+						}
+					}
+				});
+		DOM.setElementAttribute(duplicateBtn.getElement(), "id", "duplicateBtn");
+		duplicateBtn.setStyleName("floatingScheduleButtonBarItemLeft");
+		bottomButtonFlowPanel.add(duplicateBtn);
+
+		Button removeBtn = new Button("Remove Selected Instructors",
+				new com.google.gwt.event.dom.client.ClickHandler() {
+					@Override
+					public void onClick(
+							com.google.gwt.event.dom.client.ClickEvent event) {
+						ListGridRecord[] selectedRecords = grid
+								.getSelectedRecords();
+						for (ListGridRecord rec : selectedRecords) {
+							grid.removeData(rec);
+						}
+					}
+				});
+		DOM.setElementAttribute(removeBtn.getElement(), "id", "removeBtn");
+
+		removeBtn.setStyleName("floatingScheduleButtonBarItemLeft");
+		bottomButtonFlowPanel.add(removeBtn);
+
+		this.add(bottomButtonFlowPanel);
 	}
 }
