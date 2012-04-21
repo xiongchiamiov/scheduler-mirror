@@ -319,7 +319,9 @@ public class CoursesDataSource extends DataSource {
 		Record record = dsRequest.getOldValues();
 		
 		Record changes = dsRequest.getAttributeAsRecord("data");
-		
+
+		assert(changes.getAttributeAsInt("id") != null);
+		assert(record.getAttributeAsInt("id") != null);
 		assert(changes.getAttributeAsInt("id") == record.getAttributeAsInt("id"));
 		if (changes.getAttribute("department") != null)
 			record.setAttribute("department", changes.getAttribute("department"));
@@ -350,6 +352,8 @@ public class CoursesDataSource extends DataSource {
 		
 		
 		final CourseGWT course = readRecordIntoCourse(record);
+		
+		assert(course.getID() != null);
 		
 		System.out.println("updating course id " + course.getID());
 		

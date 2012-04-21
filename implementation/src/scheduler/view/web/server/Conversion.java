@@ -156,7 +156,7 @@ public abstract class Conversion {
 		result.setDayPatterns(dayPatterns);
 		
 		result.setUsedEquipment(source.getUsedEquipment());
-		result.setLecture(model.findCourseByID(source.getLectureID()));
+		result.setLecture(source.getLectureID() == -1 ? null : model.findCourseByID(source.getLectureID()));
 		result.setTetheredToLecture(source.getTetheredToLecture());
 	}
 

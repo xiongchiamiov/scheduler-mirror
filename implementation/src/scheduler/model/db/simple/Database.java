@@ -33,7 +33,7 @@ import scheduler.model.db.IDatabase;
 
 public class Database implements IDatabase {
 	static class SimpleTable<T extends DBObject> implements Serializable {
-		private static final long serialVersionUID = 8869725561395493377L;
+		private static final long serialVersionUID = 1337L;
 		
 		Map<Integer, T> objectsByID;
 		

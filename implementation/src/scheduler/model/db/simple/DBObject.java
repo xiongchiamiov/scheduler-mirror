@@ -5,6 +5,8 @@ import java.io.Serializable;
 import scheduler.model.db.IDBObject;
 
 abstract class DBObject implements IDBObject, Serializable {
+	private static final long serialVersionUID = 1337L;
+	
 	Integer id;
 	
 	@Override
