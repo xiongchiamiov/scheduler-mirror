@@ -216,7 +216,7 @@ public class AdminScheduleNavView extends VerticalPanel implements UnsavedDocume
 	
 	private TabSet makeTabs() {
 		
-		TabSet tabSet = new TabSet();
+		final TabSet tabSet = new TabSet();
 		tabSet.setTabBarPosition(Side.TOP);
 		
 		tabSet.setTabBarThickness(25);
@@ -251,7 +251,11 @@ public class AdminScheduleNavView extends VerticalPanel implements UnsavedDocume
 		tabSet.addTabSelectedHandler(new TabSelectedHandler() {
 			public void onTabSelected(TabSelectedEvent event) {
 				if (event.getTab() == scheduleTab) {
+					tabSet.setPaneContainerOverflow(Overflow.HIDDEN);
 					viewFrameContainer.add(new CalendarView(service, document, (UnsavedDocumentStrategy)AdminScheduleNavView.this));
+				}
+				else {
+					tabSet.setPaneContainerOverflow(Overflow.VISIBLE);
 				}
 			}
 		});
