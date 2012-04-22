@@ -125,4 +125,13 @@ public class Location extends Identified {
 		return this.getRoom();
 	}
 	
+	public boolean equals(Object other) {
+		if(this == other)
+			return true;
+		if((other == null) || (this.getClass() != other.getClass()))
+			return false;
+		Location loc = (Location)other;
+		return this.underlyingLocation.equals(loc.underlyingLocation);
+	}
+	
 }
