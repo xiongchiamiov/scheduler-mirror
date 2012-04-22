@@ -85,35 +85,35 @@ public class SchedulerBot {
 		}
 	}
 	
-	private WebElement elementForResourceTableCell(int row0Based, int col0Based) {
-		return driver.findElement(By.xpath("((//table[@class='listTable']/tbody/tr[@role='listitem'])[" + (1 + row0Based) + "]/td)[" + (1 + col0Based) + "]"));
+	private WebElement elementForResourceTableCell(String viewID, int row0Based, int col0Based) {
+		return driver.findElement(By.xpath("((//div[@eventproxy='" + viewID + "']//table[@class='listTable']/tbody/tr[@role='listitem'])[" + (1 + row0Based) + "]/td)[" + (1 + col0Based) + "]"));
 	}
 	
-	private void setResourceTableTextCell(int row0Based, int col0Based, String text) {
+	private void setResourceTableTextCell(String viewID, int row0Based, int col0Based, String text) {
 		if (text == null)
 			return;
 		
-		WebElement cell = elementForResourceTableCell(row0Based, col0Based);
+		WebElement cell = elementForResourceTableCell(viewID, row0Based, col0Based);
 		cell.click();
 		
-		WebElement input = elementForResourceTableCell(row0Based, col0Based).findElement(By.xpath("//input"));
+		WebElement input = elementForResourceTableCell(viewID, row0Based, col0Based).findElement(By.xpath("//input"));
 		input.sendKeys(text);
 
 		driver.findElement(By.tagName("body")).click();
 	}
 
-	private void setResourceTableMultiselectCell(int row0Based, int col0Based, String optionsCombined) throws InterruptedException {
+	private void setResourceTableMultiselectCell(String viewID, int row0Based, int col0Based, String optionsCombined) throws InterruptedException {
 		if (optionsCombined == null)
 			return;
 
 		Set<String> options = new TreeSet(Arrays.asList(optionsCombined.split(",")));
 		
-		WebElement cell = elementForResourceTableCell(row0Based, col0Based);
+		WebElement cell = elementForResourceTableCell(viewID, row0Based, col0Based);
 		cell.click();
 
 		driver.manage().timeouts().implicitlyWait(0, TimeUnit.MILLISECONDS);
 		
-		WebElement selectBeforeExpand = elementForResourceTableCell(row0Based, col0Based).findElement(By.xpath("div/nobr/span/table"));
+		WebElement selectBeforeExpand = elementForResourceTableCell(viewID, row0Based, col0Based).findElement(By.xpath("div/nobr/span/table"));
 		selectBeforeExpand.click();
 		
 		Thread.sleep(500);
@@ -142,11 +142,11 @@ public class SchedulerBot {
 		driver.findElement(By.tagName("body")).click();
 	}
 
-	private void setResourceTableSelectCell(int row0Based, int col0Based, String text) {
+	private void setResourceTableSelectCell(String viewID, int row0Based, int col0Based, String text) {
 		if (text == null)
 			return;
 		
-		WebElement cell = elementForResourceTableCell(row0Based, col0Based);
+		WebElement cell = elementForResourceTableCell(viewID, row0Based, col0Based);
 		cell.click();
 		
 		System.out.println("TODO: get rid of IND->LAB conversion!");
@@ -154,7 +154,7 @@ public class SchedulerBot {
 			text = "LAB";
 		// Making test temporarily pass so we can get on with the rest of it
 		
-		WebElement selectBeforeExpand = elementForResourceTableCell(row0Based, col0Based).findElement(By.xpath("div/nobr/span/table"));
+		WebElement selectBeforeExpand = elementForResourceTableCell(viewID, row0Based, col0Based).findElement(By.xpath("div/nobr/span/table"));
 		selectBeforeExpand.click();
 		
 		WebElement popupList = driver.findElement(By.xpath("/html/body/div/div/div[@class='pickListMenuBody']"));
@@ -172,14 +172,14 @@ public class SchedulerBot {
 
 		driver.findElement(By.tagName("body")).click();
 		
-		assert(elementForResourceTableCell(row0Based, col0Based).getText().trim().equalsIgnoreCase(text));
+		assert(elementForResourceTableCell(viewID, row0Based, col0Based).getText().trim().equalsIgnoreCase(text));
 	}
 	
-	private void setResourceTableCheckboxCell(int row0Based, int col0Based, boolean newValue) {
+	private void setResourceTableCheckboxCell(String viewID, int row0Based, int col0Based, boolean newValue) {
 //		WebElement newCourseDeptCell = elementForResourceTableCell(row0Based, col0Based);
 //		newCourseDeptCell.click();
 		
-		WebElement img = elementForResourceTableCell(row0Based, col0Based).findElement(By.xpath("//div[@class='labelAnchor']/img"));
+		WebElement img = elementForResourceTableCell(viewID, row0Based, col0Based).findElement(By.xpath("//div[@class='labelAnchor']/img"));
 		WebElement imgParent = img.findElement(By.xpath("parent::*"));
 		assert(imgParent.getTagName().equals("div"));
 		
@@ -236,21 +236,23 @@ public class SchedulerBot {
 		
 		System.out.println("Entering row index " + row0Based);
 		
-		driver.findElement(By.id("s_newCourseBtn")).click();
+		driver.findElement(By.xpath("//div[@eventproxy='s_newCourseBtn']")).click();
 		
-		setResourceTableCheckboxCell(row0Based, 1, isSchedulable);
-		setResourceTableTextCell(row0Based, 2, department);
-		setResourceTableTextCell(row0Based, 3, catalogNum);
-		setResourceTableTextCell(row0Based, 4, courseName);
-		setResourceTableTextCell(row0Based, 5, numSections);
-		setResourceTableTextCell(row0Based, 6, wtu);
-		setResourceTableTextCell(row0Based, 7, scu);
-		setResourceTableMultiselectCell(row0Based, 8, dayCombinations);
-		setResourceTableTextCell(row0Based, 9, hoursPerWeek);
-		setResourceTableTextCell(row0Based, 10, maxEnrollment);
-		setResourceTableSelectCell(row0Based, 11, type);
-		setResourceTableMultiselectCell(row0Based, 12, usedEquipment);
-		setResourceTableTextCell(row0Based, 13, association);
+		String viewID = "s_courseviewTab";
+		
+		setResourceTableCheckboxCell(viewID, row0Based, 1, isSchedulable);
+		setResourceTableTextCell(viewID, row0Based, 2, department);
+		setResourceTableTextCell(viewID, row0Based, 3, catalogNum);
+		setResourceTableTextCell(viewID, row0Based, 4, courseName);
+		setResourceTableTextCell(viewID, row0Based, 5, numSections);
+		setResourceTableTextCell(viewID, row0Based, 6, wtu);
+		setResourceTableTextCell(viewID, row0Based, 7, scu);
+		setResourceTableMultiselectCell(viewID, row0Based, 8, dayCombinations);
+		setResourceTableTextCell(viewID, row0Based, 9, hoursPerWeek);
+		setResourceTableTextCell(viewID, row0Based, 10, maxEnrollment);
+		setResourceTableSelectCell(viewID, row0Based, 11, type);
+		setResourceTableMultiselectCell(viewID, row0Based, 12, usedEquipment);
+		setResourceTableTextCell(viewID, row0Based, 13, association);
 	}
 	
 	public void waitForElementPresent(final By by) throws InterruptedException {
@@ -291,13 +293,15 @@ public class SchedulerBot {
 
 		System.out.println("Entering row index " + row0Based);
 		
-		driver.findElement(By.id("addInstructorBtn")).click();
+		driver.findElement(By.xpath("//div[@eventproxy='addInstructorBtn']")).click();
 		
-		setResourceTableCheckboxCell(row0Based, 1, isSchedulable);
-		setResourceTableTextCell(row0Based, 2, lastName);
-		setResourceTableTextCell(row0Based, 3, firstName);
-		setResourceTableTextCell(row0Based, 4, username);
-		setResourceTableTextCell(row0Based, 5, maxWTU);
+		String viewID = "s_instructorviewTab";
+		
+		setResourceTableCheckboxCell(viewID, row0Based, 1, isSchedulable);
+		setResourceTableTextCell(viewID, row0Based, 2, lastName);
+		setResourceTableTextCell(viewID, row0Based, 3, firstName);
+		setResourceTableTextCell(viewID, row0Based, 4, username);
+		setResourceTableTextCell(viewID, row0Based, 5, maxWTU);
 	}
 
 	public void enterIntoLocationsResourceTableNewRow(
@@ -310,12 +314,14 @@ public class SchedulerBot {
 
 		System.out.println("Entering row index " + row0Based);
 		
-		driver.findElement(By.id("addLocationButton")).click();
+		driver.findElement(By.xpath("//div[@eventproxy='addLocationButton']")).click();
 		
-		setResourceTableCheckboxCell(row0Based, 1, isSchedulable);
-		setResourceTableTextCell(row0Based, 2, room);
-		setResourceTableTextCell(row0Based, 3, type);
-		setResourceTableTextCell(row0Based, 4, maxOccupancy);
-		setResourceTableTextCell(row0Based, 5, equipment);
+		String viewID = "s_locationviewTab";
+		
+		setResourceTableCheckboxCell(viewID, row0Based, 1, isSchedulable);
+		setResourceTableTextCell(viewID, row0Based, 2, room);
+		setResourceTableTextCell(viewID, row0Based, 3, type);
+		setResourceTableTextCell(viewID, row0Based, 4, maxOccupancy);
+		setResourceTableTextCell(viewID, row0Based, 5, equipment);
 	}
 }

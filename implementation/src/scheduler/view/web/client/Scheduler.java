@@ -156,7 +156,7 @@ public class Scheduler implements EntryPoint, UpdateHeaderStrategy
 		scheduleNameContainer.add(new Label(documentName));
 		
 		appNameContainer.clear();
-		appNameContainer.add(new Label(" - Schedulizerifier"));
+		appNameContainer.add(new Label(" - The Scheduler Project"));
 
 		refreshWindowTitle();
 	}

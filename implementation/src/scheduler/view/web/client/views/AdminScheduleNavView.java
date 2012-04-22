@@ -2,6 +2,7 @@ package scheduler.view.web.client.views;
 
 import scheduler.view.web.client.ExportDialog;
 import scheduler.view.web.client.GreetingServiceAsync;
+import scheduler.view.web.client.HTMLUtilities;
 import scheduler.view.web.client.Import;
 import scheduler.view.web.client.MergeDialog;
 import scheduler.view.web.client.NewScheduleCreator;
@@ -22,7 +23,9 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.Side;
 import com.smartgwt.client.types.TabBarControls;
-import com.smartgwt.client.widgets.layout.HLayout;
+import com.smartgwt.client.widgets.Canvas;
+import com.smartgwt.client.widgets.layout.LayoutSpacer;
+import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
 import com.smartgwt.client.widgets.menu.MenuItemSeparator;
@@ -225,36 +228,31 @@ public class AdminScheduleNavView extends VerticalPanel implements UnsavedDocume
 		// tabSet.setPaneCon
 		
 		final Tab coursesTab = new Tab("Courses");
+		coursesTab.setPane(new CoursesView(service, document, (UnsavedDocumentStrategy)AdminScheduleNavView.this));
 		tabSet.addTab(coursesTab);
 		
 		final Tab instructorsTab = new Tab("Instructors");
+		instructorsTab.setPane(new InstructorsView(service, document, (UnsavedDocumentStrategy)AdminScheduleNavView.this));
 		tabSet.addTab(instructorsTab);
 		
 		final Tab locationsTab = new Tab("Locations");
+		locationsTab.setPane(new LocationsView(service, document, (UnsavedDocumentStrategy)AdminScheduleNavView.this));
 		tabSet.addTab(locationsTab);
 		
 		final Tab scheduleTab = new Tab("Schedule");
+		Canvas emptyCanvas = new VLayout();
+		emptyCanvas.setWidth(0);
+		emptyCanvas.setHeight(1); // SmartGWT complains when we have 0 area.
+		scheduleTab.setPane(emptyCanvas);
 		tabSet.addTab(scheduleTab);
 		
 		tabSet.setTabBarControls(TabBarControls.TAB_SCROLLER, TabBarControls.TAB_PICKER);
 		
 		tabSet.addTabSelectedHandler(new TabSelectedHandler() {
 			public void onTabSelected(TabSelectedEvent event) {
-				// Window.alert(event.getTab().getTitle());
-				if (event.getTab() == coursesTab) {
-					viewFrameContainer.add(new CoursesView(service, document, (UnsavedDocumentStrategy)AdminScheduleNavView.this));
-				}
-				else if (event.getTab() == instructorsTab) {
-					viewFrameContainer.add(new InstructorsView(service, document, (UnsavedDocumentStrategy)AdminScheduleNavView.this));
-				}
-				else if (event.getTab() == locationsTab) {
-					viewFrameContainer.add(new LocationsView(service, document, (UnsavedDocumentStrategy)AdminScheduleNavView.this));
-				}
-				else if (event.getTab() == scheduleTab) {
+				if (event.getTab() == scheduleTab) {
 					viewFrameContainer.add(new CalendarView(service, document, (UnsavedDocumentStrategy)AdminScheduleNavView.this));
 				}
-				else
-					assert (false);
 			}
 		});
 		
@@ -270,15 +268,20 @@ public class AdminScheduleNavView extends VerticalPanel implements UnsavedDocume
 	
 	
 	private void addMenus() {
-		HLayout navBar = new HLayout();
+		VLayout navBar = new VLayout();
 		navBar.setWidth100();
-		navBar.setHeight(40);
+//		navBar.setHeight(40);
+		navBar.setAutoHeight();
+		navBar.setOverflow(Overflow.VISIBLE);
 		add(navBar);
 		
 		viewFrameContainer = new SimplePanel();
 		add(viewFrameContainer);
 
 		navBar.addMember(makeToolStrip(updateHeaderStrategy));
+		
+		HTMLUtilities.addSpace(navBar, 10);
+		
 		navBar.addMember(makeTabs());
 	}
 

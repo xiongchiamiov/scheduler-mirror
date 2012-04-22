@@ -49,7 +49,7 @@
   
   <path id="project.class.path">
     <pathelement location="src"/>
-    <pathelement location="test-classes"/>
+    <pathelement location="classes"/>
     <!-- Add any additional non-server libs (such as JUnit) -->
     <fileset dir="seljars" includes="**/*.jar"/>
   </path>

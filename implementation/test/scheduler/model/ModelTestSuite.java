@@ -3,7 +3,7 @@ package scheduler.model;
 import junit.framework.TestResult;
 import junit.framework.TestSuite;
 
-public class ModelTestSuite {
+public class ModelTestSuite extends TestSuite {
 
 	/**
 	 * The testsuite meant to fully exercise model code 
@@ -22,16 +22,16 @@ public class ModelTestSuite {
 	 */
 	public static TestSuite suite() {
 		TestSuite suite = new TestSuite("Model tests");
-		suite.addTest(new AlgorithmTestSimpleDB());
-		suite.addTest(new CoursesTestSimpleDB());
-		suite.addTest(new DocumentsTestSimpleDB());
-		suite.addTest(new DocumentsTestSQLDB());
-		suite.addTest(new InstructorsPreferencesTestSimpleDB());
-		suite.addTest(new InstructorsTestSimpleDB());
-		suite.addTest(new InstructorsTestSQLDB());
-		suite.addTest(new LocationsTestSimpleDB());
-		suite.addTest(new ScheduleItemsTestSimpleDB());
-		suite.addTest(new UsersTestSimpleDB());
+//		suite.addTestSuite(AlgorithmTestSimpleDB.class);
+		suite.addTestSuite(CoursesTestSimpleDB.class);
+		suite.addTestSuite(DocumentsTestSimpleDB.class);
+//		suite.addTestSuite(DocumentsTestSQLDB.class);
+		suite.addTestSuite(InstructorsPreferencesTestSimpleDB.class);
+		suite.addTestSuite(InstructorsTestSimpleDB.class);
+//		suite.addTestSuite(InstructorsTestSQLDB.class);
+		suite.addTestSuite(LocationsTestSimpleDB.class);
+		suite.addTestSuite(ScheduleItemsTestSimpleDB.class);
+		suite.addTestSuite(UsersTestSimpleDB.class);
 		suite.run(new TestResult());
 		
 		return suite;

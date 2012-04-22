@@ -57,7 +57,7 @@ public class Database implements IDatabase {
 			
 			objectsByID.put(newObject.id, newObject);
 
-			System.out.println("Inserted " + newObject.getClass().getName() + " id " + newObject.id);
+//			System.out.println("Inserted " + newObject.getClass().getName() + " id " + newObject.id);
 			
 			return newObject.id;
 		}

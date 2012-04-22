@@ -295,7 +295,7 @@ public class Course extends Identified {
 		assert (cachedTetheredToLecture == null);
 		assert(underlyingCourse.getType() != null);
 		
-		System.out.println("is lab? " + underlyingCourse.getType().equals("LAB"));
+//		System.out.println("is lab? " + underlyingCourse.getType().equals("LAB"));
 		
 		if (underlyingCourse.getType().equals("LAB")) {
 			IDBCourseAssociation assoc = mModel.database.getAssociationForLabOrNull(underlyingCourse);

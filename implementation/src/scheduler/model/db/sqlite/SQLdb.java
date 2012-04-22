@@ -125,7 +125,7 @@ public class SQLdb implements IDatabase {
 		Class.forName("org.sqlite.JDBC");
 		conn =
 			DriverManager.getConnection("jdbc:sqlite:database.db");
-		System.out.println("Connected to database");
+//		System.out.println("Connected to database");
 	}
 	
 	public void closeConnection() throws SQLException

@@ -141,25 +141,30 @@ public abstract class GRCAcceptanceTest extends DefaultSelTestCase {
 		// Test saving
 		driver.findElement(By.xpath("//div[@class='toolStrip']//td[@class='buttonTitle'][text()='File']")).click();
 		driver.findElement(By.xpath("//td[@class='menuTitleField']/nobr[text()='Save']")).click();
-		
-	// Get a handle to the open alert, prompt or confirmation
-		Alert alert = driver.switchTo().alert();
-		// Get the text of the alert or prompt
-		alert.getText();  
-		// And acknowledge the alert (equivalent to clicking "OK")
-		alert.accept();
+		driver.switchTo().alert().accept();
 
 		// Click on the instructors tab
 		driver.findElement(By.xpath("//td[@class='tabTitle'][text()='Instructors']")).click();
 
 		// Start filling out instructors
 		bot.enterIntoInstructorsResourceTableNewRow(0, true, "Ovadia", "Evan", "eovadia", "20");
+		
+		// Test saving
+		driver.findElement(By.xpath("//div[@class='toolStrip']//td[@class='buttonTitle'][text()='File']")).click();
+		driver.findElement(By.xpath("//td[@class='menuTitleField']/nobr[text()='Save']")).click();
+		driver.switchTo().alert().accept();
 
 		// Click on the locations tab
 		driver.findElement(By.xpath("//td[@class='tabTitle'][text()='Locations']")).click();
 
 		// Start filling out locations
 		bot.enterIntoLocationsResourceTableNewRow(0, true, "14-255", "Smart Room", "9001", null);
+		
+		// Test saving
+		driver.findElement(By.xpath("//div[@class='toolStrip']//td[@class='buttonTitle'][text()='File']")).click();
+		driver.findElement(By.xpath("//td[@class='menuTitleField']/nobr[text()='Save']")).click();
+		driver.switchTo().alert().accept();
+
 	}
 }
 

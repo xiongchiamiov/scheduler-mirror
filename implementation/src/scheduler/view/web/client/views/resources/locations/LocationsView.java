@@ -4,32 +4,31 @@ import scheduler.view.web.client.GreetingServiceAsync;
 import scheduler.view.web.client.UnsavedDocumentStrategy;
 import scheduler.view.web.shared.DocumentGWT;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
-import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.types.ListGridEditEvent;
 import com.smartgwt.client.types.RowEndEditAction;
+import com.smartgwt.client.widgets.IButton;
+import com.smartgwt.client.widgets.events.ClickEvent;
+import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.events.KeyPressEvent;
 import com.smartgwt.client.widgets.events.KeyPressHandler;
 import com.smartgwt.client.widgets.grid.CellFormatter;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
+import com.smartgwt.client.widgets.layout.HLayout;
+import com.smartgwt.client.widgets.layout.VLayout;
 
-public class LocationsView extends VerticalPanel {
+public class LocationsView extends VLayout {
 	public LocationsView(final GreetingServiceAsync service,
 			final DocumentGWT document,
 			UnsavedDocumentStrategy unsavedDocumentStrategy) {
-		this.setWidth("100%");
-		this.setHeight("100%");
-		this.setHorizontalAlignment(ALIGN_CENTER);
+		setID("s_locationviewTab");
+		this.setWidth100();
+		this.setHeight100();
+//		this.setHorizontalAlignment(ALIGN_CENTER);
 		// this.add(new HTML("<h2>Locations</h2>"));
 
 		final ListGrid grid = new ListGrid();
@@ -74,8 +73,8 @@ public class LocationsView extends VerticalPanel {
 		grid.setFields(idField, schedulableField, roomField, typeField,
 				maxOccupancyField, equipmentField);
 
-		this.add(grid);
-		this.setHorizontalAlignment(ALIGN_DEFAULT);
+		this.addMember(grid);
+//		this.setHorizontalAlignment(ALIGN_DEFAULT);
 
 		grid.addKeyPressHandler(new KeyPressHandler() {
 			public void onKeyPress(KeyPressEvent event) {
@@ -93,23 +92,23 @@ public class LocationsView extends VerticalPanel {
 	 * Lays out the buttons which will appear on this widget
 	 */
 	private void layoutBottomButtonBar(final ListGrid grid) {
-		FlowPanel bottomButtonFlowPanel = new FlowPanel();
-		bottomButtonFlowPanel.addStyleName("floatingScheduleButtonBar");
+		HLayout bottomButtonFlowPanel = new HLayout();
+//		bottomButtonFlowPanel.addStyleName("floatingScheduleButtonBar");
 
-		Button newButton = new Button("Add New Location", new ClickHandler() {
+		IButton newButton = new IButton("Add New Location", new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				grid.startEditingNew();
 			}
 		});
-		newButton.getElement().setId("addLocationButton");
+//		newButton.getElement().setId("addLocationButton");
 		// DOM.setElementAttribute(course.getElement(), "id", "s_newCourseBtn");
-		newButton.setStyleName("floatingScheduleButtonBarItemLeft");
-		bottomButtonFlowPanel.add(newButton);
+//		newButton.setStyleName("floatingScheduleButtonBarItemLeft");
+		newButton.setID("addLocationButton");
+		bottomButtonFlowPanel.addMember(newButton);
 
-		Button dupeBtn = new Button("Duplicate Selected Locations",
-				new com.google.gwt.event.dom.client.ClickHandler() {
-					public void onClick(
-							com.google.gwt.event.dom.client.ClickEvent event) {
+		IButton dupeBtn = new IButton("Duplicate Selected Locations",
+				new ClickHandler() {
+					public void onClick(ClickEvent event) {
 						ListGridRecord[] selectedRecords = grid
 								.getSelectedRecords();
 						for (ListGridRecord rec : selectedRecords) {
@@ -119,10 +118,11 @@ public class LocationsView extends VerticalPanel {
 					}
 				});
 		// DOM.setElementAttribute(dupeBtn.getElement(), "id", "s_dupeBtn");
-		dupeBtn.setStyleName("floatingScheduleButtonBarItemLeft");
-		bottomButtonFlowPanel.add(dupeBtn);
+//		dupeBtn.setStyleName("floatingScheduleButtonBarItemLeft");
+		dupeBtn.setID("s_dupeBtn");
+		bottomButtonFlowPanel.addMember(dupeBtn);
 
-		Button remove = new Button("Remove Selected Locations", new ClickHandler() {
+		IButton remove = new IButton("Remove Selected Locations", new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				ListGridRecord[] selectedRecords = grid.getSelectedRecords();
 				for (ListGridRecord rec : selectedRecords) {
@@ -131,9 +131,10 @@ public class LocationsView extends VerticalPanel {
 			}
 		});
 //		DOM.setElementAttribute(remove.getElement(), "id", "s_removeBtn");
-		remove.setStyleName("floatingScheduleButtonBarItemLeft");
-		bottomButtonFlowPanel.add(remove);
+//		remove.setStyleName("floatingScheduleButtonBarItemLeft");
+		remove.setID("s_removeBtn");
+		bottomButtonFlowPanel.addMember(remove);
 
-		this.add(bottomButtonFlowPanel);
+		this.addMember(bottomButtonFlowPanel);
 	}
 }

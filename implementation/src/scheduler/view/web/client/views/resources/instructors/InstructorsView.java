@@ -9,10 +9,8 @@ import scheduler.view.web.shared.InstructorGWT;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.ScrollPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
+//import com.google.gwt.user.client.ui.Button;
+//import com.google.gwt.user.client.ui.ScrollPanel;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Autofit;
@@ -31,8 +29,10 @@ import com.smartgwt.client.widgets.grid.CellFormatter;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
+import com.smartgwt.client.widgets.layout.HLayout;
+import com.smartgwt.client.widgets.layout.VLayout;
 
-public class InstructorsView extends VerticalPanel {
+public class InstructorsView extends VLayout {
 	protected GreetingServiceAsync service;
 	protected final DocumentGWT document;
 
@@ -41,13 +41,15 @@ public class InstructorsView extends VerticalPanel {
 	public InstructorsView(final GreetingServiceAsync service,
 			final DocumentGWT document,
 			final UnsavedDocumentStrategy unsavedDocumentStrategy) {
+		setID("s_instructorviewTab");
+		
 		this.service = service;
 		this.document = document;
 		// this.addStyleName("iViewPadding");
 
-		this.setWidth("100%");
-		this.setHeight("100%");
-		this.setHorizontalAlignment(ALIGN_CENTER);
+		this.setWidth100();
+		this.setHeight100();
+//		this.setHorizontalAlignment(ALIGN_CENTER);
 		// this.add(new HTML("<h2>Instructors</h2>"));
 
 		final ListGrid grid = new ListGrid() {
@@ -173,8 +175,8 @@ public class InstructorsView extends VerticalPanel {
 				firstNameField, usernameField, maxWTUField,
 				instructorPrefsField);
 
-		this.add(grid);
-		this.setHorizontalAlignment(ALIGN_DEFAULT);
+		this.addMember(grid);
+//		this.setHorizontalAlignment(ALIGN_DEFAULT);
 
 		grid.addKeyPressHandler(new KeyPressHandler() {
 			public void onKeyPress(KeyPressEvent event) {
@@ -204,19 +206,24 @@ public class InstructorsView extends VerticalPanel {
 		iipv.setParent(window);
 		iipv.afterPush();
 
-		final ScrollPanel weewee = new ScrollPanel();
-		weewee.setWidget(iipv);
-		weewee.setSize("700px", "600px");
-		window.addItem(weewee);
+//		final ScrollPanel weewee = new ScrollPanel();
+//		weewee.setWidget(iipv);
+//		weewee.setSize("700px", "600px");
+//		window.addItem(weewee);
+		
+		window.addMember(iipv);
 
 		com.google.gwt.event.dom.client.ClickHandler handler = new com.google.gwt.event.dom.client.ClickHandler() {
 			@Override
 			public void onClick(com.google.gwt.event.dom.client.ClickEvent event) {
-				window.hide();
+				
 			}
 		};
-		Button button = new Button("Close");
-		button.addClickHandler(handler);
+		IButton button = new IButton("Close", new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				window.hide();
+			}
+		});
 		iipv.add(button);
 		button.setStyleName("centerness");
 
@@ -228,57 +235,52 @@ public class InstructorsView extends VerticalPanel {
 	 * Lays out the buttons which will appear on this widget
 	 */
 	private void layoutBottomButtonBar(final ListGrid grid) {
-		FlowPanel bottomButtonFlowPanel = new FlowPanel();
-		bottomButtonFlowPanel.addStyleName("floatingScheduleButtonBar");
+		HLayout bottomButtonFlowPanel = new HLayout();
+//		bottomButtonFlowPanel.addStyleName("floatingScheduleButtonBar");
 
-		Button addBtn = new Button("Add New Instructor",
-				new com.google.gwt.event.dom.client.ClickHandler() {
-					@Override
-					public void onClick(
-							com.google.gwt.event.dom.client.ClickEvent event) {
-						Record defaultValues = new Record();
-						defaultValues.setAttribute("maxWTU", 0);
-						grid.startEditingNew(defaultValues);
-					}
-				});
-		DOM.setElementAttribute(addBtn.getElement(), "id", "addInstructorBtn");
-		addBtn.setStyleName("floatingScheduleButtonBarItemLeft");
-		bottomButtonFlowPanel.add(addBtn);
+		IButton addBtn = new IButton("Add New Instructor", new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				Record defaultValues = new Record();
+				defaultValues.setAttribute("maxWTU", 0);
+				grid.startEditingNew(defaultValues);
+			}
+		});
+//		DOM.setElementAttribute(addBtn.getElement(), "id", "addInstructorBtn");
+//		addBtn.setStyleName("floatingScheduleButtonBarItemLeft");
+		addBtn.setID("addInstructorBtn");
+		bottomButtonFlowPanel.addMember(addBtn);
 
-		Button duplicateBtn = new Button("Duplicate Selected Instructors",
-				new com.google.gwt.event.dom.client.ClickHandler() {
-					public void onClick(
-							com.google.gwt.event.dom.client.ClickEvent event) {
-						ListGridRecord[] selectedRecords = grid
-								.getSelectedRecords();
-						for (ListGridRecord rec : selectedRecords) {
-							rec.setAttribute("id", (Integer) null);
-							rec.setAttribute("instructorPrefs", (Integer) null);
-							grid.startEditingNew(rec);
-						}
-					}
-				});
-		DOM.setElementAttribute(duplicateBtn.getElement(), "id", "duplicateBtn");
-		duplicateBtn.setStyleName("floatingScheduleButtonBarItemLeft");
-		bottomButtonFlowPanel.add(duplicateBtn);
+		IButton duplicateBtn = new IButton("Duplicate Selected Instructors", new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				ListGridRecord[] selectedRecords = grid
+						.getSelectedRecords();
+				for (ListGridRecord rec : selectedRecords) {
+					rec.setAttribute("id", (Integer) null);
+					rec.setAttribute("instructorPrefs", (Integer) null);
+					grid.startEditingNew(rec);
+				}
+			}
+		});
+//		DOM.setElementAttribute(duplicateBtn.getElement(), "id", "duplicateBtn");
+//		duplicateBtn.setStyleName("floatingScheduleButtonBarItemLeft");
+		duplicateBtn.setID("duplicateBtn");
+		bottomButtonFlowPanel.addMember(duplicateBtn);
 
-		Button removeBtn = new Button("Remove Selected Instructors",
-				new com.google.gwt.event.dom.client.ClickHandler() {
-					@Override
-					public void onClick(
-							com.google.gwt.event.dom.client.ClickEvent event) {
-						ListGridRecord[] selectedRecords = grid
-								.getSelectedRecords();
-						for (ListGridRecord rec : selectedRecords) {
-							grid.removeData(rec);
-						}
-					}
-				});
-		DOM.setElementAttribute(removeBtn.getElement(), "id", "removeBtn");
+		IButton removeBtn = new IButton("Remove Selected Instructors", new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				ListGridRecord[] selectedRecords = grid
+						.getSelectedRecords();
+				for (ListGridRecord rec : selectedRecords) {
+					grid.removeData(rec);
+				}
+			}
+		});
+//		DOM.setElementAttribute(removeBtn.getElement(), "id", "removeBtn");
 
-		removeBtn.setStyleName("floatingScheduleButtonBarItemLeft");
-		bottomButtonFlowPanel.add(removeBtn);
+//		removeBtn.setStyleName("floatingScheduleButtonBarItemLeft");
+		removeBtn.setID("removeBtn");
+		bottomButtonFlowPanel.addMember(removeBtn);
 
-		this.add(bottomButtonFlowPanel);
+		this.addMember(bottomButtonFlowPanel);
 	}
 }
