@@ -52,4 +52,16 @@ public class DBInstructor extends DBObject implements IDBInstructor {
 	public boolean isSchedulable() { return isSchedulable; }
 	@Override
 	public void setIsSchedulable(boolean isSchedulable) { this.isSchedulable = isSchedulable; }
+	
+	//Need equals method for comparisons in the algorithm
+	public boolean equals(Object other) {
+		if(this == other)
+			return true;
+		if((other == null) || (this.getClass() != other.getClass()))
+			return false;
+		DBInstructor instructor = (DBInstructor)other;
+		return this.firstName == instructor.firstName &&
+			   this.lastName == instructor.lastName &&
+			   this.username == instructor.username;
+	}
 }

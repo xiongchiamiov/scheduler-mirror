@@ -45,4 +45,13 @@ public class DBLocation extends DBObject implements IDBLocation {
 	public boolean isSchedulable() { return isSchedulable; }
 	@Override
 	public void setIsSchedulable(boolean isSchedulable) { this.isSchedulable = isSchedulable; }
+	
+	public boolean equals(Object other) {
+		if(this == other)
+			return true;
+		if((other == null) || (this.getClass() != other.getClass()))
+			return false;
+		DBLocation loc = (DBLocation)other;
+		return this.room == loc.room && this.type == loc.type;
+	}
 }
