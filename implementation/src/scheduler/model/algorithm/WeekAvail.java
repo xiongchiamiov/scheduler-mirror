@@ -3,9 +3,7 @@ package scheduler.model.algorithm;
 import scheduler.model.Day;
 
 public class WeekAvail
-{
-    //public static final long serialVersionUID = 42;
-	
+{	
 	private boolean[][] availability = new boolean[5][48];
 
     public WeekAvail() {
@@ -43,14 +41,10 @@ public class WeekAvail
     public boolean isFree(Week days, TimeRange tr) {
 	    for(Day day : days.getDays()) {
 	    	for(int time = tr.getS(); time < tr.getE(); time++) {
-	    		System.err.println("Trying day: " + day.ordinal());
-	    		System.err.println("With time: " + time);
-	    		System.err.println("Found: " + availability[day.ordinal() - 1][time]);
 	    		if(!availability[day.ordinal() - 1][time])
 	    			return false;
 	    	}
 	    }
-	    
 	    return true;
     }
     
