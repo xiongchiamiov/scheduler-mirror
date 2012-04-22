@@ -23,7 +23,7 @@ import scheduler.model.Location;
 import scheduler.model.Model;
 import scheduler.model.Schedule;
 import scheduler.model.ScheduleItem;
-import scheduler.model.algorithm.Generate;
+import scheduler.model.algorithm.GenerateEntryPoint;
 import scheduler.model.db.DatabaseException;
 import scheduler.view.web.client.GreetingService;
 import scheduler.view.web.client.InvalidLoginException;
@@ -700,7 +700,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 				if (location.isSchedulable())
 					schedulableLocations.add(location);
 			
-			Vector<ScheduleItem> generated = Generate.generate(model, schedule, schedule.getItems(), schedulableCourses, schedulableInstructors, schedulableLocations);
+			Vector<ScheduleItem> generated = GenerateEntryPoint.generate(model, schedule, schedule.getItems(), schedulableCourses, schedulableInstructors, schedulableLocations);
 			for (ScheduleItem item : generated) {
 				item.setSchedule(schedule);
 				item.insert();

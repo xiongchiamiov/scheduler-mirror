@@ -16,7 +16,7 @@ import scheduler.model.Instructor;
 import scheduler.model.Location;
 import scheduler.model.Model;
 import scheduler.model.Schedule;
-import scheduler.model.algorithm.Generate;
+import scheduler.model.algorithm.GenerateEntryPoint;
 import scheduler.model.algorithm.ScheduleItemDecorator;
 import scheduler.model.algorithm.Week;
 import scheduler.model.db.DatabaseException;
@@ -49,7 +49,7 @@ public class AlgorithmTest {
 		
 		long start = System.currentTimeMillis();
 		
-	    Generate.generate(model, schedule, sids, courses, instructors, locations);
+	    GenerateEntryPoint.generate(model, schedule, sids, courses, instructors, locations);
 	    
 	    long end = System.currentTimeMillis();
 	    
