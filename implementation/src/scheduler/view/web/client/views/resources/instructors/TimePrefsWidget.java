@@ -151,7 +151,7 @@ public class TimePrefsWidget extends VerticalPanel {
 			}
 
 			public InstructorGWT getInstructor() {
-				return instructor;
+				return TimePrefsWidget.this.instructor;
 			}
 
 			public void autoSave() {
@@ -173,43 +173,29 @@ public class TimePrefsWidget extends VerticalPanel {
 		RootPanel.get().add(new HTML(st));
 	}
 
-	void setSelectedCellsContents(int value) {
+	/*void setSelectedCellsContents(int value) {
 		for (TimePrefsCellWidget cell : selectedCells)
 			setPreference(cell, value);
 		//redoColors();
-	}
+	}*/
 
 	void setPreference(TimePrefsCellWidget cell, int desire) {
 		InstructorGWT instructor = strategy.getInstructor();
-		
-//		int hour = cell.halfHour / 2 + 7; // divide by two to get hours 0-15. Add 7 to get hours 7-22.
-		
-//		Integer time = hour * 60 + cell.halfHour % 2 * 30;
 
 		Integer dayNum = cell.day;
 		DayGWT day = DayGWT.values()[dayNum];
-
-		instructor.gettPrefs()[day.ordinal()][cell.halfHour] = desire;
-		instructor.gettPrefs()[day.ordinal()][cell.halfHour + 1] = desire;
+		System.out.println("Helper stuff: "+day.name);
+		System.out.println("Ordinal stuff: "+ day.ordinal()+", "+cell.day);
+		instructor.gettPrefs()[day.ordinal() + 1][cell.halfHour] = desire;
+		instructor.gettPrefs()[day.ordinal() + 1][cell.halfHour + 1] = desire;
 		
-//		time = hour * 60 + cell.halfHour % 2 * 30;
-
-		dayNum = cell.day;
-		day = DayGWT.values()[dayNum];
-		
-		assert(getPreference(instructor, cell.halfHour, cell.day) == desire);
+		assert(getPreference(instructor, cell.halfHour, cell.day + 1) == desire);
 		
 		assert(cell != null);
 		cell.addListStyle(styleNames[3-desire]);
-		//cell.clear();
-		//cell.add(new HTML(new Integer(getPreference(instructor, cell.halfHour, cell.day)).toString()));
 	}
 
 	int getPreference(InstructorGWT ins, int halfHour, int dayNum) {
-//		int hour = halfHour / 2 + 7; // divide by two to get hours 0-15. Add 7 to get hours 7-22.
-		
-//		Integer time = hour * 60 + halfHour % 2 * 30;
-		
 		DayGWT day = DayGWT.values()[dayNum];
 		return ins.gettPrefs()[day.ordinal()][halfHour];
 	}
@@ -252,7 +238,6 @@ public class TimePrefsWidget extends VerticalPanel {
 		toList.setTitle("To: ");
 				
 		for (int halfHour = 0; halfHour < 30; halfHour+=2) { // There are 30 half-hours between 7am and 10pm
-//			int row = halfHour + 1;
 			int hour = halfHour / 2 + 7; // divide by two to get hours 0-15. Add 7 to get hours 7-22.
 			String string = ((hour + 12 - 1) % 12 + 1) + ":" + (halfHour % 2 == 0 ? "00" : "30") + (hour < 12 ? "am" : "pm");
 			fromList.addItem(string);
@@ -280,31 +265,15 @@ public class TimePrefsWidget extends VerticalPanel {
 		topStuff.getWidget(1, 2).setWidth("100px");
 		topStuff.getWidget(1, 3).setWidth("100px");
 		topStuff.getWidget(1, 4).setWidth("100px");
-		
-		//add(fromList);
-		//add(toList);
-		
-		//add(multiSet);
+
 		multiSet.addChangeHandler(new ChangeHandler() {
 			@Override
 			public void onChange(ChangeEvent event) {
-				setMultiplePreferences();//setCoursePreference(course, list.getSelectedIndex());
+				setMultiplePreferences();
 				strategy.autoSave();
 			}
 		});
 		
-		/*topStuff.setWidget(3, 1, new Button("Change Preferences", new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				setMultiplePreferences();
-				strategy.autoSave();
-			}
-		}));*/
-		//this.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-		//this.setLayoutData(ALIGN_CENTER);
-		//topStuff.
-		//topStuff.setBorderWidth(5);
-		//topStuff.setStyleName("centerness");
 		focus.setStyleName("otherCenterness");
 		focusTwo.setStyleName("otherCenterness");
 		focusTwo.add(topStuff);
@@ -316,18 +285,7 @@ public class TimePrefsWidget extends VerticalPanel {
 			@Override
 			public void onKeyDown(KeyDownEvent event) {
 				event.preventDefault();
-				
-				//int keyCode = event.getNativeKeyCode();
-				/*if (keyCode >= '0' && keyCode <= '9')
-					setSelectedCellsContents(keyCode - '0');
-				else if (keyCode == KeyCodes.KEY_ENTER) {
-					if (lastSelectedCell != null && lastSelectedCell.halfHour + 1 < 30) {
-						clearSelectedCells();
-						CellWidget cell = cells[lastSelectedCell.halfHour + 1][lastSelectedCell.day];
-						selectCell(cell);
-						lastSelectedCell = cell;
-					}
-				}*/
+
 				if (event.getNativeKeyCode() == KeyCodes.KEY_TAB) {
 					if (lastSelectedCell != null && lastSelectedCell.day + 1 < 7) {
 						clearSelectedCells();
@@ -344,8 +302,7 @@ public class TimePrefsWidget extends VerticalPanel {
 	public void redraw()
 	{
 		this.timePrefsTable = new FlexTable();
-		//timePrefsTable.setBorderWidth(10);
-		//timePrefsTable.setText(0, 0, "            ");
+
 		focus.add(timePrefsTable);
 		this.timePrefsTable.addStyleName("timePreferencesTable");
 		this.timePrefsTable.setWidth("100%");
@@ -353,16 +310,14 @@ public class TimePrefsWidget extends VerticalPanel {
 		this.timePrefsTable.setCellPadding(0);
 		DOM.setElementAttribute(this.timePrefsTable.getElement(), "id", "timePrefsTable");
 		
-		//timePrefsTable.setWidget(0, 0, new HTML("           "));
 		for (int halfHour = 0; halfHour < 30; halfHour+=2) {
 			// There are 30 half-hours between 7am and 10pm
 			int row = halfHour/2 + 1;
 			int hour = halfHour / 2 + 7; // divide by two to get hours 0-15. Add 7 to get hours 7-22.
 			String string = ((hour + 12 - 1) % 12 + 1) + ":" + (halfHour % 2 == 0 ? "00" : "30") + (hour < 12 ? "am" : "pm");
-			this.timePrefsTable.setText(row, 0, string);// new HTML(new String("   ")+string));
+			this.timePrefsTable.setText(row, 0, string);
 		}
 		
-		//String days[] = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" };
 		ArrayList<String> days = new ArrayList<String>();
 		days.add("Monday");
 		days.add("Tuesday");
@@ -398,7 +353,7 @@ public class TimePrefsWidget extends VerticalPanel {
 				if(days.get(dayNum).equals("Thursday")) prefCol = 3;
 				if(days.get(dayNum).equals("Friday")) prefCol = 4;
 
-				int desire = this.getPreference(strategy.getInstructor(), halfHour, prefCol);
+				int desire = this.getPreference(strategy.getInstructor(), halfHour, prefCol + 1);
 				if(desire > 3) desire = 3;
 				if(desire < 0) desire = 0;
 				final TimePrefsCellWidget cell = new TimePrefsCellWidget(halfHour, dayNum);
@@ -576,9 +531,10 @@ public class TimePrefsWidget extends VerticalPanel {
 
 			@Override
 			public void onSuccess(Void result) {
+				System.out.println("Got to this amazing place");
 				savedInstructor = instructor;
 				instructor = new InstructorGWT(instructor);
-				redoColors();
+				//redoColors();
 			}
 		});
 	}
