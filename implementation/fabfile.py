@@ -43,3 +43,7 @@ def deploy(*directories):
 		      extra_opts='--omit-dir-times --no-perms')
 	restart_tomcat()
 
+def nuke_databases():
+	print('Deleting serialized database files...')
+	run('rm /var/lib/tomcat6/webapps/**/*.javaser')
+
