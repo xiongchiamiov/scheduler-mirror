@@ -2,6 +2,7 @@ from fabric.api import env, local, put, run
 from fabric.contrib.project import rsync_project as rsync
 
 env.hosts = ['scheduler.csc.calpoly.edu']
+departments = ['AERO','BUS','CHEM','CM','CSC','EE','ENGL','FSN','GRC','IME','MU','RPTA']
 
 def generate_build_xml():
 	print('Generating build.xml...')
@@ -25,8 +26,15 @@ def restart_tomcat():
 
 def deploy(*directories):
 	#build()
-	if len(directories) == 1 and directories[0] == 'all':
-		directories = ['AERO','BUS','CHEM','CM','CSC','EE','ENGL','FSN','GRC','IME','MU','RPTA']
+	if len(directories) == 1:
+		if directories[0] == 'all':
+			# We need a copy since we're modifying the list.
+			directories = list(department)
+			directories.extend([department+'x' for department in departments])
+		elif directories[0] == 'all-dev':
+			directories = [department+'x' for department in departments]
+		elif directories[0] == 'all-stable':
+			directories = departments
 	
 	for directory in directories:
 		print('Deploying %s...' % directory)
