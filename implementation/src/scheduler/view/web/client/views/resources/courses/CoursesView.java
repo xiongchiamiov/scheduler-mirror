@@ -4,7 +4,6 @@ import scheduler.view.web.client.GreetingServiceAsync;
 import scheduler.view.web.client.UnsavedDocumentStrategy;
 import scheduler.view.web.shared.DocumentGWT;
 
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
@@ -27,10 +26,10 @@ import com.smartgwt.client.widgets.layout.VLayout;
 public class CoursesView extends VLayout {
 	private GreetingServiceAsync service;
 	private final DocumentGWT document;
-	
+
 	public CoursesView(GreetingServiceAsync service, DocumentGWT document,
 			UnsavedDocumentStrategy unsavedDocumentStrategy) {
-		
+
 		this.service = service;
 		this.document = document;
 		// this.addStyleName("iViewPadding");
@@ -40,15 +39,14 @@ public class CoursesView extends VLayout {
 		this.setWidth100();
 		// this.setHeight("100%");
 		this.setHeight100();
-		
+
 		// this.add(new HTML("<h2>Courses</h2>"));
-		
+
 		// gridPanel.setHorizontalAlignment(ALIGN_CENTER);
 		final ListGrid grid = new ListGrid();
-		// grid.setWidth100();
-		grid.setWidth("98%");
+		grid.setWidth100();
 		grid.setAutoFitData(Autofit.VERTICAL);
-		
+
 		grid.setShowAllRecords(true);
 		grid.setAutoFetchData(true);
 		grid.setCanEdit(true);
@@ -64,7 +62,7 @@ public class CoursesView extends VLayout {
 						return grid.getRecords();
 					}
 				}));
-		
+
 		grid.addKeyPressHandler(new KeyPressHandler() {
 			public void onKeyPress(KeyPressEvent event) {
 				if (event.getKeyName().equals("Backspace")
@@ -74,9 +72,9 @@ public class CoursesView extends VLayout {
 						grid.removeSelectedData();
 			}
 		});
-		
+
 		ListGridField idField = new ListGridField("id", "&nbsp;");
-		
+
 		idField.setCanEdit(false);
 		idField.setCellFormatter(new CellFormatter() {
 			public String format(Object value, ListGridRecord record,
@@ -86,10 +84,10 @@ public class CoursesView extends VLayout {
 		});
 		idField.setWidth(20);
 		idField.setAlign(Alignment.CENTER);
-		
+
 		IntegerRangeValidator nonnegativeInt = new IntegerRangeValidator();
 		nonnegativeInt.setMin(0);
-		
+
 		ListGridField schedulableField = new ListGridField("isSchedulable",
 				"Schedulable");
 		schedulableField.setAlign(Alignment.CENTER);
@@ -131,7 +129,7 @@ public class CoursesView extends VLayout {
 		ListGridField associationsField = new ListGridField("associations",
 				"Associations");
 		associationsField.setAlign(Alignment.CENTER);
-		
+
 		// For a combo box associations field CURRENTLY NOT WORKING
 		// final SelectItem test = new SelectItem();
 		// test.setName("association");
@@ -161,29 +159,29 @@ public class CoursesView extends VLayout {
 		// }
 		// } );
 		// associationsField.setEditorType(test);
-		
+
 		grid.setFields(idField, schedulableField, departmentField,
 				catalogNumberField, nameField, numSectionsField, wtuField,
 				scuField, dayCombinationsField, hoursPerWeekField,
 				maxEnrollmentField, courseTypeField, usedEquipmentField,
 				associationsField);
-		
+
 		// DOM.setElementAttribute(this.getElement(), "id", "s_coursesTab");
-		
+
 		// grid.getElement().setId("s_gridCoursesTbl");
 		// this.setHorizontalAlignment(ALIGN_CENTER);
 		this.addMember(grid);
 		// this.setHorizontalAlignment(ALIGN_LEFT);
 		layoutBottomButtonBar(grid);
 	}
-	
+
 	/**
 	 * Lays out the buttons which will appear on this widget
 	 */
 	private void layoutBottomButtonBar(final ListGrid grid) {
 		HLayout bottomButtonFlowPanel = new HLayout();
-		// bottomButtonFlowPanel.addStyleName("floatingScheduleButtonBar");
-		
+		 bottomButtonFlowPanel.addStyleName("floatingScheduleButtonBar");
+
 		IButton course = new IButton("Add New Course", new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				Record defaultValues = new Record();
@@ -200,36 +198,40 @@ public class CoursesView extends VLayout {
 		// course.setStyleName("floatingScheduleButtonBarItemLeft");
 		course.setID("s_newCourseBtn");
 		bottomButtonFlowPanel.addMember(course);
-		
-		IButton dupeBtn = new IButton("Duplicate Selected Courses", new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				ListGridRecord[] selectedRecords = grid.getSelectedRecords();
-				for (ListGridRecord rec : selectedRecords) {
-					rec.setAttribute("id", (Integer)null);
-					grid.startEditingNew(rec);
-				}
-			}
-		});
-		
+
+		IButton dupeBtn = new IButton("Duplicate Selected Courses",
+				new ClickHandler() {
+					public void onClick(ClickEvent event) {
+						ListGridRecord[] selectedRecords = grid
+								.getSelectedRecords();
+						for (ListGridRecord rec : selectedRecords) {
+							rec.setAttribute("id", (Integer) null);
+							grid.startEditingNew(rec);
+						}
+					}
+				});
+
 		// DOM.setElementAttribute(dupeBtn.getElement(), "id", "s_dupeBtn");
 		// dupeBtn.setStyleName("floatingScheduleButtonBarItemLeft");
 		dupeBtn.setID("s_courseDupeBtn");
 		bottomButtonFlowPanel.addMember(dupeBtn);
-		
-		IButton remove = new IButton("Remove Selected Courses", new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				ListGridRecord[] selectedRecords = grid.getSelectedRecords();
-				for (ListGridRecord rec : selectedRecords) {
-					grid.removeData(rec);
-				}
-			}
-		});
-		
+
+		IButton remove = new IButton("Remove Selected Courses",
+				new ClickHandler() {
+					public void onClick(ClickEvent event) {
+						ListGridRecord[] selectedRecords = grid
+								.getSelectedRecords();
+						for (ListGridRecord rec : selectedRecords) {
+							grid.removeData(rec);
+						}
+					}
+				});
+
 		// DOM.setElementAttribute(remove.getElement(), "id", "s_removeBtn");
 		// remove.setStyleName("floatingScheduleButtonBarItemLeft");
 		remove.setID("s_removeBtn");
 		bottomButtonFlowPanel.addMember(remove);
-		
+
 		this.addMember(bottomButtonFlowPanel);
 	}
 }

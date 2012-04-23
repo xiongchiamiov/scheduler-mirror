@@ -9,6 +9,7 @@ import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.types.ListGridEditEvent;
 import com.smartgwt.client.types.RowEndEditAction;
+import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -28,11 +29,11 @@ public class LocationsView extends VLayout {
 		setID("s_locationviewTab");
 		this.setWidth100();
 		this.setHeight100();
-//		this.setHorizontalAlignment(ALIGN_CENTER);
+		// this.setHorizontalAlignment(ALIGN_CENTER);
 		// this.add(new HTML("<h2>Locations</h2>"));
 
 		final ListGrid grid = new ListGrid();
-		grid.setWidth("98%");
+		grid.setWidth100();
 		grid.setAutoFitData(Autofit.VERTICAL);
 		grid.setShowAllRecords(true);
 		grid.setAutoFetchData(true);
@@ -74,7 +75,7 @@ public class LocationsView extends VLayout {
 				maxOccupancyField, equipmentField);
 
 		this.addMember(grid);
-//		this.setHorizontalAlignment(ALIGN_DEFAULT);
+		// this.setHorizontalAlignment(ALIGN_DEFAULT);
 
 		grid.addKeyPressHandler(new KeyPressHandler() {
 			public void onKeyPress(KeyPressEvent event) {
@@ -93,14 +94,14 @@ public class LocationsView extends VLayout {
 	 */
 	private void layoutBottomButtonBar(final ListGrid grid) {
 		HLayout bottomButtonFlowPanel = new HLayout();
-//		bottomButtonFlowPanel.addStyleName("floatingScheduleButtonBar");
+		bottomButtonFlowPanel.setStyleName("floatingScheduleButtonBar");
 
 		IButton newButton = new IButton("Add New Location", new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				grid.startEditingNew();
 			}
 		});
-//		newButton.getElement().setId("addLocationButton");
+		// newButton.getElement().setId("addLocationButton");
 		// DOM.setElementAttribute(course.getElement(), "id", "s_newCourseBtn");
 //		newButton.setStyleName("floatingScheduleButtonBarItemLeft");
 		newButton.setID("addLocationButton");
@@ -122,15 +123,17 @@ public class LocationsView extends VLayout {
 		dupeBtn.setID("s_locationDupeBtn");
 		bottomButtonFlowPanel.addMember(dupeBtn);
 
-		IButton remove = new IButton("Remove Selected Locations", new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				ListGridRecord[] selectedRecords = grid.getSelectedRecords();
-				for (ListGridRecord rec : selectedRecords) {
-					grid.removeData(rec);
-				}
-			}
-		});
-//		DOM.setElementAttribute(remove.getElement(), "id", "s_removeBtn");
+		IButton remove = new IButton("Remove Selected Locations",
+				new ClickHandler() {
+					public void onClick(ClickEvent event) {
+						ListGridRecord[] selectedRecords = grid
+								.getSelectedRecords();
+						for (ListGridRecord rec : selectedRecords) {
+							grid.removeData(rec);
+						}
+					}
+				});
+		// DOM.setElementAttribute(remove.getElement(), "id", "s_removeBtn");
 //		remove.setStyleName("floatingScheduleButtonBarItemLeft");
 		remove.setID("s_removeBtn");
 		bottomButtonFlowPanel.addMember(remove);
