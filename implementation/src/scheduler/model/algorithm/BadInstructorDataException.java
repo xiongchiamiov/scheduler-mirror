@@ -18,7 +18,7 @@ public class BadInstructorDataException extends Exception
     */
    public enum ConflictType
    {
-      IS_STAFF;
+      IS_STAFF, IS_NULL;
       
       public String toString ()
       {
@@ -26,6 +26,8 @@ public class BadInstructorDataException extends Exception
          {
             case IS_STAFF:
                return "Staff Instructor detected";
+            case IS_NULL:
+                return "Null data detected";
             
             default:
                System.err.println ("BAD DATA TYPE");

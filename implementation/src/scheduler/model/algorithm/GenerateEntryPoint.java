@@ -9,6 +9,7 @@ import scheduler.model.Instructor;
 import scheduler.model.Model;
 import scheduler.model.Schedule;
 import scheduler.model.ScheduleItem;
+import scheduler.model.algorithm.BadInstructorDataException.ConflictType;
 import scheduler.model.db.DatabaseException;
 
 public class GenerateEntryPoint {
@@ -43,9 +44,14 @@ public class GenerateEntryPoint {
 		return Generate.generate(model, schedule, s_items, c_list, insD, locD);
 	}
 	
-	private static InstructorDecorator checkValid(Instructor ins) throws BadInstructorDataException{
+	private static InstructorDecorator checkValid(Instructor ins) throws 
+	BadInstructorDataException, DatabaseException{
 		//validity checks
-		//if(ins!=null)
+		if(ins==null || ins.getCoursePreferences() == null || ins.getTimePreferences() == null) {
+			throw new BadInstructorDataException(BadInstructorDataException.ConflictType.IS_NULL,
+					ins, "null preferences", "preferences");
+		}
+		
 			return new InstructorDecorator(ins);
 	}
 	

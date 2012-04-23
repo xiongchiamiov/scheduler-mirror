@@ -18,7 +18,7 @@ public class BadLocationDataException extends Exception
     */
    public enum ConflictType
    {
-      IS_TBA;
+      IS_TBA, IS_NULL, ;
       
       public String toString ()
       {
