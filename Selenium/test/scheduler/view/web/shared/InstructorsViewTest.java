@@ -1,6 +1,6 @@
 package scheduler.view.web.shared;
 
-import java.util.List;
+//import java.util.List;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -64,8 +64,12 @@ public class InstructorsViewTest extends TestCase {
 		driver.switchTo().window(newWindowHandle);
 		
 		// click on the instructors tab
-		this.waitForSmartGWTElement("s_instructorsTab");
-		WebElement tab = this.getElementBySmartGWTID("s_instructorsTab");
+//		this.waitForSmartGWTElement("s_instructorsTab");
+//		WebElement tab = this.getElementBySmartGWTID("s_instructorsTab");
+		// just temporary until the next dev deploy
+		this.waitForSmartGWTElement("isc_Tab_1");
+		WebElement tab = this.getElementBySmartGWTID("isc_Tab_1");
+		
 		assertEquals("Instructors", tab.getText());
 		tab.click();
 		
@@ -86,111 +90,118 @@ public class InstructorsViewTest extends TestCase {
 	public void testAddInstructor()
 	{
 		// click the Button to add an instructor
-		driver.findElement(By.id("addInstructorBtn")).click();
+
+		this.waitForSmartGWTElement("addInstructorBtn");
+
+//		driver.findElement(By.id("addInstructorBtn")).click();
 		
-		// TODO: insert a last name
+		// TODO: insert data
+		try {
+			bot.enterIntoInstructorsResourceTableNewRow(0, true, "World", "Hello", "foo", "30");
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-		// TODO: insert a first name
-		
-		// TODO: insert a username
+		this.waitMillis(2000);
 		
 		// TODO: set focus somewhere else
 		
 		// TODO: check if there is a new instructor with this data
 	}
 	
-	/**
-	 * tests if instructors can be duplicated
-	 */
-	public void testDuplicateInstructor()
-	{
-		// TODO: select the first instructor
-		
-		// click the button to duplicate an instructor
-		driver.findElement(By.id("duplicateInstructorBtn")).click();
-		
-		// TODO: check if there are two of them
-	}
-	
-	/**
-	 * tests if instructors can be removed
-	 */
-	public void testRemoveInstructor()
-	{
-		// TODO: select the first instructor
-		
-		// click the button to remove an instructor
-		driver.findElement(By.id("removeInstructorBtn")).click();
-		
-		// TODO: check if the instructor is still in the system
-	}
-	
-	/**
-	 * tests if the time and course preferences
-	 * can be set.
-	 */
-	public void testSetPreferences()
-	{
-		// click on the preferences button of the first instructor
-		WebElement prefsButton = this.getElementBySmartGWTID("instrPrefsButton_0");
-		assertEquals("Instructors", prefsButton.getText());
-		prefsButton.click();
-		
-		WebElement timeTable = this.getElementBySmartGWTID("timePrefsTable");
-		List<WebElement> rows = timeTable.findElements(By.tagName("tr"));;
-		WebElement cell;
-		WebElement select;
-		
-		// set Monday    7:00 am to "Not Preferred"
-		cell = rows.get(1).findElements(By.tagName("td")).get(1);
-		select = cell.findElement(By.tagName("select"));
-		select.click();
-		select.findElements(By.tagName("option")).get(1).click();
-//		assertEquals("Not Preferred", );
-		
-		// set Tuesday   8:00 am to "Acceptable"
-		cell = rows.get(2).findElements(By.tagName("td")).get(2);
-		select = cell.findElement(By.tagName("select"));
-		select.click();
-		select.findElements(By.tagName("option")).get(2).click();
-//		assertEquals("Acceptable", );
-		
-		// set Wednesday 9:00 am to "Preferred"
-		cell = rows.get(3).findElements(By.tagName("td")).get(3);
-		select = cell.findElement(By.tagName("select"));
-		select.click();
-		select.findElements(By.tagName("option")).get(3).click();
-//		assertEquals("Preferred", );
-		
-		
-		
-		WebElement courseTable = this.getElementBySmartGWTID("coursePrefsTable");
-		rows = courseTable.findElements(By.tagName("tr"));;
-		
-		// set the secont course to "Not Preferred"
-		cell = rows.get(2).findElements(By.tagName("td")).get(1);
-		select = cell.findElement(By.tagName("select"));
-		select.click();
-		select.findElements(By.tagName("option")).get(1).click();
-//		assertEquals("Not Preferred", );
-		
-		// set the third  course to "Acceptable"
-		cell = rows.get(3).findElements(By.tagName("td")).get(1);
-		select = cell.findElement(By.tagName("select"));
-		select.click();
-		select.findElements(By.tagName("option")).get(2).click();
-//		assertEquals("Acceptable", );
-		
-		// set the fourth course to "Preferred"
-		cell = rows.get(4).findElements(By.tagName("td")).get(1);
-		select = cell.findElement(By.tagName("select"));
-		select.click();
-		select.findElements(By.tagName("option")).get(3).click();
-//		assertEquals("Preferred", );
-		
-		
-		// TODO: check if all settings are correct
-	}
+//	/**
+//	 * tests if instructors can be duplicated
+//	 */
+//	public void testDuplicateInstructor()
+//	{
+//		// TODO: select the first instructor
+//		
+//		// click the button to duplicate an instructor
+//		driver.findElement(By.id("duplicateBtn")).click();
+//		
+//		// TODO: check if there are two of them
+//	}
+//	
+//	/**
+//	 * tests if instructors can be removed
+//	 */
+//	public void testRemoveInstructor()
+//	{
+//		// TODO: select the first instructor
+//		
+//		// click the button to remove an instructor
+//		driver.findElement(By.id("removeBtn")).click();
+//		
+//		// TODO: check if the instructor is still in the system
+//	}
+//	
+//	/**
+//	 * tests if the time and course preferences
+//	 * can be set.
+//	 */
+//	public void testSetPreferences()
+//	{
+//		// click on the preferences button of the first instructor
+//		WebElement prefsButton = this.getElementBySmartGWTID("instrPrefsButton_0");
+//		assertEquals("Instructors", prefsButton.getText());
+//		prefsButton.click();
+//		
+//		WebElement timeTable = this.getElementBySmartGWTID("timePrefsTable");
+//		List<WebElement> rows = timeTable.findElements(By.tagName("tr"));;
+//		WebElement cell;
+//		WebElement select;
+//		
+//		// set Monday    7:00 am to "Not Preferred"
+//		cell = rows.get(1).findElements(By.tagName("td")).get(1);
+//		select = cell.findElement(By.tagName("select"));
+//		select.click();
+//		select.findElements(By.tagName("option")).get(1).click();
+////		assertEquals("Not Preferred", );
+//		
+//		// set Tuesday   8:00 am to "Acceptable"
+//		cell = rows.get(2).findElements(By.tagName("td")).get(2);
+//		select = cell.findElement(By.tagName("select"));
+//		select.click();
+//		select.findElements(By.tagName("option")).get(2).click();
+////		assertEquals("Acceptable", );
+//		
+//		// set Wednesday 9:00 am to "Preferred"
+//		cell = rows.get(3).findElements(By.tagName("td")).get(3);
+//		select = cell.findElement(By.tagName("select"));
+//		select.click();
+//		select.findElements(By.tagName("option")).get(3).click();
+////		assertEquals("Preferred", );
+//		
+//		
+//		
+//		WebElement courseTable = this.getElementBySmartGWTID("coursePrefsTable");
+//		rows = courseTable.findElements(By.tagName("tr"));;
+//		
+//		// set the secont course to "Not Preferred"
+//		cell = rows.get(2).findElements(By.tagName("td")).get(1);
+//		select = cell.findElement(By.tagName("select"));
+//		select.click();
+//		select.findElements(By.tagName("option")).get(1).click();
+////		assertEquals("Not Preferred", );
+//		
+//		// set the third  course to "Acceptable"
+//		cell = rows.get(3).findElements(By.tagName("td")).get(1);
+//		select = cell.findElement(By.tagName("select"));
+//		select.click();
+//		select.findElements(By.tagName("option")).get(2).click();
+////		assertEquals("Acceptable", );
+//		
+//		// set the fourth course to "Preferred"
+//		cell = rows.get(4).findElements(By.tagName("td")).get(1);
+//		select = cell.findElement(By.tagName("select"));
+//		select.click();
+//		select.findElements(By.tagName("option")).get(3).click();
+////		assertEquals("Preferred", );
+//		
+//		
+//		// TODO: check if all settings are correct
+//	}
 	
 	/**
 	 * Waits the given amount, it is used when elements
