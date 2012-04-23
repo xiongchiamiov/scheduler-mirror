@@ -80,7 +80,7 @@ public class Database implements IDatabase {
 		
 		void deleteByID(int id) {
 			assert(objectsByID.containsKey(id));
-			String className = objectsByID.get(id).getClass().getName();
+//			String className = objectsByID.get(id).getClass().getName();
 			objectsByID.remove(id);
 		}
 	
@@ -428,9 +428,9 @@ public class Database implements IDatabase {
 		return new DBTimePreference(timePreferenceTable.findByID(id));
 	}
 
-	private boolean sameTime(IDBTime a, IDBTime b) {
-		return a.getDay() == b.getDay() && a.getHalfHour() == b.getHalfHour();
-	}
+//	private boolean sameTime(IDBTime a, IDBTime b) {
+//		return a.getDay() == b.getDay() && a.getHalfHour() == b.getHalfHour();
+//	}
 	
 	
 	@Override

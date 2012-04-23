@@ -3,6 +3,8 @@ package scheduler.model.db.simple;
 import scheduler.model.db.IDBUsedEquipment;
 
 public class DBUsedEquipment extends DBObject implements IDBUsedEquipment {
+	private static final long serialVersionUID = 1337L;
+	
 	Integer courseID;
 	Integer equipmentTypeID;
 	

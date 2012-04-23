@@ -6,6 +6,8 @@ import java.util.TreeSet;
 import scheduler.model.db.IDBDayPattern;
 
 public class DBDayPattern extends DBObject implements IDBDayPattern {
+	private static final long serialVersionUID = 1337L;
+	
 	public DBDayPattern(Integer id) {
 		super(id);
 	}

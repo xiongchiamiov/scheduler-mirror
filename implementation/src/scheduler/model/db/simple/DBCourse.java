@@ -1,9 +1,10 @@
 package scheduler.model.db.simple;
 
 import scheduler.model.db.IDBCourse;
-import scheduler.model.db.IDBCourseAssociation;
 
 public class DBCourse extends DBObject implements IDBCourse {
+	private static final long serialVersionUID = 1337L;
+	
 	Integer documentID;
 	boolean isSchedulable;
 	String name;

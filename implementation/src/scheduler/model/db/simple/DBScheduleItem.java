@@ -6,6 +6,8 @@ import scheduler.model.Day;
 import scheduler.model.db.IDBScheduleItem;
 
 public class DBScheduleItem extends DBObject implements IDBScheduleItem {
+	private static final long serialVersionUID = 1337L;
+	
 	Integer scheduleID;
 	Integer instructorID, courseID, locationID;
 	int section;

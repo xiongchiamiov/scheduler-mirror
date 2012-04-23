@@ -3,6 +3,8 @@ package scheduler.model.db.simple;
 import scheduler.model.db.IDBUser;
 
 public class DBUser extends DBObject implements IDBUser {
+	private static final long serialVersionUID = 1337L;
+	
 	String username;
 	boolean isAdmin;
 	

@@ -3,6 +3,8 @@ package scheduler.model.db.simple;
 import scheduler.model.db.IDBCoursePreference;
 
 public class DBCoursePreference extends DBObject implements IDBCoursePreference {
+	private static final long serialVersionUID = 1337L;
+	
 	Integer instructorID;
 	Integer courseID;
 	Integer preference;

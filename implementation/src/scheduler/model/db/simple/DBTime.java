@@ -3,6 +3,8 @@ package scheduler.model.db.simple;
 import scheduler.model.db.IDBTime;
 
 public class DBTime extends DBObject implements IDBTime {
+	private static final long serialVersionUID = 1337L;
+	
 	private static int idFromDayAndHalfHour(int day, int halfHour) {
 		assert(halfHour >= 0 && halfHour < 48);
 		assert(day >= 0 && day < 7);

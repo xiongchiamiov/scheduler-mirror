@@ -3,6 +3,8 @@ package scheduler.model.db.simple;
 import scheduler.model.db.IDBDocument;
 
 public class DBDocument extends DBObject implements IDBDocument {
+	private static final long serialVersionUID = 1337L;
+	
 	String name;
 	boolean isTrashed;
 	Integer originalID; // null if this is an original

@@ -3,6 +3,8 @@ package scheduler.model.db.simple;
 import scheduler.model.db.IDBTimePreference;
 
 public class DBTimePreference extends DBObject implements IDBTimePreference {
+	private static final long serialVersionUID = 1337L;
+	
 	Integer instructorID;
 	Integer timeID;
 	int preference;

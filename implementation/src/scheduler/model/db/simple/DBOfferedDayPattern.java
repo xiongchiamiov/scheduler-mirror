@@ -3,6 +3,8 @@ package scheduler.model.db.simple;
 import scheduler.model.db.IDBOfferedDayPattern;
 
 public class DBOfferedDayPattern extends DBObject implements IDBOfferedDayPattern {
+	private static final long serialVersionUID = 1337L;
+	
 	Integer courseID;
 	Integer dayPatternID;
 	

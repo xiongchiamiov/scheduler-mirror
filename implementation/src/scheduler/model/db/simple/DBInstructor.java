@@ -3,6 +3,8 @@ package scheduler.model.db.simple;
 import scheduler.model.db.IDBInstructor;
 
 public class DBInstructor extends DBObject implements IDBInstructor {
+	private static final long serialVersionUID = 1337L;
+	
 	Integer documentID;
 	String firstName, lastName;
 	String username;

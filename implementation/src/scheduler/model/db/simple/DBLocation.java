@@ -3,6 +3,8 @@ package scheduler.model.db.simple;
 import scheduler.model.db.IDBLocation;
 
 public class DBLocation extends DBObject implements IDBLocation {
+	private static final long serialVersionUID = 1337L;
+	
 	Integer documentID;
 	String room;
 	String type;
