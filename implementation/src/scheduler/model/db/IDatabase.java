@@ -13,10 +13,11 @@ import scheduler.model.db.simple.DBUsedEquipment;
 public interface IDatabase {
 	public class NotFoundException extends DatabaseException {
 		private static final long serialVersionUID = 1L;
-		public NotFoundException(Throwable thr) {
-			super(thr);
-		}
-		public NotFoundException() {
+//		public NotFoundException(Throwable thr) {
+//			super(thr);
+//		}
+		public NotFoundException(String message) {
+			super(message);
 		}
 	}
 	

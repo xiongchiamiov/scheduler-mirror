@@ -66,8 +66,7 @@ public class Database implements IDatabase {
 			assert(id != null);
 			T result = objectsByID.get(id);
 			if (result == null) {
-				System.out.println("Couldn't find id " + id);
-				throw new NotFoundException();
+				throw new NotFoundException("Couldn't find ID " + id);
 			}
 
 //			result.sanityCheck();
@@ -133,7 +132,7 @@ public class Database implements IDatabase {
 		for (DBUser user : userTable.getAll())
 			if (user.getUsername().equals(username))
 				return user;
-		throw new NotFoundException();
+		throw new NotFoundException("Couldn't find username " + username);
 	}
 
 	@Override
@@ -675,7 +674,7 @@ public class Database implements IDatabase {
 		for (DBEquipmentType type : equipmentTypeTable.getAll())
 			if (type.description.equals(equipmentTypeDescription))
 				return type;
-		throw new NotFoundException();
+		throw new NotFoundException("Couldn't find equipment type " + equipmentTypeDescription);
 	}
 
 	@Override

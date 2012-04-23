@@ -7,5 +7,7 @@ public class DatabaseException extends Exception {
 		super(thr);
 	}
 	
-	public DatabaseException(){}
+	public DatabaseException(String message) {
+		super(message);
+	}
 }
