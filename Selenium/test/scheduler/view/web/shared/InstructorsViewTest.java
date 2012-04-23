@@ -3,10 +3,12 @@ package scheduler.view.web.shared;
 import java.util.List;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 import scheduler.view.web.shared.Selenium.SchedulerBot;
+import scheduler.view.web.shared.Selenium.SchedulerBot.PopupWaiter;
 import junit.framework.TestCase;
 
 /**
@@ -43,14 +45,26 @@ public class InstructorsViewTest extends TestCase {
 		unameField.sendKeys("admin");
 		loginBtn.click();
 		
+		
+		this.waitForSmartGWTElement("s_createBtn");
 		// klick the first item in the schedule document list
 		WebElement first_doc = this.getElementBySmartGWTID("sc_document_0");
-		assertEquals("sc_document_0", first_doc.getText());
+		if(first_doc == null)
+		{
+			this.addNewDocument();
+		}
+		
+		PopupWaiter popupWaiter = bot.getPopupWaiter();
+		
+		this.waitForSmartGWTElement("sc_document_0");
 		first_doc.click();
 		
-		// TODO: change broswer tab here
+		// change broswer tab here
+		String newWindowHandle = popupWaiter.waitForPopup();
+		driver.switchTo().window(newWindowHandle);
 		
 		// click on the instructors tab
+		this.waitForSmartGWTElement("s_instructorsTab");
 		WebElement tab = this.getElementBySmartGWTID("s_instructorsTab");
 		assertEquals("Instructors", tab.getText());
 		tab.click();
@@ -198,6 +212,44 @@ public class InstructorsViewTest extends TestCase {
 	 * @return the found element
 	 */
 	private WebElement getElementBySmartGWTID(String smartGWTID) {
-		return this.driver.findElement(By.xpath("//div[@eventproxy='" + smartGWTID + "']"));
+		try
+		{
+			return this.driver.findElement(By.xpath("//div[@eventproxy='" + smartGWTID + "']"));
+		}
+		catch(NoSuchElementException e)
+		{
+			return null;
+		}
+	}
+	
+	/**
+	 * adds a new document if ther is no document for testing
+	 */
+	private void addNewDocument()
+	{
+		System.out.println("new document");
+		WebElement createBtn = this.getElementBySmartGWTID("s_createBtn");
+		createBtn.click();
+		
+		this.waitMillis(1000);
+		
+		WebElement docName = driver.findElement(By.id("s_createBox"));
+		docName.sendKeys("first document");
+
+		driver.findElement(By.id("s_createNamedDocBtn")).click();
+	}
+	
+	/**
+	 * waits for the given smartGWT element
+	 * @param id
+	 */
+	private void waitForSmartGWTElement(String id)
+	{
+		try {
+			this.bot.waitForElementPresent(By.xpath("//div[@eventproxy='" + id + "']"));
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

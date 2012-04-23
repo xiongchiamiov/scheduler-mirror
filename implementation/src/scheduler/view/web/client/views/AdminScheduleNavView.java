@@ -229,14 +229,17 @@ public class AdminScheduleNavView extends VerticalPanel implements UnsavedDocume
 		
 		final Tab coursesTab = new Tab("Courses");
 		coursesTab.setPane(new CoursesView(service, document, (UnsavedDocumentStrategy)AdminScheduleNavView.this));
+		coursesTab.setID("s_coursesTab");
 		tabSet.addTab(coursesTab);
 		
 		final Tab instructorsTab = new Tab("Instructors");
 		instructorsTab.setPane(new InstructorsView(service, document, (UnsavedDocumentStrategy)AdminScheduleNavView.this));
+		coursesTab.setID("s_instructorsTab");
 		tabSet.addTab(instructorsTab);
 		
 		final Tab locationsTab = new Tab("Locations");
 		locationsTab.setPane(new LocationsView(service, document, (UnsavedDocumentStrategy)AdminScheduleNavView.this));
+		coursesTab.setID("s_locationsTab");
 		tabSet.addTab(locationsTab);
 		
 		final Tab scheduleTab = new Tab("Schedule");
@@ -244,6 +247,7 @@ public class AdminScheduleNavView extends VerticalPanel implements UnsavedDocume
 		emptyCanvas.setWidth(0);
 		emptyCanvas.setHeight(1); // SmartGWT complains when we have 0 area.
 		scheduleTab.setPane(emptyCanvas);
+		coursesTab.setID("s_scheduleTab");
 		tabSet.addTab(scheduleTab);
 		
 		tabSet.setTabBarControls(TabBarControls.TAB_SCROLLER, TabBarControls.TAB_PICKER);
