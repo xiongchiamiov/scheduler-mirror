@@ -131,11 +131,34 @@ public class InstructorsView extends VLayout {
 				"Schedulable");
 		schedulableField.setDefaultValue(true);
 		schedulableField.setAlign(Alignment.CENTER);
+		
 		ListGridField lastNameField = new ListGridField("lastName", "Last Name");
 		lastNameField.setAlign(Alignment.CENTER);
+		lastNameField.setValidators(new CustomValidator() {
+			@Override
+			protected boolean condition(Object value) {
+				if (value == null) {
+					setErrorMessage("Username must be present!");
+					return false;
+				}
+				return true;
+			}
+		});
+		
 		ListGridField firstNameField = new ListGridField("firstName",
 				"First Name");
 		firstNameField.setAlign(Alignment.CENTER);
+		firstNameField.setValidators(new CustomValidator() {
+			@Override
+			protected boolean condition(Object value) {
+				if (value == null) {
+					setErrorMessage("Username must be present!");
+					return false;
+				}
+				return true;
+			}
+		});
+		
 		ListGridField usernameField = new ListGridField("username", "Username");
 		usernameField.setAlign(Alignment.CENTER);
 		usernameField.setValidators(new CustomValidator() {
@@ -167,9 +190,10 @@ public class InstructorsView extends VLayout {
 		ListGridField maxWTUField = new ListGridField("maxWTU", "Max WTU");
 		maxWTUField.setValidators(nonnegativeInt);
 		maxWTUField.setAlign(Alignment.CENTER);
-		ListGridField instructorPrefsField = new ListGridField(
-				"instructorPrefs", "Preferences");
+		
+		ListGridField instructorPrefsField = new ListGridField("instructorPrefs", "Preferences");
 		instructorPrefsField.setAlign(Alignment.CENTER);
+		instructorPrefsField.setCanEdit(false);
 
 		grid.setFields(idField, schedulableField, lastNameField,
 				firstNameField, usernameField, maxWTUField,

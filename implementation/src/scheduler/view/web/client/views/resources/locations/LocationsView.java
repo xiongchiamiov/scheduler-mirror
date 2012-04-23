@@ -119,7 +119,7 @@ public class LocationsView extends VLayout {
 				});
 		// DOM.setElementAttribute(dupeBtn.getElement(), "id", "s_dupeBtn");
 //		dupeBtn.setStyleName("floatingScheduleButtonBarItemLeft");
-		dupeBtn.setID("s_dupeBtn");
+		dupeBtn.setID("s_locationDupeBtn");
 		bottomButtonFlowPanel.addMember(dupeBtn);
 
 		IButton remove = new IButton("Remove Selected Locations", new ClickHandler() {

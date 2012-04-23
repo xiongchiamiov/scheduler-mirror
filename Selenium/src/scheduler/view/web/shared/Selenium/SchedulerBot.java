@@ -89,30 +89,34 @@ public class SchedulerBot {
 		return driver.findElement(By.xpath("((//div[@eventproxy='" + viewID + "']//table[@class='listTable']/tbody/tr[@role='listitem'])[" + (1 + row0Based) + "]/td)[" + (1 + col0Based) + "]"));
 	}
 	
-	private void setResourceTableTextCell(String viewID, int row0Based, int col0Based, String text) {
+	private void setResourceTableTextCell(String viewID, int row0Based, int col0Based, String text) throws InterruptedException {
 		if (text == null)
 			return;
-		
+
+		Thread.sleep(500);
 		WebElement cell = elementForResourceTableCell(viewID, row0Based, col0Based);
 		cell.click();
-		
+
+		Thread.sleep(500);
 		WebElement input = elementForResourceTableCell(viewID, row0Based, col0Based).findElement(By.xpath("//input"));
 		input.sendKeys(text);
 
 		driver.findElement(By.tagName("body")).click();
+		Thread.sleep(500);
 	}
 
 	private void setResourceTableMultiselectCell(String viewID, int row0Based, int col0Based, String optionsCombined) throws InterruptedException {
 		if (optionsCombined == null)
 			return;
 
-		Set<String> options = new TreeSet(Arrays.asList(optionsCombined.split(",")));
+		Set<String> options = new TreeSet<String>(Arrays.asList(optionsCombined.split(",")));
 		
 		WebElement cell = elementForResourceTableCell(viewID, row0Based, col0Based);
 		cell.click();
 
 		driver.manage().timeouts().implicitlyWait(0, TimeUnit.MILLISECONDS);
-		
+
+		Thread.sleep(500);
 		WebElement selectBeforeExpand = elementForResourceTableCell(viewID, row0Based, col0Based).findElement(By.xpath("div/nobr/span/table"));
 		selectBeforeExpand.click();
 		
@@ -140,9 +144,10 @@ public class SchedulerBot {
 		}
 		
 		driver.findElement(By.tagName("body")).click();
+		Thread.sleep(500);
 	}
 
-	private void setResourceTableSelectCell(String viewID, int row0Based, int col0Based, String text) {
+	private void setResourceTableSelectCell(String viewID, int row0Based, int col0Based, String text) throws InterruptedException {
 		if (text == null)
 			return;
 		
@@ -171,11 +176,12 @@ public class SchedulerBot {
 		assert(foundOptionToClickOn) : "Couldnt find option " + text;
 
 		driver.findElement(By.tagName("body")).click();
+		Thread.sleep(500);
 		
 		assert(elementForResourceTableCell(viewID, row0Based, col0Based).getText().trim().equalsIgnoreCase(text));
 	}
 	
-	private void setResourceTableCheckboxCell(String viewID, int row0Based, int col0Based, boolean newValue) {
+	private void setResourceTableCheckboxCell(String viewID, int row0Based, int col0Based, boolean newValue) throws InterruptedException {
 //		WebElement newCourseDeptCell = elementForResourceTableCell(row0Based, col0Based);
 //		newCourseDeptCell.click();
 		
@@ -192,6 +198,7 @@ public class SchedulerBot {
 //		assert(currentValue == newValue);
 		
 		driver.findElement(By.tagName("body")).click();
+		Thread.sleep(500);
 	}
 	
 //	private void enterIntoResourceTableRow(int row0Based, Object... values) {
@@ -235,7 +242,8 @@ public class SchedulerBot {
 			String association) throws InterruptedException {
 		
 		System.out.println("Entering row index " + row0Based);
-		
+
+		Thread.sleep(500);
 		driver.findElement(By.xpath("//div[@eventproxy='s_newCourseBtn']")).click();
 		
 		String viewID = "s_courseviewTab";
@@ -289,7 +297,7 @@ public class SchedulerBot {
 			String lastName,
 			String firstName,
 			String username,
-			String maxWTU) {
+			String maxWTU) throws InterruptedException {
 
 		System.out.println("Entering row index " + row0Based);
 		
@@ -310,7 +318,7 @@ public class SchedulerBot {
 			String room,
 			String type,
 			String maxOccupancy,
-			String equipment) {
+			String equipment) throws InterruptedException {
 
 		System.out.println("Entering row index " + row0Based);
 		

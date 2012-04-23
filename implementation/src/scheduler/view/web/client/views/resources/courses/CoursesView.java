@@ -213,7 +213,7 @@ public class CoursesView extends VLayout {
 		
 		// DOM.setElementAttribute(dupeBtn.getElement(), "id", "s_dupeBtn");
 		// dupeBtn.setStyleName("floatingScheduleButtonBarItemLeft");
-		dupeBtn.setID("s_dupeBtn");
+		dupeBtn.setID("s_courseDupeBtn");
 		bottomButtonFlowPanel.addMember(dupeBtn);
 		
 		IButton remove = new IButton("Remove Selected Courses", new ClickHandler() {
