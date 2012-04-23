@@ -24,29 +24,32 @@ public class GenerateEntryPoint {
 		locD = new Vector<LocationDecorator>();
 		
 	    for(Instructor i : i_coll) {
-	    	//try {
+	    	try {
 				insD.add(checkValid(i));
-		//	} catch (BadInstructorDataException e) {
-				// TODO Auto-generated catch block
-			//	e.printStackTrace();
-			//}
+			} catch (BadInstructorDataException e) {
+				e.printStackTrace();
+			}
 	    }
 	   
 	    for(Location l : l_coll) {
-	    	locD.add(checkValid(l));
+	    	try {
+				locD.add(checkValid(l));
+			} catch (BadLocationDataException e) {
+				e.printStackTrace();
+			}
 	    }
 		
 		
-		return Generate.generate(model, schedule, s_items, c_list, insD, locD);//new Vector<ScheduleItem>();
+		return Generate.generate(model, schedule, s_items, c_list, insD, locD);
 	}
 	
-	private static InstructorDecorator checkValid(Instructor ins) /*throws BadInstructorDataException*/{
+	private static InstructorDecorator checkValid(Instructor ins) throws BadInstructorDataException{
 		//validity checks
 		//if(ins!=null)
 			return new InstructorDecorator(ins);
 	}
 	
-	private static LocationDecorator checkValid(Location loc) /*throws BadLocationDataException*/{
+	private static LocationDecorator checkValid(Location loc) throws BadLocationDataException{
 		//validity checks
 		return new LocationDecorator(loc);
 	}
