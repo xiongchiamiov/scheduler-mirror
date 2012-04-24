@@ -65,11 +65,15 @@ public class SchedulerBot {
 		String poppedUpWindow;
 		public PopupWaiter() {
 			initialWindows = driver.getWindowHandles();
+			for (String initialWindow : initialWindows)
+				System.out.println("initial window: " + initialWindow);
 		}
 		public String waitForPopup() {
 			new WebDriverWait(driver, 20).until(new Predicate<WebDriver>() {
 				public boolean apply(WebDriver arg0) {
 					Set<String> currentWindows = driver.getWindowHandles();
+					for (String currentWindow : currentWindows)
+						System.out.println("initial window: " + currentWindow);
 					currentWindows.removeAll(initialWindows);
 					if (!currentWindows.isEmpty()) {
 						poppedUpWindow = currentWindows.iterator().next();
@@ -185,6 +189,7 @@ public class SchedulerBot {
 //		WebElement newCourseDeptCell = elementForResourceTableCell(row0Based, col0Based);
 //		newCourseDeptCell.click();
 		
+		Thread.sleep(500);
 		WebElement img = elementForResourceTableCell(viewID, row0Based, col0Based).findElement(By.xpath("//div[@class='labelAnchor']/img"));
 		WebElement imgParent = img.findElement(By.xpath("parent::*"));
 		assert(imgParent.getTagName().equals("div"));
@@ -301,8 +306,8 @@ public class SchedulerBot {
 
 		System.out.println("Entering row index " + row0Based);
 		
-//		driver.findElement(By.xpath("//div[@eventproxy='addInstructorBtn']")).click();
-		driver.findElement(By.id("addInstructorBtn")).click();
+		driver.findElement(By.xpath("//div[@eventproxy='addInstructorBtn']")).click();
+//		driver.findElement(By.id("addInstructorBtn")).click();
 		
 		String viewID = "s_instructorviewTab";
 		
