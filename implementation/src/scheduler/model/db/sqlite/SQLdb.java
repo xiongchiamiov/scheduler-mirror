@@ -97,13 +97,13 @@ public class SQLdb implements IDatabase {
 					new Table.Column("schedulable", Boolean.class),
 					new Table.Column("numHalfHours", Integer.class)
 	});
-	Table<SQLCourse> courseequipmentTable = new Table<SQLCourse>(SQLCourse.class, "courseequipment",
+	Table<SQLEquipmentType> courseequipmentTable = new Table<SQLEquipmentType>(SQLEquipmentType.class, "courseequipment",
 			new Table.Column[] {
 					new Table.Column("id", Integer.class),
 					new Table.Column("courseID", Integer.class),
 					new Table.Column("equipID", Integer.class)
 	});
-	Table<SQLCourse> coursepatternsTable = new Table<SQLCourse>(SQLCourse.class, "coursepatterns",
+	Table<SQLCoursePattern> coursepatternsTable = new Table<SQLCoursePattern>(SQLCoursePattern.class, "coursepatterns",
 			new Table.Column[] {
 					new Table.Column("id", Integer.class),
 					new Table.Column("courseID", Integer.class),
@@ -121,18 +121,18 @@ public class SQLdb implements IDatabase {
 					new Table.Column("dayPatternID", String.class),
 					new Table.Column("sectionNum", String.class)
 	});
-	Table<SQLCourse> labassociationsTable = new Table<SQLCourse>(SQLCourse.class, "labassociations",
+	Table<SQLCourseAssociation> labassociationsTable = new Table<SQLCourseAssociation>(SQLCourse.class, "labassociations",
 			new Table.Column[] {
 					new Table.Column("id", Integer.class),
 					new Table.Column("lecID", Integer.class),
 	});
-	Table<SQLCourse> labtetheredTable = new Table<SQLCourse>(SQLCourse.class, "labtethered",
+	Table<SQLLabAssociation> labtetheredTable = new Table<SQLLabAssociation>(SQLLabAssociation.class, "labtethered",
 			new Table.Column[] {
 					new Table.Column("id", Integer.class),
 					new Table.Column("lecID", Integer.class),
 					new Table.Column("tetheredID", Integer.class)
 	});
-	Table<SQLCourse> timeslotprefTable = new Table<SQLCourse>(SQLCourse.class, "timeslotpref",
+	Table<SQLTimePreference> timeslotprefTable = new Table<SQLTimePreference>(SQLTimePreference.class, "timeslotpref",
 			new Table.Column[] {
 					new Table.Column("id", Integer.class),
 					new Table.Column("day", Integer.class),
@@ -140,19 +140,19 @@ public class SQLdb implements IDatabase {
 					new Table.Column("instID", Integer.class),
 					new Table.Column("prefLevel", Integer.class)
 	});
-	Table<SQLCourse> courseprefTable = new Table<SQLCourse>(SQLCourse.class, "coursepref",
+	Table<SQLCoursePreference> courseprefTable = new Table<SQLCoursePreference>(SQLCoursePreference.class, "coursepref",
 			new Table.Column[] {
 					new Table.Column("id", Integer.class),
 					new Table.Column("instID", Integer.class),
 					new Table.Column("courseID", Integer.class),
 					new Table.Column("prefLevel", Integer.class)
 	});
-	Table<SQLCourse> patternTable = new Table<SQLCourse>(SQLCourse.class, "pattern",
+	Table<SQLDayPattern> patternTable = new Table<SQLDayPattern>(SQLDayPattern.class, "pattern",
 			new Table.Column[] {
 					new Table.Column("id", Integer.class),
 					new Table.Column("days", String.class)
 	});
-	Table<SQLCourse> equipmentTable = new Table<SQLCourse>(SQLCourse.class, "equipment",
+	Table<SQLEquipmentType> equipmentTable = new Table<SQLEquipmentType>(SQLEquipmentType.class, "equipment",
 			new Table.Column[] {
 					new Table.Column("id", Integer.class),
 					new Table.Column("desc", String.class)
@@ -883,11 +883,14 @@ public class SQLdb implements IDatabase {
 		return result;
 	}
 
-
+//*******************Kaylene's half**********VVVV
 	@Override
 	public IDBInstructor findInstructorByID(int id) throws DatabaseException {
-		// TODO Auto-generated method stub
-		return null;
+		IDBInstructor result;
+		HashMap<String, Object> wheres = new HashMap<String, Object>();
+		wheres.put("id", id);
+		result = instructorTable.select(wheres).get(0);
+		return result;
 	}
 
 
@@ -903,7 +906,9 @@ public class SQLdb implements IDatabase {
 	@Override
 	public void insertInstructor(IDBDocument containingDocument,
 			IDBInstructor instructor) throws DatabaseException {
-		// TODO Auto-generated method stub
+		SQLInstructor sqlinstructor = (SQLInstructor) instructor;
+		//(Integer id, Integer docID, Integer maxWTU,String firstName, String lastName, String username, Boolean schedulable)
+		sqlinstructor.id = instructorTable.insert(new Object[]{ instructor.getUsername(), user.isAdmin()});
 		
 	}
 
@@ -935,8 +940,11 @@ public class SQLdb implements IDatabase {
 	@Override
 	public IDBTimePreference findTimePreferenceByID(int id)
 			throws DatabaseException {
-		// TODO Auto-generated method stub
-		return null;
+		IDBTimePreference result;
+		HashMap<String, Object> wheres = new HashMap<String, Object>();
+		wheres.put("id", id);
+		result = timeslotprefTable.select(wheres).get(0);
+		return result;
 	}
 
 
@@ -983,8 +991,11 @@ public class SQLdb implements IDatabase {
 	@Override
 	public IDBCoursePreference findCoursePreferenceByID(int id)
 			throws DatabaseException {
-		// TODO Auto-generated method stub
-		return null;
+		IDBCoursePreference result;
+		HashMap<String, Object> wheres = new HashMap<String, Object>();
+		wheres.put("id", id);
+		result = courseprefTable.select(wheres).get(0);
+		return result;
 	}
 
 
