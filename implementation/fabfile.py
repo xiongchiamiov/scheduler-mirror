@@ -16,7 +16,7 @@ def build():
 
 def test():
 	print('Running JUnit tests...')
-	local('ant test')
+	local('ant build && ant test')
 	print('Running Selenium tests...')
 	local('cd ../Selenium && ant build && ant test')
 
