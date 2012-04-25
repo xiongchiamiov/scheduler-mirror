@@ -116,8 +116,8 @@ create table labassociations (
     foreign key (lecID) references course(id)
 );
 
-drop table tethered; 
-create table tethered (
+drop table labtethered; 
+create table labtethered (
     id integer primary key,
     lecID,
     tetheredID,

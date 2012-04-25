@@ -51,27 +51,12 @@ public class SQLdb implements IDatabase {
 					new Table.Column("isTrash", Boolean.class),
 					new Table.Column("startHalfHour", Integer.class),
 					new Table.Column("endHalfHour", Integer.class)
-			});
+	});
 	Table<SQLDocument> workingcopyTable = new Table<SQLDocument>(SQLDocument.class, "workingcopy",
 			new Table.Column[] {
 					new Table.Column("id", Integer.class),
 					new Table.Column("originalDocID", Integer.class)
-			});
-	Table<SQLUser> userdataTable = new Table<SQLUser>(SQLUser.class, "userdata",
-			new Table.Column[] {
-					new Table.Column("id", Integer.class),
-					new Table.Column("username", String.class),
-					new Table.Column("isAdmin", Boolean.class)
-			});
-	Table<SQLLocation> locationTable = new Table<SQLLocation>(SQLLocation.class, "location",
-			new Table.Column[] {
-					new Table.Column("id", Integer.class),
-					new Table.Column("docID", Integer.class),
-					new Table.Column("maxOccupancy", Integer.class),
-					new Table.Column("type", String.class),
-					new Table.Column("room", String.class),
-					new Table.Column("schedulable", Boolean.class)	
-			});
+	});
 	Table<SQLInstructor> instructorTable = new Table<SQLInstructor>(SQLInstructor.class, "instructor",
 			new Table.Column[] {
 					new Table.Column("id", Integer.class),
@@ -81,6 +66,21 @@ public class SQLdb implements IDatabase {
 					new Table.Column("username", String.class),
 					new Table.Column("maxWTU", Integer.class),
 					new Table.Column("schedulable", Boolean.class)
+	});
+	Table<SQLLocation> locationTable = new Table<SQLLocation>(SQLLocation.class, "location",
+			new Table.Column[] {
+					new Table.Column("id", Integer.class),
+					new Table.Column("docID", Integer.class),
+					new Table.Column("maxOccupancy", Integer.class),
+					new Table.Column("type", String.class),
+					new Table.Column("room", String.class),
+					new Table.Column("schedulable", Boolean.class)	
+	});
+	Table<SQLLocation> locationequipmentTable = new Table<SQLLocation>(SQLLocation.class, "locationequipment",
+			new Table.Column[] {
+					new Table.Column("id", Integer.class),
+					new Table.Column("locID", Integer.class),
+					new Table.Column("equipID", Integer.class)
 	});
 	Table<SQLCourse> courseTable = new Table<SQLCourse>(SQLCourse.class, "course",
 			new Table.Column[] {
@@ -97,6 +97,18 @@ public class SQLdb implements IDatabase {
 					new Table.Column("schedulable", Boolean.class),
 					new Table.Column("numHalfHours", Integer.class)
 	});
+	Table<SQLCourse> courseequipmentTable = new Table<SQLCourse>(SQLCourse.class, "courseequipment",
+			new Table.Column[] {
+					new Table.Column("id", Integer.class),
+					new Table.Column("courseID", Integer.class),
+					new Table.Column("equipID", Integer.class)
+	});
+	Table<SQLCourse> coursepatternsTable = new Table<SQLCourse>(SQLCourse.class, "coursepatterns",
+			new Table.Column[] {
+					new Table.Column("id", Integer.class),
+					new Table.Column("courseID", Integer.class),
+					new Table.Column("patternID", Integer.class)
+	});
 	Table<SQLScheduleItem> scheduleItemTable = new Table<SQLScheduleItem>(SQLScheduleItem.class, "scheduleitem",
 			new Table.Column[] {
 					new Table.Column("id", Integer.class),
@@ -108,6 +120,48 @@ public class SQLdb implements IDatabase {
 					new Table.Column("endTime", String.class),
 					new Table.Column("dayPatternID", String.class),
 					new Table.Column("sectionNum", String.class)
+	});
+	Table<SQLCourse> labassociationsTable = new Table<SQLCourse>(SQLCourse.class, "labassociations",
+			new Table.Column[] {
+					new Table.Column("id", Integer.class),
+					new Table.Column("lecID", Integer.class),
+	});
+	Table<SQLCourse> labtetheredTable = new Table<SQLCourse>(SQLCourse.class, "labtethered",
+			new Table.Column[] {
+					new Table.Column("id", Integer.class),
+					new Table.Column("lecID", Integer.class),
+					new Table.Column("tetheredID", Integer.class)
+	});
+	Table<SQLCourse> timeslotprefTable = new Table<SQLCourse>(SQLCourse.class, "timeslotpref",
+			new Table.Column[] {
+					new Table.Column("id", Integer.class),
+					new Table.Column("day", Integer.class),
+					new Table.Column("time", Integer.class),
+					new Table.Column("instID", Integer.class),
+					new Table.Column("prefLevel", Integer.class)
+	});
+	Table<SQLCourse> courseprefTable = new Table<SQLCourse>(SQLCourse.class, "coursepref",
+			new Table.Column[] {
+					new Table.Column("id", Integer.class),
+					new Table.Column("instID", Integer.class),
+					new Table.Column("courseID", Integer.class),
+					new Table.Column("prefLevel", Integer.class)
+	});
+	Table<SQLCourse> patternTable = new Table<SQLCourse>(SQLCourse.class, "pattern",
+			new Table.Column[] {
+					new Table.Column("id", Integer.class),
+					new Table.Column("days", String.class)
+	});
+	Table<SQLCourse> equipmentTable = new Table<SQLCourse>(SQLCourse.class, "equipment",
+			new Table.Column[] {
+					new Table.Column("id", Integer.class),
+					new Table.Column("desc", String.class)
+	});
+	Table<SQLUser> userdataTable = new Table<SQLUser>(SQLUser.class, "userdata",
+			new Table.Column[] {
+					new Table.Column("id", Integer.class),
+					new Table.Column("username", String.class),
+					new Table.Column("isAdmin", Boolean.class)
 	});
 
 	public SQLdb() {

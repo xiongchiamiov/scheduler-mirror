@@ -91,8 +91,11 @@ public abstract class MUAcceptanceTest extends DefaultSelTestCase {
 		createDocumentFromHomeTabAndSwitchToItsWindow(documentName);
 
 		// By default we're looking at the courses view, so start filling out courses
-		bot.enterIntoCoursesResourceTableNewRow(0, true, "MU", "101", "Introduction to Music Theory", "1", "3", "3", "MW,TuTh", "3", "97", "LEC", "Smart Room", null);
+		bot.enterIntoCoursesResourceTableNewRow(0, true, "MU", "101", "Introduction to Music Theory", "7", "3", "3", "MW,MWF,TuTh", "3", "27", "LEC", "Smart Room", null);
+		bot.enterIntoCoursesResourceTableNewRow(1, true, "MU", "104", "Musicianship I", "1", "3", "3", "MWF", "3", "14", "LEC", "Laptop Connectivity, Overhead", null);
+		bot.enterIntoCoursesResourceTableNewRow(2, true, "MU", "105", "Music Theory II: Chromatic Materials", "1", "3", "3", "MWF", "4.5", "27", "LEC", null, null);
 
+		
 		// Click on the instructors tab
 		driver.findElement(By.xpath("//td[@class='tabTitle'][text()='Instructors']")).click();
 
