@@ -52,7 +52,7 @@ public class SQLdb implements IDatabase {
 					new Table.Column("startHalfHour", Integer.class),
 					new Table.Column("endHalfHour", Integer.class)
 	});
-	Table<SQLDocument> workingcopyTable = new Table<SQLDocument>(SQLDocument.class, "workingcopy",
+	Table<SQLWorkingCopy> workingcopyTable = new Table<SQLWorkingCopy>(SQLWorkingCopy.class, "workingcopy",
 			new Table.Column[] {
 					new Table.Column("id", Integer.class),
 					new Table.Column("originalDocID", Integer.class)
@@ -76,7 +76,7 @@ public class SQLdb implements IDatabase {
 					new Table.Column("room", String.class),
 					new Table.Column("schedulable", Boolean.class)	
 	});
-	Table<SQLLocation> locationequipmentTable = new Table<SQLLocation>(SQLLocation.class, "locationequipment",
+	Table<SQLLocationEquipment> locationequipmentTable = new Table<SQLLocationEquipment>(SQLLocationEquipment.class, "locationequipment",
 			new Table.Column[] {
 					new Table.Column("id", Integer.class),
 					new Table.Column("locID", Integer.class),
@@ -97,7 +97,7 @@ public class SQLdb implements IDatabase {
 					new Table.Column("schedulable", Boolean.class),
 					new Table.Column("numHalfHours", Integer.class)
 	});
-	Table<SQLEquipmentType> courseequipmentTable = new Table<SQLEquipmentType>(SQLEquipmentType.class, "courseequipment",
+	Table<SQLCourseEquipment> courseequipmentTable = new Table<SQLCourseEquipment>(SQLCourseEquipment.class, "courseequipment",
 			new Table.Column[] {
 					new Table.Column("id", Integer.class),
 					new Table.Column("courseID", Integer.class),
@@ -121,12 +121,12 @@ public class SQLdb implements IDatabase {
 					new Table.Column("dayPatternID", String.class),
 					new Table.Column("sectionNum", String.class)
 	});
-	Table<SQLCourseAssociation> labassociationsTable = new Table<SQLCourseAssociation>(SQLCourse.class, "labassociations",
+	Table<SQLLabAssociation> labassociationsTable = new Table<SQLLabAssociation>(SQLLabAssociation.class, "labassociations",
 			new Table.Column[] {
 					new Table.Column("id", Integer.class),
-					new Table.Column("lecID", Integer.class),
+					new Table.Column("lecID", Integer.class)
 	});
-	Table<SQLLabAssociation> labtetheredTable = new Table<SQLLabAssociation>(SQLLabAssociation.class, "labtethered",
+	Table<SQLCourseAssociation> labtetheredTable = new Table<SQLCourseAssociation>(SQLCourseAssociation.class, "labtethered",
 			new Table.Column[] {
 					new Table.Column("id", Integer.class),
 					new Table.Column("lecID", Integer.class),
@@ -490,26 +490,32 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public boolean isOriginalDocument(IDBDocument doc) throws DatabaseException {
-//		IDBDocument result;
-//		HashMap<String, Object> wheres = new HashMap<String, Object>();
-//		wheres.put("id", doc.getID());
-//		result = documentTable.select(wheres).get(0);
-//		return result;
-		return !(((SQLDocument)doc).isWorkingCopy());
+		List<SQLWorkingCopy> result;
+		HashMap<String, Object> wheres = new HashMap<String, Object>();
+		wheres.put("id", doc.getID());
+		result = workingcopyTable.select(wheres);
+		return result.size() == 0;
 	}
 
 
 	@Override
 	public boolean documentIsWorkingCopy(IDBDocument document)
 			throws DatabaseException {
-		return ((SQLDocument)document).isWorkingCopy();
+		List<SQLWorkingCopy> result;
+		HashMap<String, Object> wheres = new HashMap<String, Object>();
+		wheres.put("id", document.getID());
+		result = workingcopyTable.select(wheres);
+		return result.size() != 0;
 	}
 
 
 	@Override
 	public IDBDocument getOriginalForWorkingCopyDocumentOrNull(IDBDocument rawDocument)
 			throws DatabaseException {
-		//return ((SQLDocument)rawDocument).getWorkingCopyID();
+		List<SQLWorkingCopy> result;
+		HashMap<String, Object> wheres = new HashMap<String, Object>();
+		wheres.put("id", rawDocument.getID());
+		result = workingcopyTable.select(wheres);
 		return null;
 	}
 
@@ -859,7 +865,6 @@ public class SQLdb implements IDatabase {
 		return null;
 	}
 
-
 	@Override
 	public void associateLectureAndLab(IDBCourse lecture, IDBCourse lab)
 			throws DatabaseException {
@@ -867,7 +872,8 @@ public class SQLdb implements IDatabase {
 		
 	}
 
-
+	//DO STUFF HERE AND ABOVE;
+	
 	@Override
 	public Collection<IDBInstructor> findInstructorsForDocument(
 			IDBDocument document) throws DatabaseException {
@@ -908,7 +914,7 @@ public class SQLdb implements IDatabase {
 			IDBInstructor instructor) throws DatabaseException {
 		SQLInstructor sqlinstructor = (SQLInstructor) instructor;
 		//(Integer id, Integer docID, Integer maxWTU,String firstName, String lastName, String username, Boolean schedulable)
-		sqlinstructor.id = instructorTable.insert(new Object[]{ instructor.getUsername(), user.isAdmin()});
+		//sqlinstructor.id = instructorTable.insert(new Object[]{ instructor.getUsername(), user.isAdmin()});
 		
 	}
 
