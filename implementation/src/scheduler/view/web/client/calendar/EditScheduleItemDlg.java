@@ -30,8 +30,6 @@ import scheduler.view.web.shared.ScheduleItemGWT;
 /**
  * A dialog that allows the user to edit the instructor, location, and time of a
  * schedule item
- * 
- * @author Tyler Yero
  */
 public class EditScheduleItemDlg extends DialogBox {
 
@@ -144,6 +142,13 @@ public class EditScheduleItemDlg extends DialogBox {
 	}
 
 	private void ok() {
+		int startHalfHour = getStartHalfHour(mStartTimeLB.getSelectedIndex());
+		int endHalfHour = getEndHalfHour(mEndTimeLB.getSelectedIndex());
+		if (startHalfHour > endHalfHour) {
+			Window.alert("Error: Start time must be earlier than end time");
+			return;
+		}
+		
 		mChangedItem = true;
 		hide();
 		

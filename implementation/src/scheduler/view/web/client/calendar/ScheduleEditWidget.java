@@ -202,7 +202,6 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 	 * @return This widget
 	 */
 	public Widget getWidget() {
-
 		return mMainPanel;
 	}
 

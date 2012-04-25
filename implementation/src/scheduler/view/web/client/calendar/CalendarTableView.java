@@ -1,5 +1,6 @@
 package scheduler.view.web.client.calendar;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
@@ -110,8 +111,7 @@ public class CalendarTableView extends SimplePanel {
 		private final CalendarDayModel mDays[];
 	}
 	
-	private List<ScheduleItemGWT> mScheduleItems;
-	private List<ScheduleItemGWT> mFilteredScheduleItems;
+	private List<ScheduleItemGWT> mScheduleItems = new ArrayList<ScheduleItemGWT>();
 	private CalendarTableModel mModel;
 	private String mInnerHTML;
 	private int mLeftOffset;
@@ -141,9 +141,10 @@ public class CalendarTableView extends SimplePanel {
 		
 		// Add day headers
 		for (DayGWT day : DayGWT.values()) {
-			int colspan = mModel.get(day).getWidth() + 1; // +1 for day spacer cells (see loop below)
+			int colspan = mModel.get(day).getWidth() ;
 			
 			builder.append("<td colspan="+colspan+" class=\"dayHeader\" id='h"+day.name+"'>"+day.name+"</td>");
+			builder.append("<td class=\"daySpacer\"></td>");
 		}
 		builder.append("</tr>");
 		
@@ -213,7 +214,7 @@ public class CalendarTableView extends SimplePanel {
 		
 		CalendarTableModel model = new CalendarTableModel();
 		
-		for (ScheduleItemGWT item : mFilteredScheduleItems) {
+		for (ScheduleItemGWT item : mScheduleItems) {
 			for (DayGWT day : item.getDays()) {
 				CalendarDayModel dayModel = model.get(day);
 				
@@ -222,7 +223,12 @@ public class CalendarTableView extends SimplePanel {
 				for (; colNdx < dayModel.getWidth(); colNdx++) {
 					boolean occupied = false;
 					
-					for (int rowNdx = getStartRow(item); rowNdx <= getEndRow(item); rowNdx++) {
+					int startRow = getStartRow(item);
+					int endRow = getEndRow(item);
+					if (startRow > endRow)
+						continue;
+					
+					for (int rowNdx = startRow; rowNdx <= endRow; rowNdx++) {
 						CalendarRowModel row = dayModel.get(rowNdx);
 						
 						if (row.get(colNdx) != null) {
@@ -381,11 +387,6 @@ public class CalendarTableView extends SimplePanel {
 	private void setTopOffset(int pixels) {
 		DOMUtility.setStyleAttribute("CalendarTableContainer", "top", pixels+"px");
 	}
-
-	private void applyFilters() {
-		// TODO implement filtering
-		mFilteredScheduleItems = mScheduleItems;
-	}
 	
 	public static int getStartRow(ScheduleItemGWT item) {
 		return item.getStartHalfHour() - 14;
@@ -401,7 +402,6 @@ public class CalendarTableView extends SimplePanel {
 	
 	public void setScheduleItems(List<ScheduleItemGWT> items) {
 		mScheduleItems = items;
-		applyFilters();
 	}
 	
 	public void addScheduleItem(ScheduleItemGWT item) {

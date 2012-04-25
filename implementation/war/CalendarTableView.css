@@ -16,7 +16,7 @@
    border:none;
    width:100%;
 }
-   
+
 #CalendarTable tr 
 {
    height:20px;
@@ -41,7 +41,6 @@
 {
    position:relative;
    background-color:#edf2f2;
-   border-right:1px solid #000000;
    border-bottom:1px solid #000000;
    font-weight:bold;
    text-align:center;
@@ -60,6 +59,7 @@
 
 #CalendarTable td#topCorner 
 {
+   border-right:1px solid #000000;
    border-bottom:1px solid #000000;
    background-color:#edf2f2;
    width:60px;
@@ -67,10 +67,11 @@
 
 #CalendarTable td.daySpacer 
 {
-   border-right:1px solid #000000;
+   border:none;
+   background-color:#000000;
    padding:0px;
    margin:0px;
-   width:0px;
+   width:1px;
 }
 
 .ScheduleAvailableCoursesList 

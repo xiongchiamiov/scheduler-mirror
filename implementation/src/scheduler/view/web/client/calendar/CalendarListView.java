@@ -1,5 +1,7 @@
 package scheduler.view.web.client.calendar;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -14,13 +16,103 @@ import scheduler.view.web.shared.DayGWT;
 import scheduler.view.web.shared.ScheduleItemGWT;
 
 public class CalendarListView extends SimplePanel {
+	
+	private class scheduleItemComparator implements Comparator<ScheduleItemGWT> {
 
+		@Override
+		public int compare(ScheduleItemGWT arg0, ScheduleItemGWT arg1) {
+			switch(mCurrentSort) {
+				case COURSE_NAME_ASC:
+					return safeCompareTo(mScheduleController.getCourseString(arg0.getCourseID()),
+							mScheduleController.getCourseString(arg1.getCourseID()));
+
+				case COURSE_NAME_DESC:
+					return safeCompareTo(mScheduleController.getCourseString(arg1.getCourseID()),
+							mScheduleController.getCourseString(arg0.getCourseID()));
+					
+				case SECTION_NUMBER_ASC:
+					return arg1.getSection() - arg0.getSection();
+					
+				case SECTION_NUMBER_DESC:
+					return arg0.getSection() - arg1.getSection();
+					
+				case INSTRUCTOR_ASC:
+					return safeCompareTo(mScheduleController.getInstructor(arg0.getInstructorID()).getName(),
+							mScheduleController.getInstructor(arg1.getInstructorID()).getName());
+
+				case INSTRUCTOR_DESC:
+					return safeCompareTo(mScheduleController.getInstructor(arg1.getInstructorID()).getName(),
+							mScheduleController.getInstructor(arg0.getInstructorID()).getName());
+					
+				case DAYS_ASC:
+					return safeCompareTo(getDaysString(arg0.getDays()), getDaysString(arg1.getDays()));
+					
+				case DAYS_DESC:
+					return safeCompareTo(getDaysString(arg1.getDays()), getDaysString(arg0.getDays()));
+					
+				case START_TIME_ASC:
+					return arg0.getStartHalfHour() - arg1.getStartHalfHour();
+					
+				case START_TIME_DESC:
+					return arg1.getStartHalfHour() - arg0.getStartHalfHour();
+					
+				case END_TIME_ASC:
+					return arg0.getEndHalfHour() - arg1.getEndHalfHour();
+					
+				case END_TIME_DESC:
+					return arg1.getEndHalfHour() - arg0.getEndHalfHour();
+			}
+			return 0;
+		}
+	    
+		/**
+		 * Compares two Objects without throwing NullPointerExceptions
+		 */
+		private <T> int safeCompareTo(Comparable<T> left, T right) {
+			if (left == null) {
+				if (right == null)
+					return 0;
+				else
+					return -1;
+			}
+			else if (right == null)
+				return 1;
+			
+			return left.compareTo(right);
+		}
+	}
+
+	private static enum columnIndices {
+		COURSE_NAME,
+		SECTION_NUMBER,
+		INSTRUCTOR,
+		DAYS,
+		START_TIME,
+		END_TIME
+	}
+	
+	private static enum sortBy {
+		NONE,
+		COURSE_NAME_ASC,
+		COURSE_NAME_DESC,
+		SECTION_NUMBER_ASC,
+		SECTION_NUMBER_DESC,
+		INSTRUCTOR_ASC,
+		INSTRUCTOR_DESC,
+		DAYS_ASC,
+		DAYS_DESC,
+		START_TIME_ASC,
+		START_TIME_DESC,
+		END_TIME_ASC,
+		END_TIME_DESC
+	}
+	
 	private List<ScheduleItemGWT> mScheduleItems;
-	private List<ScheduleItemGWT> mFilteredScheduleItems;
 	private final ScheduleEditWidget mScheduleController;
 	private String mInnerHTML;
 	private int mLeftOffset;
 	private int mLastRowSelected = -1;
+	private sortBy mCurrentSort = sortBy.NONE;
 	private static final int KEYCODE_DELETE = 46;
 	private static final int COLUMN_COUNT = 11;
 
@@ -31,7 +123,7 @@ public class CalendarListView extends SimplePanel {
 	}
 
 	public void setLeftOffset(int pixels) {
-		mLeftOffset = pixels + 1;
+		mLeftOffset = pixels;
 		DOMUtility.setStyleAttribute("ListTableContainer", "left", (mLeftOffset+1)+"px");
 	}
 
@@ -62,18 +154,16 @@ public class CalendarListView extends SimplePanel {
 		$wnd.calendarListKeyDown = function(row, keycode) {
 			return scheduleTable.@scheduler.view.web.client.calendar.CalendarListView::keyDown(II)(row, keycode);
 		}
+		$wnd.calendarListSort = function(col) {
+			return scheduleTable.@scheduler.view.web.client.calendar.CalendarListView::setSort(I)(col);
+		}
 	}-*/;
 
 	public void setScheduleItems(List<ScheduleItemGWT> items) {
 		mScheduleItems = items;
-		applyFilters();
+		sort();
 	}
-
-	private void applyFilters() {
-		// TODO implement filtering
-		mFilteredScheduleItems = mScheduleItems;
-	}
-
+	
 	public void drawList() {
 		clear();
 		
@@ -82,24 +172,74 @@ public class CalendarListView extends SimplePanel {
 		builder.append("<table id=\"ListTable\"><tr id=\"headerRow\">");
 
 		// Add column header
-		builder.append("<td class=\"columnHeader\" id='h'>Course Number</td>");
-		builder.append("<td class=\"columnHeader\" id='h'>Section Number</td>");
+		builder.append("<td class=\"columnHeader\" id='h'");
+		builder.append("onclick=\"calendarListSort(").append(columnIndices.COURSE_NAME.ordinal()).append(")\"");
+		builder.append(">Course Number");
+		if (mCurrentSort == sortBy.COURSE_NAME_ASC)
+			builder.append(" &#9660;");
+		else if (mCurrentSort == sortBy.COURSE_NAME_DESC)
+			builder.append(" &#9650;");
+		builder.append("</td>");
+
+		builder.append("<td class=\"columnHeader\" id='h'");
+		builder.append("onclick=\"calendarListSort(").append(columnIndices.SECTION_NUMBER.ordinal()).append(")\"");
+		builder.append(">Section Number");
+		if (mCurrentSort == sortBy.SECTION_NUMBER_ASC)
+			builder.append(" &#9660;");
+		else if (mCurrentSort == sortBy.SECTION_NUMBER_DESC)
+			builder.append(" &#9650;");
+		builder.append("</td>");
+		
 		builder.append("<td class=\"columnHeader\" id='h'>Type</td>");
 
 		builder.append("<td class=\"columnHeader\" id='h'>SCU</td>");
+		
 		builder.append("<td class=\"columnHeader\" id='h'>WTU</td>");
-		builder.append("<td class=\"columnHeader\" id='h'>Instructor</td>");
+
+		builder.append("<td class=\"columnHeader\" id='h'");
+		builder.append("onclick=\"calendarListSort(").append(columnIndices.INSTRUCTOR.ordinal()).append(")\"");
+		builder.append(">Instructor");
+		if (mCurrentSort == sortBy.INSTRUCTOR_ASC)
+			builder.append(" &#9660;");
+		else if (mCurrentSort == sortBy.INSTRUCTOR_DESC)
+			builder.append(" &#9650;");
+		builder.append("</td>");
+		
 		builder.append("<td class=\"columnHeader\" id='h'>Building</td>");
 
-		builder.append("<td class=\"columnHeader\" id='h'>Days</td>");
-		builder.append("<td class=\"columnHeader\" id='h'>Start Time</td>");
-		builder.append("<td class=\"columnHeader\" id='h'>End Time</td>");
+		builder.append("<td class=\"columnHeader\" id='h'");
+		builder.append("onclick=\"calendarListSort(").append(columnIndices.DAYS.ordinal()).append(")\"");
+		builder.append(">Days");
+		if (mCurrentSort == sortBy.DAYS_ASC)
+			builder.append(" &#9660;");
+		else if (mCurrentSort == sortBy.DAYS_DESC)
+			builder.append(" &#9650;");
+		builder.append("</td>");
+
+		builder.append("<td class=\"columnHeader\" id='h'");
+		builder.append("onclick=\"calendarListSort(").append(columnIndices.START_TIME.ordinal()).append(")\"");
+		builder.append(">Start Time");
+		if (mCurrentSort == sortBy.START_TIME_ASC)
+			builder.append(" &#9660;");
+		else if (mCurrentSort == sortBy.START_TIME_DESC)
+			builder.append(" &#9650;");
+		builder.append("</td>");
+
+		builder.append("<td class=\"columnHeader\" id='h'");
+		builder.append("onclick=\"calendarListSort(").append(columnIndices.END_TIME.ordinal()).append(")\"");
+		builder.append(">End Time");
+		if (mCurrentSort == sortBy.END_TIME_ASC)
+			builder.append(" &#9660;");
+		else if (mCurrentSort == sortBy.END_TIME_DESC)
+			builder.append(" &#9650;");
+		builder.append("</td>");
+		
 		builder.append("<td class=\"columnHeader\" id='h'>Capacity</td>");
 
 		builder.append("</tr>");
 
 		int tableRow = 0;
-		for (ScheduleItemGWT item : mFilteredScheduleItems) {
+		for (ScheduleItemGWT item : mScheduleItems) {
 			int tableCol = 0;
 			builder.append("<tr>");
 			
@@ -163,7 +303,6 @@ public class CalendarListView extends SimplePanel {
 					+ ",event.which)\" " + "onselectstart=\"return false\" "
 					+ ">" + mScheduleController.getCourse(item.getCourseID()).getWtu() + "</td>");
 			tableCol++;
-
 			
 			builder.append("<td " + "class=\"item\" id=\"x" + tableCol + "y"
 					+ tableRow + "\" "
@@ -216,7 +355,7 @@ public class CalendarListView extends SimplePanel {
 					+ tableRow + "," + tableCol + ")\" " + "tabindex=\"0\" "
 					+ "onkeydown=\"calendarListKeyDown(" + tableRow
 					+ ",event.which)\" " + "onselectstart=\"return false\" "
-					+ ">" + GetDaysString(item.getDays()) + "</td>");
+					+ ">" + getDaysString(item.getDays()) + "</td>");
 			tableCol++;
 
 			builder.append("<td " + "class=\"item\" id=\"x" + tableCol + "y"
@@ -230,9 +369,9 @@ public class CalendarListView extends SimplePanel {
 					+ ",event.which)\" " + "onselectstart=\"return false\" "
 					+ ">");
 			
-			if (CalendarTableView.getStartRow(item) >= 99) {
-			   builder.append(ScheduleEditWidget.START_TIMES[CalendarTableView.getStartRow(item)]); 
-			}
+			int startRow = CalendarTableView.getStartRow(item);
+			if (startRow >= 0 && startRow < ScheduleEditWidget.START_TIMES.length)
+			   builder.append(ScheduleEditWidget.START_TIMES[startRow]);
 			
 			builder.append("</td>");
 			
@@ -248,10 +387,10 @@ public class CalendarListView extends SimplePanel {
 					+ "onkeydown=\"calendarListKeyDown(" + tableRow
 					+ ",event.which)\" " + "onselectstart=\"return false\" "
 					+ ">");
-									
-			if (CalendarTableView.getEndRow(item) + 1 >= 0) {
-				builder.append(ScheduleEditWidget.END_TIMES[CalendarTableView.getEndRow(item) + 1]); 
-			}
+			
+			int endRow = CalendarTableView.getEndRow(item) + 1;
+			if (endRow >= 0 && endRow < ScheduleEditWidget.END_TIMES.length)
+				builder.append(ScheduleEditWidget.END_TIMES[endRow]); 
 			
 			builder.append("</td>");
 			tableCol++;
@@ -282,7 +421,7 @@ public class CalendarListView extends SimplePanel {
 		setTopOffset(mScheduleController.getWidget().getAbsoluteTop());
 	}
 
-	private String GetDaysString(Set<DayGWT> days) {
+	private String getDaysString(Set<DayGWT> days) {
 		String returnString = new String();
 		Iterator<DayGWT> it = days.iterator();
 
@@ -313,7 +452,7 @@ public class CalendarListView extends SimplePanel {
 	 */
 	public void doubleClick(int row, int col) {
 		highlightRow(row);
-		final ScheduleItemGWT item = mFilteredScheduleItems.get(row);
+		final ScheduleItemGWT item = mScheduleItems.get(row);
 
 		mScheduleController.editItem(false, item, null, -1);
 	}
@@ -337,7 +476,6 @@ public class CalendarListView extends SimplePanel {
 		if (keycode == KEYCODE_DELETE) {
 			mScheduleController.removeItem(mScheduleItems.get(row));
 			mScheduleItems.remove(row);
-			applyFilters();
 			mLastRowSelected = -1;
 //			this.drawList();
 		}
@@ -392,12 +530,96 @@ public class CalendarListView extends SimplePanel {
 		DOMUtility.setStyleAttribute("y" + row, "backgroundColor", "#FFFFFF");
 		DOMUtility.setStyleAttribute("h" + row, "backgroundColor", "#edf2f2");
 	}
+	
+	public void setSort(int column) {
+		if (column == columnIndices.COURSE_NAME.ordinal()) {
+			switch (mCurrentSort) {
+				case COURSE_NAME_ASC:
+					mCurrentSort = sortBy.COURSE_NAME_DESC;
+					break;
+				case COURSE_NAME_DESC:
+					mCurrentSort = sortBy.NONE;
+					break;
+				default:
+					mCurrentSort = sortBy.COURSE_NAME_ASC;
+			}
+		}
+		else if (column == columnIndices.SECTION_NUMBER.ordinal()) {
+			switch (mCurrentSort) {
+				case SECTION_NUMBER_ASC:
+					mCurrentSort = sortBy.SECTION_NUMBER_DESC;
+					break;
+				case SECTION_NUMBER_DESC:
+					mCurrentSort = sortBy.NONE;
+					break;
+				default:
+					mCurrentSort = sortBy.SECTION_NUMBER_ASC;
+			}
+		}
+		else if (column == columnIndices.INSTRUCTOR.ordinal()) {
+			switch (mCurrentSort) {
+				case INSTRUCTOR_ASC:
+					mCurrentSort = sortBy.INSTRUCTOR_DESC;
+					break;
+				case INSTRUCTOR_DESC:
+					mCurrentSort = sortBy.NONE;
+					break;
+				default:
+					mCurrentSort = sortBy.INSTRUCTOR_ASC;
+			}
+		}
+		else if (column == columnIndices.DAYS.ordinal()) {
+			switch (mCurrentSort) {
+				case DAYS_ASC:
+					mCurrentSort = sortBy.DAYS_DESC;
+					break;
+				case DAYS_DESC:
+					mCurrentSort = sortBy.NONE;
+					break;
+				default:
+					mCurrentSort = sortBy.DAYS_ASC;
+			}
+		}
+		else if (column == columnIndices.START_TIME.ordinal()) {
+			switch (mCurrentSort) {
+				case START_TIME_ASC:
+					mCurrentSort = sortBy.START_TIME_DESC;
+					break;
+				case START_TIME_DESC:
+					mCurrentSort = sortBy.NONE;
+					break;
+				default:
+					mCurrentSort = sortBy.START_TIME_ASC;
+			}
+		}
+		else if (column == columnIndices.END_TIME.ordinal()) {
+			switch (mCurrentSort) {
+				case END_TIME_ASC:
+					mCurrentSort = sortBy.END_TIME_DESC;
+					break;
+				case END_TIME_DESC:
+					mCurrentSort = sortBy.NONE;
+					break;
+				default:
+					mCurrentSort = sortBy.END_TIME_ASC;
+			}
+		}
+		
+		sort();
+		drawList();
+	}
 
+	@Override
 	public void clear() {
 		Iterator<Widget> it = iterator();
 		while (it.hasNext()) {
 			it.next();
 			it.remove();
 		}
+	}
+	
+	private void sort() {
+		if (mCurrentSort != null && mCurrentSort != sortBy.NONE)
+			Collections.sort(mScheduleItems, new scheduleItemComparator());
 	}
 }
