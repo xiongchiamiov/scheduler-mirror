@@ -89,11 +89,11 @@ public class SchedulerBot {
 		}
 	}
 	
-	private WebElement elementForResourceTableCell(String viewID, int row0Based, int col0Based) {
+	public WebElement elementForResourceTableCell(String viewID, int row0Based, int col0Based) {
 		return driver.findElement(By.xpath("((//div[@eventproxy='" + viewID + "']//table[@class='listTable']/tbody/tr[@role='listitem'])[" + (1 + row0Based) + "]/td)[" + (1 + col0Based) + "]"));
 	}
 	
-	private void setResourceTableTextCell(String viewID, int row0Based, int col0Based, String text) throws InterruptedException {
+	public void setResourceTableTextCell(String viewID, int row0Based, int col0Based, String text) throws InterruptedException {
 		if (text == null)
 			return;
 
@@ -305,9 +305,8 @@ public class SchedulerBot {
 			String maxWTU) throws InterruptedException {
 
 		System.out.println("Entering row index " + row0Based);
-		
+
 		driver.findElement(By.xpath("//div[@eventproxy='addInstructorBtn']")).click();
-//		driver.findElement(By.id("addInstructorBtn")).click();
 		
 		String viewID = "s_instructorviewTab";
 		
@@ -337,5 +336,22 @@ public class SchedulerBot {
 		setResourceTableTextCell(viewID, row0Based, 3, type);
 		setResourceTableTextCell(viewID, row0Based, 4, maxOccupancy);
 		setResourceTableTextCell(viewID, row0Based, 5, equipment);
+	}
+	
+	public void clickInstructorsResourceTablePreferencesButton(
+			int row0Based) throws InterruptedException {
+
+		System.out.println("clicking preferences button at line: " + row0Based);
+		
+		String viewID = "s_instructorviewTab";
+
+		Thread.sleep(500);
+		WebElement btn = elementForResourceTableCell(viewID,
+				row0Based, 6).findElement(By.xpath("//td[text()='Preferences'][@class='buttonTitle']"));
+//		btn.click();
+		System.out.println(btn);
+		this.mouseDownAndUpAt(btn, 1, 1);
+
+		Thread.sleep(500);
 	}
 }

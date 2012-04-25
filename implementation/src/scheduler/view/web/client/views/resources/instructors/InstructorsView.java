@@ -61,7 +61,6 @@ public class InstructorsView extends VLayout {
 					button.setHeight(18);
 					button.setWidth(65);
 					button.setTitle("Preferences");
-					button.setID("instrPrefsButton_" + this.rowCount);
 					this.rowCount++;
 					button.addClickHandler(new ClickHandler() {
 						public void onClick(ClickEvent event) {
