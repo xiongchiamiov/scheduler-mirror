@@ -4,11 +4,17 @@ import scheduler.view.web.client.GreetingServiceAsync;
 import scheduler.view.web.client.UnsavedDocumentStrategy;
 import scheduler.view.web.shared.InstructorGWT;
 
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.smartgwt.client.widgets.IButton;
+//import com.smartgwt.client.widgets.events.ClickEvent;
+//import com.smartgwt.client.widgets.events.ClickHandler;
 
 /**
  * This is the panel class for the amdministrator's view of the
@@ -74,6 +80,14 @@ public class InstructorPreferencesView extends VerticalPanel {
 		this.add(cprefs);
 
 		this.add(coursePrefs);
+		
+		Button button = new Button("Close", new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				parent.hide();
+			}
+		});
+		
+		this.add(button);
 	}
 	
 	public void setParent(com.smartgwt.client.widgets.Window parent) {

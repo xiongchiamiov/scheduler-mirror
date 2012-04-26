@@ -64,8 +64,6 @@ public class TimePrefsWidget extends VerticalPanel {
 			setPreference(this, desire);
 			list.setSelectedIndex(desire);
 			String lastStyle = list.getStyleName();
-			//System.out.println("Last style name: "+lastStyle);
-			//System.out.println("New style: "+styleNames[desire-3]);
 			list.removeStyleName(lastStyle);
 			list.addStyleName(styleNames[3 - desire]);
 		}
@@ -184,8 +182,6 @@ public class TimePrefsWidget extends VerticalPanel {
 
 		Integer dayNum = cell.day;
 		DayGWT day = DayGWT.values()[dayNum];
-		System.out.println("Helper stuff: "+day.name);
-		System.out.println("Ordinal stuff: "+ day.ordinal()+", "+cell.day);
 		instructor.gettPrefs()[day.ordinal() + 1][cell.halfHour] = desire;
 		instructor.gettPrefs()[day.ordinal() + 1][cell.halfHour + 1] = desire;
 		
@@ -335,7 +331,6 @@ public class TimePrefsWidget extends VerticalPanel {
 		
 		
 		this.cells = new TimePrefsCellWidget[15][days.size()];
-		//System.out.println("cells 2nd dim " + days.size());
 		
 		final int totalHalfHours = 30;
 		final int totalDays = days.size();
@@ -531,7 +526,6 @@ public class TimePrefsWidget extends VerticalPanel {
 
 			@Override
 			public void onSuccess(Void result) {
-				System.out.println("Got to this amazing place");
 				savedInstructor = instructor;
 				instructor = new InstructorGWT(instructor);
 				//redoColors();

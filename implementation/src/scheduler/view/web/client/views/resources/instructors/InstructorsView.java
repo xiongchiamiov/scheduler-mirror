@@ -8,6 +8,8 @@ import scheduler.view.web.shared.DocumentGWT;
 import scheduler.view.web.shared.InstructorGWT;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.ScrollPanel;
+//import com.google.gwt.user.client.ui.ScrollPanel;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Autofit;
@@ -15,7 +17,9 @@ import com.smartgwt.client.types.ListGridEditEvent;
 import com.smartgwt.client.types.RowEndEditAction;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.IButton;
+//import com.google.gwt.user.client.Window;
 import com.smartgwt.client.widgets.Window;
+import com.smartgwt.client.widgets.Scrollbar;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.events.KeyPressEvent;
@@ -224,29 +228,39 @@ public class InstructorsView extends VLayout {
 				+ ")");
 		window.setCanDragReposition(true);
 		window.setCanDragResize(true);
+		window.setSize("700px", "600px");
+		
+		/*IButton button = new IButton("Close", new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				window.hide();
+			}
+		});*/
+		//window.addMember(button);
 		iipv.setParent(window);
 		iipv.afterPush();
+		
+		window.setSize("700px", "600px");
+		final ScrollPanel weewee = new ScrollPanel();
+		weewee.setWidget(iipv);
+		weewee.setSize("700px", "600px");
+		window.addItem(weewee);
+		//window.addItem(button);
 
-		// final ScrollPanel weewee = new ScrollPanel();
-		// weewee.setWidget(iipv);
-		// weewee.setSize("700px", "600px");
-		// window.addItem(weewee);
-
-		window.addMember(iipv);
-
-		com.google.gwt.event.dom.client.ClickHandler handler = new com.google.gwt.event.dom.client.ClickHandler() {
+		/*com.google.gwt.event.dom.client.ClickHandler handler = new com.google.gwt.event.dom.client.ClickHandler() {
 			@Override
 			public void onClick(com.google.gwt.event.dom.client.ClickEvent event) {
 
 			}
-		};
-		IButton button = new IButton("Close", new ClickHandler() {
+		};*/
+		/*IButton button = new IButton("Close", new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				window.hide();
 			}
-		});
-		iipv.add(button);
-		button.setStyleName("centerness");
+		});*/
+		//button.setTitle("Close");
+		//weewee.add(button);
+		//window.addMember(weewee);
+		//button.setStyleName("centerness");
 
 		window.setAutoSize(true);
 		window.show();
