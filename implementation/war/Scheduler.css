@@ -575,6 +575,11 @@ h1 {
 	margin: 0px 5px 0px 15px;
 }
 
+.resourceTableButton {
+	float: left;
+	padding-left: 50px;
+}
+
 .editScheduleItemDialog {
 	padding: 10px;
 }

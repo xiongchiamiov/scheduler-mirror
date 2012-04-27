@@ -8,6 +8,7 @@ import com.google.gwt.user.client.Window;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.types.ListGridEditEvent;
+import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.RowEndEditAction;
 import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.widgets.IButton;
@@ -32,7 +33,16 @@ public class LocationsView extends VLayout {
 		// this.setHorizontalAlignment(ALIGN_CENTER);
 		// this.add(new HTML("<h2>Locations</h2>"));
 
-		final ListGrid grid = new ListGrid();
+		final ListGrid grid = new ListGrid() {
+			protected String getCellCSSText(ListGridRecord record, int rowNum,
+					int colNum) {
+				if (getFieldName(colNum).equals("id")) {
+					return "cursor: pointer; background: #C0C0C0;";
+				} else {
+					return super.getCellCSSText(record, rowNum, colNum);
+				}
+			}
+		};
 		grid.setWidth100();
 		grid.setAutoFitData(Autofit.VERTICAL);
 		grid.setShowAllRecords(true);
@@ -94,6 +104,7 @@ public class LocationsView extends VLayout {
 	 */
 	private void layoutBottomButtonBar(final ListGrid grid) {
 		HLayout bottomButtonFlowPanel = new HLayout();
+		bottomButtonFlowPanel.setMembersMargin(10);
 		bottomButtonFlowPanel.setStyleName("floatingScheduleButtonBar");
 
 		IButton newButton = new IButton("Add New Location", new ClickHandler() {
@@ -103,8 +114,10 @@ public class LocationsView extends VLayout {
 		});
 		// newButton.getElement().setId("addLocationButton");
 		// DOM.setElementAttribute(course.getElement(), "id", "s_newCourseBtn");
-//		newButton.setStyleName("floatingScheduleButtonBarItemLeft");
-		newButton.setID("addLocationButton");
+		newButton.setAutoWidth();
+		newButton.setOverflow(Overflow.VISIBLE);
+		//DON'T CHANGE THIS ID IT WILL BREAK THE BUTTONS
+		newButton.setID("s_newLocationBtn");
 		bottomButtonFlowPanel.addMember(newButton);
 
 		IButton dupeBtn = new IButton("Duplicate Selected Locations",
@@ -119,8 +132,10 @@ public class LocationsView extends VLayout {
 					}
 				});
 		// DOM.setElementAttribute(dupeBtn.getElement(), "id", "s_dupeBtn");
-//		dupeBtn.setStyleName("floatingScheduleButtonBarItemLeft");
-		dupeBtn.setID("s_locationDupeBtn");
+		dupeBtn.setAutoWidth();
+		dupeBtn.setOverflow(Overflow.VISIBLE);
+		//DON'T CHANGE THIS ID IT WILL BREAK THE BUTTONS
+		dupeBtn.setID("s_dupeLocationBtn");
 		bottomButtonFlowPanel.addMember(dupeBtn);
 
 		IButton remove = new IButton("Remove Selected Locations",
@@ -134,8 +149,10 @@ public class LocationsView extends VLayout {
 					}
 				});
 		// DOM.setElementAttribute(remove.getElement(), "id", "s_removeBtn");
-//		remove.setStyleName("floatingScheduleButtonBarItemLeft");
-		remove.setID("s_removeBtn");
+		remove.setAutoWidth();
+		remove.setOverflow(Overflow.VISIBLE);
+		//DON'T CHANGE THIS ID IT WILL BREAK THE BUTTONS
+		remove.setID("s_removeLocationBtn");
 		bottomButtonFlowPanel.addMember(remove);
 
 		this.addMember(bottomButtonFlowPanel);

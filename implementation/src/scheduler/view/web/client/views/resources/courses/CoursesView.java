@@ -9,6 +9,7 @@ import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.types.ListGridEditEvent;
+import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.RowEndEditAction;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -17,6 +18,7 @@ import com.smartgwt.client.widgets.events.KeyPressEvent;
 import com.smartgwt.client.widgets.events.KeyPressHandler;
 import com.smartgwt.client.widgets.form.validator.IntegerRangeValidator;
 import com.smartgwt.client.widgets.grid.CellFormatter;
+import com.smartgwt.client.widgets.grid.HoverCustomizer;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -35,15 +37,22 @@ public class CoursesView extends VLayout {
 		// this.addStyleName("iViewPadding");
 		// DOM.setElementAttribute(this.getElement(), "id", "s_courseviewTab");
 		this.setID("s_courseviewTab");
-		// this.setWidth("100%");
 		this.setWidth100();
-		// this.setHeight("100%");
 		this.setHeight100();
 
 		// this.add(new HTML("<h2>Courses</h2>"));
 
 		// gridPanel.setHorizontalAlignment(ALIGN_CENTER);
-		final ListGrid grid = new ListGrid();
+		final ListGrid grid = new ListGrid() {
+			protected String getCellCSSText(ListGridRecord record, int rowNum,
+					int colNum) {
+				if (getFieldName(colNum).equals("id")) {
+					return "cursor: pointer; background: #C0C0C0;";
+				} else {
+					return super.getCellCSSText(record, rowNum, colNum);
+				}
+			}
+		};
 		grid.setWidth100();
 		grid.setAutoFitData(Autofit.VERTICAL);
 
@@ -102,6 +111,7 @@ public class CoursesView extends VLayout {
 		nameField.setAlign(Alignment.CENTER);
 		ListGridField numSectionsField = new ListGridField("numSections",
 				"Number of Sections");
+		numSectionsField.setDefaultFilterValue(1);
 		numSectionsField.setAlign(Alignment.CENTER);
 		numSectionsField.setValidators(nonnegativeInt);
 		ListGridField wtuField = new ListGridField("wtu", "WTU");
@@ -180,7 +190,8 @@ public class CoursesView extends VLayout {
 	 */
 	private void layoutBottomButtonBar(final ListGrid grid) {
 		HLayout bottomButtonFlowPanel = new HLayout();
-		 bottomButtonFlowPanel.addStyleName("floatingScheduleButtonBar");
+		bottomButtonFlowPanel.setMembersMargin(10);
+		bottomButtonFlowPanel.addStyleName("floatingScheduleButtonBar");
 
 		IButton course = new IButton("Add New Course", new ClickHandler() {
 			public void onClick(ClickEvent event) {
@@ -195,7 +206,9 @@ public class CoursesView extends VLayout {
 			}
 		});
 		// DOM.setElementAttribute(course.getElement(), "id", "s_newCourseBtn");
-		// course.setStyleName("floatingScheduleButtonBarItemLeft");
+		course.setAutoWidth();
+		course.setOverflow(Overflow.VISIBLE);
+		//DON'T CHANGE THIS ID IT WILL BREAK THE BUTTONS
 		course.setID("s_newCourseBtn");
 		bottomButtonFlowPanel.addMember(course);
 
@@ -212,8 +225,10 @@ public class CoursesView extends VLayout {
 				});
 
 		// DOM.setElementAttribute(dupeBtn.getElement(), "id", "s_dupeBtn");
-		// dupeBtn.setStyleName("floatingScheduleButtonBarItemLeft");
-		dupeBtn.setID("s_courseDupeBtn");
+		dupeBtn.setAutoWidth();
+		dupeBtn.setOverflow(Overflow.VISIBLE);
+		//DON'T CHANGE THIS ID IT WILL BREAK THE BUTTONS
+		dupeBtn.setID("s_dupeCourseBtn");
 		bottomButtonFlowPanel.addMember(dupeBtn);
 
 		IButton remove = new IButton("Remove Selected Courses",
@@ -228,8 +243,10 @@ public class CoursesView extends VLayout {
 				});
 
 		// DOM.setElementAttribute(remove.getElement(), "id", "s_removeBtn");
-		// remove.setStyleName("floatingScheduleButtonBarItemLeft");
-		remove.setID("s_removeBtn");
+		remove.setAutoWidth();
+		remove.setOverflow(Overflow.VISIBLE);
+		//DON'T CHANGE THIS ID IT WILL BREAK THE BUTTONS
+		remove.setID("s_removeCourseBtn");
 		bottomButtonFlowPanel.addMember(remove);
 
 		this.addMember(bottomButtonFlowPanel);

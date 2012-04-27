@@ -14,6 +14,7 @@ import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.types.ListGridEditEvent;
+import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.RowEndEditAction;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.IButton;
@@ -55,6 +56,15 @@ public class InstructorsView extends VLayout {
 
 		final ListGrid grid = new ListGrid() {
 			protected int rowCount = 0;
+
+			protected String getCellCSSText(ListGridRecord record, int rowNum,
+					int colNum) {
+				if (getFieldName(colNum).equals("id")) {
+					return "cursor: pointer; background: #C0C0C0;";
+				} else {
+					return super.getCellCSSText(record, rowNum, colNum);
+				}
+			}
 
 			@Override
 			protected Canvas createRecordComponent(final ListGridRecord record,
@@ -229,38 +239,39 @@ public class InstructorsView extends VLayout {
 		window.setCanDragReposition(true);
 		window.setCanDragResize(true);
 		window.setSize("700px", "600px");
-		
-		/*IButton button = new IButton("Close", new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				window.hide();
-			}
-		});*/
-		//window.addMember(button);
+
+		/*
+		 * IButton button = new IButton("Close", new ClickHandler() { public
+		 * void onClick(ClickEvent event) { window.hide(); } });
+		 */
+		// window.addMember(button);
 		iipv.setParent(window);
 		iipv.afterPush();
-		
+
 		window.setSize("700px", "600px");
 		final ScrollPanel weewee = new ScrollPanel();
 		weewee.setWidget(iipv);
 		weewee.setSize("700px", "600px");
 		window.addItem(weewee);
-		//window.addItem(button);
+		// window.addItem(button);
 
-		/*com.google.gwt.event.dom.client.ClickHandler handler = new com.google.gwt.event.dom.client.ClickHandler() {
-			@Override
-			public void onClick(com.google.gwt.event.dom.client.ClickEvent event) {
-
-			}
-		};*/
-		/*IButton button = new IButton("Close", new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				window.hide();
-			}
-		});*/
-		//button.setTitle("Close");
-		//weewee.add(button);
-		//window.addMember(weewee);
-		//button.setStyleName("centerness");
+		/*
+		 * com.google.gwt.event.dom.client.ClickHandler handler = new
+		 * com.google.gwt.event.dom.client.ClickHandler() {
+		 * 
+		 * @Override public void
+		 * onClick(com.google.gwt.event.dom.client.ClickEvent event) {
+		 * 
+		 * } };
+		 */
+		/*
+		 * IButton button = new IButton("Close", new ClickHandler() { public
+		 * void onClick(ClickEvent event) { window.hide(); } });
+		 */
+		// button.setTitle("Close");
+		// weewee.add(button);
+		// window.addMember(weewee);
+		// button.setStyleName("centerness");
 
 		window.setAutoSize(true);
 		window.show();
@@ -271,7 +282,8 @@ public class InstructorsView extends VLayout {
 	 */
 	private void layoutBottomButtonBar(final ListGrid grid) {
 		HLayout bottomButtonFlowPanel = new HLayout();
-		 bottomButtonFlowPanel.addStyleName("floatingScheduleButtonBar");
+		bottomButtonFlowPanel.setMembersMargin(10);
+		bottomButtonFlowPanel.addStyleName("floatingScheduleButtonBar");
 
 		IButton addBtn = new IButton("Add New Instructor", new ClickHandler() {
 			public void onClick(ClickEvent event) {
@@ -282,8 +294,10 @@ public class InstructorsView extends VLayout {
 		});
 		// DOM.setElementAttribute(addBtn.getElement(), "id",
 		// "addInstructorBtn");
-		// addBtn.setStyleName("floatingScheduleButtonBarItemLeft");
-		addBtn.setID("addInstructorBtn");
+		addBtn.setAutoWidth();
+		addBtn.setOverflow(Overflow.VISIBLE);
+		//DON'T CHANGE THIS ID IT WILL BREAK THE BUTTONS
+		addBtn.setID("s_newInstructorBtn");
 		bottomButtonFlowPanel.addMember(addBtn);
 
 		IButton duplicateBtn = new IButton("Duplicate Selected Instructors",
@@ -300,8 +314,10 @@ public class InstructorsView extends VLayout {
 				});
 		// DOM.setElementAttribute(duplicateBtn.getElement(), "id",
 		// "duplicateBtn");
-		// duplicateBtn.setStyleName("floatingScheduleButtonBarItemLeft");
-		duplicateBtn.setID("duplicateBtn");
+		duplicateBtn.setAutoWidth();
+		duplicateBtn.setOverflow(Overflow.VISIBLE);
+		//DON'T CHANGE THIS ID IT WILL BREAK THE BUTTONS
+		duplicateBtn.setID("s_dupeInstructorBtn");
 		bottomButtonFlowPanel.addMember(duplicateBtn);
 
 		IButton removeBtn = new IButton("Remove Selected Instructors",
@@ -316,8 +332,10 @@ public class InstructorsView extends VLayout {
 				});
 		// DOM.setElementAttribute(removeBtn.getElement(), "id", "removeBtn");
 
-		// removeBtn.setStyleName("floatingScheduleButtonBarItemLeft");
-		removeBtn.setID("removeBtn");
+		removeBtn.setAutoWidth();
+		removeBtn.setOverflow(Overflow.VISIBLE);
+		//DON'T CHANGE THIS ID IT WILL BREAK THE BUTTONS
+		removeBtn.setID("s_removeInstructorBtn");
 		bottomButtonFlowPanel.addMember(removeBtn);
 
 		this.addMember(bottomButtonFlowPanel);
