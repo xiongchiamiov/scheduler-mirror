@@ -14,10 +14,11 @@ def build():
 	local('ant build')
 	local('ant gwtc')
 
-def test():
+def test(domain='localhost:8080'):
 	print('Running JUnit tests...')
 	local('ant build && ant test')
 	print('Running Selenium tests...')
+	local('echo "domain=http://%s" > ../Selenium/test/scheduler/view/web/shared/selenium.properties' % domain)
 	local('cd ../Selenium && ant build && ant test')
 
 def restart_tomcat():
@@ -29,13 +30,14 @@ def deploy(*directories):
 	if len(directories) == 1:
 		if directories[0] == 'all':
 			# We need a copy since we're modifying the list.
-			directories = list(department)
+			directories = list(departments)
 			directories.extend([department+'x' for department in departments])
 		elif directories[0] == 'all-dev':
 			directories = [department+'x' for department in departments]
 		elif directories[0] == 'all-stable':
 			directories = departments
 	
+	local('mkdir -p test/scheduler/view/web/share')
 	for directory in directories:
 		print('Deploying %s...' % directory)
 		local('''echo "#this required property tells the scheduler where to write its database file to.

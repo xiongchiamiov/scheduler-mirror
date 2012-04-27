@@ -2,6 +2,7 @@ package scheduler.view.web.shared;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.Properties;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
@@ -14,10 +15,14 @@ import scheduler.view.web.shared.Selenium.SchedulerBot.PopupWaiter;
 public abstract class GRCAcceptanceTest extends DefaultSelTestCase {	
 	private WebDriver driver;
 	private StringBuffer verificationErrors = new StringBuffer();
-	private static final String protoURL = "http://localhost:8080/GRC";
+	private static String protoURL;
 	private SchedulerBot bot;	
 	
-	public void setUp(WebDriver drv) {
+	public void setUp(WebDriver drv) throws java.io.IOException {
+		Properties properties = new Properties();
+		properties.load(this.getClass().getResourceAsStream("selenium.properties"));
+		this.protoURL = properties.getProperty("domain") + "/GRC";
+		
 		this.driver = drv;
 		super.setUp(protoURL, drv);
 		bot = new SchedulerBot(driver);
