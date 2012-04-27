@@ -348,6 +348,41 @@ public class SQLdb implements IDatabase {
 			}
 		}
 		
+		public Integer insertWithID(Object[] values) throws DatabaseException {
+			assert(values.length == columns.length);
+			PreparedStatement stmnt = null;
+  
+			String queryString = "INSERT INTO " + name + " (";
+  
+			for (Column column : columns)
+				queryString += column.name + ",";
+  
+			queryString = queryString.substring(0, queryString.length() - 1);
+			queryString += ") VALUES (";
+  
+			for (int columnI = 0; columnI < columns.length; columnI++)
+				queryString += "?,";
+			
+			queryString = queryString.substring(0, queryString.length() - 1);
+			queryString += ")";
+
+			try {
+				stmnt = conn.prepareStatement(queryString);
+				
+				for (int columnI = 0; columnI < columns.length; columnI++) {
+					setStatement(stmnt, columns[columnI].classs, columnI+1, values[columnI]);
+				}
+				stmnt.executeUpdate();
+				
+				stmnt = conn.prepareStatement("select last_insert_rowid()");
+				ResultSet id = stmnt.executeQuery();
+				return id.getInt("last_insert_rowid()");
+			}
+			catch (SQLException e) {
+				throw new DatabaseException(e);
+			}
+		}
+		
 		private void setStatement(PreparedStatement stmnt, Class objClass, int idx, Object val)
 				throws SQLException 
 		{
@@ -512,19 +547,36 @@ public class SQLdb implements IDatabase {
 	@Override
 	public IDBDocument getOriginalForWorkingCopyDocumentOrNull(IDBDocument rawDocument)
 			throws DatabaseException {
-		List<SQLWorkingCopy> result;
+		SQLDocument doc = null;
+		SQLWorkingCopy wc = null;
 		HashMap<String, Object> wheres = new HashMap<String, Object>();
+		
 		wheres.put("id", rawDocument.getID());
-		result = workingcopyTable.select(wheres);
-		return null;
+		wc = workingcopyTable.select(wheres).get(0);
+		if (wc != null) {
+			wheres.clear();
+			wheres.put("id", wc.getOriginalDocID());
+			doc = documentTable.select(wheres).get(0);
+		}
+		return doc;
 	}
 
 
 	@Override
 	public IDBDocument getWorkingCopyForOriginalDocumentOrNull(
 			IDBDocument document) throws DatabaseException {
-		// TODO Auto-generated method stub
-		return null;
+		SQLDocument doc = null;
+		SQLWorkingCopy wc = null;
+		HashMap<String, Object> wheres = new HashMap<String, Object>();
+		
+		wheres.put("originalDocID", document.getID());
+		wc = workingcopyTable.select(wheres).get(0);
+		if (wc != null) {
+			wheres.clear();
+			wheres.put("id", wc.getID());
+			doc = documentTable.select(wheres).get(0);
+		}
+		return doc;
 	}
 
 
@@ -532,8 +584,7 @@ public class SQLdb implements IDatabase {
 	public void associateWorkingCopyWithOriginal(
 			IDBDocument underlyingDocument, IDBDocument underlyingDocument2)
 			throws DatabaseException {
-		// TODO Auto-generated method stub
-		
+		workingcopyTable.insertWithID(new Object[] {underlyingDocument.getID(), underlyingDocument2.getID()});
 	}
 
 
