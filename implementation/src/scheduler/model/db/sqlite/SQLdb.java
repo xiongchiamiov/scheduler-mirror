@@ -592,8 +592,7 @@ public class SQLdb implements IDatabase {
 	public void disassociateWorkingCopyWithOriginal(
 			IDBDocument underlyingDocument, IDBDocument underlyingDocument2)
 			throws DatabaseException {
-		// TODO Auto-generated method stub
-		
+		workingcopyTable.delete(underlyingDocument.getID());
 	}
 
 
@@ -610,7 +609,10 @@ public class SQLdb implements IDatabase {
 	//We can't have this method, ScheduleID isn't enough to identify a Schedule
 	@Override
 	public IDBSchedule findScheduleByID(int id) throws DatabaseException {
-		return null;
+		SQLDocument ret;
+		HashMap<String, Object> wheres = new HashMap<String, Object>();
+		
+		return null; //documentTable.select(wheres);
 	}
 
 

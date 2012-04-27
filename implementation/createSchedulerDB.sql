@@ -1,6 +1,8 @@
 --  This file creates the tables for the scheduler
 --  database, for the software engineering capstone
 --  series.
+PRAGMA foreign_keys = ON;
+
 drop table document; 
 create table document (
     id integer primary key,
@@ -12,10 +14,11 @@ create table document (
 
 drop table workingcopy;
 create table workingcopy (
-    id integer primary key, 
-    originalDocID,
+    id integer primary key,
+    originalDocID integer,
     unique (originalDocID),
-    foreign key (originalDocID) references document(id)
+    foreign key (originalDocID) references document(id),
+    foreign key (id) references document(id)
 );
 
 
