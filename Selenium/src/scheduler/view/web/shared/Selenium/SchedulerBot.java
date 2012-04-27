@@ -306,7 +306,7 @@ public class SchedulerBot {
 
 		System.out.println("Entering row index " + row0Based);
 
-		driver.findElement(By.xpath("//div[@eventproxy='addInstructorBtn']")).click();
+		driver.findElement(By.xpath("//div[@eventproxy='s_newInstructorBtn']")).click();
 		
 		String viewID = "s_instructorviewTab";
 		
@@ -327,7 +327,7 @@ public class SchedulerBot {
 
 		System.out.println("Entering row index " + row0Based);
 		
-		driver.findElement(By.xpath("//div[@eventproxy='addLocationButton']")).click();
+		driver.findElement(By.xpath("//div[@eventproxy='s_newLocationButton']")).click();
 		
 		String viewID = "s_locationviewTab";
 		

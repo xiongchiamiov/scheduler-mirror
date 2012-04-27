@@ -18,7 +18,6 @@ import com.smartgwt.client.widgets.events.KeyPressEvent;
 import com.smartgwt.client.widgets.events.KeyPressHandler;
 import com.smartgwt.client.widgets.form.validator.IntegerRangeValidator;
 import com.smartgwt.client.widgets.grid.CellFormatter;
-import com.smartgwt.client.widgets.grid.HoverCustomizer;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -111,14 +110,16 @@ public class CoursesView extends VLayout {
 		nameField.setAlign(Alignment.CENTER);
 		ListGridField numSectionsField = new ListGridField("numSections",
 				"Number of Sections");
-		numSectionsField.setDefaultFilterValue(1);
+		numSectionsField.setDefaultValue(1);
 		numSectionsField.setAlign(Alignment.CENTER);
 		numSectionsField.setValidators(nonnegativeInt);
 		ListGridField wtuField = new ListGridField("wtu", "WTU");
 		wtuField.setAlign(Alignment.CENTER);
+		wtuField.setDefaultValue(0);
 		wtuField.setValidators(nonnegativeInt);
 		ListGridField scuField = new ListGridField("scu", "SCU");
 		scuField.setAlign(Alignment.CENTER);
+		scuField.setDefaultValue(0);
 		scuField.setValidators(nonnegativeInt);
 		ListGridField dayCombinationsField = new ListGridField(
 				"dayCombinations", "Day Combinations");
@@ -126,13 +127,16 @@ public class CoursesView extends VLayout {
 		ListGridField hoursPerWeekField = new ListGridField("hoursPerWeek",
 				"Hours per Week");
 		hoursPerWeekField.setAlign(Alignment.CENTER);
+		hoursPerWeekField.setDefaultValue(0);
 		hoursPerWeekField.setValidators(nonnegativeInt);
 		ListGridField maxEnrollmentField = new ListGridField("maxEnrollment",
 				"Max Enrollment");
 		maxEnrollmentField.setAlign(Alignment.CENTER);
+		maxEnrollmentField.setDefaultValue(0);
 		maxEnrollmentField.setValidators(nonnegativeInt);
 		ListGridField courseTypeField = new ListGridField("type", "Type");
 		courseTypeField.setAlign(Alignment.CENTER);
+		courseTypeField.setDefaultValue("LEC");
 		ListGridField usedEquipmentField = new ListGridField("usedEquipment",
 				"Used Equipment");
 		usedEquipmentField.setAlign(Alignment.CENTER);
@@ -196,12 +200,6 @@ public class CoursesView extends VLayout {
 		IButton course = new IButton("Add New Course", new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				Record defaultValues = new Record();
-				defaultValues.setAttribute("type", "LEC");
-				defaultValues.setAttribute("numSections", 0);
-				defaultValues.setAttribute("wtu", 0);
-				defaultValues.setAttribute("scu", 0);
-				defaultValues.setAttribute("hoursPerWeek", 0);
-				defaultValues.setAttribute("maxEnrollment", 0);
 				grid.startEditingNew(defaultValues);
 			}
 		});

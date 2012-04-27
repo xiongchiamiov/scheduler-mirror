@@ -101,7 +101,7 @@ public class LocationsPage {
 	}
 	
 	protected void init() {
-		newBtn = fbot.findElement(By.id("newLocationBtn"));
+		newBtn = fbot.findElement(By.id("s_newLocationBtn"));
 	}
 	
 	private void pause() {

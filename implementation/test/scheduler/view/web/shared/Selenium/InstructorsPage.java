@@ -36,7 +36,7 @@ public class InstructorsPage {
 	
 	protected void init() {
 		try {
-			newButton = fbot.findElement(By.id("newInstructorButton"));
+			newButton = fbot.findElement(By.id("s_newInstructorBtn"));
 		} catch(org.openqa.selenium.NoSuchElementException ex) {
 			System.out.println("Selenium Page Elements [instructors] not located, check ID's");
 		}

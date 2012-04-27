@@ -10,7 +10,6 @@ import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.types.ListGridEditEvent;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.RowEndEditAction;
-import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -51,7 +50,6 @@ public class LocationsView extends VLayout {
 		grid.setEditEvent(ListGridEditEvent.CLICK);
 		grid.setEditByCell(true);
 		grid.setListEndEditAction(RowEndEditAction.NEXT);
-		// grid.setCellHeight(22);
 		grid.setDataSource(new LocationsDataSource(service, document,
 				unsavedDocumentStrategy));
 
@@ -74,8 +72,10 @@ public class LocationsView extends VLayout {
 		roomField.setAlign(Alignment.CENTER);
 		ListGridField typeField = new ListGridField("type", "Type");
 		typeField.setAlign(Alignment.CENTER);
+		typeField.setDefaultValue("LEC");
 		ListGridField maxOccupancyField = new ListGridField("maxOccupancy",
 				"Max Occupancy");
+		maxOccupancyField.setDefaultValue(0);
 		maxOccupancyField.setAlign(Alignment.CENTER);
 		ListGridField equipmentField = new ListGridField("equipment",
 				"Equipment");

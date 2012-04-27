@@ -9,7 +9,6 @@ import scheduler.view.web.shared.InstructorGWT;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ScrollPanel;
-//import com.google.gwt.user.client.ui.ScrollPanel;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Autofit;
@@ -18,9 +17,7 @@ import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.RowEndEditAction;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.IButton;
-//import com.google.gwt.user.client.Window;
 import com.smartgwt.client.widgets.Window;
-import com.smartgwt.client.widgets.Scrollbar;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.events.KeyPressEvent;
@@ -200,6 +197,7 @@ public class InstructorsView extends VLayout {
 		ListGridField maxWTUField = new ListGridField("maxWTU", "Max WTU");
 		maxWTUField.setValidators(nonnegativeInt);
 		maxWTUField.setAlign(Alignment.CENTER);
+		maxWTUField.setDefaultValue(0);
 
 		ListGridField instructorPrefsField = new ListGridField(
 				"instructorPrefs", "Preferences");
@@ -288,7 +286,6 @@ public class InstructorsView extends VLayout {
 		IButton addBtn = new IButton("Add New Instructor", new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				Record defaultValues = new Record();
-				defaultValues.setAttribute("maxWTU", 0);
 				grid.startEditingNew(defaultValues);
 			}
 		});
