@@ -18,7 +18,7 @@ public class BadInstructorDataException extends Exception
     */
    public enum ConflictType
    {
-      IS_STAFF, IS_NULL;
+      IS_STAFF, IS_NULL, NOT_SCHEDULABLE, NULL_I_PREFS, NULL_C_PREFS, NULL_I_PREF_MEM, NULL_C_PREF_MEM;
       
       public String toString ()
       {
@@ -27,8 +27,17 @@ public class BadInstructorDataException extends Exception
             case IS_STAFF:
                return "Staff Instructor detected";
             case IS_NULL:
-                return "Null data detected";
-            
+                return "Null Instructor";
+            case NOT_SCHEDULABLE:
+                return "Unschedulable Instructor detected";
+            case NULL_I_PREFS:
+                return "Null Instructor Preferences";
+            case NULL_C_PREFS:
+                return "Null Course Preferences";
+            case NULL_I_PREF_MEM:
+                return "Null Instructor Preference Member";
+            case NULL_C_PREF_MEM:
+                return "Null Course Preference Member";        
             default:
                System.err.println ("BAD DATA TYPE");
                return "Unknown error";

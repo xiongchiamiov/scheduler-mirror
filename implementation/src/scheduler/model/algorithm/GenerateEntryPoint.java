@@ -9,7 +9,6 @@ import scheduler.model.Instructor;
 import scheduler.model.Model;
 import scheduler.model.Schedule;
 import scheduler.model.ScheduleItem;
-import scheduler.model.algorithm.BadInstructorDataException.ConflictType;
 import scheduler.model.db.DatabaseException;
 
 public class GenerateEntryPoint {
@@ -21,43 +20,68 @@ public class GenerateEntryPoint {
 			Collection<Course> c_list, Collection<Instructor> i_coll,
 			Collection<Location> l_coll) throws DatabaseException {
 		
+		if(model == null || schedule == null) 
+			throw new NullPointerException();
+		
 		insD = new Vector<InstructorDecorator>();
 		locD = new Vector<LocationDecorator>();
 		
 	    for(Instructor i : i_coll) {
-	    	try {
-				insD.add(checkValid(i));
+			try {
+				checkValid(i);
+				insD.add(new InstructorDecorator(i));
 			} catch (BadInstructorDataException e) {
+				System.out.println("caught bad instructor exception");
 				e.printStackTrace();
 			}
 	    }
 	   
-	    for(Location l : l_coll) {
-	    	try {
-				locD.add(checkValid(l));
+	    for(Location l : l_coll) {    	
+			try {
+				checkValid(l);
+				locD.add(new LocationDecorator(l));
 			} catch (BadLocationDataException e) {
+				System.out.println("caught bad instructor exception");
 				e.printStackTrace();
 			}
 	    }
 		
-		
 		return Generate.generate(model, schedule, s_items, c_list, insD, locD);
 	}
 	
-	private static InstructorDecorator checkValid(Instructor ins) throws 
+	private static void checkValid(Instructor ins) throws 
 	BadInstructorDataException, DatabaseException{
 		//validity checks
-		if(ins==null || ins.getCoursePreferences() == null || ins.getTimePreferences() == null) {
+		if(ins==null)
 			throw new BadInstructorDataException(BadInstructorDataException.ConflictType.IS_NULL,
-					ins, "null preferences", "preferences");
-		}
+					ins, "null", "instructor object");
 		
-			return new InstructorDecorator(ins);
+		if(!ins.isSchedulable())
+			throw new BadInstructorDataException(BadInstructorDataException.ConflictType.IS_NULL,
+					ins, "null", "instructor object");
+		checkInsTimePrefs(ins);
+		checkInsCoursePrefs(ins);
 	}
 	
-	private static LocationDecorator checkValid(Location loc) throws BadLocationDataException{
+	private static void checkInsTimePrefs(Instructor ins) throws BadInstructorDataException, DatabaseException{
+		if(ins.getCoursePreferences() == null)
+			throw new BadInstructorDataException(BadInstructorDataException.ConflictType.NULL_C_PREFS,
+					ins, "null", "instructor course prefs");
+		if(ins.getTimePreferences() == null)
+			throw new BadInstructorDataException(BadInstructorDataException.ConflictType.NULL_C_PREFS,
+					ins, "null", "instructor course prefs");
+		//int[][] prefs = ins.getTimePreferences();
+	}
+	
+	private static void checkInsCoursePrefs(Instructor ins) {
+
+	}
+	
+	private static void checkValid(Location loc) throws BadLocationDataException{
 		//validity checks
-		return new LocationDecorator(loc);
+		if(loc == null)
+			throw new BadLocationDataException(BadLocationDataException.ConflictType.IS_NULL, loc, "null", "loc"); 
+
 	}
 	
 }

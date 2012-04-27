@@ -18,7 +18,7 @@ public class BadLocationDataException extends Exception
     */
    public enum ConflictType
    {
-      IS_TBA, IS_NULL, ;
+      IS_TBA, IS_NULL;
       
       public String toString ()
       {
@@ -26,6 +26,9 @@ public class BadLocationDataException extends Exception
          {
             case IS_TBA:
                return "TBA Location detected";
+            
+            case IS_NULL:
+                return "Null Location data detected";
             
             default:
                System.err.println ("BAD DATA TYPE");

@@ -38,7 +38,7 @@ public class Generate {
 	}
 
 	public static Vector<ScheduleItem> generate(Model model, Schedule schedule, 
-			/*replace with decorator also*/Collection<ScheduleItem> s_items, Collection<Course> c_list, Vector<InstructorDecorator> i_vec,
+			Collection<ScheduleItem> s_items, Collection<Course> c_list, Vector<InstructorDecorator> i_vec,
 			Vector<LocationDecorator> l_vec) throws DatabaseException {
 		
 		Vector<ScheduleItemDecorator> items = new Vector<ScheduleItemDecorator>();
