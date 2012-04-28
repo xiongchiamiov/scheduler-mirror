@@ -66,4 +66,10 @@ public interface GreetingService extends RemoteService {
 	Collection<ScheduleItemGWT> newRemoveScheduleItem(ScheduleItemGWT itemGWT);
 	Collection<ScheduleItemGWT> getScheduleItems(int scheduleID);
 
+	List<Integer> updateCourses(
+			int documentID,
+			List<CourseGWT> addedResources,
+			Collection<CourseGWT> editedResources,
+			List<Integer> deletedResourcesIDs);
+
 }

@@ -149,10 +149,12 @@ public class LocationsView extends VLayout {
 					}
 				});
 		// DOM.setElementAttribute(remove.getElement(), "id", "s_removeBtn");
+
 		remove.setAutoWidth();
 		remove.setOverflow(Overflow.VISIBLE);
 		//DON'T CHANGE THIS ID IT WILL BREAK THE BUTTONS
 		remove.setID("s_removeLocationBtn");
+
 		bottomButtonFlowPanel.addMember(remove);
 
 		this.addMember(bottomButtonFlowPanel);

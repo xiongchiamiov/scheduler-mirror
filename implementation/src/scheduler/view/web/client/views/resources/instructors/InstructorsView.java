@@ -329,10 +329,12 @@ public class InstructorsView extends VLayout {
 				});
 		// DOM.setElementAttribute(removeBtn.getElement(), "id", "removeBtn");
 
+
 		removeBtn.setAutoWidth();
 		removeBtn.setOverflow(Overflow.VISIBLE);
 		//DON'T CHANGE THIS ID IT WILL BREAK THE BUTTONS
 		removeBtn.setID("s_removeInstructorBtn");
+
 		bottomButtonFlowPanel.addMember(removeBtn);
 
 		this.addMember(bottomButtonFlowPanel);

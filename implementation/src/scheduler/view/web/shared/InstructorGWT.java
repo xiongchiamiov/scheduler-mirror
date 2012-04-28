@@ -128,7 +128,7 @@ public class InstructorGWT implements Serializable, Identified {
 		return id;
 	}
 
-	public void setID(int id) {
+	public void setID(Integer id) {
 		this.id = id;
 	}
 

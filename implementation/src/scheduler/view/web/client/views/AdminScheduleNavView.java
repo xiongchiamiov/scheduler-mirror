@@ -12,6 +12,7 @@ import scheduler.view.web.client.TabOpener;
 import scheduler.view.web.client.UnsavedDocumentStrategy;
 import scheduler.view.web.client.UpdateHeaderStrategy;
 import scheduler.view.web.client.views.resources.courses.CoursesView;
+import scheduler.view.web.client.views.resources.courses.DocumentCoursesCache;
 import scheduler.view.web.client.views.resources.instructors.InstructorsView;
 import scheduler.view.web.client.views.resources.locations.LocationsView;
 import scheduler.view.web.shared.DocumentGWT;
@@ -24,7 +25,6 @@ import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.Side;
 import com.smartgwt.client.types.TabBarControls;
 import com.smartgwt.client.widgets.Canvas;
-import com.smartgwt.client.widgets.layout.LayoutSpacer;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
@@ -106,7 +106,8 @@ public class AdminScheduleNavView extends VerticalPanel implements UnsavedDocume
 				service.saveWorkingCopyToOriginalDocument(document.getID(), new
 						AsyncCallback<Void>() {
 							public void onSuccess(Void result) {
-								setDocumentChanged(false);
+								documentChanged = false;
+								updateHeaderStrategy.setDocumentChanged(false);
 								Window.alert("Successfully saved!");
 							}
 							public void onFailure(Throwable caught) {
@@ -228,7 +229,18 @@ public class AdminScheduleNavView extends VerticalPanel implements UnsavedDocume
 		// tabSet.setPaneCon
 		
 		final Tab coursesTab = new Tab("Courses");
-		coursesTab.setPane(new CoursesView(service, document, (UnsavedDocumentStrategy)AdminScheduleNavView.this));
+		
+		DocumentCoursesCache documentCoursesCache = new DocumentCoursesCache(service, document.getID());
+		documentCoursesCache.addObserver(new DocumentCoursesCache.Observer() {
+			public void onPopulate() { }
+			public void onModify() {
+				documentChanged = true;
+				updateHeaderStrategy.setDocumentChanged(true);
+			}
+		});
+		documentCoursesCache.populateFromServer();
+		
+		coursesTab.setPane(new CoursesView(documentCoursesCache));
 		coursesTab.setID("s_coursesTab");
 		tabSet.addTab(coursesTab);
 		
@@ -295,7 +307,7 @@ public class AdminScheduleNavView extends VerticalPanel implements UnsavedDocume
 
 	@Override
 	public void setDocumentChanged(boolean documentChanged) {
-		this.documentChanged = documentChanged;
-		this.updateHeaderStrategy.setDocumentChanged(documentChanged);
+		// TODO Auto-generated method stub
+		System.out.println("implement me");
 	}
 }

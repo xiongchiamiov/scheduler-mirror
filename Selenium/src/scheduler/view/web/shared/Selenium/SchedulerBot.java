@@ -191,13 +191,11 @@ public class SchedulerBot {
 		
 		Thread.sleep(500);
 		WebElement img = elementForResourceTableCell(viewID, row0Based, col0Based).findElement(By.xpath("//div[@class='labelAnchor']/img"));
-		WebElement imgParent = img.findElement(By.xpath("parent::*"));
-		assert(imgParent.getTagName().equals("div"));
 		
-		boolean currentValue = "true".equals(imgParent.getAttribute("aria-checked"));
+		boolean currentValue = !img.getAttribute("src").contains("unchecked");
 		
 		if (currentValue != newValue)
-			mouseDownAndUpAt(imgParent, 5, 5);
+			mouseDownAndUpAt(img, 5, 5);
 		
 //		currentValue = "true".equals(imgParent.getAttribute("aria-checked"));
 //		assert(currentValue == newValue);
@@ -326,8 +324,8 @@ public class SchedulerBot {
 			String equipment) throws InterruptedException {
 
 		System.out.println("Entering row index " + row0Based);
-		
-		driver.findElement(By.xpath("//div[@eventproxy='s_newLocationButton']")).click();
+
+		driver.findElement(By.xpath("//div[@eventproxy='s_newLocationBtn']")).click();
 		
 		String viewID = "s_locationviewTab";
 		

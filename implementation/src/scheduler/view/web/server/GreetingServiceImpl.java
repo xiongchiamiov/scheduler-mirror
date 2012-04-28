@@ -177,6 +177,22 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	}
 	
 	@Override
+	public List<Integer> updateCourses(
+			int documentID,
+			List<CourseGWT> addedResources,
+			Collection<CourseGWT> editedResources,
+			List<Integer> deletedResourcesIDs) {
+		List<Integer> addedCoursesIDs = new LinkedList<Integer>();
+		for (CourseGWT newCourse : addedResources)
+			addedCoursesIDs.add(addCourseToDocument(documentID, newCourse).getID());
+		for (CourseGWT editedCourse : editedResources)
+			editCourse(editedCourse);
+		for (int deletedCourseID : deletedResourcesIDs)
+			removeCourse(deletedCourseID);
+		return addedCoursesIDs;
+	}
+	
+	@Override
 	public CourseGWT addCourseToDocument(int documentID, CourseGWT course) {
 		System.out.println("Called addCourse with " + course.getDept() + " " + course.getCatalogNum());
 		

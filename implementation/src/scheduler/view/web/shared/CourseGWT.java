@@ -3,6 +3,7 @@ package scheduler.view.web.shared;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Set;
+import java.util.TreeSet;
 
 
 public class CourseGWT implements Serializable, Identified {
@@ -159,7 +160,7 @@ public class CourseGWT implements Serializable, Identified {
 		return id;
 	}
 
-	public void setID(int id) {
+	public void setID(Integer id) {
 		this.id = id;
 	}
 
@@ -246,4 +247,46 @@ public class CourseGWT implements Serializable, Identified {
 			return false;
 		}
 	}
+
+	public static String dayCombinationToString(Set<DayGWT> dayCombination) {
+		String result = "";
+		if (dayCombination.contains(DayGWT.MONDAY))
+			result += "M";
+		if (dayCombination.contains(DayGWT.TUESDAY))
+			result += "Tu";
+		if (dayCombination.contains(DayGWT.WEDNESDAY))
+			result += "W";
+		if (dayCombination.contains(DayGWT.THURSDAY))
+			result += "Th";
+		if (dayCombination.contains(DayGWT.FRIDAY))
+			result += "F";
+		if (dayCombination.contains(DayGWT.SATURDAY))
+			result += "Sa";
+		if (dayCombination.contains(DayGWT.SUNDAY))
+			result += "Su";
+		assert(result.length() > 0);
+		return result;
+	}
+	
+
+	public static Set<DayGWT> dayCombinationFromString(String string) {
+		Set<DayGWT> result = new TreeSet<DayGWT>();
+		if (string.contains("M"))
+			result.add(DayGWT.MONDAY);
+		if (string.contains("Tu")) // A 'T', as long as its not followed by an h
+			result.add(DayGWT.TUESDAY);
+		if (string.contains("W"))
+			result.add(DayGWT.WEDNESDAY);
+		if (string.contains("Th"))
+			result.add(DayGWT.THURSDAY);
+		if (string.contains("F"))
+			result.add(DayGWT.FRIDAY);
+		if (string.contains("Sa"))
+			result.add(DayGWT.SATURDAY);
+		if (string.contains("Su"))
+			result.add(DayGWT.SUNDAY);
+		assert(result.size() > 0);
+		return result;
+	}
+	
 }

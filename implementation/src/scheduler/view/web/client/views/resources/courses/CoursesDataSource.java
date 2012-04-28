@@ -2,18 +2,13 @@ package scheduler.view.web.client.views.resources.courses;
 
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import scheduler.view.web.client.GreetingServiceAsync;
-import scheduler.view.web.client.UnsavedDocumentStrategy;
+import scheduler.view.web.client.views.resources.ResourceCollection;
 import scheduler.view.web.shared.CourseGWT;
 import scheduler.view.web.shared.DayGWT;
-import scheduler.view.web.shared.DocumentGWT;
 
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.smartgwt.client.data.DSRequest;
 import com.smartgwt.client.data.DSResponse;
 import com.smartgwt.client.data.DataSource;
@@ -25,35 +20,17 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
 import com.smartgwt.client.types.DSProtocol;
 
 public class CoursesDataSource extends DataSource {
+	ResourceCollection<CourseGWT> coursesSource;
 	
-	// private static CourseDataSource instance = null;
-	//
-	// public static CourseDataSource getInstance() {
-	// if (instance == null) {
-	// instance = new CourseDataSource("countryDS");
-	// }
-	// return instance;
-	// }
-	
-	final GreetingServiceAsync service;
-	final DocumentGWT document;
-	UnsavedDocumentStrategy unsavedDocumentStrategy;
-	GetAllRecordsStrategy getAllRecordsStrategy;
-	
-	public CoursesDataSource(GreetingServiceAsync service, DocumentGWT document, UnsavedDocumentStrategy unsavedDocumentStrategy, GetAllRecordsStrategy getAllRecordsStrategy) {
-		this.service = service;
-		this.document = document;
-		this.unsavedDocumentStrategy = unsavedDocumentStrategy;
-		this.getAllRecordsStrategy = getAllRecordsStrategy;
+	public CoursesDataSource(ResourceCollection<CourseGWT> coursesSource) {
+		this.coursesSource = coursesSource;
 		
 		setDataProtocol(DSProtocol.CLIENTCUSTOM);
 		
 		this.setAddGlobalId(false);
-//		setID(dataSourceID);
 		
 		DataSourceIntegerField idField = new DataSourceIntegerField("id");
 		idField.setHidden(true);
-//		idField.setRequired(true);
 		idField.setPrimaryKey(true);
 		
 		DataSourceBooleanField schedulableField = new DataSourceBooleanField("isSchedulable");
@@ -85,43 +62,17 @@ public class CoursesDataSource extends DataSource {
 		usedEquipmentField.setMultiple(true);
 		usedEquipmentField.setValueMap("Laptop Connectivity", "Overhead", "Smart Room");
 		
-//		DataSourceEnumField associationsField = new DataSourceEnumField("associations");
-//		associationsField.setValueMap("?");
-//		associationsField.setMultiple(true);
-		
-		DataSourceTextField associationsField = new DataSourceTextField("associations");
-		
 		setFields(idField, schedulableField, departmentField, catalogNumberField, nameField, numSectionsField, wtuField, scuField,
-				dayCombinationsField, hoursPerWeekField, maxEnrollmentField, courseTypeField, usedEquipmentField, associationsField);
+				dayCombinationsField, hoursPerWeekField, maxEnrollmentField, courseTypeField, usedEquipmentField);
 		
 		setClientOnly(true);
 	}
 
-	String dayCombinationToString(Set<DayGWT> dayCombination) {
-		String result = "";
-		if (dayCombination.contains(DayGWT.MONDAY))
-			result += "M";
-		if (dayCombination.contains(DayGWT.TUESDAY))
-			result += "Tu";
-		if (dayCombination.contains(DayGWT.WEDNESDAY))
-			result += "W";
-		if (dayCombination.contains(DayGWT.THURSDAY))
-			result += "Th";
-		if (dayCombination.contains(DayGWT.FRIDAY))
-			result += "F";
-		if (dayCombination.contains(DayGWT.SATURDAY))
-			result += "Sa";
-		if (dayCombination.contains(DayGWT.SUNDAY))
-			result += "Su";
-		assert(result.length() > 0);
-		return result;
-	}
-	
 	Record readCourseIntoRecord(CourseGWT course) {
 		String[] dayCombinationsStrings = new String[course.getDayPatterns().size()];
 		int dayCombinationIndex = 0;
 		for (Set<DayGWT> dayCombination : course.getDayPatterns())
-			dayCombinationsStrings[dayCombinationIndex++] = dayCombinationToString(dayCombination);
+			dayCombinationsStrings[dayCombinationIndex++] = CourseGWT.dayCombinationToString(dayCombination);
 		
 		String[] usedEquipmentsStrings = course.getUsedEquipment().toArray(new String[0]);
 		
@@ -139,41 +90,16 @@ public class CoursesDataSource extends DataSource {
 		record.setAttribute("maxEnrollment", course.getMaxEnroll());
 		record.setAttribute("type", course.getType());
 		record.setAttribute("usedEquipment", usedEquipmentsStrings);
-//		record.setAttribute("associations", "?");
-		if(course.getLectureID() != -1)
-		{
-			record.setAttribute("associations", "LecID: " + course.getLectureID() + " Tethered? " + course.getTetheredToLecture());
-		}
 		return record;
 	}
 
-	Set<DayGWT> dayCombinationFromString(String string) {
-		Set<DayGWT> result = new TreeSet<DayGWT>();
-		if (string.contains("M"))
-			result.add(DayGWT.MONDAY);
-		if (string.contains("Tu")) // A 'T', as long as its not followed by an h
-			result.add(DayGWT.TUESDAY);
-		if (string.contains("W"))
-			result.add(DayGWT.WEDNESDAY);
-		if (string.contains("Th"))
-			result.add(DayGWT.THURSDAY);
-		if (string.contains("F"))
-			result.add(DayGWT.FRIDAY);
-		if (string.contains("Sa"))
-			result.add(DayGWT.SATURDAY);
-		if (string.contains("Su"))
-			result.add(DayGWT.SUNDAY);
-		assert(result.size() > 0);
-		return result;
-	}
-	
 	CourseGWT readRecordIntoCourse(Record record) {
 
 		String dayCombinationsStringsCombined = record.getAttributeAsString("dayCombinations");
 		Collection<Set<DayGWT>> dayCombinations = new LinkedList<Set<DayGWT>>();
 		if (dayCombinationsStringsCombined != null && dayCombinationsStringsCombined.length() > 0) {
 			for (String dayCombinationString : dayCombinationsStringsCombined.split(","))
-				dayCombinations.add(dayCombinationFromString(dayCombinationString));
+				dayCombinations.add(CourseGWT.dayCombinationFromString(dayCombinationString));
 		}
 		
 		
@@ -188,56 +114,6 @@ public class CoursesDataSource extends DataSource {
 		System.out.println("Association: " + associations);
 		int lectureID = -1;
 		boolean isTethered = false;
-		System.out.println("Type before assoc: " + record.getAttributeAsString("type"));
-		if(record.getAttributeAsString("type") != null && record.getAttributeAsString("type").equals("LAB"))
-		{
-			System.out.println("Type is Lab, associating things");
-			if(associations != null && associations.length() > 0)
-			{
-				//TODO: validate this next part
-				String[] split = associations.split(" ");
-				String dept = "";
-				String catalogNum = "";
-				String tethered = "";
-				if(split.length > 0)
-				{
-					dept = split[0];
-					if(split.length > 1)
-					{
-						catalogNum = split[1];
-						if(split.length > 2)
-						{
-							tethered = split[2];
-						}
-					}
-				}
-				System.out.println("DEPT: " + dept);
-				System.out.println("CATALOGNUM: " + catalogNum);
-				System.out.println("TETHERED: " + tethered);
-				Record[] records = getAllRecordsStrategy.getAllRecords();
-				for(Record r : records)
-				{
-					System.out.println("Got a record");
-					if(r.getAttributeAsString("type").equals("LEC"))
-					{
-						System.out.println("Is a lecture");
-						if(r.getAttributeAsString("department").equals(dept))
-						{
-							System.out.println("Department match, cat num: " + r.getAttributeAsString("catalogNumber"));
-							if(r.getAttributeAsString("catalogNumber").equals(catalogNum))
-							{
-								//Match
-								System.out.println("Found a lecture match");
-								lectureID = r.getAttributeAsInt("id");
-							}
-						}
-					}
-				}
-				isTethered = tethered.equals("(tethered)");
-			}
-		}
-		System.out.println("Tethered is " + isTethered);
-		
 		
 		assert(record.getAttribute("type") != null);
 		
@@ -264,55 +140,33 @@ public class CoursesDataSource extends DataSource {
 	
 
 	protected void fetch(final DSRequest dsRequest) {
-		service.getCoursesForDocument(document.getID(), new AsyncCallback<List<CourseGWT>>() {
-			public void onSuccess(List<CourseGWT> result) {
-				Record[] responseRecords = new Record[result.size()];
-				
-				int responseRecordIndex = 0;
-				for (CourseGWT course : result) {
-					System.out.println("Fetch course result id " + course.getID());
-					System.out.println("Fetch record id " + readCourseIntoRecord(course).getAttribute("id"));
-					responseRecords[responseRecordIndex++] = readCourseIntoRecord(course);
-				}
-				
-				DSResponse response = new DSResponse();
-				response.setData(responseRecords);
-				processResponse(dsRequest.getRequestId(), response);
-			}
-			
-			@Override
-			public void onFailure(Throwable caught) {
-				DSResponse dsResponse = new DSResponse();
-				Window.alert("Failed to retrieve courses!");
-				processResponse(dsRequest.getRequestId(), dsResponse);
-			}
-		});
+		Collection<CourseGWT> courses = coursesSource.getAll();
+		
+		Record[] responseRecords = new Record[courses.size()];
+		
+		int responseRecordIndex = 0;
+		for (CourseGWT course : courses) {
+			System.out.println("Fetch course result id " + course.getID());
+			System.out.println("Fetch record id " + readCourseIntoRecord(course).getAttribute("id"));
+			responseRecords[responseRecordIndex++] = readCourseIntoRecord(course);
+		}
+		
+		DSResponse response = new DSResponse();
+		response.setData(responseRecords);
+		processResponse(dsRequest.getRequestId(), response);
 	}
 	
 	protected void add(final DSRequest dsRequest) {
 		Record record = dsRequest.getAttributeAsRecord("data");
 		CourseGWT newCourse = readRecordIntoCourse(record);
 		
-		System.out.println("new course id " + newCourse.getID());
+		coursesSource.add(newCourse);
+		assert(newCourse.getID() != null);
 		
-		service.addCourseToDocument(document.getID(), newCourse, new AsyncCallback<CourseGWT>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				DSResponse dsResponse = new DSResponse();
-				Window.alert("Failed to update course!");
-				processResponse(dsRequest.getRequestId(), dsResponse);
-			}
-			
-			@Override
-			public void onSuccess(CourseGWT result) {
-				unsavedDocumentStrategy.setDocumentChanged(true);
-				DSResponse response = new DSResponse();
-				System.out.println("result record id " + result.getID());
-				response.setData(new Record[] { readCourseIntoRecord(result) });
-				assert(response.getData()[0].getAttributeAsInt("id") != null);
-				processResponse(dsRequest.getRequestId(), response);
-			}
-		});
+		DSResponse response = new DSResponse();
+		response.setData(new Record[] { readCourseIntoRecord(newCourse) });
+		assert(response.getData()[0].getAttributeAsInt("id") != null);
+		processResponse(dsRequest.getRequestId(), response);
 	}
 	
 	protected void update(final DSRequest dsRequest) {
@@ -355,51 +209,28 @@ public class CoursesDataSource extends DataSource {
 		
 		assert(course.getID() != null);
 		
-		System.out.println("updating course id " + course.getID());
+		System.out.println("updating course id " + course.getID() + ": " + course.getDept() + " " + course.getCatalogNum());
 		
-		service.editCourse(course, new AsyncCallback<Void>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				DSResponse dsResponse = new DSResponse();
-				Window.alert("Failed to update course!");
-				processResponse(dsRequest.getRequestId(), dsResponse);
-			}
-			
-			@Override
-			public void onSuccess(Void result) {
-				unsavedDocumentStrategy.setDocumentChanged(true);
-				DSResponse response = new DSResponse();
-				response.setData(new Record[] { readCourseIntoRecord(course) });
-				processResponse(dsRequest.getRequestId(), response);
-			}
-		});
+		coursesSource.edit(course);
+		
+		DSResponse response = new DSResponse();
+		response.setData(new Record[] { readCourseIntoRecord(course) });
+		processResponse(dsRequest.getRequestId(), response);
 	}
 	
 	protected void remove(final DSRequest dsRequest) {
 		final Record record = dsRequest.getAttributeAsRecord("data");
 		final CourseGWT course = readRecordIntoCourse(record);
 
-		service.removeCourse(record.getAttributeAsInt("id"), new AsyncCallback<Void>() {
-			@Override
-			public void onSuccess(Void result) {
-				unsavedDocumentStrategy.setDocumentChanged(true);
-				DSResponse response = new DSResponse();
-				response.setData(new Record[] { readCourseIntoRecord(course) });
-				processResponse(dsRequest.getRequestId(), response);
-			}
-			
-			@Override
-			public void onFailure(Throwable caught) {
-				DSResponse dsResponse = new DSResponse();
-				Window.alert("Failed to delete course!");
-				processResponse(dsRequest.getRequestId(), dsResponse);
-			}
-		});
+		coursesSource.delete(record.getAttributeAsInt("id"));
+		
+		DSResponse response = new DSResponse();
+		response.setData(new Record[] { readCourseIntoRecord(course) });
+		processResponse(dsRequest.getRequestId(), response);
 	}
 	
 	@Override
    protected Object transformRequest(final DSRequest dsRequest) {
-//		FETCH ADD UPDATE REMOVE VALIDATE
 		switch (dsRequest.getOperationType()) {
 			case FETCH: fetch(dsRequest); break;
 			case ADD: add(dsRequest); break;
@@ -409,44 +240,4 @@ public class CoursesDataSource extends DataSource {
 		
       return dsRequest;
   }
-//		
-//		setID(id);
-//		setRecordXPath("/List/country");
-//		DataSourceIntegerField pkField = new DataSourceIntegerField("pk");
-//		pkField.setHidden(true);
-//		pkField.setPrimaryKey(true);
-//		
-//		DataSourceTextField countryCodeField = new DataSourceTextField("countryCode", "Code");
-//		countryCodeField.setRequired(true);
-//		
-//		DataSourceTextField countryNameField = new DataSourceTextField("countryName", "Country");
-//		countryNameField.setRequired(true);
-//		
-//		DataSourceTextField capitalField = new DataSourceTextField("capital", "Capital");
-//		DataSourceTextField governmentField = new DataSourceTextField("government", "Government", 500);
-//		
-//		DataSourceBooleanField memberG8Field = new DataSourceBooleanField("member_g8", "G8");
-//		
-//		DataSourceTextField continentField = new DataSourceTextField("continent", "Continent");
-//		continentField.setValueMap("Europe", "Asia", "North America", "Australia/Oceania", "South America", "Africa");
-//		
-//		DataSourceDateField independenceField = new DataSourceDateField("independence", "Nationhood");
-//		DataSourceFloatField areaField = new DataSourceFloatField("area", "Area (km)");
-//		DataSourceIntegerField populationField = new DataSourceIntegerField("population", "Population");
-//		DataSourceFloatField gdpField = new DataSourceFloatField("gdp", "GDP ($M)");
-//		DataSourceLinkField articleField = new DataSourceLinkField("article", "Info");
-//		
-//		setFields(pkField, countryCodeField, countryNameField, capitalField, governmentField,
-//				memberG8Field, continentField, independenceField, areaField, populationField,
-//				gdpField, articleField);
-		
-//		setDataURL("ds/test_data/country.data.xml");
-//		setClientOnly(true);
-	
-	
-	
-	public interface GetAllRecordsStrategy
-	{
-		public Record[] getAllRecords();
-	}
 }

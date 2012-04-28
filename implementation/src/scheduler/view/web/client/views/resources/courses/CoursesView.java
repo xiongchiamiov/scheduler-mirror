@@ -1,8 +1,7 @@
 package scheduler.view.web.client.views.resources.courses;
 
-import scheduler.view.web.client.GreetingServiceAsync;
-import scheduler.view.web.client.UnsavedDocumentStrategy;
-import scheduler.view.web.shared.DocumentGWT;
+import scheduler.view.web.client.views.LoadingPopup;
+import scheduler.view.web.client.views.resources.ResourceCache.Observer;
 
 import com.google.gwt.user.client.Window;
 import com.smartgwt.client.data.Record;
@@ -11,6 +10,7 @@ import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.types.ListGridEditEvent;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.RowEndEditAction;
+import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -25,14 +25,13 @@ import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 public class CoursesView extends VLayout {
-	private GreetingServiceAsync service;
-	private final DocumentGWT document;
-
-	public CoursesView(GreetingServiceAsync service, DocumentGWT document,
-			UnsavedDocumentStrategy unsavedDocumentStrategy) {
-
-		this.service = service;
-		this.document = document;
+	LoadingPopup populateLoadingPopup;
+	
+	DocumentCoursesCache coursesCache;
+	
+	public CoursesView(final DocumentCoursesCache coursesCache) {
+		this.coursesCache = coursesCache;
+		
 		// this.addStyleName("iViewPadding");
 		// DOM.setElementAttribute(this.getElement(), "id", "s_courseviewTab");
 		this.setID("s_courseviewTab");
@@ -41,8 +40,69 @@ public class CoursesView extends VLayout {
 
 		// this.add(new HTML("<h2>Courses</h2>"));
 
+		populateLoadingPopup = new LoadingPopup();
+		populateLoadingPopup.show();
+		
+		if (coursesCache.isPopulated()) {
+			onPopulate();
+		}
+		else {
+			coursesCache.addObserver(new Observer() {
+				public void onModify() { }
+				@Override
+				public void onPopulate() {
+					CoursesView.this.onPopulate();
+					coursesCache.removeObserver(this);
+				}
+			});
+		}
+	}
+	
+	private void onPopulate() {
+		populateLoadingPopup.hide();
+		
+		final LectureOptionsDataSource lectureOptionsDataSource = new LectureOptionsDataSource(coursesCache);
+
 		// gridPanel.setHorizontalAlignment(ALIGN_CENTER);
 		final ListGrid grid = new ListGrid() {
+			protected Canvas createRecordComponent(final ListGridRecord record, Integer colNum) {
+//				String fieldName = this.getFieldName(colNum);
+//				if (fieldName.equals("associations")) {
+//					DynamicForm form = new DynamicForm();
+//					
+//					SelectItem select = new SelectItem();
+//					select.setWidth(100);
+//					select.setShowTitle(false);
+//					select.setMultiple(false);
+//					select.setValue("course1");
+//					select.setValueMap("course1", "course2");
+//					select.setEndRow(false);
+//					select.setOptionDataSource(lectureOptionsDataSource);
+//					
+//					select.addChangedHandler(new ChangedHandler() {
+//						public void onChanged(ChangedEvent event) {
+//							
+//						}
+//					});
+//					
+//					final CheckboxItem checkbox = new CheckboxItem();
+//					checkbox.setShowTitle(false);
+//					checkbox.setStartRow(false);
+//					checkbox.setShowLabel(false);
+//					checkbox.addChangedHandler(new ChangedHandler() {
+//						public void onChanged(ChangedEvent event) {
+//							record.setAttribute("tethered", checkbox.getValueAsBoolean());
+//						}
+//					});
+//					
+//					form.setFields(select, checkbox);
+//					
+//					return form;
+//				}
+				
+				return null;
+			}
+			
 			protected String getCellCSSText(ListGridRecord record, int rowNum,
 					int colNum) {
 				if (getFieldName(colNum).equals("id")) {
@@ -52,6 +112,7 @@ public class CoursesView extends VLayout {
 				}
 			}
 		};
+		
 		grid.setWidth100();
 		grid.setAutoFitData(Autofit.VERTICAL);
 
@@ -62,14 +123,7 @@ public class CoursesView extends VLayout {
 		grid.setEditByCell(true);
 		grid.setListEndEditAction(RowEndEditAction.NEXT);
 		// grid.setCellHeight(22);
-		grid.setDataSource(new CoursesDataSource(service, document,
-				unsavedDocumentStrategy,
-				new CoursesDataSource.GetAllRecordsStrategy() {
-					@Override
-					public Record[] getAllRecords() {
-						return grid.getRecords();
-					}
-				}));
+		grid.setDataSource(new CoursesDataSource(coursesCache));
 
 		grid.addKeyPressHandler(new KeyPressHandler() {
 			public void onKeyPress(KeyPressEvent event) {
@@ -184,7 +238,7 @@ public class CoursesView extends VLayout {
 
 		// grid.getElement().setId("s_gridCoursesTbl");
 		// this.setHorizontalAlignment(ALIGN_CENTER);
-		this.addMember(grid);
+		addMember(grid);
 		// this.setHorizontalAlignment(ALIGN_LEFT);
 		layoutBottomButtonBar(grid);
 	}
