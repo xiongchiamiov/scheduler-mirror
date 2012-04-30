@@ -75,8 +75,6 @@ public class CSVExporter {
 	 * @return A string with the location's index
 	 */
 	private String compileLocation(Location location) throws DatabaseException {
-		// location.verify(); //TODO Re-enable. Location.verify uses deprecated
-		// item ADA and room TBA has uninitialized data
 
 		int index = locations.indexOf(location);
 		if (index < 0) {
@@ -85,7 +83,7 @@ public class CSVExporter {
 					location.getRoom(), location.getMaxOccupancy(),
 					location.getType(),
 					join(location.getProvidedEquipment(), " & ") });
-			 locationRowIndexByID.put(location.getID(), index);
+			locationRowIndexByID.put(location.getID(), index);
 
 		}
 
@@ -107,19 +105,12 @@ public class CSVExporter {
 		if (index < 0) {
 			index = instructors.size();
 
-			// Separates STAFF due to STAFF having uninitialized variables.
-			// Uninitialized variables are commented out. This can potentially
-			// can cause issues for CSVimporter
-			// Fairness is commented out in both due to it currently not being
-			// used.
-
 			instructors.add(new String[] { "instructor#" + index,
 					instructor.getFirstName(), instructor.getLastName(),
 					instructor.getUsername(), instructor.getMaxWTU(),
 					compileCoursePrefs(instructor.getCoursePreferences()),
 					compileTimePrefs(instructor.getTimePreferences()) });
 			instructorRowIndexByID.put(instructor.getID(), index);
-			// instructorRowIndexByID.put(instructor.hashCode(), index);
 
 		}
 		return "instructor#" + index;
@@ -246,14 +237,15 @@ public class CSVExporter {
 			scheduleItems.add(new String[] {
 					"item#" + index,
 					"instructor#"
-					 +
-					 instructorRowIndexByID.get(item.getInstructor().getID()),
-					
+							+ instructorRowIndexByID.get(item.getInstructor()
+									.getID()),
+
 					"course#"
-					 + courseRowIndexByID.get(item.getCourse().getID()),			
+							+ courseRowIndexByID.get(item.getCourse().getID()),
 
 					"location#"
-					 + locationRowIndexByID.get(item.getLocation().getID()),
+							+ locationRowIndexByID.get(item.getLocation()
+									.getID()),
 
 					Integer.toString(item.getSection()),
 					Boolean.toString(item.isPlaced()),
@@ -321,14 +313,14 @@ public class CSVExporter {
 			}
 
 			String association;
-			if (course.getLecture() == null) {
-				association = "Course# -1";
-			} else {
-				association = compileCourse(
-						findCourseByID(course.getLecture().getID(), others),
-						others);// for associations
+			// if (course.getLecture() == null) {
+			association = "Course# -1";
+			// } else {
+			// association = compileAssociatedCourse(
+			// findCourseByID(course.getLecture().getID(), others),
+			// others);// for associations
 
-			}
+			// }
 
 			index = courses.size();
 			courses.add(new String[] { "course#" + index,
@@ -345,6 +337,76 @@ public class CSVExporter {
 		}
 
 		return "course#" + index;
+	}
+
+	/**
+	 * Compile associated Courses. Finds associated courses and modifies the proper value in courses if there is an associated course  
+	 */
+	private void compileAssociatedCourse(Course course,
+			Collection<Course> others) throws DatabaseException {
+
+		// Goes through each course again, finds ones that have assocatiated
+		// values
+		// Finds main course and associated course in courses
+
+	
+		if (course.getLecture() != null) {
+			int lecIndex = 0;
+			
+			String dayPatterns = "";
+			for (Set<Day> pattern : course.getDayPatterns()) {
+				if (!dayPatterns.equals(""))
+					dayPatterns += " ";
+				dayPatterns += compileDayPattern(pattern);
+			}
+			
+			//Find main course in courses
+			for (String[] c : courses) {
+				if(c[1] == course.getType() &&
+						c[2].equals(course.getName()) &&
+						c[3].equals(course.getCatalogNumber()) &&
+						c[4].equals(course.getDepartment()) &&
+						c[5].equals(course.getWTU()) &&
+						c[6].equals(course.getSCU()) &&
+						c[7].equals(course.getNumSections()) &&
+						c[8].equals(course.getNumHalfHoursPerWeek()) &&
+						c[9].equals(dayPatterns) &&
+						c[10].equals(course.getMaxEnrollment())
+						){
+					lecIndex = courses.indexOf(c);
+					break;
+				}
+			}
+			Course associatedCourse = findCourseByID(course.getLecture()
+					.getID(), others);
+			
+			dayPatterns = "";
+			for (Set<Day> pattern : associatedCourse.getDayPatterns()) {
+				if (!dayPatterns.equals(""))
+					dayPatterns += " ";
+				dayPatterns += compileDayPattern(pattern);
+			}
+			
+			for (String[] c : courses) {
+				if(c[1] == associatedCourse.getType() &&
+						c[2].equals(associatedCourse.getName()) &&
+						c[3].equals(associatedCourse.getCatalogNumber()) &&
+						c[4].equals(associatedCourse.getDepartment()) &&
+						c[5].equals(associatedCourse.getWTU()) &&
+						c[6].equals(associatedCourse.getSCU()) &&
+						c[7].equals(associatedCourse.getNumSections()) &&
+						c[8].equals(associatedCourse.getNumHalfHoursPerWeek()) &&
+						c[9].equals(dayPatterns) &&
+						c[10].equals(associatedCourse.getMaxEnrollment())
+						){
+					courses.get(lecIndex)[11] = c[0];
+					break;
+				}
+			}
+		
+		
+		}
+
 	}
 
 	/**
@@ -367,6 +429,10 @@ public class CSVExporter {
 				.findCoursesForDocument(document);
 		for (Course course : coursesInDocument) {
 			compileCourse(course, coursesInDocument);
+		}
+
+		for (Course course : coursesInDocument) {
+			compileAssociatedCourse(course, coursesInDocument);
 		}
 
 		for (Instructor instructor : model.findInstructorsForDocument(document))
@@ -411,17 +477,17 @@ public class CSVExporter {
 
 		writer.endRecord();
 		writer.writeComment(CSVStructure.INSTRUCTORS_COURSE_PREFS_MARKER);
-		
+
 		for (int i = 0; i < instructorsCoursePrefs.size(); i++) {
 			writer.write("coursePrefs#" + i);
 			writer.endRecord();
 			writer.writeComment(CSVStructure.INSTRUCTOR_COURSE_PREFS_MARKER);
-			
-		//	for (String[][] prefs : instructorsCoursePrefs)
-				String[][] prefs = instructorsCoursePrefs.get(i);
-				for (String[] rec : prefs)
-					writer.writeRecord(rec);
-			
+
+			// for (String[][] prefs : instructorsCoursePrefs)
+			String[][] prefs = instructorsCoursePrefs.get(i);
+			for (String[] rec : prefs)
+				writer.writeRecord(rec);
+
 			writer.writeComment(CSVStructure.INSTRUCTOR_COURSE_PREFS_END_MARKER);
 		}
 		writer.writeComment(CSVStructure.INSTRUCTORS_COURSE_PREFS_END_MARKER);
@@ -460,5 +526,4 @@ public class CSVExporter {
 		return stringWriter.toString();
 	}
 
-	
 }
