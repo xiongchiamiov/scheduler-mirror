@@ -474,9 +474,15 @@ public class Model {
 		assert(doc.getTBALocation() != null);
 		assert(doc.getTBALocation().getID() != null);
 		Collection<Location> result = new LinkedList<Location>();
-		for (IDBLocation underlying : database.findLocationsForDocument(doc.underlyingDocument))
+		for (IDBLocation underlying : database.findLocationsForDocument(doc.underlyingDocument)) {
+			assert underlying != null : "under null";
+			assert underlying.getID() != null : " under id null";
+			assert doc != null : "doc null";
+			assert doc.getTBALocation() != null : "tba null";
+			assert doc.getTBALocation().getID() != null : "doc tba id null";
 			if (!underlying.getID().equals(doc.getTBALocation().getID()))
 				result.add(locationCache.decorateAndPutIfNotPresent(underlying));
+		}
 		return result;
 	}
 

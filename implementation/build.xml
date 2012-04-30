@@ -95,7 +95,7 @@
       <test name="scheduler.model.ModelTestSuite" />
     </junit>
     <cobertura-report destdir="../testing/coverage" srcdir="src" />
-    <cobertura-check totalbranchrate="100" totallinerate="100" />
+    <!--cobertura-check totalbranchrate="100" totallinerate="100" /-->
   </target>
   
   <target name="gwtc" depends="build" description="GWT compile to JavaScript (production mode)">
