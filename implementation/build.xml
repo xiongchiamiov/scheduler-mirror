@@ -13,6 +13,7 @@
   <target name="init">
     <mkdir dir="war/WEB-INF/classes"/>
     <mkdir dir="test-classes"/>
+    <mkdir dir="instrumented-classes"/>
     <copy includeemptydirs="false" todir="war/WEB-INF/classes">
       <fileset dir="src">
       <exclude name="**/*.java"/>
@@ -29,6 +30,8 @@
     <delete dir="war/gwtview"/>
     <delete dir="war/WEB-INF/classes"/>
     <delete dir="test-classes"/>
+    <delete dir="instrumented-classes"/>
+    <delete file="cobertura.ser"/>
   </target>
   
   <target depends="clean" name="cleanall"/>
@@ -70,6 +73,7 @@
   </path>
   
   <path id="test.class.path">
+    <pathelement location="instrumented-classes"/>
     <path refid="project.class.path"/>
     <pathelement location="test-classes"/>
     <!-- Add any additional non-server libs (such as JUnit) -->
@@ -77,7 +81,12 @@
   </path>
   
   <target name="test">
+    <taskdef classpathref="test.class.path" resource="tasks.properties" />
+    <cobertura-instrument todir="instrumented-classes">
+      <fileset dir="war/WEB-INF/classes/scheduler/model" includes="**/*.class" />
+    </cobertura-instrument>
     <junit fork="yes" haltonfailure="yes">
+      <sysproperty key="net.sourceforge.cobertura.datafile" file="${basedir}/cobertura.ser" />
       <formatter type="plain" usefile="false" />
       <classpath refid="test.class.path" />
       <!--<batchtest>-->
@@ -85,6 +94,8 @@
       <!--</batchtest>-->
       <test name="scheduler.model.ModelTestSuite" />
     </junit>
+    <cobertura-report destdir="../testing/coverage" srcdir="src" />
+    <cobertura-check totalbranchrate="100" totallinerate="100" />
   </target>
   
   <target name="gwtc" depends="build" description="GWT compile to JavaScript (production mode)">
