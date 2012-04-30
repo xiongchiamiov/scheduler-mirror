@@ -5,6 +5,7 @@ package scheduler.view.web.client;
 import java.util.Collection;
 import java.util.List;
 
+//import scheduler.model.algorithm.BadInstructorDataException;
 import scheduler.view.web.shared.CouldNotBeScheduledExceptionGWT;
 import scheduler.view.web.shared.CourseGWT;
 import scheduler.view.web.shared.DocumentGWT;

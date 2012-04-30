@@ -69,12 +69,18 @@ public class InstructorDecorator {
 		return ((this.WTU.intValue() + course.getWTUInt()) <= this.instructor.getMaxWTUInt());
 	}
 	
-	public boolean preferenceForCourse(Course course) throws DatabaseException {
-		return (this.instructor.getCoursePreferences().get(course.getID()) > 0);
+	public boolean preferenceForCourse(Course course) throws DatabaseException, BadInstructorDataException {
+		if(this.instructor.getCoursePreferences().get(course.getID()) == null)
+				throw new BadInstructorDataException(BadInstructorDataException.ConflictType.NULL_C_PREFS, 
+				instructor, "null", "instructor course preferences");
+		else return (this.instructor.getCoursePreferences().get(course.getID()) > 0);
 	}
 	
-	public int actualCoursePreferenceAsInt(Course course) throws DatabaseException {
-		return new Integer((this.instructor.getCoursePreferences().get(course.getID())));
+	public int actualCoursePreferenceAsInt(Course course) throws DatabaseException, BadInstructorDataException {
+		if(this.instructor.getCoursePreferences().get(course.getID()) == null)
+			throw new BadInstructorDataException(BadInstructorDataException.ConflictType.NULL_C_PREFS, 
+			instructor, "null", "instructor course preferences");
+		else return new Integer((this.instructor.getCoursePreferences().get(course.getID())));
 	}
 	
 	public int getTimePreferenceFor(Day d, int time) throws DatabaseException {

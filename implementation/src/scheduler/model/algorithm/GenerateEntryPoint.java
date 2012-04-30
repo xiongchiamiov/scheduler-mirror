@@ -18,7 +18,7 @@ public class GenerateEntryPoint {
 	
 	public static Vector<ScheduleItem> generate(Model model, Schedule schedule, Collection<ScheduleItem> s_items, 
 			Collection<Course> c_list, Collection<Instructor> i_coll,
-			Collection<Location> l_coll) throws DatabaseException {
+			Collection<Location> l_coll) throws DatabaseException, BadInstructorDataException {
 		
 		if(model == null || schedule == null) 
 			throw new NullPointerException();
@@ -45,7 +45,7 @@ public class GenerateEntryPoint {
 				e.printStackTrace();
 			}
 	    }
-		
+
 		return Generate.generate(model, schedule, s_items, c_list, insD, locD);
 	}
 	
@@ -68,13 +68,14 @@ public class GenerateEntryPoint {
 			throw new BadInstructorDataException(BadInstructorDataException.ConflictType.NULL_C_PREFS,
 					ins, "null", "instructor course prefs");
 		if(ins.getTimePreferences() == null)
-			throw new BadInstructorDataException(BadInstructorDataException.ConflictType.NULL_C_PREFS,
-					ins, "null", "instructor course prefs");
-		//int[][] prefs = ins.getTimePreferences();
+			throw new BadInstructorDataException(BadInstructorDataException.ConflictType.NULL_I_PREFS,
+					ins, "null", "instructor time prefs");
 	}
 	
-	private static void checkInsCoursePrefs(Instructor ins) {
-
+	private static void checkInsCoursePrefs(Instructor ins) throws DatabaseException, BadInstructorDataException {
+		if(ins.getCoursePreferences() == null)
+			throw new BadInstructorDataException(BadInstructorDataException.ConflictType.NULL_C_PREFS, 
+					ins, "null", "instructor course preferences");		
 	}
 	
 	private static void checkValid(Location loc) throws BadLocationDataException{

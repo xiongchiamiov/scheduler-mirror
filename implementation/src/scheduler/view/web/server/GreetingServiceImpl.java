@@ -23,6 +23,7 @@ import scheduler.model.Location;
 import scheduler.model.Model;
 import scheduler.model.Schedule;
 import scheduler.model.ScheduleItem;
+import scheduler.model.algorithm.BadInstructorDataException;
 import scheduler.model.algorithm.GenerateEntryPoint;
 import scheduler.model.db.DatabaseException;
 import scheduler.view.web.client.GreetingService;
@@ -746,6 +747,10 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		catch (DatabaseException e) {
 			throw new RuntimeException(e);
 		}
+		catch (BadInstructorDataException e) {
+			throw new RuntimeException(e);
+		}
+		
 	}
 	
 	@Override

@@ -39,7 +39,7 @@ public class Generate {
 
 	public static Vector<ScheduleItem> generate(Model model, Schedule schedule, 
 			Collection<ScheduleItem> s_items, Collection<Course> c_list, Vector<InstructorDecorator> i_vec,
-			Vector<LocationDecorator> l_vec) throws DatabaseException {
+			Vector<LocationDecorator> l_vec) throws DatabaseException, BadInstructorDataException {
 		
 		Vector<ScheduleItemDecorator> items = new Vector<ScheduleItemDecorator>();
 		for (ScheduleItem si : s_items)
@@ -186,12 +186,13 @@ public class Generate {
 	    * 
 	    * @return A ScheduleItem which is safe to add to the schedule
 	    * @throws DatabaseException 
+	 * @throws BadInstructorDataException 
 	    * @see Tba#getTba()
 	    * @see Staff#getStaff()
 	    */
 	   private static ScheduleItemDecorator genLecItem (Model model, Schedule schedule, Course lec, 
 			   TimeRange lec_bounds, Vector<InstructorDecorator> id_vec, Vector<LocationDecorator> ld_vec)
-					   throws DatabaseException
+					   throws DatabaseException, BadInstructorDataException
 	   {
 	      ScheduleItem lec_si = model.createTransientScheduleItem(0, lec.getDayPatterns().iterator().next(),
 	    		  lec_bounds.getS(), lec_bounds.getE(), false, false);
@@ -210,12 +211,13 @@ public class Generate {
 	    * @param si ScheduleItem to add
 	    * 
 	    * @return true if the item was added. False otherwise.
+	 * @throws BadInstructorDataException 
 	 * @throws NotFoundException 
 	    */
 	   private static boolean add (Model model, Schedule schedule, ScheduleItemDecorator si, 
 			   Vector<ScheduleItemDecorator> items, HashMap<Integer, SectionTracker> sections, 
 			   Vector<InstructorDecorator> id_vec, Vector<LocationDecorator> ld_vec) 
-					   throws CouldNotBeScheduledException, DatabaseException
+					   throws CouldNotBeScheduledException, DatabaseException, BadInstructorDataException
 	   {
 	      boolean r;
 
@@ -261,12 +263,13 @@ public class Generate {
 	    * 
 	    * @return A ScheduleItem for 'lab' which is safe to add to the schedule
 	 * @throws DatabaseException 
+	 * @throws BadInstructorDataException 
 	 * @see Tba#getTba()
 	    * @see Staff#getStaff()
 	    */
 	   private static ScheduleItemDecorator genLabItem (Model model, Schedule schedule, Course lab, 
 			   ScheduleItemDecorator lec_si, TimeRange lab_bounds, Vector<InstructorDecorator> id_vec, Vector<LocationDecorator> ld_vec) 
-					   throws DatabaseException
+					   throws DatabaseException, BadInstructorDataException
 	   {
 		  ScheduleItem lab_si = model.createTransientScheduleItem(0, lab.getDayPatterns().iterator().next(), lab_bounds.getS(),
 				  lab_bounds.getE(), false, false);
@@ -306,7 +309,7 @@ public class Generate {
 		   return new InstructorDecorator(doc.getStaffInstructor());
 	   }
 	   
- 	   private static InstructorDecorator findInstructor (Course c, Vector<InstructorDecorator> id_vec) throws DatabaseException
+ 	   private static InstructorDecorator findInstructor (Course c, Vector<InstructorDecorator> id_vec) throws DatabaseException, BadInstructorDataException
 	   {
 	      return findInstructor(c, null, id_vec);
 	   }
@@ -320,9 +323,10 @@ public class Generate {
 	    * 
 	    * @return An intsructor to teach 'c'. This can be STAFF if no instructor
 	    *         if capable of teaching
+	 * @throws BadInstructorDataException 
 	    */
 	   private static InstructorDecorator findInstructor (Course c, List<Integer> doNotPickInstructorIDs, 
-			   Vector<InstructorDecorator> id_vec) throws DatabaseException
+			   Vector<InstructorDecorator> id_vec) throws DatabaseException, BadInstructorDataException
 	   {
 	      InstructorDecorator r = getStaff(c.getDocument());
 	      if(doNotPickInstructorIDs != null) {
@@ -365,8 +369,9 @@ public class Generate {
 	    * 
 	    * @param course the course for which to get the preference.
 	    * @return the course preference for the given course.
+	 * @throws BadInstructorDataException 
 	    */
-	   public static int getPreference (InstructorDecorator instructor, Course course) throws DatabaseException
+	   public static int getPreference (InstructorDecorator instructor, Course course) throws DatabaseException, BadInstructorDataException
 	   {
 	      int desire = InstructorDecorator.getDefaultPref();
 
@@ -380,8 +385,9 @@ public class Generate {
 	   /**
 	    * Checks to see if an instructor can teach the given course. Checks
 	    * available WTUs and if their teaching preference is not 0.
+	 * @throws BadInstructorDataException 
 	    */
-		public static boolean canTeach (InstructorDecorator instructor, Course course) throws DatabaseException
+		public static boolean canTeach (InstructorDecorator instructor, Course course) throws DatabaseException, BadInstructorDataException
 		{
 		  if(instructor.isStaffInstructor())
 			  return true;
@@ -443,6 +449,7 @@ public class Generate {
 	    * 
 	    * @return A ScheduleItem which this instructor wants to teach at least as
 	    *         much as every other ScheduleItem that might be produced
+	 * @throws BadInstructorDataException 
 	 * @throws NotFoundException 
 	    * 
 	    * @see SiMap#put(ScheduleItem)
@@ -452,7 +459,7 @@ public class Generate {
 	    * @see #findTimes(ScheduleItem, TimeRange)
 	    */
 	   private static ScheduleItemDecorator genBestTime (Model model, Schedule schedule, ScheduleItem base, TimeRange tr, 
-			   Vector<InstructorDecorator> id_vec, Vector<LocationDecorator> ld_vec) throws DatabaseException
+			   Vector<InstructorDecorator> id_vec, Vector<LocationDecorator> ld_vec) throws DatabaseException, BadInstructorDataException
 	   {
 	      Vector<ScheduleItemDecorator> si_list = new Vector<ScheduleItemDecorator>();
 
@@ -536,12 +543,13 @@ public class Generate {
 	    *         encountered, the instructor cannot teach during the given times, 
 	    *         the instructor cannot teach the course, or if no more sections of
 	    *         the given course can be taught 
+	 * @throws BadInstructorDataException 
 	 * @throws NotFoundException 
 	    * 
 	    * @see Instructor#canTeach(Course)
 	    */   
 	   private static boolean verify (Model model, ScheduleItemDecorator si,
-			   InstructorDecorator ins, LocationDecorator loc) throws CouldNotBeScheduledException, DatabaseException
+			   InstructorDecorator ins, LocationDecorator loc) throws CouldNotBeScheduledException, DatabaseException, BadInstructorDataException
 	   {
 	      Week days = new Week(si.getItem().getDays());
 	      Course c = model.findCourseByID(si.getItem().getCourse().getID());
@@ -927,101 +935,6 @@ public class Generate {
 		   assert(false);
 		   return 0;
 	   }
-	   
-	   //TODO - Move functionality needs to be addressed.  Currently should not work.
-	   public static ScheduleItemDecorator move (Model model, Schedule schedule, Vector<ScheduleItemDecorator> s_items,
-			   ScheduleItemDecorator si, Week days, int s, Vector<InstructorDecorator> id_vec, Vector<LocationDecorator> ld_vec) 
-			      throws CouldNotBeScheduledException, DatabaseException
-			   {
-			      ScheduleItemDecorator fresh_si = new ScheduleItemDecorator(si.getItem().createTransientCopy());
-			      if (remove(model, id_vec, ld_vec, s_items, si))
-			      {
-			         Course c = model.findCourseByID(si.getItem().getCourse().getID());
-			         
-			         TimeRange tr = new TimeRange(s, splitLengthOverDays(c, days.size()));
-			      
-			         fresh_si.setDays(days.getDays());
-			         fresh_si.setStartHalfHour(tr.getS());
-			         fresh_si.setEndHalfHour(tr.getE());
-			      
-			         add(model, schedule, fresh_si, s_items, null, id_vec, ld_vec);
-			         
-			         /*
-			          * If the lab for the SI was teathered, we need to move it to just 
-			          * after the fresh_si
-			          */
-			         //assert(false);
-			         /*
-			          *  
-			         Lab lab = c.getLab();
-			         if (lab != null && lab.isTethered())
-			         {
-			            Time lab_s = tr.getE();
-			            for (ScheduleItem lab_si: si.getLabs())
-			            {
-			               move(lab_si, days, lab_s);
-			            }
-			         }*/
-			      }
-			      return fresh_si;
-			   }   
-
-	/**
-	 * Removes a given ScheduleItem from the schedule. Updates instructor and
-	 * location availability to show this new free time. The course's number of
-	 * sections taught are decremented. If this makes the course again eligible
-	 * to be taught, it will be added back to our cSourceList.
-	 * 
-	 * @param si ScheduleItem to remove
-	 * 
-	 * @return if the specified item was removed or not. It will not be removed
-	 *         if it does not exist in our list of items
-	 * @throws NotFoundException 
-	 */
-	 public static boolean remove (Model model, Vector<InstructorDecorator> id_vec, Vector<LocationDecorator> ld_vec, 
-			   Vector<ScheduleItemDecorator> s_items, ScheduleItemDecorator si) 
-					   throws DatabaseException
-	   {
-		   
-		   Vector<ScheduleItemDecorator> items = s_items;
-		    
-		   HashMap<Integer, SectionTracker> sections = new HashMap<Integer, SectionTracker>();
-	      
-		   boolean r = false;
-	      if (items.contains(si))
-	      {
-	         r = true;
-	         
-	         Course c = model.findCourseByID(si.getItem().getCourse().getID());
-	         Week days = new Week(si.getItem().getDays());
-	         TimeRange tr = new TimeRange(si.getItem().getStartHalfHour(), si.getItem().getEndHalfHour());
-
-	         InstructorDecorator id = getInstructorDecorator(id_vec, model, si.getItem());
-	         LocationDecorator ld = getLocationDecorator(ld_vec, model, si.getItem());
-	         
-	         s_items.remove(si);
-	         unbook(days, tr, id);
-	         unbook(days, tr, ld);
-
-	         id.subtractWTU(si.getItem().getCourse().getWTUInt());
-
-	         SectionTracker st = getSectionTracker(c, sections);
-	         st.removeSection(si.getItem().getSection());
-	         
-	         /*
-	          * Remove the labs only if they're teathered to the course
-	          */
-	         if (!si.getItem().getLabs().isEmpty())
-	         {
-	            if (c.isTetheredToLecture())
-	            {
-	            	assert(false); // not sure what to give in for the 4th arg
-	               removeItem(model, id, ld, items, null, id_vec, ld_vec);
-	            }
-	         }
-	      }
-	      return r;
-	   }
 
 	   /**
 	    * Sets the instructor as busy for a given set of days over a given
@@ -1064,16 +977,6 @@ public class Generate {
 	   public static boolean unbook(Week days, TimeRange tr, LocationDecorator ld)
 	   {
 		   return ld.getAvailability().unbook(days, tr);
-	   }
-	   
-	   private static void removeItem (Model model, InstructorDecorator ins, LocationDecorator loc, 
-			   Vector<ScheduleItemDecorator> s_items, List<ScheduleItemDecorator> toRemove, Vector<InstructorDecorator> id_vec,
-			   Vector<LocationDecorator> ld_vec) throws DatabaseException
-	   {
-	      for (ScheduleItemDecorator si: toRemove)
-	      {
-	         remove(model, id_vec, ld_vec, s_items, si);
-	      }
 	   }
 	   
 	   private static InstructorDecorator getInstructorDecorator(Vector<InstructorDecorator> id_vec, Model model, ScheduleItem base)
