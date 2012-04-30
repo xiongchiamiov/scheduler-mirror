@@ -3,7 +3,7 @@ package scheduler.model;
 import scheduler.model.db.DatabaseException;
 import scheduler.model.db.IDBUser;
 
-public class User extends Identified {
+public class User extends ModelObject {
 	private final Model model;
 	
 	final IDBUser underlyingUser;
@@ -19,11 +19,13 @@ public class User extends Identified {
 	// PERSISTENCE FUNCTIONS
 
 	public User insert() throws DatabaseException {
+		preInsertOrUpdateSanityCheck();
 		model.userCache.insert(this);
 		return this;
 	}
 
 	public void update() throws DatabaseException {
+		preInsertOrUpdateSanityCheck();
 		model.userCache.update(this);
 	}
 	
@@ -41,4 +43,9 @@ public class User extends Identified {
 	public void setAdmin(boolean isAdmin) { underlyingUser.setAdmin(isAdmin); }
 
 	public Integer getID() { return underlyingUser.getID(); }
+
+	@Override
+	public void preInsertOrUpdateSanityCheck() {
+		assert getUsername() != null;
+	}
 }

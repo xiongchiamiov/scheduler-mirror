@@ -9,7 +9,7 @@ import scheduler.model.db.IDBLocation;
 import scheduler.model.db.IDBProvidedEquipment;
 import scheduler.model.db.IDatabase.NotFoundException;
 
-public class Location extends Identified {
+public class Location extends ModelObject {
 	private final Model model;
 	
 	IDBLocation underlyingLocation;
@@ -31,6 +31,7 @@ public class Location extends Identified {
 	// PERSISTENCE FUNCTIONS
 
 	public Location insert() throws DatabaseException {
+		preInsertOrUpdateSanityCheck();
 		model.locationCache.insert(this);
 		putProvidedEquipmentIntoDB();
 		return this;
@@ -38,6 +39,7 @@ public class Location extends Identified {
 
 	public void update() throws DatabaseException {
 		removeProvidedEquipmentFromDB(underlyingLocation);
+		preInsertOrUpdateSanityCheck();
 		model.database.updateLocation(underlyingLocation);
 		putProvidedEquipmentIntoDB();
 	}
@@ -132,6 +134,19 @@ public class Location extends Identified {
 			return false;
 		Location loc = (Location)other;
 		return this.underlyingLocation.equals(loc.underlyingLocation);
+	}
+
+	@Override
+	public void preInsertOrUpdateSanityCheck() {
+		assert getRoom() != null : "room null";
+		assert getType() != null : "type null";
+		assert getMaxOccupancy() != null : "maxocc null";
+		
+		if (documentLoaded)
+			assert document != null : "doc null";
+		
+		if (providedEquipmentLoaded)
+			assert providedEquipmentDescriptions != null : "provided equipment descs null";
 	}
 	
 }

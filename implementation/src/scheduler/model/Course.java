@@ -14,7 +14,7 @@ import scheduler.model.db.IDBOfferedDayPattern;
 import scheduler.model.db.IDBUsedEquipment;
 import scheduler.model.db.IDatabase.NotFoundException;
 
-public class Course extends Identified {
+public class Course extends ModelObject {
 	private final Model mModel;
 	
 	IDBCourse underlyingCourse;
@@ -47,12 +47,13 @@ public class Course extends Identified {
 	// PERSISTENCE FUNCTIONS
 	
 	public Course insert() throws DatabaseException {
-		assert (isTransient());
-		assert (document != null);
+		assert(isTransient());
+		assert(document != null);
 		mModel.courseCache.insert(this);
 		putOfferedDayPatternsIntoDB();
 		putUsedEquipmentIntoDB();
 		putAssociationIntoDB();
+		preInsertOrUpdateSanityCheck();
 		return this;
 	}
 	
@@ -64,6 +65,7 @@ public class Course extends Identified {
 		putUsedEquipmentIntoDB();
 		putOfferedDayPatternsIntoDB();
 		putAssociationIntoDB();
+		preInsertOrUpdateSanityCheck();
 		mModel.courseCache.update(this);
 	}
 	
@@ -295,9 +297,9 @@ public class Course extends Identified {
 		if (lectureLoaded)
 			return;
 		
-		assert(lecture == null);
-		assert(cachedTetheredToLecture == null);
-		assert(underlyingCourse.getType() != null);
+		assert lecture == null : "lecture is null";
+		assert cachedTetheredToLecture == null : "cachedtetheredtolecture is null";
+		assert underlyingCourse.getType() != null : "type is null";
 		
 //		System.out.println("is lab? " + underlyingCourse.getType().equals("LAB"));
 		
@@ -369,4 +371,29 @@ public class Course extends Identified {
 		return this.getDepartment() + " " + this.getCatalogNumber() + " - " + this.getName();
 	}
 	
+	
+	
+	
+	public void preInsertOrUpdateSanityCheck() {
+		assert getName() != null : "name null";
+		assert getCatalogNumber() != null : "cat num null";
+		assert getDepartment() != null : "dept null";
+		assert getWTU() != null : "wtu null";
+		assert getSCU() != null : "scu null";
+		assert getNumSections() != null : "num sections null";
+		assert getType() != null : "type null";
+		assert getMaxEnrollment() != null : "enroll null";
+		assert getNumHalfHoursPerWeek() != null : "halfhours null";
+
+		if (usedEquipmentLoaded)
+			assert usedEquipmentDescriptions != null : "usedequipment descriptions null";
+		if (offeredDayPatternsLoaded)
+			assert offeredDayPatterns != null : "offereddaypatterns null";
+		if (lectureLoaded) {
+			assert lecture != null : "lec null";
+			assert cachedTetheredToLecture != null : "cached null";
+		}
+		if (documentLoaded)
+			assert document != null : "doc null";
+	}
 }

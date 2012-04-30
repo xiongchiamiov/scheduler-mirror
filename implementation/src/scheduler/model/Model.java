@@ -31,7 +31,7 @@ import scheduler.model.db.IDatabase;
 import scheduler.model.db.IDatabase.NotFoundException;
 
 public class Model {
-	abstract static class Cache<DecoratedT extends Identified, UnderlyingT extends IDBObject> {
+	abstract static class Cache<DecoratedT extends ModelObject, UnderlyingT extends IDBObject> {
 		HashMap<Integer, DecoratedT> cache = new HashMap<Integer, DecoratedT>();
 
 		private DecoratedT decorateAndPut(UnderlyingT underlying) {

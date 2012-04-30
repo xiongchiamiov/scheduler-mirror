@@ -5,7 +5,7 @@ import java.util.Collection;
 import scheduler.model.db.DatabaseException;
 import scheduler.model.db.IDBSchedule;
 
-public class Schedule extends Identified {
+public class Schedule extends ModelObject {
 	private final Model model;
 	
 	IDBSchedule underlyingSchedule;
@@ -28,11 +28,13 @@ public class Schedule extends Identified {
 
 	public Schedule insert() throws DatabaseException{
 		assert(document != null);
+		preInsertOrUpdateSanityCheck();
 		model.database.insertSchedule(document.underlyingDocument, underlyingSchedule);
 		return this;
 	}
 
 	public void update() throws DatabaseException {
+		preInsertOrUpdateSanityCheck();
 		model.database.updateSchedule(underlyingSchedule);
 	}
 	
@@ -69,6 +71,13 @@ public class Schedule extends Identified {
 		document = newDocument;
 		documentLoaded = true;
 		return this;
+	}
+
+	@Override
+	public void preInsertOrUpdateSanityCheck() {
+		// TODO Auto-generated method stub
+		if (documentLoaded)
+			assert document != null : "doc null";
 	}
 	
 }

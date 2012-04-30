@@ -11,7 +11,7 @@ import scheduler.model.db.IDBTime;
 import scheduler.model.db.IDBTimePreference;
 import scheduler.model.db.IDatabase.NotFoundException;
 
-public class Instructor extends Identified {
+public class Instructor extends ModelObject {
 	public static final int DEFAULT_PREF = 5;
 	
 	private final Model model;
@@ -40,6 +40,7 @@ public class Instructor extends Identified {
 
 	public Instructor insert() throws DatabaseException {
 		assert(document != null);
+		preInsertOrUpdateSanityCheck();
 		model.instructorCache.insert(this);
 		putTimePreferencesIntoDB();
 		putCoursePreferencesIntoDB();
@@ -49,6 +50,7 @@ public class Instructor extends Identified {
 	public void update() throws DatabaseException {
 		removeTimePreferencesFromDB();
 		removeCoursePreferencesFromDB();
+		preInsertOrUpdateSanityCheck();
 		model.instructorCache.update(this);
 		putTimePreferencesIntoDB();
 		putCoursePreferencesIntoDB();
@@ -231,5 +233,26 @@ public class Instructor extends Identified {
 			return false;
 		Instructor instructor = (Instructor)other;
 		return this.underlyingInstructor.equals(instructor.underlyingInstructor);
+	}
+
+
+	@Override
+	public void preInsertOrUpdateSanityCheck() {
+		assert getFirstName() != null : "firstname null";
+		
+		assert getLastName() != null : "lastname null";
+		
+		assert getUsername() != null : "username null";
+		
+		assert getMaxWTU() != null : "maxwtu null";
+		
+		if (documentLoaded)
+			assert document != null : "doc null";
+		
+		if (timePreferencesLoaded)
+			assert timePreferences != null : "timeprefs null";
+		
+		if (coursePreferencesLoaded)
+			assert coursePreferences != null : "courseprefs null";
 	}
 }

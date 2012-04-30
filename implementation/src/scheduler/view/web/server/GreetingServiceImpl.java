@@ -206,7 +206,10 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			assert (document.getOriginal() != null);
 			assert(document.getStaffInstructor() != null);
 			assert(document.getTBALocation() != null);
-			int id = Conversion.courseFromGWT(model, course).setDocument(document).insert().getID();
+			
+			Course resultCourse = Conversion.courseFromGWT(model, course).setDocument(document);
+			
+			int id = resultCourse.insert().getID();
 			course.setID(id);
 			
 			sanityCheck();

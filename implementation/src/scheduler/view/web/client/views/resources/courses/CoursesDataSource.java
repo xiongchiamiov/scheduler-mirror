@@ -99,6 +99,17 @@ public class CoursesDataSource extends DataSource {
 		return record;
 	}
 
+	private <T> T assertNotNull(T thing) {
+		assert thing != null;
+		return thing;
+	}
+	
+	private String emptyStringIfNull(String str) {
+		if (str == null)
+			return "";
+		return str;
+	}
+	
 	CourseGWT readRecordIntoCourse(Record record) {
 
 		String dayCombinationsStringsCombined = record.getAttributeAsString("dayCombinations");
@@ -120,16 +131,16 @@ public class CoursesDataSource extends DataSource {
 		
 		CourseGWT course = new CourseGWT(
 				record.getAttribute("isSchedulable").equals("true"),
-				record.getAttribute("name"),
-				record.getAttribute("catalogNumber"),
-				record.getAttribute("department"),
-				record.getAttribute("wtu"),
-				record.getAttribute("scu"),
-				record.getAttribute("numSections"),
-				record.getAttribute("type"),
-				record.getAttribute("maxEnrollment"),
+				emptyStringIfNull(record.getAttribute("name")),
+				emptyStringIfNull(record.getAttribute("catalogNumber")),
+				emptyStringIfNull(record.getAttribute("department")),
+				emptyStringIfNull(record.getAttribute("wtu")),
+				emptyStringIfNull(record.getAttribute("scu")),
+				emptyStringIfNull(record.getAttribute("numSections")),
+				emptyStringIfNull(record.getAttribute("type")),
+				emptyStringIfNull(record.getAttribute("maxEnrollment")),
 				Integer.parseInt(record.getAttribute("lectureID")), // lecture ID
-				record.getAttribute("hoursPerWeek"),
+				emptyStringIfNull(record.getAttribute("hoursPerWeek")),
 				dayCombinations, // day combinations
 				record.getAttributeAsInt("id"), // id
 				"true".equals(record.getAttribute("isTethered")),

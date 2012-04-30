@@ -6,7 +6,7 @@ import java.util.Set;
 import scheduler.model.db.DatabaseException;
 import scheduler.model.db.IDBScheduleItem;
 
-public class ScheduleItem extends Identified {
+public class ScheduleItem extends ModelObject {
 	private final Model model;
 	
 	IDBScheduleItem underlying;
@@ -44,6 +44,7 @@ public class ScheduleItem extends Identified {
 		assert(locationLoaded);
 		assert(instructorLoaded);
 		
+		preInsertOrUpdateSanityCheck();
 		model.itemCache.insert(this);
 	}
 
@@ -64,6 +65,7 @@ public class ScheduleItem extends Identified {
 				model.database.associateScheduleItemLab(lecture.underlying, underlying);
 		}
 		
+		preInsertOrUpdateSanityCheck();
 		model.itemCache.update(this);
 	}
 	
@@ -225,4 +227,24 @@ public class ScheduleItem extends Identified {
 	      }*/
 	      return r;
 	   }
+
+
+	@Override
+	public void preInsertOrUpdateSanityCheck() {
+		assert getDays() != null : "days null";
+		
+		if (scheduleLoaded)
+			assert schedule != null : "sched null";
+		
+		if (courseLoaded)
+			assert course != null : "course null";
+		
+		if (locationLoaded)
+			assert location != null : "location null";
+		
+		if (instructorLoaded)
+			assert instructor != null : "instructor null";
+		
+		// lecture can be null
+	}
 }

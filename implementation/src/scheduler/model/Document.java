@@ -8,7 +8,7 @@ import scheduler.model.db.IDBInstructor;
 import scheduler.model.db.IDBLocation;
 import scheduler.model.db.IDatabase.NotFoundException;
 
-public class Document extends Identified {
+public class Document extends ModelObject {
 	private final Model model;
 
 	private boolean tbaLocationLoaded;
@@ -35,6 +35,7 @@ public class Document extends Identified {
 	// PERSISTENCE FUNCTIONS
 
 	public Document insert() throws DatabaseException {
+		preInsertOrUpdateSanityCheck();
 		model.documentCache.insert(this);
 		return this;
 	}
@@ -47,6 +48,7 @@ public class Document extends Identified {
 		disassociateWorkingCopy();
 		if (originalLoaded && original != null)
 			model.database.associateWorkingCopyWithOriginal(underlyingDocument, original.underlyingDocument);
+		preInsertOrUpdateSanityCheck();
 		model.documentCache.update(this);
 	}
 	
@@ -190,5 +192,19 @@ public class Document extends Identified {
 		if (workingCopy == null)
 			return null;
 		return model.documentCache.decorateAndPutIfNotPresent(workingCopy);
+	}
+
+
+	@Override
+	public void preInsertOrUpdateSanityCheck() {
+		assert getName() != null : "name null";
+		
+		if (tbaLocationLoaded)
+			assert tbaLocation != null : "tba loc null";
+		
+		if (staffInstructorLoaded)
+			assert staffInstructor != null : "staff null";
+		
+		// original can be null
 	}
 }
