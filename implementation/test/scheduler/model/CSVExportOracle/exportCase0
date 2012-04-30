@@ -1,0 +1,25 @@
+#This is a CSV file whose contents represent a schedule.
+#It is highly recommended you make a backup before modifying anything.
+#Feel free to modify it but please do not modify any lines starting with a pound sign "#".
+
+#Schedule
+Doc0
+#End Schedule
+
+#Courses
+#End Courses
+
+#Locations
+#End Locations
+
+#Instructors' Course Preferences
+#End Instructors' Course Preferences
+
+#Instructors' Time Preferences
+#End Instructors' Time Preferences
+
+#Instructors
+#End Instructors
+
+#Schedule Items
+#End Schedule Items

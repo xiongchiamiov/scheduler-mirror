@@ -1,0 +1,407 @@
+#This is a CSV file whose contents represent a schedule.
+#It is highly recommended you make a backup before modifying anything.
+#Feel free to modify it but please do not modify any lines starting with a pound sign "#".
+
+#Schedule
+Doc12
+#End Schedule
+
+#Courses
+course#0,LEC,NameValue0,Num0,Dept0,0,0,0,0,TuSuWTh TuSa TuSuMTh TuSuWMSaFTh TuWSuTh,0,Course# -1
+course#1,LEC,NameValue1,Num1,Dept1,13,12,11,16,TuWMFSaTh WSaF M TuSuWSaTh TuSuWMSaFTh TuSuW TuSuWMSaTh,15,Course# -1
+course#2,DIS,NameValue2,Num2,Dept2,26,24,22,32,TuSuFSa SuSaF TuW,30,Course# -1
+course#3,ACT,NameValue3,Num3,Dept3,39,36,33,48,TuWMSaTh TuSuWMTh F TuWSuMFTh TuWSuMFSaTh TuSu Sa,45,Course# -1
+course#4,SEM,NameValue4,Num4,Dept4,52,48,44,64,Sa TuWSuMSaTh WMSaF TuSuMFTh Sa WFSaTh,60,Course# -1
+course#5,SEM,NameValue5,Num5,Dept5,65,60,55,80,TuSuMSa SaTh SuSaF Tu TuWFTh,75,Course# -1
+course#6,LAB,NameValue6,Num6,Dept6,78,72,66,96,WSuFTh TuSuWMSa TuSuWMSaTh TuWSuMFSaTh F SuWMSaTh,90,course#1
+#End Courses
+
+#Locations
+location#0,1-0,1,LAB,
+location#1,16-14,141,LEC,Smartboard & Projector
+location#2,31-28,281,LEC,Smartboard & Whiteboard & Computer & Projector
+location#3,46-42,421,LEC,Whiteboard
+location#4,61-56,561,LEC,Computer & Projector
+location#5,76-70,701,LEC,Overhead
+location#6,91-84,841,LAB,
+#End Locations
+
+#Instructors' Course Preferences
+coursePrefs#0
+#Instructor's Course Preferences
+course#0,1
+course#1,2
+course#2,3
+course#3,0
+course#4,1
+course#5,2
+course#6,3
+#End Instructor's Course Preferences
+coursePrefs#1
+#Instructor's Course Preferences
+course#0,1
+course#1,2
+course#2,3
+course#3,0
+course#4,1
+course#5,2
+course#6,3
+#End Instructor's Course Preferences
+coursePrefs#2
+#Instructor's Course Preferences
+course#0,1
+course#1,2
+course#2,3
+course#3,0
+course#4,1
+course#5,2
+course#6,3
+#End Instructor's Course Preferences
+coursePrefs#3
+#Instructor's Course Preferences
+course#0,1
+course#1,2
+course#2,3
+course#3,0
+course#4,1
+course#5,2
+course#6,3
+#End Instructor's Course Preferences
+coursePrefs#4
+#Instructor's Course Preferences
+course#0,1
+course#1,2
+course#2,3
+course#3,0
+course#4,1
+course#5,2
+course#6,3
+#End Instructor's Course Preferences
+coursePrefs#5
+#Instructor's Course Preferences
+course#0,1
+course#1,2
+course#2,3
+course#3,0
+course#4,1
+course#5,2
+course#6,3
+#End Instructor's Course Preferences
+coursePrefs#6
+#Instructor's Course Preferences
+course#0,1
+course#1,2
+course#2,3
+course#3,0
+course#4,1
+course#5,2
+course#6,3
+#End Instructor's Course Preferences
+#End Instructors' Course Preferences
+
+#Instructors' Time Preferences
+timePrefs#0
+#Instructor's Time Preferences
+Time,SUNDAY,MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY
+7:00am,2,2,1,1,0,2,3
+7:30am,1,0,2,3,0,0,2
+8:00am,0,0,3,2,3,3,1
+8:30am,1,3,0,3,1,0,2
+9:00am,3,2,1,3,1,3,2
+9:30am,0,1,0,1,0,0,0
+10:00am,0,1,3,0,0,1,1
+10:30am,2,0,2,1,2,3,2
+11:00am,0,0,1,3,0,3,3
+11:30am,2,1,1,2,1,2,3
+0:00pm,3,3,3,2,2,2,3
+0:30pm,3,3,1,1,2,0,1
+1:00pm,1,0,1,1,1,3,1
+1:30pm,2,1,1,3,2,3,0
+2:00pm,3,0,3,3,3,3,3
+2:30pm,3,1,3,3,2,2,3
+3:00pm,3,1,3,1,1,0,2
+3:30pm,0,0,0,2,2,3,1
+4:00pm,3,2,0,1,0,2,1
+4:30pm,2,1,2,3,3,1,0
+5:00pm,2,2,0,1,0,3,2
+5:30pm,2,0,3,3,0,2,0
+6:00pm,1,1,0,3,2,3,0
+6:30pm,2,3,0,2,2,2,3
+7:00pm,1,2,0,1,1,3,0
+7:30pm,3,0,1,3,3,1,0
+8:00pm,2,0,0,2,1,3,1
+8:30pm,0,1,3,3,0,3,0
+9:00pm,2,1,0,2,2,0,1
+9:30pm,1,3,1,2,3,3,3
+#End Instructor's Time Preferences
+timePrefs#1
+#Instructor's Time Preferences
+Time,SUNDAY,MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY
+7:00am,2,2,1,1,0,2,3
+7:30am,1,0,2,3,0,0,2
+8:00am,0,0,3,2,3,3,1
+8:30am,1,3,0,3,1,0,2
+9:00am,3,2,1,3,1,3,2
+9:30am,0,1,0,1,0,0,0
+10:00am,0,1,3,0,0,1,1
+10:30am,2,0,2,1,2,3,2
+11:00am,0,0,1,3,0,3,3
+11:30am,2,1,1,2,1,2,3
+0:00pm,3,3,3,2,2,2,3
+0:30pm,3,3,1,1,2,0,1
+1:00pm,1,0,1,1,1,3,1
+1:30pm,2,1,1,3,2,3,0
+2:00pm,3,0,3,3,3,3,3
+2:30pm,3,1,3,3,2,2,3
+3:00pm,3,1,3,1,1,0,2
+3:30pm,0,0,0,2,2,3,1
+4:00pm,3,2,0,1,0,2,1
+4:30pm,2,1,2,3,3,1,0
+5:00pm,2,2,0,1,0,3,2
+5:30pm,2,0,3,3,0,2,0
+6:00pm,1,1,0,3,2,3,0
+6:30pm,2,3,0,2,2,2,3
+7:00pm,1,2,0,1,1,3,0
+7:30pm,3,0,1,3,3,1,0
+8:00pm,2,0,0,2,1,3,1
+8:30pm,0,1,3,3,0,3,0
+9:00pm,2,1,0,2,2,0,1
+9:30pm,1,3,1,2,3,3,3
+#End Instructor's Time Preferences
+timePrefs#2
+#Instructor's Time Preferences
+Time,SUNDAY,MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY
+7:00am,2,2,1,1,0,2,3
+7:30am,1,0,2,3,0,0,2
+8:00am,0,0,3,2,3,3,1
+8:30am,1,3,0,3,1,0,2
+9:00am,3,2,1,3,1,3,2
+9:30am,0,1,0,1,0,0,0
+10:00am,0,1,3,0,0,1,1
+10:30am,2,0,2,1,2,3,2
+11:00am,0,0,1,3,0,3,3
+11:30am,2,1,1,2,1,2,3
+0:00pm,3,3,3,2,2,2,3
+0:30pm,3,3,1,1,2,0,1
+1:00pm,1,0,1,1,1,3,1
+1:30pm,2,1,1,3,2,3,0
+2:00pm,3,0,3,3,3,3,3
+2:30pm,3,1,3,3,2,2,3
+3:00pm,3,1,3,1,1,0,2
+3:30pm,0,0,0,2,2,3,1
+4:00pm,3,2,0,1,0,2,1
+4:30pm,2,1,2,3,3,1,0
+5:00pm,2,2,0,1,0,3,2
+5:30pm,2,0,3,3,0,2,0
+6:00pm,1,1,0,3,2,3,0
+6:30pm,2,3,0,2,2,2,3
+7:00pm,1,2,0,1,1,3,0
+7:30pm,3,0,1,3,3,1,0
+8:00pm,2,0,0,2,1,3,1
+8:30pm,0,1,3,3,0,3,0
+9:00pm,2,1,0,2,2,0,1
+9:30pm,1,3,1,2,3,3,3
+#End Instructor's Time Preferences
+timePrefs#3
+#Instructor's Time Preferences
+Time,SUNDAY,MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY
+7:00am,2,2,1,1,0,2,3
+7:30am,1,0,2,3,0,0,2
+8:00am,0,0,3,2,3,3,1
+8:30am,1,3,0,3,1,0,2
+9:00am,3,2,1,3,1,3,2
+9:30am,0,1,0,1,0,0,0
+10:00am,0,1,3,0,0,1,1
+10:30am,2,0,2,1,2,3,2
+11:00am,0,0,1,3,0,3,3
+11:30am,2,1,1,2,1,2,3
+0:00pm,3,3,3,2,2,2,3
+0:30pm,3,3,1,1,2,0,1
+1:00pm,1,0,1,1,1,3,1
+1:30pm,2,1,1,3,2,3,0
+2:00pm,3,0,3,3,3,3,3
+2:30pm,3,1,3,3,2,2,3
+3:00pm,3,1,3,1,1,0,2
+3:30pm,0,0,0,2,2,3,1
+4:00pm,3,2,0,1,0,2,1
+4:30pm,2,1,2,3,3,1,0
+5:00pm,2,2,0,1,0,3,2
+5:30pm,2,0,3,3,0,2,0
+6:00pm,1,1,0,3,2,3,0
+6:30pm,2,3,0,2,2,2,3
+7:00pm,1,2,0,1,1,3,0
+7:30pm,3,0,1,3,3,1,0
+8:00pm,2,0,0,2,1,3,1
+8:30pm,0,1,3,3,0,3,0
+9:00pm,2,1,0,2,2,0,1
+9:30pm,1,3,1,2,3,3,3
+#End Instructor's Time Preferences
+timePrefs#4
+#Instructor's Time Preferences
+Time,SUNDAY,MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY
+7:00am,2,2,1,1,0,2,3
+7:30am,1,0,2,3,0,0,2
+8:00am,0,0,3,2,3,3,1
+8:30am,1,3,0,3,1,0,2
+9:00am,3,2,1,3,1,3,2
+9:30am,0,1,0,1,0,0,0
+10:00am,0,1,3,0,0,1,1
+10:30am,2,0,2,1,2,3,2
+11:00am,0,0,1,3,0,3,3
+11:30am,2,1,1,2,1,2,3
+0:00pm,3,3,3,2,2,2,3
+0:30pm,3,3,1,1,2,0,1
+1:00pm,1,0,1,1,1,3,1
+1:30pm,2,1,1,3,2,3,0
+2:00pm,3,0,3,3,3,3,3
+2:30pm,3,1,3,3,2,2,3
+3:00pm,3,1,3,1,1,0,2
+3:30pm,0,0,0,2,2,3,1
+4:00pm,3,2,0,1,0,2,1
+4:30pm,2,1,2,3,3,1,0
+5:00pm,2,2,0,1,0,3,2
+5:30pm,2,0,3,3,0,2,0
+6:00pm,1,1,0,3,2,3,0
+6:30pm,2,3,0,2,2,2,3
+7:00pm,1,2,0,1,1,3,0
+7:30pm,3,0,1,3,3,1,0
+8:00pm,2,0,0,2,1,3,1
+8:30pm,0,1,3,3,0,3,0
+9:00pm,2,1,0,2,2,0,1
+9:30pm,1,3,1,2,3,3,3
+#End Instructor's Time Preferences
+timePrefs#5
+#Instructor's Time Preferences
+Time,SUNDAY,MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY
+7:00am,2,2,1,1,0,2,3
+7:30am,1,0,2,3,0,0,2
+8:00am,0,0,3,2,3,3,1
+8:30am,1,3,0,3,1,0,2
+9:00am,3,2,1,3,1,3,2
+9:30am,0,1,0,1,0,0,0
+10:00am,0,1,3,0,0,1,1
+10:30am,2,0,2,1,2,3,2
+11:00am,0,0,1,3,0,3,3
+11:30am,2,1,1,2,1,2,3
+0:00pm,3,3,3,2,2,2,3
+0:30pm,3,3,1,1,2,0,1
+1:00pm,1,0,1,1,1,3,1
+1:30pm,2,1,1,3,2,3,0
+2:00pm,3,0,3,3,3,3,3
+2:30pm,3,1,3,3,2,2,3
+3:00pm,3,1,3,1,1,0,2
+3:30pm,0,0,0,2,2,3,1
+4:00pm,3,2,0,1,0,2,1
+4:30pm,2,1,2,3,3,1,0
+5:00pm,2,2,0,1,0,3,2
+5:30pm,2,0,3,3,0,2,0
+6:00pm,1,1,0,3,2,3,0
+6:30pm,2,3,0,2,2,2,3
+7:00pm,1,2,0,1,1,3,0
+7:30pm,3,0,1,3,3,1,0
+8:00pm,2,0,0,2,1,3,1
+8:30pm,0,1,3,3,0,3,0
+9:00pm,2,1,0,2,2,0,1
+9:30pm,1,3,1,2,3,3,3
+#End Instructor's Time Preferences
+timePrefs#6
+#Instructor's Time Preferences
+Time,SUNDAY,MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY
+7:00am,2,2,1,1,0,2,3
+7:30am,1,0,2,3,0,0,2
+8:00am,0,0,3,2,3,3,1
+8:30am,1,3,0,3,1,0,2
+9:00am,3,2,1,3,1,3,2
+9:30am,0,1,0,1,0,0,0
+10:00am,0,1,3,0,0,1,1
+10:30am,2,0,2,1,2,3,2
+11:00am,0,0,1,3,0,3,3
+11:30am,2,1,1,2,1,2,3
+0:00pm,3,3,3,2,2,2,3
+0:30pm,3,3,1,1,2,0,1
+1:00pm,1,0,1,1,1,3,1
+1:30pm,2,1,1,3,2,3,0
+2:00pm,3,0,3,3,3,3,3
+2:30pm,3,1,3,3,2,2,3
+3:00pm,3,1,3,1,1,0,2
+3:30pm,0,0,0,2,2,3,1
+4:00pm,3,2,0,1,0,2,1
+4:30pm,2,1,2,3,3,1,0
+5:00pm,2,2,0,1,0,3,2
+5:30pm,2,0,3,3,0,2,0
+6:00pm,1,1,0,3,2,3,0
+6:30pm,2,3,0,2,2,2,3
+7:00pm,1,2,0,1,1,3,0
+7:30pm,3,0,1,3,3,1,0
+8:00pm,2,0,0,2,1,3,1
+8:30pm,0,1,3,3,0,3,0
+9:00pm,2,1,0,2,2,0,1
+9:30pm,1,3,1,2,3,3,3
+#End Instructor's Time Preferences
+#End Instructors' Time Preferences
+
+#Instructors
+instructor#0,sari,gvez,sgvez,0,coursePrefs#0,timePrefs#0
+instructor#1,qnff,swpw,qswpw,1,coursePrefs#1,timePrefs#1
+instructor#2,rsjhscg,gwlgdwf,rgwlgdwf,4,coursePrefs#2,timePrefs#2
+instructor#3,oga,szw,oszw,9,coursePrefs#3,timePrefs#3
+instructor#4,plefvddl,gysmctko,pgysmctko,16,coursePrefs#4,timePrefs#4
+instructor#5,mysaqc,ubdjlq,mubdjlq,25,coursePrefs#5,timePrefs#5
+instructor#6,nbwcbdc,gzytbrs,ngzytbrs,36,coursePrefs#6,timePrefs#6
+#End Instructors
+
+#Schedule Items
+item#0,instructor#4,course#4,location#5,0,true,TuMFSaTh,11:00am to 0:30pm
+item#1,instructor#4,course#6,location#2,1,false,TuSuWTh,1:30pm to 2:00pm
+item#2,instructor#2,course#4,location#4,2,true,TuSa,0:30pm to 1:00pm
+item#3,instructor#5,course#0,location#5,3,false,TuSuMTh,9:00am to 11:00am
+item#4,instructor#2,course#3,location#1,4,true,TuSuWMSaFTh,9:30am to 2:00pm
+item#5,instructor#4,course#1,location#2,5,false,TuWSuTh,8:00am to 11:30am
+item#6,instructor#4,course#0,location#0,6,true,TuSuWMFSaTh,0:30pm to 2:00pm
+item#7,instructor#6,course#4,location#1,7,false,TuWMFSaTh,8:00am to 1:30pm
+item#8,instructor#2,course#1,location#0,8,true,WSaF,0:00pm to 0:30pm
+item#9,instructor#5,course#2,location#3,9,false,M,11:00am to 11:30am
+item#10,instructor#5,course#6,location#0,10,true,TuSuWSaTh,9:30am to 0:00pm
+item#11,instructor#3,course#6,location#1,11,false,TuSuWMSaFTh,0:30pm to 1:30pm
+item#12,instructor#1,course#0,location#5,12,true,TuSuW,1:30pm to 2:00pm
+item#13,instructor#5,course#1,location#2,13,false,TuSuWMSaTh,0:30pm to 2:00pm
+item#14,instructor#1,course#4,location#5,14,true,WSuMFSa,9:00am to 2:00pm
+item#15,instructor#6,course#4,location#1,16,true,SuSaF,1:00pm to 2:00pm
+item#16,instructor#0,course#5,location#6,15,false,TuSuFSa,9:00am to 10:00am
+item#17,instructor#5,course#0,location#4,18,true,WFTh,9:00am to 2:00pm
+item#18,instructor#2,course#0,location#2,17,false,TuW,11:30am to 1:30pm
+item#19,instructor#5,course#1,location#5,20,true,TuSuWMTh,1:00pm to 1:30pm
+item#20,instructor#3,course#6,location#4,19,false,TuWMSaTh,7:00am to 1:30pm
+item#21,instructor#5,course#3,location#2,22,true,TuWSuMFTh,7:00am to 0:30pm
+item#22,instructor#4,course#6,location#2,21,false,F,7:00am to 10:00am
+item#23,instructor#2,course#4,location#5,24,true,TuSu,10:30am to 0:00pm
+item#24,instructor#4,course#6,location#6,23,false,TuWSuMFSaTh,7:00am to 0:30pm
+item#25,instructor#3,course#0,location#5,26,true,SuM,7:00am to 8:30am
+item#26,instructor#0,course#5,location#2,25,false,Sa,9:30am to 1:30pm
+item#27,instructor#4,course#0,location#3,28,true,TuWSuMSaTh,1:30pm to 2:00pm
+item#28,instructor#0,course#5,location#5,27,false,Sa,1:30pm to 2:00pm
+item#29,instructor#3,course#2,location#2,30,true,TuSuMFTh,8:30am to 11:30am
+item#30,instructor#2,course#1,location#3,29,false,WMSaF,7:30am to 2:00pm
+item#31,instructor#0,course#4,location#6,33,false,W,8:00am to 9:00am
+item#32,instructor#5,course#4,location#6,34,true,TuSuMSa,0:30pm to 1:00pm
+item#33,instructor#1,course#6,location#4,31,false,Sa,7:30am to 9:30am
+item#34,instructor#6,course#1,location#4,32,true,WFSaTh,8:30am to 10:30am
+item#35,instructor#1,course#2,location#0,37,false,Tu,9:30am to 0:30pm
+item#36,instructor#5,course#1,location#2,38,true,TuWFTh,7:00am to 7:30am
+item#37,instructor#5,course#6,location#0,35,false,SaTh,1:30pm to 2:00pm
+item#38,instructor#6,course#1,location#2,36,true,SuSaF,9:30am to 1:00pm
+item#39,instructor#5,course#5,location#4,41,false,TuSuWMSa,10:30am to 11:00am
+item#40,instructor#4,course#2,location#0,42,true,TuSuWMSaTh,1:30pm to 2:00pm
+item#41,instructor#2,course#6,location#6,39,false,TuWSuMFSaTh,10:00am to 11:30am
+item#42,instructor#4,course#0,location#1,40,true,WSuFTh,7:00am to 10:30am
+item#43,instructor#6,course#4,location#4,45,false,SuWMSaTh,11:00am to 2:00pm
+item#44,instructor#1,course#1,location#3,46,true,MSa,11:30am to 0:30pm
+item#45,instructor#4,course#6,location#4,43,false,TuWSuMFSaTh,1:30pm to 2:00pm
+item#46,instructor#0,course#5,location#3,44,true,F,8:30am to 10:00am
+item#47,instructor#0,course#6,location#5,50,true,TuWMTh,8:00am to 0:00pm
+item#48,instructor#4,course#5,location#3,49,false,TuSuWTh,11:30am to 0:30pm
+item#49,instructor#2,course#1,location#3,48,true,Tu,10:00am to 10:30am
+item#50,instructor#6,course#1,location#6,47,false,Su,9:30am to 10:30am
+item#51,instructor#4,course#6,location#5,52,true,Su,1:00pm to 1:30pm
+item#52,instructor#4,course#0,location#5,51,false,TuM,11:00am to 0:30pm
+#End Schedule Items

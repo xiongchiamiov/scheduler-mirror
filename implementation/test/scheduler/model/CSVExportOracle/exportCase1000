@@ -1,0 +1,1409 @@
+#This is a CSV file whose contents represent a schedule.
+#It is highly recommended you make a backup before modifying anything.
+#Feel free to modify it but please do not modify any lines starting with a pound sign "#".
+
+#Schedule
+Doc1000
+#End Schedule
+
+#Courses
+course#0,LEC,NameValue0,Num0,Dept0,0,0,0,0,TuWSuMSaFTh F TuWMFSaTh TuWSuSaTh SuWSa,0,Course# -1
+course#1,LEC,NameValue1,Num1,Dept1,13,12,11,16,,15,Course# -1
+course#2,DIS,NameValue2,Num2,Dept2,26,24,22,32,SuWMFSaTh TuWMSa TuMFTh TuWMSaFTh TuSuSaFTh WSuMFTh,30,Course# -1
+course#3,ACT,NameValue3,Num3,Dept3,39,36,33,48,TuSuMFSa SuF SuM TuMTh,45,Course# -1
+course#4,SEM,NameValue4,Num4,Dept4,52,48,44,64,WSuMFSaTh TuSuWMSaTh,60,Course# -1
+course#5,SEM,NameValue5,Num5,Dept5,65,60,55,80,Sa TuW Th TuSuMSaTh TuSuWMSaFTh Su,75,Course# -1
+course#6,LAB,NameValue6,Num6,Dept6,78,72,66,96,FTh TuSuWMFSaTh Th TuWF WSuTh TuWSuFSaTh TuSuWSaTh,90,course#1
+course#7,LAB,NameValue7,Num7,Dept7,91,84,77,112,TuSu WF,105,Course# -1
+#End Courses
+
+#Locations
+location#0,1-0,1,LAB,Projector
+location#1,16-14,141,LEC,
+location#2,31-28,281,LAB,Whiteboard & Computer & Projector & Overhead
+location#3,46-42,421,LEC,
+location#4,61-56,561,LAB,Smartboard & Computer & Projector
+location#5,76-70,701,LEC,
+location#6,91-84,841,LEC,Smartboard & Whiteboard & Projector
+location#7,106-98,981,LAB,Overhead
+#End Locations
+
+#Instructors' Course Preferences
+coursePrefs#0
+#Instructor's Course Preferences
+course#0,1
+course#1,2
+course#2,3
+course#3,0
+course#4,1
+course#5,2
+course#6,3
+course#7,0
+#End Instructor's Course Preferences
+coursePrefs#1
+#Instructor's Course Preferences
+course#0,1
+course#1,2
+course#2,3
+course#3,0
+course#4,1
+course#5,2
+course#6,3
+course#7,0
+#End Instructor's Course Preferences
+coursePrefs#2
+#Instructor's Course Preferences
+course#0,1
+course#1,2
+course#2,3
+course#3,0
+course#4,1
+course#5,2
+course#6,3
+course#7,0
+#End Instructor's Course Preferences
+coursePrefs#3
+#Instructor's Course Preferences
+course#0,1
+course#1,2
+course#2,3
+course#3,0
+course#4,1
+course#5,2
+course#6,3
+course#7,0
+#End Instructor's Course Preferences
+coursePrefs#4
+#Instructor's Course Preferences
+course#0,1
+course#1,2
+course#2,3
+course#3,0
+course#4,1
+course#5,2
+course#6,3
+course#7,0
+#End Instructor's Course Preferences
+coursePrefs#5
+#Instructor's Course Preferences
+course#0,1
+course#1,2
+course#2,3
+course#3,0
+course#4,1
+course#5,2
+course#6,3
+course#7,0
+#End Instructor's Course Preferences
+coursePrefs#6
+#Instructor's Course Preferences
+course#0,1
+course#1,2
+course#2,3
+course#3,0
+course#4,1
+course#5,2
+course#6,3
+course#7,0
+#End Instructor's Course Preferences
+coursePrefs#7
+#Instructor's Course Preferences
+course#0,1
+course#1,2
+course#2,3
+course#3,0
+course#4,1
+course#5,2
+course#6,3
+course#7,0
+#End Instructor's Course Preferences
+#End Instructors' Course Preferences
+
+#Instructors' Time Preferences
+timePrefs#0
+#Instructor's Time Preferences
+Time,SUNDAY,MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY
+7:00am,1,1,0,0,1,3,1
+7:30am,2,2,0,2,2,3,2
+8:00am,1,1,0,1,1,1,3
+8:30am,3,1,1,2,3,0,1
+9:00am,3,3,3,0,0,1,3
+9:30am,1,3,0,3,0,0,0
+10:00am,2,0,1,2,1,0,1
+10:30am,3,3,3,0,2,1,3
+11:00am,3,1,2,1,1,3,0
+11:30am,3,0,0,0,3,1,2
+0:00pm,1,2,3,0,2,2,0
+0:30pm,2,2,1,1,1,2,2
+1:00pm,1,2,2,0,2,3,2
+1:30pm,0,3,0,3,3,3,0
+2:00pm,0,1,0,2,2,0,3
+2:30pm,0,0,3,2,0,0,1
+3:00pm,3,3,1,1,3,1,1
+3:30pm,1,0,2,0,2,0,1
+4:00pm,0,2,0,2,0,1,1
+4:30pm,2,0,2,2,2,3,1
+5:00pm,3,0,0,3,2,2,3
+5:30pm,1,0,1,2,1,0,3
+6:00pm,0,2,3,2,1,0,2
+6:30pm,3,1,1,1,1,0,0
+7:00pm,3,0,1,2,0,3,1
+7:30pm,1,3,0,2,1,3,2
+8:00pm,1,2,1,2,0,0,0
+8:30pm,0,3,3,2,2,3,1
+9:00pm,3,2,1,0,1,2,2
+9:30pm,3,1,0,1,2,1,2
+#End Instructor's Time Preferences
+timePrefs#1
+#Instructor's Time Preferences
+Time,SUNDAY,MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY
+7:00am,1,1,0,0,1,3,1
+7:30am,2,2,0,2,2,3,2
+8:00am,1,1,0,1,1,1,3
+8:30am,3,1,1,2,3,0,1
+9:00am,3,3,3,0,0,1,3
+9:30am,1,3,0,3,0,0,0
+10:00am,2,0,1,2,1,0,1
+10:30am,3,3,3,0,2,1,3
+11:00am,3,1,2,1,1,3,0
+11:30am,3,0,0,0,3,1,2
+0:00pm,1,2,3,0,2,2,0
+0:30pm,2,2,1,1,1,2,2
+1:00pm,1,2,2,0,2,3,2
+1:30pm,0,3,0,3,3,3,0
+2:00pm,0,1,0,2,2,0,3
+2:30pm,0,0,3,2,0,0,1
+3:00pm,3,3,1,1,3,1,1
+3:30pm,1,0,2,0,2,0,1
+4:00pm,0,2,0,2,0,1,1
+4:30pm,2,0,2,2,2,3,1
+5:00pm,3,0,0,3,2,2,3
+5:30pm,1,0,1,2,1,0,3
+6:00pm,0,2,3,2,1,0,2
+6:30pm,3,1,1,1,1,0,0
+7:00pm,3,0,1,2,0,3,1
+7:30pm,1,3,0,2,1,3,2
+8:00pm,1,2,1,2,0,0,0
+8:30pm,0,3,3,2,2,3,1
+9:00pm,3,2,1,0,1,2,2
+9:30pm,3,1,0,1,2,1,2
+#End Instructor's Time Preferences
+timePrefs#2
+#Instructor's Time Preferences
+Time,SUNDAY,MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY
+7:00am,1,1,0,0,1,3,1
+7:30am,2,2,0,2,2,3,2
+8:00am,1,1,0,1,1,1,3
+8:30am,3,1,1,2,3,0,1
+9:00am,3,3,3,0,0,1,3
+9:30am,1,3,0,3,0,0,0
+10:00am,2,0,1,2,1,0,1
+10:30am,3,3,3,0,2,1,3
+11:00am,3,1,2,1,1,3,0
+11:30am,3,0,0,0,3,1,2
+0:00pm,1,2,3,0,2,2,0
+0:30pm,2,2,1,1,1,2,2
+1:00pm,1,2,2,0,2,3,2
+1:30pm,0,3,0,3,3,3,0
+2:00pm,0,1,0,2,2,0,3
+2:30pm,0,0,3,2,0,0,1
+3:00pm,3,3,1,1,3,1,1
+3:30pm,1,0,2,0,2,0,1
+4:00pm,0,2,0,2,0,1,1
+4:30pm,2,0,2,2,2,3,1
+5:00pm,3,0,0,3,2,2,3
+5:30pm,1,0,1,2,1,0,3
+6:00pm,0,2,3,2,1,0,2
+6:30pm,3,1,1,1,1,0,0
+7:00pm,3,0,1,2,0,3,1
+7:30pm,1,3,0,2,1,3,2
+8:00pm,1,2,1,2,0,0,0
+8:30pm,0,3,3,2,2,3,1
+9:00pm,3,2,1,0,1,2,2
+9:30pm,3,1,0,1,2,1,2
+#End Instructor's Time Preferences
+timePrefs#3
+#Instructor's Time Preferences
+Time,SUNDAY,MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY
+7:00am,1,1,0,0,1,3,1
+7:30am,2,2,0,2,2,3,2
+8:00am,1,1,0,1,1,1,3
+8:30am,3,1,1,2,3,0,1
+9:00am,3,3,3,0,0,1,3
+9:30am,1,3,0,3,0,0,0
+10:00am,2,0,1,2,1,0,1
+10:30am,3,3,3,0,2,1,3
+11:00am,3,1,2,1,1,3,0
+11:30am,3,0,0,0,3,1,2
+0:00pm,1,2,3,0,2,2,0
+0:30pm,2,2,1,1,1,2,2
+1:00pm,1,2,2,0,2,3,2
+1:30pm,0,3,0,3,3,3,0
+2:00pm,0,1,0,2,2,0,3
+2:30pm,0,0,3,2,0,0,1
+3:00pm,3,3,1,1,3,1,1
+3:30pm,1,0,2,0,2,0,1
+4:00pm,0,2,0,2,0,1,1
+4:30pm,2,0,2,2,2,3,1
+5:00pm,3,0,0,3,2,2,3
+5:30pm,1,0,1,2,1,0,3
+6:00pm,0,2,3,2,1,0,2
+6:30pm,3,1,1,1,1,0,0
+7:00pm,3,0,1,2,0,3,1
+7:30pm,1,3,0,2,1,3,2
+8:00pm,1,2,1,2,0,0,0
+8:30pm,0,3,3,2,2,3,1
+9:00pm,3,2,1,0,1,2,2
+9:30pm,3,1,0,1,2,1,2
+#End Instructor's Time Preferences
+timePrefs#4
+#Instructor's Time Preferences
+Time,SUNDAY,MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY
+7:00am,1,1,0,0,1,3,1
+7:30am,2,2,0,2,2,3,2
+8:00am,1,1,0,1,1,1,3
+8:30am,3,1,1,2,3,0,1
+9:00am,3,3,3,0,0,1,3
+9:30am,1,3,0,3,0,0,0
+10:00am,2,0,1,2,1,0,1
+10:30am,3,3,3,0,2,1,3
+11:00am,3,1,2,1,1,3,0
+11:30am,3,0,0,0,3,1,2
+0:00pm,1,2,3,0,2,2,0
+0:30pm,2,2,1,1,1,2,2
+1:00pm,1,2,2,0,2,3,2
+1:30pm,0,3,0,3,3,3,0
+2:00pm,0,1,0,2,2,0,3
+2:30pm,0,0,3,2,0,0,1
+3:00pm,3,3,1,1,3,1,1
+3:30pm,1,0,2,0,2,0,1
+4:00pm,0,2,0,2,0,1,1
+4:30pm,2,0,2,2,2,3,1
+5:00pm,3,0,0,3,2,2,3
+5:30pm,1,0,1,2,1,0,3
+6:00pm,0,2,3,2,1,0,2
+6:30pm,3,1,1,1,1,0,0
+7:00pm,3,0,1,2,0,3,1
+7:30pm,1,3,0,2,1,3,2
+8:00pm,1,2,1,2,0,0,0
+8:30pm,0,3,3,2,2,3,1
+9:00pm,3,2,1,0,1,2,2
+9:30pm,3,1,0,1,2,1,2
+#End Instructor's Time Preferences
+timePrefs#5
+#Instructor's Time Preferences
+Time,SUNDAY,MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY
+7:00am,1,1,0,0,1,3,1
+7:30am,2,2,0,2,2,3,2
+8:00am,1,1,0,1,1,1,3
+8:30am,3,1,1,2,3,0,1
+9:00am,3,3,3,0,0,1,3
+9:30am,1,3,0,3,0,0,0
+10:00am,2,0,1,2,1,0,1
+10:30am,3,3,3,0,2,1,3
+11:00am,3,1,2,1,1,3,0
+11:30am,3,0,0,0,3,1,2
+0:00pm,1,2,3,0,2,2,0
+0:30pm,2,2,1,1,1,2,2
+1:00pm,1,2,2,0,2,3,2
+1:30pm,0,3,0,3,3,3,0
+2:00pm,0,1,0,2,2,0,3
+2:30pm,0,0,3,2,0,0,1
+3:00pm,3,3,1,1,3,1,1
+3:30pm,1,0,2,0,2,0,1
+4:00pm,0,2,0,2,0,1,1
+4:30pm,2,0,2,2,2,3,1
+5:00pm,3,0,0,3,2,2,3
+5:30pm,1,0,1,2,1,0,3
+6:00pm,0,2,3,2,1,0,2
+6:30pm,3,1,1,1,1,0,0
+7:00pm,3,0,1,2,0,3,1
+7:30pm,1,3,0,2,1,3,2
+8:00pm,1,2,1,2,0,0,0
+8:30pm,0,3,3,2,2,3,1
+9:00pm,3,2,1,0,1,2,2
+9:30pm,3,1,0,1,2,1,2
+#End Instructor's Time Preferences
+timePrefs#6
+#Instructor's Time Preferences
+Time,SUNDAY,MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY
+7:00am,1,1,0,0,1,3,1
+7:30am,2,2,0,2,2,3,2
+8:00am,1,1,0,1,1,1,3
+8:30am,3,1,1,2,3,0,1
+9:00am,3,3,3,0,0,1,3
+9:30am,1,3,0,3,0,0,0
+10:00am,2,0,1,2,1,0,1
+10:30am,3,3,3,0,2,1,3
+11:00am,3,1,2,1,1,3,0
+11:30am,3,0,0,0,3,1,2
+0:00pm,1,2,3,0,2,2,0
+0:30pm,2,2,1,1,1,2,2
+1:00pm,1,2,2,0,2,3,2
+1:30pm,0,3,0,3,3,3,0
+2:00pm,0,1,0,2,2,0,3
+2:30pm,0,0,3,2,0,0,1
+3:00pm,3,3,1,1,3,1,1
+3:30pm,1,0,2,0,2,0,1
+4:00pm,0,2,0,2,0,1,1
+4:30pm,2,0,2,2,2,3,1
+5:00pm,3,0,0,3,2,2,3
+5:30pm,1,0,1,2,1,0,3
+6:00pm,0,2,3,2,1,0,2
+6:30pm,3,1,1,1,1,0,0
+7:00pm,3,0,1,2,0,3,1
+7:30pm,1,3,0,2,1,3,2
+8:00pm,1,2,1,2,0,0,0
+8:30pm,0,3,3,2,2,3,1
+9:00pm,3,2,1,0,1,2,2
+9:30pm,3,1,0,1,2,1,2
+#End Instructor's Time Preferences
+timePrefs#7
+#Instructor's Time Preferences
+Time,SUNDAY,MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY
+7:00am,1,1,0,0,1,3,1
+7:30am,2,2,0,2,2,3,2
+8:00am,1,1,0,1,1,1,3
+8:30am,3,1,1,2,3,0,1
+9:00am,3,3,3,0,0,1,3
+9:30am,1,3,0,3,0,0,0
+10:00am,2,0,1,2,1,0,1
+10:30am,3,3,3,0,2,1,3
+11:00am,3,1,2,1,1,3,0
+11:30am,3,0,0,0,3,1,2
+0:00pm,1,2,3,0,2,2,0
+0:30pm,2,2,1,1,1,2,2
+1:00pm,1,2,2,0,2,3,2
+1:30pm,0,3,0,3,3,3,0
+2:00pm,0,1,0,2,2,0,3
+2:30pm,0,0,3,2,0,0,1
+3:00pm,3,3,1,1,3,1,1
+3:30pm,1,0,2,0,2,0,1
+4:00pm,0,2,0,2,0,1,1
+4:30pm,2,0,2,2,2,3,1
+5:00pm,3,0,0,3,2,2,3
+5:30pm,1,0,1,2,1,0,3
+6:00pm,0,2,3,2,1,0,2
+6:30pm,3,1,1,1,1,0,0
+7:00pm,3,0,1,2,0,3,1
+7:30pm,1,3,0,2,1,3,2
+8:00pm,1,2,1,2,0,0,0
+8:30pm,0,3,3,2,2,3,1
+9:00pm,3,2,1,0,1,2,2
+9:30pm,3,1,0,1,2,1,2
+#End Instructor's Time Preferences
+#End Instructors' Time Preferences
+
+#Instructors
+instructor#0,sari,gvez,sgvez,0,coursePrefs#0,timePrefs#0
+instructor#1,qnff,swpw,qswpw,1,coursePrefs#1,timePrefs#1
+instructor#2,rsjhscg,gwlgdwf,rgwlgdwf,4,coursePrefs#2,timePrefs#2
+instructor#3,oga,szw,oszw,9,coursePrefs#3,timePrefs#3
+instructor#4,plefvddl,gysmctko,pgysmctko,16,coursePrefs#4,timePrefs#4
+instructor#5,mysaqc,ubdjlq,mubdjlq,25,coursePrefs#5,timePrefs#5
+instructor#6,nbwcbdc,gzytbrs,ngzytbrs,36,coursePrefs#6,timePrefs#6
+instructor#7,zdprmdg,soimxgf,zsoimxgf,49,coursePrefs#7,timePrefs#7
+#End Instructors
+
+#Schedule Items
+item#0,instructor#4,course#5,location#5,0,true,TuSuMFTh,10:30am to 2:00pm
+item#1,instructor#4,course#2,location#5,1,false,TuWSuMSaFTh,8:30am to 1:00pm
+item#2,instructor#2,course#6,location#6,2,true,F,11:00am to 0:00pm
+item#3,instructor#0,course#2,location#7,3,false,TuWMFSaTh,1:00pm to 1:30pm
+item#4,instructor#7,course#1,location#4,4,true,TuWSuSaTh,8:30am to 11:30am
+item#5,instructor#5,course#0,location#7,5,false,SuWSa,8:30am to 1:00pm
+item#6,instructor#5,course#7,location#6,6,true,TuWSuFTh,1:30pm to 2:00pm
+item#7,instructor#0,course#2,location#6,7,false,TuSuWMSaFTh,10:30am to 0:30pm
+item#8,instructor#3,course#4,location#4,8,true,SuWMFSaTh,10:30am to 2:00pm
+item#9,instructor#1,course#0,location#4,9,false,TuWMSa,10:30am to 2:00pm
+item#10,instructor#2,course#6,location#4,10,true,TuMFTh,7:00am to 0:30pm
+item#11,instructor#3,course#1,location#1,11,false,TuWMSaFTh,9:30am to 2:00pm
+item#12,instructor#7,course#6,location#3,12,true,TuSuSaFTh,0:00pm to 1:00pm
+item#13,instructor#0,course#2,location#1,13,false,WSuMFTh,11:00am to 2:00pm
+item#14,instructor#6,course#4,location#0,14,true,WMSaFTh,7:00am to 8:30am
+item#15,instructor#2,course#5,location#3,16,true,SuF,8:00am to 1:00pm
+item#16,instructor#6,course#7,location#1,15,false,TuSuMFSa,1:30pm to 2:00pm
+item#17,instructor#6,course#1,location#3,18,true,TuMTh,8:30am to 2:00pm
+item#18,instructor#0,course#3,location#1,17,false,SuM,7:00am to 1:30pm
+item#19,instructor#0,course#1,location#3,20,true,WSuMFSaTh,1:00pm to 2:00pm
+item#20,instructor#3,course#6,location#5,19,false,WSaTh,7:00am to 7:30am
+item#21,instructor#7,course#2,location#0,22,true,MTh,0:00pm to 2:00pm
+item#22,instructor#4,course#4,location#2,21,false,TuSuWMSaTh,0:00pm to 0:30pm
+item#23,instructor#2,course#2,location#2,24,true,TuW,1:30pm to 2:00pm
+item#24,instructor#6,course#7,location#6,23,false,Sa,7:00am to 0:00pm
+item#25,instructor#3,course#2,location#2,26,true,TuSuMSaTh,8:00am to 0:30pm
+item#26,instructor#2,course#6,location#2,25,false,Th,0:30pm to 1:00pm
+item#27,instructor#6,course#1,location#3,28,true,Su,1:00pm to 1:30pm
+item#28,instructor#3,course#4,location#3,27,false,TuSuWMSaFTh,7:00am to 0:30pm
+item#29,instructor#0,course#3,location#5,30,true,FTh,11:30am to 1:30pm
+item#30,instructor#4,course#7,location#0,29,false,WMTh,8:30am to 9:00am
+item#31,instructor#2,course#5,location#3,33,false,TuWF,11:00am to 2:00pm
+item#32,instructor#7,course#2,location#3,34,true,WSuTh,10:00am to 1:00pm
+item#33,instructor#3,course#7,location#1,31,false,TuSuWMFSaTh,0:00pm to 1:30pm
+item#34,instructor#1,course#3,location#6,32,true,Th,0:00pm to 1:30pm
+item#35,instructor#4,course#5,location#0,37,false,Sa,9:30am to 0:30pm
+item#36,instructor#0,course#3,location#3,38,true,TuSu,7:30am to 0:30pm
+item#37,instructor#7,course#4,location#3,35,false,TuWSuFSaTh,11:00am to 0:30pm
+item#38,instructor#6,course#0,location#5,36,true,TuSuWSaTh,7:00am to 1:30pm
+item#39,instructor#7,course#3,location#5,41,false,Th,0:00pm to 1:30pm
+item#40,instructor#1,course#4,location#3,42,true,TuMFTh,7:00am to 11:00am
+item#41,instructor#0,course#6,location#6,39,false,WF,9:30am to 1:00pm
+item#42,instructor#5,course#5,location#5,40,true,SuWMFTh,9:30am to 11:00am
+item#43,instructor#6,course#1,location#0,45,false,TuWTh,0:30pm to 1:00pm
+item#44,instructor#4,course#0,location#7,46,true,Sa,1:30pm to 2:00pm
+item#45,instructor#0,course#2,location#1,43,false,TuSuTh,1:30pm to 2:00pm
+item#46,instructor#2,course#0,location#7,44,true,TuWSuMFSa,0:00pm to 1:30pm
+item#47,instructor#5,course#4,location#6,50,true,SaTh,1:30pm to 2:00pm
+item#48,instructor#1,course#4,location#0,49,false,TuSuWMSaTh,7:30am to 11:00am
+item#49,instructor#2,course#6,location#4,48,true,TuWSuSaTh,0:00pm to 0:30pm
+item#50,instructor#5,course#6,location#2,47,false,TuSuWMSaFTh,1:00pm to 1:30pm
+item#51,instructor#2,course#2,location#3,54,true,M,8:30am to 10:00am
+item#52,instructor#2,course#3,location#1,53,false,WSuFTh,7:00am to 10:00am
+item#53,instructor#5,course#5,location#2,52,true,TuSuTh,10:00am to 0:00pm
+item#54,instructor#6,course#0,location#1,51,false,TuMSaFTh,7:30am to 1:00pm
+item#55,instructor#6,course#1,location#2,58,true,TuWSuMSaFTh,9:30am to 1:30pm
+item#56,instructor#3,course#5,location#0,57,false,F,11:30am to 0:30pm
+item#57,instructor#0,course#5,location#3,56,true,WSuMFSaTh,11:00am to 0:00pm
+item#58,instructor#6,course#2,location#5,55,false,TuF,8:30am to 11:30am
+item#59,instructor#1,course#6,location#3,62,true,TuWSuMFTh,8:30am to 0:30pm
+item#60,instructor#7,course#5,location#1,61,false,TuWSuMSaFTh,10:30am to 0:30pm
+item#61,instructor#1,course#6,location#4,60,true,TuMSaFTh,11:30am to 2:00pm
+item#62,instructor#1,course#4,location#4,59,false,WMSaTh,10:00am to 2:00pm
+item#63,instructor#3,course#6,location#1,67,false,SuWMTh,7:00am to 0:00pm
+item#64,instructor#0,course#3,location#0,68,true,TuWSaTh,0:00pm to 1:00pm
+item#65,instructor#5,course#3,location#2,69,false,WFSaTh,8:00am to 9:30am
+item#66,instructor#5,course#6,location#1,70,true,TuSuFTh,8:00am to 9:00am
+item#67,instructor#3,course#2,location#7,63,false,SuTh,10:00am to 10:30am
+item#68,instructor#6,course#4,location#4,64,true,TuWMFTh,7:30am to 2:00pm
+item#69,instructor#3,course#2,location#2,65,false,TuMSaFTh,0:00pm to 1:00pm
+item#70,instructor#7,course#3,location#3,66,true,TuMFTh,11:30am to 0:30pm
+item#71,instructor#1,course#3,location#7,75,false,TuSuWMFTh,0:30pm to 1:30pm
+item#72,instructor#4,course#0,location#4,76,true,MTh,10:00am to 1:00pm
+item#73,instructor#3,course#5,location#2,77,false,SuMF,8:30am to 0:30pm
+item#74,instructor#4,course#5,location#6,78,true,TuWSuMFTh,11:30am to 0:30pm
+item#75,instructor#2,course#4,location#5,71,false,TuSuTh,1:30pm to 2:00pm
+item#76,instructor#4,course#6,location#2,72,true,TuSaFTh,7:00am to 9:30am
+item#77,instructor#0,course#3,location#3,73,false,TuSu,0:00pm to 0:30pm
+item#78,instructor#2,course#3,location#1,74,true,Su,9:30am to 11:00am
+item#79,instructor#0,course#0,location#5,84,true,SuFTh,1:00pm to 1:30pm
+item#80,instructor#7,course#0,location#5,83,false,SuWMTh,11:30am to 0:30pm
+item#81,instructor#2,course#3,location#6,86,true,WMF,0:30pm to 2:00pm
+item#82,instructor#4,course#4,location#1,85,false,TuSuFSa,11:30am to 0:30pm
+item#83,instructor#3,course#6,location#0,80,true,TuSu,10:30am to 0:30pm
+item#84,instructor#0,course#0,location#3,79,false,TuM,11:30am to 1:00pm
+item#85,instructor#0,course#0,location#5,82,true,TuSuWF,7:00am to 10:30am
+item#86,instructor#7,course#7,location#3,81,false,FSaTh,11:30am to 2:00pm
+item#87,instructor#7,course#0,location#1,92,true,Th,7:30am to 9:00am
+item#88,instructor#1,course#1,location#4,91,false,TuSuWMSaTh,1:30pm to 2:00pm
+item#89,instructor#2,course#2,location#4,94,true,WSuMFTh,7:30am to 10:30am
+item#90,instructor#5,course#5,location#4,93,false,M,0:30pm to 1:30pm
+item#91,instructor#5,course#6,location#6,88,true,WSuSaF,7:30am to 9:30am
+item#92,instructor#2,course#1,location#5,87,false,TuSuWMFSaTh,10:00am to 0:00pm
+item#93,instructor#7,course#7,location#7,90,true,TuSaF,11:00am to 0:00pm
+item#94,instructor#4,course#0,location#6,89,false,SaTh,0:00pm to 1:30pm
+item#95,instructor#4,course#6,location#4,101,false,TuSuFTh,7:30am to 10:00am
+item#96,instructor#3,course#1,location#0,102,true,MFSa,7:30am to 9:00am
+item#97,instructor#4,course#6,location#3,99,false,SuMF,8:00am to 1:00pm
+item#98,instructor#4,course#1,location#3,100,true,TuMSaTh,10:30am to 0:30pm
+item#99,instructor#3,course#5,location#6,97,false,SuMSaF,0:30pm to 1:00pm
+item#100,instructor#1,course#5,location#5,98,true,TuSuWMFSa,1:00pm to 2:00pm
+item#101,instructor#4,course#6,location#1,95,false,TuWFSa,7:00am to 11:30am
+item#102,instructor#7,course#2,location#6,96,true,TuMSaTh,1:30pm to 2:00pm
+item#103,instructor#0,course#7,location#2,109,false,TuWFTh,9:30am to 2:00pm
+item#104,instructor#7,course#0,location#7,110,true,TuSuWMFSaTh,11:30am to 1:00pm
+item#105,instructor#3,course#6,location#2,107,false,TuWSa,1:30pm to 2:00pm
+item#106,instructor#5,course#2,location#3,108,true,TuSuMTh,11:30am to 1:30pm
+item#107,instructor#4,course#7,location#3,105,false,TuMSaFTh,1:00pm to 2:00pm
+item#108,instructor#1,course#1,location#6,106,true,TuW,11:30am to 2:00pm
+item#109,instructor#7,course#5,location#1,103,false,M,0:00pm to 2:00pm
+item#110,instructor#2,course#2,location#4,104,true,TuF,11:00am to 0:30pm
+item#111,instructor#2,course#4,location#4,118,true,MFSaTh,10:30am to 0:00pm
+item#112,instructor#0,course#5,location#6,117,false,TuWSuMSaFTh,11:00am to 2:00pm
+item#113,instructor#1,course#2,location#5,116,true,Tu,1:30pm to 2:00pm
+item#114,instructor#0,course#7,location#5,115,false,MFTh,11:30am to 0:30pm
+item#115,instructor#7,course#1,location#1,114,true,WSuMFTh,8:00am to 9:30am
+item#116,instructor#7,course#6,location#1,113,false,WF,10:30am to 1:30pm
+item#117,instructor#6,course#1,location#6,112,true,TuWMFSaTh,7:00am to 1:00pm
+item#118,instructor#1,course#4,location#1,111,false,Th,7:00am to 10:30am
+item#119,instructor#1,course#7,location#4,126,true,SuW,10:30am to 2:00pm
+item#120,instructor#0,course#4,location#7,125,false,TuSuMFSa,0:30pm to 1:00pm
+item#121,instructor#1,course#0,location#1,124,true,TuWSuMSaFTh,8:30am to 0:30pm
+item#122,instructor#3,course#6,location#5,123,false,TuSuWSaFTh,11:30am to 2:00pm
+item#123,instructor#2,course#1,location#6,122,true,SuF,7:00am to 2:00pm
+item#124,instructor#6,course#3,location#7,121,false,TuSuWMSa,1:00pm to 1:30pm
+item#125,instructor#5,course#7,location#7,120,true,TuMTh,9:30am to 0:00pm
+item#126,instructor#0,course#2,location#1,119,false,TuSa,11:00am to 0:00pm
+item#127,instructor#2,course#0,location#6,136,true,SuSaTh,7:00am to 11:00am
+item#128,instructor#0,course#6,location#5,135,false,WFSa,9:30am to 0:00pm
+item#129,instructor#0,course#1,location#5,138,true,TuSa,10:30am to 0:30pm
+item#130,instructor#2,course#0,location#7,137,false,Sa,11:00am to 1:00pm
+item#131,instructor#0,course#2,location#2,140,true,TuWMSaF,10:30am to 0:30pm
+item#132,instructor#0,course#7,location#5,139,false,TuSuWSaFTh,11:30am to 1:00pm
+item#133,instructor#5,course#3,location#3,142,true,MFTh,8:00am to 2:00pm
+item#134,instructor#3,course#3,location#2,141,false,TuMTh,10:30am to 1:30pm
+item#135,instructor#0,course#1,location#4,128,true,TuWSuMFSa,9:00am to 2:00pm
+item#136,instructor#4,course#3,location#4,127,false,TuSuWMSaFTh,9:00am to 11:00am
+item#137,instructor#6,course#2,location#1,130,true,TuWSuMSaFTh,10:00am to 0:30pm
+item#138,instructor#0,course#2,location#7,129,false,TuWSuMSaFTh,1:30pm to 2:00pm
+item#139,instructor#0,course#5,location#5,132,true,WMSa,8:00am to 1:30pm
+item#140,instructor#5,course#5,location#4,131,false,Sa,10:30am to 0:30pm
+item#141,instructor#6,course#5,location#2,134,true,SuSa,7:30am to 11:00am
+item#142,instructor#1,course#6,location#7,133,false,TuSuMSaTh,8:00am to 2:00pm
+item#143,instructor#0,course#0,location#2,151,false,TuSuWMSaF,11:30am to 1:30pm
+item#144,instructor#1,course#4,location#7,152,true,WSaTh,10:30am to 2:00pm
+item#145,instructor#4,course#7,location#0,153,false,TuSuSaFTh,8:00am to 11:00am
+item#146,instructor#3,course#7,location#3,154,true,TuSuMTh,11:30am to 0:00pm
+item#147,instructor#5,course#6,location#7,155,false,TuSaFTh,0:30pm to 1:00pm
+item#148,instructor#7,course#0,location#5,156,true,TuWSuMSaFTh,7:30am to 0:30pm
+item#149,instructor#2,course#4,location#5,157,false,WSuMSaFTh,7:30am to 11:30am
+item#150,instructor#6,course#4,location#2,158,true,TuWMF,10:30am to 1:30pm
+item#151,instructor#2,course#7,location#2,143,false,TuSuWSaFTh,9:00am to 10:00am
+item#152,instructor#0,course#4,location#7,144,true,TuTh,8:00am to 0:30pm
+item#153,instructor#5,course#0,location#0,145,false,TuSuMF,9:30am to 11:00am
+item#154,instructor#5,course#4,location#1,146,true,TuSuMFSa,8:00am to 11:00am
+item#155,instructor#1,course#0,location#7,147,false,SuWSaFTh,1:30pm to 2:00pm
+item#156,instructor#7,course#5,location#3,148,true,WMSaFTh,7:00am to 11:00am
+item#157,instructor#1,course#6,location#5,149,false,TuSuMTh,7:00am to 8:30am
+item#158,instructor#4,course#4,location#6,150,true,TuSuMSaF,9:30am to 0:00pm
+item#159,instructor#6,course#7,location#2,170,true,WTh,7:00am to 7:30am
+item#160,instructor#4,course#1,location#7,169,false,TuSuM,0:00pm to 2:00pm
+item#161,instructor#4,course#1,location#0,168,true,FTh,7:30am to 8:30am
+item#162,instructor#2,course#1,location#1,167,false,Su,7:00am to 8:00am
+item#163,instructor#0,course#3,location#3,174,true,MSaF,8:00am to 9:00am
+item#164,instructor#2,course#0,location#7,173,false,MSa,0:00pm to 0:30pm
+item#165,instructor#2,course#7,location#5,172,true,SuTh,10:00am to 1:30pm
+item#166,instructor#4,course#1,location#3,171,false,MTh,11:00am to 1:00pm
+item#167,instructor#7,course#6,location#1,162,true,TuSuWSaFTh,9:30am to 10:30am
+item#168,instructor#6,course#5,location#2,161,false,Sa,9:00am to 1:30pm
+item#169,instructor#5,course#2,location#7,160,true,Su,8:30am to 2:00pm
+item#170,instructor#1,course#6,location#5,159,false,WSuSa,11:30am to 2:00pm
+item#171,instructor#3,course#2,location#2,166,true,WM,11:00am to 11:30am
+item#172,instructor#1,course#2,location#6,165,false,SaTh,9:00am to 1:30pm
+item#173,instructor#6,course#0,location#6,164,true,Tu,10:00am to 11:30am
+item#174,instructor#1,course#4,location#0,163,false,TuMSa,8:30am to 0:00pm
+item#175,instructor#0,course#0,location#4,185,false,TuSuFSa,11:30am to 0:00pm
+item#176,instructor#4,course#3,location#2,186,true,SuTh,7:00am to 0:00pm
+item#177,instructor#2,course#5,location#3,183,false,TuWSaFTh,11:30am to 1:00pm
+item#178,instructor#7,course#0,location#2,184,true,M,1:30pm to 2:00pm
+item#179,instructor#2,course#5,location#7,189,false,WSuMSaFTh,1:00pm to 1:30pm
+item#180,instructor#6,course#0,location#6,190,true,SuWMSaTh,1:30pm to 2:00pm
+item#181,instructor#4,course#5,location#1,187,false,WSuMSaFTh,1:30pm to 2:00pm
+item#182,instructor#1,course#3,location#3,188,true,Tu,10:00am to 2:00pm
+item#183,instructor#2,course#1,location#2,177,false,TuSuMSa,8:30am to 0:00pm
+item#184,instructor#7,course#7,location#5,178,true,TuWMSaFTh,8:30am to 2:00pm
+item#185,instructor#1,course#5,location#5,175,false,SuWFSaTh,9:00am to 1:00pm
+item#186,instructor#1,course#3,location#0,176,true,WSa,0:30pm to 1:00pm
+item#187,instructor#0,course#3,location#5,181,false,TuWSa,8:00am to 1:00pm
+item#188,instructor#0,course#3,location#5,182,true,TuF,9:00am to 0:30pm
+item#189,instructor#6,course#2,location#1,179,false,WSuMSa,0:30pm to 1:00pm
+item#190,instructor#1,course#6,location#6,180,true,TuWMSa,10:30am to 0:30pm
+item#191,instructor#7,course#3,location#1,204,true,TuSuSaFTh,9:30am to 0:30pm
+item#192,instructor#4,course#2,location#2,203,false,SuTh,8:00am to 8:30am
+item#193,instructor#0,course#6,location#7,206,true,Tu,11:00am to 0:00pm
+item#194,instructor#4,course#0,location#2,205,false,W,0:30pm to 1:00pm
+item#195,instructor#6,course#5,location#5,200,true,SuWMSa,1:00pm to 2:00pm
+item#196,instructor#3,course#7,location#2,199,false,TuSuSaTh,7:00am to 2:00pm
+item#197,instructor#6,course#1,location#6,202,true,Th,0:30pm to 2:00pm
+item#198,instructor#7,course#2,location#3,201,false,TuSuWMFTh,10:30am to 0:30pm
+item#199,instructor#1,course#0,location#6,196,true,TuSuWMFSaTh,11:00am to 11:30am
+item#200,instructor#0,course#5,location#5,195,false,WSa,10:00am to 11:30am
+item#201,instructor#0,course#1,location#5,198,true,TuWMSaFTh,1:30pm to 2:00pm
+item#202,instructor#3,course#4,location#1,197,false,SuMSaFTh,1:00pm to 1:30pm
+item#203,instructor#2,course#1,location#7,192,true,Sa,10:30am to 11:00am
+item#204,instructor#1,course#3,location#1,191,false,TuWFSaTh,7:00am to 11:00am
+item#205,instructor#0,course#4,location#3,194,true,TuWMFTh,7:00am to 9:00am
+item#206,instructor#2,course#1,location#3,193,false,TuWSu,0:00pm to 0:30pm
+item#207,instructor#3,course#5,location#0,219,false,TuSuWFSaTh,1:30pm to 2:00pm
+item#208,instructor#1,course#2,location#6,220,true,TuWMFTh,9:30am to 10:30am
+item#209,instructor#7,course#0,location#5,221,false,TuSuWMTh,10:00am to 0:30pm
+item#210,instructor#6,course#1,location#1,222,true,WMSaFTh,8:30am to 11:00am
+item#211,instructor#6,course#1,location#5,215,false,WSuMFTh,1:00pm to 1:30pm
+item#212,instructor#0,course#1,location#4,216,true,Su,11:00am to 11:30am
+item#213,instructor#1,course#6,location#7,217,false,M,1:00pm to 1:30pm
+item#214,instructor#3,course#6,location#2,218,true,WSuF,9:00am to 0:00pm
+item#215,instructor#3,course#3,location#3,211,false,SuMF,0:00pm to 1:30pm
+item#216,instructor#2,course#4,location#3,212,true,TuF,0:30pm to 1:00pm
+item#217,instructor#7,course#6,location#6,213,false,SuTh,11:00am to 1:00pm
+item#218,instructor#5,course#5,location#6,214,true,Th,7:30am to 10:30am
+item#219,instructor#3,course#5,location#2,207,false,MFSaTh,11:00am to 1:30pm
+item#220,instructor#7,course#4,location#3,208,true,Tu,0:00pm to 1:00pm
+item#221,instructor#7,course#6,location#6,209,false,Su,1:00pm to 1:30pm
+item#222,instructor#0,course#0,location#2,210,true,TuWSaFTh,7:30am to 2:00pm
+item#223,instructor#1,course#2,location#2,238,true,TuSuTh,0:30pm to 1:00pm
+item#224,instructor#3,course#3,location#7,237,false,TuWSuMFSaTh,8:30am to 10:00am
+item#225,instructor#3,course#0,location#0,236,true,WSu,7:00am to 0:00pm
+item#226,instructor#6,course#0,location#5,235,false,Sa,7:30am to 9:00am
+item#227,instructor#0,course#6,location#7,234,true,TuFSa,10:30am to 11:00am
+item#228,instructor#6,course#2,location#2,233,false,TuSa,7:00am to 11:00am
+item#229,instructor#2,course#2,location#7,232,true,SuMFTh,11:00am to 11:30am
+item#230,instructor#7,course#2,location#2,231,false,TuWMSaFTh,11:00am to 1:30pm
+item#231,instructor#0,course#2,location#4,230,true,TuSuWMSaFTh,8:00am to 2:00pm
+item#232,instructor#1,course#1,location#7,229,false,TuSuWMSaFTh,8:00am to 10:30am
+item#233,instructor#6,course#6,location#0,228,true,TuMTh,1:30pm to 2:00pm
+item#234,instructor#3,course#3,location#0,227,false,TuWMSaTh,11:30am to 2:00pm
+item#235,instructor#5,course#2,location#4,226,true,Tu,11:00am to 1:30pm
+item#236,instructor#2,course#3,location#4,225,false,TuTh,1:30pm to 2:00pm
+item#237,instructor#2,course#5,location#3,224,true,MSa,8:30am to 1:30pm
+item#238,instructor#4,course#5,location#2,223,false,Th,11:00am to 0:30pm
+item#239,instructor#2,course#3,location#5,253,false,TuSuWMSaFTh,9:30am to 2:00pm
+item#240,instructor#6,course#7,location#1,254,true,TuSuW,1:30pm to 2:00pm
+item#241,instructor#5,course#3,location#7,251,false,TuWMFSaTh,1:00pm to 1:30pm
+item#242,instructor#6,course#1,location#6,252,true,TuSu,1:00pm to 2:00pm
+item#243,instructor#7,course#5,location#7,249,false,TuWSuMSaFTh,7:30am to 0:30pm
+item#244,instructor#1,course#6,location#0,250,true,MFSaTh,8:00am to 9:00am
+item#245,instructor#4,course#2,location#7,247,false,Tu,0:30pm to 2:00pm
+item#246,instructor#1,course#6,location#6,248,true,TuW,0:30pm to 2:00pm
+item#247,instructor#1,course#4,location#2,245,false,TuWSuFSa,7:00am to 0:30pm
+item#248,instructor#2,course#7,location#7,246,true,TuSuWMSaFTh,9:00am to 11:00am
+item#249,instructor#6,course#6,location#3,243,false,WSaTh,11:30am to 0:00pm
+item#250,instructor#5,course#6,location#3,244,true,Th,10:30am to 1:00pm
+item#251,instructor#5,course#5,location#3,241,false,SuMSaTh,0:00pm to 2:00pm
+item#252,instructor#6,course#2,location#1,242,true,WSaFTh,8:30am to 0:00pm
+item#253,instructor#4,course#1,location#4,239,false,WSaTh,1:30pm to 2:00pm
+item#254,instructor#7,course#4,location#6,240,true,MSaTh,9:00am to 11:00am
+item#255,instructor#2,course#7,location#0,274,true,WSuSa,1:00pm to 2:00pm
+item#256,instructor#5,course#2,location#6,273,false,TuSuWFTh,9:30am to 1:00pm
+item#257,instructor#6,course#4,location#2,272,true,TuWSuMSaFTh,11:00am to 0:30pm
+item#258,instructor#1,course#4,location#6,271,false,TuWSuMFSaTh,7:00am to 9:30am
+item#259,instructor#5,course#4,location#0,278,true,TuSuWMFSaTh,1:00pm to 2:00pm
+item#260,instructor#1,course#2,location#6,277,false,TuSuWFSaTh,8:30am to 0:00pm
+item#261,instructor#1,course#2,location#3,276,true,SuWM,0:00pm to 1:00pm
+item#262,instructor#1,course#1,location#6,275,false,TuSuWMFSaTh,10:30am to 0:00pm
+item#263,instructor#0,course#6,location#2,282,true,M,1:30pm to 2:00pm
+item#264,instructor#1,course#4,location#2,281,false,Su,8:30am to 1:30pm
+item#265,instructor#4,course#1,location#6,280,true,TuMFSaTh,9:30am to 0:00pm
+item#266,instructor#0,course#0,location#5,279,false,TuWFSa,7:30am to 1:30pm
+item#267,instructor#6,course#4,location#0,286,true,F,1:00pm to 1:30pm
+item#268,instructor#7,course#4,location#7,285,false,SuWF,0:00pm to 0:30pm
+item#269,instructor#3,course#1,location#1,284,true,Th,9:30am to 10:30am
+item#270,instructor#3,course#2,location#2,283,false,TuSuWMSaFTh,9:30am to 1:00pm
+item#271,instructor#1,course#1,location#6,257,false,TuSuWMSaFTh,1:30pm to 2:00pm
+item#272,instructor#1,course#5,location#7,258,true,SuWMFSaTh,7:30am to 8:30am
+item#273,instructor#1,course#7,location#4,255,false,F,8:30am to 10:00am
+item#274,instructor#7,course#2,location#5,256,true,MFSaTh,11:00am to 0:30pm
+item#275,instructor#5,course#1,location#0,261,false,WFTh,10:30am to 11:00am
+item#276,instructor#2,course#0,location#5,262,true,TuWMFTh,1:30pm to 2:00pm
+item#277,instructor#4,course#1,location#4,259,false,TuWSuMFSaTh,0:30pm to 2:00pm
+item#278,instructor#2,course#4,location#5,260,true,TuM,10:30am to 1:30pm
+item#279,instructor#0,course#1,location#5,265,false,TuWSuMFTh,7:00am to 10:00am
+item#280,instructor#4,course#4,location#3,266,true,TuSuWMFTh,10:00am to 10:30am
+item#281,instructor#2,course#3,location#5,263,false,TuW,0:00pm to 1:30pm
+item#282,instructor#1,course#4,location#1,264,true,TuSuWMSaFTh,9:30am to 11:00am
+item#283,instructor#4,course#3,location#7,269,false,WSuFSa,7:00am to 1:30pm
+item#284,instructor#4,course#1,location#1,270,true,SuSa,8:00am to 0:30pm
+item#285,instructor#7,course#0,location#6,267,false,WMF,10:00am to 1:00pm
+item#286,instructor#1,course#4,location#6,268,true,TuSuWSaF,0:30pm to 1:00pm
+item#287,instructor#2,course#4,location#7,304,true,TuSuWMSaFTh,11:30am to 2:00pm
+item#288,instructor#6,course#4,location#1,303,false,TuSuWMFTh,0:30pm to 1:30pm
+item#289,instructor#1,course#6,location#6,306,true,TuSuWSa,10:30am to 1:00pm
+item#290,instructor#5,course#7,location#7,305,false,W,11:00am to 1:30pm
+item#291,instructor#1,course#5,location#0,308,true,TuWSuSaFTh,0:00pm to 0:30pm
+item#292,instructor#6,course#4,location#0,307,false,SuWMSaFTh,0:30pm to 1:00pm
+item#293,instructor#1,course#5,location#4,310,true,SuWFTh,10:30am to 11:30am
+item#294,instructor#7,course#7,location#6,309,false,TuSuMSa,0:30pm to 2:00pm
+item#295,instructor#0,course#4,location#2,312,true,Tu,9:00am to 11:30am
+item#296,instructor#7,course#7,location#5,311,false,WSuFTh,8:30am to 2:00pm
+item#297,instructor#6,course#4,location#6,314,true,TuSuMSaTh,8:30am to 0:30pm
+item#298,instructor#2,course#4,location#5,313,false,TuSu,8:30am to 1:00pm
+item#299,instructor#4,course#2,location#3,316,true,TuSuWMFSaTh,9:30am to 10:00am
+item#300,instructor#4,course#0,location#2,315,false,TuSuSa,1:30pm to 2:00pm
+item#301,instructor#3,course#4,location#0,318,true,TuWSuMSa,11:30am to 2:00pm
+item#302,instructor#3,course#7,location#3,317,false,TuSuWMFTh,10:00am to 11:00am
+item#303,instructor#0,course#7,location#3,287,false,TuSuWMFSaTh,8:00am to 0:00pm
+item#304,instructor#2,course#0,location#3,288,true,TuWSuMSaFTh,0:00pm to 1:00pm
+item#305,instructor#4,course#6,location#3,289,false,TuSuWMSaFTh,7:30am to 11:30am
+item#306,instructor#0,course#1,location#3,290,true,TuM,10:00am to 10:30am
+item#307,instructor#6,course#7,location#5,291,false,SuMTh,9:00am to 10:30am
+item#308,instructor#2,course#7,location#2,292,true,TuSuM,1:30pm to 2:00pm
+item#309,instructor#6,course#1,location#3,293,false,M,9:00am to 11:30am
+item#310,instructor#3,course#1,location#1,294,true,F,0:00pm to 1:30pm
+item#311,instructor#6,course#7,location#0,295,false,SuSa,9:30am to 0:00pm
+item#312,instructor#7,course#3,location#7,296,true,SuWF,10:00am to 1:00pm
+item#313,instructor#3,course#2,location#4,297,false,SaTh,7:00am to 11:30am
+item#314,instructor#5,course#4,location#4,298,true,SuWMSa,9:30am to 10:00am
+item#315,instructor#0,course#1,location#7,299,false,TuWSuMSaFTh,7:00am to 8:30am
+item#316,instructor#0,course#3,location#6,300,true,TuSuM,9:00am to 11:00am
+item#317,instructor#7,course#4,location#7,301,false,WMSaF,9:30am to 1:00pm
+item#318,instructor#6,course#6,location#3,302,true,TuMFTh,0:30pm to 2:00pm
+item#319,instructor#0,course#2,location#0,342,true,TuWMSaFTh,10:30am to 1:00pm
+item#320,instructor#5,course#6,location#1,341,false,WSa,8:30am to 2:00pm
+item#321,instructor#6,course#5,location#0,340,true,M,8:00am to 2:00pm
+item#322,instructor#3,course#4,location#0,339,false,TuSu,11:00am to 0:30pm
+item#323,instructor#1,course#5,location#4,338,true,TuSuWMFTh,9:00am to 0:30pm
+item#324,instructor#4,course#3,location#0,337,false,TuW,10:00am to 11:00am
+item#325,instructor#7,course#5,location#3,336,true,Th,10:30am to 11:00am
+item#326,instructor#4,course#2,location#4,335,false,TuSuWMSaFTh,7:30am to 1:30pm
+item#327,instructor#6,course#7,location#2,350,true,TuMFSaTh,1:00pm to 1:30pm
+item#328,instructor#1,course#6,location#4,349,false,SuF,11:30am to 0:30pm
+item#329,instructor#6,course#0,location#4,348,true,TuMSaTh,0:00pm to 0:30pm
+item#330,instructor#0,course#5,location#5,347,false,SuTh,10:30am to 2:00pm
+item#331,instructor#2,course#5,location#6,346,true,TuSuMSaF,8:30am to 0:30pm
+item#332,instructor#2,course#3,location#4,345,false,TuW,8:00am to 0:00pm
+item#333,instructor#5,course#5,location#5,344,true,SuF,8:30am to 10:00am
+item#334,instructor#3,course#7,location#0,343,false,Tu,0:00pm to 0:30pm
+item#335,instructor#7,course#2,location#6,325,false,TuSaF,0:00pm to 1:00pm
+item#336,instructor#6,course#3,location#3,326,true,TuWSuMSaFTh,10:30am to 11:00am
+item#337,instructor#7,course#3,location#5,323,false,TuSuWFSaTh,11:30am to 0:30pm
+item#338,instructor#2,course#3,location#3,324,true,WMFSaTh,1:00pm to 1:30pm
+item#339,instructor#6,course#6,location#2,321,false,SuMF,9:30am to 0:00pm
+item#340,instructor#7,course#0,location#5,322,true,Tu,8:00am to 1:30pm
+item#341,instructor#7,course#5,location#1,319,false,Su,1:00pm to 1:30pm
+item#342,instructor#0,course#4,location#2,320,true,TuWMTh,1:00pm to 2:00pm
+item#343,instructor#2,course#5,location#1,333,false,TuSaTh,10:30am to 11:00am
+item#344,instructor#5,course#1,location#5,334,true,WMF,10:30am to 2:00pm
+item#345,instructor#5,course#0,location#1,331,false,Tu,9:30am to 10:00am
+item#346,instructor#7,course#7,location#4,332,true,TuSuWMSaFTh,7:30am to 2:00pm
+item#347,instructor#3,course#3,location#5,329,false,TuWSuSaF,9:00am to 0:30pm
+item#348,instructor#1,course#4,location#3,330,true,TuSuWMFSaTh,7:30am to 0:00pm
+item#349,instructor#7,course#5,location#3,327,false,TuSuFTh,9:30am to 2:00pm
+item#350,instructor#0,course#5,location#7,328,true,M,1:00pm to 2:00pm
+item#351,instructor#6,course#4,location#3,372,true,TuSuMSaTh,10:30am to 11:00am
+item#352,instructor#3,course#0,location#6,371,false,TuW,10:00am to 11:30am
+item#353,instructor#0,course#2,location#5,374,true,F,7:00am to 7:30am
+item#354,instructor#3,course#7,location#5,373,false,SuFTh,10:30am to 11:30am
+item#355,instructor#0,course#3,location#2,368,true,TuWSuMSaFTh,7:30am to 10:30am
+item#356,instructor#6,course#7,location#5,367,false,TuWSuMFTh,1:30pm to 2:00pm
+item#357,instructor#2,course#1,location#4,370,true,TuWMSaF,11:00am to 0:30pm
+item#358,instructor#6,course#3,location#4,369,false,SaTh,11:30am to 0:00pm
+item#359,instructor#5,course#0,location#4,380,true,TuSuWSaFTh,10:00am to 0:00pm
+item#360,instructor#3,course#6,location#0,379,false,TuWSuMFSaTh,9:30am to 11:30am
+item#361,instructor#2,course#7,location#1,382,true,TuSuWSa,1:00pm to 1:30pm
+item#362,instructor#3,course#5,location#1,381,false,MSa,0:00pm to 1:30pm
+item#363,instructor#1,course#1,location#4,376,true,TuSuWMSaFTh,11:30am to 0:30pm
+item#364,instructor#2,course#2,location#7,375,false,FTh,1:30pm to 2:00pm
+item#365,instructor#0,course#1,location#1,378,true,FSaTh,0:00pm to 0:30pm
+item#366,instructor#3,course#3,location#2,377,false,TuF,1:30pm to 2:00pm
+item#367,instructor#2,course#7,location#1,355,false,Tu,8:30am to 10:30am
+item#368,instructor#2,course#7,location#1,356,true,FTh,8:30am to 10:00am
+item#369,instructor#5,course#1,location#5,357,false,TuWFSa,0:00pm to 1:30pm
+item#370,instructor#6,course#1,location#3,358,true,TuSuSaTh,8:00am to 9:30am
+item#371,instructor#1,course#0,location#0,351,false,TuWSuMSaFTh,11:00am to 1:30pm
+item#372,instructor#5,course#0,location#4,352,true,TuMTh,1:30pm to 2:00pm
+item#373,instructor#0,course#3,location#3,353,false,TuSuWSaFTh,1:00pm to 2:00pm
+item#374,instructor#0,course#2,location#5,354,true,TuWSuMFSaTh,11:00am to 1:00pm
+item#375,instructor#6,course#5,location#2,363,false,Sa,0:00pm to 2:00pm
+item#376,instructor#1,course#1,location#7,364,true,Su,0:30pm to 2:00pm
+item#377,instructor#6,course#5,location#0,365,false,MSaF,10:00am to 1:30pm
+item#378,instructor#3,course#2,location#1,366,true,SuMFTh,11:30am to 0:30pm
+item#379,instructor#1,course#5,location#5,359,false,TuSaFTh,8:00am to 0:00pm
+item#380,instructor#6,course#2,location#2,360,true,TuWSuSaTh,10:30am to 1:30pm
+item#381,instructor#3,course#7,location#6,361,false,TuWMSa,8:30am to 11:30am
+item#382,instructor#3,course#3,location#1,362,true,SuSa,9:00am to 1:30pm
+item#383,instructor#3,course#1,location#1,409,false,Tu,8:00am to 10:30am
+item#384,instructor#2,course#3,location#7,410,true,TuSuWMFTh,10:30am to 11:30am
+item#385,instructor#4,course#4,location#0,407,false,SuWFTh,11:00am to 0:00pm
+item#386,instructor#7,course#7,location#7,408,true,TuSuWMSaFTh,1:00pm to 2:00pm
+item#387,instructor#4,course#4,location#0,413,false,TuSuWMSaFTh,0:00pm to 2:00pm
+item#388,instructor#5,course#0,location#1,414,true,SuMSa,11:00am to 2:00pm
+item#389,instructor#1,course#1,location#2,411,false,TuF,0:00pm to 1:00pm
+item#390,instructor#0,course#4,location#3,412,true,WM,8:00am to 11:00am
+item#391,instructor#1,course#6,location#1,401,false,TuSaF,8:00am to 10:30am
+item#392,instructor#5,course#3,location#5,402,true,TuSuWFTh,7:00am to 11:30am
+item#393,instructor#6,course#7,location#1,399,false,Th,11:00am to 0:00pm
+item#394,instructor#7,course#5,location#6,400,true,TuSuMTh,9:00am to 0:00pm
+item#395,instructor#7,course#6,location#2,405,false,TuWSuMSaFTh,8:30am to 1:30pm
+item#396,instructor#7,course#7,location#2,406,true,TuWSuMFSaTh,10:30am to 1:30pm
+item#397,instructor#3,course#5,location#6,403,false,Sa,7:00am to 1:00pm
+item#398,instructor#2,course#4,location#2,404,true,TuSuWMFTh,11:00am to 0:30pm
+item#399,instructor#7,course#7,location#3,394,true,TuWMSaTh,10:30am to 11:00am
+item#400,instructor#5,course#3,location#3,393,false,TuSaFTh,8:00am to 1:00pm
+item#401,instructor#6,course#5,location#7,392,true,TuWSuMSaFTh,1:00pm to 2:00pm
+item#402,instructor#0,course#2,location#6,391,false,TuSuWMFTh,11:00am to 11:30am
+item#403,instructor#4,course#5,location#2,398,true,SuM,8:30am to 11:30am
+item#404,instructor#1,course#1,location#2,397,false,Th,0:00pm to 1:30pm
+item#405,instructor#3,course#7,location#0,396,true,W,11:00am to 1:00pm
+item#406,instructor#0,course#5,location#5,395,false,TuSuMFTh,8:00am to 10:00am
+item#407,instructor#4,course#6,location#5,386,true,TuWSuMSaF,1:30pm to 2:00pm
+item#408,instructor#6,course#0,location#7,385,false,TuSuWMFTh,9:30am to 10:30am
+item#409,instructor#0,course#0,location#2,384,true,TuSuMSaFTh,9:30am to 11:00am
+item#410,instructor#0,course#6,location#6,383,false,TuWSuMTh,8:30am to 10:00am
+item#411,instructor#0,course#3,location#5,390,true,Tu,9:30am to 11:30am
+item#412,instructor#2,course#7,location#1,389,false,TuWSuFSa,11:00am to 11:30am
+item#413,instructor#4,course#4,location#3,388,true,TuSuWTh,8:30am to 9:00am
+item#414,instructor#7,course#2,location#2,387,false,F,0:30pm to 1:00pm
+item#415,instructor#6,course#0,location#1,439,false,WM,10:30am to 0:00pm
+item#416,instructor#4,course#4,location#7,440,true,TuWSuMSaTh,7:30am to 9:30am
+item#417,instructor#1,course#7,location#2,441,false,TuSuFSaTh,10:00am to 2:00pm
+item#418,instructor#2,course#7,location#3,442,true,TuSuMSaTh,11:00am to 1:00pm
+item#419,instructor#7,course#0,location#6,443,false,TuMSaTh,1:30pm to 2:00pm
+item#420,instructor#0,course#6,location#2,444,true,TuWM,10:30am to 11:00am
+item#421,instructor#6,course#1,location#5,445,false,SuFTh,8:00am to 0:30pm
+item#422,instructor#6,course#6,location#4,446,true,TuWSuSaF,9:30am to 11:30am
+item#423,instructor#5,course#0,location#6,431,false,WSuMFSaTh,7:30am to 0:30pm
+item#424,instructor#1,course#1,location#1,432,true,SuWMF,11:30am to 0:00pm
+item#425,instructor#2,course#1,location#1,433,false,TuSuMSaFTh,11:00am to 0:00pm
+item#426,instructor#0,course#4,location#6,434,true,SuWMFTh,9:00am to 0:30pm
+item#427,instructor#6,course#1,location#4,435,false,TuSuMSaFTh,1:30pm to 2:00pm
+item#428,instructor#2,course#3,location#1,436,true,SuMF,0:00pm to 2:00pm
+item#429,instructor#4,course#4,location#5,437,false,TuWSuMFSaTh,9:00am to 9:30am
+item#430,instructor#6,course#7,location#2,438,true,TuSuTh,9:30am to 1:30pm
+item#431,instructor#2,course#5,location#0,424,true,TuWSuMSaF,1:00pm to 1:30pm
+item#432,instructor#6,course#2,location#3,423,false,TuWMF,0:30pm to 1:00pm
+item#433,instructor#7,course#6,location#4,426,true,Tu,0:30pm to 2:00pm
+item#434,instructor#5,course#3,location#2,425,false,MFTh,9:00am to 10:00am
+item#435,instructor#0,course#6,location#5,428,true,TuSuWSaFTh,10:30am to 0:30pm
+item#436,instructor#0,course#1,location#6,427,false,TuSuWMSaF,7:00am to 0:30pm
+item#437,instructor#1,course#0,location#7,430,true,Tu,11:30am to 1:00pm
+item#438,instructor#2,course#4,location#5,429,false,TuWSuMSaFTh,9:00am to 1:30pm
+item#439,instructor#2,course#0,location#5,416,true,TuSuFSaTh,9:30am to 0:30pm
+item#440,instructor#1,course#1,location#3,415,false,TuWMFSaTh,0:30pm to 2:00pm
+item#441,instructor#2,course#2,location#2,418,true,TuWMFSaTh,0:30pm to 1:00pm
+item#442,instructor#6,course#6,location#1,417,false,WMFSa,8:00am to 0:30pm
+item#443,instructor#3,course#1,location#2,420,true,Su,10:00am to 11:30am
+item#444,instructor#7,course#1,location#2,419,false,TuSuWMSaTh,10:30am to 2:00pm
+item#445,instructor#7,course#0,location#1,422,true,TuSuWMFSa,0:00pm to 1:30pm
+item#446,instructor#3,course#0,location#7,421,false,TuM,1:30pm to 2:00pm
+item#447,instructor#6,course#6,location#1,477,false,FTh,7:00am to 7:30am
+item#448,instructor#2,course#7,location#4,478,true,WFTh,8:30am to 10:00am
+item#449,instructor#5,course#0,location#2,475,false,TuSuWMSaTh,0:30pm to 1:00pm
+item#450,instructor#7,course#1,location#4,476,true,TuWMSaF,10:00am to 0:30pm
+item#451,instructor#5,course#6,location#6,473,false,TuSuWMFSaTh,0:00pm to 0:30pm
+item#452,instructor#5,course#3,location#7,474,true,TuSuWMFTh,8:00am to 0:30pm
+item#453,instructor#0,course#6,location#6,471,false,WMSaTh,11:30am to 0:00pm
+item#454,instructor#6,course#5,location#0,472,true,SaTh,7:30am to 11:30am
+item#455,instructor#3,course#4,location#4,469,false,TuWSuMSaF,0:30pm to 1:30pm
+item#456,instructor#4,course#7,location#6,470,true,TuSuWMF,10:30am to 11:00am
+item#457,instructor#0,course#6,location#1,467,false,WMFTh,8:30am to 10:30am
+item#458,instructor#6,course#3,location#5,468,true,TuWSuMFTh,0:30pm to 1:00pm
+item#459,instructor#6,course#7,location#4,465,false,WM,7:00am to 10:30am
+item#460,instructor#7,course#1,location#0,466,true,SuMSaFTh,9:00am to 0:30pm
+item#461,instructor#5,course#4,location#1,463,false,TuWMSaFTh,10:00am to 11:00am
+item#462,instructor#7,course#7,location#4,464,true,SaF,9:30am to 2:00pm
+item#463,instructor#2,course#5,location#1,462,true,TuSaF,10:30am to 11:00am
+item#464,instructor#2,course#4,location#0,461,false,TuSuWF,8:00am to 9:30am
+item#465,instructor#6,course#6,location#6,460,true,SuF,10:00am to 11:00am
+item#466,instructor#6,course#4,location#7,459,false,TuMF,0:00pm to 1:30pm
+item#467,instructor#5,course#5,location#2,458,true,TuWSuMFTh,1:30pm to 2:00pm
+item#468,instructor#2,course#7,location#5,457,false,Tu,9:30am to 11:00am
+item#469,instructor#2,course#6,location#3,456,true,TuWSuMSaF,1:30pm to 2:00pm
+item#470,instructor#7,course#7,location#7,455,false,Tu,0:00pm to 2:00pm
+item#471,instructor#7,course#6,location#2,454,true,TuWSuMSaF,9:00am to 10:00am
+item#472,instructor#2,course#6,location#5,453,false,TuMSa,1:00pm to 2:00pm
+item#473,instructor#3,course#1,location#1,452,true,TuWSuMSaFTh,10:00am to 11:00am
+item#474,instructor#4,course#3,location#1,451,false,WSaF,11:00am to 0:30pm
+item#475,instructor#0,course#6,location#5,450,true,MFSa,9:30am to 10:00am
+item#476,instructor#0,course#7,location#0,449,false,MSa,0:00pm to 1:00pm
+item#477,instructor#0,course#1,location#7,448,true,SuWFSa,11:00am to 1:30pm
+item#478,instructor#0,course#3,location#2,447,false,Sa,10:30am to 0:00pm
+item#479,instructor#0,course#6,location#2,507,false,TuSuWMSaFTh,7:30am to 9:00am
+item#480,instructor#7,course#1,location#5,508,true,TuSuSaFTh,9:00am to 0:00pm
+item#481,instructor#4,course#5,location#6,509,false,SuSa,0:30pm to 2:00pm
+item#482,instructor#2,course#1,location#2,510,true,TuSuMSaTh,8:30am to 10:00am
+item#483,instructor#4,course#2,location#0,503,false,TuWM,0:00pm to 2:00pm
+item#484,instructor#7,course#6,location#2,504,true,TuSuMFTh,9:30am to 0:00pm
+item#485,instructor#1,course#2,location#5,505,false,Tu,7:00am to 9:30am
+item#486,instructor#0,course#2,location#7,506,true,TuWMSaFTh,1:00pm to 2:00pm
+item#487,instructor#6,course#5,location#7,499,false,WFTh,1:30pm to 2:00pm
+item#488,instructor#7,course#0,location#0,500,true,TuSuMFSaTh,1:00pm to 1:30pm
+item#489,instructor#4,course#3,location#3,501,false,Sa,8:30am to 10:00am
+item#490,instructor#6,course#4,location#2,502,true,SuWMSa,10:00am to 2:00pm
+item#491,instructor#4,course#5,location#3,495,false,TuWSuSaTh,10:00am to 1:00pm
+item#492,instructor#7,course#5,location#4,496,true,MSa,0:00pm to 1:00pm
+item#493,instructor#5,course#7,location#5,497,false,TuSu,10:00am to 11:30am
+item#494,instructor#0,course#2,location#3,498,true,Tu,1:30pm to 2:00pm
+item#495,instructor#6,course#5,location#5,492,true,WSa,10:00am to 2:00pm
+item#496,instructor#3,course#0,location#1,491,false,TuWSuMSaFTh,0:30pm to 1:00pm
+item#497,instructor#3,course#7,location#1,494,true,SaTh,7:30am to 1:00pm
+item#498,instructor#5,course#0,location#1,493,false,TuWSuMSaF,9:00am to 10:00am
+item#499,instructor#1,course#3,location#6,488,true,TuWSuMFSaTh,9:00am to 9:30am
+item#500,instructor#0,course#0,location#5,487,false,TuSuMSaF,0:30pm to 1:30pm
+item#501,instructor#0,course#1,location#3,490,true,Th,10:00am to 10:30am
+item#502,instructor#5,course#6,location#4,489,false,TuMSa,0:00pm to 1:00pm
+item#503,instructor#5,course#7,location#1,484,true,SuWMSaTh,0:00pm to 1:30pm
+item#504,instructor#6,course#2,location#3,483,false,Sa,8:30am to 11:00am
+item#505,instructor#6,course#2,location#7,486,true,Tu,10:30am to 2:00pm
+item#506,instructor#0,course#7,location#4,485,false,TuWSuMFSaTh,0:30pm to 1:00pm
+item#507,instructor#5,course#7,location#2,480,true,TuSuMSaFTh,8:30am to 11:30am
+item#508,instructor#3,course#3,location#6,479,false,TuWSuMFSaTh,10:00am to 10:30am
+item#509,instructor#5,course#3,location#5,482,true,TuWSuSa,9:00am to 11:00am
+item#510,instructor#3,course#2,location#2,481,false,TuSuMFSaTh,7:00am to 8:30am
+item#511,instructor#0,course#1,location#1,549,false,TuSuWMFSaTh,7:30am to 10:30am
+item#512,instructor#6,course#6,location#7,550,true,SuW,0:00pm to 0:30pm
+item#513,instructor#4,course#2,location#6,547,false,TuSuWMSaFTh,7:00am to 0:00pm
+item#514,instructor#1,course#3,location#7,548,true,TuWSuMSaTh,8:00am to 0:00pm
+item#515,instructor#2,course#6,location#1,545,false,SuWMSaFTh,9:00am to 10:00am
+item#516,instructor#5,course#6,location#2,546,true,TuWSuMFSaTh,11:00am to 2:00pm
+item#517,instructor#7,course#3,location#4,543,false,W,7:00am to 10:00am
+item#518,instructor#6,course#6,location#0,544,true,WSaTh,10:00am to 0:30pm
+item#519,instructor#5,course#7,location#5,557,false,SuWMFSaTh,9:30am to 11:00am
+item#520,instructor#5,course#4,location#2,558,true,TuWM,9:00am to 1:30pm
+item#521,instructor#1,course#7,location#7,555,false,TuW,11:30am to 1:00pm
+item#522,instructor#3,course#2,location#3,556,true,TuWMSa,1:30pm to 2:00pm
+item#523,instructor#7,course#2,location#6,553,false,F,7:30am to 10:00am
+item#524,instructor#3,course#6,location#6,554,true,TuSuWMSaTh,10:00am to 10:30am
+item#525,instructor#2,course#1,location#2,551,false,Su,8:00am to 10:30am
+item#526,instructor#3,course#7,location#3,552,true,SuSaF,7:00am to 11:30am
+item#527,instructor#2,course#1,location#1,566,true,WTh,9:00am to 0:30pm
+item#528,instructor#6,course#6,location#0,565,false,SuM,11:30am to 1:00pm
+item#529,instructor#0,course#7,location#4,564,true,TuSuWMFSaTh,11:30am to 0:30pm
+item#530,instructor#3,course#3,location#5,563,false,W,11:30am to 0:00pm
+item#531,instructor#1,course#1,location#0,562,true,WSa,9:00am to 9:30am
+item#532,instructor#7,course#7,location#0,561,false,WSuSaF,8:00am to 10:00am
+item#533,instructor#5,course#7,location#0,560,true,Th,9:30am to 0:30pm
+item#534,instructor#4,course#5,location#7,559,false,WTh,7:30am to 9:00am
+item#535,instructor#4,course#0,location#5,574,true,TuWSuMSaFTh,8:30am to 1:30pm
+item#536,instructor#6,course#5,location#1,573,false,Su,1:30pm to 2:00pm
+item#537,instructor#4,course#3,location#6,572,true,SuTh,8:00am to 0:00pm
+item#538,instructor#7,course#7,location#7,571,false,TuWSuMSaFTh,1:00pm to 1:30pm
+item#539,instructor#7,course#7,location#0,570,true,TuSuSa,10:00am to 0:30pm
+item#540,instructor#3,course#0,location#4,569,false,TuWTh,7:00am to 9:00am
+item#541,instructor#2,course#3,location#3,568,true,WM,7:00am to 10:30am
+item#542,instructor#4,course#6,location#4,567,false,TuWSuMSaFTh,8:30am to 9:30am
+item#543,instructor#2,course#2,location#6,515,false,TuWMSa,8:00am to 0:30pm
+item#544,instructor#1,course#7,location#6,516,true,TuSuMSa,10:00am to 1:30pm
+item#545,instructor#4,course#1,location#3,517,false,TuSu,1:30pm to 2:00pm
+item#546,instructor#7,course#2,location#5,518,true,WMSaTh,10:00am to 10:30am
+item#547,instructor#3,course#5,location#6,511,false,WMTh,1:00pm to 1:30pm
+item#548,instructor#4,course#7,location#4,512,true,TuWMFTh,7:30am to 1:00pm
+item#549,instructor#5,course#2,location#7,513,false,Tu,7:30am to 10:00am
+item#550,instructor#0,course#0,location#1,514,true,TuSuWMSaFTh,10:00am to 1:30pm
+item#551,instructor#7,course#5,location#1,523,false,TuMSa,9:00am to 0:30pm
+item#552,instructor#0,course#6,location#7,524,true,SuF,11:00am to 1:00pm
+item#553,instructor#1,course#2,location#1,525,false,SuWFSa,11:30am to 2:00pm
+item#554,instructor#1,course#2,location#4,526,true,TuW,10:30am to 11:30am
+item#555,instructor#5,course#6,location#5,519,false,Su,1:00pm to 1:30pm
+item#556,instructor#5,course#1,location#3,520,true,TuSuWM,10:30am to 1:30pm
+item#557,instructor#2,course#0,location#2,521,false,TuSuWMTh,10:00am to 11:30am
+item#558,instructor#2,course#5,location#0,522,true,TuSuM,9:00am to 0:30pm
+item#559,instructor#3,course#0,location#7,532,true,TuSuWMF,0:00pm to 0:30pm
+item#560,instructor#5,course#1,location#5,531,false,TuWMSaFTh,10:00am to 0:30pm
+item#561,instructor#7,course#3,location#4,534,true,SuMFSaTh,8:00am to 9:30am
+item#562,instructor#7,course#1,location#6,533,false,TuWSuMFSaTh,11:30am to 1:30pm
+item#563,instructor#4,course#6,location#3,528,true,SuWSaF,11:30am to 2:00pm
+item#564,instructor#2,course#3,location#7,527,false,TuWF,11:00am to 1:30pm
+item#565,instructor#1,course#4,location#5,530,true,WSaTh,8:30am to 1:00pm
+item#566,instructor#1,course#2,location#1,529,false,TuMSaF,10:30am to 1:30pm
+item#567,instructor#6,course#0,location#6,540,true,TuSuWMSaFTh,10:30am to 11:30am
+item#568,instructor#1,course#3,location#6,539,false,TuWSuMSaFTh,1:30pm to 2:00pm
+item#569,instructor#0,course#4,location#2,542,true,SuWMFTh,9:00am to 0:30pm
+item#570,instructor#4,course#6,location#7,541,false,TuTh,11:00am to 2:00pm
+item#571,instructor#3,course#0,location#6,536,true,TuWSuFSaTh,10:00am to 10:30am
+item#572,instructor#4,course#4,location#5,535,false,W,9:00am to 10:00am
+item#573,instructor#3,course#5,location#5,538,true,SuWMSaFTh,7:00am to 1:30pm
+item#574,instructor#7,course#1,location#0,537,false,TuSuWMSaTh,0:30pm to 1:30pm
+item#575,instructor#2,course#6,location#0,609,false,TuSuWMFSaTh,7:30am to 9:00am
+item#576,instructor#6,course#2,location#7,610,true,TuMSa,7:00am to 1:30pm
+item#577,instructor#7,course#7,location#7,607,false,TuSuSaTh,9:00am to 11:30am
+item#578,instructor#7,course#4,location#5,608,true,SuMFTh,7:30am to 10:30am
+item#579,instructor#3,course#5,location#3,613,false,TuSuMFTh,0:30pm to 1:00pm
+item#580,instructor#6,course#1,location#4,614,true,TuWSuMFTh,8:00am to 11:00am
+item#581,instructor#0,course#4,location#7,611,false,TuWFSaTh,9:30am to 11:30am
+item#582,instructor#2,course#4,location#1,612,true,Su,10:00am to 10:30am
+item#583,instructor#4,course#3,location#2,617,false,Tu,11:00am to 11:30am
+item#584,instructor#0,course#7,location#0,618,true,TuSu,1:30pm to 2:00pm
+item#585,instructor#0,course#3,location#7,615,false,TuWSuMFSaTh,10:30am to 0:30pm
+item#586,instructor#3,course#5,location#0,616,true,TuSuWMFSa,11:00am to 1:30pm
+item#587,instructor#1,course#2,location#0,621,false,M,8:00am to 1:30pm
+item#588,instructor#2,course#4,location#0,622,true,Su,1:30pm to 2:00pm
+item#589,instructor#0,course#5,location#7,619,false,TuWSuMSaTh,8:30am to 2:00pm
+item#590,instructor#0,course#4,location#4,620,true,TuWM,9:30am to 1:00pm
+item#591,instructor#4,course#3,location#5,626,true,TuSuMSaFTh,1:30pm to 2:00pm
+item#592,instructor#6,course#4,location#1,625,false,TuSuMFSa,0:30pm to 2:00pm
+item#593,instructor#2,course#0,location#3,624,true,TuMSa,11:30am to 0:00pm
+item#594,instructor#4,course#5,location#2,623,false,M,10:30am to 11:00am
+item#595,instructor#3,course#1,location#7,630,true,TuWFTh,10:30am to 1:30pm
+item#596,instructor#7,course#3,location#1,629,false,TuMF,0:30pm to 1:00pm
+item#597,instructor#6,course#0,location#7,628,true,TuMFTh,11:00am to 0:30pm
+item#598,instructor#0,course#6,location#2,627,false,TuWSuMFSaTh,0:00pm to 0:30pm
+item#599,instructor#0,course#2,location#2,634,true,TuSuMSaF,0:00pm to 1:00pm
+item#600,instructor#6,course#6,location#5,633,false,TuSuWMSaFTh,8:00am to 0:30pm
+item#601,instructor#5,course#4,location#3,632,true,TuSuWSa,11:30am to 2:00pm
+item#602,instructor#7,course#1,location#0,631,false,TuMFSaTh,10:30am to 2:00pm
+item#603,instructor#7,course#0,location#0,638,true,M,9:00am to 10:00am
+item#604,instructor#3,course#4,location#4,637,false,WMTh,10:30am to 11:30am
+item#605,instructor#0,course#0,location#4,636,true,TuSuWFSaTh,8:00am to 10:00am
+item#606,instructor#7,course#2,location#0,635,false,WF,10:00am to 0:30pm
+item#607,instructor#7,course#7,location#5,575,false,TuWMFTh,7:30am to 9:00am
+item#608,instructor#5,course#4,location#0,576,true,TuWM,11:30am to 0:00pm
+item#609,instructor#5,course#3,location#2,577,false,SuFTh,0:30pm to 1:30pm
+item#610,instructor#1,course#7,location#0,578,true,TuWSuMFSaTh,1:30pm to 2:00pm
+item#611,instructor#5,course#7,location#5,579,false,TuW,7:00am to 8:00am
+item#612,instructor#0,course#6,location#0,580,true,WSaFTh,10:30am to 11:30am
+item#613,instructor#4,course#7,location#4,581,false,SuM,10:00am to 1:00pm
+item#614,instructor#6,course#5,location#0,582,true,WF,0:30pm to 1:30pm
+item#615,instructor#7,course#2,location#3,583,false,TuSuMSaTh,9:00am to 10:00am
+item#616,instructor#6,course#2,location#3,584,true,SuMFTh,1:30pm to 2:00pm
+item#617,instructor#4,course#4,location#0,585,false,TuSuTh,1:30pm to 2:00pm
+item#618,instructor#2,course#7,location#3,586,true,WSuMTh,8:30am to 2:00pm
+item#619,instructor#2,course#3,location#3,587,false,TuWSuMSaTh,11:30am to 0:30pm
+item#620,instructor#3,course#0,location#0,588,true,TuWSuSaF,0:00pm to 1:00pm
+item#621,instructor#4,course#1,location#0,589,false,SuTh,0:00pm to 2:00pm
+item#622,instructor#5,course#5,location#4,590,true,TuSuFTh,1:00pm to 2:00pm
+item#623,instructor#0,course#5,location#4,592,true,Su,1:00pm to 1:30pm
+item#624,instructor#7,course#1,location#5,591,false,TuSuWMFSaTh,1:00pm to 1:30pm
+item#625,instructor#7,course#7,location#6,594,true,SuSa,11:30am to 1:30pm
+item#626,instructor#3,course#0,location#0,593,false,Th,10:30am to 0:00pm
+item#627,instructor#2,course#0,location#5,596,true,FTh,8:00am to 0:30pm
+item#628,instructor#3,course#0,location#7,595,false,TuSuWFTh,0:00pm to 1:00pm
+item#629,instructor#5,course#4,location#5,598,true,TuWSuMFSaTh,9:30am to 10:00am
+item#630,instructor#0,course#4,location#6,597,false,TuWSuMSaFTh,11:00am to 1:30pm
+item#631,instructor#7,course#1,location#4,600,true,SuWMF,7:00am to 9:00am
+item#632,instructor#3,course#7,location#5,599,false,TuWM,1:30pm to 2:00pm
+item#633,instructor#2,course#7,location#4,602,true,Su,8:00am to 9:00am
+item#634,instructor#4,course#4,location#3,601,false,SuFTh,8:00am to 0:30pm
+item#635,instructor#3,course#4,location#5,604,true,SuWMSaFTh,8:00am to 0:30pm
+item#636,instructor#1,course#6,location#3,603,false,SuMSaTh,10:30am to 0:00pm
+item#637,instructor#4,course#2,location#6,606,true,TuTh,0:30pm to 1:30pm
+item#638,instructor#2,course#5,location#6,605,false,TuSa,0:30pm to 1:00pm
+item#639,instructor#0,course#2,location#5,686,true,TuWSuMSa,10:30am to 1:00pm
+item#640,instructor#6,course#0,location#6,685,false,TuWF,11:30am to 0:00pm
+item#641,instructor#5,course#0,location#5,684,true,MSa,8:30am to 9:00am
+item#642,instructor#4,course#1,location#7,683,false,Su,7:30am to 1:00pm
+item#643,instructor#6,course#7,location#7,682,true,WMSaTh,0:00pm to 2:00pm
+item#644,instructor#2,course#3,location#2,681,false,Su,9:30am to 1:00pm
+item#645,instructor#7,course#0,location#2,680,true,W,7:30am to 8:30am
+item#646,instructor#6,course#4,location#0,679,false,SuWFSa,10:30am to 11:30am
+item#647,instructor#0,course#3,location#5,678,true,TuSuSa,1:00pm to 2:00pm
+item#648,instructor#4,course#6,location#0,677,false,TuWMFSaTh,9:00am to 1:30pm
+item#649,instructor#6,course#3,location#7,676,true,MSa,7:30am to 8:30am
+item#650,instructor#7,course#0,location#6,675,false,SuTh,10:30am to 1:30pm
+item#651,instructor#6,course#3,location#4,674,true,TuWSuMSaFTh,8:30am to 9:30am
+item#652,instructor#5,course#4,location#2,673,false,TuMSaTh,0:30pm to 1:30pm
+item#653,instructor#4,course#1,location#3,672,true,SuWMSaFTh,11:30am to 0:00pm
+item#654,instructor#6,course#5,location#4,671,false,Tu,1:30pm to 2:00pm
+item#655,instructor#0,course#4,location#0,701,false,TuSuSaFTh,1:30pm to 2:00pm
+item#656,instructor#2,course#7,location#3,702,true,F,0:30pm to 2:00pm
+item#657,instructor#1,course#6,location#6,699,false,TuF,10:00am to 1:30pm
+item#658,instructor#1,course#7,location#1,700,true,TuWMSaFTh,11:30am to 2:00pm
+item#659,instructor#2,course#5,location#6,697,false,TuSuWMSaFTh,0:30pm to 1:30pm
+item#660,instructor#3,course#4,location#1,698,true,Su,0:30pm to 1:00pm
+item#661,instructor#6,course#0,location#7,695,false,TuMFSaTh,1:00pm to 2:00pm
+item#662,instructor#5,course#4,location#4,696,true,F,10:30am to 1:30pm
+item#663,instructor#7,course#7,location#3,693,false,TuWMSaFTh,8:30am to 9:30am
+item#664,instructor#3,course#7,location#4,694,true,TuSu,0:00pm to 0:30pm
+item#665,instructor#6,course#2,location#5,691,false,TuSuWMSaFTh,8:30am to 9:00am
+item#666,instructor#6,course#3,location#6,692,true,TuMF,8:30am to 11:30am
+item#667,instructor#6,course#7,location#2,689,false,TuWSuMFSaTh,10:00am to 1:00pm
+item#668,instructor#0,course#6,location#7,690,true,TuW,10:00am to 1:00pm
+item#669,instructor#2,course#1,location#5,687,false,TuSuF,7:30am to 1:00pm
+item#670,instructor#7,course#6,location#1,688,true,TuSuWMSaFTh,9:00am to 0:00pm
+item#671,instructor#0,course#2,location#3,652,true,TuWSuMFSaTh,10:30am to 1:00pm
+item#672,instructor#4,course#6,location#3,651,false,TuWSa,10:00am to 0:30pm
+item#673,instructor#7,course#7,location#1,654,true,TuSuWSaFTh,8:00am to 8:30am
+item#674,instructor#0,course#0,location#4,653,false,TuWSuMFSaTh,8:30am to 11:00am
+item#675,instructor#4,course#5,location#4,648,true,TuWSaTh,0:30pm to 1:00pm
+item#676,instructor#5,course#0,location#2,647,false,Th,7:00am to 11:00am
+item#677,instructor#4,course#2,location#0,650,true,TuSuFSa,10:30am to 1:00pm
+item#678,instructor#6,course#7,location#4,649,false,TuWSuSaFTh,10:00am to 2:00pm
+item#679,instructor#7,course#4,location#6,644,true,TuSuWMSaFTh,8:30am to 2:00pm
+item#680,instructor#3,course#3,location#3,643,false,TuM,9:00am to 0:30pm
+item#681,instructor#2,course#7,location#3,646,true,TuWSuMSaFTh,8:00am to 9:00am
+item#682,instructor#2,course#5,location#5,645,false,TuSuWMFSaTh,1:00pm to 2:00pm
+item#683,instructor#1,course#7,location#4,640,true,TuWMSa,10:00am to 0:30pm
+item#684,instructor#6,course#4,location#4,639,false,TuWSuMF,7:00am to 11:00am
+item#685,instructor#0,course#5,location#1,642,true,TuSuWSaF,9:00am to 0:00pm
+item#686,instructor#1,course#0,location#5,641,false,TuWSuMSaFTh,9:30am to 0:00pm
+item#687,instructor#0,course#1,location#2,667,false,TuWSaTh,11:00am to 11:30am
+item#688,instructor#3,course#2,location#5,668,true,WSuF,10:30am to 2:00pm
+item#689,instructor#0,course#1,location#1,669,false,TuWMSaF,0:00pm to 2:00pm
+item#690,instructor#5,course#4,location#7,670,true,TuWMSaFTh,8:30am to 9:30am
+item#691,instructor#0,course#0,location#5,663,false,TuSuMFSaTh,1:30pm to 2:00pm
+item#692,instructor#4,course#5,location#0,664,true,TuMSaTh,8:30am to 9:30am
+item#693,instructor#5,course#0,location#3,665,false,TuSuWMSa,0:00pm to 2:00pm
+item#694,instructor#5,course#6,location#6,666,true,TuSu,8:00am to 9:00am
+item#695,instructor#1,course#2,location#2,659,false,SuMSaF,8:00am to 10:30am
+item#696,instructor#0,course#7,location#6,660,true,F,0:00pm to 1:00pm
+item#697,instructor#0,course#0,location#6,661,false,WF,8:30am to 2:00pm
+item#698,instructor#4,course#0,location#4,662,true,F,10:30am to 1:00pm
+item#699,instructor#1,course#5,location#7,655,false,SuMF,8:30am to 0:30pm
+item#700,instructor#4,course#6,location#0,656,true,WMSaFTh,10:30am to 11:30am
+item#701,instructor#1,course#1,location#5,657,false,TuSuMSaFTh,11:30am to 2:00pm
+item#702,instructor#5,course#6,location#2,658,true,TuWSuMSaFTh,7:30am to 11:30am
+item#703,instructor#1,course#1,location#6,746,true,TuSuSa,9:00am to 1:00pm
+item#704,instructor#6,course#2,location#3,745,false,TuM,7:30am to 8:30am
+item#705,instructor#2,course#4,location#1,744,true,TuTh,9:30am to 2:00pm
+item#706,instructor#5,course#0,location#6,743,false,MSa,0:30pm to 1:00pm
+item#707,instructor#1,course#3,location#4,750,true,SuSa,7:00am to 0:00pm
+item#708,instructor#2,course#3,location#2,749,false,TuSuMSaTh,1:00pm to 2:00pm
+item#709,instructor#3,course#4,location#3,748,true,SuWMFSa,8:00am to 0:00pm
+item#710,instructor#6,course#1,location#0,747,false,MSaTh,0:00pm to 0:30pm
+item#711,instructor#6,course#1,location#4,738,true,TuWMF,9:00am to 11:30am
+item#712,instructor#0,course#4,location#1,737,false,WMF,11:30am to 0:30pm
+item#713,instructor#4,course#7,location#4,736,true,TuMFSaTh,11:30am to 1:00pm
+item#714,instructor#2,course#2,location#1,735,false,TuWSuMFSaTh,7:00am to 1:00pm
+item#715,instructor#0,course#4,location#6,742,true,TuSuWFSaTh,9:30am to 10:00am
+item#716,instructor#3,course#2,location#4,741,false,WSa,8:00am to 8:30am
+item#717,instructor#5,course#4,location#1,740,true,M,9:00am to 10:30am
+item#718,instructor#1,course#7,location#5,739,false,W,1:30pm to 2:00pm
+item#719,instructor#3,course#1,location#2,761,false,TuW,0:30pm to 1:00pm
+item#720,instructor#2,course#5,location#6,762,true,TuSuTh,11:30am to 0:30pm
+item#721,instructor#2,course#5,location#1,759,false,TuWSuMSaFTh,9:00am to 0:30pm
+item#722,instructor#1,course#6,location#0,760,true,F,10:30am to 0:00pm
+item#723,instructor#1,course#2,location#2,765,false,TuM,7:00am to 11:30am
+item#724,instructor#5,course#0,location#1,766,true,WM,9:30am to 11:00am
+item#725,instructor#1,course#7,location#6,763,false,WSuMFSaTh,10:30am to 1:30pm
+item#726,instructor#7,course#7,location#3,764,true,TuSuWMSaFTh,11:00am to 1:00pm
+item#727,instructor#5,course#4,location#7,753,false,TuWSuSa,8:00am to 2:00pm
+item#728,instructor#7,course#4,location#3,754,true,TuWSuSaFTh,1:00pm to 1:30pm
+item#729,instructor#4,course#1,location#3,751,false,TuSuWMF,9:00am to 11:30am
+item#730,instructor#7,course#6,location#0,752,true,MTh,1:30pm to 2:00pm
+item#731,instructor#7,course#0,location#3,757,false,TuSuFSaTh,7:00am to 8:30am
+item#732,instructor#3,course#7,location#2,758,true,TuWSuMFSaTh,11:30am to 0:30pm
+item#733,instructor#1,course#3,location#0,755,false,TuSuWMTh,7:30am to 8:00am
+item#734,instructor#0,course#0,location#4,756,true,TuSuMFSaTh,8:30am to 9:30am
+item#735,instructor#5,course#2,location#5,712,true,TuSuW,1:30pm to 2:00pm
+item#736,instructor#5,course#5,location#3,711,false,TuSuSaFTh,8:30am to 10:30am
+item#737,instructor#5,course#0,location#6,714,true,Th,11:30am to 1:30pm
+item#738,instructor#6,course#0,location#1,713,false,TuWMTh,11:00am to 11:30am
+item#739,instructor#4,course#4,location#2,716,true,WSaTh,10:00am to 1:00pm
+item#740,instructor#3,course#0,location#2,715,false,SuMFTh,1:00pm to 1:30pm
+item#741,instructor#2,course#2,location#5,718,true,WSuMSaFTh,10:30am to 0:00pm
+item#742,instructor#6,course#6,location#4,717,false,FTh,1:30pm to 2:00pm
+item#743,instructor#5,course#4,location#6,704,true,TuWSuSaTh,9:30am to 11:00am
+item#744,instructor#4,course#2,location#3,703,false,TuWSuMFSa,1:00pm to 2:00pm
+item#745,instructor#5,course#2,location#7,706,true,F,0:00pm to 0:30pm
+item#746,instructor#0,course#2,location#5,705,false,TuSuMF,1:00pm to 1:30pm
+item#747,instructor#3,course#1,location#1,708,true,TuSuWFSaTh,10:30am to 0:00pm
+item#748,instructor#4,course#2,location#4,707,false,TuWMFSaTh,7:30am to 9:30am
+item#749,instructor#0,course#0,location#5,710,true,WFTh,9:00am to 2:00pm
+item#750,instructor#3,course#7,location#1,709,false,TuWSuMTh,0:00pm to 1:00pm
+item#751,instructor#4,course#1,location#3,727,false,TuMFSaTh,0:30pm to 2:00pm
+item#752,instructor#1,course#0,location#0,728,true,SuWMSa,0:00pm to 2:00pm
+item#753,instructor#1,course#2,location#5,729,false,F,10:00am to 11:30am
+item#754,instructor#2,course#7,location#3,730,true,WFSa,11:30am to 0:00pm
+item#755,instructor#2,course#7,location#5,731,false,Sa,0:30pm to 2:00pm
+item#756,instructor#0,course#6,location#7,732,true,TuSuWMFSaTh,11:30am to 0:00pm
+item#757,instructor#2,course#5,location#4,733,false,WSuFSaTh,11:00am to 1:30pm
+item#758,instructor#5,course#3,location#5,734,true,MFTh,9:00am to 11:30am
+item#759,instructor#7,course#5,location#6,719,false,TuSuWMSaFTh,7:30am to 8:00am
+item#760,instructor#2,course#7,location#5,720,true,MTh,9:30am to 11:00am
+item#761,instructor#6,course#2,location#2,721,false,TuWF,10:30am to 11:00am
+item#762,instructor#5,course#1,location#5,722,true,TuTh,0:00pm to 0:30pm
+item#763,instructor#7,course#5,location#0,723,false,WSa,7:00am to 9:30am
+item#764,instructor#6,course#7,location#3,724,true,SuWSaFTh,11:30am to 0:30pm
+item#765,instructor#6,course#1,location#1,725,false,TuWSuMSaFTh,11:30am to 1:30pm
+item#766,instructor#5,course#0,location#6,726,true,TuSuWMSaFTh,11:30am to 0:00pm
+item#767,instructor#5,course#3,location#1,820,true,TuWSuMFSaTh,7:00am to 8:00am
+item#768,instructor#5,course#3,location#2,819,false,TuSuWMSaFTh,11:30am to 0:30pm
+item#769,instructor#7,course#3,location#6,822,true,TuWF,0:30pm to 1:00pm
+item#770,instructor#6,course#0,location#3,821,false,WSa,9:00am to 10:00am
+item#771,instructor#1,course#5,location#2,816,true,SuSa,0:00pm to 0:30pm
+item#772,instructor#7,course#3,location#6,815,false,SuWMSaFTh,11:00am to 0:30pm
+item#773,instructor#0,course#5,location#1,818,true,TuWSuSaFTh,8:00am to 8:30am
+item#774,instructor#7,course#0,location#2,817,false,TuSuWMFSa,11:00am to 0:00pm
+item#775,instructor#4,course#4,location#5,828,true,TuSuWFSaTh,7:00am to 10:00am
+item#776,instructor#5,course#6,location#0,827,false,TuSuWMSaFTh,10:00am to 1:00pm
+item#777,instructor#2,course#7,location#6,830,true,WM,0:30pm to 1:30pm
+item#778,instructor#7,course#7,location#0,829,false,SuMSaFTh,11:30am to 1:00pm
+item#779,instructor#5,course#0,location#6,824,true,SuSa,10:00am to 1:00pm
+item#780,instructor#4,course#4,location#6,823,false,TuSuWMFSa,0:00pm to 0:30pm
+item#781,instructor#5,course#3,location#6,826,true,TuWMSaTh,1:00pm to 1:30pm
+item#782,instructor#4,course#1,location#6,825,false,TuSuMSaTh,11:30am to 0:00pm
+item#783,instructor#2,course#4,location#4,803,false,M,1:30pm to 2:00pm
+item#784,instructor#0,course#4,location#7,804,true,MFTh,8:00am to 2:00pm
+item#785,instructor#7,course#1,location#0,805,false,SuWMSaTh,8:00am to 9:00am
+item#786,instructor#2,course#3,location#0,806,true,WSu,10:30am to 11:30am
+item#787,instructor#1,course#7,location#6,799,false,TuWMTh,8:00am to 2:00pm
+item#788,instructor#1,course#7,location#6,800,true,TuWFTh,11:00am to 0:00pm
+item#789,instructor#4,course#3,location#4,801,false,TuWSuMSaFTh,10:00am to 2:00pm
+item#790,instructor#4,course#1,location#2,802,true,M,1:00pm to 2:00pm
+item#791,instructor#4,course#2,location#6,811,false,SuWMFSaTh,9:00am to 10:00am
+item#792,instructor#4,course#1,location#1,812,true,Tu,7:30am to 8:00am
+item#793,instructor#2,course#2,location#5,813,false,Su,1:00pm to 1:30pm
+item#794,instructor#4,course#3,location#5,814,true,SuWMSaF,8:00am to 9:30am
+item#795,instructor#2,course#7,location#4,807,false,W,11:30am to 2:00pm
+item#796,instructor#2,course#0,location#3,808,true,TuSuWMSaFTh,0:30pm to 1:30pm
+item#797,instructor#3,course#7,location#6,809,false,TuWSuMFTh,7:30am to 9:00am
+item#798,instructor#1,course#4,location#3,810,true,TuWSaF,7:00am to 10:00am
+item#799,instructor#1,course#6,location#4,790,true,TuSuWSaFTh,10:00am to 11:00am
+item#800,instructor#4,course#3,location#3,789,false,Th,7:30am to 8:00am
+item#801,instructor#1,course#1,location#4,788,true,TuWMSaTh,9:00am to 9:30am
+item#802,instructor#7,course#5,location#5,787,false,WSuMSaTh,0:30pm to 1:00pm
+item#803,instructor#4,course#1,location#6,786,true,TuSuMFSaTh,9:30am to 1:00pm
+item#804,instructor#1,course#7,location#5,785,false,TuSuWMSaF,0:00pm to 2:00pm
+item#805,instructor#0,course#2,location#6,784,true,SuWMFSaTh,7:30am to 10:00am
+item#806,instructor#7,course#5,location#0,783,false,WTh,11:30am to 1:30pm
+item#807,instructor#6,course#6,location#0,798,true,TuSuWMFSaTh,9:30am to 2:00pm
+item#808,instructor#5,course#7,location#0,797,false,WTh,1:00pm to 2:00pm
+item#809,instructor#5,course#6,location#4,796,true,TuSu,0:00pm to 0:30pm
+item#810,instructor#3,course#4,location#5,795,false,TuWSuMFSa,8:30am to 10:30am
+item#811,instructor#3,course#0,location#0,794,true,TuWSuMSaFTh,7:00am to 0:00pm
+item#812,instructor#4,course#0,location#6,793,false,TuSuWMSaFTh,0:30pm to 1:30pm
+item#813,instructor#5,course#2,location#5,792,true,WFSa,1:30pm to 2:00pm
+item#814,instructor#7,course#0,location#3,791,false,Th,11:00am to 0:30pm
+item#815,instructor#4,course#6,location#5,773,false,TuWMSa,10:30am to 11:00am
+item#816,instructor#4,course#7,location#1,774,true,TuSuMFSaTh,10:00am to 10:30am
+item#817,instructor#4,course#1,location#3,771,false,TuSuMSaTh,9:00am to 0:30pm
+item#818,instructor#4,course#4,location#4,772,true,TuWSuMFTh,0:00pm to 0:30pm
+item#819,instructor#7,course#3,location#7,769,false,TuWSuMSaFTh,1:00pm to 2:00pm
+item#820,instructor#6,course#0,location#4,770,true,TuW,10:30am to 1:00pm
+item#821,instructor#3,course#4,location#3,767,false,TuSuWMFTh,10:30am to 11:30am
+item#822,instructor#3,course#4,location#4,768,true,TuSuWMSaTh,10:30am to 0:00pm
+item#823,instructor#7,course#4,location#2,781,false,TuWSuMFTh,9:00am to 11:00am
+item#824,instructor#4,course#3,location#4,782,true,TuSuF,0:00pm to 1:30pm
+item#825,instructor#4,course#3,location#1,779,false,WSuFSaTh,0:00pm to 1:00pm
+item#826,instructor#5,course#4,location#6,780,true,TuSuWSaFTh,11:00am to 0:30pm
+item#827,instructor#5,course#6,location#6,777,false,TuWSuMSa,9:30am to 10:00am
+item#828,instructor#5,course#1,location#4,778,true,WSuMSaFTh,1:00pm to 1:30pm
+item#829,instructor#4,course#6,location#2,775,false,TuMSaTh,9:00am to 11:00am
+item#830,instructor#2,course#7,location#6,776,true,TuSuWSaFTh,8:00am to 2:00pm
+item#831,instructor#6,course#2,location#0,880,true,TuSuMTh,8:00am to 10:00am
+item#832,instructor#4,course#2,location#6,879,false,SuF,11:00am to 1:30pm
+item#833,instructor#1,course#0,location#3,882,true,TuSuWFSaTh,10:30am to 11:00am
+item#834,instructor#1,course#7,location#1,881,false,TuWMFSaTh,8:30am to 9:00am
+item#835,instructor#4,course#4,location#7,884,true,TuSuWMFSaTh,1:30pm to 2:00pm
+item#836,instructor#2,course#3,location#4,883,false,Tu,11:00am to 0:30pm
+item#837,instructor#1,course#0,location#3,886,true,WSuF,11:00am to 1:00pm
+item#838,instructor#1,course#5,location#4,885,false,WFSa,1:00pm to 1:30pm
+item#839,instructor#4,course#6,location#6,888,true,TuSuWFSa,11:30am to 0:30pm
+item#840,instructor#7,course#2,location#4,887,false,Su,10:30am to 1:30pm
+item#841,instructor#0,course#1,location#7,890,true,WTh,1:30pm to 2:00pm
+item#842,instructor#5,course#4,location#7,889,false,W,11:30am to 0:00pm
+item#843,instructor#5,course#6,location#6,892,true,Su,11:30am to 1:00pm
+item#844,instructor#1,course#2,location#7,891,false,TuSuM,8:30am to 11:30am
+item#845,instructor#1,course#1,location#3,894,true,TuSuMFSaTh,10:00am to 0:30pm
+item#846,instructor#1,course#3,location#4,893,false,TuMF,1:30pm to 2:00pm
+item#847,instructor#4,course#4,location#5,863,false,TuWSuMFSaTh,1:00pm to 1:30pm
+item#848,instructor#2,course#6,location#4,864,true,Th,9:30am to 1:00pm
+item#849,instructor#1,course#7,location#7,865,false,TuWMSaFTh,10:30am to 2:00pm
+item#850,instructor#2,course#5,location#2,866,true,MSa,10:00am to 2:00pm
+item#851,instructor#4,course#5,location#0,867,false,MSaTh,1:30pm to 2:00pm
+item#852,instructor#5,course#7,location#3,868,true,TuSuWMFTh,7:30am to 0:00pm
+item#853,instructor#6,course#4,location#6,869,false,SuFTh,8:00am to 11:00am
+item#854,instructor#1,course#1,location#6,870,true,WSaTh,11:30am to 2:00pm
+item#855,instructor#4,course#5,location#0,871,false,SuWMSaTh,7:00am to 1:30pm
+item#856,instructor#3,course#3,location#6,872,true,TuWSaTh,9:00am to 1:30pm
+item#857,instructor#2,course#0,location#4,873,false,TuWMFSaTh,1:00pm to 1:30pm
+item#858,instructor#0,course#3,location#5,874,true,Tu,7:00am to 8:30am
+item#859,instructor#0,course#1,location#5,875,false,WSa,11:00am to 1:30pm
+item#860,instructor#5,course#3,location#5,876,true,TuMSa,0:30pm to 1:30pm
+item#861,instructor#1,course#7,location#6,877,false,TuSuWMFSaTh,8:00am to 8:30am
+item#862,instructor#1,course#0,location#3,878,true,TuSuWMFTh,8:00am to 10:00am
+item#863,instructor#4,course#5,location#6,850,true,TuWSuMFSaTh,7:00am to 0:30pm
+item#864,instructor#7,course#5,location#0,849,false,WMSa,10:00am to 0:00pm
+item#865,instructor#6,course#3,location#3,848,true,F,9:00am to 0:00pm
+item#866,instructor#6,course#0,location#5,847,false,Th,10:00am to 2:00pm
+item#867,instructor#4,course#3,location#0,854,true,M,11:30am to 0:00pm
+item#868,instructor#7,course#5,location#5,853,false,Tu,1:00pm to 2:00pm
+item#869,instructor#7,course#5,location#0,852,true,TuWSuMSaTh,9:00am to 0:00pm
+item#870,instructor#2,course#7,location#3,851,false,WSuMF,1:30pm to 2:00pm
+item#871,instructor#0,course#0,location#6,858,true,SuM,10:00am to 10:30am
+item#872,instructor#2,course#3,location#5,857,false,Tu,9:00am to 10:00am
+item#873,instructor#2,course#1,location#6,856,true,TuMSaFTh,11:30am to 2:00pm
+item#874,instructor#4,course#0,location#5,855,false,W,9:00am to 2:00pm
+item#875,instructor#2,course#0,location#1,862,true,M,0:00pm to 1:00pm
+item#876,instructor#1,course#4,location#5,861,false,MF,11:30am to 2:00pm
+item#877,instructor#0,course#0,location#7,860,true,TuMF,1:30pm to 2:00pm
+item#878,instructor#5,course#4,location#0,859,false,TuWSuMFTh,8:00am to 10:00am
+item#879,instructor#2,course#3,location#6,833,false,TuW,9:30am to 2:00pm
+item#880,instructor#3,course#4,location#1,834,true,TuSuWMSaFTh,7:00am to 11:30am
+item#881,instructor#1,course#0,location#3,831,false,TuSuMFSaTh,11:00am to 11:30am
+item#882,instructor#0,course#0,location#6,832,true,Tu,10:30am to 1:00pm
+item#883,instructor#7,course#4,location#5,837,false,TuWSuSa,7:00am to 9:00am
+item#884,instructor#0,course#3,location#5,838,true,TuWMSaFTh,7:00am to 2:00pm
+item#885,instructor#1,course#7,location#4,835,false,TuSuMSaTh,10:00am to 1:00pm
+item#886,instructor#0,course#4,location#4,836,true,TuSuWMSaFTh,10:30am to 11:30am
+item#887,instructor#3,course#2,location#1,841,false,TuSuWSaFTh,0:30pm to 2:00pm
+item#888,instructor#7,course#2,location#6,842,true,TuWSuFSaTh,0:00pm to 2:00pm
+item#889,instructor#4,course#6,location#0,839,false,TuFTh,7:00am to 10:00am
+item#890,instructor#6,course#5,location#4,840,true,Th,8:30am to 0:00pm
+item#891,instructor#7,course#5,location#5,845,false,MFSa,9:30am to 0:30pm
+item#892,instructor#5,course#4,location#1,846,true,Sa,10:30am to 11:30am
+item#893,instructor#2,course#0,location#5,843,false,TuWSuMSaFTh,7:30am to 10:00am
+item#894,instructor#6,course#0,location#3,844,true,TuSuFSa,1:30pm to 2:00pm
+item#895,instructor#5,course#5,location#4,955,false,F,10:30am to 0:00pm
+item#896,instructor#4,course#5,location#5,956,true,Th,8:00am to 0:30pm
+item#897,instructor#6,course#2,location#1,957,false,FTh,8:00am to 1:30pm
+item#898,instructor#6,course#3,location#5,958,true,TuSa,7:00am to 9:30am
+item#899,instructor#0,course#3,location#6,951,false,SuF,9:00am to 11:00am
+item#900,instructor#7,course#0,location#3,952,true,TuWSuMSaFTh,10:30am to 0:00pm
+item#901,instructor#4,course#4,location#4,953,false,Su,1:00pm to 1:30pm
+item#902,instructor#7,course#7,location#5,954,true,Th,11:30am to 1:30pm
+item#903,instructor#0,course#2,location#5,947,false,Tu,10:30am to 2:00pm
+item#904,instructor#7,course#0,location#5,948,true,TuSuMF,0:00pm to 1:30pm
+item#905,instructor#0,course#4,location#4,949,false,TuWSuMFSaTh,1:30pm to 2:00pm
+item#906,instructor#4,course#0,location#4,950,true,TuSuWMFSaTh,10:30am to 11:00am
+item#907,instructor#4,course#6,location#6,943,false,TuWSuMFSaTh,9:00am to 10:00am
+item#908,instructor#2,course#4,location#4,944,true,TuSuWMFSaTh,0:00pm to 1:00pm
+item#909,instructor#5,course#6,location#2,945,false,TuMTh,8:00am to 10:00am
+item#910,instructor#6,course#5,location#1,946,true,M,0:00pm to 1:30pm
+item#911,instructor#6,course#3,location#6,940,true,SuWMFSaTh,10:30am to 1:30pm
+item#912,instructor#7,course#3,location#0,939,false,SuSa,7:00am to 0:00pm
+item#913,instructor#7,course#0,location#4,942,true,SuWMF,7:30am to 10:30am
+item#914,instructor#1,course#5,location#4,941,false,TuWSuSaTh,10:30am to 2:00pm
+item#915,instructor#4,course#3,location#5,936,true,M,9:30am to 11:00am
+item#916,instructor#2,course#0,location#2,935,false,TuSuMSaFTh,11:00am to 1:30pm
+item#917,instructor#2,course#3,location#2,938,true,Th,7:30am to 9:30am
+item#918,instructor#3,course#4,location#0,937,false,TuSuWMSaFTh,1:00pm to 2:00pm
+item#919,instructor#2,course#5,location#2,932,true,Tu,10:00am to 0:30pm
+item#920,instructor#1,course#5,location#5,931,false,TuSuMSaF,10:00am to 1:00pm
+item#921,instructor#1,course#7,location#7,934,true,TuWSuSaF,8:30am to 9:30am
+item#922,instructor#6,course#2,location#7,933,false,TuSuWMFTh,1:30pm to 2:00pm
+item#923,instructor#5,course#6,location#1,928,true,WSuMSaFTh,1:30pm to 2:00pm
+item#924,instructor#1,course#4,location#1,927,false,SuM,0:30pm to 1:00pm
+item#925,instructor#4,course#3,location#0,930,true,SuMSaTh,7:30am to 0:30pm
+item#926,instructor#5,course#7,location#6,929,false,W,8:00am to 9:30am
+item#927,instructor#6,course#6,location#4,925,false,Tu,0:00pm to 1:00pm
+item#928,instructor#6,course#2,location#0,926,true,SuM,11:30am to 2:00pm
+item#929,instructor#6,course#0,location#4,923,false,Su,1:30pm to 2:00pm
+item#930,instructor#3,course#5,location#5,924,true,WSuFTh,8:30am to 1:30pm
+item#931,instructor#2,course#0,location#4,921,false,TuMSaTh,7:00am to 2:00pm
+item#932,instructor#0,course#2,location#5,922,true,MF,10:30am to 0:30pm
+item#933,instructor#2,course#4,location#3,919,false,TuFSa,10:00am to 2:00pm
+item#934,instructor#3,course#7,location#5,920,true,TuSuWMSaFTh,11:30am to 0:30pm
+item#935,instructor#2,course#4,location#3,917,false,TuSuWMSaFTh,8:00am to 1:30pm
+item#936,instructor#3,course#7,location#2,918,true,WSuMFSaTh,1:30pm to 2:00pm
+item#937,instructor#2,course#7,location#5,915,false,F,11:30am to 0:00pm
+item#938,instructor#2,course#2,location#1,916,true,TuMSaFTh,11:00am to 1:00pm
+item#939,instructor#0,course#1,location#1,913,false,W,11:00am to 1:30pm
+item#940,instructor#7,course#6,location#0,914,true,TuSuWMFSaTh,10:00am to 0:00pm
+item#941,instructor#4,course#4,location#3,911,false,TuSuWMFSaTh,1:30pm to 2:00pm
+item#942,instructor#5,course#6,location#3,912,true,Sa,10:30am to 0:00pm
+item#943,instructor#7,course#6,location#1,910,true,TuMSa,8:00am to 8:30am
+item#944,instructor#0,course#2,location#6,909,false,WSaF,8:30am to 10:00am
+item#945,instructor#1,course#5,location#7,908,true,SuMF,9:00am to 0:30pm
+item#946,instructor#6,course#2,location#7,907,false,WSuMFSaTh,11:00am to 1:30pm
+item#947,instructor#5,course#4,location#3,906,true,TuWSuFSaTh,0:30pm to 1:00pm
+item#948,instructor#2,course#5,location#0,905,false,Su,8:30am to 1:30pm
+item#949,instructor#3,course#6,location#7,904,true,TuWSaFTh,9:30am to 1:00pm
+item#950,instructor#4,course#6,location#4,903,false,TuWSuMFSaTh,0:00pm to 2:00pm
+item#951,instructor#2,course#5,location#5,902,true,TuSuMSaF,7:30am to 1:30pm
+item#952,instructor#0,course#2,location#2,901,false,TuMF,9:00am to 0:00pm
+item#953,instructor#2,course#5,location#5,900,true,Sa,7:30am to 8:00am
+item#954,instructor#4,course#0,location#3,899,false,Su,10:30am to 1:00pm
+item#955,instructor#1,course#6,location#7,898,true,WM,0:30pm to 1:30pm
+item#956,instructor#4,course#4,location#7,897,false,TuWSuMFSaTh,8:00am to 1:30pm
+item#957,instructor#2,course#5,location#2,896,true,TuSuMSaF,0:30pm to 1:00pm
+item#958,instructor#2,course#1,location#4,895,false,TuW,9:30am to 11:30am
+item#959,instructor#1,course#6,location#2,999,false,TuWMFTh,11:00am to 0:00pm
+item#960,instructor#2,course#0,location#2,992,true,Tu,0:30pm to 1:30pm
+item#961,instructor#4,course#5,location#2,991,false,TuSuWMSaFTh,1:00pm to 1:30pm
+item#962,instructor#5,course#4,location#0,994,true,TuWSuMSaF,9:00am to 2:00pm
+item#963,instructor#2,course#4,location#2,993,false,TuWSuM,0:00pm to 1:00pm
+item#964,instructor#2,course#6,location#2,996,true,Tu,7:30am to 8:30am
+item#965,instructor#7,course#2,location#0,995,false,SaTh,11:00am to 1:30pm
+item#966,instructor#5,course#7,location#7,998,true,TuSuWMSaFTh,9:00am to 10:00am
+item#967,instructor#1,course#3,location#3,997,false,TuSuWMFSaTh,7:30am to 1:00pm
+item#968,instructor#6,course#6,location#3,985,false,Tu,10:00am to 0:30pm
+item#969,instructor#4,course#1,location#5,986,true,F,9:00am to 1:00pm
+item#970,instructor#4,course#5,location#7,983,false,TuWSuMFTh,7:00am to 7:30am
+item#971,instructor#7,course#0,location#5,984,true,Su,7:00am to 11:30am
+item#972,instructor#1,course#1,location#4,989,false,Su,0:30pm to 1:00pm
+item#973,instructor#7,course#2,location#0,990,true,TuWSuMF,11:30am to 0:00pm
+item#974,instructor#2,course#3,location#5,987,false,WF,8:00am to 10:00am
+item#975,instructor#5,course#2,location#1,988,true,TuWMFTh,1:30pm to 2:00pm
+item#976,instructor#0,course#0,location#0,977,false,TuSa,10:00am to 11:00am
+item#977,instructor#2,course#6,location#7,978,true,SuF,0:30pm to 1:30pm
+item#978,instructor#6,course#0,location#3,975,false,TuWMSaTh,9:30am to 11:00am
+item#979,instructor#3,course#2,location#6,976,true,WFSa,9:00am to 1:00pm
+item#980,instructor#2,course#7,location#2,981,false,TuWMFSaTh,10:00am to 11:00am
+item#981,instructor#1,course#7,location#4,982,true,SuTh,9:30am to 11:00am
+item#982,instructor#5,course#1,location#7,979,false,F,7:30am to 9:30am
+item#983,instructor#6,course#1,location#1,980,true,TuSuMSaTh,10:30am to 1:30pm
+item#984,instructor#0,course#2,location#6,970,true,F,8:00am to 9:00am
+item#985,instructor#2,course#1,location#0,969,false,SuWMFSaTh,11:00am to 11:30am
+item#986,instructor#7,course#1,location#4,968,true,TuSuWSaF,9:30am to 1:30pm
+item#987,instructor#0,course#6,location#4,967,false,TuWSuMFSa,8:30am to 1:30pm
+item#988,instructor#7,course#6,location#5,974,true,TuWFTh,8:00am to 0:00pm
+item#989,instructor#4,course#2,location#2,973,false,Sa,1:30pm to 2:00pm
+item#990,instructor#4,course#2,location#7,972,true,TuSuWMFSaTh,7:30am to 11:00am
+item#991,instructor#3,course#4,location#3,971,false,Sa,7:00am to 0:00pm
+item#992,instructor#5,course#5,location#2,962,true,TuWSuMSaFTh,7:30am to 9:00am
+item#993,instructor#2,course#0,location#2,961,false,WSuMFSaTh,7:30am to 9:30am
+item#994,instructor#7,course#2,location#1,960,true,TuWMFSaTh,1:00pm to 2:00pm
+item#995,instructor#6,course#1,location#4,959,false,TuSuWMSaTh,8:30am to 9:00am
+item#996,instructor#4,course#5,location#5,966,true,TuSu,10:30am to 1:30pm
+item#997,instructor#5,course#1,location#1,965,false,F,0:00pm to 2:00pm
+item#998,instructor#4,course#5,location#4,964,true,TuSuSa,0:30pm to 2:00pm
+item#999,instructor#7,course#6,location#3,963,false,SuM,0:30pm to 1:30pm
+#End Schedule Items
