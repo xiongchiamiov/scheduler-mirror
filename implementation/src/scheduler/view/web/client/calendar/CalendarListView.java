@@ -174,7 +174,7 @@ public class CalendarListView extends SimplePanel {
 		// Add column header
 		builder.append("<td class=\"columnHeader\" id='h'");
 		builder.append("onclick=\"calendarListSort(").append(columnIndices.COURSE_NAME.ordinal()).append(")\"");
-		builder.append(">Course Number");
+		builder.append(">Course");
 		if (mCurrentSort == sortBy.COURSE_NAME_ASC)
 			builder.append(" &#9660;");
 		else if (mCurrentSort == sortBy.COURSE_NAME_DESC)
@@ -205,7 +205,7 @@ public class CalendarListView extends SimplePanel {
 			builder.append(" &#9650;");
 		builder.append("</td>");
 		
-		builder.append("<td class=\"columnHeader\" id='h'>Building</td>");
+		builder.append("<td class=\"columnHeader\" id='h'>Location</td>");
 
 		builder.append("<td class=\"columnHeader\" id='h'");
 		builder.append("onclick=\"calendarListSort(").append(columnIndices.DAYS.ordinal()).append(")\"");
@@ -317,9 +317,11 @@ public class CalendarListView extends SimplePanel {
 			
 			if (mScheduleController.getInstructor(item.getInstructorID()) != null ) {
 				builder.append(mScheduleController.getInstructor(item.getInstructorID()).getLastName());
+				builder.append(", ");
+				builder.append(mScheduleController.getInstructor(item.getInstructorID()).getFirstName());
 			}			
 			else {
-				builder.append("TBA");
+				builder.append("STAFF");
 			}
 			
 			builder.append("</td>");

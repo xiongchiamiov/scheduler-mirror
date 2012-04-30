@@ -46,12 +46,6 @@ public class DragAndDropController implements MouseMoveHandler, MouseOutHandler,
 	}
 	
 	public boolean isDragging() {
-		System.out.println();
-		System.out.println("DRAGGING "+(isMoving&&isHolding()));
-		System.out.println("draggeditem "+ (mDraggingItem!=null));
-		System.out.println("itemview "+ (mItemView!=null));
-		System.out.println("isMoving "+isMoving);
-		System.out.println("isholding "+isHolding());
 		return isMoving && isHolding();
 	}
 	

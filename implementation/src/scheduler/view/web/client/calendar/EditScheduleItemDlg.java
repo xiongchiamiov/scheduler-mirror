@@ -113,13 +113,17 @@ public class EditScheduleItemDlg extends DialogBox {
 	public ScheduleItemGWT getNewItem() {
 		int courseID = mOriginalItem.getCourseID();
 		
-		int instructorID = -1; // Staff
-		if (mInstructorsLB.getSelectedIndex() > 0)
-			instructorID = mInstructors.get(mInstructorsLB.getSelectedIndex() - 1).getID();
+		int instructorID = -1; // Don't care, algorithm decides
+		if (mInstructorsLB.getSelectedIndex() == 1)
+			instructorID = mDocument.getStaffInstructorID();
+		else if (mInstructorsLB.getSelectedIndex() > 1)
+			instructorID = mInstructors.get(mInstructorsLB.getSelectedIndex() - 2).getID();
 		
-		int locationID = -1; // TBA
-		if (mLocationsLB.getSelectedIndex() > 0)
-			locationID = mLocations.get(mLocationsLB.getSelectedIndex() - 1).getID();
+		int locationID = -1; // Don't care, algorithm decides
+		if (mLocationsLB.getSelectedIndex() == 1)
+			locationID = mDocument.getTBALocationID();
+		else if (mLocationsLB.getSelectedIndex() > 1)
+			locationID = mLocations.get(mLocationsLB.getSelectedIndex() - 2).getID();
 		
 		int section = mOriginalItem.getSection();
 		
@@ -329,12 +333,13 @@ public class EditScheduleItemDlg extends DialogBox {
 			public void onSuccess(List<InstructorGWT> result) {
 				mInstructors = result;
 				
-				mInstructorsLB.addItem("Don't care");
+				mInstructorsLB.addItem("Choose one for me");
+				mInstructorsLB.addItem("STAFF");
 				if (result != null) {
 					for (InstructorGWT instructor : result) {
 						mInstructorsLB.addItem(instructor.getFirstName() + " " + instructor.getLastName());
 
-						if (mOriginalItem.getLocationID() == instructor.getID())
+						if (new Integer(mOriginalItem.getLocationID()).equals(instructor.getID()))
 							mInstructorsLB.setSelectedIndex(mInstructorsLB.getItemCount() - 1);
 					}
 				}
@@ -353,12 +358,13 @@ public class EditScheduleItemDlg extends DialogBox {
 			public void onSuccess(List<LocationGWT> result) {
 				mLocations = result;
 
-				mLocationsLB.addItem("Don't care");
+				mLocationsLB.addItem("Choose one for me");
+				mLocationsLB.addItem("TBA");
 				if (result != null) {
 					for (LocationGWT location : result) {
 						mLocationsLB.addItem(location.getRoom());
 						
-						if (mOriginalItem.getLocationID() == location.getID())
+						if (new Integer(mOriginalItem.getLocationID()).equals(location.getID()))
 							mLocationsLB.setSelectedIndex(mLocationsLB.getItemCount() - 1);
 					}
 				}

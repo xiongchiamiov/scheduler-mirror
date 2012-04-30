@@ -113,6 +113,8 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 
 					@Override
 					public void onSuccess(List<CourseGWT> result) {
+						System.out.println("Got " + result.size() + " courses");
+						
 						mCourses.clear();
 						for (CourseGWT course : result)
 							mCourses.put(course.getID(), course);
@@ -131,6 +133,8 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 
 					@Override
 					public void onSuccess(List<LocationGWT> result) {
+						System.out.println("Got " + result.size() + " locations");
+						
 						mLocations.clear();
 						for (LocationGWT Location : result)
 							mLocations.put(Location.getID(), Location);
@@ -149,6 +153,8 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 
 					@Override
 					public void onSuccess(List<InstructorGWT> result) {
+						System.out.println("Got " + result.size() + " instructors");
+						
 						mInstructors.clear();
 						for (InstructorGWT instructor : result)
 							mInstructors.put(instructor.getID(), instructor);
@@ -165,6 +171,8 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 
 					@Override
 					public void onSuccess(Collection<ScheduleItemGWT> result) {
+						System.out.println("Got " + result.size() + " items");
+					
 						mCalendarItems = new ArrayList<ScheduleItemGWT>();
 
 						for (ScheduleItemGWT item : result) {
@@ -478,8 +486,6 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 	 * Retrieves the course list and adds it to the available courses box
 	 */
 	private void populateAvailableCoursesList() {
-		final long startTimestamp = System.currentTimeMillis();
-
 		mGreetingService.getCoursesForDocument(mDocument.getID(),
 				new AsyncCallback<List<CourseGWT>>() {
 					@Override
@@ -489,10 +495,6 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 
 					@Override
 					public void onSuccess(List<CourseGWT> result) {
-						long endTimestamp = System.currentTimeMillis();
-						long secondsElapsed = (endTimestamp - startTimestamp) / 1000;
-						Window.alert("Took "+secondsElapsed+"s to retrieve available courses");
-						
 						if (result != null) {
 							mCourses.clear();
 							for (CourseGWT course : result)
@@ -563,9 +565,7 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 	public void updateItem(final ScheduleItemGWT item) {
 		final LoadingPopup loading = new LoadingPopup();
 		loading.show();
-
-		final long startTimestamp = System.currentTimeMillis();
-
+		
 		mGreetingService.updateScheduleItem(item,
 				new AsyncCallback<Collection<ScheduleItemGWT>>() {
 					@Override
@@ -576,10 +576,6 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 
 					@Override
 					public void onSuccess(Collection<ScheduleItemGWT> result) {
-						long endTimestamp = System.currentTimeMillis();
-						long secondsElapsed = (endTimestamp - startTimestamp) / 1000;
-						Window.alert("Took "+secondsElapsed+"s to update item in schedule");
-						
 						mCalendarItems = new ArrayList<ScheduleItemGWT>();
 
 						for (ScheduleItemGWT schdItem : result) {
@@ -624,8 +620,6 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 		final LoadingPopup loading = new LoadingPopup();
 		loading.show();
 		
-		final long startTimestamp = System.currentTimeMillis();
-
 		mGreetingService.insertScheduleItem(mDocument.getScheduleID(), item,
 				new AsyncCallback<Collection<ScheduleItemGWT>>() {
 					@Override
@@ -636,10 +630,6 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 
 					@Override
 					public void onSuccess(Collection<ScheduleItemGWT> result) {
-						long endTimestamp = System.currentTimeMillis();
-						long secondsElapsed = (endTimestamp - startTimestamp) / 1000;
-						Window.alert("Took "+secondsElapsed+"s to insert item in schedule");
-						
 						mCalendarItems = new ArrayList<ScheduleItemGWT>();
 
 						for (ScheduleItemGWT schdItem : result) {
@@ -703,9 +693,7 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 	public void removeItem(ScheduleItemGWT removed) {
 		final LoadingPopup loading = new LoadingPopup();
 		loading.show();
-
-		final long startTimestamp = System.currentTimeMillis();
-
+		
 		mGreetingService.newRemoveScheduleItem(removed,
 				new AsyncCallback<Collection<ScheduleItemGWT>>() {
 					@Override
@@ -716,10 +704,6 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 
 					@Override
 					public void onSuccess(Collection<ScheduleItemGWT> result) {
-						long endTimestamp = System.currentTimeMillis();
-						long secondsElapsed = (endTimestamp - startTimestamp) / 1000;
-						Window.alert("Took "+secondsElapsed+"s to remove item from schedule");
-						
 						mCalendarItems = new ArrayList<ScheduleItemGWT>();
 						for (ScheduleItemGWT schdItem : result) {
 							mCalendarItems.add(schdItem);
