@@ -16,6 +16,7 @@ import scheduler.model.Instructor;
 import scheduler.model.Location;
 import scheduler.model.Model;
 import scheduler.model.Schedule;
+import scheduler.model.algorithm.BadInstructorDataException;
 import scheduler.model.algorithm.GenerateEntryPoint;
 import scheduler.model.algorithm.ScheduleItemDecorator;
 import scheduler.model.algorithm.Week;
@@ -28,7 +29,7 @@ public class AlgorithmTest {
 	private static final int START_HALF_HOUR = 14; // 7am
 	private static final int END_HALF_HOUR = 44; // 10pm
 
-	public static void main(String[] args) throws DatabaseException {
+	public static void main(String[] args) throws DatabaseException, BadInstructorDataException {
 		Model model = new Model();
 		
 		Document doc = model.createAndInsertDocumentWithTBAStaffAndSchedule("doc", START_HALF_HOUR, END_HALF_HOUR);
