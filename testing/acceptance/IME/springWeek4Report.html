@@ -1,0 +1,133 @@
+<html>
+<head>
+<title>
+Finals Week Acceptance Test Report for the IME Department
+</title>
+</head>
+<body bgcolor=white>
+<p align=center>
+<font size=+2>
+<strong>Week 4 Acceptance Test Report for the IME Department</strong>
+</font>
+</p>
+<br>
+<br>
+<a name="Create, Save, and Re-Open a New Schedule">
+<h2>
+1.  Create, Save, and Re-Open a New Schedule
+</h2>
+</a>
+<p>
+This works doesn't seem to work. After creating several courses and instructors and saving them (which yielded a "successfully saved" message), I got a "Failed to retrieve documents from server" error. In fact, I got this several times, while I was trying to change tabs. When I logged out and logged back in. After I logged back in, my "saved" document was gone.
+</p>
+
+<br>
+<a name="Enter Resource Data">
+<h2>
+2.  Enter Resource Data
+</h2>
+</a>
+<p>
+<em>
+<ol type=a>
+<p> <li>
+Changing the course type does not work well
+<p> <li>
+When you navigate between tabs, courses should be verified as acceptable data before you navigate to a new tab
+<p> <li>
+Invalid courses should not be acceptable options for "Course Preferences"
+<p> <li>
+The tabbing error still exists, making the "schedulable" check box blank after click/tabbing.
+<p><li>
+Entering instructors was actually a pleasant experience, I entered data by tabbing through the entire table and entering data as I went, and it went relatively quickly, without incident.
+<p><li>
+
+</ol>
+</em>
+</p>
+
+<br>
+<a name="Generate a Schedule">
+<h2>
+3.  Generate a Schedule
+</h2>
+</a>
+<p>
+<em>
+<ol type=a>
+<p> <li>
+"AvailableCourses" should be "Available Courses"
+<p> <li>
+    When I went to this page I got an "error message" that said, "Took 0s to retrieve available courses"
+<p><li>
+    When I tried to press the generate button I got an error: "Failed to get schedule: com.google.gwt.user.client.rpc.StatusCodeException: 500 The call failed on the server; see server log for details"
+
+
+</ol>
+</em>
+</p>
+
+<br>
+<a name="Edit the Schedule">
+<h2>
+4.  Edit the Schedule
+</h2>
+</a>
+<p>
+<em>
+<ol type=a>
+<p> <li>
+When you drag a course onto the schedule it does not assign an instructor.
+<p><li>
+When editing, if you fill in a field as "Don't care" it should still assign a proper value to the field
+</ol>
+</em>
+</p>
+
+<br>
+<a name="Save, Exit, Re-Open Schedule">
+<h2>
+5.  Save, Exit, Re-Open Schedule
+</h2>
+</a>
+<p>
+<em>
+<ol type=a>
+<p> <li>
+    All of my data was lost after exiting the calender editing view, I received several Failed to retrieve documents from server! errors.
+    <p> <li>
+        Upon logging back in I was not able to create a new schedule, see any of my previously saved schedules. And I continuously got the "Failed to retrieve documents from server!" error.
+</ol>
+</em>
+</p>
+</p>
+
+<br>
+<a name="Quality Measures">
+<h2>
+6.  Quality Measures
+</h2>
+</a>
+<p>
+<em>
+<ol type=a>
+<p> <li>
+    The resource tables are getting to a stable and usable place; however, work needs to be done to fix the minor bugs, and to make sure that data validation is occuring.
+<p><li>
+The generation page is not acceptable. I cannot press the generation button, I still get errors. And when I try to drag courses onto the schedule, it doesn't seem to be running the algorithm to assign instructors or rooms to these courses. 
+<p><li>
+    The top-level UI functionality doesn't seem to be working, based on the failed to retrieve documents error, we either have some serious saving issues OR some serious tomcat issues. (My guess is that there are tomcat issues).
+</ol>
+</em>
+</p>
+<br>
+<a name="Other Issues">
+<h2>
+7.  Other Issues
+</h2>
+</a>
+<p>
+
+</p>
+</body>
+</html>
