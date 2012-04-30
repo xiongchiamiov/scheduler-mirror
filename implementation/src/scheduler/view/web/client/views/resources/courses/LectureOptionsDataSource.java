@@ -25,7 +25,8 @@ public class LectureOptionsDataSource extends DataSource {
 		
 		this.setAddGlobalId(false);
 		
-		DataSourceIntegerField valueField = new DataSourceIntegerField("valueField");
+		DataSourceTextField valueField = new DataSourceTextField("valueField");
+		
 		valueField.setPrimaryKey(true);
 		
 		DataSourceTextField displayField = new DataSourceTextField("displayField");
@@ -39,6 +40,11 @@ public class LectureOptionsDataSource extends DataSource {
 		Collection<CourseGWT> courses = coursesSource.getAll();
 		
 		List<Record> responseRecords = new LinkedList<Record>();
+		
+		Record noLectureRecord = new Record();
+		noLectureRecord.setAttribute("valueField", -1);
+		noLectureRecord.setAttribute("displayField", "(none)");
+		responseRecords.add(noLectureRecord);
 		
 		for (CourseGWT course : courses) {
 			if (course.getType().equals("LEC")) {

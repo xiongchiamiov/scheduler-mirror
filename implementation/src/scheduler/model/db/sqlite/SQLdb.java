@@ -919,7 +919,7 @@ public class SQLdb implements IDatabase {
 	}
 
 	@Override
-	public void associateLectureAndLab(IDBCourse lecture, IDBCourse lab)
+	public void associateLectureAndLab(IDBCourse lecture, IDBCourse lab, boolean tethered)
 			throws DatabaseException {
 		// TODO Auto-generated method stub
 		

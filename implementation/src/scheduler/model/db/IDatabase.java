@@ -104,7 +104,7 @@ public interface IDatabase {
 	Collection<IDBCourseAssociation> getAssociationsForLecture(IDBCourse lectureCourse) throws DatabaseException;
 	IDBCourse getAssociationLecture(IDBCourseAssociation association) throws DatabaseException;
 	IDBCourse getAssociationLab(IDBCourseAssociation association) throws DatabaseException;
-	void associateLectureAndLab(IDBCourse lecture, IDBCourse lab) throws DatabaseException;
+	void associateLectureAndLab(IDBCourse lecture, IDBCourse lab, boolean tethered) throws DatabaseException;
 	void disassociateLectureAndLab(IDBCourse lecture, IDBCourse lab) throws DatabaseException;
 
 	// Instructors

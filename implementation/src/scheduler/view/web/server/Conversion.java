@@ -120,6 +120,8 @@ public abstract class Conversion {
 		for (Set<Day> combo : course.getDayPatterns())
 			dayPatterns.add(dayPatternToGWT(combo));
 		
+		System.out.println("course going out, " + (course.getLecture() != null) + " and " + course.isTetheredToLecture());
+
 		return new CourseGWT(
 				course.isSchedulable(),
 				course.getName(),
@@ -154,6 +156,8 @@ public abstract class Conversion {
 		for (Set<DayGWT> combo : source.getDayPatterns())
 			dayPatterns.add(dayPatternFromGWT(combo));
 		result.setDayPatterns(dayPatterns);
+		
+		System.out.println("coursegwt coming in, " + source.getLectureID() + " and " + source.getTetheredToLecture());
 		
 		result.setUsedEquipment(source.getUsedEquipment());
 		result.setLecture(source.getLectureID() == -1 ? null : model.findCourseByID(source.getLectureID()));

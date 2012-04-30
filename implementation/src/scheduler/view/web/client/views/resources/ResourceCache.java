@@ -84,6 +84,8 @@ public abstract class ResourceCache<ResourceGWT extends Identified> implements R
 			
 			@Override
 			public void onSuccess(List<ResourceGWT> initialResources) {
+//				Window.alert("got response from server for populating!");
+				
 				assert(state instanceof PopulatingState);
 				
 				for (ResourceGWT realResource : initialResources) {
@@ -94,9 +96,15 @@ public abstract class ResourceCache<ResourceGWT extends Identified> implements R
 					Entry newEntry = new Entry(localID, realID, null, EntryActivity.NO_CHANGES);
 					entriesByLocalID.put(localID, newEntry);
 					entriesByRealID.put(realID, newEntry);
+				}
+
+				
+				
+				for (ResourceGWT realResource : initialResources) {
+					Entry newEntry = entriesByRealID.get(realResource.getID());
 					
 					newEntry.localResource = realToLocal(realResource);
-					assert(newEntry.localResource.getID() == localID);
+					assert(newEntry.localResource.getID() == newEntry.localID);
 				}
 				
 				state = new PopulatedAndReadyState();
@@ -241,7 +249,7 @@ public abstract class ResourceCache<ResourceGWT extends Identified> implements R
 
 		state = new PopulatedAndSynchronizingWithServerState();
 		
-		System.out.println("Sending activity to server! " + addedResources.size() + " " + editedResources.size() + " " + deletedResourcesRealIDs.size());
+//		System.out.println("Sending activity to server! " + addedResources.size() + " " + editedResources.size() + " " + deletedResourcesRealIDs.size());
 		sendActivityToServer(addedResources, editedResources, deletedResourcesRealIDs, new AsyncCallback<List<Integer>>() {
 			@Override
 			public void onFailure(Throwable caught) {
@@ -250,7 +258,7 @@ public abstract class ResourceCache<ResourceGWT extends Identified> implements R
 			
 			@Override
 			public void onSuccess(List<Integer> addedResourcesRealIDs) {
-				System.out.println("Success!");
+//				System.out.println("Success!");
 				
 				assert(state instanceof PopulatedAndSynchronizingWithServerState);
 				

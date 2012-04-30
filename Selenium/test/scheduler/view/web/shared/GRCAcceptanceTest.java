@@ -97,8 +97,8 @@ public abstract class GRCAcceptanceTest extends DefaultSelTestCase {
 
 		// By default we're looking at the courses view, so start filling out courses
 		bot.enterIntoCoursesResourceTableNewRow(0, true, "GRC", "101", "Graphics", "1", "3", "3", "MW,TuTh", "3", "97", "LEC", "Smart Room", null);
-//		bot.enterIntoCoursesResourceTableNewRow(1, true, "GRC", "200", "Special Problems", "1", "3", "3", null, null, "10", "IND", null, null);
-//		bot.enterIntoCoursesResourceTableNewRow(2, true, "GRC", "200", "Special Problems", "1", "3", "3", null, null, "10", "IND", null, null);
+		bot.enterIntoCoursesResourceTableNewRow(1, true, "GRC", "200", "Special Problems", "1", "3", "3", null, null, "10", "IND", null, null);
+		bot.enterIntoCoursesResourceTableNewRow(2, true, "GRC", "200", "Special Problems", "1", "3", "3", null, null, "10", "IND", null, null);
 //		bot.enterIntoCoursesResourceTableNewRow(3, true, "GRC", "202", "Digital Photography", "1", "3", "3", "MW", "2", "50", "LEC", null, null);
 //		bot.enterIntoCoursesResourceTableNewRow(4, true, "GRC", "202", "Digital Photography", "3", "3", "3", null, "3", "20", "LAB", null, "GRC 202");
 //		bot.enterIntoCoursesResourceTableNewRow(5, true, "GRC", "203", "Digital File Preparation and Workflow", "1", "2", "3", "TuTh", "1", "45", "LEC", null, null);

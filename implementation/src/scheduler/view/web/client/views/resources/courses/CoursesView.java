@@ -1,8 +1,14 @@
 package scheduler.view.web.client.views.resources.courses;
 
+import java.util.LinkedHashMap;
+import java.util.Map.Entry;
+
 import scheduler.view.web.client.views.LoadingPopup;
 import scheduler.view.web.client.views.resources.ResourceCache.Observer;
+import scheduler.view.web.shared.CourseGWT;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
@@ -12,13 +18,23 @@ import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.RowEndEditAction;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.IButton;
+import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.events.KeyPressEvent;
 import com.smartgwt.client.widgets.events.KeyPressHandler;
+import com.smartgwt.client.widgets.form.fields.FormItem;
+import com.smartgwt.client.widgets.form.fields.FormItemIcon;
+import com.smartgwt.client.widgets.form.fields.SelectItem;
+import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
+import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
+import com.smartgwt.client.widgets.form.fields.events.IconClickEvent;
+import com.smartgwt.client.widgets.form.fields.events.IconClickHandler;
 import com.smartgwt.client.widgets.form.validator.IntegerRangeValidator;
 import com.smartgwt.client.widgets.grid.CellFormatter;
 import com.smartgwt.client.widgets.grid.ListGrid;
+import com.smartgwt.client.widgets.grid.ListGridEditorContext;
+import com.smartgwt.client.widgets.grid.ListGridEditorCustomizer;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.layout.HLayout;
@@ -66,39 +82,12 @@ public class CoursesView extends VLayout {
 		// gridPanel.setHorizontalAlignment(ALIGN_CENTER);
 		final ListGrid grid = new ListGrid() {
 			protected Canvas createRecordComponent(final ListGridRecord record, Integer colNum) {
-//				String fieldName = this.getFieldName(colNum);
-//				if (fieldName.equals("associations")) {
-//					DynamicForm form = new DynamicForm();
-//					
-//					SelectItem select = new SelectItem();
-//					select.setWidth(100);
-//					select.setShowTitle(false);
-//					select.setMultiple(false);
-//					select.setValue("course1");
-//					select.setValueMap("course1", "course2");
-//					select.setEndRow(false);
-//					select.setOptionDataSource(lectureOptionsDataSource);
-//					
-//					select.addChangedHandler(new ChangedHandler() {
-//						public void onChanged(ChangedEvent event) {
-//							
-//						}
-//					});
-//					
-//					final CheckboxItem checkbox = new CheckboxItem();
-//					checkbox.setShowTitle(false);
-//					checkbox.setStartRow(false);
-//					checkbox.setShowLabel(false);
-//					checkbox.addChangedHandler(new ChangedHandler() {
-//						public void onChanged(ChangedEvent event) {
-//							record.setAttribute("tethered", checkbox.getValueAsBoolean());
-//						}
-//					});
-//					
-//					form.setFields(select, checkbox);
-//					
-//					return form;
-//				}
+				String fieldName = this.getFieldName(colNum);
+				if (fieldName.equals("associations")) {
+					if (record.getAttribute("type").equals("LAB")) {
+						return new Label("Associations");
+					}
+				}
 				
 				return null;
 			}
@@ -124,6 +113,7 @@ public class CoursesView extends VLayout {
 		grid.setListEndEditAction(RowEndEditAction.NEXT);
 		// grid.setCellHeight(22);
 		grid.setDataSource(new CoursesDataSource(coursesCache));
+		grid.setAutoSaveEdits(true);
 
 		grid.addKeyPressHandler(new KeyPressHandler() {
 			public void onKeyPress(KeyPressEvent event) {
@@ -194,9 +184,15 @@ public class CoursesView extends VLayout {
 		ListGridField usedEquipmentField = new ListGridField("usedEquipment",
 				"Used Equipment");
 		usedEquipmentField.setAlign(Alignment.CENTER);
-		ListGridField associationsField = new ListGridField("associations",
-				"Associations");
-		associationsField.setAlign(Alignment.CENTER);
+		
+		ListGridField lectureIDField = new ListGridField("lectureID");
+		lectureIDField.setDefaultValue(-1);
+		lectureIDField.setOptionDataSource(lectureOptionsDataSource);
+		lectureIDField.setDisplayField("displayField");
+		lectureIDField.setValueField("valueField");
+		
+		ListGridField isTetheredField = new ListGridField("isTethered");
+		isTetheredField.setDefaultValue(false);
 
 		// For a combo box associations field CURRENTLY NOT WORKING
 		// final SelectItem test = new SelectItem();
@@ -232,7 +228,125 @@ public class CoursesView extends VLayout {
 				catalogNumberField, nameField, numSectionsField, wtuField,
 				scuField, dayCombinationsField, hoursPerWeekField,
 				maxEnrollmentField, courseTypeField, usedEquipmentField,
-				associationsField);
+				lectureIDField, isTetheredField);
+		
+		
+
+//		DynamicForm derp = new DynamicForm();
+		
+//		ComboBoxItem select = new ComboBoxItem("displayField");
+//		select.setOptionDataSource(lectureOptionsDataSource);
+		
+//		derp.setFields(select);
+		
+//		this.addMember(derp);
+		
+		grid.setEditorCustomizer(new ListGridEditorCustomizer() {  
+			public FormItem getEditor(final ListGridEditorContext context) {  
+				ListGridField field = context.getEditField();  
+				if (field.getName().equals("associations")) {
+					final Record record = context.getEditedRecord();
+					if (record.getAttribute("type").equals("LAB")) {
+//						CanvasItem canvas = new CanvasItem();
+//						
+//						DynamicForm form = new DynamicForm();
+//						
+						
+						final SelectItem select = new SelectItem();
+						
+//						select.setOptionDataSource(lectureOptionsDataSource);
+//						select.setDisplayField("displayField");
+//						select.setValueField("valueField");
+//						
+						LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
+						valueMap.put("-1", "(none)");
+						for (CourseGWT course : coursesCache.getAll())
+							if (course.getType().equals("LEC"))
+								valueMap.put(Integer.toString(course.getID()), course.getDept() + " " + course.getCatalogNum());
+						select.setValueMap(valueMap);
+						
+//						for (Entry<String, String> derp : valueMap.entrySet()) {
+//							System.out.println(derp.getKey() + " => " + derp.getValue());
+//						}
+						
+						select.setEndRow(false);
+						select.setShowTitle(false);
+
+						String initialLectureID = record.getAttribute("lectureID");
+						Window.alert("initial lecture id is " + initialLectureID);
+						select.setValue(initialLectureID);
+
+						final FormItemIcon initialIcon = new FormItemIcon();
+						boolean isTetheredInitially = "true".equals(record.getAttribute("isTethered"));
+						initialIcon.setSrc(isTetheredInitially ? "tethered.png" : "untethered.png");
+						select.setIcons(initialIcon);
+						
+						select.addChangedHandler(new ChangedHandler() {
+							public void onChanged(ChangedEvent event) {
+								Window.alert("setting lecture id to " + event.getValue());
+								record.setAttribute("lectureID", event.getValue());
+							}
+						});
+
+						select.addIconClickHandler(new IconClickHandler() {
+							public void onIconClick(IconClickEvent event) {
+
+								boolean isTethered = "true".equals(record.getAttribute("isTethered"));
+								isTethered = !isTethered;
+								record.setAttribute("isTethered", isTethered ? "true" : "false");
+//								Window.alert("tethered is now " + isTethered);
+
+								final int row = context.getRowNum();
+								
+								Scheduler.get().scheduleDeferred(new Command() {
+									public void execute() {
+										grid.endEditing();
+										grid.startEditing(row, 13, false);
+									}
+								});
+								
+
+//								initialIcon.setSrc(isTethered ? "tethered.png" : "untethered.png");
+////								select.setIcons(icon);
+//								
+//								select.setWidth(74);
+//								select.setShowIcons(false);
+//								select.updateState();
+//								select.redraw();
+//								select.setWidth(73);
+//								select.setShowIcons(true);
+//								select.updateState();
+//								select.redraw();
+//								select.setWidth(72);
+							}
+						});
+						
+//						
+//						CheckboxItem checkbox = new CheckboxItem();
+//						checkbox.setWidth(25);
+//						checkbox.setStartRow(false);
+//						checkbox.setShowTitle(false);
+//						checkbox.setShowLabel(false);
+//						checkbox.addChangedHandler(new ChangedHandler() {
+//							public void onChanged(ChangedEvent event) {
+//								record.setAttribute("isTethered", event.getValue());
+//							}
+//						});
+//						
+//						form.setFields(select, checkbox);
+//
+//						canvas.setCanvas(form);
+//						
+//						return canvas;
+						
+						return select;
+					}
+				}
+
+				return context.getDefaultProperties();
+			}
+		});
+
 
 		// DOM.setElementAttribute(this.getElement(), "id", "s_coursesTab");
 

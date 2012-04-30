@@ -182,6 +182,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			List<CourseGWT> addedResources,
 			Collection<CourseGWT> editedResources,
 			List<Integer> deletedResourcesIDs) {
+		System.out.println("Begin GreetingServiceImpl.updateCourses");
 		List<Integer> addedCoursesIDs = new LinkedList<Integer>();
 		for (CourseGWT newCourse : addedResources)
 			addedCoursesIDs.add(addCourseToDocument(documentID, newCourse).getID());
@@ -189,12 +190,14 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			editCourse(editedCourse);
 		for (int deletedCourseID : deletedResourcesIDs)
 			removeCourse(deletedCourseID);
+		System.out.println("End GreetingServiceImpl.updateCourses");
 		return addedCoursesIDs;
 	}
 	
 	@Override
 	public CourseGWT addCourseToDocument(int documentID, CourseGWT course) {
-		System.out.println("Called addCourse with " + course.getDept() + " " + course.getCatalogNum());
+		System.out.println("Begin GreetingServiceImpl.addCourseToDocument");
+//		System.out.println("Called addCourse with " + course.getDept() + " " + course.getCatalogNum());
 		
 		assert (course.getID() == null);
 		
@@ -208,6 +211,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			
 			sanityCheck();
 			flushToFileSystem();
+
+			System.out.println("End GreetingServiceImpl.addCourseToDocument");
 			
 			return course;
 		}
@@ -218,7 +223,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	
 	@Override
 	public void editCourse(CourseGWT source) {
-		System.out.println("Called editCourse with id " + source.getID() + ": " + source.getDept() + " " + source.getCatalogNum());
+		System.out.println("Begin GreetingServiceImpl.editCourse with id " + source.getID() + ": " + source.getDept() + " " + source.getCatalogNum() + " with tethered " + source.getTetheredToLecture());
 		try {
 			Course course = model.findCourseByID(source.getID());
 			assert (course.getID() > 0);
@@ -231,6 +236,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			
 			sanityCheck();
 			flushToFileSystem();
+
+			System.out.println("End GreetingServiceImpl.editCourse");
 		}
 		catch (DatabaseException e) {
 			throw new RuntimeException(e);
@@ -240,17 +247,21 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	@Override
 	public List<CourseGWT> getCoursesForDocument(int documentID) {
 		try {
+			System.out.println("Begin GreetingServiceImpl.getCoursesForDocument");
+			
 			Document document = model.findDocumentByID(documentID);
 			assert (document.getOriginal() != null);
 			assert(document.getStaffInstructor() != null);
 			assert(document.getTBALocation() != null);
 			List<CourseGWT> result = new LinkedList<CourseGWT>();
 			for (Course course : model.findCoursesForDocument(document)) {
-				System.out.println("for doc id " + documentID + " returning course name " + course.getName());
+//				System.out.println("for doc id " + documentID + " returning course name " + course.getName());
 				result.add(Conversion.courseToGWT(course));
 			}
 			
 			sanityCheck();
+
+			System.out.println("End GreetingServiceImpl.getCoursesForDocument");
 			
 			return result;
 		}

@@ -308,6 +308,6 @@ public class AdminScheduleNavView extends VerticalPanel implements UnsavedDocume
 	@Override
 	public void setDocumentChanged(boolean documentChanged) {
 		// TODO Auto-generated method stub
-		System.out.println("implement me");
+//		System.out.println("implement me");
 	}
 }

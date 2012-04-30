@@ -232,13 +232,17 @@ public class Model {
 		// Course Associations
 		for (IDBCourse existingDocumentCourse : database.findCoursesForDocument(existingDocument.underlyingDocument)) {
 			IDBCourseAssociation assoc = database.getAssociationForLabOrNull(existingDocumentCourse);
+//			System.out.println("course " + existingDocumentCourse.getCalatogNumber() + " " + existingDocumentCourse.getType() + ": " + assoc);
 			if (assoc == null)
 				continue;
+//			System.out.println("copying assoc!");
 			IDBCourse existingDocumentLecture = database.getAssociationLecture(assoc);
 			
 			IDBCourse newDocumentCourse = newDocumentCoursesByExistingDocumentCourseIDs.get(existingDocumentCourse.getID());
 			IDBCourse newDocumentLecture = newDocumentCoursesByExistingDocumentCourseIDs.get(existingDocumentLecture.getID());
-			database.associateLectureAndLab(newDocumentLecture, newDocumentCourse);
+			database.associateLectureAndLab(newDocumentLecture, newDocumentCourse, assoc.isTethered());
+			database.updateCourse(newDocumentCourse);
+			database.updateCourse(newDocumentLecture);
 		}
 
 		// Instructors

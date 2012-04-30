@@ -105,8 +105,8 @@ public class LocationsDataSource extends DataSource {
 				
 				int responseRecordIndex = 0;
 				for (LocationGWT location : result) {
-					System.out.println("Fetch location result id " + location.getID());
-					System.out.println("Fetch record id " + readLocationIntoRecord(location).getAttribute("id"));
+//					System.out.println("Fetch location result id " + location.getID());
+//					System.out.println("Fetch record id " + readLocationIntoRecord(location).getAttribute("id"));
 					responseRecords[responseRecordIndex++] = readLocationIntoRecord(location);
 				}
 				
@@ -140,7 +140,7 @@ public class LocationsDataSource extends DataSource {
 			public void onSuccess(LocationGWT result) {
 				unsavedDocumentStrategy.setDocumentChanged(true);
 				DSResponse response = new DSResponse();
-				System.out.println("result record id " + result.getID());
+//				System.out.println("result record id " + result.getID());
 				response.setData(new Record[] { readLocationIntoRecord(result) });
 				processResponse(dsRequest.getRequestId(), response);
 			}

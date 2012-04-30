@@ -361,6 +361,7 @@ public class Database implements IDatabase {
 
 	@Override
 	public void updateCourse(IDBCourse course) {
+//		System.out.println("putting into coursetable " + course.getType() + " tethered: " + ((DBCourse)course).tetheredToLecture);
 		courseTable.update(new DBCourse((DBCourse)course));
 	}
 
@@ -554,12 +555,12 @@ public class Database implements IDatabase {
 		if (document.originalID == null)
 			return null;
 		
-		System.out.println("doc table " + documentTable + " doc " + document);
+//		System.out.println("doc table " + documentTable + " doc " + document);
 		return documentTable.findByID(document.originalID);
 	}
 
 	@Override
-	public void associateLectureAndLab(IDBCourse rawLecture, IDBCourse rawLab) {
+	public void associateLectureAndLab(IDBCourse rawLecture, IDBCourse rawLab, boolean tethered) {
 		DBCourse lab = (DBCourse)rawLab;
 		DBCourse lecture = (DBCourse)rawLecture;
 		
@@ -568,13 +569,18 @@ public class Database implements IDatabase {
 		
 		assert(lab.lectureID == null);
 		lab.lectureID = lecture.id;
-		System.out.println("setting association for lab " + rawLab + " to: " + lab.lectureID);
+		lab.tetheredToLecture = tethered;
+//		System.out.println("setting association for lab " + rawLab + " to: " + lab.lectureID);
 	}
 	
 	@Override
 	public IDBCourseAssociation getAssociationForLabOrNull(IDBCourse rawLabCourse) {
 		DBCourse labCourse = (DBCourse)rawLabCourse;
-		System.out.println("getting association for lab " + labCourse + ": " + labCourse.lectureID);
+		if (!labCourse.getType().equals("LAB")) {
+			assert(labCourse.lectureID == null);
+			return null;
+		}
+//		System.out.println("getting association for " + labCourse.getDepartment() + " " + labCourse.getCalatogNumber() + ": " + labCourse.lectureID);
 		if (labCourse.lectureID == null)
 			return null;
 		return new DBCourseAssociation(labCourse.id, labCourse.lectureID, labCourse.tetheredToLecture);
@@ -776,7 +782,7 @@ public class Database implements IDatabase {
 		
 		assert(workingCopy.originalID == null);
 		workingCopy.originalID = original.id;
-		System.out.println("set doc id " + workingCopy.id + " originalID to " + original.id);
+//		System.out.println("set doc id " + workingCopy.id + " originalID to " + original.id);
 	}
 
 	@Override

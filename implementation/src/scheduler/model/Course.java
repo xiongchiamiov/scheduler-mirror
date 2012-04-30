@@ -276,8 +276,10 @@ public class Course extends Identified {
 	private void putAssociationIntoDB() throws DatabaseException {
 		if (!lectureLoaded)
 			return;
-		if (lecture != null)
-			mModel.database.associateLectureAndLab(lecture.underlyingCourse, underlyingCourse);
+		if (lecture != null) {
+//			System.out.println("putting assoc into db!");
+			mModel.database.associateLectureAndLab(lecture.underlyingCourse, underlyingCourse, cachedTetheredToLecture);
+		}
 	}
 	
 	private void removeAssociationFromDB() throws DatabaseException {
@@ -288,23 +290,33 @@ public class Course extends Identified {
 	}
 	
 	private void loadLectureAndTethered() throws DatabaseException {
+//		System.out.println("loading lecture and tethered");
+		
 		if (lectureLoaded)
 			return;
 		
-		assert (lecture == null);
-		assert (cachedTetheredToLecture == null);
+		assert(lecture == null);
+		assert(cachedTetheredToLecture == null);
 		assert(underlyingCourse.getType() != null);
 		
 //		System.out.println("is lab? " + underlyingCourse.getType().equals("LAB"));
 		
 		if (underlyingCourse.getType().equals("LAB")) {
 			IDBCourseAssociation assoc = mModel.database.getAssociationForLabOrNull(underlyingCourse);
-			System.out.println("assoc? " + assoc);
-			if (assoc != null) {
+//			System.out.println("assoc? " + assoc);
+			if (assoc == null) {
+				lecture = null;
+				cachedTetheredToLecture = false;
+			}
+			else {
 				assert (mModel.database.getAssociationLab(assoc).getID() == underlyingCourse.getID());
 				lecture = mModel.findCourseByID(mModel.database.getAssociationLecture(assoc).getID());
 				cachedTetheredToLecture = assoc.isTethered();
 			}
+		}
+		else {
+			lecture = null;
+			cachedTetheredToLecture = false;
 		}
 		
 		lectureLoaded = true;
@@ -316,18 +328,13 @@ public class Course extends Identified {
 	}
 	
 	public void setLecture(Course newLecture) throws DatabaseException {
-		assert (newLecture == null || !newLecture.isTransient()); // You need to
-																						// insert
-																						// something
-																						// before you
-																						// can
-																						// reference
-																						// it
+		assert (newLecture == null || !newLecture.isTransient());
+		// You need to insert something before you can reference it
 		loadLectureAndTethered();
 		this.lecture = newLecture;
 	}
 	
-	public Boolean isTetheredToLecture() throws DatabaseException {
+	public boolean isTetheredToLecture() throws DatabaseException {
 		loadLectureAndTethered();
 		return cachedTetheredToLecture;
 	}

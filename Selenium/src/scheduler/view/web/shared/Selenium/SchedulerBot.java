@@ -263,7 +263,7 @@ public class SchedulerBot {
 		setResourceTableTextCell(viewID, row0Based, 10, maxEnrollment);
 		setResourceTableSelectCell(viewID, row0Based, 11, type);
 		setResourceTableMultiselectCell(viewID, row0Based, 12, usedEquipment);
-		setResourceTableTextCell(viewID, row0Based, 13, association);
+//		setResourceTableTextCell(viewID, row0Based, 13, association);
 	}
 	
 	public void waitForElementPresent(final By by) throws InterruptedException {

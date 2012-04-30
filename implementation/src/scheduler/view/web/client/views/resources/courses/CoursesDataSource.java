@@ -62,8 +62,12 @@ public class CoursesDataSource extends DataSource {
 		usedEquipmentField.setMultiple(true);
 		usedEquipmentField.setValueMap("Laptop Connectivity", "Overhead", "Smart Room");
 		
+		DataSourceIntegerField lectureIDField = new DataSourceIntegerField("lectureID");
+		
+		DataSourceBooleanField isTetheredField = new DataSourceBooleanField("isTethered");
+		
 		setFields(idField, schedulableField, departmentField, catalogNumberField, nameField, numSectionsField, wtuField, scuField,
-				dayCombinationsField, hoursPerWeekField, maxEnrollmentField, courseTypeField, usedEquipmentField);
+				dayCombinationsField, hoursPerWeekField, maxEnrollmentField, courseTypeField, usedEquipmentField, lectureIDField, isTetheredField);
 		
 		setClientOnly(true);
 	}
@@ -90,6 +94,8 @@ public class CoursesDataSource extends DataSource {
 		record.setAttribute("maxEnrollment", course.getMaxEnroll());
 		record.setAttribute("type", course.getType());
 		record.setAttribute("usedEquipment", usedEquipmentsStrings);
+		record.setAttribute("lectureID", course.getLectureID());
+		record.setAttribute("isTethered", course.getTetheredToLecture());
 		return record;
 	}
 
@@ -110,11 +116,6 @@ public class CoursesDataSource extends DataSource {
 				usedEquipments.add(usedEquipment);
 		}
 		
-		String associations = record.getAttributeAsString("associations");
-		System.out.println("Association: " + associations);
-		int lectureID = -1;
-		boolean isTethered = false;
-		
 		assert(record.getAttribute("type") != null);
 		
 		CourseGWT course = new CourseGWT(
@@ -127,11 +128,11 @@ public class CoursesDataSource extends DataSource {
 				record.getAttribute("numSections"),
 				record.getAttribute("type"),
 				record.getAttribute("maxEnrollment"),
-				lectureID, // lecture ID
+				Integer.parseInt(record.getAttribute("lectureID")), // lecture ID
 				record.getAttribute("hoursPerWeek"),
 				dayCombinations, // day combinations
 				record.getAttributeAsInt("id"), // id
-				isTethered,
+				"true".equals(record.getAttribute("isTethered")),
 				usedEquipments // equipment
 				);
 		
@@ -146,8 +147,8 @@ public class CoursesDataSource extends DataSource {
 		
 		int responseRecordIndex = 0;
 		for (CourseGWT course : courses) {
-			System.out.println("Fetch course result id " + course.getID());
-			System.out.println("Fetch record id " + readCourseIntoRecord(course).getAttribute("id"));
+//			System.out.println("Fetch course result id " + course.getID());
+//			System.out.println("Fetch record id " + readCourseIntoRecord(course).getAttribute("id"));
 			responseRecords[responseRecordIndex++] = readCourseIntoRecord(course);
 		}
 		
@@ -203,13 +204,17 @@ public class CoursesDataSource extends DataSource {
 			record.setAttribute("associations", changes.getAttribute("associations"));
 		if (changes.getAttribute("isSchedulable") != null)
 			record.setAttribute("isSchedulable", changes.getAttribute("isSchedulable"));
+		if (changes.getAttribute("isTethered") != null)
+			record.setAttribute("isTethered", changes.getAttribute("isTethered"));
+		if (changes.getAttribute("lectureID") != null)
+			record.setAttribute("lectureID", changes.getAttribute("lectureID"));
 		
 		
 		final CourseGWT course = readRecordIntoCourse(record);
 		
 		assert(course.getID() != null);
 		
-		System.out.println("updating course id " + course.getID() + ": " + course.getDept() + " " + course.getCatalogNum());
+//		System.out.println("updating course id " + course.getID() + ": " + course.getDept() + " " + course.getCatalogNum());
 		
 		coursesSource.edit(course);
 		

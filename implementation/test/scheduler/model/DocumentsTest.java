@@ -182,6 +182,42 @@ public abstract class DocumentsTest extends ModelTestCase {
 		
 		model.copyDocument(document, document.getName());
 	}
+
+	public void testCopyDocumentWithAssociations() throws DatabaseException {
+		Model model = createBlankModel();
+		
+		Document document = insertFullDocumentIntoModel(model);
+
+		Course course2 = model.createTransientCourse("mylec", "122", "dept", "10", "10", "2", "LEC", "2", "2", true).setDocument(document).insert();
+		Course course3 = model.createTransientCourse("mylab", "122", "dept", "10", "10", "2", "LAB", "2", "2", true).setDocument(document).insert();
+		course3.setLecture(course2);
+		course3.setTetheredToLecture(true);
+		course2.update();
+		course3.update();
+		
+
+		for (Course course : document.getCourses()) {
+			if (course.getName().equals("mylab")) {
+				assert(course.getLecture() != null);
+				assert(course.getLecture().getName().equals("mylec"));
+			}
+			else {
+				assert(course.isTetheredToLecture() == false);
+			}
+		}
+		
+		Document newDocument = model.copyDocument(document, "newname");
+		
+		for (Course course : newDocument.getCourses()) {
+			if (course.getName().equals("mylab")) {
+				assert(course.getLecture() != null);
+				assert(course.getLecture().getName().equals("mylec"));
+			}
+			else {
+				assert(course.isTetheredToLecture() == false);
+			}
+		}
+	}
 	
 	public void testWorkingCopy() throws DatabaseException {
 		Model model = createBlankModel();

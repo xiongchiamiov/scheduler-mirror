@@ -95,8 +95,8 @@ public class InstructorsDataSource extends DataSource {
 				
 				int responseRecordIndex = 0;
 				for (InstructorGWT instructor : result) {
-					System.out.println("Fetch instructor result id " + instructor.getID());
-					System.out.println("Fetch record id " + readInstructorIntoRecord(instructor).getAttribute("id"));
+//					System.out.println("Fetch instructor result id " + instructor.getID());
+//					System.out.println("Fetch record id " + readInstructorIntoRecord(instructor).getAttribute("id"));
 					responseRecords[responseRecordIndex++] = readInstructorIntoRecord(instructor);
 				}
 				
@@ -130,7 +130,7 @@ public class InstructorsDataSource extends DataSource {
 			public void onSuccess(InstructorGWT result) {
 				unsavedDocumentStrategy.setDocumentChanged(true);
 				DSResponse response = new DSResponse();
-				System.out.println("result record id " + result.getID());
+//				System.out.println("result record id " + result.getID());
 				response.setData(new Record[] { readInstructorIntoRecord(result) });
 				assert(response.getData()[0].getAttributeAsInt("id") != null);
 				processResponse(dsRequest.getRequestId(), response);
