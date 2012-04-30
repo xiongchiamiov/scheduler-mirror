@@ -3,5 +3,5 @@ databasefilepath=DatabaseState.javaser
 
 #this optional property tells the scheduler to feed databasefilepath to
 # the getServletContext().getRealPath(...) function. default is true.
-applyServletPath=false
-#applyServletPath=true
+useServletContextRealPath=false
+#useServletContextRealPath=true

@@ -389,10 +389,9 @@ public class Course extends ModelObject {
 			assert usedEquipmentDescriptions != null : "usedequipment descriptions null";
 		if (offeredDayPatternsLoaded)
 			assert offeredDayPatterns != null : "offereddaypatterns null";
-		if (lectureLoaded) {
-			assert lecture != null : "lec null";
-			assert cachedTetheredToLecture != null : "cached null";
-		}
+		
+		// lecture can be null
+		
 		if (documentLoaded)
 			assert document != null : "doc null";
 	}
