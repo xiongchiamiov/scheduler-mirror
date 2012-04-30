@@ -1,9 +1,7 @@
 package scheduler.view.web.client.views.resources.courses;
 
 import java.util.LinkedHashMap;
-import java.util.Map.Entry;
 
-import scheduler.view.web.client.views.LoadingPopup;
 import scheduler.view.web.client.views.resources.ResourceCache.Observer;
 import scheduler.view.web.shared.CourseGWT;
 
@@ -15,9 +13,11 @@ import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.types.ListGridEditEvent;
 import com.smartgwt.client.types.Overflow;
+import com.smartgwt.client.types.Positioning;
 import com.smartgwt.client.types.RowEndEditAction;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.IButton;
+import com.smartgwt.client.widgets.Img;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -41,23 +41,22 @@ import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 public class CoursesView extends VLayout {
-	LoadingPopup populateLoadingPopup;
+	Img loadingImage;
 	
 	DocumentCoursesCache coursesCache;
 	
 	public CoursesView(final DocumentCoursesCache coursesCache) {
 		this.coursesCache = coursesCache;
 		
-		// this.addStyleName("iViewPadding");
-		// DOM.setElementAttribute(this.getElement(), "id", "s_courseviewTab");
 		this.setID("s_courseviewTab");
 		this.setWidth100();
 		this.setHeight100();
 
-		// this.add(new HTML("<h2>Courses</h2>"));
-
-		populateLoadingPopup = new LoadingPopup();
-		populateLoadingPopup.show();
+		this.setPosition(Positioning.RELATIVE);
+		
+		loadingImage = new Img("imgs/loading.gif");
+		loadingImage.setPosition(Positioning.ABSOLUTE);
+		this.addMember(loadingImage);
 		
 		if (coursesCache.isPopulated()) {
 			onPopulate();
@@ -75,11 +74,8 @@ public class CoursesView extends VLayout {
 	}
 	
 	private void onPopulate() {
-		populateLoadingPopup.hide();
-		
 		final LectureOptionsDataSource lectureOptionsDataSource = new LectureOptionsDataSource(coursesCache);
 
-		// gridPanel.setHorizontalAlignment(ALIGN_CENTER);
 		final ListGrid grid = new ListGrid() {
 			protected Canvas createRecordComponent(final ListGridRecord record, Integer colNum) {
 				String fieldName = this.getFieldName(colNum);
@@ -94,7 +90,7 @@ public class CoursesView extends VLayout {
 			
 			protected String getCellCSSText(ListGridRecord record, int rowNum,
 					int colNum) {
-				if (getFieldName(colNum).equals("id")) {
+				if (getFieldName(colNum).equals("selector")) {
 					return "cursor: pointer; background: #C0C0C0;";
 				} else {
 					return super.getCellCSSText(record, rowNum, colNum);
@@ -125,17 +121,17 @@ public class CoursesView extends VLayout {
 			}
 		});
 
-		ListGridField idField = new ListGridField("id", "&nbsp;");
+		ListGridField selectorField = new ListGridField("selector", "&nbsp;");
 
-		idField.setCanEdit(false);
-		idField.setCellFormatter(new CellFormatter() {
+		selectorField.setCanEdit(false);
+		selectorField.setCellFormatter(new CellFormatter() {
 			public String format(Object value, ListGridRecord record,
 					int rowNum, int colNum) {
 				return "\u22EE";
 			}
 		});
-		idField.setWidth(20);
-		idField.setAlign(Alignment.CENTER);
+		selectorField.setWidth(20);
+		selectorField.setAlign(Alignment.CENTER);
 
 		IntegerRangeValidator nonnegativeInt = new IntegerRangeValidator();
 		nonnegativeInt.setMin(0);
@@ -194,52 +190,11 @@ public class CoursesView extends VLayout {
 		ListGridField isTetheredField = new ListGridField("isTethered");
 		isTetheredField.setDefaultValue(false);
 
-		// For a combo box associations field CURRENTLY NOT WORKING
-		// final SelectItem test = new SelectItem();
-		// test.setName("association");
-		// test.addClickHandler(new
-		// com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
-		//
-		// @Override
-		// public void onClick(
-		// com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
-		// ArrayList<String> lectureList = new ArrayList<String>();
-		// System.out.println("About to get records");
-		// for(ListGridRecord record : grid.getRecords())
-		// {
-		// System.out.println("Got some records");
-		// if(record.getAttributeAsString("type").equals("LEC"))
-		// {
-		// //It is a lecture, add to possible associations
-		// String lectureName = record.getAttributeAsString("catalogNumber");
-		// System.out.println("Found lecture: " + lectureName);
-		// lectureList.add(lectureName);
-		// }
-		// }
-		// // grid.getField("associations").setValueMap("101", "TEST",
-		// "TESTAGAION");
-		// // test.setValueMap("TEST", "TESTER");
-		// test.setMultiple(true);
-		// }
-		// } );
-		// associationsField.setEditorType(test);
-
-		grid.setFields(idField, schedulableField, departmentField,
+		grid.setFields(selectorField, schedulableField, departmentField,
 				catalogNumberField, nameField, numSectionsField, wtuField,
 				scuField, dayCombinationsField, hoursPerWeekField,
 				maxEnrollmentField, courseTypeField, usedEquipmentField,
 				lectureIDField, isTetheredField);
-		
-		
-
-//		DynamicForm derp = new DynamicForm();
-		
-//		ComboBoxItem select = new ComboBoxItem("displayField");
-//		select.setOptionDataSource(lectureOptionsDataSource);
-		
-//		derp.setFields(select);
-		
-//		this.addMember(derp);
 		
 		grid.setEditorCustomizer(new ListGridEditorCustomizer() {  
 			public FormItem getEditor(final ListGridEditorContext context) {  
@@ -264,10 +219,6 @@ public class CoursesView extends VLayout {
 							if (course.getType().equals("LEC"))
 								valueMap.put(Integer.toString(course.getID()), course.getDept() + " " + course.getCatalogNum());
 						select.setValueMap(valueMap);
-						
-//						for (Entry<String, String> derp : valueMap.entrySet()) {
-//							System.out.println(derp.getKey() + " => " + derp.getValue());
-//						}
 						
 						select.setEndRow(false);
 						select.setShowTitle(false);
@@ -355,6 +306,8 @@ public class CoursesView extends VLayout {
 		addMember(grid);
 		// this.setHorizontalAlignment(ALIGN_LEFT);
 		layoutBottomButtonBar(grid);
+
+		removeMember(loadingImage);
 	}
 
 	/**
