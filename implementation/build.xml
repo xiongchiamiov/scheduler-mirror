@@ -85,7 +85,7 @@
     <cobertura-instrument todir="instrumented-classes">
       <fileset dir="war/WEB-INF/classes/scheduler/model" includes="**/*.class" />
     </cobertura-instrument>
-    <junit fork="yes" haltonfailure="yes">
+    <junit fork="yes" haltonfailure="no">
       <sysproperty key="net.sourceforge.cobertura.datafile" file="${basedir}/cobertura.ser" />
       <formatter type="plain" usefile="false" />
       <classpath refid="test.class.path" />
