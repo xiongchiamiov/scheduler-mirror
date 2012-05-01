@@ -17,7 +17,7 @@ import scheduler.view.web.shared.Selenium.*;
 public class BasicSelectSchedule extends DefaultSelTestCase {
 	
 	/** The sbot. */
-	SchedulerBot sbot;
+	WebUtility sbot;
 	/** prototype url */
 	private static final String protoURL = "http://scheduler.csc.calpoly.edu/RPTA";
 	

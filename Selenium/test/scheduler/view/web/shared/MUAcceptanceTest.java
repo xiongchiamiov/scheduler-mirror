@@ -1,22 +1,20 @@
 package scheduler.view.web.shared;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.testng.xml.LaunchSuite.ExistingSuite;
 
-import scheduler.view.web.shared.Selenium.SchedulerBot;
-import scheduler.view.web.shared.Selenium.SchedulerBot.PopupWaiter;
+import scheduler.view.web.shared.Selenium.WebUtility;
+import scheduler.view.web.shared.Selenium.WebUtility.PopupWaiter;
 
 public abstract class MUAcceptanceTest extends DefaultSelTestCase {	
 	private WebDriver driver;
 	private StringBuffer verificationErrors = new StringBuffer();
 	private static String protoURL;
-	private SchedulerBot bot;	
 	
 	public void setUp(WebDriver drv) throws java.io.IOException {
 		Properties properties = new Properties();
@@ -24,7 +22,6 @@ public abstract class MUAcceptanceTest extends DefaultSelTestCase {
 		this.protoURL = properties.getProperty("domain") + "/MU";
 		this.driver = drv;
 		super.setUp(protoURL, drv);
-		bot = new SchedulerBot(driver);
 	}
 	
 	public void tearDown() {
@@ -50,11 +47,11 @@ public abstract class MUAcceptanceTest extends DefaultSelTestCase {
 			By rowXPath = By.xpath("//table[@class='listTable']/tbody/tr[@role='listitem'][" + (existingDocumentIndex + 1) + "]");
 			
 			WebElement existingDocumentClickableCell = driver.findElement(rowXPath).findElement(By.xpath("td[2]/div"));
-			bot.mouseDownAndUpAt(existingDocumentClickableCell, 5, 5);
+			WebUtility.mouseDownAndUpAt(driver, existingDocumentClickableCell, 5, 5);
 			
 			assert("true".equals(driver.findElement(rowXPath).getAttribute("aria-selected"))); // Sanity check, sometimes it was selecting the wrong one, given my xpath...
 			
-			bot.mouseDownAndUpAt(By.xpath("//div[@eventproxy='s_deleteBtn']"), 5, 5);
+			WebUtility.mouseDownAndUpAt(driver, By.xpath("//div[@eventproxy='s_deleteBtn']"), 5, 5);
 			
 			Thread.sleep(2000);
 			
@@ -63,14 +60,14 @@ public abstract class MUAcceptanceTest extends DefaultSelTestCase {
 	}
 	
 	private void createDocumentFromHomeTabAndSwitchToItsWindow(final String documentName) throws InterruptedException {
-		bot.mouseDownAndUpAt(By.xpath("//div[@eventproxy='s_createBtn']"), 5, 5);
+		WebUtility.mouseDownAndUpAt(driver, By.xpath("//div[@eventproxy='s_createBtn']"), 5, 5);
 
-		bot.waitForElementPresent(By.id("s_createBox"));
+		WebUtility.waitForElementPresent(driver, By.id("s_createBox"));
 		
 		driver.findElement(By.id("s_createBox")).clear();
 		driver.findElement(By.id("s_createBox")).sendKeys(documentName);
 
-		PopupWaiter popupWaiter = bot.getPopupWaiter();
+		PopupWaiter popupWaiter = new WebUtility.PopupWaiter(driver);
 		
 		driver.findElement(By.id("s_createNamedDocBtn")).click();
 		
@@ -83,7 +80,7 @@ public abstract class MUAcceptanceTest extends DefaultSelTestCase {
 		driver.findElement(By.id("s_unameBox")).clear();
 		driver.findElement(By.id("s_unameBox")).sendKeys(username);
 		driver.findElement(By.id("s_loginBtn")).click();
-		bot.waitForElementPresent(By.xpath("//div[@eventproxy='s_createBtn']"));
+		WebUtility.waitForElementPresent(driver, By.xpath("//div[@eventproxy='s_createBtn']"));
 		Thread.sleep(2000); // To wait for it to retrieve documents
 	}
 	
@@ -95,9 +92,9 @@ public abstract class MUAcceptanceTest extends DefaultSelTestCase {
 		createDocumentFromHomeTabAndSwitchToItsWindow(documentName);
 
 		// By default we're looking at the courses view, so start filling out courses
-		bot.enterIntoCoursesResourceTableNewRow(0, true, "MU", "101", "Introduction to Music Theory", "7", "3", "3", "MW,MWF,TuTh", "3", "27", "LEC", "Smart Room", null);
-		bot.enterIntoCoursesResourceTableNewRow(1, true, "MU", "104", "Musicianship I", "1", "3", "3", "MWF", "3", "14", "LEC", "Laptop Connectivity, Overhead", null);
-		bot.enterIntoCoursesResourceTableNewRow(2, true, "MU", "105", "Music Theory II: Chromatic Materials", "1", "3", "3", "MWF", "4.5", "27", "LEC", null, null);
+		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 0, true, "MU", "101", "Introduction to Music Theory", "7", "3", "3", "MW,MWF,TuTh", "3", "27", "LEC", "Smart Room", null);
+		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 1, true, "MU", "104", "Musicianship I", "1", "3", "3", "MWF", "3", "14", "LEC", "Laptop Connectivity, Overhead", null);
+		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 2, true, "MU", "105", "Music Theory II: Chromatic Materials", "1", "3", "3", "MWF", "4.5", "27", "LEC", null, null);
 
 		
 		// Click on the instructors tab
@@ -110,7 +107,7 @@ public abstract class MUAcceptanceTest extends DefaultSelTestCase {
 		driver.findElement(By.xpath("//td[@class='tabTitle'][text()='Locations']")).click();
 
 		// Start filling out locations
-		bot.enterIntoLocationsResourceTableNewRow(0, true, "14-255", "Smart Room", "9001", null);
+		WebUtility.enterIntoLocationsResourceTableNewRow(driver, 0, true, "14-255", "Smart Room", "9001", null);
 	}
 }
 

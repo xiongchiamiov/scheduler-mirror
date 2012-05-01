@@ -9,8 +9,8 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
-import scheduler.view.web.shared.Selenium.SchedulerBot;
-import scheduler.view.web.shared.Selenium.SchedulerBot.PopupWaiter;
+import scheduler.view.web.shared.Selenium.WebUtility;
+import scheduler.view.web.shared.Selenium.WebUtility.PopupWaiter;
 import junit.framework.TestCase;
 
 /**
@@ -22,7 +22,6 @@ import junit.framework.TestCase;
  */
 public class InstructorsViewTest extends TestCase {
 	private FirefoxDriver driver;
-	private SchedulerBot bot;
 	
 	/**
 	 * sets up the test class and initializes the Firefox driver
@@ -32,10 +31,9 @@ public class InstructorsViewTest extends TestCase {
 		this.driver = new FirefoxDriver();
 		driver.get("http://localhost:8080/dev/");
 //		driver.get("http://scheduler.csc.calpoly.edu/dev");
-		this.bot = new SchedulerBot(driver);
 		
 		try {
-			this.bot.waitForElementPresent(By.id("s_loginBtn"));
+			WebUtility.waitForElementPresent(driver, By.id("s_loginBtn"));
 		} catch (InterruptedException e) {
 			// print the exception and wait 1 second instead and hope that it works
 			e.printStackTrace();
@@ -55,7 +53,7 @@ public class InstructorsViewTest extends TestCase {
 			fail("Schedule document overview page was not loaded properly");
 		}
 		
-		PopupWaiter popupWaiter = bot.getPopupWaiter();
+		PopupWaiter popupWaiter = new WebUtility.PopupWaiter(driver);
 		
 		WebElement first_doc = this.getElementBySmartGWTID("sc_document_0");
 		if(first_doc == null)
@@ -218,7 +216,7 @@ public class InstructorsViewTest extends TestCase {
 		
 		// click on the preferences button of the first instructor
 		try {
-			this.bot.clickInstructorsResourceTablePreferencesButton(0);
+			WebUtility.clickInstructorsResourceTablePreferencesButton(driver, 0);
 		} catch (InterruptedException e) {
 			fail("there is no button for setting preferences");
 			return;
@@ -343,7 +341,7 @@ public class InstructorsViewTest extends TestCase {
 	 */
 	private void waitForSmartGWTElement(String id) throws InterruptedException
 	{
-		this.bot.waitForElementPresent(By.xpath("//div[@eventproxy='" + id + "']"));
+		WebUtility.waitForElementPresent(driver, By.xpath("//div[@eventproxy='" + id + "']"));
 	}
 	
 	private void saveData()
@@ -366,7 +364,7 @@ public class InstructorsViewTest extends TestCase {
 		
 		// insert data
 		try {
-			bot.enterIntoInstructorsResourceTableNewRow(0, schedulable, lastName, firstName, userName, wtu);
+			WebUtility.enterIntoInstructorsResourceTableNewRow(driver, 0, schedulable, lastName, firstName, userName, wtu);
 		} catch (InterruptedException e) {
 			fail("could not enter instructor data");
 			e.printStackTrace();

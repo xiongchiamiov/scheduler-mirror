@@ -7,13 +7,8 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
 
-import net.sourceforge.htmlunit.corejs.javascript.JavaScriptException;
-
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.NoSuchWindowException;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -27,17 +22,8 @@ import com.google.common.base.Predicate;
  * @author Salome Navarrete
  * @version 1.0 Nov 22 2011
  */
-public class SchedulerBot {
-	private WebDriver driver;
-	
-	public SchedulerBot(WebDriver driver) {
-		if (driver != null)
-			this.driver = driver;
-		else
-			throw new WebDriverException("Driver not found");
-	}
-	
-	public boolean isElementPresent(By by) {
+public abstract class WebUtility {
+	public static boolean isElementPresent(WebDriver driver, By by) {
 		try {
 			driver.findElement(by);
 			return true;
@@ -51,7 +37,7 @@ public class SchedulerBot {
 		public boolean stopWaiting();
 	}
 	
-	public void mouseDownAndUpAt(WebElement element, int x, int y) {
+	public static void mouseDownAndUpAt(WebDriver driver, WebElement element, int x, int y) {
 		new Actions(driver)
 		.clickAndHold(element)
 		.moveByOffset(x, y)
@@ -60,10 +46,12 @@ public class SchedulerBot {
 		.perform(); 
 	}
 
-	public class PopupWaiter {
+	public static class PopupWaiter {
 		final Set<String> initialWindows;
 		String poppedUpWindow;
-		public PopupWaiter() {
+		WebDriver driver;
+		public PopupWaiter(WebDriver driver) {
+			this.driver = driver;
 			initialWindows = driver.getWindowHandles();
 			for (String initialWindow : initialWindows)
 				System.out.println("initial window: " + initialWindow);
@@ -89,39 +77,39 @@ public class SchedulerBot {
 		}
 	}
 	
-	public WebElement elementForResourceTableCell(String viewID, int row0Based, int col0Based) {
+	public static WebElement elementForResourceTableCell(WebDriver driver, String viewID, int row0Based, int col0Based) {
 		return driver.findElement(By.xpath("((//div[@eventproxy='" + viewID + "']//table[@class='listTable']/tbody/tr[@role='listitem'])[" + (1 + row0Based) + "]/td)[" + (1 + col0Based) + "]"));
 	}
 	
-	public void setResourceTableTextCell(String viewID, int row0Based, int col0Based, String text) throws InterruptedException {
+	public static void setResourceTableTextCell(WebDriver driver, String viewID, int row0Based, int col0Based, String text) throws InterruptedException {
 		if (text == null)
 			return;
 
 		Thread.sleep(500);
-		WebElement cell = elementForResourceTableCell(viewID, row0Based, col0Based);
+		WebElement cell = elementForResourceTableCell(driver, viewID, row0Based, col0Based);
 		cell.click();
 
 		Thread.sleep(500);
-		WebElement input = elementForResourceTableCell(viewID, row0Based, col0Based).findElement(By.xpath("//input"));
+		WebElement input = elementForResourceTableCell(driver, viewID, row0Based, col0Based).findElement(By.xpath("//input"));
 		input.sendKeys(text);
 
 		driver.findElement(By.tagName("body")).click();
 		Thread.sleep(500);
 	}
 
-	private void setResourceTableMultiselectCell(String viewID, int row0Based, int col0Based, String optionsCombined) throws InterruptedException {
+	private static void setResourceTableMultiselectCell(WebDriver driver, String viewID, int row0Based, int col0Based, String optionsCombined) throws InterruptedException {
 		if (optionsCombined == null)
 			return;
 
 		Set<String> options = new TreeSet<String>(Arrays.asList(optionsCombined.split(",")));
 		
-		WebElement cell = elementForResourceTableCell(viewID, row0Based, col0Based);
+		WebElement cell = elementForResourceTableCell(driver, viewID, row0Based, col0Based);
 		cell.click();
 
 		driver.manage().timeouts().implicitlyWait(0, TimeUnit.MILLISECONDS);
 
 		Thread.sleep(500);
-		WebElement selectBeforeExpand = elementForResourceTableCell(viewID, row0Based, col0Based).findElement(By.xpath("div/nobr/span/table"));
+		WebElement selectBeforeExpand = elementForResourceTableCell(driver, viewID, row0Based, col0Based).findElement(By.xpath("div/nobr/span/table"));
 		selectBeforeExpand.click();
 		
 		Thread.sleep(500);
@@ -151,11 +139,11 @@ public class SchedulerBot {
 		Thread.sleep(500);
 	}
 
-	private void setResourceTableSelectCell(String viewID, int row0Based, int col0Based, String text) throws InterruptedException {
+	private static void setResourceTableSelectCell(WebDriver driver, String viewID, int row0Based, int col0Based, String text) throws InterruptedException {
 		if (text == null)
 			return;
 		
-		WebElement cell = elementForResourceTableCell(viewID, row0Based, col0Based);
+		WebElement cell = elementForResourceTableCell(driver, viewID, row0Based, col0Based);
 		cell.click();
 		
 		System.out.println("TODO: get rid of IND->LAB conversion!");
@@ -163,7 +151,7 @@ public class SchedulerBot {
 			text = "LAB";
 		// Making test temporarily pass so we can get on with the rest of it
 		
-		WebElement selectBeforeExpand = elementForResourceTableCell(viewID, row0Based, col0Based).findElement(By.xpath("div/nobr/span/table"));
+		WebElement selectBeforeExpand = elementForResourceTableCell(driver, viewID, row0Based, col0Based).findElement(By.xpath("div/nobr/span/table"));
 		selectBeforeExpand.click();
 		
 		WebElement popupList = driver.findElement(By.xpath("/html/body/div/div/div[@class='pickListMenuBody']"));
@@ -182,20 +170,20 @@ public class SchedulerBot {
 		driver.findElement(By.tagName("body")).click();
 		Thread.sleep(500);
 		
-		assert(elementForResourceTableCell(viewID, row0Based, col0Based).getText().trim().equalsIgnoreCase(text));
+		assert(elementForResourceTableCell(driver, viewID, row0Based, col0Based).getText().trim().equalsIgnoreCase(text));
 	}
 	
-	private void setResourceTableCheckboxCell(String viewID, int row0Based, int col0Based, boolean newValue) throws InterruptedException {
+	private static void setResourceTableCheckboxCell(WebDriver driver, String viewID, int row0Based, int col0Based, boolean newValue) throws InterruptedException {
 //		WebElement newCourseDeptCell = elementForResourceTableCell(row0Based, col0Based);
 //		newCourseDeptCell.click();
 		
 		Thread.sleep(500);
-		WebElement img = elementForResourceTableCell(viewID, row0Based, col0Based).findElement(By.xpath("//div[@class='labelAnchor']/img"));
+		WebElement img = elementForResourceTableCell(driver, viewID, row0Based, col0Based).findElement(By.xpath("//div[@class='labelAnchor']/img"));
 		
 		boolean currentValue = !img.getAttribute("src").contains("unchecked");
 		
 		if (currentValue != newValue)
-			mouseDownAndUpAt(img, 5, 5);
+			mouseDownAndUpAt(driver, img, 5, 5);
 		
 //		currentValue = "true".equals(imgParent.getAttribute("aria-checked"));
 //		assert(currentValue == newValue);
@@ -228,7 +216,8 @@ public class SchedulerBot {
 //	}
 
 //	bot.enterIntoResourceTableNewRow(0, true, "GRC", "101", "Graphics", "1", "3", "3", null, "3", "97", "LEC");
-	public void enterIntoCoursesResourceTableNewRow(
+	public static void enterIntoCoursesResourceTableNewRow(
+			WebDriver driver,
 			int row0Based,
 			boolean isSchedulable,
 			String department,
@@ -251,26 +240,26 @@ public class SchedulerBot {
 		
 		String viewID = "s_courseviewTab";
 		
-		setResourceTableCheckboxCell(viewID, row0Based, 1, isSchedulable);
-		setResourceTableTextCell(viewID, row0Based, 2, department);
-		setResourceTableTextCell(viewID, row0Based, 3, catalogNum);
-		setResourceTableTextCell(viewID, row0Based, 4, courseName);
-		setResourceTableTextCell(viewID, row0Based, 5, numSections);
-		setResourceTableTextCell(viewID, row0Based, 6, wtu);
-		setResourceTableTextCell(viewID, row0Based, 7, scu);
-		setResourceTableMultiselectCell(viewID, row0Based, 8, dayCombinations);
-		setResourceTableTextCell(viewID, row0Based, 9, hoursPerWeek);
-		setResourceTableTextCell(viewID, row0Based, 10, maxEnrollment);
-		setResourceTableSelectCell(viewID, row0Based, 11, type);
-		setResourceTableMultiselectCell(viewID, row0Based, 12, usedEquipment);
+		setResourceTableCheckboxCell(driver, viewID, row0Based, 1, isSchedulable);
+		setResourceTableTextCell(driver, viewID, row0Based, 2, department);
+		setResourceTableTextCell(driver, viewID, row0Based, 3, catalogNum);
+		setResourceTableTextCell(driver, viewID, row0Based, 4, courseName);
+		setResourceTableTextCell(driver, viewID, row0Based, 5, numSections);
+		setResourceTableTextCell(driver, viewID, row0Based, 6, wtu);
+		setResourceTableTextCell(driver, viewID, row0Based, 7, scu);
+		setResourceTableMultiselectCell(driver, viewID, row0Based, 8, dayCombinations);
+		setResourceTableTextCell(driver, viewID, row0Based, 9, hoursPerWeek);
+		setResourceTableTextCell(driver, viewID, row0Based, 10, maxEnrollment);
+		setResourceTableSelectCell(driver, viewID, row0Based, 11, type);
+		setResourceTableMultiselectCell(driver, viewID, row0Based, 12, usedEquipment);
 //		setResourceTableTextCell(viewID, row0Based, 13, association);
 	}
 	
-	public void waitForElementPresent(final By by) throws InterruptedException {
+	public static void waitForElementPresent(final WebDriver driver, final By by) throws InterruptedException {
 		new WebDriverWait(driver, 60).until(new Predicate<WebDriver>() {
 			public boolean apply(WebDriver arg0) {
 				try {
-					if (isElementPresent(by))
+					if (isElementPresent(driver, by))
 						return true;
 				}
 				catch (Exception e) {}
@@ -279,7 +268,7 @@ public class SchedulerBot {
 		});
 	}
 	
-	public void mouseDownAndUpAt(By by, int x, int y) {
+	public static void mouseDownAndUpAt(WebDriver driver, By by, int x, int y) {
 		WebElement element = driver.findElement(by);
 		
 		new Actions(driver)
@@ -290,11 +279,8 @@ public class SchedulerBot {
 				.perform();
 	}
 	
-	public PopupWaiter getPopupWaiter() {
-		return new PopupWaiter();
-	}
-
-	public void enterIntoInstructorsResourceTableNewRow(
+	public static void enterIntoInstructorsResourceTableNewRow(
+			WebDriver driver,
 			int row0Based,
 			boolean isSchedulable,
 			String lastName,
@@ -308,14 +294,15 @@ public class SchedulerBot {
 		
 		String viewID = "s_instructorviewTab";
 		
-		setResourceTableCheckboxCell(viewID, row0Based, 1, isSchedulable);
-		setResourceTableTextCell(viewID, row0Based, 2, lastName);
-		setResourceTableTextCell(viewID, row0Based, 3, firstName);
-		setResourceTableTextCell(viewID, row0Based, 4, username);
-		setResourceTableTextCell(viewID, row0Based, 5, maxWTU);
+		setResourceTableCheckboxCell(driver, viewID, row0Based, 1, isSchedulable);
+		setResourceTableTextCell(driver, viewID, row0Based, 2, lastName);
+		setResourceTableTextCell(driver, viewID, row0Based, 3, firstName);
+		setResourceTableTextCell(driver, viewID, row0Based, 4, username);
+		setResourceTableTextCell(driver, viewID, row0Based, 5, maxWTU);
 	}
 
-	public void enterIntoLocationsResourceTableNewRow(
+	public static void enterIntoLocationsResourceTableNewRow(
+			WebDriver driver,
 			int row0Based,
 			boolean isSchedulable,
 			String room,
@@ -329,26 +316,26 @@ public class SchedulerBot {
 		
 		String viewID = "s_locationviewTab";
 		
-		setResourceTableCheckboxCell(viewID, row0Based, 1, isSchedulable);
-		setResourceTableTextCell(viewID, row0Based, 2, room);
-		setResourceTableTextCell(viewID, row0Based, 3, type);
-		setResourceTableTextCell(viewID, row0Based, 4, maxOccupancy);
-		setResourceTableTextCell(viewID, row0Based, 5, equipment);
+		setResourceTableCheckboxCell(driver, viewID, row0Based, 1, isSchedulable);
+		setResourceTableTextCell(driver, viewID, row0Based, 2, room);
+		setResourceTableTextCell(driver, viewID, row0Based, 3, type);
+		setResourceTableTextCell(driver, viewID, row0Based, 4, maxOccupancy);
+		setResourceTableTextCell(driver, viewID, row0Based, 5, equipment);
 	}
 	
-	public void clickInstructorsResourceTablePreferencesButton(
-			int row0Based) throws InterruptedException {
+	public static void clickInstructorsResourceTablePreferencesButton(
+			WebDriver driver, int row0Based) throws InterruptedException {
 
 		System.out.println("clicking preferences button at line: " + row0Based);
 		
 		String viewID = "s_instructorviewTab";
 
 		Thread.sleep(500);
-		WebElement btn = elementForResourceTableCell(viewID,
+		WebElement btn = elementForResourceTableCell(driver, viewID,
 				row0Based, 6).findElement(By.xpath("//td[text()='Preferences'][@class='buttonTitle']"));
 //		btn.click();
 		System.out.println(btn);
-		this.mouseDownAndUpAt(btn, 1, 1);
+		mouseDownAndUpAt(driver, btn, 1, 1);
 
 		Thread.sleep(500);
 	}

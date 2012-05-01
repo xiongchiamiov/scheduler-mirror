@@ -15,7 +15,7 @@ import junit.framework.*;
  * 
  */
 public class SchedulerBotTest extends TestCase {
-	private SchedulerBot bot;
+	private WebUtility bot;
 	private FirefoxDriver fbot;
 	private ChromeDriver cbot;
 	private InternetExplorerDriver iebot;

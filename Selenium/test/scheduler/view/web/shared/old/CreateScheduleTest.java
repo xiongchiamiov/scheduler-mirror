@@ -19,7 +19,7 @@ import scheduler.view.web.shared.Selenium.*;
 public class CreateScheduleTest extends DefaultSelTestCase {
 	
 	/** The bot. */
-	SchedulerBot sbot;
+	WebUtility sbot;
 	/** url to use, if not default */
 	String protoURL = "http://scheduler.csc.calpoly.edu/RPTA";
 	

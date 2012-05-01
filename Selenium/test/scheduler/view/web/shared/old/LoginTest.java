@@ -7,7 +7,7 @@ import scheduler.view.web.shared.Selenium.*;
 public class LoginTest extends DefaultSelTestCase {	
 	
 	/** The sbot. */
-	SchedulerBot sbot;
+	WebUtility sbot;
 	/** url to use, if not default */
 	private static final String protoURL = "http://scheduler.csc.calpoly.edu/dev";
 	
