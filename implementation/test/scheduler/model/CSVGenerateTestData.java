@@ -1,13 +1,6 @@
 package scheduler.model;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
-import java.util.Collection;
-
-import scheduler.model.db.DatabaseException;
+import scheduler.model.simpledb.CSVTestSimpleDB;
 
 public class CSVGenerateTestData {
 	private static int numOfItems = 30;
@@ -16,7 +9,7 @@ public class CSVGenerateTestData {
 
 	public static void main(String[] args) {
 
-		CSVTest test = new CSVTest();
+		CSVTest test = new CSVTestSimpleDB();
 		for (int items = 0; items < 100; items++)
 			test.generateTestData(items, exportFilePath, exportFileName);
 		test.generateTestData(1000, exportFilePath, exportFileName);

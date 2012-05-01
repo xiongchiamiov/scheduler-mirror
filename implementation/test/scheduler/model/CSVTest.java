@@ -30,7 +30,7 @@ import junit.framework.TestCase;
  * @version: 17feb12
  */
 
-public class CSVTest extends TestCase {
+public abstract class CSVTest extends ModelTestCase {
 
 	/**
 	 * Method testExport is the unit testing method that calls

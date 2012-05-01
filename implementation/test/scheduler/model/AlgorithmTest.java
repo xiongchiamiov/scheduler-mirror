@@ -2,34 +2,19 @@ package scheduler.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.Vector;
 
-import scheduler.model.Course;
-import scheduler.model.Day;
-import scheduler.model.Document;
-import scheduler.model.Instructor;
-import scheduler.model.Location;
-import scheduler.model.Model;
-import scheduler.model.Schedule;
 import scheduler.model.algorithm.BadInstructorDataException;
 import scheduler.model.algorithm.GenerateEntryPoint;
-import scheduler.model.algorithm.ScheduleItemDecorator;
-import scheduler.model.algorithm.Week;
 import scheduler.model.db.DatabaseException;
-import scheduler.model.db.simple.DBSchedule;
-import scheduler.model.db.simple.Database;
 
-public class AlgorithmTest {
+public abstract class AlgorithmTest extends ModelTestCase {
 	
 	private static final int START_HALF_HOUR = 14; // 7am
 	private static final int END_HALF_HOUR = 44; // 10pm
 
-	public static void main(String[] args) throws DatabaseException, BadInstructorDataException {
+	public static void testThing() throws DatabaseException, BadInstructorDataException {
 		Model model = new Model();
 		
 		Document doc = model.createAndInsertDocumentWithTBAStaffAndSchedule("doc", START_HALF_HOUR, END_HALF_HOUR);

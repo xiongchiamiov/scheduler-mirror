@@ -1,7 +1,8 @@
-package scheduler.model;
+package scheduler.model.sqldb;
 
+import scheduler.model.DocumentsTest;
 import scheduler.model.db.IDatabase;
 
-public class InstructorsTestSQLDB extends InstructorsTest {
+public class DocumentsTestSQLDB extends DocumentsTest {
 	public IDatabase createBlankDatabase() { return new scheduler.model.db.sqlite.SQLdb(); }
 }
