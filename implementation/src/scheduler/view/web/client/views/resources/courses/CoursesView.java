@@ -91,7 +91,7 @@ public class CoursesView extends VLayout {
 			protected String getCellCSSText(ListGridRecord record, int rowNum,
 					int colNum) {
 				if (getFieldName(colNum).equals("selector")) {
-					return "cursor: pointer; background: #C0C0C0;";
+					return "cursor: pointer; background: #D8D8D8;";
 				} else {
 					return super.getCellCSSText(record, rowNum, colNum);
 				}
