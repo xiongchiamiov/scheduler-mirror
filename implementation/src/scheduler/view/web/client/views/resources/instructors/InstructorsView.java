@@ -225,20 +225,6 @@ public class InstructorsView extends VLayout {
 		
 		if(this.iipv == null)
 		{
-			this.iipv = new InstructorPreferencesView(service,
-				document.getID(), document.getName(), instructor,
-				unsavedDocumentStrategy);
-			
-			this.iipv.setParent(prefsWindow);
-			this.iipv.afterPush();
-		}
-		else
-		{
-			this.iipv.setInstructor(instructor);
-		}
-		
-		if(this.prefsWindow == null)
-		{
 			this.prefsWindow = new Window();
 			this.prefsWindow.setAutoSize(true);
 			
@@ -247,10 +233,22 @@ public class InstructorsView extends VLayout {
 
 			this.prefsWindow.setSize("700px", "500px");
 			ScrollPanel weewee = new ScrollPanel();
+			
+			this.iipv = new InstructorPreferencesView(service,
+				document.getID(), document.getName(), instructor,
+				unsavedDocumentStrategy);
+			
 			weewee.setWidget(iipv);
 			weewee.setSize("700px", "500px");
 			this.prefsWindow.addItem(weewee);
 			this.prefsWindow.setAutoSize(true);
+			
+			this.iipv.setParent(prefsWindow);
+			this.iipv.afterPush();
+		}
+		else
+		{
+			this.iipv.setInstructor(instructor);
 		}
 		
 		this.prefsWindow.setTitle("Instructor Preferences - <i>"
