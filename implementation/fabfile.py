@@ -16,10 +16,10 @@ def build():
 
 def test(domain='localhost:8080'):
 	print('Running JUnit tests...')
-	local('ant build && ant test')
+	local('ant clean && ant build && ant test')
 	print('Running Selenium tests...')
 	local('echo "domain=http://%s" > ../Selenium/test/scheduler/view/web/shared/selenium.properties' % domain)
-	local('cd ../Selenium && ant build && ant test')
+	local('cd ../Selenium && ant clean && ant build && ant test')
 
 def restart_tomcat():
 	print('Restarting tomcat...')
