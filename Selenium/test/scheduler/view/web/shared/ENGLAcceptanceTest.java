@@ -11,20 +11,18 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 
-import scheduler.view.web.shared.Selenium.SchedulerBot;
-import scheduler.view.web.shared.Selenium.SchedulerBot.PopupWaiter;
+import scheduler.view.web.shared.Selenium.WebUtility;
+import scheduler.view.web.shared.Selenium.WebUtility.PopupWaiter;
 
 public abstract class ENGLAcceptanceTest extends DefaultSelTestCase {	
 	private WebDriver driver;
 	private StringBuffer verificationErrors = new StringBuffer();
 	//private static final String protoURL = "http://localhost:8080/ENGL";
 	private static final String protoURL = "http://scheduler.csc.calpoly.edu/dev/";
-	private SchedulerBot bot;	
 	
 	public void setUp(WebDriver drv) {
 		this.driver = drv;
 		super.setUp(protoURL, drv);
-		bot = new SchedulerBot(driver);
 	}
 	
 	public void tearDown() {
@@ -50,11 +48,11 @@ public abstract class ENGLAcceptanceTest extends DefaultSelTestCase {
 			By rowXPath = By.xpath("//table[@class='listTable']/tbody/tr[@role='listitem'][" + (existingDocumentIndex + 1) + "]");
 			
 			WebElement existingDocumentClickableCell = driver.findElement(rowXPath).findElement(By.xpath("td[2]/div"));
-			bot.mouseDownAndUpAt(existingDocumentClickableCell, 5, 5);
+			WebUtility.mouseDownAndUpAt(driver, existingDocumentClickableCell, 5, 5);
 			
 			assert("true".equals(driver.findElement(rowXPath).getAttribute("aria-selected"))); // Sanity check, sometimes it was selecting the wrong one, given my xpath...
 			
-			bot.mouseDownAndUpAt(By.xpath("//div[@eventproxy='s_deleteBtn']"), 5, 5);
+			WebUtility.mouseDownAndUpAt(driver, By.xpath("//div[@eventproxy='s_deleteBtn']"), 5, 5);
 			
 			Thread.sleep(5000);
 			
@@ -63,14 +61,14 @@ public abstract class ENGLAcceptanceTest extends DefaultSelTestCase {
 	}
 	
 	private void createDocumentFromHomeTabAndSwitchToItsWindow(final String documentName) throws InterruptedException {
-		bot.mouseDownAndUpAt(By.xpath("//div[@eventproxy='s_createBtn']"), 5, 5);
+		WebUtility.mouseDownAndUpAt(driver, By.xpath("//div[@eventproxy='s_createBtn']"), 5, 5);
 
-		bot.waitForElementPresent(By.id("s_createBox"));
+		WebUtility.waitForElementPresent(driver, By.id("s_createBox"));
 		
 		driver.findElement(By.id("s_createBox")).clear();
 		driver.findElement(By.id("s_createBox")).sendKeys(documentName);
 
-		PopupWaiter popupWaiter = bot.getPopupWaiter();
+		PopupWaiter popupWaiter = new WebUtility.PopupWaiter(driver);
 		
 		driver.findElement(By.id("s_createNamedDocBtn")).click();
 		
@@ -83,7 +81,7 @@ public abstract class ENGLAcceptanceTest extends DefaultSelTestCase {
 		driver.findElement(By.id("s_unameBox")).clear();
 		driver.findElement(By.id("s_unameBox")).sendKeys(username);
 		driver.findElement(By.id("s_loginBtn")).click();
-		bot.waitForElementPresent(By.xpath("//div[@eventproxy='s_createBtn']"));
+		WebUtility.waitForElementPresent(driver, By.xpath("//div[@eventproxy='s_createBtn']"));
 		Thread.sleep(4000); // To wait for it to retrieve documents
 	}
 	
@@ -125,7 +123,7 @@ public abstract class ENGLAcceptanceTest extends DefaultSelTestCase {
 		// Click on the locations tab
 	   driver.findElement(By.xpath("//td[@class='tabTitle'][text()='Locations']")).click();
 
-	   bot.enterIntoLocationsResourceTableNewRow(0, false, "038-0219", "LEC", "35", null);
+	   WebUtility.enterIntoLocationsResourceTableNewRow(driver, 0, false, "038-0219", "LEC", "35", null);
 //	   bot.enterIntoLocationsResourceTableNewRow(1, false, "038-0219", "LEC", "35", null);
 //	   bot.enterIntoLocationsResourceTableNewRow(2, false, "038-0219", "LEC", "35", null);
 //	   bot.enterIntoLocationsResourceTableNewRow(3, false, "038-0219", "LEC", "35", null);
@@ -142,7 +140,7 @@ public abstract class ENGLAcceptanceTest extends DefaultSelTestCase {
 		// Click on the locations tab
 		driver.findElement(By.xpath("//td[@class='tabTitle'][text()='Instructors']")).click();
 		
-		bot.enterIntoInstructorsResourceTableNewRow(0, true, "Ovadia", "Bob", "bovadia", "40");
+		WebUtility.enterIntoInstructorsResourceTableNewRow(driver, 0, true, "Ovadia", "Bob", "bovadia", "40");
 //		bot.enterIntoInstructorsResourceTableNewRow(1, true, "Janke", "Dawn", "djanke", "40");
 //		bot.enterIntoInstructorsResourceTableNewRow(2, true, "Wilhelm", "Deborah", "dwilhelm", "40");
 //		bot.enterIntoInstructorsResourceTableNewRow(3, true, "Martin-Elston", "Erin", "ejmartin", "40");
@@ -170,7 +168,7 @@ public abstract class ENGLAcceptanceTest extends DefaultSelTestCase {
 
 	private void enterAllCourses() throws InterruptedException {
 
-		bot.enterIntoCoursesResourceTableNewRow(0, true, "ENGL", "103", "Writing Labratory", "1", "3", "3", "MW,TuTh", "3", "50", "LAB", "Smart Room", null);
+		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 0, true, "ENGL", "103", "Writing Labratory", "1", "3", "3", "MW,TuTh", "3", "50", "LAB", "Smart Room", null);
 //		bot.enterIntoCoursesResourceTableNewRow(1, true, "ENGL", "115", "GWR Preparation", "1", "1", "1", "Tr", "1", "35", "LEC", null, null);
 //		bot.enterIntoCoursesResourceTableNewRow(2, true, "ENGL", "134", "Writing and Rhetoric", "27", "3", "3", "MWF", "3", "30", "LEC", "Smart Room", null);
 //		bot.enterIntoCoursesResourceTableNewRow(3, true, "ENGL", "145", "Reasoning, Argumentation, and Writing", "39", "3", "3", "MW,TuTh", "3", "30", "LEC", "Smart Room", null);
