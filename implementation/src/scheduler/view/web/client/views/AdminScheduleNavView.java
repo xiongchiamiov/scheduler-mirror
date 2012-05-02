@@ -246,7 +246,7 @@ public class AdminScheduleNavView extends VerticalPanel implements UnsavedDocume
 		
 		final Tab instructorsTab = new Tab("Instructors");
 		instructorsTab.setPane(new InstructorsView(service, document, (UnsavedDocumentStrategy)AdminScheduleNavView.this));
-		coursesTab.setID("s_instructorsTab");
+		instructorsTab.setID("s_instructorsTab");
 		tabSet.addTab(instructorsTab);
 		
 		final Tab locationsTab = new Tab("Locations");

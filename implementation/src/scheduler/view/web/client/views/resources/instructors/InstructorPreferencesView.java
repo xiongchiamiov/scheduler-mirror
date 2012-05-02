@@ -86,6 +86,7 @@ public class InstructorPreferencesView extends VerticalPanel {
 				parent.hide();
 			}
 		});
+		DOM.setElementAttribute(button.getElement(), "id", "s_prefCloseBtn");
 		
 		this.add(button);
 	}
