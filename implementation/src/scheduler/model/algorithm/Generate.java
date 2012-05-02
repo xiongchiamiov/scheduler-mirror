@@ -22,7 +22,7 @@ public class Generate {
 	/**
 	 * Used for debugging. Toggle it to get debugging output
 	 */
-	 private static final boolean DEBUG = !true; // !true == false ; )
+	 private static final boolean DEBUG = true; // !true == false ; )
 	   
 	/**
 	 * Prints a message to STDERR if DEBUG is true
@@ -321,7 +321,7 @@ public class Generate {
 	    * @param c Course to find an instructor for
 	    * @param doNotPick List of instructor to <b>not</b> choose
 	    * 
-	    * @return An intsructor to teach 'c'. This can be STAFF if no instructor
+	    * @return An instructor to teach 'c'. This can be STAFF if no instructor
 	    *         if capable of teaching
 	 * @throws BadInstructorDataException 
 	    */
@@ -341,7 +341,7 @@ public class Generate {
 	      {
 	    	  //Instructor i = id.getInstructor(); using instructor id's seems more stable
 	    	  if(!(id.getInstructorID().equals(r.getInstructorID()))) {
-	    		  debug ("CONSIDERING " + id);
+	    		  debug ("CONSIDERING " + id.getInstructor());
 	    		  if (doNotPickInstructorIDs == null || !doNotPickInstructorIDs.contains(id.getInstructorID()))
 	    		  {
 	    			  debug ("NOT EXCLUDED");
@@ -478,7 +478,6 @@ public class Generate {
 	      
 	      debug("Model instructor chosen: " + model.findInstructorByID(base.getInstructor().getID()));
 	      debug("Instructor from vector chosen: " + id.getInstructor());
-	      debug("Using id: " + id);
 	      
 	      si_list = findTimes(model, schedule, base, tr, id);
 	      if (si_list.isEmpty())
@@ -496,12 +495,12 @@ public class Generate {
 	         do
 	         {
 	            InstructorDecorator i = findInstructor(c, haveTriedInstructorIDs, id_vec);
-	            debug ("FindInsructor returned: " + i.toString());
+	            debug ("FindInstructor returned: " + i.getInstructor());
 
 	            //id = new InstructorDecorator(i);
 	            
 	            debug ("NO TIMES FOUND FOR " + base.getInstructor());
-	            debug ("TRYING " + i);
+	            debug ("TRYING " + i.getInstructor());
 	            
 	            clone.setInstructor(i.getInstructor());
 	            si_list = findTimes(model, schedule, clone, tr, id);
@@ -774,30 +773,32 @@ public class Generate {
 	     // Instructor i = model.findInstructorByID(si.getInstructor().getID());
 	      
 	      TimeRange tr = new TimeRange(range.getS(), range.getS() + getDayLength(c));
-	      debug("Daylength: " + getDayLength(c));
-	      debug("Time range end is: " + tr.getE());
-	      debug("End of day range is: " + range.getE());
+	      debug("Time range actually being used: " + tr);
+	      debug("With instructor: " + id.getInstructor());
 	      for (; tr.getE() < range.getE(); tr.addHalf())
 	      {
-	         Set<Day> days = c.getDayPatterns().iterator().next();	         
+	    	  Set<Day> days = c.getDayPatterns().iterator().next();
+	         //for(Set<Day> days : c.getDayPatterns()) {
+	        	//debug("Using day combo: " + days);	        	
 
-	         debug("CONSIDERING Time Range: " + tr);
-	         if (isAvailable(new Week(days), tr, id))
-	         {
-	            debug("AVAILABLE");
-	            double pref;
-	            //i to id
-	            if ((pref = getAvgPrefForTimeRange(id, new Week(days), tr.getS(), tr.getE())) > 0)
+	            debug("CONSIDERING Time Range: " + tr);
+	            if (isAvailable(new Week(days), tr, id))
 	            {
-	               debug("WANTS: " + pref);
-	               ScheduleItem toAdd = si.createTransientCopy();
-	               toAdd.setDays(days);
-	               toAdd.setStartHalfHour(tr.getS());
-	               toAdd.setEndHalfHour(tr.getE());
+	               debug("AVAILABLE");
+	               double pref;
+	               //i to id
+	               if ((pref = getAvgPrefForTimeRange(id, new Week(days), tr.getS(), tr.getE())) > 0)
+	               {
+	                  debug("WANTS: " + pref);
+	                  ScheduleItem toAdd = si.createTransientCopy();
+	                  toAdd.setDays(days);
+	                  toAdd.setStartHalfHour(tr.getS());
+	                  toAdd.setEndHalfHour(tr.getE());
 
-	               sis.add(new ScheduleItemDecorator(toAdd));
+	                  sis.add(new ScheduleItemDecorator(toAdd));
+	               }
 	            }
-	         }
+	         //}
 	      }
 	      if(sis.isEmpty()) { //Didn't find any times.  Probably a tethered lab.
 	    	  debug("Found no matching times.  Tethered lab?");
@@ -858,7 +859,7 @@ public class Generate {
 	         for (LocationDecorator ld : ld_vec)
 	         {
 	        	//Location l = ld.getLocation();
-	            debug ("TRYING LOCATION " + ld + " with time " + tr);
+	            debug ("TRYING LOCATION " + ld.getLocation() + " with time " + tr);
 	            if (isAvailable(days, tr, ld))
 	            {
 	               if (providesFor(ld, model.findCourseByID(si.getItem().getCourse().getID())))
