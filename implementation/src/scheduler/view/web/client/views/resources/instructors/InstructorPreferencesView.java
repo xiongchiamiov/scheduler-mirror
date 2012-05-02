@@ -12,9 +12,7 @@ import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.smartgwt.client.widgets.IButton;
-//import com.smartgwt.client.widgets.events.ClickEvent;
-//import com.smartgwt.client.widgets.events.ClickHandler;
+
 
 /**
  * This is the panel class for the amdministrator's view of the
@@ -95,6 +93,16 @@ public class InstructorPreferencesView extends VerticalPanel {
 		this.parent = parent;
 		if(this.coursePrefs != null)
 			this.coursePrefs.setParent(parent);
+	}
+	
+	
+	public void setInstructor(InstructorGWT instructor) {
+		
+		instructor.verify();
+		this.instructor = instructor;
+
+		this.timePrefs.setInstructor(instructor);
+		this.coursePrefs.setInstructor(instructor);
 	}
 
 	// @Override

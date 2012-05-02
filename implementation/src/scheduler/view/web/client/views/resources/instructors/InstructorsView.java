@@ -34,8 +34,8 @@ import com.smartgwt.client.widgets.layout.VLayout;
 public class InstructorsView extends VLayout {
 	protected GreetingServiceAsync service;
 	protected final DocumentGWT document;
-
-	// protected ViewFrame frame;
+	protected InstructorPreferencesView iipv = null;
+	protected Window prefsWindow = null;
 
 	public InstructorsView(final GreetingServiceAsync service,
 			final DocumentGWT document,
@@ -44,15 +44,12 @@ public class InstructorsView extends VLayout {
 
 		this.service = service;
 		this.document = document;
-		// this.addStyleName("iViewPadding");
 
 		this.setWidth100();
 		this.setHeight100();
-		// this.setHorizontalAlignment(ALIGN_CENTER);
-		// this.add(new HTML("<h2>Instructors</h2>"));
-
+		
 		final ListGrid grid = new ListGrid() {
-			protected int rowCount = 0;
+//			protected int rowCount = 0;
 
 			protected String getCellCSSText(ListGridRecord record, int rowNum,
 					int colNum) {
@@ -72,7 +69,7 @@ public class InstructorsView extends VLayout {
 					button.setHeight(18);
 					button.setWidth(65);
 					button.setTitle("Preferences");
-					this.rowCount++;
+//					this.rowCount++;
 					button.addClickHandler(new ClickHandler() {
 						public void onClick(ClickEvent event) {
 							final int instructorID = record
@@ -225,54 +222,43 @@ public class InstructorsView extends VLayout {
 
 	public void preferencesButtonClicked(InstructorGWT instructor,
 			UnsavedDocumentStrategy unsavedDocumentStrategy) {
-		InstructorPreferencesView iipv = new InstructorPreferencesView(service,
+		
+		if(this.iipv == null)
+		{
+			this.iipv = new InstructorPreferencesView(service,
 				document.getID(), document.getName(), instructor,
 				unsavedDocumentStrategy);
-		final Window window = new Window();
-		window.setAutoSize(true);
-		window.setTitle("Instructor Preferences - <i>"
+			
+			this.iipv.setParent(prefsWindow);
+			this.iipv.afterPush();
+		}
+		else
+		{
+			this.iipv.setInstructor(instructor);
+		}
+		
+		if(this.prefsWindow == null)
+		{
+			this.prefsWindow = new Window();
+			this.prefsWindow.setAutoSize(true);
+			
+			this.prefsWindow.setCanDragReposition(true);
+			this.prefsWindow.setCanDragResize(true);
+
+			this.prefsWindow.setSize("700px", "500px");
+			ScrollPanel weewee = new ScrollPanel();
+			weewee.setWidget(iipv);
+			weewee.setSize("700px", "500px");
+			this.prefsWindow.addItem(weewee);
+			this.prefsWindow.setAutoSize(true);
+		}
+		
+		this.prefsWindow.setTitle("Instructor Preferences - <i>"
 				+ instructor.getUsername() + "</i> ("
 				+ instructor.getFirstName() + " " + instructor.getLastName()
 				+ ")");
-		window.setCanDragReposition(true);
-		window.setCanDragResize(true);
-		window.setSize("700px", "600px");
-
-		/*
-		 * IButton button = new IButton("Close", new ClickHandler() { public
-		 * void onClick(ClickEvent event) { window.hide(); } });
-		 */
-		// window.addMember(button);
-		iipv.setParent(window);
-		iipv.afterPush();
-
-		window.setSize("700px", "600px");
-		final ScrollPanel weewee = new ScrollPanel();
-		weewee.setWidget(iipv);
-		weewee.setSize("700px", "600px");
-		window.addItem(weewee);
-		// window.addItem(button);
-
-		/*
-		 * com.google.gwt.event.dom.client.ClickHandler handler = new
-		 * com.google.gwt.event.dom.client.ClickHandler() {
-		 * 
-		 * @Override public void
-		 * onClick(com.google.gwt.event.dom.client.ClickEvent event) {
-		 * 
-		 * } };
-		 */
-		/*
-		 * IButton button = new IButton("Close", new ClickHandler() { public
-		 * void onClick(ClickEvent event) { window.hide(); } });
-		 */
-		// button.setTitle("Close");
-		// weewee.add(button);
-		// window.addMember(weewee);
-		// button.setStyleName("centerness");
-
-		window.setAutoSize(true);
-		window.show();
+		
+		this.prefsWindow.show();
 	}
 
 	/**

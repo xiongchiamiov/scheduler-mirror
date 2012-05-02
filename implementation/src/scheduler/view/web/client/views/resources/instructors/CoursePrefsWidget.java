@@ -217,4 +217,58 @@ public class CoursePrefsWidget extends VerticalPanel
 			 */
 		}
 	}
+	
+	public void setInstructor(InstructorGWT instructor)
+	{
+		instructor.verify();
+		this.instructor = instructor;
+		this.savedInstructor = new InstructorGWT(instructor);
+
+		service.getCoursesForDocument(documentID,
+				new AsyncCallback<List<CourseGWT>>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						Window.alert("Failed to get courses.");
+					}
+
+					public void onSuccess(List<CourseGWT> result) {
+						if (result.size() == 0) {
+							System.out
+									.println("The size of the course list >>is<< zero. It should NOT open preferences");
+							final NoCourseDialog dlg = new NoCourseDialog(
+									"No courses in database",
+									"The database doesn't contain any course right now. "
+											+ "Do you want to proceed?");
+							dlg.addClickNoHandler(new ClickHandler() {
+								@Override
+								public void onClick(ClickEvent event) {
+									dlg.hide();
+									if (parent != null) {
+										parent.hide();
+									}
+								}
+							});
+
+							dlg.addClickYesHandler(new ClickHandler() {
+								@Override
+								public void onClick(ClickEvent event) {
+									if (parent != null) {
+										parent.show();
+									}
+									dlg.hide();
+								}
+							});
+							dlg.show();
+						} else {
+							System.out
+									.println("The size of the course list is not zero. It should open preferences");
+
+							HashMap<Integer, CourseGWT> newCoursesByID = new HashMap<Integer, CourseGWT>();
+							for (CourseGWT course : result)
+								newCoursesByID.put(course.getID(), course);
+							populateCourses(newCoursesByID);
+						}
+					}
+				});
+	}
 }

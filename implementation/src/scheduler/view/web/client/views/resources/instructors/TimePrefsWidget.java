@@ -292,10 +292,10 @@ public class TimePrefsWidget extends VerticalPanel {
 				}
 			}
 		});
-		redraw();
+		firstdraw();
 	}
 	
-	public void redraw()
+	public void firstdraw()
 	{
 		this.timePrefsTable = new FlexTable();
 
@@ -323,7 +323,7 @@ public class TimePrefsWidget extends VerticalPanel {
 		for (int day = 0; day < days.size(); day++) {
 			HTML html = new HTML(days.get(day));
 			html.setStyleName("timePrefs");
-			//Widget widget = new Widget(html);
+			
 			this.timePrefsTable.setWidget(0, day + 1, html);
 			this.timePrefsTable.getWidget(0, day + 1).setStyleName("timePrefs");
 		}
@@ -355,35 +355,52 @@ public class TimePrefsWidget extends VerticalPanel {
 				cell.addStyleName("desireCell");
 				cell.addItems();
 				cell.setIndex(desire);
-				
-				//cell.add(list);
+			
 				cell.addListStyle(this.styleNames[3-desire]);
-				//cell.add(new HTML(Integer.toString(desire)));
-				/*cell.addClickHandler(new ClickHandler() {
-					@Override
-					public void onClick(ClickEvent event) {
-						cellWidgetClicked(cell, event);
-					}
-				});*/
-				
-				/*cell.addMouseDownHandler(new MouseDownHandler() {
-					@Override
-					public void onMouseDown(MouseDownEvent event) {
-						cellWidgetMouseDown(cell, event);
-					}
-				});
-				
-				cell.addMouseUpHandler(new MouseUpHandler() {
-					@Override
-					public void onMouseUp(MouseUpEvent event) {
-						cellWidgetMouseUp(cell, event);
-						lastSelectedCell = cell;
-						focus.setFocus(true);
-					}
-				});*/
-								
 				this.timePrefsTable.setWidget(row, col, cell);
 				
+				this.cells[halfHour/2][dayNum] = cell;
+			}
+		}
+	}
+	
+	public void redraw()
+	{
+		ArrayList<String> days = new ArrayList<String>();
+		days.add("Monday");
+		days.add("Tuesday");
+		days.add("Wednesday");
+		days.add("Thursday");
+		days.add("Friday");
+
+		final int totalHalfHours = 30;
+		final int totalDays = days.size();
+		int row = 0;
+		
+		for (int halfHour = 0; halfHour < totalHalfHours; halfHour+=2) {
+			row++;
+			
+			for (int dayNum = 0; dayNum < totalDays; dayNum++) {
+				int col = dayNum + 1;
+				int prefCol = 0;
+				
+				if(days.get(dayNum).equals("Monday")) prefCol = 0;
+				if(days.get(dayNum).equals("Tuesday")) prefCol = 1;
+				if(days.get(dayNum).equals("Wednesday")) prefCol = 2;
+				if(days.get(dayNum).equals("Thursday")) prefCol = 3;
+				if(days.get(dayNum).equals("Friday")) prefCol = 4;
+
+				int desire = this.getPreference(strategy.getInstructor(), halfHour, prefCol + 1);
+				if(desire > 3) desire = 3;
+				if(desire < 0) desire = 0;
+				
+				TimePrefsCellWidget cell = new TimePrefsCellWidget(halfHour, dayNum);
+				cell.addStyleName("desireCell");
+				cell.addItems();
+				cell.setIndex(desire);
+			
+				cell.addListStyle(this.styleNames[3-desire]);
+				this.timePrefsTable.setWidget(row, col, cell);
 				this.cells[halfHour/2][dayNum] = cell;
 			}
 		}
@@ -419,33 +436,6 @@ public class TimePrefsWidget extends VerticalPanel {
 	{
 		redraw();
 	}
-
-	/*void cellWidgetClicked(CellWidget cell, ClickEvent event) {
-		if (event.isControlKeyDown()) {
-			toggleCellSelected(cell);
-			anchorCell = cell;
-		}
-		else if (event.isShiftKeyDown()) {
-			if (anchorCell == null)
-				anchorCell = cell;
-			else
-				selectRangeOfCells(anchorCell.halfHour, anchorCell.day, cell.halfHour, cell.day);
-		}
-		else if (event.getNativeButton() == NativeEvent.BUTTON_LEFT){
-			if (anchorCell == null)
-				anchorCell = cell;
-			while (event.getNativeButton() == NativeEvent.BUTTON_LEFT){
-					selectRangeOfCells(anchorCell.halfHour, anchorCell.day, cell.halfHour, cell.day);
-					System.out.println("Got to this spot++++++++++");
-			}
-		}
-		else {
-			System.out.println("Got to this spot!!!!!!!!!!");
-			clearSelectedCells();
-			selectCell(cell);
-			anchorCell = cell;
-		}
-	}*/
 
 	void selectRangeOfCells(int fromHalfHour, int fromDay, int toHalfHour, int toDay) {
 		if (toHalfHour < fromHalfHour) {
@@ -502,9 +492,6 @@ public class TimePrefsWidget extends VerticalPanel {
 	
 	void redoColors() {
 		for (int halfHour = 0; halfHour < 30; halfHour++) {
-//			int hour = halfHour / 2 + 7; // divide by two to get hours 0-15. Add 7 to get hours 7-22.
-			
-//			Integer time = hour * 60 + halfHour % 2 * 30;
 			
 			for (int dayNum = 0; dayNum < 5; dayNum++) {
 				TimePrefsCellWidget cell = cells[halfHour/2][dayNum];
@@ -531,6 +518,29 @@ public class TimePrefsWidget extends VerticalPanel {
 				//redoColors();
 			}
 		});
+	}
+	
+	public void setInstructor(InstructorGWT instructor)
+	{
+		instructor.verify();
+		this.instructor = instructor;
+		this.savedInstructor = new InstructorGWT(instructor);
+		this.strategy = new TimePrefsWidget.Strategy() {
+			public InstructorGWT getSavedInstructor() {
+				return savedInstructor;
+			}
+
+			public InstructorGWT getInstructor() {
+				return TimePrefsWidget.this.instructor;
+			}
+
+			public void autoSave() {
+				save();
+			}
+		};
+		strategy.getInstructor().verify();
+		strategy.getSavedInstructor().verify();
+		redraw();
 	}
 	
 }

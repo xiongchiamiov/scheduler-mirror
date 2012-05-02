@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import scheduler.view.web.client.GreetingServiceAsync;
-import scheduler.view.web.shared.DayGWT;
 import scheduler.view.web.shared.DocumentGWT;
 import scheduler.view.web.shared.InstructorGWT;
 
