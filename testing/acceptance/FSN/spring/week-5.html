@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
+
+<html>
+<head>
+	<meta name="generator" content=
+	"HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 15.3.6), see www.w3.org">
+
+	<title>Week 5 Acceptance Test Report for the FSN
+	Department</title>
+	<style type="text/css">
+		img {
+			display: block;
+			margin-left: auto;
+			margin-right: auto;
+		}
+	</style>
+</head>
+
+<body bgcolor="white">
+	<p align="center"><font size="+2"><strong>Finals Week Acceptance
+	Test Report for the FSN Department</strong></font></p><br>
+	<br>
+
+	<h2><a name="Create, Save, and Re-Open a New Schedule">1. Create,
+	Save, and Re-Open a New Schedule</a></h2>
+	<p>
+		Everything worked as expected.  However, the new-window aspect
+		is a bit funky - the document opens in a new window, but close
+		returns to the main screen (rather than closing the window),
+		which results in two main windows.
+	</p>
+
+	<h2><a name="Enter Resource Data">2. Enter Resource
+	Data</a></h2>
+	<ul>
+		<li>Why do I have to enter the department every time?</li>
+		<li>Rows look like they're draggable.  They aren't.</li>
+		<li>How do I delete a row?</li>
+		<li>We don't have a floating header any more, so I get a little bit
+		lost on what column's what.</li>
+		<li>These images 404:
+			<ul>
+				<li>http://scheduler.csc.calpoly.edu/FSN/imgs/bottom_bar_bg.gif</li>
+				<li>http://scheduler.csc.calpoly.edu/FSN/images/icons/16/save_as.png</li>
+				<li>http://scheduler.csc.calpoly.edu/FSN/images/icons/16/disk_blue.png</li>
+				<li>http://scheduler.csc.calpoly.edu/FSN/images/icons/16/document_plain_new.png</li>
+				<li>http://scheduler.csc.calpoly.edu/FSN/images/icons/16/folder_out.png</li>
+				<li>http://scheduler.csc.calpoly.edu/FSN/images/icons/16/export1.png</li>
+				<li>http://scheduler.csc.calpoly.edu/FSN/images/icons/16/printer3.png</li>
+			</ul></li>
+		<li>I was clicking around, and after saving, refreshed the page - I got
+		the dreaded "Failed to retrieve courses!" and the page showed that I no
+		longer had any courses.  The exception on the server was:<br />
+			<code><pre>
+Caused by: java.lang.AssertionError
+        at scheduler.model.Course.loadLectureAndTethered(Course.java:296)
+        at scheduler.model.Course.getLecture(Course.java:314)
+        at scheduler.view.web.server.Conversion.courseToGWT(Conversion.java:123)
+        at scheduler.view.web.server.GreetingServiceImpl.getCoursesForDocument(GreetingServiceImpl.java:234)
+			</pre></code></li>
+	</ul>
+
+	<h2><a name="Generate a Schedule">3. Generate a
+	Schedule</a></h2>
+	<p>
+		Since I couldn't find any way (as a user) to unbork the courses (I
+		tried saving with a blank list of courses), I don't want to test
+		anything else.
+	</p>
+	
+	<h2><a name="Edit the Schedule">4. Edit the Schedule</a></h2>
+
+	<h2><a name="Save, Exit, Re-Open Schedule">5. Save, Exit, Re-Open
+	Schedule</a></h2>
+
+	<h2><a name="Quality Measures">6. Quality Measures</a></h2>
+
+	<h2><a name="Other Issues">7. Other Issues</a></h2>
+</body>
+</html>
+
