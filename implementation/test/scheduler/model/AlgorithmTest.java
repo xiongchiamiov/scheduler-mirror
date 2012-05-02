@@ -27,8 +27,6 @@ public abstract class AlgorithmTest extends ModelTestCase {
 		
 		List<Location> locations = generateLocationList(model, doc);
 		
-		//locations.add(doc.getTBALocation());
-		
 		Vector<ScheduleItem> sids = new Vector<ScheduleItem>();
 		
 		System.err.println("Starting schedule generation...");
@@ -47,6 +45,7 @@ public abstract class AlgorithmTest extends ModelTestCase {
 		
 		Course course = model.createTransientCourse("Test1", "101", "CSC", "4", "4", "2", "LEC", "60", "6", true);
 		ModelTestUtility.addDayPattern(course, Day.MONDAY, Day.WEDNESDAY, Day.FRIDAY);
+		ModelTestUtility.addDayPattern(course, Day.TUESDAY, Day.THURSDAY);
 		course.setDocument(doc).insert();
 		courses.add(course);
 		
@@ -58,7 +57,7 @@ public abstract class AlgorithmTest extends ModelTestCase {
 		courses.add(lab);
 		
 		course = model.createTransientCourse("Test2", "102", "CSC", "4", "4", "2", "LEC", "60", "6", true);
-		ModelTestUtility.addDayPattern(course, Day.TUESDAY, Day.THURSDAY);
+		ModelTestUtility.addDayPattern(course, Day.MONDAY, Day.WEDNESDAY, Day.FRIDAY);
 		course.setDocument(doc).insert();
 		courses.add(course);
 		
