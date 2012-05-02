@@ -770,65 +770,57 @@ public class Generate {
 	      Vector<ScheduleItemDecorator> sis = new Vector<ScheduleItemDecorator>();
 	      Course c = model.findCourseByID(si.getCourse().getID());
 	      assert(si.getInstructor() != null);
-	     // Instructor i = model.findInstructorByID(si.getInstructor().getID());
 	      
-	      TimeRange tr = new TimeRange(range.getS(), range.getS() + getDayLength(c));
-	      debug("Time range actually being used: " + tr);
-	      debug("With instructor: " + id.getInstructor());
-	      for (; tr.getE() < range.getE(); tr.addHalf())
-	      {
-	    	  Set<Day> days = c.getDayPatterns().iterator().next();
-	         //for(Set<Day> days : c.getDayPatterns()) {
-	        	//debug("Using day combo: " + days);	        	
+	      for(Set<Day> days : c.getDayPatterns()) {
+	      
+	          TimeRange tr = new TimeRange(range.getS(), range.getS() + getDayLength(c, days));
+	          for (; tr.getE() < range.getE(); tr.addHalf())
+	          {      	
+	                debug("CONSIDERING Time Range: " + tr);
+	                if (isAvailable(new Week(days), tr, id))
+	                {
+	                   debug("AVAILABLE");
+	                   double pref;
+	                   if ((pref = getAvgPrefForTimeRange(id, new Week(days), tr.getS(), tr.getE())) > 0)
+	                   {
+	                      debug("WANTS: " + pref);
+	                      ScheduleItem toAdd = si.createTransientCopy();
+	                      toAdd.setDays(days);
+	                      toAdd.setStartHalfHour(tr.getS());
+	                      toAdd.setEndHalfHour(tr.getE());
 
-	            debug("CONSIDERING Time Range: " + tr);
-	            if (isAvailable(new Week(days), tr, id))
-	            {
-	               debug("AVAILABLE");
-	               double pref;
-	               //i to id
-	               if ((pref = getAvgPrefForTimeRange(id, new Week(days), tr.getS(), tr.getE())) > 0)
-	               {
-	                  debug("WANTS: " + pref);
-	                  ScheduleItem toAdd = si.createTransientCopy();
-	                  toAdd.setDays(days);
-	                  toAdd.setStartHalfHour(tr.getS());
-	                  toAdd.setEndHalfHour(tr.getE());
-
-	                  sis.add(new ScheduleItemDecorator(toAdd));
+	                      sis.add(new ScheduleItemDecorator(toAdd));
+	                   }
 	               }
-	            }
-	         //}
-	      }
-	      if(sis.isEmpty()) { //Didn't find any times.  Probably a tethered lab.
-	    	  debug("Found no matching times.  Tethered lab?");
-	    	  if(si.getCourse().isTetheredToLecture()) {
-	    		  debug("Found tethered lab.");
-	    		  Set<Day> days = c.getDayPatterns().iterator().next();	
-	    		  debug("Calling isAvailable with: " + id.getInstructor().toString());
-	    		  if(isAvailable(new Week(days), tr, id)) {
-	    			  debug("AVAILABLE - Tethered");
-	    			  double pref;
-	    			  //changed i to id
-	  	              if ((pref = getAvgPrefForTimeRange(id, new Week(days), tr.getS(), tr.getE())) > 0)
-	  	              {
-	  	                 debug("WANTS: " + pref);
-	  	                 ScheduleItem toAdd = si.createTransientCopy();
-	  	                 toAdd.setDays(days);
-	  	                 toAdd.setStartHalfHour(tr.getS());
-	  	                 toAdd.setEndHalfHour(tr.getE());
+	          }
+	          if(sis.isEmpty()) { //Didn't find any times.  Probably a tethered lab.
+	    	      debug("Found no matching times.  Tethered lab?");
+	    	      if(si.getCourse().isTetheredToLecture()) {
+	    		      debug("Found tethered lab.");	
+	    		      debug("Calling isAvailable with: " + id.getInstructor().toString());
+	    		      if(isAvailable(new Week(days), tr, id)) {
+	    			      debug("AVAILABLE - Tethered");
+	    			      double pref;
+	  	                  if ((pref = getAvgPrefForTimeRange(id, new Week(days), tr.getS(), tr.getE())) > 0)
+	  	                  {
+	  	                     debug("WANTS: " + pref);
+	  	                     ScheduleItem toAdd = si.createTransientCopy();
+	  	                     toAdd.setDays(days);
+	  	                     toAdd.setStartHalfHour(tr.getS());
+	  	                     toAdd.setEndHalfHour(tr.getE());
 
-	  	                 sis.add(new ScheduleItemDecorator(toAdd));
-	  	              }
-	    		  }
-	    	  }
+	  	                     sis.add(new ScheduleItemDecorator(toAdd));
+	  	                  }
+	    		      }
+	    	      }
+	          }
 	      }
 
 	      return sis;
 	   }
 	   
-	   private static int getDayLength(Course c) throws DatabaseException {
-		  return c.getNumHalfHoursPerWeekInt() / c.getDayPatterns().iterator().next().size();
+	   private static int getDayLength(Course c, Set<Day> days) throws DatabaseException {
+		  return c.getNumHalfHoursPerWeekInt() / days.size();
 	   }
 
 	/**
