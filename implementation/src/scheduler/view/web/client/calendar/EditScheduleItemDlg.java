@@ -21,6 +21,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import scheduler.view.web.client.GreetingServiceAsync;
+import scheduler.view.web.shared.CourseGWT;
 import scheduler.view.web.shared.DayGWT;
 import scheduler.view.web.shared.DocumentGWT;
 import scheduler.view.web.shared.InstructorGWT;
@@ -44,7 +45,7 @@ public class EditScheduleItemDlg extends DialogBox {
 	private List<LocationGWT> mLocations;
 
 	private final GreetingServiceAsync mGreetingService;
-	private final ScheduleEditWidget mWidget;
+	private final ScheduleEditWidget mScheduleController;
 	private final DragAndDropController mDragController;
 	
 	private final boolean mFromList;
@@ -64,7 +65,7 @@ public class EditScheduleItemDlg extends DialogBox {
 		super(false);
 
 		mGreetingService = service;
-		mWidget = widget;
+		mScheduleController = widget;
 		mDragController = dragController;
 		
 		mFromList = fromList;
@@ -80,7 +81,7 @@ public class EditScheduleItemDlg extends DialogBox {
 		mMainPanel.setWidth("300px");
 		mMainPanel.setSpacing(5);
 		mMainPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-		mMainPanel.setTitle("Edit " + mWidget.getCourseString(mOriginalItem.getCourseID()));
+		mMainPanel.setTitle("Edit " + mScheduleController.getCourseString(mOriginalItem.getCourseID()));
 		mMainPanel.setStylePrimaryName("editScheduleItemDialog");
 		
 		mMainPanel.add(createTitlePanel());
@@ -146,6 +147,7 @@ public class EditScheduleItemDlg extends DialogBox {
 	}
 
 	private void ok() {
+		// Check start time is earlier than end time
 		int startHalfHour = getStartHalfHour(mStartTimeLB.getSelectedIndex());
 		int endHalfHour = getEndHalfHour(mEndTimeLB.getSelectedIndex());
 		if (startHalfHour > endHalfHour) {
@@ -153,20 +155,32 @@ public class EditScheduleItemDlg extends DialogBox {
 			return;
 		}
 		
+		// Check number of hours per week
+		Set<DayGWT> days = new HashSet<DayGWT>();
+		for (int i = 0; i < mDayCheckBoxes.size(); i++)
+			if (mDayCheckBoxes.get(i).getValue())
+				days.add(DayGWT.values()[i]);
+		int hoursPerWeek = ((endHalfHour - startHalfHour + 1) / 2) * days.size();
+		CourseGWT course = mScheduleController.getCourse(mOriginalItem.getCourseID());
+		if (!course.getHalfHoursPerWeek().equals(""+hoursPerWeek)) {
+			Window.alert("Error: This course must be scheduled for " 
+					+ course.getHalfHoursPerWeek() + " hours per week.");
+			return;
+		}
+		
+		// Check day combination
+		if (!course.getDayPatterns().contains(days)) {
+			Window.alert("Error: The selected combination of days is not a valid option for this course.");
+			return;
+		}
+		
 		mChangedItem = true;
 		hide();
 		
-		ArrayList<Integer> days = new ArrayList<Integer>();
-		for (int i = 0; i < mDayCheckBoxes.size(); i++) {
-			if (mDayCheckBoxes.get(i).getValue()) {
-				days.add(i + 1);
-			}
-		}
-		
 		if (mFromList)
-			mWidget.insertItem(getNewItem());
+			mScheduleController.insertItem(getNewItem());
 		else
-			mWidget.updateItem(getNewItem());
+			mScheduleController.updateItem(getNewItem());
 	}
 	
 	private int getStartHalfHour(int row) {
@@ -178,7 +192,7 @@ public class EditScheduleItemDlg extends DialogBox {
 	}
 	
 	private Widget createTitlePanel() {
-		final HTML titlePanel = new HTML("<center><b>Edit " + mWidget.getCourseString(mOriginalItem.getCourseID()) + "</b></center><p>");
+		final HTML titlePanel = new HTML("<center><b>Edit " + mScheduleController.getCourseString(mOriginalItem.getCourseID()) + "</b></center><p>");
 		titlePanel.setHeight("30px");
 		return titlePanel;
 	}
