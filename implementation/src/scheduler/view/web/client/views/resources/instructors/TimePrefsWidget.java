@@ -184,8 +184,8 @@ public class TimePrefsWidget extends VerticalPanel {
 
 		Integer dayNum = cell.day;
 		DayGWT day = DayGWT.values()[dayNum];
-		instructor.gettPrefs()[day.ordinal() + 1][cell.halfHour] = desire;
-		instructor.gettPrefs()[day.ordinal() + 1][cell.halfHour + 1] = desire;
+		instructor.gettPrefs()[day.ordinal() + 1][cell.halfHour + 14] = desire;
+		instructor.gettPrefs()[day.ordinal() + 1][cell.halfHour + 15] = desire;
 		
 		assert(getPreference(instructor, cell.halfHour, cell.day + 1) == desire);
 		
@@ -195,18 +195,18 @@ public class TimePrefsWidget extends VerticalPanel {
 
 	int getPreference(InstructorGWT ins, int halfHour, int dayNum) {
 		DayGWT day = DayGWT.values()[dayNum];
-		return ins.gettPrefs()[day.ordinal()][halfHour];
+		return ins.gettPrefs()[day.ordinal()][halfHour + 14];
 	}
 	
 	public void setMultiplePreferences()
 	{
 		for(int j = fromList.getSelectedIndex(); j < toList.getSelectedIndex() + 1; j++)
 		{
-			if(monday.getValue()) cells[j][0].setCellPreference(multiSet.getSelectedIndex());//setPreference(cells[j][1], multiSet.getSelectedIndex());
-			if(tuesday.getValue()) cells[j][1].setCellPreference(multiSet.getSelectedIndex());//setPreference(cells[j][2], multiSet.getSelectedIndex());
-			if(wednesday.getValue()) cells[j][2].setCellPreference(multiSet.getSelectedIndex());//setPreference(cells[j][3], multiSet.getSelectedIndex());
-			if(thursday.getValue()) cells[j][3].setCellPreference(multiSet.getSelectedIndex());//setPreference(cells[j][4], multiSet.getSelectedIndex());
-			if(friday.getValue()) cells[j][4].setCellPreference(multiSet.getSelectedIndex());//setPreference(cells[j][5], multiSet.getSelectedIndex());
+			if(monday.getValue()) cells[j][0].setCellPreference(multiSet.getSelectedIndex());
+			if(tuesday.getValue()) cells[j][1].setCellPreference(multiSet.getSelectedIndex());
+			if(wednesday.getValue()) cells[j][2].setCellPreference(multiSet.getSelectedIndex());
+			if(thursday.getValue()) cells[j][3].setCellPreference(multiSet.getSelectedIndex());
+			if(friday.getValue()) cells[j][4].setCellPreference(multiSet.getSelectedIndex());
 		}
 	}
 
