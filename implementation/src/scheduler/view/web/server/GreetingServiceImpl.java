@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OptionalDataException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -131,6 +132,11 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			}
 			catch (FileNotFoundException e) {
 				System.out.println("Database state file (" + filepath + ") doesn't exist, starting with a fresh model!");
+				model = new Model();
+			}
+			catch (OptionalDataException e) {
+				// TODO: Notify the user.
+				System.out.println("Database state file (" + filepath + ") corrupted; starting with a fresh model!");
 				model = new Model();
 			}
 			catch (IOException e) {
