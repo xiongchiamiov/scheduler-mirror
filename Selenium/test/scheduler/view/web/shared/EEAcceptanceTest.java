@@ -2,6 +2,7 @@ package scheduler.view.web.shared;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.Properties;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -12,9 +13,13 @@ import scheduler.view.web.shared.Selenium.WebUtility;
 public abstract class EEAcceptanceTest extends DefaultSelTestCase {	
 	private WebDriver driver;
 	private StringBuffer verificationErrors = new StringBuffer();
-	private static final String protoURL = "http://localhost:8080/EE";
+	private static String protoURL;// = "http://localhost:8080/EE";
 	
-	public void setUp(WebDriver drv) {
+	public void setUp(WebDriver drv) throws java.io.IOException{
+		Properties properties = new Properties();
+		properties.load(this.getClass().getResourceAsStream("selenium.properties"));
+		this.protoURL = properties.getProperty("domain") + "/EEx";
+		
 		this.driver = drv;
 		super.setUp(protoURL, drv);
 	}
@@ -80,22 +85,22 @@ public abstract class EEAcceptanceTest extends DefaultSelTestCase {
 	}
 	
 	public void testAcceptanceForEE() throws InterruptedException {
-		login("eovadia");
+		login("pooper");
 		
 		final String documentName = "EE Acceptance Test Document";
 		deleteDocumentFromHomeTab(documentName);
 		createDocumentFromHomeTabAndSwitchToItsWindow(documentName);
 
 		// By default we're looking at the courses view, so start filling out courses
-		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 0, true, "EE", "112", "Electric Circuit Analysis I", "5", "4", "2", "MW", "2", "48", "LEC", "Smart Room", null);
+		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 0, true, "EE", "112", "Electric Circuit Analysis I", "5", "4", "2", "MW", "2", "48", "LEC", null, null);
 		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 1, true, "EE", "200", "Special Problems", "1", "3", "3", null, null, "10", "IND", null, null);
 		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 2, true, "EE", "200", "Special Problems", "1", "3", "3", null, null, "10", "IND", null, null);
 		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 3, true, "EE", "201", "Electric Circuit Theory", "2", "4", "3", "MWF", "3", "230", "LEC", null, null);
 		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 4, true, "EE", "211", "Electric Circuit Analysis II", "1", "4", "3", "MWF", "3", "36", "LEC", null, null);
 		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 5, true, "EE", "212", "Electric Circuit Analysis III", "2", "4", "3", "MWF", "3", "44", "LEC", null, null);
 		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 6, true, "EE", "228", "Continuous-Time Signals and Systems", "3", "4", "4", "TuTh", "4", "40", "LEC", null, null);
-		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 7, true, "EE", "241", "Electric Circuit Analysis Lab I", "2", "1", "1", "Tu", "3", "24", "LAB", null, "EE 112");
-		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 8, true, "EE", "242", "Electric Circuit Analysis Lab II", "4", "1", "1", "Tu,W,Th", "3", "22", "LAB", null, "EE 211");
+		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 7, true, "EE", "241", "Electric Circuit Analysis Lab I", "2", "1", "1", "Tu", "3", "24", "LAB", null, null);
+		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 8, true, "EE", "242", "Electric Circuit Analysis Lab II", "4", "1", "1", "Tu,W,Th", "3", "22", "LAB", null, null);
 		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 9, true, "EE", "251", "Electric Circuits Lab", "6", "1", "1", "Tu,Th", "3", "24", "LAB", null, null);
 		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 10, true, "EE", "255", "Energy Conversion Electromagnetics", "4", "4", "3", "MWF", "3", "40", "LEC", null, null);
 		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 11, true, "EE", "295", "Energy Conversion Electromagnetics Lab", "8", "1", "1", "M,Tu,W,Th,F", "3", "18", "LAB", null, null);

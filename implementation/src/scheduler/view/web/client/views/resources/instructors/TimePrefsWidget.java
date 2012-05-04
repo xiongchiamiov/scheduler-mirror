@@ -7,6 +7,7 @@ import java.util.List;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
@@ -15,6 +16,7 @@ import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FocusPanel;
@@ -261,14 +263,26 @@ public class TimePrefsWidget extends VerticalPanel {
 		topStuff.getWidget(1, 2).setWidth("100px");
 		topStuff.getWidget(1, 3).setWidth("100px");
 		topStuff.getWidget(1, 4).setWidth("100px");
+		
+		ClickHandler handler = new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				setMultiplePreferences();
+				strategy.autoSave();
+			}
+		};
+		
+		Button multiButton = new Button("Set Preferences", handler);
+		
+		topStuff.setWidget(1, 5, multiButton);
 
-		multiSet.addChangeHandler(new ChangeHandler() {
+		/*multiSet.addChangeHandler(new ChangeHandler() {
 			@Override
 			public void onChange(ChangeEvent event) {
 				setMultiplePreferences();
 				strategy.autoSave();
 			}
-		});
+		});*/
 		
 		focus.setStyleName("otherCenterness");
 		focusTwo.setStyleName("otherCenterness");
