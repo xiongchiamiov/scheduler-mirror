@@ -77,7 +77,7 @@ public class AdminScheduleNavView extends VerticalPanel implements UnsavedDocume
 		menu.setShowShadow(true);
 		menu.setShadowDepth(3);
 		
-		MenuItem newItem = new MenuItem("New", "icons/16/document_plain_new.png", "Ctrl+N");
+		MenuItem newItem = new MenuItem("New", "icons/16/document_plain_new.png");
 		newItem.addClickHandler(new ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				NewScheduleCreator.createNewSchedule(service, username, new CreatedScheduleCallback() {
@@ -86,21 +86,21 @@ public class AdminScheduleNavView extends VerticalPanel implements UnsavedDocume
 			}
 		});
 		
-		MenuItem openItem = new MenuItem("Open", "icons/16/folder_out.png", "Ctrl+O");
+		MenuItem openItem = new MenuItem("Open", "icons/16/folder_out.png");
 		openItem.addClickHandler(new ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				TabOpener.openHomeInNewTab(username);
 			}
 		});
 		
-		MenuItem closeItem = new MenuItem("Close", "icons/16/folder_out.png", "Ctrl+W");
+		MenuItem closeItem = new MenuItem("Close", "icons/16/folder_out.png");
 		closeItem.addClickHandler(new ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				TabOpener.openHomeInThisTab(username);
 			}
 		});
 		
-		MenuItem saveItem = new MenuItem("Save", "icons/16/disk_blue.png", "Ctrl+S");
+		MenuItem saveItem = new MenuItem("Save", "icons/16/disk_blue.png");
 		saveItem.addClickHandler(new ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				service.saveWorkingCopyToOriginalDocument(document.getID(), new
@@ -124,7 +124,7 @@ public class AdminScheduleNavView extends VerticalPanel implements UnsavedDocume
 			}
 		});
 		
-		MenuItem mergeItem = new MenuItem("Merge", "icons/16/folder_out.png", "Ctrl+M");
+		MenuItem mergeItem = new MenuItem("Merge", "icons/16/folder_out.png");
 		mergeItem.addClickHandler(new ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				MergeDialog.fileMergePressed(service);
@@ -143,7 +143,7 @@ public class AdminScheduleNavView extends VerticalPanel implements UnsavedDocume
 		
 		// recentDocItem.setSubmenu(recentDocSubMenu);
 		
-		MenuItem importItem = new MenuItem("Import", "icons/16/folder_out.png", "Ctrl+I");
+		MenuItem importItem = new MenuItem("Import", "icons/16/folder_out.png");
 		importItem.addClickHandler(new ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				Import.showImport();
@@ -157,7 +157,7 @@ public class AdminScheduleNavView extends VerticalPanel implements UnsavedDocume
 			}
 		});
 		
-		MenuItem printItem = new MenuItem("Print", "icons/16/printer3.png", "Ctrl+P");
+		MenuItem printItem = new MenuItem("Print", "icons/16/printer3.png");
 		printItem.setEnabled(false);
 		
 		MenuItemSeparator separator = new MenuItemSeparator();
@@ -178,9 +178,9 @@ public class AdminScheduleNavView extends VerticalPanel implements UnsavedDocume
 		menu.setShowShadow(true);
 		menu.setShadowDepth(3);
 		
-		MenuItem newItem = new MenuItem("Times", "icons/16/document_plain_new.png", "Ctrl+N");
-		MenuItem openItem = new MenuItem("Preferences", "icons/16/folder_out.png", "Ctrl+O");
-		MenuItem saveItem = new MenuItem("Permissions/Roles", "icons/16/disk_blue.png", "Ctrl+S");
+		MenuItem newItem = new MenuItem("Times", "icons/16/document_plain_new.png");
+		MenuItem openItem = new MenuItem("Preferences", "icons/16/folder_out.png");
+		MenuItem saveItem = new MenuItem("Permissions/Roles", "icons/16/disk_blue.png");
 		
 		menu.setItems(newItem, openItem, saveItem);
 		menu.setZIndex(1100000);
