@@ -84,6 +84,7 @@ public class InstructorDecorator {
 	}
 	
 	public int getTimePreferenceFor(Day d, int time) throws DatabaseException {
+		//assert this.instructor.
 		return (this.instructor.getTimePreferences(d, time));
 	}
 	

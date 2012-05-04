@@ -909,27 +909,6 @@ public class Generate {
 	   }
 
 	   /**
-	    * Moves an already-existing ScheduleItem from one place on the schedule 
-	    * to another. If this ScheduleItem has teathered lab ScheduleItems attached
-	    * to it, those labs will be moved as well. 
-	    * 
-	    * @param si ScheduleItem to move
-	    * @param days Days you want the ScheduleItem to be taught on
-	    * @param s The start time you want the ScheduleItem to be taught on
-	    * 
-	    * @return The new ScheduleItem, w/ its fields updated to where it was placed
-	    * 
-	    * @throws CouldNotBeScheduledException If you've moved the ScheduleItem to
-	    *         a time where the location is in use or the instructor is already
-	    *         teaching. 
-	 * @throws NotFoundException 
-	    */
-	   private static int splitLengthOverDays(Course c, int size) {
-		   assert(false);
-		   return 0;
-	   }
-
-	   /**
 	    * Sets the instructor as busy for a given set of days over a given
 	    * TimeRange.
 	    * 

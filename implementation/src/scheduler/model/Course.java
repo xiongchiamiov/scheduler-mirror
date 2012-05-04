@@ -127,7 +127,10 @@ public class Course extends ModelObject {
 	public void setSCU(String scu) {
 		underlyingCourse.setSCU(scu);
 	}
-	
+	public int getSCUInt() {
+		return Integer.parseInt(getSCU());
+	}
+		
 	public String getNumSections() {
 		return underlyingCourse.getNumSections();
 	}

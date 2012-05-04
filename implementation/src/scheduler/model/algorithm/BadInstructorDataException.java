@@ -18,7 +18,8 @@ public class BadInstructorDataException extends Exception
     */
    public enum ConflictType
    {
-      IS_STAFF, IS_NULL, NOT_SCHEDULABLE, NULL_I_PREFS, NULL_C_PREFS, NULL_I_PREF_MEM, NULL_C_PREF_MEM;
+      IS_STAFF, IS_NULL, DONT_CARE, NOT_SCHEDULABLE, NULL_I_PREFS, NULL_C_PREFS, NULL_I_PREF_MEM, NULL_C_PREF_MEM, NULL_DOC,
+      BAD_LNAME, BAD_FNAME, BAD_UNAME, BAD_MAXWTU;
       
       public String toString ()
       {
@@ -28,6 +29,8 @@ public class BadInstructorDataException extends Exception
                return "Staff Instructor detected";
             case IS_NULL:
                 return "Null Instructor";
+            case DONT_CARE:
+            	return "Choose For Me detected";
             case NOT_SCHEDULABLE:
                 return "Unschedulable Instructor detected";
             case NULL_I_PREFS:
@@ -37,7 +40,17 @@ public class BadInstructorDataException extends Exception
             case NULL_I_PREF_MEM:
                 return "Null Instructor Preference Member";
             case NULL_C_PREF_MEM:
-                return "Null Course Preference Member";        
+                return "Null Course Preference Member";
+            case NULL_DOC:
+                return "Null Document Member";
+            case BAD_LNAME:
+            	return "Bad Last Name";
+            case BAD_FNAME:
+            	return "Bad First Name";
+            case BAD_UNAME:
+            	return "Bad username";
+            case BAD_MAXWTU:
+            	return "Bad Max WTUs";
             default:
                System.err.println ("BAD DATA TYPE");
                return "Unknown error";
