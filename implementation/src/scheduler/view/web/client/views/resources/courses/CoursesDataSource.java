@@ -99,12 +99,7 @@ public class CoursesDataSource extends DataSource {
 		return record;
 	}
 
-	private <T> T assertNotNull(T thing) {
-		assert thing != null;
-		return thing;
-	}
-	
-	private String emptyStringIfNull(String str) {
+	private static String emptyStringIfNull(String str) {
 		if (str == null)
 			return "";
 		return str;

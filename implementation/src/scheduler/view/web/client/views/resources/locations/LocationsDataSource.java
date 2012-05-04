@@ -81,6 +81,12 @@ public class LocationsDataSource extends DataSource {
 		return record;
 	}
 
+	private static String emptyStringIfNull(String str) {
+		if (str == null)
+			return "";
+		return str;
+	}
+	
 	LocationGWT readRecordIntoLocation(Record record) {
 		String equipmentsCombined = record.getAttributeAsString("equipment");
 		Set<String> equipments = new TreeSet<String>();
@@ -91,9 +97,9 @@ public class LocationsDataSource extends DataSource {
 		
 		return new LocationGWT(
 				record.getAttributeAsInt("id"),
-				record.getAttribute("room"),
-				record.getAttribute("type"),
-				record.getAttribute("maxOccupancy"),
+				emptyStringIfNull(record.getAttribute("room")),
+				emptyStringIfNull(record.getAttribute("type")),
+				emptyStringIfNull(record.getAttribute("maxOccupancy")),
 				equipments,
 				record.getAttribute("isSchedulable").equals("true"));
 	}

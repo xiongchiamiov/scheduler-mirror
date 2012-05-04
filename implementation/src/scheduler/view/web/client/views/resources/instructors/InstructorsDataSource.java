@@ -76,13 +76,19 @@ public class InstructorsDataSource extends DataSource {
 		return record;
 	}
 
+	private static String emptyStringIfNull(String str) {
+		if (str == null)
+			return "";
+		return str;
+	}
+	
 	InstructorGWT readRecordIntoInstructor(Record record) {		
 		return new InstructorGWT(
 				record.getAttributeAsInt("id"),
-				record.getAttribute("username"),
-				record.getAttribute("firstName"),
-				record.getAttribute("lastName"),
-				record.getAttribute("maxWTU"),
+				emptyStringIfNull(record.getAttribute("username")),
+				emptyStringIfNull(record.getAttribute("firstName")),
+				emptyStringIfNull(record.getAttribute("lastName")),
+				emptyStringIfNull(record.getAttribute("maxWTU")),
 				new int[DayGWT.values().length][48],
 				new HashMap<Integer, Integer>(),
 				record.getAttribute("isSchedulable").equals("true"));
