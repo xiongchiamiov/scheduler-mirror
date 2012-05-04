@@ -672,7 +672,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			assert(schedule.getDocument().getTBALocation() != null);
 			
 			assert (scheduleItem.getCourseID() >= 0);
-			// temporary, please hand in the staffinstructor id and tbalocation id
+			
+			// TODO these need to be don't care location/instructor
 			if (scheduleItem.getLocationID() < 0)
 				scheduleItem.setLocationID(schedule.getDocument().getTBALocation().getID());
 			if (scheduleItem.getInstructorID() < 0)
@@ -757,7 +758,17 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	public Collection<ScheduleItemGWT> updateScheduleItem(ScheduleItemGWT itemGWT) {
 		try {
 			ScheduleItem item = model.findScheduleItemByID(itemGWT.getID());
-			assert (item.getSchedule().getDocument().getOriginal() != null);
+			Schedule schedule = item.getSchedule();
+			
+			assert (schedule.getDocument().getOriginal() != null);
+			assert (itemGWT.getCourseID() >= 0);
+			
+			// TODO these need to be don't care location/instructor
+			if (itemGWT.getLocationID() < 0)
+				itemGWT.setLocationID(schedule.getDocument().getTBALocation().getID());
+			if (itemGWT.getInstructorID() < 0)
+				itemGWT.setInstructorID(schedule.getDocument().getStaffInstructor().getID());
+			
 			Conversion.readScheduleItemFromGWT(model, itemGWT, item);
 			item.update();
 			
