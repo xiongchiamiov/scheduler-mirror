@@ -527,8 +527,8 @@ public class TimePrefsWidget extends VerticalPanel {
 
 			@Override
 			public void onSuccess(Void result) {
-				savedInstructor = instructor;
-				instructor = new InstructorGWT(instructor);
+				savedInstructor = new InstructorGWT(instructor);
+				//instructor = new InstructorGWT(instructor);
 				//redoColors();
 				System.out.println("saved time preferences... ?!?");
 			}
