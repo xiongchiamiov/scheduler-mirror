@@ -2,7 +2,7 @@ from fabric.api import env, local, put, run
 from fabric.contrib.project import rsync_project as rsync
 
 env.hosts = ['scheduler.csc.calpoly.edu']
-departments = ['AERO','BUS','CHEM','CM','CSC','EE','ENGL','FSN','GRC','IME','MU','RPTA']
+departments = ['AERO','BUS','CHEM','CM','CSC','EE','ENGL','FSN','GRC','IME','MU','PHYS','RPTA']
 
 def generate_build_xml():
 	print('Generating build.xml...')
