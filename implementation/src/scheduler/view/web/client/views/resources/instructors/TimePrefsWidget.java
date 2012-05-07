@@ -530,6 +530,7 @@ public class TimePrefsWidget extends VerticalPanel {
 				savedInstructor = instructor;
 				instructor = new InstructorGWT(instructor);
 				//redoColors();
+				System.out.println("saved time preferences... ?!?");
 			}
 		});
 	}
