@@ -4,6 +4,7 @@ import java.util.List;
 
 import scheduler.view.web.client.GreetingServiceAsync;
 import scheduler.view.web.client.UnsavedDocumentStrategy;
+import scheduler.view.web.client.views.resources.ValidatorUtil;
 import scheduler.view.web.shared.DocumentGWT;
 import scheduler.view.web.shared.InstructorGWT;
 
@@ -22,7 +23,6 @@ import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.events.KeyPressEvent;
 import com.smartgwt.client.widgets.events.KeyPressHandler;
-import com.smartgwt.client.widgets.form.validator.CustomValidator;
 import com.smartgwt.client.widgets.form.validator.IntegerRangeValidator;
 import com.smartgwt.client.widgets.grid.CellFormatter;
 import com.smartgwt.client.widgets.grid.ListGrid;
@@ -53,11 +53,21 @@ public class InstructorsView extends VLayout {
 
 			protected String getCellCSSText(ListGridRecord record, int rowNum,
 					int colNum) {
-				if (getFieldName(colNum).equals("id")) {
-					return "cursor: pointer; background: #D8D8D8;";
-				} else {
-					return super.getCellCSSText(record, rowNum, colNum);
+				if(record != null)
+				{
+					if (getFieldName(colNum).equals("id")) {
+						return "cursor: pointer; background: #D8D8D8;";
+					} 
+					else if (!ValidatorUtil.isValid(getFieldName(colNum), record, getDataAsRecordList())) {
+						// Invalid data, set background to red
+						return "background: #FF9999;";
+					} 
+					else {
+						// Valid data, do nothing
+						return super.getCellCSSText(record, rowNum, colNum);
+					}
 				}
+				return super.getCellCSSText(record, rowNum, colNum);
 			}
 
 			@Override
@@ -138,61 +148,62 @@ public class InstructorsView extends VLayout {
 
 		ListGridField lastNameField = new ListGridField("lastName", "Last Name");
 		lastNameField.setAlign(Alignment.CENTER);
-		lastNameField.setValidators(new CustomValidator() {
-			@Override
-			protected boolean condition(Object value) {
-				if (value == null) {
-					setErrorMessage("Username must be present!");
-					return false;
-				}
-				return true;
-			}
-		});
+		lastNameField.setDefaultValue("");
+//		lastNameField.setValidators(new CustomValidator() {
+//			@Override
+//			protected boolean condition(Object value) {
+//				if (value == null) {
+//					setErrorMessage("Username must be present!");
+//					return false;
+//				}
+//				return true;
+//			}
+//		});
 
 		ListGridField firstNameField = new ListGridField("firstName",
 				"First Name");
 		firstNameField.setAlign(Alignment.CENTER);
-		firstNameField.setValidators(new CustomValidator() {
-			@Override
-			protected boolean condition(Object value) {
-				if (value == null) {
-					setErrorMessage("Username must be present!");
-					return false;
-				}
-				return true;
-			}
-		});
+		firstNameField.setDefaultValue("");
+//		firstNameField.setValidators(new CustomValidator() {
+//			@Override
+//			protected boolean condition(Object value) {
+//				if (value == null) {
+//					setErrorMessage("Username must be present!");
+//					return false;
+//				}
+//				return true;
+//			}
+//		});
 
 		ListGridField usernameField = new ListGridField("username", "Username");
 		usernameField.setAlign(Alignment.CENTER);
-		usernameField.setValidators(new CustomValidator() {
-			protected boolean condition(Object value) {
-				if (value == null) {
-					setErrorMessage("Username must be present!");
-					return false;
-				}
-
-				assert (value instanceof String);
-				String username = (String) value;
-				if (username.trim().length() == 0) {
-					setErrorMessage("Username must be present!");
-					return false;
-				}
-
-				for (Record record : grid.getDataAsRecordList().getRange(0,
-						grid.getDataAsRecordList().getLength())) {
-					if (username.equals(record.getAttribute("username"))) {
-						setErrorMessage("Username \"" + username
-								+ "\" already exists!");
-						return false;
-					}
-				}
-				return true;
-			}
-		});
+//		usernameField.setValidators(new CustomValidator() {
+//			protected boolean condition(Object value) {
+//				if (value == null) {
+//					setErrorMessage("Username must be present!");
+//					return false;
+//				}
+//
+//				assert (value instanceof String);
+//				String username = (String) value;
+//				if (username.trim().length() == 0) {
+//					setErrorMessage("Username must be present!");
+//					return false;
+//				}
+//
+//				for (Record record : grid.getDataAsRecordList().getRange(0,
+//						grid.getDataAsRecordList().getLength())) {
+//					if (username.equals(record.getAttribute("username"))) {
+//						setErrorMessage("Username \"" + username
+//								+ "\" already exists!");
+//						return false;
+//					}
+//				}
+//				return true;
+//			}
+//		});
 
 		ListGridField maxWTUField = new ListGridField("maxWTU", "Max WTU");
-		maxWTUField.setValidators(nonnegativeInt);
 		maxWTUField.setAlign(Alignment.CENTER);
 		maxWTUField.setDefaultValue(0);
 

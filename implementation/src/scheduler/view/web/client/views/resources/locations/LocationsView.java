@@ -2,6 +2,7 @@ package scheduler.view.web.client.views.resources.locations;
 
 import scheduler.view.web.client.GreetingServiceAsync;
 import scheduler.view.web.client.UnsavedDocumentStrategy;
+import scheduler.view.web.client.views.resources.ValidatorUtil;
 import scheduler.view.web.shared.DocumentGWT;
 
 import com.google.gwt.user.client.Window;
@@ -35,11 +36,21 @@ public class LocationsView extends VLayout {
 		final ListGrid grid = new ListGrid() {
 			protected String getCellCSSText(ListGridRecord record, int rowNum,
 					int colNum) {
-				if (getFieldName(colNum).equals("id")) {
-					return "cursor: pointer; background: #D8D8D8;";
-				} else {
-					return super.getCellCSSText(record, rowNum, colNum);
+				if(record != null)
+				{
+					if (getFieldName(colNum).equals("id")) {
+						return "cursor: pointer; background: #D8D8D8;";
+					} 
+					else if (!ValidatorUtil.isValid(getFieldName(colNum), record, getDataAsRecordList())) {
+						// Invalid data, set background to red
+						return "background: #FF9999;";
+					} 
+					else {
+						// Valid data, do nothing
+						return super.getCellCSSText(record, rowNum, colNum);
+					}
 				}
+				return super.getCellCSSText(record, rowNum, colNum);
 			}
 		};
 		grid.setWidth100();
@@ -70,6 +81,7 @@ public class LocationsView extends VLayout {
 		schedulableField.setAlign(Alignment.CENTER);
 		ListGridField roomField = new ListGridField("room", "Room");
 		roomField.setAlign(Alignment.CENTER);
+		roomField.setDefaultValue("");
 		ListGridField typeField = new ListGridField("type", "Type");
 		typeField.setAlign(Alignment.CENTER);
 		typeField.setDefaultValue("LEC");
@@ -80,6 +92,7 @@ public class LocationsView extends VLayout {
 		ListGridField equipmentField = new ListGridField("equipment",
 				"Equipment");
 		equipmentField.setAlign(Alignment.CENTER);
+		equipmentField.setDefaultValue("");
 
 		grid.setFields(idField, schedulableField, roomField, typeField,
 				maxOccupancyField, equipmentField);
