@@ -157,15 +157,17 @@ public class Instructor extends ModelObject {
 				coursePreferences.put(entry.getKey().getID(), entry.getValue().getPreference());
 			coursePreferencesLoaded = true;
 		}
-		
+		System.out.println("Before check: " + coursePreferences.keySet().toString());
 		for (Course c : this.getDocument().getCourses())
 		{
 			if (coursePreferences.get(c.getID()) == null)
 			{
 				coursePreferences.put(c.getID(), new Integer(0));
+				System.out.println("Did need to add it");
 			}
+			System.out.println("Course getting added: " + c.getName());
 		}
-		
+		System.out.println("After check: " + coursePreferences.keySet().toString());
 		/*for (Integer key : coursePreferences.keySet())
 		{
 			if (coursePreferences.get(key) == null)
