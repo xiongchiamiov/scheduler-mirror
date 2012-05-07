@@ -10,6 +10,7 @@ import scheduler.model.db.IDBInstructor;
 import scheduler.model.db.IDBTime;
 import scheduler.model.db.IDBTimePreference;
 import scheduler.model.db.IDatabase.NotFoundException;
+import scheduler.model.Course;
 
 public class Instructor extends ModelObject {
 	public static final int DEFAULT_PREF = 0;
@@ -156,13 +157,22 @@ public class Instructor extends ModelObject {
 				coursePreferences.put(entry.getKey().getID(), entry.getValue().getPreference());
 			coursePreferencesLoaded = true;
 		}
-		for (Integer key : coursePreferences.keySet())
+		
+		for (Course c : this.getDocument().getCourses())
+		{
+			if (coursePreferences.get(c.getID()) == null)
+			{
+				coursePreferences.put(c.getID(), new Integer(0));
+			}
+		}
+		
+		/*for (Integer key : coursePreferences.keySet())
 		{
 			if (coursePreferences.get(key) == null)
 			{
 				coursePreferences.put(key, new Integer(0));
 			}
-		}
+		}*/
 		return coursePreferences;
 	}
 	public Instructor setCoursePreferences(HashMap<Integer, Integer> coursePreferences) {
