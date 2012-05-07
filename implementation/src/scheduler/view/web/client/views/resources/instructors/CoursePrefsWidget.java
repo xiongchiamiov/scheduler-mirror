@@ -186,7 +186,10 @@ public class CoursePrefsWidget extends VerticalPanel
 	int getCoursePreference(InstructorGWT instructor, CourseGWT course) {
 		assert (instructor.getCoursePreferences() != null);
 		if (instructor.getCoursePreferences().get(course.getID()) == null)
+		{
+			setCoursePreference(course, 0);
 			return 0;
+		}
 		return instructor.getCoursePreferences().get(course.getID());
 	}
 
