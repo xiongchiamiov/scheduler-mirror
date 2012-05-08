@@ -5,12 +5,10 @@ import com.smartgwt.client.data.RecordList;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 public class ValidatorUtil {
-	public static boolean isValid(String fieldName, ListGridRecord record,
-			RecordList recordList) {
+	public static boolean isValidCourseType(String fieldName,
+			ListGridRecord record) {
 		if (record != null) {
-
 			String value = null;
-			// Courses
 			if (fieldName.equals("maxEnrollment")) {
 				value = record.getAttributeAsString("maxEnrollment");
 				return value != null && validateNonNegativeInt(value);
@@ -30,8 +28,21 @@ public class ValidatorUtil {
 				value = record.getAttributeAsString("catalogNum");
 				return value != null && validateNotEmpty(value);
 			}
-			// Instructors
-			else if (fieldName.equals("lastName")) {
+			// Default
+			else {
+				// Isn't a special column, is always valid
+				return true;
+			}
+		}
+		return true;
+	}
+
+	public static boolean isValidInstructorType(String fieldName,
+			ListGridRecord record, RecordList recordList) {
+		if (record != null) {
+
+			String value = null;
+			if (fieldName.equals("lastName")) {
 				value = record.getAttributeAsString("lastName");
 				return value != null && validateNotEmpty(value);
 			} else if (fieldName.equals("firstName")) {
@@ -45,8 +56,20 @@ public class ValidatorUtil {
 				return value != null && validateNotEmpty(value)
 						&& validateUsername(value, recordList);
 			}
-			// Locations
-			else if (fieldName.equals("maxOccupancy")) {
+			// Default
+			else {
+				// Isn't a special column, is always valid
+				return true;
+			}
+		}
+		return true;
+	}
+
+	public static boolean isValidLocationType(String fieldName,
+			ListGridRecord record) {
+		if (record != null) {
+			String value = null;
+			if (fieldName.equals("maxOccupancy")) {
 				value = record.getAttributeAsString("maxOccupancy");
 				return value != null && validateNonNegativeInt(value);
 			} else if (fieldName.equals("room")) {
@@ -107,8 +130,14 @@ public class ValidatorUtil {
 			return false;
 		}
 
+		int count = 0;
 		for (Record record : recordList.getRange(0, recordList.getLength())) {
 			if (username.equals(record.getAttribute("username"))) {
+				count++;
+			}
+			if (count > 1) {
+				// It will always have its own name, invalid if there is more
+				// than one instance though
 				return false;
 			}
 		}

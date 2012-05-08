@@ -58,7 +58,7 @@ public class InstructorsView extends VLayout {
 					if (getFieldName(colNum).equals("id")) {
 						return "cursor: pointer; background: #D8D8D8;";
 					} 
-					else if (!ValidatorUtil.isValid(getFieldName(colNum), record, getDataAsRecordList())) {
+					else if (!ValidatorUtil.isValidInstructorType(getFieldName(colNum), record, getDataAsRecordList())) {
 						// Invalid data, set background to red
 						return "background: #FF9999;";
 					} 

@@ -71,7 +71,7 @@ public class CoursesView extends VLayout {
 				{
 					if (getFieldName(colNum).equals("selector")) {
 						return "cursor: pointer; background: #D8D8D8;";
-					} else if (!ValidatorUtil.isValid(getFieldName(colNum), record, getDataAsRecordList())) {
+					} else if (!ValidatorUtil.isValidCourseType(getFieldName(colNum), record)) {
 						// Invalid data, set background to red
 						return "background: #FF9999;";
 					} else {

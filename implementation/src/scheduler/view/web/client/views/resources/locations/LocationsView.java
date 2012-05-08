@@ -41,7 +41,7 @@ public class LocationsView extends VLayout {
 					if (getFieldName(colNum).equals("id")) {
 						return "cursor: pointer; background: #D8D8D8;";
 					} 
-					else if (!ValidatorUtil.isValid(getFieldName(colNum), record, getDataAsRecordList())) {
+					else if (!ValidatorUtil.isValidLocationType(getFieldName(colNum), record)) {
 						// Invalid data, set background to red
 						return "background: #FF9999;";
 					} 
