@@ -2,6 +2,7 @@ package scheduler.view.web.shared;
 
 //import java.util.List;
 
+import java.util.HashMap;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -23,6 +24,7 @@ import scheduler.view.web.shared.Selenium.WebUtility.PopupWaiter;
  */
 public class InstructorsViewTest extends TestCase {
 	private FirefoxDriver driver;
+	private HashMap<String, String> courseNames = new HashMap<String, String>();
 	
 	/**
 	 * sets up the test class and initializes the Firefox driver
@@ -33,6 +35,13 @@ public class InstructorsViewTest extends TestCase {
 		driver.get("http://localhost:8080/dev/");
 //		driver.get("http://scheduler.csc.calpoly.edu/dev");
 		
+		this.login();
+		
+		System.out.println("set up");
+	}
+	
+	private void login()
+	{
 		try {
 			WebUtility.waitForElementPresent(driver, By.id("s_loginBtn"));
 		} catch (InterruptedException e) {
@@ -81,8 +90,6 @@ public class InstructorsViewTest extends TestCase {
 		
 		assertEquals("Instructors", tab.getText());
 		tab.click();
-		
-		System.out.println("set up");
 	}
 	
 	/**
@@ -93,67 +100,67 @@ public class InstructorsViewTest extends TestCase {
 		System.out.println("teared down\n");
 	}
 	
-//	/**
-//	 * tests if instructors can be added
-//	 */
-//	public void testAddInstructor()
-//	{
-//		this.addInstructor(true, "World", "Hello", "foo", "30");
-//		this.saveData();
-//	}
-//	
-//	/**
-//	 * tests if instructors can be duplicated
-//	 */
-//	public void testDuplicateInstructor()
-//	{
-//		// select the first instructor
-//		WebElement cell = WebUtility.elementForResourceTableCell(driver, "s_instructorviewTab", 0, 1);
-//		WebUtility.mouseDownAndUpAt(driver, cell, 1, 1);
-//		this.waitMillis(500);
-//		// click the button to duplicate an instructor
-//		this.getElementBySmartGWTID("s_dupeInstructorBtn").click();
-//		
-//		this.waitMillis(500);
-//		
-//		// change username of the duplicate, otherwise we won't be able to save
-//		try {
-//			WebUtility.setResourceTableTextCell(driver, "s_instructorviewTab", 1, 4, "bar");
-//		} catch (InterruptedException e) {
-//			fail("failed to enter a new instructor user name");
-//		}
-//		
-//		this.saveData();
-//	}
-//	
-//	/**
-//	 * tests if instructors can be removed
-//	 */
-//	public void testRemoveInstructor()
-//	{		
-//		// select the first instructor
-//		WebElement cell = WebUtility.elementForResourceTableCell(driver, "s_instructorviewTab", 0, 1);
-//		WebUtility.mouseDownAndUpAt(driver, cell, 1, 1);
-//		this.waitMillis(500);
-//		
-//		// click the button to remove an instructor
-//		this.getElementBySmartGWTID("s_removeInstructorBtn").click();
-//		
-//		this.waitMillis(500);
-//		
-//		// select again the first instructor (which should be the former second one)
-//		cell = WebUtility.elementForResourceTableCell(driver, "s_instructorviewTab", 0, 1);
-//		WebUtility.mouseDownAndUpAt(driver, cell, 1, 1);
-//		this.waitMillis(500);
-//		
-//		// click the button to remove an instructor to remove the snd one as well
-//		this.getElementBySmartGWTID("s_removeInstructorBtn").click();
-//		
-//		this.waitMillis(500);
-//		
-//		
-//		this.saveData();
-//	}
+	/**
+	 * tests if instructors can be added
+	 */
+	public void testAddInstructor()
+	{
+		this.addInstructor(true, "World", "Hello", "foo", "30");
+		this.saveData();
+	}
+	
+	/**
+	 * tests if instructors can be duplicated
+	 */
+	public void testDuplicateInstructor()
+	{
+		// select the first instructor
+		WebElement cell = WebUtility.elementForResourceTableCell(driver, "s_instructorviewTab", 0, 1);
+		WebUtility.mouseDownAndUpAt(driver, cell, 1, 1);
+		this.waitMillis(500);
+		// click the button to duplicate an instructor
+		this.getElementBySmartGWTID("s_dupeInstructorBtn").click();
+		
+		this.waitMillis(500);
+		
+		// change username of the duplicate, otherwise we won't be able to save
+		try {
+			WebUtility.setResourceTableTextCell(driver, "s_instructorviewTab", 1, 4, "bar");
+		} catch (InterruptedException e) {
+			fail("failed to enter a new instructor user name");
+		}
+		
+		this.saveData();
+	}
+	
+	/**
+	 * tests if instructors can be removed
+	 */
+	public void testRemoveInstructor()
+	{		
+		// select the first instructor
+		WebElement cell = WebUtility.elementForResourceTableCell(driver, "s_instructorviewTab", 0, 1);
+		WebUtility.mouseDownAndUpAt(driver, cell, 1, 1);
+		this.waitMillis(500);
+		
+		// click the button to remove an instructor
+		this.getElementBySmartGWTID("s_removeInstructorBtn").click();
+		
+		this.waitMillis(500);
+		
+		// select again the first instructor (which should be the former second one)
+		cell = WebUtility.elementForResourceTableCell(driver, "s_instructorviewTab", 0, 1);
+		WebUtility.mouseDownAndUpAt(driver, cell, 1, 1);
+		this.waitMillis(500);
+		
+		// click the button to remove an instructor to remove the snd one as well
+		this.getElementBySmartGWTID("s_removeInstructorBtn").click();
+		
+		this.waitMillis(500);
+		
+		
+		this.saveData();
+	}
 	
 	/**
 	 * tests if the time and course preferences
@@ -161,59 +168,59 @@ public class InstructorsViewTest extends TestCase {
 	 */
 	public void testSetPreferences()
 	{
-//		// first add an instructor
-//		this.addInstructor(true, "Jones", "Jupiter", "jujo", "10");
-//		
-//		this.waitMillis(500);
-//		
-//		// click on the preferences button of the first instructor
-//		try {
-//			WebUtility.clickInstructorsResourceTablePreferencesButton(driver, 0);
-//		} catch (InterruptedException e) {
-//			fail("there is no button for setting preferences");
-//			return;
-//		}
-//		
-//		this.waitMillis(500);
-//		
-//		// since there is no course we will get a message which asks whether we
-//		// want to proceed. We click "No"
-//		try {
-//			WebUtility.waitForElementPresent(driver, By.id("noButton"));
-//		} catch (InterruptedException e) {
-//			fail("a dialog should have popped up");
-//			return;
-//		}
-//		driver.findElement(By.id("noButton")).click();
-//		
-//		// Then we add four courses:
-//		WebElement tab = this.getElementBySmartGWTID("s_coursesTab");
-//		tab.click();
-//		
-//		try {
-//			this.waitForSmartGWTElement("s_newCourseBtn");
-//		} catch (InterruptedException e1) {
-//			fail("Button for adding courses could not be found");
-//			return;
-//		}
-//		
-//		// insert data
-//		try {
-//			WebUtility.enterIntoCoursesResourceTableNewRow(driver, 0, true, "CPE", "406", "Software Deployment", "4", "8", "4", "TT", "8", "30", "LEC", "", "");
-//			WebUtility.enterIntoCoursesResourceTableNewRow(driver, 1, true, "CSC", "471", "Introduction to Computer Graphics", "4", "8", "4", "TT", "8", "30", "LEC", "", "");
-//			WebUtility.enterIntoCoursesResourceTableNewRow(driver, 2, true, "CSC", "484", "User Centered Interface Design", "4", "8", "4", "TT", "8", "30", "LEC", "", "");
-//			WebUtility.enterIntoCoursesResourceTableNewRow(driver, 3, true, "CSC", "530", "Languages and Translators", "4", "8", "4", "TT", "8", "30", "LEC", "", "");
-//		} catch (InterruptedException e) {
-//			fail("could not enter course data");
-//			e.printStackTrace();
-//		}
-//		
-//		// then we switch back to the instructors tab
-//		tab = this.getElementBySmartGWTID("s_instructorsTab");
-//		tab.click();
-//		
-//		this.waitMillis(500);
+		// first add an instructor
+		this.addInstructor(true, "Jones", "Jupiter", "jujo", "10");
 		
+		this.waitMillis(500);
+		
+		// click on the preferences button of the first instructor
+		try {
+			WebUtility.clickInstructorsResourceTablePreferencesButton(driver, 0);
+		} catch (InterruptedException e) {
+			fail("there is no button for setting preferences");
+			return;
+		}
+		
+		this.waitMillis(500);
+		
+		// since there is no course we will get a message which asks whether we
+		// want to proceed. We click "No"
+		try {
+			WebUtility.waitForElementPresent(driver, By.id("noButton"));
+		} catch (InterruptedException e) {
+			fail("a dialog should have popped up");
+			return;
+		}
+		driver.findElement(By.id("noButton")).click();
+		
+		// Then we add four courses:
+		WebElement tab = this.getElementBySmartGWTID("s_coursesTab");
+		tab.click();
+		
+		try {
+			this.waitForSmartGWTElement("s_newCourseBtn");
+		} catch (InterruptedException e1) {
+			fail("Button for adding courses could not be found");
+			return;
+		}
+		
+		// insert data
+		try {
+			WebUtility.enterIntoCoursesResourceTableNewRow(driver, 0, true, "CPE", "406", "Software Deployment", "4", "8", "4", "TT", "8", "30", "LEC", "", "");
+			WebUtility.enterIntoCoursesResourceTableNewRow(driver, 1, true, "CSC", "471", "Introduction to Computer Graphics", "4", "8", "4", "TT", "8", "30", "LEC", "", "");
+			WebUtility.enterIntoCoursesResourceTableNewRow(driver, 2, true, "CSC", "484", "User Centered Interface Design", "4", "8", "4", "TT", "8", "30", "LEC", "", "");
+			WebUtility.enterIntoCoursesResourceTableNewRow(driver, 3, true, "CSC", "530", "Languages and Translators", "4", "8", "4", "TT", "8", "30", "LEC", "", "");
+		} catch (InterruptedException e) {
+			fail("could not enter course data");
+			e.printStackTrace();
+		}
+		
+		// then we switch back to the instructors tab
+		tab = this.getElementBySmartGWTID("s_instructorsTab");
+		tab.click();
+		
+		this.waitMillis(500);
+//		
 		// click on the preferences button of the first instructor
 		try {
 			WebUtility.clickInstructorsResourceTablePreferencesButton(driver, 0);
@@ -231,10 +238,7 @@ public class InstructorsViewTest extends TestCase {
 		cell = rows.get(1).findElements(By.tagName("td")).get(1);
 		select = cell.findElement(By.tagName("select"));
 		select.click();
-//		WebUtility.mouseDownAndUpAt(driver, select, 5, 5);
-		this.waitMillis(1000);
 		select.findElements(By.tagName("option")).get(1).click();
-//		WebUtility.mouseDownAndUpAt(driver, timeTable, 1, 1);
 		this.waitMillis(200);
 		assertEquals("Not Preferred", select.getAttribute("value"));
 		
@@ -242,9 +246,7 @@ public class InstructorsViewTest extends TestCase {
 		cell = rows.get(2).findElements(By.tagName("td")).get(2);
 		select = cell.findElement(By.tagName("select"));
 		select.click();
-//		WebUtility.mouseDownAndUpAt(driver, select, 1, 1);
 		select.findElements(By.tagName("option")).get(2).click();
-//		WebUtility.mouseDownAndUpAt(driver, timeTable, 1, 1);
 		this.waitMillis(200);
 		assertEquals("Acceptable", select.getAttribute("value"));
 
@@ -252,65 +254,64 @@ public class InstructorsViewTest extends TestCase {
 		cell = rows.get(3).findElements(By.tagName("td")).get(3);
 		select = cell.findElement(By.tagName("select"));
 		select.click();
-//		WebUtility.mouseDownAndUpAt(driver, select, 1, 1);
 		select.findElements(By.tagName("option")).get(3).click();
-//		WebUtility.mouseDownAndUpAt(driver, timeTable, 1, 1);
 		this.waitMillis(200);
 		assertEquals("Preferred", select.getAttribute("value"));
 		
 		
-		
 		WebElement courseTable = driver.findElement(By.id("coursePrefsTable"));
 		rows = courseTable.findElements(By.tagName("tr"));;
+		courseNames.put(rows.get(1).findElements(By.tagName("td")).get(0).getText(), "Not Qualified");
 		
-		// set the second course to "Not Preferred"
+		courseNames.put(rows.get(2).findElements(By.tagName("td")).get(0).getText(), "Not Preferred");
 		cell = rows.get(2).findElements(By.tagName("td")).get(1);
 		select = cell.findElement(By.tagName("select"));
 		select.click();
-//		WebUtility.mouseDownAndUpAt(driver, select, 1, 1);
-		this.waitMillis(200);
 		select.findElements(By.tagName("option")).get(1).click();
-//		WebUtility.mouseDownAndUpAt(driver, courseTable, 1, 1);
 		this.waitMillis(200);
-		// TODO: Assertion failes
-		// (maybe because of line 212 and following in file CoursePrefsWidget.java?
-//		assertEquals("Not Preferred", select.getAttribute("value"));
+		assertEquals("Not Preferred", select.getAttribute("value"));
+		
+		
 		
 		// set the third  course to "Acceptable"
+		courseNames.put(rows.get(3).findElements(By.tagName("td")).get(0).getText(), "Acceptable");
 		cell = rows.get(3).findElements(By.tagName("td")).get(1);
 		select = cell.findElement(By.tagName("select"));
-//		select.click();
-		WebUtility.mouseDownAndUpAt(driver, select, 1, 1);
-		this.waitMillis(200);
+		select.click();
 		select.findElements(By.tagName("option")).get(2).click();
-		WebUtility.mouseDownAndUpAt(driver, courseTable, 1, 1);
 		this.waitMillis(200);
-//		assertEquals("Acceptable", select.getAttribute("value"));
+		assertEquals("Acceptable", select.getAttribute("value"));
 		
 		// set the fourth course to "Preferred"
+		courseNames.put(rows.get(4).findElements(By.tagName("td")).get(0).getText(), "Preferred");
 		cell = rows.get(4).findElements(By.tagName("td")).get(1);
 		select = cell.findElement(By.tagName("select"));
-//		select.click();
-		WebUtility.mouseDownAndUpAt(driver, select, 1, 1);
-		this.waitMillis(200);
+		select.click();
+//		WebUtility.mouseDownAndUpAt(driver, select, 1, 1);
 		select.findElements(By.tagName("option")).get(3).click();
-		WebUtility.mouseDownAndUpAt(driver, courseTable, 1, 1);
+//		WebUtility.mouseDownAndUpAt(driver, courseTable, 1, 1);
 		this.waitMillis(200);
-//		assertEquals("Preferred", select.getAttribute("value"));
+		assertEquals("Preferred", select.getAttribute("value"));
+		
+		this.waitMillis(5000);
 		
 		// close popup and save
 		// --------------------
 		driver.findElement(By.id("s_prefCloseBtn")).click();
 		this.saveData();
+
+		// then we log out and log in again
+		driver.findElement(By.id("s_logoutLnk")).click();
+	
+		this.tearDown();
+		this.setUp();
 		
-		WebElement tab; //!! REMOVE THIS LINE AGAIN
-		
-		// then we switch to the courses tab
-		tab = this.getElementBySmartGWTID("s_coursesTab");
-		tab.click();
-		// and then again we switch back to the instructors tab
-		tab = this.getElementBySmartGWTID("s_instructorsTab");
-		tab.click();
+//		// then we switch to the courses tab
+//		tab = this.getElementBySmartGWTID("s_coursesTab");
+//		tab.click();
+//		// and then again we switch back to the instructors tab
+//		tab = this.getElementBySmartGWTID("s_instructorsTab");
+//		tab.click();
 		
 		// click on the preferences button of the first instructor
 		try {
@@ -323,7 +324,7 @@ public class InstructorsViewTest extends TestCase {
 		// check if all settings are correct
 		// ---------------------------------
 		this.waitMillis(200);
-
+		
 		timeTable = driver.findElement(By.id("timePrefsTable"));
 		rows = timeTable.findElements(By.tagName("tr"));;
 		
@@ -347,29 +348,36 @@ public class InstructorsViewTest extends TestCase {
 		rows = courseTable.findElements(By.tagName("tr"));;
 		
 		// check if the first course is "Not Qualified"
+		String courseName = rows.get(1).findElements(By.tagName("td")).get(0).getText();
 		cell = rows.get(1).findElements(By.tagName("td")).get(1);
 		select = cell.findElement(By.tagName("select"));
-		assertEquals("Not Qualified", select.getAttribute("value"));
+//		System.out.println(courseName + " ## " + courseNames.get(courseName) + " ## " + select.getAttribute("value"));
+		assertEquals(courseNames.get(courseName), select.getAttribute("value"));
 		
 		// check if the second course is "Not Preferred"
+		courseName = rows.get(2).findElements(By.tagName("td")).get(0).getText();
 		cell = rows.get(2).findElements(By.tagName("td")).get(1);
 		select = cell.findElement(By.tagName("select"));
-		assertEquals("Not Preferred", select.getAttribute("value"));
+		System.out.println(courseName + " ## " + courseNames.get(courseName) + " ## " + select.getAttribute("value"));
+		assertEquals(courseNames.get(courseName), select.getAttribute("value"));
 		
 		// check if the third  course is "Acceptable"
+		courseName = rows.get(3).findElements(By.tagName("td")).get(0).getText();
 		cell = rows.get(3).findElements(By.tagName("td")).get(1);
 		select = cell.findElement(By.tagName("select"));
-		assertEquals("Acceptable", select.getAttribute("value"));
+		System.out.println(courseName + " ## " + courseNames.get(courseName) + " ## " + select.getAttribute("value"));
+		assertEquals(courseNames.get(courseName), select.getAttribute("value"));
 		
 		// check if the fourth course is "Preferred"
+		courseName = rows.get(4).findElements(By.tagName("td")).get(0).getText();
 		cell = rows.get(4).findElements(By.tagName("td")).get(1);
 		select = cell.findElement(By.tagName("select"));
-		assertEquals("Preferred", select.getAttribute("value"));
+		System.out.println(courseName + " ## " + courseNames.get(courseName) + " ## " + select.getAttribute("value"));
+		assertEquals(courseNames.get(courseName), select.getAttribute("value"));
 		
 		// clean up all the data after the tests
 		// -------------------------------------
-		
-		this.getElementBySmartGWTID("isc_Window_1_closeButton").click();
+		driver.findElement(By.id("s_prefCloseBtn")).click();
 		
 		// select the first instructor
 		cell = WebUtility.elementForResourceTableCell(driver, "s_instructorviewTab", 0, 1);
@@ -378,6 +386,7 @@ public class InstructorsViewTest extends TestCase {
 		
 		// click the button to remove an instructor
 		this.getElementBySmartGWTID("s_removeInstructorBtn").click();
+		
 		
 		// change to courses tab
 		tab = this.getElementBySmartGWTID("s_coursesTab");
@@ -403,7 +412,7 @@ public class InstructorsViewTest extends TestCase {
 			this.waitMillis(100);
 		}
 		
-//		this.saveData();
+		this.saveData();
 	}
 	
 	/**
