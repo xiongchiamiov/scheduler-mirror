@@ -212,12 +212,17 @@ public class CoursePrefsWidget extends VerticalPanel
 			assert (list != null);
 			list.setStyleName(styleNames[3 - getCoursePreference(instructor,
 					course)]);
-			/*
-			 * if (getCoursePreference(instructor, course) !=
-			 * getCoursePreference(savedInstructor, course))
-			 * list.addStyleName("changed"); else
-			 * list.removeStyleName("changed");
-			 */
+			list.setItemSelected(getCoursePreference(instructor, course), true); //?!?! 
+			
+//			  if (getCoursePreference(instructor, course) != getCoursePreference(savedInstructor, course))
+//			  {
+//				  list.addStyleName("changed");
+//			  }
+//			  else
+//			  {
+//				  list.removeStyleName("changed");
+//			  }
+			 
 		}
 	}
 	

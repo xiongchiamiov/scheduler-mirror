@@ -151,6 +151,7 @@ public class Instructor extends ModelObject {
 	// Course Preferences
 	
 	public HashMap<Integer, Integer> getCoursePreferences() throws DatabaseException {
+		System.out.println("SIHOQSPSBPISBPIWBPDIBDWIIBWDPIB");
 		if (!coursePreferencesLoaded) {
 			coursePreferences = new HashMap<Integer, Integer>();
 			for (Entry<IDBCourse, IDBCoursePreference> entry : model.database.findCoursePreferencesByCourseForInstructor(underlyingInstructor).entrySet())
@@ -175,6 +176,17 @@ public class Instructor extends ModelObject {
 				coursePreferences.put(key, new Integer(0));
 			}
 		}*/
+		for (Integer key : coursePreferences.keySet())
+		{
+			if (coursePreferences.get(key) == null)
+			{
+				System.out.println(key+" it is still null");
+			}
+			else
+			{
+				System.out.println(key+" it is "+coursePreferences.get(key));
+			}
+		}
 		return coursePreferences;
 	}
 	public Instructor setCoursePreferences(HashMap<Integer, Integer> coursePreferences) {
