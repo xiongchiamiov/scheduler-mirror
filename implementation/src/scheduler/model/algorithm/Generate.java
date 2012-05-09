@@ -22,7 +22,7 @@ public class Generate {
 	/**
 	 * Used for debugging. Toggle it to get debugging output
 	 */
-	 private static final boolean DEBUG = !true; // !true == false ; )
+	 private static final boolean DEBUG = true; // !true == false ; )
 	   
 	/**
 	 * Prints a message to STDERR if DEBUG is true
@@ -61,6 +61,7 @@ public class Generate {
 	    //Generate labs from the course list
 	    HashMap<Integer, Course> tetheredLabs = new HashMap<Integer, Course>();
 	    ArrayList<Course> untetheredLabs = new ArrayList<Course>();
+	    ArrayList<Course> indStudyCourses = new ArrayList<Course>();
 	    for (Course c : c_list) {
 	        //Is a lab (or until a case found otherwise, an ACT or DIS) associated with a lecture
 	    	if(c.getTypeEnum() == Course.CourseType.LAB || c.getTypeEnum() == Course.CourseType.ACT || 
@@ -71,13 +72,16 @@ public class Generate {
 	    		    tetheredLabs.put(c.getLecture().getID(), c);
 	    	    else
 	    		    untetheredLabs.add(c);
-	        }    	  
+	        }
+	    	if(c.getTypeEnum() == Course.CourseType.IND) {
+	    		debug ("Found IND: " + c.getTypeEnum() + " " + c.getCatalogNumber() + " " + c.getName());
+	    		indStudyCourses.add(c);
+	    	}
 	    }
 
 	      for (Course c : c_list)
 	      {
-	           if(c.getTypeEnum() == Course.CourseType.LEC ||c.getTypeEnum() == Course.CourseType.IND ||
-	        		   c.getTypeEnum() == Course.CourseType.SEM) {
+	           if(c.getTypeEnum() == Course.CourseType.LEC || c.getTypeEnum() == Course.CourseType.SEM) {
 	                debug ("MAKING SI's FOR COURSE " + c);
 
 	                ScheduleItemDecorator lec_si = null;
@@ -147,6 +151,28 @@ public class Generate {
                         System.err.println(lab_si);
                     }
 	            }
+	      }
+	      
+	      //Add IND courses
+	      for (Course c : indStudyCourses) {
+	    	  ScheduleItem indSI = model.createTransientScheduleItem(1, null, 0, 0, false, false);
+	    	  indSI.setCourse(c);
+	    	  
+	    	  indSI.setInstructor((findInstructor(c, i_vec)).getInstructor());
+	    	  
+	    	  debug("Found instructor for IND: " + indSI.getInstructor());
+	    	  
+	    	  for (InstructorDecorator id : i_vec) {
+	    		  if(id.getInstructor() == indSI.getInstructor()) {
+	    			  debug ("Adding " + indSI.getCourse().getWTUInt() + " WTU to " + id.getInstructor());
+	    			  
+	    			  id.addWTU(indSI.getCourse().getWTUInt());
+	    		  }
+	    	  }
+	    	  
+	    	  indSI.setLocation(getTBA(schedule).getLocation());
+	    	  
+	    	  items.add(new ScheduleItemDecorator(indSI));
 	      }
 
 	      debug ("GENERATION FINISHED W/: " + items.size());
@@ -222,7 +248,6 @@ public class Generate {
 	      boolean r;
 
 	      assert(si.getItem().getInstructor() != null);
-	      //this should be  ok, as staff prefs should be set by now, BUT ensure this is the case. potential bugsrc
           InstructorDecorator id = getStaff(schedule);
           for(InstructorDecorator dec : id_vec) {
         	  if(dec.equals(si.getItem().getInstructor()))
@@ -242,8 +267,6 @@ public class Generate {
 	      if (r = verify(model, si, id, ld))
 	      {
 	         book(model, si, items, sections, id, ld);
-	         //Persist the availability to the id_vec list
-             
 	      }
 
 	      return r;
