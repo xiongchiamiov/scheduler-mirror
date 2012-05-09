@@ -9,6 +9,9 @@ public class SQLDocument extends SQLObject implements IDBDocument, IDBSchedule {
 	boolean isTrashed;
 	Integer startHalfHour;
 	Integer endHalfHour;
+	Integer staffInstructorID; // null if there is none
+	Integer tbaLocationID; // null if there is none
+
 	
 	public SQLDocument(Integer id, String name, Integer startHalfHour, Integer endHalfHour) {
 		super(id);

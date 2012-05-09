@@ -146,7 +146,7 @@ public interface IDatabase {
 	// Used Equipment
 	Map<IDBEquipmentType, IDBUsedEquipment> findUsedEquipmentByEquipmentForCourse(IDBCourse course) throws DatabaseException;
 	void deleteUsedEquipment(IDBUsedEquipment usedEquipment) throws DatabaseException;
-	DBUsedEquipment assembleUsedEquipment() throws DatabaseException;
+	IDBUsedEquipment assembleUsedEquipment() throws DatabaseException;
 	void insertUsedEquipment(IDBCourse course, IDBEquipmentType equipmentType, IDBUsedEquipment equip) throws DatabaseException;
 	
 	// Provided Equipment
@@ -164,7 +164,7 @@ public interface IDatabase {
 	void insertOfferedDayPattern(IDBCourse underlying, IDBDayPattern dayPattern, IDBOfferedDayPattern pattern) throws DatabaseException;
 	
 	// For testing
-	boolean isEmpty();
+	boolean isEmpty() throws DatabaseException;
 	
 	IDBScheduleItem assembleScheduleItemCopy(IDBScheduleItem underlying) throws DatabaseException;
 	IDBSchedule getScheduleItemSchedule(IDBScheduleItem underlying) throws DatabaseException;

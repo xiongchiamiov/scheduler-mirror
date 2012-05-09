@@ -1,6 +1,8 @@
 package scheduler.model.db.sqlite;
 
-public class SQLCoursePattern extends SQLObject {
+import scheduler.model.db.IDBOfferedDayPattern;
+
+public class SQLCoursePattern extends SQLObject implements IDBOfferedDayPattern {
 	Integer courseID, patternID;
 	
 	public SQLCoursePattern(Integer id, Integer courseID, Integer patternID) {

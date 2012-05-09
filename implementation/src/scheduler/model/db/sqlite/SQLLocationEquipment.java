@@ -1,6 +1,8 @@
 package scheduler.model.db.sqlite;
 
-public class SQLLocationEquipment extends SQLObject {
+import scheduler.model.db.IDBProvidedEquipment;
+
+public class SQLLocationEquipment extends SQLObject implements IDBProvidedEquipment {
 	Integer locID, equipID;
 	
 	public SQLLocationEquipment(Integer id, Integer locID, Integer equipID) {
