@@ -424,6 +424,9 @@ public class CalendarListView extends SimplePanel {
 	}
 
 	private String getDaysString(Set<DayGWT> days) {
+		if (days == null)
+			return "";
+		
 		String returnString = new String();
 		Iterator<DayGWT> it = days.iterator();
 
