@@ -39,8 +39,12 @@ public interface IDatabase {
 
 	IDBInstructor getDocumentStaffInstructorOrNull(IDBDocument underlyingDocument) throws DatabaseException;
 	IDBLocation getDocumentTBALocationOrNull(IDBDocument underlyingDocument) throws DatabaseException;
+	IDBInstructor getDocumentChooseForMeInstructorOrNull(IDBDocument underlyingDocument) throws DatabaseException;
+	IDBLocation getDocumentChooseForMeLocationOrNull(IDBDocument underlyingDocument) throws DatabaseException;
 	void setDocumentStaffInstructor(IDBDocument underlyingDocument, IDBInstructor underlyingInstructor) throws DatabaseException;
 	void setDocumentTBALocation(IDBDocument underlyingDocument, IDBLocation underlyingLocation) throws DatabaseException;
+	void setDocumentChooseForMeInstructor(IDBDocument underlyingDocument, IDBInstructor underlyingInstructor) throws DatabaseException;
+	void setDocumentChooseForMeLocation(IDBDocument underlyingDocument, IDBLocation underlyingLocation) throws DatabaseException;
 	
 	// Working Copy
 	boolean isOriginalDocument(IDBDocument doc) throws DatabaseException;

@@ -560,7 +560,6 @@ public class Generate {
 	    	 debug("Instructor is not available.  Verification FAIL.");
 	         throw new CouldNotBeScheduledException(ConflictType.I_DBL_BK, si);
 	      }
-	      //possible bug this was 'i' and switched to 'l' since that's the type of booking error we're looking for
 	      if (!isAvailable(days, tr, loc))
 	      {
 	    	 debug("Location is not available. Verification FAIL.");

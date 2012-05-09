@@ -17,6 +17,12 @@ public class Document extends ModelObject {
 	private boolean staffInstructorLoaded;
 	private Instructor staffInstructor;
 	
+	private boolean chooseForMeInsLoaded;
+	private Instructor chooseForMeInstructor;
+	
+	private boolean chooseForMeLocLoaded;
+	private Location chooseForMeLocation;
+	
 	private boolean originalLoaded;
 	private Document original;
 	
@@ -45,6 +51,10 @@ public class Document extends ModelObject {
 			model.database.setDocumentStaffInstructor(underlyingDocument, staffInstructor.underlyingInstructor);
 		if (tbaLocationIsSet())
 			model.database.setDocumentTBALocation(underlyingDocument, tbaLocation.underlyingLocation);
+		if(chooseForMeInstructorIsSet())
+			model.database.setDocumentChooseForMeInstructor(underlyingDocument, chooseForMeInstructor.underlyingInstructor);
+		if(chooseForMeLocationIsSet())
+			model.database.setDocumentChooseForMeLocation(underlyingDocument, chooseForMeLocation.underlyingLocation);
 		disassociateWorkingCopy();
 		if (originalLoaded && original != null)
 			model.database.associateWorkingCopyWithOriginal(underlyingDocument, original.underlyingDocument);
@@ -58,9 +68,11 @@ public class Document extends ModelObject {
 		for (Location location : getLocations())
 			location.delete();
 		getTBALocation().delete();
+		getChooseForMeLocation().delete();
 		for (Instructor instructor : getInstructors())
 			instructor.delete();
 		getStaffInstructor().delete();
+		getChooseForMeInstructor().delete();
 		for (Course course : getCourses())
 			course.delete();
 
@@ -136,6 +148,28 @@ public class Document extends ModelObject {
 	public boolean tbaLocationIsSet() { return tbaLocationLoaded; }
 	
 
+	// Choose For Me Location
+	
+	public Location getChooseForMeLocation() throws DatabaseException {
+		if(!chooseForMeLocLoaded) {
+			IDBLocation underlyingLocation = model.database.getDocumentChooseForMeLocationOrNull(underlyingDocument);
+			if(underlyingDocument == null)
+				chooseForMeLocation = null;
+			else
+				chooseForMeLocation = model.findLocationByID(underlyingLocation.getID());
+			chooseForMeLocLoaded = true;
+		}
+		return chooseForMeLocation;
+	}
+	
+	public void setChooseForMeLocation(Location newLocation) {
+		assert(!newLocation.isTransient()); // You need to insert something before you can reference it
+		chooseForMeLocation = newLocation;
+		chooseForMeLocLoaded = true;
+	}
+	
+	public boolean chooseForMeLocationIsSet() {return chooseForMeLocLoaded; }
+	
 	// Staff Instructor
 
 	public Instructor getStaffInstructor() throws DatabaseException {
@@ -159,6 +193,28 @@ public class Document extends ModelObject {
 
 	public boolean staffInstructorIsSet() { return staffInstructorLoaded; }
 	
+	// Choose For Me Instructor
+
+		public Instructor getChooseForMeInstructor() throws DatabaseException {
+			if (!chooseForMeInsLoaded) {
+				IDBInstructor underlyingInstructor = model.database.getDocumentChooseForMeInstructorOrNull(underlyingDocument);
+				if (underlyingInstructor == null)
+					chooseForMeInstructor = null;
+				else
+					chooseForMeInstructor = model.findInstructorByID(underlyingInstructor.getID());
+				
+				chooseForMeInsLoaded = true;
+			}
+			return chooseForMeInstructor;
+		}
+
+		public void setChooseForMeInstructor(Instructor newInstructor) {
+			assert(!newInstructor.isTransient()); // You need to insert something before you can reference it
+			chooseForMeInstructor = newInstructor;
+			chooseForMeInsLoaded = true;
+		}
+
+		public boolean chooseForMeInstructorIsSet() { return chooseForMeInsLoaded; }
 	
 	// Working Copy
 	
@@ -202,8 +258,14 @@ public class Document extends ModelObject {
 		if (tbaLocationLoaded)
 			assert tbaLocation != null : "tba loc null";
 		
+		if(chooseForMeLocLoaded)
+			assert chooseForMeLocation != null : "choose for me loc null";
+		
 		if (staffInstructorLoaded)
 			assert staffInstructor != null : "staff null";
+		
+		if(chooseForMeInsLoaded)
+			assert chooseForMeInstructor != null : "choose for me instructor null";
 		
 		// original can be null
 	}

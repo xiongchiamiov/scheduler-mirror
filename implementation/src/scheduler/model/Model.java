@@ -31,6 +31,8 @@ import scheduler.model.db.IDatabase;
 import scheduler.model.db.IDatabase.NotFoundException;
 
 public class Model {
+	private static String maxWTU = "1000000";
+	
 	abstract static class Cache<DecoratedT extends ModelObject, UnderlyingT extends IDBObject> {
 		HashMap<Integer, DecoratedT> cache = new HashMap<Integer, DecoratedT>();
 
@@ -148,18 +150,26 @@ public class Model {
 		}
 	};
 
-	public Document createAndInsertDocumentWithTBAStaffAndSchedule(String name, int startHalfHour, int endHalfHour) throws DatabaseException {
+	public Document createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe(String name, int startHalfHour, int endHalfHour) throws DatabaseException {
 		Document document = createTransientDocument(name, startHalfHour, endHalfHour)
 				.insert();
 
-		document.setStaffInstructor(createTransientInstructor("STAFF", "STAFF", "STAFF", "1000000", true)
+		document.setStaffInstructor(createTransientInstructor("STAFF", "STAFF", "STAFF", maxWTU, true)
 				.setDocument(document)
 				.insert());
 		
-		document.setTBALocation(createTransientLocation("TBA", "Lecture", "1000000", true)
+		document.setTBALocation(createTransientLocation("TBA", "Lecture", maxWTU, true)
 				.setDocument(document)
 				.insert());
 
+		document.setChooseForMeInstructor(createTransientInstructor("ChooseForMe", "ChooseForMe", "ChooseForMe", maxWTU, true)
+				.setDocument(document)
+				.insert());
+		
+		document.setChooseForMeLocation(createTransientLocation("ChooseForMe", "ChooseForMe", maxWTU, true)
+				.setDocument(document)
+				.insert());
+		
 		createTransientSchedule().setDocument(document).insert().getID();
 		
 		document.update();
@@ -305,6 +315,11 @@ public class Model {
 			database.setDocumentStaffInstructor(newUnderlyingDocument, newDocumentInstructorsByExistingDocumentInstructorIDs.get(existingDocument.getStaffInstructor().getID()));
 		if (existingDocument.getTBALocation() != null)
 			database.setDocumentTBALocation(newUnderlyingDocument, newDocumentLocationsByExistingDocumentLocationIDs.get(existingDocument.getTBALocation().getID()));
+		if (existingDocument.getChooseForMeInstructor() != null)
+			database.setDocumentChooseForMeInstructor(newUnderlyingDocument, newDocumentInstructorsByExistingDocumentInstructorIDs.get(existingDocument.getChooseForMeInstructor().getID()));
+		if (existingDocument.getChooseForMeLocation() != null)
+			database.setDocumentChooseForMeLocation(newUnderlyingDocument, newDocumentLocationsByExistingDocumentLocationIDs.get(existingDocument.getChooseForMeLocation().getID()));
+		
 		database.updateDocument(newUnderlyingDocument);
 		
 		return this.findDocumentByID(newUnderlyingDocument.getID());
@@ -389,7 +404,8 @@ public class Model {
 	public Collection<Instructor> findInstructorsForDocument(Document doc) throws DatabaseException {
 		Collection<Instructor> result = new LinkedList<Instructor>();
 		for (IDBInstructor underlying : database.findInstructorsForDocument(doc.underlyingDocument))
-			if (!underlying.getID().equals(doc.getStaffInstructor().getID()))
+			if (!underlying.getID().equals(doc.getStaffInstructor().getID()) && 
+			    !underlying.getID().equals(doc.getChooseForMeInstructor().getID()))
 				result.add(instructorCache.decorateAndPutIfNotPresent(underlying));
 		return result;
 	}
@@ -480,7 +496,10 @@ public class Model {
 			assert doc != null : "doc null";
 			assert doc.getTBALocation() != null : "tba null";
 			assert doc.getTBALocation().getID() != null : "doc tba id null";
-			if (!underlying.getID().equals(doc.getTBALocation().getID()))
+			assert(doc.getChooseForMeLocation() != null) : "doc choose for me null";
+			assert(doc.getChooseForMeLocation().getID() != null) : "doc choose for me id null";
+			if (!underlying.getID().equals(doc.getTBALocation().getID()) &&
+				!underlying.getID().equals(doc.getChooseForMeLocation().getID()))
 				result.add(locationCache.decorateAndPutIfNotPresent(underlying));
 		}
 		return result;

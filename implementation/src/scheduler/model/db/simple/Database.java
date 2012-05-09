@@ -169,7 +169,7 @@ public class Database implements IDatabase {
 
 	@Override
 	public IDBDocument assembleDocument(String name, int startHalfHour, int endHalfHour) {
-		return new DBDocument(null, name, null, startHalfHour, endHalfHour, null, null, false);
+		return new DBDocument(null, name, null, startHalfHour, endHalfHour, null, null, null, null, false);
 	}
 
 	@Override
@@ -917,7 +917,14 @@ public class Database implements IDatabase {
 		return instructorTable.findByID(id);
 	}
 
-
+	@Override
+	public IDBInstructor getDocumentChooseForMeInstructorOrNull(IDBDocument underlyingDocument) throws NotFoundException {
+		Integer id = ((DBDocument)underlyingDocument).chooseForMeInstructorID;
+		if (id == null)
+			return null;
+		return instructorTable.findByID(id);
+	}
+	
 	@Override
 	public IDBLocation getDocumentTBALocationOrNull(IDBDocument underlyingDocument) throws NotFoundException {
 		Integer id = ((DBDocument)underlyingDocument).tbaLocationID;
@@ -926,19 +933,34 @@ public class Database implements IDatabase {
 		return locationTable.findByID(id);
 	}
 
+	@Override
+	public IDBLocation getDocumentChooseForMeLocationOrNull(IDBDocument underlyingDocument) throws NotFoundException {
+		Integer id = ((DBDocument)underlyingDocument).chooseForMeLocationID;
+		if (id == null)
+			return null;
+		return locationTable.findByID(id);
+	}
 
 	@Override
 	public void setDocumentStaffInstructor(IDBDocument underlyingDocument, IDBInstructor underlyingInstructor) {
 		((DBDocument)underlyingDocument).staffInstructorID = underlyingInstructor.getID();
 	}
 
+	@Override
+	public void setDocumentChooseForMeInstructor(IDBDocument underlyingDocument, IDBInstructor underlyingInstructor) {
+		((DBDocument)underlyingDocument).chooseForMeInstructorID = underlyingInstructor.getID();
+	}
 
 	@Override
 	public void setDocumentTBALocation(IDBDocument underlyingDocument, IDBLocation underlyingLocation) {
 		((DBDocument)underlyingDocument).tbaLocationID = underlyingLocation.getID();
 	}
 
-
+	@Override
+	public void setDocumentChooseForMeLocation(IDBDocument underlyingDocument, IDBLocation underlyingLocation) {
+		((DBDocument)underlyingDocument).chooseForMeLocationID = underlyingLocation.getID();
+	}
+	
 	@Override
 	public void disassociateLectureAndLab(IDBCourse lecture, IDBCourse lab) {
 		((DBCourse)lab).lectureID = null;

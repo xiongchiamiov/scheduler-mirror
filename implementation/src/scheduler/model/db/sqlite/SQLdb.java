@@ -1318,6 +1318,35 @@ public class SQLdb implements IDatabase {
 	}
 
 	@Override
+	public IDBLocation getDocumentChooseForMeLocationOrNull(
+			IDBDocument underlyingDocument) throws DatabaseException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setDocumentChooseForMeInstructor(
+			IDBDocument underlyingDocument, IDBInstructor underlyingInstructor)
+			throws DatabaseException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public IDBInstructor getDocumentChooseForMeInstructorOrNull(
+			IDBDocument underlyingDocument) throws DatabaseException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setDocumentChooseForMeLocation(IDBDocument underlyingDocument,
+			IDBLocation underlyingLocation) throws DatabaseException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
 	public Collection<IDBScheduleItem> findAllLabScheduleItemsForScheduleItem(
 			IDBScheduleItem underlying) {
 		// TODO Auto-generated method stub
