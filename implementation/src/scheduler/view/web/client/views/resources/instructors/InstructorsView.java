@@ -252,10 +252,12 @@ public class InstructorsView extends VLayout {
 			weewee.setWidget(iipv);
 			weewee.setSize("700px", "500px");
 			this.prefsWindow.addItem(weewee);
+			this.prefsWindow.addItem(iipv);
 			this.prefsWindow.setAutoSize(true);
 			
 			this.iipv.setParent(prefsWindow);
 			this.iipv.afterPush();
+			//this.prefsWindow.setStyleName("bodyPanel");
 		}
 		else
 		{
