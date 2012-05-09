@@ -555,7 +555,7 @@ public class Model {
 	
 	
 
-	public boolean isEmpty() {
+	public boolean isEmpty() throws DatabaseException {
 		return database.isEmpty();
 	}
 	
