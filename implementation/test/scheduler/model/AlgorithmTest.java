@@ -28,16 +28,22 @@ public abstract class AlgorithmTest extends ModelTestCase {
 		List<Location> locations = generateLocationList(model, doc);
 		
 		Vector<ScheduleItem> sids = new Vector<ScheduleItem>();
+		//ScheduleItem schedItem = new ScheduleItem(model, null);
+		//sids.add(schedItem);
 		
 		System.err.println("Starting schedule generation...");
 		
 		long start = System.currentTimeMillis();
 		
-	    GenerateEntryPoint.generate(model, schedule, sids, courses, instructors, locations);
+	    Vector<ScheduleItem> sis = GenerateEntryPoint.generate(model, schedule, sids, courses, instructors, locations);
 	    
 	    long end = System.currentTimeMillis();
 	    
 	    System.err.println("Schedule generation complete in: " + ((end - start) / 1000) + " seconds");
+	    
+	    for (ScheduleItem si : sis) {
+	    	System.err.println(si);
+	    }
 	}
 	
 	public static List<Course> generateCourseList(Model model, Document doc) throws DatabaseException {
@@ -51,6 +57,7 @@ public abstract class AlgorithmTest extends ModelTestCase {
 		
 		Course lab = model.createTransientCourse("Test1 - Lab", "101", "CSC", "4", "4", "2", "LAB", "60", "6", true);
 		ModelTestUtility.addDayPattern(lab, Day.MONDAY, Day.WEDNESDAY, Day.FRIDAY);
+		ModelTestUtility.addDayPattern(course, Day.TUESDAY, Day.THURSDAY);
 		lab.setLecture(course);
 		lab.setTetheredToLecture(Boolean.TRUE);
 		lab.setDocument(doc).insert();
@@ -58,11 +65,16 @@ public abstract class AlgorithmTest extends ModelTestCase {
 		
 		course = model.createTransientCourse("Test2", "102", "CSC", "4", "4", "2", "LEC", "60", "6", true);
 		ModelTestUtility.addDayPattern(course, Day.MONDAY, Day.WEDNESDAY, Day.FRIDAY);
+		ModelTestUtility.addDayPattern(course, Day.TUESDAY, Day.THURSDAY);
 		course.setDocument(doc).insert();
 		courses.add(course);
 		
 		course = model.createTransientCourse("Test3", "103", "CSC", "4", "4", "1", "LEC", "30", "6", true);
 		ModelTestUtility.addDayPattern(course, Day.TUESDAY, Day.THURSDAY);
+		course.setDocument(doc).insert();
+		courses.add(course);
+		
+		course = model.createTransientCourse("IND COURSE", "400", "CSC", "0", "0", "1", "IND", "500", "0", true);
 		course.setDocument(doc).insert();
 		courses.add(course);
 		
@@ -73,10 +85,11 @@ public abstract class AlgorithmTest extends ModelTestCase {
 		List<Instructor> instructors = new ArrayList<Instructor>();
 		
 		HashMap<Integer, Integer> coursePrefs = new HashMap<Integer, Integer>();
-		coursePrefs.put(courses.get(0).getID(), 10);
-		coursePrefs.put(courses.get(1).getID(), 10);
-		coursePrefs.put(courses.get(2).getID(), 10);
-		coursePrefs.put(courses.get(3).getID(), 0);
+		coursePrefs.put(courses.get(0).getID(), 10); //Test1
+		coursePrefs.put(courses.get(1).getID(), 10); //Test1 - Lab
+		coursePrefs.put(courses.get(2).getID(), 10); //Test2
+		coursePrefs.put(courses.get(3).getID(), 0);  //Test3
+		coursePrefs.put(courses.get(4).getID(), 10); //IND COURSE
 		
 		Instructor instructor = model.createTransientInstructor("Evan", "Ovadia", "eovadia", "20", true)
 				.setTimePreferences(Instructor.createDefaultTimePreferences())
