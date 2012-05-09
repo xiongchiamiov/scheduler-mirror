@@ -104,6 +104,8 @@ create table scheduleitem (
     endTime integer not null,
     dayPatternID,
     sectionNum integer not null,
+    isPlaced tinyint(1) not null,
+    isConflicted tinyint(1) not null,
     unique (docID, courseID, sectionNum),
     foreign key (instID) references instructors(id),
     foreign key (locID) references location(id),

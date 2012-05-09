@@ -119,7 +119,9 @@ public class SQLdb implements IDatabase {
 					new Table.Column("startTime", Integer.class),
 					new Table.Column("endTime", String.class),
 					new Table.Column("dayPatternID", String.class),
-					new Table.Column("sectionNum", String.class)
+					new Table.Column("sectionNum", String.class),
+					new Table.Column("isPlaced", Boolean.class),
+					new Table.Column("isConflicted", Boolean.class)
 	});
 	Table<SQLLabAssociation> labassociationsTable = new Table<SQLLabAssociation>(SQLLabAssociation.class, "labassociations",
 			new Table.Column[] {
@@ -434,11 +436,16 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public IDBUser findUserByUsername(String username) throws DatabaseException {
-		IDBUser result;
+		List<SQLUser> result;
 		HashMap<String, Object> wheres = new HashMap<String, Object>();
 		wheres.put("username", username);
-		result = userdataTable.select(wheres).get(0);
-		return result;
+		
+		result = userdataTable.select(wheres);
+		
+		if (result.size() == 0)
+			throw new DatabaseException("No user found in SQLdb.findUserByUsername");
+		
+		return result.get(0);
 	}
 
 	@Override
@@ -470,21 +477,28 @@ public class SQLdb implements IDatabase {
 	@Override
 	public Collection<IDBDocument> findAllDocuments() throws DatabaseException {
 		ArrayList<IDBDocument> result = new ArrayList<IDBDocument>();
-		documentTable.selectAll();
+
 		for(SQLDocument docItem : documentTable.selectAll())
 			result.add(docItem);
+		
+		if (result.size() == 0) 
+			throw new DatabaseException("No documents found in SQLdb.findAllDocuments");
 		
 		return result;
 	}
 
 
 	@Override
-	public IDBDocument findDocumentByID(int id) throws DatabaseException {		
-		IDBDocument result;
+	public IDBDocument findDocumentByID(int id) throws DatabaseException {	
+		List<SQLDocument> result;
 		HashMap<String, Object> wheres = new HashMap<String, Object>();
 		wheres.put("id", id);
-		result = documentTable.select(wheres).get(0);
-		return result;
+		result = documentTable.select(wheres);
+		
+		if (result.size() == 0)
+			throw new DatabaseException("No document found in SQLdb.findDocumentByID");
+
+		return result.get(0);
 	}
 
 
@@ -605,14 +619,17 @@ public class SQLdb implements IDatabase {
 		return ret;
 	}
 
-
-	//We can't have this method, ScheduleID isn't enough to identify a Schedule
 	@Override
 	public IDBSchedule findScheduleByID(int id) throws DatabaseException {
-		SQLDocument ret;
+		List<SQLDocument> ret;
 		HashMap<String, Object> wheres = new HashMap<String, Object>();
+		wheres.put("id", id);	
 		
-		return null; //documentTable.select(wheres);
+		ret = documentTable.select(wheres);
+		
+		if (ret.size() == 0)
+			throw new DatabaseException("No schedule found in SQLdb.findScheduleByID");
+		return ret.get(0);
 	}
 
 
@@ -630,19 +647,18 @@ public class SQLdb implements IDatabase {
 		
 	}
 
-	/**
-	 * What is this even supposed to do?
-	 */
 	@Override
 	public void updateSchedule(IDBSchedule schedule) throws DatabaseException {
+		SQLDocument sched = (SQLDocument) schedule;
 		
+		documentTable.update(new Object[] {sched.getName(), sched.isTrashed(), sched.getStartHalfHour(), 
+				sched.getEndHalfHour()}, sched.getID());
 	}
 
 
 	@Override
 	public void deleteSchedule(IDBSchedule schedule) throws DatabaseException {
-		// TODO Auto-generated method stub
-		
+		documentTable.delete(schedule.getID());
 	}
 
 
@@ -657,6 +673,9 @@ public class SQLdb implements IDatabase {
 		
 		for(SQLScheduleItem schedItem : scheduleItemTable.select(wheres))
 			result.add(schedItem);
+		
+		if (result.size() == 0)
+			throw new DatabaseException("No scheduleItems found in SQLdb.findScheduleItemsBySchedule");
 		
 		return result;
 	}
@@ -681,8 +700,16 @@ public class SQLdb implements IDatabase {
 	@Override
 	public IDBScheduleItem findScheduleItemByID(int id)
 			throws DatabaseException {
-		// TODO Auto-generated method stub
-		return null;
+		List<SQLScheduleItem> result;
+		HashMap<String, Object> wheres = new HashMap<String, Object>();
+		wheres.put("id", id);
+		
+		result = scheduleItemTable.select(wheres);
+		
+		if (result.size() == 0)
+			throw new DatabaseException("No scheduleItems found in SQLdb.findScheduleItemsBySchedule");
+		
+		return result.get(0);
 	}
 
 
@@ -690,33 +717,31 @@ public class SQLdb implements IDatabase {
 	public IDBScheduleItem assembleScheduleItem(int section, Set<Day> days,
 			int startHalfHour, int endHalfHour, boolean isPlaced,
 			boolean isConflicted) throws DatabaseException {
-		// TODO Auto-generated method stub
-		return null;
+		return new SQLScheduleItem(null, null, null, null, null, startHalfHour, endHalfHour, null,
+				section, isConflicted, isPlaced, days);
 	}
 
-
+	//TALK TO EVAN ABOUT THIS!!!
 	@Override
 	public void insertScheduleItem(IDBSchedule schedule, IDBCourse course,
 			IDBInstructor instructor, IDBLocation location, IDBScheduleItem item)
 			throws DatabaseException {
-		// TODO Auto-generated method stub
-		
+		scheduleItemTable.insert(null);	
 	}
 
 
 	@Override
 	public void updateScheduleItem(IDBScheduleItem schedule)
 			throws DatabaseException {
-		// TODO Auto-generated method stub
-		
+		SQLScheduleItem sched = (SQLScheduleItem) schedule;
+		//scheduleItemTable.update(new Object[] {sched, id)	
 	}
 
 
 	@Override
 	public void deleteScheduleItem(IDBScheduleItem schedule)
 			throws DatabaseException {
-		// TODO Auto-generated method stub
-		
+		scheduleItemTable.delete(schedule.getID());
 	}
 
 
@@ -817,8 +842,7 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public void deleteLocation(IDBLocation location) throws DatabaseException {
-		// TODO Auto-generated method stub
-		
+		locationTable.delete(location.getID());
 	}
 
 
@@ -867,15 +891,15 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public void updateCourse(IDBCourse course) throws DatabaseException {
-		// TODO Auto-generated method stub
+		SQLCourse sqlcourse = (SQLCourse) course;
 		
+		//courseTable.update(new Object[] {sqlcourse.get, id)
 	}
 
 
 	@Override
 	public void deleteCourse(IDBCourse course) throws DatabaseException {
-		// TODO Auto-generated method stub
-		
+		courseTable.delete(course.getID());
 	}
 
 

@@ -7,9 +7,12 @@ import scheduler.model.db.IDBScheduleItem;
 
 public class SQLScheduleItem extends SQLObject implements IDBScheduleItem {
 	Integer id, docID, instID, locID, courseID, startTime, endTime, dayPatternID, sectionNum;
+	Boolean isConflicted, isPlaced;
+	Set<Day> days;
 	
-	public SQLScheduleItem(Integer id, Integer docID, Integer instID, Integer locID, Integer courseID, Integer startTime, Integer endTime, Integer dayPatternID, Integer sectionNum) {
-
+	public SQLScheduleItem(Integer id, Integer docID, Integer instID, Integer locID, Integer courseID, 
+			Integer startTime, Integer endTime, Integer dayPatternID, Integer sectionNum, Boolean isConflicted, 
+			Boolean isPlaced, Set<Day> days) {
 		super(id);
 		this.id = id;
 		this.docID = docID;
@@ -20,6 +23,17 @@ public class SQLScheduleItem extends SQLObject implements IDBScheduleItem {
 		this.endTime = endTime;
 		this.dayPatternID = dayPatternID;
 		this.sectionNum = sectionNum;
+		this.isConflicted = isConflicted;
+		this.isPlaced = isPlaced;
+		this.days = days;
+	}
+	 
+	public Integer getDocID() {
+		return docID;
+	}
+	
+	public void setDocID(Integer docID) {
+		this.docID = docID;
 	}
 
 	@Override
@@ -34,13 +48,12 @@ public class SQLScheduleItem extends SQLObject implements IDBScheduleItem {
 
 	@Override
 	public Set<Day> getDays() {
-		// TODO Auto-generated method stub
-		return null;
+		return days;
 	}
 
 	@Override
 	public void setDays(Set<Day> days) {
-		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
@@ -65,29 +78,21 @@ public class SQLScheduleItem extends SQLObject implements IDBScheduleItem {
 
 	@Override
 	public boolean isPlaced() {
-			// TODO Auto-generated method stub
-			return false;
+		return isPlaced;
 	}
 
 	@Override
 	public void setIsPlaced(boolean placed) {
-		// TODO Auto-generated method stub
-		
+		isPlaced = placed;
 	}
 
 	@Override
 	public boolean isConflicted() {
-		// TODO Auto-generated method stub
-		return false;
+		return isConflicted;
 	}
 
 	@Override
 	public void setIsConflicted(boolean conflicted) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	
-	
-	
+		isConflicted = conflicted;
+	}	
 }
