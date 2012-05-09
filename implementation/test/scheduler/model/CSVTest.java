@@ -126,7 +126,7 @@ public abstract class CSVTest extends ModelTestCase {
 		final String exportOutputPath = "test/scheduler/model/CSVExportResult/";
 
 		Model model = new Model();
-		model.createAndInsertDocumentWithTBAStaffAndSchedule(
+		model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe(
 				"Doc" + numberOfItems, 14, 44).insert();
 		Document doc = model.findAllDocuments().iterator().next();
 
@@ -518,7 +518,7 @@ public abstract class CSVTest extends ModelTestCase {
 		try {
 			// Model and Document setup
 			Model model = new Model();
-			model.createAndInsertDocumentWithTBAStaffAndSchedule(
+			model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe(
 					"Doc" + testCase, 14, 44).insert();
 			Document doc = model.findAllDocuments().iterator().next();
 

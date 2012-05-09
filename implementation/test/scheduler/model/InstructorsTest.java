@@ -17,7 +17,7 @@ public abstract class InstructorsTest extends ModelTestCase {
 	public void testTransientsNotInserted() throws DatabaseException {
 		Model model = createBlankModel();
 		
-		Document doc = model.createAndInsertDocumentWithTBAStaffAndSchedule("doc", START_HALF_HOUR, END_HALF_HOUR);
+		Document doc = model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe("doc", START_HALF_HOUR, END_HALF_HOUR);
 		model.createTransientInstructor("Evan", "Ovadia", "eovadia", "20", true);
 		
 		assertEquals(model.findInstructorsForDocument(doc).size(), 0);
@@ -29,7 +29,7 @@ public abstract class InstructorsTest extends ModelTestCase {
 		int instructorID;
 		
 		{
-			Document doc = model.createAndInsertDocumentWithTBAStaffAndSchedule("doc", START_HALF_HOUR, END_HALF_HOUR);
+			Document doc = model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe("doc", START_HALF_HOUR, END_HALF_HOUR);
 			instructorID = model.createTransientInstructor("Evan", "Ovadia", "eovadia", "20", true)
 					.setDocument(doc).insert()
 					.getID();
@@ -48,7 +48,7 @@ public abstract class InstructorsTest extends ModelTestCase {
 		int instructorID;
 		
 		{
-			Document doc = model.createAndInsertDocumentWithTBAStaffAndSchedule("doc", START_HALF_HOUR, END_HALF_HOUR);
+			Document doc = model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe("doc", START_HALF_HOUR, END_HALF_HOUR);
 			
 			int[][] timePrefs = ModelTestUtility.createSampleTimePreferences(doc);
 			
@@ -72,7 +72,7 @@ public abstract class InstructorsTest extends ModelTestCase {
 		int instructorID;
 		
 		{
-			doc = model.createAndInsertDocumentWithTBAStaffAndSchedule("doc", START_HALF_HOUR, END_HALF_HOUR);
+			doc = model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe("doc", START_HALF_HOUR, END_HALF_HOUR);
 			
 			instructorID = model.createTransientInstructor("Evan", "Ovadia", "eovadia", "20", true)
 					.setTimePreferences(ModelTestUtility.createSampleTimePreferences(doc))
@@ -92,7 +92,7 @@ public abstract class InstructorsTest extends ModelTestCase {
 		int instructorID;
 		
 		{
-			Document doc = model.createAndInsertDocumentWithTBAStaffAndSchedule("doc", START_HALF_HOUR, END_HALF_HOUR);
+			Document doc = model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe("doc", START_HALF_HOUR, END_HALF_HOUR);
 			Instructor ins = model.createTransientInstructor("Evan", "Ovadia", "eovadia", "20", true)
 					.setTimePreferences(Instructor.createDefaultTimePreferences())
 					.setDocument(doc).insert();
@@ -118,7 +118,7 @@ public abstract class InstructorsTest extends ModelTestCase {
 		int instructorID;
 		
 		{
-			doc = model.createAndInsertDocumentWithTBAStaffAndSchedule("doc", START_HALF_HOUR, END_HALF_HOUR);
+			doc = model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe("doc", START_HALF_HOUR, END_HALF_HOUR);
 			Instructor ins = model.createTransientInstructor("Evan", "Ovadia", "eovadia", "20", true)
 					.setTimePreferences(Instructor.createDefaultTimePreferences())
 					.setDocument(doc).insert();
@@ -142,7 +142,7 @@ public abstract class InstructorsTest extends ModelTestCase {
 
 		Set<Integer> instructorIDs = new HashSet<Integer>();
 		
-		Document doc = model.createAndInsertDocumentWithTBAStaffAndSchedule("doc", START_HALF_HOUR, END_HALF_HOUR);
+		Document doc = model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe("doc", START_HALF_HOUR, END_HALF_HOUR);
 		instructorIDs.add(
 				model.createTransientInstructor("Evan", "Ovadia", "eovadia", "20", true)
 				.setTimePreferences(Instructor.createDefaultTimePreferences())
@@ -168,7 +168,7 @@ public abstract class InstructorsTest extends ModelTestCase {
 		{
 			Set<Integer> instructorIDs1 = new HashSet<Integer>();
 			
-			Document doc1 = model.createAndInsertDocumentWithTBAStaffAndSchedule("doc1", START_HALF_HOUR, END_HALF_HOUR);
+			Document doc1 = model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe("doc1", START_HALF_HOUR, END_HALF_HOUR);
 			instructorIDs1.add(
 					model.createTransientInstructor("Evan", "Ovadia", "eovadia", "20", true)
 					.setTimePreferences(Instructor.createDefaultTimePreferences())
@@ -191,7 +191,7 @@ public abstract class InstructorsTest extends ModelTestCase {
 		{
 			Set<Integer> instructorIDs2 = new HashSet<Integer>();
 			
-			Document doc2 = model.createAndInsertDocumentWithTBAStaffAndSchedule("doc2", START_HALF_HOUR, END_HALF_HOUR);
+			Document doc2 = model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe("doc2", START_HALF_HOUR, END_HALF_HOUR);
 			instructorIDs2.add(
 					model.createTransientInstructor("Baby", "Seals", "bseals", "20", true)
 					.setTimePreferences(Instructor.createDefaultTimePreferences())

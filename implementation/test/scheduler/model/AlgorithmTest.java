@@ -17,7 +17,7 @@ public abstract class AlgorithmTest extends ModelTestCase {
 	public static void testThing() throws DatabaseException, BadInstructorDataException {
 		Model model = new Model();
 		
-		Document doc = model.createAndInsertDocumentWithTBAStaffAndSchedule("doc", START_HALF_HOUR, END_HALF_HOUR);
+		Document doc = model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe("doc", START_HALF_HOUR, END_HALF_HOUR);
 		
 		Schedule schedule = model.createTransientSchedule().setDocument(doc).insert();
 		

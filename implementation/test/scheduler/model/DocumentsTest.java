@@ -19,21 +19,21 @@ public abstract class DocumentsTest extends ModelTestCase {
 	public void testInsertDocument() throws DatabaseException {
 		Model model = createBlankModel();
 
-		model.createAndInsertDocumentWithTBAStaffAndSchedule("doc1", 14, 44);
+		model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe("doc1", 14, 44);
 	}
 
 	public void testInsertDocuments() throws DatabaseException {
 		Model model = createBlankModel();
 
-		model.createAndInsertDocumentWithTBAStaffAndSchedule("doc1", START_HALF_HOUR, END_HALF_HOUR);
-		model.createAndInsertDocumentWithTBAStaffAndSchedule("doc2", START_HALF_HOUR, END_HALF_HOUR);
+		model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe("doc1", START_HALF_HOUR, END_HALF_HOUR);
+		model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe("doc2", START_HALF_HOUR, END_HALF_HOUR);
 	}
 
 	public void testInsertAndFindDocument() throws DatabaseException {
 		Model model = createBlankModel();
 
 		int documentID = 
-				model.createAndInsertDocumentWithTBAStaffAndSchedule("doc1", START_HALF_HOUR, END_HALF_HOUR)
+				model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe("doc1", START_HALF_HOUR, END_HALF_HOUR)
 				.getID();
 
 		Document foundDocument = model.findDocumentByID(documentID);
@@ -47,7 +47,7 @@ public abstract class DocumentsTest extends ModelTestCase {
 		int documentID;
 
 		{
-			Document document = model.createAndInsertDocumentWithTBAStaffAndSchedule("doc1", START_HALF_HOUR, END_HALF_HOUR);
+			Document document = model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe("doc1", START_HALF_HOUR, END_HALF_HOUR);
 			document.setName("doc1renamed");
 			document.setStartHalfHour(10);
 			document.setEndHalfHour(20);
@@ -70,7 +70,7 @@ public abstract class DocumentsTest extends ModelTestCase {
 		int documentID;
 
 		{
-			Document document = model.createAndInsertDocumentWithTBAStaffAndSchedule("doc1", START_HALF_HOUR, END_HALF_HOUR);
+			Document document = model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe("doc1", START_HALF_HOUR, END_HALF_HOUR);
 			documentID = document.getID();
 			document.delete();
 		}
@@ -108,7 +108,7 @@ public abstract class DocumentsTest extends ModelTestCase {
 	public void testScheduleConsistancy() throws DatabaseException
 	{
 		Model model = createBlankModel();
-		Document predocument = model.createAndInsertDocumentWithTBAStaffAndSchedule("doc1", START_HALF_HOUR, END_HALF_HOUR);
+		Document predocument = model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe("doc1", START_HALF_HOUR, END_HALF_HOUR);
 		int documentID = predocument.getID();
 		
 		Course precourse = ModelTestUtility.createCourse(model).setDocument(predocument).insert();
@@ -128,7 +128,7 @@ public abstract class DocumentsTest extends ModelTestCase {
 	}
 
 	private Document insertFullDocumentIntoModel(Model model) throws DatabaseException {
-		Document document = model.createAndInsertDocumentWithTBAStaffAndSchedule("doc1", START_HALF_HOUR, END_HALF_HOUR);
+		Document document = model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe("doc1", START_HALF_HOUR, END_HALF_HOUR);
 		ModelTestUtility.createCourse(model).setDocument(document).insert();
 		ModelTestUtility.createBasicInstructor(model).setDocument(document).insert();
 		ModelTestUtility.createLocation(model).setDocument(document).insert();
@@ -141,10 +141,10 @@ public abstract class DocumentsTest extends ModelTestCase {
 
 		Set<Integer> docIDs = new HashSet<Integer>();
 
-		docIDs.add(model.createAndInsertDocumentWithTBAStaffAndSchedule("doc1", START_HALF_HOUR, END_HALF_HOUR)
+		docIDs.add(model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe("doc1", START_HALF_HOUR, END_HALF_HOUR)
 				.getID());
 		docIDs.add(
-				model.createAndInsertDocumentWithTBAStaffAndSchedule("doc2", START_HALF_HOUR, END_HALF_HOUR)
+				model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe("doc2", START_HALF_HOUR, END_HALF_HOUR)
 				.getID());
 
 		Collection<Document> docs = model.findAllDocuments();
@@ -158,7 +158,7 @@ public abstract class DocumentsTest extends ModelTestCase {
 	public void testDocumentTBALocation() throws DatabaseException {
 		Model model = createBlankModel();
 		
-		int documentID = model.createAndInsertDocumentWithTBAStaffAndSchedule("doc", 14, 44).getID();
+		int documentID = model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe("doc", 14, 44).getID();
 		
 		model.clearCache();
 		
@@ -168,7 +168,7 @@ public abstract class DocumentsTest extends ModelTestCase {
 	public void testDocumentStaffInstructor() throws DatabaseException {
 		Model model = createBlankModel();
 		
-		int documentID = model.createAndInsertDocumentWithTBAStaffAndSchedule("doc", 14, 44).getID();
+		int documentID = model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe("doc", 14, 44).getID();
 		
 		model.clearCache();
 		
@@ -226,8 +226,8 @@ public abstract class DocumentsTest extends ModelTestCase {
 		int doc2id;
 		
 		{
-			Document doc1 = model.createAndInsertDocumentWithTBAStaffAndSchedule("doc1", 10, 30);
-			Document doc2 = model.createAndInsertDocumentWithTBAStaffAndSchedule("doc2", 10, 30);
+			Document doc1 = model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe("doc1", 10, 30);
+			Document doc2 = model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe("doc2", 10, 30);
 			doc2.setOriginal(doc1);
 			doc2.update();
 			doc1.update();

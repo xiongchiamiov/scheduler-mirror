@@ -19,7 +19,7 @@ public abstract class InstructorsPreferencesTest extends ModelTestCase {
 		int instructorID;
 		
 		{
-			Document doc = model.createAndInsertDocumentWithTBAStaffAndSchedule("doc", START_HALF_HOUR, END_HALF_HOUR);
+			Document doc = model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe("doc", START_HALF_HOUR, END_HALF_HOUR);
 			
 			int[][] timePrefs = ModelTestUtility.createSampleTimePreferences(doc);
 			
@@ -45,7 +45,7 @@ public abstract class InstructorsPreferencesTest extends ModelTestCase {
 		int courseID2;
 		
 		{
-			Document doc = model.createAndInsertDocumentWithTBAStaffAndSchedule("doc", START_HALF_HOUR, END_HALF_HOUR);
+			Document doc = model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe("doc", START_HALF_HOUR, END_HALF_HOUR);
 
 			courseID1 = model.createTransientCourse("Graphics", "201", "GRC", "10", "20", "2", "LEC", "20", "6", true).setDocument(doc).insert().getID();
 			courseID2 = model.createTransientCourse("Graphics: The Return", "202", "GRC", "10", "20", "2", "LEC", "20", "6", true).setDocument(doc).insert().getID();
@@ -68,7 +68,7 @@ public abstract class InstructorsPreferencesTest extends ModelTestCase {
 
 	public void testUtilityInstructorEquals() throws DatabaseException {
 		Model model = createBlankModel();
-		Document doc = model.createAndInsertDocumentWithTBAStaffAndSchedule("doc", START_HALF_HOUR, END_HALF_HOUR);
+		Document doc = model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe("doc", START_HALF_HOUR, END_HALF_HOUR);
 		
 		int courseID1 = model.createTransientCourse("Graphics", "201", "GRC", "10", "20", "2", "LEC", "20", "6", true).setDocument(doc).insert().getID();
 		int courseID2 = model.createTransientCourse("Graphics: The Return", "202", "GRC", "10", "20", "2", "LEC", "20", "6", true).setDocument(doc).insert().getID();

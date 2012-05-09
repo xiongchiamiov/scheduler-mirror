@@ -19,7 +19,7 @@ public abstract class CoursesTest extends ModelTestCase
    {
       Model model = createBlankModel();
 
-      Document document = model.createAndInsertDocumentWithTBAStaffAndSchedule("doc", START_HALF_HOUR, END_HALF_HOUR);
+      Document document = model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe("doc", START_HALF_HOUR, END_HALF_HOUR);
       model.createTransientCourse("Test", "101", "CSC", "4", "4", "1", "LEC", "60", "6", true);
 
       assertEquals(model.findInstructorsForDocument(document).size(), 0);
@@ -30,7 +30,7 @@ public abstract class CoursesTest extends ModelTestCase
       
       int courseID;
       {
-         Document doc = model.createAndInsertDocumentWithTBAStaffAndSchedule("doc", START_HALF_HOUR, END_HALF_HOUR);
+         Document doc = model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe("doc", START_HALF_HOUR, END_HALF_HOUR);
          courseID = model.createTransientCourse("Test", "101", "CSC", "4", "4", "1",
                "LEC", "60", "6", true).setDocument(doc).insert().getID();
       }
@@ -55,7 +55,7 @@ public abstract class CoursesTest extends ModelTestCase
       int courseID;
       
       {
-         doc = model.createAndInsertDocumentWithTBAStaffAndSchedule("doc", START_HALF_HOUR, END_HALF_HOUR);
+         doc = model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe("doc", START_HALF_HOUR, END_HALF_HOUR);
          courseID = ModelTestUtility.createCourse(model).setDocument(doc).insert().getID();
       }
       
@@ -72,7 +72,7 @@ public abstract class CoursesTest extends ModelTestCase
 	   int labID;
 	   
 	   {
-		   Document doc = model.createAndInsertDocumentWithTBAStaffAndSchedule("doc", START_HALF_HOUR, END_HALF_HOUR);
+		   Document doc = model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe("doc", START_HALF_HOUR, END_HALF_HOUR);
 		   Course lecture = model.createTransientCourse("intro c", "101lec", "csc", "4", "4", "1", "LEC", "30", "6", true).setDocument(doc).insert();
 		   Course lab = model.createTransientCourse("intro c", "101lab", "csc", "4", "4", "1", "LAB", "30", "6", true).setDocument(doc).insert();
 		   lab.setLecture(lecture);
@@ -99,7 +99,7 @@ public abstract class CoursesTest extends ModelTestCase
       int courseID;
       
       {
-         Document doc = model.createAndInsertDocumentWithTBAStaffAndSchedule("doc", START_HALF_HOUR, END_HALF_HOUR);
+         Document doc = model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe("doc", START_HALF_HOUR, END_HALF_HOUR);
          Course course = ModelTestUtility.createCourse(model).setDocument(doc).insert();
          course.setCatalogNumber("999");
          course.setDepartment("NotCSC");
@@ -135,7 +135,7 @@ public abstract class CoursesTest extends ModelTestCase
       int courseID;
       
       {
-         doc = model.createAndInsertDocumentWithTBAStaffAndSchedule("doc", START_HALF_HOUR, END_HALF_HOUR);
+         doc = model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe("doc", START_HALF_HOUR, END_HALF_HOUR);
          Course course = ModelTestUtility.createCourse(model).setDocument(doc).insert();
          courseID = course.getID();
          course.delete();
@@ -157,7 +157,7 @@ public abstract class CoursesTest extends ModelTestCase
 
       Set<Integer> courseIDs = new HashSet<Integer>();
       
-      Document doc = model.createAndInsertDocumentWithTBAStaffAndSchedule("doc", START_HALF_HOUR, END_HALF_HOUR);
+      Document doc = model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe("doc", START_HALF_HOUR, END_HALF_HOUR);
       courseIDs.add(model.createTransientCourse("Test", "101", "CSC", "4", "4", "1",
             "LEC", "60", "6", true).setDocument(doc).insert().getID());
       courseIDs.add(model.createTransientCourse("Test1", "1011", "CSC1", "8", "8", "2",
@@ -177,7 +177,7 @@ public abstract class CoursesTest extends ModelTestCase
       {
          Set<Integer> courseIDs1 = new HashSet<Integer>();
          
-         Document doc1 = model.createAndInsertDocumentWithTBAStaffAndSchedule("doc1", START_HALF_HOUR, END_HALF_HOUR);
+         Document doc1 = model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe("doc1", START_HALF_HOUR, END_HALF_HOUR);
          courseIDs1.add(model.createTransientCourse("Test", "101", "CSC", "4", "4", "1",
                "LEC", "60", "6", true).setDocument(doc1).insert().getID());
          courseIDs1.add(model.createTransientCourse("Test1", "1011", "CSC1", "8", "8", "2",
@@ -194,7 +194,7 @@ public abstract class CoursesTest extends ModelTestCase
       {
          Set<Integer> courseIDs2 = new HashSet<Integer>();
          
-         Document doc2 = model.createAndInsertDocumentWithTBAStaffAndSchedule("doc2", START_HALF_HOUR, END_HALF_HOUR);
+         Document doc2 = model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe("doc2", START_HALF_HOUR, END_HALF_HOUR);
          courseIDs2.add(model.createTransientCourse("2Test", "2101", "2CSC", "24", "24", "21",
                "LEC", "260", "26", true).setDocument(doc2).insert().getID());
          courseIDs2.add(model.createTransientCourse("2Test1", "21011", "2CSC1", "28", "28", "22",

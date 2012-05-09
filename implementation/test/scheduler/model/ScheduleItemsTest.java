@@ -9,7 +9,7 @@ public abstract class ScheduleItemsTest extends ModelTestCase {
 	private Model createModelWithStuff() throws DatabaseException {
 		Model model = createBlankModel();
 		
-		model.createAndInsertDocumentWithTBAStaffAndSchedule("doc", 14, 44);
+		model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe("doc", 14, 44);
 		
 		return model;
 	}

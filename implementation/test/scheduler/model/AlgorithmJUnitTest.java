@@ -24,7 +24,7 @@ public abstract class AlgorithmJUnitTest extends ModelTestCase {
 	public void setUp() throws DatabaseException {
         model = new Model();
 		
-		doc = model.createAndInsertDocumentWithTBAStaffAndSchedule("doc", START_HALF_HOUR, END_HALF_HOUR);
+		doc = model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe("doc", START_HALF_HOUR, END_HALF_HOUR);
 		
 		schedule = model.createTransientSchedule().setDocument(doc).insert();
 		
