@@ -215,6 +215,9 @@ public class CalendarTableView extends SimplePanel {
 		CalendarTableModel model = new CalendarTableModel();
 		
 		for (ScheduleItemGWT item : mScheduleItems) {
+			if (item.getDays() == null)
+				continue;
+			
 			for (DayGWT day : item.getDays()) {
 				CalendarDayModel dayModel = model.get(day);
 				
