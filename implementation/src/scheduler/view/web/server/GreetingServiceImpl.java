@@ -493,7 +493,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	@Override
 	public DocumentGWT createOriginalDocument(String newDocName) {
 		try {
-			Document newOriginalDocument = model.createAndInsertDocumentWithTBAStaffAndSchedule(newDocName, 14, 44);
+			Document newOriginalDocument = model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe(newDocName, 14, 44);
 			
 			int scheduleID = model.findSchedulesForDocument(newOriginalDocument).iterator().next().getID();
 			
