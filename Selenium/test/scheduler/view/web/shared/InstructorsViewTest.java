@@ -25,6 +25,8 @@ import scheduler.view.web.shared.Selenium.WebUtility.PopupWaiter;
 public class InstructorsViewTest extends TestCase {
 	private FirefoxDriver driver;
 	private HashMap<String, String> courseNames = new HashMap<String, String>();
+	private static final String URL = "http://scheduler.csc.calpoly.edu/dev";
+	private static final String schedName = "InstructorsViewTest";
 	
 	/**
 	 * sets up the test class and initializes the Firefox driver
@@ -32,8 +34,7 @@ public class InstructorsViewTest extends TestCase {
 	public void setUp()
 	{
 		this.driver = new FirefoxDriver();
-		driver.get("http://localhost:8080/dev/");
-//		driver.get("http://scheduler.csc.calpoly.edu/dev");
+		driver.get(URL);
 		
 		this.login();
 		
@@ -65,16 +66,16 @@ public class InstructorsViewTest extends TestCase {
 		
 		PopupWaiter popupWaiter = new WebUtility.PopupWaiter(driver);
 		
-		WebElement first_doc = this.getElementBySmartGWTID("sc_document_0");
-		if(first_doc == null)
+		WebElement document = WebUtility.getDocumentByName(driver, schedName);
+		if(document == null)
 		{
 			this.addNewDocument();
 		}
 		else
 		{
-			first_doc.click();
+			document.click();
 		}
-		
+	
 		// change broswer tab here
 		String newWindowHandle = popupWaiter.waitForPopup();
 		driver.switchTo().window(newWindowHandle);
@@ -457,7 +458,7 @@ public class InstructorsViewTest extends TestCase {
 		this.waitMillis(1000);
 		
 		WebElement docName = driver.findElement(By.id("s_createBox"));
-		docName.sendKeys("first document");
+		docName.sendKeys(schedName);
 
 		driver.findElement(By.id("s_createNamedDocBtn")).click();
 	}

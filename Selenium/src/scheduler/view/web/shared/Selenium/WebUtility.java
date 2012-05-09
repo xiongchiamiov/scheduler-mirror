@@ -339,4 +339,21 @@ public abstract class WebUtility {
 
 		Thread.sleep(500);
 	}
+	
+	/**
+	 * this only works when you're in the document overview
+	 * @return: null if there is no document with the specified name
+	 */
+	public static WebElement getDocumentByName(WebDriver driver, String name)
+	{
+		try
+		{
+			return driver.findElement(By.xpath(
+				"((//td[@class='inAppLink homeDocumentLink'][text()='"+name+"']))"));
+		}
+		catch(Exception e)
+		{
+			return null;
+		}
+	}
 }
