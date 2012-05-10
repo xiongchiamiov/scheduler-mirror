@@ -6,6 +6,7 @@ import scheduler.view.web.shared.ServerResourcesResponse;
 import scheduler.view.web.shared.SynchronizeRequest;
 import scheduler.view.web.shared.SynchronizeResponse;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 // Called "Document"LocationsCache because it only deals with the Locations for a given document.
@@ -16,9 +17,11 @@ public class DocumentLocationsCache extends ResourceCache<LocationGWT> {
 	
 	public DocumentLocationsCache(boolean deferredSynchronizationEnabled, GreetingServiceAsync service, int sessionID, int workingDocumentRealID, ServerResourcesResponse<LocationGWT> initialLocations) {
 		super("doc" + workingDocumentRealID + "locations", deferredSynchronizationEnabled, initialLocations);
+		
 		this.service = service;
 		this.sessionID = sessionID;
 		this.workingDocumentRealID = workingDocumentRealID;
+
 	}
 	
 	@Override

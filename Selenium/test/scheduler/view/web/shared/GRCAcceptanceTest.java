@@ -41,9 +41,11 @@ public abstract class GRCAcceptanceTest extends DefaultSelTestCase {
 		
 		Integer existingDocumentIndex = null;
 		for (int i = 0; existingDocumentIndex == null && i < existingDocumentsNames.size(); i++) {
+			System.out.println("Existing document index " + i + " has name " + existingDocumentsNames.get(i).getText().trim() + " comparing to " + documentName);
 			if (existingDocumentsNames.get(i).getText().trim().equalsIgnoreCase(documentName))
 				existingDocumentIndex = i;
 		}
+		System.out.println("Found document " + documentName + " at: " + existingDocumentIndex);
 		
 		if (existingDocumentIndex != null) {
 			By rowXPath = By.xpath("//table[@class='listTable']/tbody/tr[@role='listitem'][" + (existingDocumentIndex + 1) + "]");

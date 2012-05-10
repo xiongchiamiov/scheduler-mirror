@@ -39,6 +39,7 @@ public class CachedOpenWorkingCopyDocument {
 			GreetingServiceAsync service,
 			int sessionID,
 			CompleteWorkingCopyDocumentGWT completeDocument) {
+		
 		this.service = service;
 		this.sessionID = sessionID;
 		
@@ -50,12 +51,10 @@ public class CachedOpenWorkingCopyDocument {
 		this.localWorkingDocument.setChooseForMeInstructorID(null);
 		this.localWorkingDocument.setChooseForMeLocationID(null);
 		
-		
 		this.courses = new DocumentCoursesCache(
 				deferredSynchronizationEnabled,
 				service, sessionID, realWorkingDocument.getRealID(),
 				completeDocument.courses);
-		
 		
 		this.instructors = new DocumentInstructorsCache(
 				deferredSynchronizationEnabled,
@@ -65,14 +64,12 @@ public class CachedOpenWorkingCopyDocument {
 		this.localWorkingDocument.setStaffInstructorID(this.instructors.realIDToLocalID(this.realWorkingDocument.getStaffInstructorID()));
 		this.localWorkingDocument.setChooseForMeInstructorID(this.instructors.realIDToLocalID(this.realWorkingDocument.getChooseForMeInstructorID()));
 		
-		
 		this.locations = new DocumentLocationsCache(
 				deferredSynchronizationEnabled,
 				service, sessionID, realWorkingDocument.getRealID(),
 				completeDocument.locations);
 		this.localWorkingDocument.setTBALocationID(this.locations.realIDToLocalID(this.realWorkingDocument.getTBALocationID()));
-		this.localWorkingDocument.setChooseForMeLocationID(this.instructors.realIDToLocalID(this.realWorkingDocument.getChooseForMeLocationID()));
-		
+		this.localWorkingDocument.setChooseForMeLocationID(this.locations.realIDToLocalID(this.realWorkingDocument.getChooseForMeLocationID()));
 		
 		this.scheduleItems = new DocumentScheduleItemsCache(
 				deferredSynchronizationEnabled,

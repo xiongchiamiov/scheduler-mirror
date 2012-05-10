@@ -6,6 +6,7 @@ import scheduler.view.web.client.UnsavedDocumentStrategy;
 import scheduler.view.web.client.calendar.ScheduleEditWidget;
 import scheduler.view.web.shared.DocumentGWT;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class CalendarView extends VerticalPanel {

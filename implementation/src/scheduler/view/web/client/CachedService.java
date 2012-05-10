@@ -9,6 +9,7 @@ import scheduler.view.web.shared.OriginalDocumentGWT;
 import scheduler.view.web.shared.ServerResourcesResponse;
 
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class CachedService {
@@ -22,6 +23,7 @@ public class CachedService {
 	
 	public CachedService(boolean deferredSynchronizationEnabled, GreetingServiceAsync service, int sessionID, ServerResourcesResponse<OriginalDocumentGWT> initialDocuments) {
 		this.deferredSynchronizationEnabled = deferredSynchronizationEnabled;
+		
 		this.mService = service;
 		this.sessionID = sessionID;
 		
@@ -52,7 +54,9 @@ public class CachedService {
 			
 			@Override
 			public void onSuccess(CompleteWorkingCopyDocumentGWT completeWorkingDocument) {
-				CachedOpenWorkingCopyDocument openedDocument = new CachedOpenWorkingCopyDocument(deferredSynchronizationEnabled, mService, sessionID, completeWorkingDocument); 
+
+				CachedOpenWorkingCopyDocument openedDocument = new CachedOpenWorkingCopyDocument(deferredSynchronizationEnabled, mService, sessionID, completeWorkingDocument);
+				
 				workingCopyDocumentsByOriginalDocumentID.put(originalDocumentID, openedDocument);
 				
 				callback.onSuccess(openedDocument);

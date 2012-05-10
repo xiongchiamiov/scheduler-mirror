@@ -117,6 +117,7 @@ public class Scheduler implements EntryPoint, UpdateHeaderStrategy
 				
 				@Override
 				public void onSuccess(LoginResponse response) {
+					
 					final CachedService cachedService = new CachedService(true, service, response.sessionID, response.initialOriginalDocuments);
 					
 					if (response.isAdmin) {

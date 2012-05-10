@@ -115,8 +115,7 @@ public class HomeTab extends Tab {
 						
 						Label workingLabel = new Label(" (being edited)");
 	
-						// for some reason two separate calls didnt work here, it wouldnt pick up the first one. -eo
-						workingLabel.setStyleName("inAppLink homeDocumentLink");
+						workingLabel.setStyleName("inAppLink");
 	
 						workingLabel.setOverflow(Overflow.VISIBLE);
 						workingLabel.setAutoWidth();

@@ -55,7 +55,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
  */
 @SuppressWarnings("serial")
 public class GreetingServiceImpl extends RemoteServiceServlet implements GreetingService {
-	private static final boolean LOG_ENTERING_AND_EXITING_CALLS = false;
+	private static final boolean LOG_ENTERING_AND_EXITING_CALLS = true;
 	
 	Properties readPropertiesFile() throws IOException {
 		Properties properties = new Properties();
@@ -325,7 +325,6 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	private CourseGWT addCourseToDocument(Document document, CourseGWT course) {
 		if (LOG_ENTERING_AND_EXITING_CALLS)
 			System.out.println("Begin GreetingServiceImpl.addCourseToDocument(doc " + document.getID() + ")");
-//		System.out.println("Called addCourse with " + course.getDept() + " " + course.getCatalogNum());
 		
 		assert (course.getID() == null);
 		
@@ -403,12 +402,18 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	
 	private void removeCourse(Integer courseID) {
 		try {
+			if (LOG_ENTERING_AND_EXITING_CALLS)
+				System.out.println("Begin GreetingServiceImpl.removeCourse(course " + courseID + ")");
+			
 			Course course = model.findCourseByID(courseID);
 			assert (course.getDocument().getOriginal() != null);
 			course.delete();
 			
 			sanityCheck();
 			flushToFileSystem();
+
+			if (LOG_ENTERING_AND_EXITING_CALLS)
+				System.out.println("End GreetingServiceImpl.removeCourse(course " + courseID + ")");
 		}
 		catch (DatabaseException e) {
 			throw new RuntimeException(e);
@@ -433,6 +438,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		assert (instructor.getID() == null);
 		
 		try {
+			if (LOG_ENTERING_AND_EXITING_CALLS)
+				System.out.println("Begin GreetingServiceImpl.addIntructorToDocument(doc " + documentID + " instructor username " + instructor.getUsername() + ")");
+			
 			Document document = model.findDocumentByID(documentID);
 			assert (document.getOriginal() != null);
 			assert(document.getStaffInstructor() != null);
@@ -444,6 +452,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			
 			sanityCheck();
 			flushToFileSystem();
+
+			if (LOG_ENTERING_AND_EXITING_CALLS)
+				System.out.println("End GreetingServiceImpl.addIntructorToDocument(doc " + documentID + " instructor username " + instructor.getUsername() + ")");
 			
 			return instructor;
 		}
@@ -454,6 +465,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	
 	private void editInstructor(InstructorGWT source) {
 		try {
+			if (LOG_ENTERING_AND_EXITING_CALLS)
+				System.out.println("Begin GreetingServiceImpl.editInstructor(instructor username " + source.getUsername() + ")");
+			
 			Instructor result = model.findInstructorByID(source.getID());
 			assert (result.getDocument().getOriginal() != null);
 			assert (result.getID() > 0);
@@ -462,6 +476,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			
 			sanityCheck();
 			flushToFileSystem();
+
+			if (LOG_ENTERING_AND_EXITING_CALLS)
+				System.out.println("End GreetingServiceImpl.editInstructor(instructor username " + source.getUsername() + ")");
 		}
 		catch (DatabaseException e) {
 			throw new RuntimeException(e);
@@ -470,6 +487,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	
 	private ServerResourcesResponse<InstructorGWT> getInstructorsForDocument(int documentID) {
 		try {
+			if (LOG_ENTERING_AND_EXITING_CALLS)
+				System.out.println("Begin GreetingServiceImpl.getInstructorsForDocument(doc " + documentID +")");
+			
 			List<InstructorGWT> result = new LinkedList<InstructorGWT>();
 			Document document = model.findDocumentByID(documentID);
 			assert (document.getOriginal() != null);
@@ -483,6 +503,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			
 			sanityCheck();
 			
+			if (LOG_ENTERING_AND_EXITING_CALLS)
+				System.out.println("End GreetingServiceImpl.getInstructorsForDocument(doc " + documentID +")");
+			
 			return new ServerResourcesResponse<InstructorGWT>(result);
 		}
 		catch (DatabaseException e) {
@@ -492,12 +515,18 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	
 	private void removeInstructor(Integer instructorID) {
 		try {
+			if (LOG_ENTERING_AND_EXITING_CALLS)
+				System.out.println("Begin GreetingServiceImpl.removeInstructor(instructor " + instructorID +")");
+			
 			Instructor instructor = model.findInstructorByID(instructorID);
 			assert (instructor.getDocument().getOriginal() != null);
 			instructor.delete();
 			
 			sanityCheck();
 			flushToFileSystem();
+
+			if (LOG_ENTERING_AND_EXITING_CALLS)
+				System.out.println("End GreetingServiceImpl.removeInstructor(instructor " + instructorID +")");
 		}
 		catch (DatabaseException e) {
 			throw new RuntimeException(e);
@@ -508,6 +537,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		assert (location.getID() == null);
 		
 		try {
+			if (LOG_ENTERING_AND_EXITING_CALLS)
+				System.out.println("Begin GreetingServiceImpl.addLocationToDocument(doc " + documentID +" location room " + location.getRoom() + ")");
+			
 			Document document = model.findDocumentByID(documentID);
 			assert (document.getOriginal() != null);
 			assert(document.getStaffInstructor() != null);
@@ -522,6 +554,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			
 			sanityCheck();
 			flushToFileSystem();
+
+			if (LOG_ENTERING_AND_EXITING_CALLS)
+				System.out.println("End GreetingServiceImpl.addLocationToDocument(doc " + documentID +" location room " + location.getRoom() + ")");
 			
 			return location;
 		}
@@ -532,6 +567,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	
 	private void editLocation(LocationGWT source) {
 		try {
+			if (LOG_ENTERING_AND_EXITING_CALLS)
+				System.out.println("Begin GreetingServiceImpl.editLocation(location room " + source.getRoom() + ")");
+			
 			Location result = model.findLocationByID(source.getID());
 			assert (result.getID() > 0);
 			assert (result.getDocument().getOriginal() != null);
@@ -540,6 +578,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			
 			sanityCheck();
 			flushToFileSystem();
+
+			if (LOG_ENTERING_AND_EXITING_CALLS)
+				System.out.println("End GreetingServiceImpl.editLocation(location room " + source.getRoom() + ")");
 		}
 		catch (DatabaseException e) {
 			throw new RuntimeException(e);
@@ -548,6 +589,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	
 	private ServerResourcesResponse<LocationGWT> getLocationsForDocument(int documentID) {
 		try {
+			if (LOG_ENTERING_AND_EXITING_CALLS)
+				System.out.println("Begin GreetingServiceImpl.getLocationsForDocument(doc " + documentID + ")");
+			
 			Document document = model.findDocumentByID(documentID);
 			assert (document.getOriginal() != null);
 			assert(document.getStaffInstructor() != null);
@@ -559,6 +603,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 				result.add(Conversion.locationToGWT(location));
 			
 			sanityCheck();
+
+			if (LOG_ENTERING_AND_EXITING_CALLS)
+				System.out.println("End GreetingServiceImpl.getLocationsForDocument(doc " + documentID + ")");
 			
 			return new ServerResourcesResponse<LocationGWT>(result);
 		}
@@ -569,6 +616,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	
 	private void removeLocation(Integer locationID) {
 		try {
+			if (LOG_ENTERING_AND_EXITING_CALLS)
+				System.out.println("Begin GreetingServiceImpl.removeLocation(location " + locationID + ")");
+			
 			Location location = model.findLocationByID(locationID);
 			assert (location.getDocument().getOriginal() != null);
 			location.delete();
@@ -584,6 +634,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	@Override
 	public LoginResponse loginAndGetAllOriginalDocuments(String username) throws InvalidLoginException {
 		User user = null;
+
+		if (LOG_ENTERING_AND_EXITING_CALLS)
+			System.out.println("Begin GreetingServiceImpl.loginAndGetAllOriginalDocuments(username " + username + ")");
 		
 		try {
 			user = model.findUserByUsername(username);
@@ -602,7 +655,12 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		sanityCheck();
 
 		try {
-			return new LoginResponse(sessionID, user.isAdmin(), getAllOriginalDocuments(sessionID));
+			LoginResponse result = new LoginResponse(sessionID, user.isAdmin(), getAllOriginalDocuments(sessionID));
+
+			if (LOG_ENTERING_AND_EXITING_CALLS)
+				System.out.println("End GreetingServiceImpl.loginAndGetAllOriginalDocuments(username " + username + ")");
+			
+			return result;
 		}
 		catch (SessionClosedFromInactivityExceptionGWT e) {
 			// We just made it, how can it be closed already?
@@ -663,6 +721,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 
 	private OriginalDocumentGWT createOriginalDocument(OriginalDocumentGWT newDocumentGWT) {
 		try {
+			if (LOG_ENTERING_AND_EXITING_CALLS)
+				System.out.println("Begin GreetingServiceImpl.createOriginalDocument(newdocname " + newDocumentGWT.getName() + ")");
+			
 			assert(newDocumentGWT.getID() == null);
 			assert(newDocumentGWT.getStaffInstructorID() == 0);
 			assert(newDocumentGWT.getTBALocationID() == 0);
@@ -675,6 +736,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 
 			sanityCheck();
 			flushToFileSystem();
+
+			if (LOG_ENTERING_AND_EXITING_CALLS)
+				System.out.println("Begin GreetingServiceImpl.createOriginalDocument(newdocname " + newDocumentGWT.getName() + ")");
 			
 			return result;
 		}
@@ -686,6 +750,11 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	@Override
 	public CompleteWorkingCopyDocumentGWT createAndOpenWorkingCopyForOriginalDocument(int sessionID, int originalDocumentID) throws SessionClosedFromInactivityExceptionGWT {
 		try {
+			if (LOG_ENTERING_AND_EXITING_CALLS)
+				System.out.println("Begin GreetingServiceImpl.createAndOpenWorkingCopyForOriginalDocument(doc " + originalDocumentID + ")");
+			
+			sessions.onActivity(sessionID);
+			
 			Document originalDocument = model.findDocumentByID(originalDocumentID);
 			assert(originalDocument.getStaffInstructor() != null);
 			assert(originalDocument.getTBALocation() != null);
@@ -726,12 +795,17 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			
 			sessions.openDocument(sessionID, workingCopyDocument.getID());
 			
-			return new CompleteWorkingCopyDocumentGWT(
+			CompleteWorkingCopyDocumentGWT derp = new CompleteWorkingCopyDocumentGWT(
 					result,
 					getCoursesForDocument(workingCopyDocument.getID()),
 					getInstructorsForDocument(workingCopyDocument.getID()),
 					getLocationsForDocument(workingCopyDocument.getID()),
 					getScheduleItemsForDocument(workingCopyDocument.getID()));
+
+			if (LOG_ENTERING_AND_EXITING_CALLS)
+				System.out.println("End GreetingServiceImpl.createAndOpenWorkingCopyForOriginalDocument(doc " + originalDocumentID + ")");
+			
+			return derp;
 		}
 		catch (DatabaseException e) {
 			throw new RuntimeException(e);
@@ -774,6 +848,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	@Override
 	public void saveWorkingCopyToOriginalDocument(int sessionID, int workingCopyDocumentID) throws SessionClosedFromInactivityExceptionGWT {
 		try {
+			if (LOG_ENTERING_AND_EXITING_CALLS)
+				System.out.println("Begin GreetingServiceImpl.saveWorkingCopyToOriginalDocument(workingdocid " + workingCopyDocumentID + ")");
+			
 			Document workingCopyDocument = model.findDocumentByID(workingCopyDocumentID);
 			assert(workingCopyDocument.getStaffInstructor() != null);
 			assert(workingCopyDocument.getTBALocation() != null);
@@ -796,6 +873,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 
 			sanityCheck();
 			flushToFileSystem();
+
+			if (LOG_ENTERING_AND_EXITING_CALLS)
+				System.out.println("End GreetingServiceImpl.saveWorkingCopyToOriginalDocument(workingdocid " + workingCopyDocumentID + ")");
 		}
 		catch (Exception e) {
 			System.out.println("Couldnt save state!");
@@ -809,6 +889,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		sessions.onActivity(sessionID, workingCopyDocumentID);
 		
 		try {
+			if (LOG_ENTERING_AND_EXITING_CALLS)
+				System.out.println("Begin GreetingServiceImpl.deleteWorkingCopyDocument(workingdocid " + workingCopyDocumentID + ")");
+			
 			Document workingCopyDocument = model.findDocumentByID(workingCopyDocumentID);
 			assert(workingCopyDocument.getStaffInstructor() != null);
 			assert(workingCopyDocument.getTBALocation() != null);
@@ -823,6 +906,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 
 			sanityCheck();
 			flushToFileSystem();
+
+			if (LOG_ENTERING_AND_EXITING_CALLS)
+				System.out.println("End GreetingServiceImpl.deleteWorkingCopyDocument(workingdocid " + workingCopyDocumentID + ")");
 		}
 		catch (DatabaseException e) {
 			throw new RuntimeException(e);
@@ -837,6 +923,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		sessions.onActivity(sessionID, workingCopyDocumentID);
 		
 		try {
+			if (LOG_ENTERING_AND_EXITING_CALLS)
+				System.out.println("Begin GreetingServiceImpl.associateWorkingCopyWithNewOriginalDocument(workingdocid " + workingCopyDocumentID + ")");
+			
 			Document workingCopyDocument = model.findDocumentByID(workingCopyDocumentID);
 			assert(workingCopyDocument.getStaffInstructor() != null);
 			assert(workingCopyDocument.getTBALocation() != null);
@@ -864,6 +953,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 
 			sanityCheck();
 			flushToFileSystem();
+			
+			if (LOG_ENTERING_AND_EXITING_CALLS)
+				System.out.println("End GreetingServiceImpl.associateWorkingCopyWithNewOriginalDocument(workingdocid " + workingCopyDocumentID + ")");
 		}
 		catch (DatabaseException e) {
 			e.printStackTrace();
@@ -874,6 +966,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	@Override
 	public ServerResourcesResponse<ScheduleItemGWT> generateRestOfSchedule(int sessionID, int documentID) throws CouldNotBeScheduledExceptionGWT, SessionClosedFromInactivityExceptionGWT {
 		try {
+			if (LOG_ENTERING_AND_EXITING_CALLS)
+				System.out.println("Begin GreetingServiceImpl.generateRestOfSchedule(doc " + documentID + ")");
+			
 			Document document = model.findDocumentByID(documentID);
 			
 			assert(document.isWorkingCopy());
@@ -908,7 +1003,12 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 				item.insert();
 			}
 			
-			return getScheduleItemsForDocument(document.getID());
+			ServerResourcesResponse<ScheduleItemGWT> derp = getScheduleItemsForDocument(document.getID());
+
+			if (LOG_ENTERING_AND_EXITING_CALLS)
+				System.out.println("End GreetingServiceImpl.generateRestOfSchedule(doc " + documentID + ")");
+			
+			return derp;
 		}
 		catch (DatabaseException e) {
 			throw new RuntimeException(e);
@@ -921,6 +1021,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	
 	private void updateDocument(DocumentGWT documentGWT) {
 		try {
+			if (LOG_ENTERING_AND_EXITING_CALLS)
+				System.out.println("Begin GreetingServiceImpl.updateDocument(doc " + documentGWT.getName() + ")");
+			
 			sanityCheck();
 			
 			System.out.println("got gwt doc " + documentGWT.isTrashed());
@@ -936,6 +1039,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 
 			sanityCheck();
 			flushToFileSystem();
+			
+			if (LOG_ENTERING_AND_EXITING_CALLS)
+				System.out.println("End GreetingServiceImpl.updateDocument(doc " + documentGWT.getName() + ")");
 		}
 		catch (DatabaseException e) {
 			throw new RuntimeException(e);
