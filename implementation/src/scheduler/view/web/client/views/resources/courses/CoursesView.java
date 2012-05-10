@@ -1,7 +1,9 @@
 package scheduler.view.web.client.views.resources.courses;
 
+import scheduler.view.web.client.CachedOpenWorkingCopyDocument;
+import scheduler.view.web.client.views.resources.ResourceCache;
 import scheduler.view.web.client.views.resources.ValidatorUtil;
-import scheduler.view.web.client.views.resources.ResourceCache.Observer;
+import scheduler.view.web.shared.CourseGWT;
 
 import com.google.gwt.user.client.Window;
 import com.smartgwt.client.data.Record;
@@ -9,7 +11,6 @@ import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.types.ListGridEditEvent;
 import com.smartgwt.client.types.Overflow;
-import com.smartgwt.client.types.Positioning;
 import com.smartgwt.client.types.RowEndEditAction;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Img;
@@ -28,40 +29,20 @@ import com.smartgwt.client.widgets.layout.VLayout;
 public class CoursesView extends VLayout {
 	Img loadingImage;
 
-	DocumentCoursesCache coursesCache;
+	CachedOpenWorkingCopyDocument document;
 
-	public CoursesView(final DocumentCoursesCache coursesCache) {
-		this.coursesCache = coursesCache;
+	public CoursesView(final CachedOpenWorkingCopyDocument document) {
+		this.document = document;
 
 		this.setID("s_courseviewTab");
 		this.setWidth100();
 		this.setHeight100();
 
-		this.setPosition(Positioning.RELATIVE);
-
-		loadingImage = new Img("imgs/loading.gif");
-		loadingImage.setPosition(Positioning.ABSOLUTE);
-		this.addMember(loadingImage);
-
-		if (coursesCache.isPopulated()) {
-			onPopulate();
-		} else {
-			coursesCache.addObserver(new Observer() {
-				public void onModify() {
-				}
-
-				@Override
-				public void onPopulate() {
-					CoursesView.this.onPopulate();
-					coursesCache.removeObserver(this);
-				}
-			});
-		}
+		onPopulate();
 	}
 
 	private void onPopulate() {
-		final LectureOptionsDataSource lectureOptionsDataSource = new LectureOptionsDataSource(
-				coursesCache);
+		final LectureOptionsDataSource lectureOptionsDataSource = new LectureOptionsDataSource(document);
 
 		final ListGrid grid = new ListGrid() {
 
@@ -93,7 +74,7 @@ public class CoursesView extends VLayout {
 		grid.setEditByCell(true);
 		grid.setListEndEditAction(RowEndEditAction.NEXT);
 		// grid.setCellHeight(22);
-		grid.setDataSource(new CoursesDataSource(coursesCache));
+		grid.setDataSource(new CoursesDataSource(document));
 		grid.setAutoSaveEdits(true);
 
 		grid.addKeyPressHandler(new KeyPressHandler() {
@@ -107,7 +88,6 @@ public class CoursesView extends VLayout {
 		});
 
 		ListGridField selectorField = new ListGridField("selector", "&nbsp;");
-
 		selectorField.setCanEdit(false);
 		selectorField.setCellFormatter(new CellFormatter() {
 			public String format(Object value, ListGridRecord record,
@@ -182,8 +162,6 @@ public class CoursesView extends VLayout {
 		addMember(grid);
 		// this.setHorizontalAlignment(ALIGN_LEFT);
 		layoutBottomButtonBar(grid);
-
-		removeMember(loadingImage);
 	}
 
 	/**
@@ -200,7 +178,6 @@ public class CoursesView extends VLayout {
 				grid.startEditingNew(defaultValues);
 			}
 		});
-		// DOM.setElementAttribute(course.getElement(), "id", "s_newCourseBtn");
 		course.setAutoWidth();
 		course.setOverflow(Overflow.VISIBLE);
 		// DON'T CHANGE THIS ID IT WILL BREAK THE BUTTONS
@@ -219,7 +196,6 @@ public class CoursesView extends VLayout {
 					}
 				});
 
-		// DOM.setElementAttribute(dupeBtn.getElement(), "id", "s_dupeBtn");
 		dupeBtn.setAutoWidth();
 		dupeBtn.setOverflow(Overflow.VISIBLE);
 		// DON'T CHANGE THIS ID IT WILL BREAK THE BUTTONS
@@ -242,6 +218,7 @@ public class CoursesView extends VLayout {
 		remove.setOverflow(Overflow.VISIBLE);
 		// DON'T CHANGE THIS ID IT WILL BREAK THE BUTTONS
 		remove.setID("s_removeCourseBtn");
+		
 		bottomButtonFlowPanel.addMember(remove);
 
 		this.addMember(bottomButtonFlowPanel);

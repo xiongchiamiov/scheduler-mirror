@@ -4,17 +4,24 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import scheduler.view.web.client.CachedOpenWorkingCopyDocument;
+import scheduler.view.web.client.schedule.FiltersViewWidget;
+import scheduler.view.web.client.views.LoadingPopup;
+import scheduler.view.web.shared.CourseGWT;
+import scheduler.view.web.shared.DayGWT;
+import scheduler.view.web.shared.InstructorGWT;
+import scheduler.view.web.shared.LocationGWT;
+import scheduler.view.web.shared.ScheduleItemGWT;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.Window;
@@ -30,11 +37,6 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import scheduler.view.web.client.GreetingServiceAsync;
-import scheduler.view.web.client.schedule.FiltersViewWidget;
-import scheduler.view.web.client.views.LoadingPopup;
-import scheduler.view.web.shared.*;
-
 /**
  * This widget contains the calendar and list of available classes. It also
  * contains the bottom button bar and handles the filter and edit item dialogs.
@@ -44,12 +46,11 @@ import scheduler.view.web.shared.*;
 
 public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 
-	private final DocumentGWT mDocument;
+	private final CachedOpenWorkingCopyDocument mWorkingCopyDocument;
 	private Map<Integer, CourseGWT> mCourses = new HashMap<Integer, CourseGWT>();
 	private Map<Integer, InstructorGWT> mInstructors = new HashMap<Integer, InstructorGWT>();
 	private Map<Integer, LocationGWT> mLocations = new HashMap<Integer, LocationGWT>();
 
-	private GreetingServiceAsync mGreetingService;
 	private ArrayList<ScheduleItemGWT> mCalendarItems = new ArrayList<ScheduleItemGWT>();
 	private VerticalPanel mMainPanel = new VerticalPanel();
 	private boolean mIsCourseListCollapsed;
@@ -89,9 +90,8 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 	
 	private static final int AVAILABLE_COURSES_LIST_WIDTH = 200;
 	
-	public ScheduleEditWidget(GreetingServiceAsync service, DocumentGWT document) {
-		mGreetingService = service;
-		mDocument = document;
+	public ScheduleEditWidget(CachedOpenWorkingCopyDocument workingCopyDocument) {
+		mWorkingCopyDocument = workingCopyDocument;
 
 		final LoadingPopup loading = new LoadingPopup();
 		loading.show();
@@ -99,107 +99,66 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 		layoutBottomButtonBar();
 		layoutListBoxAndCalendar();
 
-		final Integer documentID = document.getID();
+		workingCopyDocument.forceSynchronize(new AsyncCallback<Void>() {
+			
+			@Override
+			public void onSuccess(Void result) {
+				System.out.println("forceSynchronize called back!");
+				
+				System.out.println("Got " + mWorkingCopyDocument.getCourses().size() + " courses");
+				
+				mCourses.clear();
+				for (CourseGWT course : mWorkingCopyDocument.getCourses())
+					mCourses.put(course.getID(), course);
+				
 
-		// Initialize collection of courses
-		mGreetingService.getCoursesForDocument(documentID,
-				new AsyncCallback<List<CourseGWT>>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						Window.alert("Failed to retrieve courses.");
-						loading.hide();
-						return;
-					}
+				System.out.println("Got " + mWorkingCopyDocument.getLocations(true).size() + " locations");
+				
+				mLocations.clear();
+				for (LocationGWT Location : mWorkingCopyDocument.getLocations(true))
+					mLocations.put(Location.getID(), Location);
 
-					@Override
-					public void onSuccess(List<CourseGWT> result) {
-						System.out.println("Got " + result.size() + " courses");
-						
-						mCourses.clear();
-						for (CourseGWT course : result)
-							mCourses.put(course.getID(), course);
-					}
-				});
+				System.out.println("Got " + mWorkingCopyDocument.getInstructors(true).size() + " instructors");
+				
+				mInstructors.clear();
+				for (InstructorGWT instructor : mWorkingCopyDocument.getInstructors(true))
+					mInstructors.put(instructor.getID(), instructor);
 
-		// Initialize collection of locations
-		mGreetingService.getLocationsForDocument(documentID,
-				new AsyncCallback<List<LocationGWT>>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						Window.alert("Failed to retrieve locations.");
-						loading.hide();
-						return;
-					}
+				System.out.println("Got " + mWorkingCopyDocument.getScheduleItems().size() + " items");
+			
+				mCalendarItems = new ArrayList<ScheduleItemGWT>();
 
-					@Override
-					public void onSuccess(List<LocationGWT> result) {
-						System.out.println("Got " + result.size() + " locations");
-						
-						mLocations.clear();
-						for (LocationGWT Location : result)
-							mLocations.put(Location.getID(), Location);
-					}
-				});
-		
-		// Initialize collection of instructors
-		mGreetingService.getInstructorsForDocument(documentID,
-				new AsyncCallback<List<InstructorGWT>>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						Window.alert("Failed to retrieve instructors.");
-						loading.hide();
-						return;
-					}
+				for (ScheduleItemGWT item : mWorkingCopyDocument.getScheduleItems()) {
+					mCalendarItems.add(item);
+				}
 
-					@Override
-					public void onSuccess(List<InstructorGWT> result) {
-						System.out.println("Got " + result.size() + " instructors");
-						
-						mInstructors.clear();
-						for (InstructorGWT instructor : result)
-							mInstructors.put(instructor.getID(), instructor);
-					}
-				});
-		
-		mGreetingService.getScheduleItems(mDocument.getScheduleID(),
-				new AsyncCallback<Collection<ScheduleItemGWT>>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						Window.alert("Failed to retrieve schedule.");
-						loading.hide();
-					}
+				// Collections.sort(mCalendarItems, new
+				// ScheduleItemComparator());
 
-					@Override
-					public void onSuccess(Collection<ScheduleItemGWT> result) {
-						System.out.println("Got " + result.size() + " items");
-					
-						mCalendarItems = new ArrayList<ScheduleItemGWT>();
+				// Add the attributes of the retrieved items to the
+				// filters list
+				// mFiltersDialog.addItems(mCalendarItems);
 
-						for (ScheduleItemGWT item : result) {
-							mCalendarItems.add(item);
-						}
+				// Place schedule items with any previously set filters
+				// filterScheduleItems(mSearchBox.getText());
 
-						// Collections.sort(mCalendarItems, new
-						// ScheduleItemComparator());
+				mCalendarTableView.setScheduleItems(mCalendarItems);
+				mCalendarTableView.drawTable();
 
-						// Add the attributes of the retrieved items to the
-						// filters list
-						// mFiltersDialog.addItems(mCalendarItems);
+				mCalendarListView.setScheduleItems(mCalendarItems);
+				mCalendarListView.drawList();
 
-						// Place schedule items with any previously set filters
-						// filterScheduleItems(mSearchBox.getText());
+				populateAvailableCoursesList();
 
-						mCalendarTableView.setScheduleItems(mCalendarItems);
-						mCalendarTableView.drawTable();
-
-						mCalendarListView.setScheduleItems(mCalendarItems);
-						mCalendarListView.drawList();
-
-						populateAvailableCoursesList();
-
-						loading.hide();
-					}
-				});
+				loading.hide();
+			}
+			
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert("Failed to retrieve resources.");
+				loading.hide();
+			}
+		});
 	}
 
 	/**
@@ -227,7 +186,7 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 	 */
 	public void editItem(boolean fromList, ScheduleItemGWT originalItem,
 			List<Integer> newDays, int newStartRow) {
-		final EditScheduleItemDlg editDlg = new EditScheduleItemDlg(mGreetingService, this, mDragController, fromList, originalItem, newDays, newStartRow, mDocument);
+		final EditScheduleItemDlg editDlg = new EditScheduleItemDlg(mWorkingCopyDocument, this, mDragController, fromList, originalItem, newDays, newStartRow);
 		editDlg.center();
 	}
 
@@ -263,16 +222,16 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 
 		loading.show();
 
-		mGreetingService.generateRestOfSchedule(mDocument.getScheduleID(),
-				new AsyncCallback<Collection<ScheduleItemGWT>>() {
+		mWorkingCopyDocument.generateRestOfSchedule(
+				new AsyncCallback<Void>() {
 					public void onFailure(Throwable caught) {
 						loading.hide();
 						Window.alert("Failed to get schedule: "
 								+ caught.toString());
 					}
 
-					public void onSuccess(Collection<ScheduleItemGWT> result) {
-						if (result != null) {
+					public void onSuccess(Void v) {
+//						if (result != null) {
 							// Sort result by start times in ascending order
 							// Collections.sort(result, new
 							// ScheduleItemComparator());
@@ -280,7 +239,7 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 							// Reset column and row spans, remove any items
 							// already placed
 							mCalendarItems = new ArrayList<ScheduleItemGWT>();
-							for (ScheduleItemGWT item : result) {
+							for (ScheduleItemGWT item : mWorkingCopyDocument.getScheduleItems()) {
 								mCalendarItems.add(item);
 							}
 
@@ -304,7 +263,7 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 							populateAvailableCoursesList();
 
 							loading.hide();
-						}
+//						}
 					}
 				});
 	}
@@ -488,15 +447,17 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 	private void populateAvailableCoursesList() {
 		final double startTimestamp = System.currentTimeMillis();
 		
-		mGreetingService.getCoursesForDocument(mDocument.getID(),
-				new AsyncCallback<List<CourseGWT>>() {
+		mWorkingCopyDocument.forceSynchronize(
+				new AsyncCallback<Void>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						Window.alert("Failed to retrieve courses");
 					}
 
 					@Override
-					public void onSuccess(List<CourseGWT> result) {
+					 public void onSuccess(Void v) {
+						List<CourseGWT> result = new LinkedList<CourseGWT>(mWorkingCopyDocument.getCourses());
+						
 						double timeElapsed = ( System.currentTimeMillis() - startTimestamp ) / 1000;
 						Window.alert(timeElapsed + " seconds to get courses");
 						
@@ -573,8 +534,10 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 
 		final double startTimestamp = System.currentTimeMillis();
 		
-		mGreetingService.updateScheduleItem(item,
-				new AsyncCallback<Collection<ScheduleItemGWT>>() {
+		mWorkingCopyDocument.editScheduleItem(item);
+		
+		mWorkingCopyDocument.forceSynchronize(
+				new AsyncCallback<Void>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						loading.hide();
@@ -582,7 +545,9 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 					}
 
 					@Override
-					public void onSuccess(Collection<ScheduleItemGWT> result) {
+					public void onSuccess(Void v) {
+						Collection<ScheduleItemGWT> result = mWorkingCopyDocument.getScheduleItems();
+						
 						double timeElapsed = ( System.currentTimeMillis() - startTimestamp ) / 1000;
 						Window.alert(timeElapsed + " seconds to get courses");
 						
@@ -632,8 +597,11 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 
 		final double startTimestamp = System.currentTimeMillis();
 		
-		mGreetingService.insertScheduleItem(mDocument.getScheduleID(), item,
-				new AsyncCallback<Collection<ScheduleItemGWT>>() {
+		item.setID(null);
+		mWorkingCopyDocument.addScheduleItem(item);
+		
+		mWorkingCopyDocument.forceSynchronize(
+				new AsyncCallback<Void>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						loading.hide();
@@ -641,7 +609,9 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 					}
 
 					@Override
-					public void onSuccess(Collection<ScheduleItemGWT> result) {
+					public void onSuccess(Void v) {
+						Collection<ScheduleItemGWT> result = mWorkingCopyDocument.getScheduleItems();
+						
 						double timeElapsed = ( System.currentTimeMillis() - startTimestamp ) / 1000;
 						Window.alert(timeElapsed + " seconds to get courses");
 						
@@ -711,8 +681,10 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 
 		final double startTimestamp = System.currentTimeMillis();
 		
-		mGreetingService.newRemoveScheduleItem(removed,
-				new AsyncCallback<Collection<ScheduleItemGWT>>() {
+		mWorkingCopyDocument.deleteScheduleItem(removed.getID());
+		
+		mWorkingCopyDocument.forceSynchronize(
+				new AsyncCallback<Void>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						loading.hide();
@@ -720,7 +692,9 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 					}
 
 					@Override
-					public void onSuccess(Collection<ScheduleItemGWT> result) {
+					public void onSuccess(Void v) {
+						Collection<ScheduleItemGWT> result = mWorkingCopyDocument.getScheduleItems();
+						
 						double timeElapsed = ( System.currentTimeMillis() - startTimestamp ) / 1000;
 						Window.alert(timeElapsed + " seconds to get courses");
 						

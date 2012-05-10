@@ -1,10 +1,11 @@
 package scheduler.view.web.client.views.resources.instructors;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import scheduler.view.web.client.GreetingServiceAsync;
+import scheduler.view.web.client.CachedOpenWorkingCopyDocument;
 import scheduler.view.web.shared.CourseGWT;
 import scheduler.view.web.shared.InstructorGWT;
 
@@ -27,7 +28,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  */
 public class CoursePrefsWidget extends VerticalPanel
 {
-	protected GreetingServiceAsync service;
+	protected CachedOpenWorkingCopyDocument workingCopyDocument;
 	protected int documentID;
 	protected InstructorGWT instructor;
 	protected InstructorGWT savedInstructor;
@@ -41,21 +42,19 @@ public class CoursePrefsWidget extends VerticalPanel
 	
 	/**
 	 * The following parameters are needed to get and save the course preferences
-	 * @param service
+	 * @param workingCopyDocument
 	 * @param documentID
 	 * @param scheduleName
 	 * @param instructor
 	 */
-	public CoursePrefsWidget(GreetingServiceAsync service,
-			int documentID, InstructorGWT instructor)
+	public CoursePrefsWidget(CachedOpenWorkingCopyDocument openDocument, InstructorGWT instructor)
 	{
-		this.service = service;
+		this.workingCopyDocument = openDocument;
 		instructor.verify();
-		this.documentID = documentID;
 		this.instructor = instructor;
 		this.savedInstructor = new InstructorGWT(instructor);
 	}
-	
+
 	/**
 	 * this method should be called after instantiating the panel and
 	 * after setParent. It sets up the UI and data for the course selection
@@ -75,14 +74,16 @@ public class CoursePrefsWidget extends VerticalPanel
 
 		final com.smartgwt.client.widgets.Window parent = this.parent;
 
-		service.getCoursesForDocument(documentID,
-				new AsyncCallback<List<CourseGWT>>() {
+		workingCopyDocument.forceSynchronize(
+				new AsyncCallback<Void>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						Window.alert("Failed to get courses.");
 					}
 
-					public void onSuccess(List<CourseGWT> result) {
+					public void onSuccess(Void v) {
+						List<CourseGWT> result = new LinkedList<CourseGWT>(workingCopyDocument.getCourses());
+						
 						if (result.size() == 0) {
 							System.out
 									.println("The size of the course list >>is<< zero. It should NOT open preferences");
@@ -166,7 +167,9 @@ public class CoursePrefsWidget extends VerticalPanel
 	 * saves the data of the current instructor
 	 */
 	void save() {
-		service.editInstructor(instructor, new AsyncCallback<Void>() {
+		workingCopyDocument.editInstructor(instructor);
+		
+		workingCopyDocument.forceSynchronize(new AsyncCallback<Void>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				// popup.hide();
@@ -232,14 +235,16 @@ public class CoursePrefsWidget extends VerticalPanel
 		this.instructor = instructor;
 		this.savedInstructor = new InstructorGWT(instructor);
 
-		service.getCoursesForDocument(documentID,
-				new AsyncCallback<List<CourseGWT>>() {
+		workingCopyDocument.forceSynchronize(
+				new AsyncCallback<Void>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						Window.alert("Failed to get courses.");
 					}
 
-					public void onSuccess(List<CourseGWT> result) {
+					public void onSuccess(Void v) {
+						List<CourseGWT> result = new LinkedList<CourseGWT>(workingCopyDocument.getCourses());
+						
 						if (result.size() == 0) {
 							System.out
 									.println("The size of the course list >>is<< zero. It should NOT open preferences");

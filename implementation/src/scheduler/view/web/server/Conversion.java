@@ -1,6 +1,5 @@
 package scheduler.view.web.server;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -14,17 +13,16 @@ import scheduler.model.Document;
 import scheduler.model.Instructor;
 import scheduler.model.Location;
 import scheduler.model.Model;
-import scheduler.model.Schedule;
 import scheduler.model.ScheduleItem;
 import scheduler.model.db.DatabaseException;
-import scheduler.model.db.IDatabase.NotFoundException;
 import scheduler.view.web.shared.CourseGWT;
 import scheduler.view.web.shared.DayGWT;
 import scheduler.view.web.shared.DocumentGWT;
 import scheduler.view.web.shared.InstructorGWT;
 import scheduler.view.web.shared.LocationGWT;
-import scheduler.view.web.shared.OldScheduleItemGWT;
+import scheduler.view.web.shared.OriginalDocumentGWT;
 import scheduler.view.web.shared.ScheduleItemGWT;
+import scheduler.view.web.shared.WorkingDocumentGWT;
 
 public abstract class Conversion {
 //	public static UserData fromGWT(UserDataGWT gwt) {
@@ -119,8 +117,6 @@ public abstract class Conversion {
 		Collection<Set<DayGWT>> dayPatterns = new LinkedList<Set<DayGWT>>();
 		for (Set<Day> combo : course.getDayPatterns())
 			dayPatterns.add(dayPatternToGWT(combo));
-		
-		System.out.println("course going out, " + (course.getLecture() != null) + " and " + course.isTetheredToLecture());
 
 		return new CourseGWT(
 				course.isSchedulable(),
@@ -157,8 +153,6 @@ public abstract class Conversion {
 			dayPatterns.add(dayPatternFromGWT(combo));
 		result.setDayPatterns(dayPatterns);
 		
-		System.out.println("coursegwt coming in, " + source.getLectureID() + " and " + source.getTetheredToLecture());
-		
 		result.setUsedEquipment(source.getUsedEquipment());
 		result.setLecture(source.getLectureID() == -1 ? null : model.findCourseByID(source.getLectureID()));
 		result.setTetheredToLecture(source.getTetheredToLecture());
@@ -183,11 +177,11 @@ public abstract class Conversion {
 
 	public static LocationGWT locationToGWT(Location location) throws DatabaseException {
 		LocationGWT result = new LocationGWT(location.getID(), location.getRoom(), location.getType(), location.getMaxOccupancy(), location.getProvidedEquipment(), location.isSchedulable());
-		System.out.println("result room: " + result.getRoom() + " from " + location.getRoom());
+//		System.out.println("result room: " + result.getRoom() + " from " + location.getRoom());
 		return result;
 	}
 
-	public static DocumentGWT documentToGWT(Document doc, int scheduleID) throws DatabaseException {
+	public static WorkingDocumentGWT workingDocumentToGWT(Document doc) throws DatabaseException {
 		assert(doc != null);
 		assert(doc.getID() != null);
 		assert(doc.getName() != null);
@@ -195,15 +189,49 @@ public abstract class Conversion {
 		assert(doc.getStaffInstructor().getID() != null);
 		assert(doc.getTBALocation() != null);
 		assert(doc.getTBALocation().getID() != null);
-		return new DocumentGWT(
+		assert(doc.getChooseForMeInstructor() != null);
+		assert(doc.getChooseForMeInstructor().getID() != null);
+		assert(doc.getChooseForMeLocation() != null);
+		assert(doc.getChooseForMeLocation().getID() != null);
+		
+		assert(doc.isWorkingCopy());
+		
+		return new WorkingDocumentGWT(
 				doc.getID(),
 				doc.getName(),
-				scheduleID,
 				doc.getStaffInstructor().getID(),
 				doc.getTBALocation().getID(),
+				doc.getChooseForMeInstructor().getID(),
+				doc.getChooseForMeLocation().getID(),
 				doc.isTrashed(),
 				doc.getStartHalfHour(),
 				doc.getEndHalfHour());
+	}
+
+	public static OriginalDocumentGWT originalDocumentToGWT(Document doc, String workingChangesSummary) throws DatabaseException {
+		assert(doc != null);
+		assert(doc.getID() != null);
+		assert(doc.getName() != null);
+		assert(doc.getStaffInstructor() != null);
+		assert(doc.getStaffInstructor().getID() != null);
+		assert(doc.getTBALocation() != null);
+		assert(doc.getTBALocation().getID() != null);
+		
+		assert(!doc.isWorkingCopy());
+		
+		assert((workingChangesSummary == null) == (doc.getWorkingCopyOrNull() == null));
+		
+		return new OriginalDocumentGWT(
+				doc.getID(),
+				doc.getName(),
+				doc.getStaffInstructor().getID(),
+				doc.getTBALocation().getID(),
+				doc.getChooseForMeInstructor().getID(),
+				doc.getChooseForMeLocation().getID(),
+				doc.isTrashed(),
+				doc.getStartHalfHour(),
+				doc.getEndHalfHour(),
+				workingChangesSummary);
 	}
 
 	public static ScheduleItem scheduleItemFromGWT(Model model, ScheduleItemGWT source) throws DatabaseException {
@@ -243,7 +271,20 @@ public abstract class Conversion {
 	}
 
 	public static Document readDocumentFromGWT(Model model, DocumentGWT documentGWT) throws DatabaseException {
-		Document document = model.findDocumentByID(documentGWT.getID());
+		Document document = null;
+		
+		if (documentGWT instanceof OriginalDocumentGWT) {
+			OriginalDocumentGWT originalDocumentGWT = (OriginalDocumentGWT)documentGWT;
+			document = model.findDocumentByID(originalDocumentGWT.getID());
+		}
+		else if (documentGWT instanceof WorkingDocumentGWT) {
+			WorkingDocumentGWT workingDocumentGWT = (WorkingDocumentGWT)documentGWT;
+			document = model.findDocumentByID(workingDocumentGWT.getRealID());
+		}
+		else
+			assert(false);
+		
+		assert(document != null);
 
 		document.setName(documentGWT.getName());
 		document.setEndHalfHour(documentGWT.getEndHalfHour());

@@ -126,7 +126,7 @@ public abstract class CSVTest extends ModelTestCase {
 		final String exportOutputPath = "test/scheduler/model/CSVExportResult/";
 
 		Model model = new Model();
-		model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe(
+		model.createAndInsertDocumentWithSpecialInstructorsAndLocations(
 				"Doc" + numberOfItems, 14, 44).insert();
 		Document doc = model.findAllDocuments().iterator().next();
 
@@ -135,7 +135,6 @@ public abstract class CSVTest extends ModelTestCase {
 		generateCourses(numberOfItems, model, doc);
 		generateInstructors(numberOfItems, model, doc);
 		generateLocations(numberOfItems, model, doc);
-		generateSchedule(model, doc);
 		generateScheduleItems(numberOfItems, model, doc);
 
 		File file = new File(exportOutputPath + expectedOutputFile);
@@ -397,7 +396,7 @@ public abstract class CSVTest extends ModelTestCase {
 
 			Location loc = null;
 			;
-			Iterator<Location> lociter = model.findLocationsForDocument(doc)
+			Iterator<Location> lociter = model.findLocationsForDocument(doc, true)
 					.iterator();
 			while (lociter.hasNext())
 				loc = lociter.next();
@@ -412,20 +411,6 @@ public abstract class CSVTest extends ModelTestCase {
 
 			loc.setProvidedEquipment(equipment);
 		}
-
-	}
-
-	/**
-	 * Generates a Schedule.
-	 *
-	 * @param model the model
-	 * @param doc the document to be associated with the schedule
-	 * @throws DatabaseException the database exception
-	 */
-	private void generateSchedule(Model model, Document doc)
-			throws DatabaseException {
-
-		model.createTransientSchedule().setDocument(doc).insert();
 
 	}
 
@@ -450,15 +435,12 @@ public abstract class CSVTest extends ModelTestCase {
 		Random randTime = new Random(testCase - 1);
 		Random randDay = new Random(testCase);
 
-		// Get the schedule
-		Schedule schedule = doc.getSchedules().iterator().next();
-
 		// Convert data collections into ArrayLists
 		ArrayList<Course> courses = new ArrayList<Course>(doc.getCourses());
 		ArrayList<Instructor> instructors = new ArrayList<Instructor>(
-				doc.getInstructors());
+				doc.getInstructors(true));
 		ArrayList<Location> locations = new ArrayList<Location>(
-				doc.getLocations());
+				doc.getLocations(true));
 
 		int numberOfItems;
 		switch (testCase) {
@@ -497,7 +479,7 @@ public abstract class CSVTest extends ModelTestCase {
 					.size())));
 			item.setLocation(locations.get(itemRandom.nextInt(locations.size())));
 
-			item.setSchedule(schedule);
+			item.setDocument(doc);
 			item.insert();
 		}
 
@@ -518,7 +500,7 @@ public abstract class CSVTest extends ModelTestCase {
 		try {
 			// Model and Document setup
 			Model model = new Model();
-			model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe(
+			model.createAndInsertDocumentWithSpecialInstructorsAndLocations(
 					"Doc" + testCase, 14, 44).insert();
 			Document doc = model.findAllDocuments().iterator().next();
 
@@ -526,7 +508,6 @@ public abstract class CSVTest extends ModelTestCase {
 			generateCourses(testCase, model, doc);
 			generateInstructors(testCase, model, doc);
 			generateLocations(testCase, model, doc);
-			generateSchedule(model, doc);
 			generateScheduleItems(testCase, model, doc);
 
 			// Output for Oracle data

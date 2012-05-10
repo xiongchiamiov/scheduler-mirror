@@ -1,12 +1,13 @@
 package scheduler.view.web.client.views.resources.instructors;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-import scheduler.view.web.client.GreetingServiceAsync;
-import scheduler.view.web.client.UnsavedDocumentStrategy;
+import scheduler.view.web.client.CachedOpenWorkingCopyDocument;
+import scheduler.view.web.client.views.resources.ResourceCollection;
+import scheduler.view.web.shared.CourseGWT;
 import scheduler.view.web.shared.DayGWT;
-import scheduler.view.web.shared.DocumentGWT;
 import scheduler.view.web.shared.InstructorGWT;
 
 import com.google.gwt.user.client.Window;
@@ -21,24 +22,10 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
 import com.smartgwt.client.types.DSProtocol;
 
 public class InstructorsDataSource extends DataSource {
+	CachedOpenWorkingCopyDocument document;
 	
-	// private static InstructorDataSource instance = null;
-	//
-	// public static InstructorDataSource getInstance() {
-	// if (instance == null) {
-	// instance = new InstructorDataSource("countryDS");
-	// }
-	// return instance;
-	// }
-	
-	final GreetingServiceAsync service;
-	final DocumentGWT document;
-	UnsavedDocumentStrategy unsavedDocumentStrategy;
-	
-	public InstructorsDataSource(GreetingServiceAsync service, DocumentGWT document, UnsavedDocumentStrategy unsavedDocumentStrategy) {
-		this.service = service;
+	public InstructorsDataSource(CachedOpenWorkingCopyDocument document) {
 		this.document = document;
-		this.unsavedDocumentStrategy = unsavedDocumentStrategy;
 		
 		setDataProtocol(DSProtocol.CLIENTCUSTOM);
 		
@@ -95,53 +82,29 @@ public class InstructorsDataSource extends DataSource {
 	}
 
 	protected void fetch(final DSRequest dsRequest) {
-		service.getInstructorsForDocument(document.getID(), new AsyncCallback<List<InstructorGWT>>() {
-			public void onSuccess(List<InstructorGWT> result) {
-				Record[] responseRecords = new Record[result.size()];
-				
-				int responseRecordIndex = 0;
-				for (InstructorGWT instructor : result) {
-//					System.out.println("Fetch instructor result id " + instructor.getID());
-//					System.out.println("Fetch record id " + readInstructorIntoRecord(instructor).getAttribute("id"));
-					responseRecords[responseRecordIndex++] = readInstructorIntoRecord(instructor);
-				}
-				
-				DSResponse response = new DSResponse();
-				response.setData(responseRecords);
-				processResponse(dsRequest.getRequestId(), response);
-			}
-			
-			@Override
-			public void onFailure(Throwable caught) {
-				DSResponse dsResponse = new DSResponse();
-				Window.alert("Failed to retrieve instructors!");
-				processResponse(dsRequest.getRequestId(), dsResponse);
-			}
-		});
+		Collection<InstructorGWT> resources = document.getInstructors(true);
+		
+		Record[] responseRecords = new Record[resources.size()];
+		int responseRecordIndex = 0;
+		for (InstructorGWT resource : resources)
+			responseRecords[responseRecordIndex++] = readInstructorIntoRecord(resource);
+		
+		DSResponse response = new DSResponse();
+		response.setData(responseRecords);
+		processResponse(dsRequest.getRequestId(), response);
 	}
-	
+
 	protected void add(final DSRequest dsRequest) {
 		Record record = dsRequest.getAttributeAsRecord("data");
 		InstructorGWT newInstructor = readRecordIntoInstructor(record);
 		
-		service.addInstructorToDocument(document.getID(), newInstructor, new AsyncCallback<InstructorGWT>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				DSResponse dsResponse = new DSResponse();
-				Window.alert("Failed to update instructor!");
-				processResponse(dsRequest.getRequestId(), dsResponse);
-			}
-			
-			@Override
-			public void onSuccess(InstructorGWT result) {
-				unsavedDocumentStrategy.setDocumentChanged(true);
-				DSResponse response = new DSResponse();
-//				System.out.println("result record id " + result.getID());
-				response.setData(new Record[] { readInstructorIntoRecord(result) });
-				assert(response.getData()[0].getAttributeAsInt("id") != null);
-				processResponse(dsRequest.getRequestId(), response);
-			}
-		});
+		document.addInstructor(newInstructor);
+		assert(newInstructor.getID() != null);
+		
+		DSResponse response = new DSResponse();
+		response.setData(new Record[] { readInstructorIntoRecord(newInstructor) });
+		assert(response.getData()[0].getAttributeAsInt("id") != null);
+		processResponse(dsRequest.getRequestId(), response);
 	}
 	
 	protected void update(final DSRequest dsRequest) {
@@ -163,49 +126,24 @@ public class InstructorsDataSource extends DataSource {
 		
 		final InstructorGWT instructor = readRecordIntoInstructor(record);
 		
-		service.editInstructor(instructor, new AsyncCallback<Void>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				DSResponse dsResponse = new DSResponse();
-				Window.alert("Failed to update instructor!");
-				processResponse(dsRequest.getRequestId(), dsResponse);
-			}
-			
-			@Override
-			public void onSuccess(Void result) {
-				unsavedDocumentStrategy.setDocumentChanged(true);
-				DSResponse response = new DSResponse();
-				response.setData(new Record[] { readInstructorIntoRecord(instructor) });
-				processResponse(dsRequest.getRequestId(), response);
-			}
-		});
+		DSResponse response = new DSResponse();
+		response.setData(new Record[] { readInstructorIntoRecord(instructor) });
+		processResponse(dsRequest.getRequestId(), response);
 	}
 	
 	protected void remove(final DSRequest dsRequest) {
 		final Record record = dsRequest.getAttributeAsRecord("data");
-		final InstructorGWT instructor = readRecordIntoInstructor(record);
+		final InstructorGWT course = readRecordIntoInstructor(record);
 
-		service.removeInstructor(record.getAttributeAsInt("id"), new AsyncCallback<Void>() {
-			@Override
-			public void onSuccess(Void result) {
-				unsavedDocumentStrategy.setDocumentChanged(true);
-				DSResponse response = new DSResponse();
-				response.setData(new Record[] { readInstructorIntoRecord(instructor) });
-				processResponse(dsRequest.getRequestId(), response);
-			}
-			
-			@Override
-			public void onFailure(Throwable caught) {
-				DSResponse dsResponse = new DSResponse();
-				Window.alert("Failed to delete instructor!");
-				processResponse(dsRequest.getRequestId(), dsResponse);
-			}
-		});
+		document.deleteInstructor(record.getAttributeAsInt("id"));
+		
+		DSResponse response = new DSResponse();
+		response.setData(new Record[] { readInstructorIntoRecord(course) });
+		processResponse(dsRequest.getRequestId(), response);
 	}
 	
 	@Override
    protected Object transformRequest(final DSRequest dsRequest) {
-//		FETCH ADD UPDATE REMOVE VALIDATE
 		switch (dsRequest.getOperationType()) {
 			case FETCH: fetch(dsRequest); break;
 			case ADD: add(dsRequest); break;

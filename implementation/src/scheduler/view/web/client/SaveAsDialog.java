@@ -1,8 +1,5 @@
 package scheduler.view.web.client;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import scheduler.view.web.shared.DocumentGWT;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -13,7 +10,6 @@ import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.ListBox;
@@ -21,104 +17,107 @@ import com.google.gwt.user.client.ui.TextBox;
 
 public class SaveAsDialog {
 
-	public static void afterSaveAsPressed(final GreetingServiceAsync service, final DocumentGWT document, final UpdateHeaderStrategy updateHeaderStrategy, final UnsavedDocumentStrategy unsavedDocumentStrategy) {
-
+	public static void afterSaveAsPressed(final CachedService service, final CachedOpenWorkingCopyDocument document, final UpdateHeaderStrategy updateHeaderStrategy, final UnsavedDocumentStrategy unsavedDocumentStrategy) {
 		final com.smartgwt.client.widgets.Window window = new com.smartgwt.client.widgets.Window();
 		window.setAutoSize(true);
 		window.setTitle("Name Schedule");
 		window.setCanDragReposition(true);
 		window.setCanDragResize(true);
 		
-	      final ListBox saveAsListBox = new ListBox();
-	      final ArrayList<String> schedNames = new ArrayList<String>();
-	      final TextBox tb = new TextBox();
-	      FlowPanel fp = new FlowPanel();
-	      final Button saveButton = new Button("Save", new ClickHandler() {
-	         public void onClick(ClickEvent event)
-	         {
-	         	window.hide();
+      final ListBox saveAsListBox = new ListBox();
+      final TextBox tb = new TextBox();
+      FlowPanel fp = new FlowPanel();
+      final Button saveButton = new Button("Save", new ClickHandler() {
+         public void onClick(ClickEvent event) {
+         	window.hide();
+         	
+            final String newDocumentName = tb.getText();
+            
+            if (newDocumentName.isEmpty()) {
+            	Window.alert("Please enter a name for your new document.");
+            }
+            else {
+            	afterNewNameSupplied(service, document, newDocumentName);
+            }
+         }
+      });
 
-	            final String scheduleName = tb.getText();
-	            if (scheduleName.isEmpty()) return;
+      final Button cancelButton = new Button("Cancel", new ClickHandler() {
+         @Override
+         public void onClick(ClickEvent event) {
+         	window.hide();
+         }
+      });
 
-	            boolean allowOverwrite = false;
-	            if (schedNames.contains(scheduleName))
-	            {
-	               if (Window.confirm("The schedule \"" + scheduleName
-	                     + "\" already exists.  Are you sure you want to replace it?"))
-	                  allowOverwrite = true;
-	               else return;
-	            }
+      tb.addKeyPressHandler(new KeyPressHandler() {
+         @Override
+         public void onKeyPress(KeyPressEvent event) {
+            if (event.getCharCode() == KeyCodes.KEY_ENTER) saveButton.click();
+         }
+      });
 
-	            service.associateWorkingCopyWithNewOriginalDocument(document.getID(), scheduleName, allowOverwrite, new AsyncCallback<Void>() {
-	            	@Override
-	            	public void onFailure(Throwable caught) {
-	            		Window.alert("Failed to save!");
-	            	}
-	            	@Override
-	            	public void onSuccess(Void v) {
-	            		updateHeaderStrategy.onDocumentNameChanged(scheduleName);
-	            		unsavedDocumentStrategy.setDocumentChanged(false);
-	            		Window.alert("Successfully saved.");
-	            	}
-	            });
-	         }
-	      });
+      fp.add(new HTML("<center>Specify a name to save the schedule as...</center>"));
+      saveAsListBox.addClickHandler(new ClickHandler() {
+         @Override
+         public void onClick(ClickEvent event) {
+            tb.setText(saveAsListBox.getValue(saveAsListBox.getSelectedIndex()));
+         }
+      });
+      
+      saveAsListBox.setVisibleItemCount(5);
+      fp.add(saveAsListBox);
+      fp.add(tb);
+      fp.add(saveButton);
+      fp.add(cancelButton);
 
-	      final Button cancelButton = new Button("Cancel", new ClickHandler()
-	      {
-	         @Override
-	         public void onClick(ClickEvent event)
-	         {
-	         	window.hide();
-	         }
-	      });
+		window.addItem(fp);
 
-	      tb.addKeyPressHandler(new KeyPressHandler()
-	      {
-	         @Override
-	         public void onKeyPress(KeyPressEvent event)
-	         {
-	            if (event.getCharCode() == KeyCodes.KEY_ENTER) saveButton.click();
-	         }
-	      });
-
-	      service.getAllOriginalDocuments(new AsyncCallback<Collection<DocumentGWT>>() {
-			
-			@Override
-			public void onSuccess(Collection<DocumentGWT> result) {
-	            for (DocumentGWT doc : result)
-	            {
-	               saveAsListBox.addItem(doc.getName());
-	               schedNames.add(doc.getName());
-	            }
-			}
-			
-			@Override
-			public void onFailure(Throwable caught) {
-				Window.alert("Failed to get existing document names.");
-			}
-		});
-
-	      fp.add(new HTML("<center>Specify a name to save the schedule as...</center>"));
-	      saveAsListBox.addClickHandler(new ClickHandler()
-	      {
-	         @Override
-	         public void onClick(ClickEvent event)
-	         {
-	            tb.setText(saveAsListBox.getValue(saveAsListBox.getSelectedIndex()));
-	         }
-	      });
-	      saveAsListBox.setVisibleItemCount(5);
-	      fp.add(saveAsListBox);
-	      fp.add(tb);
-	      fp.add(saveButton);
-	      fp.add(cancelButton);
-
-			window.addItem(fp);
-
-			window.centerInPage();
-			window.show();
+		window.centerInPage();
+		window.show();
+		
+      for (DocumentGWT doc : service.originalDocuments.getAll())
+         saveAsListBox.addItem(doc.getName());
 	}
+	
+	private static void afterNewNameSupplied(CachedService service, CachedOpenWorkingCopyDocument document, String newDocumentName) {
 
+      DocumentGWT existingOriginalDocumentByThatName = null;
+      for (DocumentGWT existingDocument : service.originalDocuments.getAll())
+      	if (existingDocument.getName().equals(newDocumentName))
+      		existingOriginalDocumentByThatName = existingDocument;
+      
+      if (existingOriginalDocumentByThatName != null) {
+      	String confirmMessage = "The document \"" + existingOriginalDocumentByThatName.getName() + "\" already exists.  Are you sure you want to replace it?";
+      	
+         if (Window.confirm(confirmMessage)) {
+         	document.associateAndCopyToDifferentOriginalDocument(
+         			existingOriginalDocumentByThatName,
+         			new AsyncCallback<Void>() {
+               		@Override
+               		public void onFailure(Throwable caught) {
+               			Window.alert("Failed to save!" + caught.getMessage());
+               		}
+               		
+               		@Override
+         				public void onSuccess(Void result) {
+         					Window.alert("Successfully saved!");
+         				}
+               	});
+         }
+      }
+      else {
+      	document.copyIntoAssociatedOriginalDocument(
+      			new AsyncCallback<Void>() {
+            		@Override
+            		public void onFailure(Throwable caught) {
+            			Window.alert("Failed to save! " + caught.getMessage());
+            		}
+            		
+            		@Override
+      				public void onSuccess(Void result) {
+      					Window.alert("Successfully saved!");
+      				}
+            	});
+      }
+	}
 }

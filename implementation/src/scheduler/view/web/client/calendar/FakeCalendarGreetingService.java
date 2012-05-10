@@ -4,18 +4,25 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
-
 import scheduler.view.web.client.GreetingServiceAsync;
+import scheduler.view.web.shared.ClientChangesResponse;
+import scheduler.view.web.shared.CompleteWorkingCopyDocumentGWT;
 import scheduler.view.web.shared.CourseGWT;
 import scheduler.view.web.shared.DayGWT;
-import scheduler.view.web.shared.DocumentGWT;
 import scheduler.view.web.shared.InstructorGWT;
 import scheduler.view.web.shared.LocationGWT;
+import scheduler.view.web.shared.LoginResponse;
+import scheduler.view.web.shared.OriginalDocumentGWT;
 import scheduler.view.web.shared.ScheduleItemGWT;
+import scheduler.view.web.shared.ServerResourcesResponse;
+import scheduler.view.web.shared.SynchronizeRequest;
+import scheduler.view.web.shared.SynchronizeResponse;
+
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class FakeCalendarGreetingService implements GreetingServiceAsync {
 
@@ -712,142 +719,95 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 	}
 	
 	@Override
-	public void getCoursesForDocument(int documentID, AsyncCallback<List<CourseGWT>> callback) {
-		callback.onSuccess(COURSES);
+	public void saveWorkingCopyToOriginalDocument(int sessionID, int workingCopyDocumentID, AsyncCallback<Void> callback) {
+		callback.onFailure(new UnsupportedOperationException("Method not implemented in this test double."));
 	}
 
 	@Override
-	public void removeCourse(Integer realCourseID, AsyncCallback<Void> callback) {
-		callback.onFailure(new UnsupportedOperationException("Cannot remove course using this test double"));
+	public void createAndOpenWorkingCopyForOriginalDocument(
+			int sessionID,
+			int originalDocumentID,
+			AsyncCallback<CompleteWorkingCopyDocumentGWT> callback) {
+		callback.onFailure(new UnsupportedOperationException("Method not implemented in this test double."));
 	}
 
 	@Override
-	public void editCourse(CourseGWT realCourse, AsyncCallback<Void> callback) {
-		callback.onFailure(new UnsupportedOperationException("Cannot edit course using this test double"));
+	public void deleteWorkingCopyDocument(int sessionID, int documentID, AsyncCallback<Void> callback) {
+		callback.onFailure(new UnsupportedOperationException("Method not implemented in this test double."));
 	}
 
 	@Override
-	public void addCourseToDocument(int documentID, CourseGWT realCourse, AsyncCallback<CourseGWT> callback) {
-		callback.onFailure(new UnsupportedOperationException("Cannot add course using this test double"));
+	public void associateWorkingCopyWithNewOriginalDocument(
+			int sessionID,
+			int workingCopyID,
+			String scheduleName,
+			boolean allowOverwrite,
+			AsyncCallback<Void> callback) {
+		callback.onFailure(new UnsupportedOperationException("Method not implemented in this test double."));
 	}
 
 	@Override
-	public void getInstructorsForDocument(int documentID, AsyncCallback<List<InstructorGWT>> callback) {
-		callback.onSuccess(INSTRUCTORS);
+	public void synchronizeDocumentCourses(
+			int sessionID,
+			int documentID,
+			SynchronizeRequest<CourseGWT> request,
+			AsyncCallback<SynchronizeResponse<CourseGWT>> callback) {
+		callback.onSuccess(new SynchronizeResponse<CourseGWT>(new ClientChangesResponse(new LinkedList<Integer>()), new ServerResourcesResponse<CourseGWT>(COURSES)));
 	}
 
 	@Override
-	public void removeInstructor(Integer realInstructorID, AsyncCallback<Void> callback) {
-		callback.onFailure(new UnsupportedOperationException("Cannot edit instrutor using this test double"));
+	public void synchronizeDocumentInstructors(
+			int sessionID,
+			int documentID,
+			SynchronizeRequest<InstructorGWT> request,
+			AsyncCallback<SynchronizeResponse<InstructorGWT>> callback) {
+		callback.onSuccess(new SynchronizeResponse<InstructorGWT>(new ClientChangesResponse(new LinkedList<Integer>()), new ServerResourcesResponse<InstructorGWT>(INSTRUCTORS)));
 	}
 
 	@Override
-	public void editInstructor(InstructorGWT realInstructor, AsyncCallback<Void> callback) {
-		callback.onFailure(new UnsupportedOperationException("Cannot edit instrcutor using this test double"));
+	public void synchronizeDocumentLocations(
+			int sessionID,
+			int documentID,
+			SynchronizeRequest<LocationGWT> request,
+			AsyncCallback<SynchronizeResponse<LocationGWT>> callback) {
+		callback.onSuccess(new SynchronizeResponse<LocationGWT>(new ClientChangesResponse(new LinkedList<Integer>()), new ServerResourcesResponse<LocationGWT>(LOCATIONS)));
 	}
 
 	@Override
-	public void addInstructorToDocument(int documentID, InstructorGWT realInstructor, AsyncCallback<InstructorGWT> callback) {
-		callback.onFailure(new UnsupportedOperationException("Cannot add instructor using this test double"));
+	public void synchronizeOriginalDocuments(
+			int sessionID,
+			SynchronizeRequest<OriginalDocumentGWT> request,
+			AsyncCallback<SynchronizeResponse<OriginalDocumentGWT>> callback) {
+		callback.onFailure(new UnsupportedOperationException("Method not implemented in this test double."));
 	}
 
 	@Override
-	public void addLocationToDocument(int documentID, LocationGWT location, AsyncCallback<LocationGWT> callback) {
-		callback.onFailure(new UnsupportedOperationException("Cannot add location using this test double"));
+	public void generateRestOfSchedule(
+			int sessionID,
+			int scheduleID,
+			AsyncCallback<ServerResourcesResponse<ScheduleItemGWT>> callback) {
+		callback.onFailure(new UnsupportedOperationException("Method not implemented in this test double."));
 	}
 
 	@Override
-	public void editLocation(LocationGWT source, AsyncCallback<Void> callback) {
-		callback.onFailure(new UnsupportedOperationException("Cannot edit location using this test double"));
+	public void getAllOriginalDocuments(
+			int sessionID,
+			AsyncCallback<ServerResourcesResponse<OriginalDocumentGWT>> callback) {
+		callback.onFailure(new UnsupportedOperationException("Method not implemented in this test double."));
 	}
 
 	@Override
-	public void getLocationsForDocument(int documentID, AsyncCallback<List<LocationGWT>> callback) {
-		callback.onSuccess(LOCATIONS);
+	public void synchronizeDocumentScheduleItems(
+			int sessionID,
+			int documentID,
+			SynchronizeRequest<ScheduleItemGWT> request,
+			AsyncCallback<SynchronizeResponse<ScheduleItemGWT>> callback) {
+		callback.onFailure(new UnsupportedOperationException("Method not implemented in this test double."));
 	}
 
 	@Override
-	public void removeLocation(Integer locationID, AsyncCallback<Void> callback) {
-		callback.onFailure(new UnsupportedOperationException("Cannot remove location using this test double"));
+	public void loginAndGetAllOriginalDocuments(String username, AsyncCallback<LoginResponse> callback) {
+		callback.onFailure(new UnsupportedOperationException("Method not implemented in this test double."));
 	}
 
-	@Override
-	public void login(String username, AsyncCallback<Integer> callback) {
-		callback.onFailure(new UnsupportedOperationException("Cannot login using this test double"));
-	}
-
-	@Override
-	public void createOriginalDocument(String newDocName, AsyncCallback<DocumentGWT> callback) {
-		callback.onFailure(new UnsupportedOperationException("Cannot create document using this test double"));
-	}
-
-	@Override
-	public void saveWorkingCopyToOriginalDocument(Integer id, AsyncCallback<Void> callback) {
-		callback.onFailure(new UnsupportedOperationException("Cannot save working copy using this test double"));
-	}
-
-	@Override
-	public void createWorkingCopyForOriginalDocument(Integer originalDocumentID, AsyncCallback<DocumentGWT> callback) {
-		callback.onFailure(new UnsupportedOperationException("Cannot create working copy using this test double"));
-	}
-
-	@Override
-	public void deleteWorkingCopyDocument(Integer documentID, AsyncCallback<Void> callback) {
-		callback.onFailure(new UnsupportedOperationException("Cannot delete working copy using this test double"));
-	}
-
-	@Override
-	public void insertScheduleItem(int scheduleID, ScheduleItemGWT scheduleItem, AsyncCallback<Collection<ScheduleItemGWT>> callback) {
-		callback.onFailure(new UnsupportedOperationException("Cannot insert item using this test double"));
-	}
-
-	@Override
-	public void generateRestOfSchedule(int scheduleID, AsyncCallback<Collection<ScheduleItemGWT>> callback) {
-		callback.onFailure(new UnsupportedOperationException("Cannot generate schedule using this test double"));
-	}
-
-	@Override
-	public void updateScheduleItem(ScheduleItemGWT itemGWT, AsyncCallback<Collection<ScheduleItemGWT>> callback) {
-		callback.onFailure(new UnsupportedOperationException("Cannot update item using this test double"));
-	}
-
-	@Override
-	public void getScheduleItems(int scheduleID, AsyncCallback<Collection<ScheduleItemGWT>> callback) {
-		callback.onSuccess(SCHEDULE_ITEMS);
-	}
-
-	@Override
-	public void newRemoveScheduleItem(ScheduleItemGWT itemGWT, AsyncCallback<Collection<ScheduleItemGWT>> callback) {
-		callback.onFailure(new UnsupportedOperationException("Cannot remove item using this test double"));
-	}
-
-	@Override
-	public void updateDocument(DocumentGWT document, AsyncCallback<Void> callback) {
-		callback.onFailure(new UnsupportedOperationException("Cannot update document using this test double"));
-	}
-
-	@Override
-	public void associateWorkingCopyWithNewOriginalDocument(Integer workingCopyID, String scheduleName, boolean allowOverwrite, AsyncCallback<Void> callback) {
-		callback.onFailure(new UnsupportedOperationException("Cannot associate working copy using this test double"));
-	}
-
-	@Override
-	public void findDocumentByID(int automaticOpenDocumentID, AsyncCallback<DocumentGWT> callback) {
-		callback.onFailure(new UnsupportedOperationException("Cannot find document using this test double"));
-	}
-
-	@Override
-	public void getAllOriginalDocuments(AsyncCallback<Collection<DocumentGWT>> callback) {
-		callback.onFailure(new UnsupportedOperationException("Cannot get documents using this test double"));
-	}
-
-	@Override
-	public void removeOriginalDocument(Integer id, AsyncCallback<Void> callback) {
-		callback.onFailure(new UnsupportedOperationException("Cannot remove document using this test double"));
-	}
-
-	@Override
-	public void updateCourses(int documentID, List<CourseGWT> addedResources, Collection<CourseGWT> editedResources, List<Integer> deletedResourcesIDs, AsyncCallback<List<Integer>> callback) {
-		callback.onFailure(new UnsupportedOperationException("Cannot update courses using this test double"));
-	}
 }

@@ -1,39 +1,37 @@
-package scheduler.view.web.client.views.resources.courses;
+package scheduler.view.web.client;
 
-import java.util.Collection;
-import java.util.List;
-
-import scheduler.view.web.client.GreetingServiceAsync;
 import scheduler.view.web.client.views.resources.ResourceCache;
 import scheduler.view.web.shared.CourseGWT;
+import scheduler.view.web.shared.ServerResourcesResponse;
+import scheduler.view.web.shared.SynchronizeRequest;
+import scheduler.view.web.shared.SynchronizeResponse;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 // Called "Document"CoursesCache because it only deals with the courses for a given document.
 public class DocumentCoursesCache extends ResourceCache<CourseGWT> {
 	GreetingServiceAsync service;
-	int documentID;
+	int sessionID;
+	int workingDocumentRealID;
 	
-	public DocumentCoursesCache(GreetingServiceAsync service, int documentID) {
-		super();
+	public DocumentCoursesCache(boolean deferredSynchronizationEnabled, GreetingServiceAsync service, int sessionID, int workingDocumentRealID, ServerResourcesResponse<CourseGWT> initialCourses) {
+		super("doc" + workingDocumentRealID + "courses", deferredSynchronizationEnabled, initialCourses);
 		this.service = service;
-		this.documentID = documentID;
+		this.sessionID = sessionID;
+		this.workingDocumentRealID = workingDocumentRealID;
+	}
+	@Override
+	protected boolean resourceChanged(CourseGWT oldResource, CourseGWT newResource) {
+		return !oldResource.attributesEqual(newResource);
 	}
 	
 	@Override
-	protected void getInitialResourcesFromServer(AsyncCallback<List<CourseGWT>> callback) {
-		service.getCoursesForDocument(documentID, callback);
+	protected void synchronizeWithServer(
+			SynchronizeRequest<CourseGWT> request,
+			AsyncCallback<SynchronizeResponse<CourseGWT>> callback) {
+		service.synchronizeDocumentCourses(sessionID, workingDocumentRealID, request, callback);
 	}
-
-	@Override
-	protected void sendActivityToServer(
-			List<CourseGWT> addedResources,
-			Collection<CourseGWT> editedResources,
-			List<Integer> deletedResourcesIDs,
-			AsyncCallback<List<Integer>> asyncCallback) {
-		service.updateCourses(documentID, addedResources, editedResources, deletedResourcesIDs, asyncCallback);
-	}
-
+	
 	@Override
 	protected CourseGWT cloneResource(CourseGWT source) {
 		return new CourseGWT(source);

@@ -8,14 +8,12 @@ import scheduler.view.web.client.views.LoadingPopup;
 import scheduler.view.web.client.views.LoginView;
 import scheduler.view.web.client.views.home.HomeView;
 import scheduler.view.web.client.views.resources.instructors.InstructorsHomeView;
-import scheduler.view.web.shared.DocumentGWT;
+import scheduler.view.web.shared.LoginResponse;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.logical.shared.CloseEvent;
-import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -101,7 +99,7 @@ public class Scheduler implements EntryPoint, UpdateHeaderStrategy
 			urlArguments = URLUtilities.parseURLArguments(Window.Location.getHref());
 		
 		final String username = urlArguments.get("userid");
-		String documentIDStr = urlArguments.get("originaldocumentid");
+		final String documentIDStr = urlArguments.get("originaldocumentid");
 		
 		if (username == null) {
 			assert(documentIDStr == null);
@@ -111,33 +109,48 @@ public class Scheduler implements EntryPoint, UpdateHeaderStrategy
 		else {
 			onLogin(username);
 			
-			if(username.equals("jjuszak"))
-			{
-				viewContainer.add(new InstructorsHomeView(service, username));
-				loadingPopup.hide();
-				return;
-			}
-			
-			if (documentIDStr == null) {
-				viewContainer.add(new HomeView(service, viewContainer, username));
-				loadingPopup.hide();
-			}
-			else {
-				final int originalDocumentID = Integer.parseInt(documentIDStr);
+			service.loginAndGetAllOriginalDocuments(username, new AsyncCallback<LoginResponse>() {
+				@Override
+				public void onFailure(Throwable caught) {
+					Window.alert("Failed to get documents");
+				}
 				
-				service.createWorkingCopyForOriginalDocument(originalDocumentID, new AsyncCallback<DocumentGWT>() {
-					public void onSuccess(DocumentGWT workingCopyDocument) {
-						onOpenedDocument(workingCopyDocument.getName());
+				@Override
+				public void onSuccess(LoginResponse response) {
+					final CachedService cachedService = new CachedService(true, service, response.sessionID, response.initialOriginalDocuments);
+					
+					if (response.isAdmin) {
+						if (documentIDStr == null) {
+							viewContainer.add(new HomeView(cachedService, viewContainer, username));
+							loadingPopup.hide();
+						}
+						else {
+							final int originalDocumentID = Integer.parseInt(documentIDStr);
+							
+							cachedService.openWorkingCopyForOriginalDocument(originalDocumentID, new AsyncCallback<CachedOpenWorkingCopyDocument>() {
+								@Override
+								public void onFailure(Throwable caught) {
+									Window.alert("Failed to get document!");
+									loadingPopup.hide();
+								}
+								
+								@Override
+								public void onSuccess(CachedOpenWorkingCopyDocument workingCopyDocument) {
+									onOpenedDocument(cachedService.originalDocuments.getByID(cachedService.originalDocuments.realIDToLocalID(originalDocumentID)).getName());
+									
+									viewContainer.add(new AdminScheduleNavView(cachedService, Scheduler.this, username, workingCopyDocument));
+									loadingPopup.hide();
+								}
+							});
+						}
+					}
+					else {
+						loadingPopup.hide();
 						
-						viewContainer.add(new AdminScheduleNavView(service, Scheduler.this, username, workingCopyDocument));
-						loadingPopup.hide();
+						viewContainer.add(new InstructorsHomeView(cachedService, username));
 					}
-					public void onFailure(Throwable caught) {
-						Window.alert("Failed to get document!");
-						loadingPopup.hide();
-					}
-				});
-			}
+				}
+			});
 		}
 	}
 

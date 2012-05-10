@@ -3,11 +3,11 @@ package scheduler.model.algorithm;
 import java.util.Collection;
 import java.util.Vector;
 
-import scheduler.model.Location;
 import scheduler.model.Course;
+import scheduler.model.Document;
 import scheduler.model.Instructor;
+import scheduler.model.Location;
 import scheduler.model.Model;
-import scheduler.model.Schedule;
 import scheduler.model.ScheduleItem;
 import scheduler.model.db.DatabaseException;
 
@@ -16,11 +16,11 @@ public class GenerateEntryPoint {
 	private static Vector<InstructorDecorator> insD;
 	private static Vector<LocationDecorator> locD;
 	
-	public static Vector<ScheduleItem> generate(Model model, Schedule schedule, Collection<ScheduleItem> s_items, 
+	public static Vector<ScheduleItem> generate(Model model, Document document, Collection<ScheduleItem> s_items, 
 			Collection<Course> c_list, Collection<Instructor> i_coll,
 			Collection<Location> l_coll) throws DatabaseException, BadInstructorDataException {
 		
-		if(model == null || schedule == null) 
+		if(model == null || document == null) 
 			throw new NullPointerException();
 		
 		insD = new Vector<InstructorDecorator>();
@@ -53,7 +53,7 @@ public class GenerateEntryPoint {
 	    	
 	    }
 
-		return Generate.generate(model, schedule, s_items, c_list, insD, locD);
+		return Generate.generate(model, document, s_items, c_list, insD, locD);
 	}
 
 	private static void checkValid(Instructor ins) throws BadInstructorDataException, DatabaseException{

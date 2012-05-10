@@ -1,16 +1,16 @@
 package scheduler.model.db.sqlite;
 
 import scheduler.model.db.IDBDocument;
-import scheduler.model.db.IDBSchedule;
-import scheduler.model.db.simple.DBDocument;
 
-public class SQLDocument extends SQLObject implements IDBDocument, IDBSchedule {
+public class SQLDocument extends SQLObject implements IDBDocument {
 	String name;
 	boolean isTrashed;
 	Integer startHalfHour;
 	Integer endHalfHour;
 	Integer staffInstructorID; // null if there is none
 	Integer tbaLocationID; // null if there is none
+	Integer chooseForMeInstructorID; // null if there is none
+	Integer chooseForMeLocationID; // null if there is none
 
 	
 	public SQLDocument(Integer id, String name, Integer startHalfHour, Integer endHalfHour) {

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -31,14 +30,12 @@ import scheduler.model.db.IDBLocation;
 import scheduler.model.db.IDBObject;
 import scheduler.model.db.IDBOfferedDayPattern;
 import scheduler.model.db.IDBProvidedEquipment;
-import scheduler.model.db.IDBSchedule;
 import scheduler.model.db.IDBScheduleItem;
 import scheduler.model.db.IDBTime;
 import scheduler.model.db.IDBTimePreference;
 import scheduler.model.db.IDBUsedEquipment;
 import scheduler.model.db.IDBUser;
 import scheduler.model.db.IDatabase;
-import scheduler.model.db.simple.DBScheduleItem;
 import scheduler.model.db.simple.DBUsedEquipment;
 
 public class SQLdb implements IDatabase {
@@ -528,15 +525,6 @@ public class SQLdb implements IDatabase {
 		documentTable.delete(document.getID());
 	}
 
-
-	@Override
-	public IDBDocument findDocumentForSchedule(IDBSchedule schedule)
-			throws DatabaseException {		
-		SQLDocument ret = (SQLDocument) schedule;	
-		return ret;
-	}
-
-
 	@Override
 	public boolean isOriginalDocument(IDBDocument doc) throws DatabaseException {
 		List<SQLWorkingCopy> result;
@@ -611,62 +599,10 @@ public class SQLdb implements IDatabase {
 
 
 	@Override
-	public Collection<IDBSchedule> findAllSchedulesForDocument(
+	public Collection<IDBScheduleItem> findScheduleItemsByDocument(
 			IDBDocument document) throws DatabaseException {
-		ArrayList<IDBSchedule> ret = new ArrayList<IDBSchedule>();
-		ret.add((IDBSchedule)document);
-		
-		return ret;
-	}
-
-	@Override
-	public IDBSchedule findScheduleByID(int id) throws DatabaseException {
-		List<SQLDocument> ret;
-		HashMap<String, Object> wheres = new HashMap<String, Object>();
-		wheres.put("id", id);	
-		
-		ret = documentTable.select(wheres);
-		
-		if (ret.size() == 0)
-			throw new DatabaseException("No schedule found in SQLdb.findScheduleByID");
-		return ret.get(0);
-	}
-
-
-	@Override
-	public IDBSchedule assembleSchedule() throws DatabaseException {
-		return new SQLDocument(null, null, null, null);
-	}
-
-
-	@Override
-	public void insertSchedule(IDBDocument containingDocument,
-			IDBSchedule schedule) throws DatabaseException {
-		((SQLScheduleItem)schedule).docID = containingDocument.getID();
-
-		
-	}
-
-	@Override
-	public void updateSchedule(IDBSchedule schedule) throws DatabaseException {
-		SQLDocument sched = (SQLDocument) schedule;
-		
-		documentTable.update(new Object[] {sched.getName(), sched.isTrashed(), sched.getStartHalfHour(), 
-				sched.getEndHalfHour()}, sched.getID());
-	}
-
-
-	@Override
-	public void deleteSchedule(IDBSchedule schedule) throws DatabaseException {
-		documentTable.delete(schedule.getID());
-	}
-
-
-	@Override
-	public Collection<IDBScheduleItem> findScheduleItemsBySchedule(
-			IDBSchedule schedule) throws DatabaseException {
 		Collection<IDBScheduleItem> result = new LinkedList<IDBScheduleItem>();
-		SQLDocument sched = (SQLDocument) schedule;
+		SQLDocument sched = (SQLDocument) document;
 		HashMap<String, Object> wheres = new HashMap<String, Object>();
 		
 		wheres.put("id", sched.getID());
@@ -682,10 +618,10 @@ public class SQLdb implements IDatabase {
 
 
 	@Override
-	public Collection<IDBScheduleItem> findAllScheduleItemsForSchedule(
-			IDBSchedule schedule) throws DatabaseException {
+	public Collection<IDBScheduleItem> findAllScheduleItemsForDocument(
+			IDBDocument document) throws DatabaseException {
 		Collection<IDBScheduleItem> result = new LinkedList<IDBScheduleItem>();
-		SQLDocument sched = (SQLDocument) schedule;
+		SQLDocument sched = (SQLDocument) document;
 		HashMap<String, Object> wheres = new HashMap<String, Object>();
 		
 		wheres.put("id", sched.getID());
@@ -723,7 +659,7 @@ public class SQLdb implements IDatabase {
 
 	//TALK TO EVAN ABOUT THIS!!!
 	@Override
-	public void insertScheduleItem(IDBSchedule schedule, IDBCourse course,
+	public void insertScheduleItem(IDBDocument document, IDBCourse course,
 			IDBInstructor instructor, IDBLocation location, IDBScheduleItem item)
 			throws DatabaseException {
 		scheduleItemTable.insert(null);	
@@ -1347,7 +1283,7 @@ public class SQLdb implements IDatabase {
 
 
 	@Override
-	public IDBSchedule getScheduleItemSchedule(IDBScheduleItem underlying)
+	public IDBDocument getScheduleItemDocument(IDBScheduleItem underlying)
 			throws DatabaseException {
 		/**
 		 * IDBSchedule is not part of the SQLdb framework
@@ -1429,18 +1365,17 @@ public class SQLdb implements IDatabase {
 	}
 
 	@Override
-	public void setDocumentStaffInstructor(IDBDocument underlyingDocument,
+	public void setDocumentStaffInstructorOrNull(IDBDocument underlyingDocument,
 			IDBInstructor underlyingInstructor) throws DatabaseException {
 		((SQLDocument)underlyingDocument).staffInstructorID = underlyingInstructor.getID();
 		updateDocument((SQLDocument)underlyingDocument);
-		
 	}
 
 	@Override
-	public void setDocumentTBALocation(IDBDocument underlyingDocument,
+	public void setDocumentTBALocationOrNull(IDBDocument underlyingDocument,
 			IDBLocation underlyingLocation) throws DatabaseException {
 		((SQLDocument)underlyingDocument).tbaLocationID = underlyingLocation.getID();
-		updateDocument((SQLDocument)underlyingDocument);		
+		updateDocument((SQLDocument)underlyingDocument);
 	}
 
 	@Override
@@ -1500,6 +1435,20 @@ public class SQLdb implements IDatabase {
 			throw new DatabaseException(new Throwable("Document " + scheduleName + " not found."));
 		return document;
 	}
+
+	@Override
+	public void setDocumentChooseForMeInstructorOrNull(IDBDocument underlyingDocument, IDBInstructor underlyingInstructor)
+			throws DatabaseException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setDocumentChooseForMeLocationOrNull(IDBDocument underlyingDocument, IDBLocation underlyingLocation)
+			throws DatabaseException {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	/**
 	 * SALOME'S DOMAIN -- NOT KAYLENE'S
@@ -1519,20 +1468,4 @@ public class SQLdb implements IDatabase {
 		return null;
 	}
 
-	@Override
-	public void setDocumentChooseForMeInstructor(
-			IDBDocument underlyingDocument, IDBInstructor underlyingInstructor)
-			throws DatabaseException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void setDocumentChooseForMeLocation(IDBDocument underlyingDocument,
-			IDBLocation underlyingLocation) throws DatabaseException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	
 }

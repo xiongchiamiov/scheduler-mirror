@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.TreeSet;
 
 import scheduler.view.web.client.Import;
-import scheduler.view.web.shared.DocumentGWT;
+import scheduler.view.web.shared.OriginalDocumentGWT;
 
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.Record;
@@ -29,11 +29,11 @@ import com.smartgwt.client.widgets.tab.Tab;
 
 public class HomeTab extends Tab {
 	public interface DocumentsStrategy {
-		Collection<DocumentGWT> getAllOriginalDocuments();
+		Collection<OriginalDocumentGWT> getAllOriginalDocuments();
 		void trashDocuments(Collection<Integer> documentIDs);
 		void mergeDocuments(Collection<Integer> documentIDs);
 		void createNew();
-		void openDocument(int id);
+		void openDocument(int id, boolean openExistingWorkingDocument);
 	}
 	
 	final DocumentsStrategy documents;
@@ -74,24 +74,64 @@ public class HomeTab extends Tab {
 				String fieldName = this.getFieldName(colNum);
 				
 				if (fieldName.equals("linkField")) {
-					Label label = new Label(record.getAttribute("name"));
+					HLayout layout = new HLayout();
+					layout.setOverflow(Overflow.VISIBLE);
+					layout.setAutoHeight();
 					
-					// for some reason two separate calls didnt work here, it wouldnt pick up the first one. -eo
-					label.setStyleName("inAppLink homeDocumentLink");
+					{
+						Label label = new Label(record.getAttribute("name"));
+						
+						// for some reason two separate calls didnt work here, it wouldnt pick up the first one. -eo
+						label.setStyleName("inAppLink homeDocumentLink");
+	
+						label.setOverflow(Overflow.VISIBLE);
+						label.setAutoWidth();
+						label.setAutoHeight();
+						label.setWrap(false);
+						label.addClickHandler(new ClickHandler() {
+							public void onClick(ClickEvent event) {
+								int docID = record.getAttributeAsInt("id");
+								documents.openDocument(docID, false);
+							}
+						});
+						label.setID("sc_document_"+this.rowCount);
+						this.rowCount++;
+						
+						layout.addMember(label);
+					}
 
-					label.setOverflow(Overflow.VISIBLE);
-					label.setAutoWidth();
-					label.setAutoHeight();
-					label.setWrap(false);
-					label.addClickHandler(new ClickHandler() {
-						public void onClick(ClickEvent event) {
-							int docID = record.getAttributeAsInt("id");
-							documents.openDocument(docID);
-						}
-					});
-					label.setID("sc_document_"+this.rowCount);
-					this.rowCount++;
-					return label;
+					{
+						OriginalDocumentGWT document = null;
+						for (OriginalDocumentGWT considerDocument : documents.getAllOriginalDocuments())
+							if (considerDocument.getID().equals(record.getAttributeAsInt("id")))
+								document = considerDocument;
+						assert(document != null);
+						
+						final OriginalDocumentGWT finalDocument = document;
+						
+						String workingChangesSummary = document.getWorkingChangesSummary();
+						if (workingChangesSummary == null)
+							workingChangesSummary = "";
+						
+						Label workingLabel = new Label(" (being edited)");
+	
+						// for some reason two separate calls didnt work here, it wouldnt pick up the first one. -eo
+						workingLabel.setStyleName("inAppLink homeDocumentLink");
+	
+						workingLabel.setOverflow(Overflow.VISIBLE);
+						workingLabel.setAutoWidth();
+						workingLabel.setAutoHeight();
+						workingLabel.setWrap(false);
+						workingLabel.addClickHandler(new ClickHandler() {
+							public void onClick(ClickEvent event) {
+								documents.openDocument(finalDocument.getID(), true);
+							}
+						});
+						
+						layout.addMember(workingLabel);
+					}
+					
+					return layout;
 				}
 				else {
 					return null;
@@ -106,12 +146,15 @@ public class HomeTab extends Tab {
 		aliveOriginalDocumentsGrid.setShowAllRecords(true);
 		aliveOriginalDocumentsGrid.setAutoFetchData(true);
 		aliveOriginalDocumentsGrid.setCanEdit(false);
-		dataSource = new DocumentsDataSource(new DocumentsDataSource.DocumentsStrategy() {
-			public Collection<DocumentGWT> getAllDocuments() {
-				Collection<DocumentGWT> allLiveOriginals = new LinkedList<DocumentGWT>();
-				for (DocumentGWT document : documents.getAllOriginalDocuments())
-					if (!document.isTrashed())
+		dataSource = new OriginalDocumentsDataSource(new OriginalDocumentsDataSource.DocumentsStrategy() {
+			public Collection<OriginalDocumentGWT> getAllDocuments() {
+				Collection<OriginalDocumentGWT> allLiveOriginals = new LinkedList<OriginalDocumentGWT>();
+				for (OriginalDocumentGWT document : documents.getAllOriginalDocuments()) {
+					if (!document.isTrashed()) {
 						allLiveOriginals.add(document);
+						System.out.println("added document id " + document.getID() + " with summary " + document.getWorkingChangesSummary());
+					}
+				}
 				return allLiveOriginals;
 			}
 		});

@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeSet;
 
-import scheduler.view.web.client.views.resources.ResourceCollection;
+import scheduler.view.web.client.CachedOpenWorkingCopyDocument;
 import scheduler.view.web.shared.CourseGWT;
 import scheduler.view.web.shared.DayGWT;
 
@@ -20,10 +20,10 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
 import com.smartgwt.client.types.DSProtocol;
 
 public class CoursesDataSource extends DataSource {
-	ResourceCollection<CourseGWT> coursesSource;
+	CachedOpenWorkingCopyDocument document;
 	
-	public CoursesDataSource(ResourceCollection<CourseGWT> coursesSource) {
-		this.coursesSource = coursesSource;
+	public CoursesDataSource(CachedOpenWorkingCopyDocument document) {
+		this.document = document;
 		
 		setDataProtocol(DSProtocol.CLIENTCUSTOM);
 		
@@ -147,16 +147,12 @@ public class CoursesDataSource extends DataSource {
 	
 
 	protected void fetch(final DSRequest dsRequest) {
-		Collection<CourseGWT> courses = coursesSource.getAll();
+		Collection<CourseGWT> courses = document.getCourses();
 		
 		Record[] responseRecords = new Record[courses.size()];
-		
 		int responseRecordIndex = 0;
-		for (CourseGWT course : courses) {
-//			System.out.println("Fetch course result id " + course.getID());
-//			System.out.println("Fetch record id " + readCourseIntoRecord(course).getAttribute("id"));
+		for (CourseGWT course : courses)
 			responseRecords[responseRecordIndex++] = readCourseIntoRecord(course);
-		}
 		
 		DSResponse response = new DSResponse();
 		response.setData(responseRecords);
@@ -167,7 +163,7 @@ public class CoursesDataSource extends DataSource {
 		Record record = dsRequest.getAttributeAsRecord("data");
 		CourseGWT newCourse = readRecordIntoCourse(record);
 		
-		coursesSource.add(newCourse);
+		document.addCourse(newCourse);
 		assert(newCourse.getID() != null);
 		
 		DSResponse response = new DSResponse();
@@ -222,7 +218,7 @@ public class CoursesDataSource extends DataSource {
 		
 //		System.out.println("updating course id " + course.getID() + ": " + course.getDept() + " " + course.getCatalogNum());
 		
-		coursesSource.edit(course);
+		document.editCourse(course);
 		
 		DSResponse response = new DSResponse();
 		response.setData(new Record[] { readCourseIntoRecord(course) });
@@ -233,7 +229,7 @@ public class CoursesDataSource extends DataSource {
 		final Record record = dsRequest.getAttributeAsRecord("data");
 		final CourseGWT course = readRecordIntoCourse(record);
 
-		coursesSource.delete(record.getAttributeAsInt("id"));
+		document.deleteCourse(record.getAttributeAsInt("id"));
 		
 		DSResponse response = new DSResponse();
 		response.setData(new Record[] { readCourseIntoRecord(course) });

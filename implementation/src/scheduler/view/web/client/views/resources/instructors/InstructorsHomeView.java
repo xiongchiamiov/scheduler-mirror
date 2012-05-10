@@ -3,11 +3,12 @@ package scheduler.view.web.client.views.resources.instructors;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 
-import scheduler.view.web.client.GreetingServiceAsync;
+import scheduler.view.web.client.CachedOpenWorkingCopyDocument;
+import scheduler.view.web.client.CachedService;
 import scheduler.view.web.shared.DocumentGWT;
 import scheduler.view.web.shared.InstructorGWT;
+import scheduler.view.web.shared.OriginalDocumentGWT;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -22,14 +23,14 @@ import com.smartgwt.client.widgets.Window;
 
 public class InstructorsHomeView extends VerticalPanel
 {
-	protected GreetingServiceAsync service;
+	protected CachedService service;
 	protected String username;
 	protected ArrayList<String> scheduleNames;
 	protected HashMap<Integer, DocumentGWT> allAvailableOriginalDocumentsByID;	
 	protected FlexTable schedList = new FlexTable();
 	protected InstructorGWT instructor;
 	
-	public InstructorsHomeView(final GreetingServiceAsync service, final String username)
+	public InstructorsHomeView(final CachedService service, final String username)
 	{	
 		this.service = service;
 		this.username = username;
@@ -59,7 +60,7 @@ public class InstructorsHomeView extends VerticalPanel
 
 		// ------------------------------------
 		
-		this.service.getAllOriginalDocuments(new AsyncCallback<Collection<DocumentGWT>>(){
+		this.service.forceSynchronize(new AsyncCallback<Void>(){
 					 @Override
 					 public void onFailure(Throwable caught)
 					 {
@@ -67,41 +68,27 @@ public class InstructorsHomeView extends VerticalPanel
 					 }
 					
 					 @Override
-					 public void onSuccess(Collection<DocumentGWT> result)
+					 public void onSuccess(Void v)
 					 {
+						 Collection<OriginalDocumentGWT> result = service.originalDocuments.getAll();
+						 
 						 allAvailableOriginalDocumentsByID = new HashMap<Integer, DocumentGWT>();
 					
-						 for (final DocumentGWT doc : result)
+						 for (final OriginalDocumentGWT doc : result)
 						 {
-							 assert(doc.getID() != null);
-							 
-							 service.getInstructorsForDocument(doc.getID(), new AsyncCallback<List<InstructorGWT>>() {
-									public void onFailure(Throwable caught) {
-										com.google.gwt.user.client.Window.alert("Failed to get instructors!");
-									}
-									public void onSuccess(List<InstructorGWT> result) {
-										for (InstructorGWT i : result) {
-											if (i.getUsername().equals(username)) {
-												System.out.println(i.getUsername()+", "+username);
-													
-												allAvailableOriginalDocumentsByID.put(doc.getID(), doc);
-												 
-												if (!doc.isTrashed())
-												{
-													addNewDocument(doc);
-													scheduleNames.add(doc.getName());
-												}
-												break;
-											}
-										}
-									}
-								});
+								allAvailableOriginalDocumentsByID.put(doc.getID(), doc);
+								 
+								if (!doc.isTrashed())
+								{
+									addNewDocument(doc);
+									scheduleNames.add(doc.getName());
+								}
 						 }
 					 }
 				  });
 	}
 	
-	public void addNewDocument(final DocumentGWT doc)
+	public void addNewDocument(final OriginalDocumentGWT doc)
 	{
 		// set the instructor
 		final String username = this.username;
@@ -114,18 +101,19 @@ public class InstructorsHomeView extends VerticalPanel
 
 			@Override
 			public void onClick(ClickEvent event) {
-				service.getInstructorsForDocument(doc.getID(), new AsyncCallback<List<InstructorGWT>>() {
+				service.openWorkingCopyForOriginalDocument(doc.getID(), new AsyncCallback<CachedOpenWorkingCopyDocument>() {
 					public void onFailure(Throwable caught) {
 						com.google.gwt.user.client.Window.alert("Failed to get instructors!");
 					}
-					public void onSuccess(List<InstructorGWT> result) {
-						for (InstructorGWT i : result) {
+					public void onSuccess(CachedOpenWorkingCopyDocument result) {
+						
+						for (InstructorGWT i : result.getInstructors(true)) {
 							if (i.getUsername().equals(username)) {
 								System.out.println(i.getUsername()+", "+username);
 								if(instructor == null)
 								{
 									System.out.println("SSSHHHHIIIITTTTTT");
-									setInstructor(i, doc);
+									setInstructor(result, i);
 								}
 								break;
 							}
@@ -147,18 +135,18 @@ public class InstructorsHomeView extends VerticalPanel
 	 * sets the instructor who shows the document
 	 * @param instructor
 	 */
-	public void setInstructor(InstructorGWT instructor1, DocumentGWT doc)
+	public void setInstructor(CachedOpenWorkingCopyDocument workingCopyDocument, InstructorGWT instructor1)
 	{
 		//System.out.println("Instructor shit: "+instructor.getUsername());
 		this.instructor = instructor1;
 		
 		final Window win1 = new Window();
-		win1.setTitle(doc.getName() + " - Course Preferences");
+		win1.setTitle(workingCopyDocument.getDocument().getName() + " - Course Preferences");
 		win1.setAutoCenter(true);
 		win1.setSize("750px", "600px");
 		
 		final Window win2 = new Window();
-		win2.setTitle(doc.getName() + " - Time Preferences");
+		win2.setTitle(workingCopyDocument.getDocument().getName() + " - Time Preferences");
 		win2.setAutoCenter(true);
 		win2.setSize("750px", "600px");
 
@@ -170,9 +158,9 @@ public class InstructorsHomeView extends VerticalPanel
 //				new HashMap<Integer, Integer>(), true);
 				
 		final InstructorPrefsWizardCourseView courses =
-				new InstructorPrefsWizardCourseView(service, doc.getID(), instructor);
+				new InstructorPrefsWizardCourseView(workingCopyDocument, instructor);
 		final InstructorPrefsWizardTimeView times =
-				new InstructorPrefsWizardTimeView(service, doc.getID(), instructor);
+				new InstructorPrefsWizardTimeView(workingCopyDocument, instructor);
 		courses.addCloseClickHandler(new ClickHandler(){
 			@Override
 			public void onClick(ClickEvent event) {

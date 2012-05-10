@@ -25,6 +25,7 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
+import scheduler.view.web.client.CachedOpenWorkingCopyDocument;
 import scheduler.view.web.client.GreetingServiceAsync;
 import scheduler.view.web.shared.DayGWT;
 import scheduler.view.web.shared.InstructorGWT;
@@ -99,7 +100,7 @@ public class TimePrefsWidget extends VerticalPanel {
 	protected ListBox fromList = new ListBox();
 	protected ListBox toList = new ListBox();
 	protected ListBox multiSet = new ListBox();
-	protected GreetingServiceAsync service;
+	protected CachedOpenWorkingCopyDocument workingCopyDocument;
 	protected Strategy strategy;
 	
 	protected FlexTable timePrefsTable;
@@ -126,12 +127,11 @@ public class TimePrefsWidget extends VerticalPanel {
 	
 	/**
 	 * The following parameters are needed to get and save the time preferences
-	 * @param service
+	 * @param workingCopyDocument
 	 * @param documentID
 	 * @param instructor
 	 */
-	public TimePrefsWidget(GreetingServiceAsync service,
-			int documentID, final InstructorGWT instructor)
+	public TimePrefsWidget(CachedOpenWorkingCopyDocument openDocument, final InstructorGWT instructor)
 	{
 		DOM.setElementAttribute(this.monday.getElement(), "id", "mondayCheck");
 		DOM.setElementAttribute(this.tuesday.getElement(), "id", "tuesdayCheck");
@@ -139,12 +139,11 @@ public class TimePrefsWidget extends VerticalPanel {
 		DOM.setElementAttribute(this.thursday.getElement(), "id", "thursdayCheck");
 		DOM.setElementAttribute(this.friday.getElement(), "id", "fridayCheck");
 		
-		this.service = service;
+		this.workingCopyDocument = openDocument;
 		instructor.verify();
 //		this.documentID = documentID;
 		this.instructor = instructor;
 		this.savedInstructor = new InstructorGWT(instructor);
-		this.service = service;
 		this.strategy = new TimePrefsWidget.Strategy() {
 			public InstructorGWT getSavedInstructor() {
 				return savedInstructor;
@@ -518,7 +517,9 @@ public class TimePrefsWidget extends VerticalPanel {
 	}
 	
 	void save() {
-		this.service.editInstructor(instructor, new AsyncCallback<Void>() {
+		workingCopyDocument.editInstructor(instructor);
+		
+		workingCopyDocument.forceSynchronize(new AsyncCallback<Void>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				// popup.hide();

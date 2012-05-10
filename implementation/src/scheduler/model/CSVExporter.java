@@ -422,7 +422,7 @@ public class CSVExporter {
 	public String export(Model model, Document document) throws IOException,
 			DatabaseException {
 		/* Gather model information into the global string ArrayLists */
-		for (Location location : model.findLocationsForDocument(document))
+		for (Location location : model.findLocationsForDocument(document, true))
 			compileLocation(location);
 
 		Collection<Course> coursesInDocument = model
@@ -435,12 +435,10 @@ public class CSVExporter {
 			compileAssociatedCourse(course, coursesInDocument);
 		}
 
-		for (Instructor instructor : model.findInstructorsForDocument(document))
+		for (Instructor instructor : model.findInstructorsForDocument(document, true))
 			compileInstructor(instructor);
 
-		Schedule schedule = document.getSchedules().iterator().next();
-		Collection<ScheduleItem> items = model
-				.findAllScheduleItemsForSchedule(schedule);
+		Collection<ScheduleItem> items = model.findAllScheduleItemsForDocument(document);
 
 		for (ScheduleItem item : items)
 			compileScheduleItem(item, items);

@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import scheduler.view.web.client.CachedOpenWorkingCopyDocument;
 import scheduler.view.web.client.views.resources.ResourceCollection;
 import scheduler.view.web.shared.CourseGWT;
 
@@ -16,10 +17,10 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
 import com.smartgwt.client.types.DSProtocol;
 
 public class LectureOptionsDataSource extends DataSource {
-	ResourceCollection<CourseGWT> coursesSource;
+	CachedOpenWorkingCopyDocument document;
 	
-	public LectureOptionsDataSource(ResourceCollection<CourseGWT> coursesSource) {
-		this.coursesSource = coursesSource;
+	public LectureOptionsDataSource(CachedOpenWorkingCopyDocument document) {
+		this.document = document;
 		
 		setDataProtocol(DSProtocol.CLIENTCUSTOM);
 		
@@ -37,7 +38,7 @@ public class LectureOptionsDataSource extends DataSource {
 	}
 
 	protected void fetch(final DSRequest dsRequest) {
-		Collection<CourseGWT> courses = coursesSource.getAll();
+		Collection<CourseGWT> courses = document.getCourses();
 		
 		List<Record> responseRecords = new LinkedList<Record>();
 		

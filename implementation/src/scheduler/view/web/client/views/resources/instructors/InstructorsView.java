@@ -1,14 +1,9 @@
 package scheduler.view.web.client.views.resources.instructors;
 
-import java.util.List;
-
-import scheduler.view.web.client.GreetingServiceAsync;
-import scheduler.view.web.client.UnsavedDocumentStrategy;
+import scheduler.view.web.client.CachedOpenWorkingCopyDocument;
 import scheduler.view.web.client.views.resources.ValidatorUtil;
-import scheduler.view.web.shared.DocumentGWT;
 import scheduler.view.web.shared.InstructorGWT;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
@@ -32,21 +27,24 @@ import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 public class InstructorsView extends VLayout {
-	protected GreetingServiceAsync service;
-	protected final DocumentGWT document;
+	CachedOpenWorkingCopyDocument openDocument;
+	
 	protected InstructorPreferencesView iipv = null;
 	protected Window prefsWindow = null;
 
-	public InstructorsView(final GreetingServiceAsync service,
-			final DocumentGWT document,
-			final UnsavedDocumentStrategy unsavedDocumentStrategy) {
+	public InstructorsView(CachedOpenWorkingCopyDocument openDocument) {
+		this.openDocument = openDocument;
+		
 		setID("s_instructorviewTab");
-
-		this.service = service;
-		this.document = document;
 
 		this.setWidth100();
 		this.setHeight100();
+
+		onPopulate();
+	}
+	
+	private void onPopulate() {
+		//com.google.gwt.user.client.Window.alert("onpopulate!");
 		
 		final ListGrid grid = new ListGrid() {
 //			protected int rowCount = 0;
@@ -82,28 +80,10 @@ public class InstructorsView extends VLayout {
 //					this.rowCount++;
 					button.addClickHandler(new ClickHandler() {
 						public void onClick(ClickEvent event) {
-							final int instructorID = record
-									.getAttributeAsInt("id");
-							service.getInstructorsForDocument(document.getID(),
-									new AsyncCallback<List<InstructorGWT>>() {
-										public void onFailure(Throwable caught) {
-											com.google.gwt.user.client.Window
-													.alert("Failed to get instructors!");
-										}
-
-										public void onSuccess(
-												List<InstructorGWT> result) {
-											for (InstructorGWT instructor : result) {
-												if (instructor.getID().equals(
-														instructorID)) {
-													preferencesButtonClicked(
-															instructor,
-															unsavedDocumentStrategy);
-													break;
-												}
-											}
-										}
-									});
+							final int instructorID = record.getAttributeAsInt("id");
+							
+							InstructorGWT instructor = openDocument.getInstructorByID(instructorID);
+							preferencesButtonClicked(instructor);
 						}
 					});
 					return button;
@@ -122,21 +102,31 @@ public class InstructorsView extends VLayout {
 		grid.setEditByCell(true);
 		grid.setListEndEditAction(RowEndEditAction.NEXT);
 		// grid.setCellHeight(22);
-		grid.setDataSource(new InstructorsDataSource(service, document,
-				unsavedDocumentStrategy));
+		grid.setDataSource(new InstructorsDataSource(openDocument));
+		grid.setAutoSaveEdits(true);
 		grid.setShowRecordComponents(true);
 		grid.setShowRecordComponentsByCell(true);
 
-		ListGridField idField = new ListGridField("id", "&nbsp;");
-		idField.setCanEdit(false);
-		idField.setCellFormatter(new CellFormatter() {
+		grid.addKeyPressHandler(new KeyPressHandler() {
+			public void onKeyPress(KeyPressEvent event) {
+				if (event.getKeyName().equals("Backspace")
+						|| event.getKeyName().equals("Delete"))
+					if (com.google.gwt.user.client.Window
+							.confirm("Are you sure you want to remove this course?"))
+						grid.removeSelectedData();
+			}
+		});
+
+		ListGridField selectorField = new ListGridField("selectorField", "&nbsp;");
+		selectorField.setCanEdit(false);
+		selectorField.setCellFormatter(new CellFormatter() {
 			public String format(Object value, ListGridRecord record,
 					int rowNum, int colNum) {
 				return "\u22EE";
 			}
 		});
-		idField.setWidth(20);
-		idField.setAlign(Alignment.CENTER);
+		selectorField.setWidth(20);
+		selectorField.setAlign(Alignment.CENTER);
 
 		IntegerRangeValidator nonnegativeInt = new IntegerRangeValidator();
 		nonnegativeInt.setMin(0);
@@ -212,27 +202,17 @@ public class InstructorsView extends VLayout {
 		instructorPrefsField.setAlign(Alignment.CENTER);
 		instructorPrefsField.setCanEdit(false);
 
-		grid.setFields(idField, schedulableField, lastNameField,
+		grid.setFields(selectorField, schedulableField, lastNameField,
 				firstNameField, usernameField, maxWTUField,
 				instructorPrefsField);
 
 		this.addMember(grid);
 		// this.setHorizontalAlignment(ALIGN_DEFAULT);
 
-		grid.addKeyPressHandler(new KeyPressHandler() {
-			public void onKeyPress(KeyPressEvent event) {
-				if (event.getKeyName().equals("Backspace")
-						|| event.getKeyName().equals("Delete"))
-					if (com.google.gwt.user.client.Window
-							.confirm("Are you sure you want to remove this instructor?"))
-						grid.removeSelectedData();
-			}
-		});
 		layoutBottomButtonBar(grid);
 	}
 
-	public void preferencesButtonClicked(InstructorGWT instructor,
-			UnsavedDocumentStrategy unsavedDocumentStrategy) {
+	public void preferencesButtonClicked(InstructorGWT instructor) {
 		
 		if(this.iipv == null)
 		{
@@ -245,9 +225,7 @@ public class InstructorsView extends VLayout {
 			this.prefsWindow.setSize("700px", "500px");
 //			ScrollPanel weewee = new ScrollPanel();
 			
-			this.iipv = new InstructorPreferencesView(service,
-				document.getID(), document.getName(), instructor,
-				unsavedDocumentStrategy);
+			this.iipv = new InstructorPreferencesView(openDocument, instructor);
 			
 //			weewee.setWidget(iipv);
 //			weewee.setSize("700px", "500px");
@@ -286,8 +264,6 @@ public class InstructorsView extends VLayout {
 				grid.startEditingNew(defaultValues);
 			}
 		});
-		// DOM.setElementAttribute(addBtn.getElement(), "id",
-		// "addInstructorBtn");
 		addBtn.setAutoWidth();
 		addBtn.setOverflow(Overflow.VISIBLE);
 		//DON'T CHANGE THIS ID IT WILL BREAK THE BUTTONS
@@ -306,8 +282,6 @@ public class InstructorsView extends VLayout {
 						}
 					}
 				});
-		// DOM.setElementAttribute(duplicateBtn.getElement(), "id",
-		// "duplicateBtn");
 		duplicateBtn.setAutoWidth();
 		duplicateBtn.setOverflow(Overflow.VISIBLE);
 		//DON'T CHANGE THIS ID IT WILL BREAK THE BUTTONS

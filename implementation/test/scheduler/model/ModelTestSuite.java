@@ -3,7 +3,6 @@ package scheduler.model;
 import junit.framework.TestResult;
 import junit.framework.TestSuite;
 import scheduler.model.simpledb.AlgorithmTestSimpleDB;
-import scheduler.model.simpledb.CSVTestSimpleDB;
 import scheduler.model.simpledb.CoursesTestSimpleDB;
 import scheduler.model.simpledb.DocumentsTestSimpleDB;
 import scheduler.model.simpledb.InstructorsPreferencesTestSimpleDB;

@@ -3,24 +3,26 @@ package scheduler.view.web.client.views.home;
 import java.util.Collection;
 
 import scheduler.view.web.shared.DocumentGWT;
+import scheduler.view.web.shared.OriginalDocumentGWT;
 
 import com.smartgwt.client.data.DSRequest;
 import com.smartgwt.client.data.DSResponse;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.Record;
+import com.smartgwt.client.data.fields.DataSourceBooleanField;
 import com.smartgwt.client.data.fields.DataSourceIntegerField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 import com.smartgwt.client.types.DSOperationType;
 import com.smartgwt.client.types.DSProtocol;
 
-public class DocumentsDataSource extends DataSource {
+public class OriginalDocumentsDataSource extends DataSource {
 	interface DocumentsStrategy {
-		Collection<DocumentGWT> getAllDocuments();
+		Collection<OriginalDocumentGWT> getAllDocuments();
 	}
 	
 	DocumentsStrategy documentsStrategy;
 
-	public DocumentsDataSource(DocumentsStrategy documentsStrategy) {
+	public OriginalDocumentsDataSource(DocumentsStrategy documentsStrategy) {
 		this.documentsStrategy = documentsStrategy;
 
 		setDataProtocol(DSProtocol.CLIENTCUSTOM);
@@ -43,13 +45,11 @@ public class DocumentsDataSource extends DataSource {
    protected Object transformRequest(final DSRequest dsRequest) {
 		assert(dsRequest.getOperationType() == DSOperationType.FETCH);
 		
-		System.out.println("DocumentsDataSource transformRequest()");
-		
-		Collection<DocumentGWT> resultDocuments = documentsStrategy.getAllDocuments();
+		Collection<OriginalDocumentGWT> resultDocuments = documentsStrategy.getAllDocuments();
 		
 		Record[] resultRecords = new Record[resultDocuments.size()];
 		int resultRecordIndex = 0;
-		for (DocumentGWT resultDocument : resultDocuments) {
+		for (OriginalDocumentGWT resultDocument : resultDocuments) {
 			Record resultRecord = new Record();
 			resultRecord.setAttribute("id", resultDocument.getID());
 			resultRecord.setAttribute("name", resultDocument.getName());
@@ -60,8 +60,6 @@ public class DocumentsDataSource extends DataSource {
 		response.setData(resultRecords);
 		processResponse(dsRequest.getRequestId(), response);
 
-		System.out.println("End DocumentsDataSource transformRequest()");
-		
 		return dsRequest;
 	}
 }

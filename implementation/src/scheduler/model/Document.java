@@ -47,34 +47,66 @@ public class Document extends ModelObject {
 	}
 
 	public void update() throws DatabaseException {
-		if (staffInstructorIsSet())
-			model.database.setDocumentStaffInstructor(underlyingDocument, staffInstructor.underlyingInstructor);
-		if (tbaLocationIsSet())
-			model.database.setDocumentTBALocation(underlyingDocument, tbaLocation.underlyingLocation);
-		if(chooseForMeInstructorIsSet())
-			model.database.setDocumentChooseForMeInstructor(underlyingDocument, chooseForMeInstructor.underlyingInstructor);
-		if(chooseForMeLocationIsSet())
-			model.database.setDocumentChooseForMeLocation(underlyingDocument, chooseForMeLocation.underlyingLocation);
+		if (staffInstructorIsSet()) {
+			if (staffInstructor == null)
+				model.database.setDocumentStaffInstructorOrNull(underlyingDocument, null);
+			else
+				model.database.setDocumentStaffInstructorOrNull(underlyingDocument, staffInstructor.underlyingInstructor);
+		}
+		
+		if (tbaLocationIsSet()) {
+			if (tbaLocation == null)
+				model.database.setDocumentTBALocationOrNull(underlyingDocument, null);
+			else
+				model.database.setDocumentTBALocationOrNull(underlyingDocument, tbaLocation.underlyingLocation);
+		}
+		
+		if(chooseForMeInstructorIsSet()) {
+			if (chooseForMeInstructor == null)
+				model.database.setDocumentChooseForMeInstructorOrNull(underlyingDocument, null);
+			else
+				model.database.setDocumentChooseForMeInstructorOrNull(underlyingDocument, chooseForMeInstructor.underlyingInstructor);
+		}
+		
+		if(chooseForMeLocationIsSet()) {
+			if (chooseForMeLocation == null)
+				model.database.setDocumentChooseForMeLocationOrNull(underlyingDocument, null);
+			else
+				model.database.setDocumentChooseForMeLocationOrNull(underlyingDocument, chooseForMeLocation.underlyingLocation);
+		}
+		
 		disassociateWorkingCopy();
+		
 		if (originalLoaded && original != null)
 			model.database.associateWorkingCopyWithOriginal(underlyingDocument, original.underlyingDocument);
+		
 		preInsertOrUpdateSanityCheck();
+		
 		model.documentCache.update(this);
 	}
 	
-	public void delete() throws DatabaseException {
-		for (Schedule schedule : getSchedules())
-			schedule.delete();
-		for (Location location : getLocations())
+	public void deleteContents(boolean excludeSpecialCaseInstructorsAndLocationsFromDeletion) throws DatabaseException {
+		if (!excludeSpecialCaseInstructorsAndLocationsFromDeletion) {
+			setStaffInstructor(null);
+			setChooseForMeInstructor(null);
+			setTBALocation(null);
+			setChooseForMeLocation(null);
+		}
+		
+		for (ScheduleItem scheduleItem : getScheduleItems())
+			scheduleItem.delete();
+		for (Location location : getLocations(excludeSpecialCaseInstructorsAndLocationsFromDeletion))
 			location.delete();
-		getTBALocation().delete();
-		getChooseForMeLocation().delete();
-		for (Instructor instructor : getInstructors())
+		for (Instructor instructor : getInstructors(excludeSpecialCaseInstructorsAndLocationsFromDeletion))
 			instructor.delete();
-		getStaffInstructor().delete();
-		getChooseForMeInstructor().delete();
 		for (Course course : getCourses())
 			course.delete();
+		
+		update();
+	}
+	
+	public void delete() throws DatabaseException {
+		deleteContents(false);
 
 		disassociateWorkingCopy();
 		model.documentCache.delete(this);
@@ -108,20 +140,20 @@ public class Document extends ModelObject {
 	
 	// ENTITY RELATIONS
 
-	public Collection<Schedule> getSchedules() throws DatabaseException{
-		return model.findSchedulesForDocument(this);
+	public Collection<ScheduleItem> getScheduleItems() throws DatabaseException{
+		return model.findAllScheduleItemsForDocument(this);
 	}
 
-	public Collection<Instructor> getInstructors() throws DatabaseException{
-		return model.findInstructorsForDocument(this);
+	public Collection<Instructor> getInstructors(boolean excludeSpecialCaseInstructors) throws DatabaseException{
+		return model.findInstructorsForDocument(this, excludeSpecialCaseInstructors);
 	}
 
 	public Collection<Course> getCourses() throws DatabaseException {
 		return model.findCoursesForDocument(this);
 	}
 	
-	public Collection<Location> getLocations() throws DatabaseException {
-		return model.findLocationsForDocument(this);
+	public Collection<Location> getLocations(boolean excludeSpecialCaseLocations) throws DatabaseException {
+		return model.findLocationsForDocument(this, excludeSpecialCaseLocations);
 	}
 	
 
@@ -140,7 +172,9 @@ public class Document extends ModelObject {
 	}
 
 	public void setTBALocation(Location newLocation) {
-		assert(!newLocation.isTransient()); // You need to insert something before you can reference it
+		if (newLocation != null) {
+			assert(!newLocation.isTransient()); // You need to insert something before you can reference it
+		}
 		tbaLocation = newLocation;
 		tbaLocationLoaded = true;
 	}
@@ -153,7 +187,7 @@ public class Document extends ModelObject {
 	public Location getChooseForMeLocation() throws DatabaseException {
 		if(!chooseForMeLocLoaded) {
 			IDBLocation underlyingLocation = model.database.getDocumentChooseForMeLocationOrNull(underlyingDocument);
-			if(underlyingDocument == null)
+			if(underlyingLocation == null)
 				chooseForMeLocation = null;
 			else
 				chooseForMeLocation = model.findLocationByID(underlyingLocation.getID());
@@ -163,7 +197,9 @@ public class Document extends ModelObject {
 	}
 	
 	public void setChooseForMeLocation(Location newLocation) {
-		assert(!newLocation.isTransient()); // You need to insert something before you can reference it
+		if (newLocation != null) {
+			assert(!newLocation.isTransient()); // You need to insert something before you can reference it
+		}
 		chooseForMeLocation = newLocation;
 		chooseForMeLocLoaded = true;
 	}
@@ -186,7 +222,10 @@ public class Document extends ModelObject {
 	}
 
 	public void setStaffInstructor(Instructor newInstructor) {
-		assert(!newInstructor.isTransient()); // You need to insert something before you can reference it
+		if (newInstructor != null) {
+			assert(!newInstructor.isTransient()); // You need to insert something before you can reference it
+		}
+		
 		staffInstructor = newInstructor;
 		staffInstructorLoaded = true;
 	}
@@ -209,7 +248,9 @@ public class Document extends ModelObject {
 		}
 
 		public void setChooseForMeInstructor(Instructor newInstructor) {
-			assert(!newInstructor.isTransient()); // You need to insert something before you can reference it
+			if (newInstructor != null) {
+				assert(!newInstructor.isTransient()); // You need to insert something before you can reference it
+			}
 			chooseForMeInstructor = newInstructor;
 			chooseForMeInsLoaded = true;
 		}
@@ -242,7 +283,7 @@ public class Document extends ModelObject {
 		return !model.database.isOriginalDocument(underlyingDocument);
 	}
 	
-	public Document getWorkingCopy() throws DatabaseException {
+	public Document getWorkingCopyOrNull() throws DatabaseException {
 		assert(!isWorkingCopy());
 		IDBDocument workingCopy = model.database.getWorkingCopyForOriginalDocumentOrNull(underlyingDocument);
 		if (workingCopy == null)
@@ -255,18 +296,30 @@ public class Document extends ModelObject {
 	public void preInsertOrUpdateSanityCheck() {
 		assert getName() != null : "name null";
 		
-		if (tbaLocationLoaded)
-			assert tbaLocation != null : "tba loc null";
+		// tba can be null
 		
-		if(chooseForMeLocLoaded)
-			assert chooseForMeLocation != null : "choose for me loc null";
+		// cfm location can be null
 		
-		if (staffInstructorLoaded)
-			assert staffInstructor != null : "staff null";
-		
-		if(chooseForMeInsLoaded)
-			assert chooseForMeInstructor != null : "choose for me instructor null";
+		// cfm instructor can be null
 		
 		// original can be null
+	}
+
+
+	public void invalidateLoaded() {
+		tbaLocationLoaded = false;
+		tbaLocation = null;
+		
+		staffInstructorLoaded = false;
+		staffInstructor = null;
+		
+		chooseForMeInsLoaded = false;
+		chooseForMeInstructor = null;
+		
+		chooseForMeLocLoaded = false;
+		chooseForMeLocation = null;
+		
+		originalLoaded = false;
+		original = null;		
 	}
 }

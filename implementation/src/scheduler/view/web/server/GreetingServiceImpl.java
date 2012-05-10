@@ -5,16 +5,19 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OptionalDataException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
+import java.io.OptionalDataException;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.Vector;
 
 import scheduler.model.Course;
@@ -22,21 +25,28 @@ import scheduler.model.Document;
 import scheduler.model.Instructor;
 import scheduler.model.Location;
 import scheduler.model.Model;
-import scheduler.model.Schedule;
 import scheduler.model.ScheduleItem;
+import scheduler.model.User;
 import scheduler.model.algorithm.BadInstructorDataException;
 import scheduler.model.algorithm.GenerateEntryPoint;
 import scheduler.model.db.DatabaseException;
 import scheduler.view.web.client.GreetingService;
 import scheduler.view.web.client.InvalidLoginException;
+import scheduler.view.web.shared.ClientChangesResponse;
+import scheduler.view.web.shared.CompleteWorkingCopyDocumentGWT;
 import scheduler.view.web.shared.CouldNotBeScheduledExceptionGWT;
 import scheduler.view.web.shared.CourseGWT;
 import scheduler.view.web.shared.DocumentGWT;
 import scheduler.view.web.shared.InstructorGWT;
 import scheduler.view.web.shared.LocationGWT;
-import scheduler.view.web.shared.OldScheduleItemGWT;
+import scheduler.view.web.shared.LoginResponse;
+import scheduler.view.web.shared.OriginalDocumentGWT;
 import scheduler.view.web.shared.ScheduleItemGWT;
-import scheduler.view.web.shared.ScheduleItemList;
+import scheduler.view.web.shared.ServerResourcesResponse;
+import scheduler.view.web.shared.SessionClosedFromInactivityExceptionGWT;
+import scheduler.view.web.shared.SynchronizeRequest;
+import scheduler.view.web.shared.SynchronizeResponse;
+import scheduler.view.web.shared.WorkingDocumentGWT;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
@@ -45,7 +55,8 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
  */
 @SuppressWarnings("serial")
 public class GreetingServiceImpl extends RemoteServiceServlet implements GreetingService {
-
+	private static final boolean LOG_ENTERING_AND_EXITING_CALLS = false;
+	
 	Properties readPropertiesFile() throws IOException {
 		Properties properties = new Properties();
 		InputStream in = GreetingServiceImpl.class.getResourceAsStream("scheduler.properties");
@@ -57,7 +68,117 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	}
 	
 	private boolean loadAndSaveFromFileSystem;
-	private Model model;
+	public Model model;
+	
+	
+	
+	
+	static class SessionList {
+		static class Session {
+			static class OpenDocument {
+				Date lastActivity;
+				
+				public OpenDocument(Date lastActivity) {
+					this.lastActivity = lastActivity;
+				}
+			}
+			
+			public final int id;
+			public final User user;
+			Date lastActivity;
+			public Map<Integer, OpenDocument> openDocumentsByDocumentID = new HashMap<Integer, OpenDocument>();
+			
+			Session(int id, User user, Date lastActivity) {
+				this.id = id;
+				this.user = user;
+				this.lastActivity = lastActivity;
+			}
+			
+			void onOpenedDocument(int documentID) {
+				openDocumentsByDocumentID.put(documentID, new OpenDocument(new Date()));
+			}
+			
+			void onContacted(int documentID) throws SessionClosedFromInactivityExceptionGWT {
+				OpenDocument ods = openDocumentsByDocumentID.get(documentID);
+				if (ods == null)
+					throw new SessionClosedFromInactivityExceptionGWT();
+				ods.lastActivity = new Date();
+			}
+			
+			void closeOpenDocumentsWithNoContactSince(Date since) {
+				for (Integer openDocumentID : new HashSet<Integer>(openDocumentsByDocumentID.keySet())) {
+					OpenDocument openDocument = openDocumentsByDocumentID.get(openDocumentID);
+					assert(openDocument != null);
+					
+					if (openDocument.lastActivity.before(since))
+						openDocumentsByDocumentID.remove(openDocumentID);
+				}
+			}
+		}
+
+		int nextSessionID = 1;
+		Map<Integer, Session> sessionsByID = new HashMap<Integer, Session>();
+		
+		public int createSession(User user) {
+			Session newSession = new Session(nextSessionID++, user, new Date());
+			sessionsByID.put(newSession.id, newSession);
+			
+			System.out.println("Making new session: " + newSession.id + " for user " + user.getUsername());
+			
+			return newSession.id;
+		}
+		
+		public void openDocument(int sessionID, int workingDocumentID) throws SessionClosedFromInactivityExceptionGWT {
+			Session session = sessionsByID.get(sessionID);
+			assert(session != null);
+			
+			session.openDocumentsByDocumentID.put(workingDocumentID, new Session.OpenDocument(new Date()));
+			
+			System.out.println("Opened document with id " + workingDocumentID);
+		}
+		
+		public Session onActivity(int sessionID) throws SessionClosedFromInactivityExceptionGWT {
+			Session session = sessionsByID.get(sessionID);
+			if (session == null)
+				throw new SessionClosedFromInactivityExceptionGWT();
+			session.lastActivity = new Date();
+			
+			return session;
+		}
+		
+		public Session onActivity(int sessionID, int workingCopyDocumentID) throws SessionClosedFromInactivityExceptionGWT {
+			Session session = onActivity(sessionID);
+			
+			Session.OpenDocument openDocument = session.openDocumentsByDocumentID.get(workingCopyDocumentID);
+			if (openDocument == null)
+				throw new SessionClosedFromInactivityExceptionGWT();
+			openDocument.lastActivity = new Date();
+			
+			return session;
+		}
+
+		public void closeDocumentsAndSessionsWithNoContactSince(Date since) {
+			for (Integer sessionID : new HashSet<Integer>(sessionsByID.keySet())) {
+				Session session = sessionsByID.get(sessionID);
+				assert(session != null);
+				
+				session.closeOpenDocumentsWithNoContactSince(since);
+				
+				if (session.openDocumentsByDocumentID.isEmpty())
+					sessionsByID.remove(sessionID);
+			}
+		}
+		
+		public Set<String> findAllUsersWithWorkingDocumentOpen(int workingDocumentID) {
+			Set<String> result = new HashSet<String>();
+			for (Session session : sessionsByID.values())
+				if (session.openDocumentsByDocumentID.containsKey(workingDocumentID))
+					result.add(session.user.getUsername());
+			return result;
+		}
+	}
+	
+	SessionList sessions = new SessionList();
 	
 	public GreetingServiceImpl() {
 		this(true);
@@ -129,6 +250,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 				model.readState(ois);
 				
 				ois.close();
+
+				sanityCheck();
 			}
 			catch (FileNotFoundException e) {
 				System.out.println("Database state file (" + filepath + ") doesn't exist, starting with a fresh model!");
@@ -174,8 +297,10 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 				assert(doc.getTBALocation().getID() != null);
 				assert(doc.getStaffInstructor() != null);
 				assert(doc.getStaffInstructor().getID() != null);
-				assert(doc.getSchedules().size() == 1);
-				assert(doc.getSchedules().iterator().next().getID() != null);
+				assert(doc.getChooseForMeInstructor() != null);
+				assert(doc.getChooseForMeInstructor().getID() != null);
+				assert(doc.getChooseForMeLocation() != null);
+				assert(doc.getChooseForMeLocation().getID() != null);
 			}
 		}
 		catch (DatabaseException e) {
@@ -183,37 +308,28 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		}
 	}
 	
-	@Override
-	public List<Integer> updateCourses(
-			int documentID,
-			List<CourseGWT> addedResources,
-			Collection<CourseGWT> editedResources,
-			List<Integer> deletedResourcesIDs) {
-		System.out.println("Begin GreetingServiceImpl.updateCourses");
-		List<Integer> addedCoursesIDs = new LinkedList<Integer>();
-		for (CourseGWT newCourse : addedResources)
-			addedCoursesIDs.add(addCourseToDocument(documentID, newCourse).getID());
-		for (CourseGWT editedCourse : editedResources)
-			editCourse(editedCourse);
-		for (int deletedCourseID : deletedResourcesIDs)
-			removeCourse(deletedCourseID);
-		System.out.println("End GreetingServiceImpl.updateCourses");
-		return addedCoursesIDs;
-	}
 	
-	@Override
-	public CourseGWT addCourseToDocument(int documentID, CourseGWT course) {
-		System.out.println("Begin GreetingServiceImpl.addCourseToDocument");
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	// COURSES
+	
+
+
+	private CourseGWT addCourseToDocument(Document document, CourseGWT course) {
+		if (LOG_ENTERING_AND_EXITING_CALLS)
+			System.out.println("Begin GreetingServiceImpl.addCourseToDocument(doc " + document.getID() + ")");
 //		System.out.println("Called addCourse with " + course.getDept() + " " + course.getCatalogNum());
 		
 		assert (course.getID() == null);
 		
 		try {
-			Document document = model.findDocumentByID(documentID);
-			assert (document.getOriginal() != null);
-			assert(document.getStaffInstructor() != null);
-			assert(document.getTBALocation() != null);
-			
 			Course resultCourse = Conversion.courseFromGWT(model, course).setDocument(document);
 			
 			int id = resultCourse.insert().getID();
@@ -222,7 +338,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			sanityCheck();
 			flushToFileSystem();
 
-			System.out.println("End GreetingServiceImpl.addCourseToDocument");
+			if (LOG_ENTERING_AND_EXITING_CALLS)
+				System.out.println("End GreetingServiceImpl.addCourseToDocument(" + document.getID() + ")");
 			
 			return course;
 		}
@@ -231,9 +348,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		}
 	}
 	
-	@Override
-	public void editCourse(CourseGWT source) {
-		System.out.println("Begin GreetingServiceImpl.editCourse with id " + source.getID() + ": " + source.getDept() + " " + source.getCatalogNum() + " with tethered " + source.getTetheredToLecture());
+	private void editCourse(CourseGWT source) {
+		if (LOG_ENTERING_AND_EXITING_CALLS)
+			System.out.println("Begin GreetingServiceImpl.editCourse with id " + source.getID() + ": " + source.getDept() + " " + source.getCatalogNum() + " with tethered " + source.getTetheredToLecture());
 		try {
 			Course course = model.findCourseByID(source.getID());
 			assert (course.getID() > 0);
@@ -247,22 +364,25 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			sanityCheck();
 			flushToFileSystem();
 
-			System.out.println("End GreetingServiceImpl.editCourse");
+			if (LOG_ENTERING_AND_EXITING_CALLS)
+				System.out.println("End GreetingServiceImpl.editCourse");
 		}
 		catch (DatabaseException e) {
 			throw new RuntimeException(e);
 		}
 	}
 	
-	@Override
-	public List<CourseGWT> getCoursesForDocument(int documentID) {
+	private ServerResourcesResponse<CourseGWT> getCoursesForDocument(int documentID) {
 		try {
-			System.out.println("Begin GreetingServiceImpl.getCoursesForDocument");
+			if (LOG_ENTERING_AND_EXITING_CALLS)
+				System.out.println("Begin GreetingServiceImpl.getCoursesForDocument(doc " + documentID + ")");
 			
 			Document document = model.findDocumentByID(documentID);
-			assert (document.getOriginal() != null);
+			assert(document.getOriginal() != null);
 			assert(document.getStaffInstructor() != null);
 			assert(document.getTBALocation() != null);
+			assert(document.getChooseForMeInstructor() != null);
+			assert(document.getChooseForMeLocation() != null);
 			List<CourseGWT> result = new LinkedList<CourseGWT>();
 			for (Course course : model.findCoursesForDocument(document)) {
 //				System.out.println("for doc id " + documentID + " returning course name " + course.getName());
@@ -271,17 +391,17 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			
 			sanityCheck();
 
-			System.out.println("End GreetingServiceImpl.getCoursesForDocument");
+			if (LOG_ENTERING_AND_EXITING_CALLS)
+				System.out.println("End GreetingServiceImpl.getCoursesForDocument(" + documentID + ")");
 			
-			return result;
+			return new ServerResourcesResponse<CourseGWT>(result);
 		}
 		catch (DatabaseException e) {
 			throw new RuntimeException(e);
 		}
 	}
 	
-	@Override
-	public void removeCourse(Integer courseID) {
+	private void removeCourse(Integer courseID) {
 		try {
 			Course course = model.findCourseByID(courseID);
 			assert (course.getDocument().getOriginal() != null);
@@ -295,8 +415,21 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		}
 	}
 	
-	@Override
-	public InstructorGWT addInstructorToDocument(int documentID, InstructorGWT instructor) {
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	private InstructorGWT addInstructorToDocument(int documentID, InstructorGWT instructor) {
 		assert (instructor.getID() == null);
 		
 		try {
@@ -304,6 +437,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			assert (document.getOriginal() != null);
 			assert(document.getStaffInstructor() != null);
 			assert(document.getTBALocation() != null);
+			assert(document.getChooseForMeInstructor() != null);
+			assert(document.getChooseForMeLocation() != null);
 			int id = Conversion.instructorFromGWT(model, instructor).setDocument(document).insert().getID();
 			instructor.setID(id);
 			
@@ -317,8 +452,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		}
 	}
 	
-	@Override
-	public void editInstructor(InstructorGWT source) {
+	private void editInstructor(InstructorGWT source) {
 		try {
 			Instructor result = model.findInstructorByID(source.getID());
 			assert (result.getDocument().getOriginal() != null);
@@ -334,29 +468,29 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		}
 	}
 	
-	@Override
-	public List<InstructorGWT> getInstructorsForDocument(int documentID) {
+	private ServerResourcesResponse<InstructorGWT> getInstructorsForDocument(int documentID) {
 		try {
 			List<InstructorGWT> result = new LinkedList<InstructorGWT>();
 			Document document = model.findDocumentByID(documentID);
 			assert (document.getOriginal() != null);
 			assert(document.getStaffInstructor() != null);
 			assert(document.getTBALocation() != null);
-			for (Instructor instructor : model.findInstructorsForDocument(document)) {
+			assert(document.getChooseForMeInstructor() != null);
+			assert(document.getChooseForMeLocation() != null);
+			for (Instructor instructor : model.findInstructorsForDocument(document, false)) {
 				result.add(Conversion.instructorToGWT(instructor));
 			}
 			
 			sanityCheck();
 			
-			return result;
+			return new ServerResourcesResponse<InstructorGWT>(result);
 		}
 		catch (DatabaseException e) {
 			throw new RuntimeException(e);
 		}
 	}
 	
-	@Override
-	public void removeInstructor(Integer instructorID) {
+	private void removeInstructor(Integer instructorID) {
 		try {
 			Instructor instructor = model.findInstructorByID(instructorID);
 			assert (instructor.getDocument().getOriginal() != null);
@@ -370,8 +504,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		}
 	}
 	
-	@Override
-	public LocationGWT addLocationToDocument(int documentID, LocationGWT location) {
+	private LocationGWT addLocationToDocument(int documentID, LocationGWT location) {
 		assert (location.getID() == null);
 		
 		try {
@@ -379,6 +512,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			assert (document.getOriginal() != null);
 			assert(document.getStaffInstructor() != null);
 			assert(document.getTBALocation() != null);
+			assert(document.getChooseForMeInstructor() != null);
+			assert(document.getChooseForMeLocation() != null);
 			Location modelLocation = model.createTransientLocation(
 					location.getRoom(), location.getType(), location.getRawMaxOccupancy(), true);
 			modelLocation.setProvidedEquipment(location.getEquipment());
@@ -395,8 +530,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		}
 	}
 	
-	@Override
-	public void editLocation(LocationGWT source) {
+	private void editLocation(LocationGWT source) {
 		try {
 			Location result = model.findLocationByID(source.getID());
 			assert (result.getID() > 0);
@@ -412,28 +546,28 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		}
 	}
 	
-	@Override
-	public List<LocationGWT> getLocationsForDocument(int documentID) {
+	private ServerResourcesResponse<LocationGWT> getLocationsForDocument(int documentID) {
 		try {
 			Document document = model.findDocumentByID(documentID);
 			assert (document.getOriginal() != null);
 			assert(document.getStaffInstructor() != null);
 			assert(document.getTBALocation() != null);
+			assert(document.getChooseForMeInstructor() != null);
+			assert(document.getChooseForMeLocation() != null);
 			List<LocationGWT> result = new LinkedList<LocationGWT>();
-			for (Location location : model.findLocationsForDocument(document))
+			for (Location location : model.findLocationsForDocument(document, false))
 				result.add(Conversion.locationToGWT(location));
 			
 			sanityCheck();
 			
-			return result;
+			return new ServerResourcesResponse<LocationGWT>(result);
 		}
 		catch (DatabaseException e) {
 			throw new RuntimeException(e);
 		}
 	}
 	
-	@Override
-	public void removeLocation(Integer locationID) {
+	private void removeLocation(Integer locationID) {
 		try {
 			Location location = model.findLocationByID(locationID);
 			assert (location.getDocument().getOriginal() != null);
@@ -448,56 +582,96 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	}
 	
 	@Override
-	public Integer login(String username) throws InvalidLoginException {
+	public LoginResponse loginAndGetAllOriginalDocuments(String username) throws InvalidLoginException {
+		User user = null;
+		
 		try {
-			Integer result = model.findUserByUsername(username).getID();
-			
-			sanityCheck();
-			
-			return result;
+			user = model.findUserByUsername(username);
 		}
 		catch (DatabaseException e) {
 			try {
-				return model.createTransientUser(username, true).insert().getID();
+				user = model.createTransientUser(username, !username.equals("jjuszak")).insert();
 			}
 			catch (DatabaseException e2) {
 				throw new RuntimeException(e2);
 			}
 		}
+
+		int sessionID = sessions.createSession(user);
+		
+		sanityCheck();
+
+		try {
+			return new LoginResponse(sessionID, user.isAdmin(), getAllOriginalDocuments(sessionID));
+		}
+		catch (SessionClosedFromInactivityExceptionGWT e) {
+			// We just made it, how can it be closed already?
+			assert(false);
+			throw new RuntimeException(e);
+		}
 	}
 	
 	@Override
-	public Collection<DocumentGWT> getAllOriginalDocuments() {
+	public ServerResourcesResponse<OriginalDocumentGWT> getAllOriginalDocuments(int sessionID) throws SessionClosedFromInactivityExceptionGWT {
+		SessionList.Session session = sessions.onActivity(sessionID);
+		
 		try {
-			Collection<DocumentGWT> result = new LinkedList<DocumentGWT>();
+			if (LOG_ENTERING_AND_EXITING_CALLS)
+				System.out.println("Begin GreetingServiceImpl.getAllOriginalDocuments(session " + sessionID + ")");
+			
+			Collection<OriginalDocumentGWT> result = new LinkedList<OriginalDocumentGWT>();
 			for (Document doc : model.findAllDocuments()) {
 				assert(doc.getStaffInstructor() != null);
 				assert(doc.getTBALocation() != null);
+				assert(doc.getChooseForMeInstructor() != null);
+				assert(doc.getChooseForMeLocation() != null);
 				
-				if (doc.isWorkingCopy())
+				if (doc.isWorkingCopy()) {
 					continue;
-				int scheduleID = model.findSchedulesForDocument(doc).iterator().next().getID();
-				DocumentGWT gwt = Conversion.documentToGWT(doc, scheduleID);
+				}
+				
+				if (!session.user.isAdmin()) {
+					boolean instructorPresent = false;
+					for (Instructor instructor : doc.getInstructors(true))
+						if (instructor.getUsername().equals(session.user.getUsername()))
+							instructorPresent = true;
+					if (!instructorPresent)
+						continue;
+				}
+				
+				OriginalDocumentGWT gwt = Conversion.originalDocumentToGWT(doc, summarizeWorkingChanges(doc));
 				result.add(gwt);
 			}
 			
 			sanityCheck();
+
+			if (LOG_ENTERING_AND_EXITING_CALLS) {
+				System.out.println("End GreetingServiceImpl.getAllOriginalDocuments(" + sessionID + ")");
+			}
 			
-			return result;
+			return new ServerResourcesResponse<OriginalDocumentGWT>(result);
 		}
 		catch (DatabaseException e) {
 			throw new RuntimeException(e);
 		}
 	}
 	
-	@Override
-	public DocumentGWT createOriginalDocument(String newDocName) {
+	private String summarizeWorkingChanges(Document doc) throws DatabaseException {
+//		System.out.println("doc id " + doc.getID() + " will have summary " + (doc.getWorkingCopyOrNull() == null ? "no working copy" : "has working copy"));
+		return doc.getWorkingCopyOrNull() == null ? null : "has working copy";
+	}
+
+	private OriginalDocumentGWT createOriginalDocument(OriginalDocumentGWT newDocumentGWT) {
 		try {
-			Document newOriginalDocument = model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe(newDocName, 14, 44);
+			assert(newDocumentGWT.getID() == null);
+			assert(newDocumentGWT.getStaffInstructorID() == 0);
+			assert(newDocumentGWT.getTBALocationID() == 0);
+			assert(newDocumentGWT.getChooseForMeInstructorID() == 0);
+			assert(newDocumentGWT.getChooseForMeLocationID() == 0);
+			assert(newDocumentGWT.getWorkingChangesSummary() == null);
+			Document newOriginalDocument = model.createAndInsertDocumentWithSpecialInstructorsAndLocations(newDocumentGWT.getName(), newDocumentGWT.getStartHalfHour(), newDocumentGWT.getEndHalfHour());
 			
-			int scheduleID = model.findSchedulesForDocument(newOriginalDocument).iterator().next().getID();
-			
-			DocumentGWT result = Conversion.documentToGWT(newOriginalDocument, scheduleID);
+			OriginalDocumentGWT result = Conversion.originalDocumentToGWT(newOriginalDocument, null);
 
 			sanityCheck();
 			flushToFileSystem();
@@ -507,40 +681,57 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		catch (DatabaseException e) {
 			throw new RuntimeException(e);
 		}
-		
 	}
 	
 	@Override
-	public DocumentGWT createWorkingCopyForOriginalDocument(Integer originalDocumentID) {
+	public CompleteWorkingCopyDocumentGWT createAndOpenWorkingCopyForOriginalDocument(int sessionID, int originalDocumentID) throws SessionClosedFromInactivityExceptionGWT {
 		try {
 			Document originalDocument = model.findDocumentByID(originalDocumentID);
 			assert(originalDocument.getStaffInstructor() != null);
 			assert(originalDocument.getTBALocation() != null);
+			assert(originalDocument.getChooseForMeInstructor() != null);
+			assert(originalDocument.getChooseForMeLocation() != null);
 			
-			Document workingCopyDocument = originalDocument.getWorkingCopy();
+			Document workingCopyDocument = originalDocument.getWorkingCopyOrNull();
 			
-			if (workingCopyDocument != null) {
+			if (workingCopyDocument == null) {
+				workingCopyDocument = model.createTransientDocument(originalDocument.getName(), originalDocument.getStartHalfHour(), originalDocument.getEndHalfHour()).insert();
+			}
+			else {
+				System.out.println("working copy already exists for document " + originalDocumentID + ", writing over it!");
 				// This is where we theoretically could "restore their working copy"
-				workingCopyDocument.delete();
-				workingCopyDocument = null;
+				
+				workingCopyDocument.deleteContents(false);
 			}
 			
-			workingCopyDocument = model.copyDocument(originalDocument, originalDocument.getName());
+			model.copyDocument(originalDocument, workingCopyDocument);
 			
 			assert (workingCopyDocument.getTBALocation() != null);
 			assert (workingCopyDocument.getStaffInstructor() != null);
+			assert(workingCopyDocument.getChooseForMeInstructor() != null);
+			assert(workingCopyDocument.getChooseForMeLocation() != null);
 			
 			workingCopyDocument.setOriginal(originalDocument);
 			workingCopyDocument.update();
 			
 			originalDocument.update();
-			DocumentGWT result = Conversion.documentToGWT(workingCopyDocument, model.findSchedulesForDocument(workingCopyDocument)
-					.iterator().next().getID());
+			WorkingDocumentGWT result = Conversion.workingDocumentToGWT(workingCopyDocument);
 
+			assert(result.getRealID() == workingCopyDocument.getID());
+			
 			sanityCheck();
 			flushToFileSystem();
 			
-			return result;
+			System.out.println("working document gwt id " + result.getRealID());
+			
+			sessions.openDocument(sessionID, workingCopyDocument.getID());
+			
+			return new CompleteWorkingCopyDocumentGWT(
+					result,
+					getCoursesForDocument(workingCopyDocument.getID()),
+					getInstructorsForDocument(workingCopyDocument.getID()),
+					getLocationsForDocument(workingCopyDocument.getID()),
+					getScheduleItemsForDocument(workingCopyDocument.getID()));
 		}
 		catch (DatabaseException e) {
 			throw new RuntimeException(e);
@@ -548,6 +739,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	}
 	
 	private void flushToFileSystem() {
+		sanityCheck();
+		
 		try {
 			if (this.loadAndSaveFromFileSystem) {
 				String filepath = getDatabaseStateFilepath();
@@ -579,29 +772,27 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	}
 	
 	@Override
-	public void saveWorkingCopyToOriginalDocument(Integer workingCopyDocumentID) {
+	public void saveWorkingCopyToOriginalDocument(int sessionID, int workingCopyDocumentID) throws SessionClosedFromInactivityExceptionGWT {
 		try {
 			Document workingCopyDocument = model.findDocumentByID(workingCopyDocumentID);
 			assert(workingCopyDocument.getStaffInstructor() != null);
 			assert(workingCopyDocument.getTBALocation() != null);
+			assert(workingCopyDocument.getChooseForMeInstructor() != null);
+			assert(workingCopyDocument.getChooseForMeLocation() != null);
 			
 			Document originalDocument = workingCopyDocument.getOriginal();
-			assert (originalDocument != null);
-			workingCopyDocument.setOriginal(null);
-			workingCopyDocument.update();
 			
-			String originalDocumentName = originalDocument.getName();
+			originalDocument.deleteContents(false);
 			
-			originalDocument.delete();
+			model.copyDocument(workingCopyDocument, originalDocument);
 			
-			originalDocument = model.copyDocument(workingCopyDocument, originalDocumentName);
-			originalDocument.setOriginal(null);
-			workingCopyDocument.setOriginal(originalDocument);
 			originalDocument.update();
 			workingCopyDocument.update();
 			
 			assert(originalDocument.getStaffInstructor() != null);
 			assert(originalDocument.getTBALocation() != null);
+			assert(originalDocument.getChooseForMeInstructor() != null);
+			assert(originalDocument.getChooseForMeLocation() != null);
 
 			sanityCheck();
 			flushToFileSystem();
@@ -614,11 +805,15 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	}
 	
 	@Override
-	public void deleteWorkingCopyDocument(Integer workingCopyDocumentID) {
+	public void deleteWorkingCopyDocument(int sessionID, int workingCopyDocumentID) throws SessionClosedFromInactivityExceptionGWT {
+		sessions.onActivity(sessionID, workingCopyDocumentID);
+		
 		try {
 			Document workingCopyDocument = model.findDocumentByID(workingCopyDocumentID);
 			assert(workingCopyDocument.getStaffInstructor() != null);
 			assert(workingCopyDocument.getTBALocation() != null);
+			assert(workingCopyDocument.getChooseForMeInstructor() != null);
+			assert(workingCopyDocument.getChooseForMeLocation() != null);
 			
 			// Document originalDocument =
 			// model.getOriginalForWorkingCopyDocument(workingCopyDocument);
@@ -636,28 +831,35 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	
 	@Override
 	public void associateWorkingCopyWithNewOriginalDocument(
-			Integer workingCopyDocumentID, String scheduleName,
-			boolean allowOverwrite) {
+			int sessionID,
+			int workingCopyDocumentID, String newOriginalDocumentName,
+			boolean allowOverwrite) throws SessionClosedFromInactivityExceptionGWT {
+		sessions.onActivity(sessionID, workingCopyDocumentID);
+		
 		try {
-			Document existingDocumentByThatName = model.findDocumentByNameOrNull(scheduleName);
-			if (existingDocumentByThatName != null) {
-				if (allowOverwrite) {
-					existingDocumentByThatName.delete();
-				}
-				else {
-					throw new RuntimeException("Document by name " + scheduleName + " already exists!");
-				}
-			}
-			
 			Document workingCopyDocument = model.findDocumentByID(workingCopyDocumentID);
 			assert(workingCopyDocument.getStaffInstructor() != null);
 			assert(workingCopyDocument.getTBALocation() != null);
+			assert(workingCopyDocument.getChooseForMeInstructor() != null);
+			assert(workingCopyDocument.getChooseForMeLocation() != null);
 			
-			Document newOriginal = model.copyDocument(workingCopyDocument, scheduleName);
-			newOriginal.setOriginal(null);
-			workingCopyDocument.setOriginal(newOriginal);
+			Document originalDocumentWithNewName = model.findDocumentByNameOrNull(newOriginalDocumentName);
 			
-			newOriginal.update();
+			if (originalDocumentWithNewName == null) {
+				originalDocumentWithNewName = model.createTransientDocument(newOriginalDocumentName, workingCopyDocument.getStartHalfHour(), workingCopyDocument.getEndHalfHour()).insert();
+			}
+			else {
+				if (!allowOverwrite) {
+					throw new RuntimeException("Document by name " + newOriginalDocumentName + " already exists!");
+				}
+			}
+			
+			model.copyDocument(workingCopyDocument, originalDocumentWithNewName);
+			
+			originalDocumentWithNewName.setOriginal(null);
+			workingCopyDocument.setOriginal(originalDocumentWithNewName);
+			
+			originalDocumentWithNewName.update();
 			workingCopyDocument.update();
 
 			sanityCheck();
@@ -670,86 +872,43 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	}
 	
 	@Override
-	public Collection<ScheduleItemGWT> insertScheduleItem(int scheduleID, ScheduleItemGWT scheduleItem) {
+	public ServerResourcesResponse<ScheduleItemGWT> generateRestOfSchedule(int sessionID, int documentID) throws CouldNotBeScheduledExceptionGWT, SessionClosedFromInactivityExceptionGWT {
 		try {
-			Schedule schedule = model.findScheduleByID(scheduleID);
-			assert (schedule.getDocument().getOriginal() != null);
-			assert(schedule.getDocument().getStaffInstructor() != null);
-			assert(schedule.getDocument().getTBALocation() != null);
+			Document document = model.findDocumentByID(documentID);
 			
-			assert (scheduleItem.getCourseID() >= 0);
+			assert(document.isWorkingCopy());
 			
-			// TODO these need to be don't care location/instructor
-			if (scheduleItem.getLocationID() < 0)
-				scheduleItem.setLocationID(schedule.getDocument().getTBALocation().getID());
-			if (scheduleItem.getInstructorID() < 0)
-				scheduleItem.setInstructorID(schedule.getDocument().getStaffInstructor().getID());
-			
-			ScheduleItem newItem = Conversion.scheduleItemFromGWT(model, scheduleItem);
-			newItem.setSchedule(schedule);
-			newItem.setLocation(model.findLocationByID(scheduleItem.getLocationID()));
-			newItem.setCourse(model.findCourseByID(scheduleItem.getCourseID()));
-			newItem.setInstructor(model.findInstructorByID(scheduleItem.getInstructorID()));
-			newItem.insert();
-			System.out.println("Inserted new item: " + newItem.getID());
-			
-			// Generate.generate(model, schedule, s_items, c_list, i_list, l_list)
-			//
-			// GenerationAlgorithm.insertNewScheduleItem(model, schedule, newItem);
-			//
-			// Generate.generate(model, schedule, s_items, c_list, i_list, l_list)
-			
-			Collection<ScheduleItemGWT> result = getScheduleItems(scheduleID);
-
-			sanityCheck();
-			flushToFileSystem();
-			
-			return result;
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-	
-	@Override
-	public Collection<ScheduleItemGWT> generateRestOfSchedule(int scheduleID) throws CouldNotBeScheduledExceptionGWT {
-		try {
-			Schedule schedule = model.findScheduleByID(scheduleID);
-			
-			Document document = schedule.getDocument();
+			sessions.onActivity(sessionID, document.getID());
 			
 			assert (document.getStaffInstructor() != null);
 			assert (document.getTBALocation() != null);
+			assert(document.getChooseForMeInstructor() != null);
+			assert(document.getChooseForMeLocation() != null);
 			
 			assert (document.getOriginal() != null);
 			
 			Collection<Course> schedulableCourses = new LinkedList<Course>();
-			for (Course course : schedule.getDocument().getCourses())
+			for (Course course : document.getCourses())
 				if (course.isSchedulable())
 					schedulableCourses.add(course);
 			
 			Collection<Instructor> schedulableInstructors = new LinkedList<Instructor>();
-			for (Instructor instructor : schedule.getDocument().getInstructors())
+			for (Instructor instructor : document.getInstructors(true))
 				if (instructor.isSchedulable())
 					schedulableInstructors.add(instructor);
 			
 			Collection<Location> schedulableLocations = new LinkedList<Location>();
-			for (Location location : schedule.getDocument().getLocations())
+			for (Location location : document.getLocations(true))
 				if (location.isSchedulable())
 					schedulableLocations.add(location);
 			
-			Vector<ScheduleItem> generated = GenerateEntryPoint.generate(model, schedule, schedule.getItems(), schedulableCourses, schedulableInstructors, schedulableLocations);
+			Vector<ScheduleItem> generated = GenerateEntryPoint.generate(model, document, document.getScheduleItems(), schedulableCourses, schedulableInstructors, schedulableLocations);
 			for (ScheduleItem item : generated) {
-				item.setSchedule(schedule);
+				item.setDocument(document);
 				item.insert();
 			}
 			
-			Collection<ScheduleItemGWT> result = getScheduleItems(scheduleID);
-
-			sanityCheck();
-			flushToFileSystem();
-			
-			return result;
+			return getScheduleItemsForDocument(document.getID());
 		}
 		catch (DatabaseException e) {
 			throw new RuntimeException(e);
@@ -760,76 +919,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		
 	}
 	
-	@Override
-	public Collection<ScheduleItemGWT> updateScheduleItem(ScheduleItemGWT itemGWT) {
-		try {
-			ScheduleItem item = model.findScheduleItemByID(itemGWT.getID());
-			Schedule schedule = item.getSchedule();
-			
-			assert (schedule.getDocument().getOriginal() != null);
-			assert (itemGWT.getCourseID() >= 0);
-			
-			// TODO these need to be don't care location/instructor
-			if (itemGWT.getLocationID() < 0)
-				itemGWT.setLocationID(schedule.getDocument().getTBALocation().getID());
-			if (itemGWT.getInstructorID() < 0)
-				itemGWT.setInstructorID(schedule.getDocument().getStaffInstructor().getID());
-			
-			Conversion.readScheduleItemFromGWT(model, itemGWT, item);
-			item.update();
-			
-			Collection<ScheduleItemGWT> result = getScheduleItems(item.getSchedule().getID());
-
-			sanityCheck();
-			flushToFileSystem();
-			
-			return result;
-		}
-		catch (DatabaseException e) {
-			throw new RuntimeException(e);
-		}
-	}
-	
-	@Override
-	public Collection<ScheduleItemGWT> newRemoveScheduleItem(ScheduleItemGWT itemGWT) {
-		try {
-			Schedule schedule = model.findScheduleItemByID(itemGWT.getID()).getSchedule();
-			assert (schedule.getDocument().getOriginal() != null);
-			
-			model.findScheduleItemByID(itemGWT.getID()).delete();
-			
-			Collection<ScheduleItemGWT> result = getScheduleItems(schedule.getID());
-
-			sanityCheck();
-			flushToFileSystem();
-			
-			return result;
-		}
-		catch (DatabaseException e) {
-			throw new RuntimeException(e);
-		}
-	}
-	
-	@Override
-	public Collection<ScheduleItemGWT> getScheduleItems(int scheduleID) {
-		try {
-			Schedule schedule = model.findScheduleByID(scheduleID);
-			assert (schedule.getDocument().getOriginal() != null);
-			Collection<ScheduleItemGWT> result = new LinkedList<ScheduleItemGWT>();
-			for (ScheduleItem item : model.findAllScheduleItemsForSchedule(schedule))
-				result.add(Conversion.scheduleItemToGWT(item));
-			
-			sanityCheck();
-			
-			return result;
-		}
-		catch (DatabaseException e) {
-			throw new RuntimeException(e);
-		}
-	}
-	
-	@Override
-	public void updateDocument(DocumentGWT documentGWT) {
+	private void updateDocument(DocumentGWT documentGWT) {
 		try {
 			sanityCheck();
 			
@@ -838,6 +928,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 
 			assert (document.getStaffInstructor() != null);
 			assert (document.getTBALocation() != null);
+			assert(document.getChooseForMeInstructor() != null);
+			assert(document.getChooseForMeLocation() != null);
 			
 			System.out.println("updating model doc " + document.isTrashed());
 			document.update();
@@ -849,29 +941,28 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			throw new RuntimeException(e);
 		}
 	}
-	
-	@Override
-	public DocumentGWT findDocumentByID(int automaticOpenDocumentID) {
-		try {
-			Document doc = model.findDocumentByID(automaticOpenDocumentID);
+//	
+//	@Override
+//	public DocumentGWT findDocumentByID(int automaticOpenDocumentID) {
+//		try {
+//			Document doc = model.findDocumentByID(automaticOpenDocumentID);
+//
+//			assert (doc.getStaffInstructor() != null);
+//			assert (doc.getTBALocation() != null);
+//			
+//			Schedule schedule = doc.getSchedules().iterator().next();
+//			DocumentGWT result = Conversion.documentToGWT(doc, schedule.getID());
+//
+//			sanityCheck();
+//			
+//			return result;
+//		}
+//		catch (DatabaseException e) {
+//			throw new RuntimeException(e);
+//		}
+//	}
 
-			assert (doc.getStaffInstructor() != null);
-			assert (doc.getTBALocation() != null);
-			
-			Schedule schedule = doc.getSchedules().iterator().next();
-			DocumentGWT result = Conversion.documentToGWT(doc, schedule.getID());
-
-			sanityCheck();
-			
-			return result;
-		}
-		catch (DatabaseException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@Override
-	public void removeOriginalDocument(Integer id) {
+	private void removeOriginalDocument(Integer id) {
 		try {
 			model.findDocumentByID(id).delete();
 
@@ -882,4 +973,314 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			throw new RuntimeException(e);
 		}
 	}
+
+	@Override
+	public SynchronizeResponse<OriginalDocumentGWT> synchronizeOriginalDocuments(int sessionID, SynchronizeRequest<OriginalDocumentGWT> request) throws SessionClosedFromInactivityExceptionGWT {
+		if (LOG_ENTERING_AND_EXITING_CALLS)
+			System.out.println("Begin GreetingServiceImpl.synchronizeOriginalDocuments(session " + sessionID + ")");
+		
+		sessions.onActivity(sessionID);
+		
+		List<Integer> addedDocumentIDs = new LinkedList<Integer>();	
+		for (OriginalDocumentGWT newDocument : request.clientChanges.addedResources)
+			addedDocumentIDs.add(createOriginalDocument(newDocument).getID());
+		for (OriginalDocumentGWT editedDocument : request.clientChanges.editedResources)
+			updateDocument(editedDocument);
+		for (int deletedDocumentID : request.clientChanges.deletedResourceIDs)
+			removeOriginalDocument(deletedDocumentID);
+		
+		ClientChangesResponse clientChangesResponse = new ClientChangesResponse(addedDocumentIDs);
+		
+		SynchronizeResponse<OriginalDocumentGWT> result = new SynchronizeResponse<OriginalDocumentGWT>(clientChangesResponse, getAllOriginalDocuments(sessionID));
+		
+		if (LOG_ENTERING_AND_EXITING_CALLS)
+			System.out.println("End GreetingServiceImpl.synchronizeOriginalDocuments(" + sessionID + ")");
+		
+		return result;
+	}
+
+	@Override
+	public SynchronizeResponse<CourseGWT> synchronizeDocumentCourses(
+			int sessionID,
+			int documentID,
+			SynchronizeRequest<CourseGWT> request) throws SessionClosedFromInactivityExceptionGWT {
+		
+		try {
+			if (LOG_ENTERING_AND_EXITING_CALLS)
+				System.out.println("Begin GreetingServiceImpl.synchronizeDocumentCourses(session " + sessionID + " doc " + documentID + ")");
+
+			sessions.onActivity(sessionID, documentID);
+			
+			Document document = model.findDocumentByID(documentID);
+			assert (document.getOriginal() != null);
+			assert(document.getStaffInstructor() != null);
+			assert(document.getTBALocation() != null);
+			assert(document.getChooseForMeInstructor() != null);
+			assert(document.getChooseForMeLocation() != null);
+			
+			List<Integer> addedCourseIDs = new LinkedList<Integer>();
+			for (CourseGWT newCourse : request.clientChanges.addedResources)
+				addedCourseIDs.add(addCourseToDocument(document, newCourse).getID());
+			for (CourseGWT editedCourse : request.clientChanges.editedResources)
+				editCourse(editedCourse);
+			for (int deletedCourseID : request.clientChanges.deletedResourceIDs)
+				removeCourse(deletedCourseID);
+			
+			ServerResourcesResponse<CourseGWT> result = getCoursesForDocument(documentID);
+			
+			if (LOG_ENTERING_AND_EXITING_CALLS)
+				System.out.println("End GreetingServiceImpl.synchronizeDocumentCourses(" + documentID + ")");
+			
+			return new SynchronizeResponse<CourseGWT>(new ClientChangesResponse(addedCourseIDs), result);
+		}
+		catch (DatabaseException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	@Override
+	public SynchronizeResponse<InstructorGWT> synchronizeDocumentInstructors(
+			int sessionID,
+			int documentID,
+			SynchronizeRequest<InstructorGWT> request) throws SessionClosedFromInactivityExceptionGWT {
+
+		try {
+			if (LOG_ENTERING_AND_EXITING_CALLS)
+				System.out.println("Begin GreetingServiceImpl.synchronizeDocumentInstructors(" + sessionID + ", " + documentID + ")");
+
+			sessions.onActivity(sessionID, documentID);
+			
+			Document document = model.findDocumentByID(documentID);
+			assert (document.getOriginal() != null);
+			assert(document.getStaffInstructor() != null);
+			assert(document.getTBALocation() != null);
+			assert(document.getChooseForMeInstructor() != null);
+			assert(document.getChooseForMeLocation() != null);
+			
+			List<Integer> addedInstructorIDs = new LinkedList<Integer>();
+			for (InstructorGWT newInstructor : request.clientChanges.addedResources)
+				addedInstructorIDs.add(addInstructorToDocument(document.getID(), newInstructor).getID());
+			for (InstructorGWT editedInstructor : request.clientChanges.editedResources)
+				editInstructor(editedInstructor);
+			for (int deletedInstructorID : request.clientChanges.deletedResourceIDs)
+				removeInstructor(deletedInstructorID);
+			
+			ClientChangesResponse response = new ClientChangesResponse(addedInstructorIDs);
+			
+			if (LOG_ENTERING_AND_EXITING_CALLS)
+				System.out.println("End GreetingServiceImpl.synchronizeDocumentInstructors(" + sessionID + ")");
+			
+			return new SynchronizeResponse<InstructorGWT>(response, getInstructorsForDocument(documentID));
+		}
+		catch (DatabaseException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	@Override
+	public SynchronizeResponse<LocationGWT> synchronizeDocumentLocations(
+			int sessionID,
+			int documentID,
+			SynchronizeRequest<LocationGWT> request) throws SessionClosedFromInactivityExceptionGWT {
+
+		sessions.onActivity(sessionID, documentID);
+		
+		try {
+			if (LOG_ENTERING_AND_EXITING_CALLS)
+				System.out.println("Begin GreetingServiceImpl.synchronizeDocumentLocations(" + documentID + ")");
+	
+			Document document = model.findDocumentByID(documentID);
+			assert (document.getOriginal() != null);
+			assert(document.getStaffInstructor() != null);
+			assert(document.getTBALocation() != null);
+			assert(document.getChooseForMeInstructor() != null);
+			assert(document.getChooseForMeLocation() != null);
+			
+			List<Integer> addedLocationIDs = new LinkedList<Integer>();
+			for (LocationGWT newLocation : request.clientChanges.addedResources)
+				addedLocationIDs.add(addLocationToDocument(document.getID(), newLocation).getID());
+			for (LocationGWT editedLocation : request.clientChanges.editedResources)
+				editLocation(editedLocation);
+			for (int deletedLocationID : request.clientChanges.deletedResourceIDs)
+				removeLocation(deletedLocationID);
+			
+			ClientChangesResponse changesResponse = new ClientChangesResponse(addedLocationIDs);
+			
+			ServerResourcesResponse<LocationGWT> locations = getLocationsForDocument(documentID);
+			
+			if (LOG_ENTERING_AND_EXITING_CALLS)
+				System.out.println("End GreetingServiceImpl.synchronizeDocumentLocations(" + documentID + ")");
+			
+			return new SynchronizeResponse<LocationGWT>(changesResponse, locations);
+		}
+		catch (DatabaseException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@Override
+	public SynchronizeResponse<ScheduleItemGWT> synchronizeDocumentScheduleItems(
+			int sessionID,
+			int documentID,
+			SynchronizeRequest<ScheduleItemGWT> request) throws SessionClosedFromInactivityExceptionGWT {
+
+		try {
+			if (LOG_ENTERING_AND_EXITING_CALLS)
+				System.out.println("Begin GreetingServiceImpl.synchronizeDocumentScheduleItems(session " + sessionID + " doc" + documentID + ")");
+
+			sessions.onActivity(sessionID, documentID);
+				
+			Document document = model.findDocumentByID(documentID);
+			assert (document.getOriginal() != null);
+			assert(document.getStaffInstructor() != null);
+			assert(document.getTBALocation() != null);
+			assert(document.getChooseForMeInstructor() != null);
+			assert(document.getChooseForMeLocation() != null);
+			
+			List<Integer> addedScheduleItemIDs = new LinkedList<Integer>();
+			for (ScheduleItemGWT newScheduleItem : request.clientChanges.addedResources)
+				addedScheduleItemIDs.add(addScheduleItemToDocument(document, newScheduleItem).getID());
+			for (ScheduleItemGWT editedScheduleItem : request.clientChanges.editedResources)
+				editScheduleItem(editedScheduleItem);
+			for (int deletedScheduleItemID : request.clientChanges.deletedResourceIDs)
+				removeScheduleItem(deletedScheduleItemID);
+			
+			ClientChangesResponse response = new ClientChangesResponse(addedScheduleItemIDs);
+			
+			ServerResourcesResponse<ScheduleItemGWT> scheduleItems = getScheduleItemsForDocument(documentID);
+			
+			if (LOG_ENTERING_AND_EXITING_CALLS)
+				System.out.println("End GreetingServiceImpl.synchronizeDocumentScheduleItems(" + documentID + ")");
+			
+			return new SynchronizeResponse<ScheduleItemGWT>(response, scheduleItems);
+		}
+		catch (DatabaseException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	
+
+	private ScheduleItemGWT addScheduleItemToDocument(Document document, ScheduleItemGWT scheduleItem) {
+		if (LOG_ENTERING_AND_EXITING_CALLS)
+			System.out.println("Begin GreetingServiceImpl.addScheduleItemToDocument(" + document.getID() + ")");
+		assert (scheduleItem.getID() == null);
+		
+		try {
+			assert (document.getOriginal() != null);
+			assert(document.getStaffInstructor() != null);
+			assert(document.getTBALocation() != null);
+			assert(document.getChooseForMeInstructor() != null);
+			assert(document.getChooseForMeLocation() != null);
+			
+			assert (scheduleItem.getCourseID() >= 0);
+			
+			// TODO these need to be don't care location/instructor
+			if (scheduleItem.getLocationID() < 0)
+				scheduleItem.setLocationID(document.getTBALocation().getID());
+			if (scheduleItem.getInstructorID() < 0)
+				scheduleItem.setInstructorID(document.getStaffInstructor().getID());
+			
+			ScheduleItem newItem = Conversion.scheduleItemFromGWT(model, scheduleItem);
+			newItem.setDocument(document);
+			newItem.setLocation(model.findLocationByID(scheduleItem.getLocationID()));
+			newItem.setCourse(model.findCourseByID(scheduleItem.getCourseID()));
+			newItem.setInstructor(model.findInstructorByID(scheduleItem.getInstructorID()));
+
+			int id = newItem.insert().getID();
+			
+			System.out.println("Inserted new item: " + newItem.getID());
+
+			// Generate.generate(model, schedule, s_items, c_list, i_list, l_list)
+			//
+			// GenerationAlgorithm.insertNewScheduleItem(model, schedule, newItem);
+			//
+			// Generate.generate(model, schedule, s_items, c_list, i_list, l_list)
+			
+			scheduleItem.setID(id);
+			
+			sanityCheck();
+			flushToFileSystem();
+
+			if (LOG_ENTERING_AND_EXITING_CALLS)
+				System.out.println("End GreetingServiceImpl.addScheduleItemToDocument(" + document.getID() + ")");
+			
+			return scheduleItem;
+		}
+		catch (DatabaseException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	private void editScheduleItem(ScheduleItemGWT itemGWT) {
+		if (LOG_ENTERING_AND_EXITING_CALLS)
+			System.out.println("Begin GreetingServiceImpl.editScheduleItem");
+		try {
+			ScheduleItem item = model.findScheduleItemByID(itemGWT.getID());
+			Document document = item.getDocument();
+			
+			assert (document.getOriginal() != null);
+			assert (itemGWT.getCourseID() >= 0);
+			
+			// TODO these need to be don't care location/instructor
+			if (itemGWT.getLocationID() < 0)
+				itemGWT.setLocationID(document.getTBALocation().getID());
+			if (itemGWT.getInstructorID() < 0)
+				itemGWT.setInstructorID(document.getStaffInstructor().getID());
+			
+			Conversion.readScheduleItemFromGWT(model, itemGWT, item);
+			item.update();
+			
+			sanityCheck();
+			flushToFileSystem();
+
+			if (LOG_ENTERING_AND_EXITING_CALLS)
+				System.out.println("End GreetingServiceImpl.editScheduleItem");
+		}
+		catch (DatabaseException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	private ServerResourcesResponse<ScheduleItemGWT> getScheduleItemsForDocument(int documentID) {
+		try {
+			if (LOG_ENTERING_AND_EXITING_CALLS)
+				System.out.println("Begin GreetingServiceImpl.getScheduleItemsForDocument(" + documentID + ")");
+			
+			Document document = model.findDocumentByID(documentID);
+			assert (document.getOriginal() != null);
+			assert(document.getStaffInstructor() != null);
+			assert(document.getTBALocation() != null);
+			assert(document.getChooseForMeInstructor() != null);
+			assert(document.getChooseForMeLocation() != null);
+			List<ScheduleItemGWT> result = new LinkedList<ScheduleItemGWT>();
+			for (ScheduleItem scheduleItem : document.getScheduleItems()) {
+//				System.out.println("for doc id " + documentID + " returning scheduleItem name " + scheduleItem.getName());
+				result.add(Conversion.scheduleItemToGWT(scheduleItem));
+			}
+			
+			sanityCheck();
+
+			if (LOG_ENTERING_AND_EXITING_CALLS)
+				System.out.println("End GreetingServiceImpl.getScheduleItemsForDocument(" + documentID + ")");
+			
+			return new ServerResourcesResponse<ScheduleItemGWT>(result);
+		}
+		catch (DatabaseException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	private void removeScheduleItem(Integer scheduleItemID) {
+		try {
+			ScheduleItem scheduleItem = model.findScheduleItemByID(scheduleItemID);
+			assert (scheduleItem.getDocument().getOriginal() != null);
+			scheduleItem.delete();
+			
+			sanityCheck();
+			flushToFileSystem();
+		}
+		catch (DatabaseException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
 }

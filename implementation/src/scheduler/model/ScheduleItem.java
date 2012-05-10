@@ -11,8 +11,8 @@ public class ScheduleItem extends ModelObject {
 	
 	IDBScheduleItem underlying;
 	
-	private boolean scheduleLoaded;
-	private Schedule schedule;
+	private boolean documentLoaded;
+	private Document document;
 
 	private boolean courseLoaded;
 	private Course course;
@@ -38,14 +38,16 @@ public class ScheduleItem extends ModelObject {
 	
 	// PERSISTENCE FUNCTIONS
 
-	public void insert() throws DatabaseException {
-		assert(scheduleLoaded);
+	public ScheduleItem insert() throws DatabaseException {
+		assert(documentLoaded);
 		assert(courseLoaded);
 		assert(locationLoaded);
 		assert(instructorLoaded);
 		
 		preInsertOrUpdateSanityCheck();
 		model.itemCache.insert(this);
+		
+		return this;
 	}
 
 	public void delete() throws DatabaseException {
@@ -71,8 +73,8 @@ public class ScheduleItem extends ModelObject {
 	
 	public ScheduleItem createTransientCopy() throws DatabaseException {
 		ScheduleItem result = new ScheduleItem(model, model.database.assembleScheduleItemCopy(underlying));
-		if (scheduleLoaded)
-			result.setSchedule(getSchedule());
+		if (documentLoaded)
+			result.setDocument(getDocument());
 		if (instructorLoaded)
 			result.setInstructor(getInstructor());
 		if (locationLoaded)
@@ -131,19 +133,20 @@ public class ScheduleItem extends ModelObject {
 
 	// Schedule
 
-	public Schedule getSchedule() throws DatabaseException {
-		if (!scheduleLoaded) {
-			assert(schedule == null);
-			schedule = model.findScheduleByID(model.database.getScheduleItemSchedule(underlying).getID());
-			scheduleLoaded = true;
+	public Document getDocument() throws DatabaseException {
+		if (!documentLoaded) {
+			assert(document == null);
+			document = model.findDocumentByID(model.database.getScheduleItemDocument(underlying).getID());
+			documentLoaded = true;
 		}
-		return schedule;
+		return document;
 	}
 
-	public void setSchedule(Schedule newSchedule) {
-		assert(!newSchedule.isTransient()); // You need to insert something before you can reference it
-		schedule = newSchedule;
-		scheduleLoaded = true;
+	public ScheduleItem setDocument(Document newDocument) {
+		assert(!newDocument.isTransient()); // You need to insert something before you can reference it
+		document = newDocument;
+		documentLoaded = true;
+		return this;
 	}
 	
 
@@ -233,8 +236,8 @@ public class ScheduleItem extends ModelObject {
 	public void preInsertOrUpdateSanityCheck() {
 		assert getDays() != null : "days null";
 		
-		if (scheduleLoaded)
-			assert schedule != null : "sched null";
+		if (documentLoaded)
+			assert document != null : "sched null";
 		
 		if (courseLoaded)
 			assert course != null : "course null";

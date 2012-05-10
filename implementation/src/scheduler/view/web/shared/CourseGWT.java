@@ -2,6 +2,7 @@ package scheduler.view.web.shared;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -289,4 +290,18 @@ public class CourseGWT implements Serializable, Identified {
 		return result;
 	}
 	
+	public boolean attributesEqual(CourseGWT that) {
+		return catalogNum.equals(that.catalogNum) &&
+				courseName.equals(that.courseName) &&
+				dayPatterns.equals(that.dayPatterns) &&
+				dept.equals(that.dept) &&
+				halfHoursPerWeek.equals(that.halfHoursPerWeek) &&
+				lectureID == that.lectureID &&
+				maxEnroll.equals(that.maxEnroll) &&
+				numSections.equals(that.numSections) &&
+				scu.equals(that.scu) &&
+				tetheredToLecture == that.tetheredToLecture &&
+				type.equals(that.type) &&
+				usedEquipment.equals(that.usedEquipment);
+	}
 }

@@ -15,7 +15,6 @@ public abstract class AlgorithmJUnitTest extends ModelTestCase {
 	
 	private Model model;
 	private Document doc;
-	private Schedule schedule;
 	private List<Course> courses;
 	private List<Instructor> instructors;
 	private List<Location> locations;
@@ -24,9 +23,7 @@ public abstract class AlgorithmJUnitTest extends ModelTestCase {
 	public void setUp() throws DatabaseException {
         model = new Model();
 		
-		doc = model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe("doc", START_HALF_HOUR, END_HALF_HOUR);
-		
-		schedule = model.createTransientSchedule().setDocument(doc).insert();
+		doc = model.createAndInsertDocumentWithSpecialInstructorsAndLocations("doc", START_HALF_HOUR, END_HALF_HOUR);
 		
 		courses = generateCourseList(model, doc);
 		
@@ -142,7 +139,7 @@ public abstract class AlgorithmJUnitTest extends ModelTestCase {
 	//TEST METHODS
 	
 	public void testGenerateBasic() throws DatabaseException, BadInstructorDataException{
-		Vector<ScheduleItem> items = GenerateEntryPoint.generate(model, schedule, sids, courses, instructors, locations);
+		Vector<ScheduleItem> items = GenerateEntryPoint.generate(model, doc, sids, courses, instructors, locations);
 		
 		assertFalse(items.isEmpty());
 	}

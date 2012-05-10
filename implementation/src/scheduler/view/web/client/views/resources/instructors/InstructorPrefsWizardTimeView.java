@@ -1,5 +1,6 @@
 package scheduler.view.web.client.views.resources.instructors;
 
+import scheduler.view.web.client.CachedOpenWorkingCopyDocument;
 import scheduler.view.web.client.GreetingServiceAsync;
 import scheduler.view.web.shared.InstructorGWT;
 
@@ -29,13 +30,12 @@ public class InstructorPrefsWizardTimeView extends VerticalPanel{
 	 * @param scheduleName
 	 * @param instructor
 	 */
-	public InstructorPrefsWizardTimeView(GreetingServiceAsync service,
-			int documentID, InstructorGWT instructor)
+	public InstructorPrefsWizardTimeView(CachedOpenWorkingCopyDocument workingCopyDocument, InstructorGWT instructor)
 	{
 		this.setSpacing(15);
 		this.setWidth("100%");
 		this.setHeight("100%");
-		this.timePrefs = new TimePrefsWidget(service, documentID, instructor);
+		this.timePrefs = new TimePrefsWidget(workingCopyDocument, instructor);
 		this.back = new Button("< back");
 		this.finish = new Button("finish");
 		this.back.setWidth("150px");

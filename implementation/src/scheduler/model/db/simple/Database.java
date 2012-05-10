@@ -23,7 +23,6 @@ import scheduler.model.db.IDBLocation;
 import scheduler.model.db.IDBObject;
 import scheduler.model.db.IDBOfferedDayPattern;
 import scheduler.model.db.IDBProvidedEquipment;
-import scheduler.model.db.IDBSchedule;
 import scheduler.model.db.IDBScheduleItem;
 import scheduler.model.db.IDBTime;
 import scheduler.model.db.IDBTimePreference;
@@ -33,18 +32,18 @@ import scheduler.model.db.IDatabase;
 
 public class Database implements IDatabase {
 	static class SimpleTable<T extends DBObject> implements Serializable {
-		private static final long serialVersionUID = 1337L;
+		private static final long serialVersionUID = 1339L;
 		
+		int nextID;
 		Map<Integer, T> objectsByID;
 		
 		public SimpleTable() {
+			nextID = 1;
 			objectsByID = new HashMap<Integer, T>();
 		}
 		
 		private int generateUnusedID() {
-			for (int unusedID = 1; ; unusedID++)
-				if (!objectsByID.containsKey(unusedID))
-					return unusedID;
+			return nextID++;
 		}
 		
 		// Returns the new ID
@@ -98,7 +97,6 @@ public class Database implements IDatabase {
 
 	SimpleTable<DBUser> userTable;
 	SimpleTable<DBDocument> documentTable;
-	SimpleTable<DBSchedule> scheduleTable;
 	SimpleTable<DBScheduleItem> scheduleItemTable;
 	SimpleTable<DBCourse> courseTable;
 	SimpleTable<DBLocation> locationTable;
@@ -113,7 +111,6 @@ public class Database implements IDatabase {
 	public Database() {
 		userTable = new SimpleTable<DBUser>();
 		documentTable = new SimpleTable<DBDocument>();
-		scheduleTable = new SimpleTable<DBSchedule>();
 		scheduleItemTable = new SimpleTable<DBScheduleItem>();
 		courseTable = new SimpleTable<DBCourse>();
 		locationTable = new SimpleTable<DBLocation>();
@@ -186,7 +183,7 @@ public class Database implements IDatabase {
 
 	@Override
 	public void deleteDocument(IDBDocument document) {
-		assert(findAllSchedulesForDocument(document).isEmpty());
+		assert(findAllScheduleItemsForDocument(document).isEmpty());
 		assert(findCoursesForDocument(document).isEmpty());
 		assert(findInstructorsForDocument(document).isEmpty());
 		assert(findLocationsForDocument(document).isEmpty());
@@ -194,50 +191,50 @@ public class Database implements IDatabase {
 		documentTable.deleteByID(document.getID());
 	}
 
-	@Override
-	public Collection<IDBSchedule> findAllSchedulesForDocument(IDBDocument document) {
-		Collection<IDBSchedule> result = new LinkedList<IDBSchedule>();
-		for (DBSchedule schedule : scheduleTable.getAll())
-			if (schedule.documentID == document.getID())
-				result.add(schedule);
-		return result;
-	}
+//	@Override
+//	public Collection<IDBSchedule> findAllSchedulesForDocument(IDBDocument document) {
+//		Collection<IDBSchedule> result = new LinkedList<IDBSchedule>();
+//		for (DBSchedule schedule : scheduleTable.getAll())
+//			if (schedule.documentID == document.getID())
+//				result.add(schedule);
+//		return result;
+//	}
+//
+//	@Override
+//	public IDBSchedule findScheduleByID(int id) throws NotFoundException {
+//		return new DBSchedule(scheduleTable.findByID(id));
+//	}
+//
+//	@Override
+//	public IDBSchedule assembleSchedule() {
+//		return new DBSchedule(null, null);
+//	}
+//
+//	@Override
+//	public void insertSchedule(IDBDocument document, IDBSchedule rawSchedule) {
+//		DBSchedule schedule = (DBSchedule)rawSchedule;
+//		assert(schedule.id == null);
+//		schedule.documentID = document.getID();
+//		schedule.id = scheduleTable.insert(new DBSchedule(schedule));
+//	}
+//
+//	@Override
+//	public void updateSchedule(IDBSchedule schedule) {
+//		scheduleTable.update(new DBSchedule((DBSchedule)schedule));
+//	}
+//
+//	@Override
+//	public void deleteSchedule(IDBSchedule schedule) {
+//		assert(findAllScheduleItemsForSchedule(schedule).isEmpty());
+//		
+//		scheduleTable.deleteByID(schedule.getID());
+//	}
 
 	@Override
-	public IDBSchedule findScheduleByID(int id) throws NotFoundException {
-		return new DBSchedule(scheduleTable.findByID(id));
-	}
-
-	@Override
-	public IDBSchedule assembleSchedule() {
-		return new DBSchedule(null, null);
-	}
-
-	@Override
-	public void insertSchedule(IDBDocument document, IDBSchedule rawSchedule) {
-		DBSchedule schedule = (DBSchedule)rawSchedule;
-		assert(schedule.id == null);
-		schedule.documentID = document.getID();
-		schedule.id = scheduleTable.insert(new DBSchedule(schedule));
-	}
-
-	@Override
-	public void updateSchedule(IDBSchedule schedule) {
-		scheduleTable.update(new DBSchedule((DBSchedule)schedule));
-	}
-
-	@Override
-	public void deleteSchedule(IDBSchedule schedule) {
-		assert(findAllScheduleItemsForSchedule(schedule).isEmpty());
-		
-		scheduleTable.deleteByID(schedule.getID());
-	}
-
-	@Override
-	public Collection<IDBScheduleItem> findAllScheduleItemsForSchedule(IDBSchedule schedule) {
+	public Collection<IDBScheduleItem> findAllScheduleItemsForDocument(IDBDocument document) {
 		Collection<IDBScheduleItem> result = new LinkedList<IDBScheduleItem>();
 		for (DBScheduleItem scheduleItem : scheduleItemTable.getAll())
-			if (scheduleItem.scheduleID == schedule.getID())
+			if (scheduleItem.documentID == document.getID())
 				result.add(scheduleItem);
 		return result;
 	}
@@ -259,11 +256,11 @@ public class Database implements IDatabase {
 	}
 	
 	@Override
-	public void insertScheduleItem(IDBSchedule schedule, IDBCourse course,
+	public void insertScheduleItem(IDBDocument document, IDBCourse course,
 			IDBInstructor instructor, IDBLocation location, IDBScheduleItem rawItem) {
 		DBScheduleItem item = (DBScheduleItem)rawItem;
 		assert(item.id == null);
-		item.scheduleID = schedule.getID();
+		item.documentID = document.getID();
 		item.courseID = course.getID();
 		item.instructorID = instructor.getID();
 		item.locationID = location.getID();
@@ -649,10 +646,10 @@ public class Database implements IDatabase {
 	}
 
 	@Override
-	public Collection<IDBScheduleItem> findScheduleItemsBySchedule(IDBSchedule schedule) {
+	public Collection<IDBScheduleItem> findScheduleItemsByDocument(IDBDocument document) {
 		Collection<IDBScheduleItem> result = new LinkedList<IDBScheduleItem>();
 		for (DBScheduleItem item : scheduleItemTable.getAll())
-			if (item.scheduleID == schedule.getID())
+			if (item.documentID.equals(document.getID()))
 				result.add(item);
 		return result;
 	}
@@ -799,10 +796,10 @@ public class Database implements IDatabase {
 		return ((DBDocument)doc).originalID == null;
 	}
 
-	@Override
-	public IDBDocument findDocumentForSchedule(IDBSchedule schedule) throws NotFoundException {
-		return documentTable.findByID(((DBSchedule)schedule).documentID);
-	}
+//	@Override
+//	public IDBDocument findDocumentForSchedule(IDBSchedule schedule) throws NotFoundException {
+//		return documentTable.findByID(((DBSchedule)schedule).documentID);
+//	}
 
 	@Override
 	public void setScheduleItemCourse(IDBScheduleItem rawItem, IDBCourse course) {
@@ -823,7 +820,6 @@ public class Database implements IDatabase {
 	public boolean isEmpty() {
 		return userTable.isEmpty()
 				&& documentTable.isEmpty()
-				&& scheduleTable.isEmpty()
 				&& courseTable.isEmpty()
 				&& locationTable.isEmpty()
 				&& instructorTable.isEmpty()
@@ -844,8 +840,8 @@ public class Database implements IDatabase {
 	}
 
 	@Override
-	public IDBSchedule getScheduleItemSchedule(IDBScheduleItem underlying) throws NotFoundException {
-		return scheduleTable.findByID(((DBScheduleItem)underlying).scheduleID);
+	public IDBDocument getScheduleItemDocument(IDBScheduleItem underlying) throws NotFoundException {
+		return documentTable.findByID(((DBScheduleItem)underlying).documentID);
 	}
 
 
@@ -872,7 +868,6 @@ public class Database implements IDatabase {
 	public void writeState(ObjectOutputStream oos) throws IOException {
 		oos.writeObject(userTable);
 		oos.writeObject(documentTable);
-		oos.writeObject(scheduleTable);
 		oos.writeObject(scheduleItemTable);
 		oos.writeObject(courseTable);
 		oos.writeObject(locationTable);
@@ -892,7 +887,6 @@ public class Database implements IDatabase {
 		try {
 			userTable = (SimpleTable<DBUser>)ois.readObject();
 			documentTable = (SimpleTable<DBDocument>)ois.readObject();
-			scheduleTable = (SimpleTable<DBSchedule>)ois.readObject();
 			scheduleItemTable = (SimpleTable<DBScheduleItem>)ois.readObject();
 			courseTable = (SimpleTable<DBCourse>)ois.readObject();
 			locationTable = (SimpleTable<DBLocation>)ois.readObject();
@@ -942,23 +936,35 @@ public class Database implements IDatabase {
 	}
 
 	@Override
-	public void setDocumentStaffInstructor(IDBDocument underlyingDocument, IDBInstructor underlyingInstructor) {
-		((DBDocument)underlyingDocument).staffInstructorID = underlyingInstructor.getID();
+	public void setDocumentStaffInstructorOrNull(IDBDocument underlyingDocument, IDBInstructor underlyingInstructor) {
+		if (underlyingInstructor == null)
+			((DBDocument)underlyingDocument).staffInstructorID = null;
+		else
+			((DBDocument)underlyingDocument).staffInstructorID = underlyingInstructor.getID();
 	}
 
 	@Override
-	public void setDocumentChooseForMeInstructor(IDBDocument underlyingDocument, IDBInstructor underlyingInstructor) {
-		((DBDocument)underlyingDocument).chooseForMeInstructorID = underlyingInstructor.getID();
+	public void setDocumentChooseForMeInstructorOrNull(IDBDocument underlyingDocument, IDBInstructor underlyingInstructor) {
+		if (underlyingInstructor == null)
+			((DBDocument)underlyingDocument).chooseForMeInstructorID = null;
+		else
+			((DBDocument)underlyingDocument).chooseForMeInstructorID = underlyingInstructor.getID();
 	}
 
 	@Override
-	public void setDocumentTBALocation(IDBDocument underlyingDocument, IDBLocation underlyingLocation) {
-		((DBDocument)underlyingDocument).tbaLocationID = underlyingLocation.getID();
+	public void setDocumentTBALocationOrNull(IDBDocument underlyingDocument, IDBLocation underlyingLocation) {
+		if (underlyingLocation == null)
+			((DBDocument)underlyingDocument).tbaLocationID = null;
+		else
+			((DBDocument)underlyingDocument).tbaLocationID = underlyingLocation.getID();
 	}
 
 	@Override
-	public void setDocumentChooseForMeLocation(IDBDocument underlyingDocument, IDBLocation underlyingLocation) {
-		((DBDocument)underlyingDocument).chooseForMeLocationID = underlyingLocation.getID();
+	public void setDocumentChooseForMeLocationOrNull(IDBDocument underlyingDocument, IDBLocation underlyingLocation) {
+		if (underlyingLocation == null)
+			((DBDocument)underlyingDocument).chooseForMeLocationID = null;
+		else
+			((DBDocument)underlyingDocument).chooseForMeLocationID = underlyingLocation.getID();
 	}
 	
 	@Override

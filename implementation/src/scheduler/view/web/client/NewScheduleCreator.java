@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import scheduler.view.web.client.views.LoadingPopup;
 import scheduler.view.web.shared.DocumentGWT;
+import scheduler.view.web.shared.OriginalDocumentGWT;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -28,52 +29,44 @@ public class NewScheduleCreator {
 		void namedSchedule(String scheduleName);
 	}
 	
-	public static void createNewSchedule(final GreetingServiceAsync service, final String username, final CreatedScheduleCallback callback) {
+	public static void createNewSchedule(final CachedService service, final String username) {
 		displayNewSchedPopup("Create", new NamedScheduleCallback() {
 			@Override
 			public void namedSchedule(final String newDocumentName) {
-				service.getAllOriginalDocuments(new AsyncCallback<Collection<DocumentGWT>>() {
-					public void onSuccess(Collection<DocumentGWT> existingDocuments) {
-						boolean newDocumentNameExists = false;
-						for (DocumentGWT existingDocument : existingDocuments) {
-							if (!existingDocument.isTrashed() && existingDocument.getName().equals(newDocumentName)) {
-								newDocumentNameExists = true;
-								break;
-							}
+				Collection<OriginalDocumentGWT> existingDocuments = service.originalDocuments.getAll();
+				
+				boolean newDocumentNameExists = false;
+				for (DocumentGWT existingDocument : existingDocuments) {
+					if (!existingDocument.isTrashed() && existingDocument.getName().equals(newDocumentName)) {
+						newDocumentNameExists = true;
+						break;
+					}
+				}
+				
+				if (newDocumentNameExists == false) {
+					final LoadingPopup popup = new LoadingPopup();
+					DOM.setElementAttribute(popup.getElement(), "id", "s_loadPop");
+					popup.show();
+					
+					DOM.setElementAttribute(popup.getElement(), "id", "failSchedPopup");
+					
+					final OriginalDocumentGWT newDocument = new OriginalDocumentGWT(null, newDocumentName, 0, 0, 0, 0, false, 14, 44, null);
+					service.originalDocuments.add(newDocument);
+					
+					service.originalDocuments.forceSynchronize(new AsyncCallback<Void>() {
+						public void onSuccess(Void v) {
+							popup.hide();
+							assert (newDocumentName.equals(newDocument.getName()));
+							TabOpener.openDocInNewTab(username, service.originalDocuments.localIDToRealID(newDocument.getID()), false);
 						}
 						
-						if (newDocumentNameExists == false) {
-							final LoadingPopup popup = new LoadingPopup();
-							DOM.setElementAttribute(popup.getElement(), "id", "s_loadPop");
-							popup.show();
-							
-							DOM.setElementAttribute(popup.getElement(), "id", "failSchedPopup");
-							
-							service.createOriginalDocument(newDocumentName, new AsyncCallback<DocumentGWT>() {
-								public void onSuccess(DocumentGWT newDocument) {
-									popup.hide();
-									assert (newDocumentName.equals(newDocument.getName()));
-									TabOpener.openDocInNewTab(username, newDocument);
-									callback.createdSchedule();
-								}
-								
-								public void onFailure(Throwable caught) {
-									popup.hide();
-									Window.alert("Failed to open new schedule in" + ": " + caught.getMessage());
-								}
-							});
-						}
-						else {
-							Window.alert("Error: Schedule named " + newDocumentName
-									+ " already exists. Please enter a different name.");
-						}
-					}
-					
-					@Override
-					public void onFailure(Throwable caught) {
-						Window.alert("Failed to get list of existing documents!");
-					}
-				});
+						public void onFailure(Throwable caught) { assert(false); }
+					});
+				}
+				else {
+					Window.alert("Error: Schedule named " + newDocumentName
+							+ " already exists. Please enter a different name.");
+				}
 			}
 		});
 	}

@@ -9,7 +9,7 @@ public abstract class ScheduleItemsTest extends ModelTestCase {
 	private Model createModelWithStuff() throws DatabaseException {
 		Model model = createBlankModel();
 		
-		model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe("doc", 14, 44);
+		model.createAndInsertDocumentWithSpecialInstructorsAndLocations("doc", 14, 44);
 		
 		return model;
 	}
@@ -17,7 +17,6 @@ public abstract class ScheduleItemsTest extends ModelTestCase {
 	public void testInsertAndFindScheduleItem() throws DatabaseException {
 		Model model = createModelWithStuff();
 		Document doc = model.findAllDocuments().iterator().next();
-		Schedule schedule = doc.getSchedules().iterator().next();
 
 		Course course = model.createTransientCourse("Graphics", "101", "GRC", "4", "4", "2", "LEC", "30", "6", true);
 		course.setDocument(doc);
@@ -32,7 +31,7 @@ public abstract class ScheduleItemsTest extends ModelTestCase {
 			item.setInstructor(doc.getStaffInstructor());
 			item.setLocation(doc.getTBALocation());
 			item.setCourse(course);
-			item.setSchedule(schedule);
+			item.setDocument(doc);
 			item.insert();
 			itemID = item.getID();
 		}
@@ -50,7 +49,6 @@ public abstract class ScheduleItemsTest extends ModelTestCase {
 
 		Model model = createModelWithStuff();
 		Document doc = model.findAllDocuments().iterator().next();
-		Schedule schedule = doc.getSchedules().iterator().next();
 
 		Set<Day> mwf = new TreeSet<Day>();
 		mwf.add(Day.MONDAY);
@@ -68,7 +66,7 @@ public abstract class ScheduleItemsTest extends ModelTestCase {
 			item1.setInstructor(doc.getStaffInstructor());
 			item1.setLocation(doc.getTBALocation());
 			item1.setCourse(course1);
-			item1.setSchedule(schedule);
+			item1.setDocument(doc);
 			item1.insert();
 		}
 
@@ -81,7 +79,7 @@ public abstract class ScheduleItemsTest extends ModelTestCase {
 			item2.setInstructor(doc.getStaffInstructor());
 			item2.setLocation(doc.getTBALocation());
 			item2.setCourse(course2);
-			item2.setSchedule(schedule);
+			item2.setDocument(doc);
 			item2.insert();
 		}
 

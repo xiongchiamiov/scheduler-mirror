@@ -2,8 +2,16 @@ package scheduler.view.web.client.calendar;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+
+import scheduler.view.web.client.CachedOpenWorkingCopyDocument;
+import scheduler.view.web.shared.CourseGWT;
+import scheduler.view.web.shared.DayGWT;
+import scheduler.view.web.shared.InstructorGWT;
+import scheduler.view.web.shared.LocationGWT;
+import scheduler.view.web.shared.ScheduleItemGWT;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -19,14 +27,6 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
-
-import scheduler.view.web.client.GreetingServiceAsync;
-import scheduler.view.web.shared.CourseGWT;
-import scheduler.view.web.shared.DayGWT;
-import scheduler.view.web.shared.DocumentGWT;
-import scheduler.view.web.shared.InstructorGWT;
-import scheduler.view.web.shared.LocationGWT;
-import scheduler.view.web.shared.ScheduleItemGWT;
 
 /**
  * A dialog that allows the user to edit the instructor, location, and time of a
@@ -44,7 +44,7 @@ public class EditScheduleItemDlg extends DialogBox {
 	private List<InstructorGWT> mInstructors;
 	private List<LocationGWT> mLocations;
 
-	private final GreetingServiceAsync mGreetingService;
+	private final CachedOpenWorkingCopyDocument mWorkingCopyDocument;
 	private final ScheduleEditWidget mScheduleController;
 	private final DragAndDropController mDragController;
 	
@@ -53,18 +53,17 @@ public class EditScheduleItemDlg extends DialogBox {
 	private List<Integer> mNewDays;
 	private int mNewStartRow;
 	private boolean mChangedItem;
-	private final DocumentGWT mDocument;
 
-	public EditScheduleItemDlg(GreetingServiceAsync service, ScheduleEditWidget widget, DragAndDropController dragController,
-			boolean fromList, ScheduleItemGWT item, DocumentGWT document) {
-		this(service, widget, dragController, fromList, item, null, -1, document);
+	public EditScheduleItemDlg(CachedOpenWorkingCopyDocument workingCopyDocument, ScheduleEditWidget widget, DragAndDropController dragController,
+			boolean fromList, ScheduleItemGWT item) {
+		this(workingCopyDocument, widget, dragController, fromList, item, null, -1);
 	}
 	
-	public EditScheduleItemDlg(GreetingServiceAsync service, ScheduleEditWidget widget, DragAndDropController dragController,
-			boolean fromList, ScheduleItemGWT item, List<Integer> newDays, int newStartRow, DocumentGWT document) {
+	public EditScheduleItemDlg(CachedOpenWorkingCopyDocument workingCopyDocument, ScheduleEditWidget widget, DragAndDropController dragController,
+			boolean fromList, ScheduleItemGWT item, List<Integer> newDays, int newStartRow) {
 		super(false);
 
-		mGreetingService = service;
+		mWorkingCopyDocument = workingCopyDocument;
 		mScheduleController = widget;
 		mDragController = dragController;
 		
@@ -72,7 +71,6 @@ public class EditScheduleItemDlg extends DialogBox {
 		mOriginalItem = item;
 		mNewDays = newDays;
 		mNewStartRow = newStartRow;
-		mDocument = document;
 		
 		draw();
 	}
@@ -116,13 +114,13 @@ public class EditScheduleItemDlg extends DialogBox {
 		
 		int instructorID = -1; // Don't care, algorithm decides
 		if (mInstructorsLB.getSelectedIndex() == 1)
-			instructorID = mDocument.getStaffInstructorID();
+			instructorID = mWorkingCopyDocument.getDocument().getStaffInstructorID();
 		else if (mInstructorsLB.getSelectedIndex() > 1)
 			instructorID = mInstructors.get(mInstructorsLB.getSelectedIndex() - 2).getID();
 		
 		int locationID = -1; // Don't care, algorithm decides
 		if (mLocationsLB.getSelectedIndex() == 1)
-			locationID = mDocument.getTBALocationID();
+			locationID = mWorkingCopyDocument.getDocument().getTBALocationID();
 		else if (mLocationsLB.getSelectedIndex() > 1)
 			locationID = mLocations.get(mLocationsLB.getSelectedIndex() - 2).getID();
 		
@@ -337,14 +335,16 @@ public class EditScheduleItemDlg extends DialogBox {
 	}
 
 	private void populateInstructors() {
-		mGreetingService.getInstructorsForDocument(mDocument.getID(), new AsyncCallback<List<InstructorGWT>>() {
+		mWorkingCopyDocument.forceSynchronize(new AsyncCallback<Void>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				Window.alert("Failed to retrieve instructors.");
 			}
 
 			@Override
-			public void onSuccess(List<InstructorGWT> result) {
+			public void onSuccess(Void v) {
+				List<InstructorGWT> result = new LinkedList<InstructorGWT>(mWorkingCopyDocument.getInstructors(true));
+				
 				mInstructors = result;
 				
 				mInstructorsLB.addItem("Choose one for me");
@@ -362,14 +362,16 @@ public class EditScheduleItemDlg extends DialogBox {
 	}
 
 	private void populateLocations() {
-		mGreetingService.getLocationsForDocument(mDocument.getID(), new AsyncCallback<List<LocationGWT>>() {
+		mWorkingCopyDocument.forceSynchronize(new AsyncCallback<Void>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				Window.alert("Failed to retrieve instructors.");
 			}
 
 			@Override
-			public void onSuccess(List<LocationGWT> result) {
+			public void onSuccess(Void v) {
+				List<LocationGWT> result = new LinkedList<LocationGWT>(mWorkingCopyDocument.getLocations(true));
+				
 				mLocations = result;
 
 				mLocationsLB.addItem("Choose one for me");

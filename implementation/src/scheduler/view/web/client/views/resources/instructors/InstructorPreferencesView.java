@@ -1,5 +1,6 @@
 package scheduler.view.web.client.views.resources.instructors;
 
+import scheduler.view.web.client.CachedOpenWorkingCopyDocument;
 import scheduler.view.web.client.GreetingServiceAsync;
 import scheduler.view.web.client.UnsavedDocumentStrategy;
 import scheduler.view.web.shared.InstructorGWT;
@@ -20,8 +21,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author unknown, modified by Carsten Pfeffer <pfeffer@tzi.de>
  */
 public class InstructorPreferencesView extends VerticalPanel {
-	protected GreetingServiceAsync service;
-	protected int documentID;
+	protected CachedOpenWorkingCopyDocument openDocument;
 	protected InstructorGWT instructor;
 	
 	protected TimePrefsWidget timePrefs;
@@ -36,13 +36,11 @@ public class InstructorPreferencesView extends VerticalPanel {
 	 * @param instructor
 	 * @param unsavedDocumentStrategy 
 	 */
-	public InstructorPreferencesView(GreetingServiceAsync service,
-			int documentID, String scheduleName, InstructorGWT instructor, UnsavedDocumentStrategy unsavedDocumentStrategy) {
-		this.service = service;
+	public InstructorPreferencesView(CachedOpenWorkingCopyDocument openDocument, InstructorGWT instructor) {
+		this.openDocument = openDocument;
 
 		instructor.verify();
 
-		this.documentID = documentID;
 		this.instructor = instructor;
 	}
 
@@ -58,8 +56,7 @@ public class InstructorPreferencesView extends VerticalPanel {
 		fpanel.add(instructorName);
 		this.add(fpanel);
 
-		this.timePrefs = new TimePrefsWidget(this.service,
-				this.documentID, this.instructor);
+		this.timePrefs = new TimePrefsWidget(openDocument, this.instructor);
 		
 		this.setSpacing(20);
 
@@ -67,8 +64,7 @@ public class InstructorPreferencesView extends VerticalPanel {
 		this.setStyleName("centerness");
 
 		
-		this.coursePrefs = new CoursePrefsWidget(this.service,
-				this.documentID, this.instructor);
+		this.coursePrefs = new CoursePrefsWidget(openDocument, this.instructor);
 		this.coursePrefs.setStyleName("otherCenterness");
 		this.coursePrefs.setParent(this.parent);
 		this.coursePrefs.afterPush();

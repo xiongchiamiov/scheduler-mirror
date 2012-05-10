@@ -20,7 +20,7 @@ public abstract class LocationsTest extends ModelTestCase {
 		int locationID;
 		
 		{
-			Document doc = model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe("doc", START_HALF_HOUR, END_HALF_HOUR);
+			Document doc = model.createAndInsertDocumentWithSpecialInstructorsAndLocations("doc", START_HALF_HOUR, END_HALF_HOUR);
 			locationID = model.createTransientLocation("roomlol", "LEC", "30", true).setDocument(doc).insert().getID();
 		}
 		
@@ -33,7 +33,7 @@ public abstract class LocationsTest extends ModelTestCase {
 	public void testInsertAndFindLocationSameInstance() throws DatabaseException {
 		Model model = createBlankModel();
 		
-		Document doc = model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe("doc", START_HALF_HOUR, END_HALF_HOUR);
+		Document doc = model.createAndInsertDocumentWithSpecialInstructorsAndLocations("doc", START_HALF_HOUR, END_HALF_HOUR);
 		Location insertedLocation = model.createTransientLocation("roomlol", "LEC", "30", true).setDocument(doc).insert();
 		
 		Location found = model.findLocationByID(insertedLocation.getID());
@@ -46,7 +46,7 @@ public abstract class LocationsTest extends ModelTestCase {
 		int locationID;
 		
 		{
-			Document doc = model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe("doc", START_HALF_HOUR, END_HALF_HOUR);
+			Document doc = model.createAndInsertDocumentWithSpecialInstructorsAndLocations("doc", START_HALF_HOUR, END_HALF_HOUR);
 			Location ins = model.createTransientLocation("roomlol", "LEC", "30", true).setDocument(doc).insert();
 			ins.setRoom("hark");
 			ins.setType("derp");
@@ -67,7 +67,7 @@ public abstract class LocationsTest extends ModelTestCase {
 		int locationID;
 		
 		{
-			Document doc = model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe("doc", START_HALF_HOUR, END_HALF_HOUR);
+			Document doc = model.createAndInsertDocumentWithSpecialInstructorsAndLocations("doc", START_HALF_HOUR, END_HALF_HOUR);
 			Location ins = model.createTransientLocation("roomlol", "LEC", "30", true).setDocument(doc).insert();
 			locationID = ins.getID();
 			ins.delete();
@@ -85,11 +85,11 @@ public abstract class LocationsTest extends ModelTestCase {
 
 		Set<Integer> locationIDs = new HashSet<Integer>();
 		
-		Document doc = model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe("doc", START_HALF_HOUR, END_HALF_HOUR);
+		Document doc = model.createAndInsertDocumentWithSpecialInstructorsAndLocations("doc", START_HALF_HOUR, END_HALF_HOUR);
 		locationIDs.add(model.createTransientLocation("roomlol", "LEC", "30", true).setDocument(doc).insert().getID());
 		locationIDs.add(model.createTransientLocation("room2lol", "LEC", "20", true).setDocument(doc).insert().getID());
 		
-		Collection<Location> returnedLocations = model.findLocationsForDocument(doc);
+		Collection<Location> returnedLocations = model.findLocationsForDocument(doc, true);
 		for (Location returnedDoc : returnedLocations) {
 			assertTrue(locationIDs.contains(returnedDoc.getID()));
 			locationIDs.remove(returnedDoc.getID());
@@ -103,11 +103,11 @@ public abstract class LocationsTest extends ModelTestCase {
 		{
 			Set<Integer> locationIDs1 = new HashSet<Integer>();
 			
-			Document doc1 = model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe("doc1", START_HALF_HOUR, END_HALF_HOUR);
+			Document doc1 = model.createAndInsertDocumentWithSpecialInstructorsAndLocations("doc1", START_HALF_HOUR, END_HALF_HOUR);
 			locationIDs1.add(model.createTransientLocation("roomlol", "LEC", "30", true).setDocument(doc1).insert().getID());
 			locationIDs1.add(model.createTransientLocation("room2lol", "LEC", "20", true).setDocument(doc1).insert().getID());
 			
-			Collection<Location> returnedLocations1 = model.findLocationsForDocument(doc1);
+			Collection<Location> returnedLocations1 = model.findLocationsForDocument(doc1, true);
 			for (Location returnedDoc : returnedLocations1) {
 				assertTrue(locationIDs1.contains(returnedDoc.getID()));
 				locationIDs1.remove(returnedDoc.getID());
@@ -118,11 +118,11 @@ public abstract class LocationsTest extends ModelTestCase {
 		{
 			Set<Integer> locationIDs2 = new HashSet<Integer>();
 			
-			Document doc2 = model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe("doc2", START_HALF_HOUR, END_HALF_HOUR);
+			Document doc2 = model.createAndInsertDocumentWithSpecialInstructorsAndLocations("doc2", START_HALF_HOUR, END_HALF_HOUR);
 			locationIDs2.add(model.createTransientLocation("room3lol", "LEC", "35", true).setDocument(doc2).insert().getID());
 			locationIDs2.add(model.createTransientLocation("room4lol", "LEC", "30", true).setDocument(doc2).insert().getID());
 			
-			Collection<Location> returnedLocations2 = model.findLocationsForDocument(doc2);
+			Collection<Location> returnedLocations2 = model.findLocationsForDocument(doc2, true);
 			for (Location returnedDoc : returnedLocations2) {
 				assertTrue(locationIDs2.contains(returnedDoc.getID()));
 				locationIDs2.remove(returnedDoc.getID());

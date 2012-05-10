@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.TreeSet;
 
 import scheduler.view.web.shared.DocumentGWT;
+import scheduler.view.web.shared.OriginalDocumentGWT;
 
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
@@ -25,9 +26,9 @@ import com.smartgwt.client.widgets.tab.Tab;
 
 public class TrashTab extends Tab {
 	public interface DocumentsStrategy {
-		Collection<DocumentGWT> getAllOriginalDocuments();
+		Collection<OriginalDocumentGWT> getAllOriginalDocuments();
 		void restoreDocuments(Collection<Integer> documentIDs);
-		void openDocument(int id);
+		void openDocument(int originalDocumentID, boolean openExistingWorkingDocument);
 	}
 	
 	final DocumentsStrategy documents;
@@ -73,7 +74,7 @@ public class TrashTab extends Tab {
 					label.addClickHandler(new ClickHandler() {
 						public void onClick(ClickEvent event) {
 							int docID = record.getAttributeAsInt("id");
-							documents.openDocument(docID);
+							documents.openDocument(docID, false);
 //							TabOpener.openDocInNewTab(username, documentsCache.getDocumentByID(docID));
 						}
 					});
@@ -93,10 +94,10 @@ public class TrashTab extends Tab {
 		deletedOriginalDocumentsGrid.setAutoFetchData(true);
 		deletedOriginalDocumentsGrid.setCanEdit(false);
 
-		deletedOriginalDocumentsGrid.setDataSource(new DocumentsDataSource(new DocumentsDataSource.DocumentsStrategy() {
-			public Collection<DocumentGWT> getAllDocuments() {
-				Collection<DocumentGWT> allTrashedOriginals = new LinkedList<DocumentGWT>();
-				for (DocumentGWT document : documents.getAllOriginalDocuments())
+		deletedOriginalDocumentsGrid.setDataSource(new OriginalDocumentsDataSource(new OriginalDocumentsDataSource.DocumentsStrategy() {
+			public Collection<OriginalDocumentGWT> getAllDocuments() {
+				Collection<OriginalDocumentGWT> allTrashedOriginals = new LinkedList<OriginalDocumentGWT>();
+				for (OriginalDocumentGWT document : documents.getAllOriginalDocuments())
 					if (document.isTrashed())
 						allTrashedOriginals.add(document);
 				return allTrashedOriginals;

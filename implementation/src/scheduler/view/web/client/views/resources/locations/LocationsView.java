@@ -1,9 +1,9 @@
 package scheduler.view.web.client.views.resources.locations;
 
-import scheduler.view.web.client.GreetingServiceAsync;
-import scheduler.view.web.client.UnsavedDocumentStrategy;
+import scheduler.view.web.client.CachedOpenWorkingCopyDocument;
+import scheduler.view.web.client.views.resources.ResourceCollection;
 import scheduler.view.web.client.views.resources.ValidatorUtil;
-import scheduler.view.web.shared.DocumentGWT;
+import scheduler.view.web.shared.LocationGWT;
 
 import com.google.gwt.user.client.Window;
 import com.smartgwt.client.types.Alignment;
@@ -24,9 +24,7 @@ import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 public class LocationsView extends VLayout {
-	public LocationsView(final GreetingServiceAsync service,
-			final DocumentGWT document,
-			UnsavedDocumentStrategy unsavedDocumentStrategy) {
+	public LocationsView(CachedOpenWorkingCopyDocument document) {
 		setID("s_locationviewTab");
 		this.setWidth100();
 		this.setHeight100();
@@ -61,8 +59,7 @@ public class LocationsView extends VLayout {
 		grid.setEditEvent(ListGridEditEvent.CLICK);
 		grid.setEditByCell(true);
 		grid.setListEndEditAction(RowEndEditAction.NEXT);
-		grid.setDataSource(new LocationsDataSource(service, document,
-				unsavedDocumentStrategy));
+		grid.setDataSource(new LocationsDataSource(document));
 
 		ListGridField idField = new ListGridField("id", "&nbsp;");
 		idField.setCanEdit(false);

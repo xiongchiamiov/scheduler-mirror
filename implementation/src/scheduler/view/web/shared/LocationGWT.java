@@ -62,8 +62,17 @@ public class LocationGWT implements Serializable, Identified {
 	
 	@Override
 	public boolean equals(Object obj) {
-		return ((LocationGWT)obj).getID() == getID();
+		assert(false); // DONT USE EQUALS! equals() is a gateway to bugs because the word "equals" is very ambiguous.
+		return false;//((LocationGWT)obj).getID() == getID();
 	}
 
 	public boolean isSchedulable() { return this.isSchedulable; }
+
+	public boolean attributesEqual(LocationGWT that) {
+		return id.equals(that.id)&&
+				room.equals(that.room) &&
+				type.equals(that.type) &&
+				maxOccupancy.equals(that.maxOccupancy) &&
+				equipment.equals(that.equipment);
+	}
 }

@@ -1,7 +1,6 @@
 package scheduler.view.web.client.views;
 
 import scheduler.view.web.client.GreetingServiceAsync;
-import scheduler.view.web.client.Login;
 import scheduler.view.web.client.TabOpener;
 import scheduler.view.web.client.UpdateHeaderStrategy;
 
@@ -12,7 +11,6 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasAlignment;
@@ -78,18 +76,6 @@ public class LoginView extends VerticalPanel {
 			return;
 		}
 		
-		Login.login(service, username, new AsyncCallback<Void>() {
-			public void onSuccess(Void result) {
-				LoginView.this.username = username;
-				pushSelectScheduleView(username);
-			}
-			public void onFailure(Throwable caught) {
-				Window.alert("Failed to log in: " + caught.getMessage());
-			}
-		});
-	}
-	
-	protected void pushSelectScheduleView(String username) {
 		TabOpener.openHomeInThisTab(username);
 	}
 }

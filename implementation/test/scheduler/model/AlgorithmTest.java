@@ -17,9 +17,7 @@ public abstract class AlgorithmTest extends ModelTestCase {
 	public static void testThing() throws DatabaseException, BadInstructorDataException {
 		Model model = new Model();
 		
-		Document doc = model.createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe("doc", START_HALF_HOUR, END_HALF_HOUR);
-		
-		Schedule schedule = model.createTransientSchedule().setDocument(doc).insert();
+		Document doc = model.createAndInsertDocumentWithSpecialInstructorsAndLocations("doc", START_HALF_HOUR, END_HALF_HOUR);
 		
 		List<Course> courses = generateCourseList(model, doc);
 		
@@ -35,7 +33,7 @@ public abstract class AlgorithmTest extends ModelTestCase {
 		
 		long start = System.currentTimeMillis();
 		
-	    Vector<ScheduleItem> sis = GenerateEntryPoint.generate(model, schedule, sids, courses, instructors, locations);
+	    Vector<ScheduleItem> sis = GenerateEntryPoint.generate(model, doc, sids, courses, instructors, locations);
 	    
 	    long end = System.currentTimeMillis();
 	    

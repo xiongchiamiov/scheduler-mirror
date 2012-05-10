@@ -1,12 +1,11 @@
 package scheduler.view.web.client.views.resources.locations;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
 
-import scheduler.view.web.client.GreetingServiceAsync;
-import scheduler.view.web.client.UnsavedDocumentStrategy;
-import scheduler.view.web.shared.DocumentGWT;
+import scheduler.view.web.client.CachedOpenWorkingCopyDocument;
+import scheduler.view.web.client.views.resources.ResourceCollection;
 import scheduler.view.web.shared.LocationGWT;
 
 import com.google.gwt.user.client.Window;
@@ -32,14 +31,10 @@ public class LocationsDataSource extends DataSource {
 	// return instance;
 	// }
 	
-	final GreetingServiceAsync service;
-	final DocumentGWT document;
-	UnsavedDocumentStrategy unsavedDocumentStrategy;
+	CachedOpenWorkingCopyDocument document;
 	
-	public LocationsDataSource(GreetingServiceAsync service, DocumentGWT document, UnsavedDocumentStrategy unsavedDocumentStrategy) {
-		this.service = service;
+	public LocationsDataSource(CachedOpenWorkingCopyDocument document) {
 		this.document = document;
-		this.unsavedDocumentStrategy = unsavedDocumentStrategy;
 		
 		setDataProtocol(DSProtocol.CLIENTCUSTOM);
 		
@@ -105,52 +100,29 @@ public class LocationsDataSource extends DataSource {
 	}
 
 	protected void fetch(final DSRequest dsRequest) {
-		service.getLocationsForDocument(document.getID(), new AsyncCallback<List<LocationGWT>>() {
-			public void onSuccess(List<LocationGWT> result) {
-				Record[] responseRecords = new Record[result.size()];
-				
-				int responseRecordIndex = 0;
-				for (LocationGWT location : result) {
-//					System.out.println("Fetch location result id " + location.getID());
-//					System.out.println("Fetch record id " + readLocationIntoRecord(location).getAttribute("id"));
-					responseRecords[responseRecordIndex++] = readLocationIntoRecord(location);
-				}
-				
-				DSResponse response = new DSResponse();
-				response.setData(responseRecords);
-				processResponse(dsRequest.getRequestId(), response);
-			}
-			
-			@Override
-			public void onFailure(Throwable caught) {
-				DSResponse dsResponse = new DSResponse();
-				Window.alert("Failed to retrieve locations!");
-				processResponse(dsRequest.getRequestId(), dsResponse);
-			}
-		});
+		Collection<LocationGWT> result = document.getLocations(true);
+		
+		Record[] responseRecords = new Record[result.size()];
+		
+		int responseRecordIndex = 0;
+		for (LocationGWT location : result) {
+			responseRecords[responseRecordIndex++] = readLocationIntoRecord(location);
+		}
+		
+		DSResponse response = new DSResponse();
+		response.setData(responseRecords);
+		processResponse(dsRequest.getRequestId(), response);
 	}
 	
 	protected void add(final DSRequest dsRequest) {
 		Record record = dsRequest.getAttributeAsRecord("data");
 		LocationGWT newLocation = readRecordIntoLocation(record);
 		
-		service.addLocationToDocument(document.getID(), newLocation, new AsyncCallback<LocationGWT>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				DSResponse dsResponse = new DSResponse();
-				Window.alert("Failed to update location!");
-				processResponse(dsRequest.getRequestId(), dsResponse);
-			}
-			
-			@Override
-			public void onSuccess(LocationGWT result) {
-				unsavedDocumentStrategy.setDocumentChanged(true);
-				DSResponse response = new DSResponse();
-//				System.out.println("result record id " + result.getID());
-				response.setData(new Record[] { readLocationIntoRecord(result) });
-				processResponse(dsRequest.getRequestId(), response);
-			}
-		});
+		document.addLocation(newLocation);
+		
+		DSResponse response = new DSResponse();
+		response.setData(new Record[] { readLocationIntoRecord(newLocation) });
+		processResponse(dsRequest.getRequestId(), response);
 	}
 	
 	protected void update(final DSRequest dsRequest) {
@@ -172,44 +144,22 @@ public class LocationsDataSource extends DataSource {
 		
 		final LocationGWT location = readRecordIntoLocation(record);
 		
-		service.editLocation(location, new AsyncCallback<Void>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				DSResponse dsResponse = new DSResponse();
-				Window.alert("Failed to update location!");
-				processResponse(dsRequest.getRequestId(), dsResponse);
-			}
-			
-			@Override
-			public void onSuccess(Void result) {
-				unsavedDocumentStrategy.setDocumentChanged(true);
-				DSResponse response = new DSResponse();
-				response.setData(new Record[] { readLocationIntoRecord(location) });
-				processResponse(dsRequest.getRequestId(), response);
-			}
-		});
+		document.editLocation(location);
+		
+		DSResponse response = new DSResponse();
+		response.setData(new Record[] { readLocationIntoRecord(location) });
+		processResponse(dsRequest.getRequestId(), response);
 	}
 	
 	protected void remove(final DSRequest dsRequest) {
 		final Record record = dsRequest.getAttributeAsRecord("data");
 		final LocationGWT location = readRecordIntoLocation(record);
 
-		service.removeLocation(record.getAttributeAsInt("id"), new AsyncCallback<Void>() {
-			@Override
-			public void onSuccess(Void result) {
-				unsavedDocumentStrategy.setDocumentChanged(true);
-				DSResponse response = new DSResponse();
-				response.setData(new Record[] { readLocationIntoRecord(location) });
-				processResponse(dsRequest.getRequestId(), response);
-			}
-			
-			@Override
-			public void onFailure(Throwable caught) {
-				DSResponse dsResponse = new DSResponse();
-				Window.alert("Failed to delete location!");
-				processResponse(dsRequest.getRequestId(), dsResponse);
-			}
-		});
+		document.deleteLocation(location.getID());
+		
+		DSResponse response = new DSResponse();
+		response.setData(new Record[] { readLocationIntoRecord(location) });
+		processResponse(dsRequest.getRequestId(), response);
 	}
 	
 	@Override

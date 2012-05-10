@@ -8,7 +8,7 @@ import scheduler.model.db.IDBScheduleItem;
 public class DBScheduleItem extends DBObject implements IDBScheduleItem {
 	private static final long serialVersionUID = 1337L;
 	
-	Integer scheduleID;
+	Integer documentID;
 	Integer instructorID, courseID, locationID;
 	int section;
 	Set<Day> days;
@@ -18,12 +18,12 @@ public class DBScheduleItem extends DBObject implements IDBScheduleItem {
 	boolean isConflicted;
 	Integer lectureScheduleItemID;
 	
-	public DBScheduleItem(Integer id, Integer scheduleID, Integer instructorID,
+	public DBScheduleItem(Integer id, Integer documentID, Integer instructorID,
 			Integer courseID, Integer locationID, int section, Set<Day> days,
 			int startHalfHour, int endHalfHour, boolean isPlaced,
 			boolean isConflicted, Integer lectureScheduleItemID) {
 		super(id);
-		this.scheduleID = scheduleID;
+		this.documentID = documentID;
 		this.instructorID = instructorID;
 		this.courseID = courseID;
 		this.locationID = locationID;
@@ -36,11 +36,11 @@ public class DBScheduleItem extends DBObject implements IDBScheduleItem {
 		this.lectureScheduleItemID = lectureScheduleItemID;
 	}
 	public DBScheduleItem(DBScheduleItem that) {
-		this(that.id, that.scheduleID, that.instructorID, that.courseID, that.locationID, that.section, that.days, that.startHalfHour, that.endHalfHour, that.isPlaced, that.isConflicted, that.lectureScheduleItemID);
+		this(that.id, that.documentID, that.instructorID, that.courseID, that.locationID, that.section, that.days, that.startHalfHour, that.endHalfHour, that.isPlaced, that.isConflicted, that.lectureScheduleItemID);
 	}
 
 	public void sanityCheck() {
-		assert(scheduleID != null);
+		assert(documentID != null);
 		assert(instructorID != null);
 		assert(courseID != null);
 		assert(locationID != null);

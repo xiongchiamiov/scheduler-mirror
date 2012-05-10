@@ -1,6 +1,7 @@
 package scheduler.view.web.shared;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
@@ -156,4 +157,23 @@ public class InstructorGWT implements Serializable, Identified {
 
 	public boolean isSchedulable() { return this.isSchedulable; }
 	public void setIsSchedulable(boolean isSchedulable) { this.isSchedulable = isSchedulable; }
+
+	public boolean attributesEqual(InstructorGWT that) {
+		return username.equals(that.username) &&
+				firstName.equals(that.firstName) &&
+				lastName.equals(that.lastName) &&
+				maxwtu.equals(that.maxwtu) &&
+				isSchedulable == that.isSchedulable &&
+				Arrays.deepEquals(tPrefs, that.tPrefs) &&
+				coursePrefsEqual(coursePrefs, that.coursePrefs);
+	}
+	
+	private static boolean coursePrefsEqual(HashMap<Integer, Integer> a, HashMap<Integer, Integer> b) {
+		if (!a.keySet().equals(b.keySet()))
+			return false;
+		for (Integer courseID : a.keySet())
+			if (!a.get(courseID).equals(b.get(courseID)))
+				return false;
+		return true;
+	}
 }

@@ -131,6 +131,7 @@ public class ValidatorUtil {
 		}
 
 		int count = 0;
+		
 		for (Record record : recordList.getRange(0, recordList.getLength())) {
 			if (username.equals(record.getAttribute("username"))) {
 				count++;

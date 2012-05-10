@@ -1,21 +1,19 @@
 package scheduler.view.web.client.views;
 
+import scheduler.view.web.client.CachedOpenWorkingCopyDocument;
+import scheduler.view.web.client.CachedService;
 import scheduler.view.web.client.ExportDialog;
-import scheduler.view.web.client.GreetingServiceAsync;
 import scheduler.view.web.client.HTMLUtilities;
 import scheduler.view.web.client.Import;
 import scheduler.view.web.client.MergeDialog;
 import scheduler.view.web.client.NewScheduleCreator;
-import scheduler.view.web.client.NewScheduleCreator.CreatedScheduleCallback;
 import scheduler.view.web.client.SaveAsDialog;
 import scheduler.view.web.client.TabOpener;
 import scheduler.view.web.client.UnsavedDocumentStrategy;
 import scheduler.view.web.client.UpdateHeaderStrategy;
 import scheduler.view.web.client.views.resources.courses.CoursesView;
-import scheduler.view.web.client.views.resources.courses.DocumentCoursesCache;
 import scheduler.view.web.client.views.resources.instructors.InstructorsView;
 import scheduler.view.web.client.views.resources.locations.LocationsView;
-import scheduler.view.web.shared.DocumentGWT;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -40,10 +38,10 @@ import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripMenuButton;
 
-public class AdminScheduleNavView extends VerticalPanel implements UnsavedDocumentStrategy {
-	final GreetingServiceAsync service;
+public class AdminScheduleNavView extends VerticalPanel {
+	final CachedService service;
+	final CachedOpenWorkingCopyDocument document;
 	final String username;
-	final DocumentGWT document;
 	boolean documentChanged;
 	
 	SimplePanel viewFrameContainer;
@@ -55,7 +53,7 @@ public class AdminScheduleNavView extends VerticalPanel implements UnsavedDocume
 	// MenuItem instructorsMenuItem, locationsMenuItem, coursesMenuItem,
 	// scheduleMenuItem;
 	
-	public AdminScheduleNavView(GreetingServiceAsync service, final UpdateHeaderStrategy updateHeaderStrategy, String username, DocumentGWT document) {
+	public AdminScheduleNavView(CachedService service, final UpdateHeaderStrategy updateHeaderStrategy, String username, CachedOpenWorkingCopyDocument document) {
 		this.service = service;
 		this.username = username;
 		this.document = document;
@@ -66,6 +64,13 @@ public class AdminScheduleNavView extends VerticalPanel implements UnsavedDocume
 			public void onWindowClosing(Window.ClosingEvent closingEvent) {
 				if (documentChanged)
 					closingEvent.setMessage("You have unsaved data! Are you sure you want to close?");
+			}
+		});
+		
+		document.addObserver(new CachedOpenWorkingCopyDocument.Observer() {
+			@Override
+			public void onAnyLocalChange() {
+				updateHeaderStrategy.setDocumentChanged(true);
 			}
 		});
 
@@ -80,9 +85,7 @@ public class AdminScheduleNavView extends VerticalPanel implements UnsavedDocume
 		MenuItem newItem = new MenuItem("New", "icons/16/document_plain_new.png");
 		newItem.addClickHandler(new ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				NewScheduleCreator.createNewSchedule(service, username, new CreatedScheduleCallback() {
-					public void createdSchedule() { }
-				});
+				NewScheduleCreator.createNewSchedule(service, username);
 			}
 		});
 		
@@ -103,17 +106,20 @@ public class AdminScheduleNavView extends VerticalPanel implements UnsavedDocume
 		MenuItem saveItem = new MenuItem("Save", "icons/16/disk_blue.png");
 		saveItem.addClickHandler(new ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				service.saveWorkingCopyToOriginalDocument(document.getID(), new
-						AsyncCallback<Void>() {
-							public void onSuccess(Void result) {
-								documentChanged = false;
-								updateHeaderStrategy.setDocumentChanged(false);
-								Window.alert("Successfully saved!");
-							}
-							public void onFailure(Throwable caught) {
-								Window.alert("Failed to save! " + caught.getMessage());
-							}
-						});
+				document.copyIntoAssociatedOriginalDocument(new AsyncCallback<Void>() {
+					
+					@Override
+					public void onSuccess(Void result) {
+						documentChanged = false;
+						updateHeaderStrategy.setDocumentChanged(false);
+						Window.alert("Successfully saved!");
+					}
+					
+					@Override
+					public void onFailure(Throwable caught) {
+						Window.alert("Failed to save! " + caught.getMessage());
+					}
+				});
 			}
 		});
 		
@@ -227,30 +233,20 @@ public class AdminScheduleNavView extends VerticalPanel implements UnsavedDocume
 		tabSet.setOverflow(Overflow.VISIBLE);
 		tabSet.setPaneContainerOverflow(Overflow.VISIBLE);
 		// tabSet.setPaneCon
-		
+
 		final Tab coursesTab = new Tab("Courses");
 		
-		DocumentCoursesCache documentCoursesCache = new DocumentCoursesCache(service, document.getID());
-		documentCoursesCache.addObserver(new DocumentCoursesCache.Observer() {
-			public void onPopulate() { }
-			public void onModify() {
-				documentChanged = true;
-				updateHeaderStrategy.setDocumentChanged(true);
-			}
-		});
-		documentCoursesCache.populateFromServer();
-		
-		coursesTab.setPane(new CoursesView(documentCoursesCache));
+		coursesTab.setPane(new CoursesView(document));
 		coursesTab.setID("s_coursesTab");
 		tabSet.addTab(coursesTab);
 		
 		final Tab instructorsTab = new Tab("Instructors");
-		instructorsTab.setPane(new InstructorsView(service, document, (UnsavedDocumentStrategy)AdminScheduleNavView.this));
+		instructorsTab.setPane(new InstructorsView(document));
 		instructorsTab.setID("s_instructorsTab");
 		tabSet.addTab(instructorsTab);
 		
 		final Tab locationsTab = new Tab("Locations");
-		locationsTab.setPane(new LocationsView(service, document, (UnsavedDocumentStrategy)AdminScheduleNavView.this));
+		locationsTab.setPane(new LocationsView(document));
 		locationsTab.setID("s_locationsTab");
 		tabSet.addTab(locationsTab);
 		
@@ -268,7 +264,7 @@ public class AdminScheduleNavView extends VerticalPanel implements UnsavedDocume
 			public void onTabSelected(TabSelectedEvent event) {
 				if (event.getTab() == scheduleTab) {
 					tabSet.setPaneContainerOverflow(Overflow.HIDDEN);
-					viewFrameContainer.add(new CalendarView(service, document, (UnsavedDocumentStrategy)AdminScheduleNavView.this));
+					viewFrameContainer.add(new CalendarView(document));
 				}
 				else {
 					tabSet.setPaneContainerOverflow(Overflow.VISIBLE);
@@ -303,11 +299,5 @@ public class AdminScheduleNavView extends VerticalPanel implements UnsavedDocume
 		HTMLUtilities.addSpace(navBar, 10);
 		
 		navBar.addMember(makeTabs());
-	}
-
-	@Override
-	public void setDocumentChanged(boolean documentChanged) {
-		// TODO Auto-generated method stub
-//		System.out.println("implement me");
 	}
 }

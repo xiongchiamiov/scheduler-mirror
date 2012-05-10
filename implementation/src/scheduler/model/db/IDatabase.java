@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import scheduler.model.Day;
+import scheduler.model.db.IDatabase.NotFoundException;
 import scheduler.model.db.simple.DBUsedEquipment;
 
 public interface IDatabase {
@@ -35,16 +36,16 @@ public interface IDatabase {
 	IDBDocument assembleDocument(String name, int startHalfHour, int endHalfHour) throws DatabaseException;
 	void updateDocument(IDBDocument document) throws DatabaseException;
 	void deleteDocument(IDBDocument document) throws DatabaseException;
-	IDBDocument findDocumentForSchedule(IDBSchedule schedule) throws DatabaseException;
+//	IDBDocument findDocumentForSchedule(IDBSchedule schedule) throws DatabaseException;
 
 	IDBInstructor getDocumentStaffInstructorOrNull(IDBDocument underlyingDocument) throws DatabaseException;
 	IDBLocation getDocumentTBALocationOrNull(IDBDocument underlyingDocument) throws DatabaseException;
 	IDBInstructor getDocumentChooseForMeInstructorOrNull(IDBDocument underlyingDocument) throws DatabaseException;
 	IDBLocation getDocumentChooseForMeLocationOrNull(IDBDocument underlyingDocument) throws DatabaseException;
-	void setDocumentStaffInstructor(IDBDocument underlyingDocument, IDBInstructor underlyingInstructor) throws DatabaseException;
-	void setDocumentTBALocation(IDBDocument underlyingDocument, IDBLocation underlyingLocation) throws DatabaseException;
-	void setDocumentChooseForMeInstructor(IDBDocument underlyingDocument, IDBInstructor underlyingInstructor) throws DatabaseException;
-	void setDocumentChooseForMeLocation(IDBDocument underlyingDocument, IDBLocation underlyingLocation) throws DatabaseException;
+	void setDocumentStaffInstructorOrNull(IDBDocument underlyingDocument, IDBInstructor underlyingInstructor) throws DatabaseException;
+	void setDocumentTBALocationOrNull(IDBDocument underlyingDocument, IDBLocation underlyingLocation) throws DatabaseException;
+	void setDocumentChooseForMeInstructorOrNull(IDBDocument underlyingDocument, IDBInstructor underlyingInstructor) throws DatabaseException;
+	void setDocumentChooseForMeLocationOrNull(IDBDocument underlyingDocument, IDBLocation underlyingLocation) throws DatabaseException;
 	
 	// Working Copy
 	boolean isOriginalDocument(IDBDocument doc) throws DatabaseException;
@@ -55,20 +56,20 @@ public interface IDatabase {
 	void disassociateWorkingCopyWithOriginal(IDBDocument underlyingDocument, IDBDocument underlyingDocument2) throws DatabaseException;
 
 	// Schedules
-	Collection<IDBSchedule> findAllSchedulesForDocument(IDBDocument document) throws DatabaseException;
-	IDBSchedule findScheduleByID(int id) throws DatabaseException;
-	IDBSchedule assembleSchedule() throws DatabaseException;
-	void insertSchedule(IDBDocument containingDocument, IDBSchedule schedule) throws DatabaseException;
-	void updateSchedule(IDBSchedule schedule) throws DatabaseException;
-	void deleteSchedule(IDBSchedule schedule) throws DatabaseException;
+//	Collection<IDBSchedule> findAllSchedulesForDocument(IDBDocument document) throws DatabaseException;
+//	IDBSchedule findScheduleByID(int id) throws DatabaseException;
+//	IDBSchedule assembleSchedule() throws DatabaseException;
+//	void insertSchedule(IDBDocument containingDocument, IDBSchedule schedule) throws DatabaseException;
+//	void updateSchedule(IDBSchedule schedule) throws DatabaseException;
+//	void deleteSchedule(IDBSchedule schedule) throws DatabaseException;
 	
 	// Schedule Items
-	Collection<IDBScheduleItem> findScheduleItemsBySchedule(IDBSchedule schedule) throws DatabaseException;
-	Collection<IDBScheduleItem> findAllScheduleItemsForSchedule(IDBSchedule schedule) throws DatabaseException;
+	Collection<IDBScheduleItem> findScheduleItemsByDocument(IDBDocument schedule) throws DatabaseException;
+	Collection<IDBScheduleItem> findAllScheduleItemsForDocument(IDBDocument schedule) throws DatabaseException;
 	IDBScheduleItem findScheduleItemByID(int id) throws DatabaseException;
 	IDBScheduleItem assembleScheduleItem(int section, Set<Day> days,
 			int startHalfHour, int endHalfHour, boolean isPlaced, boolean isConflicted) throws DatabaseException;
-	void insertScheduleItem(IDBSchedule schedule, IDBCourse course,
+	void insertScheduleItem(IDBDocument document, IDBCourse course,
 			IDBInstructor instructor, IDBLocation location, IDBScheduleItem item) throws DatabaseException;
 	void updateScheduleItem(IDBScheduleItem schedule) throws DatabaseException;
 	void deleteScheduleItem(IDBScheduleItem schedule) throws DatabaseException;
@@ -167,7 +168,7 @@ public interface IDatabase {
 	boolean isEmpty() throws DatabaseException;
 	
 	IDBScheduleItem assembleScheduleItemCopy(IDBScheduleItem underlying) throws DatabaseException;
-	IDBSchedule getScheduleItemSchedule(IDBScheduleItem underlying) throws DatabaseException;
+	IDBDocument getScheduleItemDocument(IDBScheduleItem underlying) throws DatabaseException;
 	boolean isInserted(IDBScheduleItem underlying) throws DatabaseException;
 	IDBObject findDocumentForLocation(IDBLocation underlyingLocation) throws DatabaseException;
 	IDBObject findDocumentForInstructor(IDBInstructor underlyingInstructor) throws DatabaseException;

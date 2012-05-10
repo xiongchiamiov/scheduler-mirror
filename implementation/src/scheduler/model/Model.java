@@ -22,7 +22,6 @@ import scheduler.model.db.IDBInstructor;
 import scheduler.model.db.IDBLocation;
 import scheduler.model.db.IDBObject;
 import scheduler.model.db.IDBOfferedDayPattern;
-import scheduler.model.db.IDBSchedule;
 import scheduler.model.db.IDBScheduleItem;
 import scheduler.model.db.IDBTime;
 import scheduler.model.db.IDBTimePreference;
@@ -150,7 +149,7 @@ public class Model {
 		}
 	};
 
-	public Document createAndInsertDocumentWithTBAStaffAndScheduleAndChooseForMe(String name, int startHalfHour, int endHalfHour) throws DatabaseException {
+	public Document createAndInsertDocumentWithSpecialInstructorsAndLocations(String name, int startHalfHour, int endHalfHour) throws DatabaseException {
 		Document document = createTransientDocument(name, startHalfHour, endHalfHour)
 				.insert();
 
@@ -170,14 +169,12 @@ public class Model {
 				.setDocument(document)
 				.insert());
 		
-		createTransientSchedule().setDocument(document).insert().getID();
-		
 		document.update();
 		
 		return document;
 	}
 	
-	private Document createTransientDocument(String name, int startHalfHour, int endHalfHour) throws DatabaseException {
+	public Document createTransientDocument(String name, int startHalfHour, int endHalfHour) throws DatabaseException {
 		return new Document(this, database.assembleDocument(name, startHalfHour, endHalfHour));
 	}
 	
@@ -203,13 +200,20 @@ public class Model {
 		return new Document(this, underlying);
 	}
 	
-	public Document copyDocument(Document existingDocument, String newName) throws DatabaseException {
-		IDBDocument newUnderlyingDocument = database.assembleDocument(newName, existingDocument.getStartHalfHour(), existingDocument.getEndHalfHour());
-		database.insertDocument(newUnderlyingDocument);
+	public void copyDocument(Document existingDocument, Document newDocument) throws DatabaseException {
+//		IDBDocument newUnderlyingDocument = database.assembleDocument(newDocument, existingDocument.getStartHalfHour(), existingDocument.getEndHalfHour());
+//		database.insertDocument(newUnderlyingDocument);
 //		Document newDocument = new Document(this, underlying);
 		
+		assert(newDocument.getCourses().isEmpty());		
+		assert(newDocument.getLocations(true).isEmpty());		
+		assert(newDocument.getInstructors(true).isEmpty());
+		assert(newDocument.getStaffInstructor() == null);
+		assert(newDocument.getTBALocation() == null);
+		assert(newDocument.getChooseForMeInstructor() == null);
+		assert(newDocument.getChooseForMeLocation() == null);
+		IDBDocument newUnderlyingDocument = newDocument.underlyingDocument;
 		
-
 		// Locations
 		Map<Integer, IDBLocation> newDocumentLocationsByExistingDocumentLocationIDs = new HashMap<Integer, IDBLocation>();
 		for (IDBLocation existingDocumentLocation : database.findLocationsForDocument(existingDocument.underlyingDocument)) {
@@ -278,51 +282,69 @@ public class Model {
 			}
 		}
 		
-		// Schedules
-		Map<Integer, IDBSchedule> newDocumentScheduleIDsByExistingDocumentScheduleIDs = new HashMap<Integer, IDBSchedule>();
-		for (IDBSchedule existingDocumentSchedule : database.findAllSchedulesForDocument(existingDocument.underlyingDocument)) {
-			IDBSchedule newDocumentSchedule = database.assembleSchedule();
-			database.insertSchedule(newUnderlyingDocument, newDocumentSchedule);
-			
-			newDocumentScheduleIDsByExistingDocumentScheduleIDs.put(existingDocumentSchedule.getID(), newDocumentSchedule);
-			
-			// Schedule Items
-			for (IDBScheduleItem existingDocumentScheduleItem : database.findAllScheduleItemsForSchedule(existingDocumentSchedule)) {
-				IDBCourse existingDocumentCourse = database.getScheduleItemCourse(existingDocumentScheduleItem);
-				IDBLocation existingDocumentLocation = database.getScheduleItemLocation(existingDocumentScheduleItem);
-				IDBInstructor existingDocumentInstructor = database.getScheduleItemInstructor(existingDocumentScheduleItem);
+		// Schedule Items
+		Map<Integer, IDBScheduleItem> newDocumentScheduleItemsByExistingDocumentScheduleItemIDs = new HashMap<Integer, IDBScheduleItem>();
+		for (IDBScheduleItem existingDocumentScheduleItem : database.findAllScheduleItemsForDocument(existingDocument.underlyingDocument)) {
+			IDBCourse existingDocumentCourse = database.getScheduleItemCourse(existingDocumentScheduleItem);
+			IDBLocation existingDocumentLocation = database.getScheduleItemLocation(existingDocumentScheduleItem);
+			IDBInstructor existingDocumentInstructor = database.getScheduleItemInstructor(existingDocumentScheduleItem);
 
-				IDBCourse newDocumentCourse = newDocumentCoursesByExistingDocumentCourseIDs.get(existingDocumentCourse.getID());
-				IDBLocation newDocumentLocation = newDocumentLocationsByExistingDocumentLocationIDs.get(existingDocumentLocation.getID());
-				IDBInstructor newDocumentInstructor = newDocumentInstructorsByExistingDocumentInstructorIDs.get(existingDocumentInstructor.getID());
-				
-				database.insertScheduleItem(
-						newDocumentSchedule,
-						newDocumentCourse,
-						newDocumentInstructor,
-						newDocumentLocation,
-						database.assembleScheduleItem(
-								existingDocumentScheduleItem.getSection(),
-								existingDocumentScheduleItem.getDays(),
-								existingDocumentScheduleItem.getStartHalfHour(),
-								existingDocumentScheduleItem.getEndHalfHour(),
-								existingDocumentScheduleItem.isPlaced(),
-								existingDocumentScheduleItem.isConflicted()));
-			}
+			IDBCourse newDocumentCourse = newDocumentCoursesByExistingDocumentCourseIDs.get(existingDocumentCourse.getID());
+			IDBLocation newDocumentLocation = newDocumentLocationsByExistingDocumentLocationIDs.get(existingDocumentLocation.getID());
+			IDBInstructor newDocumentInstructor = newDocumentInstructorsByExistingDocumentInstructorIDs.get(existingDocumentInstructor.getID());
+			
+			IDBScheduleItem newDocumentScheduleItem = database.assembleScheduleItem(
+					existingDocumentScheduleItem.getSection(),
+					existingDocumentScheduleItem.getDays(),
+					existingDocumentScheduleItem.getStartHalfHour(),
+					existingDocumentScheduleItem.getEndHalfHour(),
+					existingDocumentScheduleItem.isPlaced(),
+					existingDocumentScheduleItem.isConflicted());
+			
+			database.insertScheduleItem(
+					newDocument.underlyingDocument,
+					newDocumentCourse,
+					newDocumentInstructor,
+					newDocumentLocation,
+					newDocumentScheduleItem);
+			database.updateDocument(newDocument.underlyingDocument);
+			database.updateCourse(newDocumentCourse);
+			database.updateInstructor(newDocumentInstructor);
+			database.updateLocation(newDocumentLocation);
+			
+			newDocumentScheduleItemsByExistingDocumentScheduleItemIDs.put(existingDocumentScheduleItem.getID(), newDocumentScheduleItem);
+		}
+		
+		// Schedule Item Associations
+		for (IDBScheduleItem existingDocumentLabScheduleItem : database.findAllScheduleItemsForDocument(existingDocument.underlyingDocument)) {
+			IDBScheduleItem existingDocumentLectureScheduleItem = database.getScheduleItemLectureOrNull(existingDocumentLabScheduleItem);
+//			System.out.println("course " + existingDocumentScheduleItem.getCalatogNumber() + " " + existingDocumentScheduleItem.getType() + ": " + assoc);
+			if (existingDocumentLectureScheduleItem == null)
+				continue;
+			
+			IDBScheduleItem newDocumentLabScheduleItem = newDocumentScheduleItemsByExistingDocumentScheduleItemIDs.get(existingDocumentLabScheduleItem.getID());
+			IDBScheduleItem newDocumentLectureScheduleItem = newDocumentScheduleItemsByExistingDocumentScheduleItemIDs.get(existingDocumentLectureScheduleItem.getID());
+			database.associateScheduleItemLab(newDocumentLectureScheduleItem, newDocumentLabScheduleItem);
+			database.updateScheduleItem(newDocumentLabScheduleItem);
+			database.updateScheduleItem(newDocumentLectureScheduleItem);
 		}
 
-		if (existingDocument.getStaffInstructor() != null)
-			database.setDocumentStaffInstructor(newUnderlyingDocument, newDocumentInstructorsByExistingDocumentInstructorIDs.get(existingDocument.getStaffInstructor().getID()));
-		if (existingDocument.getTBALocation() != null)
-			database.setDocumentTBALocation(newUnderlyingDocument, newDocumentLocationsByExistingDocumentLocationIDs.get(existingDocument.getTBALocation().getID()));
-		if (existingDocument.getChooseForMeInstructor() != null)
-			database.setDocumentChooseForMeInstructor(newUnderlyingDocument, newDocumentInstructorsByExistingDocumentInstructorIDs.get(existingDocument.getChooseForMeInstructor().getID()));
-		if (existingDocument.getChooseForMeLocation() != null)
-			database.setDocumentChooseForMeLocation(newUnderlyingDocument, newDocumentLocationsByExistingDocumentLocationIDs.get(existingDocument.getChooseForMeLocation().getID()));
+
+		assert(newDocumentInstructorsByExistingDocumentInstructorIDs.containsKey(existingDocument.getStaffInstructor().getID()));
+		database.setDocumentStaffInstructorOrNull(newUnderlyingDocument, newDocumentInstructorsByExistingDocumentInstructorIDs.get(existingDocument.getStaffInstructor().getID()));
+
+		assert(newDocumentLocationsByExistingDocumentLocationIDs.containsKey(existingDocument.getTBALocation().getID()));
+		database.setDocumentTBALocationOrNull(newUnderlyingDocument, newDocumentLocationsByExistingDocumentLocationIDs.get(existingDocument.getTBALocation().getID()));
+		
+		assert(newDocumentInstructorsByExistingDocumentInstructorIDs.containsKey(existingDocument.getChooseForMeInstructor().getID()));
+		database.setDocumentChooseForMeInstructorOrNull(newUnderlyingDocument, newDocumentInstructorsByExistingDocumentInstructorIDs.get(existingDocument.getChooseForMeInstructor().getID()));
+
+		assert(newDocumentLocationsByExistingDocumentLocationIDs.containsKey(existingDocument.getChooseForMeLocation().getID()));	
+		database.setDocumentChooseForMeLocationOrNull(newUnderlyingDocument, newDocumentLocationsByExistingDocumentLocationIDs.get(existingDocument.getChooseForMeLocation().getID()));
 		
 		database.updateDocument(newUnderlyingDocument);
 		
-		return this.findDocumentByID(newUnderlyingDocument.getID());
+		newDocument.invalidateLoaded();
 	}
 
 	void associateWorkingCopyWithOriginal(Document workingCopyDocument, Document newOriginal) throws DatabaseException {
@@ -342,41 +364,41 @@ public class Model {
 	
 	
 	
-	// SCHEDULES
-
-	Cache<Schedule, IDBSchedule> scheduleCache = new Cache<Schedule, IDBSchedule>() {
-		protected Schedule decorate(IDBSchedule underlying) {
-			return new Schedule(Model.this, underlying);
-		}
-		protected IDBSchedule loadFromDatabase(int id) throws DatabaseException {
-			return database.findScheduleByID(id);
-		}
-		protected void insertIntoDatabase(Schedule obj) throws DatabaseException {
-			database.insertSchedule(obj.getDocument().underlyingDocument, obj.underlyingSchedule);
-		}
-		protected void removeFromDatabase(Schedule obj) throws DatabaseException {
-			database.deleteSchedule(obj.underlyingSchedule);
-		}
-		@Override
-		protected void updateInDatabase(Schedule obj) throws DatabaseException {
-			database.updateSchedule(obj.underlyingSchedule);
-		}
-	};
-	
-	public Collection<Schedule> findSchedulesForDocument(Document doc) throws DatabaseException {
-		Collection<Schedule> result = new LinkedList<Schedule>();
-		for (IDBSchedule underlying : database.findAllSchedulesForDocument(doc.underlyingDocument))
-			result.add(scheduleCache.decorateAndPutIfNotPresent(underlying));
-		return result;
-	}
-
-	public Schedule findScheduleByID(int scheduleID) throws DatabaseException {
-		return scheduleCache.findByID(scheduleID);
-	}
-	
-	public Schedule createTransientSchedule() throws DatabaseException {
-		return new Schedule(this, database.assembleSchedule());
-	}
+//	// SCHEDULES
+//
+//	Cache<Schedule, IDBSchedule> scheduleCache = new Cache<Schedule, IDBSchedule>() {
+//		protected Schedule decorate(IDBSchedule underlying) {
+//			return new Schedule(Model.this, underlying);
+//		}
+//		protected IDBSchedule loadFromDatabase(int id) throws DatabaseException {
+//			return database.findScheduleByID(id);
+//		}
+//		protected void insertIntoDatabase(Schedule obj) throws DatabaseException {
+//			database.insertSchedule(obj.getDocument().underlyingDocument, obj.underlyingSchedule);
+//		}
+//		protected void removeFromDatabase(Schedule obj) throws DatabaseException {
+//			database.deleteSchedule(obj.underlyingSchedule);
+//		}
+//		@Override
+//		protected void updateInDatabase(Schedule obj) throws DatabaseException {
+//			database.updateSchedule(obj.underlyingSchedule);
+//		}
+//	};
+//	
+//	public Collection<Schedule> findSchedulesForDocument(Document doc) throws DatabaseException {
+//		Collection<Schedule> result = new LinkedList<Schedule>();
+//		for (IDBSchedule underlying : database.findAllSchedulesForDocument(doc.underlyingDocument))
+//			result.add(scheduleCache.decorateAndPutIfNotPresent(underlying));
+//		return result;
+//	}
+//
+//	public Schedule findScheduleByID(int scheduleID) throws DatabaseException {
+//		return scheduleCache.findByID(scheduleID);
+//	}
+//	
+//	public Schedule createTransientSchedule() throws DatabaseException {
+//		return new Schedule(this, database.assembleSchedule());
+//	}
 	
 	
 	
@@ -401,12 +423,20 @@ public class Model {
 		}
 	};
 	
-	public Collection<Instructor> findInstructorsForDocument(Document doc) throws DatabaseException {
+	public Collection<Instructor> findInstructorsForDocument(Document doc, boolean excludeSpecialCaseInstructors) throws DatabaseException {
 		Collection<Instructor> result = new LinkedList<Instructor>();
-		for (IDBInstructor underlying : database.findInstructorsForDocument(doc.underlyingDocument))
-			if (!underlying.getID().equals(doc.getStaffInstructor().getID()) && 
-			    !underlying.getID().equals(doc.getChooseForMeInstructor().getID()))
-				result.add(instructorCache.decorateAndPutIfNotPresent(underlying));
+
+		for (IDBInstructor underlying : database.findInstructorsForDocument(doc.underlyingDocument)) {
+			
+			if (excludeSpecialCaseInstructors) {
+				if (underlying.getID().equals(doc.getStaffInstructor().getID()))
+					continue;
+				if (underlying.getID().equals(doc.getChooseForMeInstructor().getID()))
+					continue;
+			}
+			
+			result.add(instructorCache.decorateAndPutIfNotPresent(underlying));
+		}
 		return result;
 	}
 
@@ -486,21 +516,25 @@ public class Model {
 		return new Location(this, database.assembleLocation(room, type, maxOccupancy, isSchedulable));
 	}
 
-	public Collection<Location> findLocationsForDocument(Document doc) throws DatabaseException {
-		assert(doc.getTBALocation() != null);
-		assert(doc.getTBALocation().getID() != null);
+	public Collection<Location> findLocationsForDocument(Document doc, boolean excludeSpecialCaseLocations) throws DatabaseException {
+//		assert(doc.getTBALocation() != null);
+//		assert(doc.getTBALocation().getID() != null);
 		Collection<Location> result = new LinkedList<Location>();
 		for (IDBLocation underlying : database.findLocationsForDocument(doc.underlyingDocument)) {
 			assert underlying != null : "under null";
 			assert underlying.getID() != null : " under id null";
 			assert doc != null : "doc null";
-			assert doc.getTBALocation() != null : "tba null";
-			assert doc.getTBALocation().getID() != null : "doc tba id null";
-			assert(doc.getChooseForMeLocation() != null) : "doc choose for me null";
-			assert(doc.getChooseForMeLocation().getID() != null) : "doc choose for me id null";
-			if (!underlying.getID().equals(doc.getTBALocation().getID()) &&
-				!underlying.getID().equals(doc.getChooseForMeLocation().getID()))
-				result.add(locationCache.decorateAndPutIfNotPresent(underlying));
+			
+			if (excludeSpecialCaseLocations) {
+				if (doc.getTBALocation() != null) {
+					if (underlying.getID().equals(doc.getTBALocation().getID()))
+						continue;
+					if (underlying.getID().equals(doc.getChooseForMeLocation().getID()))
+						continue;
+				}
+			}
+			
+			result.add(locationCache.decorateAndPutIfNotPresent(underlying));
 		}
 		return result;
 	}
@@ -521,7 +555,7 @@ public class Model {
 			return database.findScheduleItemByID(id);
 		}
 		protected void insertIntoDatabase(ScheduleItem obj) throws DatabaseException {
-			database.insertScheduleItem(obj.getSchedule().underlyingSchedule, obj.getCourse().underlyingCourse, obj.getInstructor().underlyingInstructor, obj.getLocation().underlyingLocation, obj.underlying);
+			database.insertScheduleItem(obj.getDocument().underlyingDocument, obj.getCourse().underlyingCourse, obj.getInstructor().underlyingInstructor, obj.getLocation().underlyingLocation, obj.underlying);
 		}
 		protected void removeFromDatabase(ScheduleItem obj) throws DatabaseException {
 			database.deleteScheduleItem(obj.underlying);
@@ -531,9 +565,9 @@ public class Model {
 		}
 	};
 	
-	public Collection<ScheduleItem> findAllScheduleItemsForSchedule(Schedule schedule) throws DatabaseException {
+	public Collection<ScheduleItem> findAllScheduleItemsForDocument(Document document) throws DatabaseException {
 		Collection<ScheduleItem> result = new LinkedList<ScheduleItem>();
-		for (IDBScheduleItem underlying : database.findAllScheduleItemsForSchedule(schedule.underlyingSchedule))
+		for (IDBScheduleItem underlying : database.findAllScheduleItemsForDocument(document.underlyingDocument))
 			result.add(itemCache.decorateAndPutIfNotPresent(underlying));
 		return result;
 	}
@@ -576,7 +610,6 @@ public class Model {
 		locationCache.cache.clear();
 		instructorCache.cache.clear();
 		courseCache.cache.clear();
-		scheduleCache.cache.clear();
 	}
 
 	public Collection<ScheduleItem> getLabScheduleItemsForScheduleItem(ScheduleItem item) throws DatabaseException {
