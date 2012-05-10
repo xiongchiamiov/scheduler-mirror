@@ -7,8 +7,8 @@ public class SQLInstructor extends SQLObject implements IDBInstructor {
 	String firstName, lastName, username;
 	Boolean schedulable;
 	
-	public SQLInstructor(Integer id, Integer docID, Integer maxWTU,
-			   String firstName, String lastName, String username, Boolean schedulable) {
+	public SQLInstructor(Integer id, Integer docID, String firstName, String lastName, 
+			String username, Integer maxWTU, Boolean schedulable) {
 		super(id);
 		this.id = id;
 		this.docID = docID;

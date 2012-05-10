@@ -415,7 +415,7 @@ public class SQLdb implements IDatabase {
 					Object[] constructorArguments = new Object[columns.length];
 					for (int i = 0; i < columns.length; i++) {
 						constructorParameters[i] = columns[i].classs;
-						constructorArguments[i] = getFromResultWithType(resultSet, i, columns[i].classs);
+						constructorArguments[i] = getFromResultWithType(resultSet, i+1, columns[i].classs);
 					}
 					
 					Constructor derp = classs.getConstructor(constructorParameters);
@@ -549,18 +549,21 @@ public class SQLdb implements IDatabase {
 	@Override
 	public IDBDocument getOriginalForWorkingCopyDocumentOrNull(IDBDocument rawDocument)
 			throws DatabaseException {
-		SQLDocument doc = null;
-		SQLWorkingCopy wc = null;
+		List<SQLDocument> doc = null;
+		List<SQLWorkingCopy> wc = null;
 		HashMap<String, Object> wheres = new HashMap<String, Object>();
-		
+
 		wheres.put("id", rawDocument.getID());
-		wc = workingcopyTable.select(wheres).get(0);
-		if (wc != null) {
+		wc = workingcopyTable.select(wheres);
+		if (wc != null && wc.size() != 0) {
 			wheres.clear();
-			wheres.put("id", wc.getOriginalDocID());
-			doc = documentTable.select(wheres).get(0);
+			wheres.put("id", wc.get(0).getOriginalDocID());
+			doc = documentTable.select(wheres);
+			
+			if (doc.size() != 0)
+				return doc.get(0);
 		}
-		return doc;
+		return null;
 	}
 
 
@@ -917,8 +920,8 @@ public class SQLdb implements IDatabase {
 	public IDBInstructor assembleInstructor(String firstName, String lastName,
 			String username, String maxWTU, boolean isSchedulable)
 			throws DatabaseException {
-		return new SQLInstructor(null, null, Integer.valueOf(maxWTU), firstName, lastName,
-				username, isSchedulable);
+		return new SQLInstructor(null, null, firstName, lastName,
+				username, Integer.valueOf(maxWTU), isSchedulable);
 	}
 
 
@@ -927,7 +930,7 @@ public class SQLdb implements IDatabase {
 			IDBInstructor instructor) throws DatabaseException {
 		SQLInstructor sqlinstructor = (SQLInstructor) instructor;
 		//(Integer id, Integer docID, Integer maxWTU,String firstName, String lastName, String username, Boolean schedulable)
-		sqlinstructor.id = instructorTable.insert(new Object[]{ sqlinstructor.docID, sqlinstructor.getMaxWTU(), sqlinstructor.getFirstName(), sqlinstructor.getLastName(), sqlinstructor.getUsername(), sqlinstructor.isSchedulable()});
+		sqlinstructor.id = instructorTable.insert(new Object[]{ containingDocument.getID(), sqlinstructor.getFirstName(), sqlinstructor.getLastName(), sqlinstructor.getUsername(), Integer.valueOf(sqlinstructor.getMaxWTU()), sqlinstructor.isSchedulable()});
 		
 	}
 
