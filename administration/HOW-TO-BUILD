@@ -1,0 +1,56 @@
+To create a new deployment named DEPT, login to the VM and do this:
+
+   (1) open the file /etc/nginx/sites-enabled
+   (2) add this
+
+       location /DEPT/ {
+	    proxy_pass	http://127.0.0.1:8080;
+	}
+
+      at the end of the list of existing lines of this form
+    (3) sudo service nginx reload
+    (4) add DEPT to the list of departments in implmentation/fabfile.py;
+        note that this will also do an 'x' suffixed version, i.e. DEPTx
+
+To do a deployment, login to a mahchine that has ant, fab, and a checked out
+copy if the scheduler project; do this:
+
+   (1) cd to the scheduler project directory
+   (2) svn update
+   (3) cd implementation
+   (4) fab build
+   (5) fab deploy:dir-name        e.g., fab deploy: CSC,IME; or fab deply:all
+						or fac delpoly:all-dev
+						or fac delpoly:all-stable
+   (6) when prompted, enter your password on the scheduler vm, followed by two
+       presses of the Return key
+
+  These steps should culminate with the messages:
+    Done.
+    Disconnecting from scheduler.csc.calpoly.edu... done.
+
+
+To validate conditions on the VM, do this:
+
+   (1) service tomcat6 status, which should report something like this:
+        * Tomcat servlet engine is running with pid XXXXX
+   (2) cd /var/lib/tomcat6/webapps
+   (3) ls -sal DEPT
+
+
+To build and run tests:
+
+   (1) cd ~/work/scheduler-vm/implementation
+   (2) fab test:scheduler.csc.calpoly.edu
+
+
+To add new jUnit tests, goto implementation/build.xml and add a new suite after
+this line:
+      <test name="scheduler.model.ModelTestSuite" />
+
+
+To add new Selenium tests: ... (see Evan's message)
+
+
+To view the serialized resource file, go here:
+    /var/lib/tomcat6/webapps/DEPT/DatabaseState.javaser
