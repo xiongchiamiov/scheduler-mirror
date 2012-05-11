@@ -50,7 +50,7 @@ public class ValidatorUtil {
 				return value != null && validateNotEmpty(value);
 			} else if (fieldName.equals("maxWTU")) {
 				value = record.getAttributeAsString("maxWTU");
-				return value != null && validateNotEmpty(value);
+				return value != null && validateGreaterThanZeroInt(value);
 			} else if (fieldName.equals("username")) {
 				value = record.getAttributeAsString("username");
 				return value != null && validateNotEmpty(value)
