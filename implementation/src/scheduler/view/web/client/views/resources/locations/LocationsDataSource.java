@@ -70,7 +70,7 @@ public class LocationsDataSource extends DataSource {
 		record.setAttribute("id", location.getID());
 		record.setAttribute("room", location.getRoom());
 		record.setAttribute("type", location.getType());
-		record.setAttribute("maxOccupancy", location.getMaxOccupancy());
+		record.setAttribute("maxOccupancy", location.getRawMaxOccupancy());
 		record.setAttribute("equipment", equipmentsStrings);
 		record.setAttribute("isSchedulable", location.isSchedulable());
 		return record;

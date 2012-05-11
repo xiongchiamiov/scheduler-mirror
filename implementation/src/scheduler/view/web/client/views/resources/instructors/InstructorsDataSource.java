@@ -2,16 +2,11 @@ package scheduler.view.web.client.views.resources.instructors;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 
 import scheduler.view.web.client.CachedOpenWorkingCopyDocument;
-import scheduler.view.web.client.views.resources.ResourceCollection;
-import scheduler.view.web.shared.CourseGWT;
 import scheduler.view.web.shared.DayGWT;
 import scheduler.view.web.shared.InstructorGWT;
 
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.smartgwt.client.data.DSRequest;
 import com.smartgwt.client.data.DSResponse;
 import com.smartgwt.client.data.DataSource;
@@ -58,7 +53,7 @@ public class InstructorsDataSource extends DataSource {
 		record.setAttribute("username", instructor.getUsername());
 		record.setAttribute("firstName", instructor.getFirstName());
 		record.setAttribute("lastName", instructor.getLastName());
-		record.setAttribute("maxWTU", instructor.getMaxWtu());
+		record.setAttribute("maxWTU", instructor.getRawMaxWtu());
 		record.setAttribute("isSchedulable", instructor.isSchedulable());
 		return record;
 	}
