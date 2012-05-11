@@ -17,6 +17,8 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
 import com.smartgwt.client.types.DSProtocol;
 
 public class InstructorsDataSource extends DataSource {
+	private static final int DEFAULT_TIME_PREF = 2;
+	
 	CachedOpenWorkingCopyDocument document;
 	
 	public InstructorsDataSource(CachedOpenWorkingCopyDocument document) {
@@ -64,16 +66,12 @@ public class InstructorsDataSource extends DataSource {
 		return str;
 	}
 	
-	InstructorGWT readRecordIntoInstructor(Record record) {		
-		return new InstructorGWT(
-				record.getAttributeAsInt("id"),
-				emptyStringIfNull(record.getAttribute("username")),
-				emptyStringIfNull(record.getAttribute("firstName")),
-				emptyStringIfNull(record.getAttribute("lastName")),
-				emptyStringIfNull(record.getAttribute("maxWTU")),
-				new int[DayGWT.values().length][48],
-				new HashMap<Integer, Integer>(),
-				record.getAttribute("isSchedulable").equals("true"));
+	void readRecordIntoInstructor(Record record, InstructorGWT instructor) {		
+		instructor.setID(record.getAttributeAsInt("id"));
+		instructor.setUsername(emptyStringIfNull(record.getAttribute("username")));
+		instructor.setFirstName(emptyStringIfNull(record.getAttribute("firstName")));
+		instructor.setLastName(emptyStringIfNull(record.getAttribute("lastName")));
+		instructor.setIsSchedulable(record.getAttribute("isSchedulable").equals("true"));
 	}
 
 	protected void fetch(final DSRequest dsRequest) {
@@ -91,7 +89,26 @@ public class InstructorsDataSource extends DataSource {
 
 	protected void add(final DSRequest dsRequest) {
 		Record record = dsRequest.getAttributeAsRecord("data");
-		InstructorGWT newInstructor = readRecordIntoInstructor(record);
+		
+		int[][] defaultTimePrefs = new int[DayGWT.values().length][48];
+		for (int day = 0; day < DayGWT.values().length; day++)
+			for (int time = 0; time < 48; time++)
+				defaultTimePrefs[day][time] = DEFAULT_TIME_PREF;
+		
+		HashMap<Integer, Integer> defaultCoursePrefs = new HashMap<Integer, Integer>();
+		// course prefs needs to be empty. -eo
+		
+		InstructorGWT newInstructor = new InstructorGWT(
+				null,
+				"defaultusername",
+				"defaultfirstname",
+				"defaultlastname",
+				"defaultmaxwtu",
+				defaultTimePrefs,
+				defaultCoursePrefs,
+				true);
+		
+		readRecordIntoInstructor(record, newInstructor);
 		
 		document.addInstructor(newInstructor);
 		assert(newInstructor.getID() != null);
@@ -119,7 +136,9 @@ public class InstructorsDataSource extends DataSource {
 		if (changes.getAttribute("isSchedulable") != null)
 			record.setAttribute("isSchedulable", changes.getAttribute("isSchedulable"));
 		
-		final InstructorGWT instructor = readRecordIntoInstructor(record);
+		InstructorGWT instructor = document.getInstructorByID(record.getAttributeAsInt("id"));
+		readRecordIntoInstructor(record, instructor);
+		document.editInstructor(instructor);
 		
 		DSResponse response = new DSResponse();
 		response.setData(new Record[] { readInstructorIntoRecord(instructor) });
@@ -128,12 +147,11 @@ public class InstructorsDataSource extends DataSource {
 	
 	protected void remove(final DSRequest dsRequest) {
 		final Record record = dsRequest.getAttributeAsRecord("data");
-		final InstructorGWT course = readRecordIntoInstructor(record);
 
 		document.deleteInstructor(record.getAttributeAsInt("id"));
 		
 		DSResponse response = new DSResponse();
-		response.setData(new Record[] { readInstructorIntoRecord(course) });
+		response.setData(new Record[] { record });
 		processResponse(dsRequest.getRequestId(), response);
 	}
 	
