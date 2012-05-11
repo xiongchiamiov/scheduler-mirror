@@ -1,9 +1,7 @@
 package scheduler.view.web.client.views.resources.courses;
 
 import scheduler.view.web.client.CachedOpenWorkingCopyDocument;
-import scheduler.view.web.client.views.resources.ResourceCache;
 import scheduler.view.web.client.views.resources.ValidatorUtil;
-import scheduler.view.web.shared.CourseGWT;
 
 import com.google.gwt.user.client.Window;
 import com.smartgwt.client.data.Record;

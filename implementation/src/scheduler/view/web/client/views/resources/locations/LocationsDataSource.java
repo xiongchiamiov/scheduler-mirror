@@ -5,11 +5,8 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import scheduler.view.web.client.CachedOpenWorkingCopyDocument;
-import scheduler.view.web.client.views.resources.ResourceCollection;
 import scheduler.view.web.shared.LocationGWT;
 
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.smartgwt.client.data.DSRequest;
 import com.smartgwt.client.data.DSResponse;
 import com.smartgwt.client.data.DataSource;

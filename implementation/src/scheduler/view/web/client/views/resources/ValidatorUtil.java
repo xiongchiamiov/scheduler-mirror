@@ -23,7 +23,7 @@ public class ValidatorUtil {
 				return value != null && validateGreaterThanZeroInt(value);
 			} else if (fieldName.equals("hoursPerWeek")) {
 				value = record.getAttributeAsString("hoursPerWeek");
-				return value != null && validateGreaterThanZeroInt(value);
+				return value != null && validateMultipleOfHalf(value);
 			} else if (fieldName.equals("catalogNum")) {
 				value = record.getAttributeAsString("catalogNum");
 				return value != null && validateNotEmpty(value);
@@ -110,6 +110,22 @@ public class ValidatorUtil {
 				return true;
 			}
 		} catch (Exception e) {
+			return false;
+		}
+	}
+	
+	private static boolean validateMultipleOfHalf(String cellvalue){
+		try {
+			float value = Float.parseFloat(cellvalue);
+			float newvalue = (Math.round(value * 2))/2.0f;
+			System.out.println("Validating half: value = " + value + ", newvalue = " + newvalue);
+			if(Math.abs(newvalue - value) <= 0.01)
+			{
+				return true;
+			}
+			return false;
+		}
+		catch (Exception e) {
 			return false;
 		}
 	}
