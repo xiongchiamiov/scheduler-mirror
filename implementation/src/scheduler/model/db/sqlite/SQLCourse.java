@@ -3,127 +3,97 @@ package scheduler.model.db.sqlite;
 import scheduler.model.db.IDBCourse;
 
 public class SQLCourse extends SQLObject implements IDBCourse {
-	Integer id, docID, enrollment, wtu, scu, numSections, numHalfHours;
-	String type, dept, name, catalogNum;
-	Boolean schedulable;
+	Integer documentID;
+	Boolean isSchedulable;
+	String name;
+	String catalogNumber;
+	String department;
+	String wtu;
+	String scu;
+	String numSections;
+	String type;
+	String maxEnrollment;
+	String numHalfHoursPerWeek;
+	Integer lectureID;
+	Boolean tetheredToLecture;
 	
-	public SQLCourse(Integer id, Integer docID, Integer enrollment, Integer wtu,
-			   Integer scu, Integer numSections, Integer numHalfHours,
-			   String type, String dept, String name, String catalogNum,
-			   Boolean schedulable) {
+	public SQLCourse(Integer id, Integer documentID, String name, String catalogNumber, String department,
+			String wtu, String scu, String numSections, String type,
+			String maxEnrollment, String numHalfHoursPerWeek, Boolean isSchedulable, Integer lectureID, Boolean tetheredToLecture) {
+		
 		super(id);
+		//SEE ABOVE TODO
 		this.id = id;
-		this.docID = docID;
-		this.enrollment = enrollment;
+		
+		this.documentID = documentID;
+		this.name = name;
+		this.catalogNumber = catalogNumber;
+		this.department = department;
 		this.wtu = wtu;
 		this.scu = scu;
 		this.numSections = numSections;
-		this.numHalfHours = numHalfHours;
 		this.type = type;
-		this.dept = dept;
-		this.name = name;
-		this.catalogNum = catalogNum;
-		this.schedulable = schedulable;
+		this.maxEnrollment = maxEnrollment;
+		this.numHalfHoursPerWeek = numHalfHoursPerWeek;
+		this.isSchedulable = isSchedulable;
+		this.lectureID = lectureID;
+		this.tetheredToLecture = tetheredToLecture;
 	}
 	
-	@Override
-	public String getName() {
-		return name;
+	public SQLCourse(SQLCourse that) {
+		this(that.id, that.documentID, that.name, that.catalogNumber, that.department, that.wtu, that.scu, that.numSections, that.type, that.maxEnrollment, that.numHalfHoursPerWeek, that.isSchedulable, that.lectureID, that.tetheredToLecture);
+	}
+
+	public void sanityCheck() {
+		assert(documentID != null);
+		assert(name != null);
+		assert(catalogNumber != null);
+		assert(wtu != null);
+		assert(scu != null);
+		assert(numSections != null);
+		assert(type != null);
+		assert(maxEnrollment != null);
+		assert(numHalfHoursPerWeek != null);
 	}
 
 	@Override
-	public void setName(String name) {
-		this.name = name;
-	}
-
+	public String getName() { return name; }
 	@Override
-	public String getCalatogNumber() {
-		return catalogNum;
-	}
-
+	public void setName(String name) { this.name = name; }
 	@Override
-	public void setCatalogNumber(String catalogNumber) {
-		this.catalogNum = catalogNumber;
-	}
-
+	public String getCalatogNumber() { return catalogNumber; }
 	@Override
-	public String getDepartment() {
-		return dept;
-	}
-
+	public void setCatalogNumber(String catalogNumber) { this.catalogNumber = catalogNumber; }
 	@Override
-	public void setDepartment(String department) {
-		this.dept = department;
-	}
-
+	public String getDepartment() { return department; }
 	@Override
-	public String getWTU() {
-		return wtu.toString();
-	}
-
+	public void setDepartment(String department) { this.department = department; }
 	@Override
-	public void setWTU(String wtu) {
-		this.wtu = Integer.parseInt(wtu);
-	}
-
+	public String getWTU() { return wtu; }
 	@Override
-	public String getSCU() {
-		return scu.toString();
-	}
-
+	public void setWTU(String wtu) { this.wtu = wtu; }
 	@Override
-	public void setSCU(String scu) {
-		this.scu = Integer.parseInt(scu);
-	}
-
+	public String getSCU() { return scu; }
 	@Override
-	public String getNumSections() {
-		return numSections.toString();
-	}
-
+	public void setSCU(String scu) { this.scu = scu; }
 	@Override
-	public void setNumSections(String numSections) {
-		this.numSections = Integer.parseInt(numSections);
-	}
-
+	public String getNumSections() { return numSections; }
 	@Override
-	public String getType() {
-		return type;
-	}
-
+	public void setNumSections(String numSections) { this.numSections = numSections; }
 	@Override
-	public void setType(String type) {
-		this.type = type;
-	}
-
+	public String getType() { return type; }
 	@Override
-	public String getMaxEnrollment() {
-		return enrollment.toString();
-	}
-
+	public void setType(String type) { this.type = type; }
 	@Override
-	public void setMaxEnrollment(String maxEnrollment) {
-		this.enrollment = Integer.parseInt(maxEnrollment);
-	}
-
+	public String getMaxEnrollment() { return maxEnrollment; }
 	@Override
-	public String getNumHalfHoursPerWeek() {
-		return numHalfHours.toString();
-	}
-
+	public void setMaxEnrollment(String maxEnrollment) { this.maxEnrollment = maxEnrollment; }
 	@Override
-	public void setNumHalfHoursPerWeek(String numHalfHoursPerWeek) {
-		this.numHalfHours = Integer.parseInt(numHalfHoursPerWeek);
-	}
-
+	public String getNumHalfHoursPerWeek() { return numHalfHoursPerWeek; }
 	@Override
-	public boolean isSchedulable() {
-		return schedulable;
-	}
-
+	public void setNumHalfHoursPerWeek(String numHalfHoursPerWeek) { this.numHalfHoursPerWeek = numHalfHoursPerWeek; }
 	@Override
-	public void setIsSchedulable(boolean isSchedulable) {
-		this.schedulable = isSchedulable;
-	}
-
+	public boolean isSchedulable() { return isSchedulable; }
+	@Override
+	public void setIsSchedulable(boolean isSchedulable) { this.isSchedulable = isSchedulable; }
 }

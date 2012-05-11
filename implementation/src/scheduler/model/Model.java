@@ -583,12 +583,6 @@ public class Model {
 		return itemCache.findByID(id);
 	}
 
-
-	
-
-	
-	
-
 	public boolean isEmpty() throws DatabaseException {
 		return database.isEmpty();
 	}

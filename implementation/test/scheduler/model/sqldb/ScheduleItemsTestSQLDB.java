@@ -6,6 +6,6 @@ import scheduler.model.db.IDatabase;
 public class ScheduleItemsTestSQLDB extends ScheduleItemsTest {
 	@Override
 	public IDatabase createBlankDatabase() {
-		return new scheduler.model.db.simple.Database();
+		return new scheduler.model.db.sqlite.SQLdb();
 	}
 }

@@ -18,7 +18,7 @@ public class CouldNotBeScheduledException extends Exception
     */
    public enum ConflictType
    {
-      I_DBL_BK, L_DBL_BK, NO_DESIRE, CANNOT_TEACH, NO_SECTIONS_LEFT;
+      I_DBL_BK, L_DBL_BK, NO_DESIRE, CANNOT_TEACH, NO_SECTIONS_LEFT, INFINITE_LOOP;
       
       public String toString ()
       {
@@ -34,6 +34,8 @@ public class CouldNotBeScheduledException extends Exception
                return "Instructor cannot teach this course";
             case NO_SECTIONS_LEFT:
                return "No more sections of the course can be scheduled";
+            case INFINITE_LOOP:
+            	return "Infinite loop somewhere";
             default:
                System.err.println ("BAD CONFLICT TYPE");
                return "Unknown error";

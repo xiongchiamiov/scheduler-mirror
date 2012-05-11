@@ -3,11 +3,11 @@ package scheduler.model.db.sqlite;
 import scheduler.model.db.IDBLocation;
 
 public class SQLLocation extends SQLObject implements IDBLocation {
-	Integer id, docID, maxOccupancy;
-	String type, room;
+	Integer id, docID;
+	String type, room, maxOccupancy;
 	Boolean schedulable;
 	
-	public SQLLocation(Integer id, Integer docID, Integer maxOccupancy,
+	public SQLLocation(Integer id, Integer docID, String maxOccupancy,
 					   String type, String room, Boolean schedulable) {
 		super(id);
 		this.id = id;
@@ -40,12 +40,12 @@ public class SQLLocation extends SQLObject implements IDBLocation {
 
 	@Override
 	public String getMaxOccupancy() {
-		return maxOccupancy.toString();
+		return maxOccupancy;
 	}
 
 	@Override
 	public void setMaxOccupancy(String maxOccupancy) {
-		this.maxOccupancy = Integer.valueOf(maxOccupancy);
+		this.maxOccupancy = maxOccupancy;
 	}
 
 	@Override
@@ -57,5 +57,9 @@ public class SQLLocation extends SQLObject implements IDBLocation {
 	public void setIsSchedulable(boolean isSchedulable) {
 		this.schedulable = isSchedulable;
 	}
-
+	
+	@Override
+	public Integer getID() {
+		return this.id;
+	}
 }

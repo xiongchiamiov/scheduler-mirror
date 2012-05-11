@@ -40,31 +40,31 @@ public class ModelTestSuite extends TestSuite {
 	public static TestSuite suite() {
 		TestSuite suite = new TestSuite("Model tests");
 
-		suite.addTestSuite(AlgorithmTestSimpleDB.class);
-		suite.addTestSuite(AlgorithmTestSQLDB.class);
+		//suite.addTestSuite(AlgorithmTestSimpleDB.class);
+		//suite.addTestSuite(AlgorithmTestSQLDB.class);
 
-		suite.addTestSuite(CoursesTestSimpleDB.class);
+		//suite.addTestSuite(CoursesTestSimpleDB.class);
 		suite.addTestSuite(CoursesTestSQLDB.class);
 
 //		suite.addTestSuite(CSVTestSimpleDB.class);
 //		suite.addTestSuite(CSVTestSQLDB.class);
 		
-		suite.addTestSuite(DocumentsTestSimpleDB.class);
+		//suite.addTestSuite(DocumentsTestSimpleDB.class);
 		suite.addTestSuite(DocumentsTestSQLDB.class);
 
-		suite.addTestSuite(InstructorsPreferencesTestSimpleDB.class);
+		//suite.addTestSuite(InstructorsPreferencesTestSimpleDB.class);
 		suite.addTestSuite(InstructorsPreferencesTestSQLDB.class);
 		
-		suite.addTestSuite(InstructorsTestSimpleDB.class);
+		//suite.addTestSuite(InstructorsTestSimpleDB.class);
 		suite.addTestSuite(InstructorsTestSQLDB.class);
 
-		suite.addTestSuite(LocationsTestSimpleDB.class);
+		//suite.addTestSuite(LocationsTestSimpleDB.class);
 		suite.addTestSuite(LocationsTestSQLDB.class);
 
-		suite.addTestSuite(ScheduleItemsTestSimpleDB.class);
+		//suite.addTestSuite(ScheduleItemsTestSimpleDB.class);
 		suite.addTestSuite(ScheduleItemsTestSQLDB.class);
 
-		suite.addTestSuite(UsersTestSimpleDB.class);
+		//suite.addTestSuite(UsersTestSimpleDB.class);
 		suite.addTestSuite(UsersTestSQLDB.class);
 		
 		suite.run(new TestResult());

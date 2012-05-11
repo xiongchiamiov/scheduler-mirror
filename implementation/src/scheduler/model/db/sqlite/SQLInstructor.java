@@ -3,70 +3,67 @@ package scheduler.model.db.sqlite;
 import scheduler.model.db.IDBInstructor;
 
 public class SQLInstructor extends SQLObject implements IDBInstructor {
-	Integer id, docID, maxWTU;
+	Integer id, documentID;
+	String maxWTU;
 	String firstName, lastName, username;
 	Boolean schedulable;
 	
-	public SQLInstructor(Integer id, Integer docID, String firstName, String lastName, 
-			String username, Integer maxWTU, Boolean schedulable) {
+	public SQLInstructor(Integer id, Integer documentID, String firstname, String lastname,
+			String username, String maxWTU, Boolean isSchedulable) {
 		super(id);
+		//TODO: I don't think this is being used locally, so why's there a var for it?
 		this.id = id;
-		this.docID = docID;
-		this.maxWTU = maxWTU;
-		this.firstName = firstName;
-		this.lastName = lastName;
+		
+		this.documentID = documentID;
+		this.firstName = firstname;
+		this.lastName = lastname;
 		this.username = username;
-		this.schedulable = schedulable;
+		this.maxWTU = maxWTU;
+		this.schedulable = isSchedulable;
 	}
 	
-	@Override
-	public String getFirstName() {
-		return firstName;
+	//TODO: just because it may be useful though we should not get null data ever
+	public void sanityCheck() {
+		assert(documentID != null);
+		assert(firstName != null);
+		assert(lastName != null);
+		assert(username != null);
+		assert(maxWTU != null);
 	}
 
 	@Override
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
+	public String getFirstName() { return firstName; }
 	@Override
-	public String getLastName() {
-		return lastName;
-	}
-
+	public void setFirstName(String firstName) { this.firstName = firstName; }
 	@Override
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
+	public String getLastName() { return lastName; }
 	@Override
-	public String getUsername() {
-		return username;
-	}
-
+	public void setLastName(String lastName) { this.lastName = lastName; }
 	@Override
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
+	public String getUsername() { return username; }
 	@Override
-	public String getMaxWTU() {
-		return maxWTU.toString();
-	}
-
+	public void setUsername(String username) { this.username = username; }
 	@Override
-	public void setMaxWTU(String maxWTU) {
-		this.maxWTU = Integer.valueOf(maxWTU);
-	}
-
+	public String getMaxWTU() { return maxWTU; }
 	@Override
-	public boolean isSchedulable() {
-		return schedulable;
-	}
-
+	public void setMaxWTU(String maxWTU) { this.maxWTU = maxWTU; }
 	@Override
-	public void setIsSchedulable(boolean isSchedulable) {
-		this.schedulable = isSchedulable;
+	public boolean isSchedulable() { return schedulable; }
+	@Override
+	public void setIsSchedulable(boolean isSchedulable) { this.schedulable = isSchedulable; }
+	@Override
+	public Integer getID(){ return id; };
+	
+	//Need this method for comparisons in the algorithm
+	public boolean isSameInstructorNameAndID(Object other) {
+		if(this == other)
+			return true;
+		if((other == null) || (this.getClass() != other.getClass()))
+			return false;
+		SQLInstructor instructor = (SQLInstructor)other;
+		return this.firstName == instructor.firstName &&
+			   this.lastName == instructor.lastName &&
+			   this.username == instructor.username;
 	}
 
 }

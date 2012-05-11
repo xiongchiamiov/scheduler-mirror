@@ -19,6 +19,7 @@ public abstract class InstructorsTest extends ModelTestCase {
 		
 		Document doc = model.createAndInsertDocumentWithSpecialInstructorsAndLocations("doc", START_HALF_HOUR, END_HALF_HOUR);
 		model.createTransientInstructor("Evan", "Ovadia", "eovadia", "20", true);
+		System.out.println(model.findInstructorsForDocument(doc, true));
 		
 		assertEquals(model.findInstructorsForDocument(doc, true).size(), 0);
 	}

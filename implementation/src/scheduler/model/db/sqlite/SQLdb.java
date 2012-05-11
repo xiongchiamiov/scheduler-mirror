@@ -36,11 +36,16 @@ import scheduler.model.db.IDBTimePreference;
 import scheduler.model.db.IDBUsedEquipment;
 import scheduler.model.db.IDBUser;
 import scheduler.model.db.IDatabase;
+import scheduler.model.db.IDatabase.NotFoundException;
+import scheduler.model.db.simple.DBCourse;
+import scheduler.model.db.simple.DBDocument;
 import scheduler.model.db.simple.DBUsedEquipment;
 
+//anything that does not conform should be altered here. 
 public class SQLdb implements IDatabase {
 	
 	static Connection conn = null;
+	
 	Table<SQLDocument> documentTable = new Table<SQLDocument>(SQLDocument.class, "document",
 			new Table.Column[] {
 					new Table.Column("id", Integer.class),
@@ -61,14 +66,14 @@ public class SQLdb implements IDatabase {
 					new Table.Column("firstName", String.class),
 					new Table.Column("lastName", String.class),
 					new Table.Column("username", String.class),
-					new Table.Column("maxWTU", Integer.class),
+					new Table.Column("maxWTU", String.class),
 					new Table.Column("schedulable", Boolean.class)
 	});
 	Table<SQLLocation> locationTable = new Table<SQLLocation>(SQLLocation.class, "location",
 			new Table.Column[] {
 					new Table.Column("id", Integer.class),
 					new Table.Column("docID", Integer.class),
-					new Table.Column("maxOccupancy", Integer.class),
+					new Table.Column("maxOccupancy", String.class),
 					new Table.Column("type", String.class),
 					new Table.Column("room", String.class),
 					new Table.Column("schedulable", Boolean.class)	
@@ -83,16 +88,16 @@ public class SQLdb implements IDatabase {
 			new Table.Column[] {
 					new Table.Column("id", Integer.class),
 					new Table.Column("docID", Integer.class),
-					new Table.Column("enrollment", Integer.class),
-					new Table.Column("wtu", Integer.class),
-					new Table.Column("scu", Integer.class),
+					new Table.Column("enrollment", String.class),
+					new Table.Column("wtu", String.class),
+					new Table.Column("scu", String.class),
 					new Table.Column("type", String.class),
-					new Table.Column("numSections", Integer.class),
+					new Table.Column("numSections", String.class),
 					new Table.Column("dept", String.class),
 					new Table.Column("catalogNum", String.class),
 					new Table.Column("name", String.class),
 					new Table.Column("schedulable", Boolean.class),
-					new Table.Column("numHalfHours", Integer.class)
+					new Table.Column("numHalfHours", String.class)
 	});
 	Table<SQLUsedEquipment> courseequipmentTable = new Table<SQLUsedEquipment>(SQLUsedEquipment.class, "courseequipment",
 			new Table.Column[] {
@@ -222,6 +227,7 @@ public class SQLdb implements IDatabase {
 		}
 		
 		public void delete(Integer id) throws DatabaseException {
+			assert(id != null) : "trying to delete null ID";
 			PreparedStatement stmnt = null;
 			String queryString = "DELETE FROM " + name + " WHERE ID = ?";
 			
@@ -235,6 +241,7 @@ public class SQLdb implements IDatabase {
 		}
 		
 		public void update(Object[] values, Integer id) throws DatabaseException {
+			assert(values != null);
 			assert(values.length == columns.length);
 			
 			PreparedStatement stmnt = null;
@@ -310,6 +317,7 @@ public class SQLdb implements IDatabase {
 		}
 		
 		public Integer insert(Object[] values) throws DatabaseException {
+			//assert(values != null);
 			assert(values.length == columns.length-1);
 			PreparedStatement stmnt = null;
   
@@ -486,14 +494,14 @@ public class SQLdb implements IDatabase {
 
 
 	@Override
-	public IDBDocument findDocumentByID(int id) throws DatabaseException {	
+	public IDBDocument findDocumentByID(int id) throws DatabaseException, NotFoundException {	
 		List<SQLDocument> result;
 		HashMap<String, Object> wheres = new HashMap<String, Object>();
 		wheres.put("id", id);
 		result = documentTable.select(wheres);
 		
 		if (result.size() == 0)
-			throw new DatabaseException("No document found in SQLdb.findDocumentByID");
+			throw new NotFoundException("No document found in SQLdb.findDocumentByID");//DatabaseException("No document found in SQLdb.findDocumentByID");
 
 		return result.get(0);
 	}
@@ -509,7 +517,7 @@ public class SQLdb implements IDatabase {
 	@Override
 	public IDBDocument assembleDocument(String name, int startHalfHour,
 			int endHalfHour) throws DatabaseException {
-		return new SQLDocument(null, name, startHalfHour, endHalfHour);
+		return new SQLDocument(null, name, startHalfHour, endHalfHour, null, null, null, null, false);
 	}
 
 
@@ -727,7 +735,7 @@ public class SQLdb implements IDatabase {
 	@Override
 	public void setScheduleItemInstructor(IDBScheduleItem underlying,
 			IDBInstructor findInstructorByID) throws DatabaseException {
-		// TODO Auto-generated method stub
+		assert(false);
 		
 	}
 
@@ -750,8 +758,12 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public IDBLocation findLocationByID(int id) throws DatabaseException {
-		// TODO Auto-generated method stub
-		return null;
+		IDBLocation result;
+		HashMap<String, Object> wheres = new HashMap<String, Object>();
+		wheres.put("id", id);
+		result = locationTable.select(wheres).get(0);
+		System.out.println("result: " + result);
+		return result;
 	}
 
 
@@ -759,23 +771,29 @@ public class SQLdb implements IDatabase {
 	public IDBLocation assembleLocation(String room, String type,
 			String maxOccupancy, boolean isSchedulable)
 			throws DatabaseException {
-		return new SQLLocation(null, null, Integer.valueOf(maxOccupancy), type, 
-				room, isSchedulable);
+		return new SQLLocation(null, null, maxOccupancy, type, 
+				room, new Boolean(isSchedulable));
 	}
 
 
 	@Override
 	public void insertLocation(IDBDocument containingDocument,
 			IDBLocation location) throws DatabaseException {
-		// TODO Auto-generated method stub
-		
+		SQLLocation sqlLocation = (SQLLocation) location;
+		assert(sqlLocation.id == null);
+		sqlLocation.docID = containingDocument.getID();
+		sqlLocation.id = locationTable.insert(new Object[]{ sqlLocation.docID, sqlLocation.maxOccupancy, sqlLocation.type, sqlLocation.room, sqlLocation.schedulable});
+		System.out.println("id: " + sqlLocation.id);
 	}
 
 
 	@Override
 	public void updateLocation(IDBLocation location) throws DatabaseException {
-		// TODO Auto-generated method stub
-		
+		assert(location!=null);
+		assert(location.getID() != null);
+		SQLLocation sqlLocation = (SQLLocation)location;
+		locationTable.update(new Object[] {sqlLocation.getID(), sqlLocation.docID, sqlLocation.maxOccupancy, sqlLocation.type, sqlLocation.room, 
+				sqlLocation.schedulable}, sqlLocation.getID());
 	}
 
 
@@ -803,8 +821,12 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public IDBCourse findCourseByID(int id) throws DatabaseException {
-		// TODO Auto-generated method stub
-		return null;
+		IDBCourse result;
+		HashMap<String, Object> wheres = new HashMap<String, Object>();
+		wheres.put("id", id);
+		result = courseTable.select(wheres).get(0);
+		System.out.println(result);
+		return result;
 	}
 
 
@@ -813,26 +835,33 @@ public class SQLdb implements IDatabase {
 			String department, String wtu, String scu, String numSections,
 			String type, String maxEnrollment, String numHalfHoursPerWeek,
 			boolean isSchedulable) throws DatabaseException {
-		return new SQLCourse(null, null, Integer.valueOf(maxEnrollment), 
-				Integer.valueOf(wtu), Integer.valueOf(scu), 
-				Integer.valueOf(numSections), Integer.valueOf(numHalfHoursPerWeek), 
-				type, department, name, catalogNumber, isSchedulable);
+
+		return new SQLCourse(null, null, name, catalogNumber, department, wtu, scu, numSections, type, maxEnrollment
+				, numHalfHoursPerWeek, isSchedulable, null, false);
 	}
 
 
 	@Override
 	public void insertCourse(IDBDocument underlyingDocument, IDBCourse course)
 			throws DatabaseException {
-		// TODO Auto-generated method stub
-		
+		//assert(course != null) : "Specified course null";
+		SQLCourse sqlCourse = (SQLCourse) course;
+		assert(sqlCourse.id == null);
+		sqlCourse.documentID = underlyingDocument.getID();
+		//this works with sqldocument.documentID, forDocumentsTest
+		sqlCourse.id = courseTable.insert(new Object[]{ sqlCourse.documentID, sqlCourse.maxEnrollment, sqlCourse.wtu, sqlCourse.scu, sqlCourse.type, sqlCourse.numSections,
+				sqlCourse.department, sqlCourse.catalogNumber, sqlCourse.name, sqlCourse.isSchedulable, sqlCourse.numHalfHoursPerWeek});
+		//System.out.println("inserting course. id is: " + sqlCourse.id);
 	}
 
 
 	@Override
 	public void updateCourse(IDBCourse course) throws DatabaseException {
-		SQLCourse sqlcourse = (SQLCourse) course;
-		
-		//courseTable.update(new Object[] {sqlcourse.get, id)
+		assert(course!=null);
+		assert(course.getID() != null);
+		SQLCourse sqlCourse = (SQLCourse)course;
+		courseTable.update(new Object[] {sqlCourse.getID(), sqlCourse.documentID, sqlCourse.maxEnrollment, sqlCourse.wtu, sqlCourse.scu, sqlCourse.type, sqlCourse.numSections,
+				sqlCourse.department, sqlCourse.catalogNumber, sqlCourse.name, sqlCourse.isSchedulable, sqlCourse.numHalfHoursPerWeek}, sqlCourse.getID());
 	}
 
 
@@ -845,8 +874,13 @@ public class SQLdb implements IDatabase {
 	@Override
 	public IDBDocument findDocumentForCourse(IDBCourse underlyingCourse)
 			throws DatabaseException {
-		// TODO Auto-generated method stub
-		return null;
+//		try {
+//			//return documentTable.//.findByID(((DBCourse)underlyingCourse).documentID);
+//		}
+//		catch (NotFoundException e) {
+//			throw new AssertionError(e);
+//		}
+	return null;
 	}
 
 
@@ -891,9 +925,11 @@ public class SQLdb implements IDatabase {
 	//DO STUFF HERE AND ABOVE;
 	
 	@Override
-	public Collection<IDBInstructor> findInstructorsForDocument(
-			IDBDocument document) throws DatabaseException {
+	public Collection<IDBInstructor> findInstructorsForDocument(IDBDocument document) throws DatabaseException {
+		assert(document != null) : "found null document";
+		
 		Collection<IDBInstructor> result = new LinkedList<IDBInstructor>();
+		
 		SQLDocument doc = (SQLDocument) document;
 		HashMap<String, Object> wheres = new HashMap<String, Object>();
 		
@@ -912,6 +948,7 @@ public class SQLdb implements IDatabase {
 		HashMap<String, Object> wheres = new HashMap<String, Object>();
 		wheres.put("id", id);
 		result = instructorTable.select(wheres).get(0);
+		System.out.println(result);
 		return result;
 	}
 
@@ -920,46 +957,46 @@ public class SQLdb implements IDatabase {
 	public IDBInstructor assembleInstructor(String firstName, String lastName,
 			String username, String maxWTU, boolean isSchedulable)
 			throws DatabaseException {
-		return new SQLInstructor(null, null, firstName, lastName,
-				username, Integer.valueOf(maxWTU), isSchedulable);
+		return new SQLInstructor(null, null, firstName, lastName, username, maxWTU, isSchedulable);
 	}
 
 
 	@Override
-	public void insertInstructor(IDBDocument containingDocument,
-			IDBInstructor instructor) throws DatabaseException {
-		SQLInstructor sqlinstructor = (SQLInstructor) instructor;
-		//(Integer id, Integer docID, Integer maxWTU,String firstName, String lastName, String username, Boolean schedulable)
-		sqlinstructor.id = instructorTable.insert(new Object[]{ containingDocument.getID(), sqlinstructor.getFirstName(), sqlinstructor.getLastName(), sqlinstructor.getUsername(), Integer.valueOf(sqlinstructor.getMaxWTU()), sqlinstructor.isSchedulable()});
-		
+	public void insertInstructor(IDBDocument containingDocument, IDBInstructor instructor) throws DatabaseException {
+		//assert(instructor != null) : "Specified instructor null";
+		SQLInstructor sqlInstructor = (SQLInstructor) instructor;
+		assert(sqlInstructor.id == null);
+		sqlInstructor.documentID = containingDocument.getID();
+		//this works with sqldocument.documentID, forDocumentsTest
+		sqlInstructor.id = instructorTable.insert(new Object[]{ sqlInstructor.documentID, 
+				sqlInstructor.getFirstName(), sqlInstructor.getLastName(), sqlInstructor.getUsername(), sqlInstructor.getMaxWTU(), 
+				sqlInstructor.isSchedulable()});
+		//System.out.println("inserting instructor. id is: " + sqlInstructor.id);
 	}
-
 
 	@Override
 	public void updateInstructor(IDBInstructor instructor)
 			throws DatabaseException {
-		//Integer id, Integer docID, Integer maxWTU, String firstName, String lastName, String username, Boolean schedulable
-		//instructorTable.update(new Object[] {instructor.g, user.isAdmin()}, user.getID());
-
-		
+		assert(instructor!=null);
+		assert(instructor.getID() != null);
+		SQLInstructor sqlInstructor = (SQLInstructor)instructor;
+		instructorTable.update(new Object[] {sqlInstructor.getID(), sqlInstructor.documentID, 
+				sqlInstructor.getFirstName(), sqlInstructor.getLastName(), sqlInstructor.getUsername(), sqlInstructor.getMaxWTU(), 
+				sqlInstructor.isSchedulable()}, sqlInstructor.getID());
 	}
-
 
 	@Override
-	public void deleteInstructor(IDBInstructor instructor)
-			throws DatabaseException {
-		instructorTable.delete(instructor.getID());
-
-		
+	public void deleteInstructor(IDBInstructor instructor) throws DatabaseException {
+		assert(instructor != null) : "Specified instructor null";
+		instructorTable.delete(instructor.getID());	
 	}
-
 
 	@Override
 	public Map<IDBTime, IDBTimePreference> findTimePreferencesByTimeForInstructor(
 			IDBInstructor instructor) throws DatabaseException {
 		HashMap<IDBTime, IDBTimePreference> result = new HashMap<IDBTime, IDBTimePreference>();
 		HashMap<String, Object> wheres = new HashMap<String, Object>();
-		wheres.put("instID", instructor.getID());
+		wheres.put("id", instructor.getID());
 		instructorTable.select(wheres);
 		for(SQLTimePreference timepref : timeslotprefTable.select(wheres))
 		{
@@ -988,12 +1025,29 @@ public class SQLdb implements IDatabase {
 	}
 
 	@Override
-	public void insertTimePreference(IDBInstructor ins, IDBTime time,
-			IDBTimePreference timePreference) throws DatabaseException {
-		SQLTimePreference sqltimepreference = (SQLTimePreference) timePreference;
-		//(Integer id, Integer instructorID, Integer timeID, int preference) 
-		sqltimepreference.id = timeslotprefTable.insert(new Object[]{ sqltimepreference.instructorID, sqltimepreference.getPreference()});
-			
+	public void insertTimePreference(IDBInstructor ins, IDBTime time, IDBTimePreference timePreference) throws DatabaseException {
+		SQLInstructor sqlInstructor = (SQLInstructor) ins;
+		assert(sqlInstructor.id != null);
+		//sqlInstructor.documentID = containingDocument.getID();
+		//this works with sqldocument.documentID, forDocumentsTest
+//		sqlInstructor.id = instructorTable.insert(new Object[]{ sqlInstructor.documentID, 
+//				sqlInstructor.getFirstName(), sqlInstructor.getLastName(), sqlInstructor.getUsername(), sqlInstructor.getMaxWTU(), 
+//				sqlInstructor.isSchedulable()});
+		System.out.println(sqlInstructor.getID());
+		SQLTimePreference sqlTimePreference = (SQLTimePreference) timePreference;
+//		//(Integer id, Integer instructorID, Integer timeID, int preference) 
+//		//assert(sqlTimePreference.id != null);
+		SQLTime sqlTime = (SQLTime) time;
+//		assert(sqlTime.getID() != null): "time get id is null" ;
+//		System.out.println("time pref stuff: " + sqlTimePreference.preference);
+//		System.out.println("time pref stuff: " + sqlTimePreference.timeID);
+//		System.out.println("time pref stuff: " + sqlTimePreference.instructorID);
+		//find the instructor first
+		sqlTimePreference.instructorID = ins.getID();
+		sqlTimePreference.timeID = sqlTime.getID();
+//		
+		sqlTimePreference.id = timeslotprefTable.insert(new Object[]{ sqlTimePreference.instructorID, sqlTimePreference.getPreference()});
+//		sqlTimePreference.id = timeslotprefTable.insert(new Object[]{ new Integer(time.getDay()), /*need an integer Time value,*/ new Integer(ins.getID()), new Integer(sqlTimePreference.getPreference())});//sqlTimePreference.instructorID, sqlTimePreference.getPreference()});	
 	}
 
 
@@ -1009,9 +1063,7 @@ public class SQLdb implements IDatabase {
 	@Override
 	public void deleteTimePreference(IDBTimePreference timePreference)
 			throws DatabaseException {
-		timeslotprefTable.delete(timePreference.getID());
-
-		
+		timeslotprefTable.delete(timePreference.getID());	
 	}
 
 
@@ -1020,7 +1072,7 @@ public class SQLdb implements IDatabase {
 			IDBInstructor instructor) throws DatabaseException {
 		HashMap<IDBCourse, IDBCoursePreference> result = new HashMap<IDBCourse, IDBCoursePreference>();
 		HashMap<String, Object> wheres = new HashMap<String, Object>();
-		wheres.put("instID", instructor.getID());
+		wheres.put("id", instructor.getID());
 		instructorTable.select(wheres);
 		for(SQLCoursePreference coursepref : courseprefTable.select(wheres))
 		{
@@ -1065,8 +1117,6 @@ public class SQLdb implements IDatabase {
 		SQLCoursePreference sqlcoursepreference = (SQLCoursePreference) coursePreference;
 		//(Integer id, Integer instructorID, Integer courseID, int preference)
 		courseprefTable.update(new Object[]{ sqlcoursepreference.instructorID, sqlcoursepreference.courseID, sqlcoursepreference.getPreference()}, sqlcoursepreference.getID());
-		
-		
 	}
 
 
@@ -1169,6 +1219,7 @@ public class SQLdb implements IDatabase {
 	@Override
 	public void deleteProvidedEquipment(IDBProvidedEquipment providedEquipment)
 			throws DatabaseException {
+		assert(providedEquipment != null);
 		locationequipmentTable.delete(providedEquipment.getID());
 		
 	}
@@ -1288,9 +1339,7 @@ public class SQLdb implements IDatabase {
 	@Override
 	public IDBDocument getScheduleItemDocument(IDBScheduleItem underlying)
 			throws DatabaseException {
-		/**
-		 * IDBSchedule is not part of the SQLdb framework
-		 */
+		/* IDBSchedule is not part of the SQLdb framework*/
 		assert(false);
 		return null;
 	}
@@ -1321,7 +1370,7 @@ public class SQLdb implements IDatabase {
 			IDBInstructor underlyingInstructor) throws DatabaseException {
 		SQLDocument result;
 		HashMap<String, Object> wheres = new HashMap<String, Object>();
-		wheres.put("docID", ((SQLInstructor)underlyingInstructor).docID);
+		wheres.put("docID", ((SQLInstructor)underlyingInstructor).documentID);
 		result = documentTable.select(wheres).get(0);
 
 		return result;
@@ -1330,11 +1379,8 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public void writeState(ObjectOutputStream oos) throws IOException {
-		/**
-		 * Not used for SQLDB
-		 */
+		/** Not used for SQLDB*/
 		assert(false);
-		
 	}
 
 
@@ -1350,35 +1396,73 @@ public class SQLdb implements IDatabase {
 	@Override
 	public IDBInstructor getDocumentStaffInstructorOrNull(
 			IDBDocument underlyingDocument) throws DatabaseException {
-		if(((SQLDocument)underlyingDocument).staffInstructorID == null)
-		{
+		Integer id = ((SQLDocument)underlyingDocument).staffInstructorID;
+		if (id == null)
 			return null;
-		}
 		return findInstructorByID(((SQLDocument)underlyingDocument).staffInstructorID);
 	}
 
 	@Override
 	public IDBLocation getDocumentTBALocationOrNull(
 			IDBDocument underlyingDocument) throws DatabaseException {
-		if(((SQLDocument)underlyingDocument).tbaLocationID == null)
-		{
+		Integer id = ((SQLDocument)underlyingDocument).tbaLocationID;
+		if (id == null)
 			return null;
-		}
-		return findLocationByID(((SQLDocument)underlyingDocument).tbaLocationID);
+		return findLocationByID(id);
 	}
 
 	@Override
 	public void setDocumentStaffInstructorOrNull(IDBDocument underlyingDocument,
 			IDBInstructor underlyingInstructor) throws DatabaseException {
-		((SQLDocument)underlyingDocument).staffInstructorID = underlyingInstructor.getID();
-		updateDocument((SQLDocument)underlyingDocument);
+		if (underlyingInstructor == null)
+			((SQLDocument)underlyingDocument).staffInstructorID = null;
+		else
+			((SQLDocument)underlyingDocument).staffInstructorID = underlyingInstructor.getID();
 	}
 
 	@Override
 	public void setDocumentTBALocationOrNull(IDBDocument underlyingDocument,
 			IDBLocation underlyingLocation) throws DatabaseException {
-		((SQLDocument)underlyingDocument).tbaLocationID = underlyingLocation.getID();
-		updateDocument((SQLDocument)underlyingDocument);
+		if (underlyingLocation == null)
+			((SQLDocument)underlyingDocument).tbaLocationID = null;
+		else
+			((SQLDocument)underlyingDocument).tbaLocationID = underlyingLocation.getID();
+	}
+
+	@Override
+	public void setDocumentChooseForMeInstructorOrNull(IDBDocument underlyingDocument, IDBInstructor underlyingInstructor)
+			throws DatabaseException {
+		if(underlyingInstructor == null)
+			((SQLDocument)underlyingDocument).chooseForMeInstructorID = null;
+		else
+			((SQLDocument)underlyingDocument).chooseForMeInstructorID = underlyingInstructor.getID();
+	}
+
+	@Override
+	public void setDocumentChooseForMeLocationOrNull(IDBDocument underlyingDocument, IDBLocation underlyingLocation)
+			throws DatabaseException {
+		if (underlyingLocation == null)
+			((SQLDocument)underlyingDocument).chooseForMeLocationID = null;
+		else
+			((SQLDocument)underlyingDocument).chooseForMeLocationID = underlyingLocation.getID();
+	}
+
+	@Override
+	public IDBInstructor getDocumentChooseForMeInstructorOrNull(
+			IDBDocument underlyingDocument) throws DatabaseException {
+		Integer id = ((SQLDocument)underlyingDocument).chooseForMeInstructorID;
+		if(id == null)
+			return null;
+		return findInstructorByID(id);
+	}
+
+	@Override
+	public IDBLocation getDocumentChooseForMeLocationOrNull(
+			IDBDocument underlyingDocument) throws DatabaseException {
+		Integer id = ((SQLDocument)underlyingDocument).chooseForMeLocationID;
+		if(id == null)
+			return null;
+		return findLocationByID(id);
 	}
 
 	@Override
@@ -1410,13 +1494,22 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public void insertEquipmentType(String string) throws DatabaseException {
-		// TODO Auto-generated method stub
-		
+		assert(string != null);
+		//TODO: Possibly not completely accurate, might need to set some id to something, yes?
+		equipmentTable.insert(new Object[] {string});
 	}
 
 	@Override
 	public IDBScheduleItem getScheduleItemLectureOrNull(
 			IDBScheduleItem underlying) throws DatabaseException {
+//		Integer id = ((SQLDocument)underlying).getID();
+//		if(id == null)
+//			return null;
+//		return findInstructorByID(id);
+//		
+//		
+//		
+		
 		SQLScheduleItem lab = (SQLScheduleItem) underlying;
 		
 		//if (lab.lectureScheduleItemID == null)
@@ -1437,38 +1530,6 @@ public class SQLdb implements IDatabase {
 		else
 			throw new DatabaseException(new Throwable("Document " + scheduleName + " not found."));
 		return document;
-	}
-
-	@Override
-	public void setDocumentChooseForMeInstructorOrNull(IDBDocument underlyingDocument, IDBInstructor underlyingInstructor)
-			throws DatabaseException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void setDocumentChooseForMeLocationOrNull(IDBDocument underlyingDocument, IDBLocation underlyingLocation)
-			throws DatabaseException {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	/**
-	 * SALOME'S DOMAIN -- NOT KAYLENE'S
-	 */
-
-	@Override
-	public IDBInstructor getDocumentChooseForMeInstructorOrNull(
-			IDBDocument underlyingDocument) throws DatabaseException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public IDBLocation getDocumentChooseForMeLocationOrNull(
-			IDBDocument underlyingDocument) throws DatabaseException {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

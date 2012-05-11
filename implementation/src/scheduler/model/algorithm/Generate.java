@@ -23,7 +23,8 @@ public class Generate {
 	 * Used for debugging. Toggle it to get debugging output
 	 */
 	 private static final boolean DEBUG = !true; // !true == false ; )
-	   
+	 private static long starttime, endtime;
+	 private static final long MAX_TIME_MS = 5000; //5 seconds should be long enough
 	/**
 	 * Prints a message to STDERR if DEBUG is true
 	 * 
@@ -40,6 +41,9 @@ public class Generate {
 	public static Vector<ScheduleItem> generate(Model model, Document document, 
 			Collection<ScheduleItem> s_items, Collection<Course> c_list, Vector<InstructorDecorator> i_vec,
 			Vector<LocationDecorator> l_vec) throws DatabaseException, BadInstructorDataException {
+		
+		//timer fun
+		starttime = System.currentTimeMillis();
 		
 		Vector<ScheduleItemDecorator> items = new Vector<ScheduleItemDecorator>();
 		for (ScheduleItem si : s_items)
@@ -63,6 +67,7 @@ public class Generate {
 	    ArrayList<Course> untetheredLabs = new ArrayList<Course>();
 	    ArrayList<Course> indStudyCourses = new ArrayList<Course>();
 	    for (Course c : c_list) {
+	    	
 	        //Is a lab (or until a case found otherwise, an ACT or DIS) associated with a lecture
 	    	if(c.getTypeEnum() == Course.CourseType.LAB || c.getTypeEnum() == Course.CourseType.ACT || 
 	    			c.getTypeEnum() == Course.CourseType.DIS) { 
@@ -81,6 +86,15 @@ public class Generate {
 
 	      for (Course c : c_list)
 	      {
+		    	//if at any point we run too long, kill ourself
+		    	endtime = System.currentTimeMillis();
+		    	if((endtime - starttime) == 5000)
+					try {
+						throw new CouldNotBeScheduledException(CouldNotBeScheduledException.ConflictType.INFINITE_LOOP, null);
+					} catch (CouldNotBeScheduledException e) {
+						debug("iterating through courses");
+						e.printStackTrace();
+					}
 	           if(c.getTypeEnum() == Course.CourseType.LEC || c.getTypeEnum() == Course.CourseType.SEM) {
 	                debug ("MAKING SI's FOR COURSE " + c);
 
@@ -139,8 +153,7 @@ public class Generate {
 	            	debug ("Now scheduling untethered LAB/ACT/DIS");
 	                	
 	              	ScheduleItemDecorator lab_si = genLabItem(model, document, lab, null,
-               	    		lab_bounds, i_vec, l_vec);
-	                	
+               	    		lab_bounds, i_vec, l_vec);	                	
                     try
                     {
                         add(model, document, lab_si, items, sections, i_vec, l_vec);
@@ -346,6 +359,16 @@ public class Generate {
 	   private static InstructorDecorator findInstructor (Course c, List<Integer> doNotPickInstructorIDs, 
 			   Vector<InstructorDecorator> id_vec) throws DatabaseException, BadInstructorDataException
 	   {
+	    	//if at any point we run too long, kill ourself
+	    	endtime = System.currentTimeMillis();
+	    	if((endtime - starttime) == 5000)
+				try {
+					throw new CouldNotBeScheduledException(CouldNotBeScheduledException.ConflictType.INFINITE_LOOP, null);
+				} catch (CouldNotBeScheduledException e) {
+					debug("trying to find an instructor");
+					e.printStackTrace();
+				}
+	    	
 	      InstructorDecorator r = getStaff(c.getDocument());
 	      if(doNotPickInstructorIDs != null) {
 	    	  Integer toRemove = r.getInstructorID();
@@ -357,6 +380,15 @@ public class Generate {
 	      debug ("EXCLUDING: " + doNotPickInstructorIDs);
 	      for (InstructorDecorator id : id_vec)
 	      {
+		    	//if at any point we run too long, kill ourself
+		    	endtime = System.currentTimeMillis();
+		    	if((endtime - starttime) == 5000)
+					try {
+						throw new CouldNotBeScheduledException(CouldNotBeScheduledException.ConflictType.INFINITE_LOOP, null);
+					} catch (CouldNotBeScheduledException e) {
+						debug("actually iterating through instructor decorators");
+						e.printStackTrace();
+					}
 	    	  //Instructor i = id.getInstructor(); using instructor id's seems more stable
 	    	  if(!(id.getInstructorID().equals(r.getInstructorID()))) {
 	    		  debug ("CONSIDERING " + id.getInstructor());

@@ -17,6 +17,11 @@ public class SQLTimePreference extends SQLObject implements IDBTimePreference {
 		this(that.id, that.instructorID, that.timeID, that.preference);
 	}
 	
+	public void sanityCheck() {
+		assert(instructorID != null);
+		assert(timeID != null);
+	}
+	
 	@Override
 	public int getPreference() { return preference; }
 	@Override

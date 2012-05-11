@@ -4,20 +4,28 @@ import scheduler.model.db.IDBDocument;
 
 public class SQLDocument extends SQLObject implements IDBDocument {
 	String name;
-	boolean isTrashed;
+	Boolean isTrashed;
 	Integer startHalfHour;
 	Integer endHalfHour;
 	Integer staffInstructorID; // null if there is none
 	Integer tbaLocationID; // null if there is none
-	Integer chooseForMeInstructorID; // null if there is none
-	Integer chooseForMeLocationID; // null if there is none
-
+	Integer chooseForMeInstructorID; //null if there is none
+	Integer chooseForMeLocationID; //null if there is none
 	
-	public SQLDocument(Integer id, String name, Integer startHalfHour, Integer endHalfHour) {
+	
+	public SQLDocument(Integer id, String name, Integer startHalfHour, Integer endHalfHour,
+			Integer staffInstructorID, Integer tbaLocationID, Integer chooseForMeInstructorID,
+			Integer chooseForMeLocationID, Boolean isTrashed) {
+		
 		super(id);
 		this.name = name;
 		this.startHalfHour = startHalfHour;
 		this.endHalfHour = endHalfHour;
+		this.staffInstructorID = staffInstructorID;
+		this.tbaLocationID = tbaLocationID;
+		this.chooseForMeInstructorID = chooseForMeInstructorID;
+		this.chooseForMeLocationID = chooseForMeLocationID;
+		this.isTrashed = isTrashed;
 	}
 	
 	@Override
@@ -39,4 +47,12 @@ public class SQLDocument extends SQLObject implements IDBDocument {
 	public int getEndHalfHour() { return endHalfHour; }
 	@Override
 	public void setEndHalfHour(int halfHour) { endHalfHour = halfHour; }
+	
+	public void sanityCheck() {
+		assert(name != null);
+		assert(staffInstructorID != null);
+		assert(tbaLocationID != null);
+		assert(chooseForMeInstructorID != null);
+		assert(chooseForMeLocationID != null);
+	}
 }

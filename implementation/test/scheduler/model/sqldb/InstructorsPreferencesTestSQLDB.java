@@ -4,5 +4,5 @@ import scheduler.model.InstructorsPreferencesTest;
 import scheduler.model.db.IDatabase;
 
 public class InstructorsPreferencesTestSQLDB extends InstructorsPreferencesTest {
-	public IDatabase createBlankDatabase() { return new scheduler.model.db.simple.Database(); }
+	public IDatabase createBlankDatabase() { return new scheduler.model.db.sqlite.SQLdb(); }
 }

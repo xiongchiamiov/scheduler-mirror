@@ -95,6 +95,8 @@ public class Location extends ModelObject {
 	}
 
 	private void removeProvidedEquipmentFromDB(IDBLocation location) throws DatabaseException {
+		assert(location!=null);
+		assert(location.getID() != null);
 		for (IDBProvidedEquipment providedEquipment : model.database.findProvidedEquipmentByEquipmentForLocation(location).values())
 			model.database.deleteProvidedEquipment(providedEquipment);
 	}
