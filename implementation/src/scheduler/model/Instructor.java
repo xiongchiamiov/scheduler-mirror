@@ -13,7 +13,7 @@ import scheduler.model.db.IDatabase.NotFoundException;
 import scheduler.model.Course;
 
 public class Instructor extends ModelObject {
-	public static final int DEFAULT_PREF = 0;
+	public static final int DEFAULT_PREF = 2;
 	
 	private final Model model;
 	
@@ -151,42 +151,22 @@ public class Instructor extends ModelObject {
 	// Course Preferences
 	
 	public HashMap<Integer, Integer> getCoursePreferences() throws DatabaseException {
-//		System.out.println("SIHOQSPSBPISBPIWBPDIBDWIIBWDPIB");
+		System.out.println("SIHOQSPSBPISBPIWBPDIBDWIIBWDPIB");
 		if (!coursePreferencesLoaded) {
 			coursePreferences = new HashMap<Integer, Integer>();
 			for (Entry<IDBCourse, IDBCoursePreference> entry : model.database.findCoursePreferencesByCourseForInstructor(underlyingInstructor).entrySet())
 				coursePreferences.put(entry.getKey().getID(), entry.getValue().getPreference());
 			coursePreferencesLoaded = true;
 		}
-//		System.out.println("Before check: " + coursePreferences.keySet().toString());
+		
 		for (Course c : this.getDocument().getCourses())
 		{
 			if (coursePreferences.get(c.getID()) == null)
 			{
-				coursePreferences.put(c.getID(), new Integer(0));
-//				System.out.println("Did need to add it");
-			}
-//			System.out.println("Course getting added: " + c.getName());
-		}
-//		System.out.println("After check: " + coursePreferences.keySet().toString());
-		/*for (Integer key : coursePreferences.keySet())
-		{
-			if (coursePreferences.get(key) == null)
-			{
-				coursePreferences.put(key, new Integer(0));
-			}
-		}*/
-		for (Integer key : coursePreferences.keySet())
-		{
-			if (coursePreferences.get(key) == null)
-			{
-				System.out.println(key+" it is still null");
-			}
-			else
-			{
-				System.out.println(key+" it is "+coursePreferences.get(key));
+				coursePreferences.put(c.getID(), new Integer(2));  //2 is "Acceptable"
 			}
 		}
+
 		return coursePreferences;
 	}
 	public Instructor setCoursePreferences(HashMap<Integer, Integer> coursePreferences) {

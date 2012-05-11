@@ -190,8 +190,8 @@ public class CoursePrefsWidget extends VerticalPanel
 		assert (instructor.getCoursePreferences() != null);
 		if (instructor.getCoursePreferences().get(course.getID()) == null)
 		{
-			setCoursePreference(course, 0);
-			return 0;
+			setCoursePreference(course, 2);  //If nothing has been set, the default is 2: "Acceptable"
+			return 2;
 		}
 		return instructor.getCoursePreferences().get(course.getID());
 	}
