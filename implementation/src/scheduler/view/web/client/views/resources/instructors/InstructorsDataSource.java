@@ -71,6 +71,7 @@ public class InstructorsDataSource extends DataSource {
 		instructor.setUsername(emptyStringIfNull(record.getAttribute("username")));
 		instructor.setFirstName(emptyStringIfNull(record.getAttribute("firstName")));
 		instructor.setLastName(emptyStringIfNull(record.getAttribute("lastName")));
+		instructor.setMaxWtu(emptyStringIfNull(record.getAttribute("maxWTU")));
 		instructor.setIsSchedulable(record.getAttribute("isSchedulable").equals("true"));
 	}
 
