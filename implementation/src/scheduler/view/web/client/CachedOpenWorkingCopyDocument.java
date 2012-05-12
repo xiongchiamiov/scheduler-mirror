@@ -132,9 +132,9 @@ public class CachedOpenWorkingCopyDocument {
 	}
 
 	public void generateRestOfSchedule(AsyncCallback<Void> callback) {
-		service.generateRestOfSchedule(sessionID, realWorkingDocument.getRealID(), new AsyncCallback<ServerResourcesResponse<ScheduleItemGWT>>() {
+		service.generateRestOfSchedule(sessionID, realWorkingDocument.getRealID(), new AsyncCallback<Void>() {
 			@Override
-			public void onSuccess(ServerResourcesResponse<ScheduleItemGWT> result) { }
+			public void onSuccess(Void v) { }
 			
 			@Override
 			public void onFailure(Throwable caught) {
@@ -142,7 +142,7 @@ public class CachedOpenWorkingCopyDocument {
 			}
 		});
 		
-		scheduleItems.forceSynchronize(null);
+		scheduleItems.forceSynchronize(callback);
 	}
 
 	public Collection<CourseGWT> getCourses() {

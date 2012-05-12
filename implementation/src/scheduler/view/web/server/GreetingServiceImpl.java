@@ -964,7 +964,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	}
 	
 	@Override
-	public ServerResourcesResponse<ScheduleItemGWT> generateRestOfSchedule(int sessionID, int documentID) throws CouldNotBeScheduledExceptionGWT, SessionClosedFromInactivityExceptionGWT {
+	public void generateRestOfSchedule(int sessionID, int documentID) throws CouldNotBeScheduledExceptionGWT, SessionClosedFromInactivityExceptionGWT {
 		try {
 			if (LOG_ENTERING_AND_EXITING_CALLS)
 				System.out.println("Begin GreetingServiceImpl.generateRestOfSchedule(doc " + documentID + ")");
@@ -1002,13 +1002,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 				item.setDocument(document);
 				item.insert();
 			}
-			
-			ServerResourcesResponse<ScheduleItemGWT> derp = getScheduleItemsForDocument(document.getID());
 
 			if (LOG_ENTERING_AND_EXITING_CALLS)
 				System.out.println("End GreetingServiceImpl.generateRestOfSchedule(doc " + documentID + ")");
-			
-			return derp;
 		}
 		catch (DatabaseException e) {
 			throw new RuntimeException(e);

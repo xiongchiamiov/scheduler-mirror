@@ -51,8 +51,7 @@ public interface GreetingService extends RemoteService {
 	
 	
 
-	// Generation (schedules and scheduleitems)
-	public ServerResourcesResponse<ScheduleItemGWT> generateRestOfSchedule(int sessionID, int scheduleID) throws CouldNotBeScheduledExceptionGWT, SessionClosedFromInactivityExceptionGWT;
+	void generateRestOfSchedule(int sessionID, int scheduleID) throws CouldNotBeScheduledExceptionGWT, SessionClosedFromInactivityExceptionGWT;
 
 	SynchronizeResponse<ScheduleItemGWT> synchronizeDocumentScheduleItems(
 			int sessionID,

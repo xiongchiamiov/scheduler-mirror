@@ -59,7 +59,7 @@ public interface GreetingServiceAsync {
 	void generateRestOfSchedule(
 			int sessionID,
 			int scheduleID,
-			AsyncCallback<ServerResourcesResponse<ScheduleItemGWT>> callback);
+			AsyncCallback<Void> asyncCallback);
 
 	void getAllOriginalDocuments(int sessionID, AsyncCallback<ServerResourcesResponse<OriginalDocumentGWT>> callback);
 

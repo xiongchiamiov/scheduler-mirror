@@ -785,7 +785,7 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 	public void generateRestOfSchedule(
 			int sessionID,
 			int scheduleID,
-			AsyncCallback<ServerResourcesResponse<ScheduleItemGWT>> callback) {
+			AsyncCallback<Void> callback) {
 		callback.onFailure(new UnsupportedOperationException("Method not implemented in this test double."));
 	}
 
