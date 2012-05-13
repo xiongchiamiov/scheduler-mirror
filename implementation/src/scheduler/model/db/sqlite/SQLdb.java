@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -40,8 +41,7 @@ import scheduler.model.db.IDatabase.NotFoundException;
 import scheduler.model.db.simple.DBCourse;
 import scheduler.model.db.simple.DBDocument;
 import scheduler.model.db.simple.DBUsedEquipment;
-
-//anything that does not conform should be altered here. 
+ 
 public class SQLdb implements IDatabase {
 	
 	static Connection conn = null;
@@ -158,7 +158,7 @@ public class SQLdb implements IDatabase {
 	});
 	Table<SQLEquipmentType> equipmentTable = new Table<SQLEquipmentType>(SQLEquipmentType.class, "equipment",
 			new Table.Column[] {
-					new Table.Column("id", Integer.class),
+					new Table.Column("id", Integer.class),  /*it's unique id generated*/
 					new Table.Column("desc", String.class)
 	});
 	Table<SQLUser> userdataTable = new Table<SQLUser>(SQLUser.class, "userdata",
@@ -517,7 +517,7 @@ public class SQLdb implements IDatabase {
 	@Override
 	public IDBDocument assembleDocument(String name, int startHalfHour,
 			int endHalfHour) throws DatabaseException {
-		return new SQLDocument(null, name, startHalfHour, endHalfHour, null, null, null, null, false);
+		return new SQLDocument(null, name, false, startHalfHour, endHalfHour, null, null, null, null);
 	}
 
 
@@ -530,6 +530,8 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public void deleteDocument(IDBDocument document) throws DatabaseException {
+		assert(document != null);
+		assert(document.getID() != null);
 		documentTable.delete(document.getID());
 	}
 
@@ -761,6 +763,9 @@ public class SQLdb implements IDatabase {
 		IDBLocation result;
 		HashMap<String, Object> wheres = new HashMap<String, Object>();
 		wheres.put("id", id);
+		//TODO: what is expected behavior if none found? are we always passed valid ids? throws NOTFOUNDEXCEPTION
+		if(locationTable.select(wheres).isEmpty())
+			throw new NotFoundException("Location not found with ID: " + id);
 		result = locationTable.select(wheres).get(0);
 		System.out.println("result: " + result);
 		return result;
@@ -825,7 +830,7 @@ public class SQLdb implements IDatabase {
 		HashMap<String, Object> wheres = new HashMap<String, Object>();
 		wheres.put("id", id);
 		result = courseTable.select(wheres).get(0);
-		System.out.println(result);
+		//System.out.println(result);
 		return result;
 	}
 
@@ -844,7 +849,7 @@ public class SQLdb implements IDatabase {
 	@Override
 	public void insertCourse(IDBDocument underlyingDocument, IDBCourse course)
 			throws DatabaseException {
-		//assert(course != null) : "Specified course null";
+		assert(course != null) : "Specified course null";
 		SQLCourse sqlCourse = (SQLCourse) course;
 		assert(sqlCourse.id == null);
 		sqlCourse.documentID = underlyingDocument.getID();
@@ -874,28 +879,46 @@ public class SQLdb implements IDatabase {
 	@Override
 	public IDBDocument findDocumentForCourse(IDBCourse underlyingCourse)
 			throws DatabaseException {
-//		try {
-//			//return documentTable.//.findByID(((DBCourse)underlyingCourse).documentID);
-//		}
-//		catch (NotFoundException e) {
-//			throw new AssertionError(e);
-//		}
-	return null;
+		SQLDocument result;
+		assert(underlyingCourse!=null);
+		assert(underlyingCourse.getID() != null);
+		HashMap<String, Object> wheres = new HashMap<String, Object>();
+		wheres.put("docID", ((SQLCourse)underlyingCourse).documentID);
+		result = documentTable.select(wheres).get(0);
+
+		return result;
 	}
 
 
 	@Override
 	public IDBCourseAssociation getAssociationForLabOrNull(IDBCourse underlying)
 			throws DatabaseException {
-		// TODO Auto-generated method stub
-		return null;
+		SQLCourseAssociation courseAssoc;
+		SQLCourse labcourse = (SQLCourse)underlying;
+
+		if (!labcourse.getType().equals("LAB")) {
+			assert(labcourse.lectureID == null);
+			return null; 
+		}
+		
+		if(labcourse.lectureID == null)
+			return null;
+		
+		HashMap<String, Object> wheres = new HashMap<String, Object>();
+		wheres.put("lecID", ((SQLCourse)underlying).documentID); //what type of id? lecID? or tetheredID
+		courseAssoc = labtetheredTable.select(wheres).get(0);
+		return courseAssoc;
 	}
 
 
 	@Override
 	public Collection<IDBCourseAssociation> getAssociationsForLecture(
 			IDBCourse lectureCourse) throws DatabaseException {
-		// TODO Auto-generated method stub
+		Collection<SQLCourseAssociation> courses = new HashSet();
+		assert(lectureCourse!=null);
+		assert(lectureCourse.getID() != null);
+		
+		
 		return null;
 	}
 
@@ -1211,8 +1234,24 @@ public class SQLdb implements IDatabase {
 	@Override
 	public Map<IDBEquipmentType, IDBProvidedEquipment> findProvidedEquipmentByEquipmentForLocation(
 			IDBLocation location) throws DatabaseException {
-		// TODO Auto-generated method stub
-		return null;
+		assert(location != null);
+		assert(location.getID() != null);
+		
+		HashMap<IDBEquipmentType, IDBProvidedEquipment> result = new HashMap<IDBEquipmentType, IDBProvidedEquipment>();
+		HashMap<String, Object> wheres = new HashMap<String, Object>();
+		wheres.put("locID", location.getID());
+		locationequipmentTable.select(wheres);
+		for(SQLLocationEquipment equip : locationequipmentTable.select(wheres))
+		{
+			IDBEquipmentType eType = null;
+			for(IDBEquipmentType equipType : findAllEquipmentTypes())
+			{
+				if(equip.equipID == equipType.getID())
+					eType = equipType;
+			}
+			result.put(eType, equip);
+		}
+		return result;
 	}
 
 
@@ -1220,6 +1259,7 @@ public class SQLdb implements IDatabase {
 	public void deleteProvidedEquipment(IDBProvidedEquipment providedEquipment)
 			throws DatabaseException {
 		assert(providedEquipment != null);
+		assert(providedEquipment.getID() != null);
 		locationequipmentTable.delete(providedEquipment.getID());
 		
 	}
@@ -1238,10 +1278,11 @@ public class SQLdb implements IDatabase {
 	public void insertProvidedEquipment(IDBLocation location,
 			IDBEquipmentType equipmentType, IDBProvidedEquipment equip)
 			throws DatabaseException {
+		System.out.println("location id: " + location.getID());
 		SQLLocationEquipment sqlusedequip = (SQLLocationEquipment) equip;
 		//Integer id, Integer locationID, Integer equipmentTypeID
-		sqlusedequip.id = locationequipmentTable.insert(new Object[]{ sqlusedequip.locID, sqlusedequip.equipID});	
-		
+		sqlusedequip.id = locationequipmentTable.insert(new Object[]{ sqlusedequip.locID, sqlusedequip.equipID});
+		System.out.println("inserted equipment: " + sqlusedequip.id);
 	}
 
 
