@@ -1,10 +1,13 @@
 package scheduler.view.web.client.views.resources.instructors;
 
+import java.util.Set;
+import java.util.TreeSet;
+
 import scheduler.view.web.client.CachedOpenWorkingCopyDocument;
 import scheduler.view.web.client.views.resources.ValidatorUtil;
 import scheduler.view.web.shared.InstructorGWT;
+import scheduler.view.web.shared.ScheduleItemGWT;
 
-import com.google.gwt.user.client.ui.ScrollPanel;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Autofit;
@@ -31,6 +34,7 @@ public class InstructorsView extends VLayout {
 	
 	protected InstructorPreferencesView iipv = null;
 	protected Window prefsWindow = null;
+	private ListGrid grid;
 
 	public InstructorsView(CachedOpenWorkingCopyDocument openDocument) {
 		this.openDocument = openDocument;
@@ -46,7 +50,7 @@ public class InstructorsView extends VLayout {
 	private void onPopulate() {
 		//com.google.gwt.user.client.Window.alert("onpopulate!");
 		
-		final ListGrid grid = new ListGrid() {
+		grid = new ListGrid() {
 //			protected int rowCount = 0;
 
 			protected String getCellCSSText(ListGridRecord record, int rowNum,
@@ -110,10 +114,9 @@ public class InstructorsView extends VLayout {
 		grid.addKeyPressHandler(new KeyPressHandler() {
 			public void onKeyPress(KeyPressEvent event) {
 				if (event.getKeyName().equals("Backspace")
-						|| event.getKeyName().equals("Delete"))
-					if (com.google.gwt.user.client.Window
-							.confirm("Are you sure you want to remove this course?"))
-						grid.removeSelectedData();
+						|| event.getKeyName().equals("Delete")) {
+					deleteSelected();
+				}
 			}
 		});
 
@@ -291,11 +294,7 @@ public class InstructorsView extends VLayout {
 		IButton removeBtn = new IButton("Remove Selected Instructors",
 				new ClickHandler() {
 					public void onClick(ClickEvent event) {
-						ListGridRecord[] selectedRecords = grid
-								.getSelectedRecords();
-						for (ListGridRecord rec : selectedRecords) {
-							grid.removeData(rec);
-						}
+						deleteSelected();
 					}
 				});
 		// DOM.setElementAttribute(removeBtn.getElement(), "id", "removeBtn");
@@ -309,5 +308,38 @@ public class InstructorsView extends VLayout {
 		bottomButtonFlowPanel.addMember(removeBtn);
 
 		this.addMember(bottomButtonFlowPanel);
+	}
+	
+	void deleteSelected() {
+		Set<Integer> referencedInstructorIDs = new TreeSet<Integer>();
+		for (ScheduleItemGWT item : openDocument.getScheduleItems())
+			referencedInstructorIDs.add(item.getInstructorID());
+		
+		Set<Integer> instructorsToDeleteIDs = new TreeSet<Integer>();
+		for (ListGridRecord rec : grid.getSelectedRecords())
+			instructorsToDeleteIDs.add(rec.getAttributeAsInt("id"));
+		
+		Set<Integer> referencedInstructorsToDeleteIDs = new TreeSet<Integer>(instructorsToDeleteIDs);
+		referencedInstructorsToDeleteIDs.retainAll(referencedInstructorIDs);
+		
+		if (!referencedInstructorsToDeleteIDs.isEmpty()) {
+			String usernamesCombined = "";
+			for (int referencedInstructorToDeleteID : referencedInstructorsToDeleteIDs) {
+				if (!usernamesCombined.equals(""))
+					usernamesCombined += ", ";
+				usernamesCombined += openDocument.getInstructorByID(referencedInstructorToDeleteID).getUsername();
+			}
+			
+			String messageString = referencedInstructorsToDeleteIDs.size() == 1 ? "Instructor " : "Instructors ";
+			messageString += usernamesCombined;
+			messageString += referencedInstructorsToDeleteIDs.size() == 1 ? " is " : " are ";
+			messageString += "scheduled already. Please unschedule, then try again.";
+			com.google.gwt.user.client.Window.alert(messageString);
+		}
+		else {
+			if (com.google.gwt.user.client.Window.confirm("Are you sure you want to remove this instructor?")) {
+					grid.removeSelectedData();
+			}
+		}
 	}
 }

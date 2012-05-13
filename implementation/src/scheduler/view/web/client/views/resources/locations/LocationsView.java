@@ -1,9 +1,14 @@
 package scheduler.view.web.client.views.resources.locations;
 
+import java.util.Set;
+import java.util.TreeSet;
+
 import scheduler.view.web.client.CachedOpenWorkingCopyDocument;
 import scheduler.view.web.client.views.resources.ResourceCollection;
 import scheduler.view.web.client.views.resources.ValidatorUtil;
+import scheduler.view.web.shared.CourseGWT;
 import scheduler.view.web.shared.LocationGWT;
+import scheduler.view.web.shared.ScheduleItemGWT;
 
 import com.google.gwt.user.client.Window;
 import com.smartgwt.client.types.Alignment;
@@ -24,14 +29,19 @@ import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 public class LocationsView extends VLayout {
+	CachedOpenWorkingCopyDocument document;
+	ListGrid grid;
+	
 	public LocationsView(CachedOpenWorkingCopyDocument document) {
+		this.document = document;
+		
 		setID("s_locationviewTab");
 		this.setWidth100();
 		this.setHeight100();
 		// this.setHorizontalAlignment(ALIGN_CENTER);
 		// this.add(new HTML("<h2>Locations</h2>"));
 
-		final ListGrid grid = new ListGrid() {
+		grid = new ListGrid() {
 			protected String getCellCSSText(ListGridRecord record, int rowNum,
 					int colNum) {
 				if(record != null)
@@ -101,9 +111,7 @@ public class LocationsView extends VLayout {
 			public void onKeyPress(KeyPressEvent event) {
 				if (event.getKeyName().equals("Backspace")
 						|| event.getKeyName().equals("Delete"))
-					if (Window
-							.confirm("Are you sure you want to remove this location?"))
-						grid.removeSelectedData();
+					deleteSelected();
 			}
 		});
 		layoutBottomButtonBar(grid);
@@ -151,11 +159,7 @@ public class LocationsView extends VLayout {
 		IButton remove = new IButton("Remove Selected Locations",
 				new ClickHandler() {
 					public void onClick(ClickEvent event) {
-						ListGridRecord[] selectedRecords = grid
-								.getSelectedRecords();
-						for (ListGridRecord rec : selectedRecords) {
-							grid.removeData(rec);
-						}
+						deleteSelected();
 					}
 				});
 		// DOM.setElementAttribute(remove.getElement(), "id", "s_removeBtn");
@@ -168,5 +172,39 @@ public class LocationsView extends VLayout {
 		bottomButtonFlowPanel.addMember(remove);
 
 		this.addMember(bottomButtonFlowPanel);
+	}
+	
+	void deleteSelected() {
+		Set<Integer> referencedLocationIDs = new TreeSet<Integer>();
+		for (ScheduleItemGWT item : document.getScheduleItems())
+			referencedLocationIDs.add(item.getLocationID());
+		
+		Set<Integer> LocationsToDeleteIDs = new TreeSet<Integer>();
+		for (ListGridRecord rec : grid.getSelectedRecords())
+			LocationsToDeleteIDs.add(rec.getAttributeAsInt("id"));
+		
+		Set<Integer> referencedLocationsToDeleteIDs = new TreeSet<Integer>(LocationsToDeleteIDs);
+		referencedLocationsToDeleteIDs.retainAll(referencedLocationIDs);
+		
+		if (!referencedLocationsToDeleteIDs.isEmpty()) {
+			String namesCombined = "";
+			for (int referencedLocationToDeleteID : referencedLocationsToDeleteIDs) {
+				if (!namesCombined.equals(""))
+					namesCombined += ", ";
+				LocationGWT location = document.getLocationByID(referencedLocationToDeleteID);
+				namesCombined += location.getRoom();
+			}
+			
+			String messageString = referencedLocationsToDeleteIDs.size() == 1 ? "Location " : "Locations ";
+			messageString += namesCombined;
+			messageString += referencedLocationsToDeleteIDs.size() == 1 ? " is " : " are ";
+			messageString += "scheduled already. Please unschedule, then try again.";
+			com.google.gwt.user.client.Window.alert(messageString);
+		}
+		else {
+			if (com.google.gwt.user.client.Window.confirm("Are you sure you want to remove this location?")) {
+					grid.removeSelectedData();
+			}
+		}
 	}
 }

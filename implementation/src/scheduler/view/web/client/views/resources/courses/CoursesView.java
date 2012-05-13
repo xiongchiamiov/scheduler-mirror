@@ -1,9 +1,14 @@
 package scheduler.view.web.client.views.resources.courses;
 
-import scheduler.view.web.client.CachedOpenWorkingCopyDocument;
-import scheduler.view.web.client.views.resources.ValidatorUtil;
+import java.util.Set;
+import java.util.TreeSet;
 
-import com.google.gwt.user.client.Window;
+import scheduler.view.web.client.CachedOpenWorkingCopyDocument;
+import scheduler.view.web.client.views.resources.ResourceCache;
+import scheduler.view.web.client.views.resources.ValidatorUtil;
+import scheduler.view.web.shared.CourseGWT;
+import scheduler.view.web.shared.ScheduleItemGWT;
+
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Autofit;
@@ -21,6 +26,8 @@ import com.smartgwt.client.widgets.grid.CellFormatter;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
+import com.smartgwt.client.widgets.grid.events.EditCompleteEvent;
+import com.smartgwt.client.widgets.grid.events.EditCompleteHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
@@ -28,6 +35,7 @@ public class CoursesView extends VLayout {
 	Img loadingImage;
 
 	CachedOpenWorkingCopyDocument document;
+	ListGrid grid;
 
 	public CoursesView(final CachedOpenWorkingCopyDocument document) {
 		this.document = document;
@@ -42,18 +50,33 @@ public class CoursesView extends VLayout {
 	private void onPopulate() {
 		final LectureOptionsDataSource lectureOptionsDataSource = new LectureOptionsDataSource(document);
 
-		final ListGrid grid = new ListGrid() {
-
-			protected String getCellCSSText(ListGridRecord record, int rowNum,
-					int colNum) {
-				if(record != null)
-				{
+		grid = new ListGrid() {
+			@Override
+			protected boolean canEditCell(int rowNum, int colNum) {
+				if ("lectureID".equals(getFieldName(colNum))) {
+					Record record = getRecord(rowNum);
+					if (record != null) {
+						if ("LEC".equals(record.getAttribute("type"))) {
+							return false;
+						}
+					}
+				}
+				
+				// TODO Auto-generated method stub
+				return super.canEditCell(rowNum, colNum);
+			}
+			
+			@Override
+			protected String getCellCSSText(ListGridRecord record, int rowNum, int colNum) {
+				if(record != null) {
 					if (getFieldName(colNum).equals("selector")) {
 						return "cursor: pointer; background: #D8D8D8;";
-					} else if (!ValidatorUtil.isValidCourseType(getFieldName(colNum), record)) {
+					}
+					else if (!ValidatorUtil.isValidCourseType(getFieldName(colNum), record)) {
 						// Invalid data, set background to red
 						return "background: #FF9999;";
-					} else {
+					}
+					else {
 						// Valid data, do nothing
 						return super.getCellCSSText(record, rowNum, colNum);
 					}
@@ -61,7 +84,7 @@ public class CoursesView extends VLayout {
 				return super.getCellCSSText(record, rowNum, colNum);
 			}
 		};
-
+		
 		grid.setWidth100();
 		grid.setAutoFitData(Autofit.VERTICAL);
 
@@ -79,9 +102,7 @@ public class CoursesView extends VLayout {
 			public void onKeyPress(KeyPressEvent event) {
 				if (event.getKeyName().equals("Backspace")
 						|| event.getKeyName().equals("Delete"))
-					if (Window
-							.confirm("Are you sure you want to remove this course?"))
-						grid.removeSelectedData();
+					deleteSelected();
 			}
 		});
 
@@ -142,14 +163,38 @@ public class CoursesView extends VLayout {
 				"Used Equipment");
 		usedEquipmentField.setAlign(Alignment.CENTER);
 		usedEquipmentField.setDefaultValue("");
+		
 		ListGridField lectureIDField = new ListGridField("lectureID");
 		lectureIDField.setDefaultValue(-1);
 		lectureIDField.setOptionDataSource(lectureOptionsDataSource);
 		lectureIDField.setDisplayField("displayField");
 		lectureIDField.setValueField("valueField");
+		lectureIDField.setCellFormatter(new CellFormatter() {
+			@Override
+			public String format(Object value, ListGridRecord record, int rowNum, int colNum) {
+				if ("lectureID".equals(grid.getFieldName(colNum))) {
+					if ("LEC".equals(record.getAttribute("type"))) {
+						return "";
+					}
+				}
+				return value.toString();
+			}
+		});
 
 		ListGridField isTetheredField = new ListGridField("isTethered");
 		isTetheredField.setDefaultValue(false);
+		isTetheredField.setCellFormatter(new CellFormatter() {
+			@Override
+			public String format(Object value, ListGridRecord record, int rowNum, int colNum) {
+				if ("isTethered".equals(grid.getFieldName(colNum))) {
+					if ("LEC".equals(record.getAttribute("type"))) {
+						return "";
+					}
+				}
+				return value.toString();
+			}
+		});
+		
 
 		grid.setFields(selectorField, schedulableField, departmentField,
 				catalogNumberField, nameField, numSectionsField, wtuField,
@@ -160,6 +205,21 @@ public class CoursesView extends VLayout {
 		addMember(grid);
 		// this.setHorizontalAlignment(ALIGN_LEFT);
 		layoutBottomButtonBar(grid);
+		
+		grid.addEditCompleteHandler(new EditCompleteHandler() {
+			@Override
+			public void onEditComplete(EditCompleteEvent event) {
+				grid.refreshRow(event.getRowNum());
+				grid.refreshRecordComponent(event.getRowNum(), event.getColNum());
+				grid.refreshCellStyle(event.getRowNum(), event.getColNum());
+				grid.redraw();
+				grid.refreshRow(event.getRowNum());
+				grid.refreshRecordComponent(event.getRowNum(), event.getColNum());
+				grid.refreshCellStyle(event.getRowNum(), event.getColNum());
+			}
+		});
+		
+//		grid.redraw();
 	}
 
 	/**
@@ -203,11 +263,7 @@ public class CoursesView extends VLayout {
 		IButton remove = new IButton("Remove Selected Courses",
 				new ClickHandler() {
 					public void onClick(ClickEvent event) {
-						ListGridRecord[] selectedRecords = grid
-								.getSelectedRecords();
-						for (ListGridRecord rec : selectedRecords) {
-							grid.removeData(rec);
-						}
+						deleteSelected();
 					}
 				});
 
@@ -220,5 +276,39 @@ public class CoursesView extends VLayout {
 		bottomButtonFlowPanel.addMember(remove);
 
 		this.addMember(bottomButtonFlowPanel);
+	}
+	
+	void deleteSelected() {
+		Set<Integer> referencedCourseIDs = new TreeSet<Integer>();
+		for (ScheduleItemGWT item : document.getScheduleItems())
+			referencedCourseIDs.add(item.getCourseID());
+		
+		Set<Integer> CoursesToDeleteIDs = new TreeSet<Integer>();
+		for (ListGridRecord rec : grid.getSelectedRecords())
+			CoursesToDeleteIDs.add(rec.getAttributeAsInt("id"));
+		
+		Set<Integer> referencedCoursesToDeleteIDs = new TreeSet<Integer>(CoursesToDeleteIDs);
+		referencedCoursesToDeleteIDs.retainAll(referencedCourseIDs);
+		
+		if (!referencedCoursesToDeleteIDs.isEmpty()) {
+			String namesCombined = "";
+			for (int referencedCourseToDeleteID : referencedCoursesToDeleteIDs) {
+				if (!namesCombined.equals(""))
+					namesCombined += ", ";
+				CourseGWT course = document.getCourseByID(referencedCourseToDeleteID);
+				namesCombined += course.getDept() + " " + course.getCatalogNum();
+			}
+			
+			String messageString = referencedCoursesToDeleteIDs.size() == 1 ? "Course " : "Courses ";
+			messageString += namesCombined;
+			messageString += referencedCoursesToDeleteIDs.size() == 1 ? " is " : " are ";
+			messageString += "scheduled already. Please unschedule, then try again.";
+			com.google.gwt.user.client.Window.alert(messageString);
+		}
+		else {
+			if (com.google.gwt.user.client.Window.confirm("Are you sure you want to remove this course?")) {
+					grid.removeSelectedData();
+			}
+		}
 	}
 }

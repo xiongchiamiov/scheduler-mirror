@@ -219,6 +219,10 @@ public class CachedOpenWorkingCopyDocument {
 		return instructors.getByID(instructorID);
 	}
 
+	public CourseGWT getCourseByID(int id) {
+		return courses.getByID(id);
+	}
+	
 	public void deleteInstructor(Integer id) {
 		instructors.delete(id);
 	}
@@ -237,6 +241,10 @@ public class CachedOpenWorkingCopyDocument {
 
 	public void deleteLocation(Integer id) {
 		locations.delete(id);
+	}
+	
+	public void addCourseObserver(ResourceCache.Observer<CourseGWT> obs) {
+		courses.addObserver(obs);
 	}
 
 	public void addObserver(final Observer observer) {
@@ -278,5 +286,9 @@ public class CachedOpenWorkingCopyDocument {
 			@Override
 			public void onResourceDeleted(int localID, boolean deletedLocally) { }
 		});
+	}
+
+	public LocationGWT getLocationByID(int id) {
+		return locations.getByID(id);
 	}
 }
