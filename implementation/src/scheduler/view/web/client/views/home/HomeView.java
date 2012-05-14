@@ -88,19 +88,19 @@ public class HomeView extends VerticalPanel {
 		this.add(tabSet);
 		
 
-		Button instructorsButton = new Button("Instructors Home View (temporary)", new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				com.smartgwt.client.widgets.Window instructorWindow = new com.smartgwt.client.widgets.Window();
-				InstructorsHomeView homeView = new InstructorsHomeView(service, username);
-				instructorWindow.addItem(homeView);
-				homeView.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-				instructorWindow.setSize("500px", "500px");
-				instructorWindow.show();
-			}
-		});
-		instructorsButton.getElement().setId("s_instructorsTab");
+//		Button instructorsButton = new Button("Instructors Home View (temporary)", new ClickHandler() {
+//			public void onClick(ClickEvent event) {
+//				com.smartgwt.client.widgets.Window instructorWindow = new com.smartgwt.client.widgets.Window();
+//				InstructorsHomeView homeView = new InstructorsHomeView(service, username);
+//				instructorWindow.addItem(homeView);
+//				homeView.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+//				instructorWindow.setSize("500px", "500px");
+//				instructorWindow.show();
+//			}
+//		});
+//		instructorsButton.getElement().setId("s_instructorsTab");
 		
-		this.add(instructorsButton);
+//		this.add(instructorsButton);
 		
 
 		service.originalDocuments.addObserver(new ResourceCache.Observer<OriginalDocumentGWT>() {

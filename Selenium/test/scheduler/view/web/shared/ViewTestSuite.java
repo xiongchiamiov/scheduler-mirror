@@ -27,6 +27,7 @@ public class ViewTestSuite extends TestSuite {
 		
 		//suite.addTestSuite(FirefoxLoginTest.class);
 		suite.addTestSuite(GRCAcceptanceTestFirefox.class);
+		suite.addTestSuite(InstructorsViewTest.class);
 		
 		return suite;
 	}
