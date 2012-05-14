@@ -4,16 +4,13 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.TreeSet;
 
-import scheduler.view.web.shared.DocumentGWT;
 import scheduler.view.web.shared.OriginalDocumentGWT;
 
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.IButton;
-import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.grid.CellFormatter;

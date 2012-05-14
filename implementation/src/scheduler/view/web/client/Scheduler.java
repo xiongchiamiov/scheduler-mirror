@@ -52,7 +52,7 @@ public class Scheduler implements EntryPoint, UpdateHeaderStrategy
 			Label lbl = new Label("The Scheduler Project");
 			appNameContainer = new SimplePanel();
 			appNameContainer.setStyleName("appName");
-			appNameContainer.add(lbl);
+			appNameContainer.setWidget(lbl);
 			topBarLeftSide.add(appNameContainer);
 			DOM.setElementAttribute(lbl.getElement(), "id", "appNameTtl");
 			
@@ -94,7 +94,7 @@ public class Scheduler implements EntryPoint, UpdateHeaderStrategy
 		
 //		if (username == null) {
 //			assert(documentIDStr == null);
-			viewContainer.add(new LoginView(service, this));
+			viewContainer.setWidget(new LoginView(service, this));
 //			loadingPopup.hide();
 //		}
 //		else {
@@ -112,10 +112,10 @@ public class Scheduler implements EntryPoint, UpdateHeaderStrategy
 //	}
 
 	public void onOpenedDocument(String documentName) {
-		scheduleNameContainer.add(new Label(documentName));
+		scheduleNameContainer.setWidget(new Label(documentName));
 		
 		appNameContainer.clear();
-		appNameContainer.add(new Label(" - The Scheduler Project"));
+		appNameContainer.setWidget(new Label(" - The Scheduler Project"));
 
 		refreshWindowTitle();
 	}
@@ -123,9 +123,9 @@ public class Scheduler implements EntryPoint, UpdateHeaderStrategy
 	public void onLogin(String username, final LogoutHandler logoutHandler) {
 		Label uname = new Label(username);
 		DOM.setElementAttribute(uname.getElement(), "id", "s_unameLbl");
-		usernameContainer.add(uname);
+		usernameContainer.setWidget(uname);
 		
-		logoutLinkContainer.add(HTMLUtilities.createLink("Log Out", "inAppLink", new ClickHandler() {
+		logoutLinkContainer.setWidget(HTMLUtilities.createLink("Log Out", "inAppLink", new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				logoutHandler.handleLogout();
 			}
@@ -149,7 +149,7 @@ public class Scheduler implements EntryPoint, UpdateHeaderStrategy
 	@Override
 	public void onDocumentNameChanged(String newDocumentName) {
 		scheduleNameContainer.clear();
-		scheduleNameContainer.add(new Label(newDocumentName));
+		scheduleNameContainer.setWidget(new Label(newDocumentName));
 
 		refreshWindowTitle();
 	}
@@ -161,7 +161,7 @@ public class Scheduler implements EntryPoint, UpdateHeaderStrategy
 		if (documentChanged) {
 			Label label = new Label("*");
 			label.setTitle("This document has been changed, and hasn't been saved yet.");
-			documentChangedIndicatorContainer.add(label);
+			documentChangedIndicatorContainer.setWidget(label);
 		}
 		
 		refreshWindowTitle();

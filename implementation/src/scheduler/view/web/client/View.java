@@ -47,7 +47,7 @@ public abstract class View extends SimplePanel {
 		
 		Widget viewWidget = newView.getViewWidget();
 		assert (viewWidget != null && viewWidget != this);
-		add(viewWidget);
+		setWidget(viewWidget);
 		
 		viewAboveMe.afterPush();
 	}

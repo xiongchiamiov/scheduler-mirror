@@ -67,7 +67,7 @@ public class LoginView extends SimplePanel {
 		DOM.setElementAttribute(login.getElement(), "id", "s_loginBtn");
 		loginViewContents.add(login);
 		
-		this.add(loginViewContents);
+		this.setWidget(loginViewContents);
 	}
 	
 	@Override
@@ -79,7 +79,7 @@ public class LoginView extends SimplePanel {
 	
 	protected void onLogout() {
 		clear();
-		add(loginViewContents);
+		setWidget(loginViewContents);
 	}
 
    protected void submitLogin(final String username) {
@@ -117,11 +117,11 @@ public class LoginView extends SimplePanel {
 				
 				if (response.isAdmin) {
 					clear();
-					add(new HomeView(updateHeaderStrategy, cachedService));
+					setWidget(new HomeView(updateHeaderStrategy, cachedService));
 				}
 				else {
 					clear();
-					add(new InstructorsHomeView(cachedService));
+					setWidget(new InstructorsHomeView(cachedService));
 				}
 			}
 		});

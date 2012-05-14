@@ -12,12 +12,8 @@ import scheduler.view.web.client.views.LoadingPopup;
 import scheduler.view.web.client.views.resources.ResourceCache;
 import scheduler.view.web.shared.OriginalDocumentGWT;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.smartgwt.client.types.Overflow;
@@ -205,7 +201,7 @@ public class HomeView extends SimplePanel {
 		if (navView.canClose()) {
 			navView.close();
 			clear();
-			add(homeViewContents);
+			setWidget(homeViewContents); // instead of add
 			return true;
 		}
 		return false;

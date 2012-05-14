@@ -2,14 +2,12 @@ package scheduler.view.web.client.views.home;
 
 import java.util.Collection;
 
-import scheduler.view.web.shared.DocumentGWT;
 import scheduler.view.web.shared.OriginalDocumentGWT;
 
 import com.smartgwt.client.data.DSRequest;
 import com.smartgwt.client.data.DSResponse;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.Record;
-import com.smartgwt.client.data.fields.DataSourceBooleanField;
 import com.smartgwt.client.data.fields.DataSourceIntegerField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 import com.smartgwt.client.types.DSOperationType;
