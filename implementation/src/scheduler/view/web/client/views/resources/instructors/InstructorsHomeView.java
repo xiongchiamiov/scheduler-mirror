@@ -82,6 +82,11 @@ public class InstructorsHomeView extends VerticalPanel
 									scheduleNames.add(doc.getName());
 								}
 						 }
+						 if(scheduleNames.size() == 0)
+						 {
+							schedList.setWidget(schedList.getRowCount(),
+									0, new HTML("There are currently no documents for you"));
+						 }
 					 }
 				  });
 	}

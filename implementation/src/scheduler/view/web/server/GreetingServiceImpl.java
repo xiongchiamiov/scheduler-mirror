@@ -644,7 +644,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		}
 		catch (DatabaseException e) {
 			try {
-				user = model.createTransientUser(username, !username.equals("jjuszak")).insert();
+				user = model.createTransientUser(username, username.equals("admin")).insert();
 			}
 			catch (DatabaseException e2) {
 				throw new RuntimeException(e2);

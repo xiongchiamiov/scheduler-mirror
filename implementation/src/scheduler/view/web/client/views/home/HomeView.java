@@ -2,21 +2,17 @@ package scheduler.view.web.client.views.home;
 
 import java.util.Collection;
 
-import scheduler.view.web.client.CachedOpenWorkingCopyDocument;
 import scheduler.view.web.client.CachedService;
 import scheduler.view.web.client.MergeDialog;
 import scheduler.view.web.client.NewScheduleCreator;
-import scheduler.view.web.client.UpdateHeaderStrategy;
-import scheduler.view.web.client.views.AdminScheduleNavView;
-import scheduler.view.web.client.views.LoadingPopup;
+import scheduler.view.web.client.TabOpener;
 import scheduler.view.web.client.views.resources.ResourceCache;
 import scheduler.view.web.client.views.resources.instructors.InstructorsHomeView;
+import scheduler.view.web.shared.DocumentGWT;
 import scheduler.view.web.shared.OriginalDocumentGWT;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -25,20 +21,13 @@ import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.Side;
 import com.smartgwt.client.widgets.tab.TabSet;
 
-public class HomeView extends SimplePanel {
+public class HomeView extends VerticalPanel {
 	CachedService service;
-	final UpdateHeaderStrategy updateHeaderStrategy;
 	HomeTab homeTab;
 	TrashTab trashTab;
 	
-	VerticalPanel homeViewContents;
-	AdminScheduleNavView navView;
-	
-	public HomeView(UpdateHeaderStrategy updateHeaderStrategy, final CachedService service) {
-		this.updateHeaderStrategy = updateHeaderStrategy;
+	public HomeView(final CachedService service, SimplePanel parentPanel, final String username) {
 		this.service = service;
-		
-		homeViewContents = new VerticalPanel();
 		
 		TabSet tabSet = new TabSet();
 		tabSet.setTabBarPosition(Side.TOP);
@@ -65,24 +54,15 @@ public class HomeView extends SimplePanel {
 			public Collection<OriginalDocumentGWT> getAllOriginalDocuments() {
 				return service.originalDocuments.getAll();
 			}
-			@Override
-			public OriginalDocumentGWT getOriginalDocumentByID(int documentID) {
-				return service.originalDocuments.getByID(documentID);
-			}
+			
 			@Override
 			public void createNew() {
-				NewScheduleCreator.createNewSchedule(service, new NewScheduleCreator.OpenDocumentCallback() {
-					@Override
-					public void openDocument(int documentID) {
-						HomeView.this.openDocument(documentID, false);
-					}
-				});
+				NewScheduleCreator.createNewSchedule(service, username);
 			}
 			
 			@Override
 			public void openDocument(int originalDocumentID, boolean openExistingWorkingDocument) {
-//				TabOpener.openDocInNewTab(username, service.originalDocuments.localIDToRealID(originalDocumentID), openExistingWorkingDocument);
-				HomeView.this.openDocument(originalDocumentID, openExistingWorkingDocument);
+				TabOpener.openDocInNewTab(username, service.originalDocuments.localIDToRealID(originalDocumentID), openExistingWorkingDocument);
 			}
 		});
 		tabSet.addTab(homeTab);
@@ -95,24 +75,34 @@ public class HomeView extends SimplePanel {
 
 			@Override
 			public void openDocument(int originalDocumentID, boolean openExistingWorkingDocument) {
-//				TabOpener.openDocInNewTab(username, service.originalDocuments.localIDToRealID(originalDocumentID), openExistingWorkingDocument);
-				HomeView.this.openDocument(originalDocumentID, openExistingWorkingDocument);
+				TabOpener.openDocInNewTab(username, service.originalDocuments.localIDToRealID(originalDocumentID), openExistingWorkingDocument);
 			}
 			
 			@Override
 			public Collection<OriginalDocumentGWT> getAllOriginalDocuments() {
 				return service.originalDocuments.getAll();
 			}
-			
-			@Override
-			public OriginalDocumentGWT getOriginalDocumentByID(int documentID) {
-				return service.originalDocuments.getByID(documentID);
-			}
 		});
 		tabSet.addTab(trashTab);
 		
-		homeViewContents.add(tabSet);
+		this.add(tabSet);
 		
+
+//		Button instructorsButton = new Button("Instructors Home View (temporary)", new ClickHandler() {
+//			public void onClick(ClickEvent event) {
+//				com.smartgwt.client.widgets.Window instructorWindow = new com.smartgwt.client.widgets.Window();
+//				InstructorsHomeView homeView = new InstructorsHomeView(service, username);
+//				instructorWindow.addItem(homeView);
+//				homeView.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+//				instructorWindow.setSize("500px", "500px");
+//				instructorWindow.show();
+//			}
+//		});
+//		instructorsButton.getElement().setId("s_instructorsTab");
+//		
+//		this.add(instructorsButton);
+		
+
 		service.originalDocuments.addObserver(new ResourceCache.Observer<OriginalDocumentGWT>() {
 			@Override
 			public void afterSynchronize() { }
@@ -137,8 +127,6 @@ public class HomeView extends SimplePanel {
 				trashTab.refreshDocuments();
 			}
 		});
-		
-		setWidget(homeViewContents);
 	}
 	
 	private void restoreDocuments(Collection<Integer> selectedIDs) {
@@ -163,65 +151,5 @@ public class HomeView extends SimplePanel {
 			// in the meantime, move it to the trashed list
 			// the trashed list should refresh based on the cached datasource
 		}
-	}
-	
-	private void openDocument(final int originalDocumentID, boolean openExistingWorkingDocument) {
-		final LoadingPopup loadingPopup = new LoadingPopup();
-		loadingPopup.show();
-		
-		service.openWorkingCopyForOriginalDocument(originalDocumentID, openExistingWorkingDocument, new AsyncCallback<CachedOpenWorkingCopyDocument>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				Window.alert("Failed to get document!");
-				loadingPopup.hide();
-			}
-			
-			@Override
-			public void onSuccess(CachedOpenWorkingCopyDocument workingCopyDocument) {
-				updateHeaderStrategy.onOpenedDocument(service.originalDocuments.getByID(service.originalDocuments.realIDToLocalID(originalDocumentID)).getName());
-				
-				CloseStrategy closeStrategy = new CloseStrategy() {
-					@Override
-					public void closeDocument() {
-						HomeView.this.closeDocument();
-					}
-				};
-				
-				OpenDocumentStrategy openDocumentStrategy = new OpenDocumentStrategy() {
-					@Override
-					public void openDocument(int documentID, boolean openExistingWorkingDocument) {
-						if (HomeView.this.closeDocument())
-							HomeView.this.openDocument(documentID, openExistingWorkingDocument);
-					}
-				};
-				
-				navView = new AdminScheduleNavView(service, updateHeaderStrategy, closeStrategy, openDocumentStrategy, workingCopyDocument);
-				setWidget(navView);
-				loadingPopup.hide();
-			}
-		});
-	}
-	
-	protected boolean closeDocument() {
-		if (navView.canClose()) {
-			navView.close();
-			clear();
-			add(homeViewContents);
-			return true;
-		}
-		return false;
-	}
-
-	boolean canClose() {
-		if (navView != null) {
-			return navView.canClose();
-		}
-		return true;
-	}
-	
-	void close() {
-		navView.close();
-
-		this.clear();
 	}
 }
