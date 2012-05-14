@@ -48,6 +48,23 @@ public abstract class CoursesTest extends ModelTestCase
       assertTrue(found.isSchedulable());
    }
    
+//   public void testInsertAndDeleteCourse() throws DatabaseException {
+//      Model model = createBlankModel();
+//      
+//      Document doc;
+//      int courseID;
+//      
+//      {
+//         doc = model.createAndInsertDocumentWithSpecialInstructorsAndLocations("doc", START_HALF_HOUR, END_HALF_HOUR);
+//         courseID = ModelTestUtility.createCourse(model).setDocument(doc).insert().getID();
+//      }
+//      
+//      model.findCourseByID(courseID).delete();
+//      doc.delete();
+//      System.out.println("courses left: " + model.findCoursesForDocument(doc));
+//      assertTrue(model.isEmpty());
+//   }
+   
    public void testInsertAndDeleteCourse() throws DatabaseException {
       Model model = createBlankModel();
       
@@ -61,11 +78,12 @@ public abstract class CoursesTest extends ModelTestCase
       
       model.findCourseByID(courseID).delete();
       doc.delete();
-      
+      System.out.println("courses left: " + model.findCoursesForDocument(doc));
+      //assertTrue(model.findCoursesForDocument(doc).isEmpty()); //note: SQLDB, this passes but model.isempty doesn't
       assertTrue(model.isEmpty());
    }
-   
-   public void testAssociation() throws DatabaseException {
+
+public void testAssociation() throws DatabaseException {
 	   Model model = createBlankModel();
 	   
 	   int lectureID;

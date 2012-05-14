@@ -14,35 +14,54 @@ public class SQLCourse extends SQLObject implements IDBCourse {
 	String type;
 	String maxEnrollment;
 	String numHalfHoursPerWeek;
-	Integer lectureID;
-	Boolean tetheredToLecture;
+	Integer lectureID;  //TODO: Not sure how this is used!
+//	Boolean tetheredToLecture;
 	
-	public SQLCourse(Integer id, Integer documentID, String name, String catalogNumber, String department,
-			String wtu, String scu, String numSections, String type,
-			String maxEnrollment, String numHalfHoursPerWeek, Boolean isSchedulable, Integer lectureID, Boolean tetheredToLecture) {
+	public SQLCourse(Integer id, Integer docID, String enrollment, String wtu, String scu, String type, String numSections,
+			String dept, String catalogNum, String name, Boolean schedulable, String numHalfHours/*, Integer lectureID*/)	//can't have 
+	{
 		
 		super(id);
 		//SEE ABOVE TODO
-		this.id = id;
+		//this.id = id;
 		
-		this.documentID = documentID;
+		this.documentID = docID;
 		this.name = name;
-		this.catalogNumber = catalogNumber;
-		this.department = department;
+		this.catalogNumber = catalogNum;
+		this.department = dept;
 		this.wtu = wtu;
 		this.scu = scu;
 		this.numSections = numSections;
 		this.type = type;
-		this.maxEnrollment = maxEnrollment;
-		this.numHalfHoursPerWeek = numHalfHoursPerWeek;
-		this.isSchedulable = isSchedulable;
-		this.lectureID = lectureID;
-		this.tetheredToLecture = tetheredToLecture;
+		this.maxEnrollment = enrollment;
+		this.numHalfHoursPerWeek = numHalfHours;
+		this.isSchedulable = schedulable;
+//		this.lectureID = lectureID;
+//		this.tetheredToLecture = tetheredToLecture;
 	}
 	
-	public SQLCourse(SQLCourse that) {
-		this(that.id, that.documentID, that.name, that.catalogNumber, that.department, that.wtu, that.scu, that.numSections, that.type, that.maxEnrollment, that.numHalfHoursPerWeek, that.isSchedulable, that.lectureID, that.tetheredToLecture);
-	}
+//	public SQLCourse(Integer id, Integer docID, String enrollment, String wtu, String scu, String type, String numSections,
+//			String dept, String catalogNum, String name, Boolean schedulable, String numHalfHours, 	Integer lectureID, Boolean tetheredToLecture)	
+//	{
+//		
+//		super(id);
+//		//SEE ABOVE TODO
+//		//this.id = id;
+//		
+//		this.documentID = docID;
+//		this.name = name;
+//		this.catalogNumber = catalogNum;
+//		this.department = dept;
+//		this.wtu = wtu;
+//		this.scu = scu;
+//		this.numSections = numSections;
+//		this.type = type;
+//		this.maxEnrollment = enrollment;
+//		this.numHalfHoursPerWeek = numHalfHours;
+//		this.isSchedulable = schedulable;
+//		this.lectureID = lectureID;
+//		this.tetheredToLecture = tetheredToLecture;
+//	}
 
 	public void sanityCheck() {
 		assert(documentID != null);
@@ -95,5 +114,5 @@ public class SQLCourse extends SQLObject implements IDBCourse {
 	@Override
 	public boolean isSchedulable() { return isSchedulable; }
 	@Override
-	public void setIsSchedulable(boolean isSchedulable) { this.isSchedulable = isSchedulable; }
+	public void setIsSchedulable(boolean isSchedulable) { this.isSchedulable = new Boolean(isSchedulable); }
 }
