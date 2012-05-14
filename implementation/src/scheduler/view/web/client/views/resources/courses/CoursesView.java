@@ -1,10 +1,11 @@
 package scheduler.view.web.client.views.resources.courses;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
 import scheduler.view.web.client.CachedOpenWorkingCopyDocument;
-import scheduler.view.web.client.views.resources.ResourceCache;
 import scheduler.view.web.client.views.resources.ValidatorUtil;
 import scheduler.view.web.shared.CourseGWT;
 import scheduler.view.web.shared.ScheduleItemGWT;
@@ -194,7 +195,6 @@ public class CoursesView extends VLayout {
 				return value.toString();
 			}
 		});
-		
 
 		grid.setFields(selectorField, schedulableField, departmentField,
 				catalogNumberField, nameField, numSectionsField, wtuField,
@@ -228,7 +228,7 @@ public class CoursesView extends VLayout {
 	private void layoutBottomButtonBar(final ListGrid grid) {
 		HLayout bottomButtonFlowPanel = new HLayout();
 		bottomButtonFlowPanel.setMembersMargin(10);
-		bottomButtonFlowPanel.addStyleName("floatingScheduleButtonBar");
+		bottomButtonFlowPanel.addStyleName("floatingResourcesButtonBar");
 
 		IButton course = new IButton("Add New Course", new ClickHandler() {
 			public void onClick(ClickEvent event) {
@@ -310,5 +310,15 @@ public class CoursesView extends VLayout {
 					grid.removeSelectedData();
 			}
 		}
+	}
+	
+	public boolean canClose() {
+		// If you want to keep the user from navigating away, return false here
+		
+		return true;
+	}
+
+	public void close() {
+		this.clear();
 	}
 }

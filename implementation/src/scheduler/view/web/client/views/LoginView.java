@@ -1,8 +1,12 @@
 package scheduler.view.web.client.views;
 
+import scheduler.view.web.client.CachedService;
 import scheduler.view.web.client.GreetingServiceAsync;
-import scheduler.view.web.client.TabOpener;
+import scheduler.view.web.client.LogoutHandler;
 import scheduler.view.web.client.UpdateHeaderStrategy;
+import scheduler.view.web.client.views.home.HomeView;
+import scheduler.view.web.client.views.resources.instructors.InstructorsHomeView;
+import scheduler.view.web.shared.LoginResponse;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -11,29 +15,35 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasAlignment;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-public class LoginView extends VerticalPanel {
+public class LoginView extends SimplePanel {
 	GreetingServiceAsync service;
 	
 	String username;
 	final UpdateHeaderStrategy updateHeaderStrategy;
 	TextBox textBox;
+	
+	VerticalPanel loginViewContents;
 
 	public LoginView(GreetingServiceAsync service, UpdateHeaderStrategy updateHeaderStrategy) {
 		this.updateHeaderStrategy = updateHeaderStrategy;
 		
 		this.service = service;
-
-		this.setWidth("100%");
-		this.setHorizontalAlignment(HasAlignment.ALIGN_CENTER);
 		
-		this.add(new HTML("<h2>Login</h2>"));
-		DOM.setElementAttribute(this.getElement(), "id", "s_loginTag");
+		loginViewContents = new VerticalPanel();
+
+		loginViewContents.setWidth("100%");
+		loginViewContents.setHorizontalAlignment(HasAlignment.ALIGN_CENTER);
+		
+		loginViewContents.add(new HTML("<h2>Login</h2>"));
+		DOM.setElementAttribute(loginViewContents.getElement(), "id", "s_loginTag");
 
 		textBox = new TextBox();
 		DOM.setElementAttribute(textBox.getElement(), "id", "s_unameBox");
@@ -45,7 +55,7 @@ public class LoginView extends VerticalPanel {
 					submitLogin(textBox.getText());
 			}
 		});
-		this.add(textBox);
+		loginViewContents.add(textBox);
 		
 		Button login = new Button("Login", new ClickHandler() {
 			@Override
@@ -54,8 +64,10 @@ public class LoginView extends VerticalPanel {
 			}
 		});
 		
-	    DOM.setElementAttribute(login.getElement(), "id", "s_loginBtn");
-		this.add(login);
+		DOM.setElementAttribute(login.getElement(), "id", "s_loginBtn");
+		loginViewContents.add(login);
+		
+		this.add(loginViewContents);
 	}
 	
 	@Override
@@ -63,6 +75,11 @@ public class LoginView extends VerticalPanel {
 		super.onLoad();
 		
 		textBox.setFocus(true);
+	}
+	
+	protected void onLogout() {
+		clear();
+		add(loginViewContents);
 	}
 
    protected void submitLogin(final String username) {
@@ -76,6 +93,37 @@ public class LoginView extends VerticalPanel {
 			return;
 		}
 		
-		TabOpener.openHomeInThisTab(username);
+		final LoadingPopup loadingPopup = new LoadingPopup();
+		loadingPopup.show();
+		
+		service.loginAndGetAllOriginalDocuments(username, new AsyncCallback<LoginResponse>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert("Failed to get documents");
+			}
+			
+			@Override
+			public void onSuccess(LoginResponse response) {
+				updateHeaderStrategy.onLogin(username, new LogoutHandler() {
+					@Override
+					public void handleLogout() {
+						onLogout();
+					}
+				});
+
+				loadingPopup.hide();
+				
+				final CachedService cachedService = new CachedService(true, service, response.sessionID, username, response.initialOriginalDocuments);
+				
+				if (response.isAdmin) {
+					clear();
+					add(new HomeView(updateHeaderStrategy, cachedService));
+				}
+				else {
+					clear();
+					add(new InstructorsHomeView(cachedService));
+				}
+			}
+		});
 	}
 }

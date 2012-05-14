@@ -7,10 +7,12 @@ import scheduler.view.web.client.HTMLUtilities;
 import scheduler.view.web.client.Import;
 import scheduler.view.web.client.MergeDialog;
 import scheduler.view.web.client.NewScheduleCreator;
+import scheduler.view.web.client.NewScheduleCreator.OpenDocumentCallback;
 import scheduler.view.web.client.SaveAsDialog;
-import scheduler.view.web.client.TabOpener;
 import scheduler.view.web.client.UnsavedDocumentStrategy;
 import scheduler.view.web.client.UpdateHeaderStrategy;
+import scheduler.view.web.client.views.home.CloseStrategy;
+import scheduler.view.web.client.views.home.OpenDocumentStrategy;
 import scheduler.view.web.client.views.resources.courses.CoursesView;
 import scheduler.view.web.client.views.resources.instructors.InstructorsView;
 import scheduler.view.web.client.views.resources.locations.LocationsView;
@@ -41,11 +43,17 @@ import com.smartgwt.client.widgets.toolbar.ToolStripMenuButton;
 public class AdminScheduleNavView extends VerticalPanel {
 	final CachedService service;
 	final CachedOpenWorkingCopyDocument document;
-	final String username;
 	boolean documentChanged;
 	
-	SimplePanel viewFrameContainer;
+	SimplePanel calendarViewContainer;
 	UpdateHeaderStrategy updateHeaderStrategy;
+	final CloseStrategy closeStrategy;
+	final OpenDocumentStrategy openDocumentStrategy;
+	
+	CoursesView coursesView;
+	InstructorsView instructorsView;
+	LocationsView locationsView;
+	CalendarView calendarView;
 	
 	// final MenuBar menuBar;
 	
@@ -53,12 +61,13 @@ public class AdminScheduleNavView extends VerticalPanel {
 	// MenuItem instructorsMenuItem, locationsMenuItem, coursesMenuItem,
 	// scheduleMenuItem;
 	
-	public AdminScheduleNavView(CachedService service, final UpdateHeaderStrategy updateHeaderStrategy, String username, CachedOpenWorkingCopyDocument document) {
+	public AdminScheduleNavView(CachedService service, final UpdateHeaderStrategy updateHeaderStrategy, CloseStrategy closeStrategy, OpenDocumentStrategy openDocumentStrategy, CachedOpenWorkingCopyDocument document) {
 		this.service = service;
-		this.username = username;
 		this.document = document;
 		this.documentChanged = false;
 		this.updateHeaderStrategy = updateHeaderStrategy;
+		this.openDocumentStrategy = openDocumentStrategy;
+		this.closeStrategy = closeStrategy;
 		
 		Window.addWindowClosingHandler(new Window.ClosingHandler() {
 			public void onWindowClosing(Window.ClosingEvent closingEvent) {
@@ -85,21 +94,26 @@ public class AdminScheduleNavView extends VerticalPanel {
 		MenuItem newItem = new MenuItem("New", "icons/16/document_plain_new.png");
 		newItem.addClickHandler(new ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				NewScheduleCreator.createNewSchedule(service, username);
+				NewScheduleCreator.createNewSchedule(service, new OpenDocumentCallback() {
+					@Override
+					public void openDocument(int documentID) {
+						openDocumentStrategy.openDocument(documentID, false);
+					}
+				});
 			}
 		});
 		
 		MenuItem openItem = new MenuItem("Open", "icons/16/folder_out.png");
 		openItem.addClickHandler(new ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				TabOpener.openHomeInNewTab(username);
+				closeStrategy.closeDocument();
 			}
 		});
 		
 		MenuItem closeItem = new MenuItem("Close", "icons/16/folder_out.png");
 		closeItem.addClickHandler(new ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				TabOpener.openHomeInThisTab(username);
+				closeStrategy.closeDocument();
 			}
 		});
 		
@@ -235,18 +249,20 @@ public class AdminScheduleNavView extends VerticalPanel {
 		// tabSet.setPaneCon
 
 		final Tab coursesTab = new Tab("Courses");
-		
-		coursesTab.setPane(new CoursesView(document));
+		coursesView = new CoursesView(document);
+		coursesTab.setPane(coursesView);
 		coursesTab.setID("s_coursesTab");
 		tabSet.addTab(coursesTab);
 		
 		final Tab instructorsTab = new Tab("Instructors");
-		instructorsTab.setPane(new InstructorsView(document));
+		instructorsView = new InstructorsView(document);
+		instructorsTab.setPane(instructorsView);
 		instructorsTab.setID("s_instructorsTab");
 		tabSet.addTab(instructorsTab);
 		
 		final Tab locationsTab = new Tab("Locations");
-		locationsTab.setPane(new LocationsView(document));
+		locationsView = new LocationsView(document);
+		locationsTab.setPane(locationsView);
 		locationsTab.setID("s_locationsTab");
 		tabSet.addTab(locationsTab);
 		
@@ -264,7 +280,8 @@ public class AdminScheduleNavView extends VerticalPanel {
 			public void onTabSelected(TabSelectedEvent event) {
 				if (event.getTab() == scheduleTab) {
 					tabSet.setPaneContainerOverflow(Overflow.HIDDEN);
-					viewFrameContainer.add(new CalendarView(document));
+					calendarView = new CalendarView(document);
+					calendarViewContainer.add(calendarView);
 				}
 				else {
 					tabSet.setPaneContainerOverflow(Overflow.VISIBLE);
@@ -275,7 +292,8 @@ public class AdminScheduleNavView extends VerticalPanel {
 		tabSet.addTabDeselectedHandler(new TabDeselectedHandler() {
 			public void onTabDeselected(TabDeselectedEvent event) {
 				// currentViewFrame.beforePop();
-				viewFrameContainer.clear();
+				calendarView = null;
+				calendarViewContainer.clear();
 			}
 		});
 		
@@ -291,13 +309,36 @@ public class AdminScheduleNavView extends VerticalPanel {
 		navBar.setOverflow(Overflow.VISIBLE);
 		add(navBar);
 		
-		viewFrameContainer = new SimplePanel();
-		add(viewFrameContainer);
+		calendarViewContainer = new SimplePanel();
+		add(calendarViewContainer);
 
 		navBar.addMember(makeToolStrip(updateHeaderStrategy));
 		
 		HTMLUtilities.addSpace(navBar, 10);
 		
 		navBar.addMember(makeTabs());
+	}
+
+	public boolean canClose() {
+		if (calendarView != null && !calendarView.canClose())
+			return false;
+		if (!coursesView.canClose())
+			return false;
+		if (!instructorsView.canClose())
+			return false;
+		if (!locationsView.canClose())
+			return false;
+		if (documentChanged)
+			return Window.confirm("There are unsaved changes to this document. Are you sure you want to navigate away?");
+		return true;
+	}
+
+	public void close() {
+		calendarView.close();
+		coursesView.close();
+		instructorsView.close();
+		locationsView.close();
+		
+		this.clear();
 	}
 }

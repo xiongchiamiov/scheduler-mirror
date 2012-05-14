@@ -67,13 +67,7 @@ public abstract class EEAcceptanceTest extends DefaultSelTestCase {
 		driver.findElement(By.id("s_createBox")).clear();
 		driver.findElement(By.id("s_createBox")).sendKeys(documentName);
 
-		WebUtility.PopupWaiter popupWaiter = new WebUtility.PopupWaiter(driver);
-		
 		driver.findElement(By.id("s_createNamedDocBtn")).click();
-		
-		String newWindowHandle = popupWaiter.waitForPopup();
-		
-		driver.switchTo().window(newWindowHandle);
 	}
 	
 	private void login(final String username) throws InterruptedException {

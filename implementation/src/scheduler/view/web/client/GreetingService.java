@@ -5,6 +5,7 @@ package scheduler.view.web.client;
 import scheduler.view.web.shared.CompleteWorkingCopyDocumentGWT;
 import scheduler.view.web.shared.CouldNotBeScheduledExceptionGWT;
 import scheduler.view.web.shared.CourseGWT;
+import scheduler.view.web.shared.ExistingWorkingDocumentDoesntExistExceptionGWT;
 import scheduler.view.web.shared.InstructorGWT;
 import scheduler.view.web.shared.LocationGWT;
 import scheduler.view.web.shared.LoginResponse;
@@ -27,7 +28,8 @@ public interface GreetingService extends RemoteService {
 	void saveWorkingCopyToOriginalDocument(int sessionID, int documentID) throws SessionClosedFromInactivityExceptionGWT;
 	CompleteWorkingCopyDocumentGWT createAndOpenWorkingCopyForOriginalDocument(
 			int sessionID,
-			int originalDocumentID) throws SessionClosedFromInactivityExceptionGWT;
+			int originalDocumentID,
+			boolean openExistingWorkingDocument) throws SessionClosedFromInactivityExceptionGWT, ExistingWorkingDocumentDoesntExistExceptionGWT;
 	void deleteWorkingCopyDocument(int sessionID, int documentID) throws SessionClosedFromInactivityExceptionGWT;
 	// This is what we think of as "save as":
 	void associateWorkingCopyWithNewOriginalDocument(int sessionID, int workingCopyID, String scheduleName, boolean allowOverwrite) throws SessionClosedFromInactivityExceptionGWT;

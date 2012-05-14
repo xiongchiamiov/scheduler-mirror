@@ -727,6 +727,7 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 	public void createAndOpenWorkingCopyForOriginalDocument(
 			int sessionID,
 			int originalDocumentID,
+			boolean openExistingWorkingDocument,
 			AsyncCallback<CompleteWorkingCopyDocumentGWT> callback) {
 		callback.onFailure(new UnsupportedOperationException("Method not implemented in this test double."));
 	}

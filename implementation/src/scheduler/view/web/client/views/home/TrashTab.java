@@ -29,6 +29,7 @@ public class TrashTab extends Tab {
 		Collection<OriginalDocumentGWT> getAllOriginalDocuments();
 		void restoreDocuments(Collection<Integer> documentIDs);
 		void openDocument(int originalDocumentID, boolean openExistingWorkingDocument);
+		OriginalDocumentGWT getOriginalDocumentByID(int documentID);
 	}
 	
 	final DocumentsStrategy documents;
@@ -50,51 +51,8 @@ public class TrashTab extends Tab {
 			trashPane.addMember(spacer);
 		}
 		
-		// Documents List
-		deletedOriginalDocumentsGrid = new ListGrid() {
-			// private int rowCount = 0;
+		deletedOriginalDocumentsGrid = new OriginalDocumentsListGrid(new OriginalDocumentsListGrid.DocumentsStrategy() {
 			@Override
-			public Canvas createRecordComponent(final ListGridRecord record, Integer colNum) {
-				String fieldName = this.getFieldName(colNum);
-				
-				if (fieldName.equals("linkField")) {
-					Label label = new Label(record.getAttribute("name"));
-					// String seleniumID = "isc_T-"+this.rowCount;
-					// this.rowCount++;
-					// DOM.setElementAttribute(label.getElement(), "id", seleniumID);
-					// label.setID(seleniumID);
-
-					// for some reason two separate calls didnt work here, it wouldnt pick up the first one. -eo
-					label.setStyleName("inAppLink homeDocumentLink");
-
-					label.setOverflow(Overflow.VISIBLE);
-					label.setAutoWidth();
-					label.setAutoHeight();
-					label.setWrap(false);
-					label.addClickHandler(new ClickHandler() {
-						public void onClick(ClickEvent event) {
-							int docID = record.getAttributeAsInt("id");
-							documents.openDocument(docID, false);
-//							TabOpener.openDocInNewTab(username, documentsCache.getDocumentByID(docID));
-						}
-					});
-					return label;
-				}
-				else {
-					return null;
-				}
-			}
-		};
-		
-		deletedOriginalDocumentsGrid.setShowRecordComponents(true);
-		deletedOriginalDocumentsGrid.setShowRecordComponentsByCell(true);
-		deletedOriginalDocumentsGrid.setWidth100();
-		deletedOriginalDocumentsGrid.setAutoFitData(Autofit.VERTICAL);
-		deletedOriginalDocumentsGrid.setShowAllRecords(true);
-		deletedOriginalDocumentsGrid.setAutoFetchData(true);
-		deletedOriginalDocumentsGrid.setCanEdit(false);
-
-		deletedOriginalDocumentsGrid.setDataSource(new OriginalDocumentsDataSource(new OriginalDocumentsDataSource.DocumentsStrategy() {
 			public Collection<OriginalDocumentGWT> getAllDocuments() {
 				Collection<OriginalDocumentGWT> allTrashedOriginals = new LinkedList<OriginalDocumentGWT>();
 				for (OriginalDocumentGWT document : documents.getAllOriginalDocuments())
@@ -102,7 +60,15 @@ public class TrashTab extends Tab {
 						allTrashedOriginals.add(document);
 				return allTrashedOriginals;
 			}
-		}));
+			@Override
+			public OriginalDocumentGWT getDocumentByID(int documentID) {
+				return documents.getOriginalDocumentByID(documentID);
+			}
+			@Override
+			public void openDocument(int documentID, boolean openExistingWorkingDocument) {
+				documents.openDocument(documentID, openExistingWorkingDocument);
+			}
+		});
 		
 		deletedOriginalDocumentsGrid.setID("s_doclistTrashTbl");
 		

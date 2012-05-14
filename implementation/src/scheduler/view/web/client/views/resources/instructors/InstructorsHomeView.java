@@ -24,16 +24,14 @@ import com.smartgwt.client.widgets.Window;
 public class InstructorsHomeView extends VerticalPanel
 {
 	protected CachedService service;
-	protected String username;
 	protected ArrayList<String> scheduleNames;
 	protected HashMap<Integer, DocumentGWT> allAvailableOriginalDocumentsByID;	
 	protected FlexTable schedList = new FlexTable();
 	protected InstructorGWT instructor;
 	
-	public InstructorsHomeView(final CachedService service, final String username)
+	public InstructorsHomeView(final CachedService service)
 	{	
 		this.service = service;
-		this.username = username;
 		this.scheduleNames = new ArrayList<String>();
 		this.setStyleName("centerness");
 		
@@ -91,7 +89,6 @@ public class InstructorsHomeView extends VerticalPanel
 	public void addNewDocument(final OriginalDocumentGWT doc)
 	{
 		// set the instructor
-		final String username = this.username;
 
 		int row = this.schedList.getRowCount();
 		this.schedList.setWidget(row, 0, new HTML(doc.getName()));
@@ -101,15 +98,15 @@ public class InstructorsHomeView extends VerticalPanel
 
 			@Override
 			public void onClick(ClickEvent event) {
-				service.openWorkingCopyForOriginalDocument(doc.getID(), new AsyncCallback<CachedOpenWorkingCopyDocument>() {
+				service.openWorkingCopyForOriginalDocument(doc.getID(), false, new AsyncCallback<CachedOpenWorkingCopyDocument>() {
 					public void onFailure(Throwable caught) {
 						com.google.gwt.user.client.Window.alert("Failed to get instructors!");
 					}
 					public void onSuccess(CachedOpenWorkingCopyDocument result) {
 						
 						for (InstructorGWT i : result.getInstructors(true)) {
-							if (i.getUsername().equals(username)) {
-								System.out.println(i.getUsername()+", "+username);
+							if (i.getUsername().equals(service.username)) {
+								System.out.println(i.getUsername()+", "+service.username);
 								if(instructor == null)
 								{
 									System.out.println("SSSHHHHIIIITTTTTT");

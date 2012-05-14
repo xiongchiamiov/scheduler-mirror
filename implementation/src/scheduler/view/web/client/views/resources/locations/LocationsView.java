@@ -123,7 +123,7 @@ public class LocationsView extends VLayout {
 	private void layoutBottomButtonBar(final ListGrid grid) {
 		HLayout bottomButtonFlowPanel = new HLayout();
 		bottomButtonFlowPanel.setMembersMargin(10);
-		bottomButtonFlowPanel.setStyleName("floatingScheduleButtonBar");
+		bottomButtonFlowPanel.setStyleName("floatingResourcesButtonBar");
 
 		IButton newButton = new IButton("Add New Location", new ClickHandler() {
 			public void onClick(ClickEvent event) {
@@ -206,5 +206,15 @@ public class LocationsView extends VLayout {
 					grid.removeSelectedData();
 			}
 		}
+	}
+	
+	public boolean canClose() {
+		// If you want to keep the user from navigating away, return false here
+		
+		return true;
+	}
+
+	public void close() {
+		this.clear();
 	}
 }

@@ -259,7 +259,7 @@ public class InstructorsView extends VLayout {
 	private void layoutBottomButtonBar(final ListGrid grid) {
 		HLayout bottomButtonFlowPanel = new HLayout();
 		bottomButtonFlowPanel.setMembersMargin(10);
-		bottomButtonFlowPanel.addStyleName("floatingScheduleButtonBar");
+		bottomButtonFlowPanel.addStyleName("floatingResourcesButtonBar");
 
 		IButton addBtn = new IButton("Add New Instructor", new ClickHandler() {
 			public void onClick(ClickEvent event) {
@@ -341,5 +341,15 @@ public class InstructorsView extends VLayout {
 					grid.removeSelectedData();
 			}
 		}
+	}
+	
+	public boolean canClose() {
+		// If you want to keep the user from navigating away, return false here
+		
+		return true;
+	}
+
+	public void close() {
+		this.clear();
 	}
 }

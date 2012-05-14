@@ -34,10 +34,10 @@ public class HomeTab extends Tab {
 		void mergeDocuments(Collection<Integer> documentIDs);
 		void createNew();
 		void openDocument(int id, boolean openExistingWorkingDocument);
+		OriginalDocumentGWT getOriginalDocumentByID(int documentID);
 	}
 	
 	final DocumentsStrategy documents;
-	final DataSource dataSource;
 	final ListGrid aliveOriginalDocumentsGrid;
 	
 	public HomeTab(final DocumentsStrategy documents) {
@@ -65,99 +65,30 @@ public class HomeTab extends Tab {
 			spacer.setWidth(10);
 			homePane.addMember(spacer);
 		}
-		
-		// Documents List
-		aliveOriginalDocumentsGrid = new ListGrid() {
-			protected int rowCount = 0;
-			@Override
-			protected Canvas createRecordComponent(final ListGridRecord record, Integer colNum) {
-				String fieldName = this.getFieldName(colNum);
-				
-				if (fieldName.equals("linkField")) {
-					HLayout layout = new HLayout();
-					layout.setOverflow(Overflow.VISIBLE);
-					layout.setAutoHeight();
-					
-					{
-						Label label = new Label(record.getAttribute("name"));
-						
-						// for some reason two separate calls didnt work here, it wouldnt pick up the first one. -eo
-						label.setStyleName("inAppLink homeDocumentLink");
-	
-						label.setOverflow(Overflow.VISIBLE);
-						label.setAutoWidth();
-						label.setAutoHeight();
-						label.setWrap(false);
-						label.addClickHandler(new ClickHandler() {
-							public void onClick(ClickEvent event) {
-								int docID = record.getAttributeAsInt("id");
-								documents.openDocument(docID, false);
-							}
-						});
-						label.setID("sc_document_"+this.rowCount);
-						this.rowCount++;
-						
-						layout.addMember(label);
-					}
 
-					{
-						OriginalDocumentGWT document = null;
-						for (OriginalDocumentGWT considerDocument : documents.getAllOriginalDocuments())
-							if (considerDocument.getID().equals(record.getAttributeAsInt("id")))
-								document = considerDocument;
-						assert(document != null);
-						
-						final OriginalDocumentGWT finalDocument = document;
-						
-						String workingChangesSummary = document.getWorkingChangesSummary();
-						if (workingChangesSummary == null)
-							workingChangesSummary = "";
-						
-						Label workingLabel = new Label(" (being edited)");
-	
-						workingLabel.setStyleName("inAppLink");
-	
-						workingLabel.setOverflow(Overflow.VISIBLE);
-						workingLabel.setAutoWidth();
-						workingLabel.setAutoHeight();
-						workingLabel.setWrap(false);
-						workingLabel.addClickHandler(new ClickHandler() {
-							public void onClick(ClickEvent event) {
-								documents.openDocument(finalDocument.getID(), true);
-							}
-						});
-						
-						layout.addMember(workingLabel);
-					}
-					
-					return layout;
-				}
-				else {
-					return null;
-				}
+		// Documents List
+		aliveOriginalDocumentsGrid = new OriginalDocumentsListGrid(new OriginalDocumentsListGrid.DocumentsStrategy() {
+			
+			@Override
+			public void openDocument(int documentID, boolean openExistingWorkingDocument) {
+				documents.openDocument(documentID, openExistingWorkingDocument);
 			}
-		};
-		
-		aliveOriginalDocumentsGrid.setShowRecordComponents(true);
-		aliveOriginalDocumentsGrid.setShowRecordComponentsByCell(true);
-		aliveOriginalDocumentsGrid.setWidth100();
-		aliveOriginalDocumentsGrid.setAutoFitData(Autofit.VERTICAL);
-		aliveOriginalDocumentsGrid.setShowAllRecords(true);
-		aliveOriginalDocumentsGrid.setAutoFetchData(true);
-		aliveOriginalDocumentsGrid.setCanEdit(false);
-		dataSource = new OriginalDocumentsDataSource(new OriginalDocumentsDataSource.DocumentsStrategy() {
+			
+			@Override
+			public OriginalDocumentGWT getDocumentByID(int documentID) {
+				return documents.getOriginalDocumentByID(documentID);
+			}
+			
+			@Override
 			public Collection<OriginalDocumentGWT> getAllDocuments() {
 				Collection<OriginalDocumentGWT> allLiveOriginals = new LinkedList<OriginalDocumentGWT>();
-				for (OriginalDocumentGWT document : documents.getAllOriginalDocuments()) {
-					if (!document.isTrashed()) {
+				for (OriginalDocumentGWT document : documents.getAllOriginalDocuments())
+					if (!document.isTrashed())
 						allLiveOriginals.add(document);
-						System.out.println("added document id " + document.getID() + " with summary " + document.getWorkingChangesSummary());
-					}
-				}
 				return allLiveOriginals;
 			}
 		});
-		aliveOriginalDocumentsGrid.setDataSource(dataSource);
+		
 		aliveOriginalDocumentsGrid.setID("s_doclistTbl");
 		
 		ListGridField idField = new ListGridField("id", "&nbsp;");
@@ -174,7 +105,6 @@ public class HomeTab extends Tab {
 		ListGridField nameField = new ListGridField("linkField", "Document");
 		
 		aliveOriginalDocumentsGrid.setFields(idField, nameField);
-		
 		
 		aliveOriginalDocumentsGrid.addKeyPressHandler(new KeyPressHandler() {
 			@Override

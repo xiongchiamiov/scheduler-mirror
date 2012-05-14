@@ -13,7 +13,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 import scheduler.view.web.shared.Selenium.WebUtility;
-import scheduler.view.web.shared.Selenium.WebUtility.PopupWaiter;
 
 /**
  * This test class tests the admin view of the instructor settings
@@ -64,8 +63,6 @@ public class InstructorsViewTest extends TestCase {
 			fail("Schedule document overview page was not loaded properly");
 		}
 		
-		PopupWaiter popupWaiter = new WebUtility.PopupWaiter(driver);
-		
 		WebElement document = WebUtility.getDocumentByName(driver, schedName);
 		if(document == null)
 		{
@@ -76,10 +73,6 @@ public class InstructorsViewTest extends TestCase {
 			document.click();
 		}
 	
-		// change broswer tab here
-		String newWindowHandle = popupWaiter.waitForPopup();
-		driver.switchTo().window(newWindowHandle);
-		
 		// click on the instructors tab
 		try {
 			this.waitForSmartGWTElement("s_instructorsTab");

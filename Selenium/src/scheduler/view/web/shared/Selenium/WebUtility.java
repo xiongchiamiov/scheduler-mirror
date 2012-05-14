@@ -46,37 +46,6 @@ public abstract class WebUtility {
 		.perform(); 
 	}
 
-	public static class PopupWaiter {
-		final Set<String> initialWindows;
-		String poppedUpWindow;
-		WebDriver driver;
-		public PopupWaiter(WebDriver driver) {
-			this.driver = driver;
-			initialWindows = driver.getWindowHandles();
-			for (String initialWindow : initialWindows)
-				System.out.println("initial window: " + initialWindow);
-		}
-		public String waitForPopup() {
-			new WebDriverWait(driver, 20).until(new Predicate<WebDriver>() {
-				public boolean apply(WebDriver arg0) {
-					Set<String> currentWindows = driver.getWindowHandles();
-					for (String currentWindow : currentWindows)
-						System.out.println("initial window: " + currentWindow);
-					currentWindows.removeAll(initialWindows);
-					if (!currentWindows.isEmpty()) {
-						poppedUpWindow = currentWindows.iterator().next();
-						return true;
-					}
-					else {
-						return false;
-					}
-				}
-			});
-			assert(poppedUpWindow != null);
-			return poppedUpWindow;
-		}
-	}
-	
 	public static WebElement elementForResourceTableCell(WebDriver driver, String viewID, int row0Based, int col0Based) {
 		return driver.findElement(By.xpath("((//div[@eventproxy='" + viewID + "']//table[@class='listTable']/tbody/tr[@role='listitem'])[" + (1 + row0Based) + "]/td)[" + (1 + col0Based) + "]"));
 	}

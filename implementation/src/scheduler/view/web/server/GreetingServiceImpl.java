@@ -37,6 +37,7 @@ import scheduler.view.web.shared.CompleteWorkingCopyDocumentGWT;
 import scheduler.view.web.shared.CouldNotBeScheduledExceptionGWT;
 import scheduler.view.web.shared.CourseGWT;
 import scheduler.view.web.shared.DocumentGWT;
+import scheduler.view.web.shared.ExistingWorkingDocumentDoesntExistExceptionGWT;
 import scheduler.view.web.shared.InstructorGWT;
 import scheduler.view.web.shared.LocationGWT;
 import scheduler.view.web.shared.LoginResponse;
@@ -748,7 +749,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	}
 	
 	@Override
-	public CompleteWorkingCopyDocumentGWT createAndOpenWorkingCopyForOriginalDocument(int sessionID, int originalDocumentID) throws SessionClosedFromInactivityExceptionGWT {
+	public CompleteWorkingCopyDocumentGWT createAndOpenWorkingCopyForOriginalDocument(int sessionID, int originalDocumentID, boolean openExistingWorkingDocument) throws SessionClosedFromInactivityExceptionGWT, ExistingWorkingDocumentDoesntExistExceptionGWT {
 		try {
 			if (LOG_ENTERING_AND_EXITING_CALLS)
 				System.out.println("Begin GreetingServiceImpl.createAndOpenWorkingCopyForOriginalDocument(doc " + originalDocumentID + ")");
@@ -763,27 +764,48 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			
 			Document workingCopyDocument = originalDocument.getWorkingCopyOrNull();
 			
-			if (workingCopyDocument == null) {
-				workingCopyDocument = model.createTransientDocument(originalDocument.getName(), originalDocument.getStartHalfHour(), originalDocument.getEndHalfHour()).insert();
+			assert(workingCopyDocument.isWorkingCopy());
+			
+			if (openExistingWorkingDocument) {
+				if (workingCopyDocument == null) {
+					throw new ExistingWorkingDocumentDoesntExistExceptionGWT();
+				}
+				else {
+					// do nothing
+
+					assert(workingCopyDocument.isWorkingCopy());
+				}
 			}
 			else {
-				System.out.println("working copy already exists for document " + originalDocumentID + ", writing over it!");
-				// This is where we theoretically could "restore their working copy"
-				
-				workingCopyDocument.deleteContents(false);
+				if (workingCopyDocument == null) {
+					workingCopyDocument = model.createTransientDocument(originalDocument.getName(), originalDocument.getStartHalfHour(), originalDocument.getEndHalfHour()).insert();
+					model.copyDocument(originalDocument, workingCopyDocument);
+
+					workingCopyDocument.setOriginal(originalDocument);
+					workingCopyDocument.update();
+					originalDocument.update();
+				}
+				else {
+					System.out.println("working copy already exists for document " + originalDocumentID + ", writing over it!");
+
+					assert(workingCopyDocument.isWorkingCopy());
+					
+					workingCopyDocument.deleteContents(false);
+					model.copyDocument(originalDocument, workingCopyDocument);
+
+					workingCopyDocument.setOriginal(originalDocument);
+					workingCopyDocument.update();
+					originalDocument.update();
+					
+					assert(workingCopyDocument.isWorkingCopy());
+				}
 			}
 			
-			model.copyDocument(originalDocument, workingCopyDocument);
-			
-			assert (workingCopyDocument.getTBALocation() != null);
-			assert (workingCopyDocument.getStaffInstructor() != null);
+			assert(workingCopyDocument.getTBALocation() != null);
+			assert(workingCopyDocument.getStaffInstructor() != null);
 			assert(workingCopyDocument.getChooseForMeInstructor() != null);
 			assert(workingCopyDocument.getChooseForMeLocation() != null);
 			
-			workingCopyDocument.setOriginal(originalDocument);
-			workingCopyDocument.update();
-			
-			originalDocument.update();
 			WorkingDocumentGWT result = Conversion.workingDocumentToGWT(workingCopyDocument);
 
 			assert(result.getRealID() == workingCopyDocument.getID());

@@ -20,7 +20,7 @@ public interface GreetingServiceAsync {
 	void createAndOpenWorkingCopyForOriginalDocument(
 			int sessionID,
 			int originalDocumentID,
-			AsyncCallback<CompleteWorkingCopyDocumentGWT> callback);
+			boolean openExistingWorkingDocument, AsyncCallback<CompleteWorkingCopyDocumentGWT> callback);
 
 	void synchronizeOriginalDocuments(
 			int sessionID,

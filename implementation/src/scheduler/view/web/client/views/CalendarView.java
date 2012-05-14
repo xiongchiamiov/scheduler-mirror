@@ -16,4 +16,14 @@ public class CalendarView extends VerticalPanel {
 		ScheduleEditWidget scheduleEditWidget = new ScheduleEditWidget(workingCopyDocument);
 		this.add(scheduleEditWidget.getWidget());
 	}
+
+	public boolean canClose() {
+		// If you want to keep the user from navigating away, return false here
+		
+		return true;
+	}
+
+	public void close() {
+		this.clear();
+	}
 }

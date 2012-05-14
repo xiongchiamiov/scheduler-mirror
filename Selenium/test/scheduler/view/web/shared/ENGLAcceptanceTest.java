@@ -12,7 +12,6 @@ import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 
 import scheduler.view.web.shared.Selenium.WebUtility;
-import scheduler.view.web.shared.Selenium.WebUtility.PopupWaiter;
 
 public abstract class ENGLAcceptanceTest extends DefaultSelTestCase {	
 	private WebDriver driver;
@@ -67,13 +66,7 @@ public abstract class ENGLAcceptanceTest extends DefaultSelTestCase {
 		driver.findElement(By.id("s_createBox")).clear();
 		driver.findElement(By.id("s_createBox")).sendKeys(documentName);
 
-		PopupWaiter popupWaiter = new WebUtility.PopupWaiter(driver);
-		
 		driver.findElement(By.id("s_createNamedDocBtn")).click();
-		
-		String newWindowHandle = popupWaiter.waitForPopup();
-		
-		driver.switchTo().window(newWindowHandle);
 	}
 	
 	private void openDocumentFromHomeTab(String documentName) throws InterruptedException {

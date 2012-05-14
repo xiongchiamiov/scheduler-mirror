@@ -3,12 +3,7 @@ package scheduler.view.web.client;
 import java.util.Map;
 import java.util.TreeMap;
 
-import scheduler.view.web.client.views.AdminScheduleNavView;
-import scheduler.view.web.client.views.LoadingPopup;
 import scheduler.view.web.client.views.LoginView;
-import scheduler.view.web.client.views.home.HomeView;
-import scheduler.view.web.client.views.resources.instructors.InstructorsHomeView;
-import scheduler.view.web.shared.LoginResponse;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -16,7 +11,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -88,9 +82,6 @@ public class Scheduler implements EntryPoint, UpdateHeaderStrategy
 			boolean parseURLArguments,
 			final SimplePanel viewContainer) {
 		
-		final LoadingPopup loadingPopup = new LoadingPopup();
-		loadingPopup.show();
-		
 		viewContainer.clear();
 		
 		Map<String, String> urlArguments = new TreeMap<String, String>();
@@ -101,58 +92,12 @@ public class Scheduler implements EntryPoint, UpdateHeaderStrategy
 		final String username = urlArguments.get("userid");
 		final String documentIDStr = urlArguments.get("originaldocumentid");
 		
-		if (username == null) {
-			assert(documentIDStr == null);
+//		if (username == null) {
+//			assert(documentIDStr == null);
 			viewContainer.add(new LoginView(service, this));
-			loadingPopup.hide();
-		}
-		else {
-			onLogin(username);
-			
-			service.loginAndGetAllOriginalDocuments(username, new AsyncCallback<LoginResponse>() {
-				@Override
-				public void onFailure(Throwable caught) {
-					Window.alert("Failed to get documents");
-				}
-				
-				@Override
-				public void onSuccess(LoginResponse response) {
-					
-					final CachedService cachedService = new CachedService(true, service, response.sessionID, response.initialOriginalDocuments);
-					
-					if (response.isAdmin) {
-						if (documentIDStr == null) {
-							viewContainer.add(new HomeView(cachedService, viewContainer, username));
-							loadingPopup.hide();
-						}
-						else {
-							final int originalDocumentID = Integer.parseInt(documentIDStr);
-							
-							cachedService.openWorkingCopyForOriginalDocument(originalDocumentID, new AsyncCallback<CachedOpenWorkingCopyDocument>() {
-								@Override
-								public void onFailure(Throwable caught) {
-									Window.alert("Failed to get document!");
-									loadingPopup.hide();
-								}
-								
-								@Override
-								public void onSuccess(CachedOpenWorkingCopyDocument workingCopyDocument) {
-									onOpenedDocument(cachedService.originalDocuments.getByID(cachedService.originalDocuments.realIDToLocalID(originalDocumentID)).getName());
-									
-									viewContainer.add(new AdminScheduleNavView(cachedService, Scheduler.this, username, workingCopyDocument));
-									loadingPopup.hide();
-								}
-							});
-						}
-					}
-					else {
-						loadingPopup.hide();
-						
-						viewContainer.add(new InstructorsHomeView(cachedService, username));
-					}
-				}
-			});
-		}
+//			loadingPopup.hide();
+//		}
+//		else {
 	}
 
 //	static String parseURLArgument(String url, String parameter) {
@@ -174,20 +119,20 @@ public class Scheduler implements EntryPoint, UpdateHeaderStrategy
 
 		refreshWindowTitle();
 	}
-	
-	public void onLogin(String username) {
+
+	public void onLogin(String username, final LogoutHandler logoutHandler) {
 		Label uname = new Label(username);
 		DOM.setElementAttribute(uname.getElement(), "id", "s_unameLbl");
 		usernameContainer.add(uname);
 		
 		logoutLinkContainer.add(HTMLUtilities.createLink("Log Out", "inAppLink", new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				TabOpener.openLoginInThisTab();
+				logoutHandler.handleLogout();
 			}
 		}));
-
+		
 		refreshWindowTitle();
-	    DOM.setElementAttribute(logoutLinkContainer.getWidget().getElement(), "id", "s_logoutLnk");
+		DOM.setElementAttribute(logoutLinkContainer.getWidget().getElement(), "id", "s_logoutLnk");
 	}
 
 	@Override

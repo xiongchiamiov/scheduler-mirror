@@ -15,17 +15,19 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 public class CachedService {
 	int sessionID;
 	public GreetingServiceAsync mService; // we need to make this private very soon
+	public final String username;
 	
 	final boolean deferredSynchronizationEnabled;
 	public final NewOriginalDocumentsCache originalDocuments;
 	
 	Map<Integer, CachedOpenWorkingCopyDocument> workingCopyDocumentsByOriginalDocumentID = new HashMap<Integer, CachedOpenWorkingCopyDocument>();
 	
-	public CachedService(boolean deferredSynchronizationEnabled, GreetingServiceAsync service, int sessionID, ServerResourcesResponse<OriginalDocumentGWT> initialDocuments) {
+	public CachedService(boolean deferredSynchronizationEnabled, GreetingServiceAsync service, int sessionID, String username, ServerResourcesResponse<OriginalDocumentGWT> initialDocuments) {
 		this.deferredSynchronizationEnabled = deferredSynchronizationEnabled;
 		
 		this.mService = service;
 		this.sessionID = sessionID;
+		this.username = username;
 		
 		originalDocuments = new NewOriginalDocumentsCache(deferredSynchronizationEnabled, service, sessionID, initialDocuments);
 
@@ -43,10 +45,10 @@ public class CachedService {
 			doc.forceSynchronize(callback);
 	}
 	
-	public void openWorkingCopyForOriginalDocument(final int originalDocumentID, final AsyncCallback<CachedOpenWorkingCopyDocument> callback) {
+	public void openWorkingCopyForOriginalDocument(final int originalDocumentID, boolean openExistingWorkingDocument, final AsyncCallback<CachedOpenWorkingCopyDocument> callback) {
 		assert(!workingCopyDocumentsByOriginalDocumentID.containsKey(originalDocumentID));
 		
-		mService.createAndOpenWorkingCopyForOriginalDocument(sessionID, originalDocumentID, new AsyncCallback<CompleteWorkingCopyDocumentGWT>() {
+		mService.createAndOpenWorkingCopyForOriginalDocument(sessionID, originalDocumentID, openExistingWorkingDocument, new AsyncCallback<CompleteWorkingCopyDocumentGWT>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				callback.onFailure(caught);

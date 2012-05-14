@@ -29,7 +29,11 @@ public class NewScheduleCreator {
 		void namedSchedule(String scheduleName);
 	}
 	
-	public static void createNewSchedule(final CachedService service, final String username) {
+	public interface OpenDocumentCallback {
+		void openDocument(int documentID);
+	}
+	
+	public static void createNewSchedule(final CachedService service, final OpenDocumentCallback openDocumentCallback) {
 		displayNewSchedPopup("Create", new NamedScheduleCallback() {
 			@Override
 			public void namedSchedule(final String newDocumentName) {
@@ -55,9 +59,7 @@ public class NewScheduleCreator {
 					
 					service.originalDocuments.forceSynchronize(new AsyncCallback<Void>() {
 						public void onSuccess(Void v) {
-							popup.hide();
-							assert (newDocumentName.equals(newDocument.getName()));
-							TabOpener.openDocInNewTab(username, service.originalDocuments.localIDToRealID(newDocument.getID()), false);
+							openDocumentCallback.openDocument(service.originalDocuments.localIDToRealID(newDocument.getID()));
 						}
 						
 						public void onFailure(Throwable caught) { assert(false); }
@@ -131,48 +133,4 @@ public class NewScheduleCreator {
 		window.centerInPage();
 		window.show();
 	}
-	
-	// displayNewSchedPopup("Create", new NameScheduleCallback()
-	// {
-	// @Override
-	// public void namedSchedule(final String name)
-	// {
-	// if (!scheduleNames.contains(name))
-	// {
-	// newDocName = name;
-	// currentDocName = name;
-	// final LoadingPopup popup = new LoadingPopup();
-	// popup.show();
-	//
-	// DOM.setElementAttribute(popup.getElement(), "id", "failSchedPopup");
-	//
-	// service.createOriginalDocument(newDocName, new
-	// AsyncCallback<DocumentGWT>()
-	// {
-	//
-	// @Override
-	// public void onSuccess(DocumentGWT result)
-	// {
-	// popup.hide();
-	// // openDocument(result);
-	// assert(newDocName.equals(result.getName()));
-	// openDocInNewTab(result.getName(), result.getID());
-	// }
-	//
-	// @Override
-	// public void onFailure(Throwable caught)
-	// {
-	// popup.hide();
-	// Window.alert("Failed to open new schedule in" + ": " +
-	// caught.getMessage());
-	// }
-	// });
-	// }
-	// else
-	// {
-	// Window.alert("Error: Schedule named " + name +
-	// " already exists. Please enter a different name.");
-	// }
-	// }
-	// });
 }
