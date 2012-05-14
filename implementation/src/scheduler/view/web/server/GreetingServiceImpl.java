@@ -764,7 +764,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			
 			Document workingCopyDocument = originalDocument.getWorkingCopyOrNull();
 			
-			assert(workingCopyDocument.isWorkingCopy());
+			//assert(workingCopyDocument.isWorkingCopy());
 			
 			if (openExistingWorkingDocument) {
 				if (workingCopyDocument == null) {
