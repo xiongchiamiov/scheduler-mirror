@@ -14,17 +14,13 @@ public class SQLCourse extends SQLObject implements IDBCourse {
 	String type;
 	String maxEnrollment;
 	String numHalfHoursPerWeek;
-	Integer lectureID;  //TODO: Not sure how this is used!
-//	Boolean tetheredToLecture;
 	
 	public SQLCourse(Integer id, Integer docID, String enrollment, String wtu, String scu, String type, String numSections,
-			String dept, String catalogNum, String name, Boolean schedulable, String numHalfHours/*, Integer lectureID*/)	//can't have 
+			String dept, String catalogNum, String name, Boolean schedulable, String numHalfHours)
 	{
 		
 		super(id);
-		//SEE ABOVE TODO
-		//this.id = id;
-		
+		this.id = id;
 		this.documentID = docID;
 		this.name = name;
 		this.catalogNumber = catalogNum;
@@ -36,32 +32,7 @@ public class SQLCourse extends SQLObject implements IDBCourse {
 		this.maxEnrollment = enrollment;
 		this.numHalfHoursPerWeek = numHalfHours;
 		this.isSchedulable = schedulable;
-//		this.lectureID = lectureID;
-//		this.tetheredToLecture = tetheredToLecture;
 	}
-	
-//	public SQLCourse(Integer id, Integer docID, String enrollment, String wtu, String scu, String type, String numSections,
-//			String dept, String catalogNum, String name, Boolean schedulable, String numHalfHours, 	Integer lectureID, Boolean tetheredToLecture)	
-//	{
-//		
-//		super(id);
-//		//SEE ABOVE TODO
-//		//this.id = id;
-//		
-//		this.documentID = docID;
-//		this.name = name;
-//		this.catalogNumber = catalogNum;
-//		this.department = dept;
-//		this.wtu = wtu;
-//		this.scu = scu;
-//		this.numSections = numSections;
-//		this.type = type;
-//		this.maxEnrollment = enrollment;
-//		this.numHalfHoursPerWeek = numHalfHours;
-//		this.isSchedulable = schedulable;
-//		this.lectureID = lectureID;
-//		this.tetheredToLecture = tetheredToLecture;
-//	}
 
 	public void sanityCheck() {
 		assert(documentID != null);

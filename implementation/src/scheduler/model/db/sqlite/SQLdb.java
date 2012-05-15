@@ -41,7 +41,7 @@ import scheduler.model.db.IDatabase.NotFoundException;
 import scheduler.model.db.simple.DBCourse;
 import scheduler.model.db.simple.DBDocument;
 import scheduler.model.db.simple.DBUsedEquipment;
- 
+//TODO: Any input with a negative ID must not happen. Ensure this does not happen.
 public class SQLdb implements IDatabase {
 	
 	static Connection conn = null;
@@ -126,16 +126,11 @@ public class SQLdb implements IDatabase {
 					new Table.Column("isPlaced", Boolean.class),
 					new Table.Column("isConflicted", Boolean.class)
 	});
-	Table<SQLLabAssociation> labassociationsTable = new Table<SQLLabAssociation>(SQLLabAssociation.class, "labassociations",
+	Table<SQLCourseAssociation> labassociationsTable = new Table<SQLCourseAssociation>(SQLCourseAssociation.class, "labassociations",
 			new Table.Column[] {
 					new Table.Column("id", Integer.class),
-					new Table.Column("lecID", Integer.class) 
-	});
-	Table<SQLCourseAssociation> labtetheredTable = new Table<SQLCourseAssociation>(SQLCourseAssociation.class, "labtethered",
-			new Table.Column[] {
-					new Table.Column("id", Integer.class),
-					new Table.Column("lecID", Integer.class),
-					new Table.Column("tetheredID", Integer.class)
+					new Table.Column("lecID", Integer.class), 
+					new Table.Column("isTethered", Boolean.class)
 	});
 	Table<SQLTimePreference> timeslotprefTable = new Table<SQLTimePreference>(SQLTimePreference.class, "timeslotpref",
 			new Table.Column[] {
@@ -459,12 +454,14 @@ public class SQLdb implements IDatabase {
 		return new SQLUser(null, username, isAdmin);
 	}
 
-
 	@Override
 	public void insertUser(IDBUser user) throws DatabaseException {
 		SQLUser sqluser = (SQLUser) user;
-		
+//		if(user == null)
+//			throw new DatabaseException("Invalid user");
 		sqluser.id = userdataTable.insert(new Object[]{ user.getUsername(), user.isAdmin()});
+		if(sqluser.id.intValue() < 0)
+			System.out.println("This is NOT SUPPOSED TO HAPPEN");
 	}
 
 
@@ -473,12 +470,10 @@ public class SQLdb implements IDatabase {
 		userdataTable.update(new Object[] {user.getUsername(), user.isAdmin()}, user.getID());
 	}
 
-
 	@Override
 	public void deleteUser(IDBUser user) throws DatabaseException {
 		userdataTable.delete(user.getID());
 	}
-
 
 	@Override
 	public Collection<IDBDocument> findAllDocuments() throws DatabaseException {
@@ -493,7 +488,6 @@ public class SQLdb implements IDatabase {
 		return result;
 	}
 
-
 	@Override
 	public IDBDocument findDocumentByID(int id) throws DatabaseException, NotFoundException {	
 		List<SQLDocument> result;
@@ -507,13 +501,11 @@ public class SQLdb implements IDatabase {
 		return result.get(0);
 	}
 
-
 	@Override
 	public void insertDocument(IDBDocument document) throws DatabaseException {
 		SQLDocument doc = (SQLDocument) document;
 		doc.id = documentTable.insert(new Object[]{ doc.getName(), doc.isTrashed(), doc.getStartHalfHour(), doc.getEndHalfHour() });
 	}
-
 
 	@Override
 	public IDBDocument assembleDocument(String name, int startHalfHour,
@@ -521,13 +513,11 @@ public class SQLdb implements IDatabase {
 		return new SQLDocument(null, name, false, startHalfHour, endHalfHour, null, null, null, null);
 	}
 
-
 	@Override
 	public void updateDocument(IDBDocument document) throws DatabaseException {		
 		documentTable.update(new Object[] {document.getName(), document.isTrashed(), document.getStartHalfHour(), 
 				document.getEndHalfHour()}, document.getID());
 	}
-
 
 	@Override
 	public void deleteDocument(IDBDocument document) throws DatabaseException {
@@ -542,9 +532,8 @@ public class SQLdb implements IDatabase {
 		HashMap<String, Object> wheres = new HashMap<String, Object>();
 		wheres.put("id", doc.getID());
 		result = workingcopyTable.select(wheres);
-		return result.size() == 0;
+		return (result.size() == 0);
 	}
-
 
 	@Override
 	public boolean documentIsWorkingCopy(IDBDocument document)
@@ -553,9 +542,8 @@ public class SQLdb implements IDatabase {
 		HashMap<String, Object> wheres = new HashMap<String, Object>();
 		wheres.put("id", document.getID());
 		result = workingcopyTable.select(wheres);
-		return result.size() != 0;
+		return (result.size() != 0);
 	}
-
 
 	@Override
 	public IDBDocument getOriginalForWorkingCopyDocumentOrNull(IDBDocument rawDocument)
@@ -595,7 +583,6 @@ public class SQLdb implements IDatabase {
 		return doc;
 	}
 
-
 	@Override
 	public void associateWorkingCopyWithOriginal(
 			IDBDocument underlyingDocument, IDBDocument underlyingDocument2)
@@ -603,14 +590,12 @@ public class SQLdb implements IDatabase {
 		workingcopyTable.insertWithID(new Object[] {underlyingDocument.getID(), underlyingDocument2.getID()});
 	}
 
-
 	@Override
 	public void disassociateWorkingCopyWithOriginal(
 			IDBDocument underlyingDocument, IDBDocument underlyingDocument2)
 			throws DatabaseException {
 		workingcopyTable.delete(underlyingDocument.getID());
 	}
-
 
 	@Override
 	public Collection<IDBScheduleItem> findScheduleItemsByDocument(
@@ -630,7 +615,6 @@ public class SQLdb implements IDatabase {
 		return result;
 	}
 
-
 	@Override
 	public Collection<IDBScheduleItem> findAllScheduleItemsForDocument(
 			IDBDocument document) throws DatabaseException {
@@ -645,7 +629,6 @@ public class SQLdb implements IDatabase {
 		
 		return result;
 	}
-
 
 	@Override
 	public IDBScheduleItem findScheduleItemByID(int id)
@@ -849,9 +832,7 @@ public class SQLdb implements IDatabase {
 			String type, String maxEnrollment, String numHalfHoursPerWeek,
 			boolean isSchedulable) throws DatabaseException {
 		return new SQLCourse(null, null, maxEnrollment, wtu, scu, type, numSections, department, catalogNumber,
-				name, new Boolean(isSchedulable), numHalfHoursPerWeek);//, null/* new Boolean(false)*/);
-//		return new SQLCourse(null, null, name, catalogNumber, department, wtu, scu, numSections, type, maxEnrollment,
-//				numHalfHoursPerWeek, new Boolean(isSchedulable), null, new Boolean(false));
+				name, new Boolean(isSchedulable), numHalfHoursPerWeek);
 	}
 
 	@Override
@@ -891,14 +872,7 @@ public class SQLdb implements IDatabase {
 	@Override
 	public IDBDocument findDocumentForCourse(IDBCourse underlyingCourse)
 			throws DatabaseException {
-//		try {
-//			HashMap<String, Object> wheres = new HashMap<String, Object>();	
-//			wheres.put("docID", ((SQLCourse)underlyingCourse).documentID);
-//			return documentTable.select(wheres).get(0);
-//		}
-//		catch (NotFoundException e) {
-//			throw new AssertionError(e);
-//		}
+
 		if(underlyingCourse == null || underlyingCourse.getID() == null)
 			throw new DatabaseException("Course not found");
 
@@ -906,8 +880,8 @@ public class SQLdb implements IDatabase {
 		wheres.put("docID", ((SQLCourse)underlyingCourse).documentID);
 
 		if(documentTable.selectAll().isEmpty())
-			throw new DatabaseException("Course not found"); //if can't find the document then we have problems.
-		wheres.put("docID", ((SQLCourse)underlyingCourse).documentID);
+			throw new DatabaseException("Course not found"); 
+
 		return documentTable.select(wheres).get(0);
 	}
 
@@ -915,52 +889,51 @@ public class SQLdb implements IDatabase {
 	public IDBCourseAssociation getAssociationForLabOrNull(IDBCourse underlying)
 			throws DatabaseException {
 		SQLCourse labcourse = (SQLCourse)underlying;
-
-		if (!labcourse.getType().equals("LAB")) {
-			assert(labcourse.lectureID == null);
-			return null; 
+		HashMap<String, Object> labID = new HashMap<String, Object>();
+		labID.put("id", labcourse.id);
+		
+		if (!labcourse.getType().equals("LAB")) { //perhaps ACT also, I'll double check how it's handled in alg
+			//then make sure it's not considered as a labID anywhere, it's a lec-type object
+			assert(labassociationsTable.select(labID).isEmpty());
+			return null; // TODO: I think better to throw a database exception, opinions?
 		}
-		
-		if(labcourse.lectureID == null)
+		//it does not need to have an association
+		else if(labassociationsTable.select(labID).isEmpty())
 			return null;
-		
-		HashMap<String, Object> wheres = new HashMap<String, Object>();
-		wheres.put("lecID", labcourse.lectureID); //what type of id? lecID? or tetheredID
-		if(labtetheredTable.selectAll().isEmpty())
-			return null; //not sure exact behavior ... null or exception? This should have an association! its a lab
-		return labtetheredTable.select(wheres).get(0);
+		else 
+			return labassociationsTable.select(labID).get(0);
 	}
 
-	//get all the course associations for this lecture (not sure of correctness of this method)
 	@Override
 	public Collection<IDBCourseAssociation> getAssociationsForLecture(
 			IDBCourse lectureCourse) throws DatabaseException {
+		
 		SQLCourse sqlLectureCourse = (SQLCourse)lectureCourse;
 		Collection<IDBCourseAssociation> result = new LinkedList<IDBCourseAssociation>();
+		
 		assert(sqlLectureCourse!=null);
 		assert(sqlLectureCourse.getID() != null);
-		assert(sqlLectureCourse.lectureID == null);
+		//make sure it's a lecture type specifically
+		assert(sqlLectureCourse.type == "LEC");
+		HashMap<String, Object> checkNotLabID = new HashMap<String, Object>();
+		checkNotLabID.put("id", sqlLectureCourse.id);
+		assert(labassociationsTable.select(checkNotLabID).isEmpty());
 		
-		//get all the courses from coursetable where the the lectID == the lectcourseID
-		HashMap<String, Object> associatedCourses = new HashMap<String, Object>();
-		for(SQLCourse labcourse : this.courseTable.selectAll()) {
-			if(labcourse.lectureID.equals(sqlLectureCourse.id))
-				associatedCourses.put("id", labcourse.id);
-		}
-		
-		result.addAll(labtetheredTable.select(associatedCourses));			
+		//get all the course 'labs' that share a lecID with our input course ID
+		for(SQLCourseAssociation assoc : labassociationsTable.selectAll())
+			if(assoc.lectureID == sqlLectureCourse.id)
+				result.add(assoc);		
 		return result;
 	}
 
 	@Override
 	public IDBCourse getAssociationLecture(IDBCourseAssociation association)
 			throws DatabaseException {
-		//I want the course who belongs to the association's lectureID
+		//Get the lecture course component of the association link
 		SQLCourseAssociation sqlAssoc = (SQLCourseAssociation)association;
 		HashMap<String, Object> assocID = new HashMap<String, Object>();
-		assocID.put("id", sqlAssoc.lectureID);
+		assocID.put("lecID", sqlAssoc.lectureID);
 		try {
-			//not sure on accuracy of this statement, but we're looking for same ID, right?
 			return courseTable.select(assocID).get(0);
 		}
 		catch (NotFoundException e){
@@ -975,14 +948,13 @@ public class SQLdb implements IDatabase {
 	@Override
 	public IDBCourse getAssociationLab(IDBCourseAssociation association)
 			throws DatabaseException {
-		// TODO given an association, find the lab course that owns the association
-		HashMap<String, Object> courseID = new HashMap<String, Object>();
+		// Get the lab component of the provided course association link
+		HashMap<String, Object> labCourseID = new HashMap<String, Object>();
 		SQLCourseAssociation assoc = (SQLCourseAssociation)association;
-		//from my understanding of the tables, the lecID of an association is the course ID of the lab?
-		//in which case, how do you determine what course it's linked to? keep the lectureID field of course?
-		courseID.put("id", assoc.getLabID());
+		labCourseID.put("id", assoc.getLabID());
+		
 		try {
-			return courseTable.select(courseID).get(0);
+			return courseTable.select(labCourseID).get(0);
 		} catch (NotFoundException e) {
 			throw new AssertionError(e);
 		}
@@ -991,22 +963,20 @@ public class SQLdb implements IDatabase {
 	@Override
 	public void associateLectureAndLab(IDBCourse lecture, IDBCourse lab, boolean tethered)
 			throws DatabaseException {
+		//try to create a labassociation between the lecture and lab, tether if needed. Exception if can't happen.
 		assert(lecture!=null && lecture.getID() != null && lab != null && lab.getID() != null);
-		//create and insert a lab assoc for lecture and course each
-		//create a labtethered if they have a tethered connectino
-		SQLCourse lec = (SQLCourse) lecture;
-		SQLCourse labcourse = (SQLCourse)lab;		
-		//i think we need to remove these links, seems fragile...need to figure out labassoc and labtethered
-		//the below is probably totally wrong.
-		labcourse.lectureID = lec.id;
-		if(tethered) {
-			//create a labtether
-			labtetheredTable.insert(new Object[] {labcourse.id, lec.id, tethered});
-		}
-		//else create a normal association	
-	}
+		
+		SQLCourse leccourse = (SQLCourse) lecture;
+		SQLCourse labcourse = (SQLCourse)lab;
+		
+		//make sure lec not a lab, and lab *is* a lab, double check valid types for associations or it'll bug
+		if (!labcourse.getType().equals("LAB")) 
+			throw new DatabaseException("Course " + labcourse.getName() + " with ID: " + labcourse.getID() + " is not a lab");
+		if (!leccourse.getType().equals("LEC")) 
+			throw new DatabaseException("Course " + leccourse.getName() + " with ID: " + leccourse.getID() + " is not a lecture");
 
-	//DO STUFF HERE AND ABOVE;
+		labassociationsTable.insert(new Object[] {labcourse.getID(), leccourse.getID(), tethered});
+	}
 	
 	@Override
 	public Collection<IDBInstructor> findInstructorsForDocument(IDBDocument document) throws DatabaseException {
@@ -1015,27 +985,25 @@ public class SQLdb implements IDatabase {
 		Collection<IDBInstructor> result = new LinkedList<IDBInstructor>();
 		
 		SQLDocument doc = (SQLDocument) document;
-		HashMap<String, Object> wheres = new HashMap<String, Object>();
+		HashMap<String, Object> instID = new HashMap<String, Object>();
 		
-		wheres.put("docID", doc.getID());
+		instID.put("docID", doc.getID());
 		
-		for(SQLInstructor ins : instructorTable.select(wheres))
+		for(SQLInstructor ins : instructorTable.select(instID))
 			result.add(ins);
 		
 		return result;
 	}
 
-	//*******************Kaylene's half**********VVVV
 	@Override
 	public IDBInstructor findInstructorByID(int id) throws DatabaseException {
 		IDBInstructor result;
-		HashMap<String, Object> wheres = new HashMap<String, Object>();
-		wheres.put("id", id);
-		result = instructorTable.select(wheres).get(0);
-		System.out.println(result);
+		HashMap<String, Object> instID = new HashMap<String, Object>();
+		instID.put("id", id);
+		result = instructorTable.select(instID).get(0);
+
 		return result;
 	}
-
 
 	@Override
 	public IDBInstructor assembleInstructor(String firstName, String lastName,
@@ -1043,7 +1011,6 @@ public class SQLdb implements IDatabase {
 			throws DatabaseException {
 		return new SQLInstructor(null, null, firstName, lastName, username, maxWTU, isSchedulable);
 	}
-
 
 	@Override
 	public void insertInstructor(IDBDocument containingDocument, IDBInstructor instructor) throws DatabaseException {
@@ -1402,15 +1369,12 @@ public class SQLdb implements IDatabase {
 				coursepatternsTable.selectAll().size() == 0 &&
 				scheduleItemTable.selectAll().size() == 0 &&
 				labassociationsTable.selectAll().size() == 0 &&
-				labtetheredTable.selectAll().size() == 0 &&
 				timeslotprefTable.selectAll().size() == 0 &&
 				courseprefTable.selectAll().size() == 0 &&
 				patternTable.selectAll().size() == 0 &&
 				equipmentTable.selectAll().size() == 0 &&
 				userdataTable.selectAll().size() == 0)
-		{
-			return true;
-		}
+		{ return true; }
 		System.out.println(" doc table " + documentTable.selectAll().size() + 
 				" working copy table " + workingcopyTable.selectAll().size() +
 				" inst table " + instructorTable.selectAll().size() +
@@ -1421,7 +1385,6 @@ public class SQLdb implements IDatabase {
 				" coursepatterns table " + coursepatternsTable.selectAll().size() +
 				" scheduleitem table " + scheduleItemTable.selectAll().size() +
 				" labassoc table " + labassociationsTable.selectAll().size()  +
-				" labtethered table " + labtetheredTable.selectAll().size() +
 				" timeslotpref table " + timeslotprefTable.selectAll().size() +
 				" coursepref table " + courseprefTable.selectAll().size() +
 				" pattern table " + patternTable.selectAll().size() +
