@@ -1,5 +1,12 @@
 package scheduler.view.web.client.views.resources;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
+import scheduler.view.web.shared.CourseGWT;
+import scheduler.view.web.shared.InstructorGWT;
+import scheduler.view.web.shared.LocationGWT;
+
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.data.RecordList;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -88,6 +95,88 @@ public class ValidatorUtil {
 		return true;
 	}
 
+	public static boolean isValidCourseCollection(Collection<CourseGWT> courses) {
+		for (CourseGWT course : courses) {
+			if (!isValidCourseGWT(course)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public static boolean isValidCourseGWT(CourseGWT course) {
+		if (validateNonNegativeInt(course.getMaxEnroll())) {
+			if (validateGreaterThanZeroInt(course.getRawNumSections())) {
+				if (validateGreaterThanZeroInt(course.getWtu())) {
+					if (validateGreaterThanZeroInt(course.getScu())) {
+						if (validateGreaterThanZeroInt(course
+								.getHalfHoursPerWeek())) {
+							if (validateNotEmpty(course.getCatalogNum())) {
+								return true;
+							}
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	public static boolean isValidInstructorCollection(
+			Collection<InstructorGWT> instructors) {
+		// Make sure usernames are unique
+		ArrayList<String> usernames = new ArrayList<String>();
+		for (InstructorGWT instructor : instructors) {
+			String current = instructor.getUsername();
+			if (usernames.contains(current)) {
+				return false;
+			} else {
+				usernames.add(current);
+			}
+		}
+		// Validate other fields
+		for (InstructorGWT instructor : instructors) {
+			if (!isValidInstructorGWT(instructor)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public static boolean isValidInstructorGWT(InstructorGWT instructor) {
+		if (validateNotEmpty(instructor.getLastName())) {
+			if (validateNotEmpty(instructor.getFirstName())) {
+				if (validateGreaterThanZeroInt(instructor.getRawMaxWtu())) {
+					if (validateNotEmpty(instructor.getUsername())) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	public static boolean isValidLocationCollection(
+			Collection<LocationGWT> locations) {
+		for (LocationGWT location : locations) {
+			if (!isValidLocationGWT(location)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public static boolean isValidLocationGWT(LocationGWT location) {
+		if (validateNonNegativeInt(location.getRawMaxOccupancy())) {
+			if (validateNotEmpty(location.getRoom())) {
+				if (validateNotEmpty(location.getType())) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	private static boolean validateNonNegativeInt(String cellvalue) {
 		try {
 			int value = Integer.valueOf(cellvalue);
@@ -113,19 +202,18 @@ public class ValidatorUtil {
 			return false;
 		}
 	}
-	
-	private static boolean validateMultipleOfHalf(String cellvalue){
+
+	private static boolean validateMultipleOfHalf(String cellvalue) {
 		try {
 			float value = Float.parseFloat(cellvalue);
-			float newvalue = (Math.round(value * 2))/2.0f;
-			System.out.println("Validating half: value = " + value + ", newvalue = " + newvalue);
-			if(Math.abs(newvalue - value) <= 0.01)
-			{
+			float newvalue = (Math.round(value * 2)) / 2.0f;
+			System.out.println("Validating half: value = " + value
+					+ ", newvalue = " + newvalue);
+			if (value > 0.0f && Math.abs(newvalue - value) <= 0.01) {
 				return true;
 			}
 			return false;
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			return false;
 		}
 	}
@@ -147,7 +235,7 @@ public class ValidatorUtil {
 		}
 
 		int count = 0;
-		
+
 		for (Record record : recordList.getRange(0, recordList.getLength())) {
 			if (username.equals(record.getAttribute("username"))) {
 				count++;

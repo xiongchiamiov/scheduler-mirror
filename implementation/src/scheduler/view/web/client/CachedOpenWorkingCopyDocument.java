@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 import scheduler.view.web.client.views.resources.ResourceCache;
+import scheduler.view.web.client.views.resources.ValidatorUtil;
 import scheduler.view.web.shared.CompleteWorkingCopyDocumentGWT;
 import scheduler.view.web.shared.CourseGWT;
 import scheduler.view.web.shared.DocumentGWT;
@@ -24,7 +25,7 @@ public class CachedOpenWorkingCopyDocument {
 	interface GetDocumentStrategy {
 		DocumentGWT getDocument();
 	}
-	
+
 	GreetingServiceAsync service;
 	final int sessionID;
 	private final WorkingDocumentGWT realWorkingDocument;
@@ -33,84 +34,93 @@ public class CachedOpenWorkingCopyDocument {
 	private final DocumentCoursesCache courses;
 	private final DocumentLocationsCache locations;
 	private final DocumentScheduleItemsCache scheduleItems;
-	
-	CachedOpenWorkingCopyDocument(
-			boolean deferredSynchronizationEnabled,
-			GreetingServiceAsync service,
-			int sessionID,
+
+	CachedOpenWorkingCopyDocument(boolean deferredSynchronizationEnabled,
+			GreetingServiceAsync service, int sessionID,
 			CompleteWorkingCopyDocumentGWT completeDocument) {
-		
+
 		this.service = service;
 		this.sessionID = sessionID;
-		
+
 		this.realWorkingDocument = completeDocument.realWorkingDocument;
-		
-		this.localWorkingDocument = new WorkingDocumentGWT(this.realWorkingDocument);
+
+		this.localWorkingDocument = new WorkingDocumentGWT(
+				this.realWorkingDocument);
 		this.localWorkingDocument.setStaffInstructorID(null);
 		this.localWorkingDocument.setTBALocationID(null);
 		this.localWorkingDocument.setChooseForMeInstructorID(null);
 		this.localWorkingDocument.setChooseForMeLocationID(null);
-		
-		this.courses = new DocumentCoursesCache(
-				deferredSynchronizationEnabled,
+
+		this.courses = new DocumentCoursesCache(deferredSynchronizationEnabled,
 				service, sessionID, realWorkingDocument.getRealID(),
 				completeDocument.courses);
-		
+
 		this.instructors = new DocumentInstructorsCache(
-				deferredSynchronizationEnabled,
-				service, sessionID, realWorkingDocument.getRealID(),
-				this.courses,
+				deferredSynchronizationEnabled, service, sessionID,
+				realWorkingDocument.getRealID(), this.courses,
 				completeDocument.instructors);
-		this.localWorkingDocument.setStaffInstructorID(this.instructors.realIDToLocalID(this.realWorkingDocument.getStaffInstructorID()));
-		this.localWorkingDocument.setChooseForMeInstructorID(this.instructors.realIDToLocalID(this.realWorkingDocument.getChooseForMeInstructorID()));
-		
+		this.localWorkingDocument.setStaffInstructorID(this.instructors
+				.realIDToLocalID(this.realWorkingDocument
+						.getStaffInstructorID()));
+		this.localWorkingDocument.setChooseForMeInstructorID(this.instructors
+				.realIDToLocalID(this.realWorkingDocument
+						.getChooseForMeInstructorID()));
+
 		this.locations = new DocumentLocationsCache(
-				deferredSynchronizationEnabled,
-				service, sessionID, realWorkingDocument.getRealID(),
-				completeDocument.locations);
-		this.localWorkingDocument.setTBALocationID(this.locations.realIDToLocalID(this.realWorkingDocument.getTBALocationID()));
-		this.localWorkingDocument.setChooseForMeLocationID(this.locations.realIDToLocalID(this.realWorkingDocument.getChooseForMeLocationID()));
-		
+				deferredSynchronizationEnabled, service, sessionID,
+				realWorkingDocument.getRealID(), completeDocument.locations);
+		this.localWorkingDocument.setTBALocationID(this.locations
+				.realIDToLocalID(this.realWorkingDocument.getTBALocationID()));
+		this.localWorkingDocument.setChooseForMeLocationID(this.locations
+				.realIDToLocalID(this.realWorkingDocument
+						.getChooseForMeLocationID()));
+
 		this.scheduleItems = new DocumentScheduleItemsCache(
-				deferredSynchronizationEnabled,
-				service, sessionID, realWorkingDocument.getRealID(),
-				realWorkingDocument, localWorkingDocument,
-				this.courses, this.instructors, this.locations,
-				completeDocument.scheduleItems);
+				deferredSynchronizationEnabled, service, sessionID,
+				realWorkingDocument.getRealID(), realWorkingDocument,
+				localWorkingDocument, this.courses, this.instructors,
+				this.locations, completeDocument.scheduleItems);
 	}
-	
+
 	public WorkingDocumentGWT getDocument() {
-		return new WorkingDocumentGWT(localWorkingDocument); // Cloning for defense. Makes you wish java had const.
+		return new WorkingDocumentGWT(localWorkingDocument); // Cloning for
+																// defense.
+																// Makes you
+																// wish java had
+																// const.
 	}
 
 	public void copyToAndAssociateWithDifferentOriginalDocument(
 			DocumentGWT existingOriginalDocumentByThatName,
 			AsyncCallback<Void> callback) {
-		service.associateWorkingCopyWithNewOriginalDocument(sessionID, localWorkingDocument.getRealID(), existingOriginalDocumentByThatName.getName(), true, callback);
+		service.associateWorkingCopyWithNewOriginalDocument(sessionID,
+				localWorkingDocument.getRealID(),
+				existingOriginalDocumentByThatName.getName(), true, callback);
 	}
 
 	public void copyIntoAssociatedOriginalDocument(AsyncCallback<Void> callback) {
-		assert(service != null);
-		assert(localWorkingDocument != null);
-		service.saveWorkingCopyToOriginalDocument(sessionID, localWorkingDocument.getRealID(), callback);
+		assert (service != null);
+		assert (localWorkingDocument != null);
+		service.saveWorkingCopyToOriginalDocument(sessionID,
+				localWorkingDocument.getRealID(), callback);
 	}
-	
+
 	public void forceSynchronize(final AsyncCallback<Void> originalCallback) {
 		AsyncCallback<Void> callbackToGiveToCaches = null;
-		
+
 		if (originalCallback != null) {
 			AsyncCallback<Void> combineCallback = new AsyncCallback<Void>() {
 				int requestsComplete = 0;
 				boolean notifiedOfFailure = false;
-				
+
 				@Override
 				public void onSuccess(Void result) {
 					requestsComplete++;
-					
+
 					if (requestsComplete == 4)
 						originalCallback.onSuccess(null);
 				}
-				
+
 				@Override
 				public void onFailure(Throwable caught) {
 					if (!notifiedOfFailure) {
@@ -119,10 +129,10 @@ public class CachedOpenWorkingCopyDocument {
 					}
 				}
 			};
-			
+
 			callbackToGiveToCaches = combineCallback;
 		}
-		
+
 		final AsyncCallback<Void> finalCallbackToGiveToCaches = callbackToGiveToCaches;
 
 		courses.forceSynchronize(finalCallbackToGiveToCaches);
@@ -132,16 +142,18 @@ public class CachedOpenWorkingCopyDocument {
 	}
 
 	public void generateRestOfSchedule(AsyncCallback<Void> callback) {
-		service.generateRestOfSchedule(sessionID, realWorkingDocument.getRealID(), new AsyncCallback<Void>() {
-			@Override
-			public void onSuccess(Void v) { }
-			
-			@Override
-			public void onFailure(Throwable caught) {
-				Window.alert("Failed to generate schedule!" + caught);
-			}
-		});
-		
+		service.generateRestOfSchedule(sessionID,
+				realWorkingDocument.getRealID(), new AsyncCallback<Void>() {
+					@Override
+					public void onSuccess(Void v) {
+					}
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Window.alert("Failed to generate schedule!" + caught);
+					}
+				});
+
 		scheduleItems.forceSynchronize(callback);
 	}
 
@@ -165,36 +177,40 @@ public class CachedOpenWorkingCopyDocument {
 		instructors.edit(instructor);
 	}
 
-	public Collection<LocationGWT> getLocations(boolean excludeSpecialCaseLocations) {
+	public Collection<LocationGWT> getLocations(
+			boolean excludeSpecialCaseLocations) {
 		if (excludeSpecialCaseLocations) {
 			Collection<LocationGWT> locationsExcludingSpecialCases = new LinkedList<LocationGWT>();
 			for (LocationGWT location : locations.getAll()) {
-				if (location.getID().equals(localWorkingDocument.getTBALocationID()))
+				if (location.getID().equals(
+						localWorkingDocument.getTBALocationID()))
 					continue;
-				if (location.getID().equals(localWorkingDocument.getChooseForMeLocationID()))
+				if (location.getID().equals(
+						localWorkingDocument.getChooseForMeLocationID()))
 					continue;
 				locationsExcludingSpecialCases.add(location);
 			}
 			return locationsExcludingSpecialCases;
-		}
-		else {
+		} else {
 			return locations.getAll();
 		}
 	}
 
-	public Collection<InstructorGWT> getInstructors(boolean excludeSpecialCaseInstructors) {
+	public Collection<InstructorGWT> getInstructors(
+			boolean excludeSpecialCaseInstructors) {
 		if (excludeSpecialCaseInstructors) {
 			Collection<InstructorGWT> instructorsExcludingSpecialCases = new LinkedList<InstructorGWT>();
 			for (InstructorGWT location : instructors.getAll()) {
-				if (location.getID().equals(localWorkingDocument.getStaffInstructorID()))
+				if (location.getID().equals(
+						localWorkingDocument.getStaffInstructorID()))
 					continue;
-				if (location.getID().equals(localWorkingDocument.getChooseForMeInstructorID()))
+				if (location.getID().equals(
+						localWorkingDocument.getChooseForMeInstructorID()))
 					continue;
 				instructorsExcludingSpecialCases.add(location);
 			}
 			return instructorsExcludingSpecialCases;
-		}
-		else {
+		} else {
 			return instructors.getAll();
 		}
 	}
@@ -222,7 +238,7 @@ public class CachedOpenWorkingCopyDocument {
 	public CourseGWT getCourseByID(int id) {
 		return courses.getByID(id);
 	}
-	
+
 	public void deleteInstructor(Integer id) {
 		instructors.delete(id);
 	}
@@ -242,7 +258,7 @@ public class CachedOpenWorkingCopyDocument {
 	public void deleteLocation(Integer id) {
 		locations.delete(id);
 	}
-	
+
 	public void addCourseObserver(ResourceCache.Observer<CourseGWT> obs) {
 		courses.addObserver(obs);
 	}
@@ -250,41 +266,76 @@ public class CachedOpenWorkingCopyDocument {
 	public void addObserver(final Observer observer) {
 		courses.addObserver(new ResourceCache.Observer<CourseGWT>() {
 			@Override
-			public void afterSynchronize() { }
+			public void afterSynchronize() {
+			}
+
 			@Override
-			public void onAnyLocalChange() { observer.onAnyLocalChange(); }
+			public void onAnyLocalChange() {
+				observer.onAnyLocalChange();
+			}
+
 			@Override
-			public void onResourceAdded(CourseGWT resource, boolean addedLocally) { }
+			public void onResourceAdded(CourseGWT resource, boolean addedLocally) {
+			}
+
 			@Override
-			public void onResourceEdited(CourseGWT resource, boolean editedLocally) { }
+			public void onResourceEdited(CourseGWT resource,
+					boolean editedLocally) {
+			}
+
 			@Override
-			public void onResourceDeleted(int localID, boolean deletedLocally) { }
+			public void onResourceDeleted(int localID, boolean deletedLocally) {
+			}
 		});
 
 		locations.addObserver(new ResourceCache.Observer<LocationGWT>() {
 			@Override
-			public void afterSynchronize() { }
+			public void afterSynchronize() {
+			}
+
 			@Override
-			public void onAnyLocalChange() { observer.onAnyLocalChange(); }
+			public void onAnyLocalChange() {
+				observer.onAnyLocalChange();
+			}
+
 			@Override
-			public void onResourceAdded(LocationGWT resource, boolean addedLocally) { }
+			public void onResourceAdded(LocationGWT resource,
+					boolean addedLocally) {
+			}
+
 			@Override
-			public void onResourceEdited(LocationGWT resource, boolean editedLocally) { }
+			public void onResourceEdited(LocationGWT resource,
+					boolean editedLocally) {
+			}
+
 			@Override
-			public void onResourceDeleted(int localID, boolean deletedLocally) { }
+			public void onResourceDeleted(int localID, boolean deletedLocally) {
+			}
 		});
 
 		instructors.addObserver(new ResourceCache.Observer<InstructorGWT>() {
 			@Override
-			public void afterSynchronize() { }
+			public void afterSynchronize() {
+			}
+
 			@Override
-			public void onAnyLocalChange() { observer.onAnyLocalChange(); }
+			public void onAnyLocalChange() {
+				observer.onAnyLocalChange();
+			}
+
 			@Override
-			public void onResourceAdded(InstructorGWT resource, boolean addedLocally) { }
+			public void onResourceAdded(InstructorGWT resource,
+					boolean addedLocally) {
+			}
+
 			@Override
-			public void onResourceEdited(InstructorGWT resource, boolean editedLocally) { }
+			public void onResourceEdited(InstructorGWT resource,
+					boolean editedLocally) {
+			}
+
 			@Override
-			public void onResourceDeleted(int localID, boolean deletedLocally) { }
+			public void onResourceDeleted(int localID, boolean deletedLocally) {
+			}
 		});
 	}
 
@@ -292,7 +343,21 @@ public class CachedOpenWorkingCopyDocument {
 		return locations.getByID(id);
 	}
 
-	public void copyToAndAssociateWithNewOriginalDocument(String newDocumentName, AsyncCallback<Void> callback) {
-		service.associateWorkingCopyWithNewOriginalDocument(sessionID, localWorkingDocument.getRealID(), newDocumentName, false, callback);
+	public void copyToAndAssociateWithNewOriginalDocument(
+			String newDocumentName, AsyncCallback<Void> callback) {
+		service.associateWorkingCopyWithNewOriginalDocument(sessionID,
+				localWorkingDocument.getRealID(), newDocumentName, false,
+				callback);
+	}
+
+	public boolean documentIsValid() {
+		if (ValidatorUtil.isValidCourseCollection(courses.getAll())) {
+			if (ValidatorUtil.isValidInstructorCollection(instructors.getAll())) {
+				if (ValidatorUtil.isValidLocationCollection(locations.getAll())) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }
