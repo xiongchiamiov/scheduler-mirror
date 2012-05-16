@@ -19,7 +19,7 @@ copy if the scheduler project; do this:
    (2) svn update
    (3) cd implementation
    (4) fab build
-   (5) fab deploy:dir-name        e.g., fab deploy: CSC,IME; or fab deply:all
+   (5) fab deploy:dir-name        e.g., fab deploy:CSC,IME; or fab deply:all
 						or fac delpoly:all-dev
 						or fac delpoly:all-stable
    (6) when prompted, enter your password on the scheduler vm, followed by two
@@ -54,3 +54,10 @@ To add new Selenium tests: ... (see Evan's message)
 
 To view the serialized resource file, go here:
     /var/lib/tomcat6/webapps/DEPT/DatabaseState.javaser
+
+To view the tomat log, go here:
+    /var/log/tomcat6
+
+  The catalina.out file is a global log.  Each file starting "localhost..." is
+  a daily log.  At this point, James does not know precisely the content
+  difference between the global and local files.
