@@ -1,0 +1,83 @@
+.sz 10
+.ds ~ /users/gfisher/nroff
+. so \*~/stdhdr.me
+.if !\nh \{\
+.    he ''''
+.    fo ''''
+.\}
+.(TI "Minutes of the 405 In-Class Meeting, 27 February 12"
+.(S +2
+\fBMinutes of the 405 In-Class Meeting
+.hbr
+12:30 - 1:30PM Friday 27 February 12\fP
+.)S
+.)TI
+.spt
+\fBPresent\fP: Everyone
+.sp .5v
+\fBAbsent\fP: None
+.spt
+Fisher decided that relase to clients will not happen until next quarter.
+.pp
+Kaylene put the following list of \fIcritical issues\fP on the whiteboard, and
+subsequently entered them all in Jira.  The names in square brackets next to
+each issue indicate people working on that task.
+.(L 1
+.le
+Algorithm fix [Adam, Evan, Salome]
+.(L a .3v
+.le
+make the Java model used by the generation algorithm consistent with the DB
+data model
+.le
+in the algorithm, make sure scheduled courses use the university day patterns
+.le
+in the algorithm, make sure TBA scheduling is supported
+.le
+between the algorithm and the GWTView, make sure instructor preferences are
+properly communicated
+.le
+in the algorithm, make sure the lecture/lab association is properly dealt with
+.)L 1
+.hc p
+.le
+Make sure File Save and Open work, including thorough independent testing
+[Evan, James]
+.hc p
+.le
+Make sure the Model/View communication is happening everywhere it should [Evan,
+Tyler H]
+.(L a .3v
+.le
+Specifically, make sure pressing the 'Generate' button does not throw any
+exceptions.
+.le
+Also, figure out a strategy to test GreetingServicesImple and related
+"Controller" classes.
+.)L a
+.hc p
+.le
+Get the list view to work [Tyler Y]
+.hc p
+.le
+Finish and fully independently test the new DB, using a "log-and-diff" style of
+regression testing.
+.hc p
+.le
+Programmatic resource data entry [Matt]
+.)L 1
+.pep
+For those listed above next to an issue, that issue was added to Jir and those
+listed people are assigned to it.  In addition to these issues, there are
+critical task from last week that others are working on:
+.(E .3v
+.ee
+Jake will continue working on look and feel of preferences UI.
+.ee
+James will continue to work on a stress testing framework.
+.ee
+Jordon will continue to work on CSV import/export.
+.)E
+.pe
+.\" LocalWords:  Kaylene UI Evan Xs programmatically github browser's Kaylene's
+.\" LocalWords:  nh fo posterboard
