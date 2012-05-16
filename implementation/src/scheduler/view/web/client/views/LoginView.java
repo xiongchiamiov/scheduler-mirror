@@ -99,6 +99,8 @@ public class LoginView extends SimplePanel {
 		service.loginAndGetAllOriginalDocuments(username, new AsyncCallback<LoginResponse>() {
 			@Override
 			public void onFailure(Throwable caught) {
+				loadingPopup.hide();
+				
 				Window.alert("Failed to get documents");
 			}
 			

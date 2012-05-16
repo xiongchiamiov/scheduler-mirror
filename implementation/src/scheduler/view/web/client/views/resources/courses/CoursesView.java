@@ -146,9 +146,11 @@ public class CoursesView extends VLayout {
 		ListGridField scuField = new ListGridField("scu", "SCU");
 		scuField.setAlign(Alignment.CENTER);
 		scuField.setDefaultValue(0);
-		ListGridField dayCombinationsField = new ListGridField(
-				"dayCombinations", "Day Combinations");
+		
+		ListGridField dayCombinationsField = new ListGridField("dayCombinations", "Day Combinations");
 		dayCombinationsField.setAlign(Alignment.CENTER);
+		dayCombinationsField.setEditorValueMapFunction(new PossibleDayPatternsFunction());
+		
 		ListGridField hoursPerWeekField = new ListGridField("hoursPerWeek",
 				"Hours per Week");
 		hoursPerWeekField.setAlign(Alignment.CENTER);
