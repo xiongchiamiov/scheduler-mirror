@@ -32,7 +32,7 @@ import scheduler.view.web.shared.InstructorGWT;
 /**
  * This is a widget to show and modify the time
  * preferences of an instructor
- * @author unknown, modified by Carsten Pfeffer <pfeffer@tzi.de>
+ * @author Jacob Juszak, modified by Carsten Pfeffer <pfeffer@tzi.de>
  */
 public class TimePrefsWidget extends VerticalPanel {
 	class TimePrefsCellWidget extends FocusPanel {
@@ -120,6 +120,7 @@ public class TimePrefsWidget extends VerticalPanel {
 	
 	protected final FocusPanel focus = new FocusPanel();
 	protected final FocusPanel focusTwo = new FocusPanel();
+	protected final FocusPanel focusThree = new FocusPanel();
 //	private int documentID;
 	protected InstructorGWT instructor;
 	protected InstructorGWT savedInstructor;
@@ -282,11 +283,21 @@ public class TimePrefsWidget extends VerticalPanel {
 			}
 		});*/
 		
+		HTML instructions = new HTML("&nbspTo change multiple preferences at once follow these steps:" +
+									"<br>&nbsp1: Select the boxes of the days you wish to change." +
+									"<br>&nbsp2: Choose the range of times using the 'From:' and 'To:' list boxes." +
+									"<br>&nbsp3: Choose the preference level you'd like to change them to." +
+									"<br>&nbsp4: Hit the 'Set Preferences' button.");
+		//topStuff.setWidget(2, 0, instructions);
+		focusThree.add(instructions);
+		
 		focus.setStyleName("otherCenterness");
 		focusTwo.setStyleName("otherCenterness");
+		focusThree.setStyleName("otherCenterness");
 		focusTwo.add(topStuff);
 		this.setSpacing(10);
 		this.setStyleName("centerness");
+		add(focusThree);
 		add(focusTwo);
 		add(focus);
 		focus.addKeyDownHandler(new KeyDownHandler() {
@@ -322,8 +333,8 @@ public class TimePrefsWidget extends VerticalPanel {
 			// There are 30 half-hours between 7am and 10pm
 			int row = halfHour/2 + 1;
 			int hour = halfHour / 2 + 7; // divide by two to get hours 0-15. Add 7 to get hours 7-22.
-			String string = ((hour + 12 - 1) % 12 + 1) + ":" + (halfHour % 2 == 0 ? "00" : "30") + (hour < 12 ? "am" : "pm");
-			this.timePrefsTable.setText(row, 0, string);
+			HTML string = new HTML("&nbsp" + ((hour + 12 - 1) % 12 + 1) + ":" + (halfHour % 2 == 0 ? "00" : "30") + (hour < 12 ? "am" : "pm"));
+			this.timePrefsTable.setWidget(row, 0, string);
 		}
 		
 		ArrayList<String> days = new ArrayList<String>();

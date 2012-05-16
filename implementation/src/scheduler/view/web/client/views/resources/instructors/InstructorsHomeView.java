@@ -27,7 +27,7 @@ public class InstructorsHomeView extends VerticalPanel implements View
 {
 	protected CachedService service;
 	protected ArrayList<String> scheduleNames;
-	protected HashMap<Integer, DocumentGWT> allAvailableOriginalDocumentsByID;	
+	protected HashMap<Integer, DocumentGWT> allAvailableOriginalDocumentsByID;
 	protected FlexTable schedList = new FlexTable();
 	protected InstructorGWT instructor;
 	

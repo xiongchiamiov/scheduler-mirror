@@ -72,7 +72,7 @@ public abstract class EEAcceptanceTest extends DefaultSelTestCase {
 	
 	private void login(final String username) throws InterruptedException {
 		driver.findElement(By.id("s_unameBox")).clear();
-		driver.findElement(By.id("s_unameBox")).sendKeys("eovadia");
+		driver.findElement(By.id("s_unameBox")).sendKeys("Mofo");
 		driver.findElement(By.id("s_loginBtn")).click();
 		WebUtility.waitForElementPresent(driver, By.xpath("//div[@eventproxy='s_createBtn']"));
 		Thread.sleep(2000); // To wait for it to retrieve documents
