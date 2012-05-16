@@ -1,6 +1,5 @@
 package scheduler.view.web.client.views.resources.courses;
 
-import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -9,6 +8,7 @@ import scheduler.view.web.client.views.resources.ValidatorUtil;
 import scheduler.view.web.shared.CourseGWT;
 import scheduler.view.web.shared.ScheduleItemGWT;
 
+import com.google.gwt.user.client.Window;
 import com.smartgwt.client.data.DSRequest;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
@@ -155,18 +155,34 @@ public class CoursesView extends VLayout {
 			@Override
 			public void onEditComplete(EditCompleteEvent event) {
 				if (grid.getFieldName(event.getColNum()).equals("scu")) {
-					String scuString = (String)grid.getEditedCell(event.getRowNum(), "scu");
-					String type = (String)grid.getEditedCell(event.getRowNum(), "type");
-
-					DSRequest requestProperties = new DSRequest();
-					requestProperties.setOldValues(grid.getEditedRecord(event.getRowNum()));
-					
-					String[] values = PossibleDayPatternsFunction.getValues(type, scuString).values().toArray(new String[0]);
-					Record record = grid.getEditedRecord(event.getRowNum());
-					assert(record.getAttributeAsInt("id") != null);
-					record.setAttribute("dayCombinations", values);
-					
-					grid.updateData(record, null, requestProperties);
+					if(Window.confirm("By changing your SCU value you will lose your day combination data for this row. Would you like to proceed?"))
+					{
+						String scuString = (String)grid.getEditedCell(event.getRowNum(), "scu");
+						String type = (String)grid.getEditedCell(event.getRowNum(), "type");
+						
+						DSRequest requestProperties = new DSRequest();
+						requestProperties.setOldValues(grid.getEditedRecord(event.getRowNum()));
+						
+						String[] values = PossibleDayPatternsFunction.getValues(type, scuString).values().toArray(new String[0]);
+						Record record = grid.getEditedRecord(event.getRowNum());
+						assert(record.getAttributeAsInt("id") != null);
+						record.setAttribute("dayCombinations", values);
+						
+						grid.updateData(record, null, requestProperties);
+					}
+					else
+					{
+						System.out.println("oldvalue " + event.getOldRecord().getAttributeAsString("scu") + ", new record value: " + event.getNewValues().get("scu"));
+						//Revert to old scu
+						Record oldrecord = event.getOldRecord();
+						DSRequest requestProperties = new DSRequest();
+						requestProperties.setOldValues(grid.getEditedRecord(event.getRowNum()));
+						String scuvalue = oldrecord.getAttributeAsString("scu");
+						Record record = grid.getEditedRecord(event.getRowNum());
+						record.setAttribute("scu", scuvalue);
+						System.out.println("Trying to set scu value to " + scuvalue);
+						grid.updateData(record, null, requestProperties);
+					}
 				}
 			}
 		});
@@ -312,7 +328,10 @@ public class CoursesView extends VLayout {
 		
 		Set<Integer> CoursesToDeleteIDs = new TreeSet<Integer>();
 		for (ListGridRecord rec : grid.getSelectedRecords())
-			CoursesToDeleteIDs.add(rec.getAttributeAsInt("id"));
+			if(rec.getAttribute("id") != null)
+			{
+				CoursesToDeleteIDs.add(rec.getAttributeAsInt("id"));
+			}
 		
 		Set<Integer> referencedCoursesToDeleteIDs = new TreeSet<Integer>(CoursesToDeleteIDs);
 		referencedCoursesToDeleteIDs.retainAll(referencedCourseIDs);
