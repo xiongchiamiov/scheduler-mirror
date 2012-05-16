@@ -1,20 +1,26 @@
 package scheduler.model.db.sqlite;
 
 import scheduler.model.db.IDBTimePreference;
+import scheduler.model.db.sqlite.SQLdb.Table;
 
 public class SQLTimePreference extends SQLObject implements IDBTimePreference {
-	Integer instructorID;
 	Integer timeID;
+	Integer instructorID;
 	int preference;
+//	Integer day;
+//	Integer time;
 	
-	public SQLTimePreference(Integer id, Integer instructorID, Integer timeID, int preference) {
+	public SQLTimePreference(Integer id, Integer timeID, Integer instructorID, Integer preference) {
 		super(id);
-		this.instructorID = instructorID;
 		this.timeID = timeID;
+		this.instructorID = instructorID;
 		this.preference = preference;
+///		this.day = day;
+//		this.time = time;
 	}
+	
 	public SQLTimePreference(SQLTimePreference that) {
-		this(that.id, that.instructorID, that.timeID, that.preference);
+		this(that.id, that.timeID, that.instructorID, that.preference);
 	}
 	
 	public void sanityCheck() {

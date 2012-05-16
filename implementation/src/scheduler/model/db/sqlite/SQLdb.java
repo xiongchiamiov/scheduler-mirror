@@ -241,7 +241,6 @@ public class SQLdb implements IDatabase {
 		public void update(Object[] values, Integer id) throws DatabaseException {
 			assert(values != null);
 			assert(values.length == columns.length - 1);
-			
 			PreparedStatement stmnt = null;
 			String queryString = "UPDATE " + name + " SET ";
 			
@@ -322,8 +321,10 @@ public class SQLdb implements IDatabase {
 			String queryString = "INSERT INTO " + name + " (";
   
 			for (Column column : columns)
-				if (!column.name.equals("id"))
+				if (!column.name.equals("id")) {
 					queryString += column.name + ",";
+					System.out.println("column name: " + column.name);
+				}
   
 			queryString = queryString.substring(0, queryString.length() - 1);
 			queryString += ") VALUES (";
@@ -1046,6 +1047,10 @@ public class SQLdb implements IDatabase {
 		HashMap<IDBTime, IDBTimePreference> result = new HashMap<IDBTime, IDBTimePreference>();
 		if(instructor== null || instructor.getID() == null)
 			throw new DatabaseException("Instructor not found");
+		try {System.out.println(timeslotprefTable.selectAll());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		for(SQLTimePreference tp : timeslotprefTable.selectAll())
 			if(tp.instructorID == instructor.getID())
 				result.put(findTimeByID(tp.timeID), tp);
@@ -1068,9 +1073,9 @@ public class SQLdb implements IDatabase {
 	}
 
 	@Override
-	public IDBTimePreference assembleTimePreference(int preference)
+	public IDBTimePreference assembleTimePreference(int preflevel)
 			throws DatabaseException {
-		return new SQLTimePreference(null, null, null, preference);
+		return new SQLTimePreference(null, null, null, preflevel);
 	}
 
 	@Override
@@ -1079,18 +1084,8 @@ public class SQLdb implements IDatabase {
 		SQLTimePreference sqlTP = (SQLTimePreference)timePreference;
 		assert(sqlTP.id == null);
 		SQLTime thisTime = (SQLTime)time;
-		System.out.println("Instructor: " + ins.getFirstName() + " " + ins.getID());
-		System.out.println("Time Preference: " + sqlTP.preference);
 		assert(thisTime.getID() != null);
-		System.out.println("Time ID: " + thisTime.getID());
-		sqlTP.timeID = thisTime.getID();
-		//day integer not null,
-	    //time integer not null,
-	    //instID,
-	   // prefLevel integer not null,
-		System.out.println("Time details: halfhour, Day " + thisTime.getHalfHour() + " " + thisTime.getDay());
-		sqlTP.id = timeslotprefTable.insert(new Object[]{ thisTime.getDay(), thisTime.getHalfHour(), 
-				sqlTP.instructorID, sqlTP.preference});
+		sqlTP.id = timeslotprefTable.insert(new Object[]{thisTime.getID(), ins.getID(), sqlTP.preference});
 	}
 
 
@@ -1098,8 +1093,8 @@ public class SQLdb implements IDatabase {
 	public void updateTimePreference(IDBTimePreference timePreference)
 			throws DatabaseException {
 		SQLTimePreference pref = (SQLTimePreference) timePreference;
-		SQLTime time = (SQLTime)findTimeByID(pref.timeID);
-		timeslotprefTable.update(new Object[]{ time.getDay(), time.getHalfHour(), pref.instructorID, pref.getPreference()}, pref.getID());
+		//SQLTime time = (SQLTime)findTimeByID(pref.timeID);
+		timeslotprefTable.update(new Object[]{ pref.timeID, pref.instructorID, pref.getPreference()}, pref.getID());
 		
 	}
 
@@ -1150,7 +1145,7 @@ public class SQLdb implements IDatabase {
 			throws DatabaseException {
 		SQLCoursePreference sqlcoursepreference = (SQLCoursePreference) coursePreference;
 		//(Integer id, Integer instructorID, Integer courseID, int preference)
-		sqlcoursepreference.id = courseprefTable.insert(new Object[]{ sqlcoursepreference.instructorID, sqlcoursepreference.courseID, sqlcoursepreference.getPreference()});
+		sqlcoursepreference.id = courseprefTable.insert(new Object[]{ instructor.getID(), course.getID(), sqlcoursepreference.getPreference()});
 		
 	}
 

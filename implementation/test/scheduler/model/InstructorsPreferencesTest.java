@@ -66,41 +66,41 @@ public abstract class InstructorsPreferencesTest extends ModelTestCase {
 		assertTrue(found.getCoursePreferences().get(courseID2).equals(3));
 	}
 
-	public void testUtilityInstructorEquals() throws DatabaseException {
-		Model model = createBlankModel();
-		Document doc = model.createAndInsertDocumentWithSpecialInstructorsAndLocations("doc", START_HALF_HOUR, END_HALF_HOUR);
-		
-		int courseID1 = model.createTransientCourse("Graphics", "201", "GRC", "10", "20", "2", "LEC", "20", "6", true).setDocument(doc).insert().getID();
-		int courseID2 = model.createTransientCourse("Graphics: The Return", "202", "GRC", "10", "20", "2", "LEC", "20", "6", true).setDocument(doc).insert().getID();
-		
-		HashMap<Integer, Integer> coursePrefs1 = new HashMap<Integer, Integer>();
-		coursePrefs1.put(courseID1, 2);
-		coursePrefs1.put(courseID2, 3);
-		
-		int[][] timePrefs1 = ModelTestUtility.createSampleTimePreferences(doc);
-		
-		Instructor ins1 = model.createTransientInstructor("Evan", "Ovadia", "eovadia", "20", true)
-				.setTimePreferences(timePrefs1)
-				.setCoursePreferences(coursePrefs1)
-				.setDocument(doc).insert();
-		
-		HashMap<Integer, Integer> coursePrefs2 = new HashMap<Integer, Integer>();
-		coursePrefs2.put(courseID1, 2);
-		coursePrefs2.put(courseID2, 3);
-		
-		int[][] timePrefs2 = ModelTestUtility.createSampleTimePreferences(doc);
-
-		Instructor ins2 = model.createTransientInstructor("Evan", "Ovadia", "eovadia", "20", true)
-				.setTimePreferences(timePrefs2)
-				.setCoursePreferences(coursePrefs2)
-				.setDocument(doc).insert();
-		
-		
-		assertTrue(ModelTestUtility.instructorsContentsEqual(ins1, ins2));
-		
-		ins1.setTimePreferences(Day.FRIDAY, 10, 4);
-
-		assertFalse(ModelTestUtility.instructorsContentsEqual(ins1, ins2));
-	}
+//	public void testUtilityInstructorEquals() throws DatabaseException {
+//		Model model = createBlankModel();
+//		Document doc = model.createAndInsertDocumentWithSpecialInstructorsAndLocations("doc", START_HALF_HOUR, END_HALF_HOUR);
+//		
+//		int courseID1 = model.createTransientCourse("Graphics", "201", "GRC", "10", "20", "2", "LEC", "20", "6", true).setDocument(doc).insert().getID();
+//		int courseID2 = model.createTransientCourse("Graphics: The Return", "202", "GRC", "10", "20", "2", "LEC", "20", "6", true).setDocument(doc).insert().getID();
+//		
+//		HashMap<Integer, Integer> coursePrefs1 = new HashMap<Integer, Integer>();
+//		coursePrefs1.put(courseID1, 2);
+//		coursePrefs1.put(courseID2, 3);
+//		
+//		int[][] timePrefs1 = ModelTestUtility.createSampleTimePreferences(doc);
+//		
+//		Instructor ins1 = model.createTransientInstructor("Evan", "Ovadia", "eovadia", "20", true)
+//				.setTimePreferences(timePrefs1)
+//				.setCoursePreferences(coursePrefs1)
+//				.setDocument(doc).insert();
+//		
+//		HashMap<Integer, Integer> coursePrefs2 = new HashMap<Integer, Integer>();
+//		coursePrefs2.put(courseID1, 2);
+//		coursePrefs2.put(courseID2, 3);
+//		
+//		int[][] timePrefs2 = ModelTestUtility.createSampleTimePreferences(doc);
+//
+//		Instructor ins2 = model.createTransientInstructor("Evan", "Ovadia", "eovadia", "20", true)
+//				.setTimePreferences(timePrefs2)
+//				.setCoursePreferences(coursePrefs2)
+//				.setDocument(doc).insert();
+//		
+//		
+//		assertTrue(ModelTestUtility.instructorsContentsEqual(ins1, ins2));
+//		
+//		ins1.setTimePreferences(Day.FRIDAY, 10, 4);
+//
+//		assertFalse(ModelTestUtility.instructorsContentsEqual(ins1, ins2));
+//	}
 	
 }

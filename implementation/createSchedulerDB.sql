@@ -133,6 +133,7 @@ drop table timeslotpref;
 create table timeslotpref (
     id integer primary key,
     timeID integer not null,
+    timeID,
     instID,
     prefLevel integer not null,
     unique (instID, timeID),
