@@ -227,19 +227,14 @@ public class InstructorsView extends VLayout {
 			this.prefsWindow.setCanDragResize(true);
 
 			this.prefsWindow.setSize("700px", "500px");
-//			ScrollPanel weewee = new ScrollPanel();
 			
 			this.iipv = new InstructorPreferencesView(openDocument, instructor);
 			
-//			weewee.setWidget(iipv);
-//			weewee.setSize("700px", "500px");
-//			this.prefsWindow.addItem(weewee);
 			this.prefsWindow.addItem(iipv);
 			this.prefsWindow.setAutoSize(true);
 			
 			this.iipv.setParent(prefsWindow);
 			this.iipv.afterPush();
-			//this.prefsWindow.setStyleName("bodyPanel");
 		}
 		else
 		{

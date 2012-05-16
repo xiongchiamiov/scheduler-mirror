@@ -1,7 +1,6 @@
 package scheduler.view.web.client.views.resources.instructors;
 
 import scheduler.view.web.client.CachedOpenWorkingCopyDocument;
-import scheduler.view.web.client.GreetingServiceAsync;
 import scheduler.view.web.shared.InstructorGWT;
 
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -70,6 +69,14 @@ public class InstructorPrefsWizardCourseView extends VerticalPanel {
 	 */
 	public void setParent(com.smartgwt.client.widgets.Window parent) {
 		this.coursePrefs.setParent(parent);
+	}
+	
+	/**
+	 * set the document to which the preferences refer
+	 * @param parent
+	 */
+	public void setDocument(CachedOpenWorkingCopyDocument doc) {
+		this.coursePrefs.setDocument(doc);
 	}
 	
 	/**

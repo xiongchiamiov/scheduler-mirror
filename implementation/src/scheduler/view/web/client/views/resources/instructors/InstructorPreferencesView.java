@@ -1,8 +1,6 @@
 package scheduler.view.web.client.views.resources.instructors;
 
 import scheduler.view.web.client.CachedOpenWorkingCopyDocument;
-import scheduler.view.web.client.GreetingServiceAsync;
-import scheduler.view.web.client.UnsavedDocumentStrategy;
 import scheduler.view.web.shared.InstructorGWT;
 
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -99,6 +97,13 @@ public class InstructorPreferencesView extends VerticalPanel {
 
 		this.timePrefs.setInstructor(instructor);
 		this.coursePrefs.setInstructor(instructor);
+	}
+	
+	public void setDocument(CachedOpenWorkingCopyDocument doc)
+	{
+		this.openDocument = doc;
+		this.timePrefs.setDocument(doc);
+		this.coursePrefs.setDocument(doc);
 	}
 
 	// @Override

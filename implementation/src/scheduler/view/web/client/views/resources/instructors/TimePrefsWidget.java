@@ -26,7 +26,6 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import scheduler.view.web.client.CachedOpenWorkingCopyDocument;
-import scheduler.view.web.client.GreetingServiceAsync;
 import scheduler.view.web.shared.DayGWT;
 import scheduler.view.web.shared.InstructorGWT;
 
@@ -559,4 +558,9 @@ public class TimePrefsWidget extends VerticalPanel {
 		redraw();
 	}
 	
+	public void setDocument(CachedOpenWorkingCopyDocument doc)
+	{
+		instructor.verify();
+		this.workingCopyDocument = doc;
+	}
 }

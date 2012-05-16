@@ -284,4 +284,10 @@ public class CoursePrefsWidget extends VerticalPanel
 					}
 				});
 	}
+	
+	public void setDocument(CachedOpenWorkingCopyDocument doc)
+	{
+		instructor.verify();
+		this.workingCopyDocument = doc;
+	}
 }

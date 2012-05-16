@@ -1,7 +1,6 @@
 package scheduler.view.web.client.views.resources.instructors;
 
 import scheduler.view.web.client.CachedOpenWorkingCopyDocument;
-import scheduler.view.web.client.GreetingServiceAsync;
 import scheduler.view.web.shared.InstructorGWT;
 
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -68,6 +67,14 @@ public class InstructorPrefsWizardTimeView extends VerticalPanel{
 	 */
 	public void addBackClickHandler(ClickHandler handler) {
 		this.back.addClickHandler(handler);
+	}
+	
+	/**
+	 * set the document to which the preferences refer
+	 * @param parent
+	 */
+	public void setDocument(CachedOpenWorkingCopyDocument doc) {
+		this.timePrefs.setDocument(doc);
 	}
 	
 	/**
