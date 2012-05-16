@@ -51,7 +51,14 @@ public abstract class ResourceCache<ResourceGWT extends Identified> implements R
 	private boolean anotherSynchronizeRequested = false;
 	private Integer currentSyncNumber = null;
 	
-	int nextLocalID = 1;
+	class IDAllocator {
+		int nextID = -1;
+		public int allocate() {
+			return nextID--;
+		}
+	}
+	IDAllocator idAllocator = new IDAllocator();
+	
 	final HashMap<Integer, Entry> entriesByLocalID = new HashMap<Integer, Entry>();
 	final HashMap<Integer, Entry> entriesByRealID = new HashMap<Integer, Entry>();
 	
@@ -86,7 +93,7 @@ public abstract class ResourceCache<ResourceGWT extends Identified> implements R
 	public void add(ResourceGWT localResource) {
 		assert(localResource.getID() == null);
 		
-		int localID = nextLocalID++;
+		int localID = idAllocator.allocate();
 		localResource.setID(localID);
 		
 		Entry entry = new Entry(localID, null, cloneResource(localResource), EntryActivity.ADDED);
@@ -319,7 +326,7 @@ public abstract class ResourceCache<ResourceGWT extends Identified> implements R
 			
 			if (existingEntry == null) {
 				ResourceGWT localResource = cloneResource(resourceOnServer);
-				localResource.setID(nextLocalID++);
+				localResource.setID(idAllocator.allocate());
 
 				System.out.println("got a new course from server! remote id " + resourceRealID + " and now its local id is " + localResource.getID());
 				

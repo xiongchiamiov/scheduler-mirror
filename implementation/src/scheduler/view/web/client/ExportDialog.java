@@ -27,7 +27,7 @@ public class ExportDialog {
 		window.setTitle("Export As");
 		window.setCanDragReposition(true);
 		window.setCanDragResize(true);
-		window.setID("s_exportPopup");
+//		window.setID("s_exportPopup");
 		
 		VerticalPanel mainVerticalPanel = new VerticalPanel();
 		DOM.setElementAttribute(mainVerticalPanel.getElement(), "id", "s_mainExportPanel");

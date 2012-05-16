@@ -31,6 +31,7 @@ public class LoginView extends SimplePanel {
 	TextBox textBox;
 	
 	VerticalPanel loginViewContents;
+	View homeView;
 
 	public LoginView(GreetingServiceAsync service, UpdateHeaderStrategy updateHeaderStrategy) {
 		this.updateHeaderStrategy = updateHeaderStrategy;
@@ -78,8 +79,11 @@ public class LoginView extends SimplePanel {
 	}
 	
 	protected void onLogout() {
-		clear();
-		setWidget(loginViewContents);
+		if (homeView.canClose()) {
+			homeView.close();
+			updateHeaderStrategy.onLogout();
+			setWidget(loginViewContents);
+		}
 	}
 
    protected void submitLogin(final String username) {
@@ -118,12 +122,12 @@ public class LoginView extends SimplePanel {
 				final CachedService cachedService = new CachedService(true, service, response.sessionID, username, response.initialOriginalDocuments);
 				
 				if (response.isAdmin) {
-					clear();
-					setWidget(new HomeView(updateHeaderStrategy, cachedService));
+					homeView = new HomeView(updateHeaderStrategy, cachedService);
+					setWidget(homeView.viewAsWidget());
 				}
 				else {
-					clear();
-					setWidget(new InstructorsHomeView(cachedService));
+					homeView = new InstructorsHomeView(cachedService);
+					setWidget(homeView.viewAsWidget());
 				}
 			}
 		});

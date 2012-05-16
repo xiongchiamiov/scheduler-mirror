@@ -109,7 +109,7 @@ public class InstructorsViewTest extends TestCase {
 	public void testDuplicateInstructor()
 	{
 		// select the first instructor
-		WebElement cell = WebUtility.elementForResourceTableCell(driver, "s_instructorviewTab", 0, 1);
+		WebElement cell = WebUtility.elementForResourceTableCell(driver, "InstructorsView", 0, 1);
 		WebUtility.mouseDownAndUpAt(driver, cell, 1, 1);
 		this.waitMillis(500);
 		// click the button to duplicate an instructor
@@ -119,7 +119,7 @@ public class InstructorsViewTest extends TestCase {
 		
 		// change username of the duplicate, otherwise we won't be able to save
 		try {
-			WebUtility.setResourceTableTextCell(driver, "s_instructorviewTab", 1, 4, "bar");
+			WebUtility.setResourceTableTextCell(driver, "InstructorsView", 1, 4, "bar");
 		} catch (InterruptedException e) {
 			fail("failed to enter a new instructor user name");
 		}
@@ -131,9 +131,9 @@ public class InstructorsViewTest extends TestCase {
 	 * tests if instructors can be removed
 	 */
 	public void testRemoveInstructor()
-	{		
+	{
 		// select the first instructor
-		WebElement cell = WebUtility.elementForResourceTableCell(driver, "s_instructorviewTab", 0, 1);
+		WebElement cell = WebUtility.elementForResourceTableCell(driver, "InstructorsView", 0, 1);
 		WebUtility.mouseDownAndUpAt(driver, cell, 1, 1);
 		this.waitMillis(500);
 		
@@ -143,7 +143,7 @@ public class InstructorsViewTest extends TestCase {
 		this.waitMillis(500);
 		
 		// select again the first instructor (which should be the former second one)
-		cell = WebUtility.elementForResourceTableCell(driver, "s_instructorviewTab", 0, 1);
+		cell = WebUtility.elementForResourceTableCell(driver, "InstructorsView", 0, 1);
 		WebUtility.mouseDownAndUpAt(driver, cell, 1, 1);
 		this.waitMillis(500);
 		
@@ -372,9 +372,9 @@ public class InstructorsViewTest extends TestCase {
 		// clean up all the data after the tests
 		// -------------------------------------
 		driver.findElement(By.id("s_prefCloseBtn")).click();
-		
+
 		// select the first instructor
-		cell = WebUtility.elementForResourceTableCell(driver, "s_instructorviewTab", 0, 1);
+		cell = WebUtility.elementForResourceTableCell(driver, "InstructorsView", 0, 1);
 		WebUtility.mouseDownAndUpAt(driver, cell, 1, 1);
 		this.waitMillis(500);
 		
@@ -398,7 +398,7 @@ public class InstructorsViewTest extends TestCase {
 		// delete the four courses
 		for(int i=0; i < 4; i++)
 		{
-			cell = WebUtility.elementForResourceTableCell(driver, "s_courseviewTab", 0, 1);
+			cell = WebUtility.elementForResourceTableCell(driver, "InstructorsView", 0, 1);
 			WebUtility.mouseDownAndUpAt(driver, cell, 1, 1);
 			this.waitMillis(500);
 			

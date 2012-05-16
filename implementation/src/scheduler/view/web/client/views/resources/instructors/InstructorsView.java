@@ -39,7 +39,7 @@ public class InstructorsView extends VLayout {
 	public InstructorsView(CachedOpenWorkingCopyDocument openDocument) {
 		this.openDocument = openDocument;
 		
-		setID("s_instructorviewTab");
+//		setID("s_instructorviewTab");
 
 		this.setWidth100();
 		this.setHeight100();
@@ -270,7 +270,7 @@ public class InstructorsView extends VLayout {
 		addBtn.setAutoWidth();
 		addBtn.setOverflow(Overflow.VISIBLE);
 		//DON'T CHANGE THIS ID IT WILL BREAK THE BUTTONS
-		addBtn.setID("s_newInstructorBtn");
+//		addBtn.setID("s_newInstructorBtn");
 		bottomButtonFlowPanel.addMember(addBtn);
 
 		IButton duplicateBtn = new IButton("Duplicate Selected Instructors",
@@ -288,7 +288,7 @@ public class InstructorsView extends VLayout {
 		duplicateBtn.setAutoWidth();
 		duplicateBtn.setOverflow(Overflow.VISIBLE);
 		//DON'T CHANGE THIS ID IT WILL BREAK THE BUTTONS
-		duplicateBtn.setID("s_dupeInstructorBtn");
+//		duplicateBtn.setID("s_dupeInstructorBtn");
 		bottomButtonFlowPanel.addMember(duplicateBtn);
 
 		IButton removeBtn = new IButton("Remove Selected Instructors",
@@ -303,7 +303,7 @@ public class InstructorsView extends VLayout {
 		removeBtn.setAutoWidth();
 		removeBtn.setOverflow(Overflow.VISIBLE);
 		//DON'T CHANGE THIS ID IT WILL BREAK THE BUTTONS
-		removeBtn.setID("s_removeInstructorBtn");
+//		removeBtn.setID("s_removeInstructorBtn");
 
 		bottomButtonFlowPanel.addMember(removeBtn);
 

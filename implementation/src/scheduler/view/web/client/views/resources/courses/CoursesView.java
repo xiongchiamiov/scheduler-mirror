@@ -1,7 +1,6 @@
 package scheduler.view.web.client.views.resources.courses;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -10,6 +9,7 @@ import scheduler.view.web.client.views.resources.ValidatorUtil;
 import scheduler.view.web.shared.CourseGWT;
 import scheduler.view.web.shared.ScheduleItemGWT;
 
+import com.smartgwt.client.data.DSRequest;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Autofit;
@@ -41,11 +41,21 @@ public class CoursesView extends VLayout {
 	public CoursesView(final CachedOpenWorkingCopyDocument document) {
 		this.document = document;
 
-		this.setID("s_courseviewTab");
+//		this.setID("s_courseviewTab");
 		this.setWidth100();
 		this.setHeight100();
 
 		onPopulate();
+	}
+
+	private static String join(Collection<String> strings, String glue) {
+		String result = "";
+		for (String str : strings) {
+			if (!result.equals(""))
+				result += glue;
+			result += str;
+		}
+		return result;
 	}
 
 	private void onPopulate() {
@@ -98,7 +108,7 @@ public class CoursesView extends VLayout {
 		// grid.setCellHeight(22);
 		grid.setDataSource(new CoursesDataSource(document));
 		grid.setAutoSaveEdits(true);
-
+		
 		grid.addKeyPressHandler(new KeyPressHandler() {
 			public void onKeyPress(KeyPressEvent event) {
 				if (event.getKeyName().equals("Backspace")
@@ -150,7 +160,27 @@ public class CoursesView extends VLayout {
 		ListGridField dayCombinationsField = new ListGridField("dayCombinations", "Day Combinations");
 		dayCombinationsField.setAlign(Alignment.CENTER);
 		dayCombinationsField.setEditorValueMapFunction(new PossibleDayPatternsFunction());
-		
+
+		grid.addEditCompleteHandler(new EditCompleteHandler() {
+			@Override
+			public void onEditComplete(EditCompleteEvent event) {
+				if (grid.getFieldName(event.getColNum()).equals("scu")) {
+					String scuString = (String)grid.getEditedCell(event.getRowNum(), "scu");
+					String type = (String)grid.getEditedCell(event.getRowNum(), "type");
+
+					DSRequest requestProperties = new DSRequest();
+					requestProperties.setOldValues(grid.getEditedRecord(event.getRowNum()));
+					
+					String[] values = PossibleDayPatternsFunction.getValues(type, scuString).values().toArray(new String[0]);
+					Record record = grid.getEditedRecord(event.getRowNum());
+					assert(record.getAttributeAsInt("id") != null);
+					record.setAttribute("dayCombinations", values);
+					
+					grid.updateData(record, null, requestProperties);
+				}
+			}
+		});
+
 		ListGridField hoursPerWeekField = new ListGridField("hoursPerWeek",
 				"Hours per Week");
 		hoursPerWeekField.setAlign(Alignment.CENTER);
@@ -241,7 +271,7 @@ public class CoursesView extends VLayout {
 		course.setAutoWidth();
 		course.setOverflow(Overflow.VISIBLE);
 		// DON'T CHANGE THIS ID IT WILL BREAK THE BUTTONS
-		course.setID("s_newCourseBtn");
+//		course.setID("s_newCourseBtn");
 		bottomButtonFlowPanel.addMember(course);
 
 		IButton dupeBtn = new IButton("Duplicate Selected Courses",
@@ -259,7 +289,7 @@ public class CoursesView extends VLayout {
 		dupeBtn.setAutoWidth();
 		dupeBtn.setOverflow(Overflow.VISIBLE);
 		// DON'T CHANGE THIS ID IT WILL BREAK THE BUTTONS
-		dupeBtn.setID("s_dupeCourseBtn");
+//		dupeBtn.setID("s_dupeCourseBtn");
 		bottomButtonFlowPanel.addMember(dupeBtn);
 
 		IButton remove = new IButton("Remove Selected Courses",
@@ -273,7 +303,7 @@ public class CoursesView extends VLayout {
 		remove.setAutoWidth();
 		remove.setOverflow(Overflow.VISIBLE);
 		// DON'T CHANGE THIS ID IT WILL BREAK THE BUTTONS
-		remove.setID("s_removeCourseBtn");
+//		remove.setID("s_removeCourseBtn");
 		
 		bottomButtonFlowPanel.addMember(remove);
 

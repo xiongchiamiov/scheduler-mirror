@@ -179,7 +179,7 @@ public abstract class DocumentsTest extends ModelTestCase {
 		
 		Document document = insertFullDocumentIntoModel(model);
 		
-		Document newDocument = model.createAndInsertDocumentWithSpecialInstructorsAndLocations("newdoc", document.getStartHalfHour(), document.getEndHalfHour());
+		Document newDocument = model.createTransientDocument("newdoc", document.getStartHalfHour(), document.getEndHalfHour()).insert();
 		
 		model.copyDocument(document, newDocument);
 	}
@@ -207,7 +207,7 @@ public abstract class DocumentsTest extends ModelTestCase {
 			}
 		}
 		
-		Document newDocument = model.createAndInsertDocumentWithSpecialInstructorsAndLocations("newname", document.getStartHalfHour(), document.getEndHalfHour());
+		Document newDocument = model.createTransientDocument("newname", document.getStartHalfHour(), document.getEndHalfHour()).insert();
 		
 		model.copyDocument(document, newDocument);
 		

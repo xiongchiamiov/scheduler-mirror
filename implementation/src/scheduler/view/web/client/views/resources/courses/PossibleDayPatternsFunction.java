@@ -16,7 +16,15 @@ public class PossibleDayPatternsFunction implements EditorValueMapFunction {
    	
    	String type = (String)values.get("type");
    	assert(type != null);
+
+   	String scuString = (String)values.get("scu");
+   	assert(scuString != null);
    	
+   	return getValues(type, scuString);
+   }
+   
+   static Map<String, String> getValues(String type, String scuString) {
+
    	boolean canTether = "LAB".equals(type) || "ACT".equals(type);
 
 		Map<String, String> result = new LinkedHashMap<String, String>();
@@ -33,8 +41,6 @@ public class PossibleDayPatternsFunction implements EditorValueMapFunction {
 			result.put("F", "F");
    	}
    	else {
-      	String scuString = (String)values.get("scu");
-      	assert(scuString != null);
       	Integer scu = null;
       	try { scu = Integer.parseInt(scuString); }
       	catch (NumberFormatException e) { return new HashMap<String, String>(); }
@@ -42,7 +48,7 @@ public class PossibleDayPatternsFunction implements EditorValueMapFunction {
    		switch (scu) {
    			case 2:
    				result.put("MW", "MW");
-   				result.put("WF", "MF");
+   				result.put("WF", "WF");
    				result.put("MF", "MF");
    				result.put("TR", "TR");
    				break;
@@ -69,5 +75,5 @@ public class PossibleDayPatternsFunction implements EditorValueMapFunction {
    	}
    	
    	return result;
-   }  
+   }
 }

@@ -238,7 +238,7 @@ public class SQLdb implements IDatabase {
 		
 		public void update(Object[] values, Integer id) throws DatabaseException {
 			assert(values != null);
-			assert(values.length == columns.length);
+			assert(values.length == columns.length - 1);
 			
 			PreparedStatement stmnt = null;
 			String queryString = "UPDATE " + name + " SET ";

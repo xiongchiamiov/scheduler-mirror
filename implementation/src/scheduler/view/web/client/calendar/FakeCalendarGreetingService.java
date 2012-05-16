@@ -197,7 +197,7 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 				2,  // instructor id
 				2,// location id
 				2,  //section number
-				createDaySet("Th"), //days
+				createDaySet("R"), //days
 				20, //start half hour
 				21, // end half hour
 				true, // placed
@@ -211,7 +211,7 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 				3,  // instructor id
 				3,// location id
 				0,  //section number
-				createDaySet("Th"), //days
+				createDaySet("R"), //days
 				20, //start half hour
 				21, // end half hour
 				true, // placed
@@ -225,7 +225,7 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 				1,  // instructor id
 				1,// location id
 				1,  //section number
-				createDaySet("Tu"), //days
+				createDaySet("T"), //days
 				15, //start half hour
 				17, // end half hour
 				true, // placed
@@ -237,7 +237,7 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 				1,  // instructor id
 				1,// location id
 				1,  //section number
-				createDaySet("Tu"), //days
+				createDaySet("T"), //days
 				16, //start half hour
 				20, // end half hour
 				true, // placed
@@ -249,7 +249,7 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 				1,  // instructor id
 				1,// location id
 				1,  //section number
-				createDaySet("Tu"), //days
+				createDaySet("T"), //days
 				16, //start half hour
 				19, // end half hour
 				true, // placed
@@ -261,7 +261,7 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 				1,  // instructor id
 				1,// location id
 				1,  //section number
-				createDaySet("Tu"), //days
+				createDaySet("T"), //days
 				17, //start half hour
 				21, // end half hour
 				true, // placed
@@ -273,7 +273,7 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 				1,  // instructor id
 				1,// location id
 				1,  //section number
-				createDaySet("Tu"), //days
+				createDaySet("T"), //days
 				19, //start half hour
 				19, // end half hour
 				true, // placed
@@ -285,7 +285,7 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 				1,  // instructor id
 				1,// location id
 				1,  //section number
-				createDaySet("Tu"), //days
+				createDaySet("T"), //days
 				17, //start half hour
 				25, // end half hour
 				true, // placed
@@ -297,7 +297,7 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 				1,  // instructor id
 				1,// location id
 				1,  //section number
-				createDaySet("Tu"), //days
+				createDaySet("T"), //days
 				20, //start half hour
 				24, // end half hour
 				true, // placed
@@ -309,7 +309,7 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 				1,  // instructor id
 				1,// location id
 				1,  //section number
-				createDaySet("Tu"), //days
+				createDaySet("T"), //days
 				18, //start half hour
 				22, // end half hour
 				true, // placed
@@ -321,7 +321,7 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 				1,  // instructor id
 				1,// location id
 				1,  //section number
-				createDaySet("Tu"), //days
+				createDaySet("T"), //days
 				19, //start half hour
 				21, // end half hour
 				true, // placed
@@ -333,7 +333,7 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 				1,  // instructor id
 				1,// location id
 				1,  //section number
-				createDaySet("Tu"), //days
+				createDaySet("T"), //days
 				17, //start half hour
 				20, // end half hour
 				true, // placed
@@ -345,7 +345,7 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 				1,  // instructor id
 				1,// location id
 				1,  //section number
-				createDaySet("Tu"), //days
+				createDaySet("T"), //days
 				21, //start half hour
 				24, // end half hour
 				true, // placed
@@ -357,7 +357,7 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 				1,  // instructor id
 				1,// location id
 				1,  //section number
-				createDaySet("Tu"), //days
+				createDaySet("T"), //days
 				22, //start half hour
 				25, // end half hour
 				true, // placed
@@ -369,7 +369,7 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 				1,  // instructor id
 				1,// location id
 				1,  //section number
-				createDaySet("Tu"), //days
+				createDaySet("T"), //days
 				23, //start half hour
 				33, // end half hour
 				true, // placed
@@ -381,7 +381,7 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 				1,  // instructor id
 				1,// location id
 				1,  //section number
-				createDaySet("Tu"), //days
+				createDaySet("T"), //days
 				24, //start half hour
 				26, // end half hour
 				true, // placed
@@ -393,7 +393,7 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 				1,  // instructor id
 				1,// location id
 				1,  //section number
-				createDaySet("Tu"), //days
+				createDaySet("T"), //days
 				24, //start half hour
 				27, // end half hour
 				true, // placed
@@ -405,7 +405,7 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 				1,  // instructor id
 				1,// location id
 				1,  //section number
-				createDaySet("Tu"), //days
+				createDaySet("T"), //days
 				24, //start half hour
 				26, // end half hour
 				true, // placed
@@ -417,7 +417,7 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 				1,  // instructor id
 				1,// location id
 				1,  //section number
-				createDaySet("Tu"), //days
+				createDaySet("T"), //days
 				25, //start half hour
 				25, // end half hour
 				true, // placed
@@ -429,7 +429,7 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 				1,  // instructor id
 				1,// location id
 				1,  //section number
-				createDaySet("Tu"), //days
+				createDaySet("T"), //days
 				20, //start half hour
 				26, // end half hour
 				true, // placed
@@ -441,7 +441,7 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 				1,  // instructor id
 				1,// location id
 				1,  //section number
-				createDaySet("Tu"), //days
+				createDaySet("T"), //days
 				21, //start half hour
 				23, // end half hour
 				true, // placed
@@ -453,7 +453,7 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 				1,  // instructor id
 				1,// location id
 				1,  //section number
-				createDaySet("Tu"), //days
+				createDaySet("T"), //days
 				21, //start half hour
 				25, // end half hour
 				true, // placed
@@ -465,7 +465,7 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 				1,  // instructor id
 				1,// location id
 				1,  //section number
-				createDaySet("Tu"), //days
+				createDaySet("T"), //days
 				22, //start half hour
 				22, // end half hour
 				true, // placed
@@ -477,7 +477,7 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 				1,  // instructor id
 				1,// location id
 				1,  //section number
-				createDaySet("Tu"), //days
+				createDaySet("T"), //days
 				23, //start half hour
 				23, // end half hour
 				true, // placed
@@ -489,7 +489,7 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 				1,  // instructor id
 				1,// location id
 				1,  //section number
-				createDaySet("Tu"), //days
+				createDaySet("T"), //days
 				25, //start half hour
 				27, // end half hour
 				true, // placed
@@ -501,7 +501,7 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 				1,  // instructor id
 				1,// location id
 				1,  //section number
-				createDaySet("Tu"), //days
+				createDaySet("T"), //days
 				25, //start half hour
 				29, // end half hour
 				true, // placed
@@ -513,7 +513,7 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 				1,  // instructor id
 				1,// location id
 				1,  //section number
-				createDaySet("Tu"), //days
+				createDaySet("T"), //days
 				27, //start half hour
 				28, // end half hour
 				true, // placed
@@ -525,7 +525,7 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 				1,  // instructor id
 				1,// location id
 				1,  //section number
-				createDaySet("Tu"), //days
+				createDaySet("T"), //days
 				27, //start half hour
 				27, // end half hour
 				true, // placed
@@ -537,7 +537,7 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 				1,  // instructor id
 				1,// location id
 				1,  //section number
-				createDaySet("Tu"), //days
+				createDaySet("T"), //days
 				27, //start half hour
 				31, // end half hour
 				true, // placed
@@ -549,7 +549,7 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 				1,  // instructor id
 				1,// location id
 				1,  //section number
-				createDaySet("Tu"), //days
+				createDaySet("T"), //days
 				27, //start half hour
 				30, // end half hour
 				true, // placed
@@ -561,7 +561,7 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 				1,  // instructor id
 				1,// location id
 				1,  //section number
-				createDaySet("Tu"), //days
+				createDaySet("T"), //days
 				28, //start half hour
 				28, // end half hour
 				true, // placed
@@ -573,7 +573,7 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 				1,  // instructor id
 				1,// location id
 				1,  //section number
-				createDaySet("Tu"), //days
+				createDaySet("T"), //days
 				29, //start half hour
 				31, // end half hour
 				true, // placed
@@ -585,7 +585,7 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 				1,  // instructor id
 				1,// location id
 				1,  //section number
-				createDaySet("Tu"), //days
+				createDaySet("T"), //days
 				29, //start half hour
 				33, // end half hour
 				true, // placed
@@ -597,7 +597,7 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 				1,  // instructor id
 				1,// location id
 				1,  //section number
-				createDaySet("Tu"), //days
+				createDaySet("T"), //days
 				30, //start half hour
 				34, // end half hour
 				true, // placed
@@ -609,7 +609,7 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 				1,  // instructor id
 				1,// location id
 				1,  //section number
-				createDaySet("Tu"), //days
+				createDaySet("T"), //days
 				30, //start half hour
 				30, // end half hour
 				true, // placed
@@ -621,7 +621,7 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 				1,  // instructor id
 				1,// location id
 				1,  //section number
-				createDaySet("Tu"), //days
+				createDaySet("T"), //days
 				31, //start half hour
 				32, // end half hour
 				true, // placed
@@ -633,7 +633,7 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 				1,  // instructor id
 				1,// location id
 				1,  //section number
-				createDaySet("Tu"), //days
+				createDaySet("T"), //days
 				31, //start half hour
 				33, // end half hour
 				true, // placed
@@ -645,7 +645,7 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 				1,  // instructor id
 				1,// location id
 				1,  //section number
-				createDaySet("Tu"), //days
+				createDaySet("T"), //days
 				32, //start half hour
 				36, // end half hour
 				true, // placed
@@ -657,7 +657,7 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 				1,  // instructor id
 				1,// location id
 				1,  //section number
-				createDaySet("Tu"), //days
+				createDaySet("T"), //days
 				26, //start half hour
 				26, // end half hour
 				true, // placed
@@ -669,7 +669,7 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 				1,  // instructor id
 				1,// location id
 				1,  //section number
-				createDaySet("Tu"), //days
+				createDaySet("T"), //days
 				26, //start half hour
 				26, // end half hour
 				true, // placed
@@ -681,7 +681,7 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 				1,  // instructor id
 				1,// location id
 				1,  //section number
-				createDaySet("Tu"), //days
+				createDaySet("T"), //days
 				28, //start half hour
 				28, // end half hour
 				true, // placed
@@ -703,11 +703,11 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 			daySet.add(DayGWT.SUNDAY);
 		if (days.contains("M"))
 			daySet.add(DayGWT.MONDAY);
-		if (days.contains("Tu"))
+		if (days.contains("T"))
 			daySet.add(DayGWT.TUESDAY);
 		if (days.contains("W"))
 			daySet.add(DayGWT.WEDNESDAY);
-		if (days.contains("Th"))
+		if (days.contains("R"))
 			daySet.add(DayGWT.THURSDAY);
 		if (days.contains("F"))
 			daySet.add(DayGWT.FRIDAY);

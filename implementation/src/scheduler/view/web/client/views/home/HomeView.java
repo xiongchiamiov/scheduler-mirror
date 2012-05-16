@@ -9,6 +9,7 @@ import scheduler.view.web.client.NewScheduleCreator;
 import scheduler.view.web.client.UpdateHeaderStrategy;
 import scheduler.view.web.client.views.AdminScheduleNavView;
 import scheduler.view.web.client.views.LoadingPopup;
+import scheduler.view.web.client.views.View;
 import scheduler.view.web.client.views.resources.ResourceCache;
 import scheduler.view.web.shared.OriginalDocumentGWT;
 
@@ -16,11 +17,12 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.Side;
 import com.smartgwt.client.widgets.tab.TabSet;
 
-public class HomeView extends SimplePanel {
+public class HomeView extends SimplePanel implements View {
 	CachedService service;
 	final UpdateHeaderStrategy updateHeaderStrategy;
 	HomeTab homeTab;
@@ -160,11 +162,13 @@ public class HomeView extends SimplePanel {
 		}
 	}
 	
-	private void openDocument(final int originalDocumentID, boolean openExistingWorkingDocument) {
+	private void openDocument(final int originalDocumentLocalID, boolean openExistingWorkingDocument) {
+		assert(originalDocumentLocalID < 0);
+		
 		final LoadingPopup loadingPopup = new LoadingPopup();
 		loadingPopup.show();
 		
-		service.openWorkingCopyForOriginalDocument(originalDocumentID, openExistingWorkingDocument, new AsyncCallback<CachedOpenWorkingCopyDocument>() {
+		service.openWorkingCopyForOriginalDocument(originalDocumentLocalID, openExistingWorkingDocument, new AsyncCallback<CachedOpenWorkingCopyDocument>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				Window.alert("Failed to get document!");
@@ -173,7 +177,9 @@ public class HomeView extends SimplePanel {
 			
 			@Override
 			public void onSuccess(CachedOpenWorkingCopyDocument workingCopyDocument) {
-				updateHeaderStrategy.onOpenedDocument(service.originalDocuments.getByID(service.originalDocuments.realIDToLocalID(originalDocumentID)).getName());
+				OriginalDocumentGWT openedDocument = service.originalDocuments.getByID(originalDocumentLocalID);
+				
+				updateHeaderStrategy.onOpenedDocument(openedDocument.getName());
 				
 				CloseStrategy closeStrategy = new CloseStrategy() {
 					@Override
@@ -200,23 +206,25 @@ public class HomeView extends SimplePanel {
 	protected boolean closeDocument() {
 		if (navView.canClose()) {
 			navView.close();
-			clear();
-			setWidget(homeViewContents); // instead of add
+			setWidget(homeViewContents);
 			return true;
 		}
 		return false;
 	}
 
-	boolean canClose() {
+	public boolean canClose() {
 		if (navView != null) {
 			return navView.canClose();
 		}
 		return true;
 	}
 	
-	void close() {
+	public void close() {
 		navView.close();
 
 		this.clear();
 	}
+
+	@Override
+	public Widget viewAsWidget() { return this; }
 }

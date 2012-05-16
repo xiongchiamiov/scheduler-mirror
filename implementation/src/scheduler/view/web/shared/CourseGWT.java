@@ -254,11 +254,11 @@ public class CourseGWT implements Serializable, Identified {
 		if (dayCombination.contains(DayGWT.MONDAY))
 			result += "M";
 		if (dayCombination.contains(DayGWT.TUESDAY))
-			result += "Tu";
+			result += "T";
 		if (dayCombination.contains(DayGWT.WEDNESDAY))
 			result += "W";
 		if (dayCombination.contains(DayGWT.THURSDAY))
-			result += "Th";
+			result += "R";
 		if (dayCombination.contains(DayGWT.FRIDAY))
 			result += "F";
 		if (dayCombination.contains(DayGWT.SATURDAY))
@@ -274,11 +274,11 @@ public class CourseGWT implements Serializable, Identified {
 		Set<DayGWT> result = new TreeSet<DayGWT>();
 		if (string.contains("M"))
 			result.add(DayGWT.MONDAY);
-		if (string.contains("Tu")) // A 'T', as long as its not followed by an h
+		if (string.contains("T"))
 			result.add(DayGWT.TUESDAY);
 		if (string.contains("W"))
 			result.add(DayGWT.WEDNESDAY);
-		if (string.contains("Th"))
+		if (string.contains("R"))
 			result.add(DayGWT.THURSDAY);
 		if (string.contains("F"))
 			result.add(DayGWT.FRIDAY);

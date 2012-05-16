@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 import scheduler.view.web.client.CachedOpenWorkingCopyDocument;
 import scheduler.view.web.client.CachedService;
+import scheduler.view.web.client.views.View;
 import scheduler.view.web.shared.DocumentGWT;
 import scheduler.view.web.shared.InstructorGWT;
 import scheduler.view.web.shared.OriginalDocumentGWT;
@@ -18,10 +19,11 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.Window;
 
-public class InstructorsHomeView extends VerticalPanel
+public class InstructorsHomeView extends VerticalPanel implements View
 {
 	protected CachedService service;
 	protected ArrayList<String> scheduleNames;
@@ -196,4 +198,17 @@ public class InstructorsHomeView extends VerticalPanel
 		win2.addItem(times);
 		win1.show();
 	}
+
+	@Override
+	public boolean canClose() {
+		return true;
+	}
+
+	@Override
+	public void close() {
+		
+	}
+
+	@Override
+	public Widget viewAsWidget() { return this; }
 }

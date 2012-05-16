@@ -20,7 +20,7 @@ public class CachedService {
 	final boolean deferredSynchronizationEnabled;
 	public final NewOriginalDocumentsCache originalDocuments;
 	
-	Map<Integer, CachedOpenWorkingCopyDocument> workingCopyDocumentsByOriginalDocumentID = new HashMap<Integer, CachedOpenWorkingCopyDocument>();
+	Map<Integer, CachedOpenWorkingCopyDocument> workingCopyDocumentsByOriginalDocumentRealID = new HashMap<Integer, CachedOpenWorkingCopyDocument>();
 	
 	public CachedService(boolean deferredSynchronizationEnabled, GreetingServiceAsync service, int sessionID, String username, ServerResourcesResponse<OriginalDocumentGWT> initialDocuments) {
 		this.deferredSynchronizationEnabled = deferredSynchronizationEnabled;
@@ -41,14 +41,21 @@ public class CachedService {
 	public void forceSynchronize(AsyncCallback<Void> callback) {
 		originalDocuments.forceSynchronize(callback);
 		
-		for (CachedOpenWorkingCopyDocument doc : workingCopyDocumentsByOriginalDocumentID.values())
+		for (CachedOpenWorkingCopyDocument doc : workingCopyDocumentsByOriginalDocumentRealID.values())
 			doc.forceSynchronize(callback);
 	}
 	
-	public void openWorkingCopyForOriginalDocument(final int originalDocumentID, boolean openExistingWorkingDocument, final AsyncCallback<CachedOpenWorkingCopyDocument> callback) {
-		assert(!workingCopyDocumentsByOriginalDocumentID.containsKey(originalDocumentID));
+	public void openWorkingCopyForOriginalDocument(final int originalDocumentLocalID, boolean openExistingWorkingDocument, final AsyncCallback<CachedOpenWorkingCopyDocument> callback) {
+		assert(!workingCopyDocumentsByOriginalDocumentRealID.containsKey(originalDocumentLocalID));
 		
-		mService.createAndOpenWorkingCopyForOriginalDocument(sessionID, originalDocumentID, openExistingWorkingDocument, new AsyncCallback<CompleteWorkingCopyDocumentGWT>() {
+		assert(originalDocumentLocalID < 0);
+		
+		final Integer originalDocumentRealID = originalDocuments.localIDToRealID(originalDocumentLocalID);
+		
+		assert(originalDocumentRealID != null);
+		assert(originalDocumentRealID > 0);
+		
+		mService.createAndOpenWorkingCopyForOriginalDocument(sessionID, originalDocumentRealID, openExistingWorkingDocument, new AsyncCallback<CompleteWorkingCopyDocumentGWT>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				callback.onFailure(caught);
@@ -56,10 +63,9 @@ public class CachedService {
 			
 			@Override
 			public void onSuccess(CompleteWorkingCopyDocumentGWT completeWorkingDocument) {
-
 				CachedOpenWorkingCopyDocument openedDocument = new CachedOpenWorkingCopyDocument(deferredSynchronizationEnabled, mService, sessionID, completeWorkingDocument);
 				
-				workingCopyDocumentsByOriginalDocumentID.put(originalDocumentID, openedDocument);
+				workingCopyDocumentsByOriginalDocumentRealID.put(originalDocumentRealID, openedDocument);
 				
 				callback.onSuccess(openedDocument);
 			}

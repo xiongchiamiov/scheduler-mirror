@@ -6,9 +6,9 @@ import java.util.TreeSet;
 public enum DayGWT {
 	SUNDAY("Sunday", "Su"),
 	MONDAY("Monday", "M"),
-	TUESDAY("Tuesday", "Tu"),
+	TUESDAY("Tuesday", "T"),
 	WEDNESDAY("Wednesday", "W"),
-	THURSDAY("Thursday", "Th"),
+	THURSDAY("Thursday", "R"),
 	FRIDAY("Friday", "F"),
 	SATURDAY("Saturday", "Sa");
 	

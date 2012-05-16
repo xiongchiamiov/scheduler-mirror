@@ -59,10 +59,18 @@ public class NewScheduleCreator {
 					
 					service.originalDocuments.forceSynchronize(new AsyncCallback<Void>() {
 						public void onSuccess(Void v) {
-							openDocumentCallback.openDocument(service.originalDocuments.localIDToRealID(newDocument.getID()));
+							popup.hide();
+							
+							int newDocumentLocalID = newDocument.getID();
+							
+							openDocumentCallback.openDocument(newDocumentLocalID);
 						}
 						
-						public void onFailure(Throwable caught) { assert(false); }
+						public void onFailure(Throwable caught) {
+							popup.hide();
+							
+							assert(false);
+						}
 					});
 				}
 				else {

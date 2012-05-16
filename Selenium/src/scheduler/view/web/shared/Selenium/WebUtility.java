@@ -47,7 +47,7 @@ public abstract class WebUtility {
 	}
 
 	public static WebElement elementForResourceTableCell(WebDriver driver, String viewID, int row0Based, int col0Based) {
-		return driver.findElement(By.xpath("((//div[@eventproxy='" + viewID + "']//table[@class='listTable']/tbody/tr[@role='listitem'])[" + (1 + row0Based) + "]/td)[" + (1 + col0Based) + "]"));
+		return driver.findElement(By.xpath("((//div[contains(@eventproxy, '" + viewID + "')]//table[@class='listTable']/tbody/tr[@role='listitem'])[" + (1 + row0Based) + "]/td)[" + (1 + col0Based) + "]"));
 	}
 	
 	public static void setResourceTableTextCell(WebDriver driver, String viewID, int row0Based, int col0Based, String text) throws InterruptedException {
@@ -111,7 +111,7 @@ public abstract class WebUtility {
 	private static void setResourceTableSelectCell(WebDriver driver, String viewID, int row0Based, int col0Based, String text) throws InterruptedException {
 		if (text == null)
 			return;
-		
+
 		WebElement cell = elementForResourceTableCell(driver, viewID, row0Based, col0Based);
 		cell.click();
 		
@@ -201,27 +201,35 @@ public abstract class WebUtility {
 			String type,
 			String usedEquipment,
 			String association) throws InterruptedException {
+
+		String view = "CoursesView";
+		
+//		driver.manage().timeouts().implicitlyWait(0, TimeUnit.MILLISECONDS);
+//		int row0BasedCalculated = view.findElements(By.xpath("//table[@class='listTable']/tbody/tr[@role='listitem']")).size();
+//		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+//		if (row0BasedCalculated != row0Based) {
+//			System.out.println("calculated " + row0BasedCalculated + " not " + row0Based);
+//			assert(false);
+//		}
 		
 		System.out.println("Entering row index " + row0Based);
 
 		Thread.sleep(500);
-		driver.findElement(By.xpath("//div[@eventproxy='s_newCourseBtn']")).click();
+		driver.findElement(By.xpath("//div/table/tbody/tr/td[text()='Add New Course']")).click();
 		
-		String viewID = "s_courseviewTab";
-		
-		setResourceTableCheckboxCell(driver, viewID, row0Based, 1, isSchedulable);
-		setResourceTableTextCell(driver, viewID, row0Based, 2, department);
-		setResourceTableTextCell(driver, viewID, row0Based, 3, catalogNum);
-		setResourceTableTextCell(driver, viewID, row0Based, 4, courseName);
-		setResourceTableTextCell(driver, viewID, row0Based, 5, numSections);
-		setResourceTableTextCell(driver, viewID, row0Based, 6, wtu);
-		setResourceTableTextCell(driver, viewID, row0Based, 7, scu);
-		setResourceTableMultiselectCell(driver, viewID, row0Based, 8, dayCombinations);
-		setResourceTableTextCell(driver, viewID, row0Based, 9, hoursPerWeek);
-		setResourceTableTextCell(driver, viewID, row0Based, 10, maxEnrollment);
-		setResourceTableSelectCell(driver, viewID, row0Based, 11, type);
-		setResourceTableMultiselectCell(driver, viewID, row0Based, 12, usedEquipment);
-//		setResourceTableTextCell(viewID, row0Based, 13, association);
+		setResourceTableCheckboxCell(driver, view, row0Based, 1, isSchedulable);
+		setResourceTableTextCell(driver, view, row0Based, 2, department);
+		setResourceTableTextCell(driver, view, row0Based, 3, catalogNum);
+		setResourceTableTextCell(driver, view, row0Based, 4, courseName);
+		setResourceTableTextCell(driver, view, row0Based, 5, numSections);
+		setResourceTableTextCell(driver, view, row0Based, 6, wtu);
+		setResourceTableTextCell(driver, view, row0Based, 7, scu);
+		setResourceTableMultiselectCell(driver, view, row0Based, 8, dayCombinations);
+		setResourceTableTextCell(driver, view, row0Based, 9, hoursPerWeek);
+		setResourceTableTextCell(driver, view, row0Based, 10, maxEnrollment);
+		setResourceTableSelectCell(driver, view, row0Based, 11, type);
+		setResourceTableMultiselectCell(driver, view, row0Based, 12, usedEquipment);
+//		
 	}
 	
 	public static void waitForElementPresent(final WebDriver driver, final By by) throws InterruptedException {
@@ -259,9 +267,9 @@ public abstract class WebUtility {
 
 		System.out.println("Entering row index " + row0Based);
 
-		driver.findElement(By.xpath("//div[@eventproxy='s_newInstructorBtn']")).click();
-		
-		String viewID = "s_instructorviewTab";
+		driver.findElement(By.xpath("//div/table/tbody/tr/td[text()='Add New Instructor']")).click();
+
+		String viewID = "InstructorsView";
 		
 		setResourceTableCheckboxCell(driver, viewID, row0Based, 1, isSchedulable);
 		setResourceTableTextCell(driver, viewID, row0Based, 2, lastName);
@@ -281,9 +289,9 @@ public abstract class WebUtility {
 
 		System.out.println("Entering row index " + row0Based);
 
-		driver.findElement(By.xpath("//div[@eventproxy='s_newLocationBtn']")).click();
-		
-		String viewID = "s_locationviewTab";
+		driver.findElement(By.xpath("//div/table/tbody/tr/td[text()='Add New Location']")).click();
+
+		String viewID = "LocationsView";
 		
 		setResourceTableCheckboxCell(driver, viewID, row0Based, 1, isSchedulable);
 		setResourceTableTextCell(driver, viewID, row0Based, 2, room);
@@ -296,11 +304,9 @@ public abstract class WebUtility {
 			WebDriver driver, int row0Based) throws InterruptedException {
 
 		System.out.println("clicking preferences button at line: " + row0Based);
-		
-		String viewID = "s_instructorviewTab";
 
 		Thread.sleep(500);
-		WebElement btn = elementForResourceTableCell(driver, viewID,
+		WebElement btn = elementForResourceTableCell(driver, "InstructorsView",
 				row0Based, 6).findElement(By.xpath("//td[text()='Preferences'][@class='buttonTitle']"));
 //		btn.click();
 		System.out.println(btn);

@@ -92,24 +92,23 @@ public class OriginalDocumentsListGrid extends ListGrid {
 				final OriginalDocumentGWT document = documentsStrategy.getDocumentByID(record.getAttributeAsInt("id"));
 				
 				String workingChangesSummary = document.getWorkingChangesSummary();
-				if (workingChangesSummary == null)
-					workingChangesSummary = "";
-				
-				Label workingLabel = new Label(" (being edited)");
-	
-				workingLabel.setStyleName("inAppLink");
-	
-				workingLabel.setOverflow(Overflow.VISIBLE);
-				workingLabel.setAutoWidth();
-				workingLabel.setAutoHeight();
-				workingLabel.setWrap(false);
-				workingLabel.addClickHandler(new ClickHandler() {
-					public void onClick(ClickEvent event) {
-						documentsStrategy.openDocument(document.getID(), true);
-					}
-				});
-				
-				layout.addMember(workingLabel);
+				if (workingChangesSummary != null) {
+					Label workingLabel = new Label(workingChangesSummary);
+		
+					workingLabel.setStyleName("inAppLink");
+		
+					workingLabel.setOverflow(Overflow.VISIBLE);
+					workingLabel.setAutoWidth();
+					workingLabel.setAutoHeight();
+					workingLabel.setWrap(false);
+					workingLabel.addClickHandler(new ClickHandler() {
+						public void onClick(ClickEvent event) {
+							documentsStrategy.openDocument(document.getID(), true);
+						}
+					});
+					
+					layout.addMember(workingLabel);
+				}
 			}
 			
 			return layout;

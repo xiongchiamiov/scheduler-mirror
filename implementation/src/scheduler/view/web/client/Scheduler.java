@@ -114,12 +114,19 @@ public class Scheduler implements EntryPoint, UpdateHeaderStrategy
 	public void onOpenedDocument(String documentName) {
 		scheduleNameContainer.setWidget(new Label(documentName));
 		
-		appNameContainer.clear();
 		appNameContainer.setWidget(new Label(" - The Scheduler Project"));
 
 		refreshWindowTitle();
 	}
 
+	public void onClosedDocument() {
+		scheduleNameContainer.setWidget(null);
+		
+		appNameContainer.setWidget(new Label("The Scheduler Project"));
+		
+		refreshWindowTitle();
+	}
+	
 	public void onLogin(String username, final LogoutHandler logoutHandler) {
 		Label uname = new Label(username);
 		DOM.setElementAttribute(uname.getElement(), "id", "s_unameLbl");
@@ -133,6 +140,14 @@ public class Scheduler implements EntryPoint, UpdateHeaderStrategy
 		
 		refreshWindowTitle();
 		DOM.setElementAttribute(logoutLinkContainer.getWidget().getElement(), "id", "s_logoutLnk");
+	}
+	
+	public void onLogout() {
+		usernameContainer.setWidget(null);
+		
+		logoutLinkContainer.setWidget(null);
+		
+		refreshWindowTitle();
 	}
 
 	@Override

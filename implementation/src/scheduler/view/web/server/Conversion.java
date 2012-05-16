@@ -43,17 +43,6 @@ public abstract class Conversion {
 		return DayGWT.values()[gwtDay.ordinal()];
 	}
 	
-	private static HashMap<DayGWT, HashMap<Integer, Integer>> timePrefsToGWT(HashMap<Day, HashMap<Integer, Integer>> modelPrefs) {
-		HashMap<DayGWT, HashMap<Integer, Integer>> gwtPrefs = new HashMap<DayGWT, HashMap<Integer, Integer>>();
-		
-		for (Entry<Day, HashMap<Integer, Integer>> gwtPrefsForDay : modelPrefs.entrySet()) {
-			DayGWT gwtDay = dayToGWT(gwtPrefsForDay.getKey());
-			gwtPrefs.put(gwtDay, gwtPrefsForDay.getValue());
-		}
-		
-		return gwtPrefs;
-	}
-	
 	public static InstructorGWT instructorToGWT(Instructor instructor) throws DatabaseException {
 		return new InstructorGWT(
 				instructor.getID(),
@@ -67,6 +56,8 @@ public abstract class Conversion {
 	}
 	
 	public static Course courseFromGWT(Model model, CourseGWT course) throws DatabaseException {
+		assert(course.getID() == null || course.getID() >= 0);
+		
 		Collection<Set<Day>> modelDayPatterns = new LinkedList<Set<Day>>();
 		for (Set<DayGWT> gwtDayPattern : course.getDayPatterns())
 			modelDayPatterns.add(dayPatternFromGWT(gwtDayPattern));
@@ -88,6 +79,8 @@ public abstract class Conversion {
 	}
 	
 	public static Instructor instructorFromGWT(Model model, InstructorGWT instructor) throws DatabaseException {
+		assert(instructor.getID() == null || instructor.getID() >= 0);
+		
 		Instructor result = model.createTransientInstructor(
 				instructor.getFirstName(),
 				instructor.getLastName(),
@@ -137,6 +130,8 @@ public abstract class Conversion {
 	}
 	
 	static void readCourseFromGWT(CourseGWT source, Course result, Model model) throws DatabaseException {
+		assert(source.getID() == null || source.getID() >= 0);
+		
 		result.setIsSchedulable(source.isSchedulable());
 		result.setName(source.getCourseName());
 		result.setCatalogNumber(source.getCatalogNum());
@@ -159,6 +154,8 @@ public abstract class Conversion {
 	}
 
 	public static void readInstructorFromGWT(InstructorGWT source, Instructor result) {
+		assert(source.getID() == null || source.getID() >= 0);
+		
 		result.setIsSchedulable(source.isSchedulable());
 		result.setFirstName(source.getFirstName());
 		result.setLastName(source.getLastName());
@@ -169,6 +166,8 @@ public abstract class Conversion {
 	}
 
 	public static void readLocationFromGWT(LocationGWT source, Location result) {
+		assert(source.getID() == null || source.getID() >= 0);
+		
 		result.setIsSchedulable(source.isSchedulable());
 		result.setMaxOccupancy(source.getRawMaxOccupancy());
 		result.setRoom(source.getRoom());
@@ -219,8 +218,6 @@ public abstract class Conversion {
 		
 		assert(!doc.isWorkingCopy());
 		
-		assert((workingChangesSummary == null) == (doc.getWorkingCopyOrNull() == null));
-		
 		return new OriginalDocumentGWT(
 				doc.getID(),
 				doc.getName(),
@@ -235,6 +232,8 @@ public abstract class Conversion {
 	}
 
 	public static ScheduleItem scheduleItemFromGWT(Model model, ScheduleItemGWT source) throws DatabaseException {
+		assert(source.getID() == null || source.getID() >= 0);
+		
 		Set<Day> dayPattern = dayPatternFromGWT(source.getDays());
 		
 		ScheduleItem result = model.createTransientScheduleItem(
@@ -259,6 +258,8 @@ public abstract class Conversion {
 	}
 
 	public static void readScheduleItemFromGWT(Model model, ScheduleItemGWT itemGWT, ScheduleItem item) throws DatabaseException {
+		assert(itemGWT.getID() == null || itemGWT.getID() >= 0);
+		
 		item.setCourse(model.findCourseByID(itemGWT.getCourseID()));
 		item.setDays(Conversion.dayPatternFromGWT(itemGWT.getDays()));
 		item.setEndHalfHour(itemGWT.getEndHalfHour());
@@ -275,10 +276,12 @@ public abstract class Conversion {
 		
 		if (documentGWT instanceof OriginalDocumentGWT) {
 			OriginalDocumentGWT originalDocumentGWT = (OriginalDocumentGWT)documentGWT;
+			assert(originalDocumentGWT.getID() >= 0);
 			document = model.findDocumentByID(originalDocumentGWT.getID());
 		}
 		else if (documentGWT instanceof WorkingDocumentGWT) {
 			WorkingDocumentGWT workingDocumentGWT = (WorkingDocumentGWT)documentGWT;
+			assert(workingDocumentGWT.getRealID() >= 0);
 			document = model.findDocumentByID(workingDocumentGWT.getRealID());
 		}
 		else

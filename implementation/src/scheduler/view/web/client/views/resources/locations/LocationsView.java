@@ -35,7 +35,7 @@ public class LocationsView extends VLayout {
 	public LocationsView(CachedOpenWorkingCopyDocument document) {
 		this.document = document;
 		
-		setID("s_locationviewTab");
+//		setID("s_locationviewTab");
 		this.setWidth100();
 		this.setHeight100();
 		// this.setHorizontalAlignment(ALIGN_CENTER);
@@ -135,7 +135,7 @@ public class LocationsView extends VLayout {
 		newButton.setAutoWidth();
 		newButton.setOverflow(Overflow.VISIBLE);
 		//DON'T CHANGE THIS ID IT WILL BREAK THE BUTTONS
-		newButton.setID("s_newLocationBtn");
+//		newButton.setID("s_newLocationBtn");
 		bottomButtonFlowPanel.addMember(newButton);
 
 		IButton dupeBtn = new IButton("Duplicate Selected Locations",
@@ -153,7 +153,7 @@ public class LocationsView extends VLayout {
 		dupeBtn.setAutoWidth();
 		dupeBtn.setOverflow(Overflow.VISIBLE);
 		//DON'T CHANGE THIS ID IT WILL BREAK THE BUTTONS
-		dupeBtn.setID("s_dupeLocationBtn");
+//		dupeBtn.setID("s_dupeLocationBtn");
 		bottomButtonFlowPanel.addMember(dupeBtn);
 
 		IButton remove = new IButton("Remove Selected Locations",
@@ -167,7 +167,7 @@ public class LocationsView extends VLayout {
 		remove.setAutoWidth();
 		remove.setOverflow(Overflow.VISIBLE);
 		//DON'T CHANGE THIS ID IT WILL BREAK THE BUTTONS
-		remove.setID("s_removeLocationBtn");
+//		remove.setID("s_removeLocationBtn");
 
 		bottomButtonFlowPanel.addMember(remove);
 

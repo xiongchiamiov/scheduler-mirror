@@ -49,8 +49,11 @@ public class CoursesDataSource extends DataSource {
 		
 		DataSourceEnumField dayCombinationsField = new DataSourceEnumField("dayCombinations");
 		dayCombinationsField.setMultiple(true);
-		dayCombinationsField.setValueMap("M", "Tu", "W", "Th", "F", "MW", "MF", "WF", "TuTh", "MWF", "TuWThF", "MWThF", "MTuThF", "MTuWTh", "TuThF", "Sa", "Su");
 		
+		
+		dayCombinationsField.setValueMap(
+				"MW", "MF", "WF", "TR", "MWF", "MTWR", "MTWF", "MWRF", "TWRF", "MTWRF", "Tether",
+				"M", "T", "W", "R", "F");
 		DataSourceTextField hoursPerWeekField = new DataSourceTextField("hoursPerWeek");
 		
 		DataSourceTextField maxEnrollmentField = new DataSourceTextField("maxEnrollment");

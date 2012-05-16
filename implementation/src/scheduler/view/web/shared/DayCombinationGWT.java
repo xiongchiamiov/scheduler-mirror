@@ -63,11 +63,11 @@ public class DayCombinationGWT implements Serializable {
 		if (days.contains(1))
 			result += "M";
 		if (days.contains(2))
-			result += "Tu";
+			result += "T";
 		if (days.contains(3))
 			result += "W";
 		if (days.contains(4))
-			result += "Th";
+			result += "R";
 		if (days.contains(5))
 			result += "F";
 		if (days.contains(6))
@@ -81,11 +81,11 @@ public class DayCombinationGWT implements Serializable {
 			days.days.add(0);
 		if (string.contains("M"))
 			days.days.add(1);
-		if (string.contains("Tu"))
+		if (string.contains("T"))
 			days.days.add(2);
 		if (string.contains("W"))
 			days.days.add(3);
-		if (string.contains("Th"))
+		if (string.contains("R"))
 			days.days.add(4);
 		if (string.contains("F"))
 			days.days.add(5);

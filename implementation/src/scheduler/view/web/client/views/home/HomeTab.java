@@ -45,7 +45,7 @@ public class HomeTab extends Tab {
 		VLayout homePane = new VLayout();
 		setPane(homePane);
 		
-		setID("s_HomeTab");
+//		setID("s_HomeTab");
 
 		{
 			Canvas spacer = new Canvas();
@@ -86,7 +86,7 @@ public class HomeTab extends Tab {
 			}
 		});
 		
-		aliveOriginalDocumentsGrid.setID("s_doclistTbl");
+//		aliveOriginalDocumentsGrid.setID("s_doclistTbl");
 		
 		ListGridField idField = new ListGridField("id", "&nbsp;");
 		
@@ -146,7 +146,7 @@ public class HomeTab extends Tab {
 		});
 		deleteButton.setAutoWidth();
 		deleteButton.setOverflow(Overflow.VISIBLE);
-		deleteButton.setID("s_deleteBtn");
+//		deleteButton.setID("s_deleteBtn");
 		bottomButtons.addMember(deleteButton);
 
 		{
@@ -167,7 +167,7 @@ public class HomeTab extends Tab {
 		});
 		mergeButton.setAutoWidth();
 		mergeButton.setOverflow(Overflow.VISIBLE);
-		mergeButton.setID("s_mergeBtn");
+//		mergeButton.setID("s_mergeBtn");
 		bottomButtons.addMember(mergeButton);
 		
 		return bottomButtons;
@@ -184,7 +184,7 @@ public class HomeTab extends Tab {
 		});
 		
 		
-		createButton.setID("s_createBtn");
+//		createButton.setID("s_createBtn");
 		createButton.setAutoWidth();
 		createButton.setOverflow(Overflow.VISIBLE);
 		topButtons.addMember(createButton);
@@ -201,7 +201,7 @@ public class HomeTab extends Tab {
 				Import.showImport();
 			}
 		});
-		importButton.setID("importButton");
+//		importButton.setID("importButton");
 		importButton.setAutoWidth();
 		importButton.setOverflow(Overflow.VISIBLE);
 		topButtons.addMember(importButton);

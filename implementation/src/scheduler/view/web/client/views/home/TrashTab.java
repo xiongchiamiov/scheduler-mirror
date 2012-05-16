@@ -67,7 +67,7 @@ public class TrashTab extends Tab {
 			}
 		});
 		
-		deletedOriginalDocumentsGrid.setID("s_doclistTrashTbl");
+//		deletedOriginalDocumentsGrid.setID("s_doclistTrashTbl");
 		
 		ListGridField idField = new ListGridField("id", "&nbsp;");
 		
@@ -112,7 +112,7 @@ public class TrashTab extends Tab {
 		});
 		restoreButton.setAutoWidth();
 		restoreButton.setOverflow(Overflow.VISIBLE);
-		restoreButton.setID("s_restoreBtn");
+//		restoreButton.setID("s_restoreBtn");
 		bottomButtons.addMember(restoreButton);
 		
 		return bottomButtons;

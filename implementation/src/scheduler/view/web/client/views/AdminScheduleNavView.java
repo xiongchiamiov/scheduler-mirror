@@ -79,6 +79,7 @@ public class AdminScheduleNavView extends VerticalPanel {
 		document.addObserver(new CachedOpenWorkingCopyDocument.Observer() {
 			@Override
 			public void onAnyLocalChange() {
+				documentChanged = true;
 				updateHeaderStrategy.setDocumentChanged(true);
 			}
 		});
@@ -251,19 +252,19 @@ public class AdminScheduleNavView extends VerticalPanel {
 		final Tab coursesTab = new Tab("Courses");
 		coursesView = new CoursesView(document);
 		coursesTab.setPane(coursesView);
-		coursesTab.setID("s_coursesTab");
+//		coursesTab.setID("s_coursesTab");
 		tabSet.addTab(coursesTab);
 		
 		final Tab instructorsTab = new Tab("Instructors");
 		instructorsView = new InstructorsView(document);
 		instructorsTab.setPane(instructorsView);
-		instructorsTab.setID("s_instructorsTab");
+//		instructorsTab.setID("s_instructorsTab");
 		tabSet.addTab(instructorsTab);
 		
 		final Tab locationsTab = new Tab("Locations");
 		locationsView = new LocationsView(document);
 		locationsTab.setPane(locationsView);
-		locationsTab.setID("s_locationsTab");
+//		locationsTab.setID("s_locationsTab");
 		tabSet.addTab(locationsTab);
 		
 		final Tab scheduleTab = new Tab("Schedule");
@@ -271,7 +272,7 @@ public class AdminScheduleNavView extends VerticalPanel {
 		emptyCanvas.setWidth(0);
 		emptyCanvas.setHeight(1); // SmartGWT complains when we have 0 area.
 		scheduleTab.setPane(emptyCanvas);
-		scheduleTab.setID("s_scheduleTab");
+//		scheduleTab.setID("s_scheduleTab");
 		tabSet.addTab(scheduleTab);
 		
 		tabSet.setTabBarControls(TabBarControls.TAB_SCROLLER, TabBarControls.TAB_PICKER);
@@ -334,10 +335,13 @@ public class AdminScheduleNavView extends VerticalPanel {
 	}
 
 	public void close() {
-		calendarView.close();
+		if (calendarView != null)
+			calendarView.close();
 		coursesView.close();
 		instructorsView.close();
 		locationsView.close();
+		
+		updateHeaderStrategy.onClosedDocument();
 		
 		this.clear();
 	}
