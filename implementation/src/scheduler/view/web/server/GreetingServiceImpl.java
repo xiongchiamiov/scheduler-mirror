@@ -56,7 +56,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
  */
 @SuppressWarnings("serial")
 public class GreetingServiceImpl extends RemoteServiceServlet implements GreetingService {
-	private static final boolean LOG_ENTERING_AND_EXITING_CALLS = true;
+	private static final boolean LOG_ENTERING_AND_EXITING_CALLS = false;
 	
 	
 	public final GreetingServiceImplInner inner;
@@ -281,6 +281,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			boolean allowOverwrite) throws SessionClosedFromInactivityExceptionGWT {
 		if (LOG_ENTERING_AND_EXITING_CALLS)
 			System.out.println("Begin GreetingServiceImpl.associateWorkingCopyWithNewOriginalDocument(workingdocid " + workingCopyDocumentID + ")");
+		
+		System.out.println("associating!");
 		
 		synchronized (this) {
 			inner.sanityCheck();

@@ -83,10 +83,10 @@ public class CachedOpenWorkingCopyDocument {
 		return new WorkingDocumentGWT(localWorkingDocument); // Cloning for defense. Makes you wish java had const.
 	}
 
-	public void associateAndCopyToDifferentOriginalDocument(
+	public void copyToAndAssociateWithDifferentOriginalDocument(
 			DocumentGWT existingOriginalDocumentByThatName,
 			AsyncCallback<Void> callback) {
-		assert(false); // implement
+		service.associateWorkingCopyWithNewOriginalDocument(sessionID, localWorkingDocument.getRealID(), existingOriginalDocumentByThatName.getName(), true, callback);
 	}
 
 	public void copyIntoAssociatedOriginalDocument(AsyncCallback<Void> callback) {
@@ -290,5 +290,9 @@ public class CachedOpenWorkingCopyDocument {
 
 	public LocationGWT getLocationByID(int id) {
 		return locations.getByID(id);
+	}
+
+	public void copyToAndAssociateWithNewOriginalDocument(String newDocumentName, AsyncCallback<Void> callback) {
+		service.associateWorkingCopyWithNewOriginalDocument(sessionID, localWorkingDocument.getRealID(), newDocumentName, false, callback);
 	}
 }

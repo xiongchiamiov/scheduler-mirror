@@ -37,7 +37,7 @@ public class SaveAsDialog {
             	Window.alert("Please enter a name for your new document.");
             }
             else {
-            	afterNewNameSupplied(service, document, newDocumentName);
+            	afterNewNameSupplied(service, document, updateHeaderStrategy, newDocumentName, unsavedDocumentStrategy);
             }
          }
       });
@@ -79,7 +79,7 @@ public class SaveAsDialog {
          saveAsListBox.addItem(doc.getName());
 	}
 	
-	private static void afterNewNameSupplied(CachedService service, CachedOpenWorkingCopyDocument document, String newDocumentName) {
+	private static void afterNewNameSupplied(CachedService service, CachedOpenWorkingCopyDocument document, final UpdateHeaderStrategy updateHeaderStrategy, final String newDocumentName, final UnsavedDocumentStrategy unsavedDocumentStrategy) {
 
       DocumentGWT existingOriginalDocumentByThatName = null;
       for (DocumentGWT existingDocument : service.originalDocuments.getAll())
@@ -90,7 +90,7 @@ public class SaveAsDialog {
       	String confirmMessage = "The document \"" + existingOriginalDocumentByThatName.getName() + "\" already exists.  Are you sure you want to replace it?";
       	
          if (Window.confirm(confirmMessage)) {
-         	document.associateAndCopyToDifferentOriginalDocument(
+         	document.copyToAndAssociateWithDifferentOriginalDocument(
          			existingOriginalDocumentByThatName,
          			new AsyncCallback<Void>() {
                		@Override
@@ -100,13 +100,16 @@ public class SaveAsDialog {
                		
                		@Override
          				public void onSuccess(Void result) {
+               			updateHeaderStrategy.onDocumentNameChanged(newDocumentName);
+               			unsavedDocumentStrategy.setDocumentChanged(false);
          					Window.alert("Successfully saved!");
          				}
                	});
          }
       }
       else {
-      	document.copyIntoAssociatedOriginalDocument(
+      	document.copyToAndAssociateWithNewOriginalDocument(
+      			newDocumentName,
       			new AsyncCallback<Void>() {
             		@Override
             		public void onFailure(Throwable caught) {
@@ -115,6 +118,8 @@ public class SaveAsDialog {
             		
             		@Override
       				public void onSuccess(Void result) {
+            			updateHeaderStrategy.onDocumentNameChanged(newDocumentName);
+            			unsavedDocumentStrategy.setDocumentChanged(false);
       					Window.alert("Successfully saved!");
       				}
             	});

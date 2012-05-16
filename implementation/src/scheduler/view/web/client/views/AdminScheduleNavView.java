@@ -141,7 +141,13 @@ public class AdminScheduleNavView extends VerticalPanel {
 		MenuItem saveAsItem = new MenuItem("Save As", "icons/16/save_as.png");
 		saveAsItem.addClickHandler(new ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				SaveAsDialog.afterSaveAsPressed(service, document, updateHeaderStrategy, (UnsavedDocumentStrategy)AdminScheduleNavView.this);
+				SaveAsDialog.afterSaveAsPressed(service, document, updateHeaderStrategy, new UnsavedDocumentStrategy() {
+					@Override
+					public void setDocumentChanged(boolean documentChanged) {
+						AdminScheduleNavView.this.documentChanged = documentChanged;
+						updateHeaderStrategy.setDocumentChanged(documentChanged);
+					}
+				});
 			}
 		});
 		

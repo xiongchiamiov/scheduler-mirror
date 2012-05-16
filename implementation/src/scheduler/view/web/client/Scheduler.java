@@ -163,7 +163,6 @@ public class Scheduler implements EntryPoint, UpdateHeaderStrategy
 
 	@Override
 	public void onDocumentNameChanged(String newDocumentName) {
-		scheduleNameContainer.clear();
 		scheduleNameContainer.setWidget(new Label(newDocumentName));
 
 		refreshWindowTitle();
