@@ -14,13 +14,12 @@ create table document (
 
 drop table workingcopy;
 create table workingcopy (
-    id integer primary key,
-    originalDocID integer,
+    id,
+    originalDocID,
     unique (originalDocID),
     foreign key (originalDocID) references document(id),
     foreign key (id) references document(id)
 );
-
 
 drop table instructor;
 create table instructor (
@@ -29,8 +28,8 @@ create table instructor (
     firstName text not null,
     lastName text not null,
     username text not null,
-    maxWTU integer not null,
-    schedulable tinyint(1),
+    maxWTU text not null,
+    schedulable tinyint(1) not null,
     unique (username, docID),
     foreign key (docID) references document(id)
 );
@@ -39,11 +38,12 @@ drop table location;
 create table location (
     id integer primary key,
     docID,
-    maxOccupancy integer not null,
+    maxOccupancy text not null,
     type text not null,
     room text not null,
     schedulable tinyint(1) not null,
-    unique (room, docID)
+    unique (room, docID),
+    foreign key (docID) references document(id)
 );
 
 drop table locationequipment;
@@ -60,16 +60,17 @@ drop table course;
 create table course (
     id integer primary key,
     docID,
-    enrollment integer not null,
-    wtu integer not null,
-    scu integer not null,
+    enrollment text not null,
+    wtu text not null,
+    scu text not null,
     type text not null,
-    numSections integer not null,
+    numSections text not null,
     dept text not null,
     catalogNum text not null,
     name text not null,
     schedulable tinyint(1) not null,
-    numHalfHours integer not null,
+    numHalfHours text not null,
+    unique (name, catalogNum, docID),
     foreign key (docID) references document(id)
 );
 
@@ -103,7 +104,7 @@ create table scheduleitem (
     startTime integer not null, 
     endTime integer not null,
     dayPatternID,
-    sectionNum integer not null,
+    sectionNum text not null,
     isPlaced tinyint(1) not null,
     isConflicted tinyint(1) not null,
     unique (docID, courseID, sectionNum),
@@ -125,20 +126,16 @@ drop table labtethered;
 create table labtethered (
     id integer primary key,
     lecID,
-    tetheredID,
-    unique (tetheredID),
-    foreign key (lecID) references course(id),
-    foreign key (tetheredID) references course(id)
+    foreign key (lecID) references course(id)
 );
 
 drop table timeslotpref; 
 create table timeslotpref (
     id integer primary key,
-    day integer not null,
-    time integer not null,
+    timeID integer not null,
     instID,
     prefLevel integer not null,
-    unique (instID, day, time),
+    unique (instID, timeID),
     foreign key (instID) references instructor(id)
 );
 

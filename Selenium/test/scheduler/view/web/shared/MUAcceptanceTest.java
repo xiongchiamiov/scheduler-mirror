@@ -18,7 +18,7 @@ public abstract class MUAcceptanceTest extends DefaultSelTestCase {
 	public void setUp(WebDriver drv) throws java.io.IOException {
 		Properties properties = new Properties();
 		properties.load(this.getClass().getResourceAsStream("selenium.properties"));
-		this.protoURL = properties.getProperty("domain") + "/MU";
+		this.protoURL = properties.getProperty("domain") + "/MUx";
 		this.driver = drv;
 		super.setUp(protoURL, drv);
 	}
@@ -88,6 +88,8 @@ public abstract class MUAcceptanceTest extends DefaultSelTestCase {
 		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 0, true, "MU", "101", "Introduction to Music Theory", "7", "3", "3", "MW,MWF,TuTh", "3", "27", "LEC", "Smart Room", null);
 		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 1, true, "MU", "104", "Musicianship I", "1", "3", "3", "MWF", "3", "14", "LEC", "Laptop Connectivity, Overhead", null);
 		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 2, true, "MU", "105", "Music Theory II: Chromatic Materials", "1", "3", "3", "MWF", "4.5", "27", "LEC", null, null);
+		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 3, true, "MU", "105", "Music Theory II: Chromatic Materials", "1", "3", "3", "MWF", "4.5", "27", "LEC", null, null);
+		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 4, true, "MU", "105", "Music Theory II: Chromatic Materials", "1", "3", "3", "MWF", "4.5", "27", "LEC", null, null);
 
 		
 		// Click on the instructors tab

@@ -84,7 +84,6 @@ public class SQLdb implements IDatabase {
 					new Table.Column("locID", Integer.class),
 					new Table.Column("equipID", Integer.class)
 	});
-	//db course also has a lectureID integer and a boolean tethered to lect. do we need?
 	Table<SQLCourse> courseTable = new Table<SQLCourse>(SQLCourse.class, "course",
 			new Table.Column[] {
 					new Table.Column("id", Integer.class),
@@ -120,8 +119,8 @@ public class SQLdb implements IDatabase {
 					new Table.Column("locID", Integer.class),
 					new Table.Column("courseID", Integer.class),
 					new Table.Column("startTime", Integer.class),
-					new Table.Column("endTime", String.class),
-					new Table.Column("dayPatternID", String.class),
+					new Table.Column("endTime", Integer.class),
+					new Table.Column("dayPatternID", Integer.class),
 					new Table.Column("sectionNum", String.class),
 					new Table.Column("isPlaced", Boolean.class),
 					new Table.Column("isConflicted", Boolean.class)
@@ -129,14 +128,17 @@ public class SQLdb implements IDatabase {
 	Table<SQLCourseAssociation> labassociationsTable = new Table<SQLCourseAssociation>(SQLCourseAssociation.class, "labassociations",
 			new Table.Column[] {
 					new Table.Column("id", Integer.class),
-					new Table.Column("lecID", Integer.class), 
-					new Table.Column("isTethered", Boolean.class)
+					new Table.Column("lecID", Integer.class)
+	});
+	Table<SQLCourseAssociation> labtetheredTable = new Table<SQLCourseAssociation>(SQLCourseAssociation.class, "labtethered",
+			new Table.Column[] {
+					new Table.Column("id", Integer.class),
+					new Table.Column("lecID", Integer.class)
 	});
 	Table<SQLTimePreference> timeslotprefTable = new Table<SQLTimePreference>(SQLTimePreference.class, "timeslotpref",
 			new Table.Column[] {
 					new Table.Column("id", Integer.class),
-					new Table.Column("day", Integer.class),
-					new Table.Column("time", Integer.class),
+					new Table.Column("timeID", Integer.class),
 					new Table.Column("instID", Integer.class),
 					new Table.Column("prefLevel", Integer.class)
 	});
@@ -154,7 +156,7 @@ public class SQLdb implements IDatabase {
 	});
 	Table<SQLEquipmentType> equipmentTable = new Table<SQLEquipmentType>(SQLEquipmentType.class, "equipment",
 			new Table.Column[] {
-					new Table.Column("id", Integer.class),  
+					new Table.Column("id", Integer.class),  /*it's unique id generated*/
 					new Table.Column("desc", String.class)
 	});
 	Table<SQLUser> userdataTable = new Table<SQLUser>(SQLUser.class, "userdata",
@@ -654,12 +656,16 @@ public class SQLdb implements IDatabase {
 				section, isConflicted, isPlaced, days);
 	}
 
-	//TALK TO EVAN ABOUT THIS!!!
 	@Override
 	public void insertScheduleItem(IDBDocument document, IDBCourse course,
 			IDBInstructor instructor, IDBLocation location, IDBScheduleItem item)
 			throws DatabaseException {
-		scheduleItemTable.insert(null);	
+		SQLScheduleItem sqlItem = (SQLScheduleItem) item;
+		Object[] insert = {null, document.getID(), instructor.getID(),
+				location.getID(), course.getID(), sqlItem.getStartHalfHour(), sqlItem.getEndHalfHour(),
+				null, sqlItem.getSection(), sqlItem.isConflicted(), sqlItem.isPlaced(),
+				sqlItem.getDays()};
+		scheduleItemTable.insert(insert);	
 	}
 
 
@@ -729,12 +735,10 @@ public class SQLdb implements IDatabase {
 	@Override
 	public Collection<IDBLocation> findLocationsForDocument(IDBDocument document)
 			throws DatabaseException {
-		if(document == null || document.getID() == null)
-			throw new DatabaseException("Document not found");
-		
 		Collection<IDBLocation> result = new LinkedList<IDBLocation>();
 		SQLDocument doc = (SQLDocument) document;
-		HashMap<String, Object> wheres = new HashMap<String, Object>();	
+		HashMap<String, Object> wheres = new HashMap<String, Object>();
+		
 		wheres.put("docID", doc.getID());
 		
 		for(SQLLocation loc : locationTable.select(wheres))
@@ -748,10 +752,11 @@ public class SQLdb implements IDatabase {
 		IDBLocation result;
 		HashMap<String, Object> wheres = new HashMap<String, Object>();
 		wheres.put("id", id);
-
+		//TODO: what is expected behavior if none found? are we always passed valid ids? throws NOTFOUNDEXCEPTION
 		if(locationTable.select(wheres).isEmpty())
 			throw new NotFoundException("Location not found with ID: " + id);
 		result = locationTable.select(wheres).get(0);
+		System.out.println("result: " + result);
 		return result;
 	}
 
@@ -764,63 +769,57 @@ public class SQLdb implements IDatabase {
 				room, new Boolean(isSchedulable));
 	}
 
+
 	@Override
 	public void insertLocation(IDBDocument containingDocument,
 			IDBLocation location) throws DatabaseException {
 		SQLLocation sqlLocation = (SQLLocation) location;
 		assert(sqlLocation.id == null);
-			if(containingDocument == null || containingDocument.getID() == null)
-				throw new DatabaseException("Document not found");
-			if(location == null)
-				throw new DatabaseException("Location not found");
 		sqlLocation.docID = containingDocument.getID();
 		sqlLocation.id = locationTable.insert(new Object[]{ sqlLocation.docID, sqlLocation.maxOccupancy, sqlLocation.type, sqlLocation.room, sqlLocation.schedulable});
+		System.out.println("id: " + sqlLocation.id);
 	}
+
 
 	@Override
 	public void updateLocation(IDBLocation location) throws DatabaseException {
 		assert(location!=null);
 		assert(location.getID() != null);
-		if(location == null || location.getID() == null)
-			throw new DatabaseException("Location not found");
 		SQLLocation sqlLocation = (SQLLocation)location;
 		locationTable.update(new Object[] {sqlLocation.getID(), sqlLocation.docID, sqlLocation.maxOccupancy, sqlLocation.type, sqlLocation.room, 
 				sqlLocation.schedulable}, sqlLocation.getID());
 	}
 
+
 	@Override
 	public void deleteLocation(IDBLocation location) throws DatabaseException {
-		if(location == null || location.getID() == null)
-			throw new DatabaseException("Location not found");
 		locationTable.delete(location.getID());
 	}
+
 
 	@Override
 	public Collection<IDBCourse> findCoursesForDocument(IDBDocument document)
 			throws DatabaseException {
-		if(document == null || document.getID() == null)
-			throw new DatabaseException("Document not found");
-		
 		Collection<IDBCourse> result = new LinkedList<IDBCourse>();
 		SQLDocument doc = (SQLDocument) document;
-		HashMap<String, Object> wheres = new HashMap<String, Object>();	
+		HashMap<String, Object> wheres = new HashMap<String, Object>();
+		
 		wheres.put("docID", doc.getID());
-
+		
 		for(SQLCourse course : courseTable.select(wheres))
 			result.add(course);
 		
 		return result;
 	}
-	
+
+
 	@Override
 	public IDBCourse findCourseByID(int id) throws DatabaseException {
 		IDBCourse result;
 		HashMap<String, Object> wheres = new HashMap<String, Object>();
-		wheres.put("id", new Integer(id));
-		
-		if(courseTable.select(wheres).isEmpty())
-			throw new NotFoundException("Course not found with ID: " + id);
+		wheres.put("id", id);
 		result = courseTable.select(wheres).get(0);
+		//System.out.println(result);
 		return result;
 	}
 
@@ -834,39 +833,36 @@ public class SQLdb implements IDatabase {
 				name, new Boolean(isSchedulable), numHalfHoursPerWeek);
 	}
 
+
 	@Override
 	public void insertCourse(IDBDocument underlyingDocument, IDBCourse course)
 			throws DatabaseException {
-		SQLCourse sqlcourse = (SQLCourse) course;
-		
-		assert(sqlcourse.id == null);
-			if(underlyingDocument == null || underlyingDocument.getID() == null)
-				throw new DatabaseException("Document not found");
-			if(course == null)
-				throw new DatabaseException("Course not found");
-		sqlcourse.documentID =underlyingDocument.getID();
-		sqlcourse.id = courseTable.insert(new Object[]{sqlcourse.documentID, sqlcourse.maxEnrollment, sqlcourse.wtu, sqlcourse.scu, 
-				sqlcourse.type, sqlcourse.numSections, sqlcourse.department, sqlcourse.catalogNumber, sqlcourse.name, sqlcourse.isSchedulable,
-				sqlcourse.numHalfHoursPerWeek});
+		assert(course != null) : "Specified course null";
+		SQLCourse sqlCourse = (SQLCourse) course;
+		assert(sqlCourse.id == null);
+		sqlCourse.documentID = underlyingDocument.getID();
+		//this works with sqldocument.documentID, forDocumentsTest
+		sqlCourse.id = courseTable.insert(new Object[]{ sqlCourse.documentID, sqlCourse.maxEnrollment, sqlCourse.wtu, sqlCourse.scu, sqlCourse.type, sqlCourse.numSections,
+				sqlCourse.department, sqlCourse.catalogNumber, sqlCourse.name, sqlCourse.isSchedulable, sqlCourse.numHalfHoursPerWeek});
+		//System.out.println("inserting course. id is: " + sqlCourse.id);
 	}
+
 
 	@Override
 	public void updateCourse(IDBCourse course) throws DatabaseException {
 		assert(course!=null);
 		assert(course.getID() != null);
-		if(course == null || course.getID() == null)
-			throw new DatabaseException("Course not found");
 		SQLCourse sqlCourse = (SQLCourse)course;
 		courseTable.update(new Object[] {sqlCourse.getID(), sqlCourse.documentID, sqlCourse.maxEnrollment, sqlCourse.wtu, sqlCourse.scu, sqlCourse.type, sqlCourse.numSections,
 				sqlCourse.department, sqlCourse.catalogNumber, sqlCourse.name, sqlCourse.isSchedulable, sqlCourse.numHalfHoursPerWeek}, sqlCourse.getID());
 	}
 
+
 	@Override
 	public void deleteCourse(IDBCourse course) throws DatabaseException {
-		if(course == null || course.getID() == null)
-			throw new DatabaseException("Course not found");
 		courseTable.delete(course.getID());
 	}
+
 
 	@Override
 	public IDBDocument findDocumentForCourse(IDBCourse underlyingCourse)
@@ -875,6 +871,7 @@ public class SQLdb implements IDatabase {
 		if(underlyingCourse == null || underlyingCourse.getID() == null)
 			throw new DatabaseException("Course not found");
 
+		
 		HashMap<String, Object> wheres = new HashMap<String, Object>();	
 		wheres.put("docID", ((SQLCourse)underlyingCourse).documentID);
 
@@ -884,9 +881,11 @@ public class SQLdb implements IDatabase {
 		return documentTable.select(wheres).get(0);
 	}
 
+
 	@Override
 	public IDBCourseAssociation getAssociationForLabOrNull(IDBCourse underlying)
 			throws DatabaseException {
+		SQLCourseAssociation courseAssoc;
 		SQLCourse labcourse = (SQLCourse)underlying;
 		HashMap<String, Object> labID = new HashMap<String, Object>();
 		labID.put("id", labcourse.id);
@@ -925,6 +924,7 @@ public class SQLdb implements IDatabase {
 		return result;
 	}
 
+
 	@Override
 	public IDBCourse getAssociationLecture(IDBCourseAssociation association)
 			throws DatabaseException {
@@ -940,10 +940,7 @@ public class SQLdb implements IDatabase {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see scheduler.model.db.IDatabase#getAssociationLab(scheduler.model.db.IDBCourseAssociation)
-	 */
+
 	@Override
 	public IDBCourse getAssociationLab(IDBCourseAssociation association)
 			throws DatabaseException {
@@ -1017,7 +1014,7 @@ public class SQLdb implements IDatabase {
 		SQLInstructor sqlInstructor = (SQLInstructor) instructor;
 		assert(sqlInstructor.id == null);
 		sqlInstructor.documentID = containingDocument.getID();
-
+		//this works with sqldocument.documentID, forDocumentsTest
 		sqlInstructor.id = instructorTable.insert(new Object[]{ sqlInstructor.documentID, 
 				sqlInstructor.getFirstName(), sqlInstructor.getLastName(), sqlInstructor.getUsername(), sqlInstructor.getMaxWTU(), 
 				sqlInstructor.isSchedulable()});
@@ -1248,6 +1245,8 @@ public class SQLdb implements IDatabase {
 		SQLUsedEquipment sqlusedequip = (SQLUsedEquipment) equip;
 		//(Integer id, Integer courseID, Integer equipmentTypeID)
 		sqlusedequip.id = courseequipmentTable.insert(new Object[]{ sqlusedequip.courseID, sqlusedequip.equipmentTypeID});
+		
+		
 	}
 
 
