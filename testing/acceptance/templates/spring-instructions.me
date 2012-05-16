@@ -166,16 +166,17 @@ Department	1st part of Course
 Catalog Number	2nd part of Course
 Course Name	T{
 hover over Course link
-.if 0 \{\
-go to your departments page at
-.(Ah "http://catalog.calpoly.edu/2011cat/course_descr2011.html"
-catalog.calpoly.edu/2011cat/course_descr2011.html
-.)Ah
-.\}
 T}
 # of Sections	max value of Sect for any given course
 WTU	4 if no lab with course, 5 if lab with course
-SCU	number of units in the catalog for the course
+SCU	T{
+number of units in the catalog for the course; to find this,
+go to your department's page at
+.(Ah "http://catalog.calpoly.edu/2011cat/course_descr2011.html"
+catalog.calpoly.edu/2011cat/course_descr2011.html
+.)Ah
+which will serve up a pdf document that you can search for the course
+T}
 Day Combinations	Days
 Hours Per Week	Compute from values in Days, Start, and End
 Max Enrollment	ECap
@@ -226,4 +227,4 @@ Max Capacity	LCap
 Equipment	Be creative
 .TE
 .\" LocalWords:  nh fo BI UI Jira svn html sp WTU SCU ECap Assoc prefs LCap cp
-\"  LocalWords:  CHEM Firefox IE
+\"  LocalWords:  CHEM Firefox IE cd pdf
