@@ -57,7 +57,7 @@ public class CoursesView extends VLayout {
 				if ("lectureID".equals(getFieldName(colNum))) {
 					Record record = getRecord(rowNum);
 					if (record != null) {
-						if ("LEC".equals(record.getAttribute("type"))) {
+						if ("LEC".equals(record.getAttribute("type")) || "IND".equals(record.getAttribute("type")) || "SEM".equals(record.getAttribute("type"))) {
 							return false;
 						}
 					}
@@ -196,7 +196,7 @@ public class CoursesView extends VLayout {
 			@Override
 			public String format(Object value, ListGridRecord record, int rowNum, int colNum) {
 				if ("lectureID".equals(grid.getFieldName(colNum))) {
-					if ("LEC".equals(record.getAttribute("type"))) {
+					if ("LEC".equals(record.getAttribute("type")) || "SEM".equals(record.getAttribute("type")) || "IND".equals(record.getAttribute("type"))) {
 						return "";
 					}
 				}

@@ -580,7 +580,9 @@ public class Database implements IDatabase {
 	@Override
 	public IDBCourseAssociation getAssociationForLabOrNull(IDBCourse rawLabCourse) {
 		DBCourse labCourse = (DBCourse)rawLabCourse;
-		if (!labCourse.getType().equals("LAB")) {
+		String labType = labCourse.getType();
+		boolean canTether = "LAB".equals(labType) || "ACT".equals(labType) || "DIS".equals(labType);
+		if (!canTether) {
 			assert(labCourse.lectureID == null);
 			return null;
 		}

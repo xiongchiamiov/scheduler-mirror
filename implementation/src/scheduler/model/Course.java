@@ -306,7 +306,7 @@ public class Course extends ModelObject {
 		
 //		System.out.println("is lab? " + underlyingCourse.getType().equals("LAB"));
 		
-		if (underlyingCourse.getType().equals("LAB")) {
+		if (underlyingCourse.getType().equals("LAB") || underlyingCourse.getType().equals("DIS") || underlyingCourse.getType().equals("ACT")) {
 			IDBCourseAssociation assoc = mModel.database.getAssociationForLabOrNull(underlyingCourse);
 //			System.out.println("assoc? " + assoc);
 			if (assoc == null) {

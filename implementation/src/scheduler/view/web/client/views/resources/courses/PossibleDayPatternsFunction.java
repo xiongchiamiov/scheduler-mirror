@@ -25,7 +25,7 @@ public class PossibleDayPatternsFunction implements EditorValueMapFunction {
    
    static Map<String, String> getValues(String type, String scuString) {
 
-   	boolean canTether = "LAB".equals(type) || "ACT".equals(type);
+   	boolean canTether = "LAB".equals(type) || "ACT".equals(type) || "DIS".equals(type);
 
 		Map<String, String> result = new LinkedHashMap<String, String>();
 		

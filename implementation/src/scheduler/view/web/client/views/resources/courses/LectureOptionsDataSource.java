@@ -48,7 +48,7 @@ public class LectureOptionsDataSource extends DataSource {
 		responseRecords.add(noLectureRecord);
 		
 		for (CourseGWT course : courses) {
-			if (course.getType().equals("LEC")) {
+			if (course.getType().equals("LEC") || course.getType().equals("SEM") || course.getType().equals("IND")) {
 				Record record = new Record();
 				record.setAttribute("valueField", course.getID());
 				record.setAttribute("displayField", course.getDept() + " " + course.getCatalogNum());
