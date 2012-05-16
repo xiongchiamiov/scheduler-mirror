@@ -130,12 +130,17 @@ public class Instructor extends ModelObject {
 		if (!timePreferencesLoaded)
 			return;
 		
+		System.out.println("Days values: " + Day.values());
 		for (Day day : Day.values()) {
 			for (int halfHour = 0; halfHour < 48; halfHour++) {
+				System.out.println("halfhour: " + halfHour);
+				System.out.println("Before creating IDBTime, sending to database day and time: " + day.ordinal() + " " + halfHour);
 				IDBTime time = model.database.findTimeByDayAndHalfHour(day.ordinal(), halfHour); 
-				
+				System.out.println("Instructor.java: Created time with [day][halfhour] " + time.getDay() + " " + time.getHalfHour());
 				int preference = timePreferences[day.ordinal()][halfHour];
+				System.out.println("Preference found: " + preference);
 				model.database.insertTimePreference(underlyingInstructor, time, model.database.assembleTimePreference(preference));
+				System.out.println("Inserted time preference supposedly");
 			}
 		}
 	}

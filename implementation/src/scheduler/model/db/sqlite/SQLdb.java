@@ -743,7 +743,6 @@ public class SQLdb implements IDatabase {
 		return result;
 	}
 
-
 	@Override
 	public IDBLocation findLocationByID(int id) throws DatabaseException {
 		IDBLocation result;
@@ -1039,6 +1038,8 @@ public class SQLdb implements IDatabase {
 	@Override
 	public void deleteInstructor(IDBInstructor instructor) throws DatabaseException {
 		assert(instructor != null) : "Specified instructor null";
+		if(instructor == null || instructor.getID() == null)
+			throw new DatabaseException("Instructor not found");
 		instructorTable.delete(instructor.getID());	
 	}
 
@@ -1046,54 +1047,62 @@ public class SQLdb implements IDatabase {
 	public Map<IDBTime, IDBTimePreference> findTimePreferencesByTimeForInstructor(
 			IDBInstructor instructor) throws DatabaseException {
 		HashMap<IDBTime, IDBTimePreference> result = new HashMap<IDBTime, IDBTimePreference>();
-		HashMap<String, Object> wheres = new HashMap<String, Object>();
-		wheres.put("id", instructor.getID());
-		instructorTable.select(wheres);
-		for(SQLTimePreference timepref : timeslotprefTable.select(wheres))
-		{
-			result.put(new SQLTime(timepref.timeID), timepref);
-		}
+		if(instructor== null || instructor.getID() == null)
+			throw new DatabaseException("Instructor not found");
+		for(SQLTimePreference tp : timeslotprefTable.selectAll())
+			if(tp.instructorID == instructor.getID())
+				result.put(findTimeByID(tp.timeID), tp);
 		return result;
 	}
 
-
+	//possibly temporary helper method
+	public IDBTime findTimeByID(int id) {
+		return new SQLTime(id);
+	}
+	
 	@Override
 	public IDBTimePreference findTimePreferenceByID(int id)
 			throws DatabaseException {
-		IDBTimePreference result;
-		HashMap<String, Object> wheres = new HashMap<String, Object>();
-		wheres.put("id", id);
-		result = timeslotprefTable.select(wheres).get(0);
-		return result;
+		if(id < 0)
+			throw new DatabaseException("Invalid Time Preference ID");
+		HashMap<String, Object> timeID = new HashMap<String, Object>();
+		timeID.put("id", id);
+		return timeslotprefTable.select(timeID).get(0);
 	}
-
 
 	@Override
 	public IDBTimePreference assembleTimePreference(int preference)
 			throws DatabaseException {
-		//Integer id, Integer instructorID, Integer timeID, int preference
 		return new SQLTimePreference(null, null, null, preference);
 	}
 
 	@Override
 	public void insertTimePreference(IDBInstructor ins, IDBTime time, IDBTimePreference timePreference) throws DatabaseException {
-		SQLInstructor sqlInstructor = (SQLInstructor) ins;
-		System.out.println("Instructor: " + ins.getFirstName() + " " + ins.getID());
+		
 		SQLTimePreference sqlTP = (SQLTimePreference)timePreference;
 		assert(sqlTP.id == null);
+		SQLTime thisTime = (SQLTime)time;
+		System.out.println("Instructor: " + ins.getFirstName() + " " + ins.getID());
 		System.out.println("Time Preference: " + sqlTP.preference);
-		assert(time.getID() != null);
-		System.out.println("Time ID: " + time.getID());
-		sqlTP.timeID = time.getID();
-		sqlTP.id = timeslotprefTable.insert(new Object[]{ sqlTP.instructorID, sqlTP.getPreference()});
+		assert(thisTime.getID() != null);
+		System.out.println("Time ID: " + thisTime.getID());
+		sqlTP.timeID = thisTime.getID();
+		//day integer not null,
+	    //time integer not null,
+	    //instID,
+	   // prefLevel integer not null,
+		System.out.println("Time details: halfhour, Day " + thisTime.getHalfHour() + " " + thisTime.getDay());
+		sqlTP.id = timeslotprefTable.insert(new Object[]{ thisTime.getDay(), thisTime.getHalfHour(), 
+				sqlTP.instructorID, sqlTP.preference});
 	}
 
 
 	@Override
 	public void updateTimePreference(IDBTimePreference timePreference)
 			throws DatabaseException {
-		SQLTimePreference sqltimepreference = (SQLTimePreference) timePreference;
-		timeslotprefTable.update(new Object[]{ sqltimepreference.instructorID, sqltimepreference.getPreference()}, sqltimepreference.getID());
+		SQLTimePreference pref = (SQLTimePreference) timePreference;
+		SQLTime time = (SQLTime)findTimeByID(pref.timeID);
+		timeslotprefTable.update(new Object[]{ time.getDay(), time.getHalfHour(), pref.instructorID, pref.getPreference()}, pref.getID());
 		
 	}
 
@@ -1169,10 +1178,8 @@ public class SQLdb implements IDatabase {
 	@Override
 	public IDBTime findTimeByDayAndHalfHour(int day, int halfHour)
 			throws DatabaseException {
-		// TODO Auto-generated method stub
-		return null;
+		return new SQLTime(day, halfHour);
 	}
-
 
 	@Override
 	public IDBEquipmentType findEquipmentTypeByDescription(
