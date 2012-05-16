@@ -445,8 +445,6 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 	 * Retrieves the course list and adds it to the available courses box
 	 */
 	private void populateAvailableCoursesList() {
-		final double startTimestamp = System.currentTimeMillis();
-		
 		mWorkingCopyDocument.forceSynchronize(
 				new AsyncCallback<Void>() {
 					@Override
@@ -457,9 +455,6 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 					@Override
 					 public void onSuccess(Void v) {
 						List<CourseGWT> result = new LinkedList<CourseGWT>(mWorkingCopyDocument.getCourses());
-						
-						double timeElapsed = ( System.currentTimeMillis() - startTimestamp ) / 1000;
-						Window.alert(timeElapsed + " seconds to get courses");
 						
 						if (result != null) {
 							mCourses.clear();
@@ -531,8 +526,6 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 	public void updateItem(final ScheduleItemGWT item) {
 		final LoadingPopup loading = new LoadingPopup();
 		loading.show();
-
-		final double startTimestamp = System.currentTimeMillis();
 		
 		mWorkingCopyDocument.editScheduleItem(item);
 		
@@ -547,9 +540,6 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 					@Override
 					public void onSuccess(Void v) {
 						Collection<ScheduleItemGWT> result = mWorkingCopyDocument.getScheduleItems();
-						
-						double timeElapsed = ( System.currentTimeMillis() - startTimestamp ) / 1000;
-						Window.alert(timeElapsed + " seconds to get courses");
 						
 						mCalendarItems = new ArrayList<ScheduleItemGWT>();
 
@@ -595,8 +585,6 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 		final LoadingPopup loading = new LoadingPopup();
 		loading.show();
 
-		final double startTimestamp = System.currentTimeMillis();
-		
 		item.setID(null);
 		mWorkingCopyDocument.addScheduleItem(item);
 		
@@ -611,9 +599,6 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 					@Override
 					public void onSuccess(Void v) {
 						Collection<ScheduleItemGWT> result = mWorkingCopyDocument.getScheduleItems();
-						
-						double timeElapsed = ( System.currentTimeMillis() - startTimestamp ) / 1000;
-						Window.alert(timeElapsed + " seconds to get courses");
 						
 						mCalendarItems = new ArrayList<ScheduleItemGWT>();
 
@@ -679,8 +664,6 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 		final LoadingPopup loading = new LoadingPopup();
 		loading.show();
 
-		final double startTimestamp = System.currentTimeMillis();
-		
 		mWorkingCopyDocument.deleteScheduleItem(removed.getID());
 		
 		mWorkingCopyDocument.forceSynchronize(
@@ -694,9 +677,6 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 					@Override
 					public void onSuccess(Void v) {
 						Collection<ScheduleItemGWT> result = mWorkingCopyDocument.getScheduleItems();
-						
-						double timeElapsed = ( System.currentTimeMillis() - startTimestamp ) / 1000;
-						Window.alert(timeElapsed + " seconds to get courses");
 						
 						mCalendarItems = new ArrayList<ScheduleItemGWT>();
 						for (ScheduleItemGWT schdItem : result) {
