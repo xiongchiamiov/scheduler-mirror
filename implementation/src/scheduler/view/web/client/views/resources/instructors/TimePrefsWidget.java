@@ -562,5 +562,6 @@ public class TimePrefsWidget extends VerticalPanel {
 	{
 		instructor.verify();
 		this.workingCopyDocument = doc;
+		redraw();
 	}
 }

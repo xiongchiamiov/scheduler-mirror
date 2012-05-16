@@ -11,8 +11,6 @@ import scheduler.view.web.shared.InstructorGWT;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -87,30 +85,21 @@ public class CoursePrefsWidget extends VerticalPanel
 						if (result.size() == 0) {
 							System.out
 									.println("The size of the course list >>is<< zero. It should NOT open preferences");
-							final NoCourseDialog dlg = new NoCourseDialog(
-									"No courses in database",
+							
+							if(com.google.gwt.user.client.Window.confirm(
 									"The database doesn't contain any course right now. "
-											+ "Do you want to proceed?");
-							dlg.addClickNoHandler(new ClickHandler() {
-								@Override
-								public void onClick(ClickEvent event) {
-									dlg.hide();
-									if (parent != null) {
-										parent.hide();
-									}
+									+ "Do you want to proceed?"))
+							{
+								if (parent != null) {
+									parent.show();
 								}
-							});
-
-							dlg.addClickYesHandler(new ClickHandler() {
-								@Override
-								public void onClick(ClickEvent event) {
-									if (parent != null) {
-										parent.show();
-									}
-									dlg.hide();
+							}
+							else
+							{
+								if (parent != null) {
+									parent.hide();
 								}
-							});
-							dlg.show();
+							}
 						} else {
 							System.out
 									.println("The size of the course list is not zero. It should open preferences");
@@ -248,30 +237,20 @@ public class CoursePrefsWidget extends VerticalPanel
 						if (result.size() == 0) {
 							System.out
 									.println("The size of the course list >>is<< zero. It should NOT open preferences");
-							final NoCourseDialog dlg = new NoCourseDialog(
-									"No courses in database",
+							if(com.google.gwt.user.client.Window.confirm(
 									"The database doesn't contain any course right now. "
-											+ "Do you want to proceed?");
-							dlg.addClickNoHandler(new ClickHandler() {
-								@Override
-								public void onClick(ClickEvent event) {
-									dlg.hide();
-									if (parent != null) {
-										parent.hide();
-									}
+									+ "Do you want to proceed?"))
+							{
+								if (parent != null) {
+									parent.show();
 								}
-							});
-
-							dlg.addClickYesHandler(new ClickHandler() {
-								@Override
-								public void onClick(ClickEvent event) {
-									if (parent != null) {
-										parent.show();
-									}
-									dlg.hide();
+							}
+							else
+							{
+								if (parent != null) {
+									parent.hide();
 								}
-							});
-							dlg.show();
+							}
 						} else {
 							System.out
 									.println("The size of the course list is not zero. It should open preferences");
@@ -289,5 +268,44 @@ public class CoursePrefsWidget extends VerticalPanel
 	{
 		instructor.verify();
 		this.workingCopyDocument = doc;
+		
+		workingCopyDocument.forceSynchronize(
+				new AsyncCallback<Void>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						Window.alert("Failed to get courses.");
+					}
+
+					public void onSuccess(Void v) {
+						List<CourseGWT> result = new LinkedList<CourseGWT>(workingCopyDocument.getCourses());
+						
+						if (result.size() == 0) {
+							System.out
+									.println("The size of the course list >>is<< zero. It should NOT open preferences");
+							if(com.google.gwt.user.client.Window.confirm(
+									"The database doesn't contain any course right now. "
+									+ "Do you want to proceed?"))
+							{
+								if (parent != null) {
+									parent.show();
+								}
+							}
+							else
+							{
+								if (parent != null) {
+									parent.hide();
+								}
+							}
+						} else {
+							System.out
+									.println("The size of the course list is not zero. It should open preferences");
+
+							HashMap<Integer, CourseGWT> newCoursesByID = new HashMap<Integer, CourseGWT>();
+							for (CourseGWT course : result)
+								newCoursesByID.put(course.getID(), course);
+							populateCourses(newCoursesByID);
+						}
+					}
+				});
 	}
 }

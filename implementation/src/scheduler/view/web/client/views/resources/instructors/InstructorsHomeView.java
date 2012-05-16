@@ -108,36 +108,18 @@ public class InstructorsHomeView extends VerticalPanel implements View
 
 			@Override
 			public void onClick(ClickEvent event) {
-				com.google.gwt.user.client.Window.alert(new Boolean(doc == null).toString());
-				System.err.println("lalalalalalalalalalala this project sucks!");
 				service.openWorkingCopyForOriginalDocument(doc.getID(), false, new AsyncCallback<CachedOpenWorkingCopyDocument>() {
 					public void onFailure(Throwable caught) {
 						com.google.gwt.user.client.Window.alert("Failed to get instructors!");
 					}
 					public void onSuccess(CachedOpenWorkingCopyDocument result) {
-						com.google.gwt.user.client.Window.alert("Success to get instructors!");
-//						for (InstructorGWT i : result.getInstructors(true)) {
-//							if (i.getUsername().equals(service.username)) {
-////								if(instructor == null)
-////								{
-//									setInstructor(i);
-////								}
-////								openWindow(result);
-////								preferencesButtonClicked(result);
-//								System.err.println("#############################");
-//								System.err.println("#############################");
-//								System.err.println("#############################");
-//								System.err.println("#############################");
-//								System.err.println("#############################");
-//								System.err.println("#############################");
-//								System.err.println("#############################");
-//								System.err.println("#############################");
-//								System.err.println("#############################");
-//								System.err.println("#############################");
-//								System.err.println("#############################\n----------");
-//								break;
-//							}
-//						}
+						for (InstructorGWT i : result.getInstructors(true)) {
+							if (i.getUsername().equals(service.username)) {
+								setInstructor(i);
+								preferencesButtonClicked(result);
+								break;
+							}
+						}
 					}
 				});
 				
@@ -170,6 +152,7 @@ public class InstructorsHomeView extends VerticalPanel implements View
 		else
 		{
 			this.iipv.setDocument(doc);
+			this.iipv.setInstructor(instructor);
 		}
 		
 		this.prefsWindow.setTitle("Instructor Preferences - <i>"

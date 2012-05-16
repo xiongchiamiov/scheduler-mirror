@@ -5,7 +5,6 @@ import java.util.TreeSet;
 
 import scheduler.view.web.client.CachedOpenWorkingCopyDocument;
 import scheduler.view.web.client.views.resources.ValidatorUtil;
-import scheduler.view.web.shared.CourseGWT;
 import scheduler.view.web.shared.InstructorGWT;
 import scheduler.view.web.shared.ScheduleItemGWT;
 
