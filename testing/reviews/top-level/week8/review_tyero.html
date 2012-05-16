@@ -1,0 +1,44 @@
+<html>
+
+<font size=+2>
+<strong>1. Code Follows
+<a href="http://users.csc.calpoly.edu/~gfisher/classes/406/handouts/design-imple-conventions.html">
+Design and Implementation Conventions</strong>
+</a>
+</font>
+<p>
+The code follows the proper format and indentation conventions. Variable naming also follows a logical convention (adding 'm' to the beginning of member variables).
+The view classes however, don't append "UI" to the name but rather "View". For instance, "CalendarTableView". I'm ok with this. I'm not sure how I feel about "Dlg" instead of "Dialog" for the
+"EditScheduleItemDlg".
+</p>
+<br>
+<br>
+<br>
+<font size=+2>
+<strong>2. Javadoc Is Complete and Follows Design and Implementation
+Conventions</strong>
+</font>
+<p>
+Javadocs are incomplete. For the methods that they are done with they seem fine.
+</p>
+<br>
+<br>
+<br>
+<font size=+2>
+3. <strong>Design of the Code is Good</strong>
+</font>
+<p>
+The code follows a MVC pattern with ScheduleEditWidget acting as the controller for CalendarTableView, CalendarListView and EditScheduleItemDlg. All of the business logic takes place in the model or controller. This seems reasonable. There are extra unwritten methods
+for the filter functionality...but the filter button doesn't display on the screen so this isn't a problem.
+</p>
+<br>
+<br>
+<br>
+<font size=+2>
+<strong>4. Code Passes Its Tests and Has Sensible User-Level Behavior </strong>
+</font>
+<p>
+I've said it before and I'll say it again, these are the most reliable parts of the whole scheduler application. Drag and drop works fine and the list displays correctly. The view is snappy upon switching between calendar and list.
+</p>
+</body>
+</html>
