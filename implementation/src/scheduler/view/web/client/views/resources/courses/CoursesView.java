@@ -48,16 +48,6 @@ public class CoursesView extends VLayout {
 		onPopulate();
 	}
 
-	private static String join(Collection<String> strings, String glue) {
-		String result = "";
-		for (String str : strings) {
-			if (!result.equals(""))
-				result += glue;
-			result += str;
-		}
-		return result;
-	}
-
 	private void onPopulate() {
 		final LectureOptionsDataSource lectureOptionsDataSource = new LectureOptionsDataSource(document);
 
@@ -277,12 +267,17 @@ public class CoursesView extends VLayout {
 		IButton dupeBtn = new IButton("Duplicate Selected Courses",
 				new ClickHandler() {
 					public void onClick(ClickEvent event) {
-						ListGridRecord[] selectedRecords = grid
-								.getSelectedRecords();
-						for (ListGridRecord rec : selectedRecords) {
-							rec.setAttribute("id", (Integer) null);
-							grid.startEditingNew(rec);
+						grid.endEditing();
+						
+						for (ListGridRecord rec : grid.getSelectedRecords()) {
+							int id = rec.getAttributeAsInt("id");
+							CourseGWT course = new CourseGWT(document.getCourseByID(id));
+							course.setID(null);
+							document.addCourse(course);
 						}
+						
+						grid.invalidateCache();
+						grid.fetchData();
 					}
 				});
 

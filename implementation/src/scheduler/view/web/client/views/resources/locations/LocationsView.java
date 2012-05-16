@@ -7,6 +7,7 @@ import scheduler.view.web.client.CachedOpenWorkingCopyDocument;
 import scheduler.view.web.client.views.resources.ResourceCollection;
 import scheduler.view.web.client.views.resources.ValidatorUtil;
 import scheduler.view.web.shared.CourseGWT;
+import scheduler.view.web.shared.InstructorGWT;
 import scheduler.view.web.shared.LocationGWT;
 import scheduler.view.web.shared.ScheduleItemGWT;
 
@@ -141,12 +142,17 @@ public class LocationsView extends VLayout {
 		IButton dupeBtn = new IButton("Duplicate Selected Locations",
 				new ClickHandler() {
 					public void onClick(ClickEvent event) {
-						ListGridRecord[] selectedRecords = grid
-								.getSelectedRecords();
-						for (ListGridRecord rec : selectedRecords) {
-							rec.setAttribute("id", (Integer) null);
-							grid.startEditingNew(rec);
+						grid.endEditing();
+						
+						for (ListGridRecord rec : grid.getSelectedRecords()) {
+							int id = rec.getAttributeAsInt("id");
+							LocationGWT location = new LocationGWT(document.getLocationByID(id));
+							location.setID(null);
+							document.addLocation(location);
 						}
+						
+						grid.invalidateCache();
+						grid.fetchData();
 					}
 				});
 		// DOM.setElementAttribute(dupeBtn.getElement(), "id", "s_dupeBtn");

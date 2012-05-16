@@ -5,6 +5,7 @@ import java.util.TreeSet;
 
 import scheduler.view.web.client.CachedOpenWorkingCopyDocument;
 import scheduler.view.web.client.views.resources.ValidatorUtil;
+import scheduler.view.web.shared.CourseGWT;
 import scheduler.view.web.shared.InstructorGWT;
 import scheduler.view.web.shared.ScheduleItemGWT;
 
@@ -276,13 +277,17 @@ public class InstructorsView extends VLayout {
 		IButton duplicateBtn = new IButton("Duplicate Selected Instructors",
 				new ClickHandler() {
 					public void onClick(ClickEvent event) {
-						ListGridRecord[] selectedRecords = grid
-								.getSelectedRecords();
-						for (ListGridRecord rec : selectedRecords) {
-							rec.setAttribute("id", (Integer) null);
-							rec.setAttribute("instructorPrefs", (Integer) null);
-							grid.startEditingNew(rec);
+						grid.endEditing();
+						
+						for (ListGridRecord rec : grid.getSelectedRecords()) {
+							int id = rec.getAttributeAsInt("id");
+							InstructorGWT instructor = new InstructorGWT(openDocument.getInstructorByID(id));
+							instructor.setID(null);
+							openDocument.addInstructor(instructor);
 						}
+						
+						grid.invalidateCache();
+						grid.fetchData();
 					}
 				});
 		duplicateBtn.setAutoWidth();
