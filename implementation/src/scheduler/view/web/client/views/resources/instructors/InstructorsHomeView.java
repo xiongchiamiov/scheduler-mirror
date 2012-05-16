@@ -31,6 +31,9 @@ public class InstructorsHomeView extends VerticalPanel implements View
 	protected FlexTable schedList = new FlexTable();
 	protected InstructorGWT instructor;
 	
+	protected InstructorPreferencesView iipv = null;
+	protected Window prefsWindow = null;
+	
 	public InstructorsHomeView(final CachedService service)
 	{	
 		this.service = service;
@@ -105,23 +108,36 @@ public class InstructorsHomeView extends VerticalPanel implements View
 
 			@Override
 			public void onClick(ClickEvent event) {
+				com.google.gwt.user.client.Window.alert(new Boolean(doc == null).toString());
+				System.err.println("lalalalalalalalalalala this project sucks!");
 				service.openWorkingCopyForOriginalDocument(doc.getID(), false, new AsyncCallback<CachedOpenWorkingCopyDocument>() {
 					public void onFailure(Throwable caught) {
 						com.google.gwt.user.client.Window.alert("Failed to get instructors!");
 					}
 					public void onSuccess(CachedOpenWorkingCopyDocument result) {
-						
-						for (InstructorGWT i : result.getInstructors(true)) {
-							if (i.getUsername().equals(service.username)) {
-								System.out.println(i.getUsername()+", "+service.username);
-								if(instructor == null)
-								{
-									System.out.println("SSSHHHHIIIITTTTTT");
-									setInstructor(result, i);
-								}
-								break;
-							}
-						}
+						com.google.gwt.user.client.Window.alert("Success to get instructors!");
+//						for (InstructorGWT i : result.getInstructors(true)) {
+//							if (i.getUsername().equals(service.username)) {
+////								if(instructor == null)
+////								{
+//									setInstructor(i);
+////								}
+////								openWindow(result);
+////								preferencesButtonClicked(result);
+//								System.err.println("#############################");
+//								System.err.println("#############################");
+//								System.err.println("#############################");
+//								System.err.println("#############################");
+//								System.err.println("#############################");
+//								System.err.println("#############################");
+//								System.err.println("#############################");
+//								System.err.println("#############################");
+//								System.err.println("#############################");
+//								System.err.println("#############################");
+//								System.err.println("#############################\n----------");
+//								break;
+//							}
+//						}
 					}
 				});
 				
@@ -129,75 +145,111 @@ public class InstructorsHomeView extends VerticalPanel implements View
 			
 		});
 		schedList.setWidget(row, 1, prefs);
+	}
+	
+	public void preferencesButtonClicked(CachedOpenWorkingCopyDocument doc) {
 		
-		//this.instructor = null; // dirty hack to use an attribute,
-								// but otherwise we wouldn't be able to access this variable
+		if(this.iipv == null)
+		{
+			this.prefsWindow = new Window();
+			this.prefsWindow.setAutoSize(true);
+			
+			this.prefsWindow.setCanDragReposition(true);
+			this.prefsWindow.setCanDragResize(true);
+
+			this.prefsWindow.setSize("700px", "500px");
+			
+			this.iipv = new InstructorPreferencesView(doc, instructor);
+			
+			this.prefsWindow.addItem(iipv);
+			this.prefsWindow.setAutoSize(true);
+			
+			this.iipv.setParent(prefsWindow);
+			this.iipv.afterPush();
+		}
+		else
+		{
+			this.iipv.setDocument(doc);
+		}
 		
+		this.prefsWindow.setTitle("Instructor Preferences - <i>"
+				+ doc.getDocument().getName() + "</i>");
+		
+		this.prefsWindow.show();
 	}
 	
 	/**
 	 * sets the instructor who shows the document
 	 * @param instructor
 	 */
-	public void setInstructor(CachedOpenWorkingCopyDocument workingCopyDocument, InstructorGWT instructor1)
+	public void setInstructor(InstructorGWT instructor1)
 	{
-		//System.out.println("Instructor shit: "+instructor.getUsername());
 		this.instructor = instructor1;
-		
-		final Window win1 = new Window();
-		win1.setTitle(workingCopyDocument.getDocument().getName() + " - Course Preferences");
-		win1.setAutoCenter(true);
-		win1.setSize("750px", "600px");
-		
-		final Window win2 = new Window();
-		win2.setTitle(workingCopyDocument.getDocument().getName() + " - Time Preferences");
-		win2.setAutoCenter(true);
-		win2.setSize("750px", "600px");
-
-//===================================================================================
-//		this is still a dummy and has to be fetched from the real login name:
-//===================================================================================
-//		final InstructorGWT instructor  = new InstructorGWT(1, "foobar", "Hello",
-//				"World", "120", new int[DayGWT.values().length][48],
-//				new HashMap<Integer, Integer>(), true);
-				
-		final InstructorPrefsWizardCourseView courses =
-				new InstructorPrefsWizardCourseView(workingCopyDocument, instructor);
-		final InstructorPrefsWizardTimeView times =
-				new InstructorPrefsWizardTimeView(workingCopyDocument, instructor);
-		courses.addCloseClickHandler(new ClickHandler(){
-			@Override
-			public void onClick(ClickEvent event) {
-				win1.hide();
-			}
-		});
-		courses.addNextClickHandler(new ClickHandler(){
-			@Override
-			public void onClick(ClickEvent event) {
-				win1.hide();
-				win2.show();
-			}
-		});
-		times.addFinishClickHandler(new ClickHandler(){
-			@Override
-			public void onClick(ClickEvent event) {
-				win2.hide();
-			}
-		});
-		times.addBackClickHandler(new ClickHandler(){
-			@Override
-			public void onClick(ClickEvent event) {
-				win2.hide();
-				win1.show();
-			}
-		});
-		courses.setParent(win1);
-		courses.afterPush();
-		
-		win1.addItem(courses);
-		win2.addItem(times);
-		win1.show();
 	}
+	
+//	public void openWindow(CachedOpenWorkingCopyDocument workingCopyDocument)
+//	{
+//		System.err.println("entered");
+//
+//		if(win1 == null)
+//		{
+//			win1 = new Window();
+//			win2 = new Window();
+//			win1.setTitle(workingCopyDocument.getDocument().getName() + " - Course Preferences");
+//			win2.setTitle(workingCopyDocument.getDocument().getName() + " - Time Preferences");
+//			win1.setAutoCenter(true);
+//			win1.setSize("750px", "600px");
+//			win2.setAutoCenter(true);
+//			win2.setSize("750px", "600px");
+//			
+//		
+//			courses = new InstructorPrefsWizardCourseView(workingCopyDocument, instructor);
+//			times = new InstructorPrefsWizardTimeView(workingCopyDocument, instructor);
+//			courses.addCloseClickHandler(new ClickHandler(){
+//				@Override
+//				public void onClick(ClickEvent event) {
+//					win1.hide();
+//				}
+//			});
+//			courses.addNextClickHandler(new ClickHandler(){
+//				@Override
+//				public void onClick(ClickEvent event) {
+//					win1.hide();
+//					win2.show();
+//				}
+//			});
+//			times.addFinishClickHandler(new ClickHandler(){
+//				@Override
+//				public void onClick(ClickEvent event) {
+//					win2.hide();
+//				}
+//			});
+//			times.addBackClickHandler(new ClickHandler(){
+//				@Override
+//				public void onClick(ClickEvent event) {
+//					win2.hide();
+//					win1.show();
+//				}
+//			});
+//			courses.setParent(win1);
+//			courses.afterPush();
+//			
+//			win1.addItem(courses);
+//			win2.addItem(times);
+//		}
+//		else
+//		{
+//			win1.setTitle(workingCopyDocument.getDocument().getName() + " - Course Preferences");
+//			win2.setTitle(workingCopyDocument.getDocument().getName() + " - Time Preferences");
+//			
+//			System.err.println("sofosefojjnsojj");
+//			
+//			courses.setDocument(workingCopyDocument);
+//			times.setDocument(workingCopyDocument);
+//		}
+//		System.err.println("wwwweweweewewewewqqqqqqqqqqqwqwqw");
+//		win1.show();
+//	}
 
 	@Override
 	public boolean canClose() {
