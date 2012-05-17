@@ -47,7 +47,7 @@ public class BadCourseDataException extends Exception
             case BAD_CTYPE:
             	return "Course Type null or empty";
             case TETHERED_NULL_LECT:
-            	return "Tethered with null lecture course or lecture course ID"
+            	return "Tethered with null lecture course or lecture course ID";
             case DONT_CARE:
             	return "Choose For Me detected";
             default:
