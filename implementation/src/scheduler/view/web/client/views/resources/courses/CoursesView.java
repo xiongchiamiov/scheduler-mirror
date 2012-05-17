@@ -41,7 +41,7 @@ public class CoursesView extends VLayout {
 	public CoursesView(final CachedOpenWorkingCopyDocument document) {
 		this.document = document;
 
-//		this.setID("s_courseviewTab");
+		// this.setID("s_courseviewTab");
 		this.setWidth100();
 		this.setHeight100();
 
@@ -49,7 +49,8 @@ public class CoursesView extends VLayout {
 	}
 
 	private void onPopulate() {
-		final LectureOptionsDataSource lectureOptionsDataSource = new LectureOptionsDataSource(document);
+		final LectureOptionsDataSource lectureOptionsDataSource = new LectureOptionsDataSource(
+				document);
 
 		grid = new ListGrid() {
 			@Override
@@ -57,27 +58,29 @@ public class CoursesView extends VLayout {
 				if ("lectureID".equals(getFieldName(colNum))) {
 					Record record = getRecord(rowNum);
 					if (record != null) {
-						if ("LEC".equals(record.getAttribute("type")) || "IND".equals(record.getAttribute("type")) || "SEM".equals(record.getAttribute("type"))) {
+						if ("LEC".equals(record.getAttribute("type"))
+								|| "IND".equals(record.getAttribute("type"))
+								|| "SEM".equals(record.getAttribute("type"))) {
 							return false;
 						}
 					}
 				}
-				
+
 				// TODO Auto-generated method stub
 				return super.canEditCell(rowNum, colNum);
 			}
-			
+
 			@Override
-			protected String getCellCSSText(ListGridRecord record, int rowNum, int colNum) {
-				if(record != null) {
+			protected String getCellCSSText(ListGridRecord record, int rowNum,
+					int colNum) {
+				if (record != null) {
 					if (getFieldName(colNum).equals("selector")) {
 						return "cursor: pointer; background: #D8D8D8;";
-					}
-					else if (!ValidatorUtil.isValidCourseType(getFieldName(colNum), record)) {
+					} else if (!ValidatorUtil.isValidCourseType(
+							getFieldName(colNum), record)) {
 						// Invalid data, set background to red
 						return "background: #FF9999;";
-					}
-					else {
+					} else {
 						// Valid data, do nothing
 						return super.getCellCSSText(record, rowNum, colNum);
 					}
@@ -85,7 +88,7 @@ public class CoursesView extends VLayout {
 				return super.getCellCSSText(record, rowNum, colNum);
 			}
 		};
-		
+
 		grid.setWidth100();
 		grid.setAutoFitData(Autofit.VERTICAL);
 
@@ -98,7 +101,7 @@ public class CoursesView extends VLayout {
 		// grid.setCellHeight(22);
 		grid.setDataSource(new CoursesDataSource(document));
 		grid.setAutoSaveEdits(true);
-		
+
 		grid.addKeyPressHandler(new KeyPressHandler() {
 			public void onKeyPress(KeyPressEvent event) {
 				if (event.getKeyName().equals("Backspace")
@@ -146,41 +149,60 @@ public class CoursesView extends VLayout {
 		ListGridField scuField = new ListGridField("scu", "SCU");
 		scuField.setAlign(Alignment.CENTER);
 		scuField.setDefaultValue(0);
-		
-		ListGridField dayCombinationsField = new ListGridField("dayCombinations", "Day Combinations");
+
+		ListGridField dayCombinationsField = new ListGridField(
+				"dayCombinations", "Day Combinations");
 		dayCombinationsField.setAlign(Alignment.CENTER);
-		dayCombinationsField.setEditorValueMapFunction(new PossibleDayPatternsFunction());
+		dayCombinationsField
+				.setEditorValueMapFunction(new PossibleDayPatternsFunction());
 
 		grid.addEditCompleteHandler(new EditCompleteHandler() {
 			@Override
 			public void onEditComplete(EditCompleteEvent event) {
 				if (grid.getFieldName(event.getColNum()).equals("scu")) {
-					if(Window.confirm("By changing your SCU value you will lose your day combination data for this row. Would you like to proceed?"))
-					{
-						String scuString = (String)grid.getEditedCell(event.getRowNum(), "scu");
-						String type = (String)grid.getEditedCell(event.getRowNum(), "type");
-						
+					if (Window
+							.confirm("By changing your SCU value you will lose your day combination data for this row. Would you like to proceed?")) {
+						//Change day combos
+						String scuString = (String) grid.getEditedCell(
+								event.getRowNum(), "scu");
+						String type = (String) grid.getEditedCell(
+								event.getRowNum(), "type");
+
 						DSRequest requestProperties = new DSRequest();
-						requestProperties.setOldValues(grid.getEditedRecord(event.getRowNum()));
-						
-						String[] values = PossibleDayPatternsFunction.getValues(type, scuString).values().toArray(new String[0]);
+						requestProperties.setOldValues(grid
+								.getEditedRecord(event.getRowNum()));
+
+						String[] values = PossibleDayPatternsFunction
+								.getValues(type, scuString).values()
+								.toArray(new String[0]);
 						Record record = grid.getEditedRecord(event.getRowNum());
-						assert(record.getAttributeAsInt("id") != null);
+						assert (record.getAttributeAsInt("id") != null);
 						record.setAttribute("dayCombinations", values);
-						
+						//Update hours per week if it is still on default
+						String hours = (String) grid.getEditedCell(
+								event.getRowNum(), "hoursPerWeek");
+						if(hours.equals("0"))
+						{
+							//It is on default value, set to SCU
+							record.setAttribute("hoursPerWeek", scuString);
+						}
+
 						grid.updateData(record, null, requestProperties);
-					}
-					else
-					{
-						System.out.println("oldvalue " + event.getOldRecord().getAttributeAsString("scu") + ", new record value: " + event.getNewValues().get("scu"));
-						//Revert to old scu
+					} else {
+						System.out.println("oldvalue "
+								+ event.getOldRecord().getAttributeAsString(
+										"scu") + ", new record value: "
+								+ event.getNewValues().get("scu"));
+						// Revert to old scu
 						Record oldrecord = event.getOldRecord();
 						DSRequest requestProperties = new DSRequest();
-						requestProperties.setOldValues(grid.getEditedRecord(event.getRowNum()));
+						requestProperties.setOldValues(grid
+								.getEditedRecord(event.getRowNum()));
 						String scuvalue = oldrecord.getAttributeAsString("scu");
 						Record record = grid.getEditedRecord(event.getRowNum());
 						record.setAttribute("scu", scuvalue);
-						System.out.println("Trying to set scu value to " + scuvalue);
+						System.out.println("Trying to set scu value to "
+								+ scuvalue);
 						grid.updateData(record, null, requestProperties);
 					}
 				}
@@ -202,7 +224,7 @@ public class CoursesView extends VLayout {
 				"Used Equipment");
 		usedEquipmentField.setAlign(Alignment.CENTER);
 		usedEquipmentField.setDefaultValue("");
-		
+
 		ListGridField lectureIDField = new ListGridField("lectureID");
 		lectureIDField.setDefaultValue(-1);
 		lectureIDField.setOptionDataSource(lectureOptionsDataSource);
@@ -210,9 +232,12 @@ public class CoursesView extends VLayout {
 		lectureIDField.setValueField("valueField");
 		lectureIDField.setCellFormatter(new CellFormatter() {
 			@Override
-			public String format(Object value, ListGridRecord record, int rowNum, int colNum) {
+			public String format(Object value, ListGridRecord record,
+					int rowNum, int colNum) {
 				if ("lectureID".equals(grid.getFieldName(colNum))) {
-					if ("LEC".equals(record.getAttribute("type")) || "SEM".equals(record.getAttribute("type")) || "IND".equals(record.getAttribute("type"))) {
+					if ("LEC".equals(record.getAttribute("type"))
+							|| "SEM".equals(record.getAttribute("type"))
+							|| "IND".equals(record.getAttribute("type"))) {
 						return "";
 					}
 				}
@@ -224,7 +249,8 @@ public class CoursesView extends VLayout {
 		isTetheredField.setDefaultValue(false);
 		isTetheredField.setCellFormatter(new CellFormatter() {
 			@Override
-			public String format(Object value, ListGridRecord record, int rowNum, int colNum) {
+			public String format(Object value, ListGridRecord record,
+					int rowNum, int colNum) {
 				if ("isTethered".equals(grid.getFieldName(colNum))) {
 					if ("LEC".equals(record.getAttribute("type"))) {
 						return "";
@@ -235,29 +261,31 @@ public class CoursesView extends VLayout {
 		});
 
 		grid.setFields(selectorField, schedulableField, departmentField,
-				catalogNumberField, nameField, numSectionsField, wtuField,
-				scuField, dayCombinationsField, hoursPerWeekField,
-				maxEnrollmentField, courseTypeField, usedEquipmentField,
+				catalogNumberField, nameField, courseTypeField,
+				numSectionsField, wtuField, scuField, dayCombinationsField,
+				hoursPerWeekField, maxEnrollmentField, usedEquipmentField,
 				lectureIDField, isTetheredField);
 
 		addMember(grid);
 		// this.setHorizontalAlignment(ALIGN_LEFT);
 		layoutBottomButtonBar(grid);
-		
+
 		grid.addEditCompleteHandler(new EditCompleteHandler() {
 			@Override
 			public void onEditComplete(EditCompleteEvent event) {
 				grid.refreshRow(event.getRowNum());
-				grid.refreshRecordComponent(event.getRowNum(), event.getColNum());
+				grid.refreshRecordComponent(event.getRowNum(),
+						event.getColNum());
 				grid.refreshCellStyle(event.getRowNum(), event.getColNum());
 				grid.redraw();
 				grid.refreshRow(event.getRowNum());
-				grid.refreshRecordComponent(event.getRowNum(), event.getColNum());
+				grid.refreshRecordComponent(event.getRowNum(),
+						event.getColNum());
 				grid.refreshCellStyle(event.getRowNum(), event.getColNum());
 			}
 		});
-		
-//		grid.redraw();
+
+		// grid.redraw();
 	}
 
 	/**
@@ -277,21 +305,22 @@ public class CoursesView extends VLayout {
 		course.setAutoWidth();
 		course.setOverflow(Overflow.VISIBLE);
 		// DON'T CHANGE THIS ID IT WILL BREAK THE BUTTONS
-//		course.setID("s_newCourseBtn");
+		// course.setID("s_newCourseBtn");
 		bottomButtonFlowPanel.addMember(course);
 
 		IButton dupeBtn = new IButton("Duplicate Selected Courses",
 				new ClickHandler() {
 					public void onClick(ClickEvent event) {
 						grid.endEditing();
-						
+
 						for (ListGridRecord rec : grid.getSelectedRecords()) {
 							int id = rec.getAttributeAsInt("id");
-							CourseGWT course = new CourseGWT(document.getCourseByID(id));
+							CourseGWT course = new CourseGWT(
+									document.getCourseByID(id));
 							course.setID(null);
 							document.addCourse(course);
 						}
-						
+
 						grid.invalidateCache();
 						grid.fetchData();
 					}
@@ -300,7 +329,7 @@ public class CoursesView extends VLayout {
 		dupeBtn.setAutoWidth();
 		dupeBtn.setOverflow(Overflow.VISIBLE);
 		// DON'T CHANGE THIS ID IT WILL BREAK THE BUTTONS
-//		dupeBtn.setID("s_dupeCourseBtn");
+		// dupeBtn.setID("s_dupeCourseBtn");
 		bottomButtonFlowPanel.addMember(dupeBtn);
 
 		IButton remove = new IButton("Remove Selected Courses",
@@ -314,53 +343,57 @@ public class CoursesView extends VLayout {
 		remove.setAutoWidth();
 		remove.setOverflow(Overflow.VISIBLE);
 		// DON'T CHANGE THIS ID IT WILL BREAK THE BUTTONS
-//		remove.setID("s_removeCourseBtn");
-		
+		// remove.setID("s_removeCourseBtn");
+
 		bottomButtonFlowPanel.addMember(remove);
 
 		this.addMember(bottomButtonFlowPanel);
 	}
-	
+
 	void deleteSelected() {
 		Set<Integer> referencedCourseIDs = new TreeSet<Integer>();
 		for (ScheduleItemGWT item : document.getScheduleItems())
 			referencedCourseIDs.add(item.getCourseID());
-		
+
 		Set<Integer> CoursesToDeleteIDs = new TreeSet<Integer>();
 		for (ListGridRecord rec : grid.getSelectedRecords())
-			if(rec.getAttribute("id") != null)
-			{
+			if (rec.getAttribute("id") != null) {
 				CoursesToDeleteIDs.add(rec.getAttributeAsInt("id"));
 			}
-		
-		Set<Integer> referencedCoursesToDeleteIDs = new TreeSet<Integer>(CoursesToDeleteIDs);
+
+		Set<Integer> referencedCoursesToDeleteIDs = new TreeSet<Integer>(
+				CoursesToDeleteIDs);
 		referencedCoursesToDeleteIDs.retainAll(referencedCourseIDs);
-		
+
 		if (!referencedCoursesToDeleteIDs.isEmpty()) {
 			String namesCombined = "";
 			for (int referencedCourseToDeleteID : referencedCoursesToDeleteIDs) {
 				if (!namesCombined.equals(""))
 					namesCombined += ", ";
-				CourseGWT course = document.getCourseByID(referencedCourseToDeleteID);
-				namesCombined += course.getDept() + " " + course.getCatalogNum();
+				CourseGWT course = document
+						.getCourseByID(referencedCourseToDeleteID);
+				namesCombined += course.getDept() + " "
+						+ course.getCatalogNum();
 			}
-			
-			String messageString = referencedCoursesToDeleteIDs.size() == 1 ? "Course " : "Courses ";
+
+			String messageString = referencedCoursesToDeleteIDs.size() == 1 ? "Course "
+					: "Courses ";
 			messageString += namesCombined;
-			messageString += referencedCoursesToDeleteIDs.size() == 1 ? " is " : " are ";
+			messageString += referencedCoursesToDeleteIDs.size() == 1 ? " is "
+					: " are ";
 			messageString += "scheduled already. Please unschedule, then try again.";
 			com.google.gwt.user.client.Window.alert(messageString);
-		}
-		else {
-			if (com.google.gwt.user.client.Window.confirm("Are you sure you want to remove this course?")) {
-					grid.removeSelectedData();
+		} else {
+			if (com.google.gwt.user.client.Window
+					.confirm("Are you sure you want to remove this course?")) {
+				grid.removeSelectedData();
 			}
 		}
 	}
-	
+
 	public boolean canClose() {
 		// If you want to keep the user from navigating away, return false here
-		
+
 		return true;
 	}
 
