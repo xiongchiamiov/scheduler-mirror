@@ -18,7 +18,7 @@ public class BadCourseDataException extends Exception
     */
    public enum ConflictType {
       IS_NULL, NOT_SCHEDULABLE, NULL_DPTMT, BAD_CAT_NUM, NULL_CNAME, BAD_NUMSECTS, BAD_NUMWTU, BAD_NUMSCU, BAD_HHR_WEEK,
-      BAD_MAXENR, BAD_CTYPE, NULL_DOC, DONT_CARE;
+      BAD_MAXENR, BAD_CTYPE, NULL_DOC, DONT_CARE, TETHERED_NULL_LECT;
       
       public String toString ()
       {
@@ -46,6 +46,8 @@ public class BadCourseDataException extends Exception
                 return "Number Max Enrollment null or < 0";
             case BAD_CTYPE:
             	return "Course Type null or empty";
+            case TETHERED_NULL_LECT:
+            	return "Tethered with null lecture course or lecture course ID"
             case DONT_CARE:
             	return "Choose For Me detected";
             default:

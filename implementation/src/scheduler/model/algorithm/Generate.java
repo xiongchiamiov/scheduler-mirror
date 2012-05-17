@@ -74,6 +74,7 @@ public class Generate {
 	    		  
 	            debug ("Found act/dis/lab: " + c.getTypeEnum() + " " + c.getCatalogNumber() + " " + c.getName());
 	    	    if(c.isTetheredToLecture())
+	    	    	//if(!(c.getLecture() == null)) //then it is a freefloating lab so don't add it to tethered labs
 	    		    tetheredLabs.put(c.getLecture().getID(), c);
 	    	    else
 	    		    untetheredLabs.add(c);

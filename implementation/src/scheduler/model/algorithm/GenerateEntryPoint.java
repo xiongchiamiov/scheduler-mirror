@@ -141,6 +141,12 @@ public class GenerateEntryPoint {
 	    	throw new BadCourseDataException(BadCourseDataException.ConflictType.BAD_NUMSCU, c, "null or <= 0", "integer > 0");
 	    
 	    //check requirements for day combos still
+	    //c.getLecture().getID(), c
+	    if(c.isTetheredToLecture())
+	    	if(c.getLecture() == null || c.getLecture().getID() == null)
+	    		throw new BadCourseDataException(BadCourseDataException.ConflictType.TETHERED_NULL_LECT, c, "null", "course");
+//	    	throw new ()
+//	    if(c.getLecture().getID())
 	    
 	    //there should be an extra reqt..it can't be higher than soemthing (check)
 	    
