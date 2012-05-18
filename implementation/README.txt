@@ -154,6 +154,24 @@ If you have Python and setuptools, you should be able to just do
 
     $> sudo easy_install fabric
 
+Windows Installation
+--------------------
+
+1. Download and install Python 2.7 from
+[ActiveState](http://www.activestate.com/activepython/downloads).
+2. If on 64-bit, download [a precompiled version of
+pycrypto](http://yorickdowne.wordpress.com/2010/12/22/compiling-pycrypto-on-win7-64/).
+Put it in `C:\Python27` and extract it into the current folder using 7zip.
+3. Open a command prompt and run `pip install fabric`.
+4. Install the JDK.
+5. Download [ant](http://ant.apache.org/bindownload.cgi) and unzip it to
+`C:\ant`.
+6. Change a few environment variables (right-click Computer, Advanced system
+settings, Environment Variables):
+   * `PATH` - add `%ANT_HOME%\bin`
+   * `ANT_HOME` - `C:\ant`
+   * `JAVA_HOME` - `C:\Program Files\Java\jdk1.7.0_04`
+
 Deploy
 ------
 
