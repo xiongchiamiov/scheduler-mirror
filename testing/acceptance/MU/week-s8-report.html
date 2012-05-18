@@ -36,7 +36,8 @@ Location and Instructor entry was solid.
 </p>
 <strong>Issues</strong>
 <ul>
-	<li>Day Combinations were not 100%. When I clicked </li>
+	<li>Day Combinations were not 100%. When I modified the SCU, a red checkmark appeared next to my day
+		combination selection</li>
 </ul>
 
 <br>
@@ -84,8 +85,14 @@ and open it back up again.
 </h2>
 </a>
 <p>
-
+Generally the product looks good. In random user tests, the look and feel was functional/familiar.
 </p>
+<strong>Issues</strong>
+<ul>
+	<li>Location of the Generate Schedule button is hard for most people to find</li>
+	<li>The schedulable checkbox confused users since they thought it was the way to indicate which 
+		rows were selected. They tried to delete resources by checking the box and clicking remove</li>
+</ul>
 
 <br>
 <a name="Other Issues">
@@ -95,8 +102,10 @@ and open it back up again.
 </a>
 <p>
 <ul>
-	<li>Generate Schedule button caused a 500 error after entering resources.</li>
-	<li>
+	<li>After running Selenium tests with MU resources, Generate Schedule button caused a 500 error after entering resources.</li>
+	<li>After entering 2 courses and no instructors/locations, clicking Generate Schedule caused infinite loading gif.</li>
+	<li>Logged out and back in, chose same schedule, clicked generate. Loading gif came up and disappeared, but nothing was on the schedule.</li>
+</ul>
 </p>
 </body>
 </html>
