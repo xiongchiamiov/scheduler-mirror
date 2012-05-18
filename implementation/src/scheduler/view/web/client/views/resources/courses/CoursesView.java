@@ -181,7 +181,7 @@ public class CoursesView extends VLayout {
 						//Update hours per week if it is still on default
 						String hours = (String) grid.getEditedCell(
 								event.getRowNum(), "hoursPerWeek");
-						if(hours.equals("0"))
+						if(hours.equals("4"))
 						{
 							//It is on default value, set to SCU
 							record.setAttribute("hoursPerWeek", scuString);
@@ -212,7 +212,7 @@ public class CoursesView extends VLayout {
 		ListGridField hoursPerWeekField = new ListGridField("hoursPerWeek",
 				"Hours per Week");
 		hoursPerWeekField.setAlign(Alignment.CENTER);
-		hoursPerWeekField.setDefaultValue(0);
+		hoursPerWeekField.setDefaultValue(4);
 		ListGridField maxEnrollmentField = new ListGridField("maxEnrollment",
 				"Max Enrollment");
 		maxEnrollmentField.setAlign(Alignment.CENTER);

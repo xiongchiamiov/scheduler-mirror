@@ -178,6 +178,10 @@ public class CachedOpenWorkingCopyDocument {
 	}
 
 	public void deleteCourse(Integer id) {
+		for(InstructorGWT instructor : instructors.getAll())
+		{
+			instructor.getCoursePreferences().remove(id);
+		}
 		courses.delete(id);
 	}
 
