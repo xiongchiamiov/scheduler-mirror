@@ -527,12 +527,14 @@ public class TimePrefsWidget extends VerticalPanel {
 	}
 	
 	void save() {
+		System.err.println("TRY TO SAVE TIME PREFERENCE");
 		workingCopyDocument.editInstructor(instructor);
 		
 		workingCopyDocument.forceSynchronize(new AsyncCallback<Void>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				// popup.hide();
+				System.err.println("NOT TO SAVE TIME PREFERENCE");
 				Window.alert("Error saving instructor: " + caught.getMessage());
 			}
 
@@ -541,6 +543,7 @@ public class TimePrefsWidget extends VerticalPanel {
 				savedInstructor = new InstructorGWT(instructor);
 				//instructor = new InstructorGWT(instructor);
 				//redoColors();
+				System.err.println("SAVED TIME PREFERENCE");
 				System.out.println("saved time preferences... ?!?");
 			}
 		});

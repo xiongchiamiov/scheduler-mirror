@@ -118,7 +118,8 @@ public class CoursePrefsWidget extends VerticalPanel
 
 		int row = 1;
 		for (final CourseGWT course : coursesByID.values()) {
-			this.table.setWidget(row, 0, new HTML(course.getCourseName()));
+			String name = course.getCourseName() + " (" + course.getType() + ")";
+			this.table.setWidget(row, 0, new HTML(name));
 			System.out.println("Stupid course name: " + course.getCourseName());
 			final ListBox list = new ListBox();
 			listBoxesByCourseID.put(course.getID(), list);
@@ -201,7 +202,7 @@ public class CoursePrefsWidget extends VerticalPanel
 
 		for (CourseGWT course : coursesByID.values()) {
 			ListBox list = listBoxesByCourseID.get(course.getID());
-			assert (list != null);
+			if(list == null){return;}
 			list.setStyleName(styleNames[3 - getCoursePreference(instructor,
 					course)]);
 			list.setItemSelected(getCoursePreference(instructor, course), true); //?!?! 

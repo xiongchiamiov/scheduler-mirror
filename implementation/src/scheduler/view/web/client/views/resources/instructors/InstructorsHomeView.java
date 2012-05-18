@@ -22,6 +22,8 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.Window;
+import com.smartgwt.client.widgets.events.CloseClickEvent;
+import com.smartgwt.client.widgets.events.CloseClickHandler;
 
 public class InstructorsHomeView extends VerticalPanel implements View
 {
@@ -148,6 +150,21 @@ public class InstructorsHomeView extends VerticalPanel implements View
 			
 			this.iipv.setParent(prefsWindow);
 			this.iipv.afterPush();
+			
+			this.prefsWindow.addCloseClickHandler(new CloseClickHandler(){
+				@Override
+				public void onCloseClick(CloseClickEvent event) {
+					savePreferences();
+					prefsWindow.hide();
+				}
+			});
+			
+			this.iipv.addCloseHandler(new ClickHandler(){
+				@Override
+				public void onClick(ClickEvent event) {
+					savePreferences();
+				}
+			});
 		}
 		else
 		{
@@ -159,6 +176,26 @@ public class InstructorsHomeView extends VerticalPanel implements View
 				+ doc.getDocument().getName() + "</i>");
 		
 		this.prefsWindow.show();
+	}
+	
+	/**
+	 * saves the currently modified document to autosave the instructor's prefs
+	 */
+	private void savePreferences()
+	{
+		this.iipv.save();
+		this.iipv.getDocument().copyIntoAssociatedOriginalDocument(new AsyncCallback<Void>() {
+			
+			@Override
+			public void onSuccess(Void result) {
+				com.google.gwt.user.client.Window.alert("Successfully saved!");
+			}
+			
+			@Override
+			public void onFailure(Throwable caught) {
+				com.google.gwt.user.client.Window.alert("Failed to save!\n" + caught.getMessage());
+			}
+		});
 	}
 	
 	/**
