@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import scheduler.model.algorithm.BadInstructorDataException;
+import scheduler.view.web.shared.GenerateException;
 import scheduler.model.db.DatabaseException;
 import scheduler.view.web.client.GreetingService;
 import scheduler.view.web.client.InvalidLoginException;
@@ -277,7 +277,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	}
 	
 	@Override
-	public void generateRestOfSchedule(int sessionID, int documentID) throws CouldNotBeScheduledExceptionGWT, SessionClosedFromInactivityExceptionGWT {
+	public void generateRestOfSchedule(int sessionID, int documentID) throws CouldNotBeScheduledExceptionGWT, SessionClosedFromInactivityExceptionGWT, GenerateException {
 		if (LOG_ENTERING_AND_EXITING_CALLS)
 			System.out.println("Begin GreetingServiceImpl.generateRestOfSchedule(doc " + documentID + ")");
 		
@@ -287,13 +287,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			try {
 				inner.generateRestOfSchedule(sessionID, documentID);
 			}
-			catch (DatabaseException e) {
+			catch (Exception e) {
 				e.printStackTrace();
-				throw new RuntimeException(e);
-			}
-			catch (BadInstructorDataException e) {
-				e.printStackTrace();
-				throw new RuntimeException(e);
+				throw new GenerateException(e.toString());
 			}
 
 			inner.sanityCheck();

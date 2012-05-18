@@ -6,6 +6,7 @@ import scheduler.view.web.shared.CompleteWorkingCopyDocumentGWT;
 import scheduler.view.web.shared.CouldNotBeScheduledExceptionGWT;
 import scheduler.view.web.shared.CourseGWT;
 import scheduler.view.web.shared.ExistingWorkingDocumentDoesntExistExceptionGWT;
+import scheduler.view.web.shared.GenerateException;
 import scheduler.view.web.shared.InstructorGWT;
 import scheduler.view.web.shared.LocationGWT;
 import scheduler.view.web.shared.LoginResponse;
@@ -53,7 +54,7 @@ public interface GreetingService extends RemoteService {
 	
 	
 
-	void generateRestOfSchedule(int sessionID, int scheduleID) throws CouldNotBeScheduledExceptionGWT, SessionClosedFromInactivityExceptionGWT;
+	void generateRestOfSchedule(int sessionID, int scheduleID) throws CouldNotBeScheduledExceptionGWT, SessionClosedFromInactivityExceptionGWT, GenerateException;
 
 	SynchronizeResponse<ScheduleItemGWT> synchronizeDocumentScheduleItems(
 			int sessionID,
