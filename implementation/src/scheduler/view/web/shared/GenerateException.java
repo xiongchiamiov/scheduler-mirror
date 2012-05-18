@@ -15,6 +15,10 @@ public class GenerateException extends Exception {
 	
 	private String message = "";
 	
+	public GenerateException() {
+		this.message = "";
+	}
+	
 	public GenerateException(String message) {
 		this.message = message;
 	}
