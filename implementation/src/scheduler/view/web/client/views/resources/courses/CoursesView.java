@@ -269,23 +269,6 @@ public class CoursesView extends VLayout {
 		addMember(grid);
 		// this.setHorizontalAlignment(ALIGN_LEFT);
 		layoutBottomButtonBar(grid);
-
-		grid.addEditCompleteHandler(new EditCompleteHandler() {
-			@Override
-			public void onEditComplete(EditCompleteEvent event) {
-				grid.refreshRow(event.getRowNum());
-				grid.refreshRecordComponent(event.getRowNum(),
-						event.getColNum());
-				grid.refreshCellStyle(event.getRowNum(), event.getColNum());
-				grid.redraw();
-				grid.refreshRow(event.getRowNum());
-				grid.refreshRecordComponent(event.getRowNum(),
-						event.getColNum());
-				grid.refreshCellStyle(event.getRowNum(), event.getColNum());
-			}
-		});
-
-		// grid.redraw();
 	}
 
 	/**

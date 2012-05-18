@@ -164,7 +164,9 @@ public class GreetingServiceImplInner {
 	private String filepath;
 	
 	private void closeDocumentsAndSessionsWithNoContact() {
-		sessions.closeDocumentsAndSessionsWithNoContactSince(new Date(new Date().getTime() - 10000));
+		// put this back in when we start locking documents
+		
+//		sessions.closeDocumentsAndSessionsWithNoContactSince(new Date(new Date().getTime() - 10000));
 	}
 	
 	GreetingServiceImplInner(boolean loadAndSaveFromFileSystem, String filepath) {
@@ -236,6 +238,16 @@ public class GreetingServiceImplInner {
 				assert(doc.getChooseForMeInstructor().getID() != null);
 				assert(doc.getChooseForMeLocation() != null);
 				assert(doc.getChooseForMeLocation().getID() != null);
+				
+				Set<Integer> coursesIDs = new HashSet<Integer>();
+				for (Course course : doc.getCourses())
+					coursesIDs.add(course.getID());
+				
+				for (Instructor instructor : doc.getInstructors(true)) {
+					Map<Integer, Integer> preferences = instructor.getCoursePreferences();
+					for (Integer courseID : preferences.keySet())
+						assert(coursesIDs.contains(courseID));
+				}
 			}
 		}
 		catch (DatabaseException e) {

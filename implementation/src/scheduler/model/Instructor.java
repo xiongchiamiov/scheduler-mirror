@@ -150,7 +150,6 @@ public class Instructor extends ModelObject {
 	// Course Preferences
 	
 	public HashMap<Integer, Integer> getCoursePreferences() throws DatabaseException {
-		System.out.println("SIHOQSPSBPISBPIWBPDIBDWIIBWDPIB");
 		if (!coursePreferencesLoaded) {
 			coursePreferences = new HashMap<Integer, Integer>();
 			for (Entry<IDBCourse, IDBCoursePreference> entry : model.database.findCoursePreferencesByCourseForInstructor(underlyingInstructor).entrySet())

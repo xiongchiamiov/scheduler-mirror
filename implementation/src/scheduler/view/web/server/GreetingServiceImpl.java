@@ -1,42 +1,16 @@
 package scheduler.view.web.server;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OptionalDataException;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
-import java.util.Vector;
 
-import scheduler.model.Course;
-import scheduler.model.Document;
-import scheduler.model.Instructor;
-import scheduler.model.Location;
-import scheduler.model.Model;
-import scheduler.model.ScheduleItem;
-import scheduler.model.User;
 import scheduler.model.algorithm.BadInstructorDataException;
-import scheduler.model.algorithm.GenerateEntryPoint;
 import scheduler.model.db.DatabaseException;
 import scheduler.view.web.client.GreetingService;
 import scheduler.view.web.client.InvalidLoginException;
-import scheduler.view.web.shared.ClientChangesResponse;
 import scheduler.view.web.shared.CompleteWorkingCopyDocumentGWT;
 import scheduler.view.web.shared.CouldNotBeScheduledExceptionGWT;
 import scheduler.view.web.shared.CourseGWT;
-import scheduler.view.web.shared.DocumentGWT;
 import scheduler.view.web.shared.ExistingWorkingDocumentDoesntExistExceptionGWT;
 import scheduler.view.web.shared.InstructorGWT;
 import scheduler.view.web.shared.LocationGWT;
@@ -47,7 +21,6 @@ import scheduler.view.web.shared.ServerResourcesResponse;
 import scheduler.view.web.shared.SessionClosedFromInactivityExceptionGWT;
 import scheduler.view.web.shared.SynchronizeRequest;
 import scheduler.view.web.shared.SynchronizeResponse;
-import scheduler.view.web.shared.WorkingDocumentGWT;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
@@ -56,7 +29,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
  */
 @SuppressWarnings("serial")
 public class GreetingServiceImpl extends RemoteServiceServlet implements GreetingService {
-	private static final boolean LOG_ENTERING_AND_EXITING_CALLS = false;
+	private static final boolean LOG_ENTERING_AND_EXITING_CALLS = true;
 	
 	
 	public final GreetingServiceImplInner inner;
