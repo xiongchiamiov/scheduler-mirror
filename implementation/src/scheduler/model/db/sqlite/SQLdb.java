@@ -128,12 +128,8 @@ public class SQLdb implements IDatabase {
 	Table<SQLCourseAssociation> labassociationsTable = new Table<SQLCourseAssociation>(SQLCourseAssociation.class, "labassociations",
 			new Table.Column[] {
 					new Table.Column("id", Integer.class),
-					new Table.Column("lecID", Integer.class)
-	});
-	Table<SQLCourseAssociation> labtetheredTable = new Table<SQLCourseAssociation>(SQLCourseAssociation.class, "labtethered",
-			new Table.Column[] {
-					new Table.Column("id", Integer.class),
-					new Table.Column("lecID", Integer.class)
+					new Table.Column("lecID", Integer.class), 
+					new Table.Column("isTethered", Boolean.class)
 	});
 	Table<SQLTimePreference> timeslotprefTable = new Table<SQLTimePreference>(SQLTimePreference.class, "timeslotpref",
 			new Table.Column[] {
@@ -323,7 +319,7 @@ public class SQLdb implements IDatabase {
 			for (Column column : columns)
 				if (!column.name.equals("id")) {
 					queryString += column.name + ",";
-					System.out.println("column name: " + column.name);
+					//System.out.println("column name: " + column.name);
 				}
   
 			queryString = queryString.substring(0, queryString.length() - 1);
@@ -750,17 +746,12 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public IDBLocation findLocationByID(int id) throws DatabaseException {
-		IDBLocation result;
 		HashMap<String, Object> wheres = new HashMap<String, Object>();
 		wheres.put("id", id);
-		//TODO: what is expected behavior if none found? are we always passed valid ids? throws NOTFOUNDEXCEPTION
 		if(locationTable.select(wheres).isEmpty())
 			throw new NotFoundException("Location not found with ID: " + id);
-		result = locationTable.select(wheres).get(0);
-		System.out.println("result: " + result);
-		return result;
+		return locationTable.select(wheres).get(0);
 	}
-
 
 	@Override
 	public IDBLocation assembleLocation(String room, String type,
@@ -776,18 +767,22 @@ public class SQLdb implements IDatabase {
 			IDBLocation location) throws DatabaseException {
 		SQLLocation sqlLocation = (SQLLocation) location;
 		assert(sqlLocation.id == null);
-		sqlLocation.docID = containingDocument.getID();
-		sqlLocation.id = locationTable.insert(new Object[]{ sqlLocation.docID, sqlLocation.maxOccupancy, sqlLocation.type, sqlLocation.room, sqlLocation.schedulable});
-		System.out.println("id: " + sqlLocation.id);
+		//sqlLocation.docID = containingDocument.getID();
+		sqlLocation.id = locationTable.insert(new Object[]{ containingDocument.getID(), sqlLocation.maxOccupancy,
+				sqlLocation.type, sqlLocation.room, sqlLocation.schedulable});
 	}
 
 
 	@Override
 	public void updateLocation(IDBLocation location) throws DatabaseException {
-		assert(location!=null);
-		assert(location.getID() != null);
+		assert(location!=null) : "null location";
+		assert(location.getID() != null) : "null location id";
+		assert(location.getMaxOccupancy() != null);
+		assert(location.getType() != null);
+		assert(location.getRoom() != null);
+		
 		SQLLocation sqlLocation = (SQLLocation)location;
-		locationTable.update(new Object[] {sqlLocation.getID(), sqlLocation.docID, sqlLocation.maxOccupancy, sqlLocation.type, sqlLocation.room, 
+		locationTable.update(new Object[] {sqlLocation.docID, sqlLocation.maxOccupancy, sqlLocation.type, sqlLocation.room, 
 				sqlLocation.schedulable}, sqlLocation.getID());
 	}
 
@@ -816,12 +811,11 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public IDBCourse findCourseByID(int id) throws DatabaseException {
-		IDBCourse result;
 		HashMap<String, Object> wheres = new HashMap<String, Object>();
 		wheres.put("id", id);
-		result = courseTable.select(wheres).get(0);
-		//System.out.println(result);
-		return result;
+		if(courseTable.select(wheres).isEmpty())
+			throw new NotFoundException("Course with ID " + id + " not found");
+		return courseTable.select(wheres).get(0);
 	}
 
 
@@ -962,7 +956,6 @@ public class SQLdb implements IDatabase {
 			throws DatabaseException {
 		//try to create a labassociation between the lecture and lab, tether if needed. Exception if can't happen.
 		assert(lecture!=null && lecture.getID() != null && lab != null && lab.getID() != null);
-		
 		SQLCourse leccourse = (SQLCourse) lecture;
 		SQLCourse labcourse = (SQLCourse)lab;
 		
@@ -971,8 +964,8 @@ public class SQLdb implements IDatabase {
 			throw new DatabaseException("Course " + labcourse.getName() + " with ID: " + labcourse.getID() + " is not a lab");
 		if (!leccourse.getType().equals("LEC")) 
 			throw new DatabaseException("Course " + leccourse.getName() + " with ID: " + leccourse.getID() + " is not a lecture");
-
-		labassociationsTable.insert(new Object[] {labcourse.getID(), leccourse.getID(), tethered});
+		
+		labassociationsTable.insertWithID(new Object[] {labcourse.getID(), leccourse.getID(), tethered});
 	}
 	
 	@Override
@@ -994,12 +987,11 @@ public class SQLdb implements IDatabase {
 
 	@Override
 	public IDBInstructor findInstructorByID(int id) throws DatabaseException {
-		IDBInstructor result;
 		HashMap<String, Object> instID = new HashMap<String, Object>();
 		instID.put("id", id);
-		result = instructorTable.select(instID).get(0);
-
-		return result;
+		if(instructorTable.select(instID).isEmpty())
+			throw new NotFoundException("Instructor with ID " + id + " was not found");
+		return instructorTable.select(instID).get(0);
 	}
 
 	@Override
@@ -1028,7 +1020,7 @@ public class SQLdb implements IDatabase {
 		assert(instructor!=null);
 		assert(instructor.getID() != null);
 		SQLInstructor sqlInstructor = (SQLInstructor)instructor;
-		instructorTable.update(new Object[] {sqlInstructor.getID(), sqlInstructor.documentID, 
+		instructorTable.update(new Object[] {sqlInstructor.documentID, 
 				sqlInstructor.getFirstName(), sqlInstructor.getLastName(), sqlInstructor.getUsername(), sqlInstructor.getMaxWTU(), 
 				sqlInstructor.isSchedulable()}, sqlInstructor.getID());
 	}
@@ -1085,7 +1077,14 @@ public class SQLdb implements IDatabase {
 		assert(sqlTP.id == null);
 		SQLTime thisTime = (SQLTime)time;
 		assert(thisTime.getID() != null);
+		//System.out.println("Inserting instructor ID, timeID : " + ins.getID() + " " + thisTime.getID());
+		//try {
 		sqlTP.id = timeslotprefTable.insert(new Object[]{thisTime.getID(), ins.getID(), sqlTP.preference});
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			System.out.println("error: " +  ins.getID() + " " + thisTime.getID());
+//		}
+
 	}
 
 
@@ -1292,11 +1291,11 @@ public class SQLdb implements IDatabase {
 	public void insertProvidedEquipment(IDBLocation location,
 			IDBEquipmentType equipmentType, IDBProvidedEquipment equip)
 			throws DatabaseException {
-		System.out.println("location id: " + location.getID());
+		//System.out.println("location id: " + location.getID());
 		SQLLocationEquipment sqlusedequip = (SQLLocationEquipment) equip;
 		//Integer id, Integer locationID, Integer equipmentTypeID
 		sqlusedequip.id = locationequipmentTable.insert(new Object[]{ sqlusedequip.locID, sqlusedequip.equipID});
-		System.out.println("inserted equipment: " + sqlusedequip.id);
+		//System.out.println("inserted equipment: " + sqlusedequip.id);
 	}
 
 
@@ -1385,7 +1384,6 @@ public class SQLdb implements IDatabase {
 				" courseequip table " + courseequipmentTable.selectAll().size() +
 				" coursepatterns table " + coursepatternsTable.selectAll().size() +
 				" scheduleitem table " + scheduleItemTable.selectAll().size() +
-				" labassoc table " + labassociationsTable.selectAll().size()  +
 				" timeslotpref table " + timeslotprefTable.selectAll().size() +
 				" coursepref table " + courseprefTable.selectAll().size() +
 				" pattern table " + patternTable.selectAll().size() +

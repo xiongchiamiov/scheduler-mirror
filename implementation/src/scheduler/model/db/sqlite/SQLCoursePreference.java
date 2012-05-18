@@ -7,7 +7,7 @@ public class SQLCoursePreference extends SQLObject implements IDBCoursePreferenc
 	Integer courseID;
 	Integer preference;
 	
-	public SQLCoursePreference(Integer id, Integer instructorID, Integer courseID, int preference) {
+	public SQLCoursePreference(Integer id, Integer instructorID, Integer courseID, Integer preference) {
 		super(id);
 		this.instructorID = instructorID;
 		this.courseID = courseID;

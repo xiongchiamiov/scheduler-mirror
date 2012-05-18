@@ -119,13 +119,7 @@ drop table labassociations;
 create table labassociations (
     id integer primary key,
     lecID,
-    foreign key (lecID) references course(id)
-);
-
-drop table labtethered; 
-create table labtethered (
-    id integer primary key,
-    lecID,
+    isTethered tinyint(1) not null,
     foreign key (lecID) references course(id)
 );
 
@@ -133,7 +127,6 @@ drop table timeslotpref;
 create table timeslotpref (
     id integer primary key,
     timeID integer not null,
-    timeID,
     instID,
     prefLevel integer not null,
     unique (instID, timeID),

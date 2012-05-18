@@ -83,7 +83,6 @@ public abstract class InstructorsTest extends ModelTestCase {
 		
 		model.findInstructorByID(instructorID).delete();
 		doc.delete();
-		
 		assertTrue(model.isEmpty());
 	}
 	

@@ -6,7 +6,7 @@ import scheduler.model.db.IDBCourseAssociation;
 public class SQLCourseAssociation extends SQLObject implements IDBCourseAssociation {
 	// In this object, ID is the same as courseID
 	
-	public SQLCourseAssociation(int labID, int lectureID, boolean isTethered) {
+	public SQLCourseAssociation(Integer labID, Integer lectureID, Boolean isTethered) {
 		super(labID);
 		this.lectureID = lectureID;
 		this.isTethered = isTethered;

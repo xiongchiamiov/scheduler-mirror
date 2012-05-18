@@ -78,7 +78,7 @@ public abstract class CoursesTest extends ModelTestCase
       
       model.findCourseByID(courseID).delete();
       doc.delete();
-      System.out.println("courses left: " + model.findCoursesForDocument(doc));
+      //System.out.println("courses left: " + model.findCoursesForDocument(doc));
       //assertTrue(model.findCoursesForDocument(doc).isEmpty()); //note: SQLDB, this passes but model.isempty doesn't
       assertTrue(model.isEmpty());
    }
