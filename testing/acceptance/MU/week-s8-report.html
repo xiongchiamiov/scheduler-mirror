@@ -1,18 +1,18 @@
 <html>
 <head>
 <title>
-Spring Week 4 Acceptance Test Report for the MU Department
+Spring Week 8 Acceptance Test Report for the MU Department
 </title>
 </head>
 <body bgcolor=white>
 <p align=center>
 <font size=+2>
-<strong>Spring Week 4 Acceptance Test Report for the MU Department</strong>
+<strong>Spring Week 8 Acceptance Test Report for the MU Department</strong>
 </font>
 </p>
 <br>
 <h2>
-*STILL DOING TESTING BECAUSE OF ISSUES WITH SERVER* Browser Used for Testing: Used Sellenium Testing with Firefox
+Browser Used for Testing: Used Sellenium Testing for data entry with Chrome
 </h2>
 <br>
 <br>
@@ -22,7 +22,7 @@ Spring Week 4 Acceptance Test Report for the MU Department
 </h2>
 </a>
 <p>
-
+Able to login using "admin" and create, save and re-open the schedule.
 </p>
 
 <br>
@@ -32,8 +32,12 @@ Spring Week 4 Acceptance Test Report for the MU Department
 </h2>
 </a>
 <p>
-
+Location and Instructor entry was solid.
 </p>
+<strong>Issues</strong>
+<ul>
+	<li>Day Combinations were not 100%. When I clicked </li>
+</ul>
 
 <br>
 <a name="Generate a Schedule">
@@ -42,7 +46,8 @@ Spring Week 4 Acceptance Test Report for the MU Department
 </h2>
 </a>
 <p>
-
+Unable to generate a schedule using the "Generate Schedule" button. Loading gif came up after pressing the button, and 
+a 500 error popped up.
 </p>
 
 <br>
@@ -52,8 +57,14 @@ Spring Week 4 Acceptance Test Report for the MU Department
 </h2>
 </a>
 <p>
-
+Moving courses around on the schedule with drag and drop was successful.
 </p>
+<strong>Issues</strong>
+<ul>
+	<li>When dragging a course onto the schedule, it is unclear how many hours a week the course is supposed to be scheduled
+		and what day combinations are valid. The window that pops up should have more info about the course I am manually
+		placing on the schedule.</li>
+</ul>
 
 <br>
 <a name="Save, Exit, Re-Open Schedule">
@@ -62,7 +73,8 @@ Spring Week 4 Acceptance Test Report for the MU Department
 </h2>
 </a>
 <p>
-
+Saving worked (nice popup). When I logged out and back in, I was able to see the same schedule
+and open it back up again.
 </p>
 
 <br>
@@ -82,7 +94,9 @@ Spring Week 4 Acceptance Test Report for the MU Department
 </h2>
 </a>
 <p>
-
+<ul>
+	<li>Generate Schedule button caused a 500 error after entering resources.</li>
+	<li>
 </p>
 </body>
 </html>
