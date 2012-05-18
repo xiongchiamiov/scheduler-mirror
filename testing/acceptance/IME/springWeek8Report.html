@@ -1,0 +1,138 @@
+<html>
+<head>
+<title>
+Finals Week Acceptance Test Report for the IME Department
+</title>
+</head>
+<body bgcolor=white>
+<p align=center>
+<font size=+2>
+<strong>Week 6 Acceptance Test Report for the IME Department
+<br><br>
+These are the results from both Kaylene's acceptance test and the feedback that I got from my roommates from acceptance testing.</strong>
+</font>
+</p>
+<br>
+<br>
+<a name="Create, Save, and Re-Open a New Schedule">
+<h2>
+1.  Create, Save, and Re-Open a New Schedule
+</h2>
+</a>
+<p>
+This works.
+</p>
+
+<br>
+<a name="Enter Resource Data">
+<h2>
+2.  Enter Resource Data
+</h2>
+</a>
+<p>
+<em>
+<ol type=a>
+<p> <li>
+    DayCombos bug. See jira issue #495, #498, #496
+    Also, day combos don't show up after the first row
+<p><li>
+It's not clear to the user whether or not max enrollment was per section or overall for the entire course
+    <p><li>
+They viewed the "Schedulable" check box as a "Selection" text box instead of the blue highlight being row selection (but they quickly figured that out when checking it to delete it didn't work)
+</ol>
+</em>
+</p>
+
+<br>
+<a name="Generate a Schedule">
+<h2>
+3.  Generate a Schedule
+</h2>
+</a>
+<p>
+<em>
+<ol type=a>
+<p><li>
+    We need to get rid of the "debug" message that tells how long the courses take to load.
+    <p><li>
+    When I tried to press the generate button I got an error: "Failed to get schedule: com.google.gwt.user.client.rpc.StatusCodeException: 500 The call failed on the server; see server log for details"
+    <p><li>
+They didn't like that the Course Preferences Box wasn't around the course preferences (it is off kilter)
+<p><li>
+    Also, by default they put @calpoly.edu at the end of the username (this might be because I gave them faculty email addresses, but it must be more clear)
+<p><li>
+    One of them wasn't sure what to do initially to be able to enter resource data after she pressed "add course" because the first cell isn't in an "editable" state, it took her a second to realize that she had to click where the cell is to make it editable
+</ol>
+</em>
+</p>
+
+<br>
+<a name="Edit the Schedule">
+<h2>
+4.  Edit the Schedule
+</h2>
+</a>
+<p>
+<em>
+<ol type=a>
+<p> <li>
+They didn't like that Generate spit out "gross looking" schedules with lots of classes in a single time spot
+<p><li>
+When editing, by default it should give a start time and and end time that amounts to an hour difference, not a 1/2 hour difference.
+</ol>
+</em>
+</p>
+
+<br>
+<a name="Save, Exit, Re-Open Schedule">
+<h2>
+5.  Save, Exit, Re-Open Schedule
+</h2>
+</a>
+<p>
+<em>
+<ol type=a>
+<p> <li>
+This seems to work.
+</ol>
+</em>
+</p>
+</p>
+
+<br>
+<a name="Quality Measures">
+<h2>
+6.  Quality Measures
+</h2>
+</a>
+<p>
+<em>
+<ol type=a>
+<p> <li>
+    The resource tables are getting to a stable and usable place; however, work needs to be done to fix the minor bugs, and to make sure that data validation is occuring, CORRECTLY at this point.
+<p><li>
+The generation page is not acceptable. I cannot press the generation button, I still get errors. And when I try to drag courses onto the schedule, it doesn't seem to be running the algorithm to assign instructors or rooms to these courses. 
+<p><li>
+    The top-level UI functionality doesn't seem to be working, specifically the File, Open menu.
+</ol>
+</em>
+</p>
+<br>
+<a name="Other Issues">
+<h2>
+7.  Other Issues
+</h2>
+</a>
+<p>
+<em>
+<ol type=a>
+<p><li>
+Generate still fails on invalid data errors.
+<p><li>
+The DayCombos in the resource table aren't accurate.
+</ol>
+</em>
+
+</p>
+</body>
+</html>
