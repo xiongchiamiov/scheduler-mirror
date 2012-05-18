@@ -280,22 +280,22 @@ public class CoursePrefsWidget extends VerticalPanel
 						List<CourseGWT> result = new LinkedList<CourseGWT>(workingCopyDocument.getCourses());
 						
 						if (result.size() == 0) {
-							System.out
-									.println("The size of the course list >>is<< zero. It should NOT open preferences");
-							if(com.google.gwt.user.client.Window.confirm(
-									"The database doesn't contain any course right now. "
-									+ "Do you want to proceed?"))
-							{
-								if (parent != null) {
+//							System.out
+//									.println("The size of the course list >>is<< zero. It should NOT open preferences");
+//							if(com.google.gwt.user.client.Window.confirm(
+//									"The database doesn't contain any course right now. "
+//									+ "Do you want to proceed?"))
+//							{
+//								if (parent != null) {
 									parent.show();
-								}
-							}
-							else
-							{
-								if (parent != null) {
-									parent.hide();
-								}
-							}
+//								}
+//							}
+//							else
+//							{
+//								if (parent != null) {
+//									parent.hide();
+//								}
+//							}
 						} else {
 							System.out
 									.println("The size of the course list is not zero. It should open preferences");

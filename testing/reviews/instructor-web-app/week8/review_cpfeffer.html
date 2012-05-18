@@ -1,0 +1,63 @@
+<html>
+
+<font size=+2>
+<strong>1. Code Follows
+<a href="http://users.csc.calpoly.edu/~gfisher/classes/406/handouts/design-imple-conventions.html">
+Design and Implementation Conventions</strong>
+</a>
+</font>
+<br>
+<ul>
+    <li>looks good, except that sometimes the "this" is missing,
+        but there is no other way around it, because otherwise it
+        would not work with local anonymous classes...</li>
+    <li>there are no strange printlns anymore :-D</li>
+</ul>
+<br>
+<br>
+<font size=+2>
+<strong>2. Javadoc Is Complete and Follows Design and Implementation
+Conventions</strong>
+</font>
+<br>
+<i>The following issues are not only for you Jake, as well for me, but I found it hard
+to differ between you code and my code...</i>
+<br>
+<ul>
+    <li>InstructorsHomeView.java has no javadocs</li>
+    <li>InstructorPreferencesView: javadoc for the following methods is missing:<br/>
+        public void afterPush()<br/>
+        public void setParent(com.smartgwt.client.widgets.Window parent)<br/>
+        public void setInstructor(InstructorGWT instructor)<br/>
+        public void setDocument(CachedOpenWorkingCopyDocument doc)<br/>
+        public boolean canPop()<br/>
+        public void beforePop()<br/>
+        public void beforeViewPushedAboveMe()<br/>
+        public void afterViewPoppedFromAboveMe()<br/>
+        public Widget getContents()<br/>
+        </li>
+    <li>docstrings for InstructorDataSource.java are missing</li>
+    <li>docstrings for InstructorsView.java are missing</li>
+    <li>most of the docstrings in TimePrefsWidget.java are missing</li>
+</ul>
+<br>
+<br>
+<font size=+2>
+<strong>3. Design of the Code is Good</strong>
+</font>
+<br>
+<ul>
+    <li>More or less - there hasn't changed that much, just small bugfixes and deletion of duplicated code</li>
+</ul>
+<br>
+<br>
+<font size=+2>
+<strong>4. Code Passes Its Tests and Has Sensible User-Level Behavior </strong></font>
+<br>
+<ul>
+    <li>If the document is not saved before opening the instructor preferences window,
+        the course preferences will not show up</li>
+    <li>The preferences window has a strange size issue</li>
+</ul>
+</body>
+</html>
