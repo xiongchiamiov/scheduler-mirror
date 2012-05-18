@@ -115,8 +115,8 @@ public class GenerateEntryPoint {
 			throw new BadLocationDataException(BadLocationDataException.ConflictType.BAD_ROOM, loc, "null or empty room", "valid room");
 		if(loc.getType() == null || loc.getType() == "")
 			throw new BadLocationDataException(BadLocationDataException.ConflictType.BAD_LTYPE, loc, "null or empty type", "valid type");
-		if(loc.getMaxOccupancy() == null || loc.getMaxOccupancyInt() <= 0)
-			throw new BadLocationDataException(BadLocationDataException.ConflictType.BAD_MAXOCC, loc, "null or <= 0", "> 0");
+		if(loc.getMaxOccupancy() == null || loc.getMaxOccupancyInt() < 0)
+			throw new BadLocationDataException(BadLocationDataException.ConflictType.BAD_MAXOCC, loc, "null or < 0", "> 0");
 		//if(l) all equipment type values are valid. i think null shouldnt be. have a none option.
 	}
 	

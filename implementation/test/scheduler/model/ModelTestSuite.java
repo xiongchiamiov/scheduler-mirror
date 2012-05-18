@@ -2,15 +2,18 @@ package scheduler.model;
 
 import junit.framework.TestResult;
 import junit.framework.TestSuite;
-import scheduler.model.simpledb.AlgorithmTestSimpleDB;
-import scheduler.model.simpledb.CSVTestSimpleDB;
-import scheduler.model.simpledb.CoursesTestSimpleDB;
-import scheduler.model.simpledb.DocumentsTestSimpleDB;
-import scheduler.model.simpledb.InstructorsPreferencesTestSimpleDB;
-import scheduler.model.simpledb.InstructorsTestSimpleDB;
-import scheduler.model.simpledb.LocationsTestSimpleDB;
-import scheduler.model.simpledb.ScheduleItemsTestSimpleDB;
-import scheduler.model.simpledb.UsersTestSimpleDB;
+//import scheduler.model.simpledb.AlgorithmTestSimpleDB;
+//import scheduler.model.simpledb.CSVTestSimpleDB;
+//import scheduler.model.simpledb.CoursesTestSimpleDB;
+//import scheduler.model.simpledb.DocumentsTestSimpleDB;
+//import scheduler.model.simpledb.InstructorsPreferencesTestSimpleDB;
+//import scheduler.model.simpledb.InstructorsTestSimpleDB;
+//import scheduler.model.simpledb.LocationsTestSimpleDB;
+//import scheduler.model.simpledb.ScheduleItemsTestSimpleDB;
+//import scheduler.model.simpledb.UsersTestSimpleDB;
+import scheduler.model.sqldb.CoursesTestSQLDB;
+import scheduler.model.sqldb.DocumentsTestSQLDB;
+import scheduler.model.sqldb.*;
 
 public class ModelTestSuite extends TestSuite {
 
@@ -32,32 +35,32 @@ public class ModelTestSuite extends TestSuite {
 	public static TestSuite suite() {
 		TestSuite suite = new TestSuite("Model tests");
 
-		suite.addTestSuite(AlgorithmTestSimpleDB.class);
+		//suite.addTestSuite(AlgorithmTestSimpleDB.class);
 		//suite.addTestSuite(AlgorithmTestSQLDB.class);
 
-		suite.addTestSuite(CoursesTestSimpleDB.class);
-//		suite.addTestSuite(CoursesTestSQLDB.class);
+		//suite.addTestSuite(CoursesTestSimpleDB.class);
+		suite.addTestSuite(CoursesTestSQLDB.class);
 
-		suite.addTestSuite(CSVTestSimpleDB.class);
+//		suite.addTestSuite(CSVTestSimpleDB.class);
 //		suite.addTestSuite(CSVTestSQLDB.class);
 		
-		suite.addTestSuite(DocumentsTestSimpleDB.class);
-//		suite.addTestSuite(DocumentsTestSQLDB.class);
+//		suite.addTestSuite(DocumentsTestSimpleDB.class);
+		suite.addTestSuite(DocumentsTestSQLDB.class);
 
-		suite.addTestSuite(InstructorsPreferencesTestSimpleDB.class);
-//		suite.addTestSuite(InstructorsPreferencesTestSQLDB.class);
+//		suite.addTestSuite(InstructorsPreferencesTestSimpleDB.class);
+		suite.addTestSuite(InstructorsPreferencesTestSQLDB.class);
 		
-		suite.addTestSuite(InstructorsTestSimpleDB.class);
-//		suite.addTestSuite(InstructorsTestSQLDB.class);
+//		suite.addTestSuite(InstructorsTestSimpleDB.class);
+		suite.addTestSuite(InstructorsTestSQLDB.class);
 
-		suite.addTestSuite(LocationsTestSimpleDB.class);
-//		suite.addTestSuite(LocationsTestSQLDB.class);
+//		suite.addTestSuite(LocationsTestSimpleDB.class);
+		suite.addTestSuite(LocationsTestSQLDB.class);
 
-		suite.addTestSuite(ScheduleItemsTestSimpleDB.class);
-//		suite.addTestSuite(ScheduleItemsTestSQLDB.class);
+//		suite.addTestSuite(ScheduleItemsTestSimpleDB.class);
+		suite.addTestSuite(ScheduleItemsTestSQLDB.class);
 
-		suite.addTestSuite(UsersTestSimpleDB.class);
-//		suite.addTestSuite(UsersTestSQLDB.class);
+//		suite.addTestSuite(UsersTestSimpleDB.class);
+		suite.addTestSuite(UsersTestSQLDB.class);
 		
 		suite.run(new TestResult());
 		
