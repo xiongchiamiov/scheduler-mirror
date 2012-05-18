@@ -78,7 +78,7 @@ public abstract class MUAcceptanceTest extends DefaultSelTestCase {
 	}
 	
 	public void testAcceptanceForMU() throws InterruptedException {
-		login("jrawson");
+		login("admin");
 		
 		final String documentName = "MU Acceptance Test Document";
 		deleteDocumentFromHomeTab(documentName);
@@ -88,21 +88,26 @@ public abstract class MUAcceptanceTest extends DefaultSelTestCase {
 		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 0, true, "MU", "101", "Introduction to Music Theory", "7", "3", "3", "MW,MWF,TuTh", "3", "27", "LEC", "Smart Room", null);
 		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 1, true, "MU", "104", "Musicianship I", "1", "3", "3", "MWF", "3", "14", "LEC", "Laptop Connectivity, Overhead", null);
 		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 2, true, "MU", "105", "Music Theory II: Chromatic Materials", "1", "3", "3", "MWF", "4.5", "27", "LEC", null, null);
-		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 3, true, "MU", "105", "Music Theory II: Chromatic Materials", "1", "3", "3", "MWF", "4.5", "27", "LEC", null, null);
-		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 4, true, "MU", "105", "Music Theory II: Chromatic Materials", "1", "3", "3", "MWF", "4.5", "27", "LEC", null, null);
-
+		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 3, true, "MU", "108", "Musicianship III", "1", "3", "3", "MWF", "3", "20", "LEC", null, null);
+		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 4, true, "MU", "120", "Music Appreciation", "1", "3", "3", "TR", "3", "50", "LEC", null, null);
+		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 5, true, "MU", "121", "Introduction to Non-Western Musics", "1", "3", "3", "MW", "3", "27", "LEC", null, null);
 		
 		// Click on the instructors tab
 		driver.findElement(By.xpath("//td[@class='tabTitle'][text()='Instructors']")).click();
 
 		// Start filling out instructors
-		//bot.enterIntoInstructorsResourceTableNewRow(0, true, "Ovadia", "Evan", "eovadia", "20");
+		WebUtility.enterIntoInstructorsResourceTableNewRow(driver, 0, true, "Habib", "Kenneth", "khabib", "20");
+		WebUtility.enterIntoInstructorsResourceTableNewRow(driver, 1, true, "Barata", "Antonia", "abarata", "20");
+		WebUtility.enterIntoInstructorsResourceTableNewRow(driver, 2, true, "Arrivee", "David", "darrivee", "20");
+		WebUtility.enterIntoInstructorsResourceTableNewRow(driver, 0, true, "D'", "", "khabib", "20");
 
 		// Click on the locations tab
 		driver.findElement(By.xpath("//td[@class='tabTitle'][text()='Locations']")).click();
 
 		// Start filling out locations
-		WebUtility.enterIntoLocationsResourceTableNewRow(driver, 0, true, "14-255", "Smart Room", "9001", null);
+		WebUtility.enterIntoLocationsResourceTableNewRow(driver, 0, true, "045-0126", "Smart Room", "200", null);
+		WebUtility.enterIntoLocationsResourceTableNewRow(driver, 1, true, "045-0130", "Smart Room", "200", null);
+
 	}
 }
 
