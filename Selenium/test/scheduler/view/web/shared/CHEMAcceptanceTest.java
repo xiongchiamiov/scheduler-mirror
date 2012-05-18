@@ -91,11 +91,9 @@ public class CHEMAcceptanceTest extends DefaultSelTestCase{
 	//	bot.enterIntoCoursesResourceTableNewRow(row0Based, isSchedulable, department, catalogNum, courseName, 
 			// numSections, wtu, scu, dayCombinations, hoursPerWeek, maxEnrollment, type, usedEquipment, association)
 
-		//TODO fix WTU and SCU amounts
-		//TODO fix Tu / Thurs vals
 		WebUtility.enterIntoCoursesResourceTableNewRow(driver,0, true, "CHEM", "101", "World Of Chemistry-Essentials", 
 				"2", "5", "4", "MW,MWF", "3", "72", "LEC", "", null);
-/*		WebUtility.enterIntoCoursesResourceTableNewRow(driver,1, true, "CHEM", "101Lab", "World Of Chemistry-Essentials", 
+		WebUtility.enterIntoCoursesResourceTableNewRow(driver,1, true, "CHEM", "101Lab", "World Of Chemistry-Essentials", 
 				"6", "3", "2", "W,Th,F", "3", "24", "LAB", "", "0" );
 		
 		WebUtility.enterIntoCoursesResourceTableNewRow(driver,2, true, "CHEM", "111", "Survey Of Chemistry", 
@@ -204,7 +202,7 @@ public class CHEMAcceptanceTest extends DefaultSelTestCase{
 		WebUtility.enterIntoCoursesResourceTableNewRow(driver,39, true, "CHEM", "590", "Graduate Seminar in Polymers & Coating", 
 				"1", "4", "4", "F", "1", "36", "SEM", "", "" );
 		
-	*/	
+		
 		
 		// Test saving
 		driver.findElement(By.xpath("//div[@class='toolStrip']//td[@class='buttonTitle'][text()='File']")).click();
