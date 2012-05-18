@@ -193,7 +193,7 @@ public class ValidatorUtil {
 	private static boolean validateGreaterThanZeroInt(String cellvalue) {
 		try {
 			int value = Integer.valueOf(cellvalue);
-			if (value < 0) {
+			if (value <= 0) {
 				return false;
 			} else {
 				return true;
@@ -247,5 +247,18 @@ public class ValidatorUtil {
 			}
 		}
 		return true;
+	}
+
+	private static boolean validateSCUs(String cellvalue, RecordList recordList) {
+		try {
+			int value = Integer.valueOf(cellvalue);
+			if (value < 0 || value > 5) {
+				return false;
+			} else {
+				return true;
+			}
+		} catch (Exception e) {
+			return false;
+		}
 	}
 }

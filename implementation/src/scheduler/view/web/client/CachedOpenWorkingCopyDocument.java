@@ -11,7 +11,6 @@ import scheduler.view.web.shared.DocumentGWT;
 import scheduler.view.web.shared.InstructorGWT;
 import scheduler.view.web.shared.LocationGWT;
 import scheduler.view.web.shared.ScheduleItemGWT;
-import scheduler.view.web.shared.ServerResourcesResponse;
 import scheduler.view.web.shared.WorkingDocumentGWT;
 
 import com.google.gwt.user.client.Window;
@@ -141,20 +140,29 @@ public class CachedOpenWorkingCopyDocument {
 		scheduleItems.forceSynchronize(finalCallbackToGiveToCaches);
 	}
 
-	public void generateRestOfSchedule(AsyncCallback<Void> callback) {
-		service.generateRestOfSchedule(sessionID,
-				realWorkingDocument.getRealID(), new AsyncCallback<Void>() {
-					@Override
-					public void onSuccess(Void v) {
-					}
+	public void generateRestOfSchedule(final AsyncCallback<Void> callback) {
+		if (documentIsValid()) {
+			service.generateRestOfSchedule(sessionID,
+					realWorkingDocument.getRealID(), new AsyncCallback<Void>() {
+						@Override
+						public void onSuccess(Void v) {
+							callback.onSuccess(null);
+						}
 
-					@Override
-					public void onFailure(Throwable caught) {
-						Window.alert("Failed to generate schedule!" + caught);
-					}
-				});
+						@Override
+						public void onFailure(Throwable caught) {
+							Window.alert("Failed to generate schedule!"
+									+ caught);
+							callback.onFailure(caught);
+						}
+					});
 
-		scheduleItems.forceSynchronize(callback);
+			scheduleItems.forceSynchronize(callback);
+		}
+		else
+		{
+			callback.onFailure(new InvalidResourcesException("The resources are invalid, look for red cells"));
+		}
 	}
 
 	public Collection<CourseGWT> getCourses() {

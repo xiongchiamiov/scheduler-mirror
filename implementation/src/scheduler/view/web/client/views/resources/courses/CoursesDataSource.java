@@ -52,7 +52,7 @@ public class CoursesDataSource extends DataSource {
 		
 		
 		dayCombinationsField.setValueMap(
-				"MW", "MF", "WF", "TR", "MWF", "MTWR", "MTWF", "MWRF", "TWRF", "MTWRF", "Tether",
+				"MW", "MF", "WF", "TR", "MWF", "MTWR", "MTWF", "MWRF", "TWRF", "MTWRF",
 				"M", "T", "W", "R", "F");
 		DataSourceTextField hoursPerWeekField = new DataSourceTextField("hoursPerWeek");
 		

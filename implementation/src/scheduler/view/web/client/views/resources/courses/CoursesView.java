@@ -145,10 +145,10 @@ public class CoursesView extends VLayout {
 		numSectionsField.setAlign(Alignment.CENTER);
 		ListGridField wtuField = new ListGridField("wtu", "WTU");
 		wtuField.setAlign(Alignment.CENTER);
-		wtuField.setDefaultValue(0);
+		wtuField.setDefaultValue(4);
 		ListGridField scuField = new ListGridField("scu", "SCU");
 		scuField.setAlign(Alignment.CENTER);
-		scuField.setDefaultValue(0);
+		scuField.setDefaultValue(4);
 
 		ListGridField dayCombinationsField = new ListGridField(
 				"dayCombinations", "Day Combinations");
