@@ -1,0 +1,915 @@
+<html>
+    <font size=+2>
+        <strong>1. Code Follows
+            <a href="http://users.csc.calpoly.edu/~gfisher/classes/406/handouts/design-imple-conventions.html">
+                Design and Implementation Conventions</strong>
+        </a>
+    </font>
+    <ol>
+        <li><b>src/scheduler/model/db/sqlite/SQLCourse.java:</b>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>One public class per file</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Javadoc comments formatted correctly (proper number of stars with correct indentation)</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Indentation is every 3 spaces</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Use tab characters for indentation</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Java method body spacing and indentation is formatted correctly</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Comments within code are consistant, using either the starred style comments or double forward slash style comments</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names are identical to the corresponding RSL objects</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Names of model methods are identical to the names of corresponding RSL operations</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>All method names are lowercase</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>The names of view types should be the same as corresponding model names with the suffix UI added</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled> The names of the view methods should be full-word mnemonic</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>The names of process types and methods should be full-word mnemonic</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>The names of constants should be mnemonic, typically one word or two lords, all uppercase, separated by underscores</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Access methods start with "get"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Setting methods start with "set"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Searching methods start with "find"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names are identical to the corresponding RSL objects</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names begin with a captial letter, and each distinct word in the name should be capitalized</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Method names begin with a lowercase letter, and each distinct word in the name should be capitalized</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Variable names start with a lowercase letter</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>A variable may be no shorter than the total number of capital letters in its type name</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No methods longer than 50 lines</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No more than 25 public methods plus 25 protected methods</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No more than 50 protected data fields</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No file can be longer than 2500 lines of code</input>
+            </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLCourseAssociation.java:</b>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>One public class per file</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Javadoc comments formatted correctly (proper number of stars with correct indentation)</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Indentation is every 3 spaces</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Use tab characters for indentation</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Java method body spacing and indentation is formatted correctly</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Comments within code are consistant, using either the starred style comments or double forward slash style comments</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names are identical to the corresponding RSL objects</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Names of model methods are identical to the names of corresponding RSL operations</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>All method names are lowercase</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>The names of view types should be the same as corresponding model names with the suffix UI added</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled> The names of the view methods should be full-word mnemonic</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>The names of process types and methods should be full-word mnemonic</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>The names of constants should be mnemonic, typically one word or two lords, all uppercase, separated by underscores</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Access methods start with "get"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Setting methods start with "set"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Searching methods start with "find"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names are identical to the corresponding RSL objects</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names begin with a captial letter, and each distinct word in the name should be capitalized</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Method names begin with a lowercase letter, and each distinct word in the name should be capitalized</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Variable names start with a lowercase letter</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>A variable may be no shorter than the total number of capital letters in its type name</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No methods longer than 50 lines</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No more than 25 public methods plus 25 protected methods</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No more than 50 protected data fields</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No file can be longer than 2500 lines of code</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLCourseEquipment.java:</b>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>One public class per file</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Javadoc comments formatted correctly (proper number of stars with correct indentation)</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Indentation is every 3 spaces</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Use tab characters for indentation</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Java method body spacing and indentation is formatted correctly</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Comments within code are consistant, using either the starred style comments or double forward slash style comments</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names are identical to the corresponding RSL objects</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Names of model methods are identical to the names of corresponding RSL operations</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>All method names are lowercase</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>The names of view types should be the same as corresponding model names with the suffix UI added</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled> The names of the view methods should be full-word mnemonic</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>The names of process types and methods should be full-word mnemonic</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>The names of constants should be mnemonic, typically one word or two lords, all uppercase, separated by underscores</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Access methods start with "get"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Setting methods start with "set"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Searching methods start with "find"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names are identical to the corresponding RSL objects</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names begin with a captial letter, and each distinct word in the name should be capitalized</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Method names begin with a lowercase letter, and each distinct word in the name should be capitalized</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Variable names start with a lowercase letter</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>A variable may be no shorter than the total number of capital letters in its type name</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No methods longer than 50 lines</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No more than 25 public methods plus 25 protected methods</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No more than 50 protected data fields</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No file can be longer than 2500 lines of code</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLCoursePattern.java:</b>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>One public class per file</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Javadoc comments formatted correctly (proper number of stars with correct indentation)</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Indentation is every 3 spaces</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Use tab characters for indentation</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Java method body spacing and indentation is formatted correctly</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Comments within code are consistant, using either the starred style comments or double forward slash style comments</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names are identical to the corresponding RSL objects</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Names of model methods are identical to the names of corresponding RSL operations</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>All method names are lowercase</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>The names of view types should be the same as corresponding model names with the suffix UI added</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled> The names of the view methods should be full-word mnemonic</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>The names of process types and methods should be full-word mnemonic</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>The names of constants should be mnemonic, typically one word or two lords, all uppercase, separated by underscores</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Access methods start with "get"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Setting methods start with "set"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Searching methods start with "find"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names are identical to the corresponding RSL objects</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names begin with a captial letter, and each distinct word in the name should be capitalized</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Method names begin with a lowercase letter, and each distinct word in the name should be capitalized</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Variable names start with a lowercase letter</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>A variable may be no shorter than the total number of capital letters in its type name</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No methods longer than 50 lines</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No more than 25 public methods plus 25 protected methods</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No more than 50 protected data fields</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No file can be longer than 2500 lines of code</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLCoursePreference.java:</b>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>One public class per file</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Javadoc comments formatted correctly (proper number of stars with correct indentation)</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Indentation is every 3 spaces</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Use tab characters for indentation</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Java method body spacing and indentation is formatted correctly</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Comments within code are consistant, using either the starred style comments or double forward slash style comments</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names are identical to the corresponding RSL objects</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Names of model methods are identical to the names of corresponding RSL operations</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>All method names are lowercase</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>The names of view types should be the same as corresponding model names with the suffix UI added</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled> The names of the view methods should be full-word mnemonic</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>The names of process types and methods should be full-word mnemonic</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>The names of constants should be mnemonic, typically one word or two lords, all uppercase, separated by underscores</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Access methods start with "get"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Setting methods start with "set"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Searching methods start with "find"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names are identical to the corresponding RSL objects</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names begin with a captial letter, and each distinct word in the name should be capitalized</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Method names begin with a lowercase letter, and each distinct word in the name should be capitalized</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Variable names start with a lowercase letter</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>A variable may be no shorter than the total number of capital letters in its type name</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No methods longer than 50 lines</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No more than 25 public methods plus 25 protected methods</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No more than 50 protected data fields</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No file can be longer than 2500 lines of code</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLDayPattern.java:</b>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>One public class per file</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Javadoc comments formatted correctly (proper number of stars with correct indentation)</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Indentation is every 3 spaces</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Use tab characters for indentation</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Java method body spacing and indentation is formatted correctly</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Comments within code are consistant, using either the starred style comments or double forward slash style comments</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names are identical to the corresponding RSL objects</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Names of model methods are identical to the names of corresponding RSL operations</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>All method names are lowercase</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>The names of view types should be the same as corresponding model names with the suffix UI added</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled> The names of the view methods should be full-word mnemonic</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>The names of process types and methods should be full-word mnemonic</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>The names of constants should be mnemonic, typically one word or two lords, all uppercase, separated by underscores</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Access methods start with "get"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Setting methods start with "set"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Searching methods start with "find"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names are identical to the corresponding RSL objects</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names begin with a captial letter, and each distinct word in the name should be capitalized</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Method names begin with a lowercase letter, and each distinct word in the name should be capitalized</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Variable names start with a lowercase letter</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>A variable may be no shorter than the total number of capital letters in its type name</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No methods longer than 50 lines</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No more than 25 public methods plus 25 protected methods</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No more than 50 protected data fields</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No file can be longer than 2500 lines of code</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLdb.java:</b>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>One public class per file</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Javadoc comments formatted correctly (proper number of stars with correct indentation)</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Indentation is every 3 spaces</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Use tab characters for indentation</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Java method body spacing and indentation is formatted correctly</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Comments within code are consistant, using either the starred style comments or double forward slash style comments</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names are identical to the corresponding RSL objects</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Names of model methods are identical to the names of corresponding RSL operations</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>All method names are lowercase</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>The names of view types should be the same as corresponding model names with the suffix UI added</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled> The names of the view methods should be full-word mnemonic</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>The names of process types and methods should be full-word mnemonic</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>The names of constants should be mnemonic, typically one word or two lords, all uppercase, separated by underscores</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Access methods start with "get"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Setting methods start with "set"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Searching methods start with "find"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names are identical to the corresponding RSL objects</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names begin with a captial letter, and each distinct word in the name should be capitalized</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Method names begin with a lowercase letter, and each distinct word in the name should be capitalized</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Variable names start with a lowercase letter</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>A variable may be no shorter than the total number of capital letters in its type name</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No methods longer than 50 lines</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No more than 25 public methods plus 25 protected methods</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No more than 50 protected data fields</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No file can be longer than 2500 lines of code</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLDocument.java:</b>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>One public class per file</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Javadoc comments formatted correctly (proper number of stars with correct indentation)</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Indentation is every 3 spaces</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Use tab characters for indentation</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Java method body spacing and indentation is formatted correctly</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Comments within code are consistant, using either the starred style comments or double forward slash style comments</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names are identical to the corresponding RSL objects</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Names of model methods are identical to the names of corresponding RSL operations</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>All method names are lowercase</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>The names of view types should be the same as corresponding model names with the suffix UI added</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled> The names of the view methods should be full-word mnemonic</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>The names of process types and methods should be full-word mnemonic</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>The names of constants should be mnemonic, typically one word or two lords, all uppercase, separated by underscores</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Access methods start with "get"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Setting methods start with "set"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Searching methods start with "find"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names are identical to the corresponding RSL objects</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names begin with a captial letter, and each distinct word in the name should be capitalized</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Method names begin with a lowercase letter, and each distinct word in the name should be capitalized</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Variable names start with a lowercase letter</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>A variable may be no shorter than the total number of capital letters in its type name</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No methods longer than 50 lines</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No more than 25 public methods plus 25 protected methods</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No more than 50 protected data fields</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No file can be longer than 2500 lines of code</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLEquipmentType.java:</b>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>One public class per file</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Javadoc comments formatted correctly (proper number of stars with correct indentation)</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Indentation is every 3 spaces</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Use tab characters for indentation</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Java method body spacing and indentation is formatted correctly</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Comments within code are consistant, using either the starred style comments or double forward slash style comments</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names are identical to the corresponding RSL objects</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Names of model methods are identical to the names of corresponding RSL operations</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>All method names are lowercase</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>The names of view types should be the same as corresponding model names with the suffix UI added</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled> The names of the view methods should be full-word mnemonic</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>The names of process types and methods should be full-word mnemonic</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>The names of constants should be mnemonic, typically one word or two lords, all uppercase, separated by underscores</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Access methods start with "get"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Setting methods start with "set"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Searching methods start with "find"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names are identical to the corresponding RSL objects</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names begin with a captial letter, and each distinct word in the name should be capitalized</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Method names begin with a lowercase letter, and each distinct word in the name should be capitalized</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Variable names start with a lowercase letter</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>A variable may be no shorter than the total number of capital letters in its type name</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No methods longer than 50 lines</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No more than 25 public methods plus 25 protected methods</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No more than 50 protected data fields</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No file can be longer than 2500 lines of code</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLInstructor.java:</b>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>One public class per file</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Javadoc comments formatted correctly (proper number of stars with correct indentation)</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Indentation is every 3 spaces</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Use tab characters for indentation</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Java method body spacing and indentation is formatted correctly</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Comments within code are consistant, using either the starred style comments or double forward slash style comments</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names are identical to the corresponding RSL objects</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Names of model methods are identical to the names of corresponding RSL operations</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>All method names are lowercase</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>The names of view types should be the same as corresponding model names with the suffix UI added</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled> The names of the view methods should be full-word mnemonic</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>The names of process types and methods should be full-word mnemonic</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>The names of constants should be mnemonic, typically one word or two lords, all uppercase, separated by underscores</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Access methods start with "get"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Setting methods start with "set"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Searching methods start with "find"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names are identical to the corresponding RSL objects</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names begin with a captial letter, and each distinct word in the name should be capitalized</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Method names begin with a lowercase letter, and each distinct word in the name should be capitalized</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Variable names start with a lowercase letter</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>A variable may be no shorter than the total number of capital letters in its type name</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No methods longer than 50 lines</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No more than 25 public methods plus 25 protected methods</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No more than 50 protected data fields</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No file can be longer than 2500 lines of code</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLLocation.java:</b>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>One public class per file</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Javadoc comments formatted correctly (proper number of stars with correct indentation)</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Indentation is every 3 spaces</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Use tab characters for indentation</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Java method body spacing and indentation is formatted correctly</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Comments within code are consistant, using either the starred style comments or double forward slash style comments</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names are identical to the corresponding RSL objects</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Names of model methods are identical to the names of corresponding RSL operations</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>All method names are lowercase</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>The names of view types should be the same as corresponding model names with the suffix UI added</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled> The names of the view methods should be full-word mnemonic</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>The names of process types and methods should be full-word mnemonic</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>The names of constants should be mnemonic, typically one word or two lords, all uppercase, separated by underscores</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Access methods start with "get"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Setting methods start with "set"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Searching methods start with "find"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names are identical to the corresponding RSL objects</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names begin with a captial letter, and each distinct word in the name should be capitalized</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Method names begin with a lowercase letter, and each distinct word in the name should be capitalized</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Variable names start with a lowercase letter</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>A variable may be no shorter than the total number of capital letters in its type name</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No methods longer than 50 lines</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No more than 25 public methods plus 25 protected methods</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No more than 50 protected data fields</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No file can be longer than 2500 lines of code</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLLocationEquipment.java:</b>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>One public class per file</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Javadoc comments formatted correctly (proper number of stars with correct indentation)</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Indentation is every 3 spaces</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Use tab characters for indentation</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Java method body spacing and indentation is formatted correctly</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Comments within code are consistant, using either the starred style comments or double forward slash style comments</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names are identical to the corresponding RSL objects</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Names of model methods are identical to the names of corresponding RSL operations</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>All method names are lowercase</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>The names of view types should be the same as corresponding model names with the suffix UI added</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled> The names of the view methods should be full-word mnemonic</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>The names of process types and methods should be full-word mnemonic</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>The names of constants should be mnemonic, typically one word or two lords, all uppercase, separated by underscores</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Access methods start with "get"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Setting methods start with "set"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Searching methods start with "find"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names are identical to the corresponding RSL objects</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names begin with a captial letter, and each distinct word in the name should be capitalized</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Method names begin with a lowercase letter, and each distinct word in the name should be capitalized</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Variable names start with a lowercase letter</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>A variable may be no shorter than the total number of capital letters in its type name</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No methods longer than 50 lines</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No more than 25 public methods plus 25 protected methods</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No more than 50 protected data fields</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No file can be longer than 2500 lines of code</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLObject.java:</b>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>One public class per file</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Javadoc comments formatted correctly (proper number of stars with correct indentation)</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Indentation is every 3 spaces</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Use tab characters for indentation</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Java method body spacing and indentation is formatted correctly</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Comments within code are consistant, using either the starred style comments or double forward slash style comments</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names are identical to the corresponding RSL objects</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Names of model methods are identical to the names of corresponding RSL operations</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>All method names are lowercase</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>The names of view types should be the same as corresponding model names with the suffix UI added</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled> The names of the view methods should be full-word mnemonic</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>The names of process types and methods should be full-word mnemonic</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>The names of constants should be mnemonic, typically one word or two lords, all uppercase, separated by underscores</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Access methods start with "get"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Setting methods start with "set"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Searching methods start with "find"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names are identical to the corresponding RSL objects</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names begin with a captial letter, and each distinct word in the name should be capitalized</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Method names begin with a lowercase letter, and each distinct word in the name should be capitalized</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Variable names start with a lowercase letter</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>A variable may be no shorter than the total number of capital letters in its type name</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No methods longer than 50 lines</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No more than 25 public methods plus 25 protected methods</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No more than 50 protected data fields</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No file can be longer than 2500 lines of code</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLOfferedDayPattern.java:</b>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>One public class per file</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Javadoc comments formatted correctly (proper number of stars with correct indentation)</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Indentation is every 3 spaces</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Use tab characters for indentation</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Java method body spacing and indentation is formatted correctly</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Comments within code are consistant, using either the starred style comments or double forward slash style comments</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names are identical to the corresponding RSL objects</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Names of model methods are identical to the names of corresponding RSL operations</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>All method names are lowercase</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>The names of view types should be the same as corresponding model names with the suffix UI added</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled> The names of the view methods should be full-word mnemonic</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>The names of process types and methods should be full-word mnemonic</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>The names of constants should be mnemonic, typically one word or two lords, all uppercase, separated by underscores</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Access methods start with "get"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Setting methods start with "set"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Searching methods start with "find"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names are identical to the corresponding RSL objects</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names begin with a captial letter, and each distinct word in the name should be capitalized</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Method names begin with a lowercase letter, and each distinct word in the name should be capitalized</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Variable names start with a lowercase letter</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>A variable may be no shorter than the total number of capital letters in its type name</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No methods longer than 50 lines</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No more than 25 public methods plus 25 protected methods</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No more than 50 protected data fields</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No file can be longer than 2500 lines of code</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLProvidedEquipment.java:</b>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>One public class per file</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Javadoc comments formatted correctly (proper number of stars with correct indentation)</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Indentation is every 3 spaces</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Use tab characters for indentation</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Java method body spacing and indentation is formatted correctly</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Comments within code are consistant, using either the starred style comments or double forward slash style comments</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names are identical to the corresponding RSL objects</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Names of model methods are identical to the names of corresponding RSL operations</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>All method names are lowercase</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>The names of view types should be the same as corresponding model names with the suffix UI added</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled> The names of the view methods should be full-word mnemonic</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>The names of process types and methods should be full-word mnemonic</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>The names of constants should be mnemonic, typically one word or two lords, all uppercase, separated by underscores</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Access methods start with "get"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Setting methods start with "set"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Searching methods start with "find"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names are identical to the corresponding RSL objects</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names begin with a captial letter, and each distinct word in the name should be capitalized</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Method names begin with a lowercase letter, and each distinct word in the name should be capitalized</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Variable names start with a lowercase letter</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>A variable may be no shorter than the total number of capital letters in its type name</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No methods longer than 50 lines</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No more than 25 public methods plus 25 protected methods</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No more than 50 protected data fields</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No file can be longer than 2500 lines of code</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLSchedule.java:</b>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>One public class per file</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Javadoc comments formatted correctly (proper number of stars with correct indentation)</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Indentation is every 3 spaces</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Use tab characters for indentation</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Java method body spacing and indentation is formatted correctly</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Comments within code are consistant, using either the starred style comments or double forward slash style comments</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names are identical to the corresponding RSL objects</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Names of model methods are identical to the names of corresponding RSL operations</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>All method names are lowercase</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>The names of view types should be the same as corresponding model names with the suffix UI added</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled> The names of the view methods should be full-word mnemonic</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>The names of process types and methods should be full-word mnemonic</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>The names of constants should be mnemonic, typically one word or two lords, all uppercase, separated by underscores</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Access methods start with "get"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Setting methods start with "set"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Searching methods start with "find"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names are identical to the corresponding RSL objects</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names begin with a captial letter, and each distinct word in the name should be capitalized</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Method names begin with a lowercase letter, and each distinct word in the name should be capitalized</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Variable names start with a lowercase letter</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>A variable may be no shorter than the total number of capital letters in its type name</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No methods longer than 50 lines</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No more than 25 public methods plus 25 protected methods</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No more than 50 protected data fields</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No file can be longer than 2500 lines of code</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLScheduleItem.java:</b>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>One public class per file</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Javadoc comments formatted correctly (proper number of stars with correct indentation)</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Indentation is every 3 spaces</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Use tab characters for indentation</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Java method body spacing and indentation is formatted correctly</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Comments within code are consistant, using either the starred style comments or double forward slash style comments</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names are identical to the corresponding RSL objects</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Names of model methods are identical to the names of corresponding RSL operations</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>All method names are lowercase</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>The names of view types should be the same as corresponding model names with the suffix UI added</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled> The names of the view methods should be full-word mnemonic</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>The names of process types and methods should be full-word mnemonic</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>The names of constants should be mnemonic, typically one word or two lords, all uppercase, separated by underscores</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Access methods start with "get"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Setting methods start with "set"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Searching methods start with "find"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names are identical to the corresponding RSL objects</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names begin with a captial letter, and each distinct word in the name should be capitalized</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Method names begin with a lowercase letter, and each distinct word in the name should be capitalized</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Variable names start with a lowercase letter</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>A variable may be no shorter than the total number of capital letters in its type name</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No methods longer than 50 lines</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No more than 25 public methods plus 25 protected methods</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No more than 50 protected data fields</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No file can be longer than 2500 lines of code</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLTime.java:</b>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>One public class per file</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Javadoc comments formatted correctly (proper number of stars with correct indentation)</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Indentation is every 3 spaces</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Use tab characters for indentation</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Java method body spacing and indentation is formatted correctly</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Comments within code are consistant, using either the starred style comments or double forward slash style comments</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names are identical to the corresponding RSL objects</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Names of model methods are identical to the names of corresponding RSL operations</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>All method names are lowercase</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>The names of view types should be the same as corresponding model names with the suffix UI added</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled> The names of the view methods should be full-word mnemonic</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>The names of process types and methods should be full-word mnemonic</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>The names of constants should be mnemonic, typically one word or two lords, all uppercase, separated by underscores</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Access methods start with "get"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Setting methods start with "set"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Searching methods start with "find"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names are identical to the corresponding RSL objects</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names begin with a captial letter, and each distinct word in the name should be capitalized</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Method names begin with a lowercase letter, and each distinct word in the name should be capitalized</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Variable names start with a lowercase letter</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>A variable may be no shorter than the total number of capital letters in its type name</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No methods longer than 50 lines</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No more than 25 public methods plus 25 protected methods</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No more than 50 protected data fields</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No file can be longer than 2500 lines of code</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/sQLTimePreference.java:</b>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>One public class per file</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Javadoc comments formatted correctly (proper number of stars with correct indentation)</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Indentation is every 3 spaces</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Use tab characters for indentation</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Java method body spacing and indentation is formatted correctly</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Comments within code are consistant, using either the starred style comments or double forward slash style comments</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names are identical to the corresponding RSL objects</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Names of model methods are identical to the names of corresponding RSL operations</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>All method names are lowercase</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>The names of view types should be the same as corresponding model names with the suffix UI added</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled> The names of the view methods should be full-word mnemonic</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>The names of process types and methods should be full-word mnemonic</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>The names of constants should be mnemonic, typically one word or two lords, all uppercase, separated by underscores</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Access methods start with "get"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Setting methods start with "set"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Searching methods start with "find"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names are identical to the corresponding RSL objects</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names begin with a captial letter, and each distinct word in the name should be capitalized</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Method names begin with a lowercase letter, and each distinct word in the name should be capitalized</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Variable names start with a lowercase letter</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>A variable may be no shorter than the total number of capital letters in its type name</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No methods longer than 50 lines</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No more than 25 public methods plus 25 protected methods</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No more than 50 protected data fields</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No file can be longer than 2500 lines of code</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLUsedEquipment.java:</b>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>One public class per file</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Javadoc comments formatted correctly (proper number of stars with correct indentation)</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Indentation is every 3 spaces</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Use tab characters for indentation</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Java method body spacing and indentation is formatted correctly</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Comments within code are consistant, using either the starred style comments or double forward slash style comments</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names are identical to the corresponding RSL objects</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Names of model methods are identical to the names of corresponding RSL operations</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>All method names are lowercase</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>The names of view types should be the same as corresponding model names with the suffix UI added</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled> The names of the view methods should be full-word mnemonic</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>The names of process types and methods should be full-word mnemonic</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>The names of constants should be mnemonic, typically one word or two lords, all uppercase, separated by underscores</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Access methods start with "get"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Setting methods start with "set"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Searching methods start with "find"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names are identical to the corresponding RSL objects</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names begin with a captial letter, and each distinct word in the name should be capitalized</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Method names begin with a lowercase letter, and each distinct word in the name should be capitalized</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Variable names start with a lowercase letter</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>A variable may be no shorter than the total number of capital letters in its type name</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No methods longer than 50 lines</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No more than 25 public methods plus 25 protected methods</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No more than 50 protected data fields</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No file can be longer than 2500 lines of code</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLUser.java:</b>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>One public class per file</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Javadoc comments formatted correctly (proper number of stars with correct indentation)</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Indentation is every 3 spaces</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Use tab characters for indentation</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Java method body spacing and indentation is formatted correctly</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Comments within code are consistant, using either the starred style comments or double forward slash style comments</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names are identical to the corresponding RSL objects</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Names of model methods are identical to the names of corresponding RSL operations</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>All method names are lowercase</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>The names of view types should be the same as corresponding model names with the suffix UI added</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled> The names of the view methods should be full-word mnemonic</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>The names of process types and methods should be full-word mnemonic</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>The names of constants should be mnemonic, typically one word or two lords, all uppercase, separated by underscores</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Access methods start with "get"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Setting methods start with "set"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Searching methods start with "find"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names are identical to the corresponding RSL objects</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names begin with a captial letter, and each distinct word in the name should be capitalized</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Method names begin with a lowercase letter, and each distinct word in the name should be capitalized</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Variable names start with a lowercase letter</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>A variable may be no shorter than the total number of capital letters in its type name</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No methods longer than 50 lines</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No more than 25 public methods plus 25 protected methods</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No more than 50 protected data fields</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No file can be longer than 2500 lines of code</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLWorkingCopy.java:</b>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>One public class per file</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Javadoc comments formatted correctly (proper number of stars with correct indentation)</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Indentation is every 3 spaces</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Use tab characters for indentation</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Java method body spacing and indentation is formatted correctly</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Comments within code are consistant, using either the starred style comments or double forward slash style comments</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names are identical to the corresponding RSL objects</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Names of model methods are identical to the names of corresponding RSL operations</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>All method names are lowercase</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>The names of view types should be the same as corresponding model names with the suffix UI added</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled> The names of the view methods should be full-word mnemonic</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>The names of process types and methods should be full-word mnemonic</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>The names of constants should be mnemonic, typically one word or two lords, all uppercase, separated by underscores</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Access methods start with "get"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Setting methods start with "set"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Searching methods start with "find"</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names are identical to the corresponding RSL objects</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Class names begin with a captial letter, and each distinct word in the name should be capitalized</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Method names begin with a lowercase letter, and each distinct word in the name should be capitalized</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Variable names start with a lowercase letter</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>A variable may be no shorter than the total number of capital letters in its type name</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No methods longer than 50 lines</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No more than 25 public methods plus 25 protected methods</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No more than 50 protected data fields</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>No file can be longer than 2500 lines of code</input>
+        </li>
+        </li>
+    </ol>
+    <font size=+2>
+        <strong>2. Javadoc Is Complete and Follows Design and Implementation
+            Conventions</strong>
+    </font>
+    <br>
+    <ol>
+        <li><b>src/scheduler/model/db/sqlite/SQLCourse.java:</b>
+            <br><input type="checkbox" name=mybox value="1" disabled>Javadoc is complete</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Follows design conventions</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Follows implementation conventions</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLCourseAssociation.java:</b>
+            <br><input type="checkbox" name=mybox value="1" disabled>Javadoc is complete</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Follows design conventions</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Follows implementation conventions</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLCourseEquipment.java:</b>
+            <br><input type="checkbox" name=mybox value="1" disabled>Javadoc is complete</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Follows design conventions</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Follows implementation conventions</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLCoursePattern.java:</b>
+            <br><input type="checkbox" name=mybox value="1" disabled>Javadoc is complete</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Follows design conventions</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Follows implementation conventions</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLCoursePreference.java:</b>
+            <br><input type="checkbox" name=mybox value="1" disabled>Javadoc is complete</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Follows design conventions</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Follows implementation conventions</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLDayPattern.java:</b>
+            <br><input type="checkbox" name=mybox value="1" disabled>Javadoc is complete</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Follows design conventions</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Follows implementation conventions</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLdb.java:</b>
+            <br><input type="checkbox" name=mybox value="1" disabled>Javadoc is complete</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Follows design conventions</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Follows implementation conventions</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLDocument.java:</b>
+            <br><input type="checkbox" name=mybox value="1" disabled>Javadoc is complete</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Follows design conventions</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Follows implementation conventions</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLEquipmentType.java:</b>
+            <br><input type="checkbox" name=mybox value="1" disabled>Javadoc is complete</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Follows design conventions</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Follows implementation conventions</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLInstructor.java:</b>
+            <br><input type="checkbox" name=mybox value="1" disabled>Javadoc is complete</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Follows design conventions</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Follows implementation conventions</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLLocation.java:</b>
+            <br><input type="checkbox" name=mybox value="1" disabled>Javadoc is complete</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Follows design conventions</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Follows implementation conventions</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLLocationEquipment.java:</b>
+            <br><input type="checkbox" name=mybox value="1" disabled>Javadoc is complete</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Follows design conventions</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Follows implementation conventions</input>
+        </li>
+
+        <li><b>src/scheduler/model/db/sqlite/SQLObject.java:</b>
+            <br><input type="checkbox" name=mybox value="1" disabled>Javadoc is complete</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Follows design conventions</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Follows implementation conventions</input>
+        </li>
+
+        <li><b>src/scheduler/model/db/sqlite/SQLOfferedDayPattern.java:</b>
+            <br><input type="checkbox" name=mybox value="1" disabled>Javadoc is complete</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Follows design conventions</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Follows implementation conventions</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLProvidedEquipment.java:</b>
+            <br><input type="checkbox" name=mybox value="1" disabled>Javadoc is complete</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Follows design conventions</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Follows implementation conventions</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLSchedule.java:</b>
+            <br><input type="checkbox" name=mybox value="1" disabled>Javadoc is complete</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Follows design conventions</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Follows implementation conventions</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLScheduleItem.java:</b>
+            <br><input type="checkbox" name=mybox value="1" disabled>Javadoc is complete</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Follows design conventions</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Follows implementation conventions</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLTime.java:</b>
+            <br><input type="checkbox" name=mybox value="1" disabled>Javadoc is complete</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Follows design conventions</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Follows implementation conventions</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLTimePreference.java:</b>
+            <br><input type="checkbox" name=mybox value="1" disabled>Javadoc is complete</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Follows design conventions</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Follows implementation conventions</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLUsedEquipment.java:</b>
+            <br><input type="checkbox" name=mybox value="1" disabled>Javadoc is complete</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Follows design conventions</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Follows implementation conventions</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLUser.java:</b>
+            <br><input type="checkbox" name=mybox value="1" disabled>Javadoc is complete</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Follows design conventions</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Follows implementation conventions</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLWorkingCopy.java:</b>
+            <br><input type="checkbox" name=mybox value="1" disabled>Javadoc is complete</input>
+            <br><input type="checkbox" name=mybox value="1" disabled>Follows design conventions</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Follows implementation conventions</input>
+        </li>
+
+
+    </ol>
+
+    <br>
+    <font size=+2>
+        <strong>3. Design of the Code is Good</strong>
+    </font>
+    <br>
+    <ol>
+        <li><b>src/scheduler/model/db/sqlite/SQLCourse.java:</b>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Design of the Code is Good</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLCourseAssociation.java:</b>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Design of the Code is Good</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLCourseEquipment.java:</b>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Design of the Code is Good</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLCoursePattern.java:</b>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Design of the Code is Good</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLCoursePreference.java:</b>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Design of the Code is Good</input>
+        </li>
+            <li><b>src/scheduler/model/db/sqlite/SQLDayPattern.java:</b>
+                <br><input type="checkbox" name=mybox value="1" checked disabled>Design of the Code is Good</input>
+            </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLdb.java:</b>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Design of the Code is Good</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLDocument.java:</b>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Design of the Code is Good</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLEquipmentType.java:</b>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Design of the Code is Good</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLInstructor.java:</b>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Design of the Code is Good</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLLocation.java:</b>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Design of the Code is Good</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLLocationEquipment.java:</b>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Design of the Code is Good</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLObject.java:</b>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Design of the Code is Good</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLOfferedDayPattern.java:</b>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Design of the Code is Good</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLProvidedEquipment.java:</b>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Design of the Code is Good</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLSchedule.java:</b>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Design of the Code is Good</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLScheduleItem.java:</b>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Design of the Code is Good</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLTime.java:</b>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Design of the Code is Good</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLTimePreference.java:</b>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Design of the Code is Good</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLUsedEquipment.java:</b>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Design of the Code is Good</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLUser.java:</b>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Design of the Code is Good</input>
+        </li>
+        <li><b>src/scheduler/model/db/sqlite/SQLWorkingCopy.java:</b>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Design of the Code is Good</input>
+        </li>
+        </ol>
+
+    <br>
+    <font size=+2>
+        <strong>4. Code Passes Its Tests and Has Sensible User-Level Behavior </strong>
+    </font>
+    <ol>
+        <li><b>src/scheduler/model/db/sqlite/SQLCourse.java:</b>
+            <br><input type="checkbox" name=mybox value="1" disabled>Code passes its tests</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Has sensible user-level behavior</input>
+            
+        </li>
+            <li><b>src/scheduler/model/db/sqlite/SQLCourseAssociation.java:</b>
+                <br><input type="checkbox" name=mybox value="1" disabled>Code passes its tests</input>
+                <br><input type="checkbox" name=mybox value="1" checked disabled>Has sensible user-level behavior</input>
+                
+            </li>
+                <li><b>src/scheduler/model/db/sqlite/SQLCourseEquipment.java:</b>
+                    <br><input type="checkbox" name=mybox value="1" disabled>Code passes its tests</input>
+                    <br><input type="checkbox" name=mybox value="1" checked disabled>Has sensible user-level behavior</input>
+                    
+                </li>
+                    <li><b>src/scheduler/model/db/sqlite/SQLCoursePattern.java:</b>
+                        <br><input type="checkbox" name=mybox value="1" disabled>Code passes its tests</input>
+                        <br><input type="checkbox" name=mybox value="1" checked disabled>Has sensible user-level behavior</input>
+                        
+                    </li>
+                        <li><b>src/scheduler/model/db/sqlite/SQLCoursePreference.java:</b>
+                            <br><input type="checkbox" name=mybox value="1" disabled>Code passes its tests</input>
+                            <br><input type="checkbox" name=mybox value="1" checked disabled>Has sensible user-level behavior</input>
+                            
+                        </li>
+                            <li><b>src/scheduler/model/db/sqlite/SQLDayPattern.java:</b>
+                                <br><input type="checkbox" name=mybox value="1" disabled>Code passes its tests</input>
+                                <br><input type="checkbox" name=mybox value="1" checked disabled>Has sensible user-level behavior</input>
+                                
+                            </li>
+                                <li><b>src/scheduler/model/db/sqlite/SQLdb.java:</b>
+                                    <br><input type="checkbox" name=mybox value="1" disabled>Code passes its tests</input>
+                                    <br><input type="checkbox" name=mybox value="1" checked disabled>Has sensible user-level behavior</input>
+                                    
+                                </li>
+                                    <li><b>src/scheduler/model/db/sqlite/SQLDocument.java:</b>
+                                        <br><input type="checkbox" name=mybox value="1" disabled>Code passes its tests</input>
+                                        <br><input type="checkbox" name=mybox value="1" checked disabled>Has sensible user-level behavior</input>
+                                        
+                                    </li>
+                                        <li><b>src/scheduler/model/db/sqlite/SQLEquipmentType.java:</b>
+                                            <br><input type="checkbox" name=mybox value="1" disabled>Code passes its tests</input>
+                                            <br><input type="checkbox" name=mybox value="1" checked disabled>Has sensible user-level behavior</input>
+                                            
+                                        </li>
+                                            <li><b>src/scheduler/model/db/sqlite/SQLInstructor.java:</b>
+                                                <br><input type="checkbox" name=mybox value="1" disabled>Code passes its tests</input>
+                                                <br><input type="checkbox" name=mybox value="1" checked disabled>Has sensible user-level behavior</input>
+                                                
+                                            </li>
+                                                <li><b>src/scheduler/model/db/sqlite/SQLLocation.java:</b>
+                                                    <br><input type="checkbox" name=mybox value="1" disabled>Code passes its tests</input>
+                                                    <br><input type="checkbox" name=mybox value="1" checked disabled>Has sensible user-level behavior</input>
+                                                    
+                                                </li>
+                                                    <li><b>src/scheduler/model/db/sqlite/SQLLocationEquipment.java:</b>
+                                                        <br><input type="checkbox" name=mybox value="1" disabled>Code passes its tests</input>
+                                                        <br><input type="checkbox" name=mybox value="1" checked disabled>Has sensible user-level behavior</input>
+                                                        
+                                                    </li>
+                                                        <li><b>src/scheduler/model/db/sqlite/SQLObject.java:</b>
+                                                            <br><input type="checkbox" name=mybox value="1" disabled>Code passes its tests</input>
+                                                            <br><input type="checkbox" name=mybox value="1" checked disabled>Has sensible user-level behavior</input>
+                                                            
+                                                        </li>
+                                                            <li><b>src/scheduler/model/db/sqlite/SQLOfferedDayPattern.java:</b>
+                                                                <br><input type="checkbox" name=mybox value="1" disabled>Code passes its tests</input>
+                                                                <br><input type="checkbox" name=mybox value="1" checked disabled>Has sensible user-level behavior</input>
+                                                                
+                                                            </li>
+                                                                <li><b>src/scheduler/model/db/sqlite/SQLProvidedEquipment.java:</b>
+                                                                    <br><input type="checkbox" name=mybox value="1" disabled>Code passes its tests</input>
+                                                                    <br><input type="checkbox" name=mybox value="1" checked disabled>Has sensible user-level behavior</input>
+                                                                    
+                                                                </li>
+                                                                    <li><b>src/scheduler/model/db/sqlite/SQLSchedule.java:</b>
+                                                                        <br><input type="checkbox" name=mybox value="1" disabled>Code passes its tests</input>
+                                                                        <br><input type="checkbox" name=mybox value="1" checked disabled>Has sensible user-level behavior</input>
+                                                                        
+                                                                    </li>
+                                                                        <li><b>src/scheduler/model/db/sqlite/SQLScheduleItem.java:</b>
+                                                                            <br><input type="checkbox" name=mybox value="1" disabled>Code passes its tests</input>
+                                                                            <br><input type="checkbox" name=mybox value="1" checked disabled>Has sensible user-level behavior</input>
+                                                                            
+                                                                        </li>
+                                                                            <li><b>src/scheduler/model/db/sqlite/SQLTime.java:</b>
+                                                                                <li><b>src/scheduler/model/db/sqlite/SQLTimePreference.java:</b>
+                                                                                    <br><input type="checkbox" name=mybox value="1" disabled>Code passes its tests</input>
+                                                                                    <br><input type="checkbox" name=mybox value="1" checked disabled>Has sensible user-level behavior</input>
+                                                                                    
+                                                                                </li>
+                                                                                    <li><b>src/scheduler/model/db/sqlite/SQLUsedEquipment.java:</b>
+                                                                                        <br><input type="checkbox" name=mybox value="1" disabled>Code passes its tests</input>
+                                                                                        <br><input type="checkbox" name=mybox value="1" checked disabled>Has sensible user-level behavior</input>
+                                                                                        
+                                                                                    </li>
+                                                                                        <li><b>src/scheduler/model/db/sqlite/SQLUser.java:</b>
+                                                                                            <br><input type="checkbox" name=mybox value="1" disabled>Code passes its tests</input>
+                                                                                            <br><input type="checkbox" name=mybox value="1" checked disabled>Has sensible user-level behavior</input>
+                                                                                            
+                                                                                        </li>
+                                                                                            <li><b>src/scheduler/model/db/sqlite/SQLWorkingCopy.java:</b>
+                  <br><input type="checkbox" name=mybox value="1" disabled>Code passes its tests</input>
+            <br><input type="checkbox" name=mybox value="1" checked disabled>Has sensible user-level behavior</input>
+
+        </li>
+        </ol>
+
+    </body>
+</html>
