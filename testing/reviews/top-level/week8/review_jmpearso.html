@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+  <title></title>
+</head>
+
+<body>
+  <font size="+2"><strong>1. Code Follows <a href=
+  "http://users.csc.calpoly.edu/~gfisher/classes/406/handouts/design-imple-conventions.html">
+  Design and Implementation Conventions</a></strong></font><br>
+  <p>
+    <i>CHEMAcceptanceTestFirefox.java</i> - Yes.
+  </p>
+  <p>
+    <i>CHEMAcceptanceTestChrome.java</i> - Yes.
+  </p>
+  <p>
+    <i>CHEMAcceptanceTest.java</i> - Several instances of not using
+    <code>this</code> when referencing an instance variable.
+  </p>
+  <br> <br>
+  <font size="+2"><strong>2. Javadoc Is Complete and Follows Design
+  and Implementation Conventions</strong></font><br>
+  <p>
+    <i>CHEMAcceptanceTestFirefox.java</i> - No javadocs, although there are
+    only a few lines of code.
+  </p>
+  <p>
+    <i>CHEMAcceptanceTestChrome.java</i> - No javadocs, although there are
+    only a few lines of code.
+  </p>
+  <p>
+    <i>CHEMAcceptanceTest.java</i> - No javadocs.
+  </p>
+  <br> <br>
+  <font size="+2">3. <strong>Design of the Code is
+  Good</strong></font><br>
+  <p>
+    <i>CHEMAcceptanceTestFirefox.java</i> - Uses <code>ChromeDriver</code> even
+    though the name indicates it's for Firefox.
+  </p>
+  <p>
+    <i>CHEMAcceptanceTestChrome.java</i> - Yes.
+  </p>
+  <p>
+    <i>CHEMAcceptanceTest.java</i> - The for-loop in
+    <code>deleteDocumentFromHomeTab</code> could be written more eloquently as
+    a foreach-loop with a break statement.  A few uses of <code>assert</code>
+    could be replaced with <code>assertEquals</code>.
+  </p>
+  <br> <br>
+  <font size="+2"><strong>4. Code Passes Its Tests and Has Sensible
+  User-Level Behavior</strong></font>
+  <p>
+    All files are themselves tests.
+  </p>
+</body>
+</html>
