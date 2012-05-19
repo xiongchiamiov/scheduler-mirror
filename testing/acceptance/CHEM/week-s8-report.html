@@ -1,0 +1,96 @@
+<html>
+<head>
+<title>
+Spring Week 3 Acceptance Test Report for the CHEM Department
+</title>
+</head>
+<body bgcolor=white>
+<p align=center>
+<font size=+2>
+<strong>Spring Week 8 Acceptance Test Report for the CHEM Department</strong>
+</font>
+</p>
+<br>
+<h2>
+Browser Used for Testing:
+</h2>
+<br>
+Firefox 11<br>
+<br>
+<a name="Create, Save, and Re-Open a New Schedule">
+<h2>
+1.  Create, Save, and Re-Open a New Schedule
+</h2>
+</a>
+
+<p>
+Successfully completed.
+</p>
+<br>
+<a name="Enter Resource Data">
+<h2>
+2.  Enter Resource Data
+</h2>
+</a>
+<p>
+- Unable to do various Day Combinations.  The Day Combinations varied based on the type of course and left out various options on each type. ( LEC, SEM, IND only have day combinations but no single days. While LAB,ACT, DIS had some single days and a few day combinations.  In the days, only M-F were represented with no weekends. This may have been a design decision when I missed when I absent for a day.)<br>
+- The first course's Day Combo registers as invalid no matter what days are used. After loging out and logging back in, the first course's day combo is empty and can be set without issue.<br>
+- On a smaller screen, instructor preferences does not bring up a scroll bar. The preference window had to be manually resized before a scroll bar would pop up.<br>
+
+</p>
+
+<br>
+<a name="Generate a Schedule">
+<h2>
+3.  Generate a Schedule
+</h2>
+</a>
+<p>
+Could not generate a schedule.  First, I got a NoSuchElementException with just one course (with the DayCombination Issue mentioned in the previous section).  After entering courses, instructors and locations, generate complained about invalid resources but none were able to be found.  Coming back to it later gave 500 server errors.<br>
+</p>
+
+<br>
+<a name="Edit the Schedule">
+<h2>
+4.  Edit the Schedule
+</h2>
+</a>
+<p>
+Manually adding items to the Calendar worked.<br>
+There were a few usability issues that occured when manually scheduling items.  It enforced the limits of a course without saying what there were. (ie. Error: The selected combination of days is not a valid option for this course.) The user would then have to go back to the Course resource table, look at the days and then go back to the calendar.  A similar thing happened when manually scheduling a course, where the length of a course was automatically set to .5 hours when it would have to be longer.<br>
+</p>
+
+<br>
+<a name="Save, Exit, Re-Open Schedule">
+<h2>
+5.  Save, Exit, Re-Open Schedule
+</h2>
+</a>
+<p>
+With the exception of the first course having its Day Combinations disappearing after the first logout/in, saving, exiting and re-opening worked fine.
+</p>
+
+<br>
+<a name="Quality Measures">
+<h2>
+6.  Quality Measures
+</h2>
+</a>
+<p>
+-Overall, it is improving.  With the exception of the Day Combinations, resource entry is fairly painless.<br>
+- There are still a few usability issues with manually scheduling classes, generate does not work, and Save As does not appear to work when overwritting a schedule.<br>
+- Overall, it still is not meeting the "Does not suck" criteria.
+</p>
+
+<br>
+<a name="Other Issues">
+<h2>
+7.  Other Issues
+</h2>
+</a>
+<p>
+Generate does not work<br>
+
+</p>
+</body>
+</html>
