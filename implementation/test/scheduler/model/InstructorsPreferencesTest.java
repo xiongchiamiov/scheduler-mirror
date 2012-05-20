@@ -34,6 +34,8 @@ public abstract class InstructorsPreferencesTest extends ModelTestCase {
 		assertEquals(found.getLastName(), "Ovadia");
 		assertEquals(found.getUsername(), "eovadia");
 		assertEquals(found.getMaxWTU(), "20");
+		
+		model.closeModel();
 	}
 
 
@@ -64,6 +66,8 @@ public abstract class InstructorsPreferencesTest extends ModelTestCase {
 		Instructor found = model.findInstructorByID(instructorID);
 		assertTrue(found.getCoursePreferences().get(courseID1).equals(2));
 		assertTrue(found.getCoursePreferences().get(courseID2).equals(3));
+		
+		model.closeModel();
 	}
 
 //	public void testUtilityInstructorEquals() throws DatabaseException {

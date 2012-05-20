@@ -23,6 +23,8 @@ public abstract class CoursesTest extends ModelTestCase
       model.createTransientCourse("Test", "101", "CSC", "4", "4", "1", "LEC", "60", "6", true);
 
       assertEquals(model.findInstructorsForDocument(document, true).size(), 0);
+      
+      model.closeModel();
    }
    
    public void testInsertAndFindCourse() throws DatabaseException {
@@ -46,6 +48,8 @@ public abstract class CoursesTest extends ModelTestCase
       assertTrue(found.getMaxEnrollment().equals("60"));
       assertTrue(found.getNumHalfHoursPerWeek().equals("6"));
       assertTrue(found.isSchedulable());
+      
+      model.closeModel();
    }
    
 //   public void testInsertAndDeleteCourse() throws DatabaseException {
@@ -81,6 +85,8 @@ public abstract class CoursesTest extends ModelTestCase
       //System.out.println("courses left: " + model.findCoursesForDocument(doc));
       //assertTrue(model.findCoursesForDocument(doc).isEmpty()); //note: SQLDB, this passes but model.isempty doesn't
       assertTrue(model.isEmpty());
+      
+      model.closeModel();
    }
 
 public void testAssociation() throws DatabaseException {
@@ -109,6 +115,7 @@ public void testAssociation() throws DatabaseException {
 	   lab.getLecture();
 	   
 	   assert(lab.getLecture() == lecture);
+	   model.closeModel();
    }
    
    public void testUpdateCourse() throws DatabaseException {
@@ -144,6 +151,8 @@ public void testAssociation() throws DatabaseException {
       assertTrue(course.getSCU().equals("8"));
       assertTrue(course.getType().equals("LAB"));
       assertTrue(course.getWTU().equals("8"));
+      
+      model.closeModel();
    }
    
    public void testDeleteInstructor() throws Exception {
@@ -168,6 +177,7 @@ public void testAssociation() throws DatabaseException {
       doc.delete();
       
       assertTrue(model.isEmpty());
+      model.closeModel();
    }
    
    public void testFindAllCoursesForDocument() throws DatabaseException {
@@ -187,6 +197,8 @@ public void testAssociation() throws DatabaseException {
          courseIDs.remove(returnedDoc.getID());
       }
       assertTrue(courseIDs.isEmpty());
+      
+      model.closeModel();
    }
    
    public void testFindAllCoursesInMultipleDocuments() throws DatabaseException {
@@ -225,5 +237,6 @@ public void testAssociation() throws DatabaseException {
          }
          assertTrue(courseIDs2.isEmpty());
       }
+      model.closeModel();
    }
 }

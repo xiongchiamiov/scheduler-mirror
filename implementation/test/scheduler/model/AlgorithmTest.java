@@ -50,6 +50,8 @@ public abstract class AlgorithmTest extends ModelTestCase {
 	    for (ScheduleItem si : items) {
 	    	System.err.println(si);
 	    }
+	    
+	    model.closeModel();
 	}
 	
 	public static List<Course> generateCourseList(Model model, Document doc) throws DatabaseException {

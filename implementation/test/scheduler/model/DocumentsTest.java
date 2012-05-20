@@ -20,6 +20,7 @@ public abstract class DocumentsTest extends ModelTestCase {
 		Model model = createBlankModel();
 
 		model.createAndInsertDocumentWithSpecialInstructorsAndLocations("doc1", 14, 44);
+		model.closeModel();
 	}
 
 	public void testInsertDocuments() throws DatabaseException {
@@ -27,6 +28,7 @@ public abstract class DocumentsTest extends ModelTestCase {
 
 		model.createAndInsertDocumentWithSpecialInstructorsAndLocations("doc1", START_HALF_HOUR, END_HALF_HOUR);
 		model.createAndInsertDocumentWithSpecialInstructorsAndLocations("doc2", START_HALF_HOUR, END_HALF_HOUR);
+		model.closeModel();
 	}
 
 	public void testInsertAndFindDocument() throws DatabaseException {
@@ -39,6 +41,7 @@ public abstract class DocumentsTest extends ModelTestCase {
 		Document foundDocument = model.findDocumentByID(documentID);
 
 		assert (foundDocument.getName().equals("doc1"));
+		model.closeModel();
 	}
 
 	public void testUpdateDocument() throws Exception {
@@ -62,6 +65,7 @@ public abstract class DocumentsTest extends ModelTestCase {
 		assert(document.getStartHalfHour() == 10);
 		assert(document.getEndHalfHour() == 20);
 		assert(document.isTrashed() == true);
+		model.closeModel();
 	}
 
 	public void testDeleteDocument() throws Exception {
@@ -80,6 +84,7 @@ public abstract class DocumentsTest extends ModelTestCase {
 			fail();
 		} catch (NotFoundException e) {
 		}
+		model.closeModel();
 	}
 
 	public void testDeleteFullDocument() throws Exception {
@@ -95,6 +100,7 @@ public abstract class DocumentsTest extends ModelTestCase {
 			fail();
 		} catch (NotFoundException e) {
 		}
+		model.closeModel();
 	}
 
 	public void testDatabaseIsEmptyAfterDelete() throws DatabaseException {
@@ -103,6 +109,7 @@ public abstract class DocumentsTest extends ModelTestCase {
 		Document document = insertFullDocumentIntoModel(model);
 		document.delete();
 		assertTrue(model.isEmpty());
+		model.closeModel();
 	}
 	
 	public void testScheduleConsistancy() throws DatabaseException
@@ -125,6 +132,7 @@ public abstract class DocumentsTest extends ModelTestCase {
 			assertTrue(ModelTestUtility.locationsContentsEqual(postlocation, prelocation));
 		} catch (NotFoundException e) {
 		}
+		model.closeModel();
 	}
 
 	private Document insertFullDocumentIntoModel(Model model) throws DatabaseException {
@@ -152,6 +160,7 @@ public abstract class DocumentsTest extends ModelTestCase {
 			docIDs.remove(returnedDoc.getID());
 		}
 		assert (docIDs.isEmpty());
+		model.closeModel();
 	}
 
 	public void testDocumentTBALocation() throws DatabaseException {
@@ -162,6 +171,7 @@ public abstract class DocumentsTest extends ModelTestCase {
 		model.clearCache();
 		
 		assert(model.findDocumentByID(documentID).getTBALocation() != null);
+		model.closeModel();
 	}
 
 	public void testDocumentStaffInstructor() throws DatabaseException {
@@ -172,6 +182,7 @@ public abstract class DocumentsTest extends ModelTestCase {
 		model.clearCache();
 		
 		assert(model.findDocumentByID(documentID).getStaffInstructor() != null);
+		model.closeModel();
 	}
 
 	public void testCopyDocument() throws DatabaseException {
@@ -182,6 +193,7 @@ public abstract class DocumentsTest extends ModelTestCase {
 		Document newDocument = model.createTransientDocument("newdoc", document.getStartHalfHour(), document.getEndHalfHour()).insert();
 		
 		model.copyDocument(document, newDocument);
+		model.closeModel();
 	}
 
 	public void testCopyDocumentWithAssociations() throws DatabaseException {
@@ -220,6 +232,7 @@ public abstract class DocumentsTest extends ModelTestCase {
 				assert(course.isTetheredToLecture() == false);
 			}
 		}
+		model.closeModel();
 	}
 	
 	public void testWorkingCopy() throws DatabaseException {
@@ -252,5 +265,6 @@ public abstract class DocumentsTest extends ModelTestCase {
 
 		
 		model.findDocumentByID(doc2id).getOriginal().getName().equals("doc1");
+		model.closeModel();
 	}
 }

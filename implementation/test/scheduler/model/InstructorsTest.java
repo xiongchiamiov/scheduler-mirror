@@ -22,6 +22,8 @@ public abstract class InstructorsTest extends ModelTestCase {
 		System.out.println(model.findInstructorsForDocument(doc, true));
 		
 		assertEquals(model.findInstructorsForDocument(doc, true).size(), 0);
+		
+		model.closeModel();
 	}
 
 	public void testInsertAndFindBasicInstructor() throws DatabaseException {
@@ -41,6 +43,8 @@ public abstract class InstructorsTest extends ModelTestCase {
 		assertTrue(found.getLastName().equals("Ovadia"));
 		assertTrue(found.getUsername().equals("eovadia"));
 		assertTrue(found.getMaxWTU().equals("20"));
+		
+		model.closeModel();
 	}
 
 	public void testInsertAndFindInstructorWTimePrefs() throws DatabaseException {
@@ -64,6 +68,8 @@ public abstract class InstructorsTest extends ModelTestCase {
 		assertTrue(found.getLastName().equals("Ovadia"));
 		assertTrue(found.getUsername().equals("eovadia"));
 		assertTrue(found.getMaxWTU().equals("20"));
+		
+		model.closeModel();
 	}
 
 	public void testInsertAndDeleteInstructorWTimePrefs() throws DatabaseException {
@@ -84,6 +90,8 @@ public abstract class InstructorsTest extends ModelTestCase {
 		model.findInstructorByID(instructorID).delete();
 		doc.delete();
 		assertTrue(model.isEmpty());
+		
+		model.closeModel();
 	}
 	
 	public void testUpdateInstructor() throws DatabaseException {
@@ -109,6 +117,8 @@ public abstract class InstructorsTest extends ModelTestCase {
 		assertTrue(ins.getLastName().equals("Kalland"));
 		assertTrue(ins.getUsername().equals("vkalland"));
 		assertTrue(ins.getMaxWTU().equals("30"));
+		
+		model.closeModel();
 	}
 
 	public void testDeleteInstructor() throws Exception {
@@ -135,6 +145,8 @@ public abstract class InstructorsTest extends ModelTestCase {
 		doc.delete();
 		
 		assertTrue(model.isEmpty());
+		
+		model.closeModel();
 	}
 	
 	public void testFindAllInstructorsForDocument() throws DatabaseException {
@@ -160,6 +172,7 @@ public abstract class InstructorsTest extends ModelTestCase {
 			instructorIDs.remove(returnedDoc.getID());
 		}
 		assertTrue(instructorIDs.isEmpty());
+		model.closeModel();
 	}
 
 	public void testFindAllInstructorsInMultipleDocuments() throws DatabaseException {
@@ -210,5 +223,6 @@ public abstract class InstructorsTest extends ModelTestCase {
 			}
 			assertTrue(instructorIDs2.isEmpty());
 		}
+		model.closeModel();
 	}
 }

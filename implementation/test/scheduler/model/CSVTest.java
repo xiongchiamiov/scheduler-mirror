@@ -156,7 +156,7 @@ public abstract class CSVTest extends ModelTestCase {
 
 		out = stdInput.readLine();
 		assertEquals(null, out);
-
+		model.closeModel();
 	}
 
 	/**

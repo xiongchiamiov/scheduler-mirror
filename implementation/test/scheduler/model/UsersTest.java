@@ -21,6 +21,7 @@ public abstract class UsersTest extends ModelTestCase {
 		assertEquals(user.getID(), null);
 		
 		assertTrue(model.isEmpty());
+		model.closeModel();
 	}
 
 	public void testInsertAndFindBasicUser() throws DatabaseException {
@@ -35,6 +36,7 @@ public abstract class UsersTest extends ModelTestCase {
 		User found = model.findUserByUsername("eovadia");
 		assertTrue(found.getUsername().equals("eovadia"));
 		assertTrue(found.isAdmin() == true);
+		model.closeModel();
 	}
 
 	public void testInsertAndDeleteUser() throws DatabaseException {
@@ -46,6 +48,7 @@ public abstract class UsersTest extends ModelTestCase {
 		user.delete();
 		
 		assertTrue(model.isEmpty());
+		model.closeModel();
 	}
 	
 	public void testUpdateUser() throws DatabaseException {
@@ -62,6 +65,7 @@ public abstract class UsersTest extends ModelTestCase {
 		User user = model.findUserByUsername("vkalland");
 		assertTrue(user.getUsername().equals("vkalland"));
 		assertTrue(user.isAdmin() == false);
+		model.closeModel();
 	}
 
 	public void testDeleteUser() throws Exception {
@@ -74,5 +78,6 @@ public abstract class UsersTest extends ModelTestCase {
 		user.delete();
 	
 		assertTrue(model.isEmpty());
+		model.closeModel();
 	}
 }

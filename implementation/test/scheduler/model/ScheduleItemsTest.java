@@ -43,6 +43,7 @@ public abstract class ScheduleItemsTest extends ModelTestCase {
 		assertTrue(found.getStartHalfHour() == 14);
 		assertTrue(found.getEndHalfHour() == 16);
 		assertTrue(found.isConflicted() == false);
+		model.closeModel();
 	}
 
 	public void testScheduleItemLab() throws DatabaseException {
@@ -96,5 +97,6 @@ public abstract class ScheduleItemsTest extends ModelTestCase {
 
 		assertFalse(item1.getLectureOrNull() == item2);
 		assertFalse(item2.getLabs().contains(item1));
+		model.closeModel();
 	}
 }
