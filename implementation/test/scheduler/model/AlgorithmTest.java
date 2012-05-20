@@ -80,7 +80,7 @@ public abstract class AlgorithmTest extends ModelTestCase {
 		course.setDocument(doc).insert();
 		courses.add(course);
 		
-		course = model.createTransientCourse("IND COURSE", "400", "CSC", "0", "0", "1", "IND", "500", "0", true);
+		course = model.createTransientCourse("IND COURSE", "400", "CSC", "1", "1", "1", "IND", "500", "0", true);
 		course.setDocument(doc).insert();
 		courses.add(course);
 		
@@ -144,8 +144,8 @@ public abstract class AlgorithmTest extends ModelTestCase {
 		
 		Location location = model.createTransientLocation("roomlol", "LEC", "100", true);
 		location.setDocument(doc).insert();
+
 		locations.add(location);
-		
 		return locations;
 	}
 }

@@ -105,14 +105,16 @@ public class GenerateEntryPoint {
 	private static void checkValid(Location loc) throws BadLocationDataException, DatabaseException{
 		//validity checks
 		if(loc == null)
-			throw new BadLocationDataException(BadLocationDataException.ConflictType.IS_NULL, loc, "null", "loc"); 
+			throw new BadLocationDataException(BadLocationDataException.ConflictType.IS_NULL, loc, "null", "Location"); 
 		if(loc.getDocument()==null)
-			throw new BadLocationDataException(BadLocationDataException.ConflictType.IS_NULL, loc, "null", "document"); 
+			throw new BadLocationDataException(BadLocationDataException.ConflictType.IS_NULL, loc, "null", "Associated Document for " +
+					"location " + loc.getRoom()); 
 		if(loc.getDocument().getTBALocation().getID().equals(loc.getID()))
 			throw new BadLocationDataException(BadLocationDataException.ConflictType.IS_TBA, loc, "tba", "loc"); 
 		//dont care case if(loc.getDocument().g)
 		if(!loc.isSchedulable())
-			throw new BadLocationDataException(BadLocationDataException.ConflictType.NOT_SCHEDULABLE, loc, "tba", "loc"); 
+			throw new BadLocationDataException(BadLocationDataException.ConflictType.NOT_SCHEDULABLE, loc, "Location " + loc.getRoom() 
+					 , " schedulable not set"); 
 		if(loc.getRoom() == null || loc.getRoom() == "")
 			throw new BadLocationDataException(BadLocationDataException.ConflictType.BAD_ROOM, loc, "null or empty room", "valid room");
 		if(loc.getType() == null || loc.getType() == "")
@@ -138,7 +140,8 @@ public class GenerateEntryPoint {
 	    if(c.getNumSections() == null || c.getNumSectionsInt() <= 0)
 	    	throw new BadCourseDataException(BadCourseDataException.ConflictType.BAD_NUMSECTS, c, "null or <= 0", "integer > 0");
 	    if(c.getWTU() == null || c.getWTUInt() <= 0)
-			throw new BadCourseDataException(BadCourseDataException.ConflictType.BAD_NUMWTU, c, "null or <= 0", "integer > 0");
+			throw new BadCourseDataException(BadCourseDataException.ConflictType.BAD_NUMWTU, c, "Course WTU for course " + c.getName(),
+					"null or <= 0");
 	    if(c.getSCU() == null || c.getSCUInt() <= 0)
 	    	throw new BadCourseDataException(BadCourseDataException.ConflictType.BAD_NUMSCU, c, "null or <= 0", "integer > 0");
 	    
@@ -155,8 +158,8 @@ public class GenerateEntryPoint {
 	    if(c.getNumHalfHoursPerWeek() == null || c.getNumHalfHoursPerWeekInt() <= 0)
 	    	throw new BadCourseDataException(BadCourseDataException.ConflictType.BAD_HHR_WEEK, c, "null or <= 0", "integer > 0");
 	    //adding the reqt of 0 being valid. a course with 0 as max enrollment makes no sense to me
-	    if(c.getMaxEnrollment() == null || c.getMaxEnrollmentInt() <= 0)
-	    	throw new BadCourseDataException(BadCourseDataException.ConflictType.BAD_MAXENR, c, "null or <= 0", "integer > 0");
+	    if(c.getMaxEnrollment() == null || c.getMaxEnrollmentInt() < 0)
+	    	throw new BadCourseDataException(BadCourseDataException.ConflictType.BAD_MAXENR, c, "null or < 0", "integer > 0");
 	    if(c.getType() == null || c.getType() == "")
 	    	throw new BadCourseDataException(BadCourseDataException.ConflictType.BAD_CTYPE, c, "null or empty", "LEC/LAB/ACT/SEM/DIS/IND");
 	    if(c.getTypeEnum() == null)

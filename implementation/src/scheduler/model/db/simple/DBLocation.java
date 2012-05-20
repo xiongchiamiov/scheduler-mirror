@@ -17,6 +17,7 @@ public class DBLocation extends DBObject implements IDBLocation {
 		this.room = room;
 		this.type = type;
 		this.maxOccupancy = maxOccupancy;
+		this.isSchedulable = isSchedulable;
 	}
 	
 	public DBLocation(DBLocation that) {
