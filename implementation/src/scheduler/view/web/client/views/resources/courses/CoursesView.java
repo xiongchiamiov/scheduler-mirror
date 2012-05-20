@@ -156,57 +156,39 @@ public class CoursesView extends VLayout {
 		dayCombinationsField.setAlign(Alignment.CENTER);
 		dayCombinationsField
 				.setEditorValueMapFunction(new PossibleDayPatternsFunction());
-
 		grid.addEditCompleteHandler(new EditCompleteHandler() {
 			@Override
 			public void onEditComplete(EditCompleteEvent event) {
 				if (grid.getFieldName(event.getColNum()).equals("scu")) {
-					if (grid.getEditedCell(event.getRowNum(),
-							"dayCombinations").toString().length() == 0
-							|| Window
-									.confirm("By changing your SCU value you will lose your day combination data for this row. Would you like to proceed?")) {
-						// Change day combos
-						String scuString = (String) grid.getEditedCell(
-								event.getRowNum(), "scu");
-						String type = (String) grid.getEditedCell(
-								event.getRowNum(), "type");
-
-						DSRequest requestProperties = new DSRequest();
-						requestProperties.setOldValues(grid
-								.getEditedRecord(event.getRowNum()));
-
-						String[] values = PossibleDayPatternsFunction
-								.getValues(type, scuString).values()
-								.toArray(new String[0]);
-						Record record = grid.getEditedRecord(event.getRowNum());
-						assert (record.getAttributeAsInt("id") != null);
-						record.setAttribute("dayCombinations", values);
-						// Update hours per week if it is still on default
-						String hours = (String) grid.getEditedCell(
-								event.getRowNum(), "hoursPerWeek");
-						if (hours.equals("4")) {
-							// It is on default value, set to SCU
-							record.setAttribute("hoursPerWeek", scuString);
-						}
-
-						grid.updateData(record, null, requestProperties);
-					} else {
-						System.out.println("oldvalue "
-								+ event.getOldRecord().getAttributeAsString(
-										"scu") + ", new record value: "
-								+ event.getNewValues().get("scu"));
-						// Revert to old scu
-						Record oldrecord = event.getOldRecord();
-						DSRequest requestProperties = new DSRequest();
-						requestProperties.setOldValues(grid
-								.getEditedRecord(event.getRowNum()));
-						String scuvalue = oldrecord.getAttributeAsString("scu");
-						Record record = grid.getEditedRecord(event.getRowNum());
-						record.setAttribute("scu", scuvalue);
-						System.out.println("Trying to set scu value to "
-								+ scuvalue);
-						grid.updateData(record, null, requestProperties);
+					if (grid.getEditedCell(event.getRowNum(), "dayCombinations")
+							.toString().length() != 0) {
+						Window.alert("Warning: By changing your SCU value your day combination data has been changed");
 					}
+					// Change day combos
+					String scuString = (String) grid.getEditedCell(
+							event.getRowNum(), "scu");
+					String type = (String) grid.getEditedCell(
+							event.getRowNum(), "type");
+
+					DSRequest requestProperties = new DSRequest();
+					requestProperties.setOldValues(grid.getEditedRecord(event
+							.getRowNum()));
+
+					String[] values = PossibleDayPatternsFunction
+							.getValues(type, scuString).values()
+							.toArray(new String[0]);
+					Record record = grid.getEditedRecord(event.getRowNum());
+					assert (record.getAttributeAsInt("id") != null);
+					record.setAttribute("dayCombinations", values);
+					// Update hours per week if it is still on default
+					String hours = (String) grid.getEditedCell(
+							event.getRowNum(), "hoursPerWeek");
+					if (hours.equals("4")) {
+						// It is on default value, set to SCU
+						record.setAttribute("hoursPerWeek", scuString);
+					}
+
+					grid.updateData(record, null, requestProperties);
 				}
 			}
 		});
