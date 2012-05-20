@@ -458,6 +458,7 @@ public class SQLdb implements IDatabase {
 		SQLUser sqluser = (SQLUser) user;
 //		if(user == null)
 //			throw new DatabaseException("Invalid user");
+		System.out.println("Inserting user: " + user.getUsername() + " " + user.isAdmin());
 		sqluser.id = userdataTable.insert(new Object[]{ user.getUsername(), user.isAdmin()});
 		if(sqluser.id.intValue() < 0)
 			System.out.println("This is NOT SUPPOSED TO HAPPEN");

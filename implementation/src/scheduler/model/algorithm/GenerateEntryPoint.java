@@ -53,6 +53,8 @@ public class GenerateEntryPoint {
 	    	
 	    }
 
+	    //how to defensively access components of a scheduleitem?
+	    
 		return Generate.generate(model, document, s_items, c_list, insD, locD);
 	}
 

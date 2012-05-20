@@ -42,6 +42,14 @@ public abstract class AlgorithmTest extends ModelTestCase {
 	    for (ScheduleItem si : sis) {
 	    	System.err.println(si);
 	    }
+	    
+	    courses.addAll(generateAdditionalCourses(model, doc));
+	    Vector<ScheduleItem> items = GenerateEntryPoint.generate(model, doc, sis, courses, instructors, locations);
+	  
+	    System.err.println("************************************************");
+	    for (ScheduleItem si : items) {
+	    	System.err.println(si);
+	    }
 	}
 	
 	public static List<Course> generateCourseList(Model model, Document doc) throws DatabaseException {
@@ -73,6 +81,37 @@ public abstract class AlgorithmTest extends ModelTestCase {
 		courses.add(course);
 		
 		course = model.createTransientCourse("IND COURSE", "400", "CSC", "0", "0", "1", "IND", "500", "0", true);
+		course.setDocument(doc).insert();
+		courses.add(course);
+		
+		return courses;
+	}
+	
+	public static List<Course> generateAdditionalCourses(Model model, Document doc) throws DatabaseException {
+		List<Course> courses = new ArrayList<Course>();
+		
+		Course course = model.createTransientCourse("Test4", "480", "CSC", "4", "4", "2", "LEC", "60", "6", true);
+		ModelTestUtility.addDayPattern(course, Day.MONDAY, Day.WEDNESDAY, Day.FRIDAY);
+		ModelTestUtility.addDayPattern(course, Day.TUESDAY, Day.THURSDAY);
+		course.setDocument(doc).insert();
+		courses.add(course);
+		
+		Course lab = model.createTransientCourse("Test4 - Lab", "480", "CSC", "4", "4", "2", "LAB", "60", "6", true);
+		ModelTestUtility.addDayPattern(lab, Day.MONDAY, Day.WEDNESDAY, Day.FRIDAY);
+		ModelTestUtility.addDayPattern(course, Day.TUESDAY, Day.THURSDAY);
+		lab.setLecture(course);
+		lab.setTetheredToLecture(Boolean.TRUE);
+		lab.setDocument(doc).insert();
+		courses.add(lab);
+		
+		course = model.createTransientCourse("Test5", "484", "CSC", "4", "4", "2", "LEC", "60", "6", true);
+		ModelTestUtility.addDayPattern(course, Day.MONDAY, Day.WEDNESDAY, Day.FRIDAY);
+		ModelTestUtility.addDayPattern(course, Day.TUESDAY, Day.THURSDAY);
+		course.setDocument(doc).insert();
+		courses.add(course);
+		
+		course = model.createTransientCourse("Test6", "406", "CSC", "4", "4", "1", "LEC", "30", "6", true);
+		ModelTestUtility.addDayPattern(course, Day.TUESDAY, Day.THURSDAY);
 		course.setDocument(doc).insert();
 		courses.add(course);
 		

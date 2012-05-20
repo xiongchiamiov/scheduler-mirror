@@ -6,7 +6,7 @@ public class SQLUser extends SQLObject implements IDBUser {
 	String username;
 	boolean isAdmin;
 	
-	public SQLUser(Integer id, String username, boolean isAdmin) {
+	public SQLUser(Integer id, String username, Boolean isAdmin) {
 		super(id);
 		this.username = username;
 		this.isAdmin = isAdmin;

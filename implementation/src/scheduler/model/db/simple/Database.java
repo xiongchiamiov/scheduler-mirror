@@ -460,12 +460,12 @@ public class Database implements IDatabase {
 		timePreference.timeID = time.getID();
 		timePreference.id = timePreferenceTable.insert(new DBTimePreference(timePreference));
 		
-		System.out.println("Instructor: " + instructor.getFirstName() + " " + instructor.getID());
-		System.out.println("Time Preference: " + timePreference.preference);
-
-		System.out.println("Time ID: " + time.getID());
-	
-		System.out.println("Time details: halfhour, Day " + time.getHalfHour() + " " + time.getDay());
+//		System.out.println("Instructor: " + instructor.getFirstName() + " " + instructor.getID());
+//		System.out.println("Time Preference: " + timePreference.preference);
+//
+//		System.out.println("Time ID: " + time.getID());
+//	
+//		System.out.println("Time details: halfhour, Day " + time.getHalfHour() + " " + time.getDay());
 	}
 
 	@Override
