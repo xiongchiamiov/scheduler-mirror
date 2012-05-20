@@ -13,10 +13,12 @@ public class OriginalDocumentsCache extends ResourceCache<OriginalDocumentGWT> {
 	int sessionID;
 	
 	public OriginalDocumentsCache(boolean deferredSynchronizationEnabled, GreetingServiceAsync service, int sessionID, ServerResourcesResponse<OriginalDocumentGWT> initialDocuments) {
-		super("documents", deferredSynchronizationEnabled, initialDocuments);
+		super("documents", deferredSynchronizationEnabled);
 		
 		this.sessionID = sessionID;
 		this.service = service;
+
+		readServerResources(initialDocuments);
 	}
 	
 	@Override
@@ -32,9 +34,9 @@ public class OriginalDocumentsCache extends ResourceCache<OriginalDocumentGWT> {
 	}
 
 	@Override
-	protected OriginalDocumentGWT realToLocal(OriginalDocumentGWT realResource) {
+	protected OriginalDocumentGWT realToLocal(OriginalDocumentGWT realResource, Integer useThisID) {
 		OriginalDocumentGWT localDocument = new OriginalDocumentGWT(realResource);
-		localDocument.setID(realIDToLocalID(localDocument.getID()));
+		localDocument.setID(useThisID == null ? realIDToLocalID(localDocument.getID()) : useThisID);
 		return localDocument;
 	}
 

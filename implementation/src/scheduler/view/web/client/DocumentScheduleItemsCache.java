@@ -28,7 +28,7 @@ public class DocumentScheduleItemsCache extends ResourceCache<ScheduleItemGWT> {
 			DocumentLocationsCache locationsCache,
 			ServerResourcesResponse<ScheduleItemGWT> initialScheduleItems) {
 		
-		super("doc" + workingDocumentRealID + "ScheduleItems", deferredSynchronizationEnabled, initialScheduleItems);
+		super("doc" + workingDocumentRealID + "ScheduleItems", deferredSynchronizationEnabled);
 		this.service = service;
 		this.sessionID = sessionID;
 		this.workingDocumentRealID = workingDocumentRealID;
@@ -39,6 +39,8 @@ public class DocumentScheduleItemsCache extends ResourceCache<ScheduleItemGWT> {
 		this.coursesCache = coursesCache;
 		this.instructorsCache = instructorsCache;
 		this.locationsCache = locationsCache;
+
+		readServerResources(initialScheduleItems);
 	}
 	
 	@Override
@@ -71,9 +73,9 @@ public class DocumentScheduleItemsCache extends ResourceCache<ScheduleItemGWT> {
 	}
 
 	@Override
-	protected ScheduleItemGWT realToLocal(ScheduleItemGWT realResource) {
+	protected ScheduleItemGWT realToLocal(ScheduleItemGWT realResource, Integer useThisID) {
 		ScheduleItemGWT localScheduleItem = new ScheduleItemGWT(realResource);
-		localScheduleItem.setID(realIDToLocalID(localScheduleItem.getID()));
+		localScheduleItem.setID(useThisID == null ? realIDToLocalID(localScheduleItem.getID()) : useThisID);
 
 		
 		localScheduleItem.setCourseID(coursesCache.realIDToLocalID(realResource.getCourseID()));

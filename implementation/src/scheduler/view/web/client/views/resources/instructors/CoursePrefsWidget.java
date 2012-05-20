@@ -81,6 +81,10 @@ public class CoursePrefsWidget extends VerticalPanel
 
 					public void onSuccess(Void v) {
 						List<CourseGWT> result = new LinkedList<CourseGWT>(workingCopyDocument.getCourses());
+						for (CourseGWT course : result)
+							assert(workingCopyDocument.getInstructorByID(instructor.getID()).getCoursePreferences().containsKey(course.getID()));
+						for (CourseGWT course : result)
+							assert(instructor.getCoursePreferences().containsKey(course.getID()));
 						
 						if (result.size() == 0) {
 							System.out
@@ -104,16 +108,20 @@ public class CoursePrefsWidget extends VerticalPanel
 							System.out
 									.println("The size of the course list is not zero. It should open preferences");
 
+							workingCopyDocument.sanityCheck();
+							
 							HashMap<Integer, CourseGWT> newCoursesByID = new HashMap<Integer, CourseGWT>();
-							for (CourseGWT course : result)
+							for (CourseGWT course : result) {
 								newCoursesByID.put(course.getID(), course);
+								assert(instructor.getCoursePreferences().containsKey(course.getID()));
+							}
 							populateCourses(newCoursesByID);
 						}
 					}
 				});
 	}
 	
-	void populateCourses(Map<Integer, CourseGWT> newCoursesByID) {
+	void populateCourses(final Map<Integer, CourseGWT> newCoursesByID) {
 		coursesByID = newCoursesByID;
 
 		int row = 1;
@@ -136,6 +144,7 @@ public class CoursePrefsWidget extends VerticalPanel
 			list.addChangeHandler(new ChangeHandler() {
 				@Override
 				public void onChange(ChangeEvent event) {
+					assert(newCoursesByID.get(course.getID()).attributesEqual(course));
 					setCoursePreference(course, list.getSelectedIndex());
 					save();
 				}
@@ -178,11 +187,7 @@ public class CoursePrefsWidget extends VerticalPanel
 
 	int getCoursePreference(InstructorGWT instructor, CourseGWT course) {
 		assert (instructor.getCoursePreferences() != null);
-		if (instructor.getCoursePreferences().get(course.getID()) == null)
-		{
-			setCoursePreference(course, 2);  //If nothing has been set, the default is 2: "Acceptable"
-			return 2;
-		}
+		assert(instructor.getCoursePreferences().containsKey(course.getID()));
 		return instructor.getCoursePreferences().get(course.getID());
 	}
 
@@ -192,6 +197,10 @@ public class CoursePrefsWidget extends VerticalPanel
 		instructor.getCoursePreferences().put(course.getID(), newDesire);
 		for (Integer key : instructor.getCoursePreferences().keySet())
 			assert (key != null);
+		for (Integer key : instructor.getCoursePreferences().keySet()) {
+			assert(workingCopyDocument.getCourseByID(key) != null);
+			assert(workingCopyDocument.courseWithLocalIDExistsOnServer(key));
+		}
 		redoColors();
 	}
 

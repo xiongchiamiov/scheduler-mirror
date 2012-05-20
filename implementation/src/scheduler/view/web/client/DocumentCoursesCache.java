@@ -11,10 +11,12 @@ public class DocumentCoursesCache extends ResourceCache<CourseGWT> {
 	int workingDocumentRealID;
 	
 	public DocumentCoursesCache(boolean deferredSynchronizationEnabled, GreetingServiceAsync service, int sessionID, int workingDocumentRealID, ServerResourcesResponse<CourseGWT> initialCourses) {
-		super("doc" + workingDocumentRealID + "courses", deferredSynchronizationEnabled, initialCourses);
+		super("doc" + workingDocumentRealID + "courses", deferredSynchronizationEnabled);
 		this.service = service;
 		this.sessionID = sessionID;
 		this.workingDocumentRealID = workingDocumentRealID;
+		
+		readServerResources(initialCourses);
 	}
 	
 	@Override
@@ -37,9 +39,9 @@ public class DocumentCoursesCache extends ResourceCache<CourseGWT> {
 	}
 
 	@Override
-	protected CourseGWT realToLocal(CourseGWT realResource) {
+	protected CourseGWT realToLocal(CourseGWT realResource, Integer useThisID) {
 		CourseGWT localCourse = new CourseGWT(realResource);
-		localCourse.setID(realIDToLocalID(localCourse.getID()));
+		localCourse.setID(useThisID == null ? realIDToLocalID(localCourse.getID()) : useThisID);
 		if (localCourse.getLectureID() != -1)
 			localCourse.setLectureID(realIDToLocalID(localCourse.getLectureID()));
 		return localCourse;

@@ -155,12 +155,11 @@ public abstract class ResourceCache<ResourceGWT extends Identified> implements R
 	
 	protected abstract ResourceGWT cloneResource(ResourceGWT source);
 	protected abstract ResourceGWT localToReal(ResourceGWT localResource);
-	protected abstract ResourceGWT realToLocal(ResourceGWT realResource);
+	protected abstract ResourceGWT realToLocal(ResourceGWT realResource, Integer useThisID);
 	protected abstract boolean resourceChanged(ResourceGWT oldResource, ResourceGWT newResource);
 	
-	public ResourceCache(final String cachedebugname, boolean deferredSynchronizationEnabled, ServerResourcesResponse<ResourceGWT> initialResources) {
+	public ResourceCache(final String cachedebugname, boolean deferredSynchronizationEnabled) {
 		this.cachedebugname = cachedebugname;
-		readServerResources(initialResources);
 	}
 	
 	public ResourceGWT getByID(int localID) {
@@ -279,7 +278,7 @@ public abstract class ResourceCache<ResourceGWT extends Identified> implements R
 		return entry.localID;
 	}
 	
-	private void readServerResources(ServerResourcesResponse<ResourceGWT> response) {
+	protected void readServerResources(ServerResourcesResponse<ResourceGWT> response) {
 		Set<Integer> realIDsOfResourcesOnServer = new TreeSet<Integer>();
 		
 		for (ResourceGWT resourceOnServer : response.resourcesOnServer) {
@@ -289,8 +288,7 @@ public abstract class ResourceCache<ResourceGWT extends Identified> implements R
 			Entry existingEntry = entriesByRealID.get(resourceRealID);
 			
 			if (existingEntry == null) {
-				ResourceGWT localResource = cloneResource(resourceOnServer);
-				localResource.setID(idAllocator.allocate());
+				ResourceGWT localResource = realToLocal(cloneResource(resourceOnServer), idAllocator.allocate());
 
 				Entry newEntry = new Entry(localResource.getID(), resourceRealID, localResource, EntryActivity.NO_CHANGES);
 				entriesByRealID.put(resourceRealID, newEntry);
@@ -301,7 +299,7 @@ public abstract class ResourceCache<ResourceGWT extends Identified> implements R
 			}
 			else {
 				
-				ResourceGWT newLocalResource = realToLocal(cloneResource(resourceOnServer));
+				ResourceGWT newLocalResource = realToLocal(cloneResource(resourceOnServer), null);
 				
 				switch (existingEntry.activity) {
 					case DELETED:

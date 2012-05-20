@@ -7,6 +7,8 @@ import java.util.Map;
 
 import scheduler.view.web.client.views.home.NewOriginalDocumentsCache;
 import scheduler.view.web.shared.CompleteWorkingCopyDocumentGWT;
+import scheduler.view.web.shared.CourseGWT;
+import scheduler.view.web.shared.InstructorGWT;
 import scheduler.view.web.shared.OriginalDocumentGWT;
 import scheduler.view.web.shared.ServerResourcesResponse;
 import scheduler.view.web.shared.SynchronizeRequest;
@@ -104,7 +106,16 @@ public class CachedService {
 			
 			@Override
 			public void onSuccess(CompleteWorkingCopyDocumentGWT completeWorkingDocument) {
+				
+				for (InstructorGWT instructor : completeWorkingDocument.instructors.resourcesOnServer) {
+					for (CourseGWT course : completeWorkingDocument.courses.resourcesOnServer)
+						assert(instructor.getCoursePreferences().containsKey(course.getID()));
+					assert(instructor.getCoursePreferences().size() == completeWorkingDocument.courses.resourcesOnServer.size());
+				}
+				
 				CachedOpenWorkingCopyDocument openedDocument = new CachedOpenWorkingCopyDocument(deferredSynchronizationEnabled, mService, sessionID, completeWorkingDocument);
+				
+				openedDocument.getInstructors(false);
 				
 				workingCopyDocumentsByOriginalDocumentRealID.put(originalDocumentRealID, openedDocument);
 				

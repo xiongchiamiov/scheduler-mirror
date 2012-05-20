@@ -2,6 +2,8 @@ package scheduler.view.web.client;
 
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.Set;
+import java.util.TreeSet;
 
 import scheduler.view.web.client.views.resources.ResourceCache;
 import scheduler.view.web.client.views.resources.ValidatorUtil;
@@ -60,6 +62,9 @@ public class CachedOpenWorkingCopyDocument {
 		this.courses = new DocumentCoursesCache(deferredSynchronizationEnabled,
 				service, sessionID, realWorkingDocument.getRealID(),
 				completeDocument.courses);
+		
+		for (CourseGWT course : courses.getAll())
+			System.out.println("have local course " + course.getID() + " real is " + courses.localIDToRealID(course.getID()));
 
 		this.instructors = new DocumentInstructorsCache(
 				deferredSynchronizationEnabled, service, sessionID,
@@ -150,6 +155,8 @@ public class CachedOpenWorkingCopyDocument {
 
 					synchronizing = false;
 
+					sanityCheck();
+					
 					for (AsyncCallback<Void> callback : callbacksToCallAfterThisSynchronize)
 						callback.onSuccess(null);
 					
@@ -164,6 +171,18 @@ public class CachedOpenWorkingCopyDocument {
 						callback.onFailure(caught);
 				}
 			});
+		}
+	}
+	
+	public void sanityCheck() {
+		Set<Integer> courseIDs = new TreeSet<Integer>();
+		for (CourseGWT course : courses.getAll())
+			courseIDs.add(course.getID());
+		
+		for (InstructorGWT instructor : instructors.getAll()) {
+			Set<Integer> courseIDsInPrefs = instructor.getCoursePreferences().keySet();
+			assert(courseIDs.containsAll(courseIDsInPrefs));
+			assert(courseIDsInPrefs.containsAll(courseIDs));
 		}
 	}
 
@@ -237,6 +256,8 @@ public class CachedOpenWorkingCopyDocument {
 
 	public Collection<InstructorGWT> getInstructors(
 			boolean excludeSpecialCaseInstructors) {
+		Collection<InstructorGWT> result;
+		
 		if (excludeSpecialCaseInstructors) {
 			Collection<InstructorGWT> instructorsExcludingSpecialCases = new LinkedList<InstructorGWT>();
 			for (InstructorGWT location : instructors.getAll()) {
@@ -248,10 +269,18 @@ public class CachedOpenWorkingCopyDocument {
 					continue;
 				instructorsExcludingSpecialCases.add(location);
 			}
-			return instructorsExcludingSpecialCases;
+			result = instructorsExcludingSpecialCases;
 		} else {
-			return instructors.getAll();
+			result = instructors.getAll();
 		}
+		
+		for (InstructorGWT instructor : result) {
+			for (CourseGWT course : getCourses())
+				assert(instructor.getCoursePreferences().containsKey(course.getID()));
+			assert(instructor.getCoursePreferences().size() == getCourses().size());
+		}
+		
+		return result;
 	}
 
 	public void editScheduleItem(ScheduleItemGWT item) {
@@ -405,5 +434,9 @@ public class CachedOpenWorkingCopyDocument {
 			}
 		}
 		return false;
+	}
+
+	public boolean courseWithLocalIDExistsOnServer(Integer localID) {
+		return locations.localIDToRealID(localID) != null;
 	}
 }

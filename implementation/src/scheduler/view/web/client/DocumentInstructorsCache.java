@@ -3,6 +3,7 @@ package scheduler.view.web.client;
 import java.util.HashMap;
 
 import scheduler.view.web.client.views.resources.ResourceCache;
+import scheduler.view.web.shared.CourseGWT;
 import scheduler.view.web.shared.InstructorGWT;
 import scheduler.view.web.shared.ServerResourcesResponse;
 
@@ -15,11 +16,19 @@ public class DocumentInstructorsCache extends ResourceCache<InstructorGWT> {
 	final DocumentCoursesCache coursesCache;
 	
 	public DocumentInstructorsCache(boolean deferredSynchronizationEnabled, GreetingServiceAsync service, int sessionID, int workingDocumentRealID, DocumentCoursesCache coursesCache, ServerResourcesResponse<InstructorGWT> initialInstructors) {
-		super("doc" + workingDocumentRealID + "instructors", deferredSynchronizationEnabled, initialInstructors);
+		super("doc" + workingDocumentRealID + "instructors", deferredSynchronizationEnabled);
 		this.service = service;
 		this.sessionID = sessionID;
 		this.workingDocumentRealID = workingDocumentRealID;
 		this.coursesCache = coursesCache;
+		
+		for (InstructorGWT instructor : this.getAll()) {
+			for (CourseGWT course : coursesCache.getAll())
+				assert(instructor.getCoursePreferences().containsKey(course.getID()));
+			assert(instructor.getCoursePreferences().size() == coursesCache.getAll().size());
+		}
+
+		readServerResources(initialInstructors);
 	}
 
 	@Override
@@ -44,9 +53,9 @@ public class DocumentInstructorsCache extends ResourceCache<InstructorGWT> {
 	}
 
 	@Override
-	protected InstructorGWT realToLocal(InstructorGWT realResource) {
+	protected InstructorGWT realToLocal(InstructorGWT realResource, Integer useThisID) {
 		InstructorGWT localInstructor = new InstructorGWT(realResource);
-		localInstructor.setID(realIDToLocalID(localInstructor.getID()));
+		localInstructor.setID(useThisID == null ? realIDToLocalID(localInstructor.getID()) : useThisID);
 		
 		HashMap<Integer, Integer> localCoursePreferences = new HashMap<Integer, Integer>();
 		for (java.util.Map.Entry<Integer, Integer> courseRealIDAndPreference : realResource.getCoursePreferences().entrySet()) {

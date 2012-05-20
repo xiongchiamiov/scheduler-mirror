@@ -31,7 +31,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
  */
 @SuppressWarnings("serial")
 public class GreetingServiceImpl extends RemoteServiceServlet implements GreetingService {
-	private static final boolean LOG_ENTERING_AND_EXITING_CALLS = true;
+	private static final boolean LOG_ENTERING_AND_EXITING_CALLS = false;
 	
 	
 	public final GreetingServiceImplInner inner;

@@ -7,6 +7,7 @@ import java.util.HashMap;
 import scheduler.view.web.client.CachedOpenWorkingCopyDocument;
 import scheduler.view.web.client.CachedService;
 import scheduler.view.web.client.views.View;
+import scheduler.view.web.shared.CourseGWT;
 import scheduler.view.web.shared.DocumentGWT;
 import scheduler.view.web.shared.InstructorGWT;
 import scheduler.view.web.shared.OriginalDocumentGWT;
@@ -117,6 +118,7 @@ public class InstructorsHomeView extends VerticalPanel implements View
 					public void onSuccess(CachedOpenWorkingCopyDocument result) {
 						for (InstructorGWT i : result.getInstructors(true)) {
 							if (i.getUsername().equals(service.username)) {
+								sanityCheckInstructor(result, i);
 								setInstructor(i);
 								preferencesButtonClicked(result);
 								break;
@@ -205,6 +207,11 @@ public class InstructorsHomeView extends VerticalPanel implements View
 	public void setInstructor(InstructorGWT instructor1)
 	{
 		this.instructor = instructor1;
+	}
+	
+	private void sanityCheckInstructor(CachedOpenWorkingCopyDocument result, InstructorGWT instructor) {
+		for (CourseGWT course : result.getCourses())
+			assert(instructor.getCoursePreferences().containsKey(course.getID()));
 	}
 
 	@Override

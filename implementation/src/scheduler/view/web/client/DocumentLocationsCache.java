@@ -11,12 +11,13 @@ public class DocumentLocationsCache extends ResourceCache<LocationGWT> {
 	int workingDocumentRealID;
 	
 	public DocumentLocationsCache(boolean deferredSynchronizationEnabled, GreetingServiceAsync service, int sessionID, int workingDocumentRealID, ServerResourcesResponse<LocationGWT> initialLocations) {
-		super("doc" + workingDocumentRealID + "locations", deferredSynchronizationEnabled, initialLocations);
+		super("doc" + workingDocumentRealID + "locations", deferredSynchronizationEnabled);
 		
 		this.service = service;
 		this.sessionID = sessionID;
 		this.workingDocumentRealID = workingDocumentRealID;
 
+		readServerResources(initialLocations);
 	}
 	
 	@Override
@@ -32,9 +33,9 @@ public class DocumentLocationsCache extends ResourceCache<LocationGWT> {
 	}
 
 	@Override
-	protected LocationGWT realToLocal(LocationGWT realResource) {
+	protected LocationGWT realToLocal(LocationGWT realResource, Integer useThisID) {
 		LocationGWT localLocation = new LocationGWT(realResource);
-		localLocation.setID(realIDToLocalID(localLocation.getID()));
+		localLocation.setID(useThisID == null ? realIDToLocalID(localLocation.getID()) : useThisID);
 		return localLocation;
 	}
 
