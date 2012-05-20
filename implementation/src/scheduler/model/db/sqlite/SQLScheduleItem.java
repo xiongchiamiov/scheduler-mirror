@@ -1,17 +1,19 @@
 package scheduler.model.db.sqlite;
 
+import java.util.Iterator;
 import java.util.Set;
 
 import scheduler.model.Day;
 import scheduler.model.db.IDBScheduleItem;
 
 public class SQLScheduleItem extends SQLObject implements IDBScheduleItem {
-	Integer id, docID, instID, locID, courseID, startTime, endTime, dayPatternID, sectionNum;
+	Integer id, docID, instID, locID, courseID, startTime, endTime, sectionNum;
+	String dayPattern;
 	Boolean isConflicted, isPlaced;
 	Set<Day> days;
 	
 	public SQLScheduleItem(Integer id, Integer docID, Integer instID, Integer locID, Integer courseID, 
-			Integer startTime, Integer endTime, Integer dayPatternID, Integer sectionNum, Boolean isConflicted, 
+			Integer startTime, Integer endTime, String dayPattern, Integer sectionNum, Boolean isConflicted, 
 			Boolean isPlaced, Set<Day> days) {
 		super(id);
 		this.id = id;
@@ -21,7 +23,7 @@ public class SQLScheduleItem extends SQLObject implements IDBScheduleItem {
 		this.courseID = courseID;
 		this.startTime = startTime;
 		this.endTime = endTime;
-		this.dayPatternID = dayPatternID;
+		this.dayPattern = dayPattern;
 		this.sectionNum = sectionNum;
 		this.isConflicted = isConflicted;
 		this.isPlaced = isPlaced;
@@ -35,6 +37,30 @@ public class SQLScheduleItem extends SQLObject implements IDBScheduleItem {
 	public void setDocID(Integer docID) {
 		this.docID = docID;
 	}
+	
+	public Integer getLocID() {
+		return locID;
+	}
+	
+	public void setLocID(Integer locID) {
+		this.locID = locID;
+	}
+	
+	public Integer getInstID() {
+		return instID;
+	}
+	
+	public void setInstID(Integer instID) {
+		this.instID = instID;
+	}
+	
+	public Integer getCourseID() {
+		return courseID;
+	}
+	
+	public void setCourseID(Integer courseID) {
+		this.courseID = courseID;
+	}
 
 	@Override
 	public int getSection() {
@@ -45,6 +71,13 @@ public class SQLScheduleItem extends SQLObject implements IDBScheduleItem {
 	public void setSection(int section) {
 		this.sectionNum = section;
 	}
+	
+	public String getDayPattern() {
+		for (Day day : days) {
+			dayPattern += day.toString();
+		}
+		return dayPattern;
+	}
 
 	@Override
 	public Set<Day> getDays() {
@@ -53,7 +86,7 @@ public class SQLScheduleItem extends SQLObject implements IDBScheduleItem {
 
 	@Override
 	public void setDays(Set<Day> days) {
-		
+		this.days = days;
 	}
 
 	@Override

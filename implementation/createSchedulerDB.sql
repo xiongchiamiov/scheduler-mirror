@@ -103,7 +103,7 @@ create table scheduleitem (
     courseID,
     startTime integer not null, 
     endTime integer not null,
-    dayPatternID,
+    dayPattern text not null,
     sectionNum text not null,
     isPlaced tinyint(1) not null,
     isConflicted tinyint(1) not null,
@@ -111,8 +111,7 @@ create table scheduleitem (
     foreign key (instID) references instructors(id),
     foreign key (locID) references location(id),
     foreign key (courseID) references course(id),
-    foreign key (docID) references document(id),
-    foreign key (dayPatternID) references pattern(id)
+    foreign key (docID) references document(id)
 );
 
 drop table labassociations;
@@ -135,7 +134,7 @@ create table timeslotpref (
 
 drop table coursepref; 
 create table coursepref (
-    id integer primary key autoincrement,
+    id integer primary key,
     instID,
     courseID,
     prefLevel integer not null,

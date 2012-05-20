@@ -120,7 +120,7 @@ public class SQLdb implements IDatabase {
 					new Table.Column("courseID", Integer.class),
 					new Table.Column("startTime", Integer.class),
 					new Table.Column("endTime", Integer.class),
-					new Table.Column("dayPatternID", Integer.class),
+					new Table.Column("dayPattern", String.class),
 					new Table.Column("sectionNum", String.class),
 					new Table.Column("isPlaced", Boolean.class),
 					new Table.Column("isConflicted", Boolean.class)
@@ -626,6 +626,9 @@ public class SQLdb implements IDatabase {
 		for(SQLScheduleItem schedItem : scheduleItemTable.select(wheres))
 			result.add(schedItem);
 		
+		if (result.size() == 0)
+			throw new DatabaseException("No scheduleItems found in SQLdb.findScheduleItemsForDocument");
+		
 		return result;
 	}
 
@@ -658,10 +661,9 @@ public class SQLdb implements IDatabase {
 			IDBInstructor instructor, IDBLocation location, IDBScheduleItem item)
 			throws DatabaseException {
 		SQLScheduleItem sqlItem = (SQLScheduleItem) item;
-		Object[] insert = {null, document.getID(), instructor.getID(),
-				location.getID(), course.getID(), sqlItem.getStartHalfHour(), sqlItem.getEndHalfHour(),
-				null, sqlItem.getSection(), sqlItem.isConflicted(), sqlItem.isPlaced(),
-				sqlItem.getDays()};
+		Object[] insert = {document.getID(), instructor.getID(), location.getID(), 
+				course.getID(), sqlItem.getStartHalfHour(), sqlItem.getEndHalfHour(),
+				sqlItem.getDayPattern(), sqlItem.getSection(), sqlItem.isPlaced(), sqlItem.isConflicted()};
 		scheduleItemTable.insert(insert);	
 	}
 
@@ -669,8 +671,11 @@ public class SQLdb implements IDatabase {
 	@Override
 	public void updateScheduleItem(IDBScheduleItem schedule)
 			throws DatabaseException {
-		SQLScheduleItem sched = (SQLScheduleItem) schedule;
-		//scheduleItemTable.update(new Object[] {sched, id)	
+		SQLScheduleItem schedItem = (SQLScheduleItem) schedule;
+		scheduleItemTable.update(new Object[] {schedItem.getDocID(), schedItem.getInstID(),
+				schedItem.getLocID(), schedItem.getCourseID(), schedItem.getStartHalfHour(),
+				schedItem.getEndHalfHour(), schedItem.getDayPattern(), schedItem.getSection(),
+				schedItem.isPlaced(), schedItem.isConflicted()}, schedItem.getID());
 	}
 
 
@@ -684,48 +689,90 @@ public class SQLdb implements IDatabase {
 	@Override
 	public IDBLocation getScheduleItemLocation(IDBScheduleItem item)
 			throws DatabaseException {
-		// TODO Auto-generated method stub
-		return null;
+		SQLScheduleItem schedItem = (SQLScheduleItem) item;
+		List<SQLLocation> ret = null;
+		HashMap<String, Object> wheres = new HashMap<String, Object>();
+		wheres.put("id", schedItem.getLocID());
+		
+		ret = locationTable.select(wheres);
+		if (ret.size() == 0) {
+			throw new DatabaseException("No location found for schedule item");
+		}
+		
+		return ret.get(0);
 	}
 
 
 	@Override
 	public IDBCourse getScheduleItemCourse(IDBScheduleItem item)
 			throws DatabaseException {
-		// TODO Auto-generated method stub
-		return null;
+		SQLScheduleItem schedItem = (SQLScheduleItem) item;
+		List<SQLCourse> ret = null;
+		HashMap<String, Object> wheres = new HashMap<String, Object>();
+		wheres.put("id", schedItem.getCourseID());
+		
+		ret = courseTable.select(wheres);
+		if (ret.size() == 0) {
+			throw new DatabaseException("No course found for schedule item");
+		}
+		
+		return ret.get(0);
 	}
 
 
 	@Override
 	public IDBInstructor getScheduleItemInstructor(IDBScheduleItem item)
 			throws DatabaseException {
-		// TODO Auto-generated method stub
-		return null;
+		SQLScheduleItem schedItem = (SQLScheduleItem) item;
+		List<SQLInstructor> ret = null;
+		HashMap<String, Object> wheres = new HashMap<String, Object>();
+		wheres.put("id", schedItem.getInstID());
+		
+		ret = instructorTable.select(wheres);
+		if (ret.size() == 0) {
+			throw new DatabaseException("No instructor found for schedule item");
+		}
+		
+		return ret.get(0);
 	}
 
 
 	@Override
 	public void setScheduleItemCourse(IDBScheduleItem underlying,
 			IDBCourse findCourseByID) throws DatabaseException {
-		// TODO Auto-generated method stub
+		SQLScheduleItem schedItem = (SQLScheduleItem) underlying;
+		schedItem.setCourseID(findCourseByID.getID());
 		
+		scheduleItemTable.update(new Object[] {schedItem.getDocID(), schedItem.getInstID(),
+				schedItem.getLocID(), schedItem.getCourseID(), schedItem.getStartHalfHour(),
+				schedItem.getEndHalfHour(), schedItem.getDayPattern(), schedItem.getSection(),
+				schedItem.isPlaced(), schedItem.isConflicted()}, schedItem.getID());
 	}
 
 
 	@Override
 	public void setScheduleItemLocation(IDBScheduleItem underlying,
 			IDBLocation findLocationByID) throws DatabaseException {
-		// TODO Auto-generated method stub
+		SQLScheduleItem schedItem = (SQLScheduleItem) underlying;
+		schedItem.setLocID(findLocationByID.getID());
 		
+		scheduleItemTable.update(new Object[] {schedItem.getDocID(), schedItem.getInstID(),
+				schedItem.getLocID(), schedItem.getCourseID(), schedItem.getStartHalfHour(),
+				schedItem.getEndHalfHour(), schedItem.getDayPattern(), schedItem.getSection(),
+				schedItem.isPlaced(), schedItem.isConflicted()}, schedItem.getID());
 	}
 
 
 	@Override
 	public void setScheduleItemInstructor(IDBScheduleItem underlying,
 			IDBInstructor findInstructorByID) throws DatabaseException {
-		assert(false);
+		SQLScheduleItem schedItem = (SQLScheduleItem) underlying;
+		schedItem.setInstID(findInstructorByID.getID());
 		
+		scheduleItemTable.update(new Object[] {schedItem.getDocID(), schedItem.getInstID(),
+				schedItem.getLocID(), schedItem.getCourseID(), schedItem.getStartHalfHour(),
+				schedItem.getEndHalfHour(), schedItem.getDayPattern(), schedItem.getSection(),
+				schedItem.isPlaced(), schedItem.isConflicted()}, schedItem.getID());
 	}
 
 
@@ -1162,7 +1209,6 @@ public class SQLdb implements IDatabase {
 	public void deleteCoursePreference(IDBCoursePreference coursePreference)
 			throws DatabaseException {
 		courseprefTable.delete(coursePreference.getID());
-		
 	}
 
 
@@ -1325,7 +1371,6 @@ public class SQLdb implements IDatabase {
 	public IDBDayPattern getDayPatternForOfferedDayPattern(
 			IDBOfferedDayPattern offered) throws DatabaseException {
 		return new SQLDayPattern(((SQLOfferedDayPattern)offered).dayPatternID);
-		
 	}
 
 
@@ -1333,7 +1378,6 @@ public class SQLdb implements IDatabase {
 	public void deleteOfferedDayPattern(IDBOfferedDayPattern offered)
 			throws DatabaseException {
 		coursepatternsTable.delete(offered.getID());
-		
 	}
 
 
