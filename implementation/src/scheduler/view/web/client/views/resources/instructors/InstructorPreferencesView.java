@@ -28,6 +28,7 @@ public class InstructorPreferencesView extends VerticalPanel {
 	protected CoursePrefsWidget coursePrefs;
 	protected com.smartgwt.client.widgets.Window parent = null;
 	protected Button closebutton;
+	protected ClickHandler additionalCloseHandler = null;
 
 	/**
 	 * The constructor sets up the UI and passes the
@@ -85,6 +86,11 @@ public class InstructorPreferencesView extends VerticalPanel {
 						parent.hide();
 					}
 				});
+				if(additionalCloseHandler != null)
+				{
+					closebutton.addClickHandler(additionalCloseHandler);
+					additionalCloseHandler = null;
+				}
 				DOM.setElementAttribute(closebutton.getElement(), "id", "s_prefCloseBtn");
 				
 				InstructorPreferencesView.this.add(closebutton);
@@ -102,6 +108,11 @@ public class InstructorPreferencesView extends VerticalPanel {
 		this.parent = parent;
 		if(this.coursePrefs != null)
 			this.coursePrefs.setParent(parent);
+	}
+	
+	public boolean isReady()
+	{
+		return this.closebutton != null;
 	}
 	
 	
@@ -145,7 +156,14 @@ public class InstructorPreferencesView extends VerticalPanel {
 	
 	public void addCloseHandler(ClickHandler handler)
 	{
-		this.closebutton.addClickHandler(handler);
+		if(this.closebutton == null)
+		{
+			this.additionalCloseHandler = handler;
+		}
+		else
+		{
+			this.closebutton.addClickHandler(handler);
+		}
 	}
 	
 	public CachedOpenWorkingCopyDocument getDocument()
