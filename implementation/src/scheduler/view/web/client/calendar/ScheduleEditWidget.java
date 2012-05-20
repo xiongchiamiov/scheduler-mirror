@@ -243,7 +243,14 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 							// Reset column and row spans, remove any items
 							// already placed
 							mCalendarItems = new ArrayList<ScheduleItemGWT>();
-							for (ScheduleItemGWT item : mWorkingCopyDocument.getScheduleItems()) {
+							Collection<ScheduleItemGWT> items = mWorkingCopyDocument.getScheduleItems();
+							if (items == null){
+								Window.alert("null schedule!");
+								loading.hide();
+								return;
+							}
+								
+							for (ScheduleItemGWT item : items) {
 								mCalendarItems.add(item);
 							}
 
@@ -487,6 +494,9 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 							mAvailableCoursesView.setItems(availableItems);
 							mAvailableCoursesView.drawList();
 						}
+						else {
+							Window.alert("null courses!");
+						}
 					}
 				});
 	}
@@ -553,6 +563,12 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 						
 						Collection<ScheduleItemGWT> result = mWorkingCopyDocument.getScheduleItems();
 						
+						if (result == null) {
+							Window.alert("updateItem: null items!");
+							loading.hide();
+							return;
+						}
+						
 						mCalendarItems = new ArrayList<ScheduleItemGWT>();
 
 						for (ScheduleItemGWT schdItem : result) {
@@ -599,8 +615,8 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 
 		item.setID(null);
 		mWorkingCopyDocument.addScheduleItem(item);
+		
 		final long startTime = System.currentTimeMillis();
-
 		
 		mWorkingCopyDocument.forceSynchronize(
 				new AsyncCallback<Void>() {
@@ -615,6 +631,12 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 						Window.alert("Success! ("+((System.currentTimeMillis() - startTime) / 1000)+"s)");
 						
 						Collection<ScheduleItemGWT> result = mWorkingCopyDocument.getScheduleItems();
+
+						if (result == null) {
+							Window.alert("insertItem: null items!");
+							loading.hide();
+							return;
+						}
 						
 						mCalendarItems = new ArrayList<ScheduleItemGWT>();
 
@@ -697,6 +719,12 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 						Window.alert("Success! ("+((System.currentTimeMillis() - startTime) / 1000)+"s)");
 						
 						Collection<ScheduleItemGWT> result = mWorkingCopyDocument.getScheduleItems();
+
+						if (result == null) {
+							Window.alert("removeItem: null items!");
+							loading.hide();
+							return;
+						}
 						
 						mCalendarItems = new ArrayList<ScheduleItemGWT>();
 						for (ScheduleItemGWT schdItem : result) {
