@@ -140,13 +140,13 @@ public class InstructorsHomeView extends VerticalPanel implements View
 			
 			this.prefsWindow.setCanDragReposition(true);
 			this.prefsWindow.setCanDragResize(true);
-
-			this.prefsWindow.setSize("700px", "500px");
 			
 			this.iipv = new InstructorPreferencesView(doc, instructor);
 			
 			this.prefsWindow.addItem(iipv);
-			this.prefsWindow.setAutoSize(true);
+			this.prefsWindow.setAutoSize(false);
+			int height = com.google.gwt.user.client.Window.getClientHeight() - 30;
+			this.prefsWindow.setSize("730px", height+"px");
 			
 			this.iipv.setParent(prefsWindow);
 			this.iipv.afterPush();

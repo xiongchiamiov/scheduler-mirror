@@ -82,6 +82,7 @@ public class InstructorPreferencesView extends VerticalPanel {
 		DOM.setElementAttribute(closebutton.getElement(), "id", "s_prefCloseBtn");
 		
 		this.add(closebutton);
+		this.add(new HTML("<span style=\"display: block; height: 20px;\"></span>"));
 	}
 	
 	public void setParent(com.smartgwt.client.widgets.Window parent) {
