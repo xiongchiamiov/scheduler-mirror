@@ -828,8 +828,10 @@ public class SQLdb implements IDatabase {
 		assert(location.getMaxOccupancy() != null);
 		assert(location.getType() != null);
 		assert(location.getRoom() != null);
+		//assert(location. != null);
 		
 		SQLLocation sqlLocation = (SQLLocation)location;
+		System.out.println(sqlLocation.docID);
 		locationTable.update(new Object[] {sqlLocation.docID, sqlLocation.maxOccupancy, sqlLocation.type, sqlLocation.room, 
 				sqlLocation.schedulable}, sqlLocation.getID());
 	}
@@ -1640,6 +1642,16 @@ public class SQLdb implements IDatabase {
 		else
 			throw new DatabaseException(new Throwable("Document " + scheduleName + " not found."));
 		return document;
+	}
+
+	@Override
+	public void closeDatabase() {
+		try {
+			SQLdb.conn.close();
+		} catch (SQLException e) {
+			// ignore it, but print stack trace
+			e.printStackTrace();
+		}
 	}
 
 }

@@ -9,6 +9,7 @@ import scheduler.model.Location;
 import scheduler.model.Model;
 import scheduler.model.db.DatabaseException;
 import scheduler.model.db.IDatabase.NotFoundException;
+import scheduler.model.db.sqlite.SQLdb;
 
 public abstract class LocationsTest extends ModelTestCase {
 	private static final int START_HALF_HOUR = 14; // 7am
@@ -28,6 +29,8 @@ public abstract class LocationsTest extends ModelTestCase {
 		assertTrue(found.getRoom().equals("roomlol"));
 		assertTrue(found.getType().equals("LEC"));
 		assertTrue(found.getMaxOccupancy().equals("30"));
+		
+		model.closeModel();
 	}
 
 	public void testInsertAndFindLocationSameInstance() throws DatabaseException {
@@ -38,6 +41,8 @@ public abstract class LocationsTest extends ModelTestCase {
 		
 		Location found = model.findLocationByID(insertedLocation.getID());
 		assert(insertedLocation == found);
+		
+		model.closeModel();
 	}
 	
 	public void testUpdateLocation() throws DatabaseException {
@@ -59,6 +64,8 @@ public abstract class LocationsTest extends ModelTestCase {
 		assertTrue(ins.getRoom().equals("hark"));
 		assertTrue(ins.getType().equals("derp"));
 		assertTrue(ins.getMaxOccupancy().equals("40"));
+		
+		model.closeModel();
 	}
 
 	public void testDeleteLocation() throws Exception {
@@ -78,6 +85,8 @@ public abstract class LocationsTest extends ModelTestCase {
 			assertTrue(false); // should have failed
 		}
 		catch (NotFoundException e) { }
+		
+		model.closeModel();
 	}
 	
 	public void testFindAllLocationsForDocument() throws DatabaseException {
@@ -95,6 +104,8 @@ public abstract class LocationsTest extends ModelTestCase {
 			locationIDs.remove(returnedDoc.getID());
 		}
 		assertTrue(locationIDs.isEmpty());
+		
+		model.closeModel();
 	}
 
 	public void testFindAllLocationsInMultipleDocuments() throws DatabaseException {
@@ -129,5 +140,7 @@ public abstract class LocationsTest extends ModelTestCase {
 			}
 			assertTrue(locationIDs2.isEmpty());
 		}
+		
+		model.closeModel();
 	}
 }

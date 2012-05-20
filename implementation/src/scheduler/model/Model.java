@@ -637,4 +637,9 @@ public class Model {
 			return null;
 		return documentCache.decorateAndPutIfNotPresent(doc);
 	}
+	
+	public void closeModel()
+	{
+		this.database.closeDatabase();
+	}
 }

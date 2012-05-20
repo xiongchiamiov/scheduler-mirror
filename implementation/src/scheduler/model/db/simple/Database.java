@@ -1036,4 +1036,9 @@ public class Database implements IDatabase {
 		
 		return null;
 	}
+	
+	public void closeDatabase()
+	{
+		// do nothing here, this is only important for SQLite
+	}
 }

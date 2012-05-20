@@ -8,8 +8,6 @@ import java.util.Map;
 import java.util.Set;
 
 import scheduler.model.Day;
-import scheduler.model.db.IDatabase.NotFoundException;
-import scheduler.model.db.simple.DBUsedEquipment;
 
 public interface IDatabase {
 	public class NotFoundException extends DatabaseException {
@@ -177,5 +175,5 @@ public interface IDatabase {
 	void readState(ObjectInputStream ois) throws IOException;
 	IDBScheduleItem getScheduleItemLectureOrNull(IDBScheduleItem underlying) throws DatabaseException;
 	IDBDocument findDocumentByName(String scheduleName) throws DatabaseException;
-	
+	void closeDatabase();
 }
