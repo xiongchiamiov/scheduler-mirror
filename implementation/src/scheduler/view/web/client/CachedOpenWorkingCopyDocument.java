@@ -11,8 +11,12 @@ import scheduler.view.web.shared.DocumentGWT;
 import scheduler.view.web.shared.InstructorGWT;
 import scheduler.view.web.shared.LocationGWT;
 import scheduler.view.web.shared.ScheduleItemGWT;
+import scheduler.view.web.shared.SynchronizeRequest;
 import scheduler.view.web.shared.WorkingDocumentGWT;
+import scheduler.view.web.shared.WorkingDocumentSynchronizeRequest;
+import scheduler.view.web.shared.WorkingDocumentSynchronizeResponse;
 
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -34,6 +38,9 @@ public class CachedOpenWorkingCopyDocument {
 	private final DocumentLocationsCache locations;
 	private final DocumentScheduleItemsCache scheduleItems;
 
+	boolean synchronizing = false;
+	Collection<AsyncCallback<Void>> callbacksToCallAfterNextSynchronize = new LinkedList<AsyncCallback<Void>>();
+	
 	CachedOpenWorkingCopyDocument(boolean deferredSynchronizationEnabled,
 			GreetingServiceAsync service, int sessionID,
 			CompleteWorkingCopyDocumentGWT completeDocument) {
@@ -79,14 +86,18 @@ public class CachedOpenWorkingCopyDocument {
 				realWorkingDocument.getRealID(), realWorkingDocument,
 				localWorkingDocument, this.courses, this.instructors,
 				this.locations, completeDocument.scheduleItems);
+		
+
+		(new Timer() {
+			public void run() {
+				forceSynchronize(null);
+			}
+		}).scheduleRepeating(5000);
 	}
 
 	public WorkingDocumentGWT getDocument() {
-		return new WorkingDocumentGWT(localWorkingDocument); // Cloning for
-																// defense.
-																// Makes you
-																// wish java had
-																// const.
+		return new WorkingDocumentGWT(localWorkingDocument);
+		// Cloning for defense. Makes you wish java had const.
 	}
 
 	public void copyToAndAssociateWithDifferentOriginalDocument(
@@ -104,40 +115,56 @@ public class CachedOpenWorkingCopyDocument {
 				localWorkingDocument.getRealID(), callback);
 	}
 
-	public void forceSynchronize(final AsyncCallback<Void> originalCallback) {
-		AsyncCallback<Void> callbackToGiveToCaches = null;
-
-		if (originalCallback != null) {
-			AsyncCallback<Void> combineCallback = new AsyncCallback<Void>() {
-				int requestsComplete = 0;
-				boolean notifiedOfFailure = false;
-
-				@Override
-				public void onSuccess(Void result) {
-					requestsComplete++;
-
-					if (requestsComplete == 4)
-						originalCallback.onSuccess(null);
-				}
-
-				@Override
-				public void onFailure(Throwable caught) {
-					if (!notifiedOfFailure) {
-						originalCallback.onFailure(caught);
-						notifiedOfFailure = true;
-					}
-				}
+	public void forceSynchronize(AsyncCallback<Void> nextSyncCallback) {
+		if (nextSyncCallback == null) {
+			nextSyncCallback = new AsyncCallback<Void>() {
+				public void onSuccess(Void result) { }
+				public void onFailure(Throwable caught) { }
 			};
-
-			callbackToGiveToCaches = combineCallback;
 		}
 
-		final AsyncCallback<Void> finalCallbackToGiveToCaches = callbackToGiveToCaches;
+		callbacksToCallAfterNextSynchronize.add(nextSyncCallback);
+		
+		if (!synchronizing) {
+			synchronizing = true;
 
-		courses.forceSynchronize(finalCallbackToGiveToCaches);
-		instructors.forceSynchronize(finalCallbackToGiveToCaches);
-		locations.forceSynchronize(finalCallbackToGiveToCaches);
-		scheduleItems.forceSynchronize(finalCallbackToGiveToCaches);
+			final Collection<AsyncCallback<Void>> callbacksToCallAfterThisSynchronize = callbacksToCallAfterNextSynchronize;
+			callbacksToCallAfterNextSynchronize = new LinkedList<AsyncCallback<Void>>();
+			
+			SynchronizeRequest<CourseGWT> coursesRequest = courses.startSynchronize();
+			SynchronizeRequest<InstructorGWT> instructorsRequest = instructors.startSynchronize();
+			SynchronizeRequest<LocationGWT> locationsRequest = locations.startSynchronize();
+			SynchronizeRequest<ScheduleItemGWT> scheduleItemsRequest = scheduleItems.startSynchronize();
+			
+			WorkingDocumentSynchronizeRequest documentRequest = new WorkingDocumentSynchronizeRequest(
+					coursesRequest, instructorsRequest, locationsRequest, scheduleItemsRequest);
+			
+			service.synchronizeWorkingDocument(sessionID, realWorkingDocument.getRealID(), documentRequest, new AsyncCallback<WorkingDocumentSynchronizeResponse>() {
+				public void onSuccess(WorkingDocumentSynchronizeResponse response) {
+					assert(synchronizing);
+					
+					courses.finishSynchronize(response.courses);
+					instructors.finishSynchronize(response.instructors);
+					locations.finishSynchronize(response.locations);
+					scheduleItems.finishSynchronize(response.scheduleItems);
+
+					synchronizing = false;
+
+					for (AsyncCallback<Void> callback : callbacksToCallAfterThisSynchronize)
+						callback.onSuccess(null);
+					
+					if (!callbacksToCallAfterNextSynchronize.isEmpty())
+						forceSynchronize(null);
+				}
+				
+				public void onFailure(Throwable caught) {
+					assert(synchronizing);
+					synchronizing = false;
+					for (AsyncCallback<Void> callback : callbacksToCallAfterThisSynchronize)
+						callback.onFailure(caught);
+				}
+			});
+		}
 	}
 
 	public void generateRestOfSchedule(final AsyncCallback<Void> callback) {
@@ -157,7 +184,7 @@ public class CachedOpenWorkingCopyDocument {
 						}
 					});
 
-			scheduleItems.forceSynchronize(callback);
+			forceSynchronize(callback);
 		}
 		else
 		{
@@ -285,19 +312,22 @@ public class CachedOpenWorkingCopyDocument {
 			public void onAnyLocalChange() {
 				observer.onAnyLocalChange();
 			}
-
 			@Override
 			public void onResourceAdded(CourseGWT resource, boolean addedLocally) {
+				// TODO Auto-generated method stub
+				
 			}
-
-			@Override
-			public void onResourceEdited(CourseGWT resource,
-					boolean editedLocally) {
-			}
-
 			@Override
 			public void onResourceDeleted(int localID, boolean deletedLocally) {
+				// TODO Auto-generated method stub
+				
 			}
+			@Override
+			public void onResourceEdited(CourseGWT resource, boolean editedLocally) {
+				// TODO Auto-generated method stub
+				
+			}
+			
 		});
 
 		locations.addObserver(new ResourceCache.Observer<LocationGWT>() {
@@ -311,17 +341,19 @@ public class CachedOpenWorkingCopyDocument {
 			}
 
 			@Override
-			public void onResourceAdded(LocationGWT resource,
-					boolean addedLocally) {
+			public void onResourceAdded(LocationGWT resource, boolean addedLocally) {
+				// TODO Auto-generated method stub
+				
 			}
-
-			@Override
-			public void onResourceEdited(LocationGWT resource,
-					boolean editedLocally) {
-			}
-
 			@Override
 			public void onResourceDeleted(int localID, boolean deletedLocally) {
+				// TODO Auto-generated method stub
+				
+			}
+			@Override
+			public void onResourceEdited(LocationGWT resource, boolean editedLocally) {
+				// TODO Auto-generated method stub
+				
 			}
 		});
 
@@ -336,17 +368,19 @@ public class CachedOpenWorkingCopyDocument {
 			}
 
 			@Override
-			public void onResourceAdded(InstructorGWT resource,
-					boolean addedLocally) {
+			public void onResourceAdded(InstructorGWT resource, boolean addedLocally) {
+				// TODO Auto-generated method stub
+				
 			}
-
-			@Override
-			public void onResourceEdited(InstructorGWT resource,
-					boolean editedLocally) {
-			}
-
 			@Override
 			public void onResourceDeleted(int localID, boolean deletedLocally) {
+				// TODO Auto-generated method stub
+				
+			}
+			@Override
+			public void onResourceEdited(InstructorGWT resource, boolean editedLocally) {
+				// TODO Auto-generated method stub
+				
 			}
 		});
 	}

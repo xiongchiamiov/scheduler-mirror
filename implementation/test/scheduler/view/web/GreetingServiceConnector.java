@@ -19,6 +19,8 @@ import scheduler.view.web.shared.ServerResourcesResponse;
 import scheduler.view.web.shared.SessionClosedFromInactivityExceptionGWT;
 import scheduler.view.web.shared.SynchronizeRequest;
 import scheduler.view.web.shared.SynchronizeResponse;
+import scheduler.view.web.shared.WorkingDocumentSynchronizeRequest;
+import scheduler.view.web.shared.WorkingDocumentSynchronizeResponse;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -143,38 +145,12 @@ public class GreetingServiceConnector implements GreetingServiceAsync {
 	}
 
 	@Override
-	public void synchronizeDocumentCourses(
+	public void synchronizeWorkingDocument(
 			int sessionID,
 			int documentID,
-			SynchronizeRequest<CourseGWT> request,
-			AsyncCallback<SynchronizeResponse<CourseGWT>> callback) {
+			WorkingDocumentSynchronizeRequest request,
+			AsyncCallback<WorkingDocumentSynchronizeResponse> callback) {
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
-	public void synchronizeDocumentInstructors(
-			int sessionID,
-			int documentID,
-			SynchronizeRequest<InstructorGWT> request,
-			AsyncCallback<SynchronizeResponse<InstructorGWT>> callback) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public void synchronizeDocumentLocations(
-			int sessionID,
-			int documentID,
-			SynchronizeRequest<LocationGWT> request,
-			AsyncCallback<SynchronizeResponse<LocationGWT>> callback) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public void synchronizeDocumentScheduleItems(
-			int sessionID,
-			int documentID,
-			SynchronizeRequest<ScheduleItemGWT> request,
-			AsyncCallback<SynchronizeResponse<ScheduleItemGWT>> callback) {
-		throw new UnsupportedOperationException();
-	}
 }

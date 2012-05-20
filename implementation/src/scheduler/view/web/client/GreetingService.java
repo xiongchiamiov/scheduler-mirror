@@ -4,18 +4,16 @@ package scheduler.view.web.client;
 
 import scheduler.view.web.shared.CompleteWorkingCopyDocumentGWT;
 import scheduler.view.web.shared.CouldNotBeScheduledExceptionGWT;
-import scheduler.view.web.shared.CourseGWT;
 import scheduler.view.web.shared.ExistingWorkingDocumentDoesntExistExceptionGWT;
 import scheduler.view.web.shared.GenerateException;
-import scheduler.view.web.shared.InstructorGWT;
-import scheduler.view.web.shared.LocationGWT;
 import scheduler.view.web.shared.LoginResponse;
 import scheduler.view.web.shared.OriginalDocumentGWT;
-import scheduler.view.web.shared.ScheduleItemGWT;
 import scheduler.view.web.shared.ServerResourcesResponse;
 import scheduler.view.web.shared.SessionClosedFromInactivityExceptionGWT;
 import scheduler.view.web.shared.SynchronizeRequest;
 import scheduler.view.web.shared.SynchronizeResponse;
+import scheduler.view.web.shared.WorkingDocumentSynchronizeRequest;
+import scheduler.view.web.shared.WorkingDocumentSynchronizeResponse;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
@@ -35,31 +33,12 @@ public interface GreetingService extends RemoteService {
 	// This is what we think of as "save as":
 	void associateWorkingCopyWithNewOriginalDocument(int sessionID, int workingCopyID, String scheduleName, boolean allowOverwrite) throws SessionClosedFromInactivityExceptionGWT;
 
-	SynchronizeResponse<CourseGWT> synchronizeDocumentCourses(
+	WorkingDocumentSynchronizeResponse synchronizeWorkingDocument(
 			int sessionID,
 			int documentID,
-			SynchronizeRequest<CourseGWT> request) throws SessionClosedFromInactivityExceptionGWT;
-
-	SynchronizeResponse<InstructorGWT> synchronizeDocumentInstructors(
-			int sessionID,
-			int documentID,
-			SynchronizeRequest<InstructorGWT> request) throws SessionClosedFromInactivityExceptionGWT;
-
-	SynchronizeResponse<LocationGWT> synchronizeDocumentLocations(
-			int sessionID,
-			int documentID,
-			SynchronizeRequest<LocationGWT> request) throws SessionClosedFromInactivityExceptionGWT;
-
-//	SynchronizeResponse<ScheduleItemGWT> synchronizeDocumentScheduleItems(int documentID, SynchronizeRequest<ScheduleItemGWT> request);
-	
-	
+			WorkingDocumentSynchronizeRequest request) throws SessionClosedFromInactivityExceptionGWT;
 
 	void generateRestOfSchedule(int sessionID, int scheduleID) throws CouldNotBeScheduledExceptionGWT, SessionClosedFromInactivityExceptionGWT, GenerateException;
-
-	SynchronizeResponse<ScheduleItemGWT> synchronizeDocumentScheduleItems(
-			int sessionID,
-			int documentID,
-			SynchronizeRequest<ScheduleItemGWT> request) throws SessionClosedFromInactivityExceptionGWT;
 
 	LoginResponse loginAndGetAllOriginalDocuments(String username) throws InvalidLoginException;
 	

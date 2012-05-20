@@ -3,10 +3,6 @@ package scheduler.view.web.client;
 import scheduler.view.web.client.views.resources.ResourceCache;
 import scheduler.view.web.shared.CourseGWT;
 import scheduler.view.web.shared.ServerResourcesResponse;
-import scheduler.view.web.shared.SynchronizeRequest;
-import scheduler.view.web.shared.SynchronizeResponse;
-
-import com.google.gwt.user.client.rpc.AsyncCallback;
 
 // Called "Document"CoursesCache because it only deals with the courses for a given document.
 public class DocumentCoursesCache extends ResourceCache<CourseGWT> {
@@ -20,16 +16,10 @@ public class DocumentCoursesCache extends ResourceCache<CourseGWT> {
 		this.sessionID = sessionID;
 		this.workingDocumentRealID = workingDocumentRealID;
 	}
+	
 	@Override
 	protected boolean resourceChanged(CourseGWT oldResource, CourseGWT newResource) {
 		return !oldResource.attributesEqual(newResource);
-	}
-	
-	@Override
-	protected void synchronizeWithServer(
-			SynchronizeRequest<CourseGWT> request,
-			AsyncCallback<SynchronizeResponse<CourseGWT>> callback) {
-		service.synchronizeDocumentCourses(sessionID, workingDocumentRealID, request, callback);
 	}
 	
 	@Override

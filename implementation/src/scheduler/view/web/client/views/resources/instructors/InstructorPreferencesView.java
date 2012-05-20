@@ -3,9 +3,11 @@ package scheduler.view.web.client.views.resources.instructors;
 import scheduler.view.web.client.CachedOpenWorkingCopyDocument;
 import scheduler.view.web.shared.InstructorGWT;
 
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
@@ -45,43 +47,54 @@ public class InstructorPreferencesView extends VerticalPanel {
 
 	// @Override
 	public void afterPush() {
-		this.setWidth("100%");
-		this.setHeight("100%");
-		FocusPanel fpanel = new FocusPanel();
-		HTML instructorName = new HTML("Instructor Time Preferences");
-		fpanel.setStyleName("bigBold");
-		instructorName.setStyleName("bigBold");
-		DOM.setElementAttribute(instructorName.getElement(), "id", "instructorName");
-		fpanel.add(instructorName);
-		this.add(fpanel);
+		openDocument.forceSynchronize(new AsyncCallback<Void>() {
+			
+			@Override
+			public void onSuccess(Void result) {
+				InstructorPreferencesView.this.setWidth("100%");
+				InstructorPreferencesView.this.setHeight("100%");
+				FocusPanel fpanel = new FocusPanel();
+				HTML instructorName = new HTML("Instructor Time Preferences");
+				fpanel.setStyleName("bigBold");
+				instructorName.setStyleName("bigBold");
+				DOM.setElementAttribute(instructorName.getElement(), "id", "instructorName");
+				fpanel.add(instructorName);
+				InstructorPreferencesView.this.add(fpanel);
 
-		this.timePrefs = new TimePrefsWidget(openDocument, this.instructor);
-		
-		this.setSpacing(20);
+				InstructorPreferencesView.this.timePrefs = new TimePrefsWidget(openDocument, InstructorPreferencesView.this.instructor);
+				
+				InstructorPreferencesView.this.setSpacing(20);
 
-		this.add(timePrefs);
-		this.setStyleName("centerness");
+				InstructorPreferencesView.this.add(timePrefs);
+				InstructorPreferencesView.this.setStyleName("centerness");
 
-		
-		this.coursePrefs = new CoursePrefsWidget(openDocument, this.instructor);
-		this.coursePrefs.setStyleName("otherCenterness");
-		this.coursePrefs.setParent(this.parent);
-		this.coursePrefs.afterPush();
+				
+				InstructorPreferencesView.this.coursePrefs = new CoursePrefsWidget(openDocument, InstructorPreferencesView.this.instructor);
+				InstructorPreferencesView.this.coursePrefs.setStyleName("otherCenterness");
+				InstructorPreferencesView.this.coursePrefs.setParent(InstructorPreferencesView.this.parent);
+				InstructorPreferencesView.this.coursePrefs.afterPush();
 
-		HTML cprefs = new HTML("Instructor Course Preferences");
-		cprefs.addStyleName("bigBold");
-		this.add(cprefs);
+				HTML cprefs = new HTML("Instructor Course Preferences");
+				cprefs.addStyleName("bigBold");
+				InstructorPreferencesView.this.add(cprefs);
 
-		this.add(coursePrefs);
-		
-		closebutton = new Button("Close", new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				parent.hide();
+				InstructorPreferencesView.this.add(coursePrefs);
+				
+				closebutton = new Button("Close", new ClickHandler() {
+					public void onClick(ClickEvent event) {
+						parent.hide();
+					}
+				});
+				DOM.setElementAttribute(closebutton.getElement(), "id", "s_prefCloseBtn");
+				
+				InstructorPreferencesView.this.add(closebutton);
+			}
+			
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert("failed to synchronize document");
 			}
 		});
-		DOM.setElementAttribute(closebutton.getElement(), "id", "s_prefCloseBtn");
-		
-		this.add(closebutton);
 		this.add(new HTML("<span style=\"display: block; height: 20px;\"></span>"));
 	}
 	

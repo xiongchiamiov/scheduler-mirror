@@ -34,6 +34,9 @@ public class ValidatorUtil {
 			} else if (fieldName.equals("catalogNum")) {
 				value = record.getAttributeAsString("catalogNum");
 				return value != null && validateNotEmpty(value);
+			} else if (fieldName.equals("dayCombinations")) {
+				String[] values = record.getAttributeAsStringArray("dayCombinations");
+				return value != null && values.length > 0;
 			}
 			// Default
 			else {
@@ -112,7 +115,8 @@ public class ValidatorUtil {
 						if (validateGreaterThanZeroInt(course
 								.getHalfHoursPerWeek())) {
 							if (validateNotEmpty(course.getCatalogNum())) {
-								return true;
+								if (course.getDayPatterns().size() > 0)
+									return true;
 							}
 						}
 					}

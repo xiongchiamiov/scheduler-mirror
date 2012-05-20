@@ -82,34 +82,8 @@ public class Scheduler implements EntryPoint, UpdateHeaderStrategy
 			boolean parseURLArguments,
 			final SimplePanel viewContainer) {
 		
-		viewContainer.clear();
-		
-		Map<String, String> urlArguments = new TreeMap<String, String>();
-		
-		if (parseURLArguments)
-			urlArguments = URLUtilities.parseURLArguments(Window.Location.getHref());
-		
-		final String username = urlArguments.get("userid");
-		final String documentIDStr = urlArguments.get("originaldocumentid");
-		
-//		if (username == null) {
-//			assert(documentIDStr == null);
-			viewContainer.setWidget(new LoginView(service, this));
-//			loadingPopup.hide();
-//		}
-//		else {
+		viewContainer.setWidget(new LoginView(service, this));
 	}
-
-//	static String parseURLArgument(String url, String parameter) {
-//		RegExp regExp = RegExp.compile("[\\?|&].*" + parameter + "=(\\w+)");
-//		if (!regExp.test(url))
-//			return null;
-//		
-//		MatchResult matcher = regExp.exec(url);
-//		assert (matcher.getGroupCount() == 2);
-//		
-//		return matcher.getGroup(1);
-//	}
 
 	public void onOpenedDocument(String documentName) {
 		scheduleNameContainer.setWidget(new Label(documentName));

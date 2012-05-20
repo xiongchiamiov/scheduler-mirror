@@ -57,7 +57,7 @@ public class NewScheduleCreator {
 					final OriginalDocumentGWT newDocument = new OriginalDocumentGWT(null, newDocumentName, 0, 0, 0, 0, false, 14, 44, null);
 					service.originalDocuments.add(newDocument);
 					
-					service.originalDocuments.forceSynchronize(new AsyncCallback<Void>() {
+					service.forceSynchronizeOriginalDocuments(new AsyncCallback<Void>() {
 						public void onSuccess(Void v) {
 							popup.hide();
 							

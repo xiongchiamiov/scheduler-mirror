@@ -1,7 +1,5 @@
 package scheduler.view.web.client;
 
-import scheduler.view.web.client.views.resources.instructors.InstructorPreferencesView;
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;

@@ -5,10 +5,6 @@ import java.util.HashMap;
 import scheduler.view.web.client.views.resources.ResourceCache;
 import scheduler.view.web.shared.InstructorGWT;
 import scheduler.view.web.shared.ServerResourcesResponse;
-import scheduler.view.web.shared.SynchronizeRequest;
-import scheduler.view.web.shared.SynchronizeResponse;
-
-import com.google.gwt.user.client.rpc.AsyncCallback;
 
 // Called "Document"InstructorsCache because it only deals with the Instructors for a given document.
 public class DocumentInstructorsCache extends ResourceCache<InstructorGWT> {
@@ -62,14 +58,6 @@ public class DocumentInstructorsCache extends ResourceCache<InstructorGWT> {
 		localInstructor.setCoursePreferences(localCoursePreferences);
 		
 		return localInstructor;
-	}
-
-	@Override
-	protected void synchronizeWithServer(
-			SynchronizeRequest<InstructorGWT> request,
-			AsyncCallback<SynchronizeResponse<InstructorGWT>> callback) {
-		assert(sessionID > 0);
-		service.synchronizeDocumentInstructors(sessionID, workingDocumentRealID, request, callback);
 	}
 
 	@Override

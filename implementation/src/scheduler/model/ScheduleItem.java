@@ -82,7 +82,7 @@ public class ScheduleItem extends ModelObject {
 		if (courseLoaded)
 			result.setCourse(getCourse());
 		if (lectureLoaded)
-			result.setLecture(getLecture());
+			result.setLecture(getLectureOrNull());
 		return result;
 	}
 	
@@ -115,10 +115,10 @@ public class ScheduleItem extends ModelObject {
 		return model.getLabScheduleItemsForScheduleItem(this);
 	}
 	
-	public ScheduleItem getLecture() throws DatabaseException {
+	public ScheduleItem getLectureOrNull() throws DatabaseException {
 		if (!lectureLoaded) {
 			assert(lecture == null);
-			lecture = model.getScheduleItemLecture(this);
+			lecture = model.getScheduleItemLectureOrNull(this);
 			lectureLoaded = true;
 		}
 		return lecture;

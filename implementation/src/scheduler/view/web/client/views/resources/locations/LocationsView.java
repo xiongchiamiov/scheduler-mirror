@@ -4,14 +4,10 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import scheduler.view.web.client.CachedOpenWorkingCopyDocument;
-import scheduler.view.web.client.views.resources.ResourceCollection;
 import scheduler.view.web.client.views.resources.ValidatorUtil;
-import scheduler.view.web.shared.CourseGWT;
-import scheduler.view.web.shared.InstructorGWT;
 import scheduler.view.web.shared.LocationGWT;
 import scheduler.view.web.shared.ScheduleItemGWT;
 
-import com.google.gwt.user.client.Window;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.types.ListGridEditEvent;

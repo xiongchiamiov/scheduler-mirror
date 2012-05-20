@@ -3,11 +3,7 @@ package scheduler.view.web.client;
 import scheduler.view.web.client.views.resources.ResourceCache;
 import scheduler.view.web.shared.ScheduleItemGWT;
 import scheduler.view.web.shared.ServerResourcesResponse;
-import scheduler.view.web.shared.SynchronizeRequest;
-import scheduler.view.web.shared.SynchronizeResponse;
 import scheduler.view.web.shared.WorkingDocumentGWT;
-
-import com.google.gwt.user.client.rpc.AsyncCallback;
 
 // Called "Document"ScheduleItemsCache because it only deals with the ScheduleItems for a given document.
 public class DocumentScheduleItemsCache extends ResourceCache<ScheduleItemGWT> {
@@ -96,13 +92,6 @@ public class DocumentScheduleItemsCache extends ResourceCache<ScheduleItemGWT> {
 		
 		
 		return localScheduleItem;
-	}
-
-	@Override
-	protected void synchronizeWithServer(
-			SynchronizeRequest<ScheduleItemGWT> request,
-			AsyncCallback<SynchronizeResponse<ScheduleItemGWT>> callback) {
-		service.synchronizeDocumentScheduleItems(sessionID, workingDocumentRealID, request, callback);
 	}
 
 	@Override

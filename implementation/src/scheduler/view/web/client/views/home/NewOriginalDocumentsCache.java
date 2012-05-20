@@ -4,10 +4,6 @@ import scheduler.view.web.client.GreetingServiceAsync;
 import scheduler.view.web.client.views.resources.ResourceCache;
 import scheduler.view.web.shared.OriginalDocumentGWT;
 import scheduler.view.web.shared.ServerResourcesResponse;
-import scheduler.view.web.shared.SynchronizeRequest;
-import scheduler.view.web.shared.SynchronizeResponse;
-
-import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class NewOriginalDocumentsCache extends ResourceCache<OriginalDocumentGWT> {
 	GreetingServiceAsync service;
@@ -37,13 +33,6 @@ public class NewOriginalDocumentsCache extends ResourceCache<OriginalDocumentGWT
 		OriginalDocumentGWT localDocument = new OriginalDocumentGWT(realResource);
 		localDocument.setID(realIDToLocalID(localDocument.getID()));
 		return localDocument;
-	}
-
-	@Override
-	protected void synchronizeWithServer(
-			SynchronizeRequest<OriginalDocumentGWT> request,
-			AsyncCallback<SynchronizeResponse<OriginalDocumentGWT>> callback) {
-		service.synchronizeOriginalDocuments(sessionID, request, callback);
 	}
 
 	@Override

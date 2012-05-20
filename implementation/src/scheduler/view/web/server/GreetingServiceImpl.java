@@ -21,6 +21,8 @@ import scheduler.view.web.shared.ServerResourcesResponse;
 import scheduler.view.web.shared.SessionClosedFromInactivityExceptionGWT;
 import scheduler.view.web.shared.SynchronizeRequest;
 import scheduler.view.web.shared.SynchronizeResponse;
+import scheduler.view.web.shared.WorkingDocumentSynchronizeRequest;
+import scheduler.view.web.shared.WorkingDocumentSynchronizeResponse;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
@@ -329,12 +331,12 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 	}
 
 	@Override
-	public SynchronizeResponse<CourseGWT> synchronizeDocumentCourses(
+	public WorkingDocumentSynchronizeResponse synchronizeWorkingDocument(
 			int sessionID,
 			int documentID,
-			SynchronizeRequest<CourseGWT> request) throws SessionClosedFromInactivityExceptionGWT {
+			WorkingDocumentSynchronizeRequest request) throws SessionClosedFromInactivityExceptionGWT {
 
-		SynchronizeResponse<CourseGWT> result;
+		WorkingDocumentSynchronizeResponse result;
 		
 		if (LOG_ENTERING_AND_EXITING_CALLS)
 			System.out.println("Begin GreetingServiceImpl.synchronizeDocumentCourses(session " + sessionID + " doc " + documentID + ")");
@@ -342,7 +344,13 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 		synchronized (this) {
 			inner.sanityCheck();
 			
-			result = inner.synchronizeDocumentCourses(sessionID, documentID, request);
+			try {
+				result = inner.synchronizeWorkingDocument(sessionID, documentID, request);
+			}
+			catch (DatabaseException e) {
+				e.printStackTrace();
+				throw new RuntimeException(e);
+			}
 
 			inner.sanityCheck();
 			inner.flushToFileSystem();
@@ -350,101 +358,6 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 
 		if (LOG_ENTERING_AND_EXITING_CALLS)
 			System.out.println("End GreetingServiceImpl.synchronizeDocumentCourses(" + documentID + ")");
-		
-		return result;
-	}
-	
-	@Override
-	public SynchronizeResponse<InstructorGWT> synchronizeDocumentInstructors(
-			int sessionID,
-			int documentID,
-			SynchronizeRequest<InstructorGWT> request) throws SessionClosedFromInactivityExceptionGWT {
-
-		SynchronizeResponse<InstructorGWT> result;
-		
-		if (LOG_ENTERING_AND_EXITING_CALLS)
-			System.out.println("Begin GreetingServiceImpl.synchronizeDocumentInstructors(" + sessionID + ", " + documentID + ")");
-
-		synchronized (this) {
-			inner.sanityCheck();
-			
-			try {
-				result = inner.synchronizeDocumentInstructors(sessionID, documentID, request);
-			}
-			catch (DatabaseException e) {
-				e.printStackTrace();
-				throw new RuntimeException(e);
-			}
-
-			inner.sanityCheck();
-			inner.flushToFileSystem();
-		}
-
-		if (LOG_ENTERING_AND_EXITING_CALLS)
-			System.out.println("End GreetingServiceImpl.synchronizeDocumentInstructors(" + sessionID + ")");
-		
-		return result;
-	}
-	@Override
-	public SynchronizeResponse<LocationGWT> synchronizeDocumentLocations(
-			int sessionID,
-			int documentID,
-			SynchronizeRequest<LocationGWT> request) throws SessionClosedFromInactivityExceptionGWT {
-
-		if (LOG_ENTERING_AND_EXITING_CALLS)
-			System.out.println("Begin GreetingServiceImpl.synchronizeDocumentLocations(" + documentID + ")");
-		
-		SynchronizeResponse<LocationGWT> result;
-		
-		synchronized (this) {
-			inner.sanityCheck();
-			
-			try {
-				result = inner.synchronizeDocumentLocations(sessionID, documentID, request);
-			}
-			catch (DatabaseException e) {
-				e.printStackTrace();
-				throw new RuntimeException(e);
-			}
-
-			inner.sanityCheck();
-			inner.flushToFileSystem();
-		}
-		
-		if (LOG_ENTERING_AND_EXITING_CALLS)
-			System.out.println("End GreetingServiceImpl.synchronizeDocumentLocations(" + documentID + ")");
-		
-		return result;
-	}
-
-	@Override
-	public SynchronizeResponse<ScheduleItemGWT> synchronizeDocumentScheduleItems(
-			int sessionID,
-			int documentID,
-			SynchronizeRequest<ScheduleItemGWT> request) throws SessionClosedFromInactivityExceptionGWT {
-
-		SynchronizeResponse<ScheduleItemGWT> result;
-		
-		if (LOG_ENTERING_AND_EXITING_CALLS)
-			System.out.println("Begin GreetingServiceImpl.synchronizeDocumentScheduleItems(session " + sessionID + " doc" + documentID + ")");
-
-		synchronized (this) {
-			inner.sanityCheck();
-			
-			try {
-				result = inner.synchronizeDocumentScheduleItems(sessionID, documentID, request);
-			}
-			catch (DatabaseException e) {
-				e.printStackTrace();
-				throw new RuntimeException(e);
-			}
-
-			inner.sanityCheck();
-			inner.flushToFileSystem();
-		}
-
-		if (LOG_ENTERING_AND_EXITING_CALLS)
-			System.out.println("End GreetingServiceImpl.synchronizeDocumentScheduleItems(" + documentID + ")");
 		
 		return result;
 	}

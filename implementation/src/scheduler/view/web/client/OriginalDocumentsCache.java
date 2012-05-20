@@ -39,13 +39,6 @@ public class OriginalDocumentsCache extends ResourceCache<OriginalDocumentGWT> {
 	}
 
 	@Override
-	protected void synchronizeWithServer(
-			SynchronizeRequest<OriginalDocumentGWT> request,
-			AsyncCallback<SynchronizeResponse<OriginalDocumentGWT>> callback) {
-		service.synchronizeOriginalDocuments(sessionID, request, callback);
-	}
-
-	@Override
 	protected boolean resourceChanged(OriginalDocumentGWT oldResource, OriginalDocumentGWT newResource) {
 		return !oldResource.attributesEqual(newResource);
 	}

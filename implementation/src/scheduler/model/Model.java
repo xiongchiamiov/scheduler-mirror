@@ -613,8 +613,10 @@ public class Model {
 		return result;
 	}
 
-	public ScheduleItem getScheduleItemLecture(ScheduleItem scheduleItem) throws DatabaseException {
+	public ScheduleItem getScheduleItemLectureOrNull(ScheduleItem scheduleItem) throws DatabaseException {
 		IDBScheduleItem lecture = database.getScheduleItemLectureOrNull(scheduleItem.underlying);
+		if (lecture == null)
+			return null;
 		return itemCache.decorateAndPutIfNotPresent(lecture);
 	}
 

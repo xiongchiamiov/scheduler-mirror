@@ -87,14 +87,14 @@ public abstract class ScheduleItemsTest extends ModelTestCase {
 		item1.update();
 		item2.update();
 		
-		assertTrue(item1.getLecture() == item2);
+		assertTrue(item1.getLectureOrNull() == item2);
 		assertTrue(item2.getLabs().contains(item1));
 		
 		item1.setLecture(null);
 		item1.update();
 		item2.update();
 
-		assertFalse(item1.getLecture() == item2);
+		assertFalse(item1.getLectureOrNull() == item2);
 		assertFalse(item2.getLabs().contains(item1));
 	}
 }

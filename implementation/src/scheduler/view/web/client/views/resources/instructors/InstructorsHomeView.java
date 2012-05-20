@@ -65,7 +65,7 @@ public class InstructorsHomeView extends VerticalPanel implements View
 
 		// ------------------------------------
 		
-		this.service.forceSynchronize(new AsyncCallback<Void>(){
+		this.service.forceSynchronizeOriginalDocuments(new AsyncCallback<Void>(){
 					 @Override
 					 public void onFailure(Throwable caught)
 					 {

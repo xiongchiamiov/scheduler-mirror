@@ -16,6 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.Vector;
 
 import scheduler.model.Course;
@@ -28,7 +29,6 @@ import scheduler.model.User;
 import scheduler.model.algorithm.BadInstructorDataException;
 import scheduler.model.algorithm.GenerateEntryPoint;
 import scheduler.model.db.DatabaseException;
-import scheduler.view.web.client.GreetingService;
 import scheduler.view.web.client.InvalidLoginException;
 import scheduler.view.web.shared.ClientChangesResponse;
 import scheduler.view.web.shared.CompleteWorkingCopyDocumentGWT;
@@ -46,6 +46,8 @@ import scheduler.view.web.shared.SessionClosedFromInactivityExceptionGWT;
 import scheduler.view.web.shared.SynchronizeRequest;
 import scheduler.view.web.shared.SynchronizeResponse;
 import scheduler.view.web.shared.WorkingDocumentGWT;
+import scheduler.view.web.shared.WorkingDocumentSynchronizeRequest;
+import scheduler.view.web.shared.WorkingDocumentSynchronizeResponse;
 
 /**
  * The server side implementation of the RPC service.
@@ -205,26 +207,6 @@ public class GreetingServiceImplInner {
 				throw new RuntimeException(e);
 			}
 		}
-		
-		try {
-			// We dont use projector anymore. If this assert fails, you need to erase your database.
-			assert(!model.getEquipmentTypes().contains("Projector"));
-			
-			Collection<String> equipmentTypes = model.getEquipmentTypes();
-			if (equipmentTypes.size() == 0) {
-				model.insertEquipmentType("Laptop Connectivity");
-				model.insertEquipmentType("Overhead");
-				model.insertEquipmentType("Smart Room");
-			}
-		}
-		catch (DatabaseException e) {
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		}
-		
-//		for (String equipmentType : model.getEquipmentTypes())
-		
-		
 	}
 	
 	public void sanityCheck() {
@@ -238,15 +220,35 @@ public class GreetingServiceImplInner {
 				assert(doc.getChooseForMeInstructor().getID() != null);
 				assert(doc.getChooseForMeLocation() != null);
 				assert(doc.getChooseForMeLocation().getID() != null);
-				
+
 				Set<Integer> coursesIDs = new HashSet<Integer>();
 				for (Course course : doc.getCourses())
 					coursesIDs.add(course.getID());
+
+				Set<Integer> instructorsIDs = new HashSet<Integer>();
+				for (Instructor instructor : doc.getInstructors(false))
+					instructorsIDs.add(instructor.getID());
+
+				Set<Integer> locationsIDs = new HashSet<Integer>();
+				for (Location location : doc.getLocations(false))
+					locationsIDs.add(location.getID());
+
+				Set<Integer> scheduleItemsIDs = new HashSet<Integer>();
+				for (ScheduleItem scheduleItem : doc.getScheduleItems())
+					scheduleItemsIDs.add(scheduleItem.getID());
 				
-				for (Instructor instructor : doc.getInstructors(true)) {
-					Map<Integer, Integer> preferences = instructor.getCoursePreferences();
-					for (Integer courseID : preferences.keySet())
-						assert(coursesIDs.contains(courseID));
+				for (Instructor instructor : doc.getInstructors(false)) {
+					Set<Integer> coursesIDsInPreferences = instructor.getCoursePreferences().keySet();
+					assert(coursesIDs.containsAll(coursesIDsInPreferences));
+					assert(coursesIDsInPreferences.containsAll(coursesIDs));
+				}
+				
+				for (ScheduleItem scheduleItem : doc.getScheduleItems()) {
+					assert(coursesIDs.contains(scheduleItem.getCourse().getID()));
+					assert(instructorsIDs.contains(scheduleItem.getInstructor().getID()));
+					assert(locationsIDs.contains(scheduleItem.getLocation().getID()));
+					if (scheduleItem.getLectureOrNull() != null)
+						assert(scheduleItemsIDs.contains(scheduleItem.getLectureOrNull().getID()));
 				}
 			}
 		}
@@ -276,6 +278,11 @@ public class GreetingServiceImplInner {
 		
 		int id = resultCourse.insert().getID();
 		course.setID(id);
+		
+		for (Instructor instructor : document.getInstructors(false)) {
+			instructor.getCoursePreferences().put(resultCourse.getID(), Instructor.DEFAULT_PREF);
+			instructor.update();
+		}
 
 		return course;
 	}
@@ -311,9 +318,14 @@ public class GreetingServiceImplInner {
 		return new ServerResourcesResponse<CourseGWT>(result);
 	}
 	
-	private void removeCourse(Integer courseID) throws DatabaseException {
+	private void removeCourse(Document document, Integer courseID) throws DatabaseException {
 		assert(courseID >= 0);
 		
+		for (Instructor instructor : document.getInstructors(false)) {
+			instructor.getCoursePreferences().remove(courseID);
+			instructor.update();
+		}
+
 		Course course = model.findCourseByID(courseID);
 		assert (course.getDocument().getOriginal() != null);
 		course.delete();
@@ -834,136 +846,6 @@ public class GreetingServiceImplInner {
 		
 		return new SynchronizeResponse<OriginalDocumentGWT>(clientChangesResponse, originalDocs);
 	}
-
-	public SynchronizeResponse<CourseGWT> synchronizeDocumentCourses(
-			int sessionID,
-			int documentID,
-			SynchronizeRequest<CourseGWT> request) throws SessionClosedFromInactivityExceptionGWT {
-
-		SynchronizeResponse<CourseGWT> result;
-	
-		assert(documentID >= 0);
-		
-		try {
-			sessions.onActivity(sessionID, documentID);
-			
-			Document document = model.findDocumentByID(documentID);
-			assert (document.getOriginal() != null);
-			assert(document.getStaffInstructor() != null);
-			assert(document.getTBALocation() != null);
-			assert(document.getChooseForMeInstructor() != null);
-			assert(document.getChooseForMeLocation() != null);
-			
-			List<Integer> addedCourseIDs = new LinkedList<Integer>();
-			for (CourseGWT newCourse : request.clientChanges.addedResources)
-				addedCourseIDs.add(addCourseToDocument(document, newCourse).getID());
-			for (CourseGWT editedCourse : request.clientChanges.editedResources)
-				editCourse(editedCourse);
-			for (int deletedCourseID : request.clientChanges.deletedResourceIDs)
-				removeCourse(deletedCourseID);
-			
-			ServerResourcesResponse<CourseGWT> resultCourses = getCoursesForDocument(documentID);
-			
-			result = new SynchronizeResponse<CourseGWT>(new ClientChangesResponse(addedCourseIDs), resultCourses);
-		}
-		catch (DatabaseException e) {
-			throw new RuntimeException(e);
-		}
-		
-		return result;
-	}
-	
-	public SynchronizeResponse<InstructorGWT> synchronizeDocumentInstructors(
-			int sessionID,
-			int documentID,
-			SynchronizeRequest<InstructorGWT> request) throws SessionClosedFromInactivityExceptionGWT, DatabaseException {
-
-		assert(documentID >= 0);
-		
-		sessions.onActivity(sessionID, documentID);
-		
-		Document document = model.findDocumentByID(documentID);
-		assert (document.getOriginal() != null);
-		assert(document.getStaffInstructor() != null);
-		assert(document.getTBALocation() != null);
-		assert(document.getChooseForMeInstructor() != null);
-		assert(document.getChooseForMeLocation() != null);
-		
-		List<Integer> addedInstructorIDs = new LinkedList<Integer>();
-		for (InstructorGWT newInstructor : request.clientChanges.addedResources)
-			addedInstructorIDs.add(addInstructorToDocument(document.getID(), newInstructor).getID());
-		for (InstructorGWT editedInstructor : request.clientChanges.editedResources)
-			editInstructor(editedInstructor);
-		for (int deletedInstructorID : request.clientChanges.deletedResourceIDs)
-			removeInstructor(deletedInstructorID);
-		
-		ClientChangesResponse responseInstructors = new ClientChangesResponse(addedInstructorIDs);
-		
-		return new SynchronizeResponse<InstructorGWT>(responseInstructors, getInstructorsForDocument(documentID));
-	}
-	
-	public SynchronizeResponse<LocationGWT> synchronizeDocumentLocations(
-			int sessionID,
-			int documentID,
-			SynchronizeRequest<LocationGWT> request) throws SessionClosedFromInactivityExceptionGWT, DatabaseException {
-
-		assert(documentID >= 0);
-		
-		sessions.onActivity(sessionID, documentID);
-		
-		Document document = model.findDocumentByID(documentID);
-		assert (document.getOriginal() != null);
-		assert(document.getStaffInstructor() != null);
-		assert(document.getTBALocation() != null);
-		assert(document.getChooseForMeInstructor() != null);
-		assert(document.getChooseForMeLocation() != null);
-		
-		List<Integer> addedLocationIDs = new LinkedList<Integer>();
-		for (LocationGWT newLocation : request.clientChanges.addedResources)
-			addedLocationIDs.add(addLocationToDocument(document.getID(), newLocation).getID());
-		for (LocationGWT editedLocation : request.clientChanges.editedResources)
-			editLocation(editedLocation);
-		for (int deletedLocationID : request.clientChanges.deletedResourceIDs)
-			removeLocation(deletedLocationID);
-		
-		ClientChangesResponse changesResponse = new ClientChangesResponse(addedLocationIDs);
-		
-		ServerResourcesResponse<LocationGWT> locations = getLocationsForDocument(documentID);
-		
-		return new SynchronizeResponse<LocationGWT>(changesResponse, locations);
-	}
-
-	public SynchronizeResponse<ScheduleItemGWT> synchronizeDocumentScheduleItems(
-			int sessionID,
-			int documentID,
-			SynchronizeRequest<ScheduleItemGWT> request) throws SessionClosedFromInactivityExceptionGWT, DatabaseException {
-
-		assert(documentID >= 0);
-	
-		sessions.onActivity(sessionID, documentID);
-			
-		Document document = model.findDocumentByID(documentID);
-		assert (document.getOriginal() != null);
-		assert(document.getStaffInstructor() != null);
-		assert(document.getTBALocation() != null);
-		assert(document.getChooseForMeInstructor() != null);
-		assert(document.getChooseForMeLocation() != null);
-		
-		List<Integer> addedScheduleItemIDs = new LinkedList<Integer>();
-		for (ScheduleItemGWT newScheduleItem : request.clientChanges.addedResources)
-			addedScheduleItemIDs.add(addScheduleItemToDocument(document, newScheduleItem).getID());
-		for (ScheduleItemGWT editedScheduleItem : request.clientChanges.editedResources)
-			editScheduleItem(editedScheduleItem);
-		for (int deletedScheduleItemID : request.clientChanges.deletedResourceIDs)
-			removeScheduleItem(deletedScheduleItemID);
-		
-		ClientChangesResponse response = new ClientChangesResponse(addedScheduleItemIDs);
-		
-		ServerResourcesResponse<ScheduleItemGWT> scheduleItems = getScheduleItemsForDocument(documentID);
-		
-		return new SynchronizeResponse<ScheduleItemGWT>(response, scheduleItems);
-	}
-	
 	
 
 	private ScheduleItemGWT addScheduleItemToDocument(Document document, ScheduleItemGWT scheduleItem) throws DatabaseException {
@@ -1047,4 +929,165 @@ public class GreetingServiceImplInner {
 		assert (scheduleItem.getDocument().getOriginal() != null);
 		scheduleItem.delete();
 	}
+
+	public WorkingDocumentSynchronizeResponse synchronizeWorkingDocument(
+			int sessionID,
+			int documentID,
+			WorkingDocumentSynchronizeRequest request) throws SessionClosedFromInactivityExceptionGWT, DatabaseException {
+		
+		sessions.onActivity(sessionID, documentID);
+		
+		Document document = model.findDocumentByID(documentID);
+		assert (document.getOriginal() != null);
+		assert(document.getStaffInstructor() != null);
+		assert(document.getTBALocation() != null);
+		assert(document.getChooseForMeInstructor() != null);
+		assert(document.getChooseForMeLocation() != null);
+		
+		List<Integer> addedCourseIDs = new LinkedList<Integer>();
+		for (CourseGWT newCourse : request.courses.clientChanges.addedResources)
+			addedCourseIDs.add(addCourseToDocument(document, newCourse).getID());
+
+		for (CourseGWT editedCourse : request.courses.clientChanges.editedResources)
+			editCourse(editedCourse);
+
+		List<Integer> addedInstructorIDs = new LinkedList<Integer>();
+		for (InstructorGWT newInstructor : request.instructors.clientChanges.addedResources)
+			addedInstructorIDs.add(addInstructorToDocument(document.getID(), newInstructor).getID());
+
+		for (InstructorGWT editedInstructor : request.instructors.clientChanges.editedResources)
+			editInstructor(editedInstructor);
+		
+		List<Integer> addedLocationIDs = new LinkedList<Integer>();
+		for (LocationGWT newLocation : request.locations.clientChanges.addedResources)
+			addedLocationIDs.add(addLocationToDocument(document.getID(), newLocation).getID());
+
+		for (LocationGWT editedLocation : request.locations.clientChanges.editedResources)
+			editLocation(editedLocation);
+		
+		List<Integer> addedScheduleItemIDs = new LinkedList<Integer>();
+		for (ScheduleItemGWT newScheduleItem : request.scheduleItems.clientChanges.addedResources)
+			addedScheduleItemIDs.add(addScheduleItemToDocument(document, newScheduleItem).getID());
+
+		for (ScheduleItemGWT editedScheduleItem : request.scheduleItems.clientChanges.editedResources)
+			editScheduleItem(editedScheduleItem);
+		
+		for (int deletedScheduleItemID : request.scheduleItems.clientChanges.deletedResourceIDs)
+			removeScheduleItem(deletedScheduleItemID);
+
+		for (int deletedLocationID : request.locations.clientChanges.deletedResourceIDs)
+			removeLocation(deletedLocationID);
+
+		for (int deletedInstructorID : request.instructors.clientChanges.deletedResourceIDs)
+			removeInstructor(deletedInstructorID);
+		
+		for (int deletedCourseID : request.courses.clientChanges.deletedResourceIDs)
+			removeCourse(document, deletedCourseID);
+		
+		return new WorkingDocumentSynchronizeResponse(
+				new SynchronizeResponse<CourseGWT>(new ClientChangesResponse(addedCourseIDs), getCoursesForDocument(documentID)),
+				new SynchronizeResponse<InstructorGWT>(new ClientChangesResponse(addedInstructorIDs), getInstructorsForDocument(documentID)),
+				new SynchronizeResponse<LocationGWT>(new ClientChangesResponse(addedLocationIDs), getLocationsForDocument(documentID)),
+				new SynchronizeResponse<ScheduleItemGWT>(new ClientChangesResponse(addedScheduleItemIDs), getScheduleItemsForDocument(documentID)));
+	}
+	
+
+//
+//	public SynchronizeResponse<CourseGWT> synchronizeDocumentCourses(
+//			int sessionID,
+//			int documentID,
+//			SynchronizeRequest<CourseGWT> request) throws SessionClosedFromInactivityExceptionGWT {
+//
+//		SynchronizeResponse<CourseGWT> result;
+//	
+//		assert(documentID >= 0);
+//		
+//		try {
+//			sessions.onActivity(sessionID, documentID);
+//			
+//			Document document = model.findDocumentByID(documentID);
+//			assert (document.getOriginal() != null);
+//			assert(document.getStaffInstructor() != null);
+//			assert(document.getTBALocation() != null);
+//			assert(document.getChooseForMeInstructor() != null);
+//			assert(document.getChooseForMeLocation() != null);
+//			
+//			ServerResourcesResponse<CourseGWT> resultCourses = getCoursesForDocument(documentID);
+//			
+//			result = new SynchronizeResponse<CourseGWT>(new ClientChangesResponse(addedCourseIDs), resultCourses);
+//		}
+//		catch (DatabaseException e) {
+//			throw new RuntimeException(e);
+//		}
+//		
+//		return result;
+//	}
+//	
+//	public SynchronizeResponse<InstructorGWT> synchronizeDocumentInstructors(
+//			int sessionID,
+//			int documentID,
+//			SynchronizeRequest<InstructorGWT> request) throws SessionClosedFromInactivityExceptionGWT, DatabaseException {
+//
+//		assert(documentID >= 0);
+//		
+//		sessions.onActivity(sessionID, documentID);
+//		
+//		Document document = model.findDocumentByID(documentID);
+//		assert (document.getOriginal() != null);
+//		assert(document.getStaffInstructor() != null);
+//		assert(document.getTBALocation() != null);
+//		assert(document.getChooseForMeInstructor() != null);
+//		assert(document.getChooseForMeLocation() != null);
+//		
+//		ClientChangesResponse responseInstructors = new ClientChangesResponse(addedInstructorIDs);
+//		
+//		return new SynchronizeResponse<InstructorGWT>(responseInstructors, getInstructorsForDocument(documentID));
+//	}
+//	
+//	public SynchronizeResponse<LocationGWT> synchronizeDocumentLocations(
+//			int sessionID,
+//			int documentID,
+//			SynchronizeRequest<LocationGWT> request) throws SessionClosedFromInactivityExceptionGWT, DatabaseException {
+//
+//		assert(documentID >= 0);
+//		
+//		sessions.onActivity(sessionID, documentID);
+//		
+//		Document document = model.findDocumentByID(documentID);
+//		assert (document.getOriginal() != null);
+//		assert(document.getStaffInstructor() != null);
+//		assert(document.getTBALocation() != null);
+//		assert(document.getChooseForMeInstructor() != null);
+//		assert(document.getChooseForMeLocation() != null);
+//
+//		ClientChangesResponse changesResponse = new ClientChangesResponse(addedLocationIDs);
+//		
+//		ServerResourcesResponse<LocationGWT> locations = getLocationsForDocument(documentID);
+//		
+//		return new SynchronizeResponse<LocationGWT>(changesResponse, locations);
+//	}
+//
+//	public SynchronizeResponse<ScheduleItemGWT> synchronizeDocumentScheduleItems(
+//			int sessionID,
+//			int documentID,
+//			SynchronizeRequest<ScheduleItemGWT> request) throws SessionClosedFromInactivityExceptionGWT, DatabaseException {
+//
+//		assert(documentID >= 0);
+//	
+//		sessions.onActivity(sessionID, documentID);
+//			
+//		Document document = model.findDocumentByID(documentID);
+//		assert (document.getOriginal() != null);
+//		assert(document.getStaffInstructor() != null);
+//		assert(document.getTBALocation() != null);
+//		assert(document.getChooseForMeInstructor() != null);
+//		assert(document.getChooseForMeLocation() != null);
+//		
+//		ClientChangesResponse response = new ClientChangesResponse(addedScheduleItemIDs);
+//		
+//		ServerResourcesResponse<ScheduleItemGWT> scheduleItems = getScheduleItemsForDocument(documentID);
+//		
+//		return new SynchronizeResponse<ScheduleItemGWT>(response, scheduleItems);
+//	}
+//	
 }

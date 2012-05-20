@@ -1,15 +1,13 @@
 package scheduler.view.web.client;
 
 import scheduler.view.web.shared.CompleteWorkingCopyDocumentGWT;
-import scheduler.view.web.shared.CourseGWT;
-import scheduler.view.web.shared.InstructorGWT;
-import scheduler.view.web.shared.LocationGWT;
 import scheduler.view.web.shared.LoginResponse;
 import scheduler.view.web.shared.OriginalDocumentGWT;
-import scheduler.view.web.shared.ScheduleItemGWT;
 import scheduler.view.web.shared.ServerResourcesResponse;
 import scheduler.view.web.shared.SynchronizeRequest;
 import scheduler.view.web.shared.SynchronizeResponse;
+import scheduler.view.web.shared.WorkingDocumentSynchronizeRequest;
+import scheduler.view.web.shared.WorkingDocumentSynchronizeResponse;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -38,24 +36,6 @@ public interface GreetingServiceAsync {
 			boolean allowOverwrite,
 			AsyncCallback<Void> callback);
 
-	void synchronizeDocumentCourses(
-			int sessionID,
-			int documentID,
-			SynchronizeRequest<CourseGWT> request,
-			AsyncCallback<SynchronizeResponse<CourseGWT>> callback);
-
-	void synchronizeDocumentInstructors(
-			int sessionID,
-			int documentID,
-			SynchronizeRequest<InstructorGWT> request,
-			AsyncCallback<SynchronizeResponse<InstructorGWT>> callback);
-
-	void synchronizeDocumentLocations(
-			int sessionID,
-			int documentID,
-			SynchronizeRequest<LocationGWT> request,
-			AsyncCallback<SynchronizeResponse<LocationGWT>> callback);
-
 	void generateRestOfSchedule(
 			int sessionID,
 			int scheduleID,
@@ -63,11 +43,11 @@ public interface GreetingServiceAsync {
 
 	void getAllOriginalDocuments(int sessionID, AsyncCallback<ServerResourcesResponse<OriginalDocumentGWT>> callback);
 
-	void synchronizeDocumentScheduleItems(
+	void loginAndGetAllOriginalDocuments(String username, AsyncCallback<LoginResponse> callback);
+
+	void synchronizeWorkingDocument(
 			int sessionID,
 			int documentID,
-			SynchronizeRequest<ScheduleItemGWT> request,
-			AsyncCallback<SynchronizeResponse<ScheduleItemGWT>> callback);
-
-	void loginAndGetAllOriginalDocuments(String username, AsyncCallback<LoginResponse> callback);
+			WorkingDocumentSynchronizeRequest request,
+			AsyncCallback<WorkingDocumentSynchronizeResponse> callback);
 }

@@ -15,10 +15,6 @@ import scheduler.view.web.shared.ServerResourcesResponse;
 import scheduler.view.web.shared.SynchronizeRequest;
 import scheduler.view.web.shared.SynchronizeResponse;
 
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-
 // This class acts as both a proxy for the network calls, and as a cache.
 public abstract class ResourceCache<ResourceGWT extends Identified> implements ResourceCollection<ResourceGWT> {
 	public interface Observer<ResourceGWT extends Identified> {
@@ -45,11 +41,8 @@ public abstract class ResourceCache<ResourceGWT extends Identified> implements R
 		}
 	}
 
-	boolean deferredSynchronizationEnabled;
-	int nextSyncNumber = 1;
 	final String cachedebugname;
-	private boolean anotherSynchronizeRequested = false;
-	private Integer currentSyncNumber = null;
+	private List<Entry> currentSyncEntriesToAdd = null;
 	
 	class IDAllocator {
 		int nextID = -1;
@@ -66,7 +59,100 @@ public abstract class ResourceCache<ResourceGWT extends Identified> implements R
 	public void addObserver(Observer<ResourceGWT> observer) { observers.add(observer); }
 	public void removeObserver(Observer<ResourceGWT> observer) { observers.remove(observer); }
 	
-	protected abstract void synchronizeWithServer(SynchronizeRequest<ResourceGWT> request, AsyncCallback<SynchronizeResponse<ResourceGWT>> callback);
+//	protected abstract void synchronizeWithServer(SynchronizeRequest<ResourceGWT> request, AsyncCallback<SynchronizeResponse<ResourceGWT>> callback);
+	
+	public SynchronizeRequest<ResourceGWT> startSynchronize() {
+		assert(currentSyncEntriesToAdd == null);
+		
+		currentSyncEntriesToAdd = new LinkedList<Entry>();
+		
+		List<ResourceGWT> addedResources = new LinkedList<ResourceGWT>();
+		Collection<ResourceGWT> editedResources = new LinkedList<ResourceGWT>();
+		Set<Integer> deletedResourcesRealIDs = new TreeSet<Integer>();
+		
+		for (Entry entry : entriesByLocalID.values()) {
+			switch (entry.activity) {
+				case NO_CHANGES:
+					break;
+					
+				case ADDED:
+					assert(entry.realID == null);
+					ResourceGWT realResource = localToReal(cloneResource(entry.localResource));
+					addedResources.add(realResource);
+					currentSyncEntriesToAdd.add(entry);
+					break;
+					
+				case MODIFIED:
+					ResourceGWT resourceWithRealID = localToReal(cloneResource(entry.localResource));
+					editedResources.add(resourceWithRealID);
+					break;
+					
+				case DELETED:
+					deletedResourcesRealIDs.add(entry.realID);
+					break;
+			}
+		}
+
+		for (Entry entry : new LinkedList<Entry>(entriesByLocalID.values())) {
+			switch (entry.activity) {
+				case NO_CHANGES:
+					break;
+					
+				case ADDED:
+				case MODIFIED:
+					entry.activity = EntryActivity.NO_CHANGES;
+					break;
+					
+				case DELETED:
+					entriesByLocalID.remove(entry.localID);
+					
+					assert(entry.realID != null);
+					entriesByRealID.remove(entry.realID);
+					break;
+			}
+		}
+		
+		ClientChangesRequest<ResourceGWT> clientChanges = new ClientChangesRequest<ResourceGWT>(addedResources, editedResources, deletedResourcesRealIDs);
+		SynchronizeRequest<ResourceGWT> request = new SynchronizeRequest<ResourceGWT>(clientChanges);
+		
+		return request;
+	}
+	
+	public void finishSynchronize(SynchronizeResponse<ResourceGWT> response) {
+		assert(response != null);
+		assert(response.changesResponse.addedResourcesIDs != null);
+		assert(response.resourcesOnServer != null);
+		assert(currentSyncEntriesToAdd != null);
+		
+		List<Integer> addedResourcesRealIDs = response.changesResponse.addedResourcesIDs;
+		assert(addedResourcesRealIDs.size() == currentSyncEntriesToAdd.size());
+		
+		for (Pair<Entry, Integer> addedResourceEntryAndRealID : new DoubleIterator<Entry, Integer>(currentSyncEntriesToAdd, addedResourcesRealIDs)) {
+			Entry addedResourceEntry = addedResourceEntryAndRealID.getLeft();
+			Integer addedResourceRealID = addedResourceEntryAndRealID.getRight();
+			
+			addedResourceEntry.realID = addedResourceRealID;
+			
+			assert(!entriesByRealID.containsKey(addedResourceRealID));
+			entriesByRealID.put(addedResourceRealID, addedResourceEntry);
+		}
+		
+		readServerResources(response.resourcesOnServer);
+
+		for (Observer<ResourceGWT> observer : new LinkedList<Observer<ResourceGWT>>(observers))
+			observer.afterSynchronize();
+		
+		currentSyncEntriesToAdd = null;
+	}
+	
+	public boolean needsSynchronize() {
+		for (Entry entry : entriesByLocalID.values())
+			if (entry.activity != EntryActivity.NO_CHANGES)
+				return true;
+		return false;
+	}
+	
+	
 	protected abstract ResourceGWT cloneResource(ResourceGWT source);
 	protected abstract ResourceGWT localToReal(ResourceGWT localResource);
 	protected abstract ResourceGWT realToLocal(ResourceGWT realResource);
@@ -74,7 +160,6 @@ public abstract class ResourceCache<ResourceGWT extends Identified> implements R
 	
 	public ResourceCache(final String cachedebugname, boolean deferredSynchronizationEnabled, ServerResourcesResponse<ResourceGWT> initialResources) {
 		this.cachedebugname = cachedebugname;
-		this.deferredSynchronizationEnabled = deferredSynchronizationEnabled;
 		readServerResources(initialResources);
 	}
 	
@@ -104,17 +189,6 @@ public abstract class ResourceCache<ResourceGWT extends Identified> implements R
 		
 		for (Observer<ResourceGWT> observer : new LinkedList<Observer<ResourceGWT>>(observers))
 			observer.onAnyLocalChange();
-		
-		if (deferredSynchronizationEnabled) {
-			Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
-				public void execute() {
-					synchronizeWithServer();
-				}
-			});
-		}
-		else {
-			synchronizeWithServer();
-		}
 	}
 	
 	public void edit(ResourceGWT localResource) {
@@ -147,17 +221,6 @@ public abstract class ResourceCache<ResourceGWT extends Identified> implements R
 		
 		for (Observer<ResourceGWT> observer : new LinkedList<Observer<ResourceGWT>>(observers))
 			observer.onAnyLocalChange();
-
-		if (deferredSynchronizationEnabled) {
-			Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
-				public void execute() {
-					synchronizeWithServer();
-				}
-			});
-		}
-		else {
-			synchronizeWithServer();
-		}
 	}
 	
 	public void delete(int localResourceID) {
@@ -192,16 +255,16 @@ public abstract class ResourceCache<ResourceGWT extends Identified> implements R
 		for (Observer<ResourceGWT> observer : new LinkedList<Observer<ResourceGWT>>(observers))
 			observer.onAnyLocalChange();
 
-		if (deferredSynchronizationEnabled) {
-			Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
-				public void execute() {
-					synchronizeWithServer();
-				}
-			});
-		}
-		else {
-			synchronizeWithServer();
-		}
+//		if (deferredSynchronizationEnabled) {
+//			Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+//				public void execute() {
+//					synchronizeWithServer();
+//				}
+//			});
+//		}
+//		else {
+//			synchronizeWithServer();
+//		}
 	}
 
 	public Integer localIDToRealID(Integer id) {
@@ -214,105 +277,6 @@ public abstract class ResourceCache<ResourceGWT extends Identified> implements R
 		Entry entry = entriesByRealID.get(id);
 		assert entry != null : "Cache doesn't know about real ID " + id + " so it can't convert to local.";
 		return entry.localID;
-	}
-	
-	public void synchronizeWithServer() {
-		if (currentSyncNumber != null)
-			return;
-		
-		final List<Entry> addedResourcesEntries = new LinkedList<Entry>();
-		
-		List<ResourceGWT> addedResources = new LinkedList<ResourceGWT>();
-		Collection<ResourceGWT> editedResources = new LinkedList<ResourceGWT>();
-		Set<Integer> deletedResourcesRealIDs = new TreeSet<Integer>();
-		
-		for (Entry entry : entriesByLocalID.values()) {
-			switch (entry.activity) {
-				case NO_CHANGES:
-					break;
-					
-				case ADDED:
-					assert(entry.realID == null);
-					ResourceGWT realResource = localToReal(cloneResource(entry.localResource));
-					addedResources.add(realResource);
-					addedResourcesEntries.add(entry);
-					break;
-					
-				case MODIFIED:
-					ResourceGWT resourceWithRealID = localToReal(cloneResource(entry.localResource));
-					editedResources.add(resourceWithRealID);
-					break;
-					
-				case DELETED:
-					deletedResourcesRealIDs.add(entry.realID);
-					break;
-			}
-		}
-		
-		if (anotherSynchronizeRequested || !addedResources.isEmpty() || !editedResources.isEmpty() || !deletedResourcesRealIDs.isEmpty()) {
-			anotherSynchronizeRequested = false;
-			currentSyncNumber = nextSyncNumber++;
-
-			for (Entry entry : new LinkedList<Entry>(entriesByLocalID.values())) {
-				switch (entry.activity) {
-					case NO_CHANGES:
-						break;
-						
-					case ADDED:
-					case MODIFIED:
-						entry.activity = EntryActivity.NO_CHANGES;
-						break;
-						
-					case DELETED:
-						entriesByLocalID.remove(entry.localID);
-						
-						assert(entry.realID != null);
-						entriesByRealID.remove(entry.realID);
-						break;
-				}
-			}
-			
-			ClientChangesRequest<ResourceGWT> clientChanges = new ClientChangesRequest<ResourceGWT>(addedResources, editedResources, deletedResourcesRealIDs);
-			SynchronizeRequest<ResourceGWT> request = new SynchronizeRequest<ResourceGWT>(clientChanges);
-			
-			synchronizeWithServer(request, new AsyncCallback<SynchronizeResponse<ResourceGWT>>() {
-				@Override
-				public void onFailure(Throwable caught) {
-					assert(caught != null);
-					Window.alert("Failed to send updates to server! " + caught);
-				}
-				
-				@Override
-				public void onSuccess(SynchronizeResponse<ResourceGWT> response) {
-					assert(response != null);
-					assert(response.changesResponse.addedResourcesIDs != null);
-					assert(response.resourcesOnServer != null);
-					assert(currentSyncNumber != null);
-					
-					List<Integer> addedResourcesRealIDs = response.changesResponse.addedResourcesIDs;
-					assert(addedResourcesRealIDs.size() == addedResourcesEntries.size());
-					
-					for (Pair<Entry, Integer> addedResourceEntryAndRealID : new DoubleIterator<Entry, Integer>(addedResourcesEntries, addedResourcesRealIDs)) {
-						Entry addedResourceEntry = addedResourceEntryAndRealID.getLeft();
-						Integer addedResourceRealID = addedResourceEntryAndRealID.getRight();
-						
-						addedResourceEntry.realID = addedResourceRealID;
-						
-						assert(!entriesByRealID.containsKey(addedResourceRealID));
-						entriesByRealID.put(addedResourceRealID, addedResourceEntry);
-					}
-					
-					readServerResources(response.resourcesOnServer);
-
-					for (Observer<ResourceGWT> observer : new LinkedList<Observer<ResourceGWT>>(observers))
-						observer.afterSynchronize();
-					
-					currentSyncNumber = null;
-
-					synchronizeWithServer();
-				}
-			});
-		}
 	}
 	
 	private void readServerResources(ServerResourcesResponse<ResourceGWT> response) {
@@ -328,8 +292,6 @@ public abstract class ResourceCache<ResourceGWT extends Identified> implements R
 				ResourceGWT localResource = cloneResource(resourceOnServer);
 				localResource.setID(idAllocator.allocate());
 
-				System.out.println("got a new course from server! remote id " + resourceRealID + " and now its local id is " + localResource.getID());
-				
 				Entry newEntry = new Entry(localResource.getID(), resourceRealID, localResource, EntryActivity.NO_CHANGES);
 				entriesByRealID.put(resourceRealID, newEntry);
 				entriesByLocalID.put(localResource.getID(), newEntry);
@@ -393,35 +355,5 @@ public abstract class ResourceCache<ResourceGWT extends Identified> implements R
 			for (Observer<ResourceGWT> observer : new LinkedList<Observer<ResourceGWT>>(observers))
 				observer.onResourceDeleted(existingEntry.localID, false);
 		}
-	}
-	
-	public void forceSynchronize(final AsyncCallback<Void> callback) {
-		if (callback != null) {
-			final int syncNumberToCallAfter = nextSyncNumber;
-			
-			addObserver(new Observer<ResourceGWT>() {
-				@Override
-				public void onAnyLocalChange() { }
-				@Override
-				public void onResourceAdded(ResourceGWT resource, boolean addedLocally) { }
-				@Override
-				public void onResourceEdited(ResourceGWT resource, boolean editedLocally) { }
-				@Override
-				public void onResourceDeleted(int localID, boolean deletedLocally) { }
-				@Override
-				public void afterSynchronize() {
-					assert(currentSyncNumber <= syncNumberToCallAfter);
-					
-					if (currentSyncNumber == syncNumberToCallAfter) {
-						removeObserver(this);
-						callback.onSuccess(null);
-					}
-				}
-			});
-		}
-		
-		anotherSynchronizeRequested = true;
-		
-		synchronizeWithServer();
 	}
 }

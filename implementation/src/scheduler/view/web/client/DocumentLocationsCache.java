@@ -3,11 +3,6 @@ package scheduler.view.web.client;
 import scheduler.view.web.client.views.resources.ResourceCache;
 import scheduler.view.web.shared.LocationGWT;
 import scheduler.view.web.shared.ServerResourcesResponse;
-import scheduler.view.web.shared.SynchronizeRequest;
-import scheduler.view.web.shared.SynchronizeResponse;
-
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 
 // Called "Document"LocationsCache because it only deals with the Locations for a given document.
 public class DocumentLocationsCache extends ResourceCache<LocationGWT> {
@@ -41,13 +36,6 @@ public class DocumentLocationsCache extends ResourceCache<LocationGWT> {
 		LocationGWT localLocation = new LocationGWT(realResource);
 		localLocation.setID(realIDToLocalID(localLocation.getID()));
 		return localLocation;
-	}
-
-	@Override
-	protected void synchronizeWithServer(
-			SynchronizeRequest<LocationGWT> request,
-			AsyncCallback<SynchronizeResponse<LocationGWT>> callback) {
-		service.synchronizeDocumentLocations(sessionID, workingDocumentRealID, request, callback);
 	}
 
 	@Override

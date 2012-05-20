@@ -21,6 +21,8 @@ import scheduler.view.web.shared.ScheduleItemGWT;
 import scheduler.view.web.shared.ServerResourcesResponse;
 import scheduler.view.web.shared.SynchronizeRequest;
 import scheduler.view.web.shared.SynchronizeResponse;
+import scheduler.view.web.shared.WorkingDocumentSynchronizeRequest;
+import scheduler.view.web.shared.WorkingDocumentSynchronizeResponse;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -748,33 +750,6 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 	}
 
 	@Override
-	public void synchronizeDocumentCourses(
-			int sessionID,
-			int documentID,
-			SynchronizeRequest<CourseGWT> request,
-			AsyncCallback<SynchronizeResponse<CourseGWT>> callback) {
-		callback.onSuccess(new SynchronizeResponse<CourseGWT>(new ClientChangesResponse(new LinkedList<Integer>()), new ServerResourcesResponse<CourseGWT>(COURSES)));
-	}
-
-	@Override
-	public void synchronizeDocumentInstructors(
-			int sessionID,
-			int documentID,
-			SynchronizeRequest<InstructorGWT> request,
-			AsyncCallback<SynchronizeResponse<InstructorGWT>> callback) {
-		callback.onSuccess(new SynchronizeResponse<InstructorGWT>(new ClientChangesResponse(new LinkedList<Integer>()), new ServerResourcesResponse<InstructorGWT>(INSTRUCTORS)));
-	}
-
-	@Override
-	public void synchronizeDocumentLocations(
-			int sessionID,
-			int documentID,
-			SynchronizeRequest<LocationGWT> request,
-			AsyncCallback<SynchronizeResponse<LocationGWT>> callback) {
-		callback.onSuccess(new SynchronizeResponse<LocationGWT>(new ClientChangesResponse(new LinkedList<Integer>()), new ServerResourcesResponse<LocationGWT>(LOCATIONS)));
-	}
-
-	@Override
 	public void synchronizeOriginalDocuments(
 			int sessionID,
 			SynchronizeRequest<OriginalDocumentGWT> request,
@@ -798,16 +773,16 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 	}
 
 	@Override
-	public void synchronizeDocumentScheduleItems(
-			int sessionID,
-			int documentID,
-			SynchronizeRequest<ScheduleItemGWT> request,
-			AsyncCallback<SynchronizeResponse<ScheduleItemGWT>> callback) {
+	public void loginAndGetAllOriginalDocuments(String username, AsyncCallback<LoginResponse> callback) {
 		callback.onFailure(new UnsupportedOperationException("Method not implemented in this test double."));
 	}
 
 	@Override
-	public void loginAndGetAllOriginalDocuments(String username, AsyncCallback<LoginResponse> callback) {
+	public void synchronizeWorkingDocument(
+			int sessionID,
+			int documentID,
+			WorkingDocumentSynchronizeRequest request,
+			AsyncCallback<WorkingDocumentSynchronizeResponse> callback) {
 		callback.onFailure(new UnsupportedOperationException("Method not implemented in this test double."));
 	}
 

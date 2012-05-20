@@ -118,7 +118,7 @@ public class TestCaches extends TestCase {
 				NetworkEvent netEvent = (NetworkEvent)event;
 				switch (netEvent.type) {
 					case CLIENT_SEND_REQUEST:
-						cache.forceSynchronize(null);
+						cache.finishSynchronize(service.synchronizeOriginalDocuments(sessionID, cache.startSynchronize()));
 						break;
 					case SERVER_RECEIVES_REQUEST_AND_SENDS_RESPONSE:
 						asyncConnector.serverReceiveRequesAndSendResponset();
