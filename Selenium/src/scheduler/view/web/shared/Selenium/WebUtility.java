@@ -221,13 +221,13 @@ public abstract class WebUtility {
 		setResourceTableTextCell(driver, view, row0Based, 2, department);
 		setResourceTableTextCell(driver, view, row0Based, 3, catalogNum);
 		setResourceTableTextCell(driver, view, row0Based, 4, courseName);
-		setResourceTableTextCell(driver, view, row0Based, 5, numSections);
-		setResourceTableTextCell(driver, view, row0Based, 6, wtu);
-		setResourceTableTextCell(driver, view, row0Based, 7, scu);
-		setResourceTableMultiselectCell(driver, view, row0Based, 8, dayCombinations);
-		setResourceTableTextCell(driver, view, row0Based, 9, hoursPerWeek);
-		setResourceTableTextCell(driver, view, row0Based, 10, maxEnrollment);
-		setResourceTableSelectCell(driver, view, row0Based, 11, type);
+		setResourceTableSelectCell(driver, view, row0Based, 5, type);
+		setResourceTableTextCell(driver, view, row0Based, 6, numSections);
+		setResourceTableTextCell(driver, view, row0Based, 7, wtu);
+		setResourceTableTextCell(driver, view, row0Based, 8, scu);
+		setResourceTableMultiselectCell(driver, view, row0Based, 9, dayCombinations);
+		setResourceTableTextCell(driver, view, row0Based, 10, hoursPerWeek);
+		setResourceTableTextCell(driver, view, row0Based, 11, maxEnrollment);
 		setResourceTableMultiselectCell(driver, view, row0Based, 12, usedEquipment);
 //		
 	}
