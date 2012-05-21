@@ -782,13 +782,9 @@ public class GreetingServiceImplInner {
 			if (location.isSchedulable())
 				schedulableLocations.add(location);
 		
-		Set<Integer> existingScheduleItemIDs = new TreeSet<Integer>();
-		for (ScheduleItem item : document.getScheduleItems())
-			existingScheduleItemIDs.add(item.getID());
-		
 		Vector<ScheduleItem> generated = GenerateEntryPoint.generate(model, document, document.getScheduleItems(), schedulableCourses, schedulableInstructors, schedulableLocations);
 		for (ScheduleItem item : generated) {
-			if (!existingScheduleItemIDs.contains(item.getID())) {
+			if (item.isTransient()) {
 				item.setDocument(document);
 				item.insert();
 			}
