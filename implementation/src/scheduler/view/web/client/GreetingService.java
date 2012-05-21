@@ -48,4 +48,7 @@ public interface GreetingService extends RemoteService {
 	SynchronizeResponse<OriginalDocumentGWT> synchronizeOriginalDocuments(
 			int sessionID,
 			SynchronizeRequest<OriginalDocumentGWT> request) throws SessionClosedFromInactivityExceptionGWT;
+	
+	Integer prepareCSVExport(int documentID);
+
 }

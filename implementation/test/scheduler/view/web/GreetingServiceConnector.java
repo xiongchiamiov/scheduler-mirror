@@ -152,5 +152,12 @@ public class GreetingServiceConnector implements GreetingServiceAsync {
 			AsyncCallback<WorkingDocumentSynchronizeResponse> callback) {
 		throw new UnsupportedOperationException();
 	}
+	
+
+	@Override
+	public void prepareCSVExport(int documentID,
+			AsyncCallback<Integer> asyncCallback) {
+		// Left blank due to not being used here
+	}
 
 }

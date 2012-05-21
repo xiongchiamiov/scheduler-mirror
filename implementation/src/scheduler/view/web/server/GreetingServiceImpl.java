@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.util.Properties;
 
 import scheduler.view.web.shared.GenerateException;
+import scheduler.model.CSVExporter;
+import scheduler.model.Model;
 import scheduler.model.db.DatabaseException;
 import scheduler.view.web.client.GreetingService;
 import scheduler.view.web.client.InvalidLoginException;
@@ -360,5 +362,25 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements Greetin
 			System.out.println("End GreetingServiceImpl.synchronizeDocumentCourses(" + documentID + ")");
 		
 		return result;
+	}
+	
+	@Override
+	public Integer prepareCSVExport(int csvinfo) {
+		Integer csvInt = -1; //Result of calling CSV Download to save CSV string
+		
+		try {
+			Model model = inner.model;
+			
+			CSVExporter export = new CSVExporter();
+			
+			csvInt = CSVDownload.save(export.export(model, model.findDocumentByID(csvinfo)));
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (DatabaseException e) {
+			e.printStackTrace();
+		}
+
+		return csvInt;
 	}
 }

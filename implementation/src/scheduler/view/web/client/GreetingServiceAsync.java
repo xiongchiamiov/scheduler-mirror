@@ -50,4 +50,7 @@ public interface GreetingServiceAsync {
 			int documentID,
 			WorkingDocumentSynchronizeRequest request,
 			AsyncCallback<WorkingDocumentSynchronizeResponse> callback);
+
+	void prepareCSVExport(int documentID, AsyncCallback<Integer> asyncCallback);
+
 }

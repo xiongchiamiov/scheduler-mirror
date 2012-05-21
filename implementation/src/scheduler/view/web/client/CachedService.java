@@ -13,6 +13,7 @@ import scheduler.view.web.shared.ServerResourcesResponse;
 import scheduler.view.web.shared.SynchronizeRequest;
 import scheduler.view.web.shared.SynchronizeResponse;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -124,5 +125,34 @@ public class CachedService {
 				callback.onSuccess(openedDocument);
 			}
 		});
+	}
+	
+	/**
+	 * export - Saves CSV to user's computer.
+	 * @param docid
+	 *            ID of document to export
+	 * @return
+	 */
+	public void exportCSV(int docid) {
+		//Calls greeting serviceImpl to get document data which saves data into CSVDownload
+		//then returns control to here and saves CSV to user's computer.
+		mService.prepareCSVExport(docid, new AsyncCallback<Integer>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				com.google.gwt.user.client.Window
+						.alert("Failed to get data for CSV");
+			}
+
+			@Override
+			public void onSuccess(Integer result) {
+				if (result >= 0) {
+					com.google.gwt.user.client.Window.open(
+							GWT.getModuleBaseURL() + "CSVDownload", "", "");
+					result = 1;
+				}
+			}
+		});
+
 	}
 }

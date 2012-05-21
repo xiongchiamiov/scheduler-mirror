@@ -37,6 +37,8 @@ public class CSVDownload extends HttpServlet {
         	
         }catch(Exception e){}
         
+        contents = map.get(counter );
+        
 		// write stream to a byte array
 		byte[] byteArr = contents.getBytes();
 		
@@ -69,7 +71,6 @@ public class CSVDownload extends HttpServlet {
 		
 		// get counter
 		int i = counter;
-		
 		// increment counter
 		if(counter >= Integer.MAX_VALUE){
 			counter = 0;
@@ -79,8 +80,8 @@ public class CSVDownload extends HttpServlet {
 		}
 		
 		// put settings xml into the map
-		map.put(i, xml);
-		
-		return i;
+		map.put(counter, xml);
+
+		return counter;
 	}
 }

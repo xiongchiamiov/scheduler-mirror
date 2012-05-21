@@ -786,4 +786,10 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 		callback.onFailure(new UnsupportedOperationException("Method not implemented in this test double."));
 	}
 
+	
+	@Override
+	public void prepareCSVExport(int documentID,
+			AsyncCallback<Integer> asyncCallback) {
+		//Left empty due to not being used here
+	}
 }

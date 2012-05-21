@@ -180,7 +180,7 @@ public class AdminScheduleNavView extends VerticalPanel {
 		MenuItem exportItem = new MenuItem("Export as...", "icons/16/export1.png");
 		exportItem.addClickHandler(new ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				ExportDialog.displayExportPopup();
+				ExportDialog.displayExportPopup(service, document);
 			}
 		});
 		
