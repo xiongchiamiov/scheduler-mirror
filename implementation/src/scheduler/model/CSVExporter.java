@@ -163,7 +163,6 @@ public class CSVExporter {
 		}
 
 		int newIndex = instructorsTimePrefs.size();
-		// instructorsTimePrefsRowIndexByID.put(strings, newindex);
 		instructorsTimePrefs.add(strings);
 		return "timePrefs#" + newIndex;
 	}
@@ -189,7 +188,6 @@ public class CSVExporter {
 		}
 
 		int newIndex = instructorsCoursePrefs.size();
-		// instructorsCourseprefsRowIndexByID.put(strings, newIndex);
 
 		instructorsCoursePrefs.add(strings);
 
@@ -228,7 +226,6 @@ public class CSVExporter {
 	private String compileScheduleItem(ScheduleItem item,
 			Collection<ScheduleItem> others) throws DatabaseException {
 
-		// int index = scheduleItemsRowIndexByID.get(item.getID());
 		int index = scheduleItems.indexOf(item);
 
 		if (index < 0) {
@@ -291,20 +288,7 @@ public class CSVExporter {
 
 		int index = courses.indexOf(course);
 		if (index < 0) {
-			assert (false);
-			/*
-			 * The following was commented out because there is no longer a
-			 * "getLab()" method for a Course. Instead the getLectureID method
-			 * should be used.
-			 * 
-			 * If a course is a lecture, the value of the lectureID will be -1.
-			 * If the course is a lab, the value of the lectureID will be equal
-			 * to the lecture id.
-			 * 
-			 * String labIndexString = course.getLab() == null ? "" : "course#"
-			 * + courses.indexOf(course.getLab());
-			 */
-
+		
 			String dayPatterns = "";
 			for (Set<Day> pattern : course.getDayPatterns()) {
 				if (!dayPatterns.equals(""))
@@ -313,15 +297,9 @@ public class CSVExporter {
 			}
 
 			String association;
-			// if (course.getLecture() == null) {
+		
 			association = "Course# -1";
-			// } else {
-			// association = compileAssociatedCourse(
-			// findCourseByID(course.getLecture().getID(), others),
-			// others);// for associations
-
-			// }
-
+		
 			index = courses.size();
 			courses.add(new String[] { "course#" + index,
 
@@ -332,7 +310,6 @@ public class CSVExporter {
 					course.getMaxEnrollment(), association });
 			courseRowIndexByID.put(course.getID(), index);
 
-			assert (false);
 
 		}
 
@@ -481,7 +458,6 @@ public class CSVExporter {
 			writer.endRecord();
 			writer.writeComment(CSVStructure.INSTRUCTOR_COURSE_PREFS_MARKER);
 
-			// for (String[][] prefs : instructorsCoursePrefs)
 			String[][] prefs = instructorsCoursePrefs.get(i);
 			for (String[] rec : prefs)
 				writer.writeRecord(rec);
