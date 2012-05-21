@@ -530,27 +530,28 @@ public class TimePrefsWidget extends VerticalPanel {
 		System.err.println("TRY TO SAVE TIME PREFERENCE");
 		workingCopyDocument.editInstructor(instructor);
 		
-		workingCopyDocument.forceSynchronize(new AsyncCallback<Void>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				// popup.hide();
-				System.err.println("NOT TO SAVE TIME PREFERENCE");
-				Window.alert("Error saving instructor: " + caught.getMessage());
-			}
-
-			@Override
-			public void onSuccess(Void result) {
-				savedInstructor = new InstructorGWT(instructor);
-				//instructor = new InstructorGWT(instructor);
-				//redoColors();
-				System.err.println("SAVED TIME PREFERENCE");
-				System.out.println("saved time preferences... ?!?");
-			}
-		});
+//		workingCopyDocument.forceSynchronize(new AsyncCallback<Void>() {
+//			@Override
+//			public void onFailure(Throwable caught) {
+//				// popup.hide();
+//				System.err.println("NOT TO SAVE TIME PREFERENCE");
+//				Window.alert("Error saving instructor: " + caught.getMessage());
+//			}
+//
+//			@Override
+//			public void onSuccess(Void result) {
+//				savedInstructor = new InstructorGWT(instructor);
+//				//instructor = new InstructorGWT(instructor);
+//				//redoColors();
+//				System.err.println("SAVED TIME PREFERENCE");
+//				System.out.println("saved time preferences... ?!?");
+//			}
+//		});
 	}
 	
-	public void setInstructor(InstructorGWT instructor)
+	public void setDataSources(CachedOpenWorkingCopyDocument doc, InstructorGWT instructor)
 	{
+		this.workingCopyDocument = doc;
 		instructor.verify();
 		this.instructor = instructor;
 		this.savedInstructor = new InstructorGWT(instructor);
@@ -569,13 +570,6 @@ public class TimePrefsWidget extends VerticalPanel {
 		};
 		strategy.getInstructor().verify();
 		strategy.getSavedInstructor().verify();
-		redraw();
-	}
-	
-	public void setDocument(CachedOpenWorkingCopyDocument doc)
-	{
-		instructor.verify();
-		this.workingCopyDocument = doc;
 		redraw();
 	}
 }

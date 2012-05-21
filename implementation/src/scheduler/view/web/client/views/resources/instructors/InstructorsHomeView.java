@@ -119,8 +119,16 @@ public class InstructorsHomeView extends VerticalPanel implements View
 					public void onSuccess(CachedOpenWorkingCopyDocument result) {
 						for (InstructorGWT i : result.getInstructors(true)) {
 							if (i.getUsername().equals(service.username)) {
+								
 								sanityCheckInstructor(result, i);
 								setInstructor(i);
+								
+								for(CourseGWT course : result.getCourses())
+								{
+									System.out.println("---------------" + course.getCourseName() + ": " +
+											instructor.getCoursePreferences().get(course.getID()));
+								}
+								
 								preferencesButtonClicked(result);
 								break;
 							}
@@ -136,6 +144,7 @@ public class InstructorsHomeView extends VerticalPanel implements View
 	
 	public void preferencesButtonClicked(CachedOpenWorkingCopyDocument doc) {
 		
+		// the window is automatically shown when the synchronization is done
 		if(this.iipv == null)
 		{
 			this.prefsWindow = new Window();
@@ -176,14 +185,11 @@ public class InstructorsHomeView extends VerticalPanel implements View
 		}
 		else
 		{
-			this.iipv.setDocument(doc);
-			this.iipv.setInstructor(instructor);
+			this.iipv.synchronize(doc, instructor);
 		}
 		
 		this.prefsWindow.setTitle("Instructor Preferences - <i>"
 				+ doc.getDocument().getName() + "</i>");
-		
-//		this.prefsWindow.show();
 	}
 	
 	/**
@@ -191,12 +197,17 @@ public class InstructorsHomeView extends VerticalPanel implements View
 	 */
 	private void savePreferences()
 	{
-		this.iipv.save();
+//		this.iipv.save();
 		this.iipv.getDocument().copyIntoAssociatedOriginalDocument(new AsyncCallback<Void>() {
 			
 			@Override
 			public void onSuccess(Void result) {
 				com.google.gwt.user.client.Window.alert("Successfully saved!");
+				for(CourseGWT course : InstructorsHomeView.this.iipv.getDocument().getCourses())
+				{
+					System.out.println("---------------" + course.getCourseName() + ": " +
+							instructor.getCoursePreferences().get(course.getID()));
+				}
 			}
 			
 			@Override

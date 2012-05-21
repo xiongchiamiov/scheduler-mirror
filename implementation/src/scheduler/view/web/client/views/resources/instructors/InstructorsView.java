@@ -217,7 +217,7 @@ public class InstructorsView extends VLayout {
 	}
 
 	public void preferencesButtonClicked(InstructorGWT instructor) {
-		
+		// the window is automatically shown when the synchronization is done
 		if(this.iipv == null)
 		{
 			this.prefsWindow = new Window();
@@ -236,18 +236,19 @@ public class InstructorsView extends VLayout {
 			
 			this.prefsWindow.addItem(scroller);
 			this.iipv.afterPush(prefsWindow);
+
+			this.prefsWindow.setAutoSize(false);
+			this.prefsWindow.setSize("730px", height+"px");
 		}
 		else
 		{
-			this.iipv.setInstructor(instructor);
+			this.iipv.synchronize(openDocument, instructor);
 		}
 		
 		this.prefsWindow.setTitle("Instructor Preferences - <i>"
 				+ instructor.getUsername() + "</i> ("
 				+ instructor.getFirstName() + " " + instructor.getLastName()
 				+ ")");
-		
-//		this.prefsWindow.show();
 	}
 
 	/**

@@ -56,16 +56,19 @@ public class InstructorPreferencesView extends VerticalPanel {
 				DOM.setElementAttribute(instructorName.getElement(), "id", "instructorName");
 				InstructorPreferencesView.this.add(instructorName);
 
-				InstructorPreferencesView.this.timePrefs = new TimePrefsWidget(openDocument, InstructorPreferencesView.this.instructor);
+				InstructorPreferencesView.this.timePrefs = new TimePrefsWidget(
+						InstructorPreferencesView.this.openDocument, 
+						InstructorPreferencesView.this.instructor);
 				
 				InstructorPreferencesView.this.setSpacing(20);
 
 				InstructorPreferencesView.this.add(timePrefs);
 				InstructorPreferencesView.this.setStyleName("preferencesPanel");
 				
-				InstructorPreferencesView.this.coursePrefs = new CoursePrefsWidget(openDocument, InstructorPreferencesView.this.instructor);
+				InstructorPreferencesView.this.coursePrefs = new CoursePrefsWidget(
+						InstructorPreferencesView.this.openDocument, 
+						InstructorPreferencesView.this.instructor);
 				InstructorPreferencesView.this.coursePrefs.setStyleName("otherCenterness");
-				InstructorPreferencesView.this.coursePrefs.setParent(InstructorPreferencesView.this.parent);
 				InstructorPreferencesView.this.coursePrefs.afterPush();
 
 				HTML cprefs = new HTML("Instructor Course Preferences");
@@ -97,13 +100,11 @@ public class InstructorPreferencesView extends VerticalPanel {
 				Window.alert("failed to synchronize document");
 			}
 		});
-		this.add(new HTML("<span style=\"display: block; height: 20px;\"></span>"));
+
 	}
 	
 	private void setParent(com.smartgwt.client.widgets.Window parent) {
 		this.parent = parent;
-		if(this.coursePrefs != null)
-			this.coursePrefs.setParent(parent);
 	}
 	
 	public boolean isReady()
@@ -111,23 +112,6 @@ public class InstructorPreferencesView extends VerticalPanel {
 		return this.closebutton != null;
 	}
 	
-	
-	public void setInstructor(InstructorGWT instructor) {
-		
-		instructor.verify();
-		this.instructor = instructor;
-
-		this.timePrefs.setInstructor(instructor);
-		this.coursePrefs.setInstructor(instructor);
-	}
-	
-	public void setDocument(CachedOpenWorkingCopyDocument doc)
-	{
-		this.openDocument = doc;
-		this.timePrefs.setDocument(doc);
-		this.coursePrefs.setDocument(doc);
-	}
-
 	// @Override
 	public boolean canPop() {
 		return true;
@@ -167,9 +151,38 @@ public class InstructorPreferencesView extends VerticalPanel {
 		return this.openDocument;
 	}
 	
-	public void save()
+	public void synchronize(final CachedOpenWorkingCopyDocument doc,
+                             final InstructorGWT instructor)
 	{
-		this.timePrefs.save();
-		this.coursePrefs.save();
+		this.openDocument = doc;
+		instructor.verify();
+		this.instructor = instructor;
+		this.openDocument.forceSynchronize(new AsyncCallback<Void>() {
+			
+			@Override
+			public void onSuccess(Void result) {
+				
+				if((openDocument.getCourses().size() != 0)
+				  ||(com.google.gwt.user.client.Window.confirm(
+							"The database doesn't contain any course right now. "
+							+ "Do you want to proceed?")))
+				{
+					InstructorPreferencesView.this.coursePrefs.setDataSources(doc, instructor);
+					InstructorPreferencesView.this.timePrefs.setDataSources(doc, instructor);
+					
+					parent.show();
+				}
+				else
+				{
+					parent.hide();
+				}
+			}
+			
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert("failed to synchronize document");
+			}
+		});
+		parent.show();
 	}
 }
