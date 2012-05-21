@@ -98,8 +98,8 @@ public class LocationsView extends VLayout {
 		equipmentField.setAlign(Alignment.CENTER);
 		equipmentField.setDefaultValue("");
 
-		grid.setFields(idField, schedulableField, roomField, typeField,
-				maxOccupancyField, equipmentField);
+		grid.setFields(idField, roomField, typeField,
+				maxOccupancyField, equipmentField, schedulableField);
 
 		this.addMember(grid);
 		// this.setHorizontalAlignment(ALIGN_DEFAULT);

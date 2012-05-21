@@ -206,9 +206,9 @@ public class InstructorsView extends VLayout {
 		instructorPrefsField.setAlign(Alignment.CENTER);
 		instructorPrefsField.setCanEdit(false);
 
-		grid.setFields(selectorField, schedulableField, lastNameField,
+		grid.setFields(selectorField, lastNameField,
 				firstNameField, usernameField, maxWTUField,
-				instructorPrefsField);
+				instructorPrefsField, schedulableField);
 
 		this.addMember(grid);
 		// this.setHorizontalAlignment(ALIGN_DEFAULT);
