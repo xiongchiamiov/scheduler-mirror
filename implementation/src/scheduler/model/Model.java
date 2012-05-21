@@ -269,6 +269,7 @@ public class Model {
 			for (Entry<IDBCourse, IDBCoursePreference> existingDocumentEntry : database.findCoursePreferencesByCourseForInstructor(existingDocumentInstructor).entrySet()) {
 				IDBCourse existingDocumentCoursePreferenceCourse = existingDocumentEntry.getKey();
 				IDBCoursePreference existingDocumentCoursePreference = existingDocumentEntry.getValue();
+				System.out.println("exist: " + existingDocumentCoursePreferenceCourse.getName() + " pref " + existingDocumentCoursePreference.getPreference());
 				IDBCourse newDocumentCourse = newDocumentCoursesByExistingDocumentCourseIDs.get(existingDocumentCoursePreferenceCourse.getID());
 				IDBCoursePreference newDocumentCoursePreference = database.assembleCoursePreference(existingDocumentCoursePreference.getPreference());
 				database.insertCoursePreference(newDocumentInstructor, newDocumentCourse, newDocumentCoursePreference);
@@ -280,6 +281,8 @@ public class Model {
 				IDBTimePreference newDocumentTimePreference = database.assembleTimePreference(existingDocumentTimePreference.getPreference());
 				database.insertTimePreference(newDocumentInstructor, time, newDocumentTimePreference);
 			}
+			
+			database.updateInstructor(newDocumentInstructor);
 		}
 		
 		// Schedule Items

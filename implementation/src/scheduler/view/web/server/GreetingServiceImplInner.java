@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.Vector;
@@ -663,6 +664,13 @@ public class GreetingServiceImplInner {
 		assert(workingCopyDocument.getChooseForMeInstructor() != null);
 		assert(workingCopyDocument.getChooseForMeLocation() != null);
 		
+		System.out.println("Working doc before:");
+		for (Instructor instructor : workingCopyDocument.getInstructors(true)) {
+			System.out.println("   Instructor " + instructor.getUsername() + ":");
+			for (Entry<Integer, Integer> entry : instructor.getCoursePreferences().entrySet())
+				System.out.println("      course " + entry.getKey() + " pref is " + entry.getValue());
+		}
+		
 		Document originalDocument = workingCopyDocument.getOriginal();
 		
 		originalDocument.deleteContents(false);
@@ -671,6 +679,13 @@ public class GreetingServiceImplInner {
 		
 		originalDocument.update();
 		workingCopyDocument.update();
+
+		System.out.println("Orig doc before:");
+		for (Instructor instructor : originalDocument.getInstructors(true)) {
+			System.out.println("   Instructor " + instructor.getUsername() + ":");
+			for (Entry<Integer, Integer> entry : instructor.getCoursePreferences().entrySet())
+				System.out.println("      course " + entry.getKey() + " pref is " + entry.getValue());
+		}
 		
 		assert(originalDocument.getStaffInstructor() != null);
 		assert(originalDocument.getTBALocation() != null);
