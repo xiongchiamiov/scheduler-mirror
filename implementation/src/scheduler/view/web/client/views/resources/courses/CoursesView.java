@@ -174,6 +174,33 @@ public class CoursesView extends VLayout {
 						
 						grid.setEditValues(event.getRowNum(), result);
 					}
+					else {
+						if (grid.getEditedCell(event.getRowNum(), "dayCombinations").toString().length() != 0) {
+							Window.alert("Warning: By changing your SCU value your day combination data has been changed");
+						}
+						
+						// Change day combos
+						String scuString = (String) grid.getEditedCell(event.getRowNum(), "scu");
+						String type = (String) grid.getEditedCell(event.getRowNum(), "type");
+	
+						DSRequest requestProperties = new DSRequest();
+						requestProperties.setOldValues(grid.getEditedRecord(event.getRowNum()));
+	
+						String[] values = PossibleDayPatternsFunction
+								.getValues(type, scuString).values()
+								.toArray(new String[0]);
+						Record record = grid.getEditedRecord(event.getRowNum());
+						assert (record.getAttributeAsInt("id") != null);
+						record.setAttribute("dayCombinations", values);
+						// Update hours per week if it is still on default
+						String hours = (String) grid.getEditedCell(event.getRowNum(), "hoursPerWeek");
+						if (hours.equals("4")) {
+							// It is on default value, set to SCU
+							record.setAttribute("hoursPerWeek", scuString);
+						}
+	
+						grid.updateData(record, null, requestProperties);
+					}
 				}
 			}
 		});
