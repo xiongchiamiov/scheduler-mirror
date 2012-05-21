@@ -3,6 +3,8 @@ package scheduler.model.algorithm;
 import java.util.Collection;
 import java.util.Vector;
 
+import com.sun.xml.internal.bind.v2.model.core.ID;
+import scheduler.model.Day;
 import scheduler.model.Course;
 import scheduler.model.Document;
 import scheduler.model.Instructor;
@@ -50,10 +52,29 @@ public class GenerateEntryPoint {
 	    	} catch (BadCourseDataException e) {
 	    		e.printStackTrace();
 	    	}
-	    	
 	    }
-
-	    //how to defensively access components of a scheduleitem?
+	        
+	    //check schedule items - note, this should never get the staff, choose for me or tba items since they'll never be 
+	    //in the given lists
+	    for(InstructorDecorator id : insD)
+		    for(ScheduleItem s: s_items) 
+		    	if(id.equals(s.getInstructor())) {
+		    		//System.out.println("+++found the instructor+++ " + s.getInstructor().getFirstName());
+		    		//update the instructor decorator
+		    		id.addWTU(new Integer(s.getCourse().getWTUInt()));
+		    		//System.out.println("WTUs for id: " + id.getCurWTU());
+		    		TimeRange tmp = new TimeRange(s.getStartHalfHour(), s.getEndHalfHour());
+		    		id.getAvailability().book(new Week(s.getDays()), tmp);
+		    		//remove the course from the course collection, it's been scheduled
+		    		c_list.remove(s.getCourse());
+		    	}
+	    //update the location but don't remove it
+	    for(LocationDecorator ld : locD) 
+	    	for(ScheduleItem s : s_items) 
+	    		if(ld.equals(s.getLocation())) {
+	    			TimeRange tmp = new TimeRange(s.getStartHalfHour(), s.getEndHalfHour());
+	    			ld.getAvailability().book(new Week(s.getDays()), tmp);
+	    		}
 	    
 		return Generate.generate(model, document, s_items, c_list, insD, locD);
 	}
@@ -155,7 +176,7 @@ public class GenerateEntryPoint {
 	    
 	    //there should be an extra reqt..it can't be higher than soemthing (check)
 	    
-	    if(c.getNumHalfHoursPerWeek() == null || c.getNumHalfHoursPerWeekInt() <= 0)
+	    if(c.getNumHalfHoursPerWeek() == null || c.getNumHalfHoursPerWeekInt() < 0)
 	    	throw new BadCourseDataException(BadCourseDataException.ConflictType.BAD_HHR_WEEK, c, "null or <= 0", "integer > 0");
 	    //adding the reqt of 0 being valid. a course with 0 as max enrollment makes no sense to me
 	    if(c.getMaxEnrollment() == null || c.getMaxEnrollmentInt() < 0)

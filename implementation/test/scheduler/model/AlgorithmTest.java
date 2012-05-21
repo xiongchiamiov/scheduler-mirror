@@ -42,7 +42,7 @@ public abstract class AlgorithmTest extends ModelTestCase {
 	    for (ScheduleItem si : sis) {
 	    	System.err.println(si);
 	    }
-	    
+	    System.out.println("Second run with schedule items");
 	    courses.addAll(generateAdditionalCourses(model, doc));
 	    Vector<ScheduleItem> items = GenerateEntryPoint.generate(model, doc, sis, courses, instructors, locations);
 	  

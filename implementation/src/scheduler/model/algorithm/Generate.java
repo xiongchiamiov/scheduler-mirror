@@ -46,8 +46,14 @@ public class Generate {
 		starttime = System.currentTimeMillis();
 		
 		Vector<ScheduleItemDecorator> items = new Vector<ScheduleItemDecorator>();
-		for (ScheduleItem si : s_items)
-			items.add(new ScheduleItemDecorator(si));
+		Vector<ScheduleItem> temporaryItems = new Vector<ScheduleItem>();
+		for (ScheduleItem si : s_items) {	
+//			if(si.getInstructor().equals(document.getChooseForMeInstructor())) {
+//				//temporaryItems.
+//			}
+			//else 
+				items.add(new ScheduleItemDecorator(si));
+		}
 		
 		HashMap<Integer, SectionTracker> sections = new HashMap<Integer, SectionTracker>();
 		TimeRange bounds = new TimeRange(14, 44);
@@ -65,7 +71,8 @@ public class Generate {
 	    //Generate labs from the course list
 	    HashMap<Integer, Course> tetheredLabs = new HashMap<Integer, Course>();
 	    ArrayList<Course> untetheredLabs = new ArrayList<Course>();
-	    ArrayList<Course> indStudyCourses = new ArrayList<Course>();
+	    ArrayList<Course> indStudyCourses = new ArrayList<Course>();  
+    
 	    for (Course c : c_list) {
 	    	
 	        //Is a lab (or until a case found otherwise, an ACT or DIS) associated with a lecture
@@ -195,6 +202,14 @@ public class Generate {
 	      for (ScheduleItemDecorator si_dec : items)
 	    	  result.add(si_dec.getItem());
 	      return result;
+	}
+	
+	public static void findInstructorForScheduleItem() {
+	
+	}
+	
+	public static void findLocationforScheduleItem() {
+		
 	}
 	
 	/**
