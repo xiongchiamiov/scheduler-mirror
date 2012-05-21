@@ -102,13 +102,13 @@ public class Generate {
 	      {
 		    	//if at any point we run too long, kill ourself
 		    	endtime = System.currentTimeMillis();
-		    	if((endtime - starttime) == 5000)
-					try {
-						throw new CouldNotBeScheduledException(CouldNotBeScheduledException.ConflictType.INFINITE_LOOP, null);
-					} catch (CouldNotBeScheduledException e) {
-						debug("iterating through courses");
-						e.printStackTrace();
-					}
+//		    	if((endtime - starttime) == 5000)
+//					try {
+//						throw new CouldNotBeScheduledException(CouldNotBeScheduledException.ConflictType.INFINITE_LOOP, null);
+//					} catch (CouldNotBeScheduledException e) {
+//						debug("iterating through courses");
+//						e.printStackTrace();
+//					}
 	           if(c.getTypeEnum() == Course.CourseType.LEC || c.getTypeEnum() == Course.CourseType.SEM) {
 	                debug ("MAKING SI's FOR COURSE " + c);
 
@@ -401,14 +401,14 @@ public class Generate {
 			   Vector<InstructorDecorator> id_vec) throws DatabaseException, BadInstructorDataException
 	   {
 	    	//if at any point we run too long, kill ourself
-	    	endtime = System.currentTimeMillis();
-	    	if((endtime - starttime) == 5000)
-				try {
-					throw new CouldNotBeScheduledException(CouldNotBeScheduledException.ConflictType.INFINITE_LOOP, null);
-				} catch (CouldNotBeScheduledException e) {
-					debug("trying to find an instructor");
-					e.printStackTrace();
-				}
+//	    	endtime = System.currentTimeMillis();
+//	    	if((endtime - starttime) == 5000)
+//				try {
+//					throw new CouldNotBeScheduledException(CouldNotBeScheduledException.ConflictType.INFINITE_LOOP, null);
+//				} catch (CouldNotBeScheduledException e) {
+//					debug("trying to find an instructor");
+//					e.printStackTrace();
+//				}
 	    	
 	      InstructorDecorator r = getStaff(c.getDocument());
 	      if(doNotPickInstructorIDs != null) {
@@ -421,15 +421,15 @@ public class Generate {
 	      debug ("EXCLUDING: " + doNotPickInstructorIDs);
 	      for (InstructorDecorator id : id_vec)
 	      {
-		    	//if at any point we run too long, kill ourself
-		    	endtime = System.currentTimeMillis();
-		    	if((endtime - starttime) == 5000)
-					try {
-						throw new CouldNotBeScheduledException(CouldNotBeScheduledException.ConflictType.INFINITE_LOOP, null);
-					} catch (CouldNotBeScheduledException e) {
-						debug("actually iterating through instructor decorators");
-						e.printStackTrace();
-					}
+//		    	//if at any point we run too long, kill ourself
+//		    	endtime = System.currentTimeMillis();
+//		    	if((endtime - starttime) == 5000)
+//					try {
+//						throw new CouldNotBeScheduledException(CouldNotBeScheduledException.ConflictType.INFINITE_LOOP, null);
+//					} catch (CouldNotBeScheduledException e) {
+//						debug("actually iterating through instructor decorators");
+//						e.printStackTrace();
+//					}
 	    	  //Instructor i = id.getInstructor(); using instructor id's seems more stable
 	    	  if(!(id.getInstructorID().equals(r.getInstructorID()))) {
 	    		  debug ("CONSIDERING " + id.getInstructor());
