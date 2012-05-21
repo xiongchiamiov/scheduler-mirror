@@ -1,5 +1,6 @@
 package scheduler.view.web.client.views.resources.courses;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -29,6 +30,8 @@ import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.EditCompleteEvent;
 import com.smartgwt.client.widgets.grid.events.EditCompleteHandler;
+import com.smartgwt.client.widgets.grid.events.EditorExitEvent;
+import com.smartgwt.client.widgets.grid.events.EditorExitHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
@@ -156,42 +159,55 @@ public class CoursesView extends VLayout {
 		dayCombinationsField.setAlign(Alignment.CENTER);
 		dayCombinationsField
 				.setEditorValueMapFunction(new PossibleDayPatternsFunction());
-		grid.addEditCompleteHandler(new EditCompleteHandler() {
+		grid.addEditorExitHandler(new EditorExitHandler() {
 			@Override
-			public void onEditComplete(EditCompleteEvent event) {
+			public void onEditorExit(EditorExitEvent event) {
 				if (grid.getFieldName(event.getColNum()).equals("scu")) {
-					if (grid.getEditedCell(event.getRowNum(), "dayCombinations")
-							.toString().length() != 0) {
-						Window.alert("Warning: By changing your SCU value your day combination data has been changed");
+					if (grid.getEditValue(event.getRowNum(), "dayCombinations") == null) {
+						String scuString = grid.getEditedCell(event.getRowNum(), "scu").toString();
+						String type = grid.getEditedCell(event.getRowNum(), "type").toString();
+
+						// We have to get the entire record because there's no single setEditValue that takes in a String[]
+						Map result = grid.getEditValues(event.getRowNum());
+						String[] values = PossibleDayPatternsFunction.getValues(type, scuString).values().toArray(new String[0]);
+						result.put("dayCombinations", values);
+						
+						grid.setEditValues(event.getRowNum(), result);
 					}
-					// Change day combos
-					String scuString = (String) grid.getEditedCell(
-							event.getRowNum(), "scu");
-					String type = (String) grid.getEditedCell(
-							event.getRowNum(), "type");
-
-					DSRequest requestProperties = new DSRequest();
-					requestProperties.setOldValues(grid.getEditedRecord(event
-							.getRowNum()));
-
-					String[] values = PossibleDayPatternsFunction
-							.getValues(type, scuString).values()
-							.toArray(new String[0]);
-					Record record = grid.getEditedRecord(event.getRowNum());
-					assert (record.getAttributeAsInt("id") != null);
-					record.setAttribute("dayCombinations", values);
-					// Update hours per week if it is still on default
-					String hours = (String) grid.getEditedCell(
-							event.getRowNum(), "hoursPerWeek");
-					if (hours.equals("4")) {
-						// It is on default value, set to SCU
-						record.setAttribute("hoursPerWeek", scuString);
-					}
-
-					grid.updateData(record, null, requestProperties);
 				}
 			}
 		});
+//		grid.addEditCompleteHandler(new EditCompleteHandler() {
+//			@Override
+//			public void onEditComplete(EditCompleteEvent event) {
+//				if (grid.getFieldName(event.getColNum()).equals("scu")) {
+//					if (grid.getEditedCell(event.getRowNum(), "dayCombinations").toString().length() != 0) {
+//						Window.alert("Warning: By changing your SCU value your day combination data has been changed");
+//					}
+//					// Change day combos
+//					String scuString = (String) grid.getEditedCell(event.getRowNum(), "scu");
+//					String type = (String) grid.getEditedCell(event.getRowNum(), "type");
+//
+//					DSRequest requestProperties = new DSRequest();
+//					requestProperties.setOldValues(grid.getEditedRecord(event.getRowNum()));
+//
+//					String[] values = PossibleDayPatternsFunction
+//							.getValues(type, scuString).values()
+//							.toArray(new String[0]);
+//					Record record = grid.getEditedRecord(event.getRowNum());
+//					assert (record.getAttributeAsInt("id") != null);
+//					record.setAttribute("dayCombinations", values);
+//					// Update hours per week if it is still on default
+//					String hours = (String) grid.getEditedCell(event.getRowNum(), "hoursPerWeek");
+//					if (hours.equals("4")) {
+//						// It is on default value, set to SCU
+//						record.setAttribute("hoursPerWeek", scuString);
+//					}
+//
+//					grid.updateData(record, null, requestProperties);
+//				}
+//			}
+//		});
 
 		ListGridField hoursPerWeekField = new ListGridField("hoursPerWeek",
 				"Hours per Week");
