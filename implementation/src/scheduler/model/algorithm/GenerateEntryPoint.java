@@ -161,32 +161,28 @@ public class GenerateEntryPoint {
 			throw new BadCourseDataException(BadCourseDataException.ConflictType.IS_NULL, c, "Document for course " + c.getName()
 					, "null");
 		if(c.getNumSections() == null || c.getNumSectionsInt() <= 0)
-	    	throw new BadCourseDataException(BadCourseDataException.ConflictType.BAD_NUMSECTS, c, "null or <= 0", "integer > 0");
+	    	throw new BadCourseDataException(BadCourseDataException.ConflictType.BAD_NUMSECTS, c, "Course " + c.getName() + " number sections > 0", "null or <= 0");
 	    if(c.getWTU() == null || c.getWTUInt() <= 0)
 			throw new BadCourseDataException(BadCourseDataException.ConflictType.BAD_NUMWTU, c, "Course WTU for course " + c.getName(),
 					"null or <= 0");
 	    if(c.getSCU() == null || c.getSCUInt() <= 0)
-	    	throw new BadCourseDataException(BadCourseDataException.ConflictType.BAD_NUMSCU, c, "null or <= 0", "integer > 0");
+	    	throw new BadCourseDataException(BadCourseDataException.ConflictType.BAD_NUMSCU, c, "SCU for course " + c.getName() + " >0 ", "null or <= 0)");
 	    
-	    //check requirements for day combos still
-	    //c.getLecture().getID(), c
+	    //check requirements for day combos still?
 	    if(c.isTetheredToLecture())
 	    	if(c.getLecture() == null || c.getLecture().getID() == null)
-	    		throw new BadCourseDataException(BadCourseDataException.ConflictType.TETHERED_NULL_LECT, c, "null", "course");
-//	    	throw new ()
-//	    if(c.getLecture().getID())
+	    		throw new BadCourseDataException(BadCourseDataException.ConflictType.TETHERED_NULL_LECT, c, " Course " + c.getName() + "is tethered with lecture ", 
+	    				" tethered lecture or lecture ID is null");
 	    
-	    //there should be an extra reqt..it can't be higher than soemthing (check)
-	    
+	    //there should be an extra reqt..it can't be higher than some value
 	    if(c.getNumHalfHoursPerWeek() == null || c.getNumHalfHoursPerWeekInt() < 0)
-	    	throw new BadCourseDataException(BadCourseDataException.ConflictType.BAD_HHR_WEEK, c, "null or <= 0", "integer > 0");
-	    //adding the reqt of 0 being valid. a course with 0 as max enrollment makes no sense to me
+	    	throw new BadCourseDataException(BadCourseDataException.ConflictType.BAD_HHR_WEEK, c, "Course " + c.getName() + " hours per week > 0", "Number of hours per week <= 0 or null");
 	    if(c.getMaxEnrollment() == null || c.getMaxEnrollmentInt() < 0)
-	    	throw new BadCourseDataException(BadCourseDataException.ConflictType.BAD_MAXENR, c, "null or < 0", "integer > 0");
+	    	throw new BadCourseDataException(BadCourseDataException.ConflictType.BAD_MAXENR, c,  "Course " + c.getName() + "max enrollment >= 0", " enrollment null or < 0");
 	    if(c.getType() == null || c.getType() == "")
-	    	throw new BadCourseDataException(BadCourseDataException.ConflictType.BAD_CTYPE, c, "null or empty", "LEC/LAB/ACT/SEM/DIS/IND");
+	    	throw new BadCourseDataException(BadCourseDataException.ConflictType.BAD_CTYPE, c,  "Course " + c.getName() + " type should be LEC/LAB/ACT/SEM/DIS/IND", "null or empty string");
 	    if(c.getTypeEnum() == null)
-	    	throw new BadCourseDataException(BadCourseDataException.ConflictType.BAD_CTYPE, c, "null or empty", "LEC/LAB/ACT/SEM/DIS/IND");
+	    	throw new BadCourseDataException(BadCourseDataException.ConflictType.BAD_CTYPE, c, "Course " + c.getName() + " type should be LEC/LAB/ACT/SEM/DIS/IND", "null enum type");
 	    //all values are valid if(c.getUsedEquipment())
 	    //if(c.getID()) all values valid according to kaylene 
 	    //if(c.isTetheredToLecture()) not going to be null or empty string since its a boolean
