@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-import scheduler.view.web.client.views.home.NewOriginalDocumentsCache;
 import scheduler.view.web.shared.CompleteWorkingCopyDocumentGWT;
 import scheduler.view.web.shared.CourseGWT;
 import scheduler.view.web.shared.InstructorGWT;
@@ -15,6 +14,7 @@ import scheduler.view.web.shared.SynchronizeRequest;
 import scheduler.view.web.shared.SynchronizeResponse;
 
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class CachedService {
@@ -23,7 +23,7 @@ public class CachedService {
 	public final String username;
 	
 	final boolean deferredSynchronizationEnabled;
-	public final NewOriginalDocumentsCache originalDocuments;
+	public final OriginalDocumentsCache originalDocuments;
 	
 	Map<Integer, CachedOpenWorkingCopyDocument> workingCopyDocumentsByOriginalDocumentRealID = new HashMap<Integer, CachedOpenWorkingCopyDocument>();
 
@@ -37,7 +37,7 @@ public class CachedService {
 		this.sessionID = sessionID;
 		this.username = username;
 		
-		originalDocuments = new NewOriginalDocumentsCache(deferredSynchronizationEnabled, service, sessionID, initialDocuments);
+		originalDocuments = new OriginalDocumentsCache(deferredSynchronizationEnabled, service, sessionID, initialDocuments);
 
 		(new Timer() {
 			public void run() {
@@ -49,7 +49,9 @@ public class CachedService {
 	public void forceSynchronizeOriginalDocuments(AsyncCallback<Void> nextSyncCallback) {
 		if (nextSyncCallback == null) {
 			nextSyncCallback = new AsyncCallback<Void>() {
-				public void onFailure(Throwable caught) { }
+				public void onFailure(Throwable caught) {
+					Window.alert("Failed to synchronize working document! " + caught.getMessage());
+				}
 				public void onSuccess(Void result) { }
 			};
 		}

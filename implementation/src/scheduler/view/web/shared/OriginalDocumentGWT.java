@@ -26,10 +26,4 @@ public class OriginalDocumentGWT extends DocumentGWT implements Identified {
 	
 	public String getWorkingChangesSummary() { return this.workingChangesSummary; }
 	public void setWorkingChangesSummary(String workingChangesSummary) { this.workingChangesSummary = workingChangesSummary; }
-
-	public boolean attributesEqual(OriginalDocumentGWT that) {
-		return super.attributesEqual(that) &&
-				id.equals(that.id) &&
-				(workingChangesSummary == null ? that.workingChangesSummary == null : workingChangesSummary.equals(that.workingChangesSummary));
-	}
 }

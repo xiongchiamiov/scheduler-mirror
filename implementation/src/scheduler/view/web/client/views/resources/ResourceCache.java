@@ -61,10 +61,14 @@ public abstract class ResourceCache<ResourceGWT extends Identified> implements R
 	
 //	protected abstract void synchronizeWithServer(SynchronizeRequest<ResourceGWT> request, AsyncCallback<SynchronizeResponse<ResourceGWT>> callback);
 	
+	public boolean isSynchronizing() { return currentSyncEntriesToAdd != null; }
+	
 	public SynchronizeRequest<ResourceGWT> startSynchronize() {
-		assert(currentSyncEntriesToAdd == null);
+		assert(!isSynchronizing());
 		
 		currentSyncEntriesToAdd = new LinkedList<Entry>();
+		
+		assert(isSynchronizing());
 		
 		List<ResourceGWT> addedResources = new LinkedList<ResourceGWT>();
 		Collection<ResourceGWT> editedResources = new LinkedList<ResourceGWT>();
@@ -122,7 +126,8 @@ public abstract class ResourceCache<ResourceGWT extends Identified> implements R
 		assert(response != null);
 		assert(response.changesResponse.addedResourcesIDs != null);
 		assert(response.resourcesOnServer != null);
-		assert(currentSyncEntriesToAdd != null);
+		assert(isSynchronizing());
+		
 		
 		List<Integer> addedResourcesRealIDs = response.changesResponse.addedResourcesIDs;
 		assert(addedResourcesRealIDs.size() == currentSyncEntriesToAdd.size());
@@ -143,6 +148,8 @@ public abstract class ResourceCache<ResourceGWT extends Identified> implements R
 			observer.afterSynchronize();
 		
 		currentSyncEntriesToAdd = null;
+
+		assert(!isSynchronizing());
 	}
 	
 	public boolean needsSynchronize() {
@@ -215,6 +222,7 @@ public abstract class ResourceCache<ResourceGWT extends Identified> implements R
 				break;
 		}
 
+		System.out.println("calling from edit()");
 		for (Observer<ResourceGWT> observer : new LinkedList<Observer<ResourceGWT>>(observers))
 			observer.onResourceEdited(cloneResource(localResource), true);
 		
@@ -325,6 +333,7 @@ public abstract class ResourceCache<ResourceGWT extends Identified> implements R
 						if (resourceChanged(cloneResource(existingEntry.localResource), cloneResource(newLocalResource))) {
 							existingEntry.localResource = newLocalResource;
 
+							System.out.println("Calling from readserverresources");
 							for (Observer<ResourceGWT> observer : new LinkedList<Observer<ResourceGWT>>(observers))
 								observer.onResourceEdited(cloneResource(existingEntry.localResource), false);
 						}

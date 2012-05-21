@@ -121,20 +121,30 @@ public class CachedOpenWorkingCopyDocument {
 	}
 
 	public void forceSynchronize(AsyncCallback<Void> nextSyncCallback) {
+		System.out.println("Got a force sync call!");
+		
+		assert(courses.isSynchronizing() == synchronizing);
+		
 		if (nextSyncCallback == null) {
 			nextSyncCallback = new AsyncCallback<Void>() {
 				public void onSuccess(Void result) { }
-				public void onFailure(Throwable caught) { }
+				public void onFailure(Throwable caught) {
+					Window.alert("Failed to synchronize working document! " + caught.getMessage());
+				}
 			};
 		}
 
 		callbacksToCallAfterNextSynchronize.add(nextSyncCallback);
 		
 		if (!synchronizing) {
+			System.out.println("Not syncing already, doing the sync!");
 			synchronizing = true;
 
 			final Collection<AsyncCallback<Void>> callbacksToCallAfterThisSynchronize = callbacksToCallAfterNextSynchronize;
 			callbacksToCallAfterNextSynchronize = new LinkedList<AsyncCallback<Void>>();
+			
+
+			assert(!courses.isSynchronizing());
 			
 			SynchronizeRequest<CourseGWT> coursesRequest = courses.startSynchronize();
 			SynchronizeRequest<InstructorGWT> instructorsRequest = instructors.startSynchronize();
@@ -146,6 +156,8 @@ public class CachedOpenWorkingCopyDocument {
 			
 			service.synchronizeWorkingDocument(sessionID, realWorkingDocument.getRealID(), documentRequest, new AsyncCallback<WorkingDocumentSynchronizeResponse>() {
 				public void onSuccess(WorkingDocumentSynchronizeResponse response) {
+					System.out.println("got response from server!");
+					
 					assert(synchronizing);
 					
 					courses.finishSynchronize(response.courses);
@@ -160,11 +172,16 @@ public class CachedOpenWorkingCopyDocument {
 					for (AsyncCallback<Void> callback : callbacksToCallAfterThisSynchronize)
 						callback.onSuccess(null);
 					
-					if (!callbacksToCallAfterNextSynchronize.isEmpty())
+					System.out.println("done with response, marked not syncing");
+					
+					if (!callbacksToCallAfterNextSynchronize.isEmpty()) {
+						System.out.println("since another sync was requested in the meantime, calling self");
 						forceSynchronize(null);
+					}
 				}
 				
 				public void onFailure(Throwable caught) {
+					System.out.println("failure!");
 					assert(synchronizing);
 					synchronizing = false;
 					for (AsyncCallback<Void> callback : callbacksToCallAfterThisSynchronize)
@@ -176,8 +193,10 @@ public class CachedOpenWorkingCopyDocument {
 	
 	public void sanityCheck() {
 		Set<Integer> courseIDs = new TreeSet<Integer>();
-		for (CourseGWT course : courses.getAll())
-			courseIDs.add(course.getID());
+		for (CourseGWT course : courses.getAll()) {
+			if (courses.localIDToRealID(course.getID()) != null)
+				courseIDs.add(course.getID());
+		}
 		
 		for (InstructorGWT instructor : instructors.getAll()) {
 			Set<Integer> courseIDsInPrefs = instructor.getCoursePreferences().keySet();

@@ -49,10 +49,8 @@ public abstract class DocumentGWT implements Serializable {
 	public Integer getChooseForMeLocationID() { return chooseForMeLocationID; }
 	public void setChooseForMeLocationID(Integer chooseForMeLocationID) { this.chooseForMeLocationID = chooseForMeLocationID; }
 
-	protected boolean attributesEqual(DocumentGWT that) {
+	public boolean attributesEqual(DocumentGWT that) {
 		return name.equals(that.name) &&
-				staffInstructorID == that.staffInstructorID &&
-				tbaLocationID == that.tbaLocationID &&
 				isTrashed == that.isTrashed &&
 				startHalfHour == that.startHalfHour &&
 				endHalfHour == that.endHalfHour;
