@@ -46,12 +46,16 @@ public class Generate {
 		starttime = System.currentTimeMillis();
 		
 		Vector<ScheduleItemDecorator> items = new Vector<ScheduleItemDecorator>();
-		Vector<ScheduleItem> temporaryItems = new Vector<ScheduleItem>();
 		for (ScheduleItem si : s_items) {	
-//			if(si.getInstructor().equals(document.getChooseForMeInstructor())) {
-//				//temporaryItems.
-//			}
-			//else 
+			if(si.getInstructor().equals(document.getChooseForMeInstructor())) {
+				si.setInstructor((findInstructorForScheduleItem(si, document, c_list, i_vec)).getInstructor());
+				items.add(new ScheduleItemDecorator(si));
+			}
+			else if(si.getLocation().equals(document.getChooseForMeLocation())) {
+				si.setLocation((findLocationforScheduleItem(si, document, l_vec)).getLocation());
+				items.add(new ScheduleItemDecorator(si));
+			}
+			else 
 				items.add(new ScheduleItemDecorator(si));
 		}
 		
@@ -204,12 +208,31 @@ public class Generate {
 	      return result;
 	}
 	
-	public static void findInstructorForScheduleItem() {
-	
+	public static InstructorDecorator findInstructorForScheduleItem(ScheduleItem item, Document doc, Collection<Course> c_list
+			, Vector<InstructorDecorator> instructors) throws DatabaseException, BadInstructorDataException {
+		InstructorDecorator newInst = new InstructorDecorator(doc, c_list); //get staff
+		for(InstructorDecorator d : instructors) {
+			if(d.preferenceForCourse(item.getCourse()) && d.checkWTUs(item.getCourse()) && 
+					d.getAvailability().isFree(new Week(item.getDays()), new TimeRange(item.getStartHalfHour(), item.getEndHalfHour()))) 
+				newInst = d;
+		}
+		//book 'em
+		if(!newInst.isStaffInstructor())
+			newInst.getAvailability().book(new Week(item.getDays()), new TimeRange(item.getStartHalfHour(), item.getEndHalfHour()));
+		return newInst;
 	}
 	
-	public static void findLocationforScheduleItem() {
-		
+	public static LocationDecorator findLocationforScheduleItem(ScheduleItem item, Document doc, Vector<LocationDecorator> locations) throws DatabaseException {
+		LocationDecorator location = new LocationDecorator(doc.getTBALocation());
+		for(LocationDecorator ld : locations) {
+			if(ld.providesFor(item.getCourse()) && ld.getAvailability().isFree(new Week(item.getDays()), 
+					new TimeRange(item.getStartHalfHour(), item.getEndHalfHour()))) 
+				location = ld;
+		}
+		//book!
+		if(!location.isTBALocation())
+			location.getAvailability().book(new Week(item.getDays()), new TimeRange(item.getStartHalfHour(), item.getEndHalfHour()));
+		return location;
 	}
 	
 	/**
