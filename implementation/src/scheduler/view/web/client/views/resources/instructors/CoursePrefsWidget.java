@@ -181,7 +181,7 @@ public class CoursePrefsWidget extends VerticalPanel
 	
 	public void setDataSources(CachedOpenWorkingCopyDocument doc, InstructorGWT instructor)
 	{
-//		this.workingCopyDocument = doc;
+		this.workingCopyDocument = doc;
 		instructor.verify();
 		this.instructor = instructor;
 		this.savedInstructor = new InstructorGWT(instructor);
