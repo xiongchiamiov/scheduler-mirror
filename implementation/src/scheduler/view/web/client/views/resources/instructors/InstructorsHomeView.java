@@ -125,7 +125,7 @@ public class InstructorsHomeView extends VerticalPanel implements View
 								
 								for(CourseGWT course : result.getCourses())
 								{
-									System.out.println("---------------" + course.getCourseName() + ": " +
+									System.out.println("after loading ---------------" + course.getCourseName() + ": " +
 											instructor.getCoursePreferences().get(course.getID()));
 								}
 								
@@ -205,7 +205,7 @@ public class InstructorsHomeView extends VerticalPanel implements View
 				com.google.gwt.user.client.Window.alert("Successfully saved!");
 				for(CourseGWT course : InstructorsHomeView.this.iipv.getDocument().getCourses())
 				{
-					System.out.println("---------------" + course.getCourseName() + ": " +
+					System.out.println("after saving ---------------" + course.getCourseName() + ": " +
 							instructor.getCoursePreferences().get(course.getID()));
 				}
 			}

@@ -43,64 +43,53 @@ public class InstructorPreferencesView extends VerticalPanel {
 		instructor.verify();
 
 		this.instructor = instructor;
+		
+		HTML instructorName = new HTML("Instructor Time Preferences");
+		instructorName.setStyleName("bigBold");
+		DOM.setElementAttribute(instructorName.getElement(), "id", "instructorName");
+		InstructorPreferencesView.this.add(instructorName);
+
+		InstructorPreferencesView.this.timePrefs = new TimePrefsWidget(
+				InstructorPreferencesView.this.openDocument, 
+				InstructorPreferencesView.this.instructor);
+		
+		InstructorPreferencesView.this.setSpacing(20);
+
+		InstructorPreferencesView.this.add(timePrefs);
+		InstructorPreferencesView.this.setStyleName("preferencesPanel");
+		
+		InstructorPreferencesView.this.coursePrefs = new CoursePrefsWidget(
+				InstructorPreferencesView.this.openDocument, 
+				InstructorPreferencesView.this.instructor);
+		InstructorPreferencesView.this.coursePrefs.setStyleName("otherCenterness");
+		InstructorPreferencesView.this.coursePrefs.afterPush();
+
+		HTML cprefs = new HTML("Instructor Course Preferences");
+		cprefs.addStyleName("bigBold");
+		InstructorPreferencesView.this.add(cprefs);
+
+		InstructorPreferencesView.this.add(coursePrefs);
+		
+		closebutton = new Button("Close", new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				parent.hide();
+			}
+		});
+		
+		
+		if(additionalCloseHandler != null)
+		{
+			closebutton.addClickHandler(additionalCloseHandler);
+			additionalCloseHandler = null;
+		}
+		DOM.setElementAttribute(closebutton.getElement(), "id", "s_prefCloseBtn");
+		InstructorPreferencesView.this.add(closebutton);
+		InstructorPreferencesView.this.setCellHorizontalAlignment(closebutton, ALIGN_RIGHT);
 	}
 
 	public void afterPush(com.smartgwt.client.widgets.Window parentWindow) {
 		this.setParent(parentWindow);
-		openDocument.forceSynchronize(new AsyncCallback<Void>() {
-			
-			@Override
-			public void onSuccess(Void result) {
-				HTML instructorName = new HTML("Instructor Time Preferences");
-				instructorName.setStyleName("bigBold");
-				DOM.setElementAttribute(instructorName.getElement(), "id", "instructorName");
-				InstructorPreferencesView.this.add(instructorName);
-
-				InstructorPreferencesView.this.timePrefs = new TimePrefsWidget(
-						InstructorPreferencesView.this.openDocument, 
-						InstructorPreferencesView.this.instructor);
-				
-				InstructorPreferencesView.this.setSpacing(20);
-
-				InstructorPreferencesView.this.add(timePrefs);
-				InstructorPreferencesView.this.setStyleName("preferencesPanel");
-				
-				InstructorPreferencesView.this.coursePrefs = new CoursePrefsWidget(
-						InstructorPreferencesView.this.openDocument, 
-						InstructorPreferencesView.this.instructor);
-				InstructorPreferencesView.this.coursePrefs.setStyleName("otherCenterness");
-				InstructorPreferencesView.this.coursePrefs.afterPush();
-
-				HTML cprefs = new HTML("Instructor Course Preferences");
-				cprefs.addStyleName("bigBold");
-				InstructorPreferencesView.this.add(cprefs);
-
-				InstructorPreferencesView.this.add(coursePrefs);
-				
-				closebutton = new Button("Close", new ClickHandler() {
-					public void onClick(ClickEvent event) {
-						parent.hide();
-					}
-				});
-				
-				
-				if(additionalCloseHandler != null)
-				{
-					closebutton.addClickHandler(additionalCloseHandler);
-					additionalCloseHandler = null;
-				}
-				DOM.setElementAttribute(closebutton.getElement(), "id", "s_prefCloseBtn");
-				InstructorPreferencesView.this.add(closebutton);
-				InstructorPreferencesView.this.setCellHorizontalAlignment(closebutton, ALIGN_RIGHT);
-				parent.show();
-			}
-			
-			@Override
-			public void onFailure(Throwable caught) {
-				Window.alert("failed to synchronize document");
-			}
-		});
-
+		this.synchronize(this.openDocument, this.instructor);
 	}
 	
 	private void setParent(com.smartgwt.client.widgets.Window parent) {
