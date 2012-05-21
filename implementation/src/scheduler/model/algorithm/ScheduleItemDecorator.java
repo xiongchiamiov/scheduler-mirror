@@ -84,20 +84,6 @@ public class ScheduleItemDecorator implements Comparable<ScheduleItemDecorator>
     public ScheduleItem getItem() { return item; }
 
 	public double getValue() { return value; }
-
-	/*public Integer getWtuTotal() {
-		assert(false);
-		// TODO Auto-generated method stub
-		return null;
-	}*/
-
-	/*public boolean hasLabs() {
-		assert(false);
-		// TODO Auto-generated method stub
-		return false;
-	}*/
-	
-	//TODO Add ALL the methods from ScheduleItem here and just call through to the ScheduleItem.
 	
 	public void setEndHalfHour(int halfHour) throws DatabaseException {
 		item.setEndHalfHour(halfHour);
