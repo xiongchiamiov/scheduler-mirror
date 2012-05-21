@@ -19,6 +19,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.smartgwt.client.widgets.Label;
@@ -141,17 +142,22 @@ public class InstructorsHomeView extends VerticalPanel implements View
 			this.prefsWindow.setAutoSize(true);
 			
 			this.prefsWindow.setCanDragReposition(true);
-			this.prefsWindow.setCanDragResize(true);
+			this.prefsWindow.setCanDragResize(false);
 			
 			this.iipv = new InstructorPreferencesView(doc, instructor);
 			
-			this.prefsWindow.addItem(iipv);
-			this.prefsWindow.setAutoSize(false);
 			int height = com.google.gwt.user.client.Window.getClientHeight() - 30;
-			this.prefsWindow.setSize("730px", height+"px");
 			
-			this.iipv.setParent(prefsWindow);
-			this.iipv.afterPush();
+			ScrollPanel scroller = new ScrollPanel();
+			scroller.setWidget(iipv);
+			scroller.setSize("100%",(height-28)+"px");
+			
+			this.prefsWindow.addItem(scroller);
+			this.iipv.afterPush(prefsWindow);
+			
+			this.prefsWindow.setAutoSize(false);
+			this.prefsWindow.setSize("730px", height+"px");
+
 			
 			this.prefsWindow.addCloseClickHandler(new CloseClickHandler(){
 				@Override
@@ -177,7 +183,7 @@ public class InstructorsHomeView extends VerticalPanel implements View
 		this.prefsWindow.setTitle("Instructor Preferences - <i>"
 				+ doc.getDocument().getName() + "</i>");
 		
-		this.prefsWindow.show();
+//		this.prefsWindow.show();
 	}
 	
 	/**

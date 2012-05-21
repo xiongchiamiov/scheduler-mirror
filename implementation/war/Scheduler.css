@@ -652,3 +652,10 @@ h1 {
 .hiddenCell > div {
 	visibility: hidden;
 }
+
+.preferencesPanel
+{
+    margin-left: auto;
+    margin-right: auto;
+    overflow: auto;
+}

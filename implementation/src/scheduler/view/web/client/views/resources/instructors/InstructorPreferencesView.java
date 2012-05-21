@@ -9,7 +9,6 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -46,29 +45,23 @@ public class InstructorPreferencesView extends VerticalPanel {
 		this.instructor = instructor;
 	}
 
-	// @Override
-	public void afterPush() {
+	public void afterPush(com.smartgwt.client.widgets.Window parentWindow) {
+		this.setParent(parentWindow);
 		openDocument.forceSynchronize(new AsyncCallback<Void>() {
 			
 			@Override
 			public void onSuccess(Void result) {
-				InstructorPreferencesView.this.setWidth("100%");
-				InstructorPreferencesView.this.setHeight("100%");
-				FocusPanel fpanel = new FocusPanel();
 				HTML instructorName = new HTML("Instructor Time Preferences");
-				fpanel.setStyleName("bigBold");
 				instructorName.setStyleName("bigBold");
 				DOM.setElementAttribute(instructorName.getElement(), "id", "instructorName");
-				fpanel.add(instructorName);
-				InstructorPreferencesView.this.add(fpanel);
+				InstructorPreferencesView.this.add(instructorName);
 
 				InstructorPreferencesView.this.timePrefs = new TimePrefsWidget(openDocument, InstructorPreferencesView.this.instructor);
 				
 				InstructorPreferencesView.this.setSpacing(20);
 
 				InstructorPreferencesView.this.add(timePrefs);
-				InstructorPreferencesView.this.setStyleName("centerness");
-
+				InstructorPreferencesView.this.setStyleName("preferencesPanel");
 				
 				InstructorPreferencesView.this.coursePrefs = new CoursePrefsWidget(openDocument, InstructorPreferencesView.this.instructor);
 				InstructorPreferencesView.this.coursePrefs.setStyleName("otherCenterness");
@@ -86,14 +79,17 @@ public class InstructorPreferencesView extends VerticalPanel {
 						parent.hide();
 					}
 				});
+				
+				
 				if(additionalCloseHandler != null)
 				{
 					closebutton.addClickHandler(additionalCloseHandler);
 					additionalCloseHandler = null;
 				}
 				DOM.setElementAttribute(closebutton.getElement(), "id", "s_prefCloseBtn");
-				
 				InstructorPreferencesView.this.add(closebutton);
+				InstructorPreferencesView.this.setCellHorizontalAlignment(closebutton, ALIGN_RIGHT);
+				parent.show();
 			}
 			
 			@Override
@@ -104,7 +100,7 @@ public class InstructorPreferencesView extends VerticalPanel {
 		this.add(new HTML("<span style=\"display: block; height: 20px;\"></span>"));
 	}
 	
-	public void setParent(com.smartgwt.client.widgets.Window parent) {
+	private void setParent(com.smartgwt.client.widgets.Window parent) {
 		this.parent = parent;
 		if(this.coursePrefs != null)
 			this.coursePrefs.setParent(parent);

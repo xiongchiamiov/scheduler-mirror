@@ -8,6 +8,7 @@ import scheduler.view.web.client.views.resources.ValidatorUtil;
 import scheduler.view.web.shared.InstructorGWT;
 import scheduler.view.web.shared.ScheduleItemGWT;
 
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Autofit;
@@ -223,17 +224,18 @@ public class InstructorsView extends VLayout {
 			this.prefsWindow.setAutoSize(true);
 			
 			this.prefsWindow.setCanDragReposition(true);
-			this.prefsWindow.setCanDragResize(true);
+			this.prefsWindow.setCanDragResize(false);
 			
 			this.iipv = new InstructorPreferencesView(openDocument, instructor);
 			
-			this.prefsWindow.addItem(iipv);
-			this.prefsWindow.setAutoSize(false);
 			int height = com.google.gwt.user.client.Window.getClientHeight() - 30;
-			this.prefsWindow.setSize("730px", height+"px");
 			
-			this.iipv.setParent(prefsWindow);
-			this.iipv.afterPush();
+			ScrollPanel scroller = new ScrollPanel();
+			scroller.setWidget(iipv);
+			scroller.setSize("100%",(height-28)+"px");
+			
+			this.prefsWindow.addItem(scroller);
+			this.iipv.afterPush(prefsWindow);
 		}
 		else
 		{
@@ -245,7 +247,7 @@ public class InstructorsView extends VLayout {
 				+ instructor.getFirstName() + " " + instructor.getLastName()
 				+ ")");
 		
-		this.prefsWindow.show();
+//		this.prefsWindow.show();
 	}
 
 	/**
