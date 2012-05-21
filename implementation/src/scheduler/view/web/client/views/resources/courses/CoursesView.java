@@ -28,8 +28,6 @@ import com.smartgwt.client.widgets.grid.CellFormatter;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
-import com.smartgwt.client.widgets.grid.events.EditCompleteEvent;
-import com.smartgwt.client.widgets.grid.events.EditCompleteHandler;
 import com.smartgwt.client.widgets.grid.events.EditorExitEvent;
 import com.smartgwt.client.widgets.grid.events.EditorExitHandler;
 import com.smartgwt.client.widgets.layout.HLayout;

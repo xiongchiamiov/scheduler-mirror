@@ -626,7 +626,7 @@ public class GreetingServiceImplInner {
 		try {
 			if (this.loadAndSaveFromFileSystem) {
 				File file = new File(filepath);
-				System.out.println("Saving state to " + filepath + " (" + file.getAbsolutePath() + ")");
+//				System.out.println("Saving state to " + filepath + " (" + file.getAbsolutePath() + ")");
 				
 				if (!file.exists()) {
 					System.out.println("Creating file " + filepath);

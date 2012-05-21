@@ -35,8 +35,8 @@ public class ValidatorUtil {
 				value = record.getAttributeAsString("catalogNum");
 				return value != null && validateNotEmpty(value);
 			} else if (fieldName.equals("dayCombinations")) {
-				String[] values = record.getAttributeAsStringArray("dayCombinations");
-				return value != null && values.length > 0;
+				value = record.getAttributeAsString("dayCombinations");
+				return value != null && value.length() > 0;
 			}
 			// Default
 			else {
@@ -211,8 +211,6 @@ public class ValidatorUtil {
 		try {
 			float value = Float.parseFloat(cellvalue);
 			float newvalue = (Math.round(value * 2)) / 2.0f;
-			System.out.println("Validating half: value = " + value
-					+ ", newvalue = " + newvalue);
 			if (value > 0.0f && Math.abs(newvalue - value) <= 0.01) {
 				return true;
 			}
