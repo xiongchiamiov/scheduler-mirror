@@ -50,6 +50,8 @@ public class Generate {
 			if(si.getInstructor().equals(document.getChooseForMeInstructor())) {
 				si.setInstructor((findInstructorForScheduleItem(si, document, c_list, i_vec)).getInstructor());
 				items.add(new ScheduleItemDecorator(si));
+				//not sure on if dealing with sections correctly - but remove the course from the pool since it's scheduled
+				c_list.remove(si.getCourse());
 			}
 			else if(si.getLocation().equals(document.getChooseForMeLocation())) {
 				si.setLocation((findLocationforScheduleItem(si, document, l_vec)).getLocation());
@@ -208,7 +210,7 @@ public class Generate {
 	      return result;
 	}
 	
-	public static InstructorDecorator findInstructorForScheduleItem(ScheduleItem item, Document doc, Collection<Course> c_list
+	private static InstructorDecorator findInstructorForScheduleItem(ScheduleItem item, Document doc, Collection<Course> c_list
 			, Vector<InstructorDecorator> instructors) throws DatabaseException, BadInstructorDataException {
 		InstructorDecorator newInst = new InstructorDecorator(doc, c_list); //get staff
 		for(InstructorDecorator d : instructors) {
@@ -222,7 +224,7 @@ public class Generate {
 		return newInst;
 	}
 	
-	public static LocationDecorator findLocationforScheduleItem(ScheduleItem item, Document doc, Vector<LocationDecorator> locations) throws DatabaseException {
+	private static LocationDecorator findLocationforScheduleItem(ScheduleItem item, Document doc, Vector<LocationDecorator> locations) throws DatabaseException {
 		LocationDecorator location = new LocationDecorator(doc.getTBALocation());
 		for(LocationDecorator ld : locations) {
 			if(ld.providesFor(item.getCourse()) && ld.getAvailability().isFree(new Week(item.getDays()), 

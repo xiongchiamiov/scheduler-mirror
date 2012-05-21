@@ -147,18 +147,20 @@ public class GenerateEntryPoint {
 	
 	private static void checkValid(Course c) throws BadCourseDataException, DatabaseException {
 		if(c == null)
-			throw new BadCourseDataException(BadCourseDataException.ConflictType.IS_NULL, c, "null", "course");
-		if(c.getDocument() == null)
-			throw new BadCourseDataException(BadCourseDataException.ConflictType.IS_NULL, c, "null", "document");
-		if(!c.isSchedulable())
-			throw new BadCourseDataException(BadCourseDataException.ConflictType.NOT_SCHEDULABLE, c, "not schedulable", "true");
-		if(c.getDepartment() == null)
-			throw new BadCourseDataException(BadCourseDataException.ConflictType.NULL_DPTMT, c, "null", "department");
-	    if(c.getCatalogNumber() == null || c.getCatalogNumber() == "")
-	    	throw new BadCourseDataException(BadCourseDataException.ConflictType.BAD_CAT_NUM, c, "null or empty", "valid string");
+			throw new BadCourseDataException(BadCourseDataException.ConflictType.IS_NULL, c, "Course entered", "null");
 		if(c.getName() == null)
-			throw new BadCourseDataException(BadCourseDataException.ConflictType.NULL_CNAME, c, "null", "non-null string");
-	    if(c.getNumSections() == null || c.getNumSectionsInt() <= 0)
+			throw new BadCourseDataException(BadCourseDataException.ConflictType.NULL_CNAME, c, "Course name as non-null string", "null string");
+		if(!c.isSchedulable())
+			throw new BadCourseDataException(BadCourseDataException.ConflictType.NOT_SCHEDULABLE, c, "Course " + c.getName() + " not schedulable",
+					"schedulable is true");
+		if(c.getDepartment() == null)
+			throw new BadCourseDataException(BadCourseDataException.ConflictType.NULL_DPTMT, c, "Course " + c.getName() + " department", "null/no department");
+	    if(c.getCatalogNumber() == null || c.getCatalogNumber() == "")
+	    	throw new BadCourseDataException(BadCourseDataException.ConflictType.BAD_CAT_NUM, c, "Course " + c.getName() + " catalog number ", "null or empty string ");
+		if(c.getDocument() == null)
+			throw new BadCourseDataException(BadCourseDataException.ConflictType.IS_NULL, c, "Document for course " + c.getName()
+					, "null");
+		if(c.getNumSections() == null || c.getNumSectionsInt() <= 0)
 	    	throw new BadCourseDataException(BadCourseDataException.ConflictType.BAD_NUMSECTS, c, "null or <= 0", "integer > 0");
 	    if(c.getWTU() == null || c.getWTUInt() <= 0)
 			throw new BadCourseDataException(BadCourseDataException.ConflictType.BAD_NUMWTU, c, "Course WTU for course " + c.getName(),
