@@ -265,7 +265,15 @@ public class EditScheduleItemDlg extends DialogBox {
 		
 		if (mNewStartRow >= 0) {
 			final int maxIndex = mEndTimeLB.getItemCount() - 1;
-			mEndTimeLB.setSelectedIndex(mNewStartRow < maxIndex ? mNewStartRow + 1 : maxIndex);
+			if (mNewStartRow < maxIndex - 1) {
+				mEndTimeLB.setSelectedIndex(mNewStartRow + 2);
+			}
+			else if (mNewStartRow < maxIndex) {
+				mEndTimeLB.setSelectedIndex(mNewStartRow + 1);
+			}
+			else {
+				mEndTimeLB.setSelectedIndex(maxIndex);
+			}			
 		}
 		else 
 			mEndTimeLB.setSelectedIndex(CalendarTableView.getEndRow(mOriginalItem) + 1);

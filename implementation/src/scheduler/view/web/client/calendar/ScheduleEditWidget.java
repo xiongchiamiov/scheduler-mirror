@@ -64,7 +64,8 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 	private TextBox mSearchBox;
 	HorizontalPanel mBoxesAndSchedulePanel;
 	final Button mCollapseScheduleButton = new Button("<");
-
+	private Button mGenerateScheduleButton;
+	
 	public enum DisplayType {
 		Calendar,
 		List
@@ -366,12 +367,12 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 		mCollapseScheduleButton.setStyleName("floatingScheduleButtonBarItemLeft");
 		bottomButtonFlowPanel.add(mCollapseScheduleButton);
 
-		Button generateScheduleButton = new Button("Generate Schedule", new GenerateScheduleClickHandler());
-		generateScheduleButton.setStyleName("floatingScheduleButtonBarItemLeft");
-		bottomButtonFlowPanel.add(generateScheduleButton);
+		mGenerateScheduleButton = new Button("Generate Schedule", new GenerateScheduleClickHandler());
+		mGenerateScheduleButton.setStyleName("floatingScheduleButtonBarItemLeft");
+		bottomButtonFlowPanel.add(mGenerateScheduleButton);
 
-		generateScheduleButton.setStyleName("floatingScheduleButtonBarItemLeft");
-		bottomButtonFlowPanel.add(generateScheduleButton);
+		mGenerateScheduleButton.setStyleName("floatingScheduleButtonBarItemLeft");
+		bottomButtonFlowPanel.add(mGenerateScheduleButton);
 
 		final ListBox listBoxViewSelector = new ListBox(false);
 		listBoxViewSelector.addItem("Calendar View");
@@ -491,6 +492,18 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 
 							mAvailableCoursesView.setItems(availableItems);
 							mAvailableCoursesView.drawList();
+							
+							if (mGenerateScheduleButton != null) {
+								if (availableItems.size() > 0) {
+									//enable button
+									mGenerateScheduleButton.setEnabled(true);
+									
+								} 
+								else {
+									//disable button
+									mGenerateScheduleButton.setEnabled(false);
+								}
+							}
 						}
 						else {
 							Window.alert("null courses!");
