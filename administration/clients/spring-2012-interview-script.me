@@ -1,0 +1,213 @@
+.sz 10
+.ds ~ /users/gfisher/nroff
+. so \*~/stdhdr.me
+.he 'Spring 2012 Interview Script''Page %'
+.m4 1v
+.(S +2
+.(TI "Spring 2012 Client Interview Script"
+\fBSpring 2012 Client Interview Script\fP
+.)S
+.)TI
+.spt
+This document has a script for the interview sessions you will be conducting
+during weeks 9 and 10 of of Spring quarter 2012.  As the previous interviews,
+please conduct yourselves in a thoroughly professional manner at the
+interviews.  When interviewing non-computer specialists, do not use computer
+jargon or highly technical terminology.  Do use common sense interview skills,
+which include being prepared, polite, succinct, attentive, and thorough.
+
+.uh "Interview Duration" 2
+.pp
+The interview will be scheduled for 30 to 60 minutes, depending on client
+preferences.  The interview is divided into four parts of 10 to 15 minutes
+each:
+.(L 1 .3v 3n
+.le
+Demonstrate the prototype to the client.
+.le
+Assist the client using the prototype.
+.le
+Ask questions about product features.
+.le
+Ask questions about product quality and adoptability.
+.)L 1
+Further details of these interview segments are presented below.
+.pe
+
+.uh "Participants" 2
+.pp
+The interview teams will be comprised of one or two project team members.  If
+possible, one of the two should be the person assigned the department being
+visited, per the assignment table
+.(Ah "../organization.html#dept-assignments"
+here.
+.)Ah
+This is not essential, but preferred, so that the interviewer is familiar with
+the kind of scheduling the department does.  A two-person team is preferred, so
+that one person can be the primary interviewer and the other take notes.
+.pe
+
+.uh "Starting the Session" 2
+.pp
+Start by asking if it is OK to make an audio recording of the interview.  Then,
+introduce yourselves, and say, once again, that we genuinely appreciate their
+time.  Then summarize the four parts of the interview outlined above.
+.pe
+
+.uh "Part 1 -- Demonstrating the Prototype to the Client" 2
+.pp
+Inform the client that the pre-defined user ID "admin" is used to perform
+department-wide scheduling.  Explain that a future release will use Cal Poly
+CAS authentication, and provide the ability to define which users have
+administrative privileges.
+.pp
+If the interview location has a computer you can use, you can perform the
+demonstration on it.  If not, use your own laptop.  Explain that the actual
+installation of the program will be on department-controlled computers, one of
+which will hold the scheduling database.  For the current demonstration, the
+software is installed on a Computer Science department machine, with separate
+web addresses for different departments.
+.pp
+The prototype walk-through should follow the general script of the acceptance
+testing.  In particular, you should have pre-defined resource tables for the
+department you're visiting.  This way you will not need to spend a lot of time
+on repetitive data entry.
+.pp
+The
+prototype walk-through should follow the general script of the acceptance
+testing plan, in this major order:
+.(L 1 .3v 3n
+.le
+login
+.le
+create a new schedule
+.le
+manage courses
+.le
+manage instructors
+.le
+manage locations
+.le
+generate a schedule
+.le
+edit the schedule
+.le
+save and re-open
+.le
+perform additional free-form operations, based on client interaction
+.)L 1
+
+.uh "Part 2 -- Overseeing the Client Using the Prototype" 2
+.pp
+With the client's permission, show her how to access the prototype from her
+computer, and reiterate that there is a personalized workspace that has been
+created under the client's department.  Then simply guide the client in using
+the prototype.
+
+.uh "Part 3 -- Questions about Requirements Features" 2
+.pp
+Start by asking the client if she has any specific questions about any aspect
+of the project.  Discuss.
+.pep
+After the client-driven Q/A, there are two specific question areas we're
+interested in:
+.(L 1 .3v 3n
+.le
+The client's reaction to the other forms of viewing the schedule.
+.le
+The client's reaction to the drag-and-drop schedule editing interface.
+.)L 1
+.pep
+For question 1, show both the calendar and list views of the schedule.  As the
+client if there are other forms of schedule view they might find useful.
+.pep
+For question 2, ask if the drag-and-drop editing looks useful and
+understandable.  Also ask if the client can think of other ways useful to
+perform schedule creation and editing.
+.pe
+
+.uh "Part 4 -- Qualitative Questions" 2
+.pp
+Ask willing interviewees these questions:
+.(L 1 .3v 3n
+.le
+Are there any missing features in what you have seen so far, that is features
+that you think are fundamentally important to the scheduling program?
+.le
+Do you have any other questions that we have not yet covered?
+.le
+And the bottom line question: Assuming we could deliver a product that's
+reliable, and has the kind of features we've talked about today, do you
+realistically see yourself using it to do real scheduling?  If not, what do we
+need to do to make it usable for you?
+.)L 1
+
+.(An "transcript"
+.uh "Interview Transcript" 2
+.)An
+.pp
+It is the job of the interview note taker to record a complete transcript of
+the interview.  This includes all of the information provided by the clients,
+in answer to the interview questions.  The transcripts are stored in the
+project repository, in
+.(Ah "../../deployment/interviews"
+deployment/interviews/DEPT
+.)Ah
+for DEPT equal to the name of the department interviewed.  The format of the
+file names for the transcripts is \fIname\fP\fC-\fP\fIdate\fP\fC.html\fP, where
+\fIname\fP is the last name of the client and \fIdate\fP is the date on which
+the interview was conducted.
+.pep
+At the beginning of the transcript, record all of the following information:
+.(E .3v 3n
+.ee
+Time and Date of Interview: 
+.ee
+Names of Team Members Attending: 
+.ee
+Names of Attending Clients: 
+.ee
+Location of Interview: 
+.)E
+.pep
+Subdivide the transcript into one section per each of the four parts of the
+interview.  You do not need to record the questions themselves, if the content
+of the questions is essentially as given above.  If any different questions are
+asked, record those questions in conjunction with the answers.
+.pep
+The default assumption for the transcript is that the designated question-asker
+interacts orally with the client(s).  Hence, the name of the question-asker
+does not need to be noted in the body of the transcript.  If the note taker
+asks questions, record these in the transcript.
+.pep
+If there is one client, the client's name does not need to be noted in the body
+of the transcript.  If there are more than one client present, then note which
+client answers/asks which questions.
+.pep
+When the interview is concluded, be sure to download a copy of the audio file
+from the recorder via USB to a computer or USB stick of your convenience.  For
+saving the audio file in the repository, store it in the directory
+\fCdeployment/interviews/audio/\fP.  The format of the audio root file name
+transcript file.
+with an ".mp3" extension instead of ".html".  I.e., the format is
+\fIname\fP\fC-\fP\fIdate\fP\fC.mp3\fP, where \fIname\fP is the last name of the
+client and \fIdate\fP is the date on which the interview was conducted.  Use
+the date syntax described in the
+.(Ah "http://users.csc.calpoly.edu/~gfisher/classes/308/admin/meeting-minutes-template.html"
+meeting minutes template.
+.)Ah
+.pp
+Shortly after the interview is concluded, edit the transcript from its raw
+notes form to a finished document.  As necessary, use the audio recording and
+your recollection of the discussion to fill in all of the details.
+.pe
+.if 0 \{\
+Other TODOs:
+  get the script out with email annoucement and Trello post
+  copy edit phase 2 rqmts walk-thru, most likely Sat morning
+  create release-1 proto branch
+  do 402 milestones
+.\}
+.\" LocalWords:  adoptability  editable PolySched Tempus SchedIt Schedulus Poly
+.\" LocalWords:   html USB mp TODOs annoucement Trello rqmts proto dept pre CAS
+.\" LocalWords:  admin
