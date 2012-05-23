@@ -237,8 +237,9 @@ public class TimePrefsWidget extends VerticalPanel {
 		for (int halfHour = 0; halfHour < 30; halfHour+=2) { // There are 30 half-hours between 7am and 10pm
 			int hour = halfHour / 2 + 7; // divide by two to get hours 0-15. Add 7 to get hours 7-22.
 			String string = ((hour + 12 - 1) % 12 + 1) + ":" + (halfHour % 2 == 0 ? "00" : "30") + (hour < 12 ? "am" : "pm");
+			String otherString = ((hour + 12) % 12 + 1) + ":" + (halfHour % 2 == 0 ? "00" : "30") + (hour < 12 ? "am" : "pm");
+			toList.addItem(otherString);
 			fromList.addItem(string);
-			toList.addItem(string);
 		}
 		
 		multiSet.addItem("Not Possible");
