@@ -206,35 +206,9 @@ public class CoursesView extends VLayout {
 		lectureIDField.setOptionDataSource(lectureOptionsDataSource);
 		lectureIDField.setDisplayField("displayField");
 		lectureIDField.setValueField("valueField");
-		lectureIDField.setCellFormatter(new CellFormatter() {
-			@Override
-			public String format(Object value, ListGridRecord record,
-					int rowNum, int colNum) {
-				if ("lectureID".equals(grid.getFieldName(colNum))) {
-					if ("LEC".equals(record.getAttribute("type"))
-							|| "SEM".equals(record.getAttribute("type"))
-							|| "IND".equals(record.getAttribute("type"))) {
-						return "";
-					}
-				}
-				return value.toString();
-			}
-		});
 
 		ListGridField isTetheredField = new ListGridField("isTethered");
 		isTetheredField.setDefaultValue(false);
-		isTetheredField.setCellFormatter(new CellFormatter() {
-			@Override
-			public String format(Object value, ListGridRecord record,
-					int rowNum, int colNum) {
-				if ("isTethered".equals(grid.getFieldName(colNum))) {
-					if ("LEC".equals(record.getAttribute("type"))) {
-						return "";
-					}
-				}
-				return value.toString();
-			}
-		});
 
 		grid.setFields(departmentField,
 				catalogNumberField, nameField, courseTypeField,

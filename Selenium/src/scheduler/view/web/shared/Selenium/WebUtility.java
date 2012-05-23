@@ -147,7 +147,7 @@ public abstract class WebUtility {
 //		newCourseDeptCell.click();
 		
 		Thread.sleep(500);
-		WebElement img = elementForResourceTableCell(driver, viewID, row0Based, col0Based).findElement(By.xpath("//div[@class='labelAnchor']/img"));
+		WebElement img = elementForResourceTableCell(driver, viewID, row0Based, col0Based).findElement(By.xpath("//div/img"));
 		
 		boolean currentValue = !img.getAttribute("src").contains("unchecked");
 		
@@ -233,7 +233,7 @@ public abstract class WebUtility {
 		setResourceTableMultiselectCell(driver, view, row0Based, 8, dayCombinations);
 		setResourceTableTextCell(driver, view, row0Based, 9, hoursPerWeek);
 		setResourceTableTextCell(driver, view, row0Based, 10, maxEnrollment);
-//		setResourceTableCheckboxCell(driver, view, row0Based, 13, isSchedulable);
+		setResourceTableCheckboxCell(driver, view, row0Based, 13, isSchedulable);
 //		setResourceTableMultiselectCell(driver, view, row0Based, 12, usedEquipment);
 //		
 	}
