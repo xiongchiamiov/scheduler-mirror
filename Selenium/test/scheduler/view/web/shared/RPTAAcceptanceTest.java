@@ -74,14 +74,14 @@ public abstract class RPTAAcceptanceTest extends DefaultSelTestCase {
 	
 	private void login(final String username) throws InterruptedException {
 		driver.findElement(By.id("s_unameBox")).clear();
-		driver.findElement(By.id("s_unameBox")).sendKeys("admin"); //because admin is the new cool thing
+		driver.findElement(By.id("s_unameBox")).sendKeys(username); //because admin is the new cool thing
 		driver.findElement(By.id("s_loginBtn")).click();
 		WebUtility.waitForElementPresent(driver, By.xpath("//div/table/tbody/tr/td[text()='Create New Document']"));
 		Thread.sleep(2000); // To wait for it to retrieve documents
 	}
 	
 	public void testAcceptanceForRPTA() throws InterruptedException {
-		login("eovadia");
+		login("admin");
 		
 		final String documentName = "RPTA Acceptance Test Document Spring 2012";
 		deleteDocumentFromHomeTab(documentName);
