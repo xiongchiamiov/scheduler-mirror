@@ -1,8 +1,9 @@
+
 package scheduler.view.web.shared;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -13,12 +14,12 @@ import scheduler.view.web.shared.Selenium.WebUtility;
 public abstract class EEAcceptanceTest extends DefaultSelTestCase {	
 	private WebDriver driver;
 	private StringBuffer verificationErrors = new StringBuffer();
-	private static String protoURL;// = "http://localhost:8080/EE";
+	private static String protoURL;
 	
-	public void setUp(WebDriver drv) throws java.io.IOException{
+	public void setUp(WebDriver drv) throws java.io.IOException {
 		Properties properties = new Properties();
 		properties.load(this.getClass().getResourceAsStream("selenium.properties"));
-		this.protoURL = properties.getProperty("domain") + "/EEx";
+		this.protoURL = properties.getProperty("domain") + "/EE";
 		
 		this.driver = drv;
 		super.setUp(protoURL, drv);
@@ -39,9 +40,11 @@ public abstract class EEAcceptanceTest extends DefaultSelTestCase {
 		
 		Integer existingDocumentIndex = null;
 		for (int i = 0; existingDocumentIndex == null && i < existingDocumentsNames.size(); i++) {
+			System.out.println("Existing document index " + i + " has name " + existingDocumentsNames.get(i).getText().trim() + " comparing to " + documentName);
 			if (existingDocumentsNames.get(i).getText().trim().equalsIgnoreCase(documentName))
 				existingDocumentIndex = i;
 		}
+		System.out.println("Found document " + documentName + " at: " + existingDocumentIndex);
 		
 		if (existingDocumentIndex != null) {
 			By rowXPath = By.xpath("//table[@class='listTable']/tbody/tr[@role='listitem'][" + (existingDocumentIndex + 1) + "]");
@@ -51,7 +54,7 @@ public abstract class EEAcceptanceTest extends DefaultSelTestCase {
 			
 			assert("true".equals(driver.findElement(rowXPath).getAttribute("aria-selected"))); // Sanity check, sometimes it was selecting the wrong one, given my xpath...
 			
-			WebUtility.mouseDownAndUpAt(driver, By.xpath("//div[@eventproxy='s_deleteBtn']"), 5, 5);
+			WebUtility.mouseDownAndUpAt(driver, By.xpath("//div/table/tbody/tr/td[text()='Delete Selected Documents']"), 5, 5);
 			
 			Thread.sleep(5000);
 			
@@ -60,26 +63,26 @@ public abstract class EEAcceptanceTest extends DefaultSelTestCase {
 	}
 	
 	private void createDocumentFromHomeTabAndSwitchToItsWindow(final String documentName) throws InterruptedException {
-		WebUtility.mouseDownAndUpAt(driver, By.xpath("//div[@eventproxy='s_createBtn']"), 5, 5);
+		WebUtility.mouseDownAndUpAt(driver, By.xpath("//div/table/tbody/tr/td[text()='Create New Document']"), 5, 5);
 
 		WebUtility.waitForElementPresent(driver, By.id("s_createBox"));
 		
 		driver.findElement(By.id("s_createBox")).clear();
 		driver.findElement(By.id("s_createBox")).sendKeys(documentName);
-
+		
 		driver.findElement(By.id("s_createNamedDocBtn")).click();
 	}
 	
 	private void login(final String username) throws InterruptedException {
 		driver.findElement(By.id("s_unameBox")).clear();
-		driver.findElement(By.id("s_unameBox")).sendKeys("Mofo");
+		driver.findElement(By.id("s_unameBox")).sendKeys("admin");
 		driver.findElement(By.id("s_loginBtn")).click();
-		WebUtility.waitForElementPresent(driver, By.xpath("//div[@eventproxy='s_createBtn']"));
+		WebUtility.waitForElementPresent(driver, By.xpath("//div/table/tbody/tr/td[text()='Create New Document']"));
 		Thread.sleep(2000); // To wait for it to retrieve documents
 	}
 	
 	public void testAcceptanceForEE() throws InterruptedException {
-		login("pooper");
+		login("admin");
 		
 		final String documentName = "EE Acceptance Test Document";
 		deleteDocumentFromHomeTab(documentName);
@@ -139,9 +142,10 @@ public abstract class EEAcceptanceTest extends DefaultSelTestCase {
 
 		// Click on the instructors tab
 		driver.findElement(By.xpath("//td[@class='tabTitle'][text()='Instructors']")).click();
-
+		Thread.sleep(500);
+		
 		// Start filling out instructors
-		WebUtility.enterIntoInstructorsResourceTableNewRow(driver, 0, true, "Juszak", "Jake", "jjuszak", "12");
+		WebUtility.enterIntoInstructorsResourceTableNewRow(driver, 0, true, "Ovadia", "Evan", "eovadia", "20");
 		
 		// Test saving
 		driver.findElement(By.xpath("//div[@class='toolStrip']//td[@class='buttonTitle'][text()='File']")).click();
@@ -169,3 +173,4 @@ public abstract class EEAcceptanceTest extends DefaultSelTestCase {
 // TODO: see if documentName appears anywhere on screen?
 
 // saving:
+
