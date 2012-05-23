@@ -151,24 +151,12 @@ public class AdminScheduleNavView extends VerticalPanel {
 			}
 		});
 		
-		MenuItem mergeItem = new MenuItem("Merge", "icons/16/folder_out.png");
-		mergeItem.addClickHandler(new ClickHandler() {
-			public void onClick(MenuItemClickEvent event) {
-				MergeDialog.fileMergePressed(service);
-			}
-		});
-		
-		// MenuItem recentDocItem = new MenuItem("Recent Documents",
-		// "icons/16/folder_document.png");
-		
-		// Menu recentDocSubMenu = new Menu();
-		// MenuItem dataSM = new MenuItem("data.xml");
-		// dataSM.setChecked(true);
-		// MenuItem componentSM = new MenuItem("Component Guide.doc");
-		// MenuItem ajaxSM = new MenuItem("AJAX.doc");
-		// recentDocSubMenu.setItems(dataSM, componentSM, ajaxSM);
-		
-		// recentDocItem.setSubmenu(recentDocSubMenu);
+//		MenuItem mergeItem = new MenuItem("Merge", "icons/16/folder_out.png");
+//		mergeItem.addClickHandler(new ClickHandler() {
+//			public void onClick(MenuItemClickEvent event) {
+//				MergeDialog.fileMergePressed(service);
+//			}
+//		});
 		
 		MenuItem importItem = new MenuItem("Import", "icons/16/folder_out.png");
 		importItem.addClickHandler(new ClickHandler() {
@@ -184,13 +172,13 @@ public class AdminScheduleNavView extends VerticalPanel {
 			}
 		});
 		
-		MenuItem printItem = new MenuItem("Print", "icons/16/printer3.png");
-		printItem.setEnabled(false);
+//		MenuItem printItem = new MenuItem("Print", "icons/16/printer3.png");
+//		printItem.setEnabled(false);
 		
 		MenuItemSeparator separator = new MenuItemSeparator();
 		
 		menu.setItems(newItem, openItem, separator, saveItem, saveAsItem, closeItem,
-				separator, mergeItem, separator, importItem, exportItem, separator, printItem);
+				separator, importItem, exportItem);
 		menu.setZIndex(1100000);
 		menu.addStyleName("menumenu");
 		
@@ -230,9 +218,10 @@ public class AdminScheduleNavView extends VerticalPanel {
 		
 		toolStrip.addMenuButton(makeFileMenuAndButton(updateHeaderStrategy));
 		
-		toolStrip.addSpacer(5);
-		
-		toolStrip.addMenuButton(makeSettingsMenuAndButton());
+		// add these back in when we support them
+//		toolStrip.addSpacer(5);
+//		
+//		toolStrip.addMenuButton(makeSettingsMenuAndButton());
 		
 		// I have no idea why we need two of them here, but it's the only way
 		// it seems to work... -eo
@@ -347,6 +336,7 @@ public class AdminScheduleNavView extends VerticalPanel {
 		instructorsView.close();
 		locationsView.close();
 		
+		updateHeaderStrategy.setDocumentChanged(false);
 		updateHeaderStrategy.onClosedDocument();
 		
 		this.clear();

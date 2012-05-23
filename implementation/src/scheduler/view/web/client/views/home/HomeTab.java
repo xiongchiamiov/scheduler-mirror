@@ -149,26 +149,25 @@ public class HomeTab extends Tab {
 //		deleteButton.setID("s_deleteBtn");
 		bottomButtons.addMember(deleteButton);
 
-		{
-			Canvas spacer = new Canvas();
-			spacer.setHeight(10);
-			spacer.setWidth(10);
-			bottomButtons.addMember(spacer);
-		}
-		
-		IButton mergeButton = new IButton("Merge Selected Documents", new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				Collection<Integer> selectedIDs = new TreeSet<Integer>();
-				Record[] selectedRecords = aliveOriginalDocumentsGrid.getSelectedRecords();
-				for (Record selectedRecord : selectedRecords)
-					selectedIDs.add(selectedRecord.getAttributeAsInt("id"));
-				documents.mergeDocuments(selectedIDs);
-			}
-		});
-		mergeButton.setAutoWidth();
-		mergeButton.setOverflow(Overflow.VISIBLE);
-//		mergeButton.setID("s_mergeBtn");
-		bottomButtons.addMember(mergeButton);
+//		{
+//			Canvas spacer = new Canvas();
+//			spacer.setHeight(10);
+//			spacer.setWidth(10);
+//			bottomButtons.addMember(spacer);
+//		}
+//		
+//		IButton mergeButton = new IButton("Merge Selected Documents", new ClickHandler() {
+//			public void onClick(ClickEvent event) {
+//				Collection<Integer> selectedIDs = new TreeSet<Integer>();
+//				Record[] selectedRecords = aliveOriginalDocumentsGrid.getSelectedRecords();
+//				for (Record selectedRecord : selectedRecords)
+//					selectedIDs.add(selectedRecord.getAttributeAsInt("id"));
+//				documents.mergeDocuments(selectedIDs);
+//			}
+//		});
+//		mergeButton.setAutoWidth();
+//		mergeButton.setOverflow(Overflow.VISIBLE);
+//		bottomButtons.addMember(mergeButton);
 		
 		return bottomButtons;
 	}

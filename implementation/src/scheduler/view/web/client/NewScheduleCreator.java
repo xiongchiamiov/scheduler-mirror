@@ -11,6 +11,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -93,6 +94,12 @@ public class NewScheduleCreator {
 		final TextBox tb = new TextBox();
 		
 		DOM.setElementAttribute(tb.getElement(), "id", "s_createBox");
+		
+		tb.addAttachHandler(new AttachEvent.Handler() {
+			public void onAttachOrDetach(AttachEvent event) {
+				tb.setFocus(true);
+			}
+		});
 
 		final com.smartgwt.client.widgets.Window window = new com.smartgwt.client.widgets.Window();
 //		window.setID("s_NameTxt"); Don't put IDs on smartgwt widgets, it makes it add the window to a global list for later recalling

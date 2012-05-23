@@ -218,7 +218,7 @@ public class CalendarTableView extends SimplePanel {
 			if (item.getDays() == null)
 				continue;
 			
-			for (DayGWT day : item.getDays()) {
+			for (DayGWT day : item.getDays().getDays()) {
 				CalendarDayModel dayModel = model.get(day);
 				
 				// Find the leftmost column that is open on all rows that this item needs to occupy

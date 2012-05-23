@@ -3,20 +3,18 @@ package scheduler.view.web.client.calendar;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import scheduler.view.web.client.CachedOpenWorkingCopyDocument;
 import scheduler.view.web.client.schedule.FiltersViewWidget;
 import scheduler.view.web.client.views.LoadingPopup;
 import scheduler.view.web.shared.CourseGWT;
-import scheduler.view.web.shared.DayGWT;
 import scheduler.view.web.shared.InstructorGWT;
 import scheduler.view.web.shared.LocationGWT;
 import scheduler.view.web.shared.ScheduleItemGWT;
+import scheduler.view.web.shared.WeekGWT;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -173,7 +171,7 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 	}
 
 	public void editItem(CourseGWT course) {
-		Set<DayGWT> days = new HashSet<DayGWT>();
+		WeekGWT days = new WeekGWT();
 		ScheduleItemGWT item = new ScheduleItemGWT(-1, course.getID(), -1, -1,
 				-1, days, 0, 0, false, false);
 		editItem(true, item, null, -1);

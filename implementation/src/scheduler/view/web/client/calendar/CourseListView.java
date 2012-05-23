@@ -1,17 +1,16 @@
 package scheduler.view.web.client.calendar;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
+
+import scheduler.view.web.shared.CourseGWT;
+import scheduler.view.web.shared.ScheduleItemGWT;
+import scheduler.view.web.shared.WeekGWT;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.SimplePanel;
-
-import scheduler.view.web.shared.CourseGWT;
-import scheduler.view.web.shared.DayGWT;
-import scheduler.view.web.shared.ScheduleItemGWT;
 
 public class CourseListView extends SimplePanel {
 
@@ -106,7 +105,7 @@ public class CourseListView extends SimplePanel {
 	
 	private ScheduleItemGWT createItem(CourseGWT course) {
 		return new ScheduleItemGWT(-1, course.getID(), -1, -1, 
-				-1, new HashSet<DayGWT>(), 0, 0, false, false);
+				-1, new WeekGWT(), 0, 0, false, false);
 	}
 
 	/**

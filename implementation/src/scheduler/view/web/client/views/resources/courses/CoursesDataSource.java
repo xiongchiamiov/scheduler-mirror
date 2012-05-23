@@ -8,6 +8,7 @@ import java.util.TreeSet;
 import scheduler.view.web.client.CachedOpenWorkingCopyDocument;
 import scheduler.view.web.shared.CourseGWT;
 import scheduler.view.web.shared.DayGWT;
+import scheduler.view.web.shared.WeekGWT;
 
 import com.smartgwt.client.data.DSRequest;
 import com.smartgwt.client.data.DSResponse;
@@ -15,6 +16,7 @@ import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.data.fields.DataSourceBooleanField;
 import com.smartgwt.client.data.fields.DataSourceEnumField;
+import com.smartgwt.client.data.fields.DataSourceFloatField;
 import com.smartgwt.client.data.fields.DataSourceIntegerField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 import com.smartgwt.client.types.DSProtocol;
@@ -49,12 +51,12 @@ public class CoursesDataSource extends DataSource {
 		
 		DataSourceEnumField dayCombinationsField = new DataSourceEnumField("dayCombinations");
 		dayCombinationsField.setMultiple(true);
-		
-		
 		dayCombinationsField.setValueMap(
-				"MW", "MF", "WF", "TR", "MWF", "MTWR", "MTWF", "MTRF", "MWRF", "TWRF", "MTWRF",
-				"M", "T", "W", "R", "F");
-		DataSourceTextField hoursPerWeekField = new DataSourceTextField("hoursPerWeek");
+				"MW", "MF", "WF", "TR", "MWF",
+				"MTWR", "MTWF", "MTRF", "MWRF", "TWRF",
+				"MTWRF", "M", "T", "W", "R", "F");
+		
+		DataSourceFloatField hoursPerWeekField = new DataSourceFloatField("hoursPerWeek");
 		
 		DataSourceTextField maxEnrollmentField = new DataSourceTextField("maxEnrollment");
 		
@@ -78,10 +80,12 @@ public class CoursesDataSource extends DataSource {
 	Record readCourseIntoRecord(CourseGWT course) {
 		String[] dayCombinationsStrings = new String[course.getDayPatterns().size()];
 		int dayCombinationIndex = 0;
-		for (Set<DayGWT> dayCombination : course.getDayPatterns())
-			dayCombinationsStrings[dayCombinationIndex++] = CourseGWT.dayCombinationToString(dayCombination);
+		for (WeekGWT dayCombination : course.getDayPatterns())
+			dayCombinationsStrings[dayCombinationIndex++] = dayCombination.toString();
 		
 		String[] usedEquipmentsStrings = course.getUsedEquipment().toArray(new String[0]);
+
+		float hoursPerWeek = Float.parseFloat(course.getHalfHoursPerWeek()) / 2.0f;
 		
 		Record record = new Record();
 		record.setAttribute("id", course.getID());
@@ -93,7 +97,7 @@ public class CoursesDataSource extends DataSource {
 		record.setAttribute("wtu", course.getWtu());
 		record.setAttribute("scu", course.getScu());
 		record.setAttribute("dayCombinations", dayCombinationsStrings);
-		record.setAttribute("hoursPerWeek", course.getHalfHoursPerWeek());
+		record.setAttribute("hoursPerWeek", hoursPerWeek);
 		record.setAttribute("maxEnrollment", course.getMaxEnroll());
 		record.setAttribute("type", course.getType());
 		record.setAttribute("usedEquipment", usedEquipmentsStrings);
@@ -111,10 +115,10 @@ public class CoursesDataSource extends DataSource {
 	CourseGWT readRecordIntoCourse(Record record) {
 
 		String dayCombinationsStringsCombined = record.getAttributeAsString("dayCombinations");
-		Collection<Set<DayGWT>> dayCombinations = new LinkedList<Set<DayGWT>>();
+		Set<WeekGWT> dayCombinations = new TreeSet<WeekGWT>();
 		if (dayCombinationsStringsCombined != null && dayCombinationsStringsCombined.length() > 0) {
 			for (String dayCombinationString : dayCombinationsStringsCombined.split(","))
-				dayCombinations.add(CourseGWT.dayCombinationFromString(dayCombinationString));
+				dayCombinations.add(WeekGWT.parse(dayCombinationString));
 		}
 		
 		
@@ -127,6 +131,13 @@ public class CoursesDataSource extends DataSource {
 		
 		assert(record.getAttribute("type") != null);
 		
+		Integer numHalfHoursPerWeek = 0;
+		try {
+			if (record.getAttribute("hoursPerWeek") != null)
+				numHalfHoursPerWeek = Math.round(Float.parseFloat(record.getAttribute("hoursPerWeek")) * 2);
+		}
+		catch (NumberFormatException e) { }
+		
 		CourseGWT course = new CourseGWT(
 				record.getAttribute("isSchedulable").equals("true"),
 				emptyStringIfNull(record.getAttribute("name")),
@@ -138,7 +149,7 @@ public class CoursesDataSource extends DataSource {
 				emptyStringIfNull(record.getAttribute("type")),
 				emptyStringIfNull(record.getAttribute("maxEnrollment")),
 				Integer.parseInt(record.getAttribute("lectureID")), // lecture ID
-				emptyStringIfNull(record.getAttribute("hoursPerWeek")),
+				numHalfHoursPerWeek.toString(),
 				dayCombinations, // day combinations
 				record.getAttributeAsInt("id"), // id
 				"true".equals(record.getAttribute("isTethered")),

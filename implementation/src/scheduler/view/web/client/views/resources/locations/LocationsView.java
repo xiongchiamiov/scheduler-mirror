@@ -13,6 +13,7 @@ import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.types.ListGridEditEvent;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.RowEndEditAction;
+import com.smartgwt.client.types.SelectionAppearance;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -58,6 +59,7 @@ public class LocationsView extends VLayout {
 				return super.getCellCSSText(record, rowNum, colNum);
 			}
 		};
+		grid.setSelectionAppearance(SelectionAppearance.CHECKBOX);
 		grid.setWidth100();
 		grid.setAutoFitData(Autofit.VERTICAL);
 		grid.setShowAllRecords(true);
@@ -68,16 +70,16 @@ public class LocationsView extends VLayout {
 		grid.setListEndEditAction(RowEndEditAction.NEXT);
 		grid.setDataSource(new LocationsDataSource(document));
 
-		ListGridField idField = new ListGridField("id", "&nbsp;");
-		idField.setCanEdit(false);
-		idField.setCellFormatter(new CellFormatter() {
-			public String format(Object value, ListGridRecord record,
-					int rowNum, int colNum) {
-				return "\u22EE";
-			}
-		});
-		idField.setWidth(20);
-		idField.setAlign(Alignment.CENTER);
+//		ListGridField idField = new ListGridField("id", "&nbsp;");
+//		idField.setCanEdit(false);
+//		idField.setCellFormatter(new CellFormatter() {
+//			public String format(Object value, ListGridRecord record,
+//					int rowNum, int colNum) {
+//				return "\u22EE";
+//			}
+//		});
+//		idField.setWidth(20);
+//		idField.setAlign(Alignment.CENTER);
 
 		ListGridField schedulableField = new ListGridField("isSchedulable",
 				"Schedulable");
@@ -93,13 +95,15 @@ public class LocationsView extends VLayout {
 				"Max Occupancy");
 		maxOccupancyField.setDefaultValue(0);
 		maxOccupancyField.setAlign(Alignment.CENTER);
-		ListGridField equipmentField = new ListGridField("equipment",
-				"Equipment");
-		equipmentField.setAlign(Alignment.CENTER);
-		equipmentField.setDefaultValue("");
+		
+		// put back in when we support it
+//		ListGridField equipmentField = new ListGridField("equipment",
+//				"Equipment");
+//		equipmentField.setAlign(Alignment.CENTER);
+//		equipmentField.setDefaultValue("");
 
-		grid.setFields(idField, roomField, typeField,
-				maxOccupancyField, equipmentField, schedulableField);
+		grid.setFields(roomField, typeField,
+				maxOccupancyField, schedulableField);
 
 		this.addMember(grid);
 		// this.setHorizontalAlignment(ALIGN_DEFAULT);

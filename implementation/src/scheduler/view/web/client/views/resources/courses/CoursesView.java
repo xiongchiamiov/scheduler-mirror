@@ -7,7 +7,9 @@ import java.util.TreeSet;
 import scheduler.view.web.client.CachedOpenWorkingCopyDocument;
 import scheduler.view.web.client.views.resources.ValidatorUtil;
 import scheduler.view.web.shared.CourseGWT;
+import scheduler.view.web.shared.DayGWT;
 import scheduler.view.web.shared.ScheduleItemGWT;
+import scheduler.view.web.shared.WeekGWT;
 
 import com.google.gwt.user.client.Window;
 import com.smartgwt.client.data.DSRequest;
@@ -17,6 +19,7 @@ import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.types.ListGridEditEvent;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.RowEndEditAction;
+import com.smartgwt.client.types.SelectionAppearance;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Img;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -28,6 +31,10 @@ import com.smartgwt.client.widgets.grid.CellFormatter;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
+import com.smartgwt.client.widgets.grid.events.EditCompleteEvent;
+import com.smartgwt.client.widgets.grid.events.EditCompleteHandler;
+import com.smartgwt.client.widgets.grid.events.EditorEnterEvent;
+import com.smartgwt.client.widgets.grid.events.EditorEnterHandler;
 import com.smartgwt.client.widgets.grid.events.EditorExitEvent;
 import com.smartgwt.client.widgets.grid.events.EditorExitHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
@@ -94,6 +101,7 @@ public class CoursesView extends VLayout {
 		grid.setWidth100();
 		grid.setAutoFitData(Autofit.VERTICAL);
 
+		grid.setSelectionAppearance(SelectionAppearance.CHECKBOX);
 		grid.setShowAllRecords(true);
 		grid.setAutoFetchData(true);
 		grid.setCanEdit(true);
@@ -112,16 +120,16 @@ public class CoursesView extends VLayout {
 			}
 		});
 
-		ListGridField selectorField = new ListGridField("selector", "&nbsp;");
-		selectorField.setCanEdit(false);
-		selectorField.setCellFormatter(new CellFormatter() {
-			public String format(Object value, ListGridRecord record,
-					int rowNum, int colNum) {
-				return "\u22EE";
-			}
-		});
-		selectorField.setWidth(20);
-		selectorField.setAlign(Alignment.CENTER);
+//		ListGridField selectorField = new ListGridField("selector", "&nbsp;");
+//		selectorField.setCanEdit(false);
+//		selectorField.setCellFormatter(new CellFormatter() {
+//			public String format(Object value, ListGridRecord record,
+//					int rowNum, int colNum) {
+//				return "\u22EE";
+//			}
+//		});
+//		selectorField.setWidth(20);
+//		selectorField.setAlign(Alignment.CENTER);
 
 		IntegerRangeValidator nonnegativeInt = new IntegerRangeValidator();
 		nonnegativeInt.setMin(0);
@@ -157,52 +165,24 @@ public class CoursesView extends VLayout {
 		dayCombinationsField.setAlign(Alignment.CENTER);
 		dayCombinationsField
 				.setEditorValueMapFunction(new PossibleDayPatternsFunction());
-		grid.addEditorExitHandler(new EditorExitHandler() {
-			@Override
-			public void onEditorExit(EditorExitEvent event) {
-				if (grid.getFieldName(event.getColNum()).equals("scu")) {
-					if (grid.getEditValue(event.getRowNum(), "dayCombinations") == null) {
-						String scuString = grid.getEditedCell(event.getRowNum(), "scu").toString();
-						String type = grid.getEditedCell(event.getRowNum(), "type").toString();
-
-						// We have to get the entire record because there's no single setEditValue that takes in a String[]
-						Map result = grid.getEditValues(event.getRowNum());
-						String[] values = PossibleDayPatternsFunction.getValues(type, scuString).values().toArray(new String[0]);
-						result.put("dayCombinations", values);
-						
-						grid.setEditValues(event.getRowNum(), result);
-					}
-					else {
-						if (grid.getEditedCell(event.getRowNum(), "dayCombinations").toString().length() != 0) {
-							Window.alert("Warning: By changing your SCU value your day combination data has been changed");
-						}
-						
-						// Change day combos
-						String scuString = (String) grid.getEditedCell(event.getRowNum(), "scu");
-						String type = (String) grid.getEditedCell(event.getRowNum(), "type");
-	
-						DSRequest requestProperties = new DSRequest();
-						requestProperties.setOldValues(grid.getEditedRecord(event.getRowNum()));
-	
-						String[] values = PossibleDayPatternsFunction
-								.getValues(type, scuString).values()
-								.toArray(new String[0]);
-						Record record = grid.getEditedRecord(event.getRowNum());
-						assert (record.getAttributeAsInt("id") != null);
-						record.setAttribute("dayCombinations", values);
-						// Update hours per week if it is still on default
-						String hours = (String) grid.getEditedCell(event.getRowNum(), "hoursPerWeek");
-						if (hours.equals("4")) {
-							// It is on default value, set to SCU
-							record.setAttribute("hoursPerWeek", scuString);
-						}
-	
-						grid.updateData(record, null, requestProperties);
-					}
+		dayCombinationsField.setCellFormatter(new CellFormatter() {
+			public String format(Object rawValue, ListGridRecord record, int rowNum, int colNum) {
+				String[] value = record.getAttributeAsStringArray("dayCombinations");
+				if (value == null)
+					return "";
+				Set<WeekGWT> weeks = new TreeSet<WeekGWT>();
+				for (String week : value)
+					weeks.add(WeekGWT.parse(week));
+				String result = "";
+				for (WeekGWT week : weeks) {
+					if (!result.equals(""))
+						result += ",";
+					result += week.toString();
 				}
+				return result;
 			}
 		});
-
+		
 		ListGridField hoursPerWeekField = new ListGridField("hoursPerWeek",
 				"Hours per Week");
 		hoursPerWeekField.setAlign(Alignment.CENTER);
@@ -214,10 +194,12 @@ public class CoursesView extends VLayout {
 		ListGridField courseTypeField = new ListGridField("type", "Type");
 		courseTypeField.setAlign(Alignment.CENTER);
 		courseTypeField.setDefaultValue("LEC");
-		ListGridField usedEquipmentField = new ListGridField("usedEquipment",
-				"Used Equipment");
-		usedEquipmentField.setAlign(Alignment.CENTER);
-		usedEquipmentField.setDefaultValue("");
+		
+		// put back in when we support it
+//		ListGridField usedEquipmentField = new ListGridField("usedEquipment",
+//				"Used Equipment");
+//		usedEquipmentField.setAlign(Alignment.CENTER);
+//		usedEquipmentField.setDefaultValue("");
 
 		ListGridField lectureIDField = new ListGridField("lectureID", "Associations");
 		lectureIDField.setDefaultValue(-1);
@@ -254,12 +236,74 @@ public class CoursesView extends VLayout {
 			}
 		});
 
-		grid.setFields(selectorField, departmentField,
+		grid.setFields(departmentField,
 				catalogNumberField, nameField, courseTypeField,
 				numSectionsField, wtuField, scuField, dayCombinationsField,
-				hoursPerWeekField, maxEnrollmentField, usedEquipmentField,
+				hoursPerWeekField, maxEnrollmentField,
 				lectureIDField, isTetheredField, schedulableField);
 
+		grid.addEditCompleteHandler(new EditCompleteHandler() {
+			public void onEditComplete(EditCompleteEvent event) {
+				boolean recalculateDayCombos = false;
+				
+				Object dayComboValue = grid.getEditedCell(event.getRowNum(), "dayCombinations");
+				
+				if (grid.getFieldName(event.getColNum()).equals("scu")) {
+					if (dayComboValue != null && dayComboValue.toString().length() > 0)
+						Window.alert("Warning: By changing your SCU value your day combination data has been changed");
+					
+					recalculateDayCombos = true;
+				}
+				
+				if (dayComboValue == null)
+					recalculateDayCombos = true;
+				
+				if (recalculateDayCombos) {
+					// Change day combos
+					String scuString = grid.getEditedCell(event.getRowNum(), "scu").toString();
+					String type = grid.getEditedCell(event.getRowNum(), "type").toString();
+
+					DSRequest requestProperties = new DSRequest();
+					requestProperties.setOldValues(grid.getEditedRecord(event.getRowNum()));
+
+					String[] values = PossibleDayPatternsFunction
+							.getValues(type, scuString).values()
+							.toArray(new String[0]);
+					Record record = grid.getEditedRecord(event.getRowNum());
+					assert (record.getAttributeAsInt("id") != null);
+					record.setAttribute("dayCombinations", values);
+					// Update hours per week if it is still on default
+					Integer hours = (Integer) grid.getEditedCell(event.getRowNum(), "hoursPerWeek");
+					if (hours.equals(4)) {
+						// It is on default value, set to SCU
+						record.setAttribute("hoursPerWeek", scuString);
+					}
+
+					grid.updateData(record, null, requestProperties);
+				}
+			}
+		});
+		
+		grid.addEditorEnterHandler(new EditorEnterHandler() {
+			public void onEditorEnter(EditorEnterEvent event) {
+
+				Object dayComboValue = grid.getEditedCell(event.getRowNum(), "dayCombinations");
+				
+				if (dayComboValue == null || dayComboValue.toString().length() == 0) {
+					String scuString = grid.getEditedCell(event.getRowNum(), "scu").toString();
+					String type = grid.getEditedCell(event.getRowNum(), "type").toString();
+
+					String[] patterns = PossibleDayPatternsFunction
+							.getValues(type, scuString).values()
+							.toArray(new String[0]);
+					
+					Map values = grid.getEditValues(event.getRowNum());
+					values.put("dayCombinations", patterns);
+					grid.setEditValues(event.getRowNum(), values);
+				}
+			}
+		});
+		
 		addMember(grid);
 		// this.setHorizontalAlignment(ALIGN_LEFT);
 		layoutBottomButtonBar(grid);

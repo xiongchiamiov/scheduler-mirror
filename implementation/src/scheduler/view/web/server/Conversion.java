@@ -1,9 +1,7 @@
 package scheduler.view.web.server;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -22,6 +20,7 @@ import scheduler.view.web.shared.InstructorGWT;
 import scheduler.view.web.shared.LocationGWT;
 import scheduler.view.web.shared.OriginalDocumentGWT;
 import scheduler.view.web.shared.ScheduleItemGWT;
+import scheduler.view.web.shared.WeekGWT;
 import scheduler.view.web.shared.WorkingDocumentGWT;
 
 public abstract class Conversion {
@@ -59,7 +58,7 @@ public abstract class Conversion {
 		assert(course.getID() == null || course.getID() >= 0);
 		
 		Collection<Set<Day>> modelDayPatterns = new LinkedList<Set<Day>>();
-		for (Set<DayGWT> gwtDayPattern : course.getDayPatterns())
+		for (WeekGWT gwtDayPattern : course.getDayPatterns())
 			modelDayPatterns.add(dayPatternFromGWT(gwtDayPattern));
 		
 		Course result = model.createTransientCourse(
@@ -92,22 +91,22 @@ public abstract class Conversion {
 		return result;
 	}
 
-	static Set<DayGWT> dayPatternToGWT(Set<Day> modelDayPattern) {
-		Set<DayGWT> gwtDayPattern = new TreeSet<DayGWT>();
+	static WeekGWT dayPatternToGWT(Set<Day> modelDayPattern) {
+		WeekGWT gwtDayPattern = new WeekGWT();
 		for (Day modelDay : modelDayPattern)
-			gwtDayPattern.add(dayToGWT(modelDay));
+			gwtDayPattern.getDays().add(dayToGWT(modelDay));
 		return gwtDayPattern;
 	}
 
-	static Set<Day> dayPatternFromGWT(Set<DayGWT> gwtDayPattern) {
+	static Set<Day> dayPatternFromGWT(WeekGWT gwtDayPattern) {
 		Set<Day> modelDayPattern = new TreeSet<Day>();
-		for (DayGWT gwtDay : gwtDayPattern)
+		for (DayGWT gwtDay : gwtDayPattern.getDays())
 			modelDayPattern.add(dayFromGWT(gwtDay));
 		return modelDayPattern;
 	}
 
 	static CourseGWT courseToGWT(Course course) throws DatabaseException {
-		Collection<Set<DayGWT>> dayPatterns = new LinkedList<Set<DayGWT>>();
+		Set<WeekGWT> dayPatterns = new TreeSet<WeekGWT>();
 		for (Set<Day> combo : course.getDayPatterns())
 			dayPatterns.add(dayPatternToGWT(combo));
 
@@ -144,7 +143,7 @@ public abstract class Conversion {
 		result.setNumHalfHoursPerWeek(source.getHalfHoursPerWeek());
 
 		Collection<Set<Day>> dayPatterns = new LinkedList<Set<Day>>();
-		for (Set<DayGWT> combo : source.getDayPatterns())
+		for (WeekGWT combo : source.getDayPatterns())
 			dayPatterns.add(dayPatternFromGWT(combo));
 		result.setDayPatterns(dayPatterns);
 		
@@ -253,7 +252,7 @@ public abstract class Conversion {
 	}
 
 	public static ScheduleItemGWT scheduleItemToGWT(ScheduleItem item) throws DatabaseException {
-		Set<DayGWT> pattern = dayPatternToGWT(item.getDays());
+		WeekGWT pattern = dayPatternToGWT(item.getDays());
 		return new ScheduleItemGWT(item.getID(), item.getCourse().getID(), item.getInstructor().getID(), item.getLocation().getID(), item.getSection(), pattern, item.getStartHalfHour(), item.getEndHalfHour(), item.isPlaced(), item.isConflicted());
 	}
 

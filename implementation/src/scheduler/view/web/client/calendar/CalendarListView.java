@@ -4,16 +4,16 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
+
+import scheduler.view.web.shared.DayGWT;
+import scheduler.view.web.shared.ScheduleItemGWT;
+import scheduler.view.web.shared.WeekGWT;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
-
-import scheduler.view.web.shared.DayGWT;
-import scheduler.view.web.shared.ScheduleItemGWT;
 
 public class CalendarListView extends SimplePanel {
 	
@@ -423,12 +423,12 @@ public class CalendarListView extends SimplePanel {
 		setTopOffset(mScheduleController.getWidget().getAbsoluteTop());
 	}
 
-	private String getDaysString(Set<DayGWT> days) {
+	private String getDaysString(WeekGWT days) {
 		if (days == null)
 			return "";
 		
 		String returnString = new String();
-		Iterator<DayGWT> it = days.iterator();
+		Iterator<DayGWT> it = days.getDays().iterator();
 
 		while (it.hasNext()) {
 			String current = it.next().toString();

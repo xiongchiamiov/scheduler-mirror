@@ -11,7 +11,7 @@ public class ScheduleItemGWT implements Serializable, Identified {
 	private int instructorID;
 	private int locationID;
 	private int section;
-	private Set<DayGWT> days;
+	private WeekGWT days;
 	private int startHalfHour;
 	private int endHalfHour;
 	private boolean placed;
@@ -20,7 +20,7 @@ public class ScheduleItemGWT implements Serializable, Identified {
 	public ScheduleItemGWT() { }
 	
 	public ScheduleItemGWT(Integer id, int courseID, int instructorID, int locationID,
-			int section, Set<DayGWT> days, int startHalfHour, int endHalfHour,
+			int section, WeekGWT days, int startHalfHour, int endHalfHour,
 			boolean placed, boolean conflicted) {
 		super();
 		this.id = id;
@@ -49,8 +49,8 @@ public class ScheduleItemGWT implements Serializable, Identified {
 	public void setLocationID(int locationID) { this.locationID = locationID; }
 	public int getSection() { return section; }
 	public void setSection(int section) { this.section = section; }
-	public Set<DayGWT> getDays() { return days; }
-	public void setDays(Set<DayGWT> days) { this.days = days; }
+	public WeekGWT getDays() { return days; }
+	public void setDays(WeekGWT days) { this.days = days; }
 	public int getStartHalfHour() { return startHalfHour; }
 	public void setStartHalfHour(int startHalfHour) { this.startHalfHour = startHalfHour; }
 	public int getEndHalfHour() { return endHalfHour; }

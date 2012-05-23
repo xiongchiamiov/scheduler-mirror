@@ -659,3 +659,7 @@ h1 {
     margin-right: auto;
     overflow: auto;
 }
+
+.loadingPopup {
+	z-index: 111000000;
+}

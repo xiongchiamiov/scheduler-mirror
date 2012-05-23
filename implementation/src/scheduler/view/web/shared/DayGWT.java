@@ -25,19 +25,4 @@ public enum DayGWT {
 		assert(false);
 		return null;
 	}
-	
-	public static Set<DayGWT> parseDayGWTPattern(String string) {
-		Set<DayGWT> result = new TreeSet<DayGWT>();
-		for (DayGWT day : values())
-			if (string.contains(day.abbreviation))
-				result.add(day);
-		return result;
-	}
-	
-	public static String dayGWTPatternToString(Set<DayGWT> derp) {
-		String result = "";
-		for (DayGWT day : derp)
-			result += day.abbreviation;
-		return result;
-	}
 }

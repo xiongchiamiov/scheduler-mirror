@@ -4,12 +4,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import scheduler.view.web.client.GreetingServiceAsync;
-import scheduler.view.web.shared.ClientChangesResponse;
 import scheduler.view.web.shared.CompleteWorkingCopyDocumentGWT;
 import scheduler.view.web.shared.CourseGWT;
 import scheduler.view.web.shared.DayGWT;
@@ -21,6 +20,7 @@ import scheduler.view.web.shared.ScheduleItemGWT;
 import scheduler.view.web.shared.ServerResourcesResponse;
 import scheduler.view.web.shared.SynchronizeRequest;
 import scheduler.view.web.shared.SynchronizeResponse;
+import scheduler.view.web.shared.WeekGWT;
 import scheduler.view.web.shared.WorkingDocumentSynchronizeRequest;
 import scheduler.view.web.shared.WorkingDocumentSynchronizeResponse;
 
@@ -46,7 +46,7 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 				"0", //max enrollment
 				1, //lecutre id
 				"0", //hours per week
-				(Collection<Set<DayGWT>>)new ArrayList<Set<DayGWT>>(), // day combinations
+				new TreeSet<WeekGWT>(),
 				1, // id
 				false, // is tethered
 				new HashSet<String>() // equipment
@@ -63,7 +63,7 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 				"0", //max enrollment
 				2, //lecutre id
 				"0", //hours per week
-				(Collection<Set<DayGWT>>)new ArrayList<Set<DayGWT>>(), // day combinations
+				new TreeSet<WeekGWT>(), // day combinations
 				2, // id
 				false, // is tethered
 				new HashSet<String>() // equipment
@@ -80,7 +80,7 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 				"", //max enrollment
 				3, //lecutre id
 				"", //hours per week
-				(Collection<Set<DayGWT>>)new ArrayList<Set<DayGWT>>(), // day combinations
+				new TreeSet<WeekGWT>(), // day combinations
 				3, // id
 				false, // is tethered
 				new HashSet<String>() // equipment
@@ -698,26 +698,8 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 	 * @param days The days the set will contain
 	 * @return A set containing the specified days
 	 */
-	private static Set<DayGWT> createDaySet(String days) {
-		Set<DayGWT> daySet = new HashSet<DayGWT>();
-		
-		if (days.contains("Su"))
-			daySet.add(DayGWT.SUNDAY);
-		if (days.contains("M"))
-			daySet.add(DayGWT.MONDAY);
-		if (days.contains("T"))
-			daySet.add(DayGWT.TUESDAY);
-		if (days.contains("W"))
-			daySet.add(DayGWT.WEDNESDAY);
-		if (days.contains("R"))
-			daySet.add(DayGWT.THURSDAY);
-		if (days.contains("F"))
-			daySet.add(DayGWT.FRIDAY);
-		if (days.contains("Sa"))
-			daySet.add(DayGWT.SATURDAY);
-		
-		return daySet;
-		
+	private static WeekGWT createDaySet(String days) {
+		return WeekGWT.parse(days);
 	}
 	
 	@Override

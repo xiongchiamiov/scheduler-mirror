@@ -217,18 +217,24 @@ public abstract class WebUtility {
 		Thread.sleep(500);
 		driver.findElement(By.xpath("//div/table/tbody/tr/td[text()='Add New Course']")).click();
 		
-		setResourceTableCheckboxCell(driver, view, row0Based, 1, isSchedulable);
-		setResourceTableTextCell(driver, view, row0Based, 2, department);
-		setResourceTableTextCell(driver, view, row0Based, 3, catalogNum);
-		setResourceTableTextCell(driver, view, row0Based, 4, courseName);
-		setResourceTableSelectCell(driver, view, row0Based, 5, type);
-		setResourceTableTextCell(driver, view, row0Based, 6, numSections);
-		setResourceTableTextCell(driver, view, row0Based, 7, wtu);
-		setResourceTableTextCell(driver, view, row0Based, 8, scu);
-		setResourceTableMultiselectCell(driver, view, row0Based, 9, dayCombinations);
-		setResourceTableTextCell(driver, view, row0Based, 10, hoursPerWeek);
-		setResourceTableTextCell(driver, view, row0Based, 11, maxEnrollment);
-		setResourceTableMultiselectCell(driver, view, row0Based, 12, usedEquipment);
+		setResourceTableTextCell(driver, view, row0Based, 1, department);
+		setResourceTableTextCell(driver, view, row0Based, 2, catalogNum);
+		setResourceTableTextCell(driver, view, row0Based, 3, courseName);
+		setResourceTableSelectCell(driver, view, row0Based, 4, type);
+		setResourceTableTextCell(driver, view, row0Based, 5, numSections);
+		setResourceTableTextCell(driver, view, row0Based, 6, wtu);
+
+		if (!scu.equals("4")) {
+			setResourceTableTextCell(driver, view, row0Based, 7, scu);
+			Thread.sleep(500);
+			driver.switchTo().alert().accept();
+		}
+		
+		setResourceTableMultiselectCell(driver, view, row0Based, 8, dayCombinations);
+		setResourceTableTextCell(driver, view, row0Based, 9, hoursPerWeek);
+		setResourceTableTextCell(driver, view, row0Based, 10, maxEnrollment);
+//		setResourceTableCheckboxCell(driver, view, row0Based, 13, isSchedulable);
+//		setResourceTableMultiselectCell(driver, view, row0Based, 12, usedEquipment);
 //		
 	}
 	
@@ -271,11 +277,11 @@ public abstract class WebUtility {
 
 		String viewID = "InstructorsView";
 		
-		setResourceTableCheckboxCell(driver, viewID, row0Based, 1, isSchedulable);
-		setResourceTableTextCell(driver, viewID, row0Based, 2, lastName);
-		setResourceTableTextCell(driver, viewID, row0Based, 3, firstName);
-		setResourceTableTextCell(driver, viewID, row0Based, 4, username);
-		setResourceTableTextCell(driver, viewID, row0Based, 5, maxWTU);
+		setResourceTableTextCell(driver, viewID, row0Based, 1, lastName);
+		setResourceTableTextCell(driver, viewID, row0Based, 2, firstName);
+		setResourceTableTextCell(driver, viewID, row0Based, 3, username);
+		setResourceTableTextCell(driver, viewID, row0Based, 4, maxWTU);
+//		setResourceTableCheckboxCell(driver, viewID, row0Based, 5, isSchedulable);
 	}
 
 	public static void enterIntoLocationsResourceTableNewRow(
@@ -293,11 +299,11 @@ public abstract class WebUtility {
 
 		String viewID = "LocationsView";
 		
-		setResourceTableCheckboxCell(driver, viewID, row0Based, 1, isSchedulable);
-		setResourceTableTextCell(driver, viewID, row0Based, 2, room);
-		setResourceTableTextCell(driver, viewID, row0Based, 3, type);
-		setResourceTableTextCell(driver, viewID, row0Based, 4, maxOccupancy);
-		setResourceTableTextCell(driver, viewID, row0Based, 5, equipment);
+		setResourceTableTextCell(driver, viewID, row0Based, 1, room);
+		setResourceTableTextCell(driver, viewID, row0Based, 2, type);
+		setResourceTableTextCell(driver, viewID, row0Based, 3, maxOccupancy);
+//		setResourceTableCheckboxCell(driver, viewID, row0Based, 4, isSchedulable);
+//		setResourceTableTextCell(driver, viewID, row0Based, 5, equipment);
 	}
 	
 	public static void clickInstructorsResourceTablePreferencesButton(

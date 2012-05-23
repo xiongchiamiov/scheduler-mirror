@@ -19,7 +19,7 @@ public class CourseGWT implements Serializable, Identified {
 	private String type; //will be an object
 	private String maxEnroll;
 	private String halfHoursPerWeek;
-	private Collection<Set<DayGWT>> dayPatterns;
+	private Set<WeekGWT> dayPatterns;
 	private Integer lectureID;
 	private Boolean tetheredToLecture;
 	private Set<String> usedEquipment;
@@ -28,7 +28,7 @@ public class CourseGWT implements Serializable, Identified {
 	
 	public CourseGWT(boolean isSchedulable, String courseName, String catalogNum, String dept,
 			String wtu, String scu, String numSections, String type,
-			String maxEnroll, Integer lectureID, String halfHoursPerWeek, Collection<Set<DayGWT>> dayCombinations,
+			String maxEnroll, Integer lectureID, String halfHoursPerWeek, Set<WeekGWT> dayCombinations,
 			Integer id, Boolean tetheredToLecture, Set<String> equipment) {
 		super();
 		this.isSchedulable = isSchedulable;
@@ -63,12 +63,12 @@ public class CourseGWT implements Serializable, Identified {
 		assert(dayPatterns != null);
 	}
 	
-	public void setDayPatterns(Collection<Set<DayGWT>> dayPatterns)
+	public void setDayPatterns(Set<WeekGWT> dayPatterns)
 	{
 		this.dayPatterns = dayPatterns;
 	}
 	
-	public Collection<Set<DayGWT>> getDayPatterns()
+	public Set<WeekGWT> getDayPatterns()
 	{
 		return dayPatterns;
 	}
@@ -247,47 +247,6 @@ public class CourseGWT implements Serializable, Identified {
 		catch (NumberFormatException e) {
 			return false;
 		}
-	}
-
-	public static String dayCombinationToString(Set<DayGWT> dayCombination) {
-		String result = "";
-		if (dayCombination.contains(DayGWT.MONDAY))
-			result += "M";
-		if (dayCombination.contains(DayGWT.TUESDAY))
-			result += "T";
-		if (dayCombination.contains(DayGWT.WEDNESDAY))
-			result += "W";
-		if (dayCombination.contains(DayGWT.THURSDAY))
-			result += "R";
-		if (dayCombination.contains(DayGWT.FRIDAY))
-			result += "F";
-		if (dayCombination.contains(DayGWT.SATURDAY))
-			result += "Sa";
-		if (dayCombination.contains(DayGWT.SUNDAY))
-			result += "Su";
-		assert(result.length() > 0);
-		return result;
-	}
-	
-
-	public static Set<DayGWT> dayCombinationFromString(String string) {
-		Set<DayGWT> result = new TreeSet<DayGWT>();
-		if (string.contains("M"))
-			result.add(DayGWT.MONDAY);
-		if (string.contains("T"))
-			result.add(DayGWT.TUESDAY);
-		if (string.contains("W"))
-			result.add(DayGWT.WEDNESDAY);
-		if (string.contains("R"))
-			result.add(DayGWT.THURSDAY);
-		if (string.contains("F"))
-			result.add(DayGWT.FRIDAY);
-		if (string.contains("Sa"))
-			result.add(DayGWT.SATURDAY);
-		if (string.contains("Su"))
-			result.add(DayGWT.SUNDAY);
-		assert(result.size() > 0);
-		return result;
 	}
 	
 	public boolean attributesEqual(CourseGWT that) {

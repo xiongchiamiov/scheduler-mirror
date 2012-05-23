@@ -12,6 +12,7 @@ import scheduler.view.web.shared.DayGWT;
 import scheduler.view.web.shared.InstructorGWT;
 import scheduler.view.web.shared.LocationGWT;
 import scheduler.view.web.shared.ScheduleItemGWT;
+import scheduler.view.web.shared.WeekGWT;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -126,10 +127,10 @@ public class EditScheduleItemDlg extends DialogBox {
 		
 		int section = mOriginalItem.getSection();
 		
-		Set<DayGWT> days = new HashSet<DayGWT>();
+		WeekGWT days = new WeekGWT();
 		for (int i = 0; i < mDayCheckBoxes.size(); i++)
 			if (mDayCheckBoxes.get(i).getValue())
-				days.add(DayGWT.values()[i]);
+				days.getDays().add(DayGWT.values()[i]);
 		
 		int startHalfHour = getStartHalfHour(mStartTimeLB.getSelectedIndex());
 		int endHalfHour = getEndHalfHour(mEndTimeLB.getSelectedIndex());
@@ -298,7 +299,7 @@ public class EditScheduleItemDlg extends DialogBox {
 				mDayCheckBoxes.get(dayNum).setValue(true);
 		}
 		else {
-			for (DayGWT day : mOriginalItem.getDays()) {
+			for (DayGWT day : mOriginalItem.getDays().getDays()) {
 				System.out.println("checking day " + day.ordinal());
 				mDayCheckBoxes.get(day.ordinal()).setValue(true);
 			}

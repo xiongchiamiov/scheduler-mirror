@@ -15,6 +15,7 @@ import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.types.ListGridEditEvent;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.RowEndEditAction;
+import com.smartgwt.client.types.SelectionAppearance;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Window;
@@ -98,6 +99,7 @@ public class InstructorsView extends VLayout {
 			}
 		};
 
+		grid.setSelectionAppearance(SelectionAppearance.CHECKBOX);
 		grid.setWidth100();
 		grid.setAutoFitData(Autofit.VERTICAL);
 		grid.setShowAllRecords(true);
@@ -121,16 +123,16 @@ public class InstructorsView extends VLayout {
 			}
 		});
 
-		ListGridField selectorField = new ListGridField("selectorField", "&nbsp;");
-		selectorField.setCanEdit(false);
-		selectorField.setCellFormatter(new CellFormatter() {
-			public String format(Object value, ListGridRecord record,
-					int rowNum, int colNum) {
-				return "\u22EE";
-			}
-		});
-		selectorField.setWidth(20);
-		selectorField.setAlign(Alignment.CENTER);
+//		ListGridField selectorField = new ListGridField("selectorField", "&nbsp;");
+//		selectorField.setCanEdit(false);
+//		selectorField.setCellFormatter(new CellFormatter() {
+//			public String format(Object value, ListGridRecord record,
+//					int rowNum, int colNum) {
+//				return "\u22EE";
+//			}
+//		});
+//		selectorField.setWidth(20);
+//		selectorField.setAlign(Alignment.CENTER);
 
 		IntegerRangeValidator nonnegativeInt = new IntegerRangeValidator();
 		nonnegativeInt.setMin(0);
@@ -206,7 +208,7 @@ public class InstructorsView extends VLayout {
 		instructorPrefsField.setAlign(Alignment.CENTER);
 		instructorPrefsField.setCanEdit(false);
 
-		grid.setFields(selectorField, lastNameField,
+		grid.setFields(lastNameField,
 				firstNameField, usernameField, maxWTUField,
 				instructorPrefsField, schedulableField);
 
