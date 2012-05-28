@@ -159,16 +159,16 @@ public class EditScheduleItemDlg extends DialogBox {
 		for (int i = 0; i < mDayCheckBoxes.size(); i++)
 			if (mDayCheckBoxes.get(i).getValue())
 				days.add(DayGWT.values()[i]);
-		int hoursPerWeek = ((endHalfHour - startHalfHour + 1) / 2) * days.size();
+		int halfHoursPerWeek = (endHalfHour - startHalfHour + 1) * days.size();
 		CourseGWT course = mScheduleController.getCourse(mOriginalItem.getCourseID());
-		if (!course.getHalfHoursPerWeek().equals(""+hoursPerWeek)) {
+		if (!course.getHalfHoursPerWeek().equals(""+halfHoursPerWeek)) {
 			Window.alert("Error: This course must be scheduled for " 
-					+ course.getHalfHoursPerWeek() + " hours per week.");
+					+ course.getHalfHoursPerWeek() + " half hours per week.");
 			return;
 		}
 		
 		// Check day combination
-		if (!course.getDayPatterns().contains(days)) {
+		if (!course.getDayPatterns().contains(new WeekGWT(days))) {
 			Window.alert("Error: The selected combination of days is not a valid option for this course.");
 			return;
 		}
@@ -364,6 +364,7 @@ public class EditScheduleItemDlg extends DialogBox {
 
 						if (new Integer(mOriginalItem.getLocationID()).equals(instructor.getID()))
 							mInstructorsLB.setSelectedIndex(mInstructorsLB.getItemCount() - 1);
+						
 					}
 				}
 			}

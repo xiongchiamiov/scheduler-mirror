@@ -232,7 +232,7 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 					}
 
 					public void onSuccess(Void v) {
-						Window.alert("Success! ("+((System.currentTimeMillis() - startTime) / 1000)+"s)");
+//						Window.alert("Success! ("+((System.currentTimeMillis() - startTime) / 1000)+"s)");
 						
 //						if (result != null) {
 							// Sort result by start times in ascending order
@@ -466,7 +466,7 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 
 					@Override
 					 public void onSuccess(Void v) {
-						Window.alert("Success! ("+((System.currentTimeMillis() - startTime) / 1000)+"s)");
+//						Window.alert("Success! ("+((System.currentTimeMillis() - startTime) / 1000)+"s)");
 						
 						List<CourseGWT> result = new LinkedList<CourseGWT>(mWorkingCopyDocument.getCourses());
 						
@@ -570,7 +570,7 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 
 					@Override
 					public void onSuccess(Void v) {
-						Window.alert("Success! ("+((System.currentTimeMillis() - startTime) / 1000)+"s)");
+//						Window.alert("Success! ("+((System.currentTimeMillis() - startTime) / 1000)+"s)");
 						
 						Collection<ScheduleItemGWT> result = mWorkingCopyDocument.getScheduleItems();
 						
@@ -639,7 +639,7 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 
 					@Override
 					public void onSuccess(Void v) {
-						Window.alert("Success! ("+((System.currentTimeMillis() - startTime) / 1000)+"s)");
+//						Window.alert("Success! ("+((System.currentTimeMillis() - startTime) / 1000)+"s)");
 						
 						Collection<ScheduleItemGWT> result = mWorkingCopyDocument.getScheduleItems();
 
@@ -727,7 +727,7 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 
 					@Override
 					public void onSuccess(Void v) {
-						Window.alert("Success! ("+((System.currentTimeMillis() - startTime) / 1000)+"s)");
+//						Window.alert("Success! ("+((System.currentTimeMillis() - startTime) / 1000)+"s)");
 						
 						Collection<ScheduleItemGWT> result = mWorkingCopyDocument.getScheduleItems();
 
