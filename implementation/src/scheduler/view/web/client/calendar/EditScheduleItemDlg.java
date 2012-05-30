@@ -355,7 +355,9 @@ public class EditScheduleItemDlg extends DialogBox {
 				List<InstructorGWT> result = new LinkedList<InstructorGWT>(mWorkingCopyDocument.getInstructors(true));
 				
 				mInstructors = result;
-				
+
+				Integer instructorID = new Integer(mOriginalItem.getLocationID());
+
 				mInstructorsLB.addItem("Choose one for me");
 				mInstructorsLB.addItem("STAFF");
 				if (result != null) {
@@ -364,9 +366,13 @@ public class EditScheduleItemDlg extends DialogBox {
 
 						if (new Integer(mOriginalItem.getLocationID()).equals(instructor.getID()))
 							mInstructorsLB.setSelectedIndex(mInstructorsLB.getItemCount() - 1);
-						
 					}
 				}
+				
+				if (instructorID.equals(mWorkingCopyDocument.getDocument().getChooseForMeInstructorID()))
+					mLocationsLB.setSelectedIndex(0);
+				else if (instructorID.equals(mWorkingCopyDocument.getDocument().getStaffInstructorID()))
+					mLocationsLB.setSelectedIndex(1);
 			}
 		});	
 	}
@@ -383,6 +389,8 @@ public class EditScheduleItemDlg extends DialogBox {
 				List<LocationGWT> result = new LinkedList<LocationGWT>(mWorkingCopyDocument.getLocations(true));
 				
 				mLocations = result;
+				
+				Integer locationID = new Integer(mOriginalItem.getLocationID());
 
 				mLocationsLB.addItem("Choose one for me");
 				mLocationsLB.addItem("TBA");
@@ -390,12 +398,16 @@ public class EditScheduleItemDlg extends DialogBox {
 					for (LocationGWT location : result) {
 						mLocationsLB.addItem(location.getRoom());
 						
-						if (new Integer(mOriginalItem.getLocationID()).equals(location.getID()))
+						if (locationID.equals(location.getID()))
 							mLocationsLB.setSelectedIndex(mLocationsLB.getItemCount() - 1);
 					}
 				}
+				
+				if (locationID.equals(mWorkingCopyDocument.getDocument().getChooseForMeLocationID()))
+					mLocationsLB.setSelectedIndex(0);
+				else if (locationID.equals(mWorkingCopyDocument.getDocument().getTBALocationID()))
+					mLocationsLB.setSelectedIndex(1);
 			}
-			
 		});	
 	}
 }
