@@ -241,7 +241,13 @@ public class CalendarListView extends SimplePanel {
 		int tableRow = 0;
 		for (ScheduleItemGWT item : mScheduleItems) {
 			int tableCol = 0;
-			builder.append("<tr>");
+			
+			if (item.isConflicted()) {
+				builder.append("<tr class=\"conflictedItem\">");
+			}
+			else {						
+				builder.append("<tr>");
+			}
 			
 			builder.append("<td " + "class=\"item\" id=\"x" + tableCol + "y"
 					+ tableRow + "\" "
