@@ -42,21 +42,25 @@ public abstract class AlgorithmTest extends ModelTestCase {
 	    for (ScheduleItem si : sis) {
 	    	System.err.println(si);
 	    }
-	    System.out.println("Second run with schedule items");
-	    //courses.addAll(generateAdditionalCourses(model, doc));
-	    Vector<ScheduleItem> items = GenerateEntryPoint.generate(model, doc, sis, courses, instructors, locations);
-	  
-	    System.err.println("************************************************");
-	    for (ScheduleItem si : items) {
-	    	System.err.println(si);
-	    }
 	    
-	    for (ScheduleItem si : items) {
-	    	//System.err.println(si);
-	    	si.setInstructor(items.elementAt(5).getInstructor());
-	    }
-	    for(ScheduleItem si : GenerateEntryPoint.checkForConflicts(items, instructors, locations)) {
-	    	System.err.println("*conflicted items: *******");
+	    //Add some conflicting courses here
+	    Course course = model.createTransientCourse("Conflict", "103", "CSC", "4", "4", "1", "LEC", "30", "8", true);
+		ModelTestUtility.addDayPattern(course, Day.TUESDAY, Day.THURSDAY);
+		course.setDocument(doc).insert();
+		courses.add(course);
+		
+		ScheduleItem schedItem = model.createTransientScheduleItem(1, course.getDayPatterns().iterator().next(), 20, 24, true, false);
+		schedItem.setCourse(course);
+		schedItem.setInstructor(instructors.get(0)); //Gets Evan
+		schedItem.setLocation(locations.get(0)); //Gets roomlol
+		
+		sis.add(schedItem);
+	    
+	    System.err.println("Checking for conflicts");
+	    
+    	System.err.println("Conflicted items: *******");
+	    for(ScheduleItem si : GenerateEntryPoint.checkForConflicts(sis, instructors, locations)) {
+
 	    	if(si.isConflicted())
 	    		System.err.println(si);
 	    }
@@ -67,8 +71,7 @@ public abstract class AlgorithmTest extends ModelTestCase {
 	public static List<Course> generateCourseList(Model model, Document doc) throws DatabaseException {
 		List<Course> courses = new ArrayList<Course>();
 		
-		Course course = model.createTransientCourse("Test1", "101", "CSC", "4", "4", "2", "LEC", "60", "6", true);
-		ModelTestUtility.addDayPattern(course, Day.MONDAY, Day.WEDNESDAY, Day.FRIDAY);
+		Course course = model.createTransientCourse("Test1", "101", "CSC", "4", "4", "1", "LEC", "30", "8", true);
 		ModelTestUtility.addDayPattern(course, Day.TUESDAY, Day.THURSDAY);
 		course.setDocument(doc).insert();
 		courses.add(course);
@@ -87,7 +90,7 @@ public abstract class AlgorithmTest extends ModelTestCase {
 		course.setDocument(doc).insert();
 		courses.add(course);
 		
-		course = model.createTransientCourse("Test3", "103", "CSC", "4", "4", "1", "LEC", "30", "6", true);
+		course = model.createTransientCourse("Test3", "103", "CSC", "4", "4", "1", "LEC", "30", "8", true);
 		ModelTestUtility.addDayPattern(course, Day.TUESDAY, Day.THURSDAY);
 		course.setDocument(doc).insert();
 		courses.add(course);
