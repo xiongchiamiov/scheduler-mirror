@@ -28,6 +28,8 @@ public class GenerateEntryPoint {
 		insD = new Vector<InstructorDecorator>();
 		locD = new Vector<LocationDecorator>();
 		
+		
+		
 	    for(Instructor i : i_coll) {
 			try {
 				checkValid(i);
@@ -79,6 +81,57 @@ public class GenerateEntryPoint {
 		return Generate.generate(model, document, s_items, c_list, insD, locD);
 	}
 
+	public static Collection<ScheduleItem> checkForConflicts(Collection<ScheduleItem> s_items, Collection<Instructor> instructors, Collection<Location> locations)
+			throws DatabaseException {
+		
+		insD = new Vector<InstructorDecorator>();
+		locD = new Vector<LocationDecorator>();
+		
+		for(Instructor i : instructors)
+			if(!(i.getDocument().getStaffInstructor().getID().equals(i.getID())) && 
+			  (!(i.getDocument().getChooseForMeInstructor().getID().equals(i.getID())))) {
+				insD.add(new InstructorDecorator(i));
+			}
+		for(Location l : locations)
+			if(!(l.getDocument().getTBALocation().getID().equals(l.getID())) && 
+			  (!(l.getDocument().getChooseForMeLocation().getID().equals(l.getID())))) {
+				locD.add(new LocationDecorator(l));
+			}
+
+		//if there is a time or wtu conflict then mark it conflicted	
+		for(InstructorDecorator id : insD) {
+			for(ScheduleItem s : s_items) {
+				if(id.equals(s.getInstructor())) 
+					if(!(id.hasEnoughWTUToTeach(s.getCourse())))
+						s.setIsConflicted(true);
+					else id.addWTU(s.getCourse().getWTUInt());
+			
+				TimeRange tmp = new TimeRange(s.getStartHalfHour(), s.getEndHalfHour());
+				//System.out.println(s.getDays())
+				if(!(id.getAvailability().isFree(new Week(s.getDays()), tmp)))
+					s.setIsConflicted(true);
+				else id.getAvailability().book(new Week(s.getDays()), tmp);
+			}
+		}
+		
+		//if there is a time conflict mark it conflicted
+		for(LocationDecorator ld : locD) {
+			for(ScheduleItem s : s_items) {
+				if(ld.equals(s.getLocation())) {
+	    			TimeRange tmp = new TimeRange(s.getStartHalfHour(), s.getEndHalfHour());
+	    			if(!(ld.getAvailability().isFree(new Week(s.getDays()), tmp)))
+	    				s.setIsConflicted(true);
+	    			else ld.getAvailability().book(new Week(s.getDays()), tmp);
+	    		}	
+			}
+		}
+	
+//		for(ScheduleItem s : s_items)
+//			if(s.isConflicted())
+//				System.out.println(s);
+	    return s_items;
+	}
+	
 	private static void checkValid(Instructor ins) throws BadInstructorDataException, DatabaseException{
 		if(ins==null)
 			throw new BadInstructorDataException(BadInstructorDataException.ConflictType.IS_NULL,

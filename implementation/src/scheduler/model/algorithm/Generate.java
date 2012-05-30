@@ -214,7 +214,7 @@ public class Generate {
 			, Vector<InstructorDecorator> instructors) throws DatabaseException, BadInstructorDataException {
 		InstructorDecorator newInst = new InstructorDecorator(doc, c_list); //get staff
 		for(InstructorDecorator d : instructors) {
-			if(d.preferenceForCourse(item.getCourse()) && d.checkWTUs(item.getCourse()) && 
+			if(d.preferenceForCourse(item.getCourse()) && d.hasEnoughWTUToTeach(item.getCourse()) && 
 					d.getAvailability().isFree(new Week(item.getDays()), new TimeRange(item.getStartHalfHour(), item.getEndHalfHour()))) 
 				newInst = d;
 		}
@@ -482,7 +482,7 @@ public class Generate {
 		{
 		  if(instructor.isStaffInstructor())
 			  return true;
-		  if (instructor.checkWTUs(course) && instructor.preferenceForCourse(course))
+		  if (instructor.hasEnoughWTUToTeach(course) && instructor.preferenceForCourse(course))
 		      return true;
 		  
 		  return false;

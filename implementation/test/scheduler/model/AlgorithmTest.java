@@ -43,7 +43,7 @@ public abstract class AlgorithmTest extends ModelTestCase {
 	    	System.err.println(si);
 	    }
 	    System.out.println("Second run with schedule items");
-	    courses.addAll(generateAdditionalCourses(model, doc));
+	    //courses.addAll(generateAdditionalCourses(model, doc));
 	    Vector<ScheduleItem> items = GenerateEntryPoint.generate(model, doc, sis, courses, instructors, locations);
 	  
 	    System.err.println("************************************************");
@@ -51,6 +51,16 @@ public abstract class AlgorithmTest extends ModelTestCase {
 	    	System.err.println(si);
 	    }
 	    
+	    for (ScheduleItem si : items) {
+	    	//System.err.println(si);
+	    	si.setInstructor(items.elementAt(5).getInstructor());
+	    }
+	    for(ScheduleItem si : GenerateEntryPoint.checkForConflicts(items, instructors, locations)) {
+	    	System.err.println("*conflicted items: *******");
+	    	if(si.isConflicted())
+	    		System.err.println(si);
+	    }
+	    	
 	    model.closeModel();
 	}
 	

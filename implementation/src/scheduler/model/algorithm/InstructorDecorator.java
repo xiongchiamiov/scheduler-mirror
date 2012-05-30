@@ -65,7 +65,7 @@ public class InstructorDecorator {
 		return ((this.instructor.getDocument().getStaffInstructor()).getID().equals(this.instructor.getID()));
 	}
 	
-	public boolean checkWTUs(Course course) {
+	public boolean hasEnoughWTUToTeach(Course course) {
 		return ((this.WTU.intValue() + course.getWTUInt()) <= this.instructor.getMaxWTUInt());
 	}
 	
