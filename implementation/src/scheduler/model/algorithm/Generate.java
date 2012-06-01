@@ -877,7 +877,7 @@ public class Generate {
 	                      ScheduleItem toAdd = si.createTransientCopy();
 	                      toAdd.setDays(days);
 	                      toAdd.setStartHalfHour(tr.getS());
-	                      toAdd.setEndHalfHour(tr.getE());
+	                      toAdd.setEndHalfHour(tr.getE() - 1);
 
 	                      sis.add(new ScheduleItemDecorator(toAdd));
 	                   }
@@ -910,6 +910,9 @@ public class Generate {
 	   }
 	   
 	   private static int getDayLength(Course c, Set<Day> days) throws DatabaseException {
+		  debug("Number of half hours: " + c.getNumHalfHoursPerWeekInt());
+		  debug("Day combo size: " + days.size());
+		  debug("Day length is: " + c.getNumHalfHoursPerWeekInt() / days.size());
 		  return c.getNumHalfHoursPerWeekInt() / days.size();
 	   }
 
