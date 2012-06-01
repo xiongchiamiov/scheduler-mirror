@@ -1,3 +1,58 @@
+Architecture Overview
+=====================
+
+        CachedService       \
+              ^              \  Client
+              |              /
+      GreetingServiceAsync  /
+              ^
+              |
+           Internet
+              ^
+              |
+       GreetingServiceImpl  \
+              ^              \
+              |               \
+    GreetingServiceImplInner   | Server
+              ^               /
+              |              /
+            Model           /
+
+Model wraps database (ORM).  There are two sets for each class - `Course.java`
+and `GWTCourse.java` because `GWTCourse.java` needs to be serializable and
+`Course.java` contains database connections and shit that can't be serialized.
+
+`GreetingServiceImplInner` does all the communication between the user and
+these classes; everyone calls `GreetingServiceImpl` (a thin wrapper with
+logging and sanity checks).
+
+`CachedService` runs on the client (translated to Javascript); it creates the
+cached open working-copy documents.  `GreetingServiceAsync` handles the
+communication between client-side stuff and `GreetingServiceImpl`.
+
+`CourseDocumentSource` translates between user-viewable working-copy documents
+and the underlying `ListGrids`.
+
+We're using both standard GWT and SmartGWT; unfortunately, they don't play
+together well.  So, we do some funky stuff to separate them:
+
+     -------------------------------
+     | --------------------------- |
+     | |                         | |
+     | |        The Rest         | |
+     | |       (SmartGWT)        | |
+     | |                         | |
+     |  -------------------------  |
+     | --------------------------- |
+     | |                         | |
+     | |        Calendar         | |
+     | |         (GWT)           | |
+     | |                         | |
+     |  -------------------------  |
+     -------------------------------
+
+Sometimes one of these divs is empty (or almost empty), but they're both there.
+
 Setup Development Environment
 =============================
 
