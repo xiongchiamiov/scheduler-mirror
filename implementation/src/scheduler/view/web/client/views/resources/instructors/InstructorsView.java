@@ -16,6 +16,7 @@ import com.smartgwt.client.types.ListGridEditEvent;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.RowEndEditAction;
 import com.smartgwt.client.types.SelectionAppearance;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Window;
@@ -86,6 +87,8 @@ public class InstructorsView extends VLayout {
 //					this.rowCount++;
 					button.addClickHandler(new ClickHandler() {
 						public void onClick(ClickEvent event) {
+							SC.say("clicked");
+							
 							final int instructorID = record.getAttributeAsInt("id");
 							
 							InstructorGWT instructor = openDocument.getInstructorByID(instructorID);
@@ -98,7 +101,7 @@ public class InstructorsView extends VLayout {
 				}
 			}
 		};
-
+		
 		grid.setSelectionAppearance(SelectionAppearance.CHECKBOX);
 		grid.setWidth100();
 		grid.setAutoFitData(Autofit.VERTICAL);

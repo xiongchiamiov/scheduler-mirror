@@ -224,6 +224,8 @@ public class Model {
 			for (IDBEquipmentType providedEquipment : database.findProvidedEquipmentByEquipmentForLocation(existingDocumentLocation).keySet()) {
 				database.insertProvidedEquipment(newDocumentLocation, providedEquipment, database.assembleProvidedEquipment());
 			}
+
+			database.updateLocation(newDocumentLocation);
 		}
 
 		// Courses
@@ -233,14 +235,20 @@ public class Model {
 			database.insertCourse(newUnderlyingDocument, newDocumentCourse);
 			newDocumentCoursesByExistingDocumentCourseIDs.put(existingDocumentCourse.getID(), newDocumentCourse);
 			
-			for (IDBOfferedDayPattern existingOfferedDayPattern : database.findOfferedDayPatternsForCourse(existingDocumentCourse)) {
+			Collection<IDBOfferedDayPattern> existingOfferedDayPatterns = database.findOfferedDayPatternsForCourse(existingDocumentCourse);
+			System.out.println("old course " + existingDocumentCourse.getName() + " has " + existingOfferedDayPatterns.size() + " day patterns");
+			
+			for (IDBOfferedDayPattern existingOfferedDayPattern : existingOfferedDayPatterns) {
 				IDBDayPattern dayPattern = database.getDayPatternForOfferedDayPattern(existingOfferedDayPattern);
+				System.out.println("new course " + existingDocumentCourse.getName() + " has day pattern " + dayPattern.getDays().size());
 				database.insertOfferedDayPattern(newDocumentCourse, dayPattern, database.assembleOfferedDayPattern());
 			}
 
 			for (IDBEquipmentType usedEquipment : database.findUsedEquipmentByEquipmentForCourse(existingDocumentCourse).keySet()) {
 				database.insertUsedEquipment(newDocumentCourse, usedEquipment, database.assembleUsedEquipment());
 			}
+			
+			database.updateCourse(newDocumentCourse);
 		}
 		
 		// Course Associations

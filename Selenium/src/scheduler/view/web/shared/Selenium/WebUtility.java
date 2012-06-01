@@ -262,6 +262,19 @@ public abstract class WebUtility {
 				.perform();
 	}
 	
+	public static class TPrefsChunk {
+		public String days;
+		public int startHalfHour, lastHalfHour;
+		public String preference;
+		
+		public TPrefsChunk(String days, int startHalfHour, int lastHalfHour, String preference) {
+			this.days = days;
+			this.startHalfHour = startHalfHour;
+			this.lastHalfHour = lastHalfHour;
+			this.preference = preference;
+		}
+	}
+	
 	public static void enterIntoInstructorsResourceTableNewRow(
 			WebDriver driver,
 			int row0Based,
@@ -269,7 +282,7 @@ public abstract class WebUtility {
 			String lastName,
 			String firstName,
 			String username,
-			String maxWTU) throws InterruptedException {
+			String maxWTU, TPrefsChunk... chunks) throws InterruptedException {
 
 		System.out.println("Entering row index " + row0Based);
 
@@ -282,7 +295,52 @@ public abstract class WebUtility {
 		setResourceTableTextCell(driver, viewID, row0Based, 3, username);
 		setResourceTableTextCell(driver, viewID, row0Based, 4, maxWTU);
 //		setResourceTableCheckboxCell(driver, viewID, row0Based, 5, isSchedulable);
+		
+//		if (chunks.length > 0) {
+//			WebElement buttonCell = elementForResourceTableCell(driver, viewID, row0Based, 5);
+//			buttonCell.findElement(By.xpath("//td[@class='buttonTitle'][text()='Preferences']")).click();
+//			
+//			Thread.sleep(500);
+//			
+//			WebElement prefsPopup = driver.findElement(By.xpath("//table[@class='preferencesPanel']"));
+//			
+//			for (TPrefsChunk chunk : chunks) {
+//				setCheckboxChecked(prefsPopup.findElement(By.xpath("//span[@id='mondayCheck']/input")), chunk.days.contains("M"));
+//				setCheckboxChecked(prefsPopup.findElement(By.xpath("//span[@id='tuesdayCheck']/input")), chunk.days.contains("T"));
+//				setCheckboxChecked(prefsPopup.findElement(By.xpath("//span[@id='wednesdayCheck']/input")), chunk.days.contains("W"));
+//				setCheckboxChecked(prefsPopup.findElement(By.xpath("//span[@id='thursdayCheck']/input")), chunk.days.contains("R"));
+//				setCheckboxChecked(prefsPopup.findElement(By.xpath("//span[@id='fridayCheck']/input")), chunk.days.contains("F"));
+//				
+//				WebElement prefSelect = prefsPopup.findElement(By.xpath("//select[1]"));
+//				prefSelect.click();
+//				prefSelect.findElement(By.xpath("/option[text()='" + chunk.preference + "']")).click();
+//
+//				WebElement startSelect = prefsPopup.findElement(By.xpath("//select[2]"));
+//				startSelect.click();
+//				startSelect.findElement(By.xpath("/option[" + (chunk.startHalfHour + 1) + "]")).click();
+//				
+//				WebElement lastSelect = prefsPopup.findElement(By.xpath("//select[3]"));
+//				lastSelect.click();
+//				lastSelect.findElement(By.xpath("/option[" + (chunk.lastHalfHour + 1) + "]")).click();
+//				
+//				prefsPopup.findElement(By.xpath("//button[text()='Set Preferences']")).click();
+//			}
+//		}
 	}
+	
+	public static boolean checkboxChecked(WebElement checkbox) {
+		return !(checkbox.getAttribute("checked").isEmpty() || checkbox.getAttribute("checked").contentEquals("unchecked"));
+	}
+	
+	public static void setCheckboxChecked(WebElement checkbox, boolean shouldBeChecked) {
+		boolean checked = checkboxChecked(checkbox);
+		if (shouldBeChecked != checked) {
+			checkbox.click();
+			assert(checkboxChecked(checkbox) == shouldBeChecked);
+		}
+	}
+	
+	
 
 	public static void enterIntoLocationsResourceTableNewRow(
 			WebDriver driver,

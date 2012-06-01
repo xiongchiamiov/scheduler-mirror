@@ -739,6 +739,8 @@ public class GreetingServiceImplInner {
 			if (!allowOverwrite) {
 				throw new RuntimeException("Document by name " + newOriginalDocumentName + " already exists!");
 			}
+			
+			originalDocumentWithNewName.deleteContents(false);
 		}
 		
 		model.copyDocument(workingCopyDocument, originalDocumentWithNewName);

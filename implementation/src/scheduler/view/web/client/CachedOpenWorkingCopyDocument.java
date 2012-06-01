@@ -27,12 +27,10 @@ public class CachedOpenWorkingCopyDocument {
 		void onAnyLocalChange();
 	}
 
-	interface GetDocumentStrategy {
-		DocumentGWT getDocument();
-	}
-
 	GreetingServiceAsync service;
 	final int sessionID;
+	private Collection<Observer> observers = new LinkedList<Observer>();
+	
 	private final WorkingDocumentGWT realWorkingDocument;
 	private final WorkingDocumentGWT localWorkingDocument;
 	private final DocumentInstructorsCache instructors;
@@ -205,55 +203,6 @@ public class CachedOpenWorkingCopyDocument {
 		}
 	}
 
-	public void generateRestOfSchedule(final AsyncCallback<Void> callback) {
-		if (documentIsValid()) {
-			service.generateRestOfSchedule(sessionID,
-					realWorkingDocument.getRealID(), new AsyncCallback<Void>() {
-						@Override
-						public void onSuccess(Void v) {
-							callback.onSuccess(null);
-						}
-
-						@Override
-						public void onFailure(Throwable caught) {
-							Window.alert("Failed to generate schedule!"
-									+ caught);
-							callback.onFailure(caught);
-						}
-					});
-
-			forceSynchronize(callback);
-		}
-		else
-		{
-			callback.onFailure(new InvalidResourcesException("The resources are invalid, look for red cells"));
-		}
-	}
-
-	public Collection<CourseGWT> getCourses() {
-		return courses.getAll();
-	}
-
-	public void addCourse(CourseGWT newCourse) {
-		courses.add(newCourse);
-	}
-
-	public void editCourse(CourseGWT course) {
-		courses.edit(course);
-	}
-
-	public void deleteCourse(Integer id) {
-		for(InstructorGWT instructor : instructors.getAll())
-		{
-			instructor.getCoursePreferences().remove(id);
-		}
-		courses.delete(id);
-	}
-
-	public void editInstructor(InstructorGWT instructor) {
-		instructors.edit(instructor);
-	}
-
 	public Collection<LocationGWT> getLocations(
 			boolean excludeSpecialCaseLocations) {
 		if (excludeSpecialCaseLocations) {
@@ -302,20 +251,12 @@ public class CachedOpenWorkingCopyDocument {
 		return result;
 	}
 
-	public void editScheduleItem(ScheduleItemGWT item) {
-		scheduleItems.edit(item);
+	public Collection<CourseGWT> getCourses() {
+		return courses.getAll();
 	}
-
-	public void addScheduleItem(ScheduleItemGWT item) {
-		scheduleItems.add(item);
-	}
-
+	
 	public Collection<ScheduleItemGWT> getScheduleItems() {
 		return scheduleItems.getAll();
-	}
-
-	public void deleteScheduleItem(Integer id) {
-		scheduleItems.delete(id);
 	}
 
 	public InstructorGWT getInstructorByID(int instructorID) {
@@ -326,115 +267,107 @@ public class CachedOpenWorkingCopyDocument {
 		return courses.getByID(id);
 	}
 
-	public void deleteInstructor(Integer id) {
-		instructors.delete(id);
-	}
-
-	public void addInstructor(InstructorGWT newInstructor) {
-		instructors.add(newInstructor);
-	}
-
-	public void addLocation(LocationGWT newLocation) {
-		locations.add(newLocation);
-	}
-
-	public void editLocation(LocationGWT location) {
-		locations.edit(location);
-	}
-
-	public void deleteLocation(Integer id) {
-		locations.delete(id);
+	public LocationGWT getLocationByID(int id) {
+		return locations.getByID(id);
 	}
 
 	public void addCourseObserver(ResourceCache.Observer<CourseGWT> obs) {
 		courses.addObserver(obs);
 	}
 
-	public void addObserver(final Observer observer) {
-		courses.addObserver(new ResourceCache.Observer<CourseGWT>() {
-			@Override
-			public void afterSynchronize() {
-			}
 
-			@Override
-			public void onAnyLocalChange() {
-				observer.onAnyLocalChange();
-			}
-			@Override
-			public void onResourceAdded(CourseGWT resource, boolean addedLocally) {
-				// TODO Auto-generated method stub
-				
-			}
-			@Override
-			public void onResourceDeleted(int localID, boolean deletedLocally) {
-				// TODO Auto-generated method stub
-				
-			}
-			@Override
-			public void onResourceEdited(CourseGWT resource, boolean editedLocally) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-		});
-
-		locations.addObserver(new ResourceCache.Observer<LocationGWT>() {
-			@Override
-			public void afterSynchronize() {
-			}
-
-			@Override
-			public void onAnyLocalChange() {
-				observer.onAnyLocalChange();
-			}
-
-			@Override
-			public void onResourceAdded(LocationGWT resource, boolean addedLocally) {
-				// TODO Auto-generated method stub
-				
-			}
-			@Override
-			public void onResourceDeleted(int localID, boolean deletedLocally) {
-				// TODO Auto-generated method stub
-				
-			}
-			@Override
-			public void onResourceEdited(LocationGWT resource, boolean editedLocally) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
-
-		instructors.addObserver(new ResourceCache.Observer<InstructorGWT>() {
-			@Override
-			public void afterSynchronize() {
-			}
-
-			@Override
-			public void onAnyLocalChange() {
-				observer.onAnyLocalChange();
-			}
-
-			@Override
-			public void onResourceAdded(InstructorGWT resource, boolean addedLocally) {
-				// TODO Auto-generated method stub
-				
-			}
-			@Override
-			public void onResourceDeleted(int localID, boolean deletedLocally) {
-				// TODO Auto-generated method stub
-				
-			}
-			@Override
-			public void onResourceEdited(InstructorGWT resource, boolean editedLocally) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
+	
+	
+	public void addCourse(CourseGWT newCourse) {
+		courses.add(newCourse);
+		
+		for (Observer obs : observers)
+			obs.onAnyLocalChange();
 	}
 
-	public LocationGWT getLocationByID(int id) {
-		return locations.getByID(id);
+	public void editCourse(CourseGWT course) {
+		courses.edit(course);
+
+		for (Observer obs : observers)
+			obs.onAnyLocalChange();
+	}
+
+	public void deleteCourse(Integer id) {
+		for(InstructorGWT instructor : instructors.getAll())
+		{
+			instructor.getCoursePreferences().remove(id);
+		}
+		courses.delete(id);
+
+		for (Observer obs : observers)
+			obs.onAnyLocalChange();
+	}
+
+	public void editInstructor(InstructorGWT instructor) {
+		instructors.edit(instructor);
+
+		for (Observer obs : observers)
+			obs.onAnyLocalChange();
+	}
+
+	public void editScheduleItem(ScheduleItemGWT item) {
+		scheduleItems.edit(item);
+
+		for (Observer obs : observers)
+			obs.onAnyLocalChange();
+	}
+
+	public void addScheduleItem(ScheduleItemGWT item) {
+		scheduleItems.add(item);
+
+		for (Observer obs : observers)
+			obs.onAnyLocalChange();
+	}
+
+	public void deleteScheduleItem(Integer id) {
+		scheduleItems.delete(id);
+
+		for (Observer obs : observers)
+			obs.onAnyLocalChange();
+	}
+
+	public void deleteInstructor(Integer id) {
+		instructors.delete(id);
+
+		for (Observer obs : observers)
+			obs.onAnyLocalChange();
+	}
+
+	public void addInstructor(InstructorGWT newInstructor) {
+		instructors.add(newInstructor);
+
+		for (Observer obs : observers)
+			obs.onAnyLocalChange();
+	}
+
+	public void addLocation(LocationGWT newLocation) {
+		locations.add(newLocation);
+
+		for (Observer obs : observers)
+			obs.onAnyLocalChange();
+	}
+
+	public void editLocation(LocationGWT location) {
+		locations.edit(location);
+
+		for (Observer obs : observers)
+			obs.onAnyLocalChange();
+	}
+
+	public void deleteLocation(Integer id) {
+		locations.delete(id);
+
+		for (Observer obs : observers)
+			obs.onAnyLocalChange();
+	}
+
+	public void addObserver(final Observer observer) {
+		observers.add(observer);
 	}
 
 	public void copyToAndAssociateWithNewOriginalDocument(
@@ -458,4 +391,33 @@ public class CachedOpenWorkingCopyDocument {
 	public boolean courseWithLocalIDExistsOnServer(Integer localID) {
 		return locations.localIDToRealID(localID) != null;
 	}
+
+	public void generateRestOfSchedule(final AsyncCallback<Void> callback) {
+		if (documentIsValid()) {
+			service.generateRestOfSchedule(sessionID,
+					realWorkingDocument.getRealID(), new AsyncCallback<Void>() {
+						@Override
+						public void onSuccess(Void v) {
+							callback.onSuccess(null);
+						}
+
+						@Override
+						public void onFailure(Throwable caught) {
+							Window.alert("Failed to generate schedule!"
+									+ caught);
+							callback.onFailure(caught);
+						}
+					});
+
+			forceSynchronize(callback);
+
+			for (Observer obs : observers)
+				obs.onAnyLocalChange();
+		}
+		else
+		{
+			callback.onFailure(new InvalidResourcesException("The resources are invalid, look for red cells"));
+		}
+	}
+
 }
