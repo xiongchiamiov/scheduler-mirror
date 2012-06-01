@@ -170,14 +170,24 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 	public Widget getWidget() {
 		return mMainPanel;
 	}
-
-	public void editItem(CourseGWT course) {
-		WeekGWT days = new WeekGWT();
+	
+	public ScheduleItemGWT createItem(CourseGWT course) {
 		ScheduleItemGWT item = new ScheduleItemGWT(-1, course.getID(), 
 				mWorkingCopyDocument.getDocument().getChooseForMeInstructorID(),  
 				mWorkingCopyDocument.getDocument().getChooseForMeLocationID(), 
-				-1, days, 0, 0, false, false);
-		editItem(true, item, null, -1);
+				-1, new WeekGWT(), 0, 0, false, false);
+		
+		System.out.println(item.getInstructorID());
+		System.out.println("choose: "+mWorkingCopyDocument.getDocument().getChooseForMeInstructorID());
+
+		System.out.println(item.getLocationID());
+		System.out.println("choose: "+mWorkingCopyDocument.getDocument().getChooseForMeLocationID());
+		
+		return item;
+	}
+
+	public void editItem(CourseGWT course) {
+		editItem(true, createItem(course), null, -1);
 	}
 
 	/**

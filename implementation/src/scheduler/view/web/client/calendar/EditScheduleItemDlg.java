@@ -373,6 +373,11 @@ public class EditScheduleItemDlg extends DialogBox {
 					mInstructorsLB.setSelectedIndex(0);
 				else if (instructorID.equals(mWorkingCopyDocument.getDocument().getStaffInstructorID()))
 					mInstructorsLB.setSelectedIndex(1);
+				
+				System.out.println();
+				System.out.println(mOriginalItem.getInstructorID());
+				System.out.println("choose: "+mWorkingCopyDocument.getDocument().getChooseForMeInstructorID());
+				System.out.println("staff:"+mWorkingCopyDocument.getDocument().getStaffInstructorID());
 			}
 		});	
 	}
@@ -407,6 +412,11 @@ public class EditScheduleItemDlg extends DialogBox {
 					mLocationsLB.setSelectedIndex(0);
 				else if (locationID.equals(mWorkingCopyDocument.getDocument().getTBALocationID()))
 					mLocationsLB.setSelectedIndex(1);
+
+				System.out.println();
+				System.out.println(mOriginalItem.getInstructorID());
+				System.out.println("choose: "+mWorkingCopyDocument.getDocument().getChooseForMeLocationID());
+				System.out.println("tba:"+mWorkingCopyDocument.getDocument().getTBALocationID());
 			}
 		});	
 	}

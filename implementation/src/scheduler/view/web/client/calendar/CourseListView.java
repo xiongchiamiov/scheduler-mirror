@@ -99,13 +99,8 @@ public class CourseListView extends SimplePanel {
 		Element dragDiv = DOM.getElementById(DragAndDropController.DRAGGED_ID);
 		DOM.setInnerText(dragDiv, mScheduleController.getCourseString(course.getID()));
 		
-		mDragController.onMouseDown(createItem(course), row, -1);
+		mDragController.onMouseDown(mScheduleController.createItem(course), row, -1);
 		return false;
-	}
-	
-	private ScheduleItemGWT createItem(CourseGWT course) {
-		return new ScheduleItemGWT(-1, course.getID(), -1, -1, 
-				-1, new WeekGWT(), 0, 0, false, false);
 	}
 
 	/**
