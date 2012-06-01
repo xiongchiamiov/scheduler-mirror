@@ -87,8 +87,6 @@ public class InstructorsView extends VLayout {
 //					this.rowCount++;
 					button.addClickHandler(new ClickHandler() {
 						public void onClick(ClickEvent event) {
-							SC.say("clicked");
-							
 							final int instructorID = record.getAttributeAsInt("id");
 							
 							InstructorGWT instructor = openDocument.getInstructorByID(instructorID);
