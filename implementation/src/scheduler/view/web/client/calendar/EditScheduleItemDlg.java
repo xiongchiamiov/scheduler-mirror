@@ -370,9 +370,9 @@ public class EditScheduleItemDlg extends DialogBox {
 				}
 				
 				if (instructorID.equals(mWorkingCopyDocument.getDocument().getChooseForMeInstructorID()))
-					mLocationsLB.setSelectedIndex(0);
+					mInstructorsLB.setSelectedIndex(0);
 				else if (instructorID.equals(mWorkingCopyDocument.getDocument().getStaffInstructorID()))
-					mLocationsLB.setSelectedIndex(1);
+					mInstructorsLB.setSelectedIndex(1);
 			}
 		});	
 	}

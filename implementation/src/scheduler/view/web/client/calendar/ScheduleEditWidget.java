@@ -173,7 +173,9 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 
 	public void editItem(CourseGWT course) {
 		WeekGWT days = new WeekGWT();
-		ScheduleItemGWT item = new ScheduleItemGWT(-1, course.getID(), -1, -1,
+		ScheduleItemGWT item = new ScheduleItemGWT(-1, course.getID(), 
+				mWorkingCopyDocument.getDocument().getChooseForMeInstructorID(),  
+				mWorkingCopyDocument.getDocument().getChooseForMeLocationID(), 
 				-1, days, 0, 0, false, false);
 		editItem(true, item, null, -1);
 	}
