@@ -205,8 +205,12 @@ public class Generate {
 	      debug ("GENERATION FINISHED W/: " + items.size());
 	      
 	      Vector<ScheduleItem> result = new Vector<ScheduleItem>();
-	      for (ScheduleItemDecorator si_dec : items)
-	    	  result.add(si_dec.getItem());
+	      for (ScheduleItemDecorator si_dec : items) {
+	    	  ScheduleItem item = si_dec.getItem();
+	    	  if(item.getEndHalfHour() > 0)
+	              item.setEndHalfHour(item.getEndHalfHour() - 1);  
+	    	  result.add(item);
+	      }
 	      return result;
 	}
 	
@@ -880,7 +884,7 @@ public class Generate {
 	                      ScheduleItem toAdd = si.createTransientCopy();
 	                      toAdd.setDays(days);
 	                      toAdd.setStartHalfHour(tr.getS());
-	                      toAdd.setEndHalfHour(tr.getE() - 1);
+	                      toAdd.setEndHalfHour(tr.getE());
 
 	                      sis.add(new ScheduleItemDecorator(toAdd));
 	                   }
