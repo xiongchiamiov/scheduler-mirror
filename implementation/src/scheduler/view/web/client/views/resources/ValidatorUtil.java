@@ -12,6 +12,12 @@ import com.smartgwt.client.data.RecordList;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 public class ValidatorUtil {
+	/**
+	 * This method is used in CoursesView to highlight a cell based on if it is valid or not.
+	 * @param fieldName The column name to validate
+	 * @param record The course record to validate
+	 * @return True if the column is valid, false otherwise
+	 */
 	public static boolean isValidCourseType(String fieldName,
 			ListGridRecord record) {
 		if (record != null) {
@@ -47,6 +53,12 @@ public class ValidatorUtil {
 		return true;
 	}
 
+	/**
+	 * This method is used in InstructorsView to highlight a cell based on if it is valid or not.
+	 * @param fieldName The column name to validate
+	 * @param record The instructor record to validate
+	 * @return True if the column is valid, false otherwise
+	 */
 	public static boolean isValidInstructorType(String fieldName,
 			ListGridRecord record, RecordList recordList) {
 		if (record != null) {
@@ -75,6 +87,12 @@ public class ValidatorUtil {
 		return true;
 	}
 
+	/**
+	 * This method is used in LocationsView to highlight a cell based on if it is valid or not.
+	 * @param fieldName The column name to validate
+	 * @param record The location record to validate
+	 * @return True if the column is valid, false otherwise
+	 */
 	public static boolean isValidLocationType(String fieldName,
 			ListGridRecord record) {
 		if (record != null) {
@@ -98,6 +116,11 @@ public class ValidatorUtil {
 		return true;
 	}
 
+	/**
+	 * This method is used to validate an entire collection of CourseGWTs.
+	 * @param courses The entire collection of CourseGWTs to validate
+	 * @return true if the collection is valid, false otherwise
+	 */
 	public static boolean isValidCourseCollection(Collection<CourseGWT> courses) {
 		for (CourseGWT course : courses) {
 			if (!isValidCourseGWT(course)) {
@@ -107,6 +130,11 @@ public class ValidatorUtil {
 		return true;
 	}
 
+	/**
+	 * Helper method to validate a single CourseGWT
+	 * @param course The CourseGWT to validate
+	 * @return true if the CourseGWT is valid, false otherwise
+	 */
 	public static boolean isValidCourseGWT(CourseGWT course) {
 		if (validateNonNegativeInt(course.getMaxEnroll())) {
 			if (validateGreaterThanZeroInt(course.getRawNumSections())) {
@@ -126,6 +154,11 @@ public class ValidatorUtil {
 		return false;
 	}
 
+	/**
+	 * This method is used to validate an entire collection of InstructorGWTs.
+	 * @param courses The entire collection of InstructorGWTs to validate
+	 * @return true if the collection is valid, false otherwise
+	 */
 	public static boolean isValidInstructorCollection(
 			Collection<InstructorGWT> instructors) {
 		// Make sure usernames are unique
@@ -147,6 +180,11 @@ public class ValidatorUtil {
 		return true;
 	}
 
+	/**
+	 * Helper method to validate a single InstructorGWT
+	 * @param course The InstructorGWT to validate
+	 * @return true if the InstructorGWT is valid, false otherwise
+	 */
 	public static boolean isValidInstructorGWT(InstructorGWT instructor) {
 		if (validateNotEmpty(instructor.getLastName())) {
 			if (validateNotEmpty(instructor.getFirstName())) {
@@ -160,6 +198,11 @@ public class ValidatorUtil {
 		return false;
 	}
 
+	/**
+	 * This method is used to validate an entire collection of LocationGWTs.
+	 * @param courses The entire collection of LocationGWTs to validate
+	 * @return true if the collection is valid, false otherwise
+	 */
 	public static boolean isValidLocationCollection(
 			Collection<LocationGWT> locations) {
 		for (LocationGWT location : locations) {
@@ -170,6 +213,11 @@ public class ValidatorUtil {
 		return true;
 	}
 
+	/**
+	 * Helper method to validate a single LocationGWT
+	 * @param course The LocationGWT to validate
+	 * @return true if the LocationGWT is valid, false otherwise
+	 */
 	public static boolean isValidLocationGWT(LocationGWT location) {
 		if (validateNonNegativeInt(location.getRawMaxOccupancy())) {
 			if (validateNotEmpty(location.getRoom())) {
@@ -181,6 +229,12 @@ public class ValidatorUtil {
 		return false;
 	}
 
+	//Helper methods to validate different types of fields
+	/**
+	 * Method to validate if a value is an integer that is >= 0
+	 * @param cellvalue The value to validate
+	 * @return true if the value is an integer greater than or equal to zero, false if it is less than zero
+	 */
 	private static boolean validateNonNegativeInt(String cellvalue) {
 		try {
 			int value = Integer.valueOf(cellvalue);
@@ -194,6 +248,11 @@ public class ValidatorUtil {
 		}
 	}
 
+	/**
+	 * Method to validate if a value is an integer that is > 0
+	 * @param cellvalue The value to validate
+	 * @return true if the value is an integer greater than zero, false if it is zero or less
+	 */
 	private static boolean validateGreaterThanZeroInt(String cellvalue) {
 		try {
 			int value = Integer.valueOf(cellvalue);
@@ -207,6 +266,11 @@ public class ValidatorUtil {
 		}
 	}
 
+	/**
+	 * Method to validate if a value is a multiple of .5
+	 * @param cellvalue The value to validate
+	 * @return true if the value is a multiple of .5, false otherwise
+	 */
 	private static boolean validateMultipleOfHalf(String cellvalue) {
 		try {
 			float value = Float.parseFloat(cellvalue);
@@ -220,6 +284,11 @@ public class ValidatorUtil {
 		}
 	}
 
+	/**
+	 * Method to validate if a value is not empty
+	 * @param cellValue The value to validate
+	 * @return true if the value is not empty, false if it is empty
+	 */
 	private static boolean validateNotEmpty(String cellValue) {
 		if (cellValue.length() <= 0) {
 			return false;
@@ -228,6 +297,12 @@ public class ValidatorUtil {
 		}
 	}
 
+	/**
+	 * Method to validate if a value is a valid username
+	 * @param cellValue The value to validate
+	 * @param recordList The entire list of records
+	 * @return true if the username is unique, false if there are duplicates
+	 */
 	private static boolean validateUsername(String cellValue,
 			RecordList recordList) {
 		assert (cellValue instanceof String);
@@ -251,6 +326,12 @@ public class ValidatorUtil {
 		return true;
 	}
 
+	/**
+	 * Method to validate if a value is a valid SCU
+	 * @param cellvalue The value to validate
+	 * @param recordList The entire list of records that contain the other rows
+	 * @return true if the SCU is between 0 and 5
+	 */
 	private static boolean validateSCUs(String cellvalue, RecordList recordList) {
 		try {
 			int value = Integer.valueOf(cellvalue);
