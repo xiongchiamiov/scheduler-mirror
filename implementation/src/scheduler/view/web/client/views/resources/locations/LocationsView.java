@@ -19,7 +19,6 @@ import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.events.KeyPressEvent;
 import com.smartgwt.client.widgets.events.KeyPressHandler;
-import com.smartgwt.client.widgets.grid.CellFormatter;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -30,14 +29,15 @@ public class LocationsView extends VLayout {
 	CachedOpenWorkingCopyDocument document;
 	ListGrid grid;
 	
+	/**
+	 * LocationsView constructor. Takes in a document to show and edit.
+	 * @param document The document
+	 */
 	public LocationsView(CachedOpenWorkingCopyDocument document) {
 		this.document = document;
 		
-//		setID("s_locationviewTab");
 		this.setWidth100();
 		this.setHeight100();
-		// this.setHorizontalAlignment(ALIGN_CENTER);
-		// this.add(new HTML("<h2>Locations</h2>"));
 
 		grid = new ListGrid() {
 			protected String getCellCSSText(ListGridRecord record, int rowNum,
@@ -70,17 +70,6 @@ public class LocationsView extends VLayout {
 		grid.setListEndEditAction(RowEndEditAction.NEXT);
 		grid.setDataSource(new LocationsDataSource(document));
 
-//		ListGridField idField = new ListGridField("id", "&nbsp;");
-//		idField.setCanEdit(false);
-//		idField.setCellFormatter(new CellFormatter() {
-//			public String format(Object value, ListGridRecord record,
-//					int rowNum, int colNum) {
-//				return "\u22EE";
-//			}
-//		});
-//		idField.setWidth(20);
-//		idField.setAlign(Alignment.CENTER);
-
 		ListGridField schedulableField = new ListGridField("isSchedulable",
 				"Schedulable");
 		schedulableField.setDefaultValue(true);
@@ -96,17 +85,10 @@ public class LocationsView extends VLayout {
 		maxOccupancyField.setDefaultValue(0);
 		maxOccupancyField.setAlign(Alignment.CENTER);
 		
-		// put back in when we support it
-//		ListGridField equipmentField = new ListGridField("equipment",
-//				"Equipment");
-//		equipmentField.setAlign(Alignment.CENTER);
-//		equipmentField.setDefaultValue("");
-
 		grid.setFields(roomField, typeField,
 				maxOccupancyField, schedulableField);
 
 		this.addMember(grid);
-		// this.setHorizontalAlignment(ALIGN_DEFAULT);
 
 		grid.addKeyPressHandler(new KeyPressHandler() {
 			public void onKeyPress(KeyPressEvent event) {
@@ -180,6 +162,9 @@ public class LocationsView extends VLayout {
 		this.addMember(bottomButtonFlowPanel);
 	}
 	
+	/**
+	 * Deletes the selected location
+	 */
 	void deleteSelected() {
 		Set<Integer> referencedLocationIDs = new TreeSet<Integer>();
 		for (ScheduleItemGWT item : document.getScheduleItems())
@@ -213,13 +198,20 @@ public class LocationsView extends VLayout {
 			}
 		}
 	}
-	
+
+	/**
+	 * Returns true if the user can close the window, false if they can't
+	 * @return true
+	 */
 	public boolean canClose() {
 		// If you want to keep the user from navigating away, return false here
 		
 		return true;
 	}
 
+	/**
+	 * Closes everything
+	 */
 	public void close() {
 		this.clear();
 	}

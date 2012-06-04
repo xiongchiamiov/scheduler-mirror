@@ -7,7 +7,6 @@ import java.util.TreeSet;
 import scheduler.view.web.client.CachedOpenWorkingCopyDocument;
 import scheduler.view.web.client.views.resources.ValidatorUtil;
 import scheduler.view.web.shared.CourseGWT;
-import scheduler.view.web.shared.DayGWT;
 import scheduler.view.web.shared.ScheduleItemGWT;
 import scheduler.view.web.shared.WeekGWT;
 
@@ -35,8 +34,6 @@ import com.smartgwt.client.widgets.grid.events.EditCompleteEvent;
 import com.smartgwt.client.widgets.grid.events.EditCompleteHandler;
 import com.smartgwt.client.widgets.grid.events.EditorEnterEvent;
 import com.smartgwt.client.widgets.grid.events.EditorEnterHandler;
-import com.smartgwt.client.widgets.grid.events.EditorExitEvent;
-import com.smartgwt.client.widgets.grid.events.EditorExitHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
@@ -47,16 +44,22 @@ public class CoursesView extends VLayout {
 	ListGrid grid;
 	private static final int DEFAULT_SCU = 4;
 
+	/**
+	 * CoursesView constructor. Takes in a document to show and edit.
+	 * @param document The document
+	 */
 	public CoursesView(final CachedOpenWorkingCopyDocument document) {
 		this.document = document;
 
-		// this.setID("s_courseviewTab");
 		this.setWidth100();
 		this.setHeight100();
 
 		onPopulate();
 	}
 
+	/**
+	 * Populates the view
+	 */
 	private void onPopulate() {
 		final LectureOptionsDataSource lectureOptionsDataSource = new LectureOptionsDataSource(
 				document);
@@ -119,17 +122,6 @@ public class CoursesView extends VLayout {
 					deleteSelected();
 			}
 		});
-
-//		ListGridField selectorField = new ListGridField("selector", "&nbsp;");
-//		selectorField.setCanEdit(false);
-//		selectorField.setCellFormatter(new CellFormatter() {
-//			public String format(Object value, ListGridRecord record,
-//					int rowNum, int colNum) {
-//				return "\u22EE";
-//			}
-//		});
-//		selectorField.setWidth(20);
-//		selectorField.setAlign(Alignment.CENTER);
 
 		IntegerRangeValidator nonnegativeInt = new IntegerRangeValidator();
 		nonnegativeInt.setMin(0);
@@ -195,12 +187,6 @@ public class CoursesView extends VLayout {
 		courseTypeField.setAlign(Alignment.CENTER);
 		courseTypeField.setDefaultValue("LEC");
 		
-		// put back in when we support it
-//		ListGridField usedEquipmentField = new ListGridField("usedEquipment",
-//				"Used Equipment");
-//		usedEquipmentField.setAlign(Alignment.CENTER);
-//		usedEquipmentField.setDefaultValue("");
-
 		ListGridField lectureIDField = new ListGridField("lectureID", "Associations");
 		lectureIDField.setDefaultValue(-1);
 		lectureIDField.setOptionDataSource(lectureOptionsDataSource);
@@ -210,12 +196,14 @@ public class CoursesView extends VLayout {
 		ListGridField isTetheredField = new ListGridField("isTethered");
 		isTetheredField.setDefaultValue(false);
 
+		//Add the fields to the grid
 		grid.setFields(departmentField,
 				catalogNumberField, nameField, courseTypeField,
 				numSectionsField, wtuField, scuField, dayCombinationsField,
 				hoursPerWeekField, maxEnrollmentField,
 				lectureIDField, isTetheredField, schedulableField);
 
+		//Add handlers in order to change dayCombinations correctly based on SCUs
 		grid.addEditCompleteHandler(new EditCompleteHandler() {
 			public void onEditComplete(EditCompleteEvent event) {
 				boolean recalculateDayCombos = false;
@@ -258,6 +246,7 @@ public class CoursesView extends VLayout {
 			}
 		});
 		
+		//Add handlers in order to change dayCombinations correctly based on SCUs
 		grid.addEditorEnterHandler(new EditorEnterHandler() {
 			public void onEditorEnter(EditorEnterEvent event) {
 
@@ -291,6 +280,7 @@ public class CoursesView extends VLayout {
 		bottomButtonFlowPanel.setMembersMargin(10);
 		bottomButtonFlowPanel.addStyleName("floatingResourcesButtonBar");
 
+		//Add button
 		IButton course = new IButton("Add New Course", new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				Record defaultValues = new Record();
@@ -303,6 +293,7 @@ public class CoursesView extends VLayout {
 		// course.setID("s_newCourseBtn");
 		bottomButtonFlowPanel.addMember(course);
 
+		//Duplicate button
 		IButton dupeBtn = new IButton("Duplicate Selected Courses",
 				new ClickHandler() {
 					public void onClick(ClickEvent event) {
@@ -327,6 +318,7 @@ public class CoursesView extends VLayout {
 		// dupeBtn.setID("s_dupeCourseBtn");
 		bottomButtonFlowPanel.addMember(dupeBtn);
 
+		//Remove button
 		IButton remove = new IButton("Remove Selected Courses",
 				new ClickHandler() {
 					public void onClick(ClickEvent event) {
@@ -345,6 +337,9 @@ public class CoursesView extends VLayout {
 		this.addMember(bottomButtonFlowPanel);
 	}
 
+	/**
+	 * Method to delete the selected course
+	 */
 	void deleteSelected() {
 		Set<Integer> referencedCourseIDs = new TreeSet<Integer>();
 		for (ScheduleItemGWT item : document.getScheduleItems())
@@ -386,12 +381,19 @@ public class CoursesView extends VLayout {
 		}
 	}
 
+	/**
+	 * Returns true if the user can close the window, false if they can't
+	 * @return true
+	 */
 	public boolean canClose() {
 		// If you want to keep the user from navigating away, return false here
 
 		return true;
 	}
 
+	/**
+	 * Closes everything
+	 */
 	public void close() {
 		this.clear();
 	}
