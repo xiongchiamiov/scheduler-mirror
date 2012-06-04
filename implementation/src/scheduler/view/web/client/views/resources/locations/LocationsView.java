@@ -25,6 +25,11 @@ import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
+/**
+ * This view contains locations
+ * @author tywholland
+ *
+ */
 public class LocationsView extends VLayout {
 	CachedOpenWorkingCopyDocument document;
 	ListGrid grid;

@@ -11,6 +11,11 @@ import com.smartgwt.client.data.Record;
 import com.smartgwt.client.data.RecordList;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
+/**
+ * A utility class to validate courses, instructors, and locations.
+ * @author tywholland
+ *
+ */
 public class ValidatorUtil {
 	/**
 	 * This method is used in CoursesView to highlight a cell based on if it is valid or not.

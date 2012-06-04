@@ -37,6 +37,11 @@ import com.smartgwt.client.widgets.grid.events.EditorEnterHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
+/**
+ * This view contains the courses data.
+ * @author tywholland
+ *
+ */
 public class CoursesView extends VLayout {
 	Img loadingImage;
 
