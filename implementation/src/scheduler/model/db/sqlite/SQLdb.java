@@ -41,11 +41,23 @@ import scheduler.model.db.IDatabase.NotFoundException;
 import scheduler.model.db.simple.DBCourse;
 import scheduler.model.db.simple.DBDocument;
 import scheduler.model.db.simple.DBUsedEquipment;
-//TODO: Any input with a negative ID must not happen. Ensure this does not happen.
+// TODO: Auto-generated Javadoc
+
+/**
+ * The Class SQLdb implements all methods of the IDatabase class
+ * to provide an API for connection to a SQLlite database. This class
+ * can be used to insert and retrieve all necessary information pertaining
+ * to the scheduler, and allows for storage of all data in a sqlite
+ * database.
+ *
+ * @author Jonathan
+ */
 public class SQLdb implements IDatabase {
 	
+	/** The connection to the database. */
 	static Connection conn = null;
 	
+	/** The document table, which is a mirror of the table as it exists in the db. */
 	Table<SQLDocument> documentTable = new Table<SQLDocument>(SQLDocument.class, "document",
 			new Table.Column[] {
 					new Table.Column("id", Integer.class),
@@ -54,11 +66,15 @@ public class SQLdb implements IDatabase {
 					new Table.Column("startHalfHour", Integer.class),
 					new Table.Column("endHalfHour", Integer.class)
 	});
+	
+	/** The workingcopy table, which is a mirror of the table as it exists in the db. */
 	Table<SQLWorkingCopy> workingcopyTable = new Table<SQLWorkingCopy>(SQLWorkingCopy.class, "workingcopy",
 			new Table.Column[] {
 					new Table.Column("id", Integer.class),
 					new Table.Column("originalDocID", Integer.class)
 	});
+	
+	/** The instructor table, which is a mirror of the table as it exists in the db. */
 	Table<SQLInstructor> instructorTable = new Table<SQLInstructor>(SQLInstructor.class, "instructor",
 			new Table.Column[] {
 					new Table.Column("id", Integer.class),
@@ -69,6 +85,8 @@ public class SQLdb implements IDatabase {
 					new Table.Column("maxWTU", String.class),
 					new Table.Column("schedulable", Boolean.class)
 	});
+	
+	/** The location table, which is a mirror of the table as it exists in the db. */
 	Table<SQLLocation> locationTable = new Table<SQLLocation>(SQLLocation.class, "location",
 			new Table.Column[] {
 					new Table.Column("id", Integer.class),
@@ -78,12 +96,16 @@ public class SQLdb implements IDatabase {
 					new Table.Column("room", String.class),
 					new Table.Column("schedulable", Boolean.class)	
 	});
+	
+	/** The locationequipment table, which is a mirror of the table as it exists in the db. */
 	Table<SQLLocationEquipment> locationequipmentTable = new Table<SQLLocationEquipment>(SQLLocationEquipment.class, "locationequipment",
 			new Table.Column[] {
 					new Table.Column("id", Integer.class),
 					new Table.Column("locID", Integer.class),
 					new Table.Column("equipID", Integer.class)
 	});
+	
+	/** The course table, which is a mirror of the table as it exists in the db. */
 	Table<SQLCourse> courseTable = new Table<SQLCourse>(SQLCourse.class, "course",
 			new Table.Column[] {
 					new Table.Column("id", Integer.class),
@@ -99,18 +121,24 @@ public class SQLdb implements IDatabase {
 					new Table.Column("schedulable", Boolean.class),
 					new Table.Column("numHalfHours", String.class)
 	});
+	
+	/** The courseequipment table, which is a mirror of the table as it exists in the db. */
 	Table<SQLUsedEquipment> courseequipmentTable = new Table<SQLUsedEquipment>(SQLUsedEquipment.class, "courseequipment",
 			new Table.Column[] {
 					new Table.Column("id", Integer.class),
 					new Table.Column("courseID", Integer.class),
 					new Table.Column("equipID", Integer.class)
 	});
+	
+	/** The coursepatterns table, which is a mirror of the table as it exists in the db. */
 	Table<SQLOfferedDayPattern> coursepatternsTable = new Table<SQLOfferedDayPattern>(SQLOfferedDayPattern.class, "coursepatterns",
 			new Table.Column[] {
 					new Table.Column("id", Integer.class),
 					new Table.Column("courseID", Integer.class),
 					new Table.Column("patternID", Integer.class)
 	});
+	
+	/** The schedule item table, which is a mirror of the table as it exists in the db. */
 	Table<SQLScheduleItem> scheduleItemTable = new Table<SQLScheduleItem>(SQLScheduleItem.class, "scheduleitem",
 			new Table.Column[] {
 					new Table.Column("id", Integer.class),
@@ -125,12 +153,16 @@ public class SQLdb implements IDatabase {
 					new Table.Column("isPlaced", Boolean.class),
 					new Table.Column("isConflicted", Boolean.class)
 	});
+	
+	/** The labassociations table, which is a mirror of the table as it exists in the db. */
 	Table<SQLCourseAssociation> labassociationsTable = new Table<SQLCourseAssociation>(SQLCourseAssociation.class, "labassociations",
 			new Table.Column[] {
 					new Table.Column("id", Integer.class),
 					new Table.Column("lecID", Integer.class), 
 					new Table.Column("isTethered", Boolean.class)
 	});
+	
+	/** The timeslotpref table, which is a mirror of the table as it exists in the db. */
 	Table<SQLTimePreference> timeslotprefTable = new Table<SQLTimePreference>(SQLTimePreference.class, "timeslotpref",
 			new Table.Column[] {
 					new Table.Column("id", Integer.class),
@@ -138,6 +170,8 @@ public class SQLdb implements IDatabase {
 					new Table.Column("instID", Integer.class),
 					new Table.Column("prefLevel", Integer.class)
 	});
+	
+	/** The coursepref table, which is a mirror of the table as it exists in the db. */
 	Table<SQLCoursePreference> courseprefTable = new Table<SQLCoursePreference>(SQLCoursePreference.class, "coursepref",
 			new Table.Column[] {
 					new Table.Column("id", Integer.class),
@@ -145,16 +179,22 @@ public class SQLdb implements IDatabase {
 					new Table.Column("courseID", Integer.class),
 					new Table.Column("prefLevel", Integer.class)
 	});
+	
+	/** The pattern table, which is a mirror of the table as it exists in the db. */
 	Table<SQLDayPattern> patternTable = new Table<SQLDayPattern>(SQLDayPattern.class, "pattern",
 			new Table.Column[] {
 					new Table.Column("id", Integer.class),
 					new Table.Column("days", String.class)
 	});
+	
+	/** The equipment table, which is a mirror of the table as it exists in the db. */
 	Table<SQLEquipmentType> equipmentTable = new Table<SQLEquipmentType>(SQLEquipmentType.class, "equipment",
 			new Table.Column[] {
 					new Table.Column("id", Integer.class),  /*it's unique id generated*/
 					new Table.Column("desc", String.class)
 	});
+	
+	/** The userdata table, which is a mirror of the table as it exists in the db. */
 	Table<SQLUser> userdataTable = new Table<SQLUser>(SQLUser.class, "userdata",
 			new Table.Column[] {
 					new Table.Column("id", Integer.class),
@@ -162,6 +202,9 @@ public class SQLdb implements IDatabase {
 					new Table.Column("isAdmin", Boolean.class)
 	});
 
+	/**
+	 * Instantiates a new SQLdb and opens the connection to the DB.
+	 */
 	public SQLdb() {
 		try {
 			openConnection();
@@ -172,6 +215,12 @@ public class SQLdb implements IDatabase {
 		}
 	}
 
+	/**
+	 * Open connection to sqlite database.
+	 *
+	 * @throws SQLException SQL exception if SQLite fails
+	 * @throws Exception any other exception
+	 */
 	public void openConnection() throws SQLException, Exception
 	{
 		Class.forName("org.sqlite.JDBC");
@@ -180,6 +229,11 @@ public class SQLdb implements IDatabase {
 //		System.out.println("Connected to database");
 	}
 	
+	/**
+	 * Close connection to the sqlite database.
+	 *
+	 * @throws SQLException the sQL exception
+	 */
 	public void closeConnection() throws SQLException
 	{
 		if(conn != null)
@@ -193,33 +247,87 @@ public class SQLdb implements IDatabase {
 		}
 	}
 
+	/**
+	 * The Class Table mimics a table in the database. It provides
+	 * select, delete, update, and insert methods to do the actual work
+	 * of connecting to the database. This abstraction allows for Table 
+	 * classes to be used instead of directly connecting to sqlite
+	 * in each method of SQLdb.java.
+	 *
+	 * @param <T> the generic type which is a type inserted in the database
+	 */
 	static class Table<T extends IDBObject> {
+		
+		/**
+		 * The Enum ColumnType can be one of four types.
+		 */
 		public enum ColumnType {
+			
+			/** The VARCHAR. */
 			VARCHAR,
+			
+			/** The INTEGER. */
 			INTEGER,
+			
+			/** The TEXT. */
 			TEXT,
+			
+			/** The BOOLEAN. */
 			BOOLEAN;
 		}
 		
+		/**
+		 * The Class Column. Each Column has a name and the
+		 * class type.
+		 */
 		static class Column {
+			
+			/** The name. */
 			String name;
- 			Class classs;
- 			Column(String name, Class classs) {
+ 			
+			 /** The classs. */
+			 Class classs;
+ 			
+			 /**
+			  * Instantiates a new column.
+			  *
+			  * @param name the name
+			  * @param classs the classs
+			  */
+			 Column(String name, Class classs) {
  				this.name = name;
  				this.classs = classs;
  			}
 		}
 		
+		/** The name. */
 		String name;
+		
+		/** The columns. */
 		Column[] columns;
+		
+		/** The classs. */
 		Class classs;
 		
+		/**
+		 * Instantiates a new table.
+		 *
+		 * @param classs the classs of the objects in the table
+		 * @param name the name of the table in the database
+		 * @param columns the columns of the table in the database
+		 */
 		public Table(Class classs, String name, Column[] columns) {
 			  this.classs = classs;
 			  this.name = name;
 			  this.columns = columns;
 		}
 		
+		/**
+		 * Deletes a row from the database with the given id.
+		 *
+		 * @param id the sqlite database row id
+		 * @throws DatabaseException the database exception
+		 */
 		public void delete(Integer id) throws DatabaseException {
 			assert(id != null) : "trying to delete null ID";
 			PreparedStatement stmnt = null;
@@ -234,6 +342,13 @@ public class SQLdb implements IDatabase {
 			}
 		}
 		
+		/**
+		 * Updates a row in the database with the given id and values.
+		 *
+		 * @param values the new values for the row
+		 * @param id the sqlite database row id
+		 * @throws DatabaseException the database exception
+		 */
 		public void update(Object[] values, Integer id) throws DatabaseException {
 			assert(values != null);
 			assert(values.length == columns.length - 1);
@@ -265,6 +380,12 @@ public class SQLdb implements IDatabase {
 			
 		}
 		
+		/**
+		 * Selects all rows in the database table.
+		 *
+		 * @return the list of all rows in the database
+		 * @throws DatabaseException the database exception
+		 */
 		public List<T> selectAll() throws DatabaseException {
 			PreparedStatement stmnt = null;
 			String queryString = "SELECT * FROM " + name;
@@ -281,6 +402,14 @@ public class SQLdb implements IDatabase {
 			return parseResultSet(rs);
   		}
 		
+		/**
+		 * Selects all rows in the database for a set of given
+		 * wheres.
+		 * 
+		 * @param wheres the wheres to be selected, which is a map of Strings to Objects
+		 * @return the list of all database rows matching the given wheres
+		 * @throws DatabaseException the database exception
+		 */
 		public List<T> select(Map<String, Object> wheres) throws DatabaseException {
 			PreparedStatement stmnt = null;  
 			String queryString = "SELECT * FROM " + name + " WHERE "; 
@@ -309,6 +438,14 @@ public class SQLdb implements IDatabase {
 			return parseResultSet(rs);
 		}
 		
+		/**
+		 * Inserts an object with the given values into the database
+		 * and assigns it a unique id based on rows in the database.
+		 *
+		 * @param values the values for the object to be inserted
+		 * @return the unique id of the object in the database
+		 * @throws DatabaseException the database exception
+		 */
 		public Integer insert(Object[] values) throws DatabaseException {
 			//assert(values != null);
 			assert(values.length == columns.length-1);
@@ -350,6 +487,14 @@ public class SQLdb implements IDatabase {
 			}
 		}
 		
+		/**
+		 * Inserts an object with the given values into the database with 
+		 * the specified id.
+		 *
+		 * @param values the values for the object to be inserted
+		 * @return the id of the last item inserted into the database
+		 * @throws DatabaseException the database exception
+		 */
 		public Integer insertWithID(Object[] values) throws DatabaseException {
 			assert(values.length == columns.length);
 			PreparedStatement stmnt = null;
@@ -385,6 +530,15 @@ public class SQLdb implements IDatabase {
 			}
 		}
 		
+		/**
+		 * Sets the sql statement to be used by the sqlite connection.
+		 *
+		 * @param stmnt the statement that will be executed
+		 * @param objClass the class of the object being assigned
+		 * @param idx the column number for the object
+		 * @param val the object to be set
+		 * @throws SQLException the sQL exception
+		 */
 		private void setStatement(PreparedStatement stmnt, Class objClass, int idx, Object val)
 				throws SQLException 
 		{
@@ -396,6 +550,17 @@ public class SQLdb implements IDatabase {
 				stmnt.setBoolean(idx, (Boolean) val);
 		}
  
+		/**
+		 * Used to pull the right type of information out of the resultset. 
+		 * This is used to get either an Integer, String, or Boolean from the
+		 * resultset.
+		 *
+		 * @param resultSet the result set from the sqlite query
+		 * @param columnIndex the column index in the database table
+		 * @param classs the class of the Object to find
+		 * @return the Object from the resultset
+		 * @throws SQLException the sQL exception
+		 */
 		private Object getFromResultWithType(ResultSet resultSet, int columnIndex, Class classs) throws SQLException {
 			if (classs == Integer.class)
 				return resultSet.getInt(columnIndex);
@@ -409,6 +574,14 @@ public class SQLdb implements IDatabase {
 			return null;
 		}
 		
+		/**
+		 * Parses the result set and constructs a list of type T
+		 * with the appropriately constructed objects.
+		 *
+		 * @param resultSet the result set from the sqlite query
+		 * @return the list of type constructed objects of type T gathered from the resultset
+		 * @throws DatabaseException the database exception
+		 */
 		private List<T> parseResultSet(ResultSet resultSet) throws DatabaseException {
 			try {
 				List<T> list = new LinkedList<T>();
@@ -434,7 +607,10 @@ public class SQLdb implements IDatabase {
 		}
 	}
 
-	@Override
+
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#findUserByUsername(java.lang.String)
+	 */
 	public IDBUser findUserByUsername(String username) throws DatabaseException {
 		List<SQLUser> result;
 		HashMap<String, Object> wheres = new HashMap<String, Object>();
@@ -448,11 +624,16 @@ public class SQLdb implements IDatabase {
 		return result.get(0);
 	}
 
-	@Override
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#assembleUser(java.lang.String, boolean)
+	 */
 	public IDBUser assembleUser(String username, boolean isAdmin) {
 		return new SQLUser(null, username, isAdmin);
 	}
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#insertUser(scheduler.model.db.IDBUser)
+	 */
 	@Override
 	public void insertUser(IDBUser user) throws DatabaseException {
 		SQLUser sqluser = (SQLUser) user;
@@ -465,16 +646,25 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#updateUser(scheduler.model.db.IDBUser)
+	 */
 	@Override
 	public void updateUser(IDBUser user) throws DatabaseException {
 		userdataTable.update(new Object[] {user.getUsername(), user.isAdmin()}, user.getID());
 	}
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#deleteUser(scheduler.model.db.IDBUser)
+	 */
 	@Override
 	public void deleteUser(IDBUser user) throws DatabaseException {
 		userdataTable.delete(user.getID());
 	}
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#findAllDocuments()
+	 */
 	@Override
 	public Collection<IDBDocument> findAllDocuments() throws DatabaseException {
 		ArrayList<IDBDocument> result = new ArrayList<IDBDocument>();
@@ -488,6 +678,9 @@ public class SQLdb implements IDatabase {
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#findDocumentByID(int)
+	 */
 	@Override
 	public IDBDocument findDocumentByID(int id) throws DatabaseException, NotFoundException {	
 		List<SQLDocument> result;
@@ -501,24 +694,36 @@ public class SQLdb implements IDatabase {
 		return result.get(0);
 	}
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#insertDocument(scheduler.model.db.IDBDocument)
+	 */
 	@Override
 	public void insertDocument(IDBDocument document) throws DatabaseException {
 		SQLDocument doc = (SQLDocument) document;
 		doc.id = documentTable.insert(new Object[]{ doc.getName(), doc.isTrashed(), doc.getStartHalfHour(), doc.getEndHalfHour() });
 	}
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#assembleDocument(java.lang.String, int, int)
+	 */
 	@Override
 	public IDBDocument assembleDocument(String name, int startHalfHour,
 			int endHalfHour) throws DatabaseException {
 		return new SQLDocument(null, name, false, startHalfHour, endHalfHour, null, null, null, null);
 	}
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#updateDocument(scheduler.model.db.IDBDocument)
+	 */
 	@Override
 	public void updateDocument(IDBDocument document) throws DatabaseException {		
 		documentTable.update(new Object[] {document.getName(), document.isTrashed(), document.getStartHalfHour(), 
 				document.getEndHalfHour()}, document.getID());
 	}
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#deleteDocument(scheduler.model.db.IDBDocument)
+	 */
 	@Override
 	public void deleteDocument(IDBDocument document) throws DatabaseException {
 		assert(document != null);
@@ -526,6 +731,9 @@ public class SQLdb implements IDatabase {
 		documentTable.delete(document.getID());
 	}
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#isOriginalDocument(scheduler.model.db.IDBDocument)
+	 */
 	@Override
 	public boolean isOriginalDocument(IDBDocument doc) throws DatabaseException {
 		List<SQLWorkingCopy> result;
@@ -535,6 +743,9 @@ public class SQLdb implements IDatabase {
 		return (result.size() == 0);
 	}
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#documentIsWorkingCopy(scheduler.model.db.IDBDocument)
+	 */
 	@Override
 	public boolean documentIsWorkingCopy(IDBDocument document)
 			throws DatabaseException {
@@ -545,6 +756,9 @@ public class SQLdb implements IDatabase {
 		return (result.size() != 0);
 	}
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#getOriginalForWorkingCopyDocumentOrNull(scheduler.model.db.IDBDocument)
+	 */
 	@Override
 	public IDBDocument getOriginalForWorkingCopyDocumentOrNull(IDBDocument rawDocument)
 			throws DatabaseException {
@@ -566,6 +780,9 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#getWorkingCopyForOriginalDocumentOrNull(scheduler.model.db.IDBDocument)
+	 */
 	@Override
 	public IDBDocument getWorkingCopyForOriginalDocumentOrNull(
 			IDBDocument document) throws DatabaseException {
@@ -583,6 +800,9 @@ public class SQLdb implements IDatabase {
 		return doc;
 	}
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#associateWorkingCopyWithOriginal(scheduler.model.db.IDBDocument, scheduler.model.db.IDBDocument)
+	 */
 	@Override
 	public void associateWorkingCopyWithOriginal(
 			IDBDocument underlyingDocument, IDBDocument underlyingDocument2)
@@ -590,6 +810,9 @@ public class SQLdb implements IDatabase {
 		workingcopyTable.insertWithID(new Object[] {underlyingDocument.getID(), underlyingDocument2.getID()});
 	}
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#disassociateWorkingCopyWithOriginal(scheduler.model.db.IDBDocument, scheduler.model.db.IDBDocument)
+	 */
 	@Override
 	public void disassociateWorkingCopyWithOriginal(
 			IDBDocument underlyingDocument, IDBDocument underlyingDocument2)
@@ -597,6 +820,9 @@ public class SQLdb implements IDatabase {
 		workingcopyTable.delete(underlyingDocument.getID());
 	}
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#findScheduleItemsByDocument(scheduler.model.db.IDBDocument)
+	 */
 	@Override
 	public Collection<IDBScheduleItem> findScheduleItemsByDocument(
 			IDBDocument document) throws DatabaseException {
@@ -615,6 +841,9 @@ public class SQLdb implements IDatabase {
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#findAllScheduleItemsForDocument(scheduler.model.db.IDBDocument)
+	 */
 	@Override
 	public Collection<IDBScheduleItem> findAllScheduleItemsForDocument(
 			IDBDocument document) throws DatabaseException {
@@ -633,6 +862,9 @@ public class SQLdb implements IDatabase {
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#findScheduleItemByID(int)
+	 */
 	@Override
 	public IDBScheduleItem findScheduleItemByID(int id)
 			throws DatabaseException {
@@ -649,6 +881,9 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#assembleScheduleItem(int, java.util.Set, int, int, boolean, boolean)
+	 */
 	@Override
 	public IDBScheduleItem assembleScheduleItem(int section, Set<Day> days,
 			int startHalfHour, int endHalfHour, boolean isPlaced,
@@ -657,6 +892,9 @@ public class SQLdb implements IDatabase {
 				section, isConflicted, isPlaced, days);
 	}
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#insertScheduleItem(scheduler.model.db.IDBDocument, scheduler.model.db.IDBCourse, scheduler.model.db.IDBInstructor, scheduler.model.db.IDBLocation, scheduler.model.db.IDBScheduleItem)
+	 */
 	@Override
 	public void insertScheduleItem(IDBDocument document, IDBCourse course,
 			IDBInstructor instructor, IDBLocation location, IDBScheduleItem item)
@@ -669,6 +907,9 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#updateScheduleItem(scheduler.model.db.IDBScheduleItem)
+	 */
 	@Override
 	public void updateScheduleItem(IDBScheduleItem schedule)
 			throws DatabaseException {
@@ -680,6 +921,9 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#deleteScheduleItem(scheduler.model.db.IDBScheduleItem)
+	 */
 	@Override
 	public void deleteScheduleItem(IDBScheduleItem schedule)
 			throws DatabaseException {
@@ -687,6 +931,9 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#getScheduleItemLocation(scheduler.model.db.IDBScheduleItem)
+	 */
 	@Override
 	public IDBLocation getScheduleItemLocation(IDBScheduleItem item)
 			throws DatabaseException {
@@ -704,6 +951,9 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#getScheduleItemCourse(scheduler.model.db.IDBScheduleItem)
+	 */
 	@Override
 	public IDBCourse getScheduleItemCourse(IDBScheduleItem item)
 			throws DatabaseException {
@@ -721,6 +971,9 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#getScheduleItemInstructor(scheduler.model.db.IDBScheduleItem)
+	 */
 	@Override
 	public IDBInstructor getScheduleItemInstructor(IDBScheduleItem item)
 			throws DatabaseException {
@@ -738,6 +991,9 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#setScheduleItemCourse(scheduler.model.db.IDBScheduleItem, scheduler.model.db.IDBCourse)
+	 */
 	@Override
 	public void setScheduleItemCourse(IDBScheduleItem underlying,
 			IDBCourse findCourseByID) throws DatabaseException {
@@ -751,6 +1007,9 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#setScheduleItemLocation(scheduler.model.db.IDBScheduleItem, scheduler.model.db.IDBLocation)
+	 */
 	@Override
 	public void setScheduleItemLocation(IDBScheduleItem underlying,
 			IDBLocation findLocationByID) throws DatabaseException {
@@ -764,6 +1023,9 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#setScheduleItemInstructor(scheduler.model.db.IDBScheduleItem, scheduler.model.db.IDBInstructor)
+	 */
 	@Override
 	public void setScheduleItemInstructor(IDBScheduleItem underlying,
 			IDBInstructor findInstructorByID) throws DatabaseException {
@@ -777,6 +1039,9 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#findLocationsForDocument(scheduler.model.db.IDBDocument)
+	 */
 	@Override
 	public Collection<IDBLocation> findLocationsForDocument(IDBDocument document)
 			throws DatabaseException {
@@ -792,6 +1057,9 @@ public class SQLdb implements IDatabase {
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#findLocationByID(int)
+	 */
 	@Override
 	public IDBLocation findLocationByID(int id) throws DatabaseException {
 		HashMap<String, Object> wheres = new HashMap<String, Object>();
@@ -801,6 +1069,9 @@ public class SQLdb implements IDatabase {
 		return locationTable.select(wheres).get(0);
 	}
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#assembleLocation(java.lang.String, java.lang.String, java.lang.String, boolean)
+	 */
 	@Override
 	public IDBLocation assembleLocation(String room, String type,
 			String maxOccupancy, boolean isSchedulable)
@@ -810,6 +1081,9 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#insertLocation(scheduler.model.db.IDBDocument, scheduler.model.db.IDBLocation)
+	 */
 	@Override
 	public void insertLocation(IDBDocument containingDocument,
 			IDBLocation location) throws DatabaseException {
@@ -821,6 +1095,9 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#updateLocation(scheduler.model.db.IDBLocation)
+	 */
 	@Override
 	public void updateLocation(IDBLocation location) throws DatabaseException {
 		assert(location!=null) : "null location";
@@ -837,12 +1114,18 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#deleteLocation(scheduler.model.db.IDBLocation)
+	 */
 	@Override
 	public void deleteLocation(IDBLocation location) throws DatabaseException {
 		locationTable.delete(location.getID());
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#findCoursesForDocument(scheduler.model.db.IDBDocument)
+	 */
 	@Override
 	public Collection<IDBCourse> findCoursesForDocument(IDBDocument document)
 			throws DatabaseException {
@@ -859,6 +1142,9 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#findCourseByID(int)
+	 */
 	@Override
 	public IDBCourse findCourseByID(int id) throws DatabaseException {
 		HashMap<String, Object> wheres = new HashMap<String, Object>();
@@ -869,6 +1155,9 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#assembleCourse(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean)
+	 */
 	@Override
 	public IDBCourse assembleCourse(String name, String catalogNumber,
 			String department, String wtu, String scu, String numSections,
@@ -879,6 +1168,9 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#insertCourse(scheduler.model.db.IDBDocument, scheduler.model.db.IDBCourse)
+	 */
 	@Override
 	public void insertCourse(IDBDocument underlyingDocument, IDBCourse course)
 			throws DatabaseException {
@@ -893,6 +1185,9 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#updateCourse(scheduler.model.db.IDBCourse)
+	 */
 	@Override
 	public void updateCourse(IDBCourse course) throws DatabaseException {
 		assert(course!=null);
@@ -903,12 +1198,18 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#deleteCourse(scheduler.model.db.IDBCourse)
+	 */
 	@Override
 	public void deleteCourse(IDBCourse course) throws DatabaseException {
 		courseTable.delete(course.getID());
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#findDocumentForCourse(scheduler.model.db.IDBCourse)
+	 */
 	@Override
 	public IDBDocument findDocumentForCourse(IDBCourse underlyingCourse)
 			throws DatabaseException {
@@ -927,6 +1228,9 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#getAssociationForLabOrNull(scheduler.model.db.IDBCourse)
+	 */
 	@Override
 	public IDBCourseAssociation getAssociationForLabOrNull(IDBCourse underlying)
 			throws DatabaseException {
@@ -947,6 +1251,9 @@ public class SQLdb implements IDatabase {
 			return labassociationsTable.select(labID).get(0);
 	}
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#getAssociationsForLecture(scheduler.model.db.IDBCourse)
+	 */
 	@Override
 	public Collection<IDBCourseAssociation> getAssociationsForLecture(
 			IDBCourse lectureCourse) throws DatabaseException {
@@ -970,6 +1277,9 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#getAssociationLecture(scheduler.model.db.IDBCourseAssociation)
+	 */
 	@Override
 	public IDBCourse getAssociationLecture(IDBCourseAssociation association)
 			throws DatabaseException {
@@ -986,6 +1296,9 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#getAssociationLab(scheduler.model.db.IDBCourseAssociation)
+	 */
 	@Override
 	public IDBCourse getAssociationLab(IDBCourseAssociation association)
 			throws DatabaseException {
@@ -1001,6 +1314,9 @@ public class SQLdb implements IDatabase {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#associateLectureAndLab(scheduler.model.db.IDBCourse, scheduler.model.db.IDBCourse, boolean)
+	 */
 	@Override
 	public void associateLectureAndLab(IDBCourse lecture, IDBCourse lab, boolean tethered)
 			throws DatabaseException {
@@ -1018,6 +1334,9 @@ public class SQLdb implements IDatabase {
 		labassociationsTable.insertWithID(new Object[] {labcourse.getID(), leccourse.getID(), tethered});
 	}
 	
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#findInstructorsForDocument(scheduler.model.db.IDBDocument)
+	 */
 	@Override
 	public Collection<IDBInstructor> findInstructorsForDocument(IDBDocument document) throws DatabaseException {
 		assert(document != null) : "found null document";
@@ -1035,6 +1354,9 @@ public class SQLdb implements IDatabase {
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#findInstructorByID(int)
+	 */
 	@Override
 	public IDBInstructor findInstructorByID(int id) throws DatabaseException {
 		HashMap<String, Object> instID = new HashMap<String, Object>();
@@ -1044,6 +1366,9 @@ public class SQLdb implements IDatabase {
 		return instructorTable.select(instID).get(0);
 	}
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#assembleInstructor(java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean)
+	 */
 	@Override
 	public IDBInstructor assembleInstructor(String firstName, String lastName,
 			String username, String maxWTU, boolean isSchedulable)
@@ -1051,6 +1376,9 @@ public class SQLdb implements IDatabase {
 		return new SQLInstructor(null, null, firstName, lastName, username, maxWTU, isSchedulable);
 	}
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#insertInstructor(scheduler.model.db.IDBDocument, scheduler.model.db.IDBInstructor)
+	 */
 	@Override
 	public void insertInstructor(IDBDocument containingDocument, IDBInstructor instructor) throws DatabaseException {
 		//assert(instructor != null) : "Specified instructor null";
@@ -1064,6 +1392,9 @@ public class SQLdb implements IDatabase {
 		//System.out.println("inserting instructor. id is: " + sqlInstructor.id);
 	}
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#updateInstructor(scheduler.model.db.IDBInstructor)
+	 */
 	@Override
 	public void updateInstructor(IDBInstructor instructor)
 			throws DatabaseException {
@@ -1075,6 +1406,9 @@ public class SQLdb implements IDatabase {
 				sqlInstructor.isSchedulable()}, sqlInstructor.getID());
 	}
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#deleteInstructor(scheduler.model.db.IDBInstructor)
+	 */
 	@Override
 	public void deleteInstructor(IDBInstructor instructor) throws DatabaseException {
 		assert(instructor != null) : "Specified instructor null";
@@ -1083,6 +1417,9 @@ public class SQLdb implements IDatabase {
 		instructorTable.delete(instructor.getID());	
 	}
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#findTimePreferencesByTimeForInstructor(scheduler.model.db.IDBInstructor)
+	 */
 	@Override
 	public Map<IDBTime, IDBTimePreference> findTimePreferencesByTimeForInstructor(
 			IDBInstructor instructor) throws DatabaseException {
@@ -1100,10 +1437,19 @@ public class SQLdb implements IDatabase {
 	}
 
 	//possibly temporary helper method
+	/**
+	 * Find time by id.
+	 *
+	 * @param id the id
+	 * @return the iDB time
+	 */
 	public IDBTime findTimeByID(int id) {
 		return new SQLTime(id);
 	}
 	
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#findTimePreferenceByID(int)
+	 */
 	@Override
 	public IDBTimePreference findTimePreferenceByID(int id)
 			throws DatabaseException {
@@ -1114,12 +1460,18 @@ public class SQLdb implements IDatabase {
 		return timeslotprefTable.select(timeID).get(0);
 	}
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#assembleTimePreference(int)
+	 */
 	@Override
 	public IDBTimePreference assembleTimePreference(int preflevel)
 			throws DatabaseException {
 		return new SQLTimePreference(null, null, null, preflevel);
 	}
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#insertTimePreference(scheduler.model.db.IDBInstructor, scheduler.model.db.IDBTime, scheduler.model.db.IDBTimePreference)
+	 */
 	@Override
 	public void insertTimePreference(IDBInstructor ins, IDBTime time, IDBTimePreference timePreference) throws DatabaseException {
 		
@@ -1138,6 +1490,9 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#updateTimePreference(scheduler.model.db.IDBTimePreference)
+	 */
 	@Override
 	public void updateTimePreference(IDBTimePreference timePreference)
 			throws DatabaseException {
@@ -1148,6 +1503,9 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#deleteTimePreference(scheduler.model.db.IDBTimePreference)
+	 */
 	@Override
 	public void deleteTimePreference(IDBTimePreference timePreference)
 			throws DatabaseException {
@@ -1155,6 +1513,9 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#findCoursePreferencesByCourseForInstructor(scheduler.model.db.IDBInstructor)
+	 */
 	@Override
 	public Map<IDBCourse, IDBCoursePreference> findCoursePreferencesByCourseForInstructor(
 			IDBInstructor instructor) throws DatabaseException {
@@ -1170,6 +1531,9 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#findCoursePreferenceByID(int)
+	 */
 	@Override
 	public IDBCoursePreference findCoursePreferenceByID(int id)
 			throws DatabaseException {
@@ -1181,6 +1545,9 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#assembleCoursePreference(int)
+	 */
 	@Override
 	public IDBCoursePreference assembleCoursePreference(int preference)
 			throws DatabaseException {
@@ -1188,6 +1555,9 @@ public class SQLdb implements IDatabase {
 		return new SQLCoursePreference(null, null, null, preference);
 	}
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#insertCoursePreference(scheduler.model.db.IDBInstructor, scheduler.model.db.IDBCourse, scheduler.model.db.IDBCoursePreference)
+	 */
 	@Override
 	public void insertCoursePreference(IDBInstructor instructor,
 			IDBCourse course, IDBCoursePreference coursePreference)
@@ -1199,6 +1569,9 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#updateCoursePreference(scheduler.model.db.IDBCoursePreference)
+	 */
 	@Override
 	public void updateCoursePreference(IDBCoursePreference coursePreference)
 			throws DatabaseException {
@@ -1208,6 +1581,9 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#deleteCoursePreference(scheduler.model.db.IDBCoursePreference)
+	 */
 	@Override
 	public void deleteCoursePreference(IDBCoursePreference coursePreference)
 			throws DatabaseException {
@@ -1215,12 +1591,18 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#findTimeByDayAndHalfHour(int, int)
+	 */
 	@Override
 	public IDBTime findTimeByDayAndHalfHour(int day, int halfHour)
 			throws DatabaseException {
 		return new SQLTime(day, halfHour);
 	}
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#findEquipmentTypeByDescription(java.lang.String)
+	 */
 	@Override
 	public IDBEquipmentType findEquipmentTypeByDescription(
 			String equipmentTypeDescription) throws DatabaseException {
@@ -1235,6 +1617,9 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#findAllEquipmentTypes()
+	 */
 	@Override
 	public Collection<IDBEquipmentType> findAllEquipmentTypes()
 			throws DatabaseException {
@@ -1243,6 +1628,9 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#findUsedEquipmentByEquipmentForCourse(scheduler.model.db.IDBCourse)
+	 */
 	@Override
 	public Map<IDBEquipmentType, IDBUsedEquipment> findUsedEquipmentByEquipmentForCourse(
 			IDBCourse course) throws DatabaseException {
@@ -1266,6 +1654,9 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#deleteUsedEquipment(scheduler.model.db.IDBUsedEquipment)
+	 */
 	@Override
 	public void deleteUsedEquipment(IDBUsedEquipment usedEquipment)
 			throws DatabaseException {
@@ -1274,6 +1665,9 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#assembleUsedEquipment()
+	 */
 	@Override
 	public IDBUsedEquipment assembleUsedEquipment() throws DatabaseException {
 		//(Integer id, Integer courseID, Integer equipmentTypeID)
@@ -1281,6 +1675,9 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#insertUsedEquipment(scheduler.model.db.IDBCourse, scheduler.model.db.IDBEquipmentType, scheduler.model.db.IDBUsedEquipment)
+	 */
 	@Override
 	public void insertUsedEquipment(IDBCourse course,
 			IDBEquipmentType equipmentType, IDBUsedEquipment equip)
@@ -1293,6 +1690,9 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#findProvidedEquipmentByEquipmentForLocation(scheduler.model.db.IDBLocation)
+	 */
 	@Override
 	public Map<IDBEquipmentType, IDBProvidedEquipment> findProvidedEquipmentByEquipmentForLocation(
 			IDBLocation location) throws DatabaseException {
@@ -1317,6 +1717,9 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#deleteProvidedEquipment(scheduler.model.db.IDBProvidedEquipment)
+	 */
 	@Override
 	public void deleteProvidedEquipment(IDBProvidedEquipment providedEquipment)
 			throws DatabaseException {
@@ -1327,6 +1730,9 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#assembleProvidedEquipment()
+	 */
 	@Override
 	public IDBProvidedEquipment assembleProvidedEquipment()
 			throws DatabaseException {
@@ -1336,6 +1742,9 @@ public class SQLdb implements IDatabase {
 
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#insertProvidedEquipment(scheduler.model.db.IDBLocation, scheduler.model.db.IDBEquipmentType, scheduler.model.db.IDBProvidedEquipment)
+	 */
 	@Override
 	public void insertProvidedEquipment(IDBLocation location,
 			IDBEquipmentType equipmentType, IDBProvidedEquipment equip)
@@ -1348,6 +1757,9 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#findDayPatternByDays(java.util.Set)
+	 */
 	@Override
 	public IDBDayPattern findDayPatternByDays(Set<Integer> dayPattern)
 			throws DatabaseException {
@@ -1355,6 +1767,9 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#findOfferedDayPatternsForCourse(scheduler.model.db.IDBCourse)
+	 */
 	@Override
 	public Collection<IDBOfferedDayPattern> findOfferedDayPatternsForCourse(
 			IDBCourse underlying) throws DatabaseException {
@@ -1370,6 +1785,9 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#getDayPatternForOfferedDayPattern(scheduler.model.db.IDBOfferedDayPattern)
+	 */
 	@Override
 	public IDBDayPattern getDayPatternForOfferedDayPattern(
 			IDBOfferedDayPattern offered) throws DatabaseException {
@@ -1377,6 +1795,9 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#deleteOfferedDayPattern(scheduler.model.db.IDBOfferedDayPattern)
+	 */
 	@Override
 	public void deleteOfferedDayPattern(IDBOfferedDayPattern offered)
 			throws DatabaseException {
@@ -1384,6 +1805,9 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#assembleOfferedDayPattern()
+	 */
 	@Override
 	public IDBOfferedDayPattern assembleOfferedDayPattern()
 			throws DatabaseException {
@@ -1392,6 +1816,9 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#insertOfferedDayPattern(scheduler.model.db.IDBCourse, scheduler.model.db.IDBDayPattern, scheduler.model.db.IDBOfferedDayPattern)
+	 */
 	@Override
 	public void insertOfferedDayPattern(IDBCourse underlying,
 			IDBDayPattern dayPattern, IDBOfferedDayPattern pattern)
@@ -1404,6 +1831,9 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#isEmpty()
+	 */
 	@Override
 	public boolean isEmpty() throws DatabaseException {
 		if(documentTable.selectAll().size() == 0 &&
@@ -1439,6 +1869,9 @@ public class SQLdb implements IDatabase {
 		return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#assembleScheduleItemCopy(scheduler.model.db.IDBScheduleItem)
+	 */
 	@Override
 	public IDBScheduleItem assembleScheduleItemCopy(IDBScheduleItem underlying)
 			throws DatabaseException {
@@ -1448,6 +1881,9 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#getScheduleItemDocument(scheduler.model.db.IDBScheduleItem)
+	 */
 	@Override
 	public IDBDocument getScheduleItemDocument(IDBScheduleItem underlying)
 			throws DatabaseException {
@@ -1457,6 +1893,9 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#isInserted(scheduler.model.db.IDBScheduleItem)
+	 */
 	@Override
 	public boolean isInserted(IDBScheduleItem underlying)
 			throws DatabaseException {
@@ -1465,6 +1904,9 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#findDocumentForLocation(scheduler.model.db.IDBLocation)
+	 */
 	@Override
 	public IDBObject findDocumentForLocation(IDBLocation underlyingLocation)
 			throws DatabaseException {
@@ -1477,6 +1919,9 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#findDocumentForInstructor(scheduler.model.db.IDBInstructor)
+	 */
 	@Override
 	public IDBObject findDocumentForInstructor(
 			IDBInstructor underlyingInstructor) throws DatabaseException {
@@ -1489,6 +1934,9 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#writeState(java.io.ObjectOutputStream)
+	 */
 	@Override
 	public void writeState(ObjectOutputStream oos) throws IOException {
 		/** Not used for SQLDB*/
@@ -1496,6 +1944,9 @@ public class SQLdb implements IDatabase {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#readState(java.io.ObjectInputStream)
+	 */
 	@Override
 	public void readState(ObjectInputStream ois) throws IOException {
 		/**
@@ -1505,6 +1956,9 @@ public class SQLdb implements IDatabase {
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#getDocumentStaffInstructorOrNull(scheduler.model.db.IDBDocument)
+	 */
 	@Override
 	public IDBInstructor getDocumentStaffInstructorOrNull(
 			IDBDocument underlyingDocument) throws DatabaseException {
@@ -1514,6 +1968,9 @@ public class SQLdb implements IDatabase {
 		return findInstructorByID(((SQLDocument)underlyingDocument).staffInstructorID);
 	}
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#getDocumentTBALocationOrNull(scheduler.model.db.IDBDocument)
+	 */
 	@Override
 	public IDBLocation getDocumentTBALocationOrNull(
 			IDBDocument underlyingDocument) throws DatabaseException {
@@ -1523,6 +1980,9 @@ public class SQLdb implements IDatabase {
 		return findLocationByID(id);
 	}
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#setDocumentStaffInstructorOrNull(scheduler.model.db.IDBDocument, scheduler.model.db.IDBInstructor)
+	 */
 	@Override
 	public void setDocumentStaffInstructorOrNull(IDBDocument underlyingDocument,
 			IDBInstructor underlyingInstructor) throws DatabaseException {
@@ -1532,6 +1992,9 @@ public class SQLdb implements IDatabase {
 			((SQLDocument)underlyingDocument).staffInstructorID = underlyingInstructor.getID();
 	}
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#setDocumentTBALocationOrNull(scheduler.model.db.IDBDocument, scheduler.model.db.IDBLocation)
+	 */
 	@Override
 	public void setDocumentTBALocationOrNull(IDBDocument underlyingDocument,
 			IDBLocation underlyingLocation) throws DatabaseException {
@@ -1541,6 +2004,9 @@ public class SQLdb implements IDatabase {
 			((SQLDocument)underlyingDocument).tbaLocationID = underlyingLocation.getID();
 	}
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#setDocumentChooseForMeInstructorOrNull(scheduler.model.db.IDBDocument, scheduler.model.db.IDBInstructor)
+	 */
 	@Override
 	public void setDocumentChooseForMeInstructorOrNull(IDBDocument underlyingDocument, IDBInstructor underlyingInstructor)
 			throws DatabaseException {
@@ -1550,6 +2016,9 @@ public class SQLdb implements IDatabase {
 			((SQLDocument)underlyingDocument).chooseForMeInstructorID = underlyingInstructor.getID();
 	}
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#setDocumentChooseForMeLocationOrNull(scheduler.model.db.IDBDocument, scheduler.model.db.IDBLocation)
+	 */
 	@Override
 	public void setDocumentChooseForMeLocationOrNull(IDBDocument underlyingDocument, IDBLocation underlyingLocation)
 			throws DatabaseException {
@@ -1559,6 +2028,9 @@ public class SQLdb implements IDatabase {
 			((SQLDocument)underlyingDocument).chooseForMeLocationID = underlyingLocation.getID();
 	}
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#getDocumentChooseForMeInstructorOrNull(scheduler.model.db.IDBDocument)
+	 */
 	@Override
 	public IDBInstructor getDocumentChooseForMeInstructorOrNull(
 			IDBDocument underlyingDocument) throws DatabaseException {
@@ -1568,6 +2040,9 @@ public class SQLdb implements IDatabase {
 		return findInstructorByID(id);
 	}
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#getDocumentChooseForMeLocationOrNull(scheduler.model.db.IDBDocument)
+	 */
 	@Override
 	public IDBLocation getDocumentChooseForMeLocationOrNull(
 			IDBDocument underlyingDocument) throws DatabaseException {
@@ -1577,6 +2052,9 @@ public class SQLdb implements IDatabase {
 		return findLocationByID(id);
 	}
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#findAllLabScheduleItemsForScheduleItem(scheduler.model.db.IDBScheduleItem)
+	 */
 	@Override
 	public Collection<IDBScheduleItem> findAllLabScheduleItemsForScheduleItem(
 			IDBScheduleItem underlying) {
@@ -1584,6 +2062,9 @@ public class SQLdb implements IDatabase {
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#associateScheduleItemLab(scheduler.model.db.IDBScheduleItem, scheduler.model.db.IDBScheduleItem)
+	 */
 	@Override
 	public void associateScheduleItemLab(IDBScheduleItem lecture,
 			IDBScheduleItem lab) {
@@ -1591,6 +2072,9 @@ public class SQLdb implements IDatabase {
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#disassociateScheduleItemLab(scheduler.model.db.IDBScheduleItem, scheduler.model.db.IDBScheduleItem)
+	 */
 	@Override
 	public void disassociateScheduleItemLab(IDBScheduleItem lecture,
 			IDBScheduleItem lab) {
@@ -1598,12 +2082,18 @@ public class SQLdb implements IDatabase {
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#disassociateLectureAndLab(scheduler.model.db.IDBCourse, scheduler.model.db.IDBCourse)
+	 */
 	@Override
 	public void disassociateLectureAndLab(IDBCourse lecture, IDBCourse lab) throws DatabaseException {
 		// TODO Auto-generated method stub
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#insertEquipmentType(java.lang.String)
+	 */
 	@Override
 	public void insertEquipmentType(String string) throws DatabaseException {
 		assert(string != null);
@@ -1611,6 +2101,9 @@ public class SQLdb implements IDatabase {
 		equipmentTable.insert(new Object[] {string});
 	}
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#getScheduleItemLectureOrNull(scheduler.model.db.IDBScheduleItem)
+	 */
 	@Override
 	public IDBScheduleItem getScheduleItemLectureOrNull(
 			IDBScheduleItem underlying) throws DatabaseException {
@@ -1629,6 +2122,9 @@ public class SQLdb implements IDatabase {
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#findDocumentByName(java.lang.String)
+	 */
 	@Override
 	public IDBDocument findDocumentByName(String scheduleName)
 			throws DatabaseException {
@@ -1644,6 +2140,9 @@ public class SQLdb implements IDatabase {
 		return document;
 	}
 
+	/* (non-Javadoc)
+	 * @see scheduler.model.db.IDatabase#closeDatabase()
+	 */
 	@Override
 	public void closeDatabase() {
 		try {

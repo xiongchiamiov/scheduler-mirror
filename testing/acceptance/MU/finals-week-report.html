@@ -1,16 +1,21 @@
 <html>
 <head>
 <title>
-Finals Week Acceptance Test Report for the MU Department
+Spring Finals Week Acceptance Test Report for the MU Department
 </title>
 </head>
 <body bgcolor=white>
 <p align=center>
 <font size=+2>
-<strong>Finals Week Acceptance Test Report for the MU Department</strong>
+<strong>Spring Finals Week Acceptance Test Report for the MU Department</strong>
 </font>
 </p>
-<b><font size=+1 color=blue>SAFARI VERSION 5.1.2 USED FOR ALL TESTING</font></b>
+<br>
+<h2>
+Browser Used for Testing: Used Sellenium Testing for data entry with Chrome. <br>
+This test was done as of 1:30pm on Monday, so the latest changes were not deployed
+which should fix some of the schedule issues.
+</h2>
 <br>
 <br>
 <a name="Create, Save, and Re-Open a New Schedule">
@@ -19,17 +24,7 @@ Finals Week Acceptance Test Report for the MU Department
 </h2>
 </a>
 <p>
-Successfully created Winter 2012 schedule. 
-
-<br><br><b>Issues:</b>
-<ul>
-<li>Had to logout to see schedule in the home screen, new Document page did not
-open when clicking Create</li>
-<li>Created schedule named "Test". Refreshed home. Deleted "Test". Tried to make
-"Test" again, and it said the name already existed. After logging out and back
-in, I could then create "Test" again.</li>
-<li>Schedule name has a space which is appearing as %20 in title of open document</li>
-</ul>
+Able to login using "admin" and create, save and re-open the schedule.
 </p>
 
 <br>
@@ -39,45 +34,15 @@ in, I could then create "Test" again.</li>
 </h2>
 </a>
 <p>
-Overall, I was able to enter the necessary data in order to generate a schedule, with
-the following positives and negatives.
+Data entry was mostly very good.
 </p>
-<p>
-<b>Things that worked:</b>
+<strong>Issues</strong>
 <ul>
-<li>Tabbed data entry</li>
-<li>Ordering the columns by clicking on the top row</li>
-<li>Saving, exiting, and reopening a schedule with same data</li>
+	<li>I tried to associate a lecture with a lab, and could not click on the association column.
+		I then logged out and back in, and all courses had an association with the first course
+		in the column. I still could not click on this to update it. I am not sure if this is
+		affecting generate or not.</li>
 </ul>
-
-<br><b>Issues:</b>
-<ul>
-<li>Had to double click Day Combinations column in order to see checkboxes</li>
-<li>After selecting a Day Combo, the column would compress and I would have to double
-click again</li>
-<li>Reopening the schedule results in all data being gone without force saving. 
-*I thought we were autosaving?</li>
-<li>Unable to edit text in a cell that has already been entered. Only able to replace
-existing text</li>
-<li>Unable to delete a row. I don't see a way to do this</li>
-<li>Unable to save association for a class. Appears as "None" after saving</li>
-<li>Missing day combination for MTWF</li>
-<li>When tabbing to input values, the view jumps to the top of the page. Need
-to scroll down to see where I am inputting values</li>
-<li>I do not see a way to support ACTivities that do not have times associated with them,
-so I have left them out of the course resources</li>
-<li>Had a 500 error, failed to update server</li>
-<li>Update failed: 502, Bad Gateway</li>
-<li>After these errors occurred, saving did not work. I was told data had saved,
-but upon reopening, it had not been</li>
-<li>It is unclear how to crosslist courses. I do not see how to list MU 171 and MU 371
-as the same course to be scheduled at the same time</li>
-<li>Shift+tab makes new row instead of going back a tab</li>
-<li>Scrolling sideways while the column headers are moving down with the top of the page
-results in the columns moving, but the headers staying fixed</li>
-<li>Needed to save and close document to see changes persist for instructor prefs</li>
-</ul>
-</p>
 
 <br>
 <a name="Generate a Schedule">
@@ -86,10 +51,15 @@ results in the columns moving, but the headers staying fixed</li>
 </h2>
 </a>
 <p>
-Failed to generate schedule. 500 error.<br>"Failed to get schedule: 
-com.google.gwt.user.client.rpc.StatusCodeException: 500 The call failed on the server; 
-see server log for details"
+Successfully generated a schedule. 
 </p>
+<strong>Issues</strong>
+<ul>
+	<li>The schedule looked great in the list and calendar view, however there was an overlap in the courses
+		that were being taught by the professor. He was scheduled for 3 overlapping courses.</li>
+	<li>When I logged out and opened the schedule again, there was no generated schedule. Had to generate again</li>
+	<li>I tried generating a schedule while looking at the List View, and it didn't do anything</li>
+</ul>
 
 <br>
 <a name="Edit the Schedule">
@@ -98,8 +68,14 @@ see server log for details"
 </h2>
 </a>
 <p>
-Unable to perform this since the schedule was not generated.
+Moving courses around on the schedule with drag and drop was successful.
 </p>
+<strong>Issues</strong>
+<ul>
+	<li>It would be nice to have more clear information about a course when moving and scheduling,
+		such as hours per week and day combinations. There was a popup for hours per week
+		when I tried to schedule a course for the incorrect number of hours.</li>
+</ul>
 
 <br>
 <a name="Save, Exit, Re-Open Schedule">
@@ -108,9 +84,13 @@ Unable to perform this since the schedule was not generated.
 </h2>
 </a>
 <p>
-Resource tables are still populated with existing data. Schedule is 
-still not present.
+Saving worked (nice popup). When I logged out and back in, I was able to see the same schedule
+document and open it back up again.
 </p>
+<strong>Issues</strong>
+<ul>
+	<li>I did not see the same generated schedule after logging out and back in.</li>
+</ul>
 
 <br>
 <a name="Quality Measures">
@@ -119,17 +99,16 @@ still not present.
 </h2>
 </a>
 <p>
-This product is not usable, and should not be deployed as is. Some of the usability/quality
-concerns that I have are as follows:
-
-<ul>
-<li>A schedule cannot be generated</li>
-<li>500 errors persist and cause data entry to fail. Saving does not work after these errors</li>
-<li>Tab navigation of the cells is buggy, see <em>Enter Resource Data</em></li>
-<li>Homescreen seems fine, but making a new schedule does not automatically
-open up a new tab</li>
-</ul>
+Generally the product looks good. In random user tests, the look and feel was functional/familiar.
+Able to generate a schedule and enter resources successfully.
 </p>
+<strong>Issues</strong>
+<ul>
+	<li>Location of the Generate Schedule button is still hard for most people to find</li>
+	<li>The schedule was not valid since there was an overlap in courses.</li>
+	<li>Schedule does not look very clean with lots of courses. This was an issue we did not
+		get to address since we only recently got a working Generate Schedule button.</li>
+</ul>
 
 <br>
 <a name="Other Issues">
@@ -138,8 +117,13 @@ open up a new tab</li>
 </h2>
 </a>
 <p>
-Most of the other issues were noted in my above sections, namely the
-<em>Enter Resource Data</em> section.
+<ul>
+	<li>After running Selenium tests with MU resources, Generate Schedule button caused a 500 error after entering resources.</li>
+	<li>Navigated to courses table after generating, tried to save, received 500 error. Navigating to any tab after this
+		also resulted in a 500 error.</li>
+	<li>I logged out and tried to log back in as admin and received "Failed to get documents". It could not log me back
+		in after this. This issue happened after the above mentioned issue with the 500 error.</li>
+</ul>
 </p>
 </body>
 </html>
