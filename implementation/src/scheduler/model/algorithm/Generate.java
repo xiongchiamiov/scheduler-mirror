@@ -451,7 +451,6 @@ public class Generate {
 	    		  }
 	    	  }
 	      }
-	      
 	      return r;
 	   }
 	   
@@ -594,7 +593,8 @@ public class Generate {
 	            debug ("TRYING " + i.getInstructor());
 	            
 	            clone.setInstructor(i.getInstructor());
-	            si_list = findTimes(model, document, clone, tr, id);
+	            debug("ID is actually: " + id.getInstructor());
+	            si_list = findTimes(model, document, clone, tr, i);
 	            haveTriedInstructorIDs.add(i.getInstructorID());
 	            
 	         } while (si_list.isEmpty());
@@ -684,6 +684,9 @@ public class Generate {
 	   public static double getAvgPrefForTimeRange (InstructorDecorator ins, Week w, int s, int e) 
 			   throws DatabaseException
 	   {
+		  if(ins.isStaffInstructor())
+			  return 10;
+		   
 	      double total = 0;
 	      int length = e - s;
 
