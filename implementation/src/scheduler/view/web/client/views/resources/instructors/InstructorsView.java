@@ -16,7 +16,6 @@ import com.smartgwt.client.types.ListGridEditEvent;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.RowEndEditAction;
 import com.smartgwt.client.types.SelectionAppearance;
-import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Window;
@@ -25,13 +24,15 @@ import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.events.KeyPressEvent;
 import com.smartgwt.client.widgets.events.KeyPressHandler;
 import com.smartgwt.client.widgets.form.validator.IntegerRangeValidator;
-import com.smartgwt.client.widgets.grid.CellFormatter;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
+/**
+ * This view contains the resource table for the instructors
+ */
 public class InstructorsView extends VLayout {
 	CachedOpenWorkingCopyDocument openDocument;
 	
@@ -39,6 +40,10 @@ public class InstructorsView extends VLayout {
 	protected Window prefsWindow = null;
 	private ListGrid grid;
 
+	/**
+	 * the constructor calls the method to load the instructor list
+	 * @param openDocument
+	 */
 	public InstructorsView(CachedOpenWorkingCopyDocument openDocument) {
 		this.openDocument = openDocument;
 		
@@ -50,6 +55,9 @@ public class InstructorsView extends VLayout {
 		onPopulate();
 	}
 	
+	/**
+	 * loads the instructors into the listctrl
+	 */
 	private void onPopulate() {
 		//com.google.gwt.user.client.Window.alert("onpopulate!");
 		
@@ -219,6 +227,10 @@ public class InstructorsView extends VLayout {
 		layoutBottomButtonBar(grid);
 	}
 
+	/**
+	 * This opens the preferences window when a preferences button is clicked
+	 * @param instructor
+	 */
 	public void preferencesButtonClicked(InstructorGWT instructor) {
 		// the window is automatically shown when the synchronization is done
 		if(this.iipv == null)
@@ -315,6 +327,9 @@ public class InstructorsView extends VLayout {
 		this.addMember(bottomButtonFlowPanel);
 	}
 	
+	/**
+	 * deletes the selected instructors
+	 */
 	void deleteSelected() {
 		Set<Integer> referencedInstructorIDs = new TreeSet<Integer>();
 		for (ScheduleItemGWT item : openDocument.getScheduleItems())
@@ -348,12 +363,19 @@ public class InstructorsView extends VLayout {
 		}
 	}
 	
+	/**
+	 * returns whether this widget can be closed 
+	 * @return always true
+	 */
 	public boolean canClose() {
 		// If you want to keep the user from navigating away, return false here
 		
 		return true;
 	}
 
+	/**
+	 * closes this view
+	 */
 	public void close() {
 		this.clear();
 	}

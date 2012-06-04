@@ -11,7 +11,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 
 /**
@@ -87,42 +86,31 @@ public class InstructorPreferencesView extends VerticalPanel {
 		InstructorPreferencesView.this.setCellHorizontalAlignment(closebutton, ALIGN_RIGHT);
 	}
 
+	/**
+	 * This method should be called after adding it to its parent.
+	 * it leads the data for the document and instructor
+	 * @param parentWindow
+	 */
 	public void afterPush(com.smartgwt.client.widgets.Window parentWindow) {
 		this.setParent(parentWindow);
 		this.synchronize(this.openDocument, this.instructor);
 	}
 	
+	/**
+	 * Sets the parent widget. This is used to eventually close the window if no courses are available 
+	 * @param parent
+	 */
 	private void setParent(com.smartgwt.client.widgets.Window parent) {
 		this.parent = parent;
 	}
 	
-	public boolean isReady()
-	{
-		return this.closebutton != null;
-	}
 	
-	// @Override
-	public boolean canPop() {
-		return true;
-	}
-
-	// @Override
-	public void beforePop() {
-	}
-
-	// @Override
-	public void beforeViewPushedAboveMe() {
-	}
-
-	// @Override
-	public void afterViewPoppedFromAboveMe() {
-	}
-
-	// @Override
-	public Widget getContents() {
-		return this;
-	}
-	
+	/**
+	 * This adds a handler to be executed when the window is closed.
+	 * This is used to autosave the preferences after closing the window
+	 * in the instructors view
+	 * @param handler
+	 */
 	public void addCloseHandler(ClickHandler handler)
 	{
 		if(this.closebutton == null)
@@ -135,11 +123,20 @@ public class InstructorPreferencesView extends VerticalPanel {
 		}
 	}
 	
+	/**
+	 * returns the associated document object
+	 * @return
+	 */
 	public CachedOpenWorkingCopyDocument getDocument()
 	{
 		return this.openDocument;
 	}
 	
+	/**
+	 * reads the data for the given document and instructor
+	 * @param doc
+	 * @param instructor
+	 */
 	public void synchronize(final CachedOpenWorkingCopyDocument doc,
                              final InstructorGWT instructor)
 	{

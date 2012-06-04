@@ -14,8 +14,6 @@ import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -35,16 +33,27 @@ import scheduler.view.web.shared.InstructorGWT;
  * @author Jacob Juszak, modified by Carsten Pfeffer <pfeffer@tzi.de>
  */
 public class TimePrefsWidget extends VerticalPanel {
+	/**
+	 * This subclass is a a cell for the time preferences
+	 */
 	class TimePrefsCellWidget extends FocusPanel {
 		int halfHour, day;
 		ListBox list = new ListBox();
 		
+		/**
+		 * sets the time data
+		 * @param halfHour
+		 * @param day
+		 */
 		TimePrefsCellWidget(int halfHour, int day) {
 			this.halfHour = halfHour;
 			this.day = day;
 			this.add(list);
 		}
 		
+		/**
+		 * adds the lists labels to the selectbox
+		 */
 		public void addItems()
 		{
 			list.addItem("Not Possible");
@@ -61,6 +70,10 @@ public class TimePrefsWidget extends VerticalPanel {
 			});
 		}
 		
+		/**
+		 * sets the preference of this cell
+		 * @param desire ("not possible" - 0, "not preferred" - 1 etc...)
+		 */
 		public void setCellPreference(int desire)
 		{
 			setPreference(this, desire);
@@ -70,6 +83,10 @@ public class TimePrefsWidget extends VerticalPanel {
 			list.addStyleName(styleNames[3 - desire]);
 		}
 		
+		/**
+		 * adds a style name
+		 * @param style
+		 */
 		public void addListStyle(String style)
 		{
 			String lastStyle = list.getStyleName();
@@ -79,17 +96,28 @@ public class TimePrefsWidget extends VerticalPanel {
 			list.addStyleName(style);
 		}
 		
+		/**
+		 * returns the selection index
+		 * @return
+		 */
 		public int getIndex()
 		{
 			return list.getSelectedIndex();
 		}
 		
+		/**
+		 * sets the selection by index ("not possible" - 0, "not preferred" - 1 etc...)
+		 * @param desire
+		 */
 		public void setIndex(int desire)
 		{
 			list.setSelectedIndex(desire);
 		}
 	}
 	
+	/**
+	 * basically the data container
+	 */
 	public interface Strategy {
 		InstructorGWT getSavedInstructor();
 		InstructorGWT getInstructor();
@@ -164,6 +192,10 @@ public class TimePrefsWidget extends VerticalPanel {
 		strategy.getSavedInstructor().verify();
 	}
 
+	/**
+	 * prints the given exception to the UI
+	 * @param e
+	 */
 	static void printException(Throwable e) {
 		String st = e.getClass().getName() + ": " + e.getMessage();
 		for (StackTraceElement ste : e.getStackTrace())
@@ -171,13 +203,12 @@ public class TimePrefsWidget extends VerticalPanel {
 		RootPanel.get().clear();
 		RootPanel.get().add(new HTML(st));
 	}
-
-	/*void setSelectedCellsContents(int value) {
-		for (TimePrefsCellWidget cell : selectedCells)
-			setPreference(cell, value);
-		//redoColors();
-	}*/
-
+	
+	/**
+	 * sets the preference for a certain cell
+	 * @param cell
+	 * @param desire ("not possible" - 0, "not preferred" - 1 etc...)
+	 */
 	void setPreference(TimePrefsCellWidget cell, int desire) {
 		InstructorGWT instructor = strategy.getInstructor();
 
@@ -192,11 +223,21 @@ public class TimePrefsWidget extends VerticalPanel {
 		cell.addListStyle(styleNames[3-desire]);
 	}
 
+	/**
+	 * returns the preference for a given instructor for a certain time
+	 * @param ins
+	 * @param halfHour
+	 * @param dayNum
+	 * @return ("not possible" - 0, "not preferred" - 1 etc...)
+	 */
 	int getPreference(InstructorGWT ins, int halfHour, int dayNum) {
 		DayGWT day = DayGWT.values()[dayNum];
 		return ins.gettPrefs()[day.ordinal()][halfHour + 14];
 	}
 	
+	/**
+	 * This method is for the top panel which allows you to set mutliple preferences at once
+	 */
 	public void setMultiplePreferences()
 	{
 		for(int j = fromList.getSelectedIndex(); j < toList.getSelectedIndex() + 1; j++)
@@ -210,6 +251,9 @@ public class TimePrefsWidget extends VerticalPanel {
 	}
 
 	@Override
+	/**
+	 * while the wiidget is loaded, all of the preferences have to be set.
+	 */
 	protected void onLoad() {
 		super.onLoad();
 		topStuff = new FlexTable();
@@ -319,6 +363,9 @@ public class TimePrefsWidget extends VerticalPanel {
 		firstdraw();
 	}
 	
+	/**
+	 * when the widget is first drawn, all of the child objects have to be created
+	 */
 	public void firstdraw()
 	{
 		this.timePrefsTable = new FlexTable();
@@ -388,6 +435,10 @@ public class TimePrefsWidget extends VerticalPanel {
 		}
 	}
 	
+	/**
+	 * when the widget should be just redrawn we can't recreate all of the children,
+	 * since that would cause ambigious IDs. So we just reset their contents.
+	 */
 	public void redraw()
 	{
 		ArrayList<String> days = new ArrayList<String>();
@@ -430,11 +481,21 @@ public class TimePrefsWidget extends VerticalPanel {
 		}
 	}
 	
+	/**
+	 * just for debugging...
+	 * @param x
+	 * @param y
+	 */
 	void rowOrColumnSelected(int x, int y)
 	{
 		System.out.println("X: "+x+", Y: "+y);
 	}
 	
+	/**
+	 * is called when the user changes a preference
+	 * @param cell
+	 * @param event
+	 */
 	void cellWidgetMouseDown(TimePrefsCellWidget cell, MouseDownEvent event)
 	{
 		event.preventDefault();
@@ -448,6 +509,11 @@ public class TimePrefsWidget extends VerticalPanel {
 		selectRangeOfCells(this.anchorCell.halfHour, this.anchorCell.day, cell.halfHour, cell.day);
 	}
 	
+	/**
+	 * is called when the user changes a preference
+	 * @param cell
+	 * @param event
+	 */
 	void cellWidgetMouseUp(TimePrefsCellWidget cell, MouseUpEvent event)
 	{
 		event.preventDefault();
@@ -456,11 +522,23 @@ public class TimePrefsWidget extends VerticalPanel {
 		this.anchorCell = null;
 	}
 	
+	/**
+	 * redraws the children when a preference was changed
+	 * @param event
+	 */
 	void CheckBoxClicked(ClickEvent event)
 	{
 		redraw();
 	}
 
+	/**
+	 * This is used for the top panel when the user selects the range of which
+	 * times should be quick-edited
+	 * @param fromHalfHour
+	 * @param fromDay
+	 * @param toHalfHour
+	 * @param toDay
+	 */
 	void selectRangeOfCells(int fromHalfHour, int fromDay, int toHalfHour, int toDay) {
 		if (toHalfHour < fromHalfHour) {
 			int temp = toHalfHour;
@@ -479,6 +557,10 @@ public class TimePrefsWidget extends VerticalPanel {
 				selectCell(this.cells[halfHour][day]);
 	}
 	
+	/**
+	 * 
+	 * @param cell
+	 */
 	void setAnchorCell(TimePrefsCellWidget cell) {
 		if (this.anchorCell != null) {
 			this.anchorCell.removeStyleName("anchorCell");
@@ -489,6 +571,10 @@ public class TimePrefsWidget extends VerticalPanel {
 		this.anchorCell.addStyleName("anchorCell");
 	}
 	
+	/**
+	 * is called when the user selects a cell
+	 * @param cell
+	 */
 	void selectCell(TimePrefsCellWidget cell) {
 		if (!this.selectedCells.contains(cell)) {
 			this.selectedCells.add(cell);
@@ -496,6 +582,9 @@ public class TimePrefsWidget extends VerticalPanel {
 		}
 	}
 	
+	/**
+	 * resets all selected cells to normal
+	 */
 	void clearSelectedCells() {
 		for (TimePrefsCellWidget c : this.selectedCells)
 			c.removeStyleName("selectedCell");
@@ -503,6 +592,10 @@ public class TimePrefsWidget extends VerticalPanel {
 		this.selectedCells.clear();
 	}
 	
+	/**
+	 * turns a selected cell to unselected and an unselected one to selected
+	 * @param cell
+	 */
 	void toggleCellSelected(TimePrefsCellWidget cell) {
 		if (!this.selectedCells.contains(cell)) {
 			this.selectedCells.add(cell);
@@ -514,6 +607,9 @@ public class TimePrefsWidget extends VerticalPanel {
 		}
 	}
 	
+	/**
+	 * refreshes the colors of the child widgets according to the preferences
+	 */
 	void redoColors() {
 		for (int halfHour = 0; halfHour < 30; halfHour++) {
 			
@@ -527,29 +623,21 @@ public class TimePrefsWidget extends VerticalPanel {
 		}
 	}
 	
+	/**
+	 * saves the preferences to the working copy
+	 */
 	void save() {
 		System.err.println("TRY TO SAVE TIME PREFERENCE");
 		workingCopyDocument.editInstructor(instructor);
-		
-//		workingCopyDocument.forceSynchronize(new AsyncCallback<Void>() {
-//			@Override
-//			public void onFailure(Throwable caught) {
-//				// popup.hide();
-//				System.err.println("NOT TO SAVE TIME PREFERENCE");
-//				Window.alert("Error saving instructor: " + caught.getMessage());
-//			}
-//
-//			@Override
-//			public void onSuccess(Void result) {
-//				savedInstructor = new InstructorGWT(instructor);
-//				//instructor = new InstructorGWT(instructor);
-//				//redoColors();
-//				System.err.println("SAVED TIME PREFERENCE");
-//				System.out.println("saved time preferences... ?!?");
-//			}
-//		});
 	}
 	
+	/**
+	 * Sets the document and the instructor which are connected to the widget.
+	 * In admin view instructors are different for each instance of this class,
+	 * in instructors view documents are.
+	 * @param doc
+	 * @param instructor
+	 */
 	public void setDataSources(CachedOpenWorkingCopyDocument doc, InstructorGWT instructor)
 	{
 		this.workingCopyDocument = doc;

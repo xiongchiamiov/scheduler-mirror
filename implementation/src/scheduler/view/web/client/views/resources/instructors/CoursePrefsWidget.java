@@ -79,6 +79,10 @@ public class CoursePrefsWidget extends VerticalPanel
 		populateCourses(newCoursesByID);
 	}
 	
+	/**
+	 * This method inserts the courses into the controls
+	 * @param newCoursesByID
+	 */
 	void populateCourses(final Map<Integer, CourseGWT> newCoursesByID) {
 		coursesByID = newCoursesByID;
 		this.table.removeAllRows();
@@ -143,12 +147,29 @@ public class CoursePrefsWidget extends VerticalPanel
 		});
 	}
 
+	/**
+	 * returns the preference for a specific course and instructor
+	 * (This is necessary since this class is used in both, admin and instructors panel)
+	 * @param instructor
+	 * @param course
+	 * @return Course preference as integer (either 0:"not qualified",
+	 * 										  1:"not preferred", 2:"acceptable" or
+	 * 										  3:"preferred")  
+	 */
 	int getCoursePreference(InstructorGWT instructor, CourseGWT course) {
 		assert (instructor.getCoursePreferences() != null);
 		assert(instructor.getCoursePreferences().containsKey(course.getID()));
 		return instructor.getCoursePreferences().get(course.getID());
 	}
 
+	/**
+	 * Sets the preference of a specific course and changes the colors of the
+	 * dropdown control afterwards
+	 * @param course
+	 * @param newDesire Course preference as integer (either 0:"not qualified",
+	 * 										  1:"not preferred", 2:"acceptable" or
+	 * 										  3:"preferred")  
+	 */
 	void setCoursePreference(CourseGWT course, int newDesire) {
 		for (Integer key : instructor.getCoursePreferences().keySet())
 			assert (key != null);
@@ -179,6 +200,13 @@ public class CoursePrefsWidget extends VerticalPanel
 		}
 	}
 	
+	/**
+	 * Sets the document and the instructor which are connected to the widget.
+	 * In admin view instructors are different for each instance of this class,
+	 * in instructors view documents are.
+	 * @param doc
+	 * @param instructor
+	 */
 	public void setDataSources(CachedOpenWorkingCopyDocument doc, InstructorGWT instructor)
 	{
 		this.workingCopyDocument = doc;

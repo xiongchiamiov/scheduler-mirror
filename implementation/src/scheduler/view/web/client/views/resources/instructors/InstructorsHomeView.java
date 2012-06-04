@@ -27,6 +27,12 @@ import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.CloseClickEvent;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
 
+/**
+ * This class represents the view for the instructors which shows
+ * the documents which are available for the instructors and where
+ * they are able to set their preferences.
+ * @author Jake Juszak, Carsten Pfeffer <pfeffer.carsten@gmail.com>
+ */
 public class InstructorsHomeView extends VerticalPanel implements View
 {
 	protected CachedService service;
@@ -38,6 +44,10 @@ public class InstructorsHomeView extends VerticalPanel implements View
 	protected InstructorPreferencesView iipv = null;
 	protected Window prefsWindow = null;
 	
+	/**
+	 * constructor sets up the view and loads the data
+	 * @param service
+	 */
 	public InstructorsHomeView(final CachedService service)
 	{	
 		this.service = service;
@@ -100,6 +110,10 @@ public class InstructorsHomeView extends VerticalPanel implements View
 				  });
 	}
 	
+	/**
+	 * adds a new document to the list in the view
+	 * @param doc
+	 */
 	public void addNewDocument(final OriginalDocumentGWT doc)
 	{
 		// set the instructor
@@ -142,6 +156,10 @@ public class InstructorsHomeView extends VerticalPanel implements View
 		schedList.setWidget(row, 1, prefs);
 	}
 	
+	/**
+	 * This opens the preferences window when a preferences button is clicked
+	 * @param doc
+	 */
 	public void preferencesButtonClicked(CachedOpenWorkingCopyDocument doc) {
 		
 		// the window is automatically shown when the synchronization is done
@@ -226,21 +244,37 @@ public class InstructorsHomeView extends VerticalPanel implements View
 		this.instructor = instructor1;
 	}
 	
+	/**
+	 * Checks if the instructor data is valid
+	 * @param result
+	 * @param instructor
+	 */
 	private void sanityCheckInstructor(CachedOpenWorkingCopyDocument result, InstructorGWT instructor) {
 		for (CourseGWT course : result.getCourses())
 			assert(instructor.getCoursePreferences().containsKey(course.getID()));
 	}
 
 	@Override
+	/**
+	 * returns whether this widget can be closed 
+	 * @return always true
+	 */
 	public boolean canClose() {
+		// If you want to keep the user from navigating away, return false here
 		return true;
 	}
 
 	@Override
+	/**
+	 * closes this view
+	 */
 	public void close() {
 		
 	}
 
 	@Override
+	/**
+	 * returns this class as a Widget object
+	 */
 	public Widget viewAsWidget() { return this; }
 }
