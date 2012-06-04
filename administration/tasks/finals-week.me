@@ -1,0 +1,121 @@
+.sz 10
+.ds ~ /users/gfisher/nroff
+. so \*~/stdhdr.me
+.(TI "CSC 406 Final Project Deliverables"
+.(S +2
+\fBCSC 406 Final Project Deliverables\fP
+.)S
+.)TI
+.spt
+The following deliverables are due by 11:59PM Friday 8 June.  These are all
+items that have been previously assigned during the quarter.  The online
+version of this handout is here in the project repository:
+.(Ah "finals-week.html"
+administration/tasks/finals-week.html
+.)Ah
+.sp
+.(L 1 1v 3n
+.le
+\f[BI]Edited transcript(s) for the finals week interview(s) you conducted.\fP
+.sp .6v
+Commit the transcript here:
+.(Ah "../../deployment/interviews"
+deployment/interviews/DEPT
+.)Ah
+for DEPT equal to the name of the department interviewed.  The format of the
+file names for the transcripts is \fIname\fP\fC-\fP\fIdate\fP\fC.html\fP, where
+\fIname\fP is the last name of the client and \fIdate\fP is the date on which
+the interview was conducted.  Use the date syntax described in the
+.(Ah "http://users.csc.calpoly.edu/~gfisher/classes/308/admin/meeting-minutes-template.html"
+meeting minutes template.
+.)Ah
+.sp .6v
+See the spring 2012 interview script for further details on the content of the
+client interviews and their transcripts, at
+.(Ah "../clients/spring-2012-interview-script.html"
+administration/clients/spring-2012-interview-script.html
+.)Ah
+Note that for class credit purposes, the authors of the transcript will be
+considered to be those listed under the 
+.(Ah "../clients/spring-2012-interview-script.html"
+transcript heading
+.)Ah 
+"\fBNames of Team Members Attending:\fP".
+.hc p
+.le
+\f[BI]Final Acceptance Test Report.\fP
+.sp .6v
+Commit the transcript here:
+.(Ah "/../../testing/acceptance"
+testing/acceptance/DEPT/finals-week-report.html
+.)Ah
+for DEPT equal to the name of the department you were assigned to work on this
+quarter.  NOTE WELL that this may or may not be the same department that where
+you conducted the interview
+.sp .6v
+See the Spring acceptance template for details on the content of the report, at
+.(Ah 
+testing/acceptance/templates/spring-report.html
+.)Ah
+.sp .6v
+If you did an acceptance test report for week 8 or 9, you may copy and paste it
+into the finals-week-report and update the report to be consistent with the
+final deployed version of the program.  If you did not do a report for weeks 8
+or 9, then you must do a new one for the finals week report.
+.hc p
+.le
+\f[BI]Selenium Tests for Your Assigned Department.\fP
+.sp .6v
+This goes in the project directory
+.(Ah "../../Selenium/test/scheduler/view/web/shared/AEROAcceptanceTest.java"
+Selenium/test/scheduler/view/web/shared/*AcceptanceTest*.java
+.)Ah
+per the Selenium file naming conventions developed by Salome and Evan.
+.hc p
+.le
+\f[BI]Javadoc for All of Your Code.\fP
+.sp .6v
+This goes in the .java files that you have been responsible for this quarter.
+.hc p
+.le
+\f[BI]A Summary Code Review for the Team You Were Paired With\fP
+.sp
+Commit the review here
+.(Ah "../../testing/reviews/"
+\fCtesting/reviews/TEAM/finals-week/review.html\fP
+.)Ah
+where the TEAM sub-directories are \fCalgorithm\fP, \fCresources-backend\fP,
+\fCschedule-views\fP, \fCinstructor-web-app\fP, \fCresources-frontend\fP, and
+\fCtop-level\fP.
+.sp .6v
+If you done a recent code review, you may copy and paste it into the final
+review and update to be consistent with the final deployed version of the
+program.  If you have not done a inter-team code review at all this quarter,
+then you must do a new one for the finals week review.  The "inter-team" code
+review is for two-person team you were paired with, NOT your won two-person
+team.  The pairings are those listed in the
+.(Ah "http://users.csc.calpoly.edo/~gfisher/classes/406/handouts/syllabus.html#team-pairings"
+406 syllabus
+.)Ah
+, i.e.,:
+.sp .6v
+.TS
+box center;
+l l l
+l | l | l.
+\fBTeam\fP	\fBProject Focus\fP	\fBCode Review Pairing\fP
+. sp .2v
+=
+. sp .2v
+Salome, Adam	Algorithm	Schedule Views
+Matt, Tyler Y	Schedule Views	Algorithm
+
+Kaylene, Jonathan	Resource Tables, Back End	Front End
+Evan, Tyler H	Resource Tables, Front End	Back End
+
+Jake, Carsten	Instructor Web App	Top-Level
+James, Jordan	Top-Level UI & File Storage	Instructor Web App
+.TE
+.)L 1
+.\" LocalWords:  CSC BI AcceptanceTest java Salome Evan Javadoc backend app sp
+.\" LocalWords:  frontend Kaylene Carsten UI
