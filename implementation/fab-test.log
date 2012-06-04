@@ -1,0 +1,1038 @@
+fab test:scheduler.csc.calpoly.edu
+[scheduler.csc.calpoly.edu] Executing task 'test'
+Running JUnit tests...
+[localhost] local: ant clean && ant build && ant test
+Buildfile: build.xml
+
+clean:
+   [delete] Deleting directory /Users/gfisher/work/scheduler-vm/implementation/war/WEB-INF/classes
+   [delete] Deleting directory /Users/gfisher/work/scheduler-vm/implementation/test-classes
+   [delete] Deleting directory /Users/gfisher/work/scheduler-vm/implementation/instrumented-classes
+
+BUILD SUCCESSFUL
+Total time: 1 second
+Buildfile: build.xml
+
+build-subprojects:
+
+init:
+    [mkdir] Created dir: /Users/gfisher/work/scheduler-vm/implementation/war/WEB-INF/classes
+    [mkdir] Created dir: /Users/gfisher/work/scheduler-vm/implementation/test-classes
+    [mkdir] Created dir: /Users/gfisher/work/scheduler-vm/implementation/instrumented-classes
+     [copy] Copying 3 files to /Users/gfisher/work/scheduler-vm/implementation/war/WEB-INF/classes
+     [copy] Copying 110 files to /Users/gfisher/work/scheduler-vm/implementation/test-classes
+
+build-project:
+     [echo] GWTView: /Users/gfisher/work/scheduler-vm/implementation/build.xml
+    [javac] Compiling 206 source files to /Users/gfisher/work/scheduler-vm/implementation/war/WEB-INF/classes
+    [javac] Note: Some input files use or override a deprecated API.
+    [javac] Note: Recompile with -Xlint:deprecation for details.
+    [javac] Note: Some input files use unchecked or unsafe operations.
+    [javac] Note: Recompile with -Xlint:unchecked for details.
+    [javac] Compiling 38 source files to /Users/gfisher/work/scheduler-vm/implementation/test-classes
+    [javac] Note: /Users/gfisher/work/scheduler-vm/implementation/test/scheduler/model/ModelTestUtility.java uses unchecked or unsafe operations.
+    [javac] Note: Recompile with -Xlint:unchecked for details.
+
+build:
+
+BUILD SUCCESSFUL
+Total time: 10 seconds
+Buildfile: build.xml
+
+test:
+[cobertura-instrument] Cobertura 1.9.4.1 - GNU GPL License (NO WARRANTY) - See COPYRIGHT file
+[cobertura-instrument] Instrumenting 122 files to /Users/gfisher/work/scheduler-vm/implementation/instrumented-classes
+[cobertura-instrument] Cobertura: Saved information on 122 classes.
+[cobertura-instrument] Instrument time: 967ms
+    [junit] Testsuite: scheduler.model.ModelTestSuite
+    [junit] Tests run: 45, Failures: 0, Errors: 45, Time elapsed: 0.233 sec
+    [junit] ------------- Standard Output ---------------
+    [junit] Inserting user: eovadia true
+    [junit] Inserting user: eovadia true
+    [junit] Inserting user: eovadia true
+    [junit] Inserting user: eovadia true
+    [junit] Inserting user: eovadia true
+    [junit] Inserting user: eovadia true
+    [junit] Inserting user: eovadia true
+    [junit] Inserting user: eovadia true
+    [junit] ------------- ---------------- ---------------
+    [junit] 
+    [junit] Testcase: testTransientsNotInserted took 0.015 sec
+    [junit] 	Caused an ERROR
+    [junit] java.sql.SQLException: database disk image is malformed
+    [junit] scheduler.model.db.DatabaseException: java.sql.SQLException: database disk image is malformed
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:349)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb.insertDocument(SQLdb.java:507)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:142)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:134)
+    [junit] 	at scheduler.model.Model$Cache.insert(Model.java:63)
+    [junit] 	at scheduler.model.Document.insert(Document.java:45)
+    [junit] 	at scheduler.model.Model.createAndInsertDocumentWithSpecialInstructorsAndLocations(Model.java:153)
+    [junit] 	at scheduler.model.CoursesTest.testTransientsNotInserted(CoursesTest.java:22)
+    [junit] Caused by: java.sql.SQLException: database disk image is malformed
+    [junit] 	at org.sqlite.DB.execute(DB.java:275)
+    [junit] 	at org.sqlite.DB.executeUpdate(DB.java:281)
+    [junit] 	at org.sqlite.PrepStmt.executeUpdate(PrepStmt.java:77)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:342)
+    [junit] 
+    [junit] Testcase: testInsertAndFindCourse took 0.003 sec
+    [junit] 	Caused an ERROR
+    [junit] java.sql.SQLException: database disk image is malformed
+    [junit] scheduler.model.db.DatabaseException: java.sql.SQLException: database disk image is malformed
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:349)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb.insertDocument(SQLdb.java:507)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:142)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:134)
+    [junit] 	at scheduler.model.Model$Cache.insert(Model.java:63)
+    [junit] 	at scheduler.model.Document.insert(Document.java:45)
+    [junit] 	at scheduler.model.Model.createAndInsertDocumentWithSpecialInstructorsAndLocations(Model.java:153)
+    [junit] 	at scheduler.model.CoursesTest.testInsertAndFindCourse(CoursesTest.java:35)
+    [junit] Caused by: java.sql.SQLException: database disk image is malformed
+    [junit] 	at org.sqlite.DB.execute(DB.java:275)
+    [junit] 	at org.sqlite.DB.executeUpdate(DB.java:281)
+    [junit] 	at org.sqlite.PrepStmt.executeUpdate(PrepStmt.java:77)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:342)
+    [junit] 
+    [junit] Testcase: testInsertAndDeleteCourse took 0.002 sec
+    [junit] 	Caused an ERROR
+    [junit] java.sql.SQLException: database disk image is malformed
+    [junit] scheduler.model.db.DatabaseException: java.sql.SQLException: database disk image is malformed
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:349)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb.insertDocument(SQLdb.java:507)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:142)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:134)
+    [junit] 	at scheduler.model.Model$Cache.insert(Model.java:63)
+    [junit] 	at scheduler.model.Document.insert(Document.java:45)
+    [junit] 	at scheduler.model.Model.createAndInsertDocumentWithSpecialInstructorsAndLocations(Model.java:153)
+    [junit] 	at scheduler.model.CoursesTest.testInsertAndDeleteCourse(CoursesTest.java:79)
+    [junit] Caused by: java.sql.SQLException: database disk image is malformed
+    [junit] 	at org.sqlite.DB.execute(DB.java:275)
+    [junit] 	at org.sqlite.DB.executeUpdate(DB.java:281)
+    [junit] 	at org.sqlite.PrepStmt.executeUpdate(PrepStmt.java:77)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:342)
+    [junit] 
+    [junit] Testcase: testAssociation took 0.003 sec
+    [junit] 	Caused an ERROR
+    [junit] java.sql.SQLException: database disk image is malformed
+    [junit] scheduler.model.db.DatabaseException: java.sql.SQLException: database disk image is malformed
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:349)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb.insertDocument(SQLdb.java:507)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:142)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:134)
+    [junit] 	at scheduler.model.Model$Cache.insert(Model.java:63)
+    [junit] 	at scheduler.model.Document.insert(Document.java:45)
+    [junit] 	at scheduler.model.Model.createAndInsertDocumentWithSpecialInstructorsAndLocations(Model.java:153)
+    [junit] 	at scheduler.model.CoursesTest.testAssociation(CoursesTest.java:99)
+    [junit] Caused by: java.sql.SQLException: database disk image is malformed
+    [junit] 	at org.sqlite.DB.execute(DB.java:275)
+    [junit] 	at org.sqlite.DB.executeUpdate(DB.java:281)
+    [junit] 	at org.sqlite.PrepStmt.executeUpdate(PrepStmt.java:77)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:342)
+    [junit] 
+    [junit] Testcase: testUpdateCourse took 0.002 sec
+    [junit] 	Caused an ERROR
+    [junit] java.sql.SQLException: database disk image is malformed
+    [junit] scheduler.model.db.DatabaseException: java.sql.SQLException: database disk image is malformed
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:349)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb.insertDocument(SQLdb.java:507)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:142)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:134)
+    [junit] 	at scheduler.model.Model$Cache.insert(Model.java:63)
+    [junit] 	at scheduler.model.Document.insert(Document.java:45)
+    [junit] 	at scheduler.model.Model.createAndInsertDocumentWithSpecialInstructorsAndLocations(Model.java:153)
+    [junit] 	at scheduler.model.CoursesTest.testUpdateCourse(CoursesTest.java:127)
+    [junit] Caused by: java.sql.SQLException: database disk image is malformed
+    [junit] 	at org.sqlite.DB.execute(DB.java:275)
+    [junit] 	at org.sqlite.DB.executeUpdate(DB.java:281)
+    [junit] 	at org.sqlite.PrepStmt.executeUpdate(PrepStmt.java:77)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:342)
+    [junit] 
+    [junit] Testcase: testDeleteInstructor took 0.002 sec
+    [junit] 	Caused an ERROR
+    [junit] java.sql.SQLException: database disk image is malformed
+    [junit] scheduler.model.db.DatabaseException: java.sql.SQLException: database disk image is malformed
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:349)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb.insertDocument(SQLdb.java:507)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:142)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:134)
+    [junit] 	at scheduler.model.Model$Cache.insert(Model.java:63)
+    [junit] 	at scheduler.model.Document.insert(Document.java:45)
+    [junit] 	at scheduler.model.Model.createAndInsertDocumentWithSpecialInstructorsAndLocations(Model.java:153)
+    [junit] 	at scheduler.model.CoursesTest.testDeleteInstructor(CoursesTest.java:165)
+    [junit] Caused by: java.sql.SQLException: database disk image is malformed
+    [junit] 	at org.sqlite.DB.execute(DB.java:275)
+    [junit] 	at org.sqlite.DB.executeUpdate(DB.java:281)
+    [junit] 	at org.sqlite.PrepStmt.executeUpdate(PrepStmt.java:77)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:342)
+    [junit] 
+    [junit] Testcase: testFindAllCoursesForDocument took 0.003 sec
+    [junit] 	Caused an ERROR
+    [junit] java.sql.SQLException: database disk image is malformed
+    [junit] scheduler.model.db.DatabaseException: java.sql.SQLException: database disk image is malformed
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:349)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb.insertDocument(SQLdb.java:507)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:142)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:134)
+    [junit] 	at scheduler.model.Model$Cache.insert(Model.java:63)
+    [junit] 	at scheduler.model.Document.insert(Document.java:45)
+    [junit] 	at scheduler.model.Model.createAndInsertDocumentWithSpecialInstructorsAndLocations(Model.java:153)
+    [junit] 	at scheduler.model.CoursesTest.testFindAllCoursesForDocument(CoursesTest.java:188)
+    [junit] Caused by: java.sql.SQLException: database disk image is malformed
+    [junit] 	at org.sqlite.DB.execute(DB.java:275)
+    [junit] 	at org.sqlite.DB.executeUpdate(DB.java:281)
+    [junit] 	at org.sqlite.PrepStmt.executeUpdate(PrepStmt.java:77)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:342)
+    [junit] 
+    [junit] Testcase: testFindAllCoursesInMultipleDocuments took 0.002 sec
+    [junit] 	Caused an ERROR
+    [junit] java.sql.SQLException: database disk image is malformed
+    [junit] scheduler.model.db.DatabaseException: java.sql.SQLException: database disk image is malformed
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:349)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb.insertDocument(SQLdb.java:507)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:142)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:134)
+    [junit] 	at scheduler.model.Model$Cache.insert(Model.java:63)
+    [junit] 	at scheduler.model.Document.insert(Document.java:45)
+    [junit] 	at scheduler.model.Model.createAndInsertDocumentWithSpecialInstructorsAndLocations(Model.java:153)
+    [junit] 	at scheduler.model.CoursesTest.testFindAllCoursesInMultipleDocuments(CoursesTest.java:210)
+    [junit] Caused by: java.sql.SQLException: database disk image is malformed
+    [junit] 	at org.sqlite.DB.execute(DB.java:275)
+    [junit] 	at org.sqlite.DB.executeUpdate(DB.java:281)
+    [junit] 	at org.sqlite.PrepStmt.executeUpdate(PrepStmt.java:77)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:342)
+    [junit] 
+    [junit] Testcase: testInsertDocument took 0.001 sec
+    [junit] 	Caused an ERROR
+    [junit] java.sql.SQLException: database disk image is malformed
+    [junit] scheduler.model.db.DatabaseException: java.sql.SQLException: database disk image is malformed
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:349)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb.insertDocument(SQLdb.java:507)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:142)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:134)
+    [junit] 	at scheduler.model.Model$Cache.insert(Model.java:63)
+    [junit] 	at scheduler.model.Document.insert(Document.java:45)
+    [junit] 	at scheduler.model.Model.createAndInsertDocumentWithSpecialInstructorsAndLocations(Model.java:153)
+    [junit] 	at scheduler.model.DocumentsTest.testInsertDocument(DocumentsTest.java:22)
+    [junit] Caused by: java.sql.SQLException: database disk image is malformed
+    [junit] 	at org.sqlite.DB.execute(DB.java:275)
+    [junit] 	at org.sqlite.DB.executeUpdate(DB.java:281)
+    [junit] 	at org.sqlite.PrepStmt.executeUpdate(PrepStmt.java:77)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:342)
+    [junit] 
+    [junit] Testcase: testInsertDocuments took 0.002 sec
+    [junit] 	Caused an ERROR
+    [junit] java.sql.SQLException: database disk image is malformed
+    [junit] scheduler.model.db.DatabaseException: java.sql.SQLException: database disk image is malformed
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:349)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb.insertDocument(SQLdb.java:507)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:142)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:134)
+    [junit] 	at scheduler.model.Model$Cache.insert(Model.java:63)
+    [junit] 	at scheduler.model.Document.insert(Document.java:45)
+    [junit] 	at scheduler.model.Model.createAndInsertDocumentWithSpecialInstructorsAndLocations(Model.java:153)
+    [junit] 	at scheduler.model.DocumentsTest.testInsertDocuments(DocumentsTest.java:29)
+    [junit] Caused by: java.sql.SQLException: database disk image is malformed
+    [junit] 	at org.sqlite.DB.execute(DB.java:275)
+    [junit] 	at org.sqlite.DB.executeUpdate(DB.java:281)
+    [junit] 	at org.sqlite.PrepStmt.executeUpdate(PrepStmt.java:77)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:342)
+    [junit] 
+    [junit] Testcase: testInsertAndFindDocument took 0.002 sec
+    [junit] 	Caused an ERROR
+    [junit] java.sql.SQLException: database disk image is malformed
+    [junit] scheduler.model.db.DatabaseException: java.sql.SQLException: database disk image is malformed
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:349)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb.insertDocument(SQLdb.java:507)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:142)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:134)
+    [junit] 	at scheduler.model.Model$Cache.insert(Model.java:63)
+    [junit] 	at scheduler.model.Document.insert(Document.java:45)
+    [junit] 	at scheduler.model.Model.createAndInsertDocumentWithSpecialInstructorsAndLocations(Model.java:153)
+    [junit] 	at scheduler.model.DocumentsTest.testInsertAndFindDocument(DocumentsTest.java:37)
+    [junit] Caused by: java.sql.SQLException: database disk image is malformed
+    [junit] 	at org.sqlite.DB.execute(DB.java:275)
+    [junit] 	at org.sqlite.DB.executeUpdate(DB.java:281)
+    [junit] 	at org.sqlite.PrepStmt.executeUpdate(PrepStmt.java:77)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:342)
+    [junit] 
+    [junit] Testcase: testUpdateDocument took 0.002 sec
+    [junit] 	Caused an ERROR
+    [junit] java.sql.SQLException: database disk image is malformed
+    [junit] scheduler.model.db.DatabaseException: java.sql.SQLException: database disk image is malformed
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:349)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb.insertDocument(SQLdb.java:507)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:142)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:134)
+    [junit] 	at scheduler.model.Model$Cache.insert(Model.java:63)
+    [junit] 	at scheduler.model.Document.insert(Document.java:45)
+    [junit] 	at scheduler.model.Model.createAndInsertDocumentWithSpecialInstructorsAndLocations(Model.java:153)
+    [junit] 	at scheduler.model.DocumentsTest.testUpdateDocument(DocumentsTest.java:53)
+    [junit] Caused by: java.sql.SQLException: database disk image is malformed
+    [junit] 	at org.sqlite.DB.execute(DB.java:275)
+    [junit] 	at org.sqlite.DB.executeUpdate(DB.java:281)
+    [junit] 	at org.sqlite.PrepStmt.executeUpdate(PrepStmt.java:77)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:342)
+    [junit] 
+    [junit] Testcase: testDeleteDocument took 0.003 sec
+    [junit] 	Caused an ERROR
+    [junit] java.sql.SQLException: database disk image is malformed
+    [junit] scheduler.model.db.DatabaseException: java.sql.SQLException: database disk image is malformed
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:349)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb.insertDocument(SQLdb.java:507)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:142)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:134)
+    [junit] 	at scheduler.model.Model$Cache.insert(Model.java:63)
+    [junit] 	at scheduler.model.Document.insert(Document.java:45)
+    [junit] 	at scheduler.model.Model.createAndInsertDocumentWithSpecialInstructorsAndLocations(Model.java:153)
+    [junit] 	at scheduler.model.DocumentsTest.testDeleteDocument(DocumentsTest.java:77)
+    [junit] Caused by: java.sql.SQLException: database disk image is malformed
+    [junit] 	at org.sqlite.DB.execute(DB.java:275)
+    [junit] 	at org.sqlite.DB.executeUpdate(DB.java:281)
+    [junit] 	at org.sqlite.PrepStmt.executeUpdate(PrepStmt.java:77)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:342)
+    [junit] 
+    [junit] Testcase: testDeleteFullDocument took 0.002 sec
+    [junit] 	Caused an ERROR
+    [junit] java.sql.SQLException: database disk image is malformed
+    [junit] scheduler.model.db.DatabaseException: java.sql.SQLException: database disk image is malformed
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:349)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb.insertDocument(SQLdb.java:507)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:142)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:134)
+    [junit] 	at scheduler.model.Model$Cache.insert(Model.java:63)
+    [junit] 	at scheduler.model.Document.insert(Document.java:45)
+    [junit] 	at scheduler.model.Model.createAndInsertDocumentWithSpecialInstructorsAndLocations(Model.java:153)
+    [junit] 	at scheduler.model.DocumentsTest.insertFullDocumentIntoModel(DocumentsTest.java:139)
+    [junit] 	at scheduler.model.DocumentsTest.testDeleteFullDocument(DocumentsTest.java:94)
+    [junit] Caused by: java.sql.SQLException: database disk image is malformed
+    [junit] 	at org.sqlite.DB.execute(DB.java:275)
+    [junit] 	at org.sqlite.DB.executeUpdate(DB.java:281)
+    [junit] 	at org.sqlite.PrepStmt.executeUpdate(PrepStmt.java:77)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:342)
+    [junit] 
+    [junit] Testcase: testDatabaseIsEmptyAfterDelete took 0.002 sec
+    [junit] 	Caused an ERROR
+    [junit] java.sql.SQLException: database disk image is malformed
+    [junit] scheduler.model.db.DatabaseException: java.sql.SQLException: database disk image is malformed
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:349)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb.insertDocument(SQLdb.java:507)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:142)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:134)
+    [junit] 	at scheduler.model.Model$Cache.insert(Model.java:63)
+    [junit] 	at scheduler.model.Document.insert(Document.java:45)
+    [junit] 	at scheduler.model.Model.createAndInsertDocumentWithSpecialInstructorsAndLocations(Model.java:153)
+    [junit] 	at scheduler.model.DocumentsTest.insertFullDocumentIntoModel(DocumentsTest.java:139)
+    [junit] 	at scheduler.model.DocumentsTest.testDatabaseIsEmptyAfterDelete(DocumentsTest.java:109)
+    [junit] Caused by: java.sql.SQLException: database disk image is malformed
+    [junit] 	at org.sqlite.DB.execute(DB.java:275)
+    [junit] 	at org.sqlite.DB.executeUpdate(DB.java:281)
+    [junit] 	at org.sqlite.PrepStmt.executeUpdate(PrepStmt.java:77)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:342)
+    [junit] 
+    [junit] Testcase: testScheduleConsistancy took 0.003 sec
+    [junit] 	Caused an ERROR
+    [junit] java.sql.SQLException: database disk image is malformed
+    [junit] scheduler.model.db.DatabaseException: java.sql.SQLException: database disk image is malformed
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:349)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb.insertDocument(SQLdb.java:507)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:142)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:134)
+    [junit] 	at scheduler.model.Model$Cache.insert(Model.java:63)
+    [junit] 	at scheduler.model.Document.insert(Document.java:45)
+    [junit] 	at scheduler.model.Model.createAndInsertDocumentWithSpecialInstructorsAndLocations(Model.java:153)
+    [junit] 	at scheduler.model.DocumentsTest.testScheduleConsistancy(DocumentsTest.java:118)
+    [junit] Caused by: java.sql.SQLException: database disk image is malformed
+    [junit] 	at org.sqlite.DB.execute(DB.java:275)
+    [junit] 	at org.sqlite.DB.executeUpdate(DB.java:281)
+    [junit] 	at org.sqlite.PrepStmt.executeUpdate(PrepStmt.java:77)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:342)
+    [junit] 
+    [junit] Testcase: testFindAllDocuments took 0.002 sec
+    [junit] 	Caused an ERROR
+    [junit] java.sql.SQLException: database disk image is malformed
+    [junit] scheduler.model.db.DatabaseException: java.sql.SQLException: database disk image is malformed
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:349)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb.insertDocument(SQLdb.java:507)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:142)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:134)
+    [junit] 	at scheduler.model.Model$Cache.insert(Model.java:63)
+    [junit] 	at scheduler.model.Document.insert(Document.java:45)
+    [junit] 	at scheduler.model.Model.createAndInsertDocumentWithSpecialInstructorsAndLocations(Model.java:153)
+    [junit] 	at scheduler.model.DocumentsTest.testFindAllDocuments(DocumentsTest.java:151)
+    [junit] Caused by: java.sql.SQLException: database disk image is malformed
+    [junit] 	at org.sqlite.DB.execute(DB.java:275)
+    [junit] 	at org.sqlite.DB.executeUpdate(DB.java:281)
+    [junit] 	at org.sqlite.PrepStmt.executeUpdate(PrepStmt.java:77)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:342)
+    [junit] 
+    [junit] Testcase: testDocumentTBALocation took 0.002 sec
+    [junit] 	Caused an ERROR
+    [junit] java.sql.SQLException: database disk image is malformed
+    [junit] scheduler.model.db.DatabaseException: java.sql.SQLException: database disk image is malformed
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:349)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb.insertDocument(SQLdb.java:507)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:142)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:134)
+    [junit] 	at scheduler.model.Model$Cache.insert(Model.java:63)
+    [junit] 	at scheduler.model.Document.insert(Document.java:45)
+    [junit] 	at scheduler.model.Model.createAndInsertDocumentWithSpecialInstructorsAndLocations(Model.java:153)
+    [junit] 	at scheduler.model.DocumentsTest.testDocumentTBALocation(DocumentsTest.java:169)
+    [junit] Caused by: java.sql.SQLException: database disk image is malformed
+    [junit] 	at org.sqlite.DB.execute(DB.java:275)
+    [junit] 	at org.sqlite.DB.executeUpdate(DB.java:281)
+    [junit] 	at org.sqlite.PrepStmt.executeUpdate(PrepStmt.java:77)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:342)
+    [junit] 
+    [junit] Testcase: testDocumentStaffInstructor took 0.006 sec
+    [junit] 	Caused an ERROR
+    [junit] java.sql.SQLException: database disk image is malformed
+    [junit] scheduler.model.db.DatabaseException: java.sql.SQLException: database disk image is malformed
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:349)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb.insertDocument(SQLdb.java:507)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:142)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:134)
+    [junit] 	at scheduler.model.Model$Cache.insert(Model.java:63)
+    [junit] 	at scheduler.model.Document.insert(Document.java:45)
+    [junit] 	at scheduler.model.Model.createAndInsertDocumentWithSpecialInstructorsAndLocations(Model.java:153)
+    [junit] 	at scheduler.model.DocumentsTest.testDocumentStaffInstructor(DocumentsTest.java:180)
+    [junit] Caused by: java.sql.SQLException: database disk image is malformed
+    [junit] 	at org.sqlite.DB.execute(DB.java:275)
+    [junit] 	at org.sqlite.DB.executeUpdate(DB.java:281)
+    [junit] 	at org.sqlite.PrepStmt.executeUpdate(PrepStmt.java:77)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:342)
+    [junit] 
+    [junit] Testcase: testCopyDocument took 0.005 sec
+    [junit] 	Caused an ERROR
+    [junit] java.sql.SQLException: database disk image is malformed
+    [junit] scheduler.model.db.DatabaseException: java.sql.SQLException: database disk image is malformed
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:349)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb.insertDocument(SQLdb.java:507)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:142)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:134)
+    [junit] 	at scheduler.model.Model$Cache.insert(Model.java:63)
+    [junit] 	at scheduler.model.Document.insert(Document.java:45)
+    [junit] 	at scheduler.model.Model.createAndInsertDocumentWithSpecialInstructorsAndLocations(Model.java:153)
+    [junit] 	at scheduler.model.DocumentsTest.insertFullDocumentIntoModel(DocumentsTest.java:139)
+    [junit] 	at scheduler.model.DocumentsTest.testCopyDocument(DocumentsTest.java:191)
+    [junit] Caused by: java.sql.SQLException: database disk image is malformed
+    [junit] 	at org.sqlite.DB.execute(DB.java:275)
+    [junit] 	at org.sqlite.DB.executeUpdate(DB.java:281)
+    [junit] 	at org.sqlite.PrepStmt.executeUpdate(PrepStmt.java:77)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:342)
+    [junit] 
+    [junit] Testcase: testCopyDocumentWithAssociations took 0.002 sec
+    [junit] 	Caused an ERROR
+    [junit] java.sql.SQLException: database disk image is malformed
+    [junit] scheduler.model.db.DatabaseException: java.sql.SQLException: database disk image is malformed
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:349)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb.insertDocument(SQLdb.java:507)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:142)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:134)
+    [junit] 	at scheduler.model.Model$Cache.insert(Model.java:63)
+    [junit] 	at scheduler.model.Document.insert(Document.java:45)
+    [junit] 	at scheduler.model.Model.createAndInsertDocumentWithSpecialInstructorsAndLocations(Model.java:153)
+    [junit] 	at scheduler.model.DocumentsTest.insertFullDocumentIntoModel(DocumentsTest.java:139)
+    [junit] 	at scheduler.model.DocumentsTest.testCopyDocumentWithAssociations(DocumentsTest.java:202)
+    [junit] Caused by: java.sql.SQLException: database disk image is malformed
+    [junit] 	at org.sqlite.DB.execute(DB.java:275)
+    [junit] 	at org.sqlite.DB.executeUpdate(DB.java:281)
+    [junit] 	at org.sqlite.PrepStmt.executeUpdate(PrepStmt.java:77)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:342)
+    [junit] 
+    [junit] Testcase: testWorkingCopy took 0.002 sec
+    [junit] 	Caused an ERROR
+    [junit] java.sql.SQLException: database disk image is malformed
+    [junit] scheduler.model.db.DatabaseException: java.sql.SQLException: database disk image is malformed
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:349)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb.insertDocument(SQLdb.java:507)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:142)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:134)
+    [junit] 	at scheduler.model.Model$Cache.insert(Model.java:63)
+    [junit] 	at scheduler.model.Document.insert(Document.java:45)
+    [junit] 	at scheduler.model.Model.createAndInsertDocumentWithSpecialInstructorsAndLocations(Model.java:153)
+    [junit] 	at scheduler.model.DocumentsTest.testWorkingCopy(DocumentsTest.java:245)
+    [junit] Caused by: java.sql.SQLException: database disk image is malformed
+    [junit] 	at org.sqlite.DB.execute(DB.java:275)
+    [junit] 	at org.sqlite.DB.executeUpdate(DB.java:281)
+    [junit] 	at org.sqlite.PrepStmt.executeUpdate(PrepStmt.java:77)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:342)
+    [junit] 
+    [junit] Testcase: testInsertAndFindInstructorWTimePrefs took 0.002 sec
+    [junit] 	Caused an ERROR
+    [junit] java.sql.SQLException: database disk image is malformed
+    [junit] scheduler.model.db.DatabaseException: java.sql.SQLException: database disk image is malformed
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:349)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb.insertDocument(SQLdb.java:507)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:142)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:134)
+    [junit] 	at scheduler.model.Model$Cache.insert(Model.java:63)
+    [junit] 	at scheduler.model.Document.insert(Document.java:45)
+    [junit] 	at scheduler.model.Model.createAndInsertDocumentWithSpecialInstructorsAndLocations(Model.java:153)
+    [junit] 	at scheduler.model.InstructorsPreferencesTest.testInsertAndFindInstructorWTimePrefs(InstructorsPreferencesTest.java:22)
+    [junit] Caused by: java.sql.SQLException: database disk image is malformed
+    [junit] 	at org.sqlite.DB.execute(DB.java:275)
+    [junit] 	at org.sqlite.DB.executeUpdate(DB.java:281)
+    [junit] 	at org.sqlite.PrepStmt.executeUpdate(PrepStmt.java:77)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:342)
+    [junit] 
+    [junit] Testcase: testInsertAndFindInstructorWCoursePrefs took 0.003 sec
+    [junit] 	Caused an ERROR
+    [junit] java.sql.SQLException: database disk image is malformed
+    [junit] scheduler.model.db.DatabaseException: java.sql.SQLException: database disk image is malformed
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:349)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb.insertDocument(SQLdb.java:507)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:142)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:134)
+    [junit] 	at scheduler.model.Model$Cache.insert(Model.java:63)
+    [junit] 	at scheduler.model.Document.insert(Document.java:45)
+    [junit] 	at scheduler.model.Model.createAndInsertDocumentWithSpecialInstructorsAndLocations(Model.java:153)
+    [junit] 	at scheduler.model.InstructorsPreferencesTest.testInsertAndFindInstructorWCoursePrefs(InstructorsPreferencesTest.java:50)
+    [junit] Caused by: java.sql.SQLException: database disk image is malformed
+    [junit] 	at org.sqlite.DB.execute(DB.java:275)
+    [junit] 	at org.sqlite.DB.executeUpdate(DB.java:281)
+    [junit] 	at org.sqlite.PrepStmt.executeUpdate(PrepStmt.java:77)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:342)
+    [junit] 
+    [junit] Testcase: testTransientsNotInserted took 0.002 sec
+    [junit] 	Caused an ERROR
+    [junit] java.sql.SQLException: database disk image is malformed
+    [junit] scheduler.model.db.DatabaseException: java.sql.SQLException: database disk image is malformed
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:349)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb.insertDocument(SQLdb.java:507)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:142)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:134)
+    [junit] 	at scheduler.model.Model$Cache.insert(Model.java:63)
+    [junit] 	at scheduler.model.Document.insert(Document.java:45)
+    [junit] 	at scheduler.model.Model.createAndInsertDocumentWithSpecialInstructorsAndLocations(Model.java:153)
+    [junit] 	at scheduler.model.InstructorsTest.testTransientsNotInserted(InstructorsTest.java:20)
+    [junit] Caused by: java.sql.SQLException: database disk image is malformed
+    [junit] 	at org.sqlite.DB.execute(DB.java:275)
+    [junit] 	at org.sqlite.DB.executeUpdate(DB.java:281)
+    [junit] 	at org.sqlite.PrepStmt.executeUpdate(PrepStmt.java:77)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:342)
+    [junit] 
+    [junit] Testcase: testDeleteInstructor took 0.002 sec
+    [junit] 	Caused an ERROR
+    [junit] java.sql.SQLException: database disk image is malformed
+    [junit] scheduler.model.db.DatabaseException: java.sql.SQLException: database disk image is malformed
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:349)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb.insertDocument(SQLdb.java:507)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:142)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:134)
+    [junit] 	at scheduler.model.Model$Cache.insert(Model.java:63)
+    [junit] 	at scheduler.model.Document.insert(Document.java:45)
+    [junit] 	at scheduler.model.Model.createAndInsertDocumentWithSpecialInstructorsAndLocations(Model.java:153)
+    [junit] 	at scheduler.model.InstructorsTest.testDeleteInstructor(InstructorsTest.java:131)
+    [junit] Caused by: java.sql.SQLException: database disk image is malformed
+    [junit] 	at org.sqlite.DB.execute(DB.java:275)
+    [junit] 	at org.sqlite.DB.executeUpdate(DB.java:281)
+    [junit] 	at org.sqlite.PrepStmt.executeUpdate(PrepStmt.java:77)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:342)
+    [junit] 
+    [junit] Testcase: testInsertAndFindInstructorWTimePrefs took 0.003 sec
+    [junit] 	Caused an ERROR
+    [junit] java.sql.SQLException: database disk image is malformed
+    [junit] scheduler.model.db.DatabaseException: java.sql.SQLException: database disk image is malformed
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:349)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb.insertDocument(SQLdb.java:507)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:142)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:134)
+    [junit] 	at scheduler.model.Model$Cache.insert(Model.java:63)
+    [junit] 	at scheduler.model.Document.insert(Document.java:45)
+    [junit] 	at scheduler.model.Model.createAndInsertDocumentWithSpecialInstructorsAndLocations(Model.java:153)
+    [junit] 	at scheduler.model.InstructorsTest.testInsertAndFindInstructorWTimePrefs(InstructorsTest.java:56)
+    [junit] Caused by: java.sql.SQLException: database disk image is malformed
+    [junit] 	at org.sqlite.DB.execute(DB.java:275)
+    [junit] 	at org.sqlite.DB.executeUpdate(DB.java:281)
+    [junit] 	at org.sqlite.PrepStmt.executeUpdate(PrepStmt.java:77)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:342)
+    [junit] 
+    [junit] Testcase: testInsertAndFindBasicInstructor took 0.001 sec
+    [junit] 	Caused an ERROR
+    [junit] java.sql.SQLException: database disk image is malformed
+    [junit] scheduler.model.db.DatabaseException: java.sql.SQLException: database disk image is malformed
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:349)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb.insertDocument(SQLdb.java:507)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:142)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:134)
+    [junit] 	at scheduler.model.Model$Cache.insert(Model.java:63)
+    [junit] 	at scheduler.model.Document.insert(Document.java:45)
+    [junit] 	at scheduler.model.Model.createAndInsertDocumentWithSpecialInstructorsAndLocations(Model.java:153)
+    [junit] 	at scheduler.model.InstructorsTest.testInsertAndFindBasicInstructor(InstructorsTest.java:35)
+    [junit] Caused by: java.sql.SQLException: database disk image is malformed
+    [junit] 	at org.sqlite.DB.execute(DB.java:275)
+    [junit] 	at org.sqlite.DB.executeUpdate(DB.java:281)
+    [junit] 	at org.sqlite.PrepStmt.executeUpdate(PrepStmt.java:77)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:342)
+    [junit] 
+    [junit] Testcase: testInsertAndDeleteInstructorWTimePrefs took 0.002 sec
+    [junit] 	Caused an ERROR
+    [junit] java.sql.SQLException: database disk image is malformed
+    [junit] scheduler.model.db.DatabaseException: java.sql.SQLException: database disk image is malformed
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:349)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb.insertDocument(SQLdb.java:507)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:142)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:134)
+    [junit] 	at scheduler.model.Model$Cache.insert(Model.java:63)
+    [junit] 	at scheduler.model.Document.insert(Document.java:45)
+    [junit] 	at scheduler.model.Model.createAndInsertDocumentWithSpecialInstructorsAndLocations(Model.java:153)
+    [junit] 	at scheduler.model.InstructorsTest.testInsertAndDeleteInstructorWTimePrefs(InstructorsTest.java:82)
+    [junit] Caused by: java.sql.SQLException: database disk image is malformed
+    [junit] 	at org.sqlite.DB.execute(DB.java:275)
+    [junit] 	at org.sqlite.DB.executeUpdate(DB.java:281)
+    [junit] 	at org.sqlite.PrepStmt.executeUpdate(PrepStmt.java:77)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:342)
+    [junit] 
+    [junit] Testcase: testUpdateInstructor took 0.001 sec
+    [junit] 	Caused an ERROR
+    [junit] java.sql.SQLException: database disk image is malformed
+    [junit] scheduler.model.db.DatabaseException: java.sql.SQLException: database disk image is malformed
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:349)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb.insertDocument(SQLdb.java:507)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:142)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:134)
+    [junit] 	at scheduler.model.Model$Cache.insert(Model.java:63)
+    [junit] 	at scheduler.model.Document.insert(Document.java:45)
+    [junit] 	at scheduler.model.Model.createAndInsertDocumentWithSpecialInstructorsAndLocations(Model.java:153)
+    [junit] 	at scheduler.model.InstructorsTest.testUpdateInstructor(InstructorsTest.java:103)
+    [junit] Caused by: java.sql.SQLException: database disk image is malformed
+    [junit] 	at org.sqlite.DB.execute(DB.java:275)
+    [junit] 	at org.sqlite.DB.executeUpdate(DB.java:281)
+    [junit] 	at org.sqlite.PrepStmt.executeUpdate(PrepStmt.java:77)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:342)
+    [junit] 
+    [junit] Testcase: testFindAllInstructorsForDocument took 0.001 sec
+    [junit] 	Caused an ERROR
+    [junit] java.sql.SQLException: database disk image is malformed
+    [junit] scheduler.model.db.DatabaseException: java.sql.SQLException: database disk image is malformed
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:349)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb.insertDocument(SQLdb.java:507)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:142)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:134)
+    [junit] 	at scheduler.model.Model$Cache.insert(Model.java:63)
+    [junit] 	at scheduler.model.Document.insert(Document.java:45)
+    [junit] 	at scheduler.model.Model.createAndInsertDocumentWithSpecialInstructorsAndLocations(Model.java:153)
+    [junit] 	at scheduler.model.InstructorsTest.testFindAllInstructorsForDocument(InstructorsTest.java:157)
+    [junit] Caused by: java.sql.SQLException: database disk image is malformed
+    [junit] 	at org.sqlite.DB.execute(DB.java:275)
+    [junit] 	at org.sqlite.DB.executeUpdate(DB.java:281)
+    [junit] 	at org.sqlite.PrepStmt.executeUpdate(PrepStmt.java:77)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:342)
+    [junit] 
+    [junit] Testcase: testFindAllInstructorsInMultipleDocuments took 0.002 sec
+    [junit] 	Caused an ERROR
+    [junit] java.sql.SQLException: database disk image is malformed
+    [junit] scheduler.model.db.DatabaseException: java.sql.SQLException: database disk image is malformed
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:349)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb.insertDocument(SQLdb.java:507)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:142)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:134)
+    [junit] 	at scheduler.model.Model$Cache.insert(Model.java:63)
+    [junit] 	at scheduler.model.Document.insert(Document.java:45)
+    [junit] 	at scheduler.model.Model.createAndInsertDocumentWithSpecialInstructorsAndLocations(Model.java:153)
+    [junit] 	at scheduler.model.InstructorsTest.testFindAllInstructorsInMultipleDocuments(InstructorsTest.java:184)
+    [junit] Caused by: java.sql.SQLException: database disk image is malformed
+    [junit] 	at org.sqlite.DB.execute(DB.java:275)
+    [junit] 	at org.sqlite.DB.executeUpdate(DB.java:281)
+    [junit] 	at org.sqlite.PrepStmt.executeUpdate(PrepStmt.java:77)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:342)
+    [junit] 
+    [junit] Testcase: testInsertAndFindLocation took 0.002 sec
+    [junit] 	Caused an ERROR
+    [junit] java.sql.SQLException: database disk image is malformed
+    [junit] scheduler.model.db.DatabaseException: java.sql.SQLException: database disk image is malformed
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:349)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb.insertDocument(SQLdb.java:507)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:142)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:134)
+    [junit] 	at scheduler.model.Model$Cache.insert(Model.java:63)
+    [junit] 	at scheduler.model.Document.insert(Document.java:45)
+    [junit] 	at scheduler.model.Model.createAndInsertDocumentWithSpecialInstructorsAndLocations(Model.java:153)
+    [junit] 	at scheduler.model.LocationsTest.testInsertAndFindLocation(LocationsTest.java:24)
+    [junit] Caused by: java.sql.SQLException: database disk image is malformed
+    [junit] 	at org.sqlite.DB.execute(DB.java:275)
+    [junit] 	at org.sqlite.DB.executeUpdate(DB.java:281)
+    [junit] 	at org.sqlite.PrepStmt.executeUpdate(PrepStmt.java:77)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:342)
+    [junit] 
+    [junit] Testcase: testInsertAndFindLocationSameInstance took 0.003 sec
+    [junit] 	Caused an ERROR
+    [junit] java.sql.SQLException: database disk image is malformed
+    [junit] scheduler.model.db.DatabaseException: java.sql.SQLException: database disk image is malformed
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:349)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb.insertDocument(SQLdb.java:507)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:142)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:134)
+    [junit] 	at scheduler.model.Model$Cache.insert(Model.java:63)
+    [junit] 	at scheduler.model.Document.insert(Document.java:45)
+    [junit] 	at scheduler.model.Model.createAndInsertDocumentWithSpecialInstructorsAndLocations(Model.java:153)
+    [junit] 	at scheduler.model.LocationsTest.testInsertAndFindLocationSameInstance(LocationsTest.java:39)
+    [junit] Caused by: java.sql.SQLException: database disk image is malformed
+    [junit] 	at org.sqlite.DB.execute(DB.java:275)
+    [junit] 	at org.sqlite.DB.executeUpdate(DB.java:281)
+    [junit] 	at org.sqlite.PrepStmt.executeUpdate(PrepStmt.java:77)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:342)
+    [junit] 
+    [junit] Testcase: testUpdateLocation took 0.002 sec
+    [junit] 	Caused an ERROR
+    [junit] java.sql.SQLException: database disk image is malformed
+    [junit] scheduler.model.db.DatabaseException: java.sql.SQLException: database disk image is malformed
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:349)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb.insertDocument(SQLdb.java:507)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:142)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:134)
+    [junit] 	at scheduler.model.Model$Cache.insert(Model.java:63)
+    [junit] 	at scheduler.model.Document.insert(Document.java:45)
+    [junit] 	at scheduler.model.Model.createAndInsertDocumentWithSpecialInstructorsAndLocations(Model.java:153)
+    [junit] 	at scheduler.model.LocationsTest.testUpdateLocation(LocationsTest.java:54)
+    [junit] Caused by: java.sql.SQLException: database disk image is malformed
+    [junit] 	at org.sqlite.DB.execute(DB.java:275)
+    [junit] 	at org.sqlite.DB.executeUpdate(DB.java:281)
+    [junit] 	at org.sqlite.PrepStmt.executeUpdate(PrepStmt.java:77)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:342)
+    [junit] 
+    [junit] Testcase: testDeleteLocation took 0.002 sec
+    [junit] 	Caused an ERROR
+    [junit] java.sql.SQLException: database disk image is malformed
+    [junit] scheduler.model.db.DatabaseException: java.sql.SQLException: database disk image is malformed
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:349)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb.insertDocument(SQLdb.java:507)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:142)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:134)
+    [junit] 	at scheduler.model.Model$Cache.insert(Model.java:63)
+    [junit] 	at scheduler.model.Document.insert(Document.java:45)
+    [junit] 	at scheduler.model.Model.createAndInsertDocumentWithSpecialInstructorsAndLocations(Model.java:153)
+    [junit] 	at scheduler.model.LocationsTest.testDeleteLocation(LocationsTest.java:77)
+    [junit] Caused by: java.sql.SQLException: database disk image is malformed
+    [junit] 	at org.sqlite.DB.execute(DB.java:275)
+    [junit] 	at org.sqlite.DB.executeUpdate(DB.java:281)
+    [junit] 	at org.sqlite.PrepStmt.executeUpdate(PrepStmt.java:77)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:342)
+    [junit] 
+    [junit] Testcase: testFindAllLocationsForDocument took 0.002 sec
+    [junit] 	Caused an ERROR
+    [junit] java.sql.SQLException: database disk image is malformed
+    [junit] scheduler.model.db.DatabaseException: java.sql.SQLException: database disk image is malformed
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:349)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb.insertDocument(SQLdb.java:507)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:142)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:134)
+    [junit] 	at scheduler.model.Model$Cache.insert(Model.java:63)
+    [junit] 	at scheduler.model.Document.insert(Document.java:45)
+    [junit] 	at scheduler.model.Model.createAndInsertDocumentWithSpecialInstructorsAndLocations(Model.java:153)
+    [junit] 	at scheduler.model.LocationsTest.testFindAllLocationsForDocument(LocationsTest.java:97)
+    [junit] Caused by: java.sql.SQLException: database disk image is malformed
+    [junit] 	at org.sqlite.DB.execute(DB.java:275)
+    [junit] 	at org.sqlite.DB.executeUpdate(DB.java:281)
+    [junit] 	at org.sqlite.PrepStmt.executeUpdate(PrepStmt.java:77)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:342)
+    [junit] 
+    [junit] Testcase: testFindAllLocationsInMultipleDocuments took 0.002 sec
+    [junit] 	Caused an ERROR
+    [junit] java.sql.SQLException: database disk image is malformed
+    [junit] scheduler.model.db.DatabaseException: java.sql.SQLException: database disk image is malformed
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:349)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb.insertDocument(SQLdb.java:507)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:142)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:134)
+    [junit] 	at scheduler.model.Model$Cache.insert(Model.java:63)
+    [junit] 	at scheduler.model.Document.insert(Document.java:45)
+    [junit] 	at scheduler.model.Model.createAndInsertDocumentWithSpecialInstructorsAndLocations(Model.java:153)
+    [junit] 	at scheduler.model.LocationsTest.testFindAllLocationsInMultipleDocuments(LocationsTest.java:117)
+    [junit] Caused by: java.sql.SQLException: database disk image is malformed
+    [junit] 	at org.sqlite.DB.execute(DB.java:275)
+    [junit] 	at org.sqlite.DB.executeUpdate(DB.java:281)
+    [junit] 	at org.sqlite.PrepStmt.executeUpdate(PrepStmt.java:77)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:342)
+    [junit] 
+    [junit] Testcase: testInsertAndFindScheduleItem took 0.003 sec
+    [junit] 	Caused an ERROR
+    [junit] java.sql.SQLException: database disk image is malformed
+    [junit] scheduler.model.db.DatabaseException: java.sql.SQLException: database disk image is malformed
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:349)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb.insertDocument(SQLdb.java:507)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:142)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:134)
+    [junit] 	at scheduler.model.Model$Cache.insert(Model.java:63)
+    [junit] 	at scheduler.model.Document.insert(Document.java:45)
+    [junit] 	at scheduler.model.Model.createAndInsertDocumentWithSpecialInstructorsAndLocations(Model.java:153)
+    [junit] 	at scheduler.model.ScheduleItemsTest.createModelWithStuff(ScheduleItemsTest.java:12)
+    [junit] 	at scheduler.model.ScheduleItemsTest.testInsertAndFindScheduleItem(ScheduleItemsTest.java:18)
+    [junit] Caused by: java.sql.SQLException: database disk image is malformed
+    [junit] 	at org.sqlite.DB.execute(DB.java:275)
+    [junit] 	at org.sqlite.DB.executeUpdate(DB.java:281)
+    [junit] 	at org.sqlite.PrepStmt.executeUpdate(PrepStmt.java:77)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:342)
+    [junit] 
+    [junit] Testcase: testScheduleItemLab took 0.002 sec
+    [junit] 	Caused an ERROR
+    [junit] java.sql.SQLException: database disk image is malformed
+    [junit] scheduler.model.db.DatabaseException: java.sql.SQLException: database disk image is malformed
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:349)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb.insertDocument(SQLdb.java:507)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:142)
+    [junit] 	at scheduler.model.Model$2.insertIntoDatabase(Model.java:134)
+    [junit] 	at scheduler.model.Model$Cache.insert(Model.java:63)
+    [junit] 	at scheduler.model.Document.insert(Document.java:45)
+    [junit] 	at scheduler.model.Model.createAndInsertDocumentWithSpecialInstructorsAndLocations(Model.java:153)
+    [junit] 	at scheduler.model.ScheduleItemsTest.createModelWithStuff(ScheduleItemsTest.java:12)
+    [junit] 	at scheduler.model.ScheduleItemsTest.testScheduleItemLab(ScheduleItemsTest.java:51)
+    [junit] Caused by: java.sql.SQLException: database disk image is malformed
+    [junit] 	at org.sqlite.DB.execute(DB.java:275)
+    [junit] 	at org.sqlite.DB.executeUpdate(DB.java:281)
+    [junit] 	at org.sqlite.PrepStmt.executeUpdate(PrepStmt.java:77)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:342)
+    [junit] 
+    [junit] Testcase: testTransientsNotInserted took 0.027 sec
+    [junit] 	Caused an ERROR
+    [junit] java.sql.SQLException: database disk image is malformed
+    [junit] scheduler.model.db.DatabaseException: java.sql.SQLException: database disk image is malformed
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.parseResultSet(SQLdb.java:432)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.selectAll(SQLdb.java:281)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb.isEmpty(SQLdb.java:1425)
+    [junit] 	at scheduler.model.Model.isEmpty(Model.java:598)
+    [junit] 	at scheduler.model.UsersTest.testTransientsNotInserted(UsersTest.java:23)
+    [junit] Caused by: java.sql.SQLException: database disk image is malformed
+    [junit] 	at org.sqlite.DB.throwex(DB.java:288)
+    [junit] 	at org.sqlite.RS.next(RS.java:141)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.parseResultSet(SQLdb.java:416)
+    [junit] 
+    [junit] Testcase: testInsertAndFindBasicUser took 0.006 sec
+    [junit] 	Caused an ERROR
+    [junit] java.sql.SQLException: column username is not unique
+    [junit] scheduler.model.db.DatabaseException: java.sql.SQLException: column username is not unique
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:349)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb.insertUser(SQLdb.java:462)
+    [junit] 	at scheduler.model.Model$1.insertIntoDatabase(Model.java:111)
+    [junit] 	at scheduler.model.Model$1.insertIntoDatabase(Model.java:103)
+    [junit] 	at scheduler.model.Model$Cache.insert(Model.java:63)
+    [junit] 	at scheduler.model.User.insert(User.java:23)
+    [junit] 	at scheduler.model.UsersTest.testInsertAndFindBasicUser(UsersTest.java:31)
+    [junit] Caused by: java.sql.SQLException: column username is not unique
+    [junit] 	at org.sqlite.DB.execute(DB.java:275)
+    [junit] 	at org.sqlite.DB.executeUpdate(DB.java:281)
+    [junit] 	at org.sqlite.PrepStmt.executeUpdate(PrepStmt.java:77)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:342)
+    [junit] 
+    [junit] Testcase: testInsertAndDeleteUser took 0.007 sec
+    [junit] 	Caused an ERROR
+    [junit] java.sql.SQLException: column username is not unique
+    [junit] scheduler.model.db.DatabaseException: java.sql.SQLException: column username is not unique
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:349)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb.insertUser(SQLdb.java:462)
+    [junit] 	at scheduler.model.Model$1.insertIntoDatabase(Model.java:111)
+    [junit] 	at scheduler.model.Model$1.insertIntoDatabase(Model.java:103)
+    [junit] 	at scheduler.model.Model$Cache.insert(Model.java:63)
+    [junit] 	at scheduler.model.User.insert(User.java:23)
+    [junit] 	at scheduler.model.UsersTest.testInsertAndDeleteUser(UsersTest.java:45)
+    [junit] Caused by: java.sql.SQLException: column username is not unique
+    [junit] 	at org.sqlite.DB.execute(DB.java:275)
+    [junit] 	at org.sqlite.DB.executeUpdate(DB.java:281)
+    [junit] 	at org.sqlite.PrepStmt.executeUpdate(PrepStmt.java:77)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:342)
+    [junit] 
+    [junit] Testcase: testUpdateUser took 0.008 sec
+    [junit] 	Caused an ERROR
+    [junit] java.sql.SQLException: column username is not unique
+    [junit] scheduler.model.db.DatabaseException: java.sql.SQLException: column username is not unique
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:349)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb.insertUser(SQLdb.java:462)
+    [junit] 	at scheduler.model.Model$1.insertIntoDatabase(Model.java:111)
+    [junit] 	at scheduler.model.Model$1.insertIntoDatabase(Model.java:103)
+    [junit] 	at scheduler.model.Model$Cache.insert(Model.java:63)
+    [junit] 	at scheduler.model.User.insert(User.java:23)
+    [junit] 	at scheduler.model.UsersTest.testUpdateUser(UsersTest.java:58)
+    [junit] Caused by: java.sql.SQLException: column username is not unique
+    [junit] 	at org.sqlite.DB.execute(DB.java:275)
+    [junit] 	at org.sqlite.DB.executeUpdate(DB.java:281)
+    [junit] 	at org.sqlite.PrepStmt.executeUpdate(PrepStmt.java:77)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:342)
+    [junit] 
+    [junit] Testcase: testDeleteUser took 0.006 sec
+    [junit] 	Caused an ERROR
+    [junit] java.sql.SQLException: column username is not unique
+    [junit] scheduler.model.db.DatabaseException: java.sql.SQLException: column username is not unique
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:349)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb.insertUser(SQLdb.java:462)
+    [junit] 	at scheduler.model.Model$1.insertIntoDatabase(Model.java:111)
+    [junit] 	at scheduler.model.Model$1.insertIntoDatabase(Model.java:103)
+    [junit] 	at scheduler.model.Model$Cache.insert(Model.java:63)
+    [junit] 	at scheduler.model.User.insert(User.java:23)
+    [junit] 	at scheduler.model.UsersTest.testDeleteUser(UsersTest.java:74)
+    [junit] Caused by: java.sql.SQLException: column username is not unique
+    [junit] 	at org.sqlite.DB.execute(DB.java:275)
+    [junit] 	at org.sqlite.DB.executeUpdate(DB.java:281)
+    [junit] 	at org.sqlite.PrepStmt.executeUpdate(PrepStmt.java:77)
+    [junit] 	at scheduler.model.db.sqlite.SQLdb$Table.insert(SQLdb.java:342)
+    [junit] 
+    [junit] Flushing results...
+    [junit] Flushing results done
+    [junit] Cobertura: Loaded information on 122 classes.
+    [junit] Cobertura: Saved information on 122 classes.
+    [junit] Test scheduler.model.ModelTestSuite FAILED
+[cobertura-report] Cobertura 1.9.4.1 - GNU GPL License (NO WARRANTY) - See COPYRIGHT file
+[cobertura-report] Cobertura: Loaded information on 122 classes.
+[cobertura-report] Report time: 2747ms
+
+BUILD SUCCESSFUL
+Total time: 12 seconds
+Running Selenium tests...
+[localhost] local: echo "domain=http://scheduler.csc.calpoly.edu" > ../Selenium/test/scheduler/view/web/shared/selenium.properties
+[localhost] local: cd ../Selenium && ant clean && ant build && ant test
+Buildfile: build.xml
+
+clean:
+   [delete] Deleting directory /Users/gfisher/work/scheduler-vm/Selenium/classes
+   [delete] Deleting directory /Users/gfisher/work/scheduler-vm/Selenium/test-classes
+
+BUILD SUCCESSFUL
+Total time: 0 seconds
+Buildfile: build.xml
+
+init:
+    [mkdir] Created dir: /Users/gfisher/work/scheduler-vm/Selenium/classes
+    [mkdir] Created dir: /Users/gfisher/work/scheduler-vm/Selenium/test-classes
+     [copy] Copying 1 file to /Users/gfisher/work/scheduler-vm/Selenium/classes
+     [copy] Copying 1 file to /Users/gfisher/work/scheduler-vm/Selenium/test-classes
+
+build:
+     [echo] GWTView: /Users/gfisher/work/scheduler-vm/Selenium/build.xml
+    [javac] Compiling 9 source files to /Users/gfisher/work/scheduler-vm/Selenium/classes
+    [javac] Compiling 45 source files to /Users/gfisher/work/scheduler-vm/Selenium/test-classes
+    [javac] Note: Some input files use or override a deprecated API.
+    [javac] Note: Recompile with -Xlint:deprecation for details.
+
+BUILD SUCCESSFUL
+Total time: 2 seconds
+Buildfile: build.xml
+
+test:
+    [junit] Testsuite: scheduler.view.web.shared.ViewTestSuite
+    [junit] Command duration or timeout: 2.10 seconds
+    [junit] Build info: version: '2.20.0', revision: '16008', time: '2012-02-27 19:03:04'
+    [junit] System info: os.name: 'Mac OS X', os.arch: 'x86_64', os.version: '10.6.8', java.version: '1.6.0_31'
+    [junit] Driver info: driver.version: RemoteWebDriver)
+
+    [junit] Build info: version: '2.20.0', revision: '16008', time: '2012-02-27 19:03:04'
+    [junit] System info: os.name: 'Mac OS X', os.arch: 'x86_64', os.version: '10.6.8', java.version: '1.6.0_31'
+    [junit] Driver info: driver.version: unknown)
+    [junit] Build info: version: '2.20.0', revision: '16008', time: '2012-02-27 19:03:04'
+    [junit] System info: os.name: 'Mac OS X', os.arch: 'x86_64', os.version: '10.6.8', java.version: '1.6.0_31'
+    [junit] Driver info: driver.version: unknown)
+    [junit] Build info: version: '2.20.0', revision: '16008', time: '2012-02-27 19:03:04'
+    [junit] System info: os.name: 'Mac OS X', os.arch: 'x86_64', os.version: '10.6.8', java.version: '1.6.0_31'
+    [junit] Driver info: driver.version: unknown)
+    [junit] Build info: version: '2.20.0', revision: '16008', time: '2012-02-27 19:03:04'
+    [junit] System info: os.name: 'Mac OS X', os.arch: 'x86_64', os.version: '10.6.8', java.version: '1.6.0_31'
+    [junit] Driver info: driver.version: unknown)
+    [junit] Tests run: 5, Failures: 0, Errors: 5, Time elapsed: 343.065 sec
+    [junit] ------------- Standard Output ---------------
+    [junit] Existing document index 0 has name GRCTest comparing to GRC Acceptance Test Document
+    [junit] Existing document index 1 has name GRC Acceptance Test Document comparing to GRC Acceptance Test Document
+    [junit] Found document GRC Acceptance Test Document at: 1
+    [junit] Entering row index 0
+    [junit] TODO: get rid of IND->LAB conversion!
+    [junit] ------------- ---------------- ---------------
+    [junit] 
+    [junit] Testcase: testAcceptanceForGRC took 77.186 sec
+    [junit] 	Caused an ERROR
+    [junit] No alert is present (WARNING: The server did not provide any stacktrace information)
+    [junit] Command duration or timeout: 2.10 seconds
+    [junit] Build info: version: '2.20.0', revision: '16008', time: '2012-02-27 19:03:04'
+    [junit] System info: os.name: 'Mac OS X', os.arch: 'x86_64', os.version: '10.6.8', java.version: '1.6.0_31'
+    [junit] Driver info: driver.version: RemoteWebDriver
+    [junit] org.openqa.selenium.NoAlertPresentException: No alert is present (WARNING: The server did not provide any stacktrace information)
+    [junit] Command duration or timeout: 2.10 seconds
+    [junit] Build info: version: '2.20.0', revision: '16008', time: '2012-02-27 19:03:04'
+    [junit] System info: os.name: 'Mac OS X', os.arch: 'x86_64', os.version: '10.6.8', java.version: '1.6.0_31'
+    [junit] Driver info: driver.version: RemoteWebDriver
+    [junit] 	at java.lang.reflect.Constructor.newInstance(Constructor.java:513)
+    [junit] 	at org.openqa.selenium.remote.ErrorHandler.createThrowable(ErrorHandler.java:170)
+    [junit] 	at org.openqa.selenium.remote.ErrorHandler.throwIfResponseFailed(ErrorHandler.java:123)
+    [junit] 	at org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:438)
+    [junit] 	at org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:442)
+    [junit] 	at org.openqa.selenium.remote.RemoteWebDriver$RemoteTargetLocator.alert(RemoteWebDriver.java:697)
+    [junit] 	at scheduler.view.web.shared.Selenium.WebUtility.enterIntoCoursesResourceTableNewRow(WebUtility.java:230)
+    [junit] 	at scheduler.view.web.shared.GRCAcceptanceTest.testAcceptanceForGRC(GRCAcceptanceTest.java:92)
+    [junit] 
+    [junit] Testcase: testAddInstructor took 63.85 sec
+    [junit] 	Caused an ERROR
+    [junit] Timed out after 60 seconds
+    [junit] Build info: version: '2.20.0', revision: '16008', time: '2012-02-27 19:03:04'
+    [junit] System info: os.name: 'Mac OS X', os.arch: 'x86_64', os.version: '10.6.8', java.version: '1.6.0_31'
+    [junit] Driver info: driver.version: unknown
+    [junit] org.openqa.selenium.TimeoutException: Timed out after 60 seconds
+    [junit] Build info: version: '2.20.0', revision: '16008', time: '2012-02-27 19:03:04'
+    [junit] System info: os.name: 'Mac OS X', os.arch: 'x86_64', os.version: '10.6.8', java.version: '1.6.0_31'
+    [junit] Driver info: driver.version: unknown
+    [junit] 	at org.openqa.selenium.support.ui.FluentWait.timeoutException(FluentWait.java:252)
+    [junit] 	at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:221)
+    [junit] 	at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:174)
+    [junit] 	at scheduler.view.web.shared.Selenium.WebUtility.waitForElementPresent(WebUtility.java:242)
+    [junit] 	at scheduler.view.web.shared.InstructorsViewTest.waitForSmartGWTElement(InstructorsViewTest.java:466)
+    [junit] 	at scheduler.view.web.shared.InstructorsViewTest.login(InstructorsViewTest.java:61)
+    [junit] 	at scheduler.view.web.shared.InstructorsViewTest.setUp(InstructorsViewTest.java:38)
+    [junit] 
+    [junit] Testcase: testDuplicateInstructor took 67.593 sec
+    [junit] 	Caused an ERROR
+    [junit] Timed out after 60 seconds
+    [junit] Build info: version: '2.20.0', revision: '16008', time: '2012-02-27 19:03:04'
+    [junit] System info: os.name: 'Mac OS X', os.arch: 'x86_64', os.version: '10.6.8', java.version: '1.6.0_31'
+    [junit] Driver info: driver.version: unknown
+    [junit] org.openqa.selenium.TimeoutException: Timed out after 60 seconds
+    [junit] Build info: version: '2.20.0', revision: '16008', time: '2012-02-27 19:03:04'
+    [junit] System info: os.name: 'Mac OS X', os.arch: 'x86_64', os.version: '10.6.8', java.version: '1.6.0_31'
+    [junit] Driver info: driver.version: unknown
+    [junit] 	at org.openqa.selenium.support.ui.FluentWait.timeoutException(FluentWait.java:252)
+    [junit] 	at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:221)
+    [junit] 	at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:174)
+    [junit] 	at scheduler.view.web.shared.Selenium.WebUtility.waitForElementPresent(WebUtility.java:242)
+    [junit] 	at scheduler.view.web.shared.InstructorsViewTest.waitForSmartGWTElement(InstructorsViewTest.java:466)
+    [junit] 	at scheduler.view.web.shared.InstructorsViewTest.login(InstructorsViewTest.java:61)
+    [junit] 	at scheduler.view.web.shared.InstructorsViewTest.setUp(InstructorsViewTest.java:38)
+    [junit] 
+    [junit] Testcase: testRemoveInstructor took 65.296 sec
+    [junit] 	Caused an ERROR
+    [junit] Timed out after 60 seconds
+    [junit] Build info: version: '2.20.0', revision: '16008', time: '2012-02-27 19:03:04'
+    [junit] System info: os.name: 'Mac OS X', os.arch: 'x86_64', os.version: '10.6.8', java.version: '1.6.0_31'
+    [junit] Driver info: driver.version: unknown
+    [junit] org.openqa.selenium.TimeoutException: Timed out after 60 seconds
+    [junit] Build info: version: '2.20.0', revision: '16008', time: '2012-02-27 19:03:04'
+    [junit] System info: os.name: 'Mac OS X', os.arch: 'x86_64', os.version: '10.6.8', java.version: '1.6.0_31'
+    [junit] Driver info: driver.version: unknown
+    [junit] 	at org.openqa.selenium.support.ui.FluentWait.timeoutException(FluentWait.java:252)
+    [junit] 	at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:221)
+    [junit] 	at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:174)
+    [junit] 	at scheduler.view.web.shared.Selenium.WebUtility.waitForElementPresent(WebUtility.java:242)
+    [junit] 	at scheduler.view.web.shared.InstructorsViewTest.waitForSmartGWTElement(InstructorsViewTest.java:466)
+    [junit] 	at scheduler.view.web.shared.InstructorsViewTest.login(InstructorsViewTest.java:61)
+    [junit] 	at scheduler.view.web.shared.InstructorsViewTest.setUp(InstructorsViewTest.java:38)
+    [junit] 
+    [junit] Testcase: testSetPreferences took 69.128 sec
+    [junit] 	Caused an ERROR
+    [junit] Timed out after 60 seconds
+    [junit] Build info: version: '2.20.0', revision: '16008', time: '2012-02-27 19:03:04'
+    [junit] System info: os.name: 'Mac OS X', os.arch: 'x86_64', os.version: '10.6.8', java.version: '1.6.0_31'
+    [junit] Driver info: driver.version: unknown
+    [junit] org.openqa.selenium.TimeoutException: Timed out after 60 seconds
+    [junit] Build info: version: '2.20.0', revision: '16008', time: '2012-02-27 19:03:04'
+    [junit] System info: os.name: 'Mac OS X', os.arch: 'x86_64', os.version: '10.6.8', java.version: '1.6.0_31'
+    [junit] Driver info: driver.version: unknown
+    [junit] 	at org.openqa.selenium.support.ui.FluentWait.timeoutException(FluentWait.java:252)
+    [junit] 	at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:221)
+    [junit] 	at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:174)
+    [junit] 	at scheduler.view.web.shared.Selenium.WebUtility.waitForElementPresent(WebUtility.java:242)
+    [junit] 	at scheduler.view.web.shared.InstructorsViewTest.waitForSmartGWTElement(InstructorsViewTest.java:466)
+    [junit] 	at scheduler.view.web.shared.InstructorsViewTest.login(InstructorsViewTest.java:61)
+    [junit] 	at scheduler.view.web.shared.InstructorsViewTest.setUp(InstructorsViewTest.java:38)
+    [junit] 
+
+BUILD FAILED
+/Users/gfisher/work/scheduler-vm/Selenium/build.xml:65: Test scheduler.view.web.shared.ViewTestSuite failed
+
+Total time: 5 minutes 44 seconds
+
+Fatal error: local() encountered an error (return code 1) while executing 'cd ../Selenium && ant clean && ant build && ant test'
+
+Aborting.
