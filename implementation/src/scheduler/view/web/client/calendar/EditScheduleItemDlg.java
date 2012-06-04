@@ -356,7 +356,7 @@ public class EditScheduleItemDlg extends DialogBox {
 				
 				mInstructors = result;
 
-				Integer instructorID = new Integer(mOriginalItem.getLocationID());
+				Integer instructorID = new Integer(mOriginalItem.getInstructorID());
 
 				mInstructorsLB.addItem("Choose one for me");
 				mInstructorsLB.addItem("STAFF");
@@ -364,7 +364,7 @@ public class EditScheduleItemDlg extends DialogBox {
 					for (InstructorGWT instructor : result) {
 						mInstructorsLB.addItem(instructor.getFirstName() + " " + instructor.getLastName());
 
-						if (new Integer(mOriginalItem.getLocationID()).equals(instructor.getID()))
+						if (new Integer(mOriginalItem.getInstructorID()).equals(instructor.getID()))
 							mInstructorsLB.setSelectedIndex(mInstructorsLB.getItemCount() - 1);
 					}
 				}
@@ -386,7 +386,7 @@ public class EditScheduleItemDlg extends DialogBox {
 		mWorkingCopyDocument.forceSynchronize(new AsyncCallback<Void>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				Window.alert("Failed to retrieve instructors.");
+				Window.alert("Failed to retrieve locations.");
 			}
 
 			@Override
@@ -414,7 +414,7 @@ public class EditScheduleItemDlg extends DialogBox {
 					mLocationsLB.setSelectedIndex(1);
 
 				System.out.println();
-				System.out.println(mOriginalItem.getInstructorID());
+				System.out.println(mOriginalItem.getLocationID());
 				System.out.println("choose: "+mWorkingCopyDocument.getDocument().getChooseForMeLocationID());
 				System.out.println("tba:"+mWorkingCopyDocument.getDocument().getTBALocationID());
 			}
