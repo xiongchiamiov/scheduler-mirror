@@ -84,3 +84,9 @@ this line:
 
 
 To add new Selenium tests: ... (see Evan's email message)
+
+
+To command tomcat:
+    sudo service tomcat6 restart
+    sudo service tomcat6 stop
+    sudo service tomcat6 start
