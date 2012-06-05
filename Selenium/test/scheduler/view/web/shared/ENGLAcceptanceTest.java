@@ -105,7 +105,7 @@ public abstract class ENGLAcceptanceTest extends DefaultSelTestCase {
 	}
 	
 	public void testAcceptanceForENGL() throws InterruptedException {
-		login("tyero");
+		login("admin");
 		
 		final String documentName = "ENGL Acceptance Test Document";
 		deleteDocumentFromHomeTab(documentName);
@@ -177,16 +177,16 @@ public abstract class ENGLAcceptanceTest extends DefaultSelTestCase {
 		WebUtility.enterIntoInstructorsResourceTableNewRow(driver, 11, true, "Brogno", "Courtney", "cbrogno", "40");
 		WebUtility.enterIntoInstructorsResourceTableNewRow(driver, 12, true, "St. John", "Leslie", "lstjohn", "40");
 		
-		WebUtility.enterIntoInstructorsResourceTableNewRow(driver, 13, true, "Wiens", "Jennie", "jpotteng", "40");
-		WebUtility.enterIntoInstructorsResourceTableNewRow(driver, 14, true, "Belknap", "Jacquelyn", "jbelknap", "40");
-		WebUtility.enterIntoInstructorsResourceTableNewRow(driver, 15, true, "Hendrix", "Ginger", "ghendrix", "40");
-		WebUtility.enterIntoInstructorsResourceTableNewRow(driver, 16, true, "Senn", "Melanie", "msenn", "40");
-		WebUtility.enterIntoInstructorsResourceTableNewRow(driver, 17, true, "Garner", "Annie", "agarner", "40");
-		WebUtility.enterIntoInstructorsResourceTableNewRow(driver, 18, true, "Ashley", "Jennifer", "jashley", "40");
+//		WebUtility.enterIntoInstructorsResourceTableNewRow(driver, 13, true, "Wiens", "Jennie", "jpotteng", "40");
+//		WebUtility.enterIntoInstructorsResourceTableNewRow(driver, 14, true, "Belknap", "Jacquelyn", "jbelknap", "40");
+//		WebUtility.enterIntoInstructorsResourceTableNewRow(driver, 15, true, "Hendrix", "Ginger", "ghendrix", "40");
+//		WebUtility.enterIntoInstructorsResourceTableNewRow(driver, 16, true, "Senn", "Melanie", "msenn", "40");
+//		WebUtility.enterIntoInstructorsResourceTableNewRow(driver, 17, true, "Garner", "Annie", "agarner", "40");
+//		WebUtility.enterIntoInstructorsResourceTableNewRow(driver, 18, true, "Ashley", "Jennifer", "jashley", "40");
 	}
 
 	private void enterAllCourses() throws InterruptedException {
-
+		
 		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 0, true, "ENGL", "103", "Writing Labratory", "1", "3", "3", "MW,TuTh", "3", "50", "LAB", "Smart Room", null);
 		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 1, true, "ENGL", "115", "GWR Preparation", "1", "1", "1", "Tr", "1", "35", "LEC", null, null);
 		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 2, true, "ENGL", "134", "Writing and Rhetoric", "27", "3", "3", "MWF", "3", "30", "LEC", "Smart Room", null);
@@ -203,42 +203,42 @@ public abstract class ENGLAcceptanceTest extends DefaultSelTestCase {
 		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 13, true, "ENGL", "253", "Great Books III: Romanticism to Modernism Literature", "4", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
 		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 14, true, "ENGL", "290", "Introduction to Linguistics", "2", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
 		
-		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 15, true, "ENGL", "302", "Writing: Advanced Composition", "1", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
-		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 16, true, "ENGL", "305", "Core VI: 1914 - Present", "2", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
-		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 17, true, "ENGL", "310", "Corporate Communicati	on", "5", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
-		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 18, true, "ENGL", "333", "British Literature in the Age of Romanticism", "2", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
-		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 19, true, "ENGL", "339", "Introduction to Shakespeare", "2", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
-		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 20, true, "ENGL", "342", "The Literary Sources of the American Character: 1914-1956", "1", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
-		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 21, true, "ENGL", "347", "African American Literature", "1", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
-		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 22, true, "ENGL", "350", "The Modern Novel", "3", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);		
-		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 23, true, "ENGL", "351", "Modern Poetry", "2", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
-		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 24, true, "ENGL", "360", "Literature for Adolescents", "2", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
-		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 25, true, "ENGL", "368", "Theory and Practice of Peer-to-peer Writing Instruction", "2", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
-		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 26, true, "ENGL", "371", "Film Styles and Genres", "6", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
-		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 27, true, "ENGL", "372", "Film Directors", "2", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
-		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 28, true, "ENGL", "380", "Literary Themes", "1", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
-		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 29, true, "ENGL", "382", "LGBT Literature and Media", "2", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
-		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 30, true, "ENGL", "387", "Fiction Writing", "2", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
-		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 31, true, "ENGL", "388", "Poetry Writing", "2", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
-		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 32, true, "ENGL", "390", "Linguistic Structr: Modern Engl", "1", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
-		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 33, true, "ENGL", "391", "Topics in Applied Linguistics", "1", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
-		
-		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 34, true, "ENGL", "400", "Special Problems for Advanced Undergraduates", "6", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
-		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 35, true, "ENGL", "408", "Internship", "1", "3", "3", "MW,TuTh", "3", "5", "LEC", "Smart Room", null);
-		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 36, true, "ENGL", "430", "Chaucer", "1", "3", "3", "MW,TuTh", "3", "40", "LEC", "Smart Room", null);
-		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 37, true, "ENGL", "439", "Significant British Writers", "1", "3", "3", "MW,TuTh", "3", "30", "LEC", "Smart Room", null);
-		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 38, true, "ENGL", "449", "Significant American Writers", "1", "3", "3", "MW,TuTh", "3", "35", "LEC", "Smart Room", null);
-		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 39, true, "ENGL", "459", "Significant World Writers", "2", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
-		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 40, true, "ENGL", "461", "Senior Project", "8", "3", "3", "MW,TuTh", "3", "5", "LEC", null, null);
-		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 41, true, "ENGL", "487", "Advanced Creative Writing: Fiction", "1", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
-		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 42, true, "ENGL", "488", "Advanced Creative Writing: Poetry", "1", "3", "3", "MW,TuTh", "3", "24", "LEC", null, null);
-		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 43, true, "ENGL", "499", "Practicum in Teaching English as a Second Language/Dialect", "2", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
-		
-		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 44, true, "ENGL", "505", "Writing Labratory", "1", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
-		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 45, true, "ENGL", "511", "Writing Labratory", "1", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
-		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 46, true, "ENGL", "512", "Writing Labratory", "1", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
-		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 47, true, "ENGL", "513", "Writing Labratory", "1", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
-		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 48, true, "ENGL", "515", "Writing Labratory", "1", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);					
+//		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 15, true, "ENGL", "302", "Writing: Advanced Composition", "1", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
+//		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 16, true, "ENGL", "305", "Core VI: 1914 - Present", "2", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
+//		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 17, true, "ENGL", "310", "Corporate Communicati	on", "5", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
+//		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 18, true, "ENGL", "333", "British Literature in the Age of Romanticism", "2", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
+//		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 19, true, "ENGL", "339", "Introduction to Shakespeare", "2", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
+//		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 20, true, "ENGL", "342", "The Literary Sources of the American Character: 1914-1956", "1", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
+//		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 21, true, "ENGL", "347", "African American Literature", "1", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
+//		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 22, true, "ENGL", "350", "The Modern Novel", "3", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);		
+//		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 23, true, "ENGL", "351", "Modern Poetry", "2", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
+//		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 24, true, "ENGL", "360", "Literature for Adolescents", "2", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
+//		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 25, true, "ENGL", "368", "Theory and Practice of Peer-to-peer Writing Instruction", "2", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
+//		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 26, true, "ENGL", "371", "Film Styles and Genres", "6", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
+//		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 27, true, "ENGL", "372", "Film Directors", "2", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
+//		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 28, true, "ENGL", "380", "Literary Themes", "1", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
+//		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 29, true, "ENGL", "382", "LGBT Literature and Media", "2", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
+//		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 30, true, "ENGL", "387", "Fiction Writing", "2", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
+//		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 31, true, "ENGL", "388", "Poetry Writing", "2", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
+//		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 32, true, "ENGL", "390", "Linguistic Structr: Modern Engl", "1", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
+//		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 33, true, "ENGL", "391", "Topics in Applied Linguistics", "1", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
+//		
+//		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 34, true, "ENGL", "400", "Special Problems for Advanced Undergraduates", "6", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
+//		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 35, true, "ENGL", "408", "Internship", "1", "3", "3", "MW,TuTh", "3", "5", "LEC", "Smart Room", null);
+//		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 36, true, "ENGL", "430", "Chaucer", "1", "3", "3", "MW,TuTh", "3", "40", "LEC", "Smart Room", null);
+//		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 37, true, "ENGL", "439", "Significant British Writers", "1", "3", "3", "MW,TuTh", "3", "30", "LEC", "Smart Room", null);
+//		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 38, true, "ENGL", "449", "Significant American Writers", "1", "3", "3", "MW,TuTh", "3", "35", "LEC", "Smart Room", null);
+//		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 39, true, "ENGL", "459", "Significant World Writers", "2", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
+//		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 40, true, "ENGL", "461", "Senior Project", "8", "3", "3", "MW,TuTh", "3", "5", "LEC", null, null);
+//		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 41, true, "ENGL", "487", "Advanced Creative Writing: Fiction", "1", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
+//		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 42, true, "ENGL", "488", "Advanced Creative Writing: Poetry", "1", "3", "3", "MW,TuTh", "3", "24", "LEC", null, null);
+//		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 43, true, "ENGL", "499", "Practicum in Teaching English as a Second Language/Dialect", "2", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
+//		
+//		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 44, true, "ENGL", "505", "Writing Labratory", "1", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
+//		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 45, true, "ENGL", "511", "Writing Labratory", "1", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
+//		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 46, true, "ENGL", "512", "Writing Labratory", "1", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
+//		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 47, true, "ENGL", "513", "Writing Labratory", "1", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);
+//		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 48, true, "ENGL", "515", "Writing Labratory", "1", "3", "3", "MW,TuTh", "3", "50", "LEC", "Smart Room", null);					
 	}
 	
 	protected String performListToCalendarDrag() throws InterruptedException {
