@@ -1,0 +1,8 @@
+The files .restore-backup-db.csh and .rm-stable-dbs.csh must be installed in
+the following directory on the machine running the scheduler tomcat server:
+
+    /var/lib/tomcat6/webapps/
+
+In the current deployment, the machine running tomcat is the VM at
+scheduler.csc.calpoly.edu.  In a deployed department installation, the machine
+would be the one designated as the server for the department.
