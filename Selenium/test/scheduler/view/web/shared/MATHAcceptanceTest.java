@@ -89,18 +89,16 @@ public abstract class MATHAcceptanceTest extends DefaultSelTestCase {
 
 		// By default we're looking at the courses view, so start filling out courses
 		//driver, row, schedulable, dptmt, catnum, name, numsect, wtu, scu, daycombos, hpw, maxenrl, type, usedquip,istethered
-		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 0, true, "MATH", "205", "Leadership and Facilitation", "1", "3", "3", "TR", "3", "40", "LEC", null, null);
+		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 0, true, "MATH", "182", "Calculus for Arch and Construction Management", "2", "2", "2", "TR", "2", "35", "LEC", null, null);
 		//not sure on convention for lab/acts with same name type
-		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 1, true, "MATH", "20L5", "Leadership and Facilitation Activity", "1", "2", "2", "F", "2", "40", "ACT", null, "MATH 205");
-		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 2, true, "MATH", "252", "Therapuetic Recreation and Special Populations", "1", "3", "3", "W", "3", "46", "LEC", null, null);
-		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 3, true, "MATH", "252Act", "Therapuetic Recreation and Special Populations", "1", "1", "1", "M, W, T, R, F", "2", "46", "ACT", null, "MATH 252");
-		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 4, true, "MATH", "260", "Recreational Sport Programming", "1", "3", "3", "TR", "3", "34", "LEC", null, null);
-		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 5, true, "MATH", "260Act", "Recreational Sport Programming", "1", "1", "1", "W", "2", "34", "ACT", null, "MATH 260");
-//		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 6, true, "MATH", "203", "Digital File Preparation and Workflow", "3", "3", "3", null, "3", "15", "LAB", null, "MATH 203 (tethered)");
-//		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 7, true, "MATH", "211", "Substrates, Inks and Toners", "1", "3", "3", "TR", "3", "43", "LEC", null, null);
-//		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 8, true, "MATH", "211", "Substrates, Inks and Toners", "3", "3", "3", null, "3", "14", "LAB", null, null);
-//		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 9, true, "MATH", "212", "Substrates, Inks and Toners: Reory", "1", "3", "3", "TR", "3", "6", "LEC", null, null);
-//		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 10, true, "MATH", "320", "Managing Quality in Graphic Communication", "1", "3", "3", "TR", "3", "46", "LEC", null, null);
+		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 1, true, "MATH", "117", "Precalculus Algebra II", "1", "2", "2", "F", "2", "35", "ACT", null, null);
+		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 2, true, "MATH", "142", "Calculus II", "1", "3", "3", "W", "3", "35", "LEC", null, null);
+		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 3, true, "MATH", "143", "Calculus III", "1", "1", "1", "M, W, T, R, F", "2", "35", "ACT", null, "MATH 252");
+		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 4, true, "MATH", "192", "Calculus for Arch and Construction Management Workshop", "1", "3", "3", "TR", "3", "25", "LAB", null, "MATH 182");
+		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 5, true, "MATH", "126", "Precalculus Algebra Worshop I", "1", "1", "1", "W", "2", "25", "LAB", null, "MATH 260");
+		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 6, true, "MATH", "141", "Calculus I", "3", "3", "3", null, "3", "35", "LAB", null, null);
+		WebUtility.enterIntoCoursesResourceTableNewRow(driver, 7, true, "MATH", "116", "Precalculus Algebra I", "1", "3", "3", "TR", "3", "35", "LEC", null, null);
+
 		
 		// Test saving
 		driver.findElement(By.xpath("//div[@class='toolStrip']//td[@class='buttonTitle'][text()='File']")).click();
