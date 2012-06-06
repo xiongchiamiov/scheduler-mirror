@@ -1,25 +1,25 @@
 <html>
 <head>
 <title>
-Finals Week Acceptance Test Report for the AERO Department
+Week 9 Acceptance Test Report for the AERO Department
 </title>
 </head>
 <body bgcolor=white>
 <p align=center>
 <font size=+2>
-<strong>Finals Week Acceptance Test Report for the AERO Department</strong>
+<strong>Week 9 Acceptance Test Report for the AERO Department</strong>
 </font>
 </p>
 <br>
 <br>
-<a name="Create, Save, and Re-Open a New Schedule">
+<a name="Open an Existing Schedule, Create a New Schedule">
 <h2>
-1.  Create, Save, and Re-Open a New Schedule
+1.  Open an Existing Schedule, Create a New Schedule
 </h2>
 </a>
-<p>
-All actions performed successfully.
-</p>
+<ul>
+  <li>Can't reload schedule if you navigate away from the scheduler project without saving and try to login again.  Only the loading gif appears.  I believe this is caused by some database locking mechanism.</li>
+</ul>
 
 <br>
 <a name="Enter Resource Data">
@@ -27,17 +27,11 @@ All actions performed successfully.
 2.  Enter Resource Data
 </h2>
 </a>
-<p>
-   <ul>
-      <li>Annoying to have to double click on items.</li>
-      <li>Need to support multiple course types.  LEC, LAB, SEM, IND, and ACT</li>
-      <li>Received 500 error when entering any instructor prefs. Opened a Jira issue for this <a href="https://scheduler.atlassian.net/browse/SCHED-237">https://scheduler.atlassian.net/browse/SCHED-237</a>.</li>
-      <li>Entering instructor preferences let's the user specify a range at the top of the Instructor Time Preferences page.  If the the user specifies from 10am to 11am the it fills in 2 hours worth of prefs instead of 1.  Opened a Jira issue for this <a href="https://scheduler.atlassian.net/browse/SCHED-238">https://scheduler.atlassian.net/browse/SCHED-238</a>.</li>
-      <li>Instructor prefs does not allow a user to specify multiple autofill options at the top of page.  Opened a Jira issue for this <a href="https://scheduler.atlassian.net/browse/SCHED-238">https://scheduler.atlassian.net/browse/SCHED-238</a>.</li>
-      <li>No option to delete a previously entered row.  I believe this previous Jira issue has to do with this <a href="https://scheduler.atlassian.net/browse/SCHED-102">https://scheduler.atlassian.net/browse/SCHED-102</a>.</li>
-      <li>Entering a blank course is reflected in Instructor Course Prefs etc.  This issue should be fixed if the previous one (Row Deletion) is.</li>
-   </ul>
-</p>
+<ul>
+  <li>Instructor prefs occasionally load bad data</li>
+  <li>Instructor prefs window occasionally will not open</li>
+  <li>Deleting a course did not make the course disappear.  Had to relogin to get it to go away.</li>
+</ul>
 
 <br>
 <a name="Generate a Schedule">
@@ -45,11 +39,9 @@ All actions performed successfully.
 3.  Generate a Schedule
 </h2>
 </a>
-<p>
-   <ul>
-      <li>Failed with 500 error.  This is due to the fact that instructor prefs are not being saved correctly.</li>
-   </ul>
-</p>
+<ul>
+  <li>In demo, classes 1 hour per day classes were being scheduled for only a half hour.</li>
+</ul>
 
 <br>
 <a name="Edit the Schedule">
@@ -57,9 +49,9 @@ All actions performed successfully.
 4.  Edit the Schedule
 </h2>
 </a>
-<p>
-All actions performed successfully.
-</p>
+<ul>
+  <li>No good way to remove all data from calendar.  Need to drag and drop everything back.</li>
+</ul>
 
 <br>
 <a name="Save, Exit, Re-Open Schedule">
@@ -68,10 +60,7 @@ All actions performed successfully.
 </h2>
 </a>
 <p>
-   <ul>
-      <li>File and Settings menu seems a bit finicky.  These need to disappear when a user logs out.  Right now a user can log out, select File-Open and open a previous schedule without even logging in.  This will cause us major issues when we implement access control.  See previously opened Jira issue <a href="https://scheduler.atlassian.net/browse/SCHED-231">https://scheduler.atlassian.net/browse/SCHED-231</a>.</li>
-      <li>Close option under the File Menu is not working.  Opened a Jira issue for this <a href="https://scheduler.atlassian.net/browse/SCHED-239">https://scheduler.atlassian.net/browse/SCHED-239</a>.</li>
-   </ul>
+All actions performed successfully.
 </p>
 
 <br>
@@ -81,7 +70,7 @@ All actions performed successfully.
 </h2>
 </a>
 <p>
-
+N/A
 </p>
 
 <br>
@@ -91,7 +80,9 @@ All actions performed successfully.
 </h2>
 </a>
 <p>
-
+N/A
 </p>
+
+
 </body>
 </html>
