@@ -1,0 +1,44 @@
+Time and Date of Interview: 12:10pm on Tuesday June 5th
+Team member names: Tyler Holland and Tyler Yero
+Client name: Michael Haungs
+Location of Interview: Michael Haungs' office, 14-226
+
+Part 1: Demonstration
+He had a question about an error that popped up while generating, but it was just a small bug. It generated most of the schedule at 7am.
+
+Part 2: Client Using the Prototype
+Courses View:
+Having number of sections was good.
+There needs to be one more field, "Category". Such as "First Year Sequence", "Tech Elective", etc. Then when you schedule, you make sure courses of the same category do not overlap with each other. Don't make it PREVENT you from generating a schedule with overlaps in the same category, just make it show a warning.
+Most courses would just be "All days". Only a few have restrictions.
+
+Instructors & Instructors Prefs View:
+Instructors view is fine.
+He'd like to be able to make a year schedule. So you could have something like 9 sections of 357 OVER THE YEAR. When he makes the schedule, he makes it for the whole year. Not a big deal at this moment.
+The instructors prefs view seems a little long with all of the courses in it. But he can't think of a better way to show the information.
+He wants to open up the instructors preferences view while in the instructors view and have it not overlap the instructors view. He'd like to have it open up on the side or something.
+Put notes in instructor preferences so that if there are special conflicts they can see that. This is one thing in the existing scheduler database that isn't in our product.
+
+Location View:
+Locations is something they can't really use. They draw from rooms all over campus, so they can't use it as it is. One way to fix it would be to try to generate using the given locations, and if it can't find a location it shows an "X" or "U" on the UI to designate that it is a "University Room".
+
+Schedule View:
+He likes drag and drop. Has a lot of questions about the generate button.
+He thinks it is very unlikely the generate thing will work. For example, having a way to "spread out" sections of 101, so they aren't all at 12-2 MWF.
+He'd like to make it so the generate button just puts in "no brainers".
+If you put down two sections of a course, if they are at the same time, give a dialog saying "Are you sure?". That way the tech electives would be spread out so they don't overlap with student's schedules. Also, have it say something like "Warning, there are 3 103 sections already at this time, are you sure you want to put this here?".
+Have classes grouped by grad and normal. That way it makes sure that grad classes don't overlap.
+During drag and drop, it would be nice to grey out the days that aren't set in the day combos from the courses view. That way if there are day restrictions it carries over to drag and drop. Even though they are greyed out, he needs to be able to override instructor and course preferences. Just give a warning about overriding preferences.
+With drag and drop, maybe suggest a location that was used in the past. And if there are too many courses with that single location, give an error.
+With drag and drop, be able to override the "tethered" thing in a course/lab pair.
+
+Part 3: Questions about Requirements Features
+Both list view and calendar view are nice and needed. He can't think of any other view method.
+
+Part 4: Qualitative Questions
+Drag and drop with hints and greyed out buttons based on prefs as stated above.
+Needs a query feature to see an entire instrutors course load.
+Being able to switch between schedule documents without having to log out.
+Be able to query over multiple schedule documents about different things, such as course load for each instructor over the year, or student demand for courses over the year. Be able to search for instructors and courses over multiple schedule documents.
+
+In order to replace their current system, it needs to have the querying.
