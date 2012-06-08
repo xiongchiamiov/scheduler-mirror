@@ -1,637 +1,657 @@
-//package scheduler.model;
-//
-//import java.io.IOException;
-//import java.util.ArrayList;
-//import java.util.Arrays;
-//import java.util.Collection;
-//import java.util.HashMap;
-//import java.util.HashSet;
-//import java.util.Iterator;
-//import java.util.LinkedHashMap;
-//import java.util.LinkedList;
-//import java.util.List;
-//import java.util.Map.Entry;
-//import java.util.Set;
-//
-//import com.csvreader.CsvReader;
-//
-//import scheduler.model.db.Database;
-//import scheduler.model.db.Time;
-//import scheduler.model.db.TimeRange;
-//import scheduler.model.db.cdb.Course;
-//import scheduler.model.db.cdb.Course.CourseType;
-//import scheduler.model.db.cdb.Lab;
-//import scheduler.model.db.idb.Instructor;
-//import scheduler.model.db.idb.TimePreference;
-//import scheduler.model.db.ldb.Location;
-//import scheduler.model.db.ldb.Location.ProvidedEquipment;
-//import scheduler.model.schedule.CouldNotBeScheduledException;
-//import scheduler.model.schedule.Day;
-//import scheduler.model.schedule.Schedule;
-//import scheduler.model.schedule.ScheduleDecorator;
-//import scheduler.model.schedule.ScheduleItem;
-//import scheduler.model.schedule.Week;
-//
-//public class CSVImporter {
-//	private class Pair<A, B> {
-//		A first;
-//		B second;
-//		Pair(A first, B second) {
-//			this.first = first;
-//			this.second = second;
-//		}
-//	}
-//
-//	List<Course> courses = new ArrayList<Course>();
-//	List<Location> locations = new ArrayList<Location>();
-//	List<HashMap<Course, Integer>> instructorsCoursePrefs = new ArrayList<HashMap<Course, Integer>>();
-//	List<HashMap<Day, LinkedHashMap<Time, TimePreference>>> instructorsTimePrefs = new ArrayList<HashMap<Day, LinkedHashMap<Time, TimePreference>>>();
-//	List<Instructor> instructors = new ArrayList<Instructor>();
-//	List<Pair<Boolean, ScheduleItem>> scheduleItems = new ArrayList<Pair<Boolean, ScheduleItem>>(); // boolean is true if on conflicted list
-//	
-//	public Schedule read(Model model, String newScheduleName, String value) throws IOException {
-////		System.out.println("In read!");
-//		
-//		CsvReader reader = CsvReader.parse(value);
-//		
-//		Collection<List<String>> lines = new LinkedList<List<String>>();
-//		while (reader.readRecord()) {
-//			String[] line = reader.getValues();
-//			if (line.length == 0)
-//				continue;
-//			if (line.length == 1 && line[0].trim().equals(""))
-//				continue;
-//			lines.add(Arrays.asList(line));
-//		}
-//		
-//		Iterator<List<String>> linesIterator = lines.iterator();
-//		
-//		for (String comment : CSVStructure.TOP_COMMENTS)
-//			skipBlanksUntilComment(linesIterator, comment);
-//		
-////		int derp = 0;
-////		System.out.println(derp++);
-//		
-//		readSchedule(linesIterator);
-////		System.out.println(derp++);
-//		
-//		readCourses(linesIterator);
-////		System.out.println(derp++);
-//		
-//		readLocations(linesIterator);
-////		System.out.println(derp++);
-//		
-//		readAllInstructorsCoursePrefs(linesIterator);
-////		System.out.println(derp++);
-//		
-//		readAllInstructorsTimePrefs(linesIterator);
-////		System.out.println(derp++);
-//		
-//		readInstructors(linesIterator);
-////		System.out.println(derp++);
-//		
-//		readScheduleItems(linesIterator);
-////		System.out.println(derp++);
-//		
-//		Schedule schedule = new Schedule();
-//		schedule.setDbid(-1);
-//		schedule.setScheduleDBId(-1);
-//		schedule.setName(newScheduleName);
-//		model.saveSchedule(schedule);
-//		assert(schedule.getDbid() != -1);
-//		assert(schedule.getScheduleDBId() != -1);
-//		model.openExistingSchedule(schedule.getDbid());
-//
-//		for (Instructor instructor : instructors) {
-//			instructor.setDbid(-1);
-//			instructor.setScheduleDBId(schedule.getScheduleDBId());
-//			model.saveInstructor(instructor);
-//		}
-//		
-//		for (Location location : locations) {
-//			location.setDbid(-1);
-//			location.setScheduleDBId(schedule.getScheduleDBId());
-//			model.saveLocation(location);
-//		}
-//		
-//		for (Course course : courses) {
-//			course.setDbid(-1);
-//			course.setScheduleDBId(schedule.getScheduleDBId());
-//			model.saveCourse(course);
-//		}
-//		
-//		schedule.setcSourceList(courses);
-//		schedule.setlSourceList(locations);
-//		schedule.setiSourceList(instructors);
-//
-//		for (Pair<Boolean, ScheduleItem> item : scheduleItems) {
-//			Boolean onConflictedList = item.first;
-//			ScheduleDecorator sd = new ScheduleDecorator();
-//			if (!onConflictedList) {
-//				try {
-//					schedule.add(item.second, sd);
-//				}
-//				catch (CouldNotBeScheduledException ex) {
-//					schedule.addConflictingItem(item.second, sd);
-//				}
-//			}
-//			else {
-//				schedule.addConflictingItem(item.second, sd);
-//			}
-//		}
-//		
-//		return schedule;
-//	}
-//	
-//	private HashMap<Course, Integer> readSingleInstructorsCoursePrefs(Iterator<List<String>> linesIterator) {
-//		skipBlanksUntilComment(linesIterator, CSVStructure.INSTRUCTOR_COURSE_PREFS_MARKER);
-//
-//		HashMap<Course, Integer> instructorCoursePrefs = new HashMap<Course, Integer>();
-//		
-//		while (true) {			
-//			assert(linesIterator.hasNext());
-//
-//			List<String> cells = linesIterator.next();
-//			if (cells.size() == 1 && cells.get(0).equals("#" + CSVStructure.INSTRUCTOR_COURSE_PREFS_END_MARKER))
-//				break;
-//
-//			Iterator<String> cellI = cells.iterator();
-//			Course course = courses.get(extractIndex("course#", cellI.next()));
-//			Integer desire = Integer.parseInt(cellI.next());
-//			instructorCoursePrefs.put(course, desire);
-//		}
-//		
-//		return instructorCoursePrefs;
-//	}
-//
-//	private void readAllInstructorsCoursePrefs(Iterator<List<String>> linesIterator) {
-//		skipBlanksUntilComment(linesIterator, CSVStructure.INSTRUCTORS_COURSE_PREFS_MARKER);
-//		
-//		while (true) {
-//			assert(linesIterator.hasNext());
-//
-//			List<String> cells = linesIterator.next();
-//			if (cells.size() == 1 && cells.get(0).equals("#" + CSVStructure.INSTRUCTORS_COURSE_PREFS_END_MARKER))
-//				break;
-//
-//			Iterator<String> cellI = cells.iterator();
-//
-//			int instructorCoursePrefIndex = instructorsCoursePrefs.size();
-//			assert(extractIndex("coursePrefs#", cellI.next()) == instructorCoursePrefIndex);
-//			
-//			instructorsCoursePrefs.add(readSingleInstructorsCoursePrefs(linesIterator));
-//		}
-//	}
-//	
-//	private void readAllInstructorsTimePrefs(Iterator<List<String>> linesIterator) {
-//		skipBlanksUntilComment(linesIterator, CSVStructure.ALL_INSTRUCTORS_TIME_PREFS_MARKER);
-//		
-//		while (true) {
-//			assert(linesIterator.hasNext());
-//
-//			List<String> cells = linesIterator.next();
-//			if (cells.size() == 1 && cells.get(0).equals("#" + CSVStructure.ALL_INSTRUCTORS_TIME_PREFS_END_MARKER))
-//				break;
-//
-//			int instructorTimePrefIndex = instructorsTimePrefs.size();
-//			assert(extractIndex("timePrefs#", cells.get(0)) == instructorTimePrefIndex);
-//			
-//			instructorsTimePrefs.add(readSingleInstructorsTimePrefs(instructorTimePrefIndex, linesIterator));
-//		}
-//	}
-//
-//	private HashMap<Day, LinkedHashMap<Time, TimePreference>> readSingleInstructorsTimePrefs(
-//			int instructorTimePrefIndex, Iterator<List<String>> linesIterator) {
-//
-//		skipBlanksUntilComment(linesIterator, CSVStructure.SINGLE_INSTRUCTOR_TIME_PREFS_MARKER);
-//
-//		List<String> headersLine = linesIterator.next();
-//		Iterator<String> headerCellI = headersLine.iterator();
-//		assert(headerCellI.next().equals("Time"));
-//		
-//		HashMap<Day, LinkedHashMap<Time, TimePreference>> instructorTimePrefs = new HashMap<Day, LinkedHashMap<Time, TimePreference>>();
-//
-//		for (Day day : Day.ALL_DAYS) {
-//			assert(headerCellI.next().equals(day.getName()));
-//			instructorTimePrefs.put(day, new LinkedHashMap<Time, TimePreference>());
-//		}
-//
-//		for (int row = 0; row < Time.ALL_TIMES_IN_DAY.length; row++) {
-//			assert(linesIterator.hasNext());
-//			List<String> cells = linesIterator.next();
-//			Iterator<String> cellI = cells.iterator();
-//			String timeString = cellI.next();
-//			Time time = Time.ALL_TIMES_IN_DAY[row];
-//			assert(timeString.equals(time.toString()));
-//			
-//			for (int col = 0; col < Day.ALL_DAYS.length; col++) {
-//				int desire = Integer.parseInt(cellI.next());
-//				TimePreference preference = new TimePreference(time, desire);
-//				instructorTimePrefs.get(Day.ALL_DAYS[col]).put(Time.ALL_TIMES_IN_DAY[row], preference);
-//			}
-//		}
-//
-//		skipBlanksUntilComment(linesIterator, CSVStructure.SINGLE_INSTRUCTOR_TIME_PREFS_END_MARKER);
-//
-//		return instructorTimePrefs;
-//	}
-//
-//	private Integer extractIndex(String prefix, String indexString) {
-//		if (indexString.equals(""))
-//			return null;
-//		assert(indexString.startsWith(prefix));
-//		return Integer.parseInt(indexString.substring(prefix.length()));
-//	}
-//	
-//	void readCourses(Iterator<List<String>> linesIterator) {
-//		skipBlanksUntilComment(linesIterator, CSVStructure.COURSES_MARKER);
-//
-//		HashMap<Integer, Integer> labIndexByCourseIndex = new HashMap<Integer, Integer>();
-//		HashMap<Integer, Integer> componentIndexByLabIndex = new HashMap<Integer, Integer>();
-//		
-//		while (true) {
-//			assert(linesIterator.hasNext());
-//			
-//			List<String> cells = linesIterator.next();
-//			if (cells.size() == 1 && cells.get(0).equals("#" + CSVStructure.COURSES_END_MARKER))
-//				break;
-//	
-//			Iterator<String> cellI = cells.iterator();
-//
-//			int index = extractIndex("course#", cellI.next());
-//			assert(index == courses.size());
-//			
-//			CourseType type = CourseType.valueOf(cellI.next());
-//			Course course = (type == CourseType.LEC ? new Course() : new Lab());
-//			course.setType(type);
-//			
-//			course.setName(cellI.next());
-//			course.setCatalogNum(cellI.next());
-//			course.setDept(cellI.next());
-//			course.setWtu(Integer.parseInt(cellI.next()));
-//			course.setScu(Integer.parseInt(cellI.next()));
-//			course.setNumOfSections(Integer.parseInt(cellI.next()));
-//			course.setLength(Integer.parseInt(cellI.next()));
-//			Set<Week> weekSet = new HashSet<Week>();
-//			weekSet.add(readWeek(cellI.next()));
-//			course.setDays(weekSet);
-//			course.setEnrollment(Integer.parseInt(cellI.next()));
-//			
-//			Integer labIndex = extractIndex("course#", cellI.next());
-//			if (labIndex != null) {
-//				assert(labIndex != -1);
-//				labIndexByCourseIndex.put(index, labIndex);
-//			}
-//			
-//			if (course instanceof Lab) {
-//				Lab lab = (Lab)course;
-//				lab.setTethered(Boolean.parseBoolean(cellI.next()));
-//				
-//				Integer componentIndex = extractIndex("course#", cellI.next());
-//				if (componentIndex != null)
-//					componentIndexByLabIndex.put(index, componentIndex);
-//				
-//				lab.setUseLectureInstructor(Boolean.parseBoolean(cellI.next()));
-//			}
-//			
-//			courses.add(course);
-//		}
-//		
-//		for (Entry<Integer, Integer> entry : labIndexByCourseIndex.entrySet()) {
-//			Integer courseIndex = entry.getKey();
-//			Integer labIndex = entry.getValue();
-//			assert(false);
-//			/*
-//			 * There is no longer a set lab within a course. This needs to be
-//			 * updated to represent a lab as a lectureID.
-//			 * 
-//             * If a course is a lecture, the value
-//             * of the lectureID will be -1. If the course is a lab, the 
-//             * value of the lectureID will be equal to the lecture id.
-//             * 
-//			 * courses.get(courseIndex).setLab((Lab)courses.get(labIndex));
-//			 */
-//		}
-//		
-//		for (Entry<Integer, Integer> entry : componentIndexByLabIndex.entrySet()) {
-//			Integer labIndex = entry.getKey();
-//			Integer componentIndex = entry.getValue();
-//			((Lab)courses.get(labIndex)).setComponent(courses.get(componentIndex));
-//		}
-//	}
-//
-//	private Week readWeek(String string) {
-//		Week result = new Week();
-//		
-//		String[] dayStrings = string.split(" ");
-//		for (String dayString : dayStrings) {
-//			for (Day possibleDay : Day.ALL_DAYS) {
-//				if (dayString.equals(possibleDay.getName())) {
-//					result.add(possibleDay);
-//					break;
-//				}
-//			}
-//		}
-//		
-//		assert(result.getDays().size() == dayStrings.length);
-//		
-//		return result;
-//	}
-//
-//	void readInstructors(Iterator<List<String>> linesIterator) {
-////		skipBlanksUntilComment(linesIterator, CSVStructure.INSTRUCTORS_MARKER);
-////		while (true) {
-////			assert(linesIterator.hasNext());
-////
-////			List<String> cells = linesIterator.next();
-////			if (cells.size() == 1 && cells.get(0).equals("#" + CSVStructure.INSTRUCTORS_COURSE_PREFS_END_MARKER))
-////				break;
-////
-////			Iterator<String> cellI = cells.iterator();
-////
-////			int instructorCoursePrefIndex = instructorsCoursePrefs.size();
-////			assert(extractIndex("coursePrefs#", cellI.next()) == instructorCoursePrefIndex);
-////			
-////			instructorsCoursePrefs.add(readSingleInstructorsCoursePrefs(linesIterator));
-////		}
-////	}
-////	
-////	private void readAllInstructorsTimePrefs(Iterator<List<String>> linesIterator) {
-////		skipBlanksUntilComment(linesIterator, CSVStructure.ALL_INSTRUCTORS_TIME_PREFS_MARKER);
-////		
-////		while (true) {
-////			assert(linesIterator.hasNext());
-////
-////			List<String> cells = linesIterator.next();
-////			if (cells.size() == 1 && cells.get(0).equals("#" + CSVStructure.ALL_INSTRUCTORS_TIME_PREFS_END_MARKER))
-////				break;
-////
-////			int instructorTimePrefIndex = instructorsTimePrefs.size();
-////			assert(extractIndex("timePrefs#", cells.get(0)) == instructorTimePrefIndex);
-////			
-////			instructorsTimePrefs.add(readSingleInstructorsTimePrefs(instructorTimePrefIndex, linesIterator));
-////		}
-////	}
-////
-////	private HashMap<Day, LinkedHashMap<Time, TimePreference>> readSingleInstructorsTimePrefs(
-////			int instructorTimePrefIndex, Iterator<List<String>> linesIterator) {
-////
-////		skipBlanksUntilComment(linesIterator, CSVStructure.SINGLE_INSTRUCTOR_TIME_PREFS_MARKER);
-////
-////		List<String> headersLine = linesIterator.next();
-////		Iterator<String> headerCellI = headersLine.iterator();
-////		assert(headerCellI.next().equals("Time"));
-////		
-////		HashMap<Day, LinkedHashMap<Time, TimePreference>> instructorTimePrefs = new HashMap<Day, LinkedHashMap<Time, TimePreference>>();
-////
-////		for (Day day : Day.ALL_DAYS) {
-////			assert(headerCellI.next().equals(day.getName()));
-////			instructorTimePrefs.put(day, new LinkedHashMap<Time, TimePreference>());
-////		}
-////
-////		for (int row = 0; row < Time.ALL_TIMES_IN_DAY.length; row++) {
-////			assert(linesIterator.hasNext());
-////			List<String> cells = linesIterator.next();
-////			Iterator<String> cellI = cells.iterator();
-////			String timeString = cellI.next();
-////			Time time = Time.ALL_TIMES_IN_DAY[row];
-////			assert(timeString.equals(time.toString()));
-////			
-////			for (int col = 0; col < Day.ALL_DAYS.length; col++) {
-////				int desire = Integer.parseInt(cellI.next());
-////				TimePreference preference = new TimePreference(time, desire);
-////				instructorTimePrefs.get(Day.ALL_DAYS[col]).put(Time.ALL_TIMES_IN_DAY[row], preference);
-////			}
-////		}
-////
-////		skipBlanksUntilComment(linesIterator, CSVStructure.SINGLE_INSTRUCTOR_TIME_PREFS_END_MARKER);
-////
-////		return instructorTimePrefs;
-////	}
-////
-////	private Integer extractIndex(String prefix, String indexString) {
-////		if (indexString.equals(""))
-////			return null;
-////		assert(indexString.startsWith(prefix));
-////		return Integer.parseInt(indexString.substring(prefix.length()));
-////	}
-////	
-////	void readCourses(Iterator<List<String>> linesIterator) {
-////		skipBlanksUntilComment(linesIterator, CSVStructure.COURSES_MARKER);
-////
-////		HashMap<Integer, Integer> labIndexByCourseIndex = new HashMap<Integer, Integer>();
-////		HashMap<Integer, Integer> componentIndexByLabIndex = new HashMap<Integer, Integer>();
-////		
-////		while (true) {
-////			assert(linesIterator.hasNext());
-////			
-////			List<String> cells = linesIterator.next();
-////			if (cells.size() == 1 && cells.get(0).equals("#" + CSVStructure.COURSES_END_MARKER))
-////				break;
-////	
-////			Iterator<String> cellI = cells.iterator();
-////
-////			int index = extractIndex("course#", cellI.next());
-////			assert(index == courses.size());
-////			
-////			CourseType type = CourseType.valueOf(cellI.next());
-////			Course course = (type == CourseType.LEC ? new Course() : new Lab());
-////			course.setType(type);
-////			
-////			course.setName(cellI.next());
-////			course.setCatalogNum(cellI.next());
-////			course.setDept(cellI.next());
-////			course.setWtu(Integer.parseInt(cellI.next()));
-////			course.setScu(Integer.parseInt(cellI.next()));
-////			course.setNumOfSections(Integer.parseInt(cellI.next()));
-////			course.setLength(Integer.parseInt(cellI.next()));
-////			course.setDays(readWeek(cellI.next()));
-////			course.setEnrollment(Integer.parseInt(cellI.next()));
-////			
-////			Integer labIndex = extractIndex("course#", cellI.next());
-////			if (labIndex != null) {
-////				assert(labIndex != -1);
-////				labIndexByCourseIndex.put(index, labIndex);
-////			}
-////			
-////			if (course instanceof Lab) {
-////				Lab lab = (Lab)course;
-////				lab.setTethered(Boolean.parseBoolean(cellI.next()));
-////				
-////				Integer componentIndex = extractIndex("course#", cellI.next());
-////				if (componentIndex != null)
-////					componentIndexByLabIndex.put(index, componentIndex);
-////				
-////				lab.setUseLectureInstructor(Boolean.parseBoolean(cellI.next()));
-////			}
-////			
-////			courses.add(course);
-////		}
-////		
-////		for (Entry<Integer, Integer> entry : labIndexByCourseIndex.entrySet()) {
-////			Integer courseIndex = entry.getKey();
-////			Integer labIndex = entry.getValue();
-////			assert(false);
-////			/*
-////			 * There is no longer a set lab within a course. This needs to be
-////			 * updated to represent a lab as a lectureID.
-////			 * 
-////             * If a course is a lecture, the value
-////             * of the lectureID will be -1. If the course is a lab, the 
-////             * value of the lectureID will be equal to the lecture id.
-////             * 
-////			 * courses.get(courseIndex).setLab((Lab)courses.get(labIndex));
-////			 */
-////		}
-////		
-////		for (Entry<Integer, Integer> entry : componentIndexByLabIndex.entrySet()) {
-////			Integer labIndex = entry.getKey();
-////			Integer componentIndex = entry.getValue();
-////			((Lab)courses.get(labIndex)).setComponent(courses.get(componentIndex));
-////		}
-////	}
-////
-////	private Week readWeek(String string) {
-////		Week result = new Week();
-////		
-////		String[] dayStrings = string.split(" ");
-////		for (String dayString : dayStrings) {
-////			for (Day possibleDay : Day.ALL_DAYS) {
-////				if (dayString.equals(possibleDay.getName())) {
-////					result.add(possibleDay);
-////					break;
-////				}
-////			}
-////		}
-////		
-////		assert(result.getDays().size() == dayStrings.length);
-////		
-////		return result;
-////	}
-////
-////	void readInstructors(Iterator<List<String>> linesIterator) {
-//////		skipBlanksUntilComment(linesIterator, CSVStructure.INSTRUCTORS_MARKER);
-//////		while (true) {
-//////			assert(linesIterator.hasNext());
-//////			List<String> cells = linesIterator.next();
-//////			if (cells.size() == 1 && cells.get(0).equals("#" + CSVStructure.INSTRUCTORS_END_MARKER))
-//////				return;
-//////
-//////			Iterator<String> cellI = cells.iterator();
-//////
-//////			int index = instructors.size();
-//////			assert(extractIndex("instructor#", cellI.next()) == index);
-//////			
-//////			Instructor instructor = new Instructor();
-//////			instructor.setUserID(cellI.next());
-//////			instructor.setFirstName(cellI.next());
-//////			instructor.setLastName(cellI.next());
-//////			instructor.setMaxWtu(Integer.parseInt(cellI.next()));
-//////			instructor.setCurWtu(Integer.parseInt(cellI.next()));
-//////			
-//////			Location office = new Location();
-//////			office.setBuilding(cellI.next());
-//////			office.setRoom(cellI.next());
-//////			instructor.setOffice(office);
-//////
-//////			instructor.setFairness(Integer.parseInt(cellI.next()));
-//////			instructor.setDisability(Boolean.parseBoolean(cellI.next()));
-//////			
-//////			instructor.setCoursePreferences(instructorsCoursePrefs.get(extractIndex("coursePrefs#", cellI.next())));
-//////			instructor.setTimePreferences(instructorsTimePrefs.get(extractIndex("timePrefs#", cellI.next())));
-//////			
-//////			instructors.add(instructor);
-//////		}
-////	}
-////
-////	void readLocations(Iterator<List<String>> linesIterator) {
-////		skipBlanksUntilComment(linesIterator, CSVStructure.LOCATIONS_MARKER);
-////		while (true) {
-////			assert(linesIterator.hasNext());
-////			List<String> cells = linesIterator.next();
-////			if (cells.size() == 1 && cells.get(0).equals("#" + CSVStructure.LOCATIONS_END_MARKER))
-////				return;
-////			
-////			System.out.println("Reading line " + cells);
-////
-////			Iterator<String> cellI = cells.iterator();
-////
-////			int index = locations.size();
-////			assert(extractIndex("location#", cellI.next()) == index);
-////			
-////			Location location = new Location();
-////			location.setBuilding(cellI.next());
-////			location.setRoom(cellI.next());
-////			location.setMaxOccupancy(Integer.parseInt(cellI.next()));
-////			location.setType(cellI.next());
-////			
-////			ProvidedEquipment equipment = new ProvidedEquipment();
-////			equipment.hasLaptopConnectivity = Boolean.parseBoolean(cellI.next());
-////			equipment.hasOverhead = Boolean.parseBoolean(cellI.next());
-////			equipment.isSmartRoom = Boolean.parseBoolean(cellI.next());
-////			location.setProvidedEquipment(equipment);
-////			
-////			location.setAdaCompliant(Boolean.parseBoolean(cellI.next()));
-////						
-////			locations.add(location);
-////		}
-////	}
-////	
-////	void skipBlanksUntilComment(Iterator<List<String>> lineIterator, String comment) {
-////		while (lineIterator.hasNext()) {
-////			List<String> line = lineIterator.next();
-////			if (line.size() == 0)
-////				continue;
-////			else if (line.size() == 1 && line.get(0).equals("#" + comment))
-////				break;
-////			else
-////				assert(false);
-////		}
-////	}
-////	
-////	void readSchedule(Iterator<List<String>> lineIterator) {
-////		skipBlanksUntilComment(lineIterator, CSVStructure.SCHEDULE_MARKER);
-////		List<String> line = lineIterator.next();
-////		String name = line.get(0);
-////		skipBlanksUntilComment(lineIterator, CSVStructure.SCHEDULE_END_MARKER);
-////	}
-////
-////	void readScheduleItems(Iterator<List<String>> linesIterator) {
-////		skipBlanksUntilComment(linesIterator, CSVStructure.SCHEDULE_ITEMS_MARKER);
-////		while (true) {
-////			assert(linesIterator.hasNext());
-////			List<String> cells = linesIterator.next();
-////			if (cells.size() == 1 && cells.get(0).equals("#" + CSVStructure.SCHEDULE_ITEMS_END_MARKER))
-////				return;
-////
-////			Iterator<String> cellI = cells.iterator();
-////
-////			int index = instructors.size();
-////			assert(extractIndex("instructor#", cellI.next()) == index);
-////			
-////			ScheduleItem item = new ScheduleItem();
-////			boolean conflicted = Boolean.parseBoolean(cellI.next());
-////			item.setInstructor(instructors.get(extractIndex("instructor#", cellI.next())));
-////			item.setCourse(courses.get(extractIndex("course#", cellI.next())));
-////			item.setLocation(locations.get(extractIndex("location#", cellI.next())));
-////			item.setSection(Integer.parseInt(cellI.next()));
-////			item.setDays(readWeek(cellI.next()));
-////			// Value?
-////			item.setTimeRange(readTimeRange(cellI.next()));
-////			// Locked?
-////			// Labs?
-////			
-////			scheduleItems.add(new Pair<Boolean, ScheduleItem>(conflicted, item));
-////		}
-////	}
-////	
-////	TimeRange readTimeRange(String string) {
-////		String startString = string.substring(0, string.indexOf(" to "));
-////		String endString = string.substring(string.indexOf(" to ") + " to ".length());
-////		return new TimeRange(readTime(startString), readTime(endString));
-////	}
-////	
-////	Time readTime(String string) {
-////		return new Time(string);
-////	}
-////}
+package scheduler.model;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
+import scheduler.model.db.DatabaseException;
+
+import com.csvreader.CsvReader;
+
+/**
+ * The Class CSVImporter.
+ * Imports the text of a CSV file, converts information into Scheduler project data, creates a new document
+ *  and inserts the data into it.
+ *  
+ * CURRENT STATUS:
+ *     The gathering of information from the CSV works, however the adding and retrieving of data from the
+ *     database has issues somewhere along the line.
+ *     
+ *     The result using import is as follows:
+ *     -New Document creation works.
+ *     -Course import works except for Day combos. Day combos work intermittently.
+ *     -Location import works.
+ *     -Instructor import works except for preferences.  They have worked irregularly in the past.
+ *         As of the last attempt to figure out why, it appears somewhere along the line something is happening where
+ *         the values are not being set in the database and a set of default values is being used.
+ *     -Schedule items currently do not go into the document at all and are commented out.
+ *     
+ * INTEGRATION FLOW: 
+ *     -The overall flow of data needs to go: Main view AdminScheduleNavView/HomeView->Import [gets CSV text and passes it to]->CachedService
+ *              ->GreetingServiceImpl->CSVImporter
+ *              This is done because CachedService has a reference to GreetingServiceImpl and GreetingServiceImpl is server
+ *              side and thus has access to CSVImport.
+ *     This was not officially integrated in due to inconsistent functionality as detailed previously.
+ *
+ *    
+ * @author Evan Ovadia
+ * @author Jordan Hand
+ */
+public class CSVImporter {
+
+	/** The courses. */
+	List<Course> courses = new ArrayList<Course>();
+
+	/** The associations. */
+	List<Integer> associations = new ArrayList<Integer>();
+
+	/** The locations. */
+	List<Location> locations = new ArrayList<Location>();
+
+	/** The instructors course prefs. */
+	List<HashMap<Integer, Integer>> instructorsCoursePrefs = new ArrayList<HashMap<Integer, Integer>>();
+
+	/** The instructors time prefs. */
+	ArrayList<int[][]> instructorsTimePrefs = new ArrayList<int[][]>();
+
+	/** The instructors. */
+	List<Instructor> instructors = new ArrayList<Instructor>();
+
+	/** The schedule items. */
+	List<ScheduleItem> scheduleItems = new ArrayList<ScheduleItem>();
+
+	/** The schedule name. */
+	String scheduleName;
+
+	/** The model. */
+	Model model;
+
+	/** STAFF instructor */
+	Instructor STAFF;
+
+	/**  TBA Location */
+	Location TBA;
+
+	/**
+	 * Read a CSV file and turn data into a Document (Courses, Locations, Instructors, and Schedule Items).
+	 * 
+	 * @param model
+	 *            the model
+	 * @param newScheduleName
+	 *            the new schedule name
+	 * @param value
+	 *            the value
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 * @throws DatabaseException
+	 *             the database exception
+	 */
+	public void read(Model model, String newScheduleName, String value)
+			throws IOException, DatabaseException {
+
+		this.model = model;
+
+		CsvReader reader = CsvReader.parse(value);
+
+		Collection<List<String>> lines = new LinkedList<List<String>>();
+		while (reader.readRecord()) {
+			String[] line = reader.getValues();
+			if (line.length == 0)
+				continue;
+			if (line.length == 1 && line[0].trim().equals(""))
+				continue;
+			lines.add(Arrays.asList(line));
+		}
+
+		Iterator<List<String>> linesIterator = lines.iterator();
+
+		for (String comment : CSVStructure.TOP_COMMENTS)
+			skipBlanksUntilComment(linesIterator, comment);
+
+		readSchedule(linesIterator);
+		Document document = model
+				.createAndInsertDocumentWithSpecialInstructorsAndLocations(
+						this.scheduleName, 14, 44);
+
+	
+		this.TBA = document.getTBALocation();
+		this.STAFF = document.getStaffInstructor();
+
+		readCourses(linesIterator);
+		assignAssociations();
+		
+		//Added courses into the document so ID's can be used for course prefs
+		for (Course course : this.courses) {
+			course.setDocument(document).insert();
+		}
+
+		readLocations(linesIterator);
+
+		readAllInstructorsCoursePrefs(linesIterator);
+
+		//Converts instructor course prefs to use the course ID instead of the arbitrary one assigned by CSVExport
+		List<HashMap<Integer, Integer>> instructorsCoursePrefs2 = new ArrayList<HashMap<Integer, Integer>>();
+
+		for (int idx = 0; idx < this.instructorsCoursePrefs.size(); idx++) {
+			HashMap<Integer, Integer> oldPrefs = this.instructorsCoursePrefs
+					.get(idx);
+			HashMap<Integer, Integer> newPrefs = new HashMap<Integer, Integer>();
+			for (Integer val : new ArrayList<Integer>(oldPrefs.keySet())) {
+				newPrefs.put(this.courses.get(val).getID(), oldPrefs.get(val));
+			}
+
+			instructorsCoursePrefs2.add(newPrefs);
+		}
+		this.instructorsCoursePrefs = instructorsCoursePrefs2;
+
+		
+		readAllInstructorsTimePrefs(linesIterator);
+
+		readInstructors(linesIterator);
+		
+		readScheduleItems(linesIterator);
+
+		for (Location location : this.locations) {
+			location.setDocument(document).insert();
+		}
+
+		for (Instructor instructor : this.instructors) {
+			instructor.setDocument(document).insert();
+		}
+
+		for (ScheduleItem item : this.scheduleItems) {
+			// item.setDocument(document).insert(); //TODO reenable
+		}
+
+	}
+
+	/**
+	 * Assign associations.
+	 * 
+	 * @throws DatabaseException
+	 *             the database exception
+	 */
+	private void assignAssociations() throws DatabaseException {
+		for (int i = 0; i < this.associations.size(); i++) {
+			if (this.associations.get(i) != -1) {
+				Course association = this.courses.get(this.associations.get(i));
+
+				this.courses.get(i).setLecture(association);
+			}
+		}
+
+	}
+
+	/**
+	 * Read single instructors course pref and return a hashmap mapping the course to 
+	 * its desirability  .
+	 * 
+	 * @param linesIterator
+	 *            the lines iterator
+	 * @return a hash map hashmap mapping the course to 
+	 * its desirability  .
+	 */
+	private HashMap<Integer, Integer> readSingleInstructorsCoursePrefs(
+			Iterator<List<String>> linesIterator) {
+		skipBlanksUntilComment(linesIterator,
+				CSVStructure.INSTRUCTOR_COURSE_PREFS_MARKER);
+
+		HashMap<Integer, Integer> instructorCoursePrefs = new HashMap<Integer, Integer>();
+		while (true) {
+			assert (linesIterator.hasNext());
+
+			List<String> cells = linesIterator.next();
+			if (cells.size() == 1
+					&& cells.get(0)
+							.equals("#"
+									+ CSVStructure.INSTRUCTOR_COURSE_PREFS_END_MARKER))
+				break;
+
+			Iterator<String> cellI = cells.iterator();
+			Integer courseIndex = extractIndex("course#", cellI.next());
+			Integer desire = Integer.parseInt(cellI.next());
+
+			instructorCoursePrefs.put(courseIndex, desire);
+		}
+
+		return instructorCoursePrefs;
+	}
+
+	/**
+	 * Read all instructors course prefs into instructorsCoursePrefs.
+	 * 
+	 * @param linesIterator
+	 *            the lines iterator
+	 */
+	private void readAllInstructorsCoursePrefs(
+			Iterator<List<String>> linesIterator) {
+		skipBlanksUntilComment(linesIterator,
+				CSVStructure.INSTRUCTORS_COURSE_PREFS_MARKER);
+
+		while (true) {
+			assert (linesIterator.hasNext());
+
+			List<String> cells = linesIterator.next();
+			if (cells.size() == 1
+					&& cells.get(0)
+							.equals("#"
+									+ CSVStructure.INSTRUCTORS_COURSE_PREFS_END_MARKER))
+				break;
+
+			Iterator<String> cellI = cells.iterator();
+
+			int instructorCoursePrefIndex = this.instructorsCoursePrefs.size();
+			assert (extractIndex("coursePrefs#", cellI.next()) == instructorCoursePrefIndex);
+
+			this.instructorsCoursePrefs
+					.add(readSingleInstructorsCoursePrefs(linesIterator));
+		}
+	}
+
+	/**
+	 * Read all instructors time prefs.
+	 * 
+	 * @param linesIterator
+	 *            the lines iterator
+	 */
+	private void readAllInstructorsTimePrefs(
+			Iterator<List<String>> linesIterator) {
+		skipBlanksUntilComment(linesIterator,
+				CSVStructure.ALL_INSTRUCTORS_TIME_PREFS_MARKER);
+
+		while (true) {
+			assert (linesIterator.hasNext());
+
+			List<String> cells = linesIterator.next();
+			if (cells.size() == 1
+					&& cells.get(0)
+							.equals("#"
+									+ CSVStructure.ALL_INSTRUCTORS_TIME_PREFS_END_MARKER))
+				break;
+
+			int instructorTimePrefIndex = instructorsTimePrefs.size();
+			assert (extractIndex("timePrefs#", cells.get(0)) == instructorTimePrefIndex);
+
+			this.instructorsTimePrefs.add(readSingleInstructorsTimePrefs(
+					instructorTimePrefIndex, linesIterator));
+		}
+	}
+
+	/**
+	 * Read single instructors time prefs.
+	 * 
+	 * @param instructorTimePrefIndex
+	 *            the instructor time pref index
+	 * @param linesIterator
+	 *            the lines iterator
+	 * @return int[][] of time preferences where the column represents the day and the row represents the time
+	 */
+	private int[][] readSingleInstructorsTimePrefs(int instructorTimePrefIndex,
+			Iterator<List<String>> linesIterator) {
+
+		skipBlanksUntilComment(linesIterator,
+				CSVStructure.SINGLE_INSTRUCTOR_TIME_PREFS_MARKER);
+
+		List<String> headersLine = linesIterator.next();
+		Iterator<String> headerCellI = headersLine.iterator();
+		assert (headerCellI.next().equals("Time"));
+
+		int halfHours = 48;
+		int[][] instructorTimePrefs = new int[Day.values().length][halfHours];
+
+		for (int row = 14; row < 44; row++) {
+			assert (linesIterator.hasNext());
+			List<String> cells = linesIterator.next();
+			Iterator<String> cellI = cells.iterator();
+			String timeString = cellI.next(); //Not used in CSV but there for readability
+
+			for (int col = 0; col < Day.values().length; col++) {
+				Integer desire = new Integer(cellI.next());
+
+				instructorTimePrefs[col][row] = desire;
+			}
+		}
+
+		for (int row = 0; row < 48; row++) {
+			for (int col = 0; col < Day.values().length; col++) {
+				instructorTimePrefs[col][row] = 0;
+
+			}
+		}
+
+		skipBlanksUntilComment(linesIterator,
+				CSVStructure.SINGLE_INSTRUCTOR_TIME_PREFS_END_MARKER);
+
+		return instructorTimePrefs;
+	}
+
+	/**
+	 * Read courses.
+	 * 
+	 * @param linesIterator
+	 *            the lines iterator
+	 * @throws DatabaseException
+	 *             the database exception
+	 */
+	void readCourses(Iterator<List<String>> linesIterator)
+			throws DatabaseException {
+		skipBlanksUntilComment(linesIterator, CSVStructure.COURSES_MARKER);
+
+		while (true) {
+			assert (linesIterator.hasNext());
+
+			List<String> cells = linesIterator.next();
+			if (cells.size() == 1
+					&& cells.get(0).equals(
+							"#" + CSVStructure.COURSES_END_MARKER))
+				break;
+
+			Course course;
+			Iterator<String> cellI = cells.iterator();
+
+			int index = extractIndex("course#", cellI.next());
+			assert (index == this.courses.size());
+
+			String courseType = cellI.next();
+			String courseName = cellI.next();
+			String courseNum = cellI.next();
+			String courseDept = cellI.next();
+
+			String wtu = cellI.next();
+			String scu = cellI.next();
+			String numOfSections = cellI.next();
+			String numOfHalfHours = cellI.next();
+			Collection<Set<Day>> dayPattern = readDayPatterns(cellI.next());
+			String maxEnrollment = cellI.next();
+			Boolean isSchedulable = new Boolean(cellI.next());
+			Boolean isTethered = new Boolean(cellI.next());
+			this.associations.add(extractIndex("course#", cellI.next()));
+
+			course = this.model.createTransientCourse(courseName, courseNum,
+					courseDept, wtu, scu, numOfSections, courseType,
+					maxEnrollment, numOfHalfHours, isSchedulable);
+			course.setDayPatterns(dayPattern);
+			course.setType(courseType);
+			course.setTetheredToLecture(isTethered);
+
+			this.courses.add(course);
+
+		}
+
+	}
+
+	/**
+	 * Read day patterns.
+	 * Takes in a String of day patterns ie. MW, TR and return a collection of 
+	 * sets of Days. {[Monday, Wednesday], [Tuesday, Thursday]}
+	 * @param pattern
+	 *            the day patterns
+	 * @return A Collection of sets of days.
+	 */
+	private Collection<Set<Day>> readDayPatterns(String pattern) {
+		Collection<Set<Day>> dayPatterns = new ArrayList<Set<Day>>();
+		String[] dayStrings = pattern.split(" ");
+
+		for (String dayString : dayStrings) {
+			Set<Day> daySet = new HashSet<Day>();
+			String dayVal = "";
+			char[] dayCharacters = dayString.toCharArray();
+			for (char dayChar : dayCharacters) {
+				if (dayVal.equals("")) {
+					dayVal = "" + dayChar;
+				} else {
+					dayVal += dayChar;
+				}
+				for (Day day : Day.values()) {
+					if (dayVal.equals(day.abbreviation)) {
+						daySet.add(day);
+						dayVal = "";
+						break;
+					}
+				}
+
+			}
+			dayPatterns.add(daySet);
+		}
+		return dayPatterns;
+
+	}
+
+	/**
+	 * Extract index.
+	 * Extracts index from an item in format of prefix from the overall string.
+	 * ie. course#0 with a prefix of "course#" would return 0.
+	 * @param prefix
+	 *            the prefix
+	 * @param indexString
+	 *            the index string
+	 * @return the integer and if null return null
+	 */
+	private Integer extractIndex(String prefix, String indexString) {
+		if (indexString.equals("")
+				|| (indexString.substring(prefix.length()).equals("null")))
+			return null;
+		assert (indexString.startsWith(prefix));
+		return Integer.parseInt(indexString.substring(prefix.length()).trim());
+
+	}
+
+	/**
+	 * Read instructors.
+	 * 
+	 * @param linesIterator
+	 *            the lines iterator
+	 * @throws DatabaseException
+	 *             the database exception
+	 */
+	void readInstructors(Iterator<List<String>> linesIterator)
+			throws DatabaseException {
+		skipBlanksUntilComment(linesIterator, CSVStructure.INSTRUCTORS_MARKER);
+		while (true) {
+			assert (linesIterator.hasNext());
+			List<String> cells = linesIterator.next();
+			if (cells.size() == 1
+					&& cells.get(0).equals(
+							"#" + CSVStructure.INSTRUCTORS_END_MARKER))
+				return;
+			Iterator<String> cellI = cells.iterator();
+			int index = extractIndex("instructor#", cellI.next());
+			assert (this.instructors.size() == index);
+			Instructor instructor;
+
+			String lastName = cellI.next();
+			String firstName = cellI.next();
+			String userName = cellI.next();
+			String maxWTU = cellI.next();
+			Boolean isSchedulable = new Boolean(cellI.next());
+
+			int coursePrefIndex = extractIndex("coursePrefs#", cellI.next());
+			int timePrefIndex = extractIndex("timePrefs#", cellI.next());
+
+			instructor = this.model.createTransientInstructor(firstName, lastName,
+					userName, maxWTU, isSchedulable);
+
+			instructor.setCoursePreferences(this.instructorsCoursePrefs
+					.get(coursePrefIndex));
+			
+			
+			 instructor.setTimePreferences(this.instructorsTimePrefs
+			 .get(timePrefIndex));
+
+			 this.instructors.add(instructor);
+		}
+	}
+
+	/**
+	 * Read locations.
+	 * 
+	 * @param linesIterator
+	 *            the lines iterator
+	 * @throws DatabaseException
+	 *             the database exception
+	 */
+	void readLocations(Iterator<List<String>> linesIterator)
+			throws DatabaseException {
+		skipBlanksUntilComment(linesIterator, CSVStructure.LOCATIONS_MARKER);
+		while (true) {
+			assert (linesIterator.hasNext());
+			List<String> cells = linesIterator.next();
+			if (cells.size() == 1
+					&& cells.get(0).equals(
+							"#" + CSVStructure.LOCATIONS_END_MARKER))
+				return;
+
+			Iterator<String> cellI = cells.iterator();
+
+			int index = extractIndex("location#", cellI.next());
+			assert (this.locations.size() == index);
+
+			Location location;
+			String locationRoom = cellI.next();
+			String locationMaxOccupancy = cellI.next();
+			String locationType = cellI.next();
+
+			Boolean isSchedulable = new Boolean(cellI.next());
+
+			location = this.model.createTransientLocation(locationRoom,
+					locationType, locationMaxOccupancy, isSchedulable);
+			this.locations.add(location);
+		}
+	}
+
+	/**
+	 * Skip blanks until comment.
+	 * 
+	 * @param lineIterator
+	 *            the line iterator
+	 * @param comment
+	 *            the comment
+	 */
+	void skipBlanksUntilComment(Iterator<List<String>> lineIterator,
+			String comment) {
+		while (lineIterator.hasNext()) {
+			List<String> line = lineIterator.next();
+			if (line.size() == 0)
+				continue;
+			else if (line.size() == 1 && line.get(0).equals("#" + comment))
+				break;
+			else
+				assert (false);
+		}
+	}
+
+	/**
+	 * Read schedule Name.
+	 * 
+	 * @param lineIterator
+	 *            the line iterator
+	 */
+	void readSchedule(Iterator<List<String>> lineIterator) {
+		skipBlanksUntilComment(lineIterator, CSVStructure.SCHEDULE_MARKER);
+		List<String> line = lineIterator.next();
+		this.scheduleName = line.get(0);
+		skipBlanksUntilComment(lineIterator, CSVStructure.SCHEDULE_END_MARKER);
+	}
+
+	/**
+	 * Read schedule items.
+	 * 
+	 * @param linesIterator
+	 *            the lines iterator
+	 * @throws DatabaseException
+	 *             the database exception
+	 */
+	void readScheduleItems(Iterator<List<String>> linesIterator)
+			throws DatabaseException {
+		skipBlanksUntilComment(linesIterator,
+				CSVStructure.SCHEDULE_ITEMS_MARKER);
+		while (true) {
+			assert (linesIterator.hasNext());
+			List<String> cells = linesIterator.next();
+			if (cells.size() == 1
+					&& cells.get(0).equals(
+							"#" + CSVStructure.SCHEDULE_ITEMS_END_MARKER))
+				return;
+
+			Iterator<String> cellI = cells.iterator();
+			int index = extractIndex("item#", cellI.next());
+			assert (this.scheduleItems.size() == index);
+
+
+			ScheduleItem item;
+
+			Integer instructorIndex = extractIndex("instructor#", cellI.next());
+			Integer courseIndex = extractIndex("course#", cellI.next());
+			Integer locationIndex = extractIndex("location#", cellI.next());
+			Integer section = Integer.parseInt(cellI.next());
+			Boolean isPlaced = new Boolean(cellI.next());
+			Boolean isConflicted = new Boolean(cellI.next());
+			ArrayList<Set<Day>> dayPattern = (ArrayList<Set<Day>>) readDayPatterns(cellI
+					.next());
+			String timeRange = cellI.next();
+
+			String startString = timeRange.substring(0,
+					timeRange.indexOf(" to "));
+			String endString = timeRange.substring(timeRange.indexOf(" to ")
+					+ " to ".length());
+
+			int startHalfHour = stringToHalfHour(startString);
+			int endHalfHour = stringToHalfHour(endString);
+
+			item = this.model.createTransientScheduleItem(section,
+					dayPattern.get(0), startHalfHour, endHalfHour, isPlaced,
+					isConflicted);
+			
+			//Handles case where instructor is STAFF
+			if (instructorIndex == null) {
+				item.setInstructor(this.STAFF);
+			} else {
+				item.setInstructor(this.instructors.get(instructorIndex));
+			}
+
+			//Handles case where location is TBA
+			if (locationIndex == null) {
+				item.setLocation(this.TBA);
+			} else {
+				item.setLocation(this.locations.get(locationIndex));
+			}
+
+			item.setCourse(this.courses.get(courseIndex));
+
+			this.scheduleItems.add(item);
+		}
+	}
+
+	/**
+	 * String to half hour. Converts String in format of 3:30pm to an int
+	 * representing half hours in a day. ie. 7:00am would result in 14
+	 * 
+	 * @param text
+	 *            Time text
+	 * @return An int representing the half our of the time put in.
+	 */
+	private static int stringToHalfHour(String text) {
+
+		String hourText = text.substring(0, text.indexOf(":"));
+		String halfHourText = text.substring(text.indexOf(":") + 1,
+				text.length() - 2);
+
+		int hour = Integer.parseInt(hourText);
+		if (text.substring(text.length() - 2).equals("pm"))
+			hour += 12;
+
+		if (halfHourText.equals("30") || halfHourText.equals("40"))
+			hour++;
+
+		return hour;
+
+	}
+
+}

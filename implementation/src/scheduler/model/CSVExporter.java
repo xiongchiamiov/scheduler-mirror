@@ -76,14 +76,17 @@ public class CSVExporter {
 	 */
 	private String compileLocation(Location location) throws DatabaseException {
 
-		int index = locations.indexOf(location);
+		int index = this.locations.indexOf(location);
 		if (index < 0) {
-			index = locations.size();
-			locations.add(new String[] { "location#" + index,
+			index = this.locations.size();
+			this.locations.add(new String[] { "location#" + index,
 					location.getRoom(), location.getMaxOccupancy(),
 					location.getType(),
-					join(location.getProvidedEquipment(), " & ") });
-			locationRowIndexByID.put(location.getID(), index);
+					(new Boolean (location.isSchedulable())).toString()
+		//			join(location.getProvidedEquipment(), " & ") /* Commented out due to not currently implemented */
+					}
+			);
+			this.locationRowIndexByID.put(location.getID(), index);
 
 		}
 
@@ -101,16 +104,16 @@ public class CSVExporter {
 	private String compileInstructor(Instructor instructor)
 			throws DatabaseException {
 
-		int index = instructors.indexOf(instructor);
+		int index = this.instructors.indexOf(instructor);
 		if (index < 0) {
-			index = instructors.size();
+			index = this.instructors.size();
 
-			instructors.add(new String[] { "instructor#" + index,
-					instructor.getFirstName(), instructor.getLastName(),
-					instructor.getUsername(), instructor.getMaxWTU(),
+			this.instructors.add(new String[] { "instructor#" + index,
+					instructor.getLastName(),	instructor.getFirstName(), 
+					instructor.getUsername(), instructor.getMaxWTU(), (new Boolean (instructor.isSchedulable())).toString(),
 					compileCoursePrefs(instructor.getCoursePreferences()),
 					compileTimePrefs(instructor.getTimePreferences()) });
-			instructorRowIndexByID.put(instructor.getID(), index);
+			this.instructorRowIndexByID.put(instructor.getID(), index);
 
 		}
 		return "instructor#" + index;
@@ -162,8 +165,8 @@ public class CSVExporter {
 			}
 		}
 
-		int newIndex = instructorsTimePrefs.size();
-		instructorsTimePrefs.add(strings);
+		int newIndex = this.instructorsTimePrefs.size();
+		this.instructorsTimePrefs.add(strings);
 		return "timePrefs#" + newIndex;
 	}
 
@@ -187,9 +190,9 @@ public class CSVExporter {
 			row++;
 		}
 
-		int newIndex = instructorsCoursePrefs.size();
+		int newIndex = this.instructorsCoursePrefs.size();
 
-		instructorsCoursePrefs.add(strings);
+		this.instructorsCoursePrefs.add(strings);
 
 		return "coursePrefs#" + newIndex;
 	}
@@ -226,26 +229,27 @@ public class CSVExporter {
 	private String compileScheduleItem(ScheduleItem item,
 			Collection<ScheduleItem> others) throws DatabaseException {
 
-		int index = scheduleItems.indexOf(item);
+		int index = this.scheduleItems.indexOf(item);
 
 		if (index < 0) {
 
 			index = scheduleItems.size();
-			scheduleItems.add(new String[] {
+			this.scheduleItems.add(new String[] {
 					"item#" + index,
 					"instructor#"
-							+ instructorRowIndexByID.get(item.getInstructor()
+							+ this.instructorRowIndexByID.get(item.getInstructor()
 									.getID()),
 
 					"course#"
-							+ courseRowIndexByID.get(item.getCourse().getID()),
+							+ this.courseRowIndexByID.get(item.getCourse().getID()),
 
 					"location#"
-							+ locationRowIndexByID.get(item.getLocation()
+							+ this.locationRowIndexByID.get(item.getLocation()
 									.getID()),
 
 					Integer.toString(item.getSection()),
 					Boolean.toString(item.isPlaced()),
+					Boolean.toString(item.isConflicted()),
 					compileDayPattern(item.getDays()),
 					compileTimeRange(item.getStartHalfHour(),
 							item.getEndHalfHour()), });
@@ -300,16 +304,16 @@ public class CSVExporter {
 		
 			association = "Course# -1";
 		
-			index = courses.size();
-			courses.add(new String[] { "course#" + index,
+			index = this.courses.size();
+			this.courses.add(new String[] { "course#" + index,
 
 			course.getType().toString(), course.getName(),
 					course.getCatalogNumber(), course.getDepartment(),
 					course.getWTU(), course.getSCU(), course.getNumSections(),
 					course.getNumHalfHoursPerWeek(), dayPatterns,
-					course.getMaxEnrollment(), association });
+					course.getMaxEnrollment(), (new Boolean(course.isSchedulable()).toString()), 
+					(new Boolean(course.isTetheredToLecture())).toString() ,association });
 			courseRowIndexByID.put(course.getID(), index);
-
 
 		}
 
@@ -322,7 +326,7 @@ public class CSVExporter {
 	private void compileAssociatedCourse(Course course,
 			Collection<Course> others) throws DatabaseException {
 
-		// Goes through each course again, finds ones that have assocatiated
+		// Goes through each course again, finds ones that have associated
 		// values
 		// Finds main course and associated course in courses
 
@@ -338,7 +342,7 @@ public class CSVExporter {
 			}
 			
 			//Find main course in courses
-			for (String[] c : courses) {
+			for (String[] c : this.courses) {
 				if(c[1] == course.getType() &&
 						c[2].equals(course.getName()) &&
 						c[3].equals(course.getCatalogNumber()) &&
@@ -350,7 +354,7 @@ public class CSVExporter {
 						c[9].equals(dayPatterns) &&
 						c[10].equals(course.getMaxEnrollment())
 						){
-					lecIndex = courses.indexOf(c);
+					lecIndex = this.courses.indexOf(c);
 					break;
 				}
 			}
@@ -364,7 +368,7 @@ public class CSVExporter {
 				dayPatterns += compileDayPattern(pattern);
 			}
 			
-			for (String[] c : courses) {
+			for (String[] c : this.courses) {
 				if(c[1] == associatedCourse.getType() &&
 						c[2].equals(associatedCourse.getName()) &&
 						c[3].equals(associatedCourse.getCatalogNumber()) &&
@@ -376,7 +380,7 @@ public class CSVExporter {
 						c[9].equals(dayPatterns) &&
 						c[10].equals(associatedCourse.getMaxEnrollment())
 						){
-					courses.get(lecIndex)[11] = c[0];
+					this.courses.get(lecIndex)[11] = c[0];
 					break;
 				}
 			}
@@ -438,27 +442,27 @@ public class CSVExporter {
 
 		writer.endRecord();
 		writer.writeComment(CSVStructure.COURSES_MARKER);
-		for (int i = 0; i < courses.size(); i++) {
-			writer.writeRecord(courses.get(i));
+		for (int i = 0; i < this.courses.size(); i++) {
+			writer.writeRecord(this.courses.get(i));
 		}
 		writer.writeComment(CSVStructure.COURSES_END_MARKER);
 
 		writer.endRecord();
 		writer.writeComment(CSVStructure.LOCATIONS_MARKER);
-		for (int i = 0; i < locations.size(); i++) {
-			writer.writeRecord(locations.get(i));
+		for (int i = 0; i < this.locations.size(); i++) {
+			writer.writeRecord(this.locations.get(i));
 		}
 		writer.writeComment(CSVStructure.LOCATIONS_END_MARKER);
 
 		writer.endRecord();
 		writer.writeComment(CSVStructure.INSTRUCTORS_COURSE_PREFS_MARKER);
 
-		for (int i = 0; i < instructorsCoursePrefs.size(); i++) {
+		for (int i = 0; i < this.instructorsCoursePrefs.size(); i++) {
 			writer.write("coursePrefs#" + i);
 			writer.endRecord();
 			writer.writeComment(CSVStructure.INSTRUCTOR_COURSE_PREFS_MARKER);
 
-			String[][] prefs = instructorsCoursePrefs.get(i);
+			String[][] prefs = this.instructorsCoursePrefs.get(i);
 			for (String[] rec : prefs)
 				writer.writeRecord(rec);
 
@@ -468,11 +472,11 @@ public class CSVExporter {
 
 		writer.endRecord();
 		writer.writeComment(CSVStructure.ALL_INSTRUCTORS_TIME_PREFS_MARKER);
-		for (int i = 0; i < instructorsTimePrefs.size(); i++) {
+		for (int i = 0; i < this.instructorsTimePrefs.size(); i++) {
 			writer.write("timePrefs#" + i);
 			writer.endRecord();
 			writer.writeComment(CSVStructure.SINGLE_INSTRUCTOR_TIME_PREFS_MARKER);
-			String[][] prefs = instructorsTimePrefs.get(i);
+			String[][] prefs = this.instructorsTimePrefs.get(i);
 			for (String[] rec : prefs)
 				writer.writeRecord(rec);
 			writer.writeComment(CSVStructure.SINGLE_INSTRUCTOR_TIME_PREFS_END_MARKER);
@@ -481,15 +485,15 @@ public class CSVExporter {
 
 		writer.endRecord();
 		writer.writeComment(CSVStructure.INSTRUCTORS_MARKER);
-		for (int i = 0; i < instructors.size(); i++) {
-			writer.writeRecord(instructors.get(i));
+		for (int i = 0; i < this.instructors.size(); i++) {
+			writer.writeRecord(this.instructors.get(i));
 		}
 		writer.writeComment(CSVStructure.INSTRUCTORS_END_MARKER);
 
 		writer.endRecord();
 		writer.writeComment(CSVStructure.SCHEDULE_ITEMS_MARKER);
-		for (int i = 0; i < scheduleItems.size(); i++)
-			writer.writeRecord(scheduleItems.get(i));
+		for (int i = 0; i < this.scheduleItems.size(); i++)
+			writer.writeRecord(this.scheduleItems.get(i));
 		writer.writeComment(CSVStructure.SCHEDULE_ITEMS_END_MARKER);
 
 		writer.flush();
