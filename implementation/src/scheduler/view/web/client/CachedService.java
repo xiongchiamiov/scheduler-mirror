@@ -155,4 +155,24 @@ public class CachedService {
 		});
 
 	}
+	
+	/**
+	 * ImportCSV
+	 * @param text The text of the CSV file
+	 */
+	public void importCSV(String text)
+	{
+		mService.prepareCSVImport(text, new AsyncCallback<Integer>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				
+			}
+
+			@Override
+			public void onSuccess(Integer result) {
+				
+			}
+		});
+	}
 }

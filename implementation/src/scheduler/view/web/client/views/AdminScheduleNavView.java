@@ -161,7 +161,7 @@ public class AdminScheduleNavView extends VerticalPanel {
 		MenuItem importItem = new MenuItem("Import", "icons/16/folder_out.png");
 		importItem.addClickHandler(new ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				Import.showImport();
+				Import.showImport(service);
 			}
 		});
 		

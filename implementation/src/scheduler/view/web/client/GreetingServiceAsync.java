@@ -52,5 +52,6 @@ public interface GreetingServiceAsync {
 			AsyncCallback<WorkingDocumentSynchronizeResponse> callback);
 
 	void prepareCSVExport(int documentID, AsyncCallback<Integer> asyncCallback);
+	void prepareCSVImport(String text, AsyncCallback<Integer> asyncCallback);
 
 }

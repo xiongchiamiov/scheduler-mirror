@@ -46,7 +46,7 @@ public class HomeView extends SimplePanel implements View {
 		tabSet.setOverflow(Overflow.VISIBLE);
 		tabSet.setPaneContainerOverflow(Overflow.VISIBLE);
 		
-		homeTab = new HomeTab(new HomeTab.DocumentsStrategy() {
+		homeTab = new HomeTab(service, new HomeTab.DocumentsStrategy() {
 			@Override
 			public void trashDocuments(Collection<Integer> documentIDs) {
 				HomeView.this.trashDocuments(documentIDs);

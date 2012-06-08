@@ -25,7 +25,16 @@
 		<url-pattern>/scheduler/CSVDownload</url-pattern>
 	</servlet-mapping>
 
+	<servlet>
+		<servlet-name>UploadService</servlet-name>
+		<servlet-class>scheduler.view.web.server.UploadService</servlet-class>
+	</servlet>
 
+	<servlet-mapping>
+		<servlet-name>UploadService</servlet-name>
+		<url-pattern>/scheduler/UploadService</url-pattern>
+	</servlet-mapping>
+	
 	<!-- Default page to serve -->
 	<welcome-file-list>
 		<welcome-file>Scheduler.html</welcome-file>

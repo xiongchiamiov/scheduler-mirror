@@ -774,4 +774,12 @@ public class FakeCalendarGreetingService implements GreetingServiceAsync {
 			AsyncCallback<Integer> asyncCallback) {
 		//Left empty due to not being used here
 	}
+
+
+	@Override
+	public void prepareCSVImport(String text,
+			AsyncCallback<Integer> asyncCallback) {
+		// TODO Auto-generated method stub
+		
+	}
 }

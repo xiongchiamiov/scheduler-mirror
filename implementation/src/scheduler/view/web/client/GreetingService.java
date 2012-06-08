@@ -50,5 +50,6 @@ public interface GreetingService extends RemoteService {
 			SynchronizeRequest<OriginalDocumentGWT> request) throws SessionClosedFromInactivityExceptionGWT;
 	
 	Integer prepareCSVExport(int documentID);
+	Integer prepareCSVImport(String text);
 
 }

@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.TreeSet;
 
+import scheduler.view.web.client.CachedService;
 import scheduler.view.web.client.Import;
 import scheduler.view.web.shared.OriginalDocumentGWT;
 
@@ -36,10 +37,10 @@ public class HomeTab extends Tab {
 	
 	final DocumentsStrategy documents;
 	final ListGrid aliveOriginalDocumentsGrid;
-	
-	public HomeTab(final DocumentsStrategy documents) {
+	CachedService mService;
+	public HomeTab(CachedService service, final DocumentsStrategy documents) {
 		super("Home");
-		
+		this.mService = service;
 		this.documents = documents;
 		
 		VLayout homePane = new VLayout();
@@ -197,7 +198,7 @@ public class HomeTab extends Tab {
 		
 		IButton importButton = new IButton("Import Document", new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				Import.showImport();
+				Import.showImport(mService); //TODO reinenable
 			}
 		});
 //		importButton.setID("importButton");

@@ -18,23 +18,25 @@ public class Import {
 
 	public static DialogBox importPopup;
 	
-	
 	/**
 	 * Imports schedule from file contents
 	 * @param text the contents of the imported file
 	 */
-	public static void processText(String text){
-		/** TODO */
+	public static void processText(CachedService service, String text){
+		//service.importCSV(text); //TODO reenable for testing
+		
+		
 	}
 	
 	
 	/**
 	 * Show the import dialog
+	 * @param service 
 	 */
-	public static void showImport(){
+	public static void showImport(CachedService service){
 		
 		// create dialog
-		FormPanel form = importForm();
+		FormPanel form = importForm(service);
 		importPopup = new DialogBox();
 		importPopup.setWidget(form);
 		importPopup.setGlassEnabled(true);
@@ -48,7 +50,7 @@ public class Import {
 	 * 
 	 * @return
 	 */
-	private static FormPanel importForm() {
+	private static FormPanel importForm(final CachedService service) {
 
 		return formPanel("schedule.csv", new ClickHandler() {
 			public void onClick(ClickEvent event) {
@@ -62,7 +64,7 @@ public class Import {
 
 				// null check
 				if (result != null) {
-					processText(result);
+					processText(service, result);
 				}
 
 				else {
@@ -88,7 +90,7 @@ public class Import {
 
 		// Create a FormPanel and point it at a service.
 		final FormPanel form = new FormPanel();
-		form.setAction(GWT.getModuleBaseURL() + "fileupload");
+		form.setAction(GWT.getModuleBaseURL() + "UploadService");
 
 		// Because we're going to add a FileUpload widget, we'll need to set the
 		// form to use the POST method, and multipart MIME encoding.
