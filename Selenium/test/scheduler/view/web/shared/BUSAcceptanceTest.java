@@ -16,8 +16,7 @@ import scheduler.view.web.shared.Selenium.WebUtility;
 public abstract class BUSAcceptanceTest extends DefaultSelTestCase {	
 	private WebDriver driver;
 	private StringBuffer verificationErrors = new StringBuffer();
-	//private static final String protoURL = "http://localhost:8080/ENGL";
-	private static final String protoURL = "http://scheduler.csc.calpoly.edu/BUSx/";
+	private static final String protoURL = "http://scheduler.csc.calpoly.edu/BUS/";
 	
 	public void setUp(WebDriver drv) {
 		this.driver = drv;
@@ -72,7 +71,7 @@ public abstract class BUSAcceptanceTest extends DefaultSelTestCase {
 	
 	private void login(final String username) throws InterruptedException {
 		driver.findElement(By.id("s_unameBox")).clear();
-		driver.findElement(By.id("s_unameBox")).sendKeys(username);
+		driver.findElement(By.id("s_unameBox")).sendKeys("admin");
 		driver.findElement(By.id("s_loginBtn")).click();
 		WebUtility.waitForElementPresent(driver, By.xpath("//div[@eventproxy='s_createBtn']"));
 		Thread.sleep(4000); // To wait for it to retrieve documents
