@@ -93,7 +93,7 @@ public class CSVImporter {
 	 * @throws DatabaseException
 	 *             the database exception
 	 */
-	public void read(Model model, String newScheduleName, String value)
+	public void read(Model model, String value)
 			throws IOException, DatabaseException {
 
 		this.model = model;
