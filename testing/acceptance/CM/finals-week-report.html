@@ -1,15 +1,19 @@
 <html>
 <head>
 <title>
-Finals Week Acceptance Test Report for the CM Department
+Spring Finals Week Acceptance Test Report for the CM Department
 </title>
 </head>
 <body bgcolor=white>
 <p align=center>
 <font size=+2>
-<strong>Finals Week Acceptance Test Report for the CM Department</strong>
+<strong>Spring Finals Week Acceptance Test Report for the CM Department</strong>
 </font>
 </p>
+<br>
+<h2>
+Browser Used for Testing: Used Selenium Testing for data entry with Chrome. <br>
+</h2>
 <br>
 <br>
 <a name="Create, Save, and Re-Open a New Schedule">
@@ -18,7 +22,7 @@ Finals Week Acceptance Test Report for the CM Department
 </h2>
 </a>
 <p>
-Works.
+Able to login using "admin" and create, save and re-open the schedule.
 </p>
 
 <br>
@@ -28,11 +32,12 @@ Works.
 </h2>
 </a>
 <p>
-Having to double click to get the days to drop down is annoying.<p>
-I entered something in the last name field, then when I tried to double-click to edit it didn't change the box to an edit text field. Also, ctrl+a selects the entire page and not just the contents of the cell.<p>
-Instructor time prefs don't save.<p>
-Again, double clicking in the equipment field to change stuff is gross, it should pop over to table row and not expand it. Also, it should stay open instead of closing whenever something is selected.
+Data entry was mostly very good.
 </p>
+<strong>Issues</strong>
+<ul>
+	<li>There is still a bug where we can't associate with the first course.</li>
+</ul>
 
 <br>
 <a name="Generate a Schedule">
@@ -41,8 +46,12 @@ Again, double clicking in the equipment field to change stuff is gross, it shoul
 </h2>
 </a>
 <p>
-There's a weird space between the available courses and the top of the page. It would look ok if there was similar spacing underneath that box thing I guess.
+Successfully generated a schedule. 
 </p>
+<strong>Issues</strong>
+<ul>
+	<li>Seemed to work well, but there was some overlap</li>
+</ul>
 
 <br>
 <a name="Edit the Schedule">
@@ -51,8 +60,12 @@ There's a weird space between the available courses and the top of the page. It 
 </h2>
 </a>
 <p>
-Drag and drop works well.
+Moving courses around on the schedule with drag and drop was successful.
 </p>
+<strong>Issues</strong>
+<ul>
+	<li>None.</li>
+</ul>
 
 <br>
 <a name="Save, Exit, Re-Open Schedule">
@@ -61,8 +74,12 @@ Drag and drop works well.
 </h2>
 </a>
 <p>
-Works.
+Saving worked, and I was able to open the schedule again.
 </p>
+<strong>Issues</strong>
+<ul>
+	<li>I did not see the same generated schedule after logging out and back in.</li>
+</ul>
 
 <br>
 <a name="Quality Measures">
@@ -71,8 +88,12 @@ Works.
 </h2>
 </a>
 <p>
-Stated in "Enter Resource Data"
+Everything looked good, except for the overlapping courses.
 </p>
+<strong>Issues</strong>
+<ul>
+	<li>The schedule was not valid since there was an overlap in courses.</li>
+</ul>
 
 <br>
 <a name="Other Issues">
@@ -81,7 +102,9 @@ Stated in "Enter Resource Data"
 </h2>
 </a>
 <p>
-
+<ul>
+	<li>None</li>
+</ul>
 </p>
 </body>
 </html>
