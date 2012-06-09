@@ -1,7 +1,12 @@
 package scheduler.model.db.sqlite;
 
 import scheduler.model.db.IDBUser;
-
+/**
+ * The Class SQLUser implements all methods of the IDBUser class (part of the IDatabase interface).
+ * This class represents a CAS user in the SQLite database.
+ * @author kayleneS
+ *
+ */
 public class SQLUser extends SQLObject implements IDBUser {
 	String username;
 	boolean isAdmin;

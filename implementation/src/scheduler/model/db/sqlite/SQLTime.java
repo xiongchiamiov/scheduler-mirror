@@ -1,7 +1,12 @@
 package scheduler.model.db.sqlite;
 
 import scheduler.model.db.IDBTime;
-
+/**
+ * The Class SQLTime implements all methods of the IDBTime class (part of the IDatabase interface).
+ * This class represents a our storage of time in the SQLite database.
+ * @author kayleneS
+ *
+ */
 public class SQLTime extends SQLObject implements IDBTime {
 	private static int idFromDayAndHalfHour(int day, int halfHour) {
 		assert(halfHour >= 0 && halfHour < 48);

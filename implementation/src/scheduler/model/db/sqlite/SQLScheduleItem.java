@@ -5,7 +5,12 @@ import java.util.Set;
 
 import scheduler.model.Day;
 import scheduler.model.db.IDBScheduleItem;
-
+/**
+ * The Class SQLCourse implements all methods of the IDBCourse class (part of the IDatabase interface).
+ * This class represents a scheduled item within a document in the SQLite database.
+ * @author kayleneS
+ *
+ */
 public class SQLScheduleItem extends SQLObject implements IDBScheduleItem {
 	Integer id, docID, instID, locID, courseID, startTime, endTime, sectionNum;
 	String dayPattern;
