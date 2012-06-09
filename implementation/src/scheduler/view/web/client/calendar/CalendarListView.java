@@ -15,6 +15,11 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
+/**
+ * This class encapsulates both the view for the schedule in list form. 
+ * 
+ * @author Tyler Yero, Matt Schirle
+ */
 public class CalendarListView extends SimplePanel {
 	
 	private class scheduleItemComparator implements Comparator<ScheduleItemGWT> {
@@ -159,11 +164,20 @@ public class CalendarListView extends SimplePanel {
 		}
 	}-*/;
 
+	/**
+	 * Set the schedule items of the list to be displayed.
+	 * 
+	 * @param items List of schedule items to put into the list. This replaces the current items.
+	 */
 	public void setScheduleItems(List<ScheduleItemGWT> items) {
 		mScheduleItems = items;
 		sort();
 	}
 	
+	/**
+	 * Clears the current view and draws the list using the current set of schedule items.
+	 * 
+	 */
 	public void drawList() {
 		clear();
 		
@@ -459,7 +473,7 @@ public class CalendarListView extends SimplePanel {
 	}
 
 	/**
-	 * Called when the user double clicks an item in the table
+	 * Called when the user double clicks an item in the list
 	 */
 	public void doubleClick(int row, int col) {
 		highlightRow(row);
@@ -482,6 +496,8 @@ public class CalendarListView extends SimplePanel {
 	/**
 	 * Called when a key is pressed down on an element
 	 * 
+	 * @param row The row in the list that was selected at the time of the key press.
+	 * @param keycode The javascript keycode of which key was pressed.
 	 */
 	public void keyDown(int row, int keycode) {
 		if (keycode == KEYCODE_DELETE) {
@@ -513,7 +529,9 @@ public class CalendarListView extends SimplePanel {
 	}
 
 	/**
-	 * Called when the any cell on the table gets a mouse up event
+	 * Called when the any cell on the list gets a mouse up event
+	 * @param row
+	 * @param col
 	 */
 	public void mouseUp(int row, int col) {
 		// if (mDragController.isDragging()) {
@@ -525,7 +543,8 @@ public class CalendarListView extends SimplePanel {
 	}
 
 	/**
-	 * Called when the any cell on the table gets a mouse up event
+	 * Called when the any cell on the list gets a mouse over event
+	 * @param row
 	 */
 	public void mouseOver(int row) {
 		// if (mDragController.isDragging()) {
@@ -535,13 +554,18 @@ public class CalendarListView extends SimplePanel {
 	}
 
 	/**
-	 * Called when the any cell on the table gets a mouse up event
+	 * Called when the any cell on the list gets a mouse out event
+	 * @param row
 	 */
 	public void mouseOut(int row) {
 		DOMUtility.setStyleAttribute("y" + row, "backgroundColor", "#FFFFFF");
 		DOMUtility.setStyleAttribute("h" + row, "backgroundColor", "#edf2f2");
 	}
 	
+	/**
+	 * Uses column parameter to determine which column needs sorting. Then it sorts the list.
+	 * @param column
+	 */
 	public void setSort(int column) {
 		if (column == columnIndices.COURSE_NAME.ordinal()) {
 			switch (mCurrentSort) {
@@ -620,6 +644,9 @@ public class CalendarListView extends SimplePanel {
 		drawList();
 	}
 
+	/**
+	 * Clears the screen of visible widgets.
+	 */
 	@Override
 	public void clear() {
 		Iterator<Widget> it = iterator();

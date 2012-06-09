@@ -89,6 +89,7 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 	
 	private static final int AVAILABLE_COURSES_LIST_WIDTH = 200;
 	
+	
 	public ScheduleEditWidget(CachedOpenWorkingCopyDocument workingCopyDocument) {
 		mWorkingCopyDocument = workingCopyDocument;
 
@@ -171,6 +172,11 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 		return mMainPanel;
 	}
 	
+	/**
+	 * Creates a schedule item given a course.
+	 * 
+	 * @param course
+	 */
 	public ScheduleItemGWT createItem(CourseGWT course) {
 		ScheduleItemGWT item = new ScheduleItemGWT(-1, course.getID(), 
 				mWorkingCopyDocument.getDocument().getChooseForMeInstructorID(),  
@@ -186,6 +192,13 @@ public class ScheduleEditWidget implements CloseHandler<PopupPanel> {
 		return item;
 	}
 
+	/**
+	 * Displays a dialog that allows the user to edit a schedule item's
+	 * instructor, location, and time. When the user clicks "ok" the dialog will
+	 * call this ScheduleEditWidget's moveItem method
+	 * 
+	 * @param course The course that will be used to create a schedule item to be shown in the dialog.
+	 */
 	public void editItem(CourseGWT course) {
 		editItem(true, createItem(course), null, -1);
 	}

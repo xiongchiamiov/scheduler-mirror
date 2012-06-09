@@ -317,7 +317,8 @@ public class CalendarTableView extends SimplePanel {
 	}
 	
 	/**
-	 * Called when the any cell on the table gets a mouse up event
+	 * Called when the any cell on the table gets a mouse over event
+	 * @param row
 	 */
 	public void mouseOver(int row) {
 		if (mDragController.isDragging()) {
@@ -329,7 +330,8 @@ public class CalendarTableView extends SimplePanel {
 	}
 	
 	/**
-	 * Called when the any cell on the table gets a mouse up event
+	 * Called when the any cell on the table gets a mouse out event
+	 * @param row
 	 */
 	public void mouseOut(int row) {
 		DOMUtility.setStyleAttribute("y"+row, "backgroundColor", "#FFFFFF");
@@ -378,19 +380,35 @@ public class CalendarTableView extends SimplePanel {
 		}
     }-*/;
 	
+	/**
+	 * Sets the left offset of the table. This pushes the table to the right.
+	 * @param pixels
+	 */
 	public void setLeftOffset(int pixels) {
 		mLeftOffset = pixels;
 		DOMUtility.setStyleAttribute("CalendarTableContainer", "left", (mLeftOffset+1)+"px");
 	}
 
+	/**
+	 * Sets the top offset of the table. This pushes the table downward.
+	 * @param pixels
+	 */
 	private void setTopOffset(int pixels) {
 		DOMUtility.setStyleAttribute("CalendarTableContainer", "top", pixels+"px");
 	}
 	
+	/**
+	 * Gets the start time row of the dropdown box on the editscheduleitemdlg form when given a schedule item.
+	 * @param item
+	 */
 	public static int getStartRow(ScheduleItemGWT item) {
 		return item.getStartHalfHour() - 14;
 	}
 	
+	/**
+	 * Gets the end time row of the dropdown box on the editscheduleitemdlg form when given a schedule item.
+	 * @param item
+	 */
 	public static int getEndRow(ScheduleItemGWT item) {
 		return item.getEndHalfHour() - 14;
 	}
