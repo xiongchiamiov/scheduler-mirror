@@ -1,7 +1,12 @@
 package scheduler.model.db.sqlite;
 
 import scheduler.model.db.IDBDocument;
-
+/**
+ * The Class SQLDocument implements all methods of the IDBDocument class (part of the IDatabase interface).
+ * This class represents an entire scheduling document in the SQLite database.
+ * @author kayleneS
+ *
+ */
 public class SQLDocument extends SQLObject implements IDBDocument {
 	String name;
 	Boolean isTrashed;

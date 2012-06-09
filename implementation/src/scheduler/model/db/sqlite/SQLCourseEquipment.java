@@ -1,5 +1,10 @@
 package scheduler.model.db.sqlite;
-
+/**
+ * The Class SQLCourseEquipment implements all methods of the IDBObject class (part of the IDatabase interface).
+ * This class represents course equipment in the SQLite database.
+ * @author kayleneS
+ *
+ */
 public class SQLCourseEquipment extends SQLObject {
 	Integer courseID, equipID;
 	

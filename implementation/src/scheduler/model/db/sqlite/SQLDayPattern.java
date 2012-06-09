@@ -4,7 +4,12 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import scheduler.model.db.IDBDayPattern;
-
+/**
+ * The Class SQLDayPattern implements all methods of the IDBDayPattern class (part of the IDatabase interface).
+ * This class represents a combination of day patterns in the SQLite database.
+ * @author kayleneS
+ *
+ */
 public class SQLDayPattern extends SQLObject implements IDBDayPattern {
 	public SQLDayPattern(Integer id) {
 		super(id);

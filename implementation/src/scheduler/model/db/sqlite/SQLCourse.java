@@ -1,7 +1,12 @@
 package scheduler.model.db.sqlite;
 
 import scheduler.model.db.IDBCourse;
-
+/**
+ * The Class SQLCourse implements all methods of the IDBCourse class (part of the IDatabase interface).
+ * This class represents a course in the SQLite database.
+ * @author kayleneS
+ *
+ */
 public class SQLCourse extends SQLObject implements IDBCourse {
 	Integer documentID;
 	Boolean isSchedulable;

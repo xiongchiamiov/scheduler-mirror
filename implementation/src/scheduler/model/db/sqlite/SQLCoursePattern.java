@@ -1,7 +1,12 @@
 package scheduler.model.db.sqlite;
 
 import scheduler.model.db.IDBOfferedDayPattern;
-
+/**
+ * The Class SQLCoursePattern implements all methods of the IDBOfferedDayPattern class (part of the IDatabase interface).
+ * This class represents a day pattern in the SQLite database.
+ * @author kayleneS
+ *
+ */
 public class SQLCoursePattern extends SQLObject implements IDBOfferedDayPattern {
 	Integer courseID, patternID;
 	

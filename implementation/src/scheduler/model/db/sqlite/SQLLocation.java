@@ -1,7 +1,12 @@
 package scheduler.model.db.sqlite;
 
 import scheduler.model.db.IDBLocation;
-
+/**
+ * The Class SQLLocation implements all methods of the IDBLocation class (part of the IDatabase interface).
+ * This class represents a location or room in the SQLite database.
+ * @author kayleneS
+ *
+ */
 public class SQLLocation extends SQLObject implements IDBLocation {
 	Integer id, docID;
 	String type, room, maxOccupancy;

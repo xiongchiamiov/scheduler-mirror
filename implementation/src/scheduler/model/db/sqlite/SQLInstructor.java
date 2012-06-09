@@ -1,7 +1,13 @@
 package scheduler.model.db.sqlite;
 
 import scheduler.model.db.IDBInstructor;
-
+/**
+ * The Class SQLInstructor implements all methods of the IDBInstructor class (part of the IDatabase interface).
+ * This class represents an instructor in the SQLite database. This maps to the "Instructors" tab in the 
+ * resource table view.
+ * @author kayleneS
+ *
+ */
 public class SQLInstructor extends SQLObject implements IDBInstructor {
 	Integer id, documentID;
 	String maxWTU;

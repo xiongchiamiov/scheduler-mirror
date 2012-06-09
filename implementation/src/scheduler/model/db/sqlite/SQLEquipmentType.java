@@ -1,7 +1,12 @@
 package scheduler.model.db.sqlite;
 
 import scheduler.model.db.IDBEquipmentType;
-
+/**
+ * The Class SQLEquipmentType implements all methods of the IDBEquipmentType class (part of the IDatabase interface).
+ * This class represents the description of a type of equipment used in a classroom in the SQLite database.
+ * @author kayleneS
+ *
+ */
 public class SQLEquipmentType extends SQLObject implements IDBEquipmentType {
 	int id;
 	String description;

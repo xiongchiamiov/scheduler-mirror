@@ -1,7 +1,12 @@
 package scheduler.model.db.sqlite;
 
 import scheduler.model.db.IDBCoursePreference;
-
+/**
+ * The Class SQLCoursePreference implements all methods of the IDBCoursePreference class (part of the IDatabase interface).
+ * This class represents an instructors' preference for a given course in the SQLite database.
+ * @author kayleneS
+ *
+ */
 public class SQLCoursePreference extends SQLObject implements IDBCoursePreference {
 	Integer instructorID;
 	Integer courseID;
