@@ -1,0 +1,130 @@
+<html>
+<head>
+<title>
+Finals Week Acceptance Test Report for the IME Department
+</title>
+</head>
+<body bgcolor=white>
+<p align=center>
+<font size=+2>
+<strong>Finals Week Acceptance Test Report for the IME Department
+</font>
+</p>
+<br>
+<br>
+<a name="Create, Save, and Re-Open a New Schedule">
+<h2>
+1.  Create, Save, and Re-Open a New Schedule
+</h2>
+</a>
+<p>
+This works. Except when you get data corruption from manipulating a schedule with drag and drop.
+</p>
+
+<br>
+<a name="Enter Resource Data">
+<h2>
+2.  Enter Resource Data
+</h2>
+</a>
+<p>
+<em>
+<ol type=a>
+<p> <li>
+The row selection (used for resource deletion/duplication) is strange, I want it to be "selected" only if they click directly on the checkbox, not on the row.
+    <p><li>
+It's not clear to the user whether or not max enrollment was per section or overall for the entire course
+    <p><li>
+        Other than that, these seem to be working well.
+    <p><li>
+        We should consider putting the defaults for the instructor preferences back to "Not Qualified" because it is the most common answer, compared to "Acceptable".
+        
+        <p><li>
+            It needs to be clear that "username" is the Cal Poly, CAS username.
+
+</ol>
+</em>
+</p>
+
+<br>
+<a name="Generate a Schedule">
+<h2>
+3.  Generate a Schedule
+</h2>
+</a>
+<p>
+<em>
+<ol type=a>
+<p><li>
+    Drag and drop defaults need to be more intuative. When the pop-up comes up, it should have defaults that don't give me an error message if I just press "OK".
+    <p><li>
+        After playing around with drag and drop, I was able to "break" the database because the "ScheduleItem" data was corrupted. This broke the entire deployment.
+</ol>
+</em>
+</p>
+
+<br>
+<a name="Edit the Schedule">
+<h2>
+4.  Edit the Schedule
+</h2>
+</a>
+<p>
+<em>
+<ol type=a>
+<p> <li>
+Generate still spits out "gross looking" schedules with lots of classes in a single time spot
+<p><li>
+When editing, by default it should give a start time and and end time that amounts to an hour difference, not a 1/2 hour difference.
+</ol>
+</em>
+</p>
+
+<br>
+<a name="Save, Exit, Re-Open Schedule">
+<h2>
+5.  Save, Exit, Re-Open Schedule
+</h2>
+</a>
+<p>
+<em>
+<ol type=a>
+<p> <li>
+This seems to work, unless you have corrupted data.
+</ol>
+</em>
+</p>
+</p>
+
+<br>
+<a name="Quality Measures">
+<h2>
+6.  Quality Measures
+</h2>
+</a>
+<p>
+<em>
+<ol type=a>
+<p> <li>
+    The resource tables are getting to a stable and usable place; however, work needs to be done to fix the minor bugs, and to make sure that data validation is occuring, CORRECTLY at this point.
+<p><li>
+    Drag and drop doesn't pass the "doesn't suck test." See above for more details.
+</ol>
+</em>
+</p>
+<br>
+<a name="Other Issues">
+<h2>
+7.  Other Issues
+</h2>
+</a>
+<p>
+<em>
+<ol type=a>
+none of note.
+</ol>
+</em>
+
+</p>
+</body>
+</html>
